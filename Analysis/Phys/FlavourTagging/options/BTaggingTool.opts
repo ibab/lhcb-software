@@ -6,9 +6,9 @@ ApplicationMgr.DLLs += { "FlavourTagging" };
 //----------------------------------------------------------------------
 
 //inclusive secondary vtx type
-ToolSvc.BTaggingTool.SecondaryVertexName  = "SVertexTool";//"TDR" type
-//ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
-//ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
+ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexTool";//"TDR" type
+//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
+//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
 
 //combination method of taggers based on probabilities from NNet
 ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";

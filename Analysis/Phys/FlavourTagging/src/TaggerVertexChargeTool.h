@@ -1,4 +1,4 @@
-// $Id: TaggerVertexChargeTool.h,v 1.3 2006-10-24 10:16:45 jpalac Exp $
+// $Id: TaggerVertexChargeTool.h,v 1.4 2007-06-09 12:46:59 musy Exp $
 #ifndef USER_TAGGERVERTEXCHARGETOOL_H 
 #define USER_TAGGERVERTEXCHARGETOOL_H 1
 
@@ -9,6 +9,7 @@
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
+#include "Kernel/ISecondaryVertexTool.h"
 
 /** @class TaggerVertexChargeTool TaggerVertexChargeTool.h 
  *
@@ -38,8 +39,13 @@ public:
 
 private:
 
+  ISecondaryVertexTool* m_svtool;
+  std::string m_SecondaryVertexToolName;
+
   std::string m_CombinationTechnique;
   double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_P2;
+  double m_wSameSign2, m_wSameSignMoreThan2;
+
 };
 
 //===============================================================//

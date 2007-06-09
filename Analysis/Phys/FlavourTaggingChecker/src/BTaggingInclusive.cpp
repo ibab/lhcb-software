@@ -1,4 +1,4 @@
-// $Id: BTaggingInclusive.cpp,v 1.4 2007-03-01 21:15:44 musy Exp $
+// $Id: BTaggingInclusive.cpp,v 1.5 2007-06-09 12:47:19 musy Exp $
 // local
 #include "BTaggingInclusive.h"
 
@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
 //=============================================================================
 BTaggingInclusive::BTaggingInclusive( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )//, m_forcedBtool(0)
+  : DVAlgorithm ( name , pSvcLocator ), m_forcedBtool(0)
 {
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
@@ -46,11 +46,11 @@ StatusCode BTaggingInclusive::initialize() {
     return StatusCode::FAILURE;
   }
 
-//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
-//   if( ! m_forcedBtool ) {
-//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
-//     return StatusCode::FAILURE;
-//   }
+  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  if( ! m_forcedBtool ) {
+    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
@@ -70,8 +70,7 @@ StatusCode BTaggingInclusive::execute() {
   // Choose the forced B
   //
   ///////////////////////////////////////
-  const MCParticle* B0 = forcedB();
-//   const MCParticle* B0 = m_forcedBtool->forcedB();
+  const MCParticle* B0 = m_forcedBtool->forcedB();
   MCParticle::Vector B0daughters(0);
 
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
@@ -313,26 +312,6 @@ StatusCode BTaggingInclusive::finalize() {
   info()<<"==========END OF INCLUSIVE BTAGGING PERFORMANCE ======="<<endmsg;
 
   return  StatusCode::SUCCESS;
-}
-//=============================================================================
-const MCParticle* BTaggingInclusive::forcedB() {
-
-  //check what is the B forced to decay
-  const MCParticle *BS = 0;
-  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
-
-  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
-       q!=hepVect->end(); ++q ) {
-    for ( HepMC::GenEvent::particle_iterator 
-	    p  = (*q)->pGenEvt()->particles_begin();
-	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
-      if( (*p)->status() != 889 ) continue;
-      BS = associatedofHEP(*p);
-      if(BS) break; 
-    }
-  }
-  return BS;
-
 }
 //============================================================================
 MCParticle* BTaggingInclusive::associatedofHEP(HepMC::GenParticle* hepmcp) {

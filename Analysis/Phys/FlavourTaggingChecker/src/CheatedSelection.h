@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.5 2007-03-05 11:44:34 pkoppenb Exp $
+// $Id: CheatedSelection.h,v 1.6 2007-06-09 12:47:20 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -9,12 +9,12 @@
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IDebugTool.h"
+#include "Kernel/IForcedBDecayTool.h"
 
 // from Associators
 #include "Kernel/Particle2MCLinker.h"
 
 // from local
-//#include "IForcedBDecayTool.h"
 
 /** @class CheatedSelection CheatedSelection.h 
  *  
@@ -45,8 +45,7 @@ class CheatedSelection : public DVAlgorithm {
   IDebugTool* m_debug;
   Particle2MCLinker* m_linker; ///< Pointer to associator using links
 
-  //IForcedBDecayTool* m_forcedBtool;
-  const LHCb::MCParticle* forcedB(void);
+  IForcedBDecayTool* m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   std::vector<std::string> m_setInputData;

@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.17 2007-04-26 12:39:44 cattanem Exp $
+! $Id: release.notes,v 1.18 2007-06-09 12:47:18 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-06-07 - M. Musy, S. Poss, O. Leroy
+ - Added DVBTagging_for_B2JpsiKs.opts, example options for producing
+   a DecayChainNTuple with tagging information from selection Bd->JPsiKS
+ - Modified units (GeV and MeV) in options files and in code. 
+   E.g. in CheatedSelection.opts: CheatedSelection.BMassWindow = 100.0 *MeV ;
+   (before specification of MeV was missing)
+ - use of IForcedBTool from Kernel
+ - add particles to daughter vector in cheated selection
+ - Add individual tagger information in ntuple : TaggerType, TaggerDecision,
+   TaggerOmega, TaggerRef (this is the index among the N particles), TaggerUsedInSV
+ - Add combined Omega in ntuple
+ - added m_M block of signal particles in ntuple.
+ - fix in kType variable. Removed dFlag. Added empty tamper.
+ - added tool TaggingUtilsChecker grouping common actions.
+ - various cleanups
 
 !===================== FlavourTaggingChecker v2r2p1 2007-04-26 ===============
 ! 2007-04-26 - Marco Cattaneo

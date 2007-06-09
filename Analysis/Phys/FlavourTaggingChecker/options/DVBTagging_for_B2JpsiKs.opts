@@ -1,0 +1,115 @@
+//================================================================
+// This example option produces a DecayChainNTuple B2JpsiKS.root
+// with tagging information from real selection Bd->JPsiKS
+//================================================================
+
+// Require DaVinci options:
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+//Include Common Particles:
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKs.opts"
+#include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
+
+/// The Main sequence; Instantiate GaudiSequencer and give it a name
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqB2Jpsihh" } ;
+
+//-------------------------------------------------------------
+// First Let's make some standard lifetime unbiased Jpsi -> MuMu's
+// and filter only events with a J/Psi reconstructed:
+//-------------------------------------------------------------
+
+SeqB2Jpsihh.Members += { "FilterDesktop/MyJpsi2MuMu" };	
+MyJpsi2MuMu.PhysDesktop.InputLocations = {"Phys/StdUnbiasedJpsi2MuMu"};
+
+//====================================================
+/// Now let's make some bees with KsLL:
+/// Instantiate MakeResonances and give it a name:
+//====================================================
+SeqB2Jpsihh.Members += { "MakeResonances/Bd2JpsiKsLL" } ; 
+
+/// Specify the input locations of J/psi and KsLL
+Bd2JpsiKsLL.PhysDesktop.InputLocations = { "Phys/MyJpsi2MuMu",
+                                           "Phys/StdLooseKsLL" } ;
+/// Specify the decay descriptor
+Bd2JpsiKsLL.DecayDescriptor="B0 -> J/psi(1S) KS0" ;
+
+/// Loose cuts
+Bd2JpsiKsLL.MotherFilter.Selections = { "B0 : VtxFilterCriterion/bdVertex" } ;
+Bd2JpsiKsLL.MotherFilter.bdVertex.MaxChi2  = 500. ;
+Bd2JpsiKsLL.Window = 500.0 * MeV ;
+
+//====================================================
+/// Now let's make some bees with KsDD:
+/// Instantiate MakeResonances and give it a name
+//====================================================
+SeqB2Jpsihh.Members += { "MakeResonances/Bd2JpsiKsDD" } ; 
+
+/// Specify the input locations of J/psi and KsLL
+Bd2JpsiKsDD.PhysDesktop.InputLocations = { "Phys/MyJpsi2MuMu",
+                                           "Phys/StdLooseKsDD" } ;
+/// Specify the decay descriptor
+Bd2JpsiKsDD.DecayDescriptor = "B0 -> J/psi(1S) KS0" ;
+
+/// Loose mass window cut
+Bd2JpsiKsDD.Window = 500.0 * MeV ;
+
+/// Loose vertex cut
+Bd2JpsiKsDD.MotherFilter.Selections = { "B0 : VtxFilterCriterion/bdVertex" } ;
+Bd2JpsiKsDD.MotherFilter.bdVertex.MaxChi2  = 500.0 ;
+
+//======================================================
+//Add Trigger
+//======================================================
+#include "$HLTSYSROOT/options/L0.opts"
+
+
+//======================================================
+//          FLAVOUR TAGGING
+//======================================================
+
+#include "$FLAVOURTAGGINGOPTS/BTagging.opts"
+BTagging.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
+BTagging.OutputLevel = 2;
+
+//======================================================
+//Add DecayChainNtuple
+//======================================================
+ApplicationMgr.TopAlg += { "DecayChainNTuple/B2JpsihhTree" };
+B2JpsihhTree.OutputLevel = 3;
+
+B2JpsihhTree.RequireTagging = true;
+B2JpsihhTree.RequireTrigger = true;
+
+B2JpsihhTree.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
+B2JpsihhTree.LinkAsct.Location = {"Phys/Relations/Particle2MCLinksB2JpsihhTree"};
+B2JpsihhTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+B2JpsihhTree.LinkAsct.AlgorithmName = "Particle2MCLinksB2JpsihhTree";
+B2JpsihhTree.LinkAsct.OutputLevel = 4;
+Particle2MCLinksB2JpsihhTree.InputData = {
+                                         "Phys/StandardMuons/Particles",
+                                         "Phys/StandardPions/Particles",
+                                         "Phys/Bd2JpsiKsLL/Particles",
+                                         "Phys/Bd2JpsiKsDD/Particles" };
+
+Particle2MCLinksB2JpsihhTree.OutputLevel = 4;
+
+B2JpsihhTree.DecayDescriptor ="[B0 -> J/psi(1S) KS0]cc" ;
+B2JpsihhTree.Decay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
+B2JpsihhTree.FillMCDecay = true;
+B2JpsihhTree.MCDecay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
+
+
+//======================================================
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='B2JpsiKS.root' TYP='ROOT' OPT='NEW'"};
+
+// Number of events to process:
+ApplicationMgr.EvtMax    = -1;
+EventSelector.FirstEvent = 1;
+
+// Insert Datasets:
+EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };

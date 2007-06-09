@@ -15,16 +15,16 @@ DECLARE_TOOL_FACTORY( TaggerMuonTool );
 
 //====================================================================
 TaggerMuonTool::TaggerMuonTool( const std::string& type,
-				const std::string& name,
-				const IInterface* parent ) :
+                                const std::string& name,
+                                const IInterface* parent ) :
   GaudiTool ( type, name, parent ), m_eventSvc(0) {
 
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",    m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_v1" );
-  declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 );
-  declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 );
+  declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 *GeV );
+  declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 *GeV );
   declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 4.0 );
   declareProperty( "AverageOmega",m_AverageOmega  = 0.33 );
   m_nnet = 0;
@@ -51,13 +51,13 @@ StatusCode TaggerMuonTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
 Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-			    std::vector<const Vertex*>& allVtx, 
-			    Particle::ConstVector& vtags ){
+                            std::vector<const Vertex*>& allVtx, 
+                            Particle::ConstVector& vtags ){
   Tagger tmu;
   if(!RecVert) return tmu;
   const Vertex * SecVert= 0;
@@ -71,10 +71,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 13 ) continue;
 
-    double Pt = (*ipart)->pt()/GeV;
+    double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_muon ) continue;
 
-    double P = (*ipart)->p()/GeV;
+    double P = (*ipart)->p();
     if( P  < m_P_cut_muon ) continue;
 
     const ProtoParticle* proto = (*ipart)->proto();
@@ -92,9 +92,6 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     }
   }
   if( ! imuon ) return tmu;
-
-  tmu.addTaggerPart(*imuon);
-  tmu.setDecision(imuon->charge()>0 ? -1: 1);
 
   //calculate omega
   double pn = 1 - m_AverageOmega;
@@ -123,8 +120,17 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = m_nnet->MLPm( inputs );
 
   }
-  tmu.setOmega( 1-pn );
+
+  if(pn<0.5){
+    pn = 1-pn;
+    tmu.setOmega( 1-pn );
+    tmu.setDecision(imuon->charge()>0 ? 1: -1);
+  } else {
+    tmu.setOmega( 1-pn );
+    tmu.setDecision(imuon->charge()>0 ? -1: 1);
+  }
   tmu.setType( Tagger::OS_Muon ); 
+  tmu.addTaggerPart(*imuon);
 
   return tmu;
 }

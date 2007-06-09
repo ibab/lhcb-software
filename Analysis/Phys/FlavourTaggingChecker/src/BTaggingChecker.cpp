@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.7 2007-03-01 21:15:44 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.8 2007-06-09 12:47:19 musy Exp $
 // local
 //#include "Kernel/StringUtils.h"
 
@@ -19,7 +19,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
 				  ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator )//, m_forcedBtool(0) 
+  : DVAlgorithm ( name , pSvcLocator ), m_forcedBtool(0) 
 {
   declareProperty("TagsLocation", 
 		  m_tags_location = FlavourTagLocation::Default );
@@ -36,11 +36,12 @@ StatusCode BTaggingChecker::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
-//   if( ! m_forcedBtool ) {
-//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
-//     return StatusCode::FAILURE;
-//   }
+
+  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  if( ! m_forcedBtool ) {
+    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
@@ -57,8 +58,7 @@ StatusCode BTaggingChecker::execute() {
 
   ////////////////////////////////////////////////////
   // Find the forced B
-  //const MCParticle* BS =  m_forcedBtool->forcedB();
-  const MCParticle* BS =  forcedB();
+  const MCParticle* BS =  m_forcedBtool->forcedB();
   ////////////////////////////////////////////////////
 
   int tagdecision=0, ix=0;
@@ -184,25 +184,8 @@ StatusCode BTaggingChecker::finalize(){
 
   return StatusCode::SUCCESS; 
 }
-const MCParticle* BTaggingChecker::forcedB() {
 
-  //check what is the B forced to decay
-  const MCParticle *BS = 0;
-  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
-
-  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
-       q!=hepVect->end(); ++q ) {
-    for ( HepMC::GenEvent::particle_iterator 
-	    p  = (*q)->pGenEvt()->particles_begin();
-	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
-      if( (*p)->status() != 889 ) continue;
-      BS = associatedofHEP(*p);
-      if(BS) break; 
-    }
-  }
-  return BS;
-
-}
+//========================================================================
 MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
 
   MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );

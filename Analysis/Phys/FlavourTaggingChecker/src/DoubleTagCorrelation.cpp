@@ -1,4 +1,4 @@
-// $Id: DoubleTagCorrelation.cpp,v 1.3 2007-03-01 21:15:44 musy Exp $
+// $Id: DoubleTagCorrelation.cpp,v 1.4 2007-06-09 12:47:20 musy Exp $
 #include "DoubleTagCorrelation.h"
 
 //--------------------------------------------------------------------------
@@ -16,7 +16,7 @@ DECLARE_ALGORITHM_FACTORY( DoubleTagCorrelation );
 //==========================================================================
 DoubleTagCorrelation::DoubleTagCorrelation( const std::string& name,
 					    ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ), m_debug(0)//, m_forcedBtool(0)
+  : DVAlgorithm ( name , pSvcLocator ), m_debug(0), m_forcedBtool(0)
 {  
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
@@ -36,11 +36,12 @@ StatusCode DoubleTagCorrelation::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
-//   if( ! m_forcedBtool ) {
-//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
-//     return StatusCode::FAILURE;
-//   }
+
+  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  if( ! m_forcedBtool ) {
+    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   for(int i=0;i<2;++i) for(int j=0;j<2;++j) matrix[i][j] = 0;  
 
@@ -55,8 +56,7 @@ StatusCode DoubleTagCorrelation::execute() {
   setFilterPassed( false );
 
   //choose the forced B
-//   const MCParticle* B0 =  m_forcedBtool->forcedB();
-  const MCParticle* B0 =  forcedB();
+  const MCParticle* B0 =  m_forcedBtool->forcedB();
   MCParticle::Vector B0daughters(0);
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
   //-------------------
@@ -113,25 +113,6 @@ StatusCode DoubleTagCorrelation::execute() {
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 };
-const MCParticle* DoubleTagCorrelation::forcedB() {
-
-  //check what is the B forced to decay
-  const MCParticle *BS = 0;
-  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
-
-  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
-       q!=hepVect->end(); ++q ) {
-    for ( HepMC::GenEvent::particle_iterator 
-	    p  = (*q)->pGenEvt()->particles_begin();
-	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
-      if( (*p)->status() != 889 ) continue;
-      BS = associatedofHEP(*p);
-      if(BS) break; 
-    }
-  }
-  return BS;
-
-}
 //============================================================================
 MCParticle* DoubleTagCorrelation::associatedofHEP(HepMC::GenParticle* hepmcp) {
 

@@ -22,8 +22,8 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.5 );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 3.0 );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.5 *GeV );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 3.0 *GeV );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 3.5 );
 
   declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
@@ -56,9 +56,9 @@ StatusCode TaggerKaonOppositeTool::initialize() {
 
 //=====================================================================
 Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0, 
-				    const RecVertex* RecVert,
-				    std::vector<const Vertex*>& allVtx, 
-				    Particle::ConstVector& vtags ){
+                                    const RecVertex* RecVert,
+                                    std::vector<const Vertex*>& allVtx, 
+                                    Particle::ConstVector& vtags ){
   Tagger tkaon;
   if(!RecVert) return tkaon;
   const Vertex * SecVert= 0;
@@ -71,9 +71,9 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
-    double Pt = (*ipart)->pt()/GeV;
+    double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
-    double P = (*ipart)->p()/GeV;
+    double P = (*ipart)->p();
     if( P < m_P_cut_kaon )  continue;
 
     //calculate signed IP wrt RecVert
@@ -89,10 +89,10 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
       double lcs = track->chi2PerDoF();
 
       if( ( track->type()==Track::Long 
-	    && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
-         || 
-	  ( track->type()==Track::Upstream 
-	    && lcs<m_lcs_ku && fabs(IP)<m_IP_ku ) ) {
+            && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
+          || 
+          ( track->type()==Track::Upstream 
+            && lcs<m_lcs_ku && fabs(IP)<m_IP_ku ) ) {
         if( Pt > ptmaxk ) { 
           ikaon = (*ipart);
           ptmaxk = Pt;
@@ -101,9 +101,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     }
   } 
   if( ! ikaon ) return tkaon;
-
-  tkaon.addTaggerPart(*ikaon);
-  tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
 
   //calculate omega
   double pn = 1-m_AverageOmega;
@@ -122,7 +119,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     std::vector<double> inputs(8);
     inputs.at(0) = B0p;
     inputs.at(1) = B0the;
-    inputs.at(2) =  m_util->countTracks(vtags);
+    inputs.at(2) = m_util->countTracks(vtags);
     inputs.at(3) = 100;
     inputs.at(4) = ikaon->p()/GeV;
     inputs.at(5) = ikaon->pt()/GeV;
@@ -132,8 +129,17 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     pn = m_nnet->MLPk( inputs );
 
   }
-  tkaon.setOmega( 1-pn );
+
+  if(pn<0.5){
+    pn = 1-pn;
+    tkaon.setOmega( 1-pn );
+    tkaon.setDecision(ikaon->charge()>0 ? 1: -1);
+  } else {
+    tkaon.setOmega( 1-pn );
+    tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
+  }
   tkaon.setType( Tagger::OS_Kaon ); 
+  tkaon.addTaggerPart(*ikaon);
 
   return tkaon;
 }

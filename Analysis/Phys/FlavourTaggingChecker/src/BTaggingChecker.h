@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.4 2007-03-01 21:15:44 musy Exp $
+// $Id: BTaggingChecker.h,v 1.5 2007-06-09 12:47:19 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -9,12 +9,12 @@
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 #include "Kernel/IDebugTool.h"
+#include "Kernel/IForcedBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
 
 // from local
-//#include "IForcedBDecayTool.h"
 
 /** @class BTaggingChecker BTaggingChecker.h
  *  
@@ -37,6 +37,7 @@ class BTaggingChecker : public DVAlgorithm {
   /// Vector of locations of the tags to monitor
   std::string m_tags_location; 
   IDebugTool* m_debug;
+  IForcedBDecayTool* m_forcedBtool;
 
   //IForcedBDecayTool* m_forcedBtool;
   const LHCb::MCParticle* forcedB(void);

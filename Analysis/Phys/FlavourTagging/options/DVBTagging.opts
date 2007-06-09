@@ -54,14 +54,7 @@ EventSelector.PrintFreq  = 1;
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-//-- GAUDI data cards generated on Jan 25, 2007 9:48:09 PM
-//-- For Event Type = 13102003 / Data type = DST 1
-//--     Configuration = DC06 - phys-lumi2
-//--     DST 1 datasets produced by Brunel - v30r14
-//--     From DIGI 1 datasets produced by Boole - v12r10
-//--     From SIM 1 datasets produced by Gauss - v25r7
-//--     Database version = v30r14
-EventSelector.Input   = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001513/DST/0000/00001513_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };//bskk
+//EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };//bdjpsikshort
+EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001515/DST/0000/00001515_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsdspi
 //---------------------------------------------------------------
 

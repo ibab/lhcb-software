@@ -1,4 +1,4 @@
-// $Id: SVertexTool.h,v 1.6 2007-03-02 11:50:07 musy Exp $
+// $Id: SVertexTool.h,v 1.7 2007-06-09 12:46:57 musy Exp $
 #ifndef SVERTEXTOOL_H 
 #define SVERTEXTOOL_H 1
 // Include files
@@ -42,7 +42,9 @@ public:
 private:
   IGeomDispCalculator* geom;
   IVertexFit *fitter;
-  double m_lcs_cut;
+  double m_lcs_Long_cut;
+  double m_lcs_Upstream_cut;
+
   float  m_ipfitpol0;
   float  m_ipfitpol1;
   float  m_ipfitpol2;
@@ -58,8 +60,7 @@ private:
 
   float  m_anglepol0;
   float  m_anglepol1;
-  float  m_anglepol2;
-
+ 
   bool isin(LHCb::Particle::ConstVector& , const LHCb::Particle* );
 
   double angle( Gaudi::LorentzVector , Gaudi::LorentzVector );

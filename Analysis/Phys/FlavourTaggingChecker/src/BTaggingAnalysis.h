@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.8 2007-04-26 12:39:44 cattanem Exp $
+// $Id: BTaggingAnalysis.h,v 1.9 2007-06-09 12:47:19 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -15,13 +15,14 @@
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IDebugTool.h"
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IForcedBDecayTool.h"
 
 #include "CaloUtils/ICaloElectron.h"
 
-//#include "IForcedBDecayTool.h"
+// from local
+#include "ITaggingUtilsChecker.h"
 
 /** @class BTaggingAnalysis BTaggingAnalysis.h 
  *  
@@ -40,26 +41,6 @@ class BTaggingAnalysis : public DVAlgorithm {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
  private:
-  bool isinTree(const LHCb::Particle*, LHCb::Particle::ConstVector&, double&);
-  StatusCode calcIP( const LHCb::Particle*, const LHCb::Vertex*, 
-		     double&, double& );
-  StatusCode calcIP( const LHCb::Particle*, const LHCb::RecVertex*, 
-		     double&, double& );
-  StatusCode calcIP( const LHCb::Particle*, 
-		     const LHCb::RecVertex::ConstVector&, double&, double& ) ;
-  LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
-  const LHCb::MCParticle* originof( const LHCb::MCParticle* ) ;
-  const LHCb::MCParticle* originD(  const LHCb::MCParticle* ) ;
-
-  const LHCb::MCParticle* forcedB(void);
-
-  LHCb::MCParticle::ConstVector prodsBstar( const LHCb::MCParticle*  );
-  LHCb::MCParticle::ConstVector prodsBstarstar( const LHCb::MCParticle*  );
-  LHCb::MCParticle::ConstVector prodsBstring( const LHCb::MCParticle*  );
-  HepMC::GenParticle* HEPassociated(const LHCb::MCParticle* );
-  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
-  int comes_from_excitedB(const LHCb::MCParticle* ,
-			  const LHCb::MCParticle* );
 
   std::string m_SVtype, m_veloChargeName, m_TagLocation;
   ISecondaryVertexTool* m_vtxtool;
@@ -67,7 +48,8 @@ class BTaggingAnalysis : public DVAlgorithm {
   IGeomDispCalculator *m_Geom;
   Particle2MCLinker* m_linkLinks;    ///< Pointer to associator using links
   ICaloElectron*  m_electron;
-  //IForcedBDecayTool* m_forcedBtool;
+  IForcedBDecayTool* m_forcedBtool;
+  ITaggingUtilsChecker* m_util;
 
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
   std::vector<std::string> m_setInputData;
@@ -80,25 +62,29 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<long>      m_Event;
   NTuple::Item<long>      m_TrueTag;
   NTuple::Item<long>      m_Tag;
+  NTuple::Item<float>     m_omega;
   NTuple::Item<long>      m_TagCat;
-  NTuple::Item<long>      m_Taggers;
   NTuple::Item<long>      m_type;
   NTuple::Item<long>      m_trigger;
-  //  NTuple::Item<long>      m_Tamper;
-  NTuple::Item<long>      m_BSID;
-  NTuple::Item<float>     m_BSthe;
-  NTuple::Item<float>     m_BSphi;
-  NTuple::Item<float>     m_BSmass;
+  NTuple::Item<long>      m_tamper;
   NTuple::Item<long>      m_BSosc;
-  NTuple::Item<float>     m_BSP;
-  NTuple::Item<float>     m_MCBSthe;
-  NTuple::Item<float>     m_MCBSphi;
-  NTuple::Item<float>     m_MCBSP;
 
   //signal
-  NTuple::Item<float>     m_BSx;
-  NTuple::Item<float>     m_BSy;
-  NTuple::Item<float>     m_BSz;
+  NTuple::Item<long>      m_M;
+  NTuple::Array<long>      m_sID;
+  NTuple::Array<long>      m_sMothID;
+  NTuple::Array<float>     m_sP;
+  NTuple::Array<float>     m_sPt;
+  NTuple::Array<float>     m_sPhi;
+  NTuple::Array<float>     m_sMass;
+  NTuple::Array<long>      m_sMCID;
+  NTuple::Array<long>      m_sMCMothID;
+  NTuple::Array<float>     m_sMCP;
+  NTuple::Array<float>     m_sMCPt;
+  NTuple::Array<float>     m_sMCPhi;
+  NTuple::Array<float>     m_sVx;
+  NTuple::Array<float>     m_sVy;
+  NTuple::Array<float>     m_sVz;
 
   NTuple::Item<long>       m_BOID;
   NTuple::Item<long>       m_BOosc;
@@ -145,7 +131,6 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<long>      m_mothID;
   NTuple::Array<long>      m_ancID;
   NTuple::Array<long>      m_bFlag;
-  NTuple::Array<long>      m_dFlag;
   NTuple::Array<long>      m_xFlag;
   NTuple::Array<float>     m_IPT;
  
@@ -153,11 +138,18 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<float>      m_RVy;
   NTuple::Item<float>      m_RVz;
 
-  NTuple::Item<float>      m_TVx;
-  NTuple::Item<float>      m_TVy;
-  NTuple::Item<float>      m_TVz;
-  NTuple::Item<float>      m_Tchi;
-  NTuple::Item<long>       m_Vch;
+  NTuple::Item<float>      m_SVx;
+  NTuple::Item<float>      m_SVy;
+  NTuple::Item<float>      m_SVz;
+  NTuple::Item<float>      m_Schi;
+  NTuple::Item<long>       m_SVch;
+
+  NTuple::Item<long>       m_T;
+  NTuple::Array<long>      m_TaggerDecision;
+  NTuple::Array<long>      m_TaggerType;
+  NTuple::Array<float>     m_TaggerOmega;
+  NTuple::Array<long>      m_TaggerUsedInSV;
+  NTuple::Array<long>      m_TaggerRef;
 
 };
 

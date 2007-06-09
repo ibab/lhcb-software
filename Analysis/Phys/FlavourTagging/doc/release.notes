@@ -1,9 +1,45 @@
-! $Id: release.notes,v 1.107 2007-04-26 13:00:22 cattanem Exp $
+! $Id: release.notes,v 1.108 2007-06-09 12:46:56 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+
+! 2007-06-07 - Marco Musy, Stephane Poss, O. Leroy
+- Modified units (GeV and MeV) in options files and in code.
+- Substituted outgoingParticles() with daughtersVector() in FindDaughters
+- Several Modifications affecting the vertex charge, as presented by S. Poss
+  at: http://indico.cern.ch/conferenceDisplay.py?confId=9599 and by M. Calvi
+  at: http://indico.cern.ch/conferenceDisplay.py?confId=16399
+- SVertexTool.cpp
+   - Put polynomial parameters in DeclareProperty
+   - Restore "TDR" polynomials functions from M. Musy and M. Calvi used in
+     the opposite inclusive vertex reconstruction (likelihood)
+   - All taggers are kept in the vertex reconstruction, including muons which
+     where previously removed
+   - The upstream tracks are included
+   - The Lambda0 mass window is tighten from 1.01-1.2 to 1.112-1.12
+   - Apply track quality Chi2 cut on all tracks :
+     - chi2(long tracks)<2.5
+     - chi2(upstream tracks)<5
+           Cuts identical to Opposite Kaon ones, not re-optimized
+- TaggerVertexChargeTool.cpp
+   - Re-optimization done on DC06 Bs2DsPi phys-lumi2 data
+   - The value of m_PowerK and m_AverageOmega cuts have been re-optimized
+   - Update the polynomial fonction giving mistag = f(Qvtx) m_P0, m_P1
+   - Add in declareProperty: m_wSameSign2 and m_wSameSignMoreThan2. They are
+     the mistag fraction of Qvtx tagger in case of 2 (>2) tracks with
+     same sign.
+   - If estimated omega > 0.5, decision is reversed and omega = 1-omega
+- All Taggers:
+   - If NNet output is < 0.5, reverse omega and decision.
+- BTaggingTool.cpp
+   - TaggerVertexChargeTool is called only when no OS (e,m,k) are present. 
+     Veto can be overwritten if property UseVtxChargeWithOS is set to true. 
+     In this case TaggerVertexChargeTool is called with a vector of particles 
+     which excludes the taggers. 
+   - call to SVertexTool moved inside TaggerVertexChargeTool.
 
 !======================== FlavourTagging v7r2p1 2007-04-26 ===================
 ! 2007-04-26 - Marco Cattaneo

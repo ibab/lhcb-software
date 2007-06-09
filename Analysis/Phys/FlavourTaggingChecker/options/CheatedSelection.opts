@@ -1,7 +1,8 @@
 //##############################################################
 // MC mass window in GeV to decide if all final state 
 // particles where present and reconstructed 
-CheatedSelection.BMassWindow = 100.0; //MeV
+
+CheatedSelection.BMassWindow = 100.0 *MeV ;
 
 //---------------------------------------------------
 #include "$PARTICLEMAKERROOT/options/PreLoadCombinedParticles.opts"

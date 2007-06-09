@@ -13,12 +13,12 @@
 #include "Kernel/IEvtTypeSvc.h"
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IDebugTool.h"
+#include "Kernel/IForcedBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
 
 // from local
-//#include "IForcedBDecayTool.h"
 
 /** @class BTaggingInclusive BTaggingInclusive.h debug/BTaggingInclusive.h
  *  
@@ -45,8 +45,7 @@ public:
 
   IDebugTool* m_debug;
 
-  //IForcedBDecayTool* m_forcedBtool;
-  const LHCb::MCParticle* forcedB(void);
+  IForcedBDecayTool* m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   int nsele,nrt[50],nwt[50];

@@ -23,8 +23,8 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.2 );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.2 * GeV );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 * GeV );
   declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 4.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
   declareProperty( "VeloChargeMax",m_VeloChMax  = 1.8 );
@@ -60,8 +60,8 @@ StatusCode TaggerElectronTool::initialize() {
 
 //=====================================================================
 Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-				std::vector<const Vertex*>& allVtx,
-				Particle::ConstVector& vtags ){
+                                std::vector<const Vertex*>& allVtx,
+                                Particle::ConstVector& vtags ){
   Tagger tele;
   if(!RecVert) return tele;
   const Vertex * SecVert= 0;
@@ -74,12 +74,12 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   double ptmaxe = -99.0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-    if( (*ipart)->particleID().abspid() != 11 ) continue;
+    if( (*ipart)->particleID().abspid() != 11 ) continue;    
 
-    double Pt = (*ipart)->pt()/GeV;
+    double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
-    double P = (*ipart)->p()/GeV;
+    double P = (*ipart)->p();
     if( P < m_P_cut_ele )  continue;
 
     const Track* track = (*ipart)->proto()->track();
@@ -97,17 +97,15 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
       double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-	debug() << "   veloch=" << veloch << endreq;
-	if( Pt > ptmaxe ) { 
-	  iele = (*ipart);
-	  ptmaxe = Pt;
-	}
+        debug() << "   veloch=" << veloch << endreq;
+        if( Pt > ptmaxe ) { 
+          iele = (*ipart);
+          ptmaxe = Pt;
+        }
       }
     }
   }
   if( !iele ) return tele;
-  tele.addTaggerPart(*iele);
-  tele.setDecision(iele->charge()>0 ? -1: 1);
 
   //calculate omega
   double pn = 1-m_AverageOmega;
@@ -135,8 +133,17 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = m_nnet->MLPe( inputs );
 
   }
-  tele.setOmega( 1-pn );
-  tele.setType( Tagger::OS_Electron ); 
+
+  if(pn<0.5){
+    pn = 1-pn;
+    tele.setOmega( 1-pn );
+    tele.setDecision(iele->charge()>0 ? 1: -1);
+  } else {
+    tele.setOmega( 1-pn );
+    tele.setDecision(iele->charge()>0 ? -1: 1);
+  }  
+  tele.addTaggerPart(*iele);
+  tele.setType( Tagger::OS_Electron );
 
   return tele;
 }

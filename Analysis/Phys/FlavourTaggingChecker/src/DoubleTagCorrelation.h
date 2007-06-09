@@ -11,12 +11,12 @@
 #include "Kernel/IEvtTypeSvc.h"
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IDebugTool.h"
+#include "Kernel/IForcedBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
 
 // from local
-//#include "IForcedBDecayTool.h"
 
 /** @class DoubleTagCorrelation DoubleTagCorrelation.h
  *  
@@ -43,9 +43,8 @@ class DoubleTagCorrelation : public DVAlgorithm {
   std::string m_ostagslocation;
 
   IDebugTool* m_debug;
+  IForcedBDecayTool* m_forcedBtool;
 
-  //IForcedBDecayTool* m_forcedBtool;
-  const LHCb::MCParticle* forcedB(void);
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   int** matrix;

@@ -22,12 +22,12 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 );
-  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 );
+  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 *GeV );
+  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.0 );
   declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.1 );
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
-  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.4 );
+  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.4 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 4.0 );
   declareProperty( "AverageOmega",    m_AverageOmega = 0.34 );
   m_nnet = 0;
@@ -54,15 +54,15 @@ StatusCode TaggerKaonSameTool::initialize() {
 
 //=====================================================================
 Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-				std::vector<const Vertex*>& allVtx, 
-				Particle::ConstVector& vtags ){
+                                std::vector<const Vertex*>& allVtx, 
+                                Particle::ConstVector& vtags ){
   Tagger tkaonS;
   if(!RecVert) return tkaonS;
   const Vertex * SecVert= 0;
   if(!allVtx.empty()) SecVert = allVtx.at(0);
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
-  double B0mass= ptotB.M()/GeV;
+  double B0mass= ptotB.M();
   double B0the = ptotB.Theta();
   double B0phi = ptotB.Phi();
 
@@ -73,9 +73,10 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
-    double Pt = (*ipart)->pt()/GeV;
+
+    double Pt = (*ipart)->pt();
+    double P  = (*ipart)->p();
     if( Pt < m_Pt_cut_kaonS )  continue;
-    double P = (*ipart)->p()/GeV;
     if( P < m_P_cut_kaonS )  continue;
 
     //calculate signed IP wrt RecVert
@@ -88,7 +89,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       double deta  = fabs(log(tan(B0the/2.)/tan(asin(Pt/P)/2.)));
       double dphi  = fabs((*ipart)->momentum().Phi() - B0phi); 
       if(dphi>3.1416) dphi=6.2832-dphi;
-      double dQ    = (ptotB+(*ipart)->momentum()).M()/GeV - B0mass;
+      double dQ    = (ptotB+(*ipart)->momentum()).M() - B0mass;
 
       if(dphi > m_phicut_kaonS) continue;
       if(deta > m_etacut_kaonS) continue;
@@ -99,17 +100,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       if( lcs > m_lcs_cut ) continue;
 
       if( Pt > ptmaxkS ) { 
-	ikaonS  = (*ipart);
-	ptmaxkS = Pt;
-	debug()<< " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	       << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
+        ikaonS  = (*ipart);
+        ptmaxkS = Pt;
+        debug()<< " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+               << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
       }
     }
   } 
   if( !ikaonS ) return tkaonS;
-
-  tkaonS.addTaggerPart(*ikaonS);
-  tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
 
   //calculate omega
   double pn = 1-m_AverageOmega;
@@ -119,8 +117,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
     double dphi= std::min(fabs(ikaonS->momentum().Phi()-B0phi), 
-			  6.283-fabs(ikaonS->momentum().Phi()-B0phi));
-    double dQ  = (ptotB+ikaonS->momentum()).M()/GeV - B0mass;
+                          6.283-fabs(ikaonS->momentum().Phi()-B0phi));
+    double dQ  = ((ptotB+ikaonS->momentum()).M() - B0mass)/GeV;
     m_util->calcIP(ikaonS, RecVert, IP, IPerr);
     if(SecVert) {
       m_util->calcIP(ikaonS, SecVert, ip, iperr);
@@ -146,8 +144,17 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = m_nnet->MLPkS( inputs );
 
   }
-  tkaonS.setOmega( 1-pn );
+
+  if(pn<0.5){
+    pn = 1-pn;
+    tkaonS.setOmega( 1-pn );
+    tkaonS.setDecision(ikaonS->charge()>0 ? -1: 1);
+  } else {
+    tkaonS.setOmega( 1-pn );
+    tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
+  }
   tkaonS.setType( Tagger::SS_Kaon ); 
+  tkaonS.addTaggerPart(*ikaonS);
 
   return tkaonS;
 }

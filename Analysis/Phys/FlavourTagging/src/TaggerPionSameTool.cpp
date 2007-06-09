@@ -23,12 +23,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_v1" );
   declareProperty( "ProbMin", m_ProbMin               = 0.55);
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.2 );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 2.0 );
+  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.2 *GeV );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 2.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.0 );
   declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 3.0 );
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 );
-  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS  = 1.0 );
+  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
+  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS  = 1.0 *GeV);
   declareProperty( "AverageOmega", m_AverageOmega     = 0.44 );
   m_nnet = 0;
   m_util = 0;
@@ -53,15 +53,15 @@ StatusCode TaggerPionSameTool::initialize() {
 
 //=====================================================================
 Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-				std::vector<const Vertex*>& allVtx, 
-				Particle::ConstVector& vtags ){
+                                std::vector<const Vertex*>& allVtx, 
+                                Particle::ConstVector& vtags ){
   Tagger tpionS;
   if(!RecVert) return tpionS;
   const Vertex * SecVert= 0;
   if(!allVtx.empty()) SecVert = allVtx.at(0);
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
-  double B0mass = ptotB.M()/GeV;
+  double B0mass = ptotB.M();
 
   //select pionS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -71,10 +71,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 211 ) continue;
 
-    double Pt = (*ipart)->pt()/GeV;
+    double Pt = (*ipart)->pt();
+    double P  = (*ipart)->p();
     if( Pt < m_Pt_cut_pionS )  continue;
-
-    double P = (*ipart)->p()/GeV;
     if( P  < m_P_cut_pionS )  continue;
 
     //calculate signed IP wrt RecVert
@@ -82,9 +81,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    if(IPsig > m_IPs_cut_pionS)  continue;   
+    if(IPsig > m_IPs_cut_pionS)  continue;
 
-    double dQ = (ptotB+(*ipart)->momentum()).M()/GeV - B0mass;
+    double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
 
     const ProtoParticle* proto = (*ipart)->proto();
@@ -105,10 +104,10 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     ipionS = (*ipart);
     ptmaxpS = Pt;
     debug() << " PioS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	    << " IP=" << IP << " dQ=" << dQ<<endreq;
+            << " IP=" << IP << " dQ=" << dQ<<endreq;
   } 
   if( ipionS  ) {
-    double extra_dQ = (ptotB+ipionS->momentum()).M()/GeV - B0mass;
+    double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
     if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
   }
   if( !ipionS ) return tpionS;
@@ -124,8 +123,8 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
     double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi), 
-			  6.283-fabs(ipionS->momentum().Phi()-B0phi));
-    double dQ  = (ptotB+ipionS->momentum()).M()/GeV - B0mass;
+                          6.283-fabs(ipionS->momentum().Phi()-B0phi));
+    double dQ  = ((ptotB+ipionS->momentum()).M() - B0mass)/GeV;
     m_util->calcIP(ipionS, RecVert, IP, IPerr);
     if(SecVert) {
       m_util->calcIP(ipionS, SecVert, ip, iperr);
@@ -153,8 +152,15 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   int tagdecision = ipionS->charge()>0 ? 1: -1;
   if( AXB0->particleID().hasUp() ) tagdecision = -tagdecision; //is Bu
-  tpionS.setDecision( tagdecision );
-  tpionS.setOmega( 1-pn );
+
+  if(pn<0.5){
+    pn = 1-pn;
+    tpionS.setDecision( -tagdecision );
+    tpionS.setOmega( 1-pn );
+  } else {
+    tpionS.setDecision( tagdecision );
+    tpionS.setOmega( 1-pn );
+  }
   tpionS.setType( Tagger::SS_Pion ); 
   tpionS.addTaggerPart(*ipionS);
 

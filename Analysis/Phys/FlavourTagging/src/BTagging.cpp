@@ -23,7 +23,7 @@ BTagging::BTagging(const std::string& name,
   DVAlgorithm(name, pSvcLocator){
   
   declareProperty( "TagOutputLocation", 
-		   m_TagLocation = FlavourTagLocation::Default );
+                   m_TagLocation = FlavourTagLocation::Default );
 }
 
 //=======================================================================
@@ -41,7 +41,7 @@ StatusCode BTagging::execute() {
   //look in location where Selection has put the B candidates
   const LHCb::Particle::ConstVector& parts = desktop()->particles();
   if( parts.empty() ) return StatusCode::SUCCESS;
-  info() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
+  debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
@@ -49,7 +49,7 @@ StatusCode BTagging::execute() {
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
       debug() << "About to tag candidate B of mass=" 
-	      << (*icandB)->momentum().M()/GeV <<endreq;
+              << (*icandB)->momentum().M()/GeV <<" GeV"<<endreq;
 
       FlavourTag* theTag = new FlavourTag;
 
@@ -64,15 +64,15 @@ StatusCode BTagging::execute() {
       //StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex, vtags );
       //--------------------------------------------------
       if (!sc) {
-	err() <<"Tagging Tool returned error."<< endreq;
-	delete theTag;
+        err() <<"Tagging Tool returned error."<< endreq;
+        delete theTag;
       } else tags->insert(theTag);
 
       //--- PRINTOUTS ---
       //print the information in theTag
       int tagdecision = theTag->decision();
-      if(tagdecision) info() << "Flavour guessed: " 
-			      << (tagdecision>0 ? "b":"bbar")<<endreq;
+      if(tagdecision) debug() << "Flavour guessed: " 
+                              << (tagdecision>0 ? "b":"bbar")<<endreq;
       debug() << "estimated omega= " << theTag->omega() <<endreq;
       const Particle* tagB = theTag->taggedB();
       if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endreq;
@@ -96,16 +96,16 @@ StatusCode BTagging::execute() {
         case Tagger::VtxCharge   : tts="VtxCharge";   break;
         case Tagger::Topology    : tts="Topology";    break;
         }
-        info() << "--> tagger type: " << tts <<endreq;
-        info() << "    decision = "
-	       << (itag->decision() > 0? "b":"bbar") <<endreq;
-        info() << "    omega    = " << itag->omega() <<endreq;
+        debug() << "--> tagger type: " << tts <<endreq;
+        debug() << "    decision = "
+                << (itag->decision() > 0? "b":"bbar") <<endreq;
+        debug() << "    omega    = " << itag->omega() <<endreq;
         std::vector<Particle> taggerparts = itag->taggerParts();
         std::vector<Particle>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          info() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
-                  << " p= "  << kp->p()/GeV << endreq;
-	}
+          verbose() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
+                    << " p= "  << kp->p()/GeV << endreq;
+        }
       }
     }
   }
