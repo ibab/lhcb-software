@@ -9,33 +9,13 @@ ApplicationMgr.TopAlg     += { "ProcessPhase/BrunelCheck" };
 BrunelCheck.DetectorList    = { "Tr" };
 BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 
-//IdealTracksCreator.AddOTTimes      = true;
-//IdealTracksCreator.AddTTClusters   = true;
-//IdealTracksCreator.AddITClusters   = true;
-//IdealTracksCreator.AddVeloClusters = true;
-
-//IdealTracksCreator.InitState   = true;
-//IdealTracksCreator.TrueStatesAtMeasZPos = false;
-
-//IdealTracksCreator.TracksOutContainer = "Rec/Track/Ideal";
-
-//IdealTracksCreator.OTGeometryPath   = DeOTDetectorLocation::Default ;
-//IdealTracksCreator.ITGeometryPath"  = DeSTDetectorLocation::Default ;
-//IdealTracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
-
-//IdealTracksCreator.MinNHits = 6;
-//IdealTracksCreator.ErrorX2  = 4.0;
-//IdealTracksCreator.ErrorY2  = 400.0;
-//IdealTracksCreator.ErrorTx2 = 6.e-5;
-//IdealTracksCreator.ErrorTy2 = 1.e-4;
-//IdealTracksCreator.ErrorP   = 0.15;
-
-IdealTracksCreator.OutputLevel   = 3;
-
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNVeloRHits   = 3;
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNVeloPhiHits = 3;
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNTTHits = 1;
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT1Hits = 1;
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT2Hits = 1;
-//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT3Hits = 1;
-
+// Example options to make long tracks
+IdealTracksCreator.TrackTypes = { 3 };
+IdealTracksCreator.TrackSelectorTool.Selector.rejectElectrons = true;
+IdealTracksCreator.TrackSelectorTool.Selector.rejectInteractions = true;
+IdealTracksCreator.TrackSelectorTool.Selector.zInteraction = 9400.;
+IdealTracksCreator.TrackSelectorTool.Selector.SelectNeutralParticles = false;
+IdealTracksCreator.TrackSelectorTool.Selector.zOrigin = 9999.0;
+IdealTracksCreator.TrackSelectorTool.Selector.etaMin = -9999.0;
+IdealTracksCreator.TrackSelectorTool.Selector.etaMax = 9999.0;
+IdealTracksCreator.MinNHits = 15;

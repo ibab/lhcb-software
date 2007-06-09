@@ -9,11 +9,11 @@
 // from LHCbKernel
 #include "Kernel/ISTClusterPosition.h"
 
-// from MCEvent
+// from Event
 #include "Event/MCParticle.h"
-
-// from OTEvent
 #include "Event/OTTime.h"
+#include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -30,6 +30,7 @@ class DeOTDetector;
 class DeSTDetector;
 class IMagneticFieldSvc;
 class ITrajPoca;
+
 
 /** @class IdealTracksCreator IdealTracksCreator.h
  *
@@ -89,7 +90,18 @@ private:
   /// Initialize seed state
   StatusCode initializeState( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
-private:
+  // bool hasT(const LHCb::Track* aTrack) const;
+
+  //  bool hasVelo(const LHCb::Track* aTrack) const;
+
+  StatusCode initEvent() const;
+
+  bool wanted(const LHCb::Track::Types& aType) const;
+
+  void printMCParticle(const LHCb::MCParticle* mcParticle) const;
+
+  void printTrack(const LHCb::Track* aTrack) const;
+
   // Geometry information
   DeVelo*       m_velo;            ///< Pointer to VELO detector element
   DeSTDetector* m_ttTracker;       ///< Pointer to TT detector element
@@ -104,7 +116,7 @@ private:
   ISTClusterPosition*     m_ttPositionTool;///< ST cluster position tool for TT
   ISTClusterPosition*     m_itPositionTool;///< ST cluster position tool for IT
   IVeloClusterPosition* m_veloPositionTool;///< Velo cluster position tool
-  ITrackCriteriaSelector* m_trackSelector; ///< Track selection tool
+  IMCReconstructible* m_trackSelector; ///< Track selection tool
   IIdealStateCreator*     m_stateCreator;  ///< Create 'seed'state at last meas
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
@@ -124,6 +136,17 @@ private:
   std::string m_selectorToolName;     ///< Track selector tool name
   std::string m_tracksOutContainer;///< Tracks output container path in the TES
   int    m_minNHits;      ///< Minimum number of hits on the track
+  std::vector<int> m_tracktypes;    ///< Track types of the monitored tracks
+  
+  typedef LinkedFrom<LHCb::STCluster,LHCb::MCParticle> STLinker;
+  typedef LinkedFrom<LHCb::OTTime,LHCb::MCParticle> OTLinker;
+  typedef LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> VeloLinker;
+
+  mutable STLinker m_itLinker;
+  mutable STLinker m_ttLinker;
+  mutable OTLinker m_otLinker;
+  mutable VeloLinker m_veloLinker;
+
 };
 
 #endif // TRACKIDEALPR_IDEALTRACKSCREATOR_H

@@ -4,6 +4,13 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-06-09 M. Needham
+ - Update IdealTracksCreator:
+   --> faster (factor 5) for many reasons
+   --> use StateVector instread of state
+   --> allow to run making ids only + not measurements
+   --> use IMCReconstructible interface for defining acceptance
+
 !======================= TrackIdealPR v2r11 2007-05-31 =======================
 ! 2007-05-31 - Marco Cattaneo
  - Follow change of interfaces location to Kernel/MCInterfaces package

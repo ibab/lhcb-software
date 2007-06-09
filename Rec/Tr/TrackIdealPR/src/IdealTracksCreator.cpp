@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.35 2007-05-07 08:06:53 mneedham Exp $
+// $Id: IdealTracksCreator.cpp,v 1.36 2007-06-09 10:40:22 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -15,9 +15,6 @@
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTDetector.h"
 
-// from RecEvent
-#include "Event/RecHeader.h"
-
 // from MCEvent
 #include "Event/MCHit.h"
 
@@ -27,6 +24,8 @@
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/StateTraj.h"
+#include "Event/StateParameters.h"
+#include "Event/StateVector.h"
 
 // from LinkerEvent
 #include "Linker/LinkerWithKey.h"
@@ -35,8 +34,13 @@
 // from TrackInterfaces
 #include "Kernel/ITrajPoca.h"
 
+#include "Kernel/IMCReconstructible.h"
+
 // Local
 #include "IdealTracksCreator.h"
+
+#include "Map.h"
+#include <boost/assign/list_of.hpp> // for 'map_list_of()'
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -47,6 +51,7 @@ DECLARE_ALGORITHM_FACTORY( IdealTracksCreator );
  *
  *  Implementation of IdealTracksCreator.
  *
+ *  @author M. Needham (make faster + more flexible)
  *  @author Eduardo Rodrigues (adaptations to new track event model)
  *  @author M. Needham
  *  @author R.M. van der Eijk (28-5-2002) 
@@ -66,6 +71,10 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   , m_otTracker(0)
   , m_trackSelector(0)
   , m_stateCreator(0)
+  , m_itLinker(0,0,"")
+  , m_ttLinker(0,0,"")
+  , m_otLinker(0,0,"")
+  , m_veloLinker(0,0,"")
 {
   /// default job Options
   declareProperty( "AddVeloClusters", m_addVeloClusters = true           );
@@ -94,8 +103,9 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "VeloPositionTool",
                    m_veloPositionToolName = "VeloClusterPosition"        );
   declareProperty( "TrackSelectorTool",
-                   m_selectorToolName = "TrackCriteriaSelector"          );
+                   m_selectorToolName =  "MCReconstructible"        );
   declareProperty( "MinNHits", m_minNHits = 6                            );
+ declareProperty( "TrackTypes", m_tracktypes = boost::assign::list_of(1)(3)(4)(5)(6));
 
 };
 
@@ -130,10 +140,9 @@ StatusCode IdealTracksCreator::initialize()
   // Retrieve the VeloClusterPosition tool
   m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
 
-  // Retrieve the Track selector tool
-  m_trackSelector = tool<ITrackCriteriaSelector>( m_selectorToolName,
-                                                  "TrackSelectorTool", this );
   
+  m_trackSelector = tool<IMCReconstructible>(m_selectorToolName,"TrackSelectorTool",this);
+
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
@@ -149,19 +158,23 @@ StatusCode IdealTracksCreator::initialize()
 //=============================================================================
 StatusCode IdealTracksCreator::execute()
 {
-  debug() << "==> Execute" << endreq;
 
   StatusCode sc;
 
-  // Event header info
-  const RecHeader* recHdr = get<RecHeader>( RecHeaderLocation::Default );
-  debug() << "Event " << recHdr -> evtNumber() << endreq;
+  debug() << "==> Execute" << endreq;
+
+  // init the linker tables
+  sc = initEvent();
+  if (sc.isFailure()){
+    return Error("Failed to finder linkers", StatusCode::FAILURE);
+  }  
+
 
   // Retrieve the MCParticle container
   const MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
 
   // Make container for tracks
-  Tracks* tracksCont = new Tracks();
+  Tracks* tracksCont = new Tracks(); tracksCont->reserve(500);
 
   // To store the Tracks in the TES
   put( tracksCont, m_tracksOutContainer );
@@ -175,39 +188,33 @@ StatusCode IdealTracksCreator::execute()
 
   // loop over MCParticles
   // =====================
+
+  const TrackIdealPR::CatMap& theMap = TrackIdealPR::catToType();
+
   MCParticles::const_iterator iPart;
   for ( iPart = particles -> begin(); particles -> end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
-    verbose() << "- MCParticle of type "
-              << m_trackSelector -> trackType( mcParticle )
-              << " , (key # " << mcParticle -> key() << ")" << endreq
-              << "    - vertex = " << mcParticle -> originVertex() ->position()
-              << endreq
-              << "    - momentum = " << mcParticle -> momentum() << " MeV" 
-              << endreq
-              << "    - P        = " << mcParticle -> p()
-              << " MeV" <<endreq
-              << "    - PID   = "
-              << ( mcParticle -> particleID().pid() ) << endreq
-              << "    - charge   = "
-              << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
-    if ( m_trackSelector -> select( mcParticle ) ) {
-      debug() << endreq
-              << "Selected MCParticle of type "
-              << m_trackSelector -> trackType( mcParticle )
-              << " , (key # " << mcParticle -> key() << ")" << endreq
-              << "    - momentum = " << mcParticle -> momentum() << " MeV"
-              << endreq
-              << "    - P        = " << mcParticle -> p()
-              << " MeV" <<endreq
-              << "    - charge   = "
-              << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
 
+    if ( msgLevel( MSG::DEBUG) ){
+      printMCParticle(mcParticle);
+    }
+
+    // find out what type it is reconstructible as....
+    IMCReconstructible::RecCategory cat = m_trackSelector->reconstructible(mcParticle);
+    
+    // map to track type
+    Track::Types aType = theMap.find(cat)->second;
+
+    if (wanted(aType) == true ) {
+   
+      if ( msgLevel( MSG::DEBUG) ){
+	debug() << "Selected particle ";
+        printMCParticle(mcParticle);
+      }
       // Make a new track
       // ----------------
       Track* track = new Track();
-
-      m_trackSelector -> setTrackType( mcParticle, track );
+      track->setType(aType);
 
       // Check whether a Velo track is backward
       if ( Track::Velo == track -> type() ) {
@@ -295,9 +302,9 @@ StatusCode IdealTracksCreator::execute()
           track -> measurements().end();
         while ( sc.isSuccess() && iMeas != endM ) {
           State tempState;
-          sc = m_stateCreator -> createState( mcParticle,
-                                              (*iMeas)->z(),
-                                              tempState );
+          sc = m_stateCreator -> createState(mcParticle,
+                                             (*iMeas)->z(),
+                                             tempState );
           if ( sc.isSuccess() ) track -> addToStates( tempState );
           ++iMeas;
         }
@@ -307,60 +314,17 @@ StatusCode IdealTracksCreator::execute()
         }        
       }
 
-      debug() << "At the end: states at z-positions: ";
-      const std::vector<State*>& allstates = track->states();
-      for ( unsigned int it = 0; it < allstates.size(); ++it ) {
-        debug() << allstates[it] -> z() << " ";
-      }
-      debug() << endreq;
-      for ( unsigned int it2 = 0; it2 < allstates.size(); ++it2 ) {
-        debug() << "state vectors:" << endreq
-                << allstates[it2] -> stateVector() << endreq;
-      }
-      debug() << endreq;
-
       // Add the track to the Tracks container and fill the association table
       // -------------------------------------------------------------------
       tracksCont -> add( track );
       linkTable.link( track, mcParticle, 1. );
 
-      // debugging Track ...
-      // -------------------
-      debug()
-        << "-> Track with key # " << track -> key() << endreq
-        << "  * charge         = " << track -> charge() << endreq
-        << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) 
-        << endreq
-        << "  * is Unique      = " << !track -> checkFlag( Track::Clone ) 
-        << endreq
-        << "  * is of type     = " << track -> type() << endreq
-        << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
-        << endreq
-        << "  * # LHCbID's     = " << track -> nLHCbIDs()
-        << "  * # measurements = " << track -> nMeasurements() << endreq;
-      
-      // print the measurements
-      const std::vector<Measurement*>& meas = track -> measurements();
-      for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
-            itMeas != meas.end(); ++itMeas ) {
-        debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
-                << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
-                << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
-        // continue according to type ...  
-        if ( (*itMeas) -> lhcbID().isOT() ) {
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() 
-                  << endreq;
-        }
-        else if ( (*itMeas) -> lhcbID().isST() ) {
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() 
-                  << endreq;
-        }
-        else if ( (*itMeas) -> lhcbID().isVelo() ) {    
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() 
-                  << endreq;
-        }
+      if ( msgLevel( MSG::DEBUG) ){
+        printTrack(track);
       }
 
+      // debugging Track ...
+      // -------------------
     } // is selected
   } // looping over MCParticles
 
@@ -387,64 +351,57 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
 {
   unsigned int nOTMeas = 0;
 
-  LinkedFrom<OTTime,MCParticle>
-    otLink( evtSvc(), msgSvc(), OTTimeLocation::Default );
-  if ( otLink.notFound() ) {
-    return Error( "Unable to retrieve OTTime to MCParticle Linker table" );
-  }
-  else {
-    const OTTime* aTime = otLink.first( mcPart );
-    while ( NULL != aTime ) {
-      OTMeasurement meas =
-        OTMeasurement( *aTime, *m_otTracker );
+  const OTTime* aTime = m_otLinker.first( mcPart );
+  while ( NULL != aTime ) {
+    OTMeasurement meas =
+    OTMeasurement( *aTime, *m_otTracker );
       
-      track -> addToLhcbIDs( meas.lhcbID() );
+    track -> addToLhcbIDs( meas.lhcbID() );
       
-      StatusCode sc;
-      if ( m_addMeasurements ) { // Add the measurement to the track
-        // Set the reference vector
-        State tempState;
-        sc = m_stateCreator -> createState( mcPart, meas.z(), tempState );
-        if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState.stateVector() );
+    StatusCode sc;
+    if ( m_addMeasurements ) { // Add the measurement to the track
+      // Set the reference vector
+      StateVector tempState;
+      sc = m_stateCreator -> createStateVector( mcPart, meas.z(), tempState );
+      if ( sc.isSuccess() ) {
+          meas.setRefVector( tempState.parameters() );
           
-          // Get the ambiguity using the Poca tool
-          XYZVector distance;
-          XYZVector bfield;
-          m_pIMF -> fieldVector( tempState.position(), bfield );
-          StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-          double s1 = 0.0;
-          double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-          StatusCode msc = m_poca -> minimize( stateTraj, s1, meas.trajectory(),
+        // Get the ambiguity using the Poca tool
+        XYZVector distance;
+        XYZVector bfield;
+        m_pIMF -> fieldVector( tempState.position(), bfield );
+        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+        double s1 = 0.0;
+        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
+        StatusCode msc = m_poca -> minimize( stateTraj, s1, meas.trajectory(),
                                                s2, distance, 20*Gaudi::Units::mm );
-          if( msc.isFailure() ) {
-            warning() << "TrajPoca minimize failed in addOTTimes." << endreq;
-          }
-          int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
-          meas.setAmbiguity( ambiguity );
-          
-          // Set the z-position of the measurement
-          meas.setZ( stateTraj.position(s1).z() );
-          
-          // Reset using the updated z-position
-          State myTempState;
-          sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
-          if ( sc.isSuccess() ) meas.setRefVector( myTempState.stateVector() );
-          
-          track -> addToMeasurements( meas );
-          
-          
+        if( msc.isFailure() ) {
+          warning() << "TrajPoca minimize failed in addOTTimes." << endreq;
         }
-        if ( sc.isFailure() )
-          Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
+        int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+        meas.setAmbiguity( ambiguity );
+          
+        // Set the z-position of the measurement
+        meas.setZ( stateTraj.position(s1).z() );
+          
+        // Reset using the updated z-position
+        StateVector myTempState;
+        sc = m_stateCreator->createStateVector(mcPart, meas.z(), myTempState);
+        if ( sc.isSuccess() ) meas.setRefVector( myTempState.parameters() );
+          
+        track -> addToMeasurements( meas );
+          
+          
+      }
+      if ( sc.isFailure() )
+        Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
         
         
-      } // if ( m_addMeasurements ) 
+    } // if ( m_addMeasurements ) 
       
-      ++nOTMeas;      
-      aTime = otLink.next();
-    } // loop over OTTimes
-  } // if ( otLink.notFound() )
+    ++nOTMeas;      
+    aTime = m_otLinker.next();
+  } // loop over OTTimes
 
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
 
@@ -459,34 +416,27 @@ StatusCode IdealTracksCreator::addTTClusters( const MCParticle* mcPart,
 {
   unsigned int nTTMeas = 0;
 
-  LinkedFrom<STCluster,MCParticle>
-    ttLink( evtSvc(), msgSvc(), STClusterLocation::TTClusters );
-  if ( ttLink.notFound() ) {
-    return Error( "Unable to retrieve STCluster-TT to MCParticle Linker table");
-  }
-  else {
-    const STCluster* aCluster = ttLink.first( mcPart );
-    while ( NULL != aCluster ) {
-      STMeasurement meas =
-        STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
-      track -> addToLhcbIDs( meas.lhcbID() );
-      if ( m_addMeasurements ) { // Add the measurement to the track
-        // Set the reference vector
-        State tempState;
-        StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
-        if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState.stateVector() ); 
-          track -> addToMeasurements( meas );
-        }
-        else {
-          Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
-        }
-        
+  const STCluster* aCluster = m_ttLinker.first( mcPart );
+  while ( NULL != aCluster ) {
+    STMeasurement meas =
+      STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
+    track -> addToLhcbIDs( meas.lhcbID() );
+    if ( m_addMeasurements ) { // Add the measurement to the track
+      // Set the reference vector
+      StateVector tempState;
+      StatusCode sc = m_stateCreator->createStateVector(mcPart,meas.z(),tempState);
+      if ( sc.isSuccess() ) {
+        meas.setRefVector( tempState.parameters() ); 
+        track -> addToMeasurements( meas );
       }
-      ++nTTMeas;      
-      aCluster = ttLink.next();
+      else {
+       Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
+      }
+        
     }
-  }
+    ++nTTMeas;      
+    aCluster = m_ttLinker.next();
+  }  // loop cluster
 
   debug() << "- " << nTTMeas << " STMeasurements in TT added" << endreq;
 
@@ -501,59 +451,48 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
 {
   unsigned int nITMeas = 0;
 
-  LinkedFrom<STCluster,MCParticle>
-    itLink( evtSvc(), msgSvc(), STClusterLocation::ITClusters );
-  if ( itLink.notFound() ) {
-    return Error( "Unable to retrieve STCluster-IT to MCParticle Linker table");
-  }
-  else {
-    const STCluster* aCluster = itLink.first( mcPart );
-    while ( NULL != aCluster ) {
-      STMeasurement meas =
-        STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
+  const STCluster* aCluster = m_itLinker.first( mcPart );
+  while ( NULL != aCluster ) {
+    STMeasurement meas = STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
       
-      track -> addToLhcbIDs( meas.lhcbID() );
+    track -> addToLhcbIDs( meas.lhcbID() );
       
-      StatusCode sc;
-      if ( m_addMeasurements ) { // Add the measurement to the track
-        // Set the reference vector
-        State tempState;
-        sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
-        if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState.stateVector() );
+    StatusCode sc;
+    if ( m_addMeasurements ) { // Add the measurement to the track
+      // Set the reference vector
+      StateVector tempState;
+      sc = m_stateCreator->createStateVector(mcPart,meas.z(),tempState);
+      if ( sc.isSuccess() ) {
+        meas.setRefVector( tempState.parameters() );
           
-          // Set the z-position of the measurement
-          XYZVector distance;
-          XYZVector bfield;
-          m_pIMF -> fieldVector( tempState.position(), bfield );
-          StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-          double s1 = 0.0;
-          double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-          StatusCode msc = m_poca->minimize(stateTraj, s1, meas.trajectory(), s2,
-                                            distance, 20*Gaudi::Units::mm);
-          if( msc.isFailure() ) {
-            warning() << "TrajPoca minimize failed in addITClusters." << endreq;
-          }
-          meas.setZ( stateTraj.position(s1).z() );
-          
-          // Reset using the updated z-position
-          State myTempState;
-          sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
-          if ( sc.isSuccess() ) meas.setRefVector( myTempState.stateVector() );
-
-          track -> addToMeasurements( meas );
-          
-          
+        // Set the z-position of the measurement
+        XYZVector distance;
+        XYZVector bfield;
+        m_pIMF -> fieldVector( tempState.position(), bfield );
+        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+        double s1 = 0.0;
+        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
+        StatusCode msc = m_poca->minimize(stateTraj, s1, meas.trajectory(), s2,
+                                          distance, 20*Gaudi::Units::mm);
+        if( msc.isFailure() ) {
+          warning() << "TrajPoca minimize failed in addITClusters." << endreq;
         }
-        if ( sc.isFailure() )
-          Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
-        
-        
-      } // if ( m_addMeasurements ) 
+        meas.setZ( stateTraj.position(s1).z() );
+          
+        // Reset using the updated z-position
+        StateVector myTempState;
+        sc = m_stateCreator->createStateVector(mcPart, meas.z(), myTempState);
+        if ( sc.isSuccess() ) meas.setRefVector( myTempState.parameters() );
+
+        track -> addToMeasurements( meas );                   
+      }
+      if ( sc.isFailure() )
+       Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
+                
+    } // if ( m_addMeasurements ) 
       
-      ++nITMeas;      
-      aCluster = itLink.next();
-    }
+    ++nITMeas;      
+    aCluster = m_itLinker.next();
   }
 
   debug() << "- " << nITMeas << " STMeasurements in IT added" << endreq;
@@ -570,49 +509,39 @@ StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart,
   unsigned int nVeloRMeas   = 0;
   unsigned int nVeloPhiMeas = 0;
 
-  LinkedFrom<VeloCluster,MCParticle>
-    veloLink( evtSvc(), msgSvc(), VeloClusterLocation::Default );
-  if ( veloLink.notFound() ) {
-    return Error( "Unable to retrieve VeloCluster to MCParticle Linker table");
-  }
-  else {
-    const VeloCluster* aCluster = veloLink.first( mcPart );
-    while ( NULL != aCluster ) {
-      // Get the reference vector
-      const DeVeloSensor* sensor =
-        m_velo -> sensor( aCluster -> channelID().sensor() );
-      double z = sensor->z();
-      // Check if VeloCluster is of type R or Phi
-      if ( sensor -> isR() || sensor -> isPileUp() ) {
-        VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
+  const VeloCluster* aCluster = m_veloLinker.first( mcPart );
+  while ( NULL != aCluster ) {
+    // Get the reference vector
+    const DeVeloSensor* sensor =
+      m_velo -> sensor( aCluster -> channelID().sensor() );
+    const double z = sensor->z();
+    // Check if VeloCluster is of type R or Phi
+    if ( sensor -> isR() || sensor -> isPileUp() ) {
+      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
                                                   *m_veloPositionTool );
-        track -> addToLhcbIDs( meas.lhcbID() );
-        if ( m_addMeasurements ) { // Add the measurement to the track
-          State tempState;
-          StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
-          if ( sc.isSuccess() ) meas.setRefVector( tempState.stateVector()); 
-          else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
-          track -> addToMeasurements( meas );
-         
-        }
+      track -> addToLhcbIDs( meas.lhcbID() );
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        StateVector tempState;
+        StatusCode sc = m_stateCreator -> createStateVector( mcPart, z, tempState);
+        if ( sc.isSuccess() ) meas.setRefVector( tempState.parameters()); 
+        else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
+        track -> addToMeasurements( meas ); 
+      }
         ++nVeloRMeas;
       } else {
         VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
                                                       *m_veloPositionTool );
         track -> addToLhcbIDs( meas.lhcbID() );
         if ( m_addMeasurements ) { // Add the measurement to the track
-          State tempState;
-          StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
-          if ( sc.isSuccess() ) meas.setRefVector( tempState.stateVector() );
+          StateVector tempState;
+          StatusCode sc = m_stateCreator -> createStateVector( mcPart, z, tempState);
+          if ( sc.isSuccess() ) meas.setRefVector( tempState.parameters() );
           else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
-          track -> addToMeasurements( meas );
-         
-        }
-        
-        ++nVeloPhiMeas;
-      }
-      aCluster = veloLink.next();
+          track -> addToMeasurements( meas );     
+      }        
+      ++nVeloPhiMeas;
     }
+    aCluster = m_veloLinker.next();
   }
   
   debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
@@ -627,37 +556,148 @@ StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart,
 StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
 						Track* track) const
 {
-  double zseed(0) ;
-  if( !track->measurements().empty()) {
-    std::vector<LHCb::Measurement*>::const_iterator imeas = track->measurements().begin() ;
-    zseed = (*imeas)->z() ;
-    for(++imeas; imeas != track->measurements().end(); ++imeas) {
-      double thisz = (*imeas)->z() ;
-      if ( m_initStateUpstreamFit && thisz > zseed ) zseed = thisz;
-      if (!m_initStateUpstreamFit && thisz < zseed ) zseed = thisz;
+
+  // try to mimic the pattern recognition
+  // if (hasVelo(track) == true){
+  if (track->hasVelo() == true) { 
+    State state; state.setLocation(State::EndVelo);
+    StatusCode sc = m_stateCreator->createState(mcPart,
+                                     800.0 , 
+                                     state );
+    if ( sc.isSuccess()){
+      track->addToStates(state);
+    }
+    else {
+      return StatusCode::FAILURE;
     }
   }
-  
-  State state;
-  StatusCode sc = m_stateCreator -> createState( mcPart, zseed, state );
-  if ( sc.isSuccess() ) {
-    track -> addToStates( state );
-    double qP = state.qOverP();
 
-    debug() << "- State added:" << endreq
-            << "  - position = " << state.position() << " mm" <<endreq
-            << "  - momentum = " << state.momentum() << " MeV" <<endreq
-            << "  - P        = " << state.p() << " MeV" <<endreq
-            << "  - charge   = " << ( qP != 0. ? int(fabs(qP)/qP) : 0  ) 
-            << endreq;
+  //  if (hasT(track) == true){
+  if (track->hasT() == true){
+    State state; state.setLocation(State::AtT);
+    StatusCode sc = m_stateCreator->createState(mcPart,
+                                     StateParameters::ZAtT , 
+                                     state );
+    if ( sc.isSuccess()){
+      track->addToStates(state);
+    }
+    else {
+      return StatusCode::FAILURE;
+    }
   }
-  else {
-   
-    debug() << "-> unable to add a State!" << endreq;
-  }
-  
-  return sc;
+
+  return StatusCode::SUCCESS;
 };
 
+/*
+bool IdealTracksCreator::hasT(const Track* aTrack) const{
+  bool hasTPart = false;
+  if (aTrack->type() == Track::Ttrack || aTrack->type() == Track::Downstream 
+      || aTrack->type() == Track::Long) hasTPart = true;
+  return hasTPart;
+}
 
-//=============================================================================
+bool IdealTracksCreator::hasVelo(const Track* aTrack) const{
+  bool hasVPart = false;
+  if (aTrack->type() == Track::Long || aTrack->type() == Track::Upstream 
+      || aTrack->type() == Track::Velo) hasVPart = true;
+  return hasVPart;
+}
+*/
+
+StatusCode IdealTracksCreator::initEvent() const{
+
+  if (m_addITClusters == true){
+    m_itLinker = STLinker( evtSvc(), msgSvc(), STClusterLocation::ITClusters );
+    if ( m_itLinker.notFound() ) {
+      return Error( "Unable to retrieve ITCluster to MCParticle Linker table");
+    }
+  }
+
+  if (m_addTTClusters == true){
+    m_ttLinker = STLinker( evtSvc(), msgSvc(), STClusterLocation::TTClusters );
+    if ( m_ttLinker.notFound() ) {
+      return Error( "Unable to retrieve TTCluster to MCParticle Linker table");
+    }
+  }
+
+  if (m_addOTTimes == true){
+    m_otLinker = OTLinker( evtSvc(), msgSvc(), OTTimeLocation::Default );
+    if ( m_ttLinker.notFound() ) {
+      return Error( "Unable to retrieve OTTimes to MCParticle Linker table");
+    }
+  }
+
+  if (m_addVeloClusters == true){
+    m_veloLinker = VeloLinker( evtSvc(), msgSvc(), VeloClusterLocation::Default );
+    if ( m_veloLinker.notFound() ) {
+      return Error( "Unable to retrieve VeloCluster to MCParticle Linker table");
+    }
+  }  
+
+  return StatusCode::SUCCESS;
+}
+
+void IdealTracksCreator::printMCParticle(const MCParticle* mcParticle) const{
+
+  debug() << "- MCParticle of type "
+        << " , (key # " << mcParticle -> key() << ")" << endreq
+        << "    - vertex = " << mcParticle -> originVertex() ->position()
+        << endreq
+        << "    - momentum = " << mcParticle -> momentum() << " MeV" 
+        << endreq
+        << "    - P        = " << mcParticle -> p()
+        << " MeV" <<endreq
+        << "    - PID   = "
+        << ( mcParticle -> particleID().pid() ) << endreq
+        << "    - charge   = "
+        << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
+}
+
+void IdealTracksCreator::printTrack(const Track* track) const{
+
+  debug()
+      << "-> Track with key # " << track -> key() << endreq
+      << "  * charge         = " << track -> charge() << endreq
+      << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) 
+      << endreq
+      << "  * is Unique      = " << !track -> checkFlag( Track::Clone ) 
+      << endreq
+      << "  * is of type     = " << track -> type() << endreq
+      << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
+      << endreq
+      << "  * # LHCbID's     = " << track -> nLHCbIDs()
+      << "  * # measurements = " << track -> nMeasurements() << endreq;
+      
+   // print the measurements
+   const std::vector<Measurement*>& meas = track -> measurements();
+   for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
+           itMeas != meas.end(); ++itMeas ) {
+       debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
+              << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
+              << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
+        // continue according to type ...  
+    if ( (*itMeas) -> lhcbID().isOT() ) {
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() 
+                  << endreq;
+    }
+    else if ( (*itMeas) -> lhcbID().isST() ) {
+       debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() 
+                  << endreq;
+    }
+    else if ( (*itMeas) -> lhcbID().isVelo() ) {    
+      debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() 
+                << endreq;
+      }
+   }
+}
+
+bool IdealTracksCreator::wanted(const Track::Types& aType) const{
+
+  bool selected = true;
+  if ( aType == Track::TypeUnknown ||
+      ( !m_tracktypes.empty() &&
+         std::find( m_tracktypes.begin(), m_tracktypes.end(),  
+                    aType ) == m_tracktypes.end() ) ) selected = false;
+  return selected;
+}
