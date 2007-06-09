@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.11 2007-05-31 15:21:38 cattanem Exp $
+// $Id: IdealStateCreator.h,v 1.12 2007-06-09 10:46:02 mneedham Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -74,7 +74,7 @@ public:
    *  @return StatusCode
    *  @param  mcPart The MCParticle from which the state will be created
    *  @param  zRec   The z-position at which the state will be created
-   *  @param  pState The pointer to the State which is created.
+   *  @param  pState The ref to the State which is created.
    */
   virtual StatusCode createState( const LHCb::MCParticle* mcPart,
                                   double zRec,
@@ -86,7 +86,7 @@ public:
    *  @return StatusCode
    *  @param  mcHit The MCHit from which the state will be created
    *  @param  zRec   The z-position at which the state will be created
-   *  @param  pState The pointer to the State which is created.
+   *  @param  pState The ref to the State which is created.
    */
   virtual StatusCode createState( const LHCb::MCHit* mcHit,
                                   double zRec,
@@ -96,10 +96,46 @@ public:
    *  using the entry/exit points of the MCHits.
    *  @return StatusCode
    *  @param  mcPart The MCParticle from which the state will be created
-   *  @param  pState The pointer to the State which is created.
+   *  @param  pState The ref to the State which is created.
    */
   virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
                                         LHCb::State& pState ) const;
+
+
+  
+  /** This method creates a state at z position from a MCParticle
+   *  using the entry/exit points of the MCHits.
+   *  @return StatusCode
+   *  @param  mcPart The MCParticle from which the state will be created
+   *  @param  zRec   The z-position at which the state will be created
+   *  @param  pVec The StateVector which is created.
+   */
+  virtual StatusCode createStateVector( const LHCb::MCParticle* mcPart,
+                                  double zRec,
+                                  LHCb::StateVector& pVec ) const;
+
+
+  /** This method creates a state at z position from a MCHit
+   *  using the entry/exit points of the MCHit.
+   *  @return StatusCode
+   *  @param  mcHit The MCHit from which the state will be created
+   *  @param  zRec   The z-position at which the state will be created
+   *  @param pVec StateVector which is created.
+   */
+  virtual StatusCode createStateVector( const LHCb::MCHit* mcHit,
+                                  double zRec,
+                                  LHCb::StateVector& pVec ) const;
+
+  /** This method creates a state at the origin vertex from a MCParticle
+   *  using the entry/exit points of the MCHits.
+   *  @return StatusCode
+   *  @param  mcPart The MCParticle from which the state will be created
+   *  @param  pVec the StateVector which is created.
+   */
+  virtual StatusCode createStateVectorVertex( const LHCb::MCParticle* mcPart,
+                                        LHCb::StateVector& pVec ) const;
+
+
   
   /** Implement the handle method for the Incident service.
   *  This is used to inform the tool of software incidents.

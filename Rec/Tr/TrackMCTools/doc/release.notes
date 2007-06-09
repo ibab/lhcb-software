@@ -4,6 +4,12 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-06-09 M. Needham
+ - Update IdealStateCreator:
+   --> Follow extension of IIdealStateCreator interface (StateVector methods)
+   --> use fast parabolic instead of master extrapolator
+   --> don't call configure in case of vertex methods
+
 !======================= TrackMCTools v2r11 2007-05-31 =======================
 ! 2007-05-31 - Marco Cattaneo
  - Fix doxygen warnings

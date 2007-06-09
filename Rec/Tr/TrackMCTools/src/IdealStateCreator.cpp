@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.14 2007-05-15 08:34:15 mneedham Exp $
+// $Id: IdealStateCreator.cpp,v 1.15 2007-06-09 10:46:02 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -11,6 +11,7 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 #include "Event/State.h"
+#include "Event/StateVector.h"
 #include "Event/TrackParameters.h"
 
 // local
@@ -38,7 +39,7 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
 
   // declare properties
   declareProperty( "Extrapolator",
-                   m_extrapolatorName = "TrackMasterExtrapolator" );
+                   m_extrapolatorName = "TrackFastParabolicExtrapolator" );
   declareProperty( "ErrorX2",  m_eX2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorY2",  m_eY2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2", m_eTx2 = 0.0                   );
@@ -119,6 +120,30 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   return createState(closestHit, zRec, state);
 }
 
+
+
+
+//=============================================================================
+// Creates a state at a z position,
+// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
+StatusCode IdealStateCreator::createStateVector(const MCParticle* mcPart,
+                                                double zRec,
+                                                StateVector& state ) const
+{
+
+  if (!m_configured) initEvent();
+
+  // Check if MCParticle exists
+  if( mcPart == 0 ) return StatusCode::FAILURE;
+
+  // Get the closest MCHit
+  MCHit* closestHit = findClosestHit( mcPart, zRec);
+  if( !closestHit ) return Error( "No closest MCHit found!!" );
+ 
+  return createStateVector(closestHit, zRec, state);
+}
+
 //=============================================================================
 // Creates a state at a z position,
 // from a MCHit using the entry/exit point
@@ -130,21 +155,14 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
 
   if (!m_configured) initEvent();
   
-  // First create the state
-  state.setZ( zRec );
- 
-  // Correct tx and ty from the MCHit for the magnetic field
-  double tx = aHit->dxdz();
-  double ty = aHit->dydz();
-  if ( m_correctSlopes ) correctSlopes( aHit, tx, ty );
+  StateVector pVec; 
+  StatusCode sc = createStateVector(aHit,zRec,pVec);
+  if (sc.isFailure()){
+    return Warning("Failed to create state vector",StatusCode::SUCCESS);
+  }
 
-  // determine Q/P
-  const double trueQOverP = qOverP(aHit);
-
-  // set the state parameters
-  const XYZPoint& beginPoint = aHit->entry();
-  state.setState(beginPoint.x(),  beginPoint.y(), beginPoint.z(),
-                   tx, ty, trueQOverP );
+  state.setZ(pVec.z());
+  state.setState(pVec.parameters());
   
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -155,14 +173,43 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
   cov(4,4) = gsl_pow_2( m_eP * state.qOverP());
   state.setCovariance( cov );
 
+  return sc;
+}
+
+
+//=============================================================================
+// Creates a state at a z position,
+// from a MCHit using the entry/exit point
+//=============================================================================
+StatusCode IdealStateCreator::createStateVector(const MCHit* aHit,
+                                                double zRec,
+                                                StateVector& pVec ) const
+{
+
+  if (!m_configured) initEvent();
+ 
+  // Correct tx and ty from the MCHit for the magnetic field
+  double tx = aHit->dxdz();
+  double ty = aHit->dydz();
+  if ( m_correctSlopes ) correctSlopes( aHit, tx, ty );
+  XYZVector direction(tx,ty,1.0);
+
+  // determine Q/P
+  const double trueQOverP = qOverP(aHit);
+  
+  // construct true State
+  pVec = StateVector(aHit->entry(),direction,trueQOverP);
+
   // extrapolate state to exact z position
-  StatusCode sc = m_extrapolator->propagate(state, zRec );
+  TrackVector& trackVec = pVec.parameters();
+  StatusCode sc = m_extrapolator->propagate(trackVec,pVec.z() ,zRec );
   if( sc.isFailure() ) {
     warning() << "Extrapolation of True State from z = "
-              << beginPoint.z() << " to z = " << zRec << " failed!" << endreq;
+              << pVec.z() << " to z = " << zRec << " failed!" << endreq;
   }
+  pVec.setZ(zRec);
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -172,35 +219,18 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
 StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
                                                  State& state ) const
 {
-  
-  if (!m_configured) initEvent();
 
   // Check if MCParticle exists
   if( mcParticle == 0 ) return StatusCode::FAILURE;
 
-  // retrieve true MC particle info
-  const MCVertex* mcVertex   = mcParticle->originVertex();
-  const LorentzVector& mc4Mom = mcParticle->momentum();
-  const XYZPoint& mcPos       = mcVertex->position();
-
-
-  // determine Q/P
-  const double trueQOverP = qOverP( mcParticle );
-
-  // determine slopes
-  double trueTx; double trueTy;
-  if ( fabs(mc4Mom.pz()) > TrackParameters::lowTolerance ) {
-    trueTx = mc4Mom.px()/mc4Mom.pz() ;
-    trueTy = mc4Mom.py()/mc4Mom.pz();
-  }
-  else {
-    warning() << "No momentum z component." << endreq;
-    return StatusCode::FAILURE;
+  StateVector pVec; 
+  StatusCode sc = createStateVectorVertex(mcParticle,pVec);
+  if (sc.isFailure()){
+    return Warning("Failed to create state vector",StatusCode::SUCCESS);
   }
 
-  // construct true State
-  state.setState(mcPos.x(), mcPos.y(), mcPos.z(),
-                 trueTx, trueTy, trueQOverP );
+  state.setZ(pVec.z());
+  state.setState(pVec.parameters());
 
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -213,6 +243,34 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
 
   return StatusCode::SUCCESS;
 }
+
+
+
+//=============================================================================
+// Creates a state at the origin vertex
+// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
+StatusCode IdealStateCreator::createStateVectorVertex( const MCParticle* mcParticle,
+                                                       StateVector& pVec ) const
+{
+
+  // Check if MCParticle exists
+  if( mcParticle == 0 ) return StatusCode::FAILURE;
+
+  // retrieve true MC particle info
+  const MCVertex* mcVertex   = mcParticle->originVertex();
+  const XYZPoint& mcPos       = mcVertex->position();
+  const LorentzVector& mc4Mom = mcParticle->momentum();
+  
+  // determine Q/P
+  const double trueQOverP = qOverP( mcParticle );
+
+  // construct true State
+  pVec = StateVector(mcPos,Gaudi::XYZVector(mc4Mom),trueQOverP);
+
+  return StatusCode::SUCCESS;
+}
+
 
 //=============================================================================
 // Find the z-closest MCHit associated to an MCParticle
@@ -256,7 +314,6 @@ double  IdealStateCreator::qOverP( const MCParticle* mcPart) const {
   const double p = mcPart->p();
   return ( p < TrackParameters::lowTolerance  ? 0.0 : charge/p );
 }
-
 
 //=============================================================================
 // Correct slopes for magnetic field given an MCHit and a MCParticle

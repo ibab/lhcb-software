@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.cpp,v 1.10 2007-02-01 10:11:28 wouter Exp $
+// $Id: TrackCriteriaSelector.cpp,v 1.11 2007-06-09 10:46:02 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -35,7 +35,7 @@ TrackCriteriaSelector::TrackCriteriaSelector( const std::string& type,
   declareProperty( "MCParticles",
                    m_mcParticleJudgeName = "TrackAcceptance"              );
   declareProperty( "RejectElectrons",    m_rejectElectrons = false        );
-  declareProperty( "RejectInteractions", m_rejectInteractions = false     );
+  declareProperty( "RejectInteractions", m_rejectInteractions = false    );
 
 }
 
