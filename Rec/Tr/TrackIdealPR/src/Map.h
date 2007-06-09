@@ -6,7 +6,7 @@
 #include <boost/assign/list_of.hpp> // for 'map_list_of()'
 
 #include "Event/Track.h"
-#include "Kernel/IMCReconstructible.h"
+#include "MCInterfaces/IMCReconstructible.h"
 
 namespace TrackIdealPR{ 
 

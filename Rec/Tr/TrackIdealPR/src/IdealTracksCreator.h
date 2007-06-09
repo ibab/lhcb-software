@@ -22,7 +22,6 @@
 
 // from MCInterfaces
 #include "MCInterfaces/IIdealStateCreator.h"
-#include "MCInterfaces/ITrackCriteriaSelector.h"
 
 // Forward declarations
 class DeVelo;
@@ -30,7 +29,7 @@ class DeOTDetector;
 class DeSTDetector;
 class IMagneticFieldSvc;
 class ITrajPoca;
-
+class IMCReconstructible;
 
 /** @class IdealTracksCreator IdealTracksCreator.h
  *
