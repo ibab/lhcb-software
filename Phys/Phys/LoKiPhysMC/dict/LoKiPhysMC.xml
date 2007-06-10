@@ -1,8 +1,6 @@
 <!-- 
-     * $Id: LoKiPhysMC.xml,v 1.1 2007-06-01 12:24:50 ibelyaev Exp $ 
+     * $Id: LoKiPhysMC.xml,v 1.2 2007-06-10 20:17:54 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-     * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries 
      * for Phys/LoKiPhysMC package
@@ -20,9 +18,11 @@
   
   <class name="LoKi::Interface<LoKi::MCMatchObj>" />
   
-  <class name = "LoKi::MCParticles::RCTruth"    />
-  <class name = "LoKi::Particles::MCTruth"    />
-  <class name = "LoKi::Particles::GenMCTruth" />
+  <class name = "LoKi::PhysMCParticles::RCTruth"    />
+  <class name = "LoKi::PhysMCParticles::MCTruth"    />
+  <class name = "LoKi::PhysMCParticles::GenMCTruth" />
+  
+  <function pattern="LoKi::Dicts::MCMatchDicts::*" />
   
   <exclusion>
   </exclusion>

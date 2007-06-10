@@ -1,14 +1,4 @@
-// $Id: PhysMCParticleCuts.h,v 1.3 2007-01-20 14:47:12 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/11/27 11:56:15  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
-// New package : RC <---> MC links for LoKi 
-// 
+// $Id: PhysMCParticleCuts.h,v 1.4 2007-06-10 20:17:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLECUTS_H 
 #define LOKI_PHYSMCPARTICLECUTS_H 1
@@ -55,9 +45,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-12
      */
-    typedef LoKi::Particles::MCTruth                              MCTRUTH ;
-    // ========================================================================
-
+    typedef LoKi::PhysMCParticles::MCTruth                            MCTRUTH ;
     // ========================================================================
     /** @typedef GMCTRUTH
      *
@@ -94,10 +82,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-12
      */
-    typedef LoKi::Particles::GenMCTruth                          GMCTRUTH ;
-    // ========================================================================
-    
-    
+    typedef LoKi::PhysMCParticles::GenMCTruth                        GMCTRUTH ;
     // ========================================================================
     /** @typedef RCTRUTH
      *
@@ -113,13 +98,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-12
      */
-    typedef LoKi::MCParticles::RCTruth                           RCTRUTH ;
+    typedef LoKi::PhysMCParticles::RCTruth                           RCTRUTH ;
     // ========================================================================
-
   }  // end of the namespace LoKi::Cuts 
-}  // end of the namespace LoKi 
-
-
+}  // end of the namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

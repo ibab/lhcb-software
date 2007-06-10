@@ -1,20 +1,4 @@
-// $Id: PhysMCParticles.h,v 1.6 2007-04-16 16:16:48 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2007/01/20 14:47:14  ibelyaev
-//  add GenMCTrith function/ GMCTRUTH shortcut
-//
-// Revision 1.4  2006/10/27 13:41:25  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.3  2006/09/06 12:37:20  ibelyaev
-//  remove duplicated constructor
-//
-// Revision 1.2  2006/03/14 19:37:09  ibelyaev
-//  minor changes
-//
+// $Id: PhysMCParticles.h,v 1.7 2007-06-10 20:17:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
@@ -66,9 +50,10 @@ namespace LoKi
 {
   /// forward declarations 
   class MCMatch ;
-  
-  namespace Particles 
-  {
+  // ==========================================================================
+  namespace PhysMCParticles 
+  { 
+    // ========================================================================
     /** @class MCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *  
      *  Helper and useful function to be used to check the matching of  
@@ -262,7 +247,7 @@ namespace LoKi
       // match-object 
       LoKi::MCMatch m_match     ; ///< match-object 
     } ;
-    
+    // ========================================================================    
     /** @class GenMCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *
      *  Helper and useful function to be used to check the matching of  
@@ -396,11 +381,7 @@ namespace LoKi
       // local storage of MC-particles 
       LoKi::UniqueKeeper<LHCb::MCParticle>   m_mc    ;
     } ;
-    
-  } ; // end of namespace Particles
-  
-  namespace MCParticles
-  {    
+    // ========================================================================
     /** @class RCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *  
      *  Helper and useful function to be used to check the matching of  
@@ -576,10 +557,23 @@ namespace LoKi
       // MC-match object
       LoKi::MCMatch  m_match ; ///< MC-match object
     };
+    // ========================================================================
+    namespace Particles 
+    {
+      /// import the type into proepr namespace 
+      typedef LoKi::PhysMCParticles::MCTruth    MCTruth    ;      
+      /// import the type into proepr namespace 
+      typedef LoKi::PhysMCParticles::GenMCTruth GenMCTruth ;
+    }
+    // ========================================================================
+    namespace MCParticles 
+    {
+      /// import the type into proepr namespace 
+      typedef LoKi::PhysMCParticles::RCTruth    RCTruth    ;
+    }
     
-  }; // end of namespace LoKi::Particles
-
-} ; // end of namespace LoKi
+  } // end of namespace LoKi::PhysMCParticles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

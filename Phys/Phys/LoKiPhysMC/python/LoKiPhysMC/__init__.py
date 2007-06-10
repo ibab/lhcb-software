@@ -1,8 +1,4 @@
-# $Id: __init__.py,v 1.1 2007-06-01 12:24:50 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-# =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Id: __init__.py,v 1.2 2007-06-10 20:17:54 ibelyaev Exp $
 # =============================================================================
 ## @file  LoKiPhysMC/__init__.py
 #  Helper file to manage LoKiPhysMC package 
@@ -12,9 +8,9 @@
 """ Helper file to manage LoKiPhysMC package """
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
-import LoKiPhys.decorators
-import LoKiMC.decorators
-import LoKiGenMC.decorators 
+# import LoKiPhys.decorators
+# import LoKiMC.decorators
+# import LoKiGenMC.decorators 
 # =============================================================================
 # The END 
 # =============================================================================
