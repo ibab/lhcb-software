@@ -1,11 +1,4 @@
-// $Id: LoopChild.cpp,v 1.2 2007-06-04 14:22:05 cattanem Exp $
-// ============================================================================
-// CVS tag $Nam:$ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/03 20:43:42  ibelyaev
-//  update LoKi::Child &
-//
+// $Id: LoopChild.cpp,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,7 +20,7 @@
  *  @date   2007-06-02
  */   
 // ============================================================================
-std::size_t LoKi::Child::nChildren 
+std::size_t LoKi::LoopChild::nChildren 
 ( const LoKi::Loop& particle )
 {
   return !particle.valid() ? 0 : particle->dim() ;
@@ -45,7 +38,7 @@ std::size_t LoKi::Child::nChildren
  *  @date   2007-06-02
  */
 // ============================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::LoopChild::child
 ( const LoKi::Loop& particle , 
   const size_t      index    ) 
 {
@@ -67,11 +60,11 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2007-06-02
  */    
 // ============================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::LoopChild::child
 ( const LoKi::Loop& particle , 
   const size_t      index1   , 
   const size_t      index2   )
-{ return child ( child ( particle , index1 ) , index2 ) ; }    
+{ return LoKi::Child::child ( child ( particle , index1 ) , index2 ) ; }    
 // ============================================================================
 /*  Trivial accessor to the dauthter particles for the given "particle"
  *
@@ -87,12 +80,12 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2007-06-02
  */    
 // ============================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::LoopChild::child
 ( const LoKi::Loop& particle , 
   const size_t      index1   , 
   const size_t      index2   ,
   const size_t      index3   )
-{ return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+{ return LoKi::Child::child ( child ( particle , index1 ) , index2 , index3 ) ; }
 // ============================================================================
 /*  Trivial accessor to the dauthter particles for the given "particle"
  *
@@ -109,14 +102,16 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2007-06-02
  */    
 // ============================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::LoopChild::child
 ( const LoKi::Loop&  particle , 
   const size_t       index1   , 
   const size_t       index2   ,
   const size_t       index3   ,
   const size_t       index4   )
-{ return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+{ return LoKi::Child::child ( child ( particle , index1 ) , 
+                              index2 , index3 , index4 ) ; }
 // ============================================================================
+
 
 
 // ============================================================================

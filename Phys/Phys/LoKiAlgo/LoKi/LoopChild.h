@@ -1,4 +1,4 @@
-// $Id: LoopChild.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: LoopChild.h,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPCHILD_H 
 #define LOKI_LOOPCHILD_H 1
@@ -12,8 +12,9 @@
 namespace LoKi 
 {
   class Loop ;
-  namespace Child 
+  namespace LoopChild 
   {
+    // ========================================================================
     /** get the number of children 
      *  @param mother poiunter to mother particle 
      *  @return number of daugthter particles 
@@ -21,6 +22,7 @@ namespace LoKi
      *  @date   2007-06-02
      */   
     std::size_t nChildren ( const LoKi::Loop& particle ) ;
+    // ========================================================================
     /** Trivial accessor to the dauthter particles for the given "particle"
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -35,6 +37,7 @@ namespace LoKi
     LHCb::Particle* child
     ( const LoKi::Loop& particle , 
       const size_t      index    ) ;
+    // ========================================================================
     /** Trivial accessor to the dauthter particles for the given "particle"
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -51,6 +54,7 @@ namespace LoKi
     ( const LoKi::Loop& particle , 
       const size_t      index1   , 
       const size_t      index2   ) ;
+    // ========================================================================
     /** Trivial accessor to the dauthter particles for the given "particle"
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -69,6 +73,7 @@ namespace LoKi
       const size_t      index1   , 
       const size_t      index2   ,
       const size_t      index3   ) ;
+    // ========================================================================
     /** Trivial accessor to the dauthter particles for the given "particle"
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -89,7 +94,13 @@ namespace LoKi
       const size_t       index2   ,
       const size_t       index3   ,
       const size_t       index4   ) ;
-  } // end of namespace Child 
+    // ========================================================================
+  } // end of namespace LoKi::LoopChild 
+  // ========================================================================
+  namespace Child 
+  {
+    using namespace LoKi::LoopChild ;
+  } // end of namespace LoKi::Child 
 } // end of namespace LoKi
 // ============================================================================
 // The END 

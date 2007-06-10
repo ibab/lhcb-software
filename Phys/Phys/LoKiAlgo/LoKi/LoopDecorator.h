@@ -1,4 +1,4 @@
-// $Id: LoopDecorator.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: LoopDecorator.h,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPDICT_H 
 #define LOKI_LOOPDICT_H 1
@@ -13,21 +13,14 @@ namespace LoKi
 {
   namespace Dicts
   {
-    /** @class LoopDecorator LoopDict.h LoKi/LoopDict.h
-     *  @author Vanya BELYAEV
-     *  @date   2007-06-03
-     */
-    class LoopDecorator
+    class DictsLoop
     {
-    public:
-      /// contructor ("do-nothing") to Please Reflex at Win32
-      LoopDecorator() {}
     public:
       /// get the effective formula of the loop, see LoKi::LoopObj::formula
       static const LoKi::LoopObj::Formula& formula( const LoKi::Loop& l ) ;
       /// get the effective dimension of the loop (== number of components)
       static size_t     dim    ( const LoKi::Loop& l ) ;
-      /// Loop size (inclusing the invalid combinations!)
+      /// Loop size (including the invalid combinations!)
       static size_t     size   ( const LoKi::Loop& l ) ;
       /// check the validity of the current combinations
       static bool       valid  ( const LoKi::Loop& l ) ;
@@ -40,10 +33,9 @@ namespace LoKi
       ( const LoKi::Loop& l     , 
         const size_t      i     ) ;
       /// conversion operator to LHCb::Particle and access to the children:
-      static const LHCb::Particle* particle 
-      ( const LoKi::Loop& l     ) ;
-      /// conversion to LHCb::Vertex 
-      static const LHCb::Vertex*   vertex   ( const LoKi::Loop& l ) ;    
+      static const LHCb::Particle*   particle ( const LoKi::Loop& l ) ;
+      /// conversion to LHCb::VertexBase 
+      static const LHCb::VertexBase* vertex   ( const LoKi::Loop& l ) ;    
       ///  get the momentum of the particle or daughter 
       static LoKi::LorentzVector momentum 
       ( const LoKi::Loop& l     ) ;
@@ -121,11 +113,12 @@ namespace LoKi
       ( const LoKi::Loop&        l , 
         const IParticleReFitter* c ) ;
       /// get the associated vertex 
-      static const LHCb::Vertex* pv  ( const LoKi::Loop& l ) ;
+      static const LHCb::VertexBase* pv  
+      ( const LoKi::Loop& l ) ;
       /// set the associated vertex 
       static const LoKi::Loop& setPV 
-      ( const LoKi::Loop&   l , 
-        const LHCb::Vertex* v ) ;    
+      ( const LoKi::Loop&       l , 
+        const LHCb::VertexBase* v ) ;    
       /// make 'effective' particle using IParticleCombiner tool
       static StatusCode make  
       ( const LoKi::Loop&        l        ) ;
@@ -156,7 +149,7 @@ namespace LoKi
       static const LoKi::Loop& backup  ( const LoKi::Loop& l ) ;
       /// restore the loop from the last backup state
       static const LoKi::Loop& restore ( const LoKi::Loop& l ) ;
-    } ;
+    } ; // end of class LoKi::Dicts::LoopDicts 
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi 
 // ============================================================================

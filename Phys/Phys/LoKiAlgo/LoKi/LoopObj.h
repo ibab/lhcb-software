@@ -1,4 +1,4 @@
-// $Id: LoopObj.h,v 1.11 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: LoopObj.h,v 1.12 2007-06-10 20:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
 #define LOKI_LOOPOBJ_H 1
@@ -77,11 +77,11 @@ namespace LoKi
     /// advance the loop to the next combination
     LoopObj& operator++( int ) { return next() ; }
     /// conversion operator to bool (to be used in the loops)
-    operator bool                  () const { return m_valid     ; }
+    operator bool                    () const { return m_valid     ; }
     /// conversion operator to LHCb::Particle
-    operator const LHCb::Particle* () const { return particle () ; }
+    operator const LHCb::Particle*   () const { return particle () ; }
     /// conversion operator to LHCb::Vertex 
-    operator const LHCb::Vertex*   () const { return vertex   () ; }
+    operator const LHCb::Vertex*     () const { return vertex   () ; }
     /** get the daughter particle by index (the index starts from 1)
      *  It is an alias to the previouse method 
      *  @attention <c>index==0</c> corresponds to the particle itself
@@ -242,9 +242,9 @@ namespace LoKi
       const size_t index4    ) const 
     { return momentum ( index1 , index2 , index3 , index4 ).M() ; }
     /// get the effective particle of the combinations 
-    inline LHCb::Particle* particle ( const IParticleCombiner* c = 0 ) const ;
+    inline LHCb::Particle*   particle ( const IParticleCombiner* c = 0 ) const ;
     /// get the effective vertex of the combiination 
-    inline LHCb::Vertex*   vertex   ( const IParticleCombiner* c = 0 ) const ;
+    inline LHCb::Vertex*     vertex   ( const IParticleCombiner* c = 0 ) const ;
     /** get  particle/daughter particle from the current combination 
      *  @attention <c>index==0</c> corresponds to the particle 
      *  Indices start from 1 
@@ -274,9 +274,9 @@ namespace LoKi
     { m_reFit = c ; return *this ; }
   public:
     /// get the associated vertex 
-    const LHCb::Vertex* pv () const { return m_pv ; }
+    const LHCb::VertexBase* pv () const { return m_pv ; }
     /// set the associated vertex 
-    LoopObj& setPV ( const LHCb::Vertex* v ) { m_pv = v ; return *this ; }    
+    LoopObj& setPV ( const LHCb::VertexBase* v ) { m_pv = v ; return *this ; }    
   public:
     /// add the component to the Loop obejcts
     LoopObj& addComponent 
@@ -373,8 +373,8 @@ namespace LoKi
     // Particle name for effective particle
     std::string                 m_pidname  ; ///< Particle name 
     // Primary Vertex (nedded for some fits/refit)
-    const LHCb::Vertex*         m_pv       ; ///< Primary Vertex
-
+    const LHCb::VertexBase*     m_pv       ; ///< Primary Vertex
+    
     // the structure to avoid the multiple counts for 
     // combination of "the same" particle types
     // e.g  (K- (pi+ pi+) pi-) 

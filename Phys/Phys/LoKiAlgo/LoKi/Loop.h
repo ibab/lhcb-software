@@ -1,14 +1,4 @@
-// $Id: Loop.h,v 1.3 2007-06-04 20:22:21 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/04/16 16:16:39  pkoppenb
-// removed polemic comment
-//
-// Revision 1.1  2006/04/09 08:51:49  ibelyaev
-//  update for LoKiAlgo
-//
+// $Id: Loop.h,v 1.4 2007-06-10 20:13:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOP_H 
 #define LOKI_LOOP_H 1
@@ -22,8 +12,6 @@
 // LoKiPhys
 // ============================================================================
 #include "LoKi/LoopObj.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -61,13 +49,13 @@ namespace LoKi
     virtual ~Loop() ;
   public:
     /// conversion operator to LoKi::LoopObj
-    operator       LoKi::LoopObj*   () const { return getObject() ; }
+    operator       LoKi::LoopObj*    () const { return getObject() ; }
     /// conversion to bool value 
-    operator bool                   () const { return valid    () ; }
+    operator bool                    () const { return valid    () ; }
     /// conversion operator to const LHCb::Particle*
-    operator const LHCb::Particle*  () const { return particle () ; }
+    operator const LHCb::Particle*   () const { return particle () ; }
     /// conversion operator to const LHCb::Vertex*
-    operator const LHCb::Vertex*    () const { return vertex   () ; }
+    operator const LHCb::Vertex*     () const { return vertex   () ; }
     /// get child of the loop object 
     const LHCb::Particle* operator  () ( const size_t index ) const 
     { return child( index ) ; }
@@ -81,11 +69,11 @@ namespace LoKi
     /// valid object??
     bool valid() const { return validPointer() && getObject()->valid() ; }
     /// conversion operator to const LHCb::Particle*    
-    const LHCb::Particle* particle () const ;
+    const LHCb::Particle*   particle () const ;
     /// conversion operator to const LHCb::Vertex*
-    const LHCb::Vertex*   vertex   () const ;    
+    const LHCb::Vertex*     vertex   () const ;    
     /// get child of the loop object 
-    const LHCb::Particle* child ( const size_t index ) const ;
+    const LHCb::Particle*   child ( const size_t index ) const ;
   private:
     // the default constructior is disabled
     Loop();
