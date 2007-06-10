@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiAlgoMC.xml,v 1.2 2007-06-03 20:44:06 ibelyaev Exp $ 
+     * $Id: LoKiAlgoMC.xml,v 1.3 2007-06-10 20:21:43 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -22,6 +22,8 @@
   
   <class name = "LoKi::Dicts::Alg<LoKi::AlgoMC>"   />
   <class name = "GaudiPython::PyAlg<LoKi::AlgoMC>" />
+  
+  <function pattern="LoKi::Dicts::MCMatchDicts::*" />
   
   <class name = "LoKi::Interface<LoKi::AlgoMC>"    />
   

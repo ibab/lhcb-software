@@ -1,11 +1,4 @@
-// $Id: LoKiAlgoMCDict.h,v 1.2 2007-06-03 20:44:06 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/01 12:30:51  ibelyaev
-//  prepare for v4r0
-// 
+// $Id: LoKiAlgoMCDict.h,v 1.3 2007-06-10 20:21:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -16,6 +9,7 @@
 // ============================================================================
 #include "LoKi/LoKiAlgoMC.h"
 #include "LoKi/AlgoDecorator.h"
+#include "LoKi/MCMatchAlgoDicts.h"
 // ============================================================================
 namespace
 {
