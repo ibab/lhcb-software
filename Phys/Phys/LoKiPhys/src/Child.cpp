@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.4 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: Child.cpp,v 1.5 2007-06-10 20:07:17 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,6 +27,19 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10 
  */
+// ========================================================================
+/*  get the number of children 
+ *  @param mother poiunter to mother particle 
+ *  @return number of daugthter particles 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-02-11
+ */
+// ============================================================================
+std::size_t LoKi::Child::nChildren ( const LHCb::Particle* mother ) 
+{
+  if ( 0 == mother ) { return 0 ;}
+  return mother->daughters().size() ;
+}
 // ============================================================================
 /*  Trivial accessor to the daughter particles for the given particle.
  *  It is not very useful in a"stand-alone-mode", but it coudl be very useful 
@@ -110,6 +123,10 @@ LoKi::Child::descendants
   return result ;
 }
 // ========================================================================
+// constructor 
+// ============================================================================
+LoKi::Child::PhysChild::PhysChild(){}
+// ============================================================================
 
 
 // ============================================================================

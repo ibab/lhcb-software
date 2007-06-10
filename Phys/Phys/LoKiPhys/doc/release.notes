@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.28 2007-06-05 06:28:03 cattanem Exp $ 
+! $Id: release.notes,v 1.29 2007-06-10 20:07:17 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-10 - Vanya BELYAEV
+ - few fixes to please Reflex, make fuctions vizible in python
+   and to achieve coherent interafce for RC and MC worlds
 
 !========================== LoKiPhys v4r0 2007-06-04 ==========================
 ! 2007-06-04 - Vanya BELYAEV
@@ -205,6 +209,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.28  2007/06/05 06:28:03  cattanem
+! move tag
+!
 ! Revision 1.27  2007/06/04 18:25:37  ibelyaev
 !  improve Algs&Extract
 !

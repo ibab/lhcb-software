@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.2 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.3 2007-06-10 20:07:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -18,6 +18,7 @@
 #include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
 // ============================================================================
+#include "LoKi/Child.h"
 #include "LoKi/Dicts.h"
 #include "LoKi/PhysAlgsDicts.h"
 #include "LoKi/PhysExtractDicts.h"

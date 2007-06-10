@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2007/06/01 12:07:03  ibelyaev
+#  prepare for version v4r0
+#
 # =============================================================================
 ## @file functions.py LoKiPhys/functions.py
 #  The set of basic decorator for objects from LoKiPhys library
@@ -411,6 +414,8 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
+
+_PhysChild = LoKi.Child.PhysChild 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.3 2007-06-04 18:25:37 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.4 2007-06-10 20:07:17 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -78,6 +78,7 @@
   <function pattern = "LoKi::Child::*"                   />
   <function pattern = "LoKi::Dicts::Extract::*"          />
   <function pattern = "LoKi::Dicts::Algs::*"             />
+  <class    name    = "LoKi::Child::PhysChild"           />
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::*>"    />
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Pa*>"    />
