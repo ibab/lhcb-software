@@ -1,9 +1,4 @@
-// $Id: GenMCParticleCuts.h,v 1.5 2007-06-01 11:53:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verstion $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: GenMCParticleCuts.h,v 1.6 2007-06-10 20:04:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLECUTS_H 
 #define LOKI_GENMCPARTICLECUTS_H 1
@@ -32,6 +27,7 @@ namespace LoKi
 {
   namespace Cuts 
   {
+    // ========================================================================
     /** Trivial predicate which evaluates to 'true'
      *  for (HepMC)particles which are "origins" for 
      *  given certain MCParticles 
@@ -68,13 +64,13 @@ namespace LoKi
      *  @see LHCb::MCParticle
      *  @see HepMC::GenParticle
      *  @see LHCb::Relations::HepMC2MC
-     *  @see LoKi::GenParticles::IsAMotherForMC
+     *  @see LoKi::GenMCParticles::IsAMotherForMC
      *  
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    typedef LoKi::GenParticles::IsAMotherForMC     GMCMOTH   ;
-    
+    typedef LoKi::GenMCParticles::IsAMotherForMC     GMCMOTH   ;
+    // ========================================================================    
     /** trivial predicate which 
      *  evaluates to 'true' for MC-particles,
      *  which originates from certain HepMC particle 
@@ -119,8 +115,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    typedef LoKi::MCParticles::IsFromHepMC         FROMGTREE ;
-    //
+    typedef LoKi::GenMCParticles::IsFromHepMC         FROMGTREE ;
+    // ========================================================================
   }  // end of namespace LoKi::Cuts
 }  // end of namespace LoKi
 // ============================================================================

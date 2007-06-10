@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.17 2007-06-04 08:32:13 cattanem Exp $ 
+! $Id: release.notes,v 1.18 2007-06-10 20:04:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-10 - Vanya BELYAEV
+
+ - few minor fixes to please Reflex and to make a coherent interface for 
+   MC and RC world 
 
 !========================== LoKiGenMC v3r0 2007-06-04 =========================
 ! 2007-06-04 - Marco Cattaneo
@@ -364,6 +369,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.17  2007/06/04 08:32:13  cattanem
+! v3r0
+!
 ! Revision 1.16  2007/06/01 11:53:46  ibelyaev
 !  prepare for v3r0
 !

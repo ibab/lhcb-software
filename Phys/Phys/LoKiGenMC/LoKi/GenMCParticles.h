@@ -1,9 +1,4 @@
-// $Id: GenMCParticles.h,v 1.6 2007-06-01 11:53:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: GenMCParticles.h,v 1.7 2007-06-10 20:04:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1
@@ -37,7 +32,7 @@
 // ============================================================================
 namespace LoKi
 {
-  namespace GenParticles 
+  namespace GenMCParticles 
   {   
     /** @class IsAMotherForMC
      *  Trivial predicate which evaluates to 'true'
@@ -129,9 +124,6 @@ namespace LoKi
       MCPs                                          m_mcps  ;
       LoKi::Interface<LHCb::HepMC2MC>               m_table ;
     };
-  }   // end of namespace GenParticles
-  namespace MCParticles 
-  {
     /** @class IsFromHepMC
      *  trivial predicate which 
      *  evaluates to 'true' for MC-particles,
@@ -247,7 +239,20 @@ namespace LoKi
       GPs                                            m_gps   ;
       LoKi::Interface<LHCb::MC2HepMC>                m_table ;
     } ;
-  }  // end of namespace MCParticles
+    // ========================================================================
+    namespace MCParticles
+    {
+      /// import a type into consistent namespace 
+      typedef LoKi::GenMCParticles::IsFromHepMC        IsFromHepMC    ;
+    }
+    // ========================================================================
+    namespace GenParticles
+    {
+      /// import a type into consistent namespace 
+      typedef LoKi::GenMCParticles::IsAMotherForMC     IsAMotherForMC ;
+    }
+    // ========================================================================    
+  }  // end of namespace GenMCParticles
 }  // end of namespace LoKi
 // ============================================================================
 // The END 

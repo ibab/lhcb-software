@@ -1,20 +1,4 @@
-// $Id: GenMCParticles.cpp,v 1.5 2007-04-16 16:16:45 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2007/01/23 13:29:18  ibelyaev
-//  fix for Ex/LoKiExample
-//
-// Revision 1.3  2006/10/27 13:38:22  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
-// New import: Generator/MC related part of LoKi project 
-// 
+// $Id: GenMCParticles.cpp,v 1.6 2007-06-10 20:04:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,8 +19,6 @@
 #include "LoKi/GenExtract.h"
 #include "LoKi/GenMCParticles.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for the functions from the file LoKi/GenMCParticles.h
@@ -53,14 +35,12 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/** constructor from the particle and relation table 
+/*  constructor from the particle and relation table 
  *  @param mc   pointer to MC particle 
  *  @param table relation table  
  */
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC 
+LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LHCb::MCParticle* mc   , 
   const LHCb::HepMC2MC*   table ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
@@ -70,12 +50,12 @@ LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC
   add ( mc ) ; 
 }
 // ============================================================================
-/** constructor from the particle and relation table 
+/*  constructor from the particle and relation table 
  *  @param mc   pointer to MC particle 
  *  @param table relation table  
  */
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC 
+LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LHCb::MCParticle::ConstVector& mc   , 
   const LHCb::HepMC2MC*   table ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
@@ -85,12 +65,12 @@ LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC
   add ( mc ) ; 
 }
 // ============================================================================
-/** constructor from the particles and relation table 
+/*  constructor from the particles and relation table 
  *  @param mc   range of MC particles 
  *  @param table relation table  
  */
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC 
+LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LoKi::MCTypes::MCRange& mc   , 
   const LHCb::HepMC2MC*         table ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
@@ -100,31 +80,31 @@ LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC
   add ( mc ) ; 
 }
 // ============================================================================
-/** copy constructor 
+/*  copy constructor 
  *  @param right object to be copied 
  */
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC 
-( const LoKi::GenParticles::IsAMotherForMC& right )
+LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
+( const LoKi::GenMCParticles::IsAMotherForMC& right )
   : LoKi::AuxFunBase                           ( right ) 
   , LoKi::Predicate<const HepMC::GenParticle*> ( right )
   , m_mcps  ( right.m_mcps  ) 
   , m_table ( right.m_table )
 {}  
 // ============================================================================
-/// MANDATORY: virtual destructor
+// MANDATORY: virtual destructor
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::~IsAMotherForMC(){}
+LoKi::GenMCParticles::IsAMotherForMC::~IsAMotherForMC(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+// MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC*
-LoKi::GenParticles::IsAMotherForMC::clone() const
-{ return new LoKi::GenParticles::IsAMotherForMC(*this) ; }
+LoKi::GenMCParticles::IsAMotherForMC*
+LoKi::GenMCParticles::IsAMotherForMC::clone() const
+{ return new LoKi::GenMCParticles::IsAMotherForMC(*this) ; }
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC::result_type 
-LoKi::GenParticles::IsAMotherForMC::operator() 
-  ( LoKi::GenParticles::IsAMotherForMC::argument p ) const 
+LoKi::GenMCParticles::IsAMotherForMC::result_type 
+LoKi::GenMCParticles::IsAMotherForMC::operator() 
+  ( LoKi::GenMCParticles::IsAMotherForMC::argument p ) const 
 {
   //
   if ( 0 == p ) 
@@ -176,16 +156,16 @@ LoKi::GenParticles::IsAMotherForMC::operator()
   }
   //
   return false ;  
-};
+}
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+// "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
-LoKi::GenParticles::IsAMotherForMC::fillStream
+LoKi::GenMCParticles::IsAMotherForMC::fillStream
 ( std::ostream& s ) const { return s << "GMCMOTH" ; }
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC& 
-LoKi::GenParticles::IsAMotherForMC::add ( const LHCb::MCParticle* mc ) 
+LoKi::GenMCParticles::IsAMotherForMC& 
+LoKi::GenMCParticles::IsAMotherForMC::add ( const LHCb::MCParticle* mc ) 
 {
   while ( 0 != mc ) 
   {
@@ -197,25 +177,22 @@ LoKi::GenParticles::IsAMotherForMC::add ( const LHCb::MCParticle* mc )
   return *this ;;
 }
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC& 
-LoKi::GenParticles::IsAMotherForMC::add
+LoKi::GenMCParticles::IsAMotherForMC& 
+LoKi::GenMCParticles::IsAMotherForMC::add
 ( const LHCb::MCParticle::ConstVector& mc ) 
 { return add ( mc.begin() , mc.end() ) ; }
 // ============================================================================
-LoKi::GenParticles::IsAMotherForMC& 
-LoKi::GenParticles::IsAMotherForMC::add
+LoKi::GenMCParticles::IsAMotherForMC& 
+LoKi::GenMCParticles::IsAMotherForMC::add
 ( const LoKi::Types::MCRange&          mc ) 
 { return add ( mc.begin() , mc.end() ) ; }
 // ============================================================================
-
-
-// ============================================================================
-/** constructor from particle and a table 
+/*  constructor from particle and a table 
  *  @param p pointer to the particle
  *  @param table pointer to table 
  */
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::MC2HepMC*     table ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -225,9 +202,9 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   add ( p ) ; 
 }
 // ============================================================================
-/// constructor from particle and a table 
+// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::HepMC2MC2D*   table ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -240,7 +217,7 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
 // ============================================================================
 /// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::HepMC2MC*     table ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -256,7 +233,7 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
  *  @param table  pointer to table 
  */
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenVertex* vertex , 
   const LHCb::MC2HepMC*   table  ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -266,9 +243,9 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   add ( vertex ) ; 
 }
 // ============================================================================
-/// constructor from particle and a table 
+// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::GenTypes::GenContainer& range , 
   const LHCb::MC2HepMC*   table  ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -278,9 +255,9 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   add ( range ) ; 
 }
 // ============================================================================
-/// constructor from particle and a table 
+// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::MC2HepMC*      table  ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -290,9 +267,9 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   add ( range ) ; 
 }
 // ============================================================================
-/// constructor from particle and a table 
+// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::HepMC2MC2D*    table  ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -303,9 +280,9 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   set ( table ) ;
 }
 // ============================================================================
-/// constructor from particle and a table 
+// constructor from particle and a table 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::HepMC2MC*      table  ) 
   : LoKi::Predicate<const LHCb::MCParticle*> ()
@@ -316,39 +293,39 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
   set ( table ) ;
 }
 // ============================================================================
-/** copy constructor
+/*  copy constructor
  *  @param rigth object to be copied 
  */
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
-( const LoKi::MCParticles::IsFromHepMC& right ) 
+LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
+( const LoKi::GenMCParticles::IsFromHepMC& right ) 
   : LoKi::AuxFunBase                         ( right ) 
   , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
   , m_gps   ( right.m_gps   ) 
   , m_table ( right.m_table ) 
 {}
 // ============================================================================
-/// MANDATORY: virtual destructor 
+// MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::~IsFromHepMC(){}
+LoKi::GenMCParticles::IsFromHepMC::~IsFromHepMC(){}
 // ============================================================================
-/// MANDATORY: clone method("virtual constructor")
+//  MANDATORY: clone method("virtual constructor")
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC*
-LoKi::MCParticles::IsFromHepMC::clone() const 
-{ return new LoKi::MCParticles::IsFromHepMC(*this) ; }
+LoKi::GenMCParticles::IsFromHepMC*
+LoKi::GenMCParticles::IsFromHepMC::clone() const 
+{ return new LoKi::GenMCParticles::IsFromHepMC(*this) ; }
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
-LoKi::MCParticles::IsFromHepMC::fillStream
+LoKi::GenMCParticles::IsFromHepMC::fillStream
 ( std::ostream& s ) const { return s << "FROMGTREE" ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC::result_type
-LoKi::MCParticles::IsFromHepMC::operator() 
-  ( LoKi::MCParticles::IsFromHepMC::argument p ) const 
+LoKi::GenMCParticles::IsFromHepMC::result_type
+LoKi::GenMCParticles::IsFromHepMC::operator() 
+  ( LoKi::GenMCParticles::IsFromHepMC::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -401,18 +378,18 @@ LoKi::MCParticles::IsFromHepMC::operator()
   //
   return false ;
   //
-};
+}
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::add ( const HepMC::GenParticle* p ) 
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::add ( const HepMC::GenParticle* p ) 
 {
   if ( 0 == p ) { return *this ;} 
   m_gps.insert( p ) ; 
   return add ( p->end_vertex () ) ;
 }
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::add ( const HepMC::GenVertex* v ) 
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::add ( const HepMC::GenVertex* v ) 
 {
   if ( 0 == v ) { return *this ; } 
   HepMC::GenVertex* _v = const_cast<HepMC::GenVertex*>( v ) ;  
@@ -420,12 +397,12 @@ LoKi::MCParticles::IsFromHepMC::add ( const HepMC::GenVertex* v )
                _v -> particles_end   ( HepMC::children ) ) ;
 }
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::add ( const LoKi::Types::GRange& r )  
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::add ( const LoKi::Types::GRange& r )  
 { return add ( r.begin() , r.end() ) ; }
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::set 
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::set 
 ( const LHCb::MC2HepMC*   table ) 
 {
   m_table = table ;
@@ -434,16 +411,16 @@ LoKi::MCParticles::IsFromHepMC::set
   return *this ;
 }
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::set
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::set
 ( const LHCb::HepMC2MC2D* table ) 
 {
   if ( 0 != table ) { set ( table->inverse() ) ; }
   return *this ;
 }
 // ============================================================================
-LoKi::MCParticles::IsFromHepMC& 
-LoKi::MCParticles::IsFromHepMC::set
+LoKi::GenMCParticles::IsFromHepMC& 
+LoKi::GenMCParticles::IsFromHepMC::set
 ( const LHCb::HepMC2MC*   table ) 
 { return set ( dynamic_cast<const LHCb::HepMC2MC2D*>( table ) ) ; }
 // ============================================================================

@@ -1,8 +1,6 @@
 <!-- 
-     * $Id: LoKiGenMC.xml,v 1.1 2007-06-01 11:53:46 ibelyaev Exp $ 
+     * $Id: LoKiGenMC.xml,v 1.2 2007-06-10 20:04:46 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-     * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -12,14 +10,13 @@
 
 <lcgdict>
   
-  <class pattern   = "LoKi::Interface<*>"               />
+  <class pattern = "LoKi::Interface<*HepMC*>"  />
   
-  <class pattern   = "LoKi::GenParticles::*"             />
-  <class pattern   = "LoKi::MCParticles::*"              />
+  <class pattern ="LoKi::GenMCParticles::*"    />
   
   <exclusion>
-    <class name="LoKi::GenParticles::IsAMotherForMC::MCPs" />
-    <class name="LoKi::MCParticles::IsFromHepMC::GPs"      />
+    <class name="LoKi::GenMCParticles::IsFromHepMC::GPs"     />
+    <class name="LoKi::GenMCParticles::IsAMotherForMC::MCPs" /> 
   </exclusion>
   
 </lcgdict>

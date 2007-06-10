@@ -1,8 +1,4 @@
-// $Id: LoKiGenMCDict.h,v 1.1 2007-06-01 11:53:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: LoKiGenMCDict.h,v 1.2 2007-06-10 20:04:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1

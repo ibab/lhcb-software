@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2007/06/03 20:40:33  ibelyaev
+#  update the functions
+#
 # Revision 1.1  2007/06/01 11:53:46  ibelyaev
 #  prepare for v3r0
 #
@@ -26,8 +29,8 @@ LoKi   = _LoKiGen.LoKi
 HepMC  = _LoKiGen.HepMC
 LHCb   = _LoKiMC.LHCb
 
-GMCMOTH   = LoKi.GenParticles.IsAMotherForMC
-FROMGTREE = LoKi.MCParticles.IsFromHepMC
+FROMGTREE = LoKi.GenMCParticles.IsFromHepMC
+GMCMOTH   = LoKi.GenMCParticles.IsAMotherForMC
 
 
 # =============================================================================
