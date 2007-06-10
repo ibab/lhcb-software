@@ -1,15 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2007/06/01 15:44:20  ibelyaev
-#  add MCREC and MCRECAS functors
-#
-# Revision 1.1  2007/06/01 11:57:36  ibelyaev
-#  prepare for v3r0
-#
-# =============================================================================
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
 #  The file is a part of LoKi and Bender projects
@@ -176,9 +166,9 @@ MCVFASPF   = LoKi.MCParticles.MCVertexFunAdapter
 ## @see LoKi::Cuts::MCDECAY
 MCDECAY    = LoKi.MCParticles.MCDecayPattern
 ## @see LoKi::Cuts::MCREC
-MCREC      = LoKi.MCParticles.MCRecontructible
+MCREC      = LoKi.MCParticles.MCReconstructible
 ## @see LoKi::Cuts::MCRECAS
-MCRECAS    = LoKi.MCParticles.MCRecontructibleAs
+MCRECAS    = LoKi.MCParticles.MCReconstructibleAs
 ## @see LoKi::Cuts::MCCHILD
 MCCHILD    = LoKi.MCParticles.ChildFunction 
 ## @see LoKi::Cuts::MCCHILDFUN
@@ -188,7 +178,7 @@ MCCHILDCUT = LoKi.MCParticles.ChildPredicate
 ## @see LoKi::Cuts::MCINTREE
 MCINTREE   = LoKi.MCParticles.InTree
 ## @see LoKi::Cuts::MCNINTREE
-MCNINTREE  = LoKi.MCParticles.NInTree
+MCNINTREE  = LoKi.MCParticles.NinTree
 ## @see LoKi::Cuts::MCSUMTREE
 MCSUMTREE  = LoKi.MCParticles.SumTree
 ## @see LoKi::Cuts::MCMULTTREE
@@ -261,6 +251,8 @@ MCISDECAY   = LoKi.MCVertices.Decay          ()
 MCVDIST     = LoKi.MCVertices.MCVertexDistance
 ## @see LoKi::Cuts::MCVXFUN
 MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
+
+_MCChild = LoKi.Child.MCChild 
 
 # =============================================================================
 if '__main__' == __name__ :

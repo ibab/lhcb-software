@@ -1,11 +1,4 @@
-// $Id: MCChild.cpp,v 1.2 2007-06-04 09:22:56 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/03 20:41:11  ibelyaev
-//  update LoKi::Child namespace
-// 
+// $Id: MCChild.cpp,v 1.3 2007-06-10 19:59:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,14 +18,14 @@
 #include "LoKi/MCDecayVertex.h"
 // ============================================================================
 /** @file
- *  Implementation file for functions form namespace LoKi::Child 
+ *  Implementation file for functions form namespace LoKi::MCChild 
  *  @date 2007-06-02 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
 // ============================================================================
 // get the number of children
 // ============================================================================
-std::size_t LoKi::Child::nChildren
+std::size_t LoKi::MCChild::nChildren
 ( const LHCb::MCParticle*   mother ) 
 {
   if ( 0 == mother       ) { return 0 ; }                           // RETURN 
@@ -56,7 +49,7 @@ std::size_t LoKi::Child::nChildren
  *  @return daughter particle with given index 
  */
 // ============================================================================
-const LHCb::MCParticle* LoKi::Child::child 
+const LHCb::MCParticle* LoKi::MCChild::child 
 ( const LHCb::MCParticle* mother , 
   const size_t            index  ) 
 {
@@ -83,7 +76,7 @@ const LHCb::MCParticle* LoKi::Child::child
  */
 // ========================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Child::children 
+LoKi::MCChild::children 
 ( const LHCb::MCParticle* particle  , 
   const bool              decayOnly ) 
 {
@@ -111,7 +104,7 @@ LoKi::Child::children
  */
 // ============================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Child::descendants
+LoKi::MCChild::descendants
 ( const LHCb::MCParticle* particle  , 
   const bool              decayOnly ) 
 {
@@ -148,7 +141,7 @@ LoKi::Child::descendants
  */
 // ============================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Child::ancestors 
+LoKi::MCChild::ancestors 
 ( const LHCb::MCParticle* particle  ) 
 {
   LHCb::MCParticle::ConstVector result ;
@@ -170,7 +163,7 @@ LoKi::Child::ancestors
  */
 // ============================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Child::parents
+LoKi::MCChild::parents
 ( const LHCb::MCParticle* particle  )
 {
   LHCb::MCParticle::ConstVector result ;

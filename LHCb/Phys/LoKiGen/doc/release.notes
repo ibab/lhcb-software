@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2007-06-04 08:29:27 cattanem Exp $ 
+! $Id: release.notes,v 1.32 2007-06-10 19:56:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,11 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2007-06-10 - Vanya BELYAEV
+
+ - minor fixes to please Reflex and make the classes/method vizible in python
+
 
 !=========================== LoKiGen v3r0 2007-06-04 ==========================
 ! 2007-06-01 - Vanya BELYAEV

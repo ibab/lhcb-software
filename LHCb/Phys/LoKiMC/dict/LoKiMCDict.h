@@ -1,11 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.2 2007-06-04 09:22:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/01 11:57:36  ibelyaev
-//  prepare for v3r0
-// 
+// $Id: LoKiMCDict.h,v 1.3 2007-06-10 19:59:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -21,6 +14,7 @@
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/MCAlgsDicts.h"
+#include "LoKi/MCFinderDicts.h"
 // ============================================================================
 namespace
 {

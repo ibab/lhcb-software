@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.23 2007-06-04 09:57:30 cattanem Exp $ 
+! $Id: release.notes,v 1.24 2007-06-10 19:59:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.24 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,27 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-06-10 - Vanya BELYAEV
+
+ - add the proper decorators for MCFinder class and overall fixes to please Reflex 
+
+  New files:
+
+   LoKi/MCFinderDicts.h
+   src/MCFinderDicts.cpp
+
+  Modified files:
+   
+    LoKi/MCChild.h
+    LoKi/MCFinder.h
+    dict/LoKiMC.xml
+    dict/LoKiMCDict.h
+    python/LoKiMC/decorators.py
+    python/LoKiMC/functions.py
+    src/MCChild.cpp
+
+
 
 !========================== LoKiMC v3r0 2007-06-04 ============================
 ! 2007-06-04 - Marco Cattaneo
@@ -318,6 +339,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.23  2007/06/04 09:57:30  cattanem
+! adapt to MCInterfaces
+!
 ! Revision 1.22  2007/06/04 09:22:56  ibelyaev
 !  make a coherent interface for LoKi::Child&LoKi::Algs
 !

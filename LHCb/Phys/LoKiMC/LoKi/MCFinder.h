@@ -1,9 +1,4 @@
-// $Id: MCFinder.h,v 1.4 2007-06-01 11:57:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Rrvision:$ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: MCFinder.h,v 1.5 2007-06-10 19:59:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDER_H 
 #define LOKI_MCFINDER_H 1
@@ -54,6 +49,8 @@ namespace LoKi
     virtual ~MCFinder( ); ///< Destructor
     /// implicit conversion to the pointer 
     operator const LoKi::MCFinderObj* () const ; 
+    /// check for pointer validity:
+    bool operator! () const { return validPointer() ; }
   private:
     // the default constructor is disabled 
     MCFinder() ;

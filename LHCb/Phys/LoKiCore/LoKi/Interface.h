@@ -1,17 +1,4 @@
-// $Id: Interface.h,v 1.5 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/08/28 15:20:32  ibelyaev
-//  fix a reference counter problem
-//
-// Revision 1.3  2006/05/26 07:07:04  ibelyaev
-//  important bug fix in LoKi::Interface
-//
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Interface.h,v 1.6 2007-06-10 19:54:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -22,8 +9,6 @@
 // ============================================================================
 #include "LoKi/AddRef.h"
 #include "LoKi/Release.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,7 +24,6 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @class Interface Interface.h LoKi/Interface.h
@@ -119,10 +103,8 @@ namespace LoKi
   private:
     /// the object to be stored 
     TYPE* m_object ;
-  } ; 
-  
+  } ;
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

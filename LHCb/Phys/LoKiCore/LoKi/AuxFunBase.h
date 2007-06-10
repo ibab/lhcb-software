@@ -1,11 +1,4 @@
-// $Id: AuxFunBase.h,v 1.4 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: AuxFunBase.h,v 1.5 2007-06-10 19:54:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -66,12 +59,12 @@ namespace LoKi
   {   
   protected:
   public:    // to please Visual C++ compiler
-    // default constructor 
-    AuxFunBase  ();
+    // Default constructor
+    AuxFunBase  () ; ///< Default constructor
     // copy consructor 
-    AuxFunBase  ( const AuxFunBase& );
+    AuxFunBase  ( const AuxFunBase& ); //</ copy consructor 
     // destructor 
-    virtual ~AuxFunBase ();
+    virtual ~AuxFunBase (); ///< destructor 
   protected:
   public:    // to please Visual C++ compiler
     /** print error message 
@@ -129,7 +122,16 @@ namespace LoKi
     virtual std::string   printOut  () const ;
     /// the actual object type 
     virtual std::string   objType   () const ;
+    /// unique function ID (hash); see LoKi::genericID 
+    virtual std::size_t   id        () const ;
   };
+  // ==========================================================================
+  /** simple fuctiin to generate the default generic 
+   *  (hopefully unique?) ID for the functor 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   */
+  std::size_t genericID( const AuxFunBase& ) ;  
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 /** output operator of function objects to std::ostream 

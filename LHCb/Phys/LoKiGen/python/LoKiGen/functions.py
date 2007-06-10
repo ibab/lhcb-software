@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.1  2007/06/01 11:48:06  ibelyaev
-# prepare for v3r0
-#
-# =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiGen library
 #  The file is a part of LoKi and Bender projects
@@ -19,9 +12,11 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators as _LoKiCore 
 
 ## needed since there is no autoloading of HepMC dictionaries:
-import PyCintex 
-PyCintex.loadDict ( "libHepMCRflx" ) 
+import sys,PyCintex
 
+if sys.platform == 'win32' : PyCintex.loadDict (    "HepMCRflx" )  
+else                       : PyCintex.loadDict ( "libHepMCRflx" )  
+    
 # Namespaces:
 _global  = _LoKiCore._global 
 std      = _LoKiCore.std
@@ -174,8 +169,6 @@ G3Q      = LoKi.GenParticles.ThreeCharge()
 GINTREE  = LoKi.GenParticles.InTree
 
 
-
-
 ## @see LoKi::Cuts::GVTRUE
 GVTRUE     = LoKi.BooleanConstant( _GV )(True)
 ## @see LoKi::Cuts::GVFALSE
@@ -213,39 +206,8 @@ GVSUM      = LoKi.GenVertices.SumIF
 
 
 # =============================================================================
-# make the decoration of all objects fomr this module
-# =============================================================================
-
-_decorated  = _LoKiCore.getAndDecorateFunctions (
-    __name__                               , ## module name 
-    GFunc                                  , ## the base 
-    LoKi.Dicts.FunCalls(HepMC.GenParticle) , ## call-traits 
-    LoKi.Dicts.FuncOps(_GP)                ) ## operators 
-_decorated |= _LoKiCore.getAndDecorateFunctions  (
-    __name__                               , ## module name 
-    GVFunc                                 , ## the base 
-    LoKi.Dicts.FunCalls(HepMC.GenVertex)   , ## call-traits 
-    LoKi.Dicts.FuncOps(_GV)                ) ## operators
-_decorated |=  _LoKiCore.getAndDecoratePredicates (
-    __name__                               , ## module name 
-    GCuts                                  , ## the base 
-    LoKi.Dicts.CutCalls(HepMC.GenParticle) , ## call-traits 
-    LoKi.Dicts.FuncOps(_GP)                ) ## operators 
-_decorated |= _LoKiCore.getAndDecoratePredicates (
-    __name__                               , ## module name 
-    GVCuts                                 , ## the base 
-    LoKi.Dicts.FunCalls(HepMC.GenVertex)   , ## call-traits 
-    LoKi.Dicts.FuncOps(_GV)                ) ## the operators 
-
-# decorate pids (Comparison with strings, integers and ParticleID objects:
-for t in ( GID , GABSID ) :
-    t = type ( t ) 
-    _LoKiCore.decoratePID ( t , LoKi.Dicts.PIDOps ( t ) )
-    
-# =============================================================================
 if '__main__' == __name__ :
-    print 'Number of properly decorated types: %s'%len(_decorated)
-    for o in _decorated : print o
+    for o in dir() : print o
         
 # =============================================================================
 # The END

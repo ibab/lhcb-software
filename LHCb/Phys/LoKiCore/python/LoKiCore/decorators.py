@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2007/06/01 11:35:27  ibelyaev
+#  prepare for v3r0
+#
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
@@ -94,16 +97,17 @@ def decorateFunctions ( funcs , calls , opers ) :
     """ Decorate the functions using the proper adapters """
     for fun in funcs :
         # operator(): 
-        def _call_ (s,a) :
+        def _call_ (s,*a) :
             """
             Invoke the functional operator: fun(arg)
             
             >>> arg = ...
             >>> result = fun(arg)
+            >>> result = fun(arg1,arg2) # for 2-argument functions 
             
             Uses:\n
             """ 
-            return calls.__call__ (s,a)
+            return calls.__call__ (s,*a)
         # comparisons:
         def _lt_   (s,a) :
             """
@@ -483,6 +487,8 @@ def decoratePID ( fun , opers ) :
     fun . __eq__ = _eq_
     fun . __ne__ = _ne_
     return fun                                    ## RETURN
+
+
 # =============================================================================
 ## import all dependent functions 
 # =============================================================================

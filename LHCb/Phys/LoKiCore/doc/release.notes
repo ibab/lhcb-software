@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.49 2007-06-04 08:24:10 cattanem Exp $ 
+! $Id: release.notes,v 1.50 2007-06-10 19:54:07 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.49 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.50 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,47 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2007-06-10 - Vanya BELYAEV
+
+ - many changes: preparation fo the next major LoKi release.
+ - also make few important fixes:
+     
+     1) split verrylarge files into mor emanageable pieces 
+     2) make possible to reuse full LoKi functionality for 
+        functions with two arguments (needed for HLT purposes) using nice trick 
+        "twho is just the special case of one"
+     3) Make LoKi much more flexible with respect to argument types, 
+        up to now it was too "pointer-oriented".
+
+  New files:
+  
+  1) LoKi/BiFunctions.h
+     the base for 2-argument functions: "tho is just the special case of one"
+  2) LoKi/Field.h
+     simple class which allows the uniform treatment of references and pointers
+  3) LoKi/Holder.h
+     the major class for "twho as the special case of one" trick
+  4) LoKi/Primitives.h
+     collection of primitive function (former part of LoKi/Functions.h)
+  5) LoKi/Reference.h
+     important class to consider references as object 
+  6) LoKi/same.h
+     fixes for non-pointer argument 
+  7) LoKi/valid.h
+     fixes for non-pointer argument 
+
+   Modified files:
+
+ LoKi/AuxFunBase.h
+ LoKi/Functions.h
+ LoKi/Interface.h
+ python/LoKiCore/decorators.py
+ python/LoKiCore/functions.py
+ src/AuxFunBase.cpp
+
+
+           
+ 
 !=========================== LoKiCore v3r0 2007-06-04 ======================
 ! 2007-06-01 - Vanya BELYAEV
 
@@ -301,6 +342,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.49  2007/06/04 08:24:10  cattanem
+! v3r0
+!
 ! Revision 1.48  2007/06/01 11:35:27  ibelyaev
 !  prepare for v3r0
 !

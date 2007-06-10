@@ -1,11 +1,4 @@
-// $Id: MCChild.h,v 1.2 2007-06-04 09:22:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/03 20:41:10  ibelyaev
-//  update LoKi::Child namespace
-// 
+// $Id: MCChild.h,v 1.3 2007-06-10 19:59:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCCHILD_H 
 #define LOKI_MCCHILD_H 1
@@ -19,7 +12,7 @@
 // ============================================================================
 namespace LoKi 
 {
-  namespace Child 
+  namespace MCChild 
   {
     // ========================================================================
     /** get the number of children for the given MC-particle
@@ -160,6 +153,7 @@ namespace LoKi
     LHCb::MCParticle::ConstVector
     ancestors 
     ( const LHCb::MCParticle* particle  ) ;
+    // ========================================================================
     /** get all (0 or 1) parents for the given particle 
      *  @param particle  MC-particle 
      *  @return vector of parent particles (1or 2)
@@ -169,6 +163,7 @@ namespace LoKi
     LHCb::MCParticle::ConstVector
     parents
     ( const LHCb::MCParticle* particle  ) ;
+    // ========================================================================
     /** get the mother particle  (just for completeness of interface)
      *  @param particle  MC-particle 
      *  @return mother particle 
@@ -180,7 +175,11 @@ namespace LoKi
     mother 
     ( const LHCb::MCParticle* particle  ) 
     { return 0 == particle ? particle : particle->mother() ; }
-    
+    // ========================================================================
+  } // end of namespace LoKi::MCChild
+  namespace Child
+  {
+    using namespace LoKi::MCChild ;    
   } // end of namespace LoKi::Child
 } // end of namespace LoKi
 // ============================================================================

@@ -1,8 +1,6 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.3 2007-06-04 09:22:55 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.4 2007-06-10 19:59:04 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
-     * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -71,16 +69,18 @@
   
   <class pattern   = "LoKi::MCParticles::*"                />
   <class pattern   = "LoKi::MCVertices::*"                 />
-
+  
   <function pattern = "LoKi::Kinematics::*"                />
   <function pattern = "LoKi::Print::*"                     />
-  <function pattern = "LoKi::Child::*"                     />
+  <function pattern = "LoKi::MCChild::*"                     />
   <function pattern = "LoKi::Dicts::Algs::*"               />
+  <function pattern = "LoKi::Dicts::MCFinderDicts::*"      />
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
   <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::CutCalls<LHCb::MC*>"     />
+
 
   <class name = "std::vector<const LHCb::MCVertex*>"        /> 
   

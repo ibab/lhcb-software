@@ -1,8 +1,4 @@
-// $Id: GenChild.cpp,v 1.1 2007-06-03 20:39:37 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: GenChild.cpp,v 1.2 2007-06-10 19:56:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +25,7 @@
  *  @date 2007-06-02
  */
 // ============================================================================
-std::size_t LoKi::Child::nChildren 
+std::size_t LoKi::GenChild::nChildren 
 ( const HepMC::GenParticle*   mother ) 
 {
   if ( 0 == mother     ) { return 0 ; }                           // RETURN 
@@ -53,7 +49,7 @@ std::size_t LoKi::Child::nChildren
  *  @date 2007-06-02
  */    
 // ============================================================================
-const HepMC::GenParticle* LoKi::Child::child 
+const HepMC::GenParticle* LoKi::GenChild::child 
 ( const HepMC::GenParticle* mother , 
   const size_t              index  ) 
 {
@@ -78,7 +74,7 @@ const HepMC::GenParticle* LoKi::Child::child
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::Child::particles 
+LoKi::GenChild::particles 
 ( const HepMC::GenVertex*    vertex , 
   const HepMC::IteratorRange range  ) 
 {
@@ -97,7 +93,7 @@ LoKi::Child::particles
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Child::particles_in 
+LoKi::GenChild::particles_in 
 ( const HepMC::GenVertex* vertex ) 
 {
   if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
@@ -114,7 +110,7 @@ LoKi::Child::particles_in
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Child::particles_out
+LoKi::GenChild::particles_out
 ( const HepMC::GenVertex* vertex ) 
 {
   if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
@@ -131,7 +127,7 @@ LoKi::Child::particles_out
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::Child::particles_all 
+LoKi::GenChild::particles_all 
 ( const HepMC::GenEvent* event )  
 {
   if ( 0 == event ) { return std::vector<const HepMC::GenParticle*>() ; }
@@ -148,7 +144,7 @@ LoKi::Child::particles_all
  */
 // ============================================================================
 std::vector<const HepMC::GenVertex*> 
-LoKi::Child::vertices_all 
+LoKi::GenChild::vertices_all 
 ( const HepMC::GenEvent* event )  
 {
   if ( 0 == event ) { return std::vector<const HepMC::GenVertex*>() ; }
@@ -163,10 +159,10 @@ LoKi::Child::vertices_all
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::Child::children ( const HepMC::GenParticle* particle ) 
+LoKi::GenChild::children ( const HepMC::GenParticle* particle ) 
 {
   if ( 0 == particle ){ return std::vector<const HepMC::GenParticle*>() ; }
-  return LoKi::Child::children ( particle->end_vertex() ) ;
+  return LoKi::GenChild::children ( particle->end_vertex() ) ;
 }
 // ============================================================================
 /*  get all "ancestors" particles form the givel particlle 
@@ -175,10 +171,10 @@ LoKi::Child::children ( const HepMC::GenParticle* particle )
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::Child::ancestors  ( const HepMC::GenParticle* particle ) 
+LoKi::GenChild::ancestors  ( const HepMC::GenParticle* particle ) 
 {
   if ( 0 == particle ){ return std::vector<const HepMC::GenParticle*>() ; }
-  return LoKi::Child::ancestors ( particle->production_vertex() ) ;
+  return LoKi::GenChild::ancestors ( particle->production_vertex() ) ;
 } 
 // ============================================================================
 /*  get all "descendant" particles form the given particle 
@@ -187,14 +183,12 @@ LoKi::Child::ancestors  ( const HepMC::GenParticle* particle )
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::Child::descendants ( const HepMC::GenParticle* particle ) 
+LoKi::GenChild::descendants ( const HepMC::GenParticle* particle ) 
 {
   if ( 0 == particle ){ return std::vector<const HepMC::GenParticle*>() ; }
-  return LoKi::Child::descendants ( particle->end_vertex() ) ;
+  return LoKi::GenChild::descendants ( particle->end_vertex() ) ;
 }
 // ============================================================================
-
-
 
 // ============================================================================
 // The END 
