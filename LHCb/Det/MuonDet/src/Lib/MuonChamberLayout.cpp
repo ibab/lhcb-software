@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.25 2007-06-08 15:34:00 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.26 2007-06-11 16:04:57 cattanem Exp $
 // Include files 
 
 // Gaudi
@@ -502,8 +502,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     substring.assign(name,start,len);
 
     sscanf(substring.c_str(),"/M%d",&obtIS);
-    if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;  
-  std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;    
+    if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;
     while(iS != obtIS-1) {
       std::cout<<"There is/are void stations. "<<std::endl;
       for(int ire = 0; ire<4; ire++) {
