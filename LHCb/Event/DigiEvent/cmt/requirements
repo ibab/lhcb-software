@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2007-06-08 14:26:04 cattanem Exp $
+# $Id: requirements,v 1.10 2007-06-11 11:55:39 cattanem Exp $
 package DigiEvent
 version v2r2
 
@@ -14,7 +14,7 @@ end_private
 # Produce Header-Files from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
-apply_pattern install_more_includes more=Event
+apply_pattern install_more_includes more=Event offset=Kernel
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
