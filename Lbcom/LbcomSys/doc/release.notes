@@ -11,11 +11,14 @@ This version uses Gaudi v19r4 and LHCb v22r6
 
 - Packages modified: SiTools v1r3, VeloTools v2r0, STAlgorithms v2r2,
     STCheckers v2r2, RichMCMonitors v1r3, RichMCTools v3r6, L0Calo v9r8,
-    MuonAssociators v3r1
+    MuonAssociators v3r1, OTMonitor v6r6
 
 - In VeloTools v2r0
   . New model of the Velo error estimate implemented, now returned error
     depends both on sensor pitch and projected angle of a track
+
+- In OTMonitor v6r6
+  . Add time spectrum histogram to OTTimeChecker
 
 - In SiTools v1r3, STAlgorithms v2r2, STCheckers v2r2, RichMCMonitors v1r3,
      RichMCTools v3r6, MuonAssociators v3r1

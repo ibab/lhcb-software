@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r5
+version v6r6
 
 branches doc cmt
 
@@ -14,7 +14,7 @@ use L0Muon            v7r1  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
-use OTMonitor         v2r6  OT          # Jan Amoraal
+use OTMonitor         v2r7  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
