@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.2 2007-03-02 17:26:27 cattanem Exp $
+// $Id: DaVinciKernelDict.h,v 1.3 2007-06-11 08:07:31 cattanem Exp $
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
 
@@ -40,6 +40,7 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IParticleReFitter.h"
 #include "Kernel/IParticleStuffer.h"
+#include "Kernel/IParticleTransporter.h"
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/IPlotTool.h"
 #include "Kernel/IProtoParticleFilter.h"

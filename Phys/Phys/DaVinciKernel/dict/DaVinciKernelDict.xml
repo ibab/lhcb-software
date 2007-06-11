@@ -30,6 +30,7 @@
   <class name = "IParticleMaker"/>
   <class name = "IParticleReFitter"/>
   <class name = "IParticleStuffer"/>
+  <class name = "IParticleTransporter"/>
   <class name = "IPhysDesktop"/>
   <class name = "IPlotTool"/>
   <class name = "IProtoParticleFilter"/>

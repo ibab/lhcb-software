@@ -3,7 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
-!========================= DaVinciKernel v6r4 2007-06-04 ====================
+!========================= DaVinciKernel v6r4 2007-06-11 ====================
+! 2007-06-11 - Marco Cattaneo
+ - Put back IParticleTransporter interface (was in PhysEvent)
+
 ! 2007-06-04 - Marco Cattaneo
  - DVAlgorithm::setFilterPassed now returns void, as in Gaudi v19r4 base class
 
