@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.50 2007-06-10 19:54:07 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.50 $
+! $Id: release.notes,v 1.51 2007-06-11 09:13:46 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,9 +15,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v3r0 2007-06-11 ======================
 ! 2007-06-10 - Vanya BELYAEV
 
- - many changes: preparation fo the next major LoKi release.
+ - many changes: preparation for the next major LoKi release.
  - also make few important fixes:
      
      1) split verrylarge files into mor emanageable pieces 
@@ -54,11 +53,7 @@
  python/LoKiCore/decorators.py
  python/LoKiCore/functions.py
  src/AuxFunBase.cpp
-
-
-           
  
-!=========================== LoKiCore v3r0 2007-06-04 ======================
 ! 2007-06-01 - Vanya BELYAEV
 
  - many changes: preparation for the next major LoKi version
@@ -342,6 +337,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.50  2007/06/10 19:54:07  ibelyaev
+!  prepare for v3r0
+!
 ! Revision 1.49  2007/06/04 08:24:10  cattanem
 ! v3r0
 !

@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.24 2007-06-10 19:59:05 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.24 $
+! $Id: release.notes,v 1.25 2007-06-11 09:17:01 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,9 +15,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v3r0 2007-06-11 ============================
 ! 2007-06-10 - Vanya BELYAEV
-
- - add the proper decorators for MCFinder class and overall fixes to please Reflex 
+ - add the proper decorators for MCFinder class and overall fixes to please Reflex
 
   New files:
 
@@ -36,9 +34,6 @@
     python/LoKiMC/functions.py
     src/MCChild.cpp
 
-
-
-!========================== LoKiMC v3r0 2007-06-04 ============================
 ! 2007-06-04 - Marco Cattaneo
  - Adapt to new location for MCInterfaces includes
 
@@ -339,6 +334,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.24  2007/06/10 19:59:05  ibelyaev
+!  prepare for v3r0
+!
 ! Revision 1.23  2007/06/04 09:57:30  cattanem
 ! adapt to MCInterfaces
 !
