@@ -1,4 +1,4 @@
-// $Id: MuonMeasurementProvider.cpp,v 1.1 2007-06-07 08:57:17 wouter Exp $
+// $Id: MuonMeasurementProvider.cpp,v 1.2 2007-06-11 16:54:37 cattanem Exp $
 
 /** @class MuonMeasurementProvider MuonMeasurementProvider.h
  *
@@ -15,6 +15,7 @@
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Event/MuonMeasurement.h"
+#include "Event/StateVector.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "GaudiKernel/ToolFactory.h"
 

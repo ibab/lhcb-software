@@ -1,8 +1,11 @@
-// $Id: MeasurementProvider.cpp,v 1.29 2007-06-07 08:57:18 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.30 2007-06-11 16:54:37 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+
+// Event model
+#include "Event/StateVector.h"
 
 // local
 #include "MeasurementProvider.h"
