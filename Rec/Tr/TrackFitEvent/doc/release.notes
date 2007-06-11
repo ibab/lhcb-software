@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r5 2007-06-11 ====================
+! 2007-06-11 - Marco Cattaneo
+ - Adapted requirements to new GaudiObjDesc v10r0 patterns
+
 ! 2007-06-06 - Wouter Hulsbergen
  - made init calls in OT,ST,Velo public for use in MeasurementCreator
  - added support for calling velo position tool with reference vector

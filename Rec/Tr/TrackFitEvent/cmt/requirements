@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v3r4
+version           v3r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,11 +21,13 @@ use   DigiEvent       v*      Event
 use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
-
-#============================================================================
-#---- Produce Header-Files from XML description
 private
-document obj2doth TrackFitEventObj2Doth ../xml/*.xml
+use GaudiObjDesc v* -no_auto_imports
+end_private
+
+# Produce Header-Files from XML description
+#============================================================================
+apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
@@ -34,20 +36,10 @@ document customdict TrackFitEventCustomDict ../Event/lcgDict.h
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
-macro TrackFitEventObj2Dict_GODflags " -s ../Event/ " \
-      WIN32                          " -s ..\Event\ "
-document obj2dict TrackFitEventObj2Dict ../xml/*.xml
+macro TrackFitEventDict_dependencies TrackFitEvent
+apply_pattern god_dictionary files=../xml/*.xml
 
-public
-library          TrackFitEvent         ../src/*.cpp
-library          TrackFitEventDict     ../$(tag)/dict/TrackFitEvent/*.cpp
-
+# Build linker library
 #============================================================================
-# define library link options
-#============================================================================
+library       TrackFitEvent     *.cpp
 apply_pattern linker_library	library=TrackFitEvent
-apply_pattern component_library library=TrackFitEventDict
-macro_remove constituents TrackFitEventDictRootMap
-
-private
-use GaudiObjDesc v* -no_auto_imports
