@@ -9,4 +9,5 @@
   <class name="MuonODEBoard"       />
   <class name="MuonStationCabling" />
   <class name="IMuonPosTool"       />
+  <variable pattern="DeMuonLocation::*" />
 </lcgdict>
