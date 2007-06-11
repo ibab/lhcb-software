@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r2>2007-06-05 Boole v14r2</A></H1><PRE>
+</PRE><H1><A NAME=v14r2>2007-06-11 Boole v14r2</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
@@ -16,10 +16,19 @@ Brunel v31r5 or greater
       (leave explicit versions for databases)
     + Use only packages needed to compile or to setup up run time environment
   . Adapt to new rootInTES convention in Gaudi v19r4
-   (CaloDigit v9r4, MuonMoniDigi v2r2, MuonAlgs v6r4, DigiAlg v4r8)
+   (CaloDAQ v3r3, CaloDigit v9r4, L0Calo v9r8, MuonDAQ v3r2, MuonMoniDigi v2r2,
+    MuonAlgs v6r4, MuonAssociators v3r1, DigiAlg v4r8)
+
+- New functionality
+  . Add possibility to smear OT measurements in time instead of distance. Off by
+    default (OTSimulation v3r11, see details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=1&amp;materialId=slides&amp;confId=10157"T-Rec on 2007-06-11</a><PRE>)
+
+- Bug fixes
+  . Check untested status codes (MuonAlgs v6r4,MuonBackground v2r4,MuonDet v6r3)
 
 - Monitoring changes
   . Improved format of counters printout (GaudiKernel v22r3)
+  . Add time spectrum histogram to OTTimeChecker (OTMonitor v6r6)
 
 </PRE><H1><A NAME=v14r1>2007-05-21 Boole v14r1</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5

@@ -17,11 +17,11 @@ use CaloDigit           v2r4    Calo  # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r4    Muon  # Alessia Satta
-use MuonBackground      v2r3    Muon  # Alessia Satta
+use MuonBackground      v2r4    Muon  # Alessia Satta
 use MuonMoniDigi        v2r2    Muon  # Alessio Sarti
 
 # Outer Tracker
-use OTSimulation        v3r10   OT    # Jan Amoraal
+use OTSimulation        v3r11   OT    # Jan Amoraal
 
 # Rich
 use RichDigiQC          v3r7    Rich  # Chris Jones
