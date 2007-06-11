@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.9 2007-05-01 22:24:27 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.10 2007-06-11 15:45:48 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -47,6 +47,7 @@ protected:
   bool m_getRaw;
   std::string m_raw;
   bool m_extraHeader;
+  bool m_packed;
 private:
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H

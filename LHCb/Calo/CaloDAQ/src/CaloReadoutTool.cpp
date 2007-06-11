@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.13 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.14 2007-06-11 15:45:48 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
     return StatusCode::FAILURE;
   }
       
-
+  m_packed =false;
   m_banks = 0;
   if( !m_packedIsDefault){
     debug() << "Banks of short type are requested as default" << endreq;
@@ -82,6 +82,7 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
     }else{
       if( !m_packedIsDefault){      
         debug()<< " Requested banks of packed type has been found" << endreq;
+        m_packed = true;
       }else{
         debug()<< " Requested banks of short type has found" << endreq;
       }
@@ -91,6 +92,7 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
       debug()<< " Requested banks of short type has been found" << endreq;
     }else{
       debug()<< " Requested banks of packed type has found" << endreq;
+      m_packed =true;
     }
   }
   return StatusCode::SUCCESS;

@@ -9,7 +9,10 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloDataProviderPatched
 //
-// 2005-01-10 : Olivier Callot
+// (temporarly) patched version of CaloDataProvider for Calo commissioning test
+// WARNING : only works with packed Calo bank (TELL1 format) !!!
+//
+// 2005-01-10 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( CaloDataProviderPatched );
@@ -84,7 +87,7 @@ StatusCode CaloDataProviderPatched::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
-std::string CaloDataProviderPatched::rawRoot(){return rootInTES();}
+std::string CaloDataProviderPatched::rawRoot(){return rootOnTES();}
 //-------------------------------------
 StatusCode CaloDataProviderPatched::setBank( ) {
   debug() << "==> Reset " << name() << endmsg;

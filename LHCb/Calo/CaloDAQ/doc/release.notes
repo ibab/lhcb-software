@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2007-06-11 - Olivier Deschamps
+ - fix CaloDataProvider in order the tool can run correctly on 0-suppressed banks 
+  (requested by Johannes Albrecht for L0-confirmation studies)
+
 !========================== CaloDAQ v3r3 2007-06-04 ==========================
 ! 2007-06-04 - Marco Cattaneo
  - Remove rootOnTES() logic, now done in GaudiAlg/Tool base class

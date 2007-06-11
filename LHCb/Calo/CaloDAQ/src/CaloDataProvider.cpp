@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloDataProvider
 //
-// 2005-01-10 : Olivier Callot
+// 2005-01-10 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( CaloDataProvider );
@@ -76,6 +76,9 @@ StatusCode CaloDataProvider::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
+//-------------------------------------------------------
+// Public methods :
+//-------------------------------------------------------
 
 std::string CaloDataProvider::rawRoot(){return rootInTES();}
 //-------------------------------------
@@ -83,7 +86,9 @@ StatusCode CaloDataProvider::setBank( ) {
   debug() << "==> Reset " << name() << endmsg;
   // Reset all containers and get CaloBanks
   clear();
-  return getCaloBanksFromRaw();
+  StatusCode sc=getCaloBanksFromRaw();
+  if( sc.isSuccess() && !m_packed)sc=decodeTell1(-1); // Decode the 0-suppressed bank by default
+  return sc;
 }
 
 //-------------------------------------
@@ -121,6 +126,7 @@ CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source){
 double CaloDataProvider::digit (LHCb::CaloCellID id){
   if( 0 >  m_digits.index(id) ){
     int temp = adc(id);
+    if( 0 == temp && 0 >  m_adcs.index(id) ) return 0.; // 0-suppressed data or non-valid CellID
     double e = ( double(temp) - m_pedShift ) * m_calo->cellGain( id );
     LHCb::CaloDigit dig(id,e);
     m_digits.addEntry( dig , id);
@@ -130,12 +136,19 @@ double CaloDataProvider::digit (LHCb::CaloCellID id){
 }
 //-------------------------------------------------------
 int CaloDataProvider::adc (LHCb::CaloCellID id){
-  if( 0 >  m_adcs.index(id) )decodeCell( id );
-  if( 0 >  m_adcs.index(id) )return 0;
+  StatusCode sc=StatusCode::SUCCESS;
+  if( 0 >  m_adcs.index(id) )sc = decodeCell( id );
+  if( 0 >  m_adcs.index(id) || !sc.isSuccess() )return 0;// 0-suppressed data or non-valid CellID
   return m_adcs[id].adc();
 }
+
+//-------------------------------------------------------
+// Protected methods :
 //-------------------------------------------------------
 StatusCode CaloDataProvider::decodeCell(LHCb::CaloCellID id ){
+
+  if( !m_packed)return StatusCode::SUCCESS; // short bank should be already decoded by default
+  // for packed banks only (sourceID = Tell1 ID)
   int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
   if(card<0)return StatusCode::FAILURE;
   int tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
