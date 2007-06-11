@@ -2,8 +2,12 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v3r11 2007-06-11 =====================
+! 2007-06-11 - Marco Cattaneo
+ - Remove obsolete file OTSimulation_load.cpp
+
 ! 2007-05-29 M. Needham
- - Add possibility to smear in time instance of distance to IOTSmearer
+ - Add possibility to smear in time instead of distance to IOTSmearer
  - Tidy up IOTSmearer class (const, const, const)
  - Add option to smear in time to MCOTDepositCreator (false by default)
   --> Dont set the option to true unless you know what you are doing !
