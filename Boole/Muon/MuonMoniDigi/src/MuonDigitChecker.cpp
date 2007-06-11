@@ -74,7 +74,7 @@ StatusCode MuonDigitChecker::initialize() {
 //=============================================================================
 StatusCode MuonDigitChecker::execute() {
 
-  const LHCb::MCHeader* evt = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  const LHCb::MCHeader* evt = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default,IgnoreRootInTES);
 
   int tnhit[5][4][4];    int tnDhit[5][4][6];  
   for(int ix=0; ix<6; ix++) {
@@ -104,7 +104,7 @@ StatusCode MuonDigitChecker::execute() {
   std::vector<float> m_digit_z,m_digit_dx,m_digit_dy,m_digit_dz,m_digit_time;
   std::vector<float> m_digit_origin,m_digit_bx,m_digit_firing,m_digit_multi;
 
-  DeMuonDetector * muonD = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon"); 
+  DeMuonDetector * muonD = getDet<DeMuonDetector>(DeMuonLocation::Default); 
 
 
   std::string spill[5] = {"","/Prev","/PrevPrev","/Next","/NextNext"};

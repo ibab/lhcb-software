@@ -2,7 +2,10 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
-!======================= MuonMoniDigi v2r2 2007-06-05 ========================
+!======================= MuonMoniDigi v2r2 2007-06-11 ========================
+! 2007-06-11 - Alessia Satta
+ - Fix for removal of rootOnTES prefix, use MuonDet default location
+
 ! 2007-06-05 - Marco Cattaneo
  - Remove rootOnTES prefix, for use with Gaudi v19r4
  - Remove obsolete file MuonMoniDigi_load.cpp
