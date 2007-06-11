@@ -2,8 +2,9 @@
 ! Package manager : J. Amoraal
 !---------------------------------------------------------------------------
 
+!==================== OTMonitor v2r7 2007-06-11 =====================
 ! 2007-05-29 M Needham
- - Add plot to checker
+ - Add time spectrum histogram to OTTimeChecker
 
 !==================== OTMonitor v2r6 2007-05-15 =====================
 ! 2007-05-15 - Jan Amoraal
