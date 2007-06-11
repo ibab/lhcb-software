@@ -2,11 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.29 2007-03-21 15:42:52 cattanem Exp $
+# $Id: requirements,v 1.30 2007-06-11 16:23:02 cattanem Exp $
 #============================================================================
 
 package RichGlobalPID
-version v3r2
+version v3r3
 
 #============================================================================
 # Structure
@@ -17,24 +17,20 @@ branches src cmt doc options xml Event RichGlobalPID
 # Used packages.
 #============================================================================
 use RichRecBase       v*  Rich
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
 
 #============================================================================
 # Environment
 #============================================================================
 set RICHGLOBALPIDOPTS $(RICHGLOBALPIDROOT)/options
 
+# Produce Header-Files from XML description and export include directories
 #============================================================================
-# Build GOD objects
-#============================================================================
-
-# Global PID XML
-document obj2doth RichGlobalPID_Event_Obj2Doth ../xml/RichGlobalPID_Event.xml
+apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=RichGlobalPID offset=Event
 
 # ================ component library=========================================
 library   RichGlobalPID           ../src/*.cpp  -import=AIDA
 apply_pattern component_library library=RichGlobalPID
-
-#============================================================================
-private
-use GaudiObjDesc v* -no_auto_imports
