@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.9 2007-06-10 20:21:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2007-06-11 09:12:26 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgoMC v4r0 2007-06-11 ========================
 ! 2007-06-10 - Vanya BELYAEV
- - few fixes to pelase reflex 
+ - few fixes to plaase reflex 
  - add decorators for MCMatchAlgo
 
   new files: 
@@ -14,7 +15,6 @@
    LoKi/MCMatchAlgoDicts.h
    src/MCMatchAlgoDicts.cpp
 
-!========================== LoKiAlgoMC v4r0 2007-06-04 ========================
 ! 2007-06-04 - Marco Cattaneo
  - Adapt to interfaces moved to MCInterfaces
 

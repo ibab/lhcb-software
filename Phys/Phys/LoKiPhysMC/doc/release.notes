@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.29 2007-06-10 20:17:54 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2007-06-11 09:18:59 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v5r0 2007-06-11 ========================
 ! 2007-06-10 - Vanya BELYAEV
-
  - add the decorators for MCMatch class, 
  - few small fixes to please Reflex and make 
    functions vizible 
@@ -17,7 +17,6 @@
    LoKi/MCMatchDicts.h
     src/MCMatchDicts.cpp
 
-!========================== LoKiPhysMC v5r0 2007-06-04 ========================
 ! 2007-06-04 - Marco Cattaneo
  - Remove obsolete file src/Components/LoKiPhysMC_load.cpp
 
