@@ -4,7 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
-!======================== RichReadout v2r7 2007-05-29 ========================
+!======================== RichReadout v2r7 2007-06-11 ========================
+! 2007-06-11 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 pattern
+
 ! 2007-05-29 - Marco Cattaneo
  - Adapt to move of interfaces to MCInterfaces
  - Remove obsolete RichReadout_Event_load.cpp file

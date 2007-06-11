@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.41 2007-05-29 15:50:02 cattanem Exp $
+# $Id: requirements,v 1.42 2007-06-11 15:31:53 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -20,11 +20,13 @@ use MCEvent      v*      Event
 use RichKernel   v*      Rich
 use RichDet      v*      Det
 use MCInterfaces v*      Kernel
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
 
+# Produce Header-Files from XML description
 #============================================================================
-# Build GOD objects
-#============================================================================
-document  obj2doth  RichReadout_EventObj2Doth      ../xml/*.xml
+apply_pattern god_headers files=../xml/*.xml
 
 # ================ component library =========================================
 library RichReadout ../src/component/*.cpp  -import=AIDA
@@ -32,5 +34,4 @@ library RichReadout ../src/component/*.cpp  -import=AIDA
 apply_pattern component_library library=RichReadout
 
 private
-use GaudiObjDesc v* -no_auto_imports
 include_dirs $(RICHREADOUTROOT)
