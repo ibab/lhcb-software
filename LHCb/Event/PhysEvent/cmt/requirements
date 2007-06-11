@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.78 2007-06-08 15:30:42 cattanem Exp $
+# $Id: requirements,v 1.79 2007-06-11 07:47:44 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -22,7 +22,7 @@ end_private
 # Produce Header-Files from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
-apply_pattern install_more_includes more=Event offset=Kernel
+apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
