@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.14 2007-06-06 15:04:24 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.15 2007-06-12 20:25:13 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -117,7 +117,7 @@ StatusCode CaloSignalAlg::execute() {
 
   // some trivial printout
   debug() << "Perform signal processing from "
-          << m_inputData << " to " << m_outputData+rootInTES() << endmsg;
+          << m_inputData << " to " << rootInTES()+ m_outputData << endmsg;
   
   // prepare the output container
   LHCb::MCCaloDigits* mcDigits = new LHCb::MCCaloDigits();
