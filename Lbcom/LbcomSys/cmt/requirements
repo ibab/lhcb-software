@@ -47,4 +47,4 @@ use VeloTools         v2r0  Velo        # Tomasz Szumlak
 use MuonAssociators   v3r1  Muon        # Alessia Satta
 
 # Common
-use Associators       v3r5  Associators # Matt Needham
+use Associators       v3r6  Associators # Matt Needham
