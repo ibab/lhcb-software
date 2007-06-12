@@ -2,6 +2,7 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!====================== Associators v3r6 2007-06-12 ========================
 ! 2007-06-12 M Needham
  - Add Muon hits to the track MCHits table
 
