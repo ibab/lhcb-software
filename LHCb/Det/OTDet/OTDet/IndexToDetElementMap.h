@@ -1,4 +1,4 @@
-// $Id: IndexToDetElementMap.h,v 1.1 2007-06-09 13:56:46 janos Exp $
+// $Id: IndexToDetElementMap.h,v 1.2 2007-06-12 22:49:54 janos Exp $
 #ifndef OTDET_INDEXTODETELEMENTMAP_H 
 #define OTDET_INDEXTODETELEMENTMAP_H 1
 
@@ -40,7 +40,7 @@ namespace OT {
     /// Insert method
     void insert(size_t index, T* object) {
       index-=offset;
-      if (index <= m_contents.size()) m_contents.resize(index + 1, 0);
+      if (index >= m_contents.size()) m_contents.resize(index + 1, 0);
       m_contents[index] = object;
     };
     
