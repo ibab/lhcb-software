@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.30 2007-06-11 16:54:37 cattanem Exp $
+// $Id: MeasurementProvider.cpp,v 1.31 2007-06-12 11:19:19 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -52,7 +52,7 @@ MeasurementProvider::~MeasurementProvider() {};
 //=============================================================================
 StatusCode MeasurementProvider::initialize() 
 {
-  info() << "MeasurementProvider::initialize()" << endreq ;
+  debug() << "MeasurementProvider::initialize()" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
