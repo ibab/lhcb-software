@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!======================= LinkerEvent v3r1 2007-06-07 =========================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
 !======================= LinkerEvent v3r0p1 2007-02-02 =======================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unneccessary rootmap for dictionary

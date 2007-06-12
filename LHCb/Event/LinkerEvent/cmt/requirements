@@ -3,35 +3,28 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           LinkerEvent
-version           v3r0p1
+version           v3r1
 
-#============================================================================
-# Structure, i.e. directories to process. 
-#============================================================================
 branches          cmt doc src Event Linker xml
 
-#============================================================================
 # Used packages.
 #============================================================================
 use LHCbKernel	v*	Kernel	
-
-#============================================================================
-#---- Produce Header-Files and from XML description
-#============================================================================
-document obj2doth LinkerEventObj2Doth ../xml/*.xml
-install_more_includes more=Event offset=Linker
-
-document obj2dict LinkerEventObj2Dict ../xml/*.xml    
-
-library          LinkerEvent         ../src/*.cpp
-library          LinkerEventDict     ../$(tag)/dict/LinkerEvent/*.cpp
-
-#============================================================================
-# define library link options
-#============================================================================
-apply_pattern linker_library	library=LinkerEvent
-apply_pattern component_library library=LinkerEventDict
-macro_remove constituents LinkerEventDictRootMap
-
 private
 use GaudiObjDesc v* -no_auto_imports
+end_private
+
+# Produce Header-Files and from XML description
+#============================================================================
+apply_pattern god_headers files=../xml/*.xml
+install_more_includes more=Event offset=Linker
+
+# Generate dictionaries with lcgdict via GOD
+#============================================================================
+macro LinkerEventDict_dependencies LinkerEvent
+apply_pattern god_dictionary files=../xml/*.xml
+
+# Make the linker library
+#============================================================================
+library          LinkerEvent    *.cpp
+apply_pattern    linker_library library=LinkerEvent
