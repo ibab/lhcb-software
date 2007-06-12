@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.10 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.11 2007-06-12 20:24:32 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -95,10 +95,10 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
     error()<< "CaloDigitsFromRaw configured to produce ** NO ** output" << endreq;
     return StatusCode::FAILURE;
   }
-  if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES" 
-                            << endreq;
-  if( m_adcOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES" 
-                          << endreq;
+  if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
+                            << rootInTES() + m_outputDigits << endreq;
+  if( m_adcOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES at "
+                          << rootInTES() + m_outputADCs << endreq;
 
   return StatusCode::SUCCESS;
 }

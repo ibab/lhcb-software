@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.7 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.8 2007-06-12 20:24:32 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -85,8 +85,10 @@ StatusCode CaloZSupAlg::initialize() {
     return StatusCode::FAILURE;
   }  
   if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
+                            << rootInTES() + m_outputDigitData
                             << endreq;
   if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES" 
+                          << rootInTES() + m_outputADCData 
                           << endreq;
   
   // Retrieve the calorimeter we are working with.
@@ -227,11 +229,11 @@ StatusCode CaloZSupAlg::execute() {
     }    
   }
   if(m_adcOnTES){
-    debug() << format( "Have stored %5d CaloAdcs.", newAdcs->size() ) 
+    if(isDebug)debug() << format( "Have stored %5d CaloAdcs.", newAdcs->size() ) 
             << endreq;
   }
   if(m_digitOnTES){
-    debug() << format( "Have stored %5d CaloDigits.", newDigits->size() ) 
+    if(isDebug)debug() << format( "Have stored %5d CaloDigits.", newDigits->size() ) 
             << endreq;
   }
 
