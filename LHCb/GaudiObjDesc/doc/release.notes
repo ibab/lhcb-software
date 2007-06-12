@@ -4,10 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r0 2007-06-12 ======================
 ! 2007-06-12 Stefan
  - change doxygen style for enum values from ///< to //
 
-!======================== GaudiObjDesc v10r0 2007-06-07 ======================
 ! 2007-06-07 - Pere Mato
  - added new two patterns to generate the headers and dictionaries. 
    god_headers: generates the header files using the existing document
