@@ -23,6 +23,14 @@ MCP2ITMCHitAlg.OutputData  = "/Event/MC/Particles2MCITHits";
 DataOnDemandSvc.Algorithms += { "DATA = '/Event/Link/MC/Particles2MCTrackerHits' TYPE = 'TrackerMCParticle2MCHitAlg/MCP2TrackerHitAlg' " };
 MCP2TrackerHitAlg.OutputData = "/Event/MC/Particles2MCTrackerHits";
 
+// MCParticle to Muon MCHits association
+DataOnDemandSvc.Algorithms += { "DATA = '/Event/Link/MC/Particles2MCMuonHits' TYPE = 'MCParticle2MCHitAlg/MCP2MuonMCHitAlg' " };
+MCP2MuonMCHitAlg.MCHitPath  = "MC/Muon/Hits"; // MCHitLocation::Muon
+MCP2MuonMCHitAlg.OutputData  = "/Event/MC/Particles2MCMuonHits";
+                                                                                
+
+
+
 DataOnDemandSvc.Nodes += { "DATA='/Event/Link' TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Link/MC' TYPE='DataObject'" };
 

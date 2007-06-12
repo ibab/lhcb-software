@@ -36,7 +36,7 @@ TrackerMCParticle2MCHitAlg::TrackerMCParticle2MCHitAlg(const std::string& name,
   declareProperty( "OutputData",  m_outputData = 
                    "/Event/MC/Particles2MCTrackerHits" );
   declareProperty("Detectors" , 
-                  m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT"));
+                  m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT")("Muon"));
 }
 
 TrackerMCParticle2MCHitAlg::~TrackerMCParticle2MCHitAlg()
@@ -64,6 +64,8 @@ StatusCode TrackerMCParticle2MCHitAlg::execute()
     std::string linkPath = MCParticleLocation::Default + "2MC" + m_dets[idet] + "Hits";
     HitLinks link( evtSvc(),msgSvc(),linkPath);
     links.push_back(link); 
+    if (link.notFound() == true)
+      return Warning("Failed to find linker table", StatusCode::FAILURE);
   } // i
 
   // loop over MCParticles
