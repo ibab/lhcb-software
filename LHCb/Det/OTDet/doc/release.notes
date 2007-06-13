@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.85 2007-06-12 22:49:55 janos Exp $
+! $Id: release.notes,v 1.86 2007-06-13 06:48:22 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v7r3 2007-06-13 =========================
 ! 2007-06-13 - Jan Amoraal
  - Bug fix in IndexToDetElementMap
 
-!========================== OTDet v7r3 2007-06-11 =========================
 ! 2007-06-07 - Jan Amoraal
  - Some minor changes requested by the A-Team: 
    - Random access to detector elements
