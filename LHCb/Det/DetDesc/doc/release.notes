@@ -1,11 +1,23 @@
 ! =============================================================================
-! $Id: release.notes,v 1.307 2007-06-13 16:11:52 jpalac Exp $ 
+! $Id: release.notes,v 1.308 2007-06-13 16:37:56 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 ! 2007-06-13 - Juan PALACIOS
+
+  - DetDesc/3DTransformationFunctions.h, src/Lib/3DTransformationFunctions.cpp
+    . Moved more general functions, ie those not depending on DetDesc classes, 
+      from GlobalToDelta.h, .cpp to this new file. Funcitons are still in the DetDesc
+      namespace.
+
+  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.h
+    . Move more general functions to 3DTransformationFunctions, namespace still DetDesc.
+
+  - DetDesc/AlignmentCondition.h
+    . Replace include of DetDesc/GlobalToLocalDelta.h by DetDesc/3DTransformationFunctions.h
+
   - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
     . Replace private Transform3D manipulations by functions in GlobalToLocalDelta.h, DetDesc
       namespace.
