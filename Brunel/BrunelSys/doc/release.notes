@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v31r6>2007-06-01 Brunel v31r6</A></H1><PRE>
+</PRE><H1><A NAME=v31r6>2007-06-12 Brunel v31r6</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r6, Lbcom v6r6, Rec v4r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
@@ -16,8 +16,23 @@ programs based on LHCb v22r5 or later
       (leave explicit versions for databases)
     + Use only packages needed to compile or to setup up run time environment
 
+- New tuning
+  . In VeloExpectation, use closestState instead of firstState (TrackTools v2r15)
+  . Faster TrackMatch version with less ghosts (TrackMatching v2r14, see details
+    in talk at </PRE><a href="http://indico.cern.ch/getFile.py/access?contribId=7&amp;sessionId=0&amp;resId=0&amp;materialId=slides&amp;confId=12233">Heidelberg Tracking Workshop on 2007-02-22</a><PRE>)
+  . Update options for zero field tracking (TrackSys v4r6)
+  . Updates to ChargedProtoPAlg (GlobalReco v6r10)
+  . New DC06 tuning for Calo PIDs (CaloReco v4r8, CaloPIDs v4r7, ParamFiles v6r1)
+  . New model of the Velo error estimate implemented, now returned error
+    depends both on sensor pitch and projected angle of a track (VeloTools v2r0,
+    see details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=6&amp;materialId=slides&amp;confId=10157">T-Rec on 2007-06-11</a><PRE>)
+   
 - Monitoring changes
   . Improved format of counters printout (GaudiKernel v22r3)
+  . Add time spectrum histogram to OTTimeChecker (OTMonitor v6r6)
+
+- Bug fixes
+  . Check untested status codes (MuonDet v6r3)
 
 </PRE><H1><A NAME=v31r5>2007-05-21 Brunel v31r5</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5, Rec v4r5
