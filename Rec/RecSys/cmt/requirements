@@ -18,9 +18,9 @@ use CaloReco            v4r8    Calo  # Olivier Deschamps
 
 # Track Fit
 use TrackSys            v4r6    Tr    # Eduardo Rodrigues
-use TrackExtrapolators  v2r11   Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r12   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r11   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r4    Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r5    Tr    # Eduardo Rodrigues
 use TrackTools          v2r15   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r15   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r12   Tr    # Eduardo Rodrigues, Edwin Bos
@@ -53,7 +53,7 @@ use MuonPIDChecker      v2r0    Muon  # Erica Polycarpo, Miriam Gandelman
 use RichRecSys          v3r4    Rich  # Chris Jones
 #use RichRingRefit       v1r11   Rich  # Chris Jones
 use RichLocalPID        v3r4    Rich  # Chris Jones
-use RichGlobalPID	v3r2    Rich  # Chris Jones
+use RichGlobalPID       v3r3    Rich  # Chris Jones
 use RichPIDMerge	v2r4    Rich  # Chris Jones
 use RichRecAlgorithms   v2r7    Rich  # Chris Jones
 use RichRecTools        v3r11   Rich  # Chris Jones

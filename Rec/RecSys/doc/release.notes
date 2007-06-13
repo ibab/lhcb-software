@@ -5,15 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r6>2007-06-05 RecSys v4r6</A></H1><PRE>
+</PRE><H1><A NAME=v4r6>2007-06-11 RecSys v4r6</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r6.
 
 - Packages modified: PatForward v2r14, PatVeloTT v2r12, PatKShort v1r6,
-    TrackSys v4r6, TrackTools v2r15, TrackMCTools v2r11, TrackIdealPR v2r11,
+    PatPV v2r8, TrackSys v4r6, TrackFitEvent v3r5, TrackTools v2r15,
+    TrackMCTools v2r11, TrackMatching v2r14, TrackIdealPR v2r11, 
     TrackCheckers v2r14, TrackPython v3r1, TsaAlgorithms v2r4, GlobalReco v6r10,
     CaloReco v4r8, CaloPIDs v4r7, RichRecQC v2r12, RichRecMonitors v2r11,
-    RichLocalPID v3r4, RichRecMCTools v2r12, RichTrgGlobalPID v3r6,
-    TrackMatching v2r14, PatPV v2r8
+    RichLocalPID v3r4, RichGlobalPID v3r3, RichRecMCTools v2r12,
+    RichTrgGlobalPID v3r6
 
 - In PatForward v2r14
   . Set uncertainties on q/p for all existing track states. Fixes pulls in HLT 
@@ -31,6 +32,17 @@ This version uses Gaudi v19r3 and LHCb v22r6.
 - In PatPV v2r8
   . Backward compatible fixes for compatibility with Gaudi v19r4
 
+- In TrackFitEvent v3r5
+  . Made init calls in OT,ST,Velo public for use in MeasurementCreator
+  . Added support for calling velo position tool with reference vector
+  . Added some missing consts in STMeasurement
+
+- In TrackExtrapolators v2r12
+  . added propagation of StateVector in TrackExtrapolator
+  . Moved propagate(state,z,pid) method to TrackExtrapolator and minor 
+  . improvements, o.a. misuse of gsl_pow_2
+  . introduced MaterialLocator instances and their use in MasterExtrapolator
+
 - In TsaAlgorithms v2r4
   . Follow change in ITrackManipulator interface
 
@@ -44,8 +56,22 @@ This version uses Gaudi v19r3 and LHCb v22r6.
   . Faster version with less ghosts ---> see February 2006 Heidelberg Workshop
     for details. Speed is ~ 6 ms /event.
 
+- In TrackMCTools v2r11
+  . Update IdealStateCreator:
+    + Follow extension of IIdealStateCreator interface (StateVector methods)
+    + use fast parabolic instead of master extrapolator
+    + don't call configure in case of vertex methods
+
+- In TrackIdeal PR v2r11
+  . Update IdealTracksCreator:
+    + faster (factor 5) for many reasons
+    + use StateVector instead of state
+    + allow to run making ids only + not measurements
+    + use IMCReconstructible interface for defining acceptance
+
 - In TrackSys v4r6
   . Update B = 0 Matching options
+  . Fix bug in zero field options
 
 - In GlobalReco v6r10
   . Update ChargedProtoPAlg
@@ -64,10 +90,18 @@ This version uses Gaudi v19r3 and LHCb v22r6.
   . DLL hist (DC06) for different BremPID added, needs ParamFiles v6r1 
   . New PIDs from DC06 added in src/BremPIDeAlg.cpp
 
+- In TrackPython v3r1
+  . Removed unnecessary "loaddict" from the gtractools.py module
+  . StateVector, MuonMeasurement classes, MuonProjector tool exposed
+  . Adapted to new projector names in Tr/TrackProjectors
+
 - In GlobalReco v6r10, TrackSys v4r6, TrackMCTools v2r11, TrackIdealPR v2r11,
      TrackCheckers v2r14, TrackPython v3r1, RichRecQC v2r12,  RichLocalPID v3r4,
      RichRecMCTools v2r12, RichTrgGlobalPID v3r6, RichRecMonitors v2r11
   . Adapt to new location of interfaces in MCInterfaces
+
+- In TrackFitEvent v3r5, RichLocalPID v3r4, RichGlobalPID v3r3
+  . Adapted requirements to new GaudiObjDesc v10r0 patterns
 
 - In TrackMCTools v2r11, CaloPIDs v4r7
   . Fixed doxygen warnings
