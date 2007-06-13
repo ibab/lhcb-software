@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.15 2007-06-13 16:11:46 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.16 2007-06-13 16:37:34 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -11,7 +11,7 @@
 ///@todo put RotationXYZ.h in GaudiKernel when it is released in MathCore.
 #include "RotationZYX.h"
 #include "3DConversions.h"
-#include "DetDesc/GlobalToLocalDelta.h"
+#include "DetDesc/3DTransformationFunctions.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignmentCondition
 //
