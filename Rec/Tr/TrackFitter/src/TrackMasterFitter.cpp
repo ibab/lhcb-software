@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.29 2007-03-21 14:41:40 cattanem Exp $
+// $Id: TrackMasterFitter.cpp,v 1.30 2007-06-13 11:56:00 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -56,7 +56,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "NodeFitter"          , m_trackNodeFitterName =
                    "TrackKalmanFilter" );
   declareProperty( "FitUpstream"         , m_upstream         =   true    );
-  declareProperty( "NumberFitIterations" , m_numFitIter       =     1     );
+  declareProperty( "NumberFitIterations" , m_numFitIter       =     3     );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0   );
   declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2     );
   declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false   );
