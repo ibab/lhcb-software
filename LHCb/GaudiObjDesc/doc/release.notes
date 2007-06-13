@@ -4,6 +4,13 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-06-13 Stefan
+ - patch from Dave Casper (dcasper@uci.edu)
+   parameterizing the up to now hardcoded "LHCb" namespace which is the scope 
+   for LHCb event classes. It introduces the namespace/scope attributes in the
+   DTD which will then be picked up by GOD to generate the namespace name. The
+   default value for these newly introduced attributes is "LHCb"
+
 !======================== GaudiObjDesc v10r0 2007-06-12 ======================
 ! 2007-06-12 Stefan
  - change doxygen style for enum values from ///< to //

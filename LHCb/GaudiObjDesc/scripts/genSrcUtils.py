@@ -6,7 +6,7 @@ class genSrcUtils(importUtils.importUtils):
 #--------------------------------------------------------------------------------
   def __init__(self):
     importUtils.importUtils.__init__(self)
-    self.namespace = 'LHCb::'
+    self.namespace = 'unknown::'
     self.generatedTypedefs = []
     self.generatedEnums = []
     self.generatedTypes = []
@@ -235,5 +235,16 @@ class genSrcUtils(importUtils.importUtils):
     if godClass.has_key('method'):
       for met in godClass['method']:
         if met['attrs']['access'] == modifier.upper() or modifier == 'all':
+          if godClass['attrs'].has_key('scope'):
+             self.namespace=godClass['attrs']['scope']+'::'
+          elif godClass['attrs'].has_key('namespace'):
+             self.namespace=godClass['attrs']['namespace']+'::'
+          elif os.environ.has_key('GODSCOPE'):
+             self.namespace=os.environ['GODSCOPE']+'::'
+          else:
+             self.namespace='LHCb::'
+
           s += self.genMethod(met,clname)
+
+    self.namespace='unknown::'
     return s[:-1]

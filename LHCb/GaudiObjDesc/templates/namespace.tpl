@@ -29,7 +29,7 @@
  * 
  */
 
-namespace LHCb 
+namespace @@@namespaceScope@@@ 
 {
   // Forward declarations
   @@@forwardDeclsLHCb@@@
@@ -41,7 +41,7 @@ namespace LHCb
   @@@attributes@@@
   @@@methods@@@
   } // namespace @@@namespacename@@@
-} // namespace LHCb
+} // namespace @@@namespaceScope@@@
 
 // -----------------------------------------------------------------------------
 // end of namespace

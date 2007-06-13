@@ -20,4 +20,5 @@ class genPackage(importUtils.importUtils):
 #--------------------------------------------------------------------------------
   def doit(self):
     self.dict['packagename'] = self.godPackage['attrs']['name']
+    self.dict['packagenamespace'] = self.godPackage['attrs']['namespace']
     self.parsePackImport(self.godPackage)

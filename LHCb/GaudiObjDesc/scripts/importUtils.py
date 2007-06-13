@@ -1,4 +1,4 @@
-import tools
+import tools, os
 
 #================================================================================
 class importUtils:
@@ -19,10 +19,6 @@ class importUtils:
       if name not in self.stdIncludes : self.stdIncludes.append(name)
     elif name not in self.include     : self.include.append(name)
 #--------------------------------------------------------------------------------
-  def addForwardDecl(self, name, ns='') :
-    if ns and ns != 'LHCb': self.addForwardDeclGlob(name, ns)
-    else                  : self.forwardDeclLHCb.append(name)
-#--------------------------------------------------------------------------------
   def parseImport(self, godClass, include, stdIncludes, forwardDeclLHCb, forwardDeclGlob, forwardIncl):
     if godClass.has_key('import'):
       for imp in godClass['import']:
@@ -32,7 +28,16 @@ class importUtils:
         else :
           if impAtt['soft'] == 'TRUE':                                             # do forward declaration stuff
             impNS = impAtt.get('namespace')
-            if impNS and impNS != 'LHCb':
+            if godClass['attrs'].has_key('scope'):
+              myNS = godClass['attrs']['scope']
+            elif godClass['attrs'].has_key('namespace'):
+              myNS = godClass['attrs']['namespace']
+            elif os.environ.has_key('GODSCOPE'):
+              myNS = os.environ['GODSCOPE']
+            else:
+              myNS = 'LHCb'
+
+            if impNS and impNS != myNS:
               if not forwardDeclGlob.has_key(impNS) : forwardDeclGlob[impNS] = [impName]
               elif impName not in forwardDeclGlob[impNS] : forwardDeclGlob[impNS].append(impName)
             elif impName not in forwardDeclLHCb : forwardDeclLHCb.append(impName)

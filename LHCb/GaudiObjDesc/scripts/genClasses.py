@@ -705,7 +705,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 
       classDict = package.dict
       classname = godClass['attrs']['name']
-      scoped_classname = 'LHCb::'+classname
+      scoped_classname = godClass['attrs']['namespace']+'::'+classname
 
       fileName = '%s.h' % classname
 
@@ -718,6 +718,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['desc']                         = self.genDesc(godClass)
       classDict['author']                       = godClass['attrs']['author']
       classDict['today']                        = time.ctime()
+      classDict['classNamespace']               = godClass['attrs']['namespace']
       classDict['inheritance']                  = self.genInheritance(godClass)
       classDict['classContainerTypedefs']       = self.genClassContainerTypedefs(godClass)
       classDict['classTypedefs']                = self.genClassTypedefs(godClass)

@@ -47,7 +47,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
       namespaceDict = package.dict
       namespacename = godNamespace['attrs']['name']
-      scoped_namespacename = 'LHCb::'+namespacename
+      scoped_namespacename = godNamespace['attrs']['scope']+'::'+namespacename
 
       fileName = '%s.h' % namespacename
 
@@ -57,6 +57,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
       namespaceDict['desc']             = self.genDesc(godNamespace)
       namespaceDict['author']           = self.genAuthor(godNamespace)
       namespaceDict['today']            = time.ctime()
+      namespaceDict['namespaceScope']   = godNamespace['attrs']['scope']
       namespaceDict['typedefs']         = self.genTypedefs('all',godNamespace)
       namespaceDict['enums']            = self.genEnums('all',godNamespace)
       namespaceDict['enumOstreamOverloads'] = self.genEnumOstreamOverloads(godNamespace)

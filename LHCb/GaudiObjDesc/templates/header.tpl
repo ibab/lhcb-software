@@ -20,7 +20,7 @@
 // Forward declarations
 @@@forwardDeclsGlob@@@
 
-namespace LHCb 
+namespace @@@classNamespace@@@ 
 {
 
   // Forward declarations
@@ -73,7 +73,7 @@ namespace LHCb
   @@@classTypedefs@@@
   @@@classOstreamOverload@@@
   @@@enumOstreamOverloads@@@
-} // namespace LHCb;
+} // namespace @@@classNamespace@@@;
 
 // -----------------------------------------------------------------------------
 // end of class
