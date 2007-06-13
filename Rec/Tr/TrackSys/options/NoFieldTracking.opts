@@ -43,11 +43,11 @@ TsaSeed.xSearchS2.dthCut = 0.08;
 TsaSeed.xSearchS3.dthCut = 0.08;
 TsaSeed.xSearchS4.dthCut = 0.08;
 
-TsaSeed.xSearchS0.x0Cut = 400.0;
-TsaSeed.xSearchS1.x0Cut = 400.0;
-TsaSeed.xSearchS2.x0Cut = 400.0;
-TsaSeed.xSearchS3.x0Cut = 400.0;
-TsaSeed.xSearchS4.x0Cut = 400.0;
+TsaSeed.xSearchS0.x0Cut = 400.;
+TsaSeed.xSearchS1.x0Cut = 400.;
+TsaSeed.xSearchS2.x0Cut = 400.;
+TsaSeed.xSearchS3.x0Cut = 400.;
+TsaSeed.xSearchS4.x0Cut = 400.;
 
 TsaSeed.xSearchS0.sxCut = 0.10;
 TsaSeed.xSearchS1.sxCut = 0.10;
@@ -58,7 +58,7 @@ TsaSeed.xSearchS2.sx2Cut = 0.08;
 
 TsaSeed.stubFinder.sxCut = 0.1;
 TsaSeed.stubFinder.dAngle = 0.08;
-TsaSeed.stubExtender.y0Cut1 = 100.0;
+TsaSeed.stubExtender.y0Cut1 = 100.;
 TsaSeed.stubExtender.txCut = 0.1;
 TsaSeed.stubExtender.tyCut = 0.1;
 
@@ -100,36 +100,39 @@ PrepareVeloTT.inputLocation     = "Rec/Track/VeloTT";
 // ====================================================================
 
 // Forward fit
+FitForward.Fitter.ErrorP              = 1e-3;
 FitForward.Fitter.NumberFitIterations = 2;
 FitForward.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitForward.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
-FitForward.Fitter.ErrorP = 1e-3;
 FitForward.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitForward.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
 // Tsa fit
+FitTsaSeed.Fitter.ErrorP              = 1e-3;
+FitTsaSeed.Fitter.NumberFitIterations = 1;
 FitTsaSeed.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitTsaSeed.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
-FitTsaSeed.Fitter.ErrorP = 1e-3;
 FitTsaSeed.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitTsaSeed.Fitter.RefInfoTool.SetLRAmbiguities = true;
 
 // Match fit
-FitMatch.Fitter.ZPositions      = { 990.0, 2165.0, 2400., 9450., 11900 };
+FitMatch.Fitter.ZPositions          = { 990., 2165., 2400., 9450., 11900. };
+FitMatch.Fitter.ErrorP              = 1e-3;
+FitMatch.Fitter.NumberFitIterations = 1;
 FitMatch.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitMatch.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
-FitMatch.Fitter.ErrorP = 1e-3;
 FitMatch.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitMatch.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
 // VeloTT fit
+FitVeloTT.Fitter.ErrorP              = 1e-3;
+FitVeloTT.Fitter.NumberFitIterations = 1;
 FitVeloTT.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitVeloTT.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
-FitVeloTT.Fitter.ErrorP = 1e-3;
 FitVeloTT.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
