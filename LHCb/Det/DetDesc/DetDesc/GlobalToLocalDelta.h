@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.4 2007-06-07 10:38:02 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.5 2007-06-13 16:11:52 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -115,8 +115,8 @@ namespace DetDesc {
    *
    * @param params vector containing the X,Y,Z coordinates of the translation.
    * @return 3D transformation object representing the translation.
-   * @todo Move this function outside of DetDesc once the ROOT::Math::RotationZYX class              
-   *       is fully available in MathCore. 
+   * @todo Move this function outside of DetDesc if and when a 
+   * ROOT::Math::Translation3D class available in MathCore. 
    */
   const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params);
 
@@ -128,8 +128,8 @@ namespace DetDesc {
    * @param params vector containing the rotations about the X,Y,Z axes. 
    *               The rotations are applied in the following order: Z-Y'-X"
    * @return 3D transformation object describing the rotation
-   * @todo Move this function outside of DetDesc once the ROOT::Math::RotationZYX class
-   *       is fully available in MathCore.  
+   * @todo Move this function outside of DetDesc once the 
+   *       ROOT::Math::RotationZYX class is fully available in MathCore.  
    *
    */
   const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params);

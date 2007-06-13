@@ -1,9 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.306 2007-06-08 14:23:38 cattanem Exp $ 
+! $Id: release.notes,v 1.307 2007-06-13 16:11:52 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-13 - Juan PALACIOS
+  - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
+    . Replace private Transform3D manipulations by functions in GlobalToLocalDelta.h, DetDesc
+      namespace.
+
+  - src/Lib/AlignmentCondition.cpp
+    . Do all matrix calculations in terms on the ideal -> misaligned matrix, corresponding
+      to field m_matrixInv.
 
 !====================== DetDesc v17r4 2007-06-08 ==============================
 ! 2007-06-07 - Juan PALACIOS

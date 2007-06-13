@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.6 2007-06-07 10:38:02 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.7 2007-06-13 16:11:52 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -68,17 +68,19 @@ const Gaudi::Transform3D localToGlobalTransformation(const std::vector<double>& 
 
 const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params) 
 {
-  return (params.size()==3) ? Gaudi::Transform3D( Gaudi::TranslationXYZ(params[0], 
-                                                                        params[1], 
-                                                                        params[2]) )
-    : Gaudi::Transform3D();
+  return (params.size()==3) 
+    ? 
+    Gaudi::Transform3D( Gaudi::TranslationXYZ(params[0], 
+                                              params[1], 
+                                              params[2]) )
+    : 
+    Gaudi::Transform3D();
   
 }
 
 const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params)
 {
   if (params.size() != 3) return Gaudi::Transform3D();
-  
   Gaudi::RotationZYX rotZYX(params[2], params[1], params[0]);
   Gaudi::Rotation3D tmp;
   Gaudi::Math::convert(rotZYX, tmp);
