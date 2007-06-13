@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.12 2007-06-06 17:43:21 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.13 2007-06-13 16:11:46 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -90,42 +90,10 @@ private:
   
 
   StatusCode makeMatrices();
-  /**
-   * Create a Transform3D out of three rotation angles. Rotation is applied
-   * about the Z, Y and X axes in that order. 
-   * @param coefficients vector with rotation angles about X, Y, Z.
-   * @return Transform3D object.
-   */
-  const Gaudi::Transform3D XYZRotation(const std::vector<double>& coefficients) const;
-  /**
-   * Create a Transform3D object for a simple translation in X,Y,Z.
-   * @param coefficients vector with translation in X, Y and Z.
-   * @return Transform3D object.
-   */
-  const Gaudi::Transform3D XYZTranslation(const std::vector<double>& coefficients) const;
+
 private:
 
   void updateParams();
-
-  /**
-   * Starting from a new local delta transformation, 
-   * calculate the transformation parameters in the 
-   * standard representation of XYZ translation and pivot, plus 
-   * rotations about Z,Y,X.The pivot point remains the same.
-   * As there is a one to many mapping between transformation and
-   * parameter sets, an arbitrary convention is chosen.
-   * 
-   */
-  void recalculateParameters(const Gaudi::Transform3D& newMatrix,
-                             std::vector<double>& translation,
-                             std::vector<double>& rotation,
-                             const std::vector<double>& pivot);
-
-  void getRotationParameters(const Gaudi::Rotation3D& newRot,
-                             std::vector<double>& rotation);
-
-  void getTranslationParameters(const Gaudi::TranslationXYZ& newTrans,
-                                std::vector<double>& translation);
 
   DetDesc::Services* m_services;
 
