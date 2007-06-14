@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.309 2007-06-14 08:14:41 cattanem Exp $ 
+! $Id: release.notes,v 1.310 2007-06-14 08:21:38 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v17r4 2007-06-13 ==============================
+!====================== DetDesc v17r4 2007-06-14 ==============================
+! 2007-06-14 - Marco Clemencic
+  - Added dictionaries for free functions in DetDesc namespace.
+
 ! 2007-06-13 - Juan PALACIOS
 
   - DetDesc/3DTransformationFunctions.h, src/Lib/3DTransformationFunctions.cpp

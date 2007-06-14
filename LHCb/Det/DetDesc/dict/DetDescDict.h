@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.1 2007-05-03 13:04:00 cattanem Exp $
+// $Id: DetDescDict.h,v 1.2 2007-06-14 08:21:38 marcocle Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -68,6 +68,9 @@
 #include "DetDesc/ReadOutInfo.h"
 #include "DetDesc/SlowControlInfo.h"
 #include "DetDesc/SimpleValidity.h"
+// ============================================================================
+#include "DetDesc/3DTransformationFunctions.h"
+#include "DetDesc/GlobalToLocalDelta.h"
 
 /** @file 
  *   

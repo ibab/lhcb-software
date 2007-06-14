@@ -47,7 +47,11 @@
   <class name="std::pair<double,SmartRef<Isotope> >" />
   <class name="std::pair<std::pair<double,double>,const Material*>" />
 
+	<function pattern="DetDesc::*" />
+	
   <exclusion>
     <class name="SolidPolycone::CmpZ" />
+		<function name="DetDesc::print" />
+		<function name="DetDesc::services" />
   </exclusion>
 </lcgdict>
