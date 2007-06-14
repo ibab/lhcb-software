@@ -7,6 +7,12 @@
 !   Read README.txt !
 !
 !-----------------------------------------------------------------------------
+
+! 2007-06-14 - Patrick Koppenburg
+ - remove _load files everywhere
+ - compile a Test version of the library from the solutions directories,
+   just to make sure everything compiles in the release.
+
 !===================== Tutorial/Analysis v6r3 2007-05-25 ======================
 ! 2007-05-25 - Patrick Koppenburg
  - solutions6: 
