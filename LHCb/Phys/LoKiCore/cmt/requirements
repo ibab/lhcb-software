@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.22 2007-06-01 11:35:27 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.22 $
+# $Id: requirements,v 1.23 2007-06-14 14:54:17 cattanem Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -18,6 +16,10 @@ use                Boost            v* LCG_Interfaces
 use                ROOT             v* LCG_Interfaces 
 use                RELAX            v* LCG_Interfaces 
 use                Reflex           v* LCG_Interfaces -no_auto_imports
+# make sure we have right python version for genreflex
+private
+use                Python           v* LCG_Interfaces 
+end_private
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes more=LoKi
@@ -38,10 +40,3 @@ apply_pattern      linker_library    library=LoKiCoreLib
 apply_pattern      component_library library=LoKiCore
 
 macro LoKiCoreDict_use_linkopts $(use_linkopts)
-
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
-# =============================================================================
-# The END
-# =============================================================================
