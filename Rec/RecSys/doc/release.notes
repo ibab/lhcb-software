@@ -5,12 +5,12 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r6>2007-06-11 RecSys v4r6</A></H1><PRE>
-This version uses Gaudi v19r3 and LHCb v22r6.
+</PRE><H1><A NAME=v4r6>2007-06-14 RecSys v4r6</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r6.
 
-- Packages modified: PatForward v2r14, PatVeloTT v2r12, PatKShort v1r6,
-    PatPV v2r8, TrackSys v4r6, TrackFitEvent v3r5, TrackTools v2r15,
-    TrackMCTools v2r11, TrackMatching v2r14, TrackIdealPR v2r11, 
+- Packages modified: PatForward v2r14, PatVeloTT v2r12,PatKShort v1r6,PatPV v2r8,
+    PatVelo v2r15, TrackSys v4r6, TrackFitEvent v3r5, TrackTools v2r15,
+    TrackMCTools v2r11, TrackMatching v2r14,TrackIdealPR v2r11,TrackFitter v2r16,
     TrackCheckers v2r14, TrackPython v3r1, TsaAlgorithms v2r4, GlobalReco v6r10,
     CaloReco v4r8, CaloPIDs v4r7, RichRecQC v2r12, RichRecMonitors v2r11,
     RichLocalPID v3r4, RichGlobalPID v3r3, RichRecMCTools v2r12,
@@ -31,6 +31,10 @@ This version uses Gaudi v19r3 and LHCb v22r6.
 
 - In PatPV v2r8
   . Backward compatible fixes for compatibility with Gaudi v19r4
+
+- In PatVelo v2r15
+  . Add algorithm PatVeloOpenTracking with auxiliary class PatVeloOpenTrack.
+    This is the tracking without pointing condition developed by Muriel Pivk
 
 - In TrackFitEvent v3r5
   . Made init calls in OT,ST,Velo public for use in MeasurementCreator
@@ -69,9 +73,14 @@ This version uses Gaudi v19r3 and LHCb v22r6.
     + allow to run making ids only + not measurements
     + use IMCReconstructible interface for defining acceptance
 
+- In TrackFitter v2r16
+  . Default number of fit iterations set to 3 (in TrackMasterFitter.cpp)
+    so that long tracks are fitted with all default options
+
 - In TrackSys v4r6
   . Update B = 0 Matching options
   . Fix bug in zero field options
+  . Adapt options to change in TrackMasterFitter default
 
 - In GlobalReco v6r10
   . Update ChargedProtoPAlg
