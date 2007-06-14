@@ -1,11 +1,10 @@
-// $Id: MagneticFieldSvc.h,v 1.14 2007-06-14 08:47:43 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.15 2007-06-14 09:54:54 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-//#include "GaudiKernel/IMagneticFieldSvc.h"
-#include "IMagneticFieldSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 
@@ -57,7 +56,7 @@ public:
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                        Gaudi::XYZVector& fvec );
+                                        Gaudi::XYZVector& fvec ) const;
 
 private:
 
