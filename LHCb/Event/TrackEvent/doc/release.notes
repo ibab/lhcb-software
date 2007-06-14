@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackEvent v4r4 2007-06-14 ==========================
+! 2007-06-14 - Edwin Bos
+ - Replaced the wrong correction by the correct value for kappa.
+
 ! 2007-06-14 - M. Needham
  - Change units of kappa to what is correct !
 
