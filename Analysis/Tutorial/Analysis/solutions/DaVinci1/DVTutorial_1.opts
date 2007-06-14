@@ -8,9 +8,6 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 // load options for creation of "standard muons":
 #include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
-
-// Don't forget the DLL
-ApplicationMgr.DLLs   += { "Analysis" };
 //
 // Let's make it a sequence
 //

@@ -10,10 +10,6 @@
 #include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 //// load options for creation of "standard kaons":
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-
-//
-// Don't forget the DLL
-ApplicationMgr.DLLs   += { "Analysis" };
 //
 // Let's make it a sequence
 //

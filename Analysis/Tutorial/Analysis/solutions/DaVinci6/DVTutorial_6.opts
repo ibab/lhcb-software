@@ -16,9 +16,6 @@
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"
 //
-// Don't forget the DLL
-ApplicationMgr.DLLs   += { "Analysis", "FlavourTagging" };
-//
 // Let's make it a sequence
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
