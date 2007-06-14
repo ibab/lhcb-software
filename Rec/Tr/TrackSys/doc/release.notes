@@ -4,11 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r6 2007-06-14 ======================
 ! 2007-06-13 Eduardo Rodrigues
  - Fitting options updated, now that the default number of fit iterations
   (in TrackMasterFitter) has been set to 3, as for long tracks
 
-!============================ TrackSys v4r6 2007-06-11 ======================
 ! 2007-06-08 M. Needham
  - Fix bug in zero field options, reported by S.Blusk
 
