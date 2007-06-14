@@ -3,6 +3,7 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r16 2007-05-14 ===================
 ! 2007-06-13 - Eduardo Rodrigues
  - Default number of fit iterations set to 3 (in TrackMasterFitter.cpp)
    so that long tracks are fitted with all default options
