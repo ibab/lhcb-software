@@ -1,6 +1,8 @@
 //##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+//ApplicationMgr.SvcOptMapping += { "AnalyticFieldSvc/MagneticFieldSvc" };
+//Uncomment for AnalyticFieldSvc testing
 //ApplicationMgr.ExtSvc += { "AnalyticFieldSvc" };
 //ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
 //#pragma print on
@@ -39,7 +41,10 @@ MagFieldReader.OutputLevel = 2;
 //MagFieldReader.FieldSvcName="AnalyticFieldSvc";
 // Pick up default field map as defined in FieldMap package
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
-
+//Uncomment for AnalyticFieldSvc testing
+//AnalyticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
+//AnalyticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
+//AnalyticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
 // Set zero field
 //MagneticFieldSvc.UseConstantField = true;
 
