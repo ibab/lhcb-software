@@ -3,6 +3,11 @@
 ! Responsible : 
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+!====================== Magnet v3r5 2007-03-05 ===============================
+! 2007-06-14 - Adlene Hicheur
+ - First import of AnalyticFieldSvc
+ - Added Helper classes as well
+ - Edited MagFieldReader and job options for the tests
 
 !====================== Magnet v3r5 2007-03-05 ===============================
 ! 2007-03-05 - Marco Cattaneo
