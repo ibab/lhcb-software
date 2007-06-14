@@ -4,6 +4,11 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements: increment version to v1r2p1
+  - Remove src/ProtoParticleFilter_load.cpp
+
 !===================== ProtoParticleFilter v1r2 2006-12-06 ===================
 
 ! 2006-12-05 - Juan PALACIOS
