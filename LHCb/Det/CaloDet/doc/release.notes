@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.74 2007-05-25 12:59:04 cattanem Exp $ 
+! $Id: release.notes,v 1.75 2007-06-14 16:10:16 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2007-06-14 Olivier Deschamps
+ - Fix FE-card connection to neighbors in DeCalorimeter::buildCards()
 
 !======================== CaloDet v8r2 2007-05-25 =============================
 ! 2007-05-25 - Marco Cattaneo

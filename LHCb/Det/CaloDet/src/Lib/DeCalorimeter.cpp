@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.38 2007-03-02 10:27:03 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.39 2007-06-14 16:10:16 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -464,14 +464,10 @@ StatusCode DeCalorimeter::buildCards( )  {
     int crate   = temp[ll+6];
     int slot    = temp[ll+7];
 
-    int downCard     = -1;
-    int leftCard     = -1;
-    int cornerCard   = -1;
-    int previousCard = -1;
 
     
     // build the FEcard
-    CardParam myCard(area, fRow, fCol , cardNum, crate, slot);
+    CardParam myCard(area, fRow, fCol ,lRow,lCol, cardNum, crate, slot);
     if(m_pinArea == area)myCard.setIsPin(true);
     if ( (int) kk != cardNum ) {
       msg << MSG::ERROR << "FE-Card number not in sequence: Found " << cardNum
@@ -490,37 +486,67 @@ StatusCode DeCalorimeter::buildCards( )  {
          myCard.addID( dummy );
         }else{  
           m_cells[id].setFeCard( cardNum, col-fCol, row-fRow );
-          myCard.addID( id ); // update myCard
-
-          //== Find the cards TO WHICH this card sends data.
-          //== previous card in crate: only non zero row number
-          if ( (row == fRow ) && (0 < fRow) ) {
-            LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col );
-            if ( cardNumber(testID) >= 0 ) {
-              downCard = cardNumber(testID);
-            }
-          }
-
-          //== Left card:  As the two halves are independend, no 'Left' neighbors for
-          //== the central column. Test on 'm_firstRowUp' which is also the first Column Left
-          //== Find also the corner card.
-
-          if ( (col == fCol) && (0 < col) && (m_firstRowUp != col) ) {
-            LHCb::CaloCellID testID( m_caloIndex, area , row , col-1 );
-            if ( cardNumber(testID) >= 0 ) {
-              leftCard = cardNumber(testID);
-            }
-            if ( (row == fRow) && (0 < row) ) {
-              LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
-              if ( cardNumber(testID) >= 0 ) {
-                cornerCard = cardNumber(testID);
-              }
-            }
-          }
+          myCard.addID( id ); // update myCard  
         }
       }
     }
+    m_feCards.push_back( myCard ); // add card
+  }
 
+  // 2nd loop on FE-Cards - 
+  //== Find the cards TO WHICH this card sends data.  
+  for(std::vector<CardParam>::iterator icard = m_feCards.begin() ; icard != m_feCards.end() ; ++icard){
+    CardParam& card = *icard;
+
+
+    int downCard     = -1;
+    int leftCard     = -1;
+    int cornerCard   = -1;
+    int previousCard = -1;
+
+
+    LHCb::CaloCellID dummy( 0, 0, 0, 0 );
+    int area = card.area();
+    int fRow = card.firstRow();
+    int lRow = card.lastRow();
+    int fCol = card.firstColumn();
+    int lCol = card.lastColumn();
+    int crate= card.crate();
+    int slot = card.slot();
+    
+
+    for ( int row = fRow; lRow >= row; ++row ) {
+      for ( int col = fCol; lCol >= col; ++col ) {
+        LHCb::CaloCellID id( m_caloIndex, area, row, col );        
+        if( !valid( id ) ) continue;
+
+//== previous card in crate: only non zero row number
+        if ( (row == fRow ) && (0 < fRow) ) {
+          LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col );
+          if ( cardNumber(testID) >= 0 ) {
+            downCard = cardNumber(testID);
+          }
+        }
+        
+        //== Left card:  As the two halves are independend, no 'Left' neighbors for
+        //== the central column. Test on 'm_firstRowUp' which is also the first Column Left
+        //== Find also the corner card.
+        
+        if ( (col == fCol) && (0 < col) && (m_firstRowUp != col) ) {
+          LHCb::CaloCellID testID( m_caloIndex, area , row , col-1 );
+          if ( cardNumber(testID) >= 0 ) {
+            leftCard = cardNumber(testID);
+          }
+          if ( (row == fRow) && (0 < row) ) {
+            LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
+            if ( cardNumber(testID) >= 0 ) {
+              cornerCard = cardNumber(testID);
+            }
+          } 
+        }
+      }
+    }
+    if(leftCard == -1)cornerCard = -1 ; // WARNING : corner is transmitted via left !!
 
     int validationCard = 2 * ( crate-firstCrate);
     if ( 7 < slot ) validationCard += 1;
@@ -531,16 +557,15 @@ StatusCode DeCalorimeter::buildCards( )  {
     }
 
     if( area != m_pinArea ){
-      myCard.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
-      myCard.setValidationNumber( validationCard );
+      card.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
+      card.setValidationNumber( validationCard );
     }
     
-    m_feCards.push_back( myCard ); // add card
 
     msg << MSG::DEBUG
         << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d #channels %4d",
-                    cardNum, crate, slot, downCard, leftCard, cornerCard, 
-                    previousCard, validationCard,myCard.ids().size() )
+                    card.number(), card.crate(), card.slot(), card.downNumber(), card.leftNumber(), card.cornerNumber(), 
+                    card.previousNumber(), card.validationNumber(),card.ids().size() )
         << endreq;
   }
 

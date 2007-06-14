@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/02/22 23:17:18  odescham
+// Define the monitoring system in DeCalorimeter
+//
 // Revision 1.2  2001/07/17 17:26:52  ibelyaev
 // modifications to improve Doxygen documentation
 //
@@ -29,12 +32,16 @@
 CardParam::CardParam( int iArea , 
                       int iRow  , 
                       int iCol  ,
+                      int ilRow  , 
+                      int ilCol  ,
                       int iNum  ,
                       int iCrate,
                       int iSlot) 
   : m_Area           ( iArea )
     , m_Row            ( iRow )
     , m_Col            ( iCol )
+    , m_lRow            ( ilRow )
+    , m_lCol            ( ilCol )
     , m_DownNumber     ( -1 )
     , m_LeftNumber     ( -1 )
     , m_CornerNumber   ( -1 ) 
