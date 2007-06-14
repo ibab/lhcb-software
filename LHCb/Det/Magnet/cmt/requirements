@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2007-02-26 14:50:45 cattanem Exp $
+# $Id: requirements,v 1.23 2007-06-14 08:47:43 ahicheur Exp $
 #============================================================================
 package           Magnet
 version           v3r5
@@ -7,6 +7,7 @@ branches          cmt doc src
 
 use LHCbKernel  v*      Kernel
 use GaudiAlg    v*      -no_auto_imports
+
 
 library          Magnet    ../src/*.cpp -import=GaudiAlg
 

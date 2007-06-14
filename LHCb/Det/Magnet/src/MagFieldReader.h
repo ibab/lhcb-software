@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.h,v 1.2 2005-12-08 15:16:44 cattanem Exp $
+// $Id: MagFieldReader.h,v 1.3 2007-06-14 08:47:43 ahicheur Exp $
 #ifndef MAGFIELDREADER_H 
 #define MAGFIELDREADER_H 1
 
@@ -11,6 +11,7 @@
 
 // Forward references
 class IMagneticFieldSvc;
+
 
 /** @class MagFieldReader MagFieldReader.h
  *  @param An Algorithm to read and plot magnetic filed maps
@@ -30,19 +31,25 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize   ();    ///< Algorithm finalization
 
 protected:
 
 private:
   
-  // Pointer to the magnetic field service
-  IMagneticFieldSvc* m_pIMF;
+  // Pointer to the magnetic field services
+  IMagneticFieldSvc* m_pIMF;  
+
+
+  
 
   // range and steps in z to get the magnetic field 
   double m_zMin, m_zMax, m_step;
 
   // range in x and y
   double m_xMin, m_xMax, m_yMin, m_yMax;
+  std::string m_FieldServiceName; ///< Indicate the name of the service to be tested (default is MagneticFieldSvc)
+  
 
 };
 #endif // MAGFIELDREADER_H

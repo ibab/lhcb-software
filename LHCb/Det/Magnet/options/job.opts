@@ -1,6 +1,13 @@
 //##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "AnalyticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
+//#pragma print on
+//AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+//NameAuditor.Enable   = false;
+//ChronoAuditor.Enable = true ;
+//MemoryAuditor.Enable = false;
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -28,7 +35,8 @@ ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 // Algorithms Private Options
 //--------------------------------------------------------------
 MagFieldReader.OutputLevel = 2;
-
+//Uncomment to test AnalyticFieldSvc:
+//MagFieldReader.FieldSvcName="AnalyticFieldSvc";
 // Pick up default field map as defined in FieldMap package
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 

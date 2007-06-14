@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.20 2007-03-19 10:31:10 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.21 2007-06-14 08:47:43 ahicheur Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -220,8 +220,7 @@ StatusCode MagneticFieldSvc::parseFile() {
 // FieldVector: find the magnetic field value at a given point in space
 //=============================================================================
 StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
-                                               Gaudi::XYZVector& bf ) const
-{
+                                               Gaudi::XYZVector& bf ) {
 
   if( m_useConstField ) {
     bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
