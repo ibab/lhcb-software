@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.75 2007-06-14 16:10:16 odescham Exp $ 
+! $Id: release.notes,v 1.76 2007-06-15 06:36:22 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v8r2 2007-06-15 =============================
 ! 2007-06-14 Olivier Deschamps
  - Fix FE-card connection to neighbors in DeCalorimeter::buildCards()
 
-!======================== CaloDet v8r2 2007-05-25 =============================
 ! 2007-05-25 - Marco Cattaneo
  - Add LCG dictionaries (moved from DetSys)
  - Add dictionary for DeCalorimeterLocation::*
