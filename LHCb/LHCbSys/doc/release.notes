@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r6>2007-06-08 LHCbSys v22r6</A></H1><PRE>
+</PRE><H1><A NAME=v22r6>2007-06-15 LHCbSys v22r6</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - Packages removed: HltBase           - Moved to HLT project
@@ -28,6 +28,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     CaloUtils v7r3, TrackInterfaces v3r5, LHCbAlgs v2r9, LoKiCore v3r0,
     LoKiGen v3r0, DaVinciKernel v6r4, DAQSys v3r3, CaloDAQ v3r3, MuonDAQ v3r2,
     OTDAQ v5r3, SimComponents v2r3, DetCondExample v11r1
+
+- In LHCbSys
+  . Cleanup doxygen configuration files to follow changes in Gaudi v19r4 doc
+  . Add root/reflex to doxygen, remove unused parts of SEAL
 
 - In LHCbKernel v7r5
   . Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
@@ -76,6 +80,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 - In TrackEvent v4r4
   . Add class StateVector
   . Add hasT, hasVelo and hasTT functions to Track
+  . Change units of kappa to what is correct !
 
 - In DetDesc v17r4
   . Added temporary files in src/Lib:
@@ -117,6 +122,9 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Add a default value for the muon detector location in /dd...
   . Clean up many StatusCodes
 
+- In CaloDet v8r2
+  . Fix FE-card connection to neighbors in DeCalorimeter::buildCards()
+
 - In OTDet v7r3, CaloDet v8r2, VeloDet v11r3, STDet v3r4, RichDet v10r5,
      MuonDet v6r3
   . Add xxxLocation::* variables to dictionary 
@@ -155,6 +163,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 - In CaloDAQ v3r3
   . CaloReadoutTool and decoding tools : add property to allow skipping the
     Detector Specific Header when present
+  . Fix CaloDataProvider so that the tool can run correctly on 0-suppressed banks
 
 - In CaloDAQ v3r3, MuonDAQ v3r2
   . Remove rootOnTES() logic, now done in Gaudi base classes (Gaudi >= v19r4)
@@ -171,7 +180,8 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     god_dictionary: generates the dictionary header file and selection file and
                     calls the standard relex_dictionary provided by the Reflex
                     LCGCMT interface package
- . fix 'static' handling for method generation
+  . fix 'static' handling for method generation
+  . change doxygen style for enum values from ///< to //
 
 - In DAQEvent v7r4, DigiEvent v2r2, EventBase v2r4, GenEvent v5r1, HltEvent v8r2,
      L0Event v16r3, LinkerEvent v3r1, MCEvent v2r4, PhysEvent v11r2,
