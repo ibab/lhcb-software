@@ -9,9 +9,9 @@
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 #include "Kernel/IEvtTypeSvc.h"
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 #include "Kernel/IDebugTool.h"
-#include "Kernel/IForcedBDecayTool.h"
+#include "MCInterfaces/IForcedBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"

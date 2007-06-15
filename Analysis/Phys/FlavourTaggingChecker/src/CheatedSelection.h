@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.6 2007-06-09 12:47:20 musy Exp $
+// $Id: CheatedSelection.h,v 1.7 2007-06-15 16:46:20 jpalac Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IDebugTool.h"
-#include "Kernel/IForcedBDecayTool.h"
+#include "MCInterfaces/IForcedBDecayTool.h"
 
 // from Associators
 #include "Kernel/Particle2MCLinker.h"

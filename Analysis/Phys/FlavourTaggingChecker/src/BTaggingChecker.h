@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.5 2007-06-09 12:47:19 musy Exp $
+// $Id: BTaggingChecker.h,v 1.6 2007-06-15 16:46:20 jpalac Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -9,7 +9,7 @@
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 #include "Kernel/IDebugTool.h"
-#include "Kernel/IForcedBDecayTool.h"
+#include "MCInterfaces/IForcedBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
