@@ -1,4 +1,4 @@
-// $Id: TestLinker.cpp,v 1.5 2007-01-12 13:58:54 ranjard Exp $
+// $Id: TestLinker.cpp,v 1.6 2007-06-15 16:05:37 pkoppenb Exp $
 #define TestLinker_CPP 
 
 // Include files
@@ -168,6 +168,7 @@ StatusCode TestLinker::execute() {
       mcPartLinks = m_linkLinks->first(part);
       std::string strCharged = part->charge()? "Charged" : "Neutral";
       _verbose << "+++ " << strCharged << " particle " << part->key() 
+               << " " << part->particleID().pid()
                << " , momentum, slopes "
                << part->p() << " " 
                << part->slopes().X() << " " 
@@ -185,7 +186,8 @@ StatusCode TestLinker::execute() {
           nass++;
           double weight = m_linkLinks->weight();
           const Gaudi::LorentzVector mc4Mom = mcPartLinks->momentum();
-          _verbose << "    MCPart " << mcPartLinks->key() 
+          _verbose << "    MCPart " << mcPartLinks->key() << " " 
+                   << mcPartLinks->particleID().pid()
                    << " (weight "
                    << weight << ") from links : momentum, slopes "
                    << mc4Mom.Vect().R() << " "
@@ -237,7 +239,9 @@ StatusCode TestLinker::execute() {
           _verbose << "      MCPart found from Chi2 is different" << endreq;
         }
         const Gaudi::LorentzVector mc4Mom = mcPartChi2->momentum();
-        _verbose << "      MCPart from Chi2  : momentum, slope "
+        _verbose << "      MCPart from Chi2 " 
+                 << part->particleID().pid()
+                 << " : momentum, slope "
                  << mc4Mom.Vect().R() << " "
                  << mc4Mom.Px()/mc4Mom.Pz() << " "
                  << mc4Mom.Py()/mc4Mom.Pz() << endreq;

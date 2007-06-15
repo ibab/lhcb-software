@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.23 2007-01-12 13:58:54 ranjard Exp $
+// $Id: Particle2MCLinks.cpp,v 1.24 2007-06-15 16:05:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -136,18 +136,17 @@ StatusCode Particle2MCLinks::execute() {
       
       if( NULL != mcPart ) {
         nass++;
-        _verbose << " is associated to MCParts";
+        _verbose << " is associated to MCParts:" << endmsg ;
         do {
-          _verbose << " - " << mcPart->key();
+          _verbose << "     " << mcPart->key() << " " << mcPart->particleID().pid() << " " << mcPart->momentum() << endmsg ;
           linkerTable->link( *pIt, mcPart, link->weight());
           nrel++;
           mcPart = link->next();
         } while( NULL != mcPart);
       } 
       else {
-        _verbose << " is not associated to any MCPart";
-      }
-      _verbose << endreq;
+        _verbose << " is not associated to any MCPart" << endmsg ;
+      } 
     }
     _debug << "Out of " << npp << " Particles in " << *inp << ", "
            << nass << " are associated, "

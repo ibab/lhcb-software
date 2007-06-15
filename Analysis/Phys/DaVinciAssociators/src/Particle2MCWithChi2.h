@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.h,v 1.8 2007-03-05 11:12:51 pkoppenb Exp $
+// $Id: Particle2MCWithChi2.h,v 1.9 2007-06-15 16:05:37 pkoppenb Exp $
 #ifndef Particle2MCWithChi2_H 
 #define Particle2MCWithChi2_H 1
 
@@ -56,5 +56,9 @@ private:
   IHistogram1D* m_hisChi2;           ///< Chi2 histogram
   IHistogram2D* m_hisChi2vsDiffP;    ///< Chi2 vs Dp/p histo
   IHistogram2D* m_hisMinChi2vsDiffP; ///< Min Chi2 vs Dp/p histo
+
+  // Chi2 cut
+  double m_chi2SpeedUpCut ; ///< Chi2 cut of parent Particle2MCWithChi2 algorithm, if present
+   
 };
 #endif // Particle2MCWithChi2_H

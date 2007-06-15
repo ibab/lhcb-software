@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.12 2007-03-05 11:28:11 pkoppenb Exp $
+// $Id: ChargedPP2MC.cpp,v 1.13 2007-06-15 16:05:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,7 @@ protected:
 
 private:
   Object2MCLinker<LHCb::Track>* m_track2MCLink;
+  std::vector<std::string> m_trackLocations ; ///< location for tracks
 };
 
 using namespace LHCb;
@@ -72,8 +73,11 @@ ChargedPP2MC::ChargedPP2MC( const std::string& name,
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
-
   m_outputTable = ChargedPP2MCAsctLocation;
+
+  m_trackLocations.push_back(TrackLocation::Default);
+  declareProperty("TrackLocations", m_trackLocations );
+  
 }
 
 //=============================================================================
@@ -94,7 +98,7 @@ StatusCode ChargedPP2MC::initialize() {
   // Get a Linker class for Tr2MCP
   m_track2MCLink = new Object2MCLinker<LHCb::Track>( this, 
                                                      "", "", 
-                                                     TrackLocation::Default);
+                                                     m_trackLocations);
   return StatusCode::SUCCESS;
 };
 

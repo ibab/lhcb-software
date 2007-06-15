@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.14 2007-06-04 15:25:14 pkoppenb Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.15 2007-06-15 16:05:37 pkoppenb Exp $
 // Include files 
 #include <math.h>
 
@@ -9,6 +9,11 @@
 
 // histograms
 #include  "GaudiKernel/IHistogramSvc.h"
+
+// properties
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/IAlgorithm.h"
 
 // event
 #include "Event/MCParticle.h"
@@ -43,6 +48,7 @@ Particle2MCWithChi2::Particle2MCWithChi2( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
   , m_histos( false )
+  , m_chi2SpeedUpCut(-1.)
 {
   declareProperty( "FillHistos", m_histos );
 }
@@ -66,6 +72,27 @@ StatusCode Particle2MCWithChi2::initialize() {
     m_hisMinChi2vsDiffP = histoSvc()->book( "asct", 3, "log(Chi2) vs dP/P",
                                             100, 0., 1., 35, 0., 7);
   }
+
+  // check if parent is Particle2MCChi2 and steal chi2 property
+  _debug << "Looking for parents of " << name() << endmsg ;
+  int pos = name().find_last_of(".");
+  std::string pname = name().substr(0,pos);  
+  _verbose << "Name is " << name() << " last . is at " << pos 
+           << " -> parent is " << pname << " " 
+           << pname.substr(pname.find_last_of("."),pname.size())<< endmsg ;
+
+  IAlgManager* algMgr = svc<IAlgManager>("ApplicationMgr");
+  IAlgorithm* algo;
+  StatusCode sc = algMgr->getAlgorithm( pname, algo );
+  if ( NULL!=algo ){
+    IProperty* prop;
+    algo->queryInterface( IID_IProperty, (void**)&prop );
+    DoubleProperty value;
+    value.assign(prop->getProperty( "Chi2Cut" ));
+    m_chi2SpeedUpCut = value ;
+    _info << "Will be using Chi2Cut of " << pname << " = " << m_chi2SpeedUpCut << endmsg ;
+  } else _debug << "No chi2 cut found " << endmsg ;
+  
   return StatusCode::SUCCESS;
 };
 
@@ -135,6 +162,7 @@ StatusCode Particle2MCWithChi2::execute() {
       }
 #endif
       
+      double cov55 = cov(5,5);
       bool ok = cov.Invert();
       
       if( !ok ) {
@@ -173,13 +201,17 @@ StatusCode Particle2MCWithChi2::execute() {
           get6Vector( mcPart, axz, mcpVector);
           
           // Avoid long computations if momentum is too much different
-          if( fabs(mcpVector[5]-pVector[5]) > 1000. && 
+          if( m_chi2SpeedUpCut<=0 && fabs(mcpVector[5]-pVector[5]) > 1000. && 
               fabs(mcpVector[5]-pVector[5])>0.1*mcpVector[5] ) continue;
+          if( m_chi2SpeedUpCut>0 && 
+              (mcpVector[5]-pVector[5])*(mcpVector[5]-pVector[5])/cov55 > m_chi2SpeedUpCut  )
+            continue ;
           
           double chi2 = ROOT::Math::Similarity( pVector - mcpVector, cov);
 
           _verbose << "     & MCPart " << mcPart->key() << " " << mcPart->momentum() 
-                   << "-> Chi2 = " << chi2 << endreq;
+                   << "-> Chi2 = " << chi2  << endreq;
+
           if( m_histos && chi2 > 0. ) {
             m_hisChi2vsDiffP->fill( fabs(mcpVector[5]-pVector[5])/pVector[5], 
                                     log10(chi2) );
