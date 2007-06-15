@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.5 2007-06-15 08:40:55 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.6 2007-06-15 15:50:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,8 @@ DECLARE_ALGORITHM_FACTORY( TutorialChecker );
 TutorialChecker::TutorialChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
+  , m_background(),
+    m_pLinker()
 {
 }
 //=============================================================================
@@ -132,7 +134,7 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
   debug() << "==> fillTruth" << endmsg;
   
   IBackgroundCategory::categories cat = m_background->category(b);
-  tuple->fill("category",cat);
+  tuple->fill("category",(int)cat);
   
   const LHCb::MCParticle* MC = m_pLinker->firstMCP( b );
   
@@ -217,6 +219,6 @@ StatusCode TutorialChecker::fillHeader(Tuple& tuple){
   const LHCb::RecHeader* header = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
   info() << "Filling Tuple at Run " << header->runNumber() << ", Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
-  tuple->column("Event", (int)header->runNumber());
+  tuple->column("Run", (int)header->runNumber());
   return StatusCode::SUCCESS ;
 }

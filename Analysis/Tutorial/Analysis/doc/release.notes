@@ -13,6 +13,7 @@
  - compile a Test version of the library from the solutions directories,
    just to make sure everything compiles in the release.
  - remove obsolete tagging options
+ - minor bug fixes in solution6
 
 !===================== Tutorial/Analysis v6r3 2007-05-25 ======================
 ! 2007-05-25 - Patrick Koppenburg
