@@ -27,7 +27,8 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     RecEvent v2r4, TrackEvent v4r4, VeloEvent v15r1, CaloInterfaces v7r3, 
     CaloUtils v7r3, TrackInterfaces v3r5, LHCbAlgs v2r9, LoKiCore v3r0,
     LoKiGen v3r0, DaVinciKernel v6r4, DAQSys v3r3, CaloDAQ v3r3, MuonDAQ v3r2,
-    OTDAQ v5r3, SimComponents v2r3, DetCond v11r4, DetCondExample v11r1
+    OTDAQ v5r3, SimComponents v2r3, DetCond v11r4, DetCondExample v11r1,
+    CondDBUI v2r3
 
 - In LHCbSys
   . Cleanup doxygen configuration files to follow changes in Gaudi v19r4 doc
@@ -127,6 +128,14 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - In DetCond v11r4
   . Removed the check on macro CORAL_1_8_x (use always the new CORAL feature).
+
+- In CondDBUI v2r3
+  . Fixed a problem in copy_files_do_db.py: the destination path was not taken
+    into account when correcting the relative paths to included files (SYSTEM
+    tag)
+  . Allow transparent usage of CORAL LFCReplicaService (enabled if the
+    environment variable CORAL_LFC_BASEDIR is set).
+  . Use Qt from LCG_Interfaces
 
 - In OTDet v7r3, CaloDet v8r2, VeloDet v11r3, STDet v3r4, RichDet v10r5,
      MuonDet v6r3
