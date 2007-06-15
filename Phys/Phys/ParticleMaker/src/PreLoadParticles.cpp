@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.7 2007-05-10 12:36:20 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.8 2007-06-15 10:06:25 jpalac Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -59,7 +59,7 @@ StatusCode PreLoadParticles::execute()
             <<desktop()->secondaryVertices().size() << endmsg;
   }
 
-  setFilterPassed(true).ignore();
+  setFilterPassed(true);
 
   return scDesktop;
 }
