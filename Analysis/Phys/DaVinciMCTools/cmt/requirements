@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.55 2007-06-06 08:20:27 pkoppenb Exp $
+# $Id: requirements,v 1.56 2007-06-15 16:17:33 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -30,7 +30,7 @@ use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 #use  CaloAssociators     v*  Calo
 use  CaloUtils           v*  Calo 
-
+use  MCInterfaces        v*  Kernel
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)
