@@ -1,10 +1,10 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.15 2007-03-05 11:44:01 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.16 2007-06-15 16:18:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 #include "Kernel/Particle2MCLinker.h"
 
 #include "Kernel/CaloCellID.h"

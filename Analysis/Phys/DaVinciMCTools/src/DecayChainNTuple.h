@@ -25,7 +25,7 @@ class IMCDecayFinder;
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeighted.h"
 #include "Event/CaloCluster.h"
-#include "Kernel/IVisPrimVertTool.h"
+#include "MCInterfaces/IVisPrimVertTool.h"
 #endif
 
 /** @class DecayChainNTuple DecayChainNTuple.h

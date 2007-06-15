@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.h,v 1.14 2006-10-11 14:19:19 jpalac Exp $
+// $Id: MCParticleMaker.h,v 1.15 2007-06-15 16:18:39 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/10/11 14:19:19  jpalac
+// Major restructuring, increase version to v8r0
+//
 // Revision 1.13  2006/09/26 10:45:56  ibelyaev
 //  make MCParticleMakerBase vizible outside package
 //
@@ -26,7 +29,7 @@
 // from DaVinciTools
 // ============================================================================
 #include "Kernel/IParticleMaker.h"
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 #include "Kernel/IDebugTool.h"
 // ============================================================================
 // local 

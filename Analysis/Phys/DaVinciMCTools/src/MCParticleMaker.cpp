@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.31 2007-01-12 14:03:52 ranjard Exp $
+// $Id: MCParticleMaker.cpp,v 1.32 2007-06-15 16:18:38 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.31  2007/01/12 14:03:52  ranjard
+// v9r0 - use Gaudi v19r0
+//
 // Revision 1.30  2006/10/11 14:19:19  jpalac
 // Major restructuring, increase version to v8r0
 //
@@ -28,8 +31,8 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-#include "Kernel/IMCDecayFinder.h"
-#include "Kernel/IMCReconstructible.h"
+#include "MCInterfaces/IMCDecayFinder.h"
+#include "MCInterfaces/IMCReconstructible.h"
 #include "LHCbMath/MatrixManip.h"
 // ============================================================================
 // local

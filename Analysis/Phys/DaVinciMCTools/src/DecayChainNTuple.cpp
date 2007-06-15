@@ -18,7 +18,7 @@
 
 
 #ifdef MCCheck
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 #include "GaudiKernel/SmartDataPtr.h" // needed for MCTrackInfo
 #include "Event/MCTrackInfo.h"
 //#include "Event/GenMCLink.h"
