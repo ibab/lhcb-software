@@ -1,12 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.56 2007-06-06 14:09:17 marcocle Exp $
+! $Id: release.notes,v 1.57 2007-06-15 15:41:42 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r3 2007-06-15 =========================
                             NEEDS LCGCMT >= 52
-
 ! 2007-06-06 - Marco Clemencic
  - Fixed a problem in copy_files_do_db.py: the destination path was not taken
    into account when correctinf the relative paths to included files (SYSTEM
