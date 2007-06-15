@@ -11,7 +11,7 @@
 /// load options for creation of "standard kaons":
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 /// B tagging options
-#include "$ANALYSISROOT/options/BTaggingTool.opts"
+#include "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts"
 // Run L0 and HLT
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"

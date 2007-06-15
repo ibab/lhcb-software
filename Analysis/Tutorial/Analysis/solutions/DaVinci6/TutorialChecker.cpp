@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.4 2007-05-25 14:43:31 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.5 2007-06-15 08:40:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -141,8 +141,8 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
     tuple->column( "TPt", MC->pt());
     tuple->column( "TPID", MC->particleID().pid() );
   } else { // all columns should be filled even if there's nothing found
-    tuple->column( "TP", Gaudi::XYZTVector(-999,-999,-999,-999));
-    tuple->column( "TPt", -999);
+    tuple->column( "TP", Gaudi::XYZTVector(-999.,-999.,-999.,-999.));
+    tuple->column( "TPt", -999.);
     tuple->column( "TPID", -1);    
   }
   
