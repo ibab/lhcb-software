@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.18 2007-06-09 12:47:18 musy Exp $
+! $Id: release.notes,v 1.19 2007-06-15 16:46:36 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-06-15 - Juan PALACIOS
+  - cmt/requirements
+    . Use Kernel/MCInterfaces package.
+  - src/BTaggingAnalysis.h
+  - src/BTaggingChecker.h
+  - src/BTaggingInclusive.h
+  - src/CheatedSelection.h
+  - src/DoubleTagCorrelation.h
+    . Change path for includes that moved from Kernel to MCInterfaces.
 
 ! 2007-06-07 - M. Musy, S. Poss, O. Leroy
  - Added DVBTagging_for_B2JpsiKs.opts, example options for producing
