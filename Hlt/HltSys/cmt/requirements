@@ -1,5 +1,5 @@
 package HltSys
-version v1r6
+version v1r7
 
 branches cmt doc options
  
@@ -7,7 +7,7 @@ branches cmt doc options
 # LHCb High Level Trigger packages
 #=======================================================
 
-use HltCommon           v1r4    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v1r4p1  Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v1r3p1  Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r2    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r3    Hlt   # Alessia Satta
@@ -20,4 +20,21 @@ use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r2    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r0    Hlt   # Alessia Satta
 
-use HltSelections       v5r2    Hlt   # Patrick Koppenburg
+use HltSelections       v5r3    Hlt   # Patrick Koppenburg
+
+#=============================================================
+# Stuff added temporarily to allow a fast development cycle
+#=============================================================
+
+use HltBase             v2r3   Hlt    # Jose Angel Hernando-Morata
+
+use LoKiHybridBase      v1r0   Phys   # Vanya Belyaev
+use LoKiTrack           v1r0   Phys   # Vanya Belyaev
+use LoKiMCHybrid        v1r0   Phys   # Vanya Belyaev
+use LoKiTrHybrid        v1r0   Phys   # Vanya Belyaev
+use LoKiArrayFunctors   v1r0   Phys   # Vanya Belyaev
+
+
+
+
+
