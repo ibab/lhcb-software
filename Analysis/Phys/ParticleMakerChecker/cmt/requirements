@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           ParticleMakerChecker
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure 
@@ -15,6 +15,7 @@ branches          cmt doc src
 #============================================================================
 use  DaVinciKernel           v*    Phys
 use  DaVinciMCKernel         v*    Phys
+use  MCInterfaces            v*    Kernel
 
 include_path      none
 #============================================================================
