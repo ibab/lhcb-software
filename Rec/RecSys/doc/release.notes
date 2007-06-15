@@ -80,6 +80,8 @@ This version uses Gaudi v19r4 and LHCb v22r6.
 - In TrackSys v4r6
   . Update B = 0 Matching options
   . Fix bug in zero field options
+
+- In TrackSys v4r6, PatVeloTT v2r12
   . Adapt options to change in TrackMasterFitter default
 
 - In GlobalReco v6r10
