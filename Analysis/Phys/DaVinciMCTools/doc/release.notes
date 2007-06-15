@@ -1,8 +1,22 @@
-! $Id: release.notes,v 1.162 2007-06-06 08:20:29 pkoppenb Exp $
+! $Id: release.notes,v 1.163 2007-06-15 16:20:48 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-06-15 - Juan PALACIOS
+
+  - cmt/requiremente
+    use  Kernel/MCInterfaces
+
+  - src/DecayChainNTuple.cpp
+  - src/DecayChainNTuple.h
+  - src/FilterGoodDecay.cpp
+  - src/MCParticleMaker.cpp
+  - src/MCParticleMaker.h
+  - src/MCPrimVertexMaker.cpp
+  - src/TrueMCFilterCriterion.cpp
+    . Fix interface includes that now come from MCInterfaces.
 
 ! 2007-06-06 - Patrick Koppenburg
  - BackgroundCategory tool: 
