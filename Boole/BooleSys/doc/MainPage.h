@@ -8,8 +8,6 @@
  *
  * <hr>
  * \htmlinclude new_release.notes
- * <b>See also: </b>
- * \li \ref externaldocs     "Related external libraries"
 
  * <b>Top level options files</b>
  * \li v200601.opts: DC06 geometry

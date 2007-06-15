@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r2>2007-06-11 Boole v14r2</A></H1><PRE>
+</PRE><H1><A NAME=v14r2>2007-06-15 Boole v14r2</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
@@ -21,10 +21,12 @@ Brunel v31r5 or greater
 
 - New functionality
   . Add possibility to smear OT measurements in time instead of distance. Off by
-    default (OTSimulation v3r11, see details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=1&amp;materialId=slides&amp;confId=10157"T-Rec on 2007-06-11</a><PRE>)
+    default (OTSimulation v3r11, see details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=1&amp;materialId=slides&amp;confId=10157">T-Rec on 2007-06-11</a><PRE>)
 
 - Bug fixes
   . Check untested status codes (MuonAlgs v6r4,MuonBackground v2r4,MuonDet v6r3)
+  . Fix FE-card connection to neighbors in DeCalorimeter::buildCards()
+    (CaloDet v8r2)
 
 - Monitoring changes
   . Improved format of counters printout (GaudiKernel v22r3)
