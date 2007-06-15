@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2007-06-15 - Jan Amoraal
+ - Modfied bank id from 2 to 1 
+
+
 !======================= OTDAQ v5r3 2007-06-07 ======================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns
