@@ -71,7 +71,7 @@ use PatTools              v3r1   Pat     # Olivier Callot
 use TrackInterfaces       v3r5   Tr      # Eduardo Rodrigues, Jose Hernando
 use TsaKernel             v2r4   Tr      # Matt Needham
 use LinkerInstances       v3r2p3 Event   # Eduardo Rodrigues, Thomas Ruf
-use DetCond               v11r3  Det     # Marco Clemencic
+use DetCond               v11r4  Det     # Marco Clemencic
 use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
 use CondDBUI              v2r2   Tools   # Marco Clemencic
 use SimComponents         v2r3   Sim     # Gloria Corti, Marco Cattaneo
