@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.27 2007-05-10 13:10:32 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.28 2007-06-15 13:51:28 jpalac Exp $
 
 #include <algorithm>
 
@@ -268,9 +268,9 @@ StatusCode MakeResonances::execute() {
 
   ++m_nEvents ;
 
-  StatusCode sc = setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
+  setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   LHCb::Particle::ConstVector Daughters, Resonances ;
-  sc = applyFilter(desktop()->particles(),Daughters,m_daughterFilter);
+  StatusCode sc = applyFilter(desktop()->particles(),Daughters,m_daughterFilter);
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
     return StatusCode::FAILURE ;  
@@ -315,7 +315,8 @@ StatusCode MakeResonances::execute() {
   if ( !Final.empty()){
     ++m_nAccepted;
     m_nCandidates+=Final.size();
-    sc = setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+    setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+    sc = StatusCode::SUCCESS;
   }
   if ( msgLevel(MSG::DEBUG) || m_printStats )
     always() << "Found " << Final.size() << " candidates " << endmsg ;

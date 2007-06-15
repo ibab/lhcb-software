@@ -1,4 +1,4 @@
-// $Id: SelResultCorrelations.cpp,v 1.2 2007-05-10 10:01:17 pkoppenb Exp $
+// $Id: SelResultCorrelations.cpp,v 1.3 2007-06-15 13:51:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -85,14 +85,14 @@ StatusCode SelResultCorrelations::execute() {
   debug() << "==> Execute" << endmsg;
 
   if (!exist<SelResults>(m_selResults)){
-    setFilterPassed(false).ignore();
+    setFilterPassed(false);
     Warning("SelResult container not found at "+m_selResults) ;
     return StatusCode::SUCCESS;   
   }
   SelResults* SelResCtr = get<SelResults>(m_selResults);
   if (!SelResCtr ) {
     err() << "No valid data at " << m_selResults << endreq;
-    setFilterPassed(false).ignore();
+    setFilterPassed(false);
     return StatusCode::FAILURE; 
   }
 
