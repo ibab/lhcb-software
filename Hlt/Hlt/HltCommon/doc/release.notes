@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-15 - Patrick Koppenburg
+ - Change signature of resetExecuted() in HltSequencer to follow changes in
+   Algorithm.h
+
 ! ======================== HltCommon v1r4 2007-03-26 =========================
 ! 2007-03-26 - Marco Cattaneo
  - Remove obsolete HltCommon_load.cpp file

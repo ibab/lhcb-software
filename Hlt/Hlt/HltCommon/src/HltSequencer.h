@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.6 2007-02-05 09:09:08 hernando Exp $
+// $Id: HltSequencer.h,v 1.7 2007-06-15 10:02:33 pkoppenb Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -44,7 +44,7 @@ public:
   virtual StatusCode beginRun  ();    ///< Algorithm beginRun
   virtual StatusCode endRun    ();    ///< Algorithm endRun
 
-  StatusCode resetExecuted();         ///< Called before an event processing
+  void resetExecuted();         ///< Called before an event processing
 
   /** for asynchronous changes in the list of algorithms */
   void membershipHandler( Property& theProp );
