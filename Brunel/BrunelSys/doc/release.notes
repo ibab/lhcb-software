@@ -3,8 +3,8 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v31r6>2007-06-12 Brunel v31r6</A></H1><PRE>
-This version uses projects Gaudi v19r3, LHCb v22r6, Lbcom v6r6, Rec v4r6
+</PRE><H1><A NAME=v31r6>2007-06-15 Brunel v31r6</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6, Rec v4r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires 
@@ -33,6 +33,8 @@ programs based on LHCb v22r5 or later
 
 - Bug fixes
   . Check untested status codes (MuonDet v6r3)
+  . Fix units of kappa in TrackParameters.h, improves pulls of OT hits at low
+    momentum (TrackEvent v4r4)
 
 </PRE><H1><A NAME=v31r5>2007-05-21 Brunel v31r5</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5, Rec v4r5
