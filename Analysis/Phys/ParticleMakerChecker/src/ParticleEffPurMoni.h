@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.2 2007-03-06 11:18:57 pkoppenb Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.3 2007-06-15 16:32:17 jpalac Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -26,8 +26,8 @@
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
-#include "Kernel/IMCReconstructible.h"
-#include "Kernel/IMCParticleSelector.h"
+#include "MCInterfaces/IMCReconstructible.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
 // Kernel
 #include "RichKernel/RichPoissonEffFunctor.h"
