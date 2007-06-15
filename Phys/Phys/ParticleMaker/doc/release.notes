@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.66 2007-05-26 11:52:42 jpalac Exp $ 
+! $Id: release.notes,v 1.67 2007-06-15 10:09:57 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2007-06-15 - Juan Palacios
+  - cmt/requirements
+    . Increase version to v3r2p2
+  - src/PreLoadParticles
+    . setFilterPassed returns void. Get rid of ignore()
 
 !======================== ParticleMaker v3r2p1 2007-05-26 ===================
 
