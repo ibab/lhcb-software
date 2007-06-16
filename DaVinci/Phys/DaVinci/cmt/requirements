@@ -1,90 +1,61 @@
-# $Id: requirements,v 1.351 2007-05-22 18:07:19 pkoppenb Exp $
+# $Id: requirements,v 1.352 2007-06-16 10:01:00 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v19r2
+version           v19r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src job options
 
-# Set the version environment variable
-#============================================================================
-pattern DaVinciVersion path APPVERSION <version>
-apply_pattern DaVinciVersion
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
 
-# Used packages. 
-#============================================================================
-#-- External libraries taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
 
-#-- Gaudi libraries
-use GaudiConf           v*
-use GaudiAlg 		v*         
-use GaudiAud            v*         
-use GaudiGSL		v*         
-use GaudiKernel		v*
-use GaudiObjDesc 	v*         
-use GaudiPoolDb		v*         
-use GaudiSvc 		v*         
-use RootHistCnv         v*         
+# Databases
+use DDDB               v1r*  Det            -no_auto_imports
+use ParamFiles         v6r1                 -no_auto_imports
+use FieldMap           v4r7                 -no_auto_imports
 
-#-- Database
-use DDDB                v1r*    Det  -no_auto_imports
-use FieldMap            v4r7         
-use ParamFiles          v5r0         
+# The rest are needed only to set up environment variables for job options
 
-#-- LHCb
-# Kernel packages
-use KernelSys           v*   Kernel
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports
 
-# Detector description
-use DetSys              v*   Det
-
-# Event data model
-use EventSys            v*   Event
-
-# DAQ Buffer encoding and decoding
-use DAQSys              v*   DAQ
-
-# Extra stuff
-use LHCbAlgs            v*    Kernel
-use CaloInterfaces      v*    Calo
-use CaloUtils           v*    Calo
-use SimComponents       v*    Sim
-use LinkerInstances     v*    Event
+# From LHCB project
+use CaloDAQ            v*    Calo           -no_auto_imports
 
 #-- Lbcom
-use LbcomSys    v6r5
+use LbcomSys    v*
 
 #-- Rec
-use RecSys      v4r5
+use RecSys      v*
 
 #-- Hlt
-use HltSys      v1r6
+use HltSys      v*
 
 #-- Phys
-use PhysSys     v6r3
+use PhysSys     v*
 
 #-- Analysis
-use AnalysisSys v1r3
+use AnalysisSys v*
 
 # Build DaVinci Application with standard executable
-# Note that user code is located in a component library (see details
-# in Gaudi User Guide)
 #============================================================================
-# application      DaVinci    ../src/Main/DaVinciMain.cpp
 application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
-
 
 # define link options
 #============================================================================
 apply_pattern application_path 
-
-macro DaVinci_linkopts    "${application_linkopts}"
 
 # define aliases
 alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"

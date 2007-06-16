@@ -5,7 +5,6 @@
  *  @author G.Corti
  *  @date 2003-03-14
  */
-
 //--------------------------------------------------------------
 // Main initialisation
 #include "$PHYSSYSROOT/options/DaVinciInit.opts"
