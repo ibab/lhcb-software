@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.6 2007-06-15 15:50:00 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.7 2007-06-16 10:50:06 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -77,7 +77,7 @@ StatusCode TutorialChecker::execute() {
     if (!sc) return sc ;
   }  
 
-  setFilterPassed(true).ignore();   // Mandatory. Set to true if event is accepted.
+  setFilterPassed(true) ;   // Mandatory. Set to true if event is accepted.
   return sc ;
 }
 //=============================================================================

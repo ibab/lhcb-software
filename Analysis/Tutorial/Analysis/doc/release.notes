@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-06-16 - Patrick Koppenburg
+ - Remove .ignore() from setFilterPassed()
+
 ! 2007-06-14 - Patrick Koppenburg
  - remove _load files everywhere
  - compile a Test version of the library from the solutions directories,
