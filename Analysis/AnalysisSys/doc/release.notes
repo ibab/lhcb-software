@@ -3,6 +3,111 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r4>2007-06-18 Analysis v1r4 - Potential DC06 Stripping version</A></H1><PRE>
+ - Uses LHCB_v22r6
+ - Various fixes related to changes in Gaudi, re-structuring of LoKi and re-packaging of some MC interfaces.
+
+#######################################MM#######################################
+#                                  ANALYSIS v1r4                               #
+################################################################################
+#################################### EXTERNAL ##################################
+
+!======================== MicroDST v1r1 2007-06-18 ====================
+
+! 2007-06-18 - Ulrich KERZEL
+  - cmt/requirements
+    . Increase version to v1r1
+  - src/TestDST.cpp
+    . changes wrt rootOnTES
+
+##################################### PHYS #####################################
+
+!========================== DaVinciMCTools v9r3 2007-06-18 ===================
+
+! 2007-06-15 - Juan PALACIOS
+
+  - cmt/requiremente
+    use  Kernel/MCInterfaces
+
+  - src/DecayChainNTuple.cpp
+  - src/DecayChainNTuple.h
+  - src/FilterGoodDecay.cpp
+  - src/MCParticleMaker.cpp
+  - src/MCParticleMaker.h
+  - src/MCPrimVertexMaker.cpp
+  - src/TrueMCFilterCriterion.cpp
+    . Fix interface includes that now come from MCInterfaces.
+
+! 2007-06-06 - Patrick Koppenburg
+ - BackgroundCategory tool: 
+   . Correct a buglet that happens when all final state particle daughters 
+     are associated to the same MC truth particle.
+   . Also: Check for non null input
+   . ... indent correctly
+   . ... added more verbose printout
+ - Increment to v9r3
+
+!========================== DaVinciAssociators v9r2 2007-06-18 ================
+
+! 2007-06-18 - Philippe Charpentier
+ - Remove rootOnTES() from CompositeAsct.cpp
+
+! 2007-06-15 - Patrick Koppenburg
+ - That was too slow. Steal property from Chi2 cut and apply it on Pz.
+
+! 2007-06-04 - Patrick Koppenburg
+ - Particle2MCWithChi2.cpp: Replace the hard-coded cut requiring
+   Particle and MCParticle to be within 1 GeV P. Replace by 1 GeV
+   or 10%. 
+   Also increased verbosity in verbose() level.
+ - Increment to v9r2
+
+!========================== ParticleMakerChecker v1r1 2007-06-18 =============
+
+! 2007-06-15 - Juan PALACIOS
+  - cmt/requirements
+    . Use Kernel/MCInterfaces and increase version to v1r1
+  - src/*.cpp
+    . Fix includes: MCInterfaces replaces Kernel.
+
+#################################### PHYSSEL ###################################
+
+!========================== PhysSelSys v10r3 2007-06-18 ===================
+
+! 2007-06-18 - Juan PALACIOS
+  - cmt/requirements
+    . Increase versions of PhysSel/Radiative and PhysSel/JetsSel
+    . Increase version to v10r3
+
+!========================== Radiative v2r2 2007-06-18 --=================
+
+! 2007-06-18 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v2r2
+
+! 2007-06-18 - Vanya BELYAEV
+ - fixes to take into account repackaging of LoKi
+
+!========================== JetsSel v1r4 2007-06-18 ===================
+
+! 2007-06-18 - Victor COCO
+  - cmt/requirements
+    . use Phys/LoKiAlgoMC instead of defunct Phys/LoKi
+    . Increase version to v1r4
+  - src/JetSelection.cpp
+    . Fix some Loki includes
+
+##################################### TOOLS ####################################
+!======================== Stripping v6r1p2 2007-06-18 ===================
+
+! 2007-06-15 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v6r1p2
+  - src/StripETC.cpp
+    . Fix for setFilterPassed returning void.
+
+
+
 </PRE><H1><A NAME=v1r3>2007-05-28 Analysis v1r3 - Potential DC06 Stripping version</A></H1><PRE>
  - Uses LHCB_v22r5
  - New MicroDST/MicroDSTAlgorithm package for making and reading MicroDSTs.
