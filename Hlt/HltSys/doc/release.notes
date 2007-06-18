@@ -5,8 +5,17 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r7>2007-06-18 HltSys v1r7</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r6
 
+  - Only minor changes. Some typo-fixes in HltSelections.
 
+  - New Setup to allow a quick development of cuts.
+    . New packages LoKiHybridBase, LoKiTrack, LoKiMCHybrid, LoKiTrHybrid, 
+      LoKIArrayFunctors.
+    . HltBase moved here.
+
+HltSys options:
 ! 2007-06-04 - Patrick Koppenburg
  - Correceted typo in Muon T conf IPSelection. Thanks to Sandra.
 
