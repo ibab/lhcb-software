@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           PyDIM 
-version           v1r2
+version           v1r3
 #============================================================================
 branches          cmt doc src
 use GaudiPolicy   v*
