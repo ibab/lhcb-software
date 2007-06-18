@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.20 2007-06-18 15:16:46 jpalac Exp $
+! $Id: release.notes,v 1.21 2007-06-18 16:21:53 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+!======================== MicroDST v1r1 2007-06-18 ====================
 
 ! 2007-06-18 - Ulrich KERZEL
   - cmt/requirements
