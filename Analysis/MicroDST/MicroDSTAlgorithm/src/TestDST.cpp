@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.10 2007-04-19 14:50:09 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.11 2007-06-18 13:21:31 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode TestDST::initialize() {
 
   // initialise associator to MC
   m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite, "");
-  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links    , rootOnTES() + LHCb::TrackLocation::Default);
+  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links    , rootInTES() + LHCb::TrackLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -74,13 +74,11 @@ StatusCode TestDST::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  // code goes here  
-  debug()<< " rootOnTES is " << rootOnTES () << endmsg;
 
   //
   // test ODIN
   //
-  LHCb::ODIN * odin = get<LHCb::ODIN>( rootOnTES()+ LHCb::ODINLocation::Default );
+  LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   
   if (odin) {
     verbose() << " ODIN event time " << odin->eventTime() 
@@ -98,7 +96,7 @@ StatusCode TestDST::execute() {
   //  
   // test RecHeader
   //
-  LHCb::RecHeader *recHeader = get<LHCb::RecHeader>(rootOnTES()+ LHCb::RecHeaderLocation::Default );
+  LHCb::RecHeader *recHeader = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default );
   if (recHeader) {
     verbose() << " RecHeader run# "    << recHeader->runNumber() 
               << " event# "            << recHeader -> evtNumber()  
@@ -181,7 +179,7 @@ StatusCode  TestDST::PrintDefaultPV(){
   LHCb::RecVertex::ConstVector::const_iterator iPV;
   LHCb::RecVertex::ConstVector::const_iterator iPVBegin = primaryVertices.begin();
   LHCb::RecVertex::ConstVector::const_iterator iPVEnd   = primaryVertices.end();  
-  LHCb::RecVertices* verts                              = get<LHCb::RecVertices>(rootOnTES()+ LHCb::RecVertexLocation::Primary);
+  LHCb::RecVertices* verts                              = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
 
   for (iPV = iPVBegin;  iPV !=iPVEnd ; iPV++){      
    const LHCb::RecVertex *thisPV = (*iPV);
@@ -286,7 +284,7 @@ StatusCode TestDST::PrintRelatedPV(const LHCb::Particle* particle) {
   //
   // get linked vertices
   //  from links stored into microDST
-  std::string linksLocation =  rootOnTES() +  LHCb::RecVertexLocation::Primary;;
+  std::string linksLocation =  LHCb::RecVertexLocation::Primary;;
   verbose() << " get associator from " << linksLocation << endmsg;
   Part2Vertex associator(eventSvc(), linksLocation  );
   const Part2VertexTable* table = associator.direct();
@@ -391,7 +389,7 @@ StatusCode TestDST::PrintParticleInfo(const LHCb::Particle *particle) {
 //=============================================================================
 StatusCode TestDST::PrintMCParticles() {
 
-  std::string locTES = rootOnTES()+  LHCb::MCParticleLocation::Default;
+  std::string locTES = LHCb::MCParticleLocation::Default;
   verbose() << "print all MC particles at TES location " << locTES << endmsg;
 
   if (exist<LHCb::MCParticles>(locTES)) {
@@ -426,7 +424,7 @@ StatusCode TestDST::PrintMCParticles() {
 StatusCode TestDST::PrintMCVertices() {
 
 
-  std::string locTES = rootOnTES()+  LHCb::MCVertexLocation::Default;
+  std::string locTES = LHCb::MCVertexLocation::Default;
   verbose() << "try to load MC vertices from " << locTES << endmsg;
 
   if (exist<LHCb::MCVertices>(locTES)) {
@@ -499,7 +497,7 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
 //    verbose() << "found proto-particle " << endmsg;
 //    if (particle->proto()->track()) {
 //      verbose() << "found track with key " << particle->proto()->track()->key() << endmsg;
-//      std::string linksLocation = rootOnTES() + LHCb::TrackLocation::Default;
+//      std::string linksLocation = LHCb::TrackLocation::Default;
 //      verbose() << " get associator from " << linksLocation << endmsg;
 //      Track2MCPart associator(eventSvc(), linksLocation  );
 //      const Track2MCPartTable *table = associator.direct();
