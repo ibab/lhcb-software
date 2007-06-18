@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.112 2007-06-18 13:45:59 phicharp Exp $
+! $Id: release.notes,v 1.113 2007-06-18 16:06:27 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v9r2 2007-06-18 ================
 
 ! 2007-06-18 - Philippe Charpentier
  - Remove rootOnTES() from CompositeAsct.cpp
