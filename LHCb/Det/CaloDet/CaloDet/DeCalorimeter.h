@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.27 2007-02-27 22:36:09 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.28 2007-06-18 16:13:56 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -226,8 +226,19 @@ public:
   inline int cardArea           ( const int card   )  const ;
   ///  card first row 
   inline int cardFirstRow       ( const int card   )  const ;
+  ///  card last column 
+  inline int cardLastColumn    ( const int card   )  const ;
+  ///  card last row 
+  inline int cardLastRow       ( const int card   )  const ;
   ///  card first column 
   inline int cardFirstColumn    ( const int card   )  const ;
+  // Valid boundaries
+  inline int cardFirstValidRow    ( const int card   )  const ;
+  inline int cardLastValidRow     ( const int card   )  const ;
+  inline int cardFirstValidColumn ( const int card   )  const ;
+  inline int cardLastValidColumn  ( const int card   )  const ;
+
+
   ///  ID of the bottom left cell
   inline LHCb::CaloCellID firstCellID ( const int card   )  const ;
   ///  ID of of the top right cell
@@ -561,6 +572,72 @@ inline int DeCalorimeter::cardFirstRow   ( const int card ) const
 // ============================================================================
 inline int DeCalorimeter::cardFirstColumn( const int card ) const 
 { return m_feCards[card].firstColumn(); };
+
+// ============================================================================
+//  card last row 
+// ============================================================================
+inline int DeCalorimeter::cardLastRow   ( const int card ) const 
+{ return m_feCards[card].lastRow();};
+
+// ============================================================================
+//  card last column 
+// ============================================================================
+inline int DeCalorimeter::cardLastColumn( const int card ) const 
+{ return m_feCards[card].lastColumn(); };
+
+// ============================================================================
+//  valid boundaries :  first/last col/row with a valid cell
+// ============================================================================
+inline int DeCalorimeter::cardFirstValidRow( const int card ) const{ 
+  LHCb::CaloCellID cell = firstCellID(card);
+  if( valid( cell ) )return cell.row();
+
+  for(int irow = cardFirstRow(card) ; irow <= cardLastRow(card) ; ++irow){
+    for(int icol = cardFirstColumn(card) ; icol <= cardLastColumn(card) ; ++icol){
+      LHCb::CaloCellID test(cell.calo(), cell.area(), irow, icol );
+      if( valid( test ) )return irow;
+    }
+  }    
+  return -1;
+}
+
+inline int DeCalorimeter::cardFirstValidColumn( const int card ) const{ 
+  LHCb::CaloCellID cell = firstCellID(card);
+  if( valid( cell ) )return cell.col();
+  for(int irow = cardFirstRow(card) ; irow <= cardLastRow(card) ; ++irow){
+    for(int icol = cardFirstColumn(card) ; icol <= cardLastColumn(card) ; ++icol){
+      LHCb::CaloCellID test(cell.calo(), cell.area(), irow, icol );
+      if( valid( test ) )return icol;
+    }
+  }
+  return -1;
+}
+
+inline int DeCalorimeter::cardLastValidRow( const int card ) const{ 
+  LHCb::CaloCellID cell = lastCellID(card);
+  if( valid( cell ) )return cell.row();
+
+  for(int irow = cardLastRow(card) ; irow >= cardFirstRow(card) ; --irow){
+    for(int icol = cardLastColumn(card) ; icol >= cardFirstColumn(card) ; --icol){
+      LHCb::CaloCellID test(cell.calo(), cell.area(), irow, icol);
+      if( valid( test ) )return irow;
+    }
+  }
+  return -1;
+}
+inline int DeCalorimeter::cardLastValidColumn( const int card ) const{ 
+  LHCb::CaloCellID cell = lastCellID(card);
+  if( valid( cell ) )return cell.col();
+
+  for(int irow = cardLastRow(card) ; irow >= cardFirstRow(card) ; --irow){
+    for(int icol = cardLastColumn(card) ; icol >= cardFirstColumn(card) ; --icol){
+      LHCb::CaloCellID test(cell.calo(), cell.area(), irow, icol );
+      if( valid( test ) )return icol;
+    }
+  }
+  return -1;
+}
+
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell

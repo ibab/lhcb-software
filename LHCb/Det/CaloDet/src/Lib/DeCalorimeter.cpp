@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.39 2007-06-14 16:10:16 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.40 2007-06-18 16:13:56 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -566,6 +566,12 @@ StatusCode DeCalorimeter::buildCards( )  {
         << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d #channels %4d",
                     card.number(), card.crate(), card.slot(), card.downNumber(), card.leftNumber(), card.cornerNumber(), 
                     card.previousNumber(), card.validationNumber(),card.ids().size() )
+        << endreq;
+    msg << MSG::DEBUG << " >> boundaries : " 
+        << cardFirstValidRow(card.number())    << " (" << cardFirstRow( card.number() )     << ") -> "   
+        << cardLastValidRow(card.number())     << " (" << cardLastRow( card.number() )      << ")  && "  
+        << cardFirstValidColumn(card.number()) << " (" << cardFirstColumn( card.number() )  << ")  -> "  
+        << cardLastValidColumn(card.number())  << " (" << cardLastColumn( card.number() )   << ") "     
         << endreq;
   }
 

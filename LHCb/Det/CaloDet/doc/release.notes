@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.76 2007-06-15 06:36:22 cattanem Exp $ 
+! $Id: release.notes,v 1.77 2007-06-18 16:13:56 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2007-06-18 Olivier Deschamps
+ - Add new method : cardFirstValidRow(), cardLastValidRow(), + idem for columns
 
 !======================== CaloDet v8r2 2007-06-15 =============================
 ! 2007-06-14 Olivier Deschamps
