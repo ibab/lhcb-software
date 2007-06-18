@@ -1,6 +1,14 @@
 Package: PyDIM
 Author:  Markus Frank
 
+!=========================== PyDIM v1r2 2007-06-18 ===========================
+! 2007-06-18 - Marco Cattaneo
+ - Add a hack to dim_dict.h to workarounc conflicting longlong definitions in
+   Reflex and DIM on amd64
+
+! 2007-05-02  Markus Frank
+ - Removed all python scripts
+
 !=========================== PyDIM v1r1 2006-10-20 ===========================
  2006-10-10  Markus Frank
   Upgrade to ROOT::Reflex and PyCintex

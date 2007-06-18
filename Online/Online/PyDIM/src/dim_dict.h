@@ -1,5 +1,8 @@
 #ifdef __GNUC__
 #include <stdint.h>
+#define longlong aStupidHackForAmd64
+#include "Reflex/Kernel.h"
+#undef longlong
 #endif
 #include "dis.hxx"
 #include "dic.hxx"
