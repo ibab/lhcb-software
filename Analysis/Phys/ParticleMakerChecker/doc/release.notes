@@ -4,7 +4,15 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
-!========================== ParticleMakerChecker v1r0 2007-03-09 ===================
+!========================== ParticleMakerChecker v1r1 2007-06-18 =============
+
+! 2007-06-15 - Juan PALACIOS
+  - cmt/requirements
+    . Use Kernel/MCInterfaces and increase version to v1r1
+  - src/*.cpp
+    . Fix includes: MCInterfaces replaces Kernel.
+
+!========================== ParticleMakerChecker v1r0 2007-03-09 =============
 ! 2007-03-06 - Patrick Koppenburg
  - Associator headers have been moved to DaVinciMCKernel
  - Depend on DaVinciMCKernel
