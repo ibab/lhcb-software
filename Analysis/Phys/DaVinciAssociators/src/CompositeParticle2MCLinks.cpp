@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.17 2007-05-11 12:34:47 ukerzel Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.18 2007-06-18 13:45:59 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -120,7 +120,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
   }
 
   // get MCParticles
-  MCParticles* mcParts = get<MCParticles>( rootOnTES() + MCParticleLocation::Default );
+  MCParticles* mcParts = get<MCParticles>( MCParticleLocation::Default );
 
   //////////////////////////////////
   // Loop on Particles containers //

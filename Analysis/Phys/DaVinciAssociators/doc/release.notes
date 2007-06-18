@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.111 2007-06-15 16:05:36 pkoppenb Exp $
+! $Id: release.notes,v 1.112 2007-06-18 13:45:59 phicharp Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-06-18 - Philippe Charpentier
+ - Remove rootOnTES() from CompositeAsct.cpp
 
 ! 2007-06-15 - Patrick Koppenburg
  - That was too slow. Steal property from Chi2 cut and apply it on Pz.
