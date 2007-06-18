@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.67 2007-06-15 10:09:57 jpalac Exp $ 
+! $Id: release.notes,v 1.68 2007-06-18 15:43:33 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+!======================== ParticleMaker v3r2p2 2007-06-18 ===================
 
 ! 2007-06-15 - Juan Palacios
   - cmt/requirements
