@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltCommon v1r4p1 2007-06-18 ===================
 ! 2007-06-15 - Patrick Koppenburg
  - Change signature of resetExecuted() in HltSequencer to follow changes in
    Algorithm.h
