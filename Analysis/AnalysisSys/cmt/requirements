@@ -1,6 +1,6 @@
 
 package AnalysisSys
-version v1r3
+version v1r4
 
 branches doc cmt
 
@@ -18,7 +18,7 @@ use  FlavourTaggingChecker      v2r3     Phys   # Marco Musy
 use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1     Phys   # Chris Jones
 ####################################################################
-use  PhysSelSys      	v10r2   PhysSel
+use  PhysSelSys      	v10r3   PhysSel
 #===================================================================
 use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r3	PhysSel # Rare Decays Working Group
@@ -27,15 +27,15 @@ use B2DplusX		v1r0	PhysSel # WGs
 use B2DsX		v1r5	PhysSel # WGs
 use B2DstarX		v1r5	PhysSel # WGs
 use B2uds	        v2r3    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
-#use JetsSel	        v1r3    PhysSel # Jest WG
-#use Radiative           v2r1    PhysSel # Vanya BELYAEV
+use JetsSel	        v1r4    PhysSel # Jest WG
+use Radiative           v2r2    PhysSel # Vanya BELYAEV
 
 # temporary packages
 use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
 use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
 
 ####################################################################
-#use               LoKiJets         v2r3p1   Phys
+use               LoKiJets         v2r3p1   Phys
 
 ####################################################################
 use  Stripping          v6r1p2  Tools             # Juan Palacios
@@ -47,3 +47,4 @@ use  Stripping          v6r1p2  Tools             # Juan Palacios
 use  KtJet              v2r1    External          # I. Belyaev
 ####################################################################
 
+use Analysis            v6r4    Tutorial         # P. Koppenburg
