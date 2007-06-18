@@ -39,6 +39,7 @@ m_initEvent(false){
  declareProperty("otClusterLocation", m_otClusterLocation = Tsa::OTClusterLocation::Default);
  declareProperty("maxDriftDistance", m_maxDriftRadius = 2.8); 
  declareProperty("minDriftDistance", m_minDriftRadius = -0.3);
+ declareProperty("correctDriftDist", m_correctDriftDist = false); 
 
  declareInterface<ITsaCollector>(this);
 
