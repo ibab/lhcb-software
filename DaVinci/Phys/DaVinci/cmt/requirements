@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.352 2007-06-16 10:01:00 pkoppenb Exp $
+# $Id: requirements,v 1.353 2007-06-18 17:26:27 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -6,6 +6,11 @@
 #============================================================================
 package           DaVinci
 version           v19r3
+
+
+use Analysis v* Tutorial
+use Bu2LLK v* PhysSel
+use DaVinciAssociators v* Phys
 
 # Structure, i.e. directories to process. 
 #============================================================================
