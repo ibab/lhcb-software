@@ -1,11 +1,22 @@
 #============================================================================
 package           DIM
-version           v16r8
+version           v16r9
 #============================================================================
 use GaudiPolicy   v*
 branches          cmt src
 
 make_fragment buildproto
+
+tag i486
+tag slc3_i486_gcc323      slc3_gcc323 i486
+tag slc3_i486_gcc323_dbg  slc3_gcc323 i486 debug
+tag slc4_i486_gcc34       slc3_gcc34  i486
+tag slc4_i486_gcc34_dbg   slc3_gcc34  i486 debug
+
+macro_append cpp          "" i486 " -m32 -march=i486 "
+macro_append cc           "" i486 " -m32 -march=i486 "
+macro_append shlibbuilder "" i486 " -m32 -march=i486 "
+
 macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
 pattern dim_exe \
     application  <name>  <files> ; \
@@ -21,6 +32,7 @@ library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
 
 apply_pattern linker_library library=dim 
 macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
+macro_append dim_shlibflags " " x86_64 " -m32 -march=i486 "
 
 apply_pattern dim_exe name=DNS files=dns.c 
 apply_pattern dim_exe name=did files=did/make_did.c
