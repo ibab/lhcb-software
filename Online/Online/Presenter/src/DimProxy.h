@@ -1,14 +1,24 @@
-// $Id: DimProxy.h,v 1.1 2007-06-08 15:10:04 psomogyi Exp $
+// $Id: DimProxy.h,v 1.2 2007-06-19 13:35:14 psomogyi Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
 //#include <boost/tokenizer.hpp>  // Boost
 
-#include <string>
+//#include <string>
 #include "dim/dic.hxx"
+//#include "OnlineHistDB/OnlineHistDB.h"
+#include "presenter.h"
 
 class TH1;
 class TH2;
+class TProfile;
+class TProfile2D;
+class OnlineHistDB;
+
+//class OnlineHistogram;
+class DimInfo;
+
+using namespace pres;
 
 /** @class DimProxy DimProxy.h
  *  @author based on code by J. Helder Lopes & Ulrich Kerzel
@@ -22,55 +32,55 @@ class TH2;
  *      (UNDERFLOW, "in range" bins, OVERFLOW)_y)
  */
 
-// TODO: remove "get" for clean API
  
 class DimProxy : public DimInfo
 {  
 public:
-  enum  ServiceType {Unknown, H1D, H2D, HPD,  // [Histogram|Dimension]
-                     CI4, CF4, CD8, CC1};     // [Counter|Type|Size]
-            
-  DimProxy(std::string serviceName, int refreshTime, int verbosity);
+  DimProxy(std::string serviceName,
+                   int refreshTime,
+                   MsgLevel verbosity,
+                   OnlineHistDB* histoDB);
+  
   virtual ~DimProxy();
   
 //  bool    checkIfServiceSupported(); 
   bool    serviceOK();
   bool    serviceUpdated();
   void    resetServiceUpdated();  // resetset m_serviceUpdated to false again
-  TH1*    rootH1D();
-  TH1*    rootOffsetH1D();  
-  TH2*    rootH2D();  
-  TH2*    rootOffsetH2D();  
-  TH1*    rootHPD();
-  TH1*    rootOffsetHPD();  
-  float   floatCF4();
-  double  doubleCD8();  
-  int     intCI4();
+//  TH1*    rootH1D();
+//  TH1*    rootOffsetH1D();  
+//  TH2*    rootH2D();  
+//  TH2*    rootOffsetH2D();  
+//  TH1*    rootHPD();
+//  TH1*    rootOffsetHPD();  
+//  float   floatCF4();
+//  double  doubleCD8();  
+//  int     intCI4();
   
-  ServiceType getType();  
+  HistoServiceType getType();  
 
 private:
-  void  fillHistogramH2D();
-  void  fillHistogramH1D();
-  void  fillHistogramHPD();
-  void  infoHandler();  // overloaded from DimInfo called whenever server
-                        // updates information
+//  void  fillHistogramH2D();
+//  void  fillHistogramH1D();
+//  void  fillHistogramHPD();
+//  void  infoHandler();  // overloaded from DimInfo called whenever server
+//                        // updates information
                                           
-  ServiceType m_serviceType;
+  HistoServiceType m_serviceType;
   bool  m_serviceOK;
   int   m_histoDimension;  // 1 for TH1, 2 for TH2
   int   m_serviceSize;  
   std::string m_serviceName;
   bool    m_serviceUpdated; // change to true once call-back is received and
                             // values may have changed        
-  int     m_verbosity;  
-  bool    m_bookedHistogram;
-  int     m_CI4;
-  float   m_CF4;
-  double  m_CD8;
-  float   *m_histoData;
-  TH1     *m_H1D;    
-  TH2     *m_H2D;
-  TH1     *m_HPD;  
+  MsgLevel m_verbosity;  
+//  bool    m_bookedHistogram;
+//  int     m_CI4;
+//  float   m_CF4;
+//  double  m_CD8;
+//  float   *m_histoData;
+//  TH1     *m_H1D;    
+//  TH2     *m_H2D;
+//  TH1     *m_HPD;  
 };
 #endif // DIMINFOHISTO_H
