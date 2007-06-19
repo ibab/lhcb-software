@@ -32,7 +32,6 @@ library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
 
 apply_pattern linker_library library=dim 
 macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
-macro_append dim_shlibflags " " x86_64 " -m32 -march=i486 "
 
 apply_pattern dim_exe name=DNS files=dns.c 
 apply_pattern dim_exe name=did files=did/make_did.c
