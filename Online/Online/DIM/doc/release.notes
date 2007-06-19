@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 
+!=========================== DIM v16r8p1 2007-06-19 ============================
+! 2007-06-19 Markus Frank
+ - add tags for i486 for credit card PC builds: 
+   slc3_i486_gcc323      slc3_gcc323 i486
+   slc3_i486_gcc323_dbg  slc3_gcc323 i486 debug
+   slc4_i486_gcc34       slc3_gcc34  i486
+   slc4_i486_gcc34_dbg   slc3_gcc34  i486 debug
+
 ! 2007-03-24 Markus Frank
  - Add dependency to librt when building libdim for linux
  - Fix link problem for did.exe
