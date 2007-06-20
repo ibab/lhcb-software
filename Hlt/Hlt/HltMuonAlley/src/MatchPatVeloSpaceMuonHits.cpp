@@ -108,7 +108,7 @@ StatusCode MatchPatVeloSpaceMuonHits::execute() {
   
   debug() << "==> Execute" << endreq;
 
-  bool ok  = HltAlgorithm::beginExecute();
+  bool ok  = true;
 
   m_inputL0Muon=get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
  debug()<<" L0 Muon "<<endreq;
@@ -135,8 +135,6 @@ StatusCode MatchPatVeloSpaceMuonHits::execute() {
   muonMatch();  
   //debug()<<" tot matched in 3D "<<m_outputMuonTracks->size()<<endreq;	  
   fillHisto(h_patOutTrack,m_outputMuonTracks->size(),1.0);
-  
-  HltAlgorithm::endExecute();  
   
   return StatusCode::SUCCESS;
 };

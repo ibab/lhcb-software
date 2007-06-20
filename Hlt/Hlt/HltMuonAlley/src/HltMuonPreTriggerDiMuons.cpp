@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.4 2006-10-30 08:39:45 asatta Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.5 2007-06-20 16:12:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -62,14 +62,9 @@ HltMuonPreTriggerDiMuons::~HltMuonPreTriggerDiMuons() {
 StatusCode HltMuonPreTriggerDiMuons::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
   m_patVertexBank =
     m_patDataStore->createVertexContainer("Hlt/Vertex/PreDiMuonVer",200);
-
-
-
-
-
 
   //  m_ptKey = HltNames::particleInfoID("PT");
   //double cutr=0.0;
@@ -116,9 +111,7 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
 //info()<<" sono qui "<<endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
-//info()<<" sono qui "<<endreq;
-  bool ok  = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks");
+  //info()<<" sono qui "<<endreq;
 
   //  ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
   //  info()<<" size "<<*m_inputTracks->size()
@@ -203,9 +196,7 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
     debug()<<" mass  cut "<<m_selevertices.size()<<endreq;
   }
   if(!store&&!store1)return stop("no mu pair is ok");
-  setDecision(true);	
-  HltAlgorithm::endExecute();
-
+  setDecision(true);
 
   if (m_debug) {
     debug() << " number of muon positive tracks " << n1 << endreq;

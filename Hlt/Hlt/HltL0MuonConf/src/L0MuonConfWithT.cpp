@@ -1,4 +1,4 @@
-// $Id: L0MuonConfWithT.cpp,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: L0MuonConfWithT.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,6 @@ StatusCode L0MuonConfWithT::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
-  HltAlgorithm::beginExecute();
   m_inputL0Muons = get<L0MuonCandidates>(L0MuonCandidateLocation::Default);  
   
 
@@ -139,8 +138,6 @@ info()<<"Tool found : "<<foundTracksTmp->size()
 
 
   delete foundTracksTmp;
-
- HltAlgorithm::endExecute();	
   
   return StatusCode::SUCCESS;
 }

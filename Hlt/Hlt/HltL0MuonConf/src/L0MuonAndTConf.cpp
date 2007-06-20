@@ -1,4 +1,4 @@
-// $Id: L0MuonAndTConf.cpp,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: L0MuonAndTConf.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,6 @@ StatusCode L0MuonAndTConf::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
-  HltAlgorithm::beginExecute();
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {   
     if(calcDLL(*itT)<m_maxdist){ 
@@ -69,8 +68,7 @@ StatusCode L0MuonAndTConf::execute() {
     }
     
   }
-  
-  HltAlgorithm::endExecute();
+
   if(m_skipFilter) setFilterPassed(true);
   
   return StatusCode::SUCCESS;

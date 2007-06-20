@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.cpp,v 1.1.1.1 2007-05-22 10:20:32 asatta Exp $
+// $Id: MuonTConfWithT.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -68,9 +68,6 @@ StatusCode MuonTConfWithT::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
-  HltAlgorithm::beginExecute();
-  setFilterPassed(true);
-
 
   m_countEvent++;
 
@@ -166,8 +163,6 @@ int nummu=0;
   setFilterPassed(true);
 //info()<<" output size "<< m_outputTracks->size()<<" "<< 
 //m_outputMuonTracks->size()<<endreq;
-  HltAlgorithm::endExecute();	
-  setFilterPassed(true);
  
   return StatusCode::SUCCESS;
 }

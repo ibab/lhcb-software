@@ -4,6 +4,9 @@
 ! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+ - minor changes, remove begin,end Execute
+
 !========================== HltL0MuonConf v1r0 2007-05-25 ===================
 ! 2007-05-22 - Patrick Koppenburg
  - Removed slc4_ia32_gcc34 directory

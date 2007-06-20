@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerSingle.cpp,v 1.3 2006-10-19 14:06:09 asatta Exp $
+// $Id: HltMuonTriggerSingle.cpp,v 1.4 2007-06-20 16:12:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -76,9 +76,6 @@ StatusCode HltMuonTriggerSingle::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 //info()<<" sono qui "<<endreq;
-  bool ok  = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks");
-
 
   ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
   //  ELoop::map(*m_inputTracks,*_ipFun,m_ipKey);
@@ -86,15 +83,13 @@ StatusCode HltMuonTriggerSingle::execute() {
 //  double pt1 = (*m_inputTracks->begin())->pt();
 //  fillHisto( m_histoPt1, pt1, 1.);
 
-  HltAlgorithm::monitor(*m_inputTracks,m_ptKey,m_histoPt);
+  // HltAlgorithm::monitor(*m_inputTracks,m_ptKey,m_histoPt);
   //  HltAlgorithm::monitor(*m_inputTracks,m_ipKey,m_histoIP);
 
   m_outputTracks->clear();
   ELoop::select(*m_inputTracks,*_ptCut,*m_outputTracks);
   int n1 = m_outputTracks->size();
   if (m_outputTracks->size() == 0) return stop(" No tracks in PT window");
-
-  HltAlgorithm::endExecute();
 
   setDecisionType(HltEnums::Muon);
   saveInSummary(*m_outputTracks);

@@ -1,4 +1,4 @@
-// $Id: MatchPatVeloSpaceL0.cpp,v 1.4 2007-02-12 12:34:40 asatta Exp $
+// $Id: MatchPatVeloSpaceL0.cpp,v 1.5 2007-06-20 16:12:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -96,7 +96,7 @@ bool MatchPatVeloSpaceL0::acceptTrack(const Track& track)
 StatusCode MatchPatVeloSpaceL0::execute() {
   debug() << "==> Execute" << endreq;
 
-  bool ok  = HltAlgorithm::beginExecute();
+  bool ok  = true;
   ok=false;
 //debug()<<" dopo "<<endreq;  
   setFilterPassed(false);  
@@ -144,7 +144,7 @@ StatusCode MatchPatVeloSpaceL0::execute() {
   
 
   if(!ok)return StatusCode::SUCCESS;
-  HltAlgorithm::endExecute();  
+
   //debug()<<" end space muon l0 "<<m_outputMuonTracks->size()<<endreq;
   return StatusCode::SUCCESS;
 };

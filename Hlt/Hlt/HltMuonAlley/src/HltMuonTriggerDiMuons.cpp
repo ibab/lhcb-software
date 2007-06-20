@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.cpp,v 1.5 2007-02-05 09:21:19 hernando Exp $
+// $Id: HltMuonTriggerDiMuons.cpp,v 1.6 2007-06-20 16:12:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -116,8 +116,7 @@ StatusCode HltMuonTriggerDiMuons::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  bool ok  = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks");
+  bool ok  = true;
   setDecision(false);
   //  ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
 //  info()<<" size "<<*m_inputTracks->size()
@@ -206,7 +205,6 @@ StatusCode HltMuonTriggerDiMuons::execute() {
     setFilterPassed(true);  
    
   }
-  HltAlgorithm::endExecute();
 
   //setDecisionType(HltEnums::DiMuon);
   //saveInSummary(*m_outputTracks);

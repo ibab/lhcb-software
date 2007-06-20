@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.h,v 1.3 2006-10-30 08:39:45 asatta Exp $
+// $Id: HltMuonPreTriggerDiMuons.h,v 1.4 2007-06-20 16:12:57 hernando Exp $
 #ifndef HLTMUONPRETRIGGERDIMUONS_H 
 #define HLTMUONPRETRIGGERDIMUONS_H 1
 
@@ -35,18 +35,15 @@ protected:
   //  HltHisto m_histoPt;
   // HltHisto m_histoPt1;
 
-protected:
-
-  
+protected:  
 
   Estd::filter<LHCb::Track>* _negMuonFil;
   Estd::filter<LHCb::Track>* _posMuonFil;
   Estd::filter<LHCb::RecVertex>*  _massAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _massCut;
   Estd::function<LHCb::Track>* _chargeFun;
-  Hlt::trackvertex_bifunction* _ipFun;
+  Hlt::TrackVertexBiFunction*  _ipFun;
   //Estd::filter<LHCb::Track>*   _ptCut;
-
 
   Hlt::SortTrackByPt _sortByPT;
   int m_IPKey;

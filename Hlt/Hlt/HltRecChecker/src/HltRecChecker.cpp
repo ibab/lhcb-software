@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.3 2006-10-24 09:50:49 hernando Exp $
+// $Id: HltRecChecker.cpp,v 1.4 2007-06-20 16:13:14 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -50,16 +50,13 @@ StatusCode HltRecChecker::initialize() {
 
 StatusCode HltRecChecker::execute() {
 
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks or vertices");
+  bool ok = true;
   
   checkQuark();
   
   if (m_inputTracks) checkTracks();
 
   if (m_inputVertices) checkVertices();
-
-  HltAlgorithm::endExecute();
 
   return StatusCode::SUCCESS;  
 }

@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.cpp,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: RZMuonMatch.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,6 @@ StatusCode RZMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
-  HltAlgorithm::beginExecute();
   debug()<<" pat "<<m_patInputTracks->size()<<" hlt "<<m_inputTracks->size()
         <<endreq;
   int tt=0;
@@ -108,9 +107,7 @@ StatusCode RZMuonMatch::execute() {
       
       }
     }
-  }  
-  
-  HltAlgorithm::endExecute();
+  }
   return StatusCode::SUCCESS;
 }
 

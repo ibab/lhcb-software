@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.cpp,v 1.2 2006-09-26 14:30:06 cattanem Exp $
+// $Id: HltRecCheckTracks.cpp,v 1.3 2007-06-20 16:13:14 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -48,13 +48,8 @@ StatusCode HltRecCheckTracks::initialize() {
 }
 
 StatusCode HltRecCheckTracks::execute() {
-
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks ");
   
   if (m_inputTracks) checkTracks();
-
-  HltAlgorithm::endExecute();
 
   return StatusCode::SUCCESS;  
 }

@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.cpp,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -60,7 +60,6 @@ StatusCode SpaceMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
-  HltAlgorithm::beginExecute();
   debug()<<" pat "<<m_inputTracks->size()<<" hlt "<<m_input2Tracks->size()
         <<endreq;
   int tt=0;
@@ -99,8 +98,7 @@ StatusCode SpaceMuonMatch::execute() {
       delete outputTrack;       
             
     }
-  }  
-  HltAlgorithm::endExecute();
+  }
   return StatusCode::SUCCESS;
 }
 

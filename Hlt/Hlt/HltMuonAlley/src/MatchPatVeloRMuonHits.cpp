@@ -67,7 +67,6 @@ StatusCode MatchPatVeloRMuonHits::execute() {
   
   debug() << "==> Execute" << endreq;
   setFilterPassed(true);
-  bool ok  = HltAlgorithm::beginExecute();  
   int matchedhits = 0;
   // loop over 2 d tracks
   for ( std::vector<Track*>::const_iterator itT =m_patInputTracks->begin();
@@ -86,9 +85,6 @@ StatusCode MatchPatVeloRMuonHits::execute() {
     }
   }
   //info() << "Matched with hits " << matchedhits << endreq;
-
-  HltAlgorithm::endExecute();
-
   return StatusCode::SUCCESS;
 };
 

@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+ - minor changes, remove begin,end Execute
+
 !========================= HltChecker v1r1 2006-11-07 ========================
 ! 2006-10-23 - Jose A. Hernando
  - src/HltRecVertices to check the PV reconstruction

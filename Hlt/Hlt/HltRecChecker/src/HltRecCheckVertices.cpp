@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.1 2006-10-24 09:50:49 hernando Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.2 2007-06-20 16:13:14 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -62,16 +62,11 @@ StatusCode HltRecCheckVertices::initialize() {
 }
 
 StatusCode HltRecCheckVertices::execute() {
-
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No input tracks ");
   
   if (m_inputTracks) {
     relateVertices();
     checkVertices();
   }
-
-  HltAlgorithm::endExecute();
 
   return StatusCode::SUCCESS;  
 }

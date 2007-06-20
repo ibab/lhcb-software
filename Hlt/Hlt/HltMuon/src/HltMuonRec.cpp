@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.2 2006-09-27 13:55:23 cattanem Exp $
+// $Id: HltMuonRec.cpp,v 1.3 2007-06-20 16:12:13 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -261,10 +261,7 @@ StatusCode HltMuonRec::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  HltAlgorithm::beginExecute();
-    
   setFilterPassed(true);
-
 
   int m_countMuonCandidates=0;
   
@@ -453,9 +450,6 @@ StatusCode HltMuonRec::execute() {
   m_muonTracks.clear();
   debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
   debug()<<" in container "<< m_muonTracksContainer->size()<<endreq;
-
- HltAlgorithm::endExecute();
-
 
   return StatusCode::SUCCESS;
 };

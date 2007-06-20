@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+ - minor changes, remove begin,end Execute
+
 !========================== HltTracking v1r3p1 2007-05-25 ===================
 ! 2007-05-25 - Patrick Koppenburg
  - Even more verbose stuff: print covariance matrix in outputlevel =1

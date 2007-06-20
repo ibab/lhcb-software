@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.h,v 1.3 2006-10-30 08:39:45 asatta Exp $
+// $Id: HltMuonTriggerDiMuons.h,v 1.4 2007-06-20 16:12:57 hernando Exp $
 #ifndef HLTMUONTRIGGERDIMUONS_H 
 #define HLTMUONTRIGGERDIMUONS_H 1
 
@@ -44,9 +44,9 @@ protected:
   Estd::filter<LHCb::RecVertex>*  _massAndDOCAAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _massAndDOCACut;
   Estd::function<LHCb::Track>* _chargeFun;
-  Hlt::trackvertex_bifunction* _ipFun;
+  Hlt::TrackVertexBiFunction*  _ipFun;
   //Estd::filter<LHCb::Track>*   _ptCut;
-  Hlt::track_bifunction*  _docaFun;
+  Hlt::TrackBiFunction*  _docaFun;
   
 
   Hlt::SortTrackByPt _sortByPT;

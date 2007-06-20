@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.4 2007-02-12 12:20:52 asatta Exp $
+// $Id: HltMuonRefine.cpp,v 1.5 2007-06-20 16:12:13 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -113,7 +113,6 @@ StatusCode HltMuonRefine::execute() {
   debug() << "==> Execute" << m_patInputTracks->size()<<endmsg;
 //std::string nameLong=m_tracksInput->name();
 //std::string nameMuon=m_muonTracksContainer->name();
-  HltAlgorithm::beginExecute();
   setFilterPassed(false);
   m_inputL0Muon=get<L0MuonCandidates>(L0MuonCandidateLocation::Default );
   m_outputTracks->clear();  
@@ -243,8 +242,6 @@ StatusCode HltMuonRefine::execute() {
       
     }    
   }  
-  HltAlgorithm::endExecute();
-  
   
   debug() << 
     "Average number of muon candidates discarded once long tracks are used: "

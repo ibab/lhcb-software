@@ -1,4 +1,4 @@
-// $Id: MatchPatVeloRL0.cpp,v 1.3 2007-02-12 12:34:40 asatta Exp $
+// $Id: MatchPatVeloRL0.cpp,v 1.4 2007-06-20 16:12:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ bool MatchPatVeloRL0::acceptTrack(const Track& track)
 //=============================================================================
 StatusCode MatchPatVeloRL0::execute() {
   debug() << "==> Execute" << endreq;
-  bool ok  = HltAlgorithm::beginExecute();
+  bool ok  = true;
   ok=false;
   
   m_outputTracks->clear();
@@ -117,8 +117,6 @@ StatusCode MatchPatVeloRL0::execute() {
     }
   }
   if(!ok)return StatusCode::SUCCESS;
-  HltAlgorithm::endExecute();
-
   
   return StatusCode::SUCCESS;
 };
