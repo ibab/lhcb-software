@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+ - more enums
+
 !======================== HltEvent v8r2 2007-06-07 ===========================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns

@@ -107,10 +107,14 @@
 	VertexRho,
 	VertexDz,
 	VertexPointing,
+        VertexMinPT,
+        VertexMaxPT,
 	Muon2DChi2,
 	Muon3DChi2,
 	Calo2DChi2,
-	Calo3DChi2'
+	Calo3DChi2,
+        IDsFraction,
+        UserQuantity = 1000'
 	access = ' PUBLIC' />	
     </class>
     
