@@ -1,4 +1,4 @@
-// $Id: HltMonitorEffvsPt.cpp,v 1.1 2007-02-08 17:38:06 hernando Exp $
+// $Id: HltMonitorEffvsPt.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -115,9 +115,7 @@ StatusCode HltMonitorEffvsPt::initialize() {
 StatusCode HltMonitorEffvsPt::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
-
-  bool ok = HltMonitorAlgorithm::beginExecute();
-  if (!ok) return sc;
+  bool ok = true;
 
   double pt = referencePt();
   debug() << " pt of selected track " << pt << endreq;
@@ -167,9 +165,6 @@ StatusCode HltMonitorEffvsPt::execute() {
     }
     if (!ok) return sc;
   }
-
-  ok = HltMonitorAlgorithm::endExecute();
-  if (!ok) return sc;
 
   return sc;
 }

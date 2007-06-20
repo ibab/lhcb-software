@@ -1,4 +1,4 @@
-// $Id: HltTrackFromTes.cpp,v 1.1 2007-02-08 17:38:06 hernando Exp $
+// $Id: HltTrackFromTes.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -61,8 +61,7 @@ StatusCode HltTrackFromTes::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return sc;
+  bool ok = true;
 
   ok = retrieve(m_tracks,m_tracksLocation);
   if (!ok) return stop("no tracks in TES");
@@ -80,9 +79,6 @@ StatusCode HltTrackFromTes::execute() {
           << " from TES " << m_tracks->size() << endreq;
 
   if (m_outputTracks->empty()) return sc;
-
-  ok = HltAlgorithm::endExecute();
-  if (!ok) return sc;
   
   return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: PhysSelEntry.cpp,v 1.1 2007-02-01 18:35:54 hernando Exp $
+// $Id: PhysSelEntry.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -62,8 +62,7 @@ StatusCode PhysSelEntry::initialize() {
 //=============================================================================
 StatusCode PhysSelEntry::execute() {  
 
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No inputs");
+  bool ok = true;
   
   if (!retrieve(m_physSels,m_physSelLocation)) 
     return stop(" No PhysSel report");
@@ -83,8 +82,7 @@ StatusCode PhysSelEntry::execute() {
   if (!ok) return stop(" No Selection Found");
 
   // fillHisto(m_histoPhysSel,1.,1.);
-  
-  HltAlgorithm::endExecute();
+
   debug() << " accepted Selection entry " << endreq;
   return StatusCode::SUCCESS;
 };

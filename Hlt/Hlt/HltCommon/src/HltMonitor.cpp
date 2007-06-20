@@ -1,4 +1,4 @@
-// $Id: HltMonitor.cpp,v 1.6 2007-02-05 09:09:08 hernando Exp $
+// $Id: HltMonitor.cpp,v 1.7 2007-06-20 16:06:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -51,10 +51,6 @@ StatusCode HltMonitor::initialize() {
 StatusCode HltMonitor::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
-
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return sc;
-
 
   // TODO
   // monitor(m_tracks,m_keys);

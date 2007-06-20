@@ -1,4 +1,4 @@
-// $Id: HltL0Monitor.cpp,v 1.1 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltL0Monitor.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -90,8 +90,6 @@ StatusCode HltL0Monitor::initialize() {
 //=============================================================================
 StatusCode HltL0Monitor::execute() {  
 
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No inputs");
   if (!m_monitor) stop(" No monitor ?");
 
   m_l0 = get<L0DUReport>(m_L0DUReportLocation);
@@ -103,9 +101,8 @@ StatusCode HltL0Monitor::execute() {
   
   monitorCalo();
   
-  monitorMuon();  
+  monitorMuon();
 
-  HltAlgorithm::endExecute();
   return StatusCode::SUCCESS;
 }
 
