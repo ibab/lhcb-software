@@ -1,0 +1,59 @@
+//----------------------------
+//  HLT Calo Alley
+//----------------------------
+//ApplicationMgr.DLLs += {"HltCaloAlley"};
+
+HltCaloAlley.Members += {  "L0Entry/L0CaloEntry",
+                           "HltSequencer/HltRecoVeloRZSeq",
+                           "HltTrackIPSelection/HltTrack2DIPSelection",
+                           "HltTracking/HltHadRecoIPVelo",
+                           "HltTrackIPSelection/HltTrack3DIPPreSelection",
+                           "HltSequencer/HltDecodeTT",
+                           "HltTracking/HltHadRecoIPVeloTT",
+                           "HltCaloPreTrigger/HltCaloPreTrigger0",
+                           "HltSequencer/HltRecoVeloSeq",
+                           "HltTrackIPSelection/HltTrack3DIPSelection",
+                           "HltSequencer/HltDecodeT",
+                           "HltTracking/HltHadRecoIPForward",
+                           "HltCaloPreTrigger/HltCaloTrigger"
+};
+// HltCaloAlley.OutputLevel = 3;
+HltCaloPreTrigger.ModeOr = true;
+
+
+
+//-------------------------------------------------------------------------
+// HLT CaloAlley options
+//-------------------------------------------------------------------------
+
+// L0CaloEntry.OutputLevel = 3;
+L0CaloEntry.L0ChannelsName = {"electron","photon","localPi0","globalPi0"};
+
+//------- the Calorimeter PreTrigger ------------
+HltCaloPreTrigger0.SelectionName      = "CalPreTrigger";
+HltCaloPreTrigger0.InputTracksName     = "Hlt/Track/rIPVeloTT";
+HltCaloPreTrigger0.OutputTracksName    = "Hlt/Track/CaloPreTrigger";
+HltCaloPreTrigger0.InputCalosName      = "Trig/L0/FullCalo";
+HltCaloPreTrigger0.OutputPhotonsName   = "Hlt/Photons/CaloPreTrigger";
+HltCaloPreTrigger0.OutputElectronsName = "Hlt/Electrons/CaloPreTrigger";
+HltCaloPreTrigger0.MinPt = 1274.;
+HltCaloPreTrigger0.MinEtElec = 3080.;
+HltCaloPreTrigger0.MinEtPhot = 2890.;
+// HltCaloPreTrigger0.OutputLevel = 3;
+// HltCaloPreTrigger0.ConditionsName = "/dd/Conditions/Trigger/HltCaloAlley/HltCaloPreTrigger";
+
+
+//------- the Calorimeter Trigger ------------
+//HltCaloTrigger.NoFilterPeriod = 1;
+HltCaloTrigger.SelectionName      = "CalTrigger";
+HltCaloTrigger.InputTracksName     = "Hlt/Track/IPForward";
+HltCaloTrigger.OutputTracksName    = "Hlt/Track/CaloTrigger";
+HltCaloTrigger.InputCalosName      = "Trig/L0/FullCalo";
+HltCaloTrigger.OutputPhotonsName   = "Hlt/Photons/CaloTrigger";
+HltCaloTrigger.OutputElectronsName = "Hlt/Electrons/CaloTrigger";
+HltCaloTrigger.MinPt = 1274.;
+HltCaloTrigger.MinEtElec = 3080.;
+HltCaloTrigger.MinEtPhot = 2890.;
+// HltCaloTrigger.OutputLevel = 3;
+// HltCaloTrigger.ConditionsName = "/dd/Conditions/Trigger/HltCaloAlley/HltCaloTrigger";
+

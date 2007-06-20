@@ -1,5 +1,27 @@
+#include "$HLTSYSROOT/options/HltReco.opts"
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
 
-#include "$HLTSYSROOT/options/HltAlleysSequence.opts"
-//#include "$HLTSYSROOT/options/HltAlleysSequenceDAQ.opts"
+Hlt.Members += {"GaudiSequencer/HltInitSeq",
+                "HltSequencer/HltAllAlleys",
+                "GaudiSequencer/HltEndSeq"
+};
+
+HltInitSeq.Members = {"PatInitEvent",
+                      "HltInit"  
+};
+
+HltEndSeq.Members = {"HltEnd"};
+//HltEnd.onTES = false;
+//HltEnd.onTES = false;
+
+HltAllAlleys.Members ={
+  "HltSequencer/HltMuonAlley"
+  ,"HltSequencer/HltHadAlley"
+  // ,"HltSequencer/HltCaloAlley"
+};
+HltAllAlleys.ModeOr=true;
+
+// different configurations
+#include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
+#include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"

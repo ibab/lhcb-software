@@ -1,19 +1,4 @@
 //------------------------------
-// DLLs and main HLT Sequencer
-//-----------------------------
-
-ApplicationMgr.DLLs += { "VeloDAQ" };
-ApplicationMgr.DLLs += { "STDAQ" };
-ApplicationMgr.DLLs += { "OTDAQ" };
-ApplicationMgr.DLLs += { "CaloDAQ" };
-ApplicationMgr.DLLs += { "RichDAQ" };
-ApplicationMgr.DLLs += { "MuonDAQ" };
-
-ApplicationMgr.DLLs += { "PatTools", "PatUtils"};
-ApplicationMgr.DLLs += { "PatVelo", "PatPV", "PatVeloTT", "PatForward" };
-
-
-//------------------------------
 // Definition of the reconstruction
 //-----------------------------
 
@@ -60,9 +45,21 @@ HltRecoForward.OutputLevel = 3;
 HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
                               "PatVeloLoadClusters",
                               "PatVeloRTracking",
-                              "PatPV2D"
+                              "PatPV2D",
+                              "HltPrepareTracks/HltPrepareRZVelo"
 };
+
+PatVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
+PatVeloRTracking.OutputLevel = 3;
+PatPV2D.InputTracksName = "Hlt/Track/RZVelo";
 PatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
+PatPV2D.OutputLevel = 3;
+
+HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.PatInputVerticesName = "Hlt/Vertex/PV2D";
+HltPrepareRZVelo.OutputVerticesName   = "Hlt/Vertex/PV2D";
+HltPrepareRZVelo.OutputLevel = 3;
 
 // 3D Velo tracking and PV
 //------------------------
@@ -90,16 +87,6 @@ createITLiteClusters.detType = "IT";
 //----------------
 
 //TODO: should be this be here or in the sequencer?
-
-PatHltHadRecoIPVeloTT.removeUsedTracks = false;
-PatHltHadRecoIPVeloTT.fitTracks = false;
-PatHltHadRecoIPVeloTT.maxChi2 = 256.;
-PatHltHadRecoIPVeloTT.PatVeloTTTool.minMomentum = 2000.;
-PatHltHadRecoIPVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
-PatHltHadRecoIPVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
-PatHltHadRecoIPVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
-PatHltHadRecoIPVeloTT.OutputLevel = 3;
-
 
 // Forward
 //----------------

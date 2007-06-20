@@ -1,0 +1,215 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+#include "$HLTSYSROOT/options/HltNewReco.opts"
+
+//---------------------------
+// HLT Had Alley
+//--------------------------
+
+HltHadAlley.Members = {//"GaudiSequencer/MCHltHadAlley",
+                       "L0Entry/L0HadEntry",
+                       "GaudiSequencer/HltRecoVeloRZSeq",
+                       "GaudiSequencer/DVHltHadAlley",
+                       "HltTrackFilter/HltHadTrackRZIPSelection",
+                       "HltTracking/HltHadRecoIPVelo",
+                       "HltTrackFilter/HltHadTrackIPSelection0",
+                       "HltSequencer/HltDecodeTT",
+                       "HltTracking/HltHadRecoIPVeloTT",
+                       "HltSequencer/HltHadPreTrigger",
+                       "HltTracking/HltRecoVelo",
+                       "HltTrackFilter/HltHadTrackIPSelection",
+                       "GaudiSequencer/HltDecodeT",
+                       "HltTracking/HltHadRecoIPForward",
+                       "HltTrackFilter/HltHadTrackIPPTSelection",
+                       "HltVertexMaker/HltHadMakeDiHadron",
+                       "HltVertexFilter/HltHadTriggerDiHadron"
+};
+HltHadAlley.MeasureTime = true;
+
+HltHadPreTrigger.Members += {
+  "HltTrackFilter/HltHadPreTriggerSingle",
+  "HltSequencer/HltHadPreDiHadronSeq"
+};
+HltHadPreTrigger.MeasureTime = true;
+HltHadPreTrigger.OutputLevel = 3;
+HltHadPreTrigger.ModeOr = true;
+
+HltHadPreDiHadronSeq.Members += {
+  "HltTrackFilter/HltHadTrackIPPTSelection0",
+  "HltVertexMaker/HltHadMakeDiHadron0",
+  "HltVertexFilter/HltHadPreTriggerDiHadron"
+};
+HltHadPreDiHadronSeq.MeasureTime = true;
+HltHadPreDiHadronSeq.OutputLevel = 3;
+
+
+//-------------------------------------------------------------------------
+// HLT HadAlley options
+//-------------------------------------------------------------------------
+
+
+L0HadEntry.L0ChannelsName = {"hadron"};
+// L0HadEntry.OutputLevel = 3;
+
+HltPrepareL0Calos.OutputLevel = 3;
+
+HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.PatInputVerticesName = "Hlt/Vertex/PV2D";
+HltPrepareRZVelo.OutputVerticesName   = "Hlt/Vertex/PV2D";
+HltPrepareRZVelo.OutputLevel = 3;
+
+HltHadTrackRZIPSelection.InputTracksName = "Hlt/Track/RZVelo";
+HltHadTrackRZIPSelection.OutputTracksName = "Hlt/Track/IPRZVelo0";
+HltHadTrackRZIPSelection.PrimaryVerticesName = "Hlt/Vertex/PV2D";
+HltHadTrackRZIPSelection.FilterDescriptor = {"rIP,[],0.10,3."};
+HltHadTrackRZIPSelection.HistoDescriptor = {"rIP,400,-1.,3.",
+                                            "rIPBest,400,-1.,3."
+};
+HltHadTrackRZIPSelection.HistogramUpdatePeriod = 1;
+HltHadTrackRZIPSelection.OutputLevel = 3;
+
+HltHadRecoIPVelo.InputTracksName = "Hlt/Track/IPRZVelo0";
+HltHadRecoIPVelo.OutputTracksName = "Hlt/Track/IPVelo0";
+HltHadRecoIPVelo.RecoName = "Velo";
+HltHadRecoIPVelo.OutputLevel = 3;
+
+HltHadTrackIPSelection0.InputTracksName = "Hlt/Track/IPVelo0";
+HltHadTrackIPSelection0.OutputTracksName = "Hlt/Track/IPVelo1";
+HltHadTrackIPSelection0.PrimaryVerticesName = "Hlt/Vertex/PV2D";
+HltHadTrackIPSelection0.FilterDescriptor = {"IP,||[],0.15,3."};
+HltHadTrackIPSelection0.HistoDescriptor = {"IP,400,-1.,3.",
+                                          "IPBest,400,-1.,3."
+};
+HltHadTrackIPSelection0.HistogramUpdatePeriod = 1;
+HltHadTrackIPSelection0.OutputLevel = 3;
+
+HltHadRecoIPVeloTT.InputTracksName = "Hlt/Track/IPVelo1";
+HltHadRecoIPVeloTT.OutputTracksName = "Hlt/Track/IPVeloTT0";
+HltHadRecoIPVeloTT.RecoName = "VeloTT";
+HltHadRecoIPVeloTT.OutputLevel = 3;
+
+PatHltHadRecoIPVeloTT.removeUsedTracks = false;
+PatHltHadRecoIPVeloTT.fitTracks = false;
+PatHltHadRecoIPVeloTT.maxChi2 = 256.;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.minMomentum = 2000.;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
+PatHltHadRecoIPVeloTT.OutputLevel = 3;
+
+HltHadPreTriggerSingle.SelectionName = "HadPreTriggerSingle";
+HltHadPreTriggerSingle.InputTracksName = "Hlt/Track/IPVeloTT0";
+HltHadPreTriggerSingle.OutputTracksName = "Hlt/Track/HadPreTrigger/Single";
+HltHadPreTriggerSingle.HistogramUpdatePeriod = 1;
+HltHadPreTriggerSingle.ComputeInfo = true;
+HltHadPreTriggerSingle.FilterDescriptor = {"rIP,[],0.1,3.",
+                                           "IP,||[],0.15,3.",
+                                           "PT,>,2500."};
+HltHadPreTriggerSingle.HistoDescriptor = {"rIP,400,-1.,3.",
+                                          "rIPBest,400,-1.,3.",
+                                          "IP,400,-1.,3.",
+                                          "IPBest,400,-1.,3.",
+                                          "PT,100,0.,8000.",
+                                          "PTBest,100,0.,8000."
+};
+HltHadPreTriggerSingle.OutputLevel = 3;
+// HltHadPreTriggerSingle.PassPeriod = 1;
+
+HltHadTrackIPPTSelection0.InputTracksName = "Hlt/Track/IPVeloTT0";
+HltHadTrackIPPTSelection0.OutputTracksName = "Hlt/Track/IPPTVeloTT0";
+HltHadTrackIPPTSelection0.FilterDescriptor = {"PT,>,850."};
+HltHadTrackIPPTSelection0.HistoDescriptor = {"PT,100,0.,8000.",
+                                             "PTBest,100,0.,8000."
+};
+HltHadTrackIPPTSelection0.HistogramUpdatePeriod = 1;
+HltHadTrackIPPTSelection0.OutputLevel = 3;
+
+HltHadMakeDiHadron0.InputTracksName = "Hlt/Track/IPPTVeloTT0";
+HltHadMakeDiHadron0.OutputVerticesName = "Hlt/Vertex/DiHadron0";
+HltHadMakeDiHadron0.FilterDescriptor = {"DOCA,<,2."};
+HltHadMakeDiHadron0.HistoDescriptor = {"DOCA,100,0.,2.",
+                                       "DOCABest,100,0.,2."};
+HltHadMakeDiHadron0.OutputLevel = 3;
+HltHadMakeDiHadron0.HistogramUpdatePeriod = 1;
+
+HltHadPreTriggerDiHadron.SelectionName = "HadPreTriggerDiHadron";
+HltHadPreTriggerDiHadron.InputVerticesName = "Hlt/Vertex/DiHadron0";
+HltHadPreTriggerDiHadron.OutputVerticesName = "Hlt/Vertex/HadPreTriggerDiHadron";
+HltHadPreTriggerDiHadron.HistogramUpdatePeriod = 1;
+HltHadPreTriggerDiHadron.ComputeInfo = true;
+HltHadPreTriggerDiHadron.FilterDescriptor = {"DOCA,<,0.2",
+                                             "VertexMaxPT,>,1100.",
+                                             "VertexMinPT,>,850."
+};
+HltHadPreTriggerDiHadron.HistoDescriptor = {"DOCA,100,0.,2.",
+                                            "DOCABest,100,0.,2.",
+                                            "VertexMaxPT,100,0.,8000.",
+                                            "VertexMaxPTBest,100,0.,8000.",
+                                            "VertexMinPT,100,0.,8000.",
+                                            "VertexMinPTBest,100,0.,8000."
+};
+HltHadPreTriggerDiHadron.OutputLevel = 3;
+// HltHadPreTriggerDiHadron.PassPeriod = 1;
+
+HltRecoVelo.InputTracksName  = "Hlt/Track/RZVelo";
+HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
+HltRecoVelo.RecoName = "Velo";
+HltRecoVelo.OutputLevel = 3;
+
+HltHadTrackIPSelection.InputTracksName = "Hlt/Track/Velo";
+HltHadTrackIPSelection.OutputTracksName = "Hlt/Track/IPVelo";
+HltHadTrackIPSelection.PrimaryVerticesName = "Hlt/Vertex/PV2D";
+HltHadTrackIPSelection.FilterDescriptor = {"IP,||[],0.10,3."};
+HltHadTrackIPSelection.HistoDescriptor = {"IP,100,-1.,1.",
+                                          "IPBest,100,-1.,1."
+};
+HltHadTrackIPSelection.HistogramUpdatePeriod = 1;
+HltHadTrackIPSelection.OutputLevel = 3;
+
+
+HltHadRecoIPForward.InputTracksName =  "Hlt/Track/IPVelo";
+HltHadRecoIPForward.OutputTracksName = "Hlt/Track/IPForward";
+HltHadRecoIPForward.RecoName = "Forward";
+HltHadRecoIPForward.OutputLevel = 3;
+PatHltHadRecoIPForward.OutputLevel = 3;
+
+HltHadTrackIPPTSelection.InputTracksName = "Hlt/Track/IPForward";
+HltHadTrackIPPTSelection.OutputTracksName = "Hlt/Track/IPPTForward";
+HltHadTrackIPPTSelection.FilterDescriptor = {"PT,>,1000."};
+HltHadTrackIPPTSelection.HistoDescriptor = {"PT,100,0.,8000.",
+                                            "PTBest,100,0.,8000."
+};
+HltHadTrackIPPTSelection.HistogramUpdatePeriod = 1;
+HltHadTrackIPPTSelection.OutputLevel = 3;
+
+HltHadMakeDiHadron.InputTracksName = "Hlt/Track/IPPTForward";
+HltHadMakeDiHadron.OutputVerticesName = "Hlt/Vertex/DiHadron";
+HltHadMakeDiHadron.FilterDescriptor = {"DOCA,<,0.2"};
+HltHadMakeDiHadron.HistoDescriptor = {"DOCA,100,0.,2.",
+                                      "DOCABest,100,0.,2."};
+HltHadMakeDiHadron.OutputLevel = 3;
+
+HltHadTriggerDiHadron.SelectionName = "HadTriggerDiHadron";
+HltHadTriggerDiHadron.InputVerticesName = "Hlt/Vertex/DiHadron";
+HltHadTriggerDiHadron.PrimaryVerticesName = "Hlt/Vertex/PV2D";
+HltHadTriggerDiHadron.OutputVerticesName = "Hlt/Vertex/HadTriggerDiHadron";
+HltHadTriggerDiHadron.HistogramUpdatePeriod = 1;
+HltHadTriggerDiHadron.FilterDescriptor = {"DOCA,<,0.2",
+                                          "VertexMinPT,>,1000.",
+                                          "VertexPointing,<,0.5",
+                                          "VertexDz,>,0."
+};
+HltHadTriggerDiHadron.HistoDescriptor = {"DOCA,100,0.,2.",
+                                         "DOCABest,100,0.,2.",
+                                         "VertexMinPT,100,0.,10000.",
+                                         "VertexMinPTBest,100,0.,10000.",
+                                         "VertexPointing,100.,0.,1.",
+                                         "VertexPointingBest,100.,0.,1.",
+                                         "VertexDz,100,-10.,50.",
+                                         "VertexDzBest,100,-10.,50."
+};
+HltHadTriggerDiHadron.OutputLevel = 3;
+// HltHadTriggerDiHadron.PassPeriod = 1;
