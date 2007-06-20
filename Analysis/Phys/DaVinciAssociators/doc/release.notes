@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.113 2007-06-18 16:06:27 jpalac Exp $
+! $Id: release.notes,v 1.114 2007-06-20 12:48:21 phicharp Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-06-20 - Philippe Charpentier
+ - WARNING: Set AllowExtraPhotons option to true by default in Composite Asct
+   This is motivated by the fact that photos is enabled in DC06. Analyses requiring
+   and explicit photon should be careful and set the option to false as required.
 
 !========================== DaVinciAssociators v9r2 2007-06-18 ================
 

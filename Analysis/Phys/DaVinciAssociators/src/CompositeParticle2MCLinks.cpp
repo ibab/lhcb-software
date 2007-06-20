@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.18 2007-06-18 13:45:59 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.19 2007-06-20 12:48:21 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
   , m_nass(0)
 {
   m_outputTable = "Phys/Relations/CompPart2MCfromLinks" ;
-  declareProperty( "AllowExtraMCPhotons",  m_allowExtraMCPhotons = false );
+  declareProperty( "AllowExtraMCPhotons",  m_allowExtraMCPhotons = true );
   declareProperty( "inclusiveMode",        m_inclusiveMode = false );
   declareProperty( "skipResonances",       m_skipResonances = false );
   declareProperty( "maxResonanceLifeTime", m_maxResonanceLifeTime = 1.e-18*Gaudi::Units::s );
