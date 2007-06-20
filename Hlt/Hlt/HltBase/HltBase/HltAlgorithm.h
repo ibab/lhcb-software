@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.8 2007-06-20 12:08:40 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.9 2007-06-20 20:31:42 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -209,15 +209,21 @@ protected:
   void doregister(CONT*& con, const std::string& name) {
     con = NULL; if (name == "") return;
     std::string loca = "/Event/"+name;
-    if (!con) con = new CONT();
-    put(m_hltSvc, new Hlt::DataHolder<CONT>(*con),loca);
-    info() << " located holder at " << loca << endreq;
+    if (exist< Hlt::DataHolder<CONT> > (m_hltSvc,loca)) {
+      fatal() << " output location already exist " << loca << endreq;
+    } else {
+      if (!con) con = new CONT();
+      put(m_hltSvc, new Hlt::DataHolder<CONT>(*con),loca);
+      info() << " located holder at " << loca << endreq;
+    }
   }
-  
+
   template <class CONT>
   void doretrieve(CONT*& con, const std::string& name) {
     con = NULL; if (name == "") return;
     std::string loca = "/Event/"+name;
+    if (! exist<Hlt::DataHolder<CONT> > (m_hltSvc,loca)) 
+      fatal() << " input location does not exist " << loca << endreq;
     Hlt::DataHolder<CONT>* holder = get< Hlt::DataHolder<CONT> >(m_hltSvc,loca);
     if (!holder) error() << " not data holder at " << loca << endreq;
     con = &(holder->object());  

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.5 2007-06-20 12:08:40 hernando Exp $
+// $Id: HltFunctions.h,v 1.6 2007-06-20 20:31:42 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -117,7 +117,7 @@ namespace Hlt {
     double operator() (const LHCb::Track& t) const {return t.pt();}
     Estd::function<LHCb::Track>* clone() const {return new PT();}
   };  
-
+  
   /* CheckFlag:    
    *   returns true if a a given flag it set on the track
    */

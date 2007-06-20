@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.9 2007-06-20 12:08:41 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.10 2007-06-20 20:31:42 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("OutputVerticesName",  m_outputVerticesName = "");
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
+
+  
 
   m_selectionSummaryID = -1;
 
