@@ -29,7 +29,7 @@ use HltSelections       v5r3    Hlt   # Patrick Koppenburg
 use HltBase             v2r4   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiHybridBase      v1r0   Phys   # Vanya Belyaev
-use LoKiHybrid          v2r0   Phys   # Vanya Belyaev
+use LoKiHybrid          v3r0   Phys   # Vanya Belyaev
 use LoKiTrack           v1r0   Phys   # Vanya Belyaev
 use LoKiMCHybrid        v1r0   Phys   # Vanya Belyaev
 use LoKiTrHybrid        v1r0   Phys   # Vanya Belyaev
