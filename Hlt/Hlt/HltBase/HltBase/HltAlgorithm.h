@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.7 2007-02-08 17:32:39 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.8 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -48,6 +48,8 @@
 class HltAlgorithm : public HltBaseAlg {
 public:
 
+  friend class IHltFunctionFactory;
+
   // typedef for track and vertices container iterators
   typedef Hlt::TrackContainer::iterator track_iterator;
   typedef Hlt::VertexContainer::iterator vertex_iterator;
@@ -73,7 +75,8 @@ public:
    * Note: call HltAlgorithm::beginExecute() and HltAlgorithm::endExecute() 
    *       at the begin and end of the excute method of the derived algorithms
    **/
-  virtual StatusCode execute   ();    ///< Algorithm execute
+  virtual StatusCode execute   () 
+  { return StatusCode::SUCCESS;};    ///< Algorithm execute
 
   /** finalize algorithm
    * Note: call HltAlgorithm::finalize()
@@ -99,6 +102,10 @@ protected:
    *             set decision to true
    **/ 
   bool endExecute();
+
+  StatusCode baseExecute() 
+  {return HltAlgorithm::execute();}
+  
 
 protected:
 
@@ -198,6 +205,25 @@ protected:
   // initialize the counters
   void initCounters();
 
+  template <class CONT>
+  void doregister(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    std::string loca = "/Event/"+name;
+    if (!con) con = new CONT();
+    put(m_hltSvc, new Hlt::DataHolder<CONT>(*con),loca);
+    info() << " located holder at " << loca << endreq;
+  }
+  
+  template <class CONT>
+  void doretrieve(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    std::string loca = "/Event/"+name;
+    Hlt::DataHolder<CONT>* holder = get< Hlt::DataHolder<CONT> >(m_hltSvc,loca);
+    if (!holder) error() << " not data holder at " << loca << endreq;
+    con = &(holder->object());  
+    info() << " retrieved holder at " << loca << endreq;
+  }
+
   // retrive a track container from a store with a given name
   void init(Hlt::TrackContainer*& con, IHltDataStore*& store,
             const std::string& name);
@@ -253,13 +279,21 @@ protected:
   // pointer to the selection summary
   LHCb::HltSelectionSummary* m_selectionSummary;
 
-protected:
+  // minimun number of candidates
+  int m_minNCandidates;
 
+protected:
+  
+  void printInfo(const std::string& title, const Hlt::TrackContainer& con);
+  
   // pointer to the pat data Store
   PatDataStore* m_patDataStore;
 
   // pointer to the hlt data store
   IHltDataStore* m_hltDataStore;
+
+  // hlt data provided service
+  IDataProviderSvc* m_hltSvc;
 
   // names of the pat input containers
   std::string m_patInputTracksName;

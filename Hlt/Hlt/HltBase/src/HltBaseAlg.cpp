@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.6 2007-02-12 09:53:20 cattanem Exp $
+// $Id: HltBaseAlg.cpp,v 1.7 2007-06-20 12:08:41 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,8 @@ HltBaseAlg::~HltBaseAlg() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltBaseAlg::initialize() {
+StatusCode HltBaseAlg::initialize() {  
+  debug() << "==> Initialize" << endreq;
   StatusCode sc = DefAlgo::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
@@ -53,11 +54,11 @@ StatusCode HltBaseAlg::initialize() {
   initializeCounter(m_counterOverruled, "Overruled");
   initializeCounter(m_counterPassed,    "Passed");
 
+  initializeCounter(m_counterCandidates,    "nCandidates");
+
   // histos
 
   initConditions();
-
-  debug() << "==> Initialize" << endreq;
   return StatusCode::SUCCESS;
 
 }
@@ -104,21 +105,29 @@ bool HltBaseAlg::initConditions()
 }
 
 
-StatusCode HltBaseAlg::execute() {
+StatusCode HltBaseAlg::sysExecute() {
 
   StatusCode sc = StatusCode::SUCCESS;
   
+  // verbose() << " sys execute HltBaseAlg beginExecute() " << endreq;
   bool ok = beginExecute();
   if (!ok) return sc;
   
+  // verbose() << " sys execute DefAlgo " << endreq;
+  sc = DefAlgo::sysExecute();
+  if (sc.isFailure()) return sc;
+  
+  // verbose() << " sys execute HltBaseAlg endExecute() " << endreq;
   endExecute();
   
   return sc;
-}
 
+}
 
 bool HltBaseAlg::beginExecute() {
   bool ok = true;
+
+  // verbose() << " entering HltBaseAlg beginExecute " << endreq;
 
   increaseCounter( m_counterEntries );
 
@@ -129,19 +138,25 @@ bool HltBaseAlg::beginExecute() {
   
   m_monitor =( m_histogramUpdatePeriod <= 0? false:
                ( (m_counterEntries % m_histogramUpdatePeriod) == 0 ) );
+
+  verbose() << " filter? " << m_filter << " monitor? " << m_monitor << endreq;
   
   if (m_filter) setDecision(false);
-  else increaseCounter(m_counterOverruled,1);
-    
+  else setDecision(true);
+  
   return ok;
 }
 
 bool HltBaseAlg::endExecute() {
   bool ok = true;
 
-  setDecision(true);
-  
-  increaseCounter(m_counterPassed);
+  // setDecision(true);
+
+  if (filterPassed()) {
+    increaseCounter(m_counterPassed);
+    if (!m_filter)
+      increaseCounter(m_counterOverruled);
+  }
 
   return ok;
 }
@@ -156,6 +171,10 @@ StatusCode HltBaseAlg::finalize() {
                       " overruled/entries");
     infoSubsetEvents( m_counterOverruled, m_counterPassed,
                       " overruled/passed");
+  }
+  if ((int) m_counterCandidates>0) {
+    float mean=((float)m_counterCandidates)/((float)m_counterPassed);
+    info() << "N Candidates " << mean << endreq;
   }
   return DefAlgo::finalize();  // must be called after all other actions
 }
@@ -252,7 +271,7 @@ void HltBaseAlg::initializeHistosFromDescriptor() {
 void HltBaseAlg::initializeHisto( HltHisto& histo, 
                                   const std::string& title,
                                   float x0, float xf, int nbins) {
-  
+  histo = NULL;
   if (m_histogramUpdatePeriod == 0) return;
 
   const std::vector<std::string> values = m_histoDescriptor.value();
@@ -274,7 +293,18 @@ void HltBaseAlg::initializeHisto( HltHisto& histo,
 
 void HltBaseAlg::fillHisto( HltHisto& histo, float x, float weight) {
   if (!m_monitor) return;
+  if (!histo) error() << " no histogram to fill " << endreq;
+  // verbose() << " fill histo " << x << endreq;
   this->fill( histo , x, weight);
+}
+
+void HltBaseAlg::fillHisto( HltHisto& histo, const std::vector<double>& x, 
+                            float weight) {
+  if (!m_monitor) return;
+  if (!histo) error() << " no histogram to fill " << endreq;
+  for (std::vector<double>::const_iterator it = x.begin(); it != x.end();
+       ++it)
+    this->fill( histo, (*it), weight);
 }
 
 
@@ -320,7 +350,7 @@ void HltBaseAlg::increaseCounter( HltCounter& count, int increase) {
 //       return;
 //     }
     
-//     std::vector<AIDA::IHistogram1D*>::const_iterator iHisto = histoCol.m_histos.begin();
+//     std::vector<AIDA::IHistoçgram1D*>::const_iterator iHisto = histoCol.m_histos.begin();
 //     for ( std::vector<float>:: const_iterator iVar = inputVariables.begin();
 //           iVar != inputVariables.end(); iVar++ ) {
 //       for ( std::vector<bool>:: const_iterator iBool = inputBools.begin();

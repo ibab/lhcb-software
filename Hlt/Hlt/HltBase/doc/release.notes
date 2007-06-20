@@ -4,6 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-06-29 - Jose A. Hernando
+ - HltBase/HltTypes (define types for Hlt)
+ - HltBase/IL0Value (to get easy access to L0 values, i.e EtTotal)	
+ - HltBase/ITrackUpgrade (interface to do the tracking)	
+ - HltBase/ITrackMatch (interface to do the track matching)
+ - HltBase/IHltFunctionFactory (interface for the Hlt alleys function factory)
+ - removing HltContainers.h
+ - additions of new functions in HltFunctions
+ - change of internal operations of HltAlgorithm (not need to do beginExecute() and endExecute()
+ - change in HltBaseAlg (takes care of the candidates counting and histos)
+
 !========================== HltBase v2r4 2007-06-18 ===================
 ! 2007-05-22 - Alessia Satta
  - Modify interfaces IPrepareMuonTSeed.h 

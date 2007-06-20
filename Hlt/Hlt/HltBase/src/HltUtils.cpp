@@ -8,25 +8,34 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
                                   const Track& track)
 {
   const State& state = track.firstState();
-  double r   = state.x();
+  double rt  = state.x();
   double phi = state.y();
   double tr  = state.tx();
-  double z   = state.z();
+  double zt  = state.z();
   // std::cout << " state " << state << std::endl;
   
   const EPoint& p = vertex.position();
-  double x = p.x();
-  double y = p.y();
-  double z0 = p.z();
-  double r0 = x*cos(phi)+y*sin(phi);
-  // std::cout << " point " << p << std::endl; 
+  double xv = p.x();
+  double yv = p.y();
+  double zv = p.z();
 
-  // computation
-  double lambda = sqrt(1+tr*tr);
-  double xhi = (z-z0)*tr-(r-r0);
-  double ip = (lambda>0? fabs(xhi)/lambda : -1e6); 
-  if (xhi<0) ip = -1.*ip;
-  // std::cout << " rIP " << ip << std::endl;
+  rt = rt+tr*(zv-zt);
+  zt = zv;
+  double rv = xv*cos(phi)+yv*sin(phi);
+  // std::cout << " point " << p << std::endl;
+
+  double Dr = rt-rv;
+  double Dz = zt-zv;
+  double dz = -(Dr*tr+Dz)/(1+tr*tr);
+  double RR = Dr+tr*dz;
+  double ZZ = Dz+dz;
+  double rIP = sqrt(RR*RR+ZZ*ZZ);
+  if (ZZ<0.) rIP = -1.*rIP;
+    
+//   double xhi = (z-z0)*tr-(r-r0);
+//   double ip = (lambda>0? fabs(xhi)/lambda : -1e6); 
+//   if (xhi<0) ip = -1.*ip;
+//   // std::cout << " rIP " << ip << std::endl;
 
   // EPoint ori(r,0.,z);
   // EVector dir(tr,0.,1.);
@@ -34,7 +43,7 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   // double ip2 = impactParameter(pos,ori,dir);
   // std::cout << " rIP2 " << ip2 << std::endl;
 
-  return ip;
+  return rIP;
 }
 
 
@@ -42,30 +51,33 @@ double HltUtils::impactParameter (const RecVertex& vertex,
                                   const Track& track)
 {
   const EPoint& pos = vertex.position();
-
+  double xv = pos.x();
+  double yv = pos.y();
+  double zv = pos.z();
+  
   const State& state = track.firstState();
-  EPoint ori(state.x(),state.y(),state.z());
-  EVector dir(state.tx(),state.ty(),1.);
-  
-  return impactParameter(pos,ori,dir);
+  double xt = state.x();
+  double yt = state.y();
+  double zt = state.z();
+  double tx = state.tx();
+  double ty = state.ty();
 
-  //   double tx = state.tx();
-  //   double ty = state.ty();
-  //   double lambda = 1./sqrt(1.+tx*tx+ty*ty);
+  xt = xt + tx*(zv-zt);
+  yt = yt + ty*(zv-zt);
+  zt = zv;
   
+  double Dx = xt-xv;
+  double Dy = yt-yv;
+  double Dz = zt-zv;
   
-  //   double dx   = state.x() - p.x();
-  //   double dy   = state.y() - p.y();
-  //   double dz   = state.z() - p.z(); 
+  double dz = -(Dx*tx+Dy*ty+Dz)/(1+tx*tx+ty*ty);
+  double XX = Dx+tx*dz;
+  double YY = Dy+ty*dz;
+  double ZZ = Dz+dz;
   
-  //   double xx =  dy    - dz*ty;
-  //   double yy = -dx    + dz*tx;
-  //   double zz =  dx*ty - dy*tx;
-  
-  //   double ip = lambda*sqrt(xx*xx+yy*yy+zz*zz);
-  
-  //   if (zz<0.) ip = -1.*ip;
-  //   return ip;
+  double IP = sqrt(XX*XX+YY*YY+ZZ*ZZ);
+  if (ZZ<0.) IP = -1.*IP;
+  return IP;
 }
 
 double HltUtils::IPError(const Track& track)
@@ -175,14 +187,15 @@ EVector HltUtils::closestDistance(const Track& track1,
                                   const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
-  EVector dis(0.,0.,0.);
+  EVector dis(0.,0.,1.e6);
   EPoint pos1(0.,0.,0.);
   EPoint pos2(0.,0.,0.);
   EVector dir1(state1.tx(),state1.ty(),1.);
   EVector dir2(state2.tx(),state2.ty(),1.);
   EPoint  ori1(state1.x(),state1.y(),state1.z());
   EPoint  ori2(state2.x(),state2.y(),state2.z());
-  closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
+  bool ok = closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
+  if (!ok) return dis;
   dis = pos1 - pos2;
   return dis;
 }
@@ -358,13 +371,51 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
 
 }
 
-bool HltUtils::matchIDs(const LHCb::Track& track1,
-                        const LHCb::Track& track2) {
+double HltUtils::matchIDsFraction(const LHCb::Track& track1,
+                                  const LHCb::Track& track2) {
   size_t n0 = track1.lhcbIDs().size();
   if (n0 <=0) return false;
   const std::vector<LHCbID>& ids1 = track1.lhcbIDs();
   const std::vector<LHCbID>& ids2 = track2.lhcbIDs();
   size_t n  = ELoop::count(ids1,ids2);
-  return (((1.*n)/(1.*n0))>0.70);
+  return (1.*n)/(1.*n0);
 }
 
+double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2) {
+  double eta1 = track1.slopes().Eta();
+  double eta2 = track2.slopes().Eta();
+  return eta2-eta1;
+}
+
+
+double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2) {
+  
+  double phi1 = track1.slopes().Phi();
+  double phi2 = track2.slopes().Phi();
+  return phi2-phi1;
+}
+
+double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2) {
+  double deta = deltaEta(track1,track2);
+  double dphi = deltaPhi(track1,track2);
+  double angle = sqrt ( deta*deta + dphi*dphi );
+  return angle;
+}
+
+double HltUtils::minPT(const LHCb::RecVertex& vertex) {
+  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+  double pt = 1e12;
+  for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
+       it != tracks.end(); it++)
+    if ((*it)->pt() < pt) pt = (*it)->pt();
+  return pt;
+}
+
+double HltUtils::maxPT(const LHCb::RecVertex& vertex) {
+  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+  double pt = -1e12;
+  for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
+       it != tracks.end(); it++)
+    if ((*it)->pt() > pt) pt = (*it)->pt();
+  return pt;
+}

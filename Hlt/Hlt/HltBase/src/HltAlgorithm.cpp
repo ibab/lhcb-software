@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.8 2007-02-12 16:13:25 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.9 2007-06-20 12:08:41 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,9 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   // output location for tracks and vertices
   declareProperty("OutputTracksName",    m_outputTracksName = "");
-  declareProperty("OutputverticesName",  m_outputVerticesName = "");
+  declareProperty("OutputVerticesName",  m_outputVerticesName = "");
+
+  declareProperty("MinCandidates",m_minNCandidates = 1);
 
   m_selectionSummaryID = -1;
 
@@ -78,8 +80,6 @@ StatusCode HltAlgorithm::initialize() {
   initCounters();
 
   initHistograms();
-
-  debug() << "==> Initialize" << endreq;
   return StatusCode::SUCCESS;
 
 }
@@ -118,20 +118,36 @@ void HltAlgorithm::init(PatVertexContainer*& con,
 bool HltAlgorithm::initContainers() {
   
 
+  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc", m_hltSvc);
+  if (sc.isFailure() || !m_hltSvc) 
+    error() << " not able to create HltData Provider " << endreq;
+
+  m_inputTracks = NULL; m_inputTracks2 = NULL;
+  doretrieve(m_inputTracks,m_inputTracksName);
+  doretrieve(m_inputTracks2,m_inputTracks2Name);
+
+  m_inputVertices = NULL; m_primaryVertices = NULL;
+  doretrieve(m_primaryVertices,m_primaryVerticesName);
+  doretrieve(m_inputVertices,m_inputVerticesName);
+
+  m_outputTracks = NULL; m_outputVertices = NULL;
+  doregister(m_outputTracks,m_outputTracksName);
+  doregister(m_outputVertices,m_outputVerticesName);
+
   // from HltDataStore
 
   m_hltDataStore     = tool<IHltDataStore>( "HltDataStore" );
   if (!m_hltDataStore) return false;
   
-  // get the input tracks and vertices containers 
-  init(m_inputTracks,m_hltDataStore,m_inputTracksName);
-  init(m_inputTracks2,m_hltDataStore,m_inputTracks2Name);
+// //  get the input tracks and vertices containers 
+//   init(m_inputTracks,m_hltDataStore,m_inputTracksName);
+//   init(m_inputTracks2,m_hltDataStore,m_inputTracks2Name);
 
-  init(m_primaryVertices,m_hltDataStore,m_primaryVerticesName);
-  init(m_inputVertices,m_hltDataStore,m_inputVerticesName);
+//   init(m_primaryVertices,m_hltDataStore,m_primaryVerticesName);
+//   init(m_inputVertices,m_hltDataStore,m_inputVerticesName);
 
-  init(m_outputTracks,m_hltDataStore,m_outputTracksName);
-  init(m_outputVertices,m_hltDataStore,m_outputVerticesName);
+//   init(m_outputTracks,m_hltDataStore,m_outputTracksName);
+//   init(m_outputVertices,m_hltDataStore,m_outputVerticesName);
 
   //  release(m_hltDataStore);  
 
@@ -148,14 +164,14 @@ bool HltAlgorithm::initContainers() {
 
   // info of using containers...
   infoContainer(m_patInputTracks," pat input tracks ",m_patInputTracksName);
-  infoContainer(m_patInputTracks2," pat input tracks 2",m_patInputTracks2Name);
+  infoContainer(m_patInputTracks2," pat input tracks2 ",m_patInputTracks2Name);
   infoContainer(m_patInputVertices," pat input vertices ",
                 m_patInputVerticesName);
   
   infoContainer(m_inputTracks,   " input tracks ",   m_inputTracksName);
-  infoContainer(m_inputTracks2,  " input tracks 2 ", m_inputTracks2Name);
+  infoContainer(m_inputTracks2,  " input tracks2 ", m_inputTracks2Name);
   infoContainer(m_inputVertices, " input vertices ", m_inputVerticesName);
-  infoContainer(m_outputTracks,  " output track ",   m_outputTracksName);
+  infoContainer(m_outputTracks,  " output tracks ",   m_outputTracksName);
   infoContainer(m_outputVertices," output vertices ",m_outputVerticesName);
 
   return true;
@@ -198,32 +214,26 @@ void HltAlgorithm::initHistograms() {
     initializeHisto(m_histoOutputTracks,  "OutputTracks");
 }
 
-
-//// Main execution
-StatusCode HltAlgorithm::execute() {
-
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  bool ok = beginExecute();
-  if (!ok) return sc;
-  
-  endExecute();
-  
-  return sc;
-}
-
-
 bool HltAlgorithm::beginExecute() {
+
   bool ok = HltBaseAlg::beginExecute();
   if (!ok) return ok;
 
+  // verbose() << " entering HltAlgorithm beginExecute " << endreq;
+
+  if (m_outputTracks) m_outputTracks->clear();
+  if (m_outputVertices) m_outputVertices->clear();
+
   m_summary = NULL;
   m_selectionSummary = NULL;
+
   if (m_selectionSummaryID>0) {
     selectionSummary();
     if (!m_filter) m_selectionSummary->setDecisionType(HltEnums::Forced, true);
   }
-  
+
+  // verbose() << " histograming inputs " << endreq;
+
   ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
             " input tracks ");
   if (!ok) return ok;
@@ -252,6 +262,7 @@ bool HltAlgorithm::beginExecute() {
             " pat input vertices ");
   if (!ok) return ok;
 
+
   increaseCounter(m_counterInput );
 
   // Increase input counters
@@ -267,7 +278,7 @@ bool HltAlgorithm::beginExecute() {
 bool HltAlgorithm::endExecute() {
   bool ok = true;
 
-  // fillHisto(m_histoCandidates, m_nCandidates, 1.);
+  fillHisto(m_histoCandidates, m_nCandidates, 1.);
 
   ok = size(m_outputTracks,m_nOutputTracks,m_histoOutputTracks,
             " output tracks ");
@@ -277,8 +288,11 @@ bool HltAlgorithm::endExecute() {
             " output vertices ");
   if (!ok) return ok;
 
-  increaseCounter(m_counterAccepted);
-
+  if (m_nCandidates >= m_minNCandidates) {
+    increaseCounter(m_counterAccepted);
+    setDecision(true);
+  }
+  
   ok = HltBaseAlg::endExecute();
   return ok;
 }
@@ -304,4 +318,15 @@ HltSelectionSummary& HltAlgorithm::selectionSummary(int id) {
     debug() << " retrieving selection summary id " << id << endreq;
   m_selectionSummary = &(m_summary->selectionSummary(id));
   return *m_selectionSummary;
+}
+
+void HltAlgorithm::printInfo(const std::string& title,
+                             const Hlt::TrackContainer& con) {
+  info() << title << endreq;
+  for (Hlt::TrackContainer::const_iterator it = con.begin(); it != con.end(); 
+       it++) {
+    const LHCb::Track& track = *(*it);
+    info() << " track  " << track.key() << " slopes " 
+           << track.slopes()  << " pt " << track.pt() << endreq;
+  } 
 }

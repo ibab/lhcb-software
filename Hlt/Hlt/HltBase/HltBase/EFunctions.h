@@ -1,7 +1,8 @@
-// $Id: EFunctions.h,v 1.5 2007-02-14 17:23:51 cattanem Exp $
+// $Id: EFunctions.h,v 1.6 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
+#include <vector>
 #include <functional>
 #include <algorithm>
 #include <ostream>
@@ -41,7 +42,7 @@ namespace Estd
 
 
   template <class T>
-  class filter : public std::unary_function<const T,double> 
+  class filter : public std::unary_function<const T,bool> 
   {
   public:
     typedef Estd::filter<T> Self;
@@ -88,30 +89,42 @@ namespace Estd
 
   //------------ Binders
 
-  template <class T1, class T2, class CON> 
-  class binder_function : Estd::function<T1> 
+  template <class T1, class T2> 
+  class binder_function : public Estd::function<T1> 
   {
   public:
-    typedef typename CON::iterator iterator;
+    typedef typename std::vector<T2*> Container;
+    typedef typename std::vector<T2*>::iterator Iterator;
+    typedef typename std::pair<double,Iterator> Pair;
     explicit binder_function(const Estd::bifunction<T1,T2>& f,
-                             CON& con, 
+                             Container& con, 
                              const Estd::bifilter<double,double>& comp)
     {bifunction = f.clone(); container = &con; comparator = comp.clone();}
     virtual ~binder_function() {delete bifunction; delete comparator;}
     double operator() (const T1& t) const {
-      if (container->size() == 0) return 0.;
-      iterator it = container->begin();
-      double d0 = (*bifunction)(t, **it); ++it;
-      for ( ; it != container->end(); ++it) 
+      if (container->size() == 0) return 0.; 
+      Iterator it = container->begin(); 
+      double d0 = (*bifunction)(t,**it); ++it;
+      for (; it != container->end(); ++it)
       {double d = (*bifunction)(t,**it); if ((*comparator)(d,d0)) d0 = d;}
       return d0;
     }
+    Pair pair(const T1& t) const {
+      if (container->size() == 0) return NULL; 
+      Iterator it = container->begin(); Iterator it0 = it;
+      double d0 = (*bifunction)(t, **it); ++it;
+      for (; it != container->end(); ++it) {
+        double d = (*bifunction)(t,**it);
+        if ((*comparator)(d,d0)) {d0 = d; it0 = it;}}
+      return Pair(d0,it0);
+    }
     Estd::function<T1>* clone() const
-    {return new binder_function<T1,T2,CON>(*bifunction,*container,*comparator);}
+    {return new binder_function<T1,T2>(*bifunction,*container,*comparator);}
+  public:
     Estd::bifunction<T1,T2>* bifunction;
-    CON* container;
-    Estd::bifilter<double,double>* comparator;    
-  };
+    Container* container;
+    Estd::bifilter<double,double>* comparator;
+  };  
 
   template <class T>
   class binder_cfunction : public Estd::function<T> 
@@ -138,63 +151,60 @@ namespace Estd
     FUN _fun;
   };  
 
-  // template <class BASE, class ARG, class RES>
-//   class binder : public BASE {
-//   public:
-//     typedef BASE Base;
-//     explicit binder(const Base& b) { base = b.clone();}
-//     RES operator() (const ARG& a) const
-//     {return bind( (*base)(a) );}
-//     virtual RES bind(const RES& res) const {return res;};
-//     Base* clone() const {return new binder(*base);}
-//     Base* base;
-//   };
-
-//   template <class BASE, class ARG1, class ARG2, class RES>
-//   class bibinder : public BASE {
-//   public:
-//     typedef BASE Base;
-//     explicit bibinder(const Base& b) { base = b.clone();}
-//     RES operator() (const ARG1& a1, const ARG2& a2) const
-//     {return bind( (*base)(a1,a2) );}
-//     virtual RES bind(const RES& res) const {return res;};
-//     Base* base;
-//   };
-
-//   template <class T>
-//   class binder_function : Estd::binder <Estd::function<T>,T,double> {
-//   public:
-//     typedef Estd::function<T> Function;
-//     typedef typename Estd::binder<Function,T,double>::Base Base;
-//     explicit binder_function(const Function& f):binder<Function,T,double>(f)
-//     {}
-//   };
-
- //  template <class T>
-//   class binder_filter : Estd::binder <Estd::filter<T>,T,bool> {
-//   public:
-//     typedef Estd::filter<T> Filter;
-//     typedef Filter Base;
-//     explicit binder_filter(const Filter& f):binder<Filter,T,bool>(f)
-//     {}
-//   };
-
-//   template <class T1, class T2>
-//   class binder_bifunction : Estd::bibinder <Estd::bifunction<T1,T2>,T1,T2,double> {
-//   public:
-//     typedef Estd::bifunction<T1,T2> BiFunction;
-//     explicit binder_bifunction(const BiFunction& f):bibinder<BiFunction,T1,T2,double>(f) {}
-//   };
-  
-//   template <class T1, class T2>
-//   class binder_bifilter : Estd::bibinder <Estd::bifilter<T1,T2>,T1,T2,bool> {
-//   public:
-//     typedef Estd::bifilter<T1,T2> BiFilter;
-//     explicit binder_bifilter(const BiFilter& f):bibinder<BiFilter,T1,T2,bool>(f) {}
-//   };
-  
-
   //------------ Helper classes
+
+  class abs_min : public Estd::bifilter<double,double> 
+  {
+  public:
+    bool operator() (const double& d, const double& d0) const
+    {return (fabs(d) < fabs(d0));}
+    BiFilter* clone() const {return new abs_min();}
+  };
+
+
+  class abs_max : public Estd::bifilter<double,double> 
+  {
+  public:
+    bool operator() (const double& d, const double& d0) const
+    {return (fabs(d) > fabs(d0));}
+    BiFilter* clone() const {return new abs_max();}
+  };
+
+  class emin : public Estd::bifilter<double,double> 
+  {
+  public:
+    bool operator() (const double& d, const double& d0) const
+    {return (d < d0);}
+    BiFilter* clone() const {return new Estd::emin();}
+  };
+
+  class emax : public Estd::bifilter<double,double> 
+  {
+  public:
+    bool operator() (const double& d, const double& d0) const
+    {return (d > d0);}
+    BiFilter* clone() const {return new Estd::emax();}
+  };
+
+  template <class T1, class T2> 
+  class binder_min_function : public binder_function<T1,T2> {
+  public:
+    typedef typename std::vector<T2*> Container;
+    explicit binder_min_function(const Estd::bifunction<T1,T2>& f,
+                                 Container& cont):
+      Estd::binder_function<T1,T2>(f, cont, Estd::emin() ) {};
+  };
+
+  template <class T1, class T2> 
+  class binder_max_function : public binder_function<T1,T2> {
+  public:
+    typedef typename std::vector<T2*> Container;
+    explicit binder_max_function(const Estd::bifunction<T1,T2>& f,
+                                 Container& cont):
+      Estd::binder_function<T1,T2>(f, cont, Estd::emax() ) {};
+  };
+
+  // simple filters and functions
 
   class identity : public Estd::function<double>
   {
@@ -204,13 +214,6 @@ namespace Estd
     Estd::function<double>* clone() const {return new identity();}
   };
 
-  class abs_min : public Estd::bifilter<double,double> 
-  {
-  public:
-    bool operator() (const double& d, const double& d0) const
-    {return (fabs(d) < fabs(d0));}
-    BiFilter* clone() const {return new abs_min();}
-  };
 
   template <class T>
   class equal_to : public Estd::filter<T> {
@@ -222,7 +225,7 @@ namespace Estd
     T t0;
   };
 
-
+  
   template <class T>
   class less : public Estd::filter<T>
   {
@@ -291,7 +294,6 @@ namespace Estd
     {return (t1 || t2) ;}
     BiFilter* clone() const { return new logical_and<T1,T2>();}
   };
-
 
   // composites - single
 

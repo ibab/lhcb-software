@@ -45,6 +45,12 @@ namespace HltUtils
   EVector closestDistance(const LHCb::Track& track1, 
                           const LHCb::Track& track2);
 
+  double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2);
+
+  double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2);
+
+  double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2);
+
   //! retun the closest point between the 2 tracks (first State)
   EPoint closestPoint(const LHCb::Track& track1,
                       const LHCb::Track& track2);
@@ -55,7 +61,16 @@ namespace HltUtils
   double FC2(const LHCb::RecVertex& svertex, 
              const LHCb::RecVertex& pvertex );
 
-  bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2);
+
+  double minPT(const LHCb::RecVertex& vertex);
+
+  double maxPT(const LHCb::RecVertex& vertex);
+
+  double matchIDsFraction(const LHCb::Track& track1, const LHCb::Track& track2);
+
+  inline bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2) {
+    return (matchIDsFraction(track1,track2) > 0.70);    
+  }
   
   double closestDistanceMod(const LHCb::Track& track1,
                             const LHCb::Track& track2);

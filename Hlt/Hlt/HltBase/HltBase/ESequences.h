@@ -62,7 +62,7 @@ namespace Estd {
                   const FUNCTION& fun, 
                   int key) { 
     for ( ;begin != end; ++begin) 
-    {(**begin).addInfo(key,fun(**begin));}
+    {if ((**begin).info(key,1.e6) == 1.e6) (**begin).addInfo(key,fun(**begin));}
   }
   
   template<class INPUT , class OUTPUT , class FILTER>
@@ -280,6 +280,10 @@ namespace ELoop {
   template <class INPUT>
   inline size_t count(const INPUT& c1, const INPUT& c2) 
   {return Estd::count(c1.begin(),c1.end(),c2.begin(),c2.end());}
+  
+  template <class INPUT, class OUTPUT>
+  inline void copy(const INPUT& c1, OUTPUT& c2) 
+  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
 
 };
 

@@ -1,10 +1,11 @@
-// $Id: HltBaseAlg.h,v 1.3 2007-02-12 09:53:19 cattanem Exp $
+// $Id: HltBaseAlg.h,v 1.4 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
 // Include files
 
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "HltBase/HltSequences.h"
 
 class Condition;
 
@@ -14,7 +15,7 @@ class Condition;
  *
  *  functionality:
  *       Histogram booking via options
- *       Filling histogram in a given period
+ *       Filling histogram in a period
  *       Counters of input, accepted events
  *
  *  Options:
@@ -48,7 +49,7 @@ public:
    *  Note: call HltBaseAlg::beginExecute(), HltBaseAlg::endExecute() 
    * at the begin and end of your algorithm
    **/
-  virtual StatusCode execute   ();
+  StatusCode sysExecute   ();
 
   /** finalize algorithm
    *  print info of passed/accepted events
@@ -58,7 +59,6 @@ public:
 protected:
 
   /** begin the execution
-   * always call it at the begining of your execution method
    * increase counters, set monitor and filter pass according with the
    * PassPeriod and HitogramUpdatePeriod options
    * set decision (pass algo) to false (except if the filter pass flag is on,
@@ -67,10 +67,12 @@ protected:
   virtual bool beginExecute();
   
   /** end of the execution
-   * always call at the end of your execution method
    * increase counter, and set decsion (pass) to true
    **/
   virtual bool endExecute();
+  
+  virtual StatusCode baseExecute() 
+  {return StatusCode::SUCCESS;};
 
 protected:
 
@@ -160,6 +162,12 @@ protected:
    **/
   void fillHisto( HltHisto& histo, float x, float weight );
 
+  /** fill histogram with this wait
+   *  it will be filled only when the monitor flag is on 
+   *  this flag it is controlled by the HitogramUpdatePeriod option
+   **/
+  void fillHisto( HltHisto& histo, const std::vector<double>& x, 
+                  float weight );
 
   /** initialize counter
    * TODO: revisit
@@ -212,18 +220,33 @@ protected:
     return (n>0);
   }
 
-  /** fill the histogram with the info stored in the objects of the container
-   * intended to do internal monitoring, before we apply any cut
-  **/
-  template <class INPUT >
-  void monitor(INPUT& con, int key, HltHisto& histo){
-    if (!m_monitor) return;
-    for (typename INPUT::iterator it = con.begin(); it != con.end(); ++it) {
-      double d = (*it)->info(key,-1.);
-      verbose() << " monitor " << key << " " << d << endreq;
-      fillHisto( histo, d, 1.);
-    }
+  template <class INPUT>
+  std::vector<double> infos(INPUT it, const INPUT& end, int key, 
+                            double val) {
+    std::vector<double> values;
+    for (; it != end; ++it) values.push_back( (*it)->info(key,val) );
+    return values;
   }
+
+  template <class CONT>
+  std::vector<double> infos(const CONT& con, int key, double val) {
+    return infos(con.begin(),con.end(),key,val);
+  }
+  
+  template <class INPUT>
+  void print(INPUT it, const INPUT& end, 
+             const std::string& comment = "values") {
+    msg() << comment;
+    for (; it != end; ++it) msg() << *it << " ";
+    msg() << endreq;    
+  }
+  
+ //  template <class INPUT >
+//   void monitor(INPUT& con, int key, HltHisto& histo){
+//     if (!m_monitor) return;
+//     std::vector<double> vals = infos(con,key,-1.e6);
+//     fillHisto(histo,vals,1.);
+//   }
   
 protected:
 
@@ -232,13 +255,16 @@ protected:
   HltCounter m_counterOverruled;
   HltCounter m_counterPassed;
 
+  HltCounter m_counterCandidates;
+
 protected:
 
   // Minimum number of candidates needed to set filterPassed to true
   long m_nCandidates;
 
   // increasing the number of candidates
-  void candidateFound() { m_nCandidates++; };
+  void candidateFound(int n) 
+  {m_nCandidates+=n; increaseCounter(m_counterCandidates,n);};
 
   // The period to always return a positive decision
   int m_passPeriod;

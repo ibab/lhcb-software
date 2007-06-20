@@ -7,4 +7,7 @@
   <class name = "IPrepareMuonTSeed"     />
   <class name = "ITrackConfirmTool"     />
   <class name = "ITrackL0CaloMatchTool" />
+  <class name = "IL0Value" />
+  <class name = "ITrackUpgrade" />
+  <class name = "ITrackMatch" />
 </lcgdict>

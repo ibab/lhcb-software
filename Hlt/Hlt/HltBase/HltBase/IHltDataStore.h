@@ -1,4 +1,4 @@
-// $Id: IHltDataStore.h,v 1.3 2007-02-14 17:23:51 cattanem Exp $
+// $Id: IHltDataStore.h,v 1.4 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_IHLTDATASTORE_H 
 #define HLTBASE_IHLTDATASTORE_H 1
 
@@ -9,7 +9,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "HltBase/HltContainers.h"
+#include "HltBase/HltTypes.h"
 
 static const InterfaceID IID_IHltDataStore ( "IHltDataStore", 1, 0 );
 
@@ -64,6 +64,6 @@ public:
   virtual const Hlt::VertexContainer& vertices(const std::string& name) const = 0;
   // getting the collection of vertices with a given name
   virtual Hlt::VertexContainer& vertices(const std::string& name) = 0;
-  
+
 };
 #endif // HLTBASE_IHLTDATASTORE_H

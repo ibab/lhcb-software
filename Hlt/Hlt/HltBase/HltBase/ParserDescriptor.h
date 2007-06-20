@@ -1,4 +1,4 @@
-// $Id: ParserDescriptor.h,v 1.3 2007-02-14 17:23:52 cattanem Exp $
+// $Id: ParserDescriptor.h,v 1.4 2007-06-20 12:08:41 hernando Exp $
 #ifndef HLTBASE_PARSERDESCRIPTOR_H 
 #define HLTBASE_PARSERDESCRIPTOR_H 1
 
@@ -20,6 +20,10 @@ namespace ParserDescriptor
   bool parseHisto1D(const std::string& descriptor,
                     std::string& title,
                     int& n, float& x0, float& xf);
+
+  bool parseFilter(const std::string& decriptor,
+                   std::string& namefilter, std::string& mode,
+                   float& x0, float& xf);
   
 
 };

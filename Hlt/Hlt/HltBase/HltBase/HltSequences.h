@@ -1,4 +1,4 @@
-// $Id: HltSequences.h,v 1.3 2007-02-14 17:23:51 cattanem Exp $
+// $Id: HltSequences.h,v 1.4 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_HLTSEQUENCES_H 
 #define HLTBASE_HLTSEQUENCES_H 1
 
@@ -15,10 +15,14 @@
 
 /// Namespace of Hlt functions, filters and sequences
 namespace Hlt {
-
+  
+  template <class INPUT, class OUTPUT>
+  inline void copy(const INPUT& c1, OUTPUT& c2) 
+  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
+  
   /* map: 
    *      apply a function to all objects in a container,
-   *      store the results into the object with an integer key
+   *      store the results info into the object using the key
    *      if the object has the key before the function will not be applied
    *
    */

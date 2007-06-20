@@ -47,4 +47,23 @@ bool ParserDescriptor::parseHisto1D(const std::string& descriptor,
   return true;
 }
 
+bool ParserDescriptor::parseFilter(const std::string& descriptor,
+                                   std::string& title, std::string& mode,
+                                   float& x0, float& xf)
+{ 
+  std::vector<std::string> gens = ParserDescriptor::parse(descriptor);
+  // for (std::vector<std::string>::const_iterator it = gens.begin();
+  //     it != gens.end(); it++)
+  //  std::cout << *it << std::endl;
+  unsigned int nsize = gens.size();
+  if (nsize<3) return false;
+  title = gens[0];
+  mode = gens[1];
+  char* pend;
+  x0 = (float) strtod(gens[2].c_str(),&pend);
+  if (nsize >3) 
+    xf = (float) strtod(gens[3].c_str(),&pend);
+  return true;
+}
+
 

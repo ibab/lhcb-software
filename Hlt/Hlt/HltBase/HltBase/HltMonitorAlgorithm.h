@@ -1,4 +1,4 @@
-// $Id: HltMonitorAlgorithm.h,v 1.4 2007-02-14 17:23:51 cattanem Exp $
+// $Id: HltMonitorAlgorithm.h,v 1.5 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_HLTMONITORALGORITHM_H 
 #define HLTBASE_HLTMONITORALGORITHM_H 1
 
@@ -8,7 +8,7 @@
 #include "Event/HltNames.h"
 
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/HltContainers.h"
+#include "HltBase/HltTypes.h"
 
 //forward declarations
 namespace LHCb {

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.4 2007-02-14 17:23:51 cattanem Exp $
+// $Id: HltFunctions.h,v 1.5 2007-06-20 12:08:40 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -12,29 +12,31 @@
  *  @date   2006-07-18
  */
 
-#include "HltBase/EFunctions.h"
-#include "HltBase/HltContainers.h"
+#include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
-#include "Event/Track.h"
-#include "Event/RecVertex.h"
 
-namespace Hlt {
+namespace Hlt {  
+ 
   
-  
-  /* definition of track and vertex functions and filters
+  /* SmartFunction:    
+   *   returns the info of the object given a key, if not apply the function
    */
-  typedef Estd::function<LHCb::Track>     track_function;  
-  typedef Estd::function<LHCb::RecVertex> vertex_function;
-  typedef Estd::filter<LHCb::Track>       track_filter;
-  typedef Estd::filter<LHCb::RecVertex>   vertex_filter;
-  
-  typedef Estd::bifunction<LHCb::Track, LHCb::Track>         track_bifunction;  
-  typedef Estd::bifunction<LHCb::RecVertex, LHCb::RecVertex> vertex_bifunction;
-  typedef Estd::bifunction<LHCb::Track, LHCb::RecVertex>     trackvertex_bifunction;
-  
-  typedef Estd::bifilter<LHCb::Track,LHCb::Track>          track_bifilter;  
-  typedef Estd::bifilter<LHCb::RecVertex, LHCb::RecVertex> vertex_bifilter;
-  
+  template <class T>
+  class SmartFunction : public Estd::function<T> 
+  {
+  public:
+    typedef Estd::function<T> Function;
+    explicit SmartFunction(int ikey, const Function& f):key(ikey) 
+    {fun = f.clone();}
+    virtual ~SmartFunction() {delete fun;}
+    double operator() (const T& t) const {
+      double v = t.info(key,-1.e6); if (v != 1.e-6) v = (*fun)(t);
+      return v;
+    }
+    Function* clone() const {return new SmartFunction(key,*fun);}
+    int key;
+    Function* fun;
+  };
   
   /* Info:    
    *   returns the info of the object given a key
@@ -49,7 +51,7 @@ namespace Hlt {
       double operator() (const T& t) const 
 	{return t.info(key,-1);}
       Function* clone() const {return new Info<T>(key);}
-      int key;
+      int key; 
     };
   
   /* AbsInfo:    
@@ -68,10 +70,48 @@ namespace Hlt {
       int key;
     };  
 
+
+  /* AbsInfo:    
+   *   returns the abs info of the object given a key
+   *   ie. if T is a track. track.info(keyPT) return the abs IP of the track
+   */
+  template <class T>
+    class AbsFun : public Estd::function<T> 
+    {
+    public:
+      typedef Estd::function<T> Function;
+      explicit AbsFun(const Function& fun) : _fun(fun.clone()) { }
+      virtual ~AbsFun() {delete _fun;}
+      double operator() (const T& t) const 
+      {return fabs((*_fun)(t));}
+      Function* clone() const {return new AbsFun<T>(*_fun);}
+    public:
+      Function* _fun;
+    };  
+
+
+  /* AbsInfo:    
+   *   returns the results of a member function
+   */
+  template <class T>
+  class MemberFunction : public Estd::function<T> 
+  {
+  public:
+    typedef Estd::function<T> Function;
+    typedef double (T::* ptr_menfun) () const;
+    explicit MemberFunction(ptr_menfun pmf):m_pmf(pmf) {}
+    double operator() (const T& t) const
+    {return ((&t)->*m_pmf)();}
+    Function* clone() const 
+    {return new MemberFunction<T>(m_pmf);}
+  public:
+    ptr_menfun m_pmf;
+  };
+
   /* AbsInfo:    
    *   returns the Pt of a track
    */
-  class PT : public track_function {
+  class PT : public Hlt::TrackFunction {
   public:
     explicit PT() {}
     double operator() (const LHCb::Track& t) const {return t.pt();}
@@ -81,7 +121,7 @@ namespace Hlt {
   /* CheckFlag:    
    *   returns true if a a given flag it set on the track
    */
-  class CheckFlag  : public track_filter {
+  class CheckFlag  : public Hlt::TrackFilter {
   public:
     explicit CheckFlag(LHCb::Track::Flags f = LHCb::Track::Backward)
     {flag = f;}
@@ -91,25 +131,43 @@ namespace Hlt {
   };
 
   
-  class Charge : public track_function {
+  class Charge : public Hlt::TrackFunction {
   public:
     explicit Charge() {}
     double operator() (const LHCb::Track& t) const {return t.charge();}
     Estd::function<LHCb::Track>* clone() const {return new Charge();}
   };
   
-  class P : public track_function {
+  class P : public Hlt::TrackFunction {
   public:
     explicit P() {}
     double operator() (const LHCb::Track& t) const {return t.p();}
     Estd::function<LHCb::Track>* clone() const {return new P();}
   };
+  
+  class minPT : public Hlt::VertexFunction {
+  public:
+    explicit minPT() {}
+    double operator() (const LHCb::RecVertex& v) const {
+      return HltUtils::minPT(v);}
+    Hlt::VertexFunction* clone() const {return new minPT();}
+  };
+
+  class maxPT : public Hlt::VertexFunction {
+  public:
+    explicit maxPT() {}
+    double operator() (const LHCb::RecVertex& v) const {
+      return HltUtils::maxPT(v);}
+    Hlt::VertexFunction* clone() const {return new maxPT();}
+  };
+
+
 
   /* rIP:
    *   return the radial impact parameter between a track and a vertex
    *   track needs to be of Velo RZ type!
    */
-  class rIP : public trackvertex_bifunction {
+  class rIP : public Hlt::TrackVertexBiFunction {
   public:
     explicit rIP(){}
     double operator() (const LHCb::Track& track, 
@@ -122,7 +180,7 @@ namespace Hlt {
   /* IP:
    *   return the impact parameter between a track and a vertex
    */
-  class IP : public trackvertex_bifunction {
+  class IP : public Hlt::TrackVertexBiFunction {
   public:
     explicit IP(){}
     double operator() (const LHCb::Track& track, 
@@ -135,7 +193,7 @@ namespace Hlt {
   /* DZ:
    *  computes the distance in z between 2 vertices: v1-v2
    */
-  class DZ : public vertex_bifunction {
+  class DZ : public Hlt::VertexBiFunction {
   public:
     explicit DZ() {}
     double operator() (const LHCb::RecVertex& vertex1, 
@@ -150,7 +208,7 @@ namespace Hlt {
   /* FC:
    *  computes the poiting of the vertex1 with respect vertex2 (primary)
    */
-  class FC : public vertex_bifunction {
+  class FC : public Hlt::VertexBiFunction {
   public:
     explicit FC() {}
     double operator() (const LHCb::RecVertex& vertex1, 
@@ -164,7 +222,7 @@ namespace Hlt {
   /* FC2:
    *  computes the poiting of the vertex1 with respect vertex2 (primary)
    */
-  class FC2 : public vertex_bifunction {
+  class FC2 : public Hlt::VertexBiFunction {
   public:
     explicit FC2() {}
     double operator() (const LHCb::RecVertex& vertex1, 
@@ -178,7 +236,7 @@ namespace Hlt {
   /* DOCA
    *   compute the distance of closest approach between two tracks
    */
-  class DOCA : public track_bifunction {
+  class DOCA : public Hlt::TrackBiFunction {
   public:
     explicit DOCA() {}
     double operator() (const LHCb::Track& track1, 
@@ -187,8 +245,33 @@ namespace Hlt {
     }
     Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
     {return new DOCA();}
+  };  
+
+
+  /* matchIDsFraction
+   */
+  class MatchIDsFraction : public Hlt::TrackBiFunction {
+  public:
+    explicit MatchIDsFraction() {}
+    double operator() (const LHCb::Track& track1, 
+                       const LHCb::Track& track2) const {
+      return HltUtils::matchIDsFraction(track1,track2);
+    }
+    Hlt::TrackBiFunction* clone() const {return new MatchIDsFraction();}
   };
 
+  /* DOCA
+   *   compute the distance of closest approach between two tracks
+   */
+  class DeltaAngle : public Hlt::TrackBiFunction {
+  public:
+    explicit DeltaAngle() {}
+    double operator() (const LHCb::Track& track1, 
+                       const LHCb::Track& track2) const {
+      return HltUtils::deltaAngle(track1,track2);
+    }
+    Hlt::TrackBiFunction* clone() const {return new DeltaAngle();}
+  };  
  
   /* It fills the vertex using the 2 tracks
    *
@@ -211,29 +294,11 @@ namespace Hlt {
                      const LHCb::Track* endTrack ) const;
   };
 
-
-  template <class CON>
-  class minDZ : public Estd::binder_function<LHCb::RecVertex,LHCb::RecVertex,CON> {
-  public:
-    explicit minDZ(CON& con): 
-      Estd::binder_function<LHCb::RecVertex,LHCb::RecVertex,CON>
-    ( Hlt::DZ(),con,Estd::abs_min() ) {}
-  };
-
-
-  template <class CON>
-  class minFC : public Estd::binder_function<LHCb::RecVertex,LHCb::RecVertex,CON> {
-  public:
-    explicit minFC(CON& con): 
-      Estd::binder_function<LHCb::RecVertex,LHCb::RecVertex,CON>
-    ( Hlt::DZ(), con, Estd::abs_min() ) {}
-  };
-
-
   typedef Estd::binder_cbifunction<LHCb::RecVertex,LHCb::RecVertex> VVFunct;
   class TFC : public VVFunct { 
     TFC(): VVFunct(&HltUtils::FC) {}
   };
+
 
   // class TDOCA : public VVFunct { 
   //  TDOCA(): VVFunct(&HltUtils::FC) {}
