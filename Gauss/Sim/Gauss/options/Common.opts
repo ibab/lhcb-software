@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.23 2007-03-26 11:37:52 gcorti Exp $ 
+// $Id: Common.opts,v 1.24 2007-06-20 09:47:38 gcorti Exp $ 
 
 /** @file 
  * 
@@ -38,10 +38,7 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout
 
 // Geometry setup always necessary
-#include "$STDOPTS/DetDesc.opts"
-
-// "Default" geometry version: the latest
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+#include "$DDDBROOT/options/DDDB.opts"
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;

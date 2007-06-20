@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Gloria Corti
+ - Adapt to use of DDDB instead of CondDB and XmlDDDB
+   . Common.opts
+   . v200601.opts
+ - Adapt requirements to use DDDB and change version number
+
 !======================== Gauss v30r2 2007-03-26 =============================
 ! 2007-03-26 - Gloria Corti
  - DEVELOPMENT VERSION INCOMPATIBLE WITH DC06 
