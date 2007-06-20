@@ -4,6 +4,16 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+ - HltFunctionFactory implementation of the alleys function factory
+ - HltPrepareL0Calo select l0 calo objects that trigger L0
+ - HltPrepareTracks select RZVelo tracks forward and Primary Vertices
+ - HltTrackFilter  filter tracks according from list of conditions via the factory
+ - HltTrackFromParticle: select tracks from a list of particles
+ - HltVertexFilter filter vertices from a list of conditions via the factory  
+ - HltVertexMaker makes vertices with a list of conditions via the factory
+ - L0Value retrieve L0 (best) values
+
 !========================== HltCommon v1r4p1 2007-06-18 ===================
 ! 2007-06-15 - Patrick Koppenburg
  - Change signature of resetExecuted() in HltSequencer to follow changes in

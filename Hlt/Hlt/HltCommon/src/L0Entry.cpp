@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.5 2006-12-18 09:46:47 hernando Exp $
+// $Id: L0Entry.cpp,v 1.6 2007-06-20 12:17:38 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -87,14 +87,11 @@ StatusCode L0Entry::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode L0Entry::execute() {  
-
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop(" No inputs");
+StatusCode L0Entry::execute() {
   
   if (!retrieve(m_l0,m_l0Location)) return stop(" No L0 report");
   
-  ok = m_l0->decision();
+  bool ok = m_l0->decision();
   if (!ok) return stop(" No L0 decsion");
 
 
@@ -109,9 +106,9 @@ StatusCode L0Entry::execute() {
     debug() << " accepted L0 channel trigger ?" << ok << endreq;
     if (!ok) return stop(" No L0 channels decision");
   }
-  
 
-  HltAlgorithm::endExecute();
+  candidateFound(1);
+  
   debug() << " accepted  l0 entry " << endreq;
   return StatusCode::SUCCESS;
 };

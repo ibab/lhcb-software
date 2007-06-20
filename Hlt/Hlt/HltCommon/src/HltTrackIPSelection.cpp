@@ -111,9 +111,6 @@ StatusCode HltTrackIPSelection::initialize() {
 //=============================================================================
 StatusCode HltTrackIPSelection::execute() {
   StatusCode sc = StatusCode::SUCCESS;
-
-  bool ok  = HltAlgorithm::beginExecute();  
-  if (!ok) return sc;
   
   // loop in tracks and compute the smalest IP per track
   computeTracksMinIP();
@@ -122,7 +119,8 @@ StatusCode HltTrackIPSelection::execute() {
   // if (m_selectVertex) 
   if (m_selectPrimaryVertex) selectVertex();
 
-  HltAlgorithm::endExecute();
+  if (m_outputTracks) candidateFound(m_outputTracks->size());
+  
   return sc;
 };
 
@@ -150,9 +148,32 @@ void HltTrackIPSelection::computeTracksMinIP()
     Hlt::map_abs_min_value(m_otracks2,*m_patInputVertices,
 			   *_ipFun,m_IPKey,m_PVKey);
   }
+  // select the input tracks that are non-backwards
+  m_otracks2.clear();
+  if (m_inputTracks)
+    Hlt::select(*m_inputTracks,*_nobackwards,m_otracks2);
+  else if (m_patInputTracks)
+    Hlt::select(*m_patInputTracks,*_nobackwards,m_otracks2);
+  debug() << " number of non-backwards tracks " 
+          << m_otracks2.size() << endreq;
+
+  // compute the min impact parameter of the tracks and
+  // store it in the track, with the information to which vertex
+  // the tracks has its min impact parameter
+  if (m_primaryVertices) 
+    Hlt::map_abs_min_value(m_otracks2,*m_primaryVertices,
+			   *_ipFun, m_IPKey,m_PVKey);
+  else if (m_patInputVertices) {
+    m_nPrimaryVertices = m_patInputVertices->size();
+    Hlt::map_abs_min_value(m_otracks2,*m_patInputVertices,
+			   *_ipFun,m_IPKey,m_PVKey);
+  }
 
   // monitor the min impact parameter of all the tracks
-  HltAlgorithm::monitor(m_otracks2,m_IPKey,m_histoIP);
+  if (m_monitor) {
+    std::vector<double> ips = infos(m_otracks2,m_IPKey,-1.e6);
+    fillHisto(m_histoIP,ips,1.);
+  }
 
   // check if there is one one vertex
   bool ok = (m_selectPrimaryVertex && (m_nPrimaryVertices >1));

@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.9 2007-06-15 10:02:33 pkoppenb Exp $
+// $Id: HltSequencer.cpp,v 1.10 2007-06-20 12:17:38 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -86,20 +86,20 @@ StatusCode HltSequencer::initialize() {
   int i = 0;
   std::vector<AlgorithmEntry>::iterator itE;
   for ( itE = m_entries.begin(); m_entries.end() != itE; itE++, i++ ) {
+    const std::string algname = (*itE).algorithm()->name();
     if ( m_measureTime ) {
-      const std::string algname = (*itE).algorithm()->name();
       (*itE).setTimer( m_timerTool->addTimer( algname ));
       AIDA::IHistogram1D* h = histo1D(algname);
       debug() << " found histogram of " << algname << " ? " 
               << h << endreq;
       m_histoTimeAlgs.push_back(h);
     }
-    // if (!m_propHisto.hasHisto(algname))
+
+    debug() << " initialize " << algname << endreq;
     status = (*itE).algorithm()->sysInitialize();
-    if ( !status.isSuccess() ) {
+    if ( !status.isSuccess() ) 
       return Error( "Can not initialize " + (*itE).algorithm()->name(), 
                     status );
-    }
   }
   
   if ( m_measureTime ) m_timerTool->decreaseIndent();
@@ -127,27 +127,24 @@ StatusCode HltSequencer::execute() {
   for ( itE = m_entries.begin(), itHis = m_histoTimeAlgs.begin(); 
         m_entries.end() != itE; itE++, ialg++, itHis++ ) {
     Algorithm* myAlg = (*itE).algorithm();
-    if ( myAlg->isEnabled() ) {
-      if ( ! myAlg->isExecuted() ) {
-        if ( m_measureTime ) m_timerTool->start( (*itE).timer() );
-        result = myAlg->sysExecute();
-        if ( m_measureTime) {
-          double t0 = m_timerTool->stop( (*itE).timer() );
-          ttot += t0;
-          if (*itHis) fill( *itHis,t0,1.);
-        }
-        myAlg->setExecuted( true );
-        if ( ! result.isSuccess() ) break;  //== Abort and return bad status
-      }
-      bool algPassed = myAlg->filterPassed();
-      debug() << " algorithm " << myAlg->name() << " " 
-              << " passed? " << algPassed << endreq;
-      if (algPassed && m_measureTime) fill(m_histoRate,1.*ialg,1.);
-      passed  = m_modeOR? (passed || algPassed) : (passed && algPassed);
-      if (!m_ignoreFilter) 
-        if ((!passed) && (!m_modeOR)) break;
+    if ( m_measureTime ) m_timerTool->start( (*itE).timer() );
+    result = myAlg->sysExecute();
+    if ( m_measureTime) {
+      double t0 = m_timerTool->stop( (*itE).timer() );
+      ttot += t0;
+      if (*itHis) fill( *itHis,t0,1.);
     }
+    myAlg->setExecuted( true );
+    if ( ! result.isSuccess() ) break;  //== Abort and return bad status
+    bool algPassed = myAlg->filterPassed();
+    debug() << " algorithm " << myAlg->name() << " " 
+            << " passed? " << algPassed << endreq;
+    if (algPassed && m_measureTime) fill(m_histoRate,1.*ialg,1.);
+    passed  = m_modeOR? (passed || algPassed) : (passed && algPassed);
+    if (!m_ignoreFilter) 
+      if ((!passed) && (!m_modeOR)) break;
   }
+
   if (!m_ignoreFilter) setFilterPassed(passed);
   else setFilterPassed( true );
   debug() << " HltSequencer passed? " << passed << endreq;
@@ -158,8 +155,7 @@ StatusCode HltSequencer::execute() {
     double t = m_timerTool->stop( m_timer );
     fill(m_histoTime,t,1.);
     fill(m_histoTime0,ttot,1.);
-  }
-  
+  }  
   
   if ( m_returnOK ) return StatusCode::SUCCESS;
   else              return result;

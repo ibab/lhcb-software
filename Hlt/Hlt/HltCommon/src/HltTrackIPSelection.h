@@ -1,4 +1,4 @@
-// $Id: HltTrackIPSelection.h,v 1.5 2007-02-05 09:09:08 hernando Exp $
+// $Id: HltTrackIPSelection.h,v 1.6 2007-06-20 12:17:38 hernando Exp $
 #ifndef HLTTRACKIPSELECTION_H 
 #define HLTTRACKIPSELECTION_H 1
 
@@ -54,10 +54,10 @@ protected:
   int m_IPKey;
   int m_PVKey;
 
-  Hlt::track_filter* _nobackwards;
-  Hlt::trackvertex_bifunction* _ipFun;
-  Hlt::track_filter* _ipWindow;
-  Hlt::track_filter* _kvertex;
+  Hlt::TrackFilter* _nobackwards;
+  Hlt::TrackVertexBiFunction* _ipFun;
+  Hlt::TrackFilter* _ipWindow;
+  Hlt::TrackFilter* _kvertex;
 
 
 protected:

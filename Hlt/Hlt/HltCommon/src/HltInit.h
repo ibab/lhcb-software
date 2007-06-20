@@ -1,9 +1,10 @@
-// $Id: HltInit.h,v 1.3 2007-02-05 09:09:08 hernando Exp $
+// $Id: HltInit.h,v 1.4 2007-06-20 12:17:38 hernando Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
 // Include files
 // from Gaudi
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/IHltDataStore.h"
 #include "HltBase/HltContainers.h"
@@ -36,6 +37,8 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+  IDataManagerSvc* m_hltSvc;
 
   std::string m_summaryName;
 

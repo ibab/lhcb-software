@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.2 2006-09-26 13:54:56 cattanem Exp $
+// $Id: HltInit.cpp,v 1.3 2007-06-20 12:17:38 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -44,6 +44,35 @@ HltInit::~HltInit() {}
 StatusCode HltInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_hltSvc = NULL;
+  std::string name = "HltDataSvc/EventDataSvc";
+  sc = serviceLocator()->service(name,m_hltSvc,true);
+  // m_hltSvc = svc<IDataManagerSvc>("HltDataSvc",true);  
+  if (!m_hltSvc) error() << " not able to create Hlt Svc " << endreq;
+  else info() << " SUCCESSFULLY CREATED!! " << endreq;
+  m_hltSvc->setRoot("/Event", new DataObject());
+
+  IDataProviderSvc* hltsvc = NULL;
+  sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  if (!hltsvc) error() << " not able to create Hlt Svc provider " << endreq;
+  else info() << " SUCCESSFULLY CREATED provider!! " << endreq;  
+
+  info() << " hlt data svc " << (int) m_hltSvc << endreq;
+  info() << " event data svc " << (int) evtSvc() << endreq;
+
+  put(hltsvc, new Tracks(), "/Event/Hlt/Track/Caca");
+  info() << " put tracks " << sc.isSuccess() << endreq;
+  Tracks* mtracks = get<Tracks>(hltsvc,"/Event/Hlt/Track/Caca");
+  if (!mtracks) error() << " can not retrieve tracks :(:(:(:(" << endreq;
+  info() << " retrieved tracks :):):):)" << endreq;
+  
+
+
+  
+ //  sc = serviceLocator()->getService(name,IDataManagerSvc::interfaceID(),m_hltSvc);
+//   if (!sc) error() << " Not able to create HltDataSvc" << endreq;
+//  
 
   debug() << "==> Initialize" << endmsg;
   IHltDataStore* store = tool<IHltDataStore>( "HltDataStore" );
@@ -128,6 +157,7 @@ StatusCode HltInit::execute() {
 //=============================================================================
 StatusCode HltInit::finalize() {
 
+  m_hltSvc->clearStore();
   debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
