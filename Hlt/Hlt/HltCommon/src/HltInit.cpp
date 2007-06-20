@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.3 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltInit.cpp,v 1.4 2007-06-20 20:34:05 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -50,22 +50,22 @@ StatusCode HltInit::initialize() {
   sc = serviceLocator()->service(name,m_hltSvc,true);
   // m_hltSvc = svc<IDataManagerSvc>("HltDataSvc",true);  
   if (!m_hltSvc) error() << " not able to create Hlt Svc " << endreq;
-  else info() << " SUCCESSFULLY CREATED!! " << endreq;
+  else debug() << " SUCCESSFULLY CREATED!! " << endreq;
   m_hltSvc->setRoot("/Event", new DataObject());
 
   IDataProviderSvc* hltsvc = NULL;
   sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
   if (!hltsvc) error() << " not able to create Hlt Svc provider " << endreq;
-  else info() << " SUCCESSFULLY CREATED provider!! " << endreq;  
+  else debug() << " SUCCESSFULLY CREATED provider!! " << endreq;  
 
   info() << " hlt data svc " << (int) m_hltSvc << endreq;
   info() << " event data svc " << (int) evtSvc() << endreq;
 
   put(hltsvc, new Tracks(), "/Event/Hlt/Track/Caca");
-  info() << " put tracks " << sc.isSuccess() << endreq;
+  debug() << " put tracks " << sc.isSuccess() << endreq;
   Tracks* mtracks = get<Tracks>(hltsvc,"/Event/Hlt/Track/Caca");
-  if (!mtracks) error() << " can not retrieve tracks :(:(:(:(" << endreq;
-  info() << " retrieved tracks :):):):)" << endreq;
+  if (!mtracks) error() << " can not retrieve tracks :(" << endreq;
+  debug() << " retrieved tracks :)" << endreq;
   
 
 

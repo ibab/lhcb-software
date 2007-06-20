@@ -9,6 +9,7 @@
  - HltPrepareL0Calo select l0 calo objects that trigger L0
  - HltPrepareTracks select RZVelo tracks forward and Primary Vertices
  - HltTrackFilter  filter tracks according from list of conditions via the factory
+ - HltTrackMerge merge 2 tracks containers in one
  - HltTrackFromParticle: select tracks from a list of particles
  - HltVertexFilter filter vertices from a list of conditions via the factory  
  - HltVertexMaker makes vertices with a list of conditions via the factory
