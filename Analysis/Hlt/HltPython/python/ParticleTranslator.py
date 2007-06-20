@@ -1,3 +1,6 @@
+# module to translates pid (int) <-> string
+# author: D. Martinez
+
 ParticleTranslator={
     'phi':333,333:'phi',
     'e-':11,11:'e-',

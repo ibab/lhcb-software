@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python
 !-----------------------------------------------------------------------------
 
+! 2007-06-20 - Jose A. Hernando
+	- adding python modules to deal with rc,mc and small framework
+    python/centella.py rctools.py mctools.py
+
 ! 2007-03-28 - Jose A. Hernando
  - Reuse of the package: store python code to study and monitor the HLT
  - python/hadalley_velol0conf.py : study the had alley using the velo-l0calo confirmation  
