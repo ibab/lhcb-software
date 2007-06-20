@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+
+! 2007-06-20 - Olivier Deschamps
+ - protection against negative modulus in CaloSignalAlg
+
 !======================== CaloDigit v2r4 2007-06-05 ==========================
 ! 2007-06-05 - Marco Cattaneo
  - Adapt to new rootInTES convention in Gaudi v19r4

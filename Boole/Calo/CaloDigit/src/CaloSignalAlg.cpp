@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.15 2007-06-12 20:25:13 odescham Exp $
+// $Id: CaloSignalAlg.cpp,v 1.16 2007-06-20 14:17:44 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -187,7 +187,7 @@ StatusCode CaloSignalAlg::execute() {
       }
     } else if ( 2 <= timeBin ) {
       //== Keep the contribution of old BX, according to the probability.
-      if ( validBX[ timeBin%validBX.size() ] ) {
+      if ( validBX[ validBX.size() + timeBin%validBX.size() ] ) {
         Gaudi::XYZPoint center = m_calo->cellCenter( id );
         Gaudi::XYZPoint newCenter( -center.x(), -center.y(), center.z() );
         LHCb::CaloCellID id = m_calo->Cell( newCenter );
