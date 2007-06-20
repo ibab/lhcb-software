@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.11 2007-05-25 12:57:20 pkoppenb Exp $
+// $Id: HltTracking.cpp,v 1.12 2007-06-20 12:22:43 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -32,10 +32,12 @@ HltTracking::HltTracking( const std::string& name,
 
   declareProperty("MeasureTime"   , m_measureTime   = false );
   declareProperty("RecoName", m_recoName = "empty");
+
+  declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   declareProperty("OrderByPt", m_orderByPt = false);
 
   m_configs["Velo"] = RecoConfiguration("Velo","RZVelo","PatVeloSpaceTracking",
-                                        LHCb::TrackLocation::RZVelo,
+                                        LHCb::TrackLocation::HltRZVelo,
                                         LHCb::TrackLocation::HltVelo);
     
   m_configs["VeloTT"] = RecoConfiguration("VeloTT","Velo","PatVeloTT",
@@ -169,20 +171,28 @@ StatusCode HltTracking::iniRecoAlgorithm()
 //=============================================================================
 StatusCode HltTracking::execute() {
 
-  bool ok = HltAlgorithm::beginExecute();
-  if (!ok) return stop( " No input tracks ");
-
   flag();
   if (m_measureTime) m_timer->start(m_timePat);
   StatusCode sc = m_algo->execute();
   if (m_measureTime) m_timer->stop(m_timePat);
   load();
+  
+  if (m_outputTracks) candidateFound( m_outputTracks->size() );
+  else candidateFound(m_patOutputTracks->size());
 
-  HltAlgorithm::endExecute();
-
+  if (m_debug && m_outputTracks) {
+    for (PatTrackContainer::iterator it0 = m_patOutputTracks->begin();
+         it0 != m_patOutputTracks->end(); it0++) {
+      debug() << " key " << (*it0)->key() << " slopes " << (*it0)->slopes() 
+              << " pt " << (*it0)->pt() << endreq; 
+    }
+    printInfo(" output tracks ",*m_outputTracks);
+  }
+        
   return sc;
   
 }
+
 
 
 void HltTracking::flag() {
@@ -209,15 +219,21 @@ void HltTracking::flag() {
 
 void HltTracking::loadFrom(const Track& mon) {
   int keymon = mon.key();
+  verbose() << " mon " << mon.key() << mon.slopes() << endreq;
   for (PatTrackContainer::iterator it = m_patOutputTracks->begin();
        it != m_patOutputTracks->end(); ++it) {
     if ((*it)->nStates() <=0) continue; /// @todo protection to buggy tracks
     Track& son = **it;
     bool ok = false;
     int ikeymon = (int) son.info(m_prevrecoKey,-1);
-    if (ikeymon == keymon) ok = true;
-    else if (ikeymon == -1) ok = isAncestor(son,mon);
+    // if (ikeymon == keymon) ok = true;
+    // else if (ikeymon == -1) ok = isAncestor(son,mon);
+    ok = isAncestor(son,mon);
+    verbose() << " son track " << son.key() << " is ancestor? " 
+            << ikeymon << " " << keymon << " " 
+            << ok << son.slopes() << endreq;
     if (ok) {
+      if (m_transferExtraInfo) son.setExtraInfo(mon.extraInfo());
       son.addInfo(m_prevrecoKey, keymon);
       if (m_outputTracks) m_outputTracks->push_back( (Track*) &son );
       verbose() << "Added to output track " << son.key() << " " 
@@ -252,8 +268,11 @@ bool HltTracking::isAncestor(const Track& son, const Track& mother) {
   for (SmartRefVector<Track>::const_iterator it = tracks.begin(); 
        it != tracks.end(); ++it) {
     const Track& imon = **it;
+    verbose() << " is ancestor? " << (Track*) (&imon) << 
+      (Track*) (&mother) << endreq;
     if (  (Track*) (&imon) == (Track*) (&mother) ) return true;
   }
+  verbose() << " no ancestor! " << endreq;
   return false;
 }
 

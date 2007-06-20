@@ -1,4 +1,4 @@
-// $Id: HltTracking.h,v 1.5 2007-02-05 09:18:17 hernando Exp $
+// $Id: HltTracking.h,v 1.6 2007-06-20 12:22:43 hernando Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
@@ -83,6 +83,7 @@ protected:
 
   std::string m_recoName;
   bool m_orderByPt;
+  bool m_transferExtraInfo;
 
   int m_recoKey;
   int m_prevrecoKey;
