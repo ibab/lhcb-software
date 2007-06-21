@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.5 2007-04-20 17:47:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.6 2007-06-21 12:20:15 frankm Exp $
 //  ====================================================================
 //  PVSSIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PVSSIO.cpp,v 1.5 2007-04-20 17:47:10 frankb Exp $
+// $Id: PVSSIO.cpp,v 1.6 2007-06-21 12:20:15 frankm Exp $
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -48,7 +48,7 @@ namespace PVSS {
   static void insert_float (std::vector<float>& t,float s)       { t.push_back(s);                }
   static void insert_time_t(std::vector<time_t>& t,time_t s)     { t.push_back(s);                }
   static void insert_uint  (std::vector<unsigned int>& t,unsigned int s)        { t.push_back(s); }
-  static void insert_dpid  (std::vector<DpID>& t,const DpID& s) { t.push_back(s); }
+  static void insert_dpid  (std::vector<DpID>& t,const DpID& s)  { t.push_back(s); }
 
   template <class T> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector<T>& v) {
     ArrayVector<T> vec(v);

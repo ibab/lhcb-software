@@ -392,11 +392,22 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
 int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   const char *tmp = ::getenv("DATAINTERFACE");
   if ( !tmp )  {
-    char n[64];
+    char n[64], nn[70];
     if ( 0 == ::gethostname (n,sizeof(n)) )  {
-      hostent* h = ::gethostbyname(n);
+      ::strncpy(nn,n,sizeof(n));
+      ::strcat(nn,"-d");
+      hostent* h = ::gethostbyname(nn);
       if ( h ) {
         tmp = inet_ntoa(*(in_addr*)h->h_addr);
+      }
+      else {
+	::strcat(nn,"1");
+	if ( (h=::gethostbyname(nn)) ) {
+	  tmp = inet_ntoa(*(in_addr*)h->h_addr);
+	}
+	else if ( (h=::gethostbyname(n)) ) {
+	  tmp = inet_ntoa(*(in_addr*)h->h_addr);
+	}
       }
     }
   }

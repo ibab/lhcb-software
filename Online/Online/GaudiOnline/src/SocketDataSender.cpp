@@ -32,7 +32,8 @@ namespace LHCb  {
   public:
     /// Standard algorithm constructor
     SocketDataSender(const std::string& nam, ISvcLocator* pSvc) 
-    : NetworkDataSender(nam, pSvc), m_netPlug(0)  {}
+    : NetworkDataSender(nam, pSvc), m_netPlug(0)  {
+    }
     /// Standard Destructor
     virtual ~SocketDataSender()   {}
     /// Subscribe to network requests

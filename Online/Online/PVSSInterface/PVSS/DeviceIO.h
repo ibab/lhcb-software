@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.5 2007-04-20 09:34:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.6 2007-06-21 12:20:15 frankm Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -169,6 +169,8 @@ namespace PVSS {
     ControlsManager* manager() const    {  return m_manager;      }
     /// Access datapoint container
     const DataPoints& points() const    {  return m_points;       }
+    /// Access to copy of datapoints
+    std::vector<DataPoint*> pointVector() const;
     /// Change Device IO to writing mode
     void setWrite();
     /// Change Device IO to writing mode

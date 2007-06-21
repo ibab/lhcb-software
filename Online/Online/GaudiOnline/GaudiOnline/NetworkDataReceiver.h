@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.5 2007-06-07 15:52:00 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.6 2007-06-21 12:18:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -103,9 +103,9 @@ namespace LHCb  {
     /// WT callback for asynchronous request rearm
     static int rearm_net_request(unsigned int facility,void* param);
     /// Retrieve receiver entry by name
-    RecvEntry* receiver(const std::string& nam);
+    virtual RecvEntry* receiver(const std::string& nam);
     /// Rearm network request for a single event source
-    StatusCode rearmRequest(const RecvEntry& src);
+    virtual StatusCode rearmRequest(const RecvEntry& src);
   public:
     /// Standard algorithm constructor
     NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc);
@@ -139,6 +139,9 @@ namespace LHCb  {
     virtual void deleteNetRequest(RecvEntry& src);
     /// Networking layer overload [Net consumer]: Reset event request and insert entry into data queue of the buffer manager
     virtual StatusCode handleEventData(const std::string& src,void* buf,size_t len);
+    /// Networking layer overload [Net consumer]: Reset event request and insert entry into data queue of the buffer manager
+    virtual StatusCode handleEventData(const RecvEntry& entry,void* buf,size_t len);
+
     /// Copy event data into buffer manager
     virtual StatusCode copyEventData(void* to, void* from, size_t len);
     /// Networking layer overload [Net consumer]: Handle event data source registration

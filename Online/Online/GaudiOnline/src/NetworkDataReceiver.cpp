@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.8 2007-06-07 15:52:01 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.9 2007-06-21 12:18:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -120,7 +120,7 @@ NetworkDataReceiver::handleSourceRequest(int clientID,
 {
   try {
     if ( 0 == receiver(source) )  {
-      m_receivers.push_back(RecvEntry(this, source, svc, clientID));
+      m_receivers.push_back(RecvEntry(this,source,svc,clientID));
       RecvEntry& entry = m_receivers.back();
       StatusCode sc = createNetRequest(entry);
       if ( sc.isSuccess() )  {
@@ -182,28 +182,43 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
   try  {
     RecvEntry* entry = receiver(src);
     if ( entry )  {
-      // Need to clone entry - new message may be arriving before this one is handled...
-      // (In mode without explicit rearm)
-      RecvEntry* e = new RecvEntry(*entry);
-      e->buffer = (char*)buf;
-      e->size = len;
-      StatusCode sc = resetNetRequest(*entry);
-      if ( m_declareAsynch )  {
-        ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
-        int backlog = ++m_backlog;
-        if ( backlog%100 == 0 ) {
-          if ( m_lastbacklog != backlog ) {
-            m_lastbacklog = backlog;
-            error("Message backlog is now %d messages.",backlog);
-          }
-        }
-      }
-      else  {
-        NetworkDataReceiver::rearm_net_request(WT_FACILITY_DAQ_EVENT,e);
-      }
-      return sc;
+      return handleEventData(*entry,buf,len);
     }
     return error("Event receive entry from unknown source:"+src);
+  }
+  catch(std::exception& e)   {
+    return errorException("Exception during event receive request:",e);
+  }
+  catch(...)   {
+    return error("Unknown exception during event receive request.");
+  }
+  return StatusCode::FAILURE;
+}
+
+// Reset event request and insert entry into data queue of the buffer manager
+StatusCode 
+NetworkDataReceiver::handleEventData(const RecvEntry& entry,void* buf,size_t len)  {
+  try  {
+    // Need to clone entry - new message may be arriving before this one is handled...
+    // (In mode without explicit rearm)
+    RecvEntry* e = new RecvEntry(entry);
+    e->buffer = (char*)buf;
+    e->size = len;
+    StatusCode sc = resetNetRequest(entry);
+    if ( m_declareAsynch )  {
+      ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
+      int backlog = ++m_backlog;
+      if ( backlog%100 == 0 ) {
+	if ( m_lastbacklog != backlog ) {
+	  m_lastbacklog = backlog;
+	  error("Message backlog is now %d messages.",backlog);
+	}
+      }
+    }
+    else  {
+      NetworkDataReceiver::rearm_net_request(WT_FACILITY_DAQ_EVENT,e);
+    }
+    return sc;
   }
   catch(std::exception& e)   {
     return errorException("Exception during event receive request:",e);

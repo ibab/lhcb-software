@@ -1,25 +1,38 @@
 import socket
 import Online.PVSS as PVSS
 import Online.Utils
-import Online.RunInfo
 import Online.JobOptions.JobOptions as JobOptions
 
 log             = Online.Utils.log
 error           = PVSS.error
 warning         = Online.Utils.warning
-RunInfo         = Online.RunInfo.RunInfo
 DataPoint       = PVSS.DataPoint
 DeviceSensor    = PVSS.DeviceSensor
 CommandListener = PVSS.CommandListener
 
+class Options:
+  def __init__(self,msg=''):
+    self.value = msg
+    if len(self.value)>0: self.value = self.value+'\n'
+  def add(self,name,value=None):
+    if value:
+      v = str(value)
+      if isinstance(value,str): v = '"'+v+'"'
+      s = 'OnlineEnv.%-16s = %s;\n'%(name,v.replace("'",'"').replace('[','{').replace(']','}'))
+      self.value = self.value + s
+    elif len(name)>0:
+      self.value = self.value + name + '\n'
+    return self
+    
 # =============================================================================
 class OptionsWriter(CommandListener):
   # ===========================================================================
-  def __init__(self, manager, hosttype, cluster, name):
+  def __init__(self, manager, hosttype, cluster, name, info):
     "Object constructor."
     self.hostType = hosttype
     self.cluster  = cluster
     self.optionsDir = None
+    self.infoCreator = info
     CommandListener.__init__(self,manager,name,name,4)
     devMgr = self.manager.deviceMgr()
     if not devMgr.exists(name):
@@ -36,7 +49,7 @@ class OptionsWriter(CommandListener):
 
   # ===========================================================================
   def getParams(self, partition):
-    run = RunInfo(self.manager,partition).load()
+    run = self.infoCreator.create(partition).load()
     if run:
       tasks = []
       activity = JobOptions.Activity(self.manager,self.activityName(run))
@@ -53,7 +66,7 @@ class OptionsWriter(CommandListener):
       else:
         error('The activity '+self.activityName(run)+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
         return None
-    error('The RunInfo for partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    error('Information for partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
@@ -89,44 +102,34 @@ class OptionsWriter(CommandListener):
       run_type = run.runType()
       context = self.configureAdditionalOptions(run, activity, tasks)
       for task in tasks:
-        opts = '//  Auto generated options for partition:'+partition+\
-          ' activity:'+run_type+' task:'+task.name+'\n'
-        opts = opts + '#include "$PREAMBLE_OPTS"\n'
+        opts = Options('//  Auto generated options for partition:'+partition+\
+               ' activity:'+run_type+' task:'+task.name+'\n' +\
+               '#include "$PREAMBLE_OPTS"')
         if task.defaults.data:
-          print 'Task', task
-          opts = opts + '//\n' +\
-            '// ---------------- General partition information:  \n'+ \
-            'OnlineEnv.PartitionID   = '+str(run.partitionID())+';\n'+ \
-            'OnlineEnv.PartitionName = "'+partition+'";\n'+ \
-            'OnlineEnv.Activity      = "'+run_type+'";\n'+ \
-            'OnlineEnv.HostType      = "'+self.hostType+'";\n'+ \
-            'OnlineEnv.HostTypes     ={"'+self.hostType+'"};\n'+ \
-            'OnlineEnv.TaskType      = "'+task.name+'";\n'
-        else:
-          opts = opts + '// ---------------- NO partition information\n'
-        additionalOpts = self.additionalOptions(context,run,activity,task)
-        if additionalOpts:
-          opts = opts + '//\n' + \
-            '// ---------------- Additional specific options:  \n'
-          for o in additionalOpts.keys():
-            opts = opts + 'OnlineEnv.'+o+' = "'+str(additionalOpts[o])+'";\n'
-        else:
-          opts = opts + '// ---------------- NO additional options\n'
+          #print 'Task', task
+          opts.add('//\n// ---------------- General partition information:  ')
+          opts.add('PartitionID',   run.partitionID())
+          opts.add('PartitionName', partition)
+          opts.add('Activity',      run_type);
+          opts.add('HostType',      self.hostType)
+          opts.add('HostTypes',    [self.hostType])
+          opts.add('TaskType',      task.name)
+        else: opts.add('// ---------------- NO partition information')
+        addOpts = self.additionalOptions(context,run,activity,task)
+        if addOpts:
+          opts.add('//\n// ---------------- Additional specific options:')
+          for nam,opt in addOpts.items(): opts.add(nam,opt)
+        else: opts.add('// ---------------- NO additional options')
         if task.tell1s.data:
-          opts = opts + '//\n' + \
-            '// ---------------- Tell1 board information:  \n'+  \
-            'OnlineEnv.Tell1Boards    = {' 
-          for b in run.tell1Boards.data:
-            opts = opts + '\n  "'+b+'", \"'+b+'", "",'
-          opts = opts[:-1] + '\n};\n'
-        else:
-          opts = opts + '// ---------------- NO tell1 board information\n'
+          opts.add('//\n// ---------------- Tell1 board information:')
+          opts.add('OnlineEnv.Tell1Boards         = {\n')
+          for b in run.tell1Boards.data: opts.add('  "%s", \"%s", "",\n'%(b,b))
+          opts.value = opts.value[:-2] + '\n};\n'
+        else: opts.add('// ---------------- NO tell1 board information') 
         if task.options.data:
-          opts = opts + '//\n' +\
-            '// ---------------- Task specific information:  \n'+  \
-            task.options.data+'\n'
-        else:
-          opts = opts + '// ---------------- NO task specific information\n'
+          opts.add('//\n// ---------------- Task specific information:')
+          opts.add(task.options.data)
+        else: opts.add('// ---------------- NO task specific information')
         if not self.writeOptions(opts,run,activity,task):
           return None
       return self
@@ -165,12 +168,12 @@ class HLTOptionsWriter(OptionsWriter):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager, name):
+  def __init__(self, manager, name, info):
     "Object constructor."
     node = socket.gethostbyaddr(socket.gethostname())[0]
     cluster = node[:node.find('.')]
     cluster = 'lbhlt04'
-    OptionsWriter.__init__(self,manager,'HLT',cluster, name)
+    OptionsWriter.__init__(self,manager,'HLT',cluster, name, info)
   # ===========================================================================
   def configureAdditionalOptions(self, run, activity, tasks):
     opts = {}
@@ -191,29 +194,74 @@ class StorageOptionsWriter(OptionsWriter):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager, name):
+  def __init__(self, manager, name, info):
     "Object constructor."
     cluster = 'storage'
-    OptionsWriter.__init__(self,manager,'RECV',cluster, name)
+    OptionsWriter.__init__(self, manager, 'RECV', cluster, name, info)
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
-    return {'DataSink':'@DataSink@', 'HostName':'@HostName@', 'Target':'@Target@::@DataSink@'}
+    return {'HostName':'@HostName@', 'ProcessName':'@ProcessName@', 'ProcessNickName':'@ProcessNickName@', 'ProcessType':'@ProcessType@'}
+  # ===========================================================================
   def checkTasks(self, opts, run, activity, task, data, item, opt=-1):
     done = 0
     for i in data:
-      items = i.split('/')
-      print task.name,items
+      it = i.split('/')
+      items = it[:-1]
+      eval_item = eval(it[-1])
+      # print '++++++++++++++++++++++>',task.name,items
       if task.name == items[3]:
         done = 1
-        if item<0:
-          options = opts.replace('@DataSink@','NONE')
-        else:
-          options = opts.replace('@DataSink@',items[item])
-        if opt>=0:
-          options = options.replace('@Target@',items[opt])
-        else:
-          options = opts.replace('@Target@','NONE')
+        options = opts.value
         options = options.replace('@HostName@',items[0])
+        options = options.replace('@ProcessName@',items[1])
+        options = options.replace('@ProcessNickName@',items[2])
+        options = options.replace('@ProcessType@',items[3])
+        if isinstance(eval_item,list) or isinstance(eval_item,tuple):
+          s = ''
+          s0 = ''
+          s1 = ''
+          prefix = ''
+          tot_len = len(eval_item)
+          if tot_len>1: prefix = '\n     '
+          for q in xrange(tot_len):
+            val = eval_item[q]
+            if isinstance(val,tuple) or isinstance(val,list):
+              if q > 0: s = s+','+prefix
+              elif len(prefix): s = prefix
+              if len(val)==2:
+                # if val[0] == "storestrm01-d1": val = ("192.167.10.11",val[1])
+                # if val[0] == "storestrm02-d1": val = ("192.167.10.12",val[1])
+                # if val[0] == "storerecv01-d1": val = ("192.167.10.1",val[1])
+                # if val[0] == "storerecv02-d1": val = ("192.167.10.2",val[1])
+                if q > 0:
+                  s0 = s0 + ','+prefix
+                  s1 = s1 + ','+prefix
+                elif len(prefix):
+                  s = s0 = s1 = prefix
+                s = s + '"'+str(val[0])+'::'+str(val[1])+'"'
+                s0 = s0 + '"'+str(val[0])+'"'
+                s1 = s1 + '"'+str(val[1])+'"'
+              if len(val)==1:
+                s = s + '"'+str(val[0])+'"'
+            else:
+              s = s + '"'+str(val)+'"'
+          if len(eval_item)>1: s = '%-26s = {%s%s};\n'%('OnlineEnv.Opt0',s,prefix)
+          else:         s = '%-26s = {%s};\n%-26s = %s;\n'%('OnlineEnv.Opt0s',s,'OnlineEnv.Opt0',s)
+          if len(s0)>0:
+            if len(eval_item)==1: s = s + '%-26s = %s;\n%-26s = {%s};\n'%('OnlineEnv.Opt1',s0,'OnlineEnv.Opt1s',s0)
+            else:          s = s + '%-26s = {%s%s};\n'%('OnlineEnv.Opt1',s0,prefix)
+          if len(s1)>0:
+            if len(eval_item)==1: s = s + '%-26s = %s;\n%-26s = {%s};\n'%('OnlineEnv.Opt2',s1,'OnlineEnv.Opt2s',s1)
+            else:          s = s + '%-26s = {%s%s};\n'%('OnlineEnv.Opt2',s1,prefix)
+          options = options + s
+        else:
+          options = options+'OnlineEnv.Opt0 = "'+str(eval_item)+'";\n'
+        qq = str(eval_item).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
+        if qq.find('},')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace('},','},\n   ')
+        options = options+'%-26s = %s;\n'%('OnlineEnv.Options',qq)
+        qq = str(items).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
+        if qq.find(',')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace(',',',\n   ')
+        options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
         if self.writeOptionsFile(items[1], options) is None:
           return None
     if done: return self
@@ -234,12 +282,13 @@ class StorageOptionsWriter(OptionsWriter):
     elif self.hostType == 'STREAM':
       if self.checkTasks(opts,run,activity,task,run.strReceivers.data,3):
         return self
-      if self.checkTasks(opts,run,activity,task,run.streamers.data,3):
+      if self.checkTasks(opts,run,activity,task,run.streamers.data,2,3):
         return self
       if self.checkTasks(opts,run,activity,task,run.strInfraTasks.data,3):
         return self
       self.printTasks(run.strInfraTasks.data)
-    error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
+          timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
   # ===========================================================================
   def write(self, partition):
@@ -249,13 +298,135 @@ class StorageOptionsWriter(OptionsWriter):
     res2 = OptionsWriter.write(self,partition)
     if res1 is None or res2 is None: return None
     return self
+
+# =============================================================================
+class MonitoringOptionsWriter(OptionsWriter):
+  """ Specialized options writer for the storage control node.
+  
+      @author  M.Frank
+      @version 1.0
+  """
+  # ===========================================================================
+  def __init__(self, manager, name, info):
+    "Object constructor."
+    cluster = 'monitoring'
+    OptionsWriter.__init__(self, manager, 'MONRELAY', cluster, name, info)
+  # ===========================================================================
+  def additionalOptions(self, context, run, activity, task):
+    return {'HostName':'@HostName@',
+            'ProcessName':'@ProcessName@',
+            'ProcessNickName':'@ProcessNickName@',
+            'ProcessType':'@ProcessType@'
+            }
+  # ===========================================================================
+  def checkTasks(self, opts, run, activity, task, data, item, opt=-1):
+    done = 0
+    for i in data:
+      it = i.split('/')
+      items = it[:-1]
+      eval_item = eval(it[-1])
+      # print '++++++++++++++++++++++>',task.name,items
+      if task.name == items[3]:
+        done = 1
+        options = opts.value
+        options = options.replace('@HostName@',items[0])
+        options = options.replace('@ProcessName@',items[1])
+        options = options.replace('@ProcessNickName@',items[2])
+        options = options.replace('@ProcessType@',items[3])
+        if isinstance(eval_item,list) or isinstance(eval_item,tuple):
+          s = ''
+          s0 = ''
+          s1 = ''
+          prefix = ''
+          tot_len = len(eval_item)
+          if tot_len>1: prefix = '\n     '
+          for q in xrange(tot_len):
+            val = eval_item[q]
+            if isinstance(val,tuple) or isinstance(val,list):
+              if q > 0: s = s+','+prefix
+              elif len(prefix): s = prefix
+              if len(val)==2:
+                # if val[0] == "storestrm01-d1": val = ("192.167.10.11",val[1])
+                # if val[0] == "storestrm02-d1": val = ("192.167.10.12",val[1])
+                # if val[0] == "storerecv01-d1": val = ("192.167.10.1",val[1])
+                # if val[0] == "storerecv02-d1": val = ("192.167.10.2",val[1])
+                if q > 0:
+                  s0 = s0 + ','+prefix
+                  s1 = s1 + ','+prefix
+                elif len(prefix):
+                  s = s0 = s1 = prefix
+                s = s + '"'+str(val[0])+'::'+str(val[1])+'"'
+                s0 = s0 + '"'+str(val[0])+'"'
+                s1 = s1 + '"'+str(val[1])+'"'
+              if len(val)==1:
+                s = s + '"'+str(val[0])+'"'
+            else:
+              s = s + '"'+str(val)+'"'
+          if len(eval_item)>1: s = '%-26s = {%s%s};\n'%('OnlineEnv.Opt0',s,prefix)
+          else:         s = '%-26s = {%s};\n%-26s = %s;\n'%('OnlineEnv.Opt0s',s,'OnlineEnv.Opt0',s)
+          if len(s0)>0:
+            if len(eval_item)==1: s = s + '%-26s = %s;\n%-26s = {%s};\n'%('OnlineEnv.Opt1',s0,'OnlineEnv.Opt1s',s0)
+            else:          s = s + '%-26s = {%s%s};\n'%('OnlineEnv.Opt1',s0,prefix)
+          if len(s1)>0:
+            if len(eval_item)==1: s = s + '%-26s = %s;\n%-26s = {%s};\n'%('OnlineEnv.Opt2',s1,'OnlineEnv.Opt2s',s1)
+            else:          s = s + '%-26s = {%s%s};\n'%('OnlineEnv.Opt2',s1,prefix)
+          options = options + s
+        else:
+          options = options+'OnlineEnv.Opt0 = "'+str(eval_item)+'";\n'
+        qq = str(eval_item).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
+        if qq.find('},')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace('},','},\n   ')
+        options = options+'%-26s = %s;\n'%('OnlineEnv.Options',qq)
+        qq = str(items).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
+        if qq.find(',')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace(',',',\n   ')
+        options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
+        if self.writeOptionsFile(items[1], options) is None:
+          return None
+    if done: return self
+    return None
+  def printTasks(self,data):
+    for i in data:
+      print 'Task:',i
+  # ===========================================================================
+  def writeOptions(self, opts, info, activity, task):
+    if self.hostType == 'MONRELAY':
+      if self.checkTasks(opts,info,activity,task,info.senders.data,5,4):
+        return self
+      if self.checkTasks(opts,info,activity,task,info.relayTasks.data,5,4):
+        return self
+      if self.checkTasks(opts,info,activity,task,info.relayInfraTasks.data,-1):
+        return self
+      self.printTasks(info.senders.data)
+      self.printTasks(info.relayTasks.data)
+      self.printTasks(info.relayInfraTasks.data)
+    elif self.hostType == 'MONI':
+      if self.checkTasks(opts,info,activity,task,info.monReceivers.data,3):
+        return self
+      if self.checkTasks(opts,info,activity,task,info.monTasks.data,2,3):
+        return self
+      if self.checkTasks(opts,info,activity,task,info.monInfraTasks.data,3):
+        return self
+      self.printTasks(info.monReceivers.data)
+      self.printTasks(info.monTasks.data)
+      self.printTasks(info.monInfraTasks.data)
+    error('### UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
+          timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    return None
+  # ===========================================================================
+  def write(self, partition):
+    self.hostType = 'MONRELAY'
+    res1 = OptionsWriter.write(self,partition)
+    self.hostType = 'MONI'
+    res2 = OptionsWriter.write(self,partition)
+    if res1 is None or res2 is None: return None
+    return self
+
 """
 import Online.PVSS as PVSS
 import Online.JobOptions.JobOptionsControl as WR
 mgr = PVSS.controlsMgr()
 # w = WR.HLTOptionsWriter(mgr,'JobOptions')
 
-w = WR.StorageOptionsWriter(mgr,'JobOptions')
+w = WR.StorageOptionsWriter(mgr,'StorageJobOptions')
 # w.write('LHCb')
 
 w.run()

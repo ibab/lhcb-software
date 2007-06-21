@@ -40,7 +40,7 @@ namespace LHCb  {
 	return;
       }
       // Things go awfully wrong....e.g. finalize was called during data taking.
-      ::fprintf(stdout,"Loosing event request....was finailize called ?\n");
+      ::fprintf(stdout,"Loosing event request....was finalize called ?\n");
       ::fflush(stdout);
     }
     static void handle_event(netentry_t* e, const netheader_t& hdr, void* param)  {
@@ -51,8 +51,23 @@ namespace LHCb  {
         char* buff = new char[hdr.size];
         int sc = net_receive(p->m_netPlug,e,buff);
         if ( sc == NET_SUCCESS )  {
-          p->handleEventData(source,buff,hdr.size);
+          RecvEntry* e = p->receiver(source);
+	  if ( !e ) {
+	    // In case the sender did not send the source request: 
+	    // add data source on the fly....
+	    p->handleSourceRequest(p->receivers().size(),source,source);
+	    e = p->receiver(source);
+	  }
+	  if ( e ) {
+	    if ( p->handleEventData(*e,buff,hdr.size).isSuccess() ) {
+	      gauditask_task_unlock();
+	      return;
+	    }
+	  }
+	  ::fprintf(stdout,"Loosing EVENT....Cannot register data source:%s.\n",hdr.name);
+	  ::fflush(stdout);
         }
+	delete [] buff;
         gauditask_task_unlock();
 	return;
       }
@@ -62,6 +77,7 @@ namespace LHCb  {
     }
     /// Pointer to netplug device
     NET*         m_netPlug;
+
   public:
     /// Standard algorithm constructor
     SocketDataReceiver(const std::string& nam, ISvcLocator* pSvc) : NetworkDataReceiver(nam, pSvc), m_finish(false) {}

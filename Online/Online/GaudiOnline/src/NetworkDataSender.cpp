@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.5 2007-06-01 17:28:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.6 2007-06-21 12:18:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -18,9 +18,9 @@ NetworkDataSender::NetworkDataSender(const std::string& nam, ISvcLocator* pSvc)
 :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
    m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0)
 {
-  declareProperty("DataSink", m_target);
+  declareProperty("DataSink",         m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
-  declareProperty("AllowSuspend", m_allowSuspend=true);
+  declareProperty("AllowSuspend",     m_allowSuspend=true);
   lib_rtl_create_lock(0,&m_lock);
 }
 

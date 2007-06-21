@@ -272,6 +272,8 @@ class CommandListener(PyDeviceListener):
     self.control  = DataPoint(self.manager,DataPoint.original(datapoint+'.'+cmd))
     self.state    = DataPoint(self.manager,DataPoint.original(datapoint+'.'+state))
     self.sensor   = DeviceSensor(self.manager,self.control)
+    info(sysname+': Listen to '+self.control.name(),1)
+    info(sysname+': Answer to '+self.state.name(),1)
 
   # ===========================================================================
   def run(self):

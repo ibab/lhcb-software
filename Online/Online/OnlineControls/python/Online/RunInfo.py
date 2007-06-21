@@ -1,6 +1,10 @@
 import time
 import Online.PVSS as PVSS
 import Online.Utils as Utils
+from Online.RunInfoClasses.General import General as General
+from Online.RunInfoClasses.Storage import Storage as Storage
+from Online.RunInfoClasses.HLTFarm import HLTFarm as HLTFarm
+sum       = Utils.sum
 log       = Utils.log
 error     = Utils.error
 std       = PVSS.gbl.std
@@ -17,13 +21,8 @@ def vector2String(c):
     s = s + ' ' + str(i)
   return s
 
-def sum(cont):
-  count = 0
-  for i in cont:
-    count = count + i
-  return count
 # =============================================================================
-class RunInfo:
+class RunInfo(General,Storage,HLTFarm):
   """ @class RunInfo
   
       Connect to all storage related datapoints in the RunInfo object
@@ -39,216 +38,103 @@ class RunInfo:
 
         @return reference to initialized object
     """
-    self.manager       = manager
-    self.name          = name
-    self.runTyp        = self.dp('general.runType')
-    self.partID        = self.dp('general.partId')
+    self.reader      = manager.devReader()
+    General.__init__(self,manager,name)
+    Storage.__init__(self)
+    HLTFarm.__init__(self)
     self.tell1Boards   = self.dp('SubDeterctors.tell1List')
-    self.nodes         = self.dp('HLTFarm.nodeList')
-    self.subFarms      = self.dp('HLTFarm.subFarms')
-    self.nSubFarm      = self.dp('HLTFarm.nSubFarms')
-    self.receivers     = self.dp('HLTFarm.receiverTasks')
-    self.flag          = self.dp('Storage.storeFlag')
-    self.rcvInfra      = self.dp('Storage.recvInfrastructure')
-    self.rcvInfraTasks = self.dp('Storage.recvInfrastructureTasks')
-    self.rcvSenders    = self.dp('Storage.recvSenders')
-
-    self.streams       = self.dp('Storage.streamTypes')
-    self.streamers     = self.dp('Storage.streamWriters')
-    self.strMult       = self.dp('Storage.streamMultiplicity')
-    self.strInfra      = self.dp('Storage.streamInfrastructure')
-    self.strInfraTasks = self.dp('Storage.streamInfrastructureTasks')
-    self.strReceivers  = self.dp('Storage.streamReceivers')
-
-    self.reader        = self.manager.devReader()
-    self.reader.add(self.runTyp)
-    self.reader.add(self.partID)
     self.reader.add(self.tell1Boards)    
-    self.reader.add(self.nodes)
-    self.reader.add(self.subFarms)
-    self.reader.add(self.nSubFarm)
-    self.reader.add(self.nodes)
-    self.reader.add(self.flag)
-    self.reader.add(self.streams)
-    self.reader.add(self.rcvInfra)
-    self.reader.add(self.strInfra)
-    self.reader.add(self.strMult)
-    self.addTaskDevices(self.reader)
     
   # ===========================================================================
-  def dp(self,name):
-    "Access internal datapoint of the datapoint structure."
-    return DataPoint(self.manager,DataPoint.original(self.name+'_RunInfo.'+name))
-
+  def numLayer2Slots(self):
+    return sum(self.strMult.data)
   # ===========================================================================
-  def _setDataItem(self, datapoint):
-    datapoint.data = partID
-    if save: return self._save(datapoint)
-    return self
-
+  def numLayer1Slots(self):
+    return self.nSubFarm.data
   # ===========================================================================
-  def _dataItem(self, datapoint):
-    if datapoint.data is None:
-      self.load()
-    return datapoint.data
-
-  # ===========================================================================
-  def load(self):
-    "Load the RunInfo structure datapoint."
-    if self.reader.execute(1,1):
-      return self
-    error('Failed to load run information for:'+self.name)
-    return None
-        
-  # ===========================================================================
-  def _save(self,datapoint,deviceIO=None):
-    """Save single datapoint. If the deviceIO structure is present only
-       add the datapoint to the pending transaction
-    """
-    if deviceIO is not None:
-      deviceIO.add(datapoint)
-      return self
-    wr = self.manager.devWriter()
-    wr.add(self.partID)
-    if wr.execute(0,1) is not None:
-      return self
-    return None
-
-  # ===========================================================================
-  def addTaskDevices(self, deviceIO):
+  def addDevices(self, deviceIO):
     "Add task devices to device IO structure for read/write access"
+    # import traceback
     wr = deviceIO
-    if wr is None: wr = self.manager.devWriter()
-    wr.add(self.streamers)
-    wr.add(self.strReceivers)
-    wr.add(self.strInfraTasks)
-    wr.add(self.receivers)
-    wr.add(self.rcvSenders)
-    wr.add(self.rcvInfraTasks)
-    if deviceIO is None:
+    if wr is None or wr.get() is None: wr = self.manager.devWriter()
+    # log('Adddevices:RunInfo wr='+str(wr.get())+'  '+str(deviceIO.get()))
+    Storage.addDevices(self,wr)
+    HLTFarm.addDevices(self,wr)
+    if deviceIO is None or deviceIO.get() is None:
+      #print '+++++++++++++++++++++++++++++++++++++> Exec IO'
       if wr.execute(0,1):
         return wr
       return None
+    #else:
+    #   traceback.print_stack()
+    #   print '-------------------------------------> NO Exec IO'
     return deviceIO
-
-  # ===========================================================================
-  def showStreams(self):
-    "Show output stream related information of the RunInfo datapoint."
-    streams = self.streams.data
-    multiplicity = self.strMult.data
-    for i in xrange(len(streams)):
-      log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
-
-  # ===========================================================================
-  def showSubfarms(self):
-    "Show subfarm related information of the RunInfo datapoint."
-    farms = self.subFarms.data
-    recv = self.receivers.data
-    nSF = self.nSubFarm.data
-    if len(farms) != nSF:
-      error('Subfarm allocation inconsistency: nSubFarm(%d) != len(subFarms)(%d)'%(len(farms),nSF))
-    full = len(recv) == len(farms)
-    for i in xrange(len(farms)):
-      if full:
-        log(' -> Subfarm:%-12s sending to: %s'%(farms[i],recv[i]))
-      else:
-        log(' -> Subfarm:%-24s '%(farms[i],))
-
   # ===========================================================================
   def show(self):
     "Show all information from the RunInfo structure."
     if self.load():
-      log('Input from %d sub farms'%self.nSubFarm.data)
       self.showSubfarms()
-      log('Output to %d logical streams'%len(self.streams.data))
       self.showStreams()
-      log('Run type:                    '+str(self.runTyp.data))
-      log('Partition ID                 '+str(self.partID.data))
+      General.show(self)
       return
     error('Failed to load RunInfo for partition:'+self.name)
-    
   # ===========================================================================
   def defineTasks(self,recv_slots,strm_slots):
     """
     Define all tasks in the storage layer for a given partition.
     The result is storen in runInfo datapoints for further processing.
-    
     """
-    streams = []
-    for j in xrange(len(self.streams.data)):
-      for i in xrange(self.strMult.data[j]):
-        streams.append([self.streams.data[j],i])
-    strmNodes = getNodesFromSlots(strm_slots)
-    recvNodes = getNodesFromSlots(recv_slots)
-
-    streamers = []
-    self.streamers.data.clear()
-    self.strReceivers.data.clear()
-    self.strInfraTasks.data.clear()
-    for i in xrange(len(strm_slots)):
-      slot = strm_slots[i]
-      node = slot[:slot.find(':')]
-      item = streams[i][0]+('_%02d'%streams[i][1])
-      short_name = 'WRT'+item
-      task = self.name+'_'+node+'_WRT'+item
-      self.streamers.data.push_back(node+'/'+task+'/'+short_name+'/WRT'+streams[i][0])
-      short_name = 'RCV'+item
-      task = self.name+'_'+node+'_RCV'+item
-      self.strReceivers.data.push_back(node+'/'+task+'/'+short_name+'/RCV'+streams[i][0])
-      streamers.append([self.name,node,slot,'%02d'%streams[i][1],streams[i][0]])
-      
-    for j in strmNodes:
-      for i in self.strInfra.data:
-        self.strInfraTasks.data.push_back(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i)
-    self.receivers.data.clear()
-    self.rcvSenders.data.clear()
-    self.rcvInfraTasks.data.clear()
-    for i in xrange(len(recv_slots)):
-      slot = recv_slots[i]
-      node = slot[:slot.find(':')]
-      short_name = self.subFarms.data[i]+'_HLT'
-      task = self.name+'_'+node+'_'+short_name
-      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLTRec/'+self.subFarms.data[i])
-    for j in recvNodes:
-      for i in xrange(len(streamers)):
-        part,node,slot,ident,type = streamers[i]
-        short_name = type+'_'+ident
-        sender = part+'_'+j+'_SND'+short_name
-        target = part+'_'+node+'_RCV'+short_name
-        self.rcvSenders.data.push_back(j+'/'+sender+'/SND'+short_name+'/SND'+type+'/'+node+'/'+target)
-      for i in self.rcvInfra.data:
-        self.rcvInfraTasks.data.push_back(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i)
+    log('RunInfo: Defining tasks for partition '+self.name)
+    Storage.defineTasks(self,recv_slots,strm_slots)
+    HLTFarm.defineTasks(self,recv_slots,strm_slots)
+    log('RunInfo: Defining tasks for partition '+self.name+'   ... done')
     wr = self.manager.devWriter()
-    return self.addTaskDevices(wr).execute(0,1)
-
+    self.addDevices(wr)
+    return wr.execute(0,1)
   # ===========================================================================
   def clearTasks(self, writer=None):
     """
     Clear all tasks definition in the storage layer for a given partition.
     """
-    wr = writer
-    if wr is None: wr = self.manager.devWriter()
-    empty = std.vector('std::string')()
-    self.streamers.data = empty
-    self.strReceivers.data = empty
-    self.strInfraTasks.data = empty
-    self.receivers.data = empty
-    self.rcvSenders.data = empty
-    self.rcvInfraTasks.data = empty
-    self.addTaskDevices(wr)
-    if writer is None:
-      return wr.execute(0,1)
+    Storage.clearTasks(self,writer)
+    HLTFarm.clearTasks(self,writer)
     return writer
+  
+  # ===========================================================================
+  def collectTasks(self,class0_tasks,class1_tasks):
+    class0_tasks = self._collectTasks(class0_tasks,self.rcvInfraTasks)
+    print 'rcvInfraTasks:',len(self.rcvInfraTasks.data)
+    for i,j in class0_tasks.items(): log('+++-->Class 0:'+str(i)+' with '+str(len(j))+' tasks')
+    
+    class0_tasks = self._collectTasks(class0_tasks,self.strInfraTasks)
+    class1_tasks = self._collectTasks(class1_tasks,self.receivers)
+    class1_tasks = self._collectTasks(class1_tasks,self.rcvSenders)
+    class1_tasks = self._collectTasks(class1_tasks,self.strReceivers)
+    class1_tasks = self._collectTasks(class1_tasks,self.streamers)
+    return (class0_tasks,class1_tasks)
 
-  # ===========================================================================
-  def setPartitionID(self,partID,save=0):
-    return self._setDataItem(self.partID,partID,save)
-  # ===========================================================================
-  def partitionID(self):
-    return self._dataItem(self.partID)
-  # ===========================================================================
-  def setRunType(self,runType,save=0):
-    return self._setDataItem(self.runTyp,runType,save)
-  # ===========================================================================
-  def runType(self):
-    return self._dataItem(self.runTyp)
+class RunInfoCreator:
+  def __init__(self,manager):             self.manager = manager
+  def create(self,partition):             return RunInfo(self.manager,partition)
+  def showPartition(self,info,partition):
+    import Online.RunInfoClasses.Storage as S
+    S.showPartition(info,partition)
+"""
+import Online.PVSS as PVSS
+import Online.RunInfo as RI
+import Online.RunInfoClasses.General as GEN
+import Online.RunInfoClasses.Storage as STO
+import Online.RunInfoClasses.HLTFarm as HLT
+
+m=PVSS.controlsMgr()
+g=GEN.General(m,"LHCb")
+g.show()
+s=STO.StorageInfo(m,"LHCb")
+s.show()
+f=HLT.HLTFarmInfo(m,"LHCb")
+f.show()
+r=RI.RunInfo(PVSS.controlsMgr(),"LHCb")
+r.show()
+
+
+"""

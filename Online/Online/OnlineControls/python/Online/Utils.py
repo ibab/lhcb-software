@@ -27,16 +27,17 @@ def timeStamp():
 # =============================================================================
 def log(msg, with_header=0, with_trailer=0,timestamp=0):
   stamp = ''
-  if timestamp: stamp = ' ' + timeStamp()
+  if len(logPrefix)>0: stamp = logPrefix + ' '
+  if timestamp:        stamp = timeStamp() + ' '
   if ( with_header != 0 ):
-    print logPrefix + ' ' + stamp + ' ' + logHeader
+    print stamp + logHeader
   if msg.__class__ == str().__class__:
-    print logPrefix + stamp + ' |  ' + msg
+    print stamp + '|  ' + msg
   else:
     for line in msg:
-      print logPrefix + stamp + ' |  ' + line
+      print stamp + '|  ' + line
   if ( with_trailer != 0 ):
-    print logPrefix + stamp + ' ' + logTrailer
+    print stamp + logTrailer
   sys.stdout.flush()
 # =============================================================================
 def error(msg, with_header=0, with_trailer=0, timestamp=0):

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.25 2007-04-25 17:11:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.26 2007-06-21 12:20:15 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.25 2007-04-25 17:11:54 frankb Exp $
+// $Id: DataPoint.cpp,v 1.26 2007-06-21 12:20:15 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -230,6 +230,7 @@ DataPoint::DataPoint(const DataPoint& c)
 
 // Standard destructor
 DataPoint::~DataPoint()   {
+  // std::cout << "Destructed datapoint:" << m_name << std::endl;
   if ( m_val ) delete m_val;
 }
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.7 2007-06-21 12:20:15 frankm Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
+// $Id: DeviceIO.cpp,v 1.7 2007-06-21 12:20:15 frankm Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -76,14 +76,25 @@ bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
   if ( !m_context )  {
     pvss_val_list_create(m_context);
   }
+  // std::cout << "Writing to " << p.size() << " datapoints." << std::endl;
   for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)  {
-    const Value* val = (*i).second->value();
-    if ( !val )  {
-      throw std::runtime_error("All datapoints must be set to perform a write action. "
-        " Missing is:"+(*i).second->name());
+    if ( (*i).second ) {
+      const Value* val = (*i).second->value();
+      // std::cout << "--->" << (*i).second->name();
+      // if ( val ) std::cout << " Typ:" << val->type();
+      // std::cout << std::endl;
+      if ( !val )  {
+	std::string err = "All datapoints must be set to perform a write action. ";
+	err +=  " Missing is:"+(*i).second->name();
+	std::cout << err << std::endl;
+	throw std::runtime_error(err);
+      }
+      (*i).second->setFlag(1,2);
+      setGenWriteIO(m_context,listCtxt,(*i).first,val);
     }
-    (*i).second->setFlag(1,2);
-    setGenWriteIO(m_context,listCtxt,(*i).first,val);
+    else {
+      std::cout << "Invalid datapoint in transaction!!!!!" << std::endl;
+    }
   }
   pvss_exec_dpset(m_context,a,keep_list);
   return true;
@@ -101,6 +112,16 @@ DeviceIO::DeviceIO(ControlsManager* mgr, const Write& ) : m_manager(mgr)  {
 
 /// Standard destructor
 DeviceIO::~DeviceIO()   {
+}
+
+/// Access to copy of datapoints
+std::vector<DataPoint*> DeviceIO::pointVector() const {
+  std::vector<DataPoint*> v;
+  const DataPoints& p = points();
+  for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)  {
+    v.push_back((*i).second);
+  }
+  return v;
 }
 
 /// Change Device IO to writing mode
@@ -160,6 +181,8 @@ void DeviceIO::clear()   {
 void DeviceIO::i_add(const DpID& id, DataPoint& dp) {
   if ( m_devIO->context() ) m_devIO->dropList();
   m_points.insert(std::make_pair(id,&dp));
+  // std::cout << (void*)this << ": DeviceIO: Add datapoint[" 
+  //           << m_points.size() << "]:" << dp.name() << std::endl;
   dp.setFlag(1,1);
 }
 
