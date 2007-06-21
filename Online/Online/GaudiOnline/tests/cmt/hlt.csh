@@ -25,6 +25,8 @@ $MINITERM MBMInit@${HOST} -e "setenv UTGID MEPInit   ; $gaudi_exe -main=$OPTS/ME
 # $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
 $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff   ; $gaudi_exe -main=$OPTS/MBMinit.opts -opt=$OPTS/Daemon.opts " &
 #
+$MINITERM TanServer@${HOST} -e "setenv UTGID TANServer; $test_exe tan_nameserver -a -tcp -d" &
+#
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
 $WIDETERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog; $gaudi_exe2 -opts=$OPTS/ErrorLogger.opts -main=$OPTS/Remap.opts " &
