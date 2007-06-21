@@ -223,6 +223,7 @@ DisplayState UpiDialogMenu::state()  const  {
 }
 
 DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem* p)    {
+  char* c = 0;
   upic_set_param (p->buffer(),
     1,
     p->format().c_str(),
@@ -232,12 +233,13 @@ DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem* p)    {
     p->list(),
     p->length(),
     p->useList());
-  p->setID((ClientData)cmd);
+  p->setID(c+cmd);
   if ( m_id != 0 ) upic_add_param_line(cmd,p->text().c_str(),"");
   return DIALOG_SUCCESS;
 }
 
 DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem** p)  {
+  char* c = 0;
   std::string text;
   for ( int i = 0; p[i] != NULL; i++ )  {
     upic_set_param (p[i]->buffer(),
@@ -250,7 +252,7 @@ DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem** p)  {
       p[i]->length(),
       p[i]->useList());
     text += p[i]->text();
-    p[i]->setID((ClientData)cmd);
+    p[i]->setID(c+cmd);
   }
   if ( m_id != 0 ) upic_add_param_line(cmd,text.c_str(),"");
   return DIALOG_SUCCESS;
@@ -267,7 +269,7 @@ DialogStatus UpiDialogMenu::replace (DialogItem* p)  {
     p->length(),
     p->useList());
   if ( m_id != 0 ) 
-    upic_replace_param_line(m_id,(int)p->id(),p->text().c_str(),"");
+    upic_replace_param_line(m_id,(long)p->id(),p->text().c_str(),"");
   return DIALOG_SUCCESS;
 }
 
@@ -286,14 +288,15 @@ DialogStatus UpiDialogMenu::replace (DialogItem** p)  {
     text += p[i]->text();
   }
   if ( m_id != 0 )
-    upic_replace_param_line(m_id,(int)p[0]->id(),text.c_str(), "");
+    upic_replace_param_line((int)m_id,(long)p[0]->id(),text.c_str(), "");
   return DIALOG_SUCCESS;
 }
 
 DialogStatus UpiDialogMenu::addButtonLine (int cmd,DialogItem* p)   {
+  char* c = 0;
   for(int i=0; i < p->length(); i++ )
     upic_set_param (p->buffer(),i+1,p->format().c_str(),p->item(i),0,0,0,0,1);
-  p->setID((ClientData)cmd);
+  p->setID(c+cmd);
   if ( m_id != 0 ) 
     upic_add_param_line(cmd,p->text().c_str(),"");
   return DIALOG_SUCCESS;
@@ -303,7 +306,7 @@ DialogStatus UpiDialogMenu::replaceButtonLine (DialogItem* p) {
   for(int i=0; i < p->length(); i++ )
     upic_set_param (p->buffer(),i+1,p->format().c_str(),p->item(i),0,0,0,0,1);
   if ( m_id != 0 ) 
-    upic_replace_param_line(m_id,(int)p->id(),p->text().c_str(),"");
+    upic_replace_param_line((int)m_id,(long)p->id(),p->text().c_str(),"");
   return DIALOG_SUCCESS;
 }
 

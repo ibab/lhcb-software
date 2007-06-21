@@ -21,37 +21,37 @@ branches cmt doc
 #use RunDatabase       v1r2     Online
  use UPI               v1r4     Online
  use Viewer            v1r3     Online
- use XMLRPC            v1r6     Online
+### use XMLRPC            v1r6     Online
+# New stuff:
+ use Presenter         v1r0     Online
 
 # Everything that follows is a hack to allow a partial build on slc4-amd64
- macro onlinewriter_use "Writer v1r1 Online" \
-             slc4-amd64 ""
- use $(onlinewriter_use)
- macro onlinetasks_use "OnlineTasks v1r4 Online" \
-             slc4-amd64 ""
- use $(onlinetasks_use)
- macro gaudionline_use "GaudiOnline v2r7 Online" \
-             slc4-amd64 ""
- use $(gaudionline_use)
- macro gauchojob_use "GauchoJob v3r1 Online" \
-             slc4-amd64 ""
- use $(gauchojob_use)
- macro gaucho_use "Gaucho v5r4 Online" \
-             slc4-amd64 ""
- use $(gaucho_use)
- macro examplegaucho_use "ExampleGaucho v2r3 Online" \
-             slc4-amd64 ""
- use $(examplegaucho_use)
- macro mbmdump_use "MBMDump v1r3 Online" \
-             slc4-amd64 ""
- use $(mbmdump_use)
- macro gaudiupi_use "GaudiUPI v1r3 Online" \
-             slc4-amd64 ""
- use $(gaudiupi_use)
- macro saver_use "Saver v1r2 Online" \
-             slc4-amd64 ""
- use $(saver_use)
- macro adder_use "Adder v4r2 Online" \
-             slc4-amd64 ""
- use $(adder_use)
- 
+macro onlinewriter_use "Writer v1r1 Online"
+use $(onlinewriter_use)
+
+macro onlinetasks_use "OnlineTasks v1r4 Online"
+use $(onlinetasks_use)
+
+macro gaudionline_use "GaudiOnline v2r7 Online"
+use $(gaudionline_use)
+
+macro gauchojob_use "GauchoJob v3r1 Online"
+use $(gauchojob_use)
+
+macro gaucho_use "Gaucho v5r4 Online"
+use $(gaucho_use)
+
+macro examplegaucho_use "ExampleGaucho v2r3 Online"
+use $(examplegaucho_use)
+
+macro mbmdump_use "MBMDump v1r3 Online"
+use $(mbmdump_use)
+
+macro gaudiupi_use "GaudiUPI v1r3 Online"
+use $(gaudiupi_use)
+
+macro saver_use "Saver v1r2 Online"
+use $(saver_use)
+
+macro adder_use "Adder v4r2 Online"
+use $(adder_use)

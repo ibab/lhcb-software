@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <unistd.h>
 #include <pthread.h>
 #include <netinet/in.h>
 #include <sys/socket.h>

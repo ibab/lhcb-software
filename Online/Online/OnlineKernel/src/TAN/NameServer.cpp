@@ -458,9 +458,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       chan->_unqueueIO (m_port);
     }
     else  {
-      TanMessage& m = ent->_Message();
-      switch ( ntohl(reply.function()) )    
-      {
+      switch( ntohl(reply.function()) ) {
       case TanMessage::DEALLOCATE:
         // No task dead message! chan->recv(&reply, 1);
         chan->_unqueueIO (m_port);

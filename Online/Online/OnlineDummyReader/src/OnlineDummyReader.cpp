@@ -76,8 +76,8 @@ OnlineDummyReader::analyze(RawEvent * evt)
     *m_log << MSG::INFO << b.size() << " banks of type: " << rawtypstr[i] << endmsg;
     for (unsigned int k = 0; k < b.size(); ++k) {
       const RawBank* r = b[k];
-      int type = r->type();
-      int src  = r->sourceID();
+      //int type = r->type();
+      //int src  = r->sourceID();
       int len  = r->size();
       const unsigned char *data = (const unsigned char *) r->data();
       *m_log << MSG::DEBUG;;

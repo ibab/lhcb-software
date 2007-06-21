@@ -125,7 +125,6 @@ int NET::recvAction (void* param)    {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode netentry_t::setSockopts()  {
-  static int cnt = 0;
   int on = 1;
   struct linger Linger;
   Linger.l_onoff = 1;

@@ -20,13 +20,14 @@ static char My_name[80];
 static char Server_name[80];
 #endif
 
-static int  Lun_scr = 0;
-static int  Lun_kbd = 0;
+static FILE* Lun_scr = 0;
+static FILE* Lun_kbd = 0;
+static inline Page* getPage(Menu* m) {  return m ? m->page.cur : 0;  }
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 #ifdef SCREEN
-int upic_mouse_handler (int window, int display, size_t row, size_t col);
+int upic_mouse_handler (int window, void* display, size_t row, size_t col);
 #endif
 //---------------------------------------------------------------------------
  
@@ -34,16 +35,14 @@ int upic_mouse_handler (int window, int display, size_t row, size_t col);
 int upic_set_cursor (int menu_id, int item_id, int param_id)  {
   return (upic_set_cursor_and_mark (menu_id, item_id, param_id, 1));
 }
-
-
 //---------------------------------------------------------------------------
 int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) {
-   Menu* m;
-   Item* i;
-   Param* p;
+  Menu* m;
+  Item* i;
+  Param* p;
   int row;
   Page* d;
-
+  
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
   if (item_id)  {
     if (!(d = m->page.first)) return UPI_SS_INVMENU;
@@ -53,15 +52,13 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) 
   }
   else  {
     d = m->page.cur;
-    if (!d)
-    {
+    if (!d)    {
       d = m->page.first;
       m->page.cur = d;
     }
     if (!d) return UPI_SS_INVCOMMAND;
     i = d->item.cur;
-    if (!i)
-    {
+    if (!i)    {
       i = d->item.first;
       d->item.cur = i;
       d->cur_line = 1;
@@ -72,33 +69,25 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) 
 
   p = 0;
   if (i->type == PARAM)  {
-    if (param_id)
-    {
+    if (param_id)    {
       if (!(p = (Param*) upic_find_param(i->param.first, param_id)))
       return UPI_SS_INVPARAM;
     }
-    else
-    {
+    else    {
       p = i->param.cur;
     }
   }
 
 #ifdef SCREEN
    Menu* cur_menu;
-  if ((cur_menu = Sys.menu.cur) && !m->from.menu && cur_menu != m && mark)
-  {
+  if ((cur_menu = Sys.menu.cur) && !m->from.menu && cur_menu != m && mark)  {
     m->from.last = cur_menu->id;
   }
-  if (Sys.menu.cur != m ||
-      Sys.item.cur != i ||
-      Sys.param.cur != p)
-  {
+  if (Sys.menu.cur != m || Sys.item.cur != i || Sys.param.cur != p)  {
     upic_draw_cursor (OFF);
     upic_wakeup();
   }
-
   if (i->type == PARAM) i->param.cur = p;
-  
   upic_move_cursor (m, d, i, row);
   upic_draw_cursor (ON);
 #else
@@ -108,19 +97,19 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) 
 }
 
 //---------------------------------------------------------------------------
-int upic_save_screen ( int *kbd, int *scr)    {
+int upic_save_screen (FILE **kbd,FILE **scr)    {
 #ifdef SCREEN
   upic_end_update();
   upic_disable_ast();
   scrc_cursor_on (Sys.pb);
   scrc_save_screen(Sys.pb);
-  Lun_kbd = (int) stdin;
-  Lun_scr = (int) stdout;
+  Lun_kbd = stdin;
+  Lun_scr = stdout;
 #else
   upir_save_screen ();
 /*  upic_net_get_mbx_names (Server_name, My_name); */
-  Lun_kbd = (int)fopen (My_name, "r");
-  Lun_scr = (int)fopen (Server_name, "w");
+  Lun_kbd = ::fopen (My_name, "r");
+  Lun_scr = ::fopen (Server_name, "w");
 #endif
   if (kbd) *kbd = Lun_kbd;
   if (scr) *scr = Lun_scr;
@@ -129,25 +118,23 @@ int upic_save_screen ( int *kbd, int *scr)    {
 }
 
 //---------------------------------------------------------------------------
-int upic_restore_screen ()
-//---------------------------------------------------------------------------
-{
+int upic_restore_screen () {
 #ifdef SCREEN
   scrc_cursor_off (Sys.pb);
   scrc_restore_screen(Sys.pb);
   upic_enable_ast();
 #else
-  if (Lun_kbd) fclose((FILE*)Lun_kbd);
-  if (Lun_scr) fclose((FILE*)Lun_scr);
+  if (Lun_kbd) ::fclose(Lun_kbd);
+  if (Lun_scr) ::fclose(Lun_scr);
+  Lun_kbd = 0;
+  Lun_scr = 0;
   upir_restore_screen ();
 #endif
   return (UPI_SS_NORMAL);
 }
 
 //---------------------------------------------------------------------------
-int upic_begin_update ()
-//---------------------------------------------------------------------------
-{
+int upic_begin_update ()  {
 #ifdef SCREEN
   scrc_begin_pasteboard_update(Sys.pb);
 #else
@@ -216,7 +203,7 @@ void upic_broadcast_handler (const char* message)   {
 }
 
 //---------------------------------------------------------------------------
-int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
+int upic_mouse_handler (Window* window, void* d, size_t row, size_t col)
 //---------------------------------------------------------------------------
 /*  window is the window where the mouse click has been detected.             */
 /*         (may be 0).                                                        */
@@ -315,7 +302,6 @@ void upic_init_screen ()    {
 void upic_erase_screen () {
   scrc_delete_pasteboard (Sys.pb);
 }
-
 //---------------------------------------------------------------------------
 int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
   Sys.menu.cur = m;  
@@ -327,7 +313,6 @@ int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
     d = Page_address (i->father);    
   }
   if (m->page.cur != d) m->page.cur = d;
-
   Sys.item.cur = i;
   Sys.param.cur = i->param.cur;
   d->item.cur  = i;
@@ -337,10 +322,9 @@ int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
 
 //---------------------------------------------------------------------------
 int upic_draw_cursor (FLAG mode)    {
-   Menu* m;
-   Page* d;
-  int row, col;
-  int attr;
+  Menu* m;
+  Page* d;
+  int row, col, attr;
 
   Item* i = (Item*) 0;  
   scrc_begin_pasteboard_update (Sys.pb);
@@ -393,7 +377,6 @@ int upic_draw_cursor (FLAG mode)    {
   scrc_end_pasteboard_update (Sys.pb);
   return UPI_SS_NORMAL;
 }
-
 //---------------------------------------------------------------------------
 int upic_move_up (Menu* m)    {
   Item* i;
@@ -404,7 +387,6 @@ int upic_move_up (Menu* m)    {
   d = Page_address(i->father);
   return (upic_move_cursor (m, d, i, line));
 }
-
 //---------------------------------------------------------------------------
 int upic_move_down (Menu* m)    {
   Item* i;
@@ -415,11 +397,9 @@ int upic_move_down (Menu* m)    {
   d = Page_address(i->father);  
   return (upic_move_cursor (m, d, i, line));
 }
-
 //---------------------------------------------------------------------------
 int upic_move_left (Menu* m)    {
-  if (!m) return (0);
-  Page* d = m->page.cur;
+  Page* d = getPage(m);
   if (!d) return 0;
   Item* i = d->item.cur;
   
@@ -464,11 +444,9 @@ int upic_move_left (Menu* m)    {
   }
   return 0;
 }
-
 //---------------------------------------------------------------------------
 int upic_move_right (Menu* m)   {
-  if (!m) return (0);
-  Page* d = m->page.cur;
+  Page* d = getPage(m);
   if (!d) return 0;
   
   Item* i = d->item.cur;  
@@ -512,25 +490,22 @@ int upic_move_right (Menu* m)   {
   }
   return UPI_SS_NORMAL;
 }
-
 //---------------------------------------------------------------------------
 int upic_page_up (Menu* m)    {
-  if (!m) return 0;
-  Page* d = m->page.cur;
-  if (!d) return 0;  
-  upic_move_cursor (m, d, d->item.first, 1);
-  return upic_move_up (m);
+  Page* d = getPage(m);
+  if (d)  {
+    upic_move_cursor (m, d, d->item.first, 1);
+    return upic_move_up (m);
+  }
+  return 0;
 }
-
 //---------------------------------------------------------------------------
 int upic_page_down (Menu* m)    {
-  if (!m) return 0;
-  Page* d = m->page.cur;
+  Page* d = getPage(m);
   if (!d) return 0;
   upic_move_cursor (m, d, d->item.last, d->lines);
   return (upic_move_down (m));
 }
-
 //---------------------------------------------------------------------------
 int upic_go_backward (Menu* m)  {
   if (m->from.menu && m->from.item)  {

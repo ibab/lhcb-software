@@ -238,7 +238,7 @@ struct PAGE
   int     row, col;
 };
 
-#define Page_address(aaa) (Page *) ((int)aaa-sizeof(struct PAGE_HEADER))
+#define Page_address(aaa) (Page *) ((char*)aaa-sizeof(struct PAGE_HEADER))
 
 struct MENU {
   Menu     Link_items;

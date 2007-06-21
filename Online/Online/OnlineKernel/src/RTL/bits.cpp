@@ -240,14 +240,15 @@ void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
     printf("\n");
     for(j=0, n=0; j < ncols; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%c",((n+1))%10 == 0 ? (n+1)/10+'0' : ' ');
+	char c = (char)((n+1))%10 == 0 ? (n+1)/10+'0' : ' ';
+        printf("%c",c);
       }
       if ( j < (ncols-1) ) printf (" ");
     }
     printf("\n");
     for(j=0, n=0; j < 4; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%d",(n+1)%10);
+        printf("%ld",(n+1)%10);
       }
       if ( j < (ncols-1) ) printf (" ");
     }

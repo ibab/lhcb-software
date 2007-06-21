@@ -4,10 +4,11 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
 #include <sys/poll.h>
-#include <errno.h>
 #include <sys/signal.h>
 
+#include <cerrno>
 #include <stdexcept>
 
 #include "GaudiKernel/MsgStream.h"

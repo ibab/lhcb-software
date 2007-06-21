@@ -1,6 +1,6 @@
 #ifndef __UPI_PROTO_H
 #define __UPI_PROTO_H
-
+#include <cstdio>
 /* 
         upi_proto.h
          Created           :  2-JAN-1992 by Christian Arnault
@@ -315,7 +315,7 @@ void upir_declare_callback (int,int);
 
 int upic_set_cursor (int,int,int);
 int upic_set_cursor_and_mark (int,int,int,int);
-int upic_save_screen (int*,int*);
+int upic_save_screen (FILE**,FILE**);
 int upic_restore_screen (void);
 int upic_begin_update (void);
 int upic_end_update (void);

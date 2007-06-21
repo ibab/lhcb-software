@@ -77,12 +77,13 @@ TanInterface& TanInterface::instance()   {
 // ----------------------------------------------------------------------------
 TanInterface::TanInterface() : m_channel(0) {
   char* dot;
+  hostent* h = 0;
   const char* tan_host = ::getenv("TAN_NODE");
   int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof (m_pcHostName));
   m_portAllocated = 0;
   if ( status < 0 )                                                  goto Error;
   if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
-  hostent* h = hostByName(m_pcHostName);
+  h = hostByName(m_pcHostName);
   if ( h == 0 )                                                      goto Error;
   dot  = strchr(m_pcHostName,'.');
   // Do not truncate host names in internet format like 192.168.xxx.yyy

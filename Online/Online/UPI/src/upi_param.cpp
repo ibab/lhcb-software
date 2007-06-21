@@ -152,69 +152,62 @@ int upic_set_param (const void *var, int id, const char *format, ...) {
   p->buf_pos = 0;
   p->list_pos = 0;
 
-  switch (p->type)
-  {
-  	case ASC_FMT :
-      {
-        char** q;
-        char** add;
-        int i;
-    
-        p->def.c = (char*) list_malloc (width + 1);
-        p->val.c = (char*) list_malloc (width + 1);
-        sprintf (p->def.c, p->format, def.c);
-        sprintf (p->val.c, p->format, def.c);
-    
-        q = (char**) list_malloc (list_size * sizeof(char*));
-        p->list = (int*) q;
-        add = (char**) list;
-        for (i=0; i<list_size; i++, q++, add++)
-        {
-          *q = (char*) list_malloc (strlen(*add)+1);
-          strcpy (*q, *add);
-        }
+  switch (p->type)    {
+  case ASC_FMT:    
+    {
+      char **q, **add;
+      int i;
+      
+      p->def.c = (char*) list_malloc (width + 1);
+      p->val.c = (char*) list_malloc (width + 1);
+      sprintf (p->def.c, p->format, def.c);
+      sprintf (p->val.c, p->format, def.c);
+      
+      q = (char**) list_malloc (list_size * sizeof(char*));
+      p->list = (int*) q;
+      add = (char**) list;
+      for (i=0; i<list_size; ++i, ++q, ++add)   {
+	*q = (char*) list_malloc (strlen(*add)+1);
+	strcpy (*q, *add);
       }
-  	  break;
-    case REAL_FMT :
-      {
-        double* q;
-        double* add;
-        int i;
-    
-        p->def.d = def.d;
-        p->val.d = def.d;
-        p->min.d = min.d;
-        p->max.d = max.d;
-
-        q = (double*) list_malloc (list_size * sizeof(double));
-        p->list = (int*) q;
-        add = (double*) list;
-        for (i=0; i<list_size; i++, q++, add++)
-          *q = *add;
-      }
-  	  break;
-    default :
-      {
-        int* q;
-        int* add;
-        int i;
-    
-        p->def.i = def.i;
-        p->val.i = def.i;
-        p->min.i = min.i;
-        p->max.i = max.i;
-
-        q = (int*) list_malloc (list_size * sizeof(int));
-        p->list = (int*) q;
-        add = (int*) list;
-        for (i=0; i<list_size; i++, q++, add++)
-          *q = *add;
-      }
-  	  break;
+    }
+    break;
+  case REAL_FMT:
+    {
+      double *q, *add;
+      int i;
+      p->def.d = def.d;
+      p->val.d = def.d;
+      p->min.d = min.d;
+      p->max.d = max.d;
+      q = (double*) list_malloc (list_size * sizeof(double));
+      p->list = (int*) q;
+      add = (double*) list;
+      for (i=0; i<list_size; i++, q++, add++)
+	*q = *add;
+    }
+    break;
+  default:
+    {
+      int* q;
+      int* add;
+      int i;
+      
+      p->def.i = def.i;
+      p->val.i = def.i;
+      p->min.i = min.i;
+      p->max.i = max.i;
+      
+      q = (int*) list_malloc (list_size * sizeof(int));
+      p->list = (int*) q;
+      add = (int*) list;
+      for (i=0; i<list_size; i++, q++, add++)
+	*q = *add;
+    }
+    break;
   }
   p->list_size   = list_size;
   p->flag        = flag;
-
   return (UPI_SS_NORMAL);
 }
 
@@ -265,91 +258,78 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
 
   switch (p->type)
   {
-  	case ASC_FMT :
-      {
-        char** q;
-        char** add;
-        int i;
-    
-        if (def.c)
-        {
+  case ASC_FMT :
+    {
+      char** q;
+      char** add;
+      int i;
+      
+      if (def.c)  {
           sprintf (p->def.c, p->format, def.c);
           sprintf (p->val.c, p->format, def.c);
         }
-        if (list)
-        {
-          q = (char **)p->list;
-          for (i=0; i<p->list_size; i++, q++)
-          {
-            if (*q) free (*q);
-          }
-          if ((q = (char **)p->list)) free(q);
+      if (list)   {
+	q = (char **)p->list;
+	for (i=0; i<p->list_size; i++, q++)  {
+	  if (*q) free (*q);
+	}
+	if ((q = (char **)p->list)) free(q);
+	
+	q = (char**) list_malloc (list_size * sizeof(char*));
+	p->list = (int*) q;
+	add = (char**) list;
+	for (i=0; i<list_size; i++, q++, add++)  {
+	  *q = (char*) list_malloc (strlen(*add)+1);
+	  strcpy (*q, *add);
+	}
+      }
+    }
+    break;
+  case REAL_FMT :
+    {
+      double* q;
+      double* add;
+      int i;
       
-          q = (char**) list_malloc (list_size * sizeof(char*));
-          p->list = (int*) q;
-          add = (char**) list;
-          for (i=0; i<list_size; i++, q++, add++)
-          {
-            *q = (char*) list_malloc (strlen(*add)+1);
-            strcpy (*q, *add);
-          }
-        }
+      if (def.d) {
+	p->def.d = def.d;
+	p->val.d = def.d;
       }
-  	  break;
-    case REAL_FMT :
-      {
-        double* q;
-        double* add;
-        int i;
-    
-        if (def.d)
-        {
-          p->def.d = def.d;
-          p->val.d = def.d;
-        }
-        if (min.d) p->min.d = min.d;
-        if (max.d) p->max.d = max.d;
-
-        if (list)
-        {
-          if ((q = (double *)p->list)) free (q);
-
-          q = (double*) list_malloc (list_size * sizeof(double));
-          p->list = (int*) q;
-          add = (double*) list;
-          for (i=0; i<list_size; i++, q++, add++)
-          {
-            *q = *add;
-          }
-        }
+      if (min.d) p->min.d = min.d;
+      if (max.d) p->max.d = max.d;
+      
+      if (list)   {
+	if ((q = (double *)p->list)) free (q);
+	
+	q = (double*) list_malloc (list_size * sizeof(double));
+	p->list = (int*) q;
+	add = (double*) list;
+	for (i=0; i<list_size; i++, q++, add++)
+	  *q = *add;
       }
-  	  break;
-    default:
-      {
-        int* q;
-        int* add;
-        int i;
-    
-        if (def.i)
-        {
-          p->def.i = def.i;
-          p->val.i = def.i;
-        }
-        if (min.i) p->min.i = min.i;
-        if (max.i) p->max.i = max.i;
-
-        if (list)
-        {
-          if ((q = p->list)) free (q);
-
-          q = (int*) list_malloc (list_size * sizeof(int));
-          p->list = (int*) q;
-          add = (int*) list;
-          for (i=0; i<list_size; i++, q++, add++)
-            *q = *add;
-        }
+    }
+    break;
+  default:
+    {
+      int i, *q, *add;
+      if (def.i)   {
+	p->def.i = def.i;
+	p->val.i = def.i;
       }
-  	  break;
+      if (min.i) p->min.i = min.i;
+      if (max.i) p->max.i = max.i;
+      
+      if (list)  {
+	if ((q = p->list)) free (q);
+	
+	q = (int*) list_malloc (list_size * sizeof(int));
+	p->list = (int*) q;
+	add = (int*) list;
+	for (i=0; i<list_size; i++, q++, add++)
+	  *q = *add;
+      }
+    }
+    break;
   }
   p->list_size   = list_size;
   p->flag        = flag;
@@ -423,8 +403,7 @@ int upic_refresh_param_line (int page, int item_id) {
   Page* d = m->page.first;
   if (!d || !(i = upic_find_item_row (d->item.first, item_id, &row)))
     return UPI_SS_INVCOMMAND;
-  if (i->type == PARAM && i->id != -1)
-  {
+  if (i->type == PARAM && i->id != -1)  {
     if (Sys.item.cur == i) upic_wakeup();
     upic_refresh_params_in_line (i->param.first);
 #ifdef SCREEN
@@ -440,9 +419,8 @@ int upic_refresh_param_line (int page, int item_id) {
 
 //---------------------------------------------------------------------------
 Param* upic_find_param (Param* first, int id)   {
-  for (; first; first = first->next)  {
+  for (; first; first = first->next)
     if (first->id == id) break;
-  }
   return first;
 }
 
@@ -458,16 +436,17 @@ void upic_drop_params (Param* p)  {
 
 //---------------------------------------------------------------------------
 void upic_drop_param (Param* p)   {
-  free (p->buf);
+  ::free (p->buf);
   int* q = p->list;
   if (p->type == ASC_FMT)  {
+    char** qc = (char**)p->list;
     free (p->def.c);
     free (p->val.c);
-    for (int i=0; i<p->list_size; i++, q++)    {
-      if (*q) free ( (void*) *q);
+    for (int i=0; i<p->list_size; ++i, ++qc)    {
+      if (*qc) ::free(*qc);
     }
   }
-  if ((q = p->list)) free (q);
+  if ((q = p->list)) ::free(q);
   list_remove_entry (p);
 }
 
@@ -480,35 +459,32 @@ void upic_refresh_params_in_line (Param* first) {
 //---------------------------------------------------------------------------
 void upic_refresh_param (Param* p)    {
   switch (p->type)  {
-  	case ASC_FMT :
-      if (p->fortran)  {
-        char* c = p->val.c;
-        strncpy (c, (char *)p->var, p->size);
-        c[p->size] = 0;
-        c[upic_non_blanks(c)] = 0;
-      }
-      else strcpy (p->val.c, (char *)p->var);
-      strcpy (p->def.c, p->val.c);
-      break;
-    case REAL_FMT :
-      p->def.d = *((double*) p->var);
-      p->val.d = p->def.d;
-      break;
-    default :
-      p->def.i = *(p->var);
-      p->val.i = p->def.i;
-      break;
+  case ASC_FMT :
+    if (p->fortran)  {
+      char* c = p->val.c;
+      strncpy (c, (char *)p->var, p->size);
+      c[p->size] = 0;
+      c[upic_non_blanks(c)] = 0;
+    }
+    else strcpy (p->val.c, (char *)p->var);
+    strcpy (p->def.c, p->val.c);
+    break;
+  case REAL_FMT :
+    p->def.d = *((double*) p->var);
+    p->val.d = p->def.d;
+    break;
+  default :
+    p->def.i = *(p->var);
+    p->val.i = p->def.i;
+    break;
   }
   upic_print_param (p, p->buf, p->val);
 }
 
 //---------------------------------------------------------------------------
 int upic_build_format (const char* format, Param* p)    {
-  char* fmt;
-  char* conv;
-  int width = 0;
-  int w2= 0;
-  char c = toupper(*format++);
+  int width = 0, w2 = 0;
+  char *fmt, *conv, c = toupper(*format++);
   if (c == '%')  {
     if (*format == '-') format++;
     c = format[upic_non_blanks(format) - 1];
@@ -595,8 +571,8 @@ void upic_install_params (Param* param, char* text)   {
   char* c = text;
   while (param)  {
     size_t n;
-    if ( (c = strstr (c, "^")) == (char*) 0) return;
-    param->pos = (int) c - (int) text + 1;
+    if ( (c=strstr(c,"^")) == 0) return;
+    param->pos = c - text + 1;
     for (n=0; (n < param->chars) && (*c == '^'); n++) c++;
     param->chars = n;
     param = param->next;

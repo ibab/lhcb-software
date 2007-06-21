@@ -3,7 +3,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
-
+#include <unistd.h>
 #include <stdexcept>
 
 #include "GaudiKernel/MsgStream.h"

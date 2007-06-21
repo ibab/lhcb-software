@@ -44,8 +44,8 @@ typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 #ifdef WIN32
 typedef __int64		longlong;
 #else
-#include <sys/types.h> 
-typedef int64_t	longlong;
+/* #include <sys/types.h>  */
+typedef long long int longlong;
 #endif
 
 #endif

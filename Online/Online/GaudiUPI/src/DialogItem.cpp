@@ -3,16 +3,19 @@
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 
+static inline ClientData _cnv(int i)  { return (ClientData)(long)i; }
+static inline ClientData _cnv(float f)  { return (ClientData)(long) *(int*)&f; }
+
 DialogItem::DialogItem (const std::string& fmt,const std::string& text,const std::string& def,const std::string& lo,const std::string& hi,bool list_only)  {
   init(fmt,text,(const ClientData)&def,(const ClientData)&lo,(const ClientData)&hi,list_only);
 }
 
 DialogItem::DialogItem (const std::string& fmt,const std::string& text,int def,int lo,int hi,bool list_only)  {
-  init(fmt,text,(const ClientData)def,(const ClientData)lo,(const ClientData)hi,list_only);
+  init(fmt,text,_cnv(def),_cnv(lo),_cnv(hi),list_only);
 }
 
 DialogItem::DialogItem (const std::string& fmt,const std::string& text,float def,float lo,float hi,bool list_only)  {
-  init(fmt,text,(const ClientData)*(int*)&def,(const ClientData)*(int*)&lo,(const ClientData)*(int*)&hi,list_only);
+  init(fmt,text,_cnv(def),_cnv(lo),_cnv(hi),list_only);
 }
 
 void DialogItem::init (const std::string& fmt,const std::string& text,const ClientData def,
@@ -127,7 +130,7 @@ ItemStatus DialogItem::setCurrent (const void* v){
     tar[len] = 0;
   }
   else if ( isInteger() )    {
-    m_def.data()->_int[0]   = (int)v;
+    m_def.data()->_int[0]   = (long)v;
   }
   else if ( isReal()   )    {
     m_def.data()->_float[0] = *(float*)v;
@@ -145,19 +148,20 @@ ClientData DialogItem::value (const DialogItemContainer* cont) const  {
     char *ptr = (char*)container->data()->_char;
     size_t siz = sizeof(display_container) - 1;
     // First do some Cleanup before actually returning the pointer
-    sscanf(m_fmt.c_str(),"%%%dd",&siz);
+    ::sscanf(m_fmt.c_str(),"%%%ldd",&siz);
     ptr[std::min(siz,strlen(ptr))] = 0;
     str_trim(ptr,ptr,&siz);
     return (ClientData)ptr;
   }
   else if ( isReal()   )  {
     unsigned int *ivalue = (unsigned int*)&container->data()->_float[0];
-    return (ClientData) *ivalue;
+    long val = *ivalue;
+    return (ClientData)val;
   }
   else if ( isInteger() )  
-    return (ClientData)container->data()->_int[0];
+    return (ClientData)(long)container->data()->_int[0];
   else
-    return (ClientData)container->data()->_int[0];
+    return (ClientData)(long)container->data()->_int[0];
 }
 
 ClientData DialogItem::buffer()  {
@@ -319,8 +323,8 @@ DialogItem& DialogItem::sort()  {
 }
 
 int DialogItem::cmpString (const void* a,const void* b)  {
-  DialogItemContainer *d1 = (DialogItemContainer*)(*(unsigned int*)a);
-  DialogItemContainer *d2 = (DialogItemContainer*)(*(unsigned int*)b);
+  DialogItemContainer *d1 = *(DialogItemContainer**)a;
+  DialogItemContainer *d2 = *(DialogItemContainer**)b;
   const char *c1 = d1->data()->_char;
   const char *c2 = d2->data()->_char;
   int value = strncmp (c1, c2, std::min(strlen(c1),strlen(c2)));
@@ -328,14 +332,14 @@ int DialogItem::cmpString (const void* a,const void* b)  {
 }
 
 int DialogItem::cmpInt (const void* a,const void* b)  {
-  DialogItemContainer *d1 = (DialogItemContainer*)(*(unsigned int*)a);
-  DialogItemContainer *d2 = (DialogItemContainer*)(*(unsigned int*)b);
+  DialogItemContainer *d1 = *(DialogItemContainer**)a;
+  DialogItemContainer *d2 = *(DialogItemContainer**)b;
   return d1->data()->_int[0] > d2->data()->_int[0];
 }
 
 int DialogItem::cmpFloat (const void* a,const void* b)  {
-  DialogItemContainer *d1 = (DialogItemContainer*)(*(unsigned int*)a);
-  DialogItemContainer *d2 = (DialogItemContainer*)(*(unsigned int*)b);
+  DialogItemContainer *d1 = *(DialogItemContainer**)a;
+  DialogItemContainer *d2 = *(DialogItemContainer**)b;
   return d1->data()->_float[0] > d2->data()->_float[0];
 }
 

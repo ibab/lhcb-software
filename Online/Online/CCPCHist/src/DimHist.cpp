@@ -46,7 +46,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
         printf("bad malloc %i\n",siz);
         return -3;
       }
-      ptr = (void*)((int)ptr +offs);
+      ptr = (void*)((char*)ptr +offs);
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       p->get(&pp->entries);
       pp->nentries = (float)p->getnents();
@@ -70,7 +70,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
         printf("bad malloc %i\n",siz);
         return -3;
       }
-      ptr = (void*)((int)ptr +offs);
+      ptr = (void*)((char*)ptr +offs);
       CCPCPHisto *ph = (CCPCPHisto*)p;
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       float *nents;
@@ -100,7 +100,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
         printf("bad malloc %i\n",siz);
         return -3;
       }
-      ptr = (void*)((int)ptr +offs);
+      ptr = (void*)((char*)ptr +offs);
       DimHistbuff2 *pp = (DimHistbuff2*)ptr;
       p->get(&pp->entries);
       dimtype *errp;
