@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.13 2007-06-09 12:46:57 musy Exp $
+// $Id: BTaggingTool.h,v 1.14 2007-06-21 10:03:17 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -19,6 +19,7 @@
 #include "ICombineTaggersTool.h" 
 #include "Kernel/ITagger.h" 
 #include "Kernel/IBTaggingTool.h" 
+#include "Kernel/IParticleDescendants.h"
 
 #include "ITaggingUtils.h"
 
@@ -58,12 +59,10 @@ private:
   bool isinTree( const LHCb::Particle*, 
                  std::vector<const LHCb::Particle*>& , double& );
 
-  LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
-
-  IDataProviderSvc* m_eventSvc;
   IGeomDispCalculator *m_Geom;
   IPhysDesktop *m_physd;
   ITaggingUtils* m_util;
+  IParticleDescendants* m_descend;
 
   ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
   ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
@@ -80,7 +79,7 @@ private:
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame;
 
-  bool m_UseVtxWithOS;
+  bool m_UseVtxOnlyWithoutOS;
 
 };
 

@@ -19,16 +19,16 @@ DECLARE_TOOL_FACTORY( BTaggingTool );
 BTaggingTool::BTaggingTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent ) :
-  GaudiTool ( type, name, parent ), m_eventSvc(0) {
+  GaudiTool ( type, name, parent ) {
 
   declareInterface<IBTaggingTool>(this);
 
   declareProperty( "CombineTaggersName",
-                   m_CombineTaggersName = "CombineTaggersNNet" );
-  declareProperty( "UseVtxChargeWithOS", m_UseVtxWithOS = false );
+                   m_CombineTaggersName = "CombineTaggersProbability" );
+  declareProperty( "UseVtxChargeWithOS", m_UseVtxOnlyWithoutOS = true );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut = 3.0 );
-  declareProperty( "thetaMin_cut", m_thetaMin = 0.012 );
+  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
+  declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
   declareProperty( "RequireTrigger",  m_RequireTrigger = false );
@@ -45,6 +45,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "OutputLocation",
                    m_outputLocation = "/Event/Phys/BTaggingTool" );
   m_util = 0;
+  m_descend =0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
 }
@@ -53,11 +54,6 @@ BTaggingTool::~BTaggingTool() {};
 //==========================================================================
 StatusCode BTaggingTool::initialize() {
 
-  StatusCode sc = service("EventDataSvc", m_eventSvc, true);
-  if( sc.isFailure() ) {
-    fatal() << " Unable to locate Event Data Service" << endreq;
-    return sc;
-  }
   m_physd = tool<IPhysDesktop> ("PhysDesktop", this);
   if(! m_physd) {
     fatal() << "Unable to retrieve PhysDesktop"<< endreq;
@@ -70,6 +66,12 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+
   m_taggerMu = tool<ITagger> ("TaggerMuonTool", this);
   if(! m_taggerMu) {
     fatal() << "Unable to retrieve TaggerMuonTool"<< endreq;
@@ -195,7 +197,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   double distphi;
   theTag.setTaggedB( AXB );
   Particle::ConstVector::const_iterator ip;
-  Particle::ConstVector axdaugh = FindDaughters( AXB ); //B daughters
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts.begin(); ip != parts.end(); ip++ ){
@@ -239,28 +241,41 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   Vertex::ConstVector allVtx;
   Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
   if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnableKaonSS) if(isBs)  
                        kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnablePionSS) if(isBd || isBu)
                        pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnableJetSame)  jetS = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
+
   if(m_EnableVertexCharge){ //S. POSS:
-    //Remove in vtags all previously built OS taggers
-    bool vetovtx = false;
-    Particle::ConstVector vtagsNoOS(0);
-    for (Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); i++){
-      if(m_EnableMuon) if(muon.type()!=0) 
-        if(muon.taggerParts().at(0).proto() == (*i)->proto()) {vetovtx=true; continue;}
-      if(m_EnableElectron) if(elec.type()!=0) 
-        if(elec.taggerParts().at(0).proto() == (*i)->proto()) {vetovtx=true; continue;}
-      if(m_EnableKaonOS) if(kaon.type()!=0)
-        if(kaon.taggerParts().at(0).proto() == (*i)->proto()) {vetovtx=true; continue;}
-      vtagsNoOS.push_back(*i);
+    //Remove in vtags all previously built OS taggers: duplicate in vtagsplusOS
+    //those parts that appear as OS taggers so that TaggerVertex can kill the tag
+    Particle::ConstVector vtagsPlusOS(0);
+    Particle::ConstVector::const_iterator i, j;
+    for ( i=vtags.begin(); i!=vtags.end(); i++ ){
+      const ProtoParticle* iproto = (*i)->proto();
+      for ( j=i+1; j!=vtags.end(); j++) if(iproto==(*j)->proto()) continue;
+      if( m_UseVtxOnlyWithoutOS ) {
+	if(muon.type()!=0) 
+	  if(muon.taggerParts().at(0).proto() == iproto ) 
+	    vtagsPlusOS.push_back(*i);
+	if(elec.type()!=0) 
+	  if(elec.taggerParts().at(0).proto() == iproto ) 
+	    vtagsPlusOS.push_back(*i);
+	if(kaon.type()!=0)
+	  if(kaon.taggerParts().at(0).proto() == iproto ) 
+	    vtagsPlusOS.push_back(*i);
+      }
+      vtagsPlusOS.push_back(*i);
     }
-    if( !vetovtx || m_UseVtxWithOS ) 
-      vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtagsNoOS);
+    vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtagsPlusOS);
   }
 
   std::vector<Tagger*> taggers;
@@ -334,27 +349,5 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
     }
   }
   return false;
-}
-//==========================================================================
-//return a vector containing all daughters of signal 
-Particle::ConstVector BTaggingTool::FindDaughters( const Particle* axp ) {
-
-  Particle::ConstVector apv, apv2, aplist;
-  apv.push_back(axp);  
-  do {
-    apv2.clear();
-    for( Particle::ConstVector::const_iterator 
-           ip=apv.begin(); ip!=apv.end(); ip++ ) {
-      Particle::ConstVector tmp = (*ip)->daughtersVector();
-      for( Particle::ConstVector::const_iterator 
-             itmp=tmp.begin(); itmp!=tmp.end(); itmp++){
-        apv2.push_back(*itmp);
-        if((*itmp)->isBasicParticle()) aplist.push_back(*itmp);
-      }
-    }
-    apv = apv2;
-  } while ( !apv2.empty() );
-   	    
-  return aplist;
 }
 //==========================================================================

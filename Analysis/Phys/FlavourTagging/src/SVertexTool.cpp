@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.8 2007-06-09 12:46:57 musy Exp $
+// $Id: SVertexTool.cpp,v 1.9 2007-06-21 10:03:17 musy Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -105,8 +105,6 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if(lcs > m_lcs_Upstream_cut) continue;
     }
     
-    debug()<<"Seed selected "<<(*ip)->particleID().pid()<<endreq;
-    
     vtags_unique.push_back(*ip);
   }
   debug() << "size of tacks for sec vtx="<<vtags_unique.size()<<endreq;
@@ -120,7 +118,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     if( iperrl > 1.0 ) continue;                                //preselection
     if( ipl/iperrl < 2.0 ) continue;                            //preselection
     if( ipl/iperrl > 100.0 ) continue;                          //preselection
-    debug() << "seed1: pt="<< (*jp)->pt()/GeV <<endreq;
+    verbose() << "seed1: pt="<< (*jp)->pt()/GeV <<endreq;
 
     //SECOND seed particle ----
     for ( kp = (jp+1) ; kp != vtags_unique.end(); kp++ ) {
@@ -135,7 +133,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if( vtx.chi2() / vtx.nDoF() > 10.0 ) continue;           //preselection
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //preselection
       double mass = 0.;
-      debug() << "    try with: pt="<< (*kp)->pt()/GeV <<endreq;
+      verbose() << "    try with: pt="<< (*kp)->pt()/GeV <<endreq;
       if((*jp)->particleID().pid()!=310 && (*kp)->particleID().pid()!=310){
         //if the couple is compatible with a Ks, drop it         //preselection
         mass = ((*jp)->momentum() + (*kp)->momentum()).M()/GeV;
@@ -143,7 +141,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
             &&  (*jp)->particleID().abspid() == 211
             &&  (*kp)->particleID().abspid() == 211
             && ((*jp)->charge()) * ((*kp)->charge())< 0){
-          debug() << "This is a Ks candidate! skip."<<endreq;
+          verbose() << "This is a Ks candidate! skip."<<endreq;
           vtags_toexclude.push_back(*jp);
           vtags_toexclude.push_back(*kp);
           continue;
@@ -156,13 +154,13 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
                  && (*kp)->particleID().abspid() == 2212) ||
                 ((*jp)->particleID().abspid()    == 2212
                  && (*kp)->particleID().abspid() ==  211) ) {
-              debug() << "This is a Lambda0 candidate! skip."<<endreq;
+              verbose() << "This is a Lambda0 candidate! skip."<<endreq;
               vtags_toexclude.push_back(*jp);
               vtags_toexclude.push_back(*kp);
               continue;
             }
       }
-      debug() << "    seed2 found: pt="<< (*kp)->pt()/GeV <<endreq;
+      verbose() << "    seed2 found: pt="<< (*kp)->pt()/GeV <<endreq;
 
       //build a likelihood that the combination comes from B ---------
       double probi1, probi2, probp1, probp2, proba, probs, probb;

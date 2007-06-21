@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.108 2007-06-09 12:46:56 musy Exp $
+! $Id: release.notes,v 1.109 2007-06-21 10:03:17 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2007-06-21 - Marco Musy
+- make use of Kernel/IParticleDescendants class 
+  instead of private method FindDaughters
+- fix in secondary vertex
+- fix in summary/summaryof 
 
 ! 2007-06-07 - Marco Musy, Stephane Poss, O. Leroy
 - Modified units (GeV and MeV) in options files and in code.
