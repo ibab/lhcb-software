@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.8 2007-06-09 12:47:19 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.9 2007-06-21 10:40:15 musy Exp $
 // local
 //#include "Kernel/StringUtils.h"
 
@@ -165,8 +165,7 @@ StatusCode BTaggingChecker::finalize(){
   if(effe_tot<0) avw_invert= 1-avw_invert;
   double utt = nsele-rtt-wtt;
   double eftot_err= sqrt((rtt*utt + utt*wtt)/nsele)/nsele;
-  double avw_invert_err= sqrt((rtt*wtt*(rtt*rtt + rtt*utt + wtt*(utt + wtt)))/
-			      ( pow(rtt + wtt,4) *(rtt + utt + wtt)));
+  double avw_invert_err= sqrt( rtt*wtt /(rtt+wtt) ) / (rtt+wtt);
 
   info()<<"---------------------------------------------------------"<<endreq;
   info()<< "Total nr of events =  "<<std::setw(5) << nsele << endreq;

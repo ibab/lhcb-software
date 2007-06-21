@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.20 2007-06-18 16:08:08 jpalac Exp $
+! $Id: release.notes,v 1.21 2007-06-21 10:40:15 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+
+! 2007-06-21 - Marco Musy
+- make use of Kernel/IParticleDescendants
+  class instead of private method FindDaughters
+
 
 !===================== FlavourTaggingChecker v2r3 2007-06-18 =================
 

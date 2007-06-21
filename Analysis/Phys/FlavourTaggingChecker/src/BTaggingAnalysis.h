@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.10 2007-06-15 16:46:20 jpalac Exp $
+// $Id: BTaggingAnalysis.h,v 1.11 2007-06-21 10:40:15 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -17,6 +17,8 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IDebugTool.h"
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IParticleDescendants.h"
+
 #include "MCInterfaces/IForcedBDecayTool.h"
 
 #include "CaloUtils/ICaloElectron.h"
@@ -50,6 +52,7 @@ class BTaggingAnalysis : public DVAlgorithm {
   ICaloElectron*  m_electron;
   IForcedBDecayTool* m_forcedBtool;
   ITaggingUtilsChecker* m_util;
+  IParticleDescendants* m_descend;
 
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
   std::vector<std::string> m_setInputData;

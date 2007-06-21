@@ -37,6 +37,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
 
   m_util = 0;
   m_vtxtool = 0;
+  m_descend = 0;
 }
 
 BTaggingAnalysis::~BTaggingAnalysis() {}; 
@@ -56,6 +57,11 @@ StatusCode BTaggingAnalysis::initialize() {
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
     fatal() << "GeomDispCalculator could not be found" << endreq;
+    return StatusCode::FAILURE;
+  }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
 
@@ -345,7 +351,7 @@ StatusCode BTaggingAnalysis::execute() {
     if(!(*ip)->particleID().hasBottom()) continue;
     nrofB++;
     AXBS = (*ip);
-    axdaugh = m_util->FindDaughters(AXBS);
+    axdaugh = m_descend->descendants(AXBS);
     axdaugh.push_back(AXBS);
     if( AXBS->particleID().hasDown() )    isBd = true;
     if( AXBS->particleID().hasStrange() ) isBs = true;
