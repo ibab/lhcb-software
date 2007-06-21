@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.4 2006-01-16 18:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.5 2007-06-21 15:55:07 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -20,22 +20,22 @@ namespace LHCb    {
   class RawEventHeader {
   public:
     /// Space for MEP_SINGLE_EVT structure
-    int m_begin;
-    int m_evID;
-    int m_mepID;
-    int m_spare[2];
+    long m_begin;
+    int  m_evID;
+    int  m_mepID;
+    int  m_spare[2];
     /// RawEventHeader data
-    int m_NumFrag;
-    int m_ErrorMask;
-    int m_NumMiss;
-    int m_MissOffset;
-    int m_offsets[1];
-    int numberOfFragments() const           {  return m_NumFrag;          }
-    int offset(int which)   const           {  return m_offsets[which];   }
+    int  m_NumFrag;
+    int  m_ErrorMask;
+    int  m_NumMiss;
+    int  m_MissOffset;
+    int  m_offsets[1];
+    int  numberOfFragments() const          {  return m_NumFrag;          }
+    int  offset(int which)   const          {  return m_offsets[which];   }
     int* offsets()                          {  return m_offsets;          }
-    int dataStart()         const           {  return m_begin;            }
-    int eventID()           const           {  return m_evID;             }
-    int mepID()             const           {  return m_mepID;            }
+    long dataStart()         const          {  return m_begin;            }
+    int  eventID()           const          {  return m_evID;             }
+    int  mepID()             const          {  return m_mepID;            }
     void setMEPID(int id)                   {  m_mepID = id;              }
     void setEventID(int id)                 {  m_evID = id;               }
     void setDataStart(int start)            {  m_begin = start;           }

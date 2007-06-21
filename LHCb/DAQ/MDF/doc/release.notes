@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-04-01 - Markus Frank
+  - Fix structure of RawEventDescriptor to match memory layout
+    of MEP_SINGLE_EVT in MEP buffer for amd64 (int->long)
+
 !======================= MDF v2r4p2 2007-04-20 ===============================
 ! 2007-04-20 - Marco Cattaneo
  - Fix doxygen warnings
