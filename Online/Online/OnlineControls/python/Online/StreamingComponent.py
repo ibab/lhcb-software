@@ -1,27 +1,35 @@
+"""
+import Online.StreamingComponent as Strm
+Strm.install('Storage')
+
+"""
+recvNodes=['storerecv01', 'storerecv02']
+strmNodes=['storestrm01', 'storestrm02']
 
 def install(name='Storage'):
-  import Online.Storage.Installer as SOI
+  import Online.Streaming.StorageInstaller as SOI
   import Online.JobOptions.Installer as JOI
-  SOI.install('Storage')
+  SOI.install(name,recvNodes,strmNodes)
   JOI.install()
 
 def uninstall(name='Storage'):
-  #import Online.Storage.Installer as SOI
+  #import Online.Streaming.StorageInstaller as SOI
   import Online.JobOptions.Installer as JOI
-  #SOI.uninstall('Storage')
+  #SOI.uninstall(name)
   JOI.uninstall()
 
 def run(name='Storage',sim=None):
   import Online.PVSS as PVSS
+  import Online.RunInfo.RunInfoCreator as RunInfoCreator
   import Online.JobOptions.JobOptionsControl as WR
-  import Online.Storage.StorageControl as StorageControl
-  import Online.Storage.Simulator as StorageSimulator
+  import Online.Streaming.StreamingControl as StreamingControl
+  import Online.Streaming.Simulator as StreamingSimulator
   mgr = PVSS.controlsMgr()
-  ctrl = StorageControl.Control(mgr,name)
+  ctrl = StreamingControl.Control(mgr,name,RunInfoCreator(mgr))
   sensor=PVSS.DeviceSensor(mgr,ctrl.point)
   sensor.addListener(ctrl)
   sensor.run(1)
-  wr = WR.StorageOptionsWriter(mgr,'JobOptions')
+  wr = WR.StreamingOptionsWriter(mgr,'JobOptions')
   wr.run()
   if sim:
     if not isinstance(sim,list):
@@ -29,7 +37,7 @@ def run(name='Storage',sim=None):
       return
     sims = []
     for slice in sim:
-      sim = StorageSimulator.Simulator(mgr,name+'_'+slice)
+      sim = StreamingSimulator.Simulator(mgr,name+'_'+slice)
       sim.run()
       sims.append(sim)
     return (mgr,wr,ctrl,sensor,sims)
