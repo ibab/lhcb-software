@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 M. Needham
+- Correct bug in  propagation of StateVector in TrackExtrapolator
+
 !======================= TrackExtrapolators v2r12 2007-06-11 =================
 ! 2007-06-07 - Wouter Hulsbergen
 - added propagation of StateVector in TrackExtrapolator

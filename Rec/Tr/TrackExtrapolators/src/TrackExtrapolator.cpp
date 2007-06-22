@@ -59,7 +59,9 @@ StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
 StatusCode TrackExtrapolator::propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix,
 					LHCb::ParticleID pid) 
 {
-  return propagate(state.parameters(),state.z(),z,transportmatrix,pid) ;
+  StatusCode sc = propagate(state.parameters(),state.z(),z,transportmatrix,pid) ;
+  if (sc.isSuccess()) state.setZ(z);
+  return sc;
 }
 
 //=============================================================================
