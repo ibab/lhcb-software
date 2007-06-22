@@ -12,6 +12,6 @@ apply_pattern install_more_includes more=ClhepTools
 
 # =========== dependencies ====================================================
 use           CLHEP             v* LCG_Interfaces
-use           LHCbDefinitions   v* Kernel
+use           GaudiKernel       v* 
 
 # =============================================================================

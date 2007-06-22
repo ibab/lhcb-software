@@ -1,12 +1,12 @@
-// $Id: MathCore2Clhep.h,v 1.1.1.1 2005-12-13 16:40:39 jpalac Exp $
+// $Id: MathCore2Clhep.h,v 1.2 2007-06-22 16:22:13 gcorti Exp $
 #ifndef CLHEPTOOLS_MATHCORE2CLHEP_H 
 #define CLHEPTOOLS_MATHCORE2CLHEP_H 1
 
 // Include files
 // MathLib
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"

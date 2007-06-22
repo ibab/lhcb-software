@@ -7,6 +7,12 @@
 !               these aren't defined.
 !-----------------------------------------------------------------------------
 
+!============================ ClhepTools v2r1 ===============================
+! 2007-06-22 - Gloria Corti
+ - Adapt to move of definitions of Gaudi:: math types to GaudiKernel
+   . MathCore2Clhep.h - change include from Kernel/ to GaudiKernel
+   . use GaudiKernel instead of LHCbDefinitions
+
 !============================ ClhepTools v2r0 ===============================
 ! 2007-01-12 - Florence Ranjard
  - install include files on InstallArea
