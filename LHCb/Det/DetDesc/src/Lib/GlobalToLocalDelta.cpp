@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.8 2007-06-13 16:36:55 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.9 2007-06-22 12:22:36 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -17,10 +17,14 @@ const Gaudi::Transform3D localDeltaMatrix(const IDetectorElement* DE,
 const Gaudi::Transform3D localDeltaMatrix(const IGeometryInfo* GI,
                                           const Gaudi::Transform3D& toMisaligned_global) {
 
-  const Gaudi::Transform3D toLocal_total       = GI->matrix();
-  const Gaudi::Transform3D toGlobal_ideal       = GI->idealMatrixInv();
-  const Gaudi::Transform3D toMisalignedOld_local = GI->localDeltaMatrix().Inverse();
-  return toMisalignedOld_local*toLocal_total*toGlobal_ideal*toMisaligned_global;
+  const Gaudi::Transform3D T       = GI->matrixInv();
+  const Gaudi::Transform3D T_inv   = T.Inverse();
+  const Gaudi::Transform3D N_0_inv = GI->localMatrix();
+  const Gaudi::Transform3D d_0_inv = GI->localDeltaMatrix();
+  const Gaudi::Transform3D N_0     = N_0_inv.Inverse();
+  const Gaudi::Transform3D d_0     = d_0_inv.Inverse();
+
+  return d_0 * N_0 * T_inv * toMisaligned_global * T * N_0_inv;
   
 }
 
