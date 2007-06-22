@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.22 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.23 2007-06-22 14:35:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -111,8 +111,10 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
 
     // loop over energy bins
     double signal = 0;
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra 
+      = segment->emittedPhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra  
+      = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin )
     {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
@@ -152,8 +154,10 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // loop over energy bins
-      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
-      const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
+      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra 
+        = segment->signalPhotonSpectra();
+      const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra 
+        = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin )
       {
 
