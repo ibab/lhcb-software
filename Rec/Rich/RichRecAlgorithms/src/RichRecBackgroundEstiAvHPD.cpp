@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.1 2007-03-09 22:48:41 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.2 2007-06-22 13:48:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -37,6 +37,9 @@ BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& name,
 
   // Number of active pixels per PD - To be got from XML eventually
   declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611 );
+
+  // Minimum pixel background
+  declareProperty( "MinimumPixelBackground", m_minPixBkg = 0.0 );
 }
 
 // Destructor
@@ -264,10 +267,11 @@ StatusCode BackgroundEstiAvHPD::pixelBackgrounds()
 
     // background for this HPD
     const double rbckexp = (m_obsPDsignals[det])[pd] - (m_expPDsignals[det])[pd];
-    //const double rbckexp = (m_expPDbkg[det])[pd];
 
     // Save this value in the pixel
-    (*pixel)->setCurrentBackground( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
+    double bkg = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
+    if ( bkg < m_minPixBkg ) bkg = m_minPixBkg;
+    (*pixel)->setCurrentBackground( bkg );
 
     // Debug printout
     if ( msgLevel(MSG::VERBOSE) )

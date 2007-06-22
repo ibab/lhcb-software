@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.h,v 1.1 2007-03-09 22:48:41 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiAvHPD.h,v 1.2 2007-06-22 13:48:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -106,6 +106,9 @@ namespace Rich
 
       /// The deduced background in each HPD in each RICH
       RichDataMap m_expPDbkg;
+
+      /// Minimum pixel background value
+      double m_minPixBkg;
 
     };
 
