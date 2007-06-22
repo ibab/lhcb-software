@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.15 2007-06-09 10:46:02 mneedham Exp $
+// $Id: IdealStateCreator.cpp,v 1.16 2007-06-22 16:47:08 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -154,15 +154,12 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
 {
 
   if (!m_configured) initEvent();
-  
-  StateVector pVec; 
-  StatusCode sc = createStateVector(aHit,zRec,pVec);
-  if (sc.isFailure()){
-    return Warning("Failed to create state vector",StatusCode::SUCCESS);
-  }
 
-  state.setZ(pVec.z());
+  StateVector pVec;
+  createStateVector(aHit,pVec);
+                                                                                
   state.setState(pVec.parameters());
+  state.setZ(pVec.z());
   
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -172,6 +169,13 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
   cov(3,3) = m_eTy2;
   cov(4,4) = gsl_pow_2( m_eP * state.qOverP());
   state.setCovariance( cov );
+
+  // transport to the z we want
+  StatusCode sc = m_extrapolator->propagate(state,zRec );
+  if( sc.isFailure() ) {
+    warning() << "Extrapolation of True State from z = "
+              << state.z() << " to z = " << zRec << " failed!" << endreq;
+  }
 
   return sc;
 }
@@ -188,29 +192,42 @@ StatusCode IdealStateCreator::createStateVector(const MCHit* aHit,
 
   if (!m_configured) initEvent();
  
+  // createState vector
+  createStateVector(aHit,pVec);
+                                                                                
+  // extrapolate state to exact z position
+  //  TrackVector& trackVec = pVec.parameters();
+  //StatusCode sc = m_extrapolator->propagate(trackVec,pVec.z() ,zRec );
+  StatusCode sc = m_extrapolator->propagate(pVec ,zRec );
+  if( sc.isFailure() ) {
+    warning() << "Extrapolation of True State from z = "
+              << pVec.z() << " to z = " << zRec << " failed!" << endreq;
+  }
+  //  pVec.setZ(zRec);
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Creates a state at a z position,
+// from a MCHit using the entry/exit point
+//=============================================================================
+void IdealStateCreator::createStateVector(const MCHit* aHit,
+                                          StateVector& pVec ) const
+{
   // Correct tx and ty from the MCHit for the magnetic field
   double tx = aHit->dxdz();
   double ty = aHit->dydz();
   if ( m_correctSlopes ) correctSlopes( aHit, tx, ty );
   XYZVector direction(tx,ty,1.0);
-
+ 
   // determine Q/P
   const double trueQOverP = qOverP(aHit);
-  
+   
   // construct true State
   pVec = StateVector(aHit->entry(),direction,trueQOverP);
-
-  // extrapolate state to exact z position
-  TrackVector& trackVec = pVec.parameters();
-  StatusCode sc = m_extrapolator->propagate(trackVec,pVec.z() ,zRec );
-  if( sc.isFailure() ) {
-    warning() << "Extrapolation of True State from z = "
-              << pVec.z() << " to z = " << zRec << " failed!" << endreq;
-  }
-  pVec.setZ(zRec);
-
-  return StatusCode::SUCCESS;
 }
+ 
 
 //=============================================================================
 // Creates a state at the origin vertex
@@ -270,6 +287,7 @@ StatusCode IdealStateCreator::createStateVectorVertex( const MCParticle* mcParti
 
   return StatusCode::SUCCESS;
 }
+
 
 
 //=============================================================================

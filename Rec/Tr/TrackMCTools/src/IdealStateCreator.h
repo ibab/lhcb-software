@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.12 2007-06-09 10:46:02 mneedham Exp $
+// $Id: IdealStateCreator.h,v 1.13 2007-06-22 16:47:08 mneedham Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -145,6 +145,15 @@ public:
   void handle( const Incident& incident );
 
 private:
+
+  /** This method creates a state at z position from a MCHit
+  *  using the entry/exit points of the MCHit.
+  *  @return StatusCode
+  *  @param  mcHit The MCHit from which the state will be created
+  *  @param  pState The ref to the State which is created.
+  */
+  void createStateVector(const LHCb::MCHit* mcHit,
+                         LHCb::StateVector& pState ) const;
 
   void initEvent() const;
 

@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 M. Needham
+  - Transport the covariance matrix correctly
+  - Follow addition of propage method to extrapolator class
+
 !======================= TrackMCTools v2r11 2007-06-11 =======================
 ! 2007-06-09 M. Needham
  - Update IdealStateCreator:
