@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.22 2007-05-08 16:06:03 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.23 2007-06-22 13:41:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -316,7 +316,7 @@ namespace Rich
                 {
 
                   // just loop over the raw RichSmartIDs and make a pixel for each
-                  // note that the associated clusrer is not set in this mode ...
+                  // note that the associated cluster is not set in this mode ...
                   for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
                         iID != smartIDs.end(); ++iID )
                   {
