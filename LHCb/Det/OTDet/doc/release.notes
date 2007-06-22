@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.86 2007-06-13 06:48:22 cattanem Exp $
+! $Id: release.notes,v 1.87 2007-06-22 09:52:52 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-06-22 - Jan Amoraal
+ - Add container classes to dictionary
 
 !========================== OTDet v7r3 2007-06-13 =========================
 ! 2007-06-13 - Jan Amoraal
