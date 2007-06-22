@@ -5,7 +5,7 @@
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.7 2007-04-26 20:14:08 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.8 2007-06-22 13:39:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -62,6 +62,12 @@ namespace Rich
 
     /// placement operator new
     inline static void* operator new ( size_t size, void*& pObj )
+    {
+      return ::operator new ( size, pObj );
+    }
+
+    /// placement operator new
+    inline static void* operator new ( size_t size, T*& pObj )
     {
       return ::operator new ( size, pObj );
     }

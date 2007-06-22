@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.150 2007-05-30 16:01:30 jonrob Exp $
+! $Id: release.notes,v 1.151 2007-06-22 13:40:22 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-06-22 - Chris Jones
+ - Add placement new operator to BoostMemPoolAlloc.h
 
 ! 2007-05-30 - Chris Jones
  - Update number of L1 inputs from 9 to 12, to match latest firmware
