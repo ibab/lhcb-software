@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Update default tools to reject change in name for the tool 
+   Rich::Rec::PhotonSignalGaussProb
+
 !=========================== RichTools v2r13 2007-05-08 ======================
 ! 2007-05-08 - Chris Jones
  - Fix how the 'default' tool mappings are handled in RichToolRegistry

@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.15 2007-06-04 06:57:55 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.16 2007-06-22 13:38:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -62,7 +62,8 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::StatusCreator/RichStatusCreator" );
   defaultTools.push_back ( "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" );
   defaultTools.push_back ( "Rich::Rec::GeomEffPhotonTracing/RichGeomEff" );
-  defaultTools.push_back ( "Rich::Rec::PhotonSignal/RichPhotonSignal" );
+  defaultTools.push_back ( "Rich::Rec::PhotonSignalGaussProb/RichPhotonSignal" );
+  //defaultTools.push_back ( "Rich::Rec::PhotonSignalJeffreysErf/RichPhotonSignal" );
   defaultTools.push_back ( "Rich::Rec::CherenkovAngle/RichCherenkovAngle" );
   defaultTools.push_back ( "Rich::Rec::GeomTool/RichRecGeometry" );
   defaultTools.push_back ( "Rich::Rec::TabulatedRayleighScatter/RichRayleighScatter" );
