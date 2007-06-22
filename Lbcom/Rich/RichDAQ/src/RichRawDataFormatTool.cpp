@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.57 2007-05-30 16:07:17 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.58 2007-06-22 12:44:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -158,13 +158,15 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
     info() << "==========================================================================================================" << endreq
            << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
-    std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
+    std::map<Rich::DetectorType,unsigned long> totWordSize, totBanks, totHits;
     Rich::DetectorType lastrich = Rich::InvalidDetector;
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
       const Level1ID      L1ID   = (*iL1C).first.second;
       const BankVersion version  = (*iL1C).first.first;
-      const Rich::DetectorType rich       = m_richSys->richDetector( L1ID );
+      Rich::DetectorType rich;
+      try                                   { rich = m_richSys->richDetector( L1ID ); }
+      catch ( const GaudiException & expt ) { rich = Rich::InvalidDetector;           }
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
       const unsigned long words           = (*iL1C).second.second.first;
@@ -187,12 +189,18 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
     }
 
     info() << "----------------------------------------------------------------------------------------------------------" << endreq;
-    info() << " Rich1 Average     | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
-           << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
-           << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
-    info() << " Rich2 Average     | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
-           << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
-           << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
+    if ( totBanks[Rich::Rich1]>0 )
+    {
+      info() << " Rich1 Average     | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+             << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
+             << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
+    }
+    if ( totBanks[Rich::Rich2]>0 )
+    {
+      info() << " Rich2 Average     | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+             << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
+             << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
+    }
 
     info() << "==========================================================================================================" << endreq;
 
@@ -771,7 +779,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
                  << ingressWord.ingressID() << " HPD " << *iHPD << " is suppressed";
-            Warning( mess.str(), StatusCode::SUCCESS );
+            Warning( mess.str(), StatusCode::SUCCESS, 3 );
           }
 
           // Only try and decode this HPD if ODIN test was OK

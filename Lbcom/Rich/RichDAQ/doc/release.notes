@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Improvements to monitoring in RichRawdataFormatTool to handle cases when the
+   L1 board ID is not recognised.
+
 ! 2007-05-03 - Chris Jones
  - Set ingress header properly in decoded data
 
