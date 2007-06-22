@@ -122,7 +122,8 @@ ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" };
 
 // Photon signals
-//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignal/RichPhotonSignal" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignalGaussProb/RichPhotonSignal" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignalJeffreysErf/RichPhotonSignal" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
 #include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"

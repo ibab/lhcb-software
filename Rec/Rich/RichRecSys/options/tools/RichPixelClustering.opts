@@ -2,15 +2,24 @@
 // the clustering tools to use in each RICH
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/PixelCreatorClustering" };
 
-// use clustered hits                                     RICH1   RICH2 
+// Use this option to suppress the pixel clustering entirely. Useful for HLT mode where
+// clusters are not needed so do not run this to save time
+ToolSvc.Offline.RichPixelCreator.SuppressClusterFinding = false;
+
+// Use these options to disable hit clustering. In this mode each RichSmartID is made into a
+// single RichRecPixel object. Not that clustering is still performed, and the RichRecPixel
+// has its associated cluster assigned
+//                                                        RICH1   RICH2
 ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { false,  false };
 
+// Cluster finding options
+//----------------------------------------------------------------------------------------
 // RICH1 options
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = true;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MinClusterSize = 1;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MaxClusterSize = 9999;
-
 // RICH2 options
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = true;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MinClusterSize = 1;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MaxClusterSize = 9999;
+//----------------------------------------------------------------------------------------

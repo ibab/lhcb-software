@@ -4,6 +4,13 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Relax completely the max number of raw input track cut. Max cut of 400 on
+   the number of tracks used by the RICH remains.
+ - Explicitly set the min signal option to 1e-3
+ - Increase max number of iterations of quartz solving in the photon creator
+   to 3
+
 !====================== RichRecSys v3r4 2007-05-08 =====================
 ! 2007-05-08 - Chris Jones
  - Remove default options from tool settings (RichToolRegistry)

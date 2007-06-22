@@ -70,8 +70,9 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSo
 //                                                                                 Aero   C4F10  CF4
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 1,     1,     1     };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
