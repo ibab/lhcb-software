@@ -1,11 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.311 2007-06-22 09:33:40 jpalac Exp $ 
+! $Id: release.notes,v 1.312 2007-06-22 12:23:05 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 ! 2007-06-22 - Juan PALACIOS
+  - src/Lib/GlobalToLocalDelta.cpp
+    . Fix implementation of localDeltaMatrix function. Algebra was basically wrong!
   - src/Lib/GeometryInfoPlus.cpp
     . Fix calculateFullMatrices: Order of matrix multiplications was wrong.
       Was: d_0*N_0*d_1*N_1*d_2*N_2*...*d_N*N_N
