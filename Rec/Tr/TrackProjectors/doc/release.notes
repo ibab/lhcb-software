@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Edwin Bos
+ - Introduced jobOption: "UseBField". If true, then the StateTraj in the
+ - projector is made using the B from the magnetic field service. If false,
+ - then B = (0,0,0) is used, making the StateTraj behave like a LineTraj. The
+ - latter option is faster and set as default.
+
 !====================== TrackProjectors v2r12 2007-05-09 ======================
 ! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo 
  - Create MuonProjector class

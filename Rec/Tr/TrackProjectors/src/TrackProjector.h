@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.6 2006-12-15 19:11:38 graven Exp $
+// $Id: TrackProjector.h,v 1.7 2007-06-22 13:54:13 ebos Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -57,6 +57,7 @@ protected:
   double  m_errResidual;
   double  m_errMeasure;
   Gaudi::TrackProjectionMatrix m_H;
-
+  /// Create StateTraj with or without BField information.
+  bool m_useBField;
 };
 #endif // TRACKPROJECTORS_TRACKPROJECTOR_H
