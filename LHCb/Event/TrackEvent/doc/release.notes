@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Edwin Bos
+ - Removed kappa. Consistently use c_light in extrapolators and StateTraj.
+
 !======================= TrackEvent v4r4 2007-06-14 ==========================
 ! 2007-06-14 - Edwin Bos
  - Replaced the wrong correction by the correct value for kappa.
