@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.19 2006-10-10 16:36:47 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.20 2007-06-22 09:33:12 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -286,19 +286,19 @@ StatusCode GeometryInfoPlus::combineMatrices(matrix_iterator deltaFirst,
                                              matrix_iterator pvEnd) 
 {
   if ( !idealMatrixLoaded() ) calculateIdealMatrix(pvFirst, pvEnd);
-  return calculateFullMatrices(deltaFirst, deltaEnd, pvFirst);
+  return calculateFullMatrices(pvFirst, pvEnd, deltaFirst);
 }
 //=============================================================================
-StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
-                                                   matrix_iterator deltaEnd,
-                                                   matrix_iterator pvFirst) 
+StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator pvFirst,
+                                                   matrix_iterator pvEnd,
+                                                   matrix_iterator deltaFirst) 
 {
 
   Gaudi::Transform3D init;
   m_matrix = 
-    new Gaudi::Transform3D( std::inner_product(deltaFirst,
-                                           deltaEnd,
-                                           pvFirst,
+    new Gaudi::Transform3D( std::inner_product(pvFirst,
+                                           pvEnd,
+                                           deltaFirst,
                                            init,
                                            std::multiplies<Gaudi::Transform3D>(),
                                            std::multiplies<Gaudi::Transform3D>()
