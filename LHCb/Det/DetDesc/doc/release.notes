@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.310 2007-06-14 08:21:38 marcocle Exp $ 
+! $Id: release.notes,v 1.311 2007-06-22 09:33:40 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-22 - Juan PALACIOS
+  - src/Lib/GeometryInfoPlus.cpp
+    . Fix calculateFullMatrices: Order of matrix multiplications was wrong.
+      Was: d_0*N_0*d_1*N_1*d_2*N_2*...*d_N*N_N
+      Is:  N_0*d_0*N_1*d_1*N_2*d_2*...*N_N*d_N
+      where d_i and N_i are the misalign->align and global->parent matrices 
+      at level i.
 
 !====================== DetDesc v17r4 2007-06-14 ==============================
 ! 2007-06-14 - Marco Clemencic
