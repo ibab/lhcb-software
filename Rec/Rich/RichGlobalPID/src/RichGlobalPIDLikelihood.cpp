@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.3 2007-03-20 11:06:25 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.4 2007-06-22 13:45:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -41,11 +41,7 @@ Likelihood::Likelihood( const std::string& name,
   declareProperty( "MaxEventIterations", m_maxEventIterations = 500 );
 
   // Minimum signal value for full calculation of log(1-exp(-signal))
-  declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-25 );
-
-  // Signal value below which to approximate log(1-exp(-signal)) with log(signal)
-  // set to 1e-99 for max precision
-  declareProperty( "MinSignalForAproxLLCalc", m_apxSig = 1e-5 );
+  declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-3 );
 
   // Track freeze out value ( the point at which it is no longer considered for change)
   declareProperty( "TrackFreezeOutDLL", m_freezeOutDll = 999999 );
@@ -83,12 +79,11 @@ StatusCode Likelihood::initialize()
   photonCreator();
 
   // Initialise parameters
-  m_logMinSig = log(m_minSig);
+  m_logMinSig = log( exp(m_minSig) - 1.0 );
 
   // Printout some initialisation info
   info() << "Maximum event iterations                  = " << m_maxEventIterations << endreq;
   info() << "Minimum signal for LL calculation         = " << m_minSig << endreq;
-  info() << "Minimum signal for approx LL              = " << m_apxSig << endreq;
   info() << "Track freeze-out DLL value                = " << freezeOutDll() << endreq;
   info() << "Track forced change DLL value             = " << forceChangeDll() << endreq;
   info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endreq;
@@ -557,8 +552,6 @@ Likelihood::deltaLogLikelihood( RichRecTrack * track,
   // Change due to track expectation
   double deltaLL = ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
                      m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
-  //  ( track->nObservableSignalPhotons(track->currentHypothesis()) +
-  //    track->nObservableScatteredPhotons(track->currentHypothesis()) );
 
   // Photon part
   RichRecTrack::Pixels & pixels = track->richRecPixels();

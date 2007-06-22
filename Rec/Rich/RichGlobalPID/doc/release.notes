@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Update the default minimum pixel dll signal cut from 1e-25 to 1e-3
+
 !======================= RichGlobalPID v3r3 2007-06-11 =======================
 ! 2007-06-11 - Marco Cattaneo
  - Adapt to GaudiObjDesc v10r0 patterns

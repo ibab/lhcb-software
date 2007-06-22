@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.h,v 1.3 2007-03-19 15:04:21 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.h,v 1.4 2007-06-22 13:45:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -165,9 +165,6 @@ namespace Rich
         /// Minimum signal value for full calculation of log(exp(signal)-1)
         double m_minSig;
 
-        /// Signal value below which to approximate log(exp(signal)-1) with log(signal)
-        double m_apxSig;
-
         /// Cached value of log(exp(m_minSig) - 1) for efficiency
         double m_logMinSig;
 
@@ -200,8 +197,7 @@ namespace Rich
 
       inline double Likelihood::sigFunc( const double s ) const
       {
-        return ( s>m_apxSig ? log(exp(s)-1.0)  : ( s>m_minSig ? log(s) : m_logMinSig ) );
-        //return ( s>m_apxSig ? log(1.0-exp(-s)) : ( s>m_minSig ? log(s) : m_logMinSig ) );
+        return ( s>m_minSig ? log(exp(s)-1.0) : m_logMinSig );
       }
 
       inline double Likelihood::freezeOutDll() const
