@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r1 2007-06-22 ======================
 ! 2007-06-13 Stefan
  - patch from Dave Casper (dcasper@uci.edu)
    parameterizing the up to now hardcoded "LHCb" namespace which is the scope 
