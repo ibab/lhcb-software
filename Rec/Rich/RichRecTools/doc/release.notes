@@ -4,6 +4,22 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Improvement to the way the photon reconstruction is done inside
+   Rich::Rec::PhotonRecoUsingQuarticSoln
+  + Properly uses the real found spherical and flat mirror segments
+  + Determines on the fly how many iterations are need to deal with the
+    non-flat secondary mirrors
+  + Add an optional test to check if the reconstructed photon direction 
+    properly intersects the actually mirror segment it is supposed to have
+    reflected off.
+ - Split the RichPhotonSignal into two
+  + Base class RichPhotonSignalGaussProb that implements a single gaussian
+    probability distribution for the expected signal
+  + Add an (experimental) RichPhotonSignalJeffreysErf that uses a modified
+    probability distribution that attempts to deal with outliers, essentially
+    by giving the distribution larger tails)
+
 !===================== RichRecTools v3r11 2007-05-08 ==========================
 ! 2007-04-27 - Chris Jones
  - Fix bug in Cherenkov Cone raytracing tool, which causes an infrequent

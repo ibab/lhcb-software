@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.15 2007-04-23 13:32:51 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.16 2007-06-22 14:35:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -81,8 +81,8 @@ namespace Rich
      *
      *  @todo Review if "Unit()" method is needed in secondary reflection
      *        plane construction
-     *  @todo Fix HPD quartz window refraction bias at source in RichDet and remove
-     *        fudge correction here
+     *  @todo Understand where the biases come from, that are 'fixed' by the fudge
+     *        factors here
      */
     //-----------------------------------------------------------------------------
 
@@ -182,6 +182,26 @@ namespace Rich
         return m_deBeam[rich];
       }
 
+      /// Find the primary mirror data
+      inline bool findPrimMirrorData( const Rich::DetectorType rich,
+                                      const Rich::Side side,
+                                      const Gaudi::XYZPoint& virtDetPoint,
+                                      const Gaudi::XYZPoint& emissionPoint,
+                                      const DeRichSphMirror*& sphSegment,
+                                      Gaudi::XYZPoint& sphReflPoint ) const
+      {
+        // solve quartic equation with nominal values and find spherical mirror reflection point
+        const bool ok = solveQuarticEq( emissionPoint,
+                                        m_rich[rich]->nominalCentreOfCurvature(side),
+                                        virtDetPoint,
+                                        m_rich[rich]->sphMirrorRadius(),
+                                        sphReflPoint );
+        // find the spherical mirror segment
+        if (ok) sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
+        // return final status
+        return ok;
+      }
+
     private: // data
 
       /// Rich1 and Rich2 detector elements
@@ -269,11 +289,18 @@ namespace Rich
       /// Turn on/off the checking of photon trajectories against the beam pipe
       std::vector<bool> m_checkBeamPipe;
 
+      /** Turn on/off the checking of photon trajectories against the mirror segments
+       *  to verify if the photon hit the real actiave area (and not, for instance, the gaps */
+      std::vector<bool> m_checkPrimMirrSegs;
+
       /// Check for photons that cross between the different RICH 'sides'
       std::vector<bool> m_checkPhotCrossSides;
 
       /// Minimum active segment fraction in each radiator
       std::vector<double> m_minActiveFrac;
+
+      /// Minimum tolerance for mirror reflection point during iterations
+      std::vector<double> m_minSphMirrTolIt;
 
     };
 

@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichPhotonSignal.cpp
+/** @file RichPhotonSignalGaussProb.cpp
  *
- *  Implementation file for tool : Rich::Rec::PhotonSignal
+ *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.23 2007-04-23 13:32:51 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.1 2007-06-22 14:35:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichPhotonSignal.h"
+#include "RichPhotonSignalGaussProb.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -23,19 +23,19 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonSignal );
+DECLARE_TOOL_FACTORY( PhotonSignalGaussProb );
 
 // Standard constructor
-PhotonSignal::PhotonSignal( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent )
+PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : RichRecToolBase( type, name, parent )
 {
   // interface
   declareInterface<IPhotonSignal>(this);
 }
 
-StatusCode PhotonSignal::initialize()
+StatusCode PhotonSignalGaussProb::initialize()
 {
 
   // Sets up various tools and services
@@ -70,15 +70,15 @@ StatusCode PhotonSignal::initialize()
   return sc;
 }
 
-StatusCode PhotonSignal::finalize()
+StatusCode PhotonSignalGaussProb::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-PhotonSignal::predictedPixelSignal( LHCb::RichRecPhoton * photon,
-                                    const Rich::ParticleIDType id ) const
+PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
+                                             const Rich::ParticleIDType id ) const
 {
   if ( !photon->expPixelSignalPhots().dataIsValid(id) )
   {
@@ -106,9 +106,17 @@ PhotonSignal::predictedPixelSignal( LHCb::RichRecPhoton * photon,
   return photon->expPixelSignalPhots( id );
 }
 
+double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
+                                              const double thetaExpRes ) const
+{
+  // See note LHCB/98-040 page 11 equation 18
+  const double expArg = 0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
+  return ( exp( -(expArg>650 ? 650 : expArg) ) / ( sqrt(2.*M_PI)*thetaExpRes ) ); 
+}
+
 double
-PhotonSignal::signalProb( LHCb::RichRecPhoton * photon,
-                          const Rich::ParticleIDType id ) const
+PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
+                                   const Rich::ParticleIDType id ) const
 {
   // Expected Cherenkov theta angle
   const double thetaExp = m_ckAngle->avgCherenkovTheta(photon->richRecSegment(),id);
@@ -119,17 +127,16 @@ PhotonSignal::signalProb( LHCb::RichRecPhoton * photon,
 
   // The difference between reco and expected
   const double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
-  if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0.0;
+  //if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0.0;
 
-  // return the probability
-  double expArg = 0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
-  return ( exp( -(expArg>650 ? 650 : expArg) ) /
-           ( sqrt(2.*M_PI)*2.*M_PI*thetaExpRes ) );
+  // return the expected signal contribution
+  return this->signalProbFunc(thetaDiff,thetaExpRes) / (2.0*M_PI);
+
 }
 
 double
-PhotonSignal::scatterProb( LHCb::RichRecPhoton * photon,
-                           const Rich::ParticleIDType id ) const
+PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
+                                    const Rich::ParticleIDType id ) const
 {
   if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() )
   {

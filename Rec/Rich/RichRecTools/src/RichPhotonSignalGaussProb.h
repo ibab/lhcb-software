@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichPhotonSignal.h
+/** @file PhotonSignalGaussProb.h
  *
- *  Header file for tool : Rich::Rec::PhotonSignal
+ *  Header file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.16 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.h,v 1.1 2007-06-22 14:35:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
-#define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
+#ifndef RICHRECTOOLS_RICHPHOTONSIGNALGAUSSPROB_H
+#define RICHRECTOOLS_RICHPHOTONSIGNALGAUSSPROB_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -37,31 +37,32 @@ namespace Rich
   {
 
     //-----------------------------------------------------------------------------
-    /** @class PhotonSignal RichPhotonSignal.h
+    /** @class PhotonSignalGaussProb RichPhotonSignalGaussProb.h
      *
      *  Tool to calculate for a given photon the probabilities of it
      *  being a signal or scattered photon, and its predicted contribution
      *  to its associated RichRecPixel, under a certain mass hypothesis.
-     *  This version is tuned for HPDs
+     *  
+     *  This version uses a simple Gaussian probability function for the signal
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
      */
     //-----------------------------------------------------------------------------
 
-    class PhotonSignal : public Rich::Rec::ToolBase,
-                         virtual public IPhotonSignal
+    class PhotonSignalGaussProb : public Rich::Rec::ToolBase,
+                                  virtual public IPhotonSignal
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      PhotonSignal( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent );
+      PhotonSignalGaussProb( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent );
 
       /// Destructor
-      virtual ~PhotonSignal(){}
+      virtual ~PhotonSignalGaussProb(){}
 
       // Initialize method
       StatusCode initialize();
@@ -81,6 +82,12 @@ namespace Rich
       // Scatter Probability for a given reconstructed photon under a given mass hypothesis
       double scatterProb( LHCb::RichRecPhoton * photon,
                           const Rich::ParticleIDType id ) const;
+
+    protected: // methods
+
+      // compute the acutal signal probability (Gaussian)
+      virtual double signalProbFunc( const double thetaDiff,
+                                     const double thetaExpRes ) const;
 
     private: // private data
 
@@ -104,4 +111,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECTOOLS_RICHPHOTONSIGNAL_H
+#endif // RICHRECTOOLS_RICHPHOTONSIGNALGAUSSPROB_H

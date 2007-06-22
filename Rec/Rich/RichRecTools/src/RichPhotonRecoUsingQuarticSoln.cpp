@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.18 2007-04-23 13:32:51 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.19 2007-06-22 14:35:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -40,9 +40,11 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
     m_nQits               ( Rich::NRadiatorTypes, 1     ),
     m_ckFudge             ( Rich::NRadiatorTypes, 0     ),
     m_deBeam              ( Rich::NRiches               ),
-    m_checkBeamPipe       ( Rich::NRadiatorTypes        ),
-    m_checkPhotCrossSides ( Rich::NRadiatorTypes        ),
-    m_minActiveFrac       ( Rich::NRadiatorTypes, 0     )
+    m_checkBeamPipe       ( Rich::NRadiatorTypes, false ),
+    m_checkPrimMirrSegs   ( Rich::NRadiatorTypes, false ),
+    m_checkPhotCrossSides ( Rich::NRadiatorTypes, false ),
+    m_minActiveFrac       ( Rich::NRadiatorTypes, 0     ),
+    m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
 {
 
   // declare interface
@@ -76,7 +78,14 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   m_checkPhotCrossSides[Rich::Rich2Gas] = true;
   declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
 
+  declareProperty( "CheckPrimaryMirrorSegments", m_checkPrimMirrSegs );
+
   declareProperty( "MinActiveFraction", m_minActiveFrac );
+
+  m_minSphMirrTolIt[Rich::Aerogel]  = pow(0.10 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Rich1Gas] = pow(0.08 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Rich2Gas] = pow(0.05 * Gaudi::Units::mm,2);
+  declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
 }
 
@@ -130,6 +139,8 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
     {      info() << "Will reject photons that cross sides in " << rad << endreq; }
     if ( m_checkBeamPipe[rad] )
     {      info() << "Will check for " << rad << " photons that hit the beam pipe" << endreq; }
+    if ( m_checkPrimMirrSegs[rad] )
+    {      info() << "Will check for full intersecton with mirror segments for " << rad << endreq; }
 
     // fudge factor warning
     if ( fabs(m_ckFudge[rad]) > 1e-7 )
@@ -300,6 +311,20 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
       // -------------------------------------------------------------------------------
 
       // -------------------------------------------------------------------------------
+      // Test to see if photon direction hits the real physical mirror segments
+      // -------------------------------------------------------------------------------
+      if ( m_checkPrimMirrSegs[radiator] )
+      {
+        // primary mirrors
+        const bool ok = ( sphSegment1->intersects( emissionPoint1,
+                                                   sphReflPoint1-emissionPoint1 ) ||
+                          sphSegment2->intersects( emissionPoint2,
+                                                   sphReflPoint2-emissionPoint2 ) );
+        if ( !ok ) return StatusCode::FAILURE;
+      }
+      // -------------------------------------------------------------------------------
+
+      // -------------------------------------------------------------------------------
       // Get the best gas emission point
       if ( !getBestGasEmissionPoint( radiator,
                                      sphReflPoint1,
@@ -359,41 +384,18 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   if ( !m_testForUnambigPhots[radiator] || Rich::Aerogel == radiator || !unambigPhoton )
   {
-
-    if ( !solveQuarticEq( emissionPoint,
-                          m_rich[rich]->nominalCentreOfCurvature(side),
-                          virtDetPoint,
-                          m_rich[rich]->sphMirrorRadius(),
-                          sphReflPoint ) )
-    {
-      return Warning( "Failed to reconstruct photon using nominal mirrors" );
-      //return StatusCode::FAILURE;
-    }
-
-    // Get pointers to the spherical mirror detector object
-    sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
-
-    if ( m_useSecMirs )
-    {
-      // Get secondary mirror reflection point
-      const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                          virtDetPoint - sphReflPoint,
-                                                          m_rich[rich]->nominalPlane(side),
-                                                          secReflPoint);
-      if ( sc.isFailure() ) { return StatusCode::FAILURE; }
-      // Get pointers to the secondary mirror detector objects
-      secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
-    }
-
+    if ( !findMirrorData(rich,side,
+                         virtDetPoint,emissionPoint,
+                         sphSegment,secSegment,sphReflPoint,secReflPoint ) )
+      return StatusCode::FAILURE;
   }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // Finally, reconstruct the photon using best emission point and the best mirror segments
+  // Finally reconstruct the photon using best emission point and the best mirror segments
   // --------------------------------------------------------------------------------------
   if ( m_useAlignedMirrSegs[radiator] )
   {
-
     if ( m_forceFlatAssumption )
     {
       // assume secondary mirrors are perfectly flat
@@ -422,16 +424,19 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
 
       // Iterate to final solution, improving the secondary mirror info
       int iIt(0);
+      Gaudi::XYZPoint last_mirror_point(0,0,0);
       while ( iIt < m_nQits[radiator] )
       {
 
         // Get secondary mirror reflection point,
-        // using the best actual secondary mirror segment
+        // using the best actual secondary mirror segment at this point
         const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
                                                             virtDetPoint - sphReflPoint,
                                                             secSegment->centreNormalPlane(),
                                                             secReflPoint );
         if ( sc.isFailure() ) { return StatusCode::FAILURE; }
+        // (re)find the secondary mirror
+        secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
 
         // Construct plane tangential to secondary mirror passing through reflection point
         // CRJ : Unit() method may not be needed here ...
@@ -454,13 +459,24 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
           return Warning( "Failed to reconstruct photon using mirror segments" );
           //return StatusCode::FAILURE;
         }
+        // (re)find the spherical mirror segment
+        sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
 
-        // increment iteration counter and continue until max iterations has been done
+        // for iterations after the first, see if we are still moving
+        // If not, abort iterations early
+        if ( iIt > 0 )
+        {
+          if ( (last_mirror_point-secReflPoint).Mag2() < m_minSphMirrTolIt[radiator] ) break;
+        }
+
+        // store last sec mirror point
+        last_mirror_point = secReflPoint;
+
+        // increment iteration counter
         ++iIt;
       }
 
     } // end mirror type if
-
   }
   // --------------------------------------------------------------------------------------
 
@@ -526,6 +542,17 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   }
   // --------------------------------------------------------------------------------------
 
+  // --------------------------------------------------------------------------------------
+  // Test final data to see if photon direction hits the real physical mirror segments
+  // --------------------------------------------------------------------------------------
+  //if ( m_checkPrimMirrSegs[radiator] )
+  //{
+  //  // primary mirrors
+  //  const bool ok = ( sphSegment->intersects(emissionPoint,photonDirection) );
+  //  if ( !ok ) return StatusCode::FAILURE;
+  //}
+  // --------------------------------------------------------------------------------------
+
   //---------------------------------------------------------------------------------------
   // Apply fudge factor correction for small biases in CK theta
   // To be understood
@@ -575,7 +602,7 @@ findMirrorData( const Rich::DetectorType rich,
                         sphReflPoint ) ) { return false; }
 
   // find the spherical mirror segment
-  sphSegment = m_mirrorSegFinder->findSphMirror(rich, side, sphReflPoint );
+  sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
 
   if ( m_useSecMirs )
   {
@@ -585,7 +612,8 @@ findMirrorData( const Rich::DetectorType rich,
                                                         m_rich[rich]->nominalPlane(side),
                                                         secReflPoint );
     if ( sc.isFailure() ) { return false; }
-    secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
+    // find the secondary mirror
+    secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
   }
 
   return true;
