@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.15 2007-06-09 13:56:45 janos Exp $
+// $Id: DeOTLayer.h,v 1.16 2007-06-22 13:22:01 cattanem Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -71,25 +71,25 @@ class DeOTLayer : public DetectorElement {
   bool contains(const LHCb::OTChannelID aChannel) const;
 
   /** Const method to return the quarter for a given channel id
-   * @param an OT channel id
+   * @param  aChannel  an OT channel id
    * @return pointer to detector element
    */
   const DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel) const;
 
   /** Non const method to return the quarter for a given channel id
-   * @param an OT channel id
+   * @param  aChannel  an OT channel id
    * @return pointer to detector element
    */
   DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the quarter for a given XYZ point
-   * @param an OT channel id
+   * @param  aChannel  an OT channel id
    * @return const pointer to detector element
    */
   const DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non const method to return the quarter for a given XYZ point
-   * @param an OT channel id
+   * @param  aChannel  an OT channel id
    * @return const pointer to detector element
    */
   DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint);
