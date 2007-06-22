@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.11 2007-02-19 14:14:33 cattanem Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.12 2007-06-22 13:43:24 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -9,9 +9,9 @@
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloMomentum.h"
-// From Event 
+// From Event
 #include "Event/CaloDataFunctor.h"
-// From CaloDet 
+// From CaloDet
 #include "CaloDet/DeCalorimeter.h"
 // local
 #include "NeutralProtoPAlg.h"
@@ -74,19 +74,18 @@ NeutralProtoPAlg::~NeutralProtoPAlg() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode NeutralProtoPAlg::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+StatusCode NeutralProtoPAlg::initialize() 
+{
+  const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-
-
 
   for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
         m_hyposLocations.end() != location ; ++location )
   {
     info() << " Hypothesis loaded from " << *location << endreq;
-  };
+  }
 
   // locate tools
   m_spdprs   = tool< ICaloHypoLikelihood>( m_spdprsType   ,  m_spdprsName ) ;
@@ -95,31 +94,43 @@ StatusCode NeutralProtoPAlg::initialize() {
   m_photonID = tool< ICaloHypoLikelihood>( m_photonIDType ,  m_photonIDName ) ;
   if( 0 == m_photonID ) { return StatusCode::FAILURE ; }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode NeutralProtoPAlg::execute() {
+StatusCode NeutralProtoPAlg::execute()
+{
 
-  debug() << "==> Execute" << endmsg;
+  ++m_nEvts;
 
-  ++ m_nEvts;
-  
-  /// create and register the output container
-  LHCb::ProtoParticles* protos = new LHCb::ProtoParticles();
-  put( protos , m_protoLocation ) ;
+  // create and register the output container
+  LHCb::ProtoParticles* protos = NULL;
+  if ( exist<LHCb::ProtoParticles>(m_protoLocation) )
+  {
+    // get existing contianer, clear, and reuse
+    Warning( "Existing ProtoParticle container at " + m_protoLocation + 
+             " found -> Will replace", StatusCode::SUCCESS );
+    protos = get<LHCb::ProtoParticles>(m_protoLocation);
+    protos->clear();
+  }
+  else
+  {
+    protos = new LHCb::ProtoParticles();
+    put( protos , m_protoLocation ) ;
+  }
 
-  /// get the relation table
+  // get the relation table
 
-  if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation ))  {
+  if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation ))  
+  {
     warning() << "No matching table at " << m_matchLocation<< endreq ;
     return StatusCode::SUCCESS;
   }
   const LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> ( m_matchLocation ) ;
   if ( 0 == table     ) { return Error("Table* points to NULL!");}
-  /// loop over all caloHypos and create the protoparticles
+  // loop over all caloHypos and create the protoparticles
   m_counts["All"] = 0;
   for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
         m_hyposLocations.end() != location ; ++location ) {
@@ -141,8 +152,8 @@ StatusCode NeutralProtoPAlg::execute() {
       //
       LHCb::ProtoParticle* proto = new LHCb::ProtoParticle() ;
       protos->insert( proto ) ;
-      
-      
+
+
       // fill protoparticle
       proto-> addToCalo( hypo ) ;
       proto-> addInfo(LHCb::ProtoParticle::CaloTrMatch  , caloTrMatch  ( hypo , table ) ) ;
@@ -153,11 +164,11 @@ StatusCode NeutralProtoPAlg::execute() {
       // Spd digit info (photon conversion) + Prs + Ecal Cluster
       proto->addInfo(LHCb::ProtoParticle::CaloNeutralSpd, CaloSpd( hypo ));
       proto->addInfo(LHCb::ProtoParticle::CaloNeutralPrs, CaloPrs( hypo ));
-      proto->addInfo(LHCb::ProtoParticle::CaloNeutralEcal,CaloEcal(hypo ));          
-      
+      proto->addInfo(LHCb::ProtoParticle::CaloNeutralEcal,CaloEcal(hypo ));
+
       ++m_counts["All"];
       ++m_counts[(*location).substr(9) ] ;
-      
+
       verbose() << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endreq;
       verbose() << "Estimator Chi2    =" << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endreq;
       verbose() << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endreq;
@@ -185,17 +196,17 @@ StatusCode NeutralProtoPAlg::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   info() << " -----------------------"<< endreq;
-  info() << " Created = " << (double) m_counts["All"] / (double) m_nEvts 
+  info() << " Created = " << (double) m_counts["All"] / (double) m_nEvts
          << " Neutral ProtoParticles/event" << endreq;
   for( std::map<std::string,long>::iterator iprototype = m_counts.begin();
        iprototype != m_counts.end(); iprototype ++){
     if((*iprototype).first != "All")
-      info() << "  -> " << (double) (*iprototype).second / (double) m_nEvts 
-             << " proto/event with CaloHypo::Hypothesis = " << (*iprototype).first 
+      info() << "  -> " << (double) (*iprototype).second / (double) m_nEvts
+             << " proto/event with CaloHypo::Hypothesis = " << (*iprototype).first
              << endreq;;
   }
   info() << " -----------------------"<< endreq;
-  
+
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -308,7 +319,7 @@ double NeutralProtoPAlg::photonID  ( const LHCb::CaloHypo*  hypo  )  const
 double NeutralProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0;  
+  if( 0 == hypo) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
@@ -318,25 +329,25 @@ double NeutralProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 double NeutralProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0;  
+  if( 0 == hypo) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
   double CaloPrs = 0. ;
   for(LHCb::CaloHypo::Digits::iterator id = digits.begin(); id != it ; ++id){
     if(0 != *id)CaloPrs += (*id)->e();
-  }  
+  }
   return CaloPrs  ;
 };
 // ============================================================================
 double NeutralProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0.;  
+  if( 0 == hypo) return 0.;
   SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
   if( 0 == clusters.size())return 0.;
   SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
   LHCb::CaloCluster* cluster = *icluster;
   if(NULL == cluster) return 0;
-  return cluster->e();  
+  return cluster->e();
 };

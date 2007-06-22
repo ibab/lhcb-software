@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Chris Jones
+ - Add a check to the neutral Protoparticle maker to test if ProtoParticles
+   already exist at the output location
+
 !========================== GlobalReco v6r10 2007-06-05 ======================
 ! 2007-06-05 - Marco Cattaneo
  - Adapt usage of rootOnTES for Gaudi v19r4
