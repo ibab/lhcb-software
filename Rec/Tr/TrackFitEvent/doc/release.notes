@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-06-22 - Edwin Bos
+ - Replaced TrackParameters::kappa with c_light as in the extrapolators.
+
 !========================== TrackFitEvent v3r5 2007-06-11 ====================
 ! 2007-06-11 - Marco Cattaneo
  - Adapted requirements to new GaudiObjDesc v10r0 patterns
