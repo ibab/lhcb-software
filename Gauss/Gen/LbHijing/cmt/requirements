@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.7 2007-03-23 11:19:48 gcorti Exp $ 
+# $Id: requirements,v 1.8 2007-06-22 13:24:55 gcorti Exp $ 
 #============================================================================
 # Created    : 2006-07-03
 # Maintainer : Daniele Gregori, Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v3r0
+version       v3r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -19,7 +19,7 @@ include_dirs  $(LBHIJINGROOT)
 ### NOTE: the order of these use is important, for the wrong order
 ###       GaussHijing.exe complains about vanishing process and stops
 use  hijing      v*  LCG_GeneratorsInterfaces    
-use  Generators  v*  Gen
+use  LbPythia    v*  Gen
 
 #============================================================================
 # Component and linker library building rule
