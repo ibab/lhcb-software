@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
+#include <cmath>
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
