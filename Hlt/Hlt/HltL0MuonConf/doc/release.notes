@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-06-20 - Jose A. Hernando
+ - minor changes, conflict with output tracks in SpaceMuonMatch
+
+! 2007-06-20 - Jose A. Hernando
  - minor changes, remove begin,end Execute
 
 !========================== HltL0MuonConf v1r0 2007-05-25 ===================

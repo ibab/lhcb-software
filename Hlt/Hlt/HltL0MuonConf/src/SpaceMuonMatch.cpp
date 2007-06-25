@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.3 2007-06-25 20:59:31 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -25,13 +25,13 @@ SpaceMuonMatch::SpaceMuonMatch( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
- declareProperty( "Input2TracksName", m_input2TracksName);
+  // declareProperty( "Input2TracksName", m_input2TracksName);
  
  declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName );
 
 }
-//=============================================================================
+//=======================================================x======================
 // Destructor
 //=============================================================================
 SpaceMuonMatch::~SpaceMuonMatch() {} 
@@ -44,7 +44,7 @@ StatusCode SpaceMuonMatch::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-  m_input2Tracks= &(m_hltDataStore->tracks(m_input2TracksName));
+  //  m_inputTracks2= &(m_hltDataStore->tracks(m_input2TracksName));
 
   m_outputMuonTracks =
     m_patDataStore->createTrackContainer( m_outputMuonTracksName, 20 );
@@ -60,7 +60,7 @@ StatusCode SpaceMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
-  debug()<<" pat "<<m_inputTracks->size()<<" hlt "<<m_input2Tracks->size()
+  debug()<<" pat "<<m_inputTracks->size()<<" hlt "<<m_inputTracks2->size()
         <<endreq;
   int tt=0;
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
@@ -74,8 +74,8 @@ StatusCode SpaceMuonMatch::execute() {
     debug()<<" new pat track "<<tt<<endreq;
 //if(pTrack->checkFlag(Track::L0Candidate))
 
-    for ( std::vector<Track*>::const_iterator itMuon = m_input2Tracks->begin();
-          m_input2Tracks->end() != itMuon; itMuon++ ) {
+    for ( std::vector<Track*>::const_iterator itMuon = m_inputTracks2->begin();
+          m_inputTracks2->end() != itMuon; itMuon++ ) {
       Track* muon=(*itMuon);
       Track* outputTrack=new Track();
       
