@@ -1,7 +1,10 @@
-// $Id: HltTracking.cpp,v 1.12 2007-06-20 12:22:43 hernando Exp $
+// $Id: HltTracking.cpp,v 1.13 2007-06-25 20:56:48 hernando Exp $
 // Include files 
 
 // from Gaudi
+#include <boost/functional/hash.hpp>
+#include <boost/lexical_cast.hpp>
+
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -9,6 +12,7 @@
 // local
 #include "Event/HltNames.h"
 #include "HltTracking.h"
+#include "dictionary.h"
 
 using namespace LHCb;
 
@@ -289,3 +293,12 @@ StatusCode HltTracking::finalize() {
 }
 
 //=============================================================================
+
+void HltTracking::saveConfiguration() {
+
+  HltAlgorithm::saveConfiguration();
+
+  std::string type = "HltTracking";
+  confregister("Type",type);
+  confregister("RecoName",m_recoName);
+}

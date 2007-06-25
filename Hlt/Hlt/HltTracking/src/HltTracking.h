@@ -1,4 +1,4 @@
-// $Id: HltTracking.h,v 1.6 2007-06-20 12:22:43 hernando Exp $
+// $Id: HltTracking.h,v 1.7 2007-06-25 20:56:48 hernando Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
@@ -49,6 +49,8 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+  void saveConfiguration();
 
   StatusCode iniRecoAlgorithm();
   bool isAncestor(const LHCb::Track& mother, const LHCb::Track& son);
