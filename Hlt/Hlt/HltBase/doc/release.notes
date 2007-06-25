@@ -12,7 +12,7 @@
   - HltBase/HltTypes (updating types) 
   - (removing ParseDescriptor, moved to EParser)
   - HltBase/HltBaseAlg (cleaning the logic of set decision) 
-  - HltBase/HltAlgorithm (ordering methods, methods to retrieve and register selection containers from data summary, removing conection with TES report-summary)  - IHltSummaryTool (incrementing methods to deal "human like" the summary and the configuration)  
+  - HltBase/HltAlgorithm (ordering methods, methods to retrieve and register selection containers from data summary, removing conection with TES report-summary)  - IConfHltSummaryTool (incrementing methods to deal "human like" the summary and the configuration)  
 
 ! 2007-06-19 - Jose A. Hernando
  - HltBase/HltTypes (define types for Hlt)

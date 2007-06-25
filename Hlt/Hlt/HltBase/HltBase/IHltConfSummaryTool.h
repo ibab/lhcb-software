@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.5 2007-06-25 20:40:11 hernando Exp $
+// $Id: IHltConfSummaryTool.h,v 1.1 2007-06-25 21:48:12 hernando Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
