@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.314 2007-06-25 14:53:04 jpalac Exp $ 
+! $Id: release.notes,v 1.315 2007-06-25 16:07:24 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 ! 2007-06-25 - Juan PALACIOS
+
+  - src/Lib/AlignmentCondition.cpp
+    . Tidy up makeMatrices method by using functions from 
+      DetDesc/3DTransformationFunctions.h
 
   - src/Lib/GeometryInfoPlus.cpp
     . Fix bug: local copy of the misalignment matrix was holding the inverse
