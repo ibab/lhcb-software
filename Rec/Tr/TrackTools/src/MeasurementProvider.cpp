@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.31 2007-06-12 11:19:19 cattanem Exp $
+// $Id: MeasurementProvider.cpp,v 1.32 2007-06-25 14:35:40 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -152,7 +152,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   LHCb::Measurement::Type rc = LHCb::Measurement::Unknown ;
   switch( id.detectorType() ) {
   case LHCb::LHCbID::Velo: 
-    rc = id.veloID().isRType() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
+    rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
   case LHCb::LHCbID::TT:   rc = LHCb::Measurement::TT ; break ;
   case LHCb::LHCbID::IT:   rc = LHCb::Measurement::IT ; break ;
