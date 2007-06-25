@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.16 2007-06-13 16:37:34 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.17 2007-06-25 15:54:24 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -89,10 +89,9 @@ StatusCode AlignmentCondition::makeMatrices()
 
   if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
 
-    m_matrixInv = ( DetDesc::XYZTranslation( translations ) *  
-                    ( DetDesc::XYZTranslation( pivot ) *
-                      DetDesc::ZYXRotation( rotations ) *
-                      DetDesc::XYZTranslation( pivot ).Inverse()  ) );
+    m_matrixInv = DetDesc::localToGlobalTransformation(translations,
+                                                       rotations,
+                                                       pivot);
     
     m_matrix = m_matrixInv.Inverse();
     

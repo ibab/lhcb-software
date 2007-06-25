@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.13 2007-06-13 16:11:46 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.14 2007-06-25 15:53:25 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -55,8 +55,8 @@ public:
 
   /**
    * Set a new 3D transformation starting directly from from a Transform3D
-   * @param newMatrix new full transformation object describing aligned to misalinged 
-   * transformation in the frame of the detector element..
+   * @param newMatrix new full transformation object describing aligned to 
+   *        misalinged transformation in the frame of the detector element..
    */
   void matrix(const Gaudi::Transform3D& newMatrix);
 
