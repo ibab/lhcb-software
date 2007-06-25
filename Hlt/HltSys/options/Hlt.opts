@@ -1,23 +1,23 @@
 #include "$HLTSYSROOT/options/HltReco.opts"
 
-ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
+ApplicationMgr.TopAlg += {"HltSequencer/Hlt"};
 
-Hlt.Members += {"GaudiSequencer/HltInitSeq",
+Hlt.Members += {"HltSequencer/HltInitSeq",
                 "HltSequencer/HltAllAlleys",
-                "GaudiSequencer/HltEndSeq"
+                "HltSequencer/HltEndSeq"
 };
+Hlt.ModeOr = true;
 
 HltInitSeq.Members = {"PatInitEvent",
                       "HltInit"  
 };
 
-HltEndSeq.Members = {"HltEnd"};
-//HltEnd.onTES = false;
-//HltEnd.onTES = false;
+HltEndSeq.Members = {"HltSummaryWriter"};
+HltSummaryWriter.OutputLevel = 2;
 
 HltAllAlleys.Members ={
-  "HltSequencer/HltMuonAlley"
-  ,"HltSequencer/HltHadAlley"
+  "HltSequencer/HltMuonAlley",
+  "HltSequencer/HltHadAlley"
   // ,"HltSequencer/HltCaloAlley"
 };
 HltAllAlleys.ModeOr=true;

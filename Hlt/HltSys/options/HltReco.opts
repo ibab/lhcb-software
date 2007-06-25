@@ -46,7 +46,8 @@ HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
                               "PatVeloLoadClusters",
                               "PatVeloRTracking",
                               "PatPV2D",
-                              "HltPrepareTracks/HltPrepareRZVelo"
+                              "HltPrepareTracks/HltPrepareRZVelo",
+                              "HltPrepareVertices/HltPreparePrimaryVertices"
 };
 
 PatVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
@@ -57,8 +58,11 @@ PatPV2D.OutputLevel = 3;
 
 HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
-HltPrepareRZVelo.PatInputVerticesName = "Hlt/Vertex/PV2D";
-HltPrepareRZVelo.OutputVerticesName   = "Hlt/Vertex/PV2D";
+HltPrepareRZVelo.OutputLevel = 3;
+
+HltPreparePrimaryVertices.SelectionName = "PV2D";
+HltPreparePrimaryVertices.PatInputVerticesName = "Hlt/Vertex/PV2D";
+HltPreparePrimaryVertices.OutputVerticesName   = "Hlt/Vertex/PV2D";
 HltPrepareRZVelo.OutputLevel = 3;
 
 // 3D Velo tracking and PV

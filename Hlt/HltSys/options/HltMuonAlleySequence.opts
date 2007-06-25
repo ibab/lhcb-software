@@ -2,6 +2,12 @@
 //  HLT Muon Alley
 //----------------------------
 
+HltSummaryWriter.Save += { "MuonPreTriggerSingle",
+                           "MuonPreTriggerIPDiMuon",
+                           "MuonPreTriggerIPDiMuon",
+                           "MuonTriggerSingle",
+                           "MuonTriggerDiMuon",
+                           "MuonTriggerIPDiMuon" };
 
 HltMuonAlley.Members = {   "L0Entry/L0MuonEntry",
                            "L0MuonCandidatesFromRaw",
@@ -46,6 +52,7 @@ HltMuonTriggerSingleMuon.Members +={"HltTrackIPSelection/HltTrackMuonIPSelection
 //-------------------------------------------------------------------------
 
 
+L0MuonEntry.SelectionName = "L0MuonEntry";
 L0MuonEntry.L0ChannelsName = {"muon" ,"dimuon"};
 // L0MuonEntry.OutputLevel = 3;
 
@@ -99,16 +106,17 @@ HltTrackMuonIPSelection.MaxIP = 30.00;
 HltTrackMuonIPSelection.SelectPrimaryVertex = false;
 // HltTrackMuonIPSelection.OutputLevel = 3;
 
-HltMuonPreTriggerSingle.SelectionName = "MuonPreTriggerSingle";
+// HltMuonPreTriggerSingle.SelectionName = "MuonPreTriggerSingle";
 HltMuonPreTriggerSingle.InputTracksName = "Hlt/Track/rIPVeloMuons";
-HltMuonPreTriggerSingle.OutputTracksName = "Hlt/Track/MuonPreTrigger/Single";
+HltMuonPreTriggerSingle.OutputTracksName = "Hlt/Track/MuonPreTrigger/MuonPreTriggerSingle";
 // HltMuonPreTriggerSingle.OutputLevel = 3;
 HltMuonPreTriggerSingle.ConditionsName = "/dd/Conditions/Trigger/HltMuonAlley/HltMuonPreTriggerSingle";
 
-HltMuonPreTriggerDiMuons.SelectionName = "MuonPreTriggerDiMuon";
+// HltMuonPreTriggerDiMuons.SelectionName = "MuonPreTriggerDiMuon";
 HltMuonPreTriggerDiMuons.Selection2Name = "MuonPreTriggerIPDiMuon";
 HltMuonPreTriggerDiMuons.InputTracksName = "Hlt/Track/VeloSpaceMuons";
 HltMuonPreTriggerDiMuons.PatInputVerticesName = "Hlt/Vertex/PV2D";
+HltMuonPreTriggerDiMuons.OutputVerticesName = "Hlt/Vertex/MuonPreTriggerDiMuon";
 HltMuonPreTriggerDiMuons.ConditionsName = "/dd/Conditions/Trigger/HltMuonAlley/HltMuonPreTriggerDiMuons";
 // HltMuonPreTriggerDiMuons.OutputLevel = 3;
 
@@ -133,16 +141,17 @@ HltTrackMuonIPSelectionTrigger.MaxIP = 30.00;
 HltTrackMuonIPSelectionTrigger.SelectPrimaryVertex = false;
 // HltTrackMuonIPSelectionTrigger.OutputLevel = 3;
 
-HltMuonTriggerSingle.SelectionName = "MuonTriggerSingle";
+// HltMuonTriggerSingle.SelectionName = "MuonTriggerSingle";
 HltMuonTriggerSingle.InputTracksName = "Hlt/Track/rIPForwardMuons";
-HltMuonTriggerSingle.OutputTracksName = "Hlt/Track/MuonTrigger/Single";
+HltMuonTriggerSingle.OutputTracksName = "Hlt/Track/MuonTriggerSingle";
 // HltMuonTriggerSingle.OutputLevel = 3;
 HltMuonTriggerSingle.ConditionsName = "/dd/Conditions/Trigger/HltMuonAlley/HltMuonTriggerSingle";
 HltMuonTriggerSingle.IsTrigger = true ;
 
-HltMuonTriggerDiMuons.SelectionName = "MuonTriggerDiMuon";
+// HltMuonTriggerDiMuons.SelectionName = "MuonTriggerDiMuon";
 HltMuonTriggerDiMuons.Selection2Name = "MuonTriggerIPDiMuon";
 HltMuonTriggerDiMuons.InputTracksName = "Hlt/Track/ForwardMuonRefined";
+HltMuonTriggerDiMuons.OutputVerticesName = "Hlt/Track/MuonTriggerDiMuon";
 HltMuonTriggerDiMuons.PatInputVerticesName = "Hlt/Vertex/PV2D";
 // HltMuonTriggerDiMuons.OutputLevel = 3;
 HltMuonTriggerDiMuons.ConditionsName = "/dd/Conditions/Trigger/HltMuonAlley/HltMuonTriggerDiMuons";

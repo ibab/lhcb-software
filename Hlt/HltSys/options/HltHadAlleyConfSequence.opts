@@ -7,6 +7,9 @@
 //---------------------------
 // HLT Had Alley
 //--------------------------
+HltSummaryWriter.Save += {"HadL0Entry",
+                          "HadPreTriggerSingle",
+                          "HadTrigger"};
 
 HltHadAlley.Members = {"L0Entry/L0HadEntry",
                        "GaudiSequencer/HltRecoVeloRZSeq",
@@ -35,6 +38,7 @@ HltHadAlley.MeasureTime = true;
 
 
 L0HadEntry.L0ChannelsName = {"hadron"};
+L0HadEntry.SelectionName = "HadL0Entry";
 L0HadEntry.OutputLevel = 3;
 
 HltPrepareL0Calos.OutputLevel = 3;
@@ -51,6 +55,7 @@ HltHadTrackRZIPSelection.HistoDescriptor = {"rIP,400,-1.,3.",
 HltHadTrackRZIPSelection.OutputLevel = 3;
 
 
+HltHadRZVeloL0CaloMatch.InputL0CaloCandidatesName = "Hlt/L0CaloCandidate/HadL0Calos";
 HltHadRZVeloL0CaloMatch.InputTracksName = "Hlt/Track/IPRZVelo0";
 HltHadRZVeloL0CaloMatch.OutputTracksName = "Hlt/Track/IPRZVelo0Conf";
 // HltRZVeloL0CaloMatch.CaloType = 2;
@@ -67,6 +72,7 @@ HltHadRecoIPVelo.RecoName = "Velo";
 HltHadRecoIPVelo.OutputLevel = 3;
 // PatHltHadRecoIPVelo.OutputLevel = 3;
 
+HltHadRZVeloL0CaloMatch.InputL0CaloCandidatesName = "Hlt/L0CaloCandidate/HadL0Calos";
 HltHadTrackIPSelection.InputTracksName = "Hlt/Track/IPVelo0";
 HltHadTrackIPSelection.OutputTracksName = "Hlt/Track/IPVelo1";
 HltHadTrackIPSelection.PrimaryVerticesName = "Hlt/Vertex/PV2D";
@@ -162,7 +168,7 @@ HltHadMakeDiHadron.HistoDescriptor = {"DOCA,100,0.,1.",
 HltHadTriggerDiHadron.SelectionName = "HadTrigger";
 HltHadTriggerDiHadron.InputVerticesName = "Hlt/Vertex/DiHadron";
 HltHadTriggerDiHadron.PrimaryVerticesName = "Hlt/Vertex/PV2D";
-HltHadTriggerDiHadron.OutputVerticesName = "Hlt/Vertex/TriggerDiHadron";
+HltHadTriggerDiHadron.OutputVerticesName = "Hlt/Vertex/HadTrigger";
 HltHadTriggerDiHadron.OutputLevel = 3;
 HltHadTriggerDiHadron.FilterDescriptor = {"VertexMaxPT,>,2000.",
                                           "VertexMinPT,>,1000.",
@@ -179,4 +185,4 @@ HltHadTriggerDiHadron.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
                                          "VertexDz,100,-10.,50.",
                                          "VertexDzBest,100,-10.,50."
 };
-HltHadTriggerDiHadron.OutputLevel = 3;
+
