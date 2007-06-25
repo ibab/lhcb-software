@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.13 2007-06-25 20:56:48 hernando Exp $
+// $Id: HltTracking.cpp,v 1.14 2007-06-25 21:35:12 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +12,6 @@
 // local
 #include "Event/HltNames.h"
 #include "HltTracking.h"
-#include "dictionary.h"
 
 using namespace LHCb;
 
