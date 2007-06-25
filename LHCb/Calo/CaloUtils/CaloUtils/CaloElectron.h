@@ -1,16 +1,15 @@
-// $Id: CaloElectron.h,v 1.3 2007-03-29 16:34:11 odescham Exp $
+// $Id: CaloElectron.h,v 1.4 2007-06-25 20:33:34 odescham Exp $
 #ifndef CALOELECTRON_H 
 #define CALOELECTRON_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "CaloUtils/Part2Calo.h"
 //from LHCb
+#include "CaloUtils/ICaloElectron.h"            
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
 //
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "CaloUtils/ICaloElectron.h"            
 #include "CaloUtils/CaloMomentum.h"
 
 
@@ -21,7 +20,7 @@
  *  @author Olivier Deschamps
  *  @date   2006-11-30
  */
-class CaloElectron : public GaudiTool, virtual public ICaloElectron {
+class CaloElectron : public Part2Calo, virtual public ICaloElectron {
 public: 
   /// Standard constructor
   CaloElectron( const std::string& type, 
@@ -31,38 +30,32 @@ public:
   virtual ~CaloElectron( ); ///< Destructor
   virtual StatusCode initialize();
   
-  bool  set(const  LHCb::Particle* particle);
-  bool  set(const  LHCb::ProtoParticle* proto);
+  bool  set(const  LHCb::Particle* particle, 
+            std::string det = DeCalorimeterLocation::Ecal,
+            CaloPlane::Plane plane = CaloPlane::ShowerMax,
+            double delta =0 );
+  bool  set(const  LHCb::ProtoParticle* proto,
+            std::string det = DeCalorimeterLocation::Ecal,
+            CaloPlane::Plane plane = CaloPlane::ShowerMax,
+            double delta =0 );
+
   LHCb::CaloHypo*    electron();
   LHCb::CaloHypo*    bremstrahlung();
   LHCb::CaloMomentum bremCaloMomentum();
   double ecalE();
   double eOverP();
-  LHCb::State caloState(CaloPlane::Plane plane = CaloPlane::ShowerMax , double deltaShower = 0. );
   LHCb::State closestState(std::string toWhat = "hypo");
   double caloTrajectoryZ(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");
   double caloTrajectoryL(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");
 
-protected:
-  bool setting (const  LHCb::Particle* particle);
-  bool setting (const  LHCb::ProtoParticle* proto);
-private:
-  std::string m_extrapolatorType;
-  double m_tolerance;
-  double m_zOffset;
-  //
-  ITrackExtrapolator*  m_extrapolator;
-  //
-  bool m_status;
-  const LHCb::Particle*      m_particle;
-  const LHCb::ProtoParticle* m_proto;
-  const LHCb::Track*         m_track;
-  LHCb::CaloHypo*      m_electron;
-  LHCb::CaloHypo*      m_bremstrahlung;
-  const LHCb::CaloPosition*  m_calopos;
-  DeCalorimeter*       m_calo;
-  std::string m_det;
-  
 
+
+protected:
+  bool caloSetting ();
+private:
+  LHCb::CaloHypo*            m_electron;
+  LHCb::CaloHypo*            m_bremstrahlung;
+  const LHCb::CaloPosition*  m_calopos;
+  double m_zOffset;
 };
 #endif // CALOELECTRON_H
