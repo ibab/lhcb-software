@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.6 2007-06-22 09:33:12 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.7 2007-06-25 08:58:12 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -414,9 +414,9 @@ private:
   /// Calculate the combined ideal and delta matrix connecting
   /// this IGeometryInfo to the global frame.
   /// Set the corresponding inverse matrix.
-  StatusCode calculateFullMatrices(matrix_iterator pvFirst,
-                                   matrix_iterator pvEnd,
-                                   matrix_iterator deltaFirst);
+  StatusCode calculateFullMatrices(matrix_iterator deltaFirst,
+                                   matrix_iterator deltaEnd,
+                                   matrix_iterator pvFirst);
 
   /// Calculate the total ideal matrix connecting 
   /// this IGeometryInfo to the global frame.
