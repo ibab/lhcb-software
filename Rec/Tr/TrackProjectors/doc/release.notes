@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r13 2007-06-25 ======================
+! 2007-06-25 - Marco Cattaneo
+ - Put back Gaudi:: namespace in .cpp calling sequences, 
+   needed to please doxygen (expects .h and .cpp to be the same)
+
 ! 2007-06-22 - Edwin Bos
  - Introduced jobOption: "UseBField". If true, then the StateTraj in the
  - projector is made using the B from the magnetic field service. If false,
