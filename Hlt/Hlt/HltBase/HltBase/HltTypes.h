@@ -1,10 +1,12 @@
-// $Id: HltTypes.h,v 1.1 2007-06-20 12:08:40 hernando Exp $
+// $Id: HltTypes.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
 #include <vector>
 #include "HltBase/EFunctions.h"
+#include "HltBase/EDictionary.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/ContainedObject.h"
 // #include "Event/Track.h"
 // #include "Event/RecVertex.h"
 // #include "Event/L0CaloCandidate.h"
@@ -18,9 +20,15 @@ namespace LHCb
 }
 
 namespace Hlt 
-{ 
+{
+
+  class ISizeHolder : public ContainedObject {
+  public:
+    virtual size_t size() const = 0;
+  };
+ 
   template <class CONT> 
-  class DataHolder : public DataObject {
+  class DataHolder : public DataObject , public ContainedObject {
   public:
     DataHolder(CONT& cont):m_cont(&cont) {};
     virtual ~DataHolder() {};
@@ -29,6 +37,19 @@ namespace Hlt
   protected:
     CONT* m_cont;    
   };
+
+  template <class CONT> 
+  class DataSizeHolder : public DataObject, public ISizeHolder {
+  public:
+    DataSizeHolder(CONT& cont):m_cont(&cont) {};
+    virtual ~DataSizeHolder() {};
+    CONT& object() {return *m_cont;}
+    const CONT& object() const {return *m_cont;}
+    size_t size() const {return m_cont->size();}
+  protected:
+    CONT* m_cont;    
+  };
+  
 }
 
 
@@ -38,6 +59,8 @@ namespace Hlt
   typedef std::vector< LHCb::RecVertex* >   VertexContainer;
   // typedef std::vector< LHCb::L0CaloCandidate* >   L0CaloCandidateContainer;
   // typedef std::vector< LHCb::L0MuonCandidate* >   L0MuonCandidateContainer;
+
+  typedef Estd::dictionary Configuration;
   
   typedef Estd::filter<double> Filter;
 
@@ -49,6 +72,10 @@ namespace Hlt
   typedef Estd::bifunction<LHCb::Track, LHCb::Track>         TrackBiFunction;  
   typedef Estd::bifunction<LHCb::RecVertex, LHCb::RecVertex> VertexBiFunction;
   typedef Estd::bifunction<LHCb::Track, LHCb::RecVertex> TrackVertexBiFunction;
+
+  typedef Hlt::DataHolder< Hlt::Configuration > HolderConfiguration;
+  typedef Hlt::DataSizeHolder< TrackContainer > HolderTrackContainer;
+  typedef Hlt::DataSizeHolder< VertexContainer > HolderVertexContainer;
 
 };
 #endif // HLTBASE_HLTCONTAINERS_H

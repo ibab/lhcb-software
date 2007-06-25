@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.9 2007-06-20 20:31:42 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.10 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -10,12 +10,14 @@
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/IHltDataStore.h"
 #include "PatTools/PatDataStore.h"
+#include "HltBase/HltTypes.h"
+#include "HltBase/EParser.h"
+#include "HltBase/HltConfigurationHelper.h"
 
 /** @class HltAlgorithm 
  *  
- *  Base class for HLT algorithms
  *  functionality:
- *        - deals with input/output tracks from Pat and Hlt stores
+ *        - deals with input/output tracks from the summary-data 
  *          options to set the pat to input/output tracks and vertices
  *        - deals with the HltSummary
             save an retrieve from summary, set decision and decision type.
@@ -48,17 +50,6 @@
 class HltAlgorithm : public HltBaseAlg {
 public:
 
-  friend class IHltFunctionFactory;
-
-  // typedef for track and vertices container iterators
-  typedef Hlt::TrackContainer::iterator track_iterator;
-  typedef Hlt::VertexContainer::iterator vertex_iterator;
-
-  typedef Hlt::TrackContainer::const_iterator track_const_iterator;
-  typedef Hlt::VertexContainer::const_iterator vertex_const_iterator;
-
-public:
-
   /// Standard constructor
   HltAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -72,8 +63,7 @@ public:
   virtual StatusCode initialize();    
 
   /** execute algorithm
-   * Note: call HltAlgorithm::beginExecute() and HltAlgorithm::endExecute() 
-   *       at the begin and end of the excute method of the derived algorithms
+   *  this system will cal beginExecute() and end Execute() 
    **/
   virtual StatusCode execute   () 
   { return StatusCode::SUCCESS;};    ///< Algorithm execute
@@ -81,48 +71,248 @@ public:
   /** finalize algorithm
    * Note: call HltAlgorithm::finalize()
    * print out info of the accepted events, etc.
-   * 
    **/
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
+  //-----------------------
+  // initializetion methods
+  //-----------------------
+
+  // initialize the containers
+  bool initContainers();
+
+  // initialize the histograms
+  void initHistograms();  
+
+  // initialize the counters
+  void initCounters();
+
+  // save configurtion of algorithm
+  virtual void saveConfiguration();
+
+protected:
+
+  //-------------------
+  // execution methods
+  //-------------------
+
   /** begin the execution
-   *    call HltBaseAlgo::beginExecute() (see HltBaseAlgo)
-   *             set decesion to false, set histo monitor bool flag
-   *    retrieve selection summary if necessary
-   *    check that the input tracks and vertices containers are not empty
-   *    increase entry counters
+   * call HltBaseAlgo::beginExecute() (see HltBaseAlgo)
+   * set decesion to false, set histo monitor bool flag
+   *    increase input counter and histograms
+   *    set filter and monitoring flags and decision in selection
    **/
   bool beginExecute();
 
   /** end of the execution
-   *    increase histos of output tracks/vertices and couter of accepted events
-   *    call HltBase::endExecute() (see HltBaseAlgo)
+   *    increase output counters and histograms
+   *    counts the candidates from output container
+   *    set decision in the selection if there are candidates
    *             set decision to true
    **/ 
   bool endExecute();
 
   StatusCode baseExecute() 
   {return HltAlgorithm::execute();}
+
+protected:
+
+  // ---------------------------------
+  //  Data Summary and Selection
+  // ---------------------------------
+
+  // register a selection without output container in data-summary
+  void sumregister(const std::string& selname);
+
+  /* set decision for gaudi (filterPass) and selection
+   */
+  virtual void setDecision(bool ok);
+
+  /** set the decision type to true in selection (call setDecision)
+   **/
+  void setDecisionType(int decisionType); 
+
+  /** get the selection summary of this algorithm 
+   **/
+  LHCb::HltSelectionSummary& selectionSummary()
+  {return m_datasummary->selectionSummary(m_selectionID);}
   
+  
+  /** get any selection summary 
+   *  note: this algorithm only modifies one selection summary, the others
+   *        should be const!
+   **/
+  const LHCb::HltSelectionSummary& selectionSummary( int id)
+  {return m_datasummary->selectionSummary(id);}
+
+protected:
+
+  std::string m_dataSummaryLocation;
+
+  // pointer to the summary
+  LHCb::HltSummary* m_datasummary;
+
+  // name of the selection summary
+  std::string m_selectionName;
+
+  // id of the selection
+  int m_selectionID;
+
+  // minimun number of candidates
+  int m_minNCandidates;
+
+  // Is isTrigger a positive decision will be stored in the summary
+  bool m_isTrigger;  
+
+
+protected:
+
+  // ------------------------
+  // Input/Output Containers
+  // ------------------------
+
+  // retrieve a container from the data summary
+  template <class CONT>
+  void sumretrieve(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    std::vector<std::string> cromos = EParser::parse(name,"/");
+    std::string selname = cromos.back();
+    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
+    info() << " input selection " << selname << " id " << id << endreq;
+    const LHCb::HltSelectionSummary& sum = selectionSummary(id);
+    const std::vector<ContainedObject*>& sumdata = sum.data();
+    if (sumdata.size() <=0) 
+      fatal() <<" no data in selection " << name<< endreq;
+    ContainedObject* pholder = (ContainedObject*) sumdata.front();
+    Hlt::DataSizeHolder<CONT>* holder= 
+      dynamic_cast< Hlt::DataSizeHolder<CONT>* >(pholder);
+    if (!holder) fatal() << " no holder at selection " << selname << endreq;
+    con = & (holder->object()); m_inputSelections.push_back(selname);
+    info() << " retrieved data from data-summary " << selname << endreq;
+  }
+
+  // register a container to the data summary
+  template <class CONT>
+  void sumregister(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    if (m_outputHolder != NULL) 
+      fatal() << " A selection output alreadi registed! " << endreq;
+    std::vector<std::string> cromos = EParser::parse(name,"/");
+    std::string selname = cromos.back(); sumregister(selname);
+    if (!con) con = new CONT();
+    Hlt::DataSizeHolder<CONT>* holder = new Hlt::DataSizeHolder<CONT>(*con);
+    m_outputHolder = holder; selectionSummary().addData(*holder);
+    info() << " registered data in data-summary " << m_selectionName << endreq;
+  }
+
+  // to register a container in the HltDataProvider (at initialization level)
+  template <class CONT>
+  void hltregister(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    std::string loca = "/Event/"+name;
+    if (exist< Hlt::DataHolder<CONT> > (m_hltSvc,loca)) {
+      fatal() << " output location already exist " << loca << endreq;
+    } else {
+      if (!con) con = new CONT();
+      put(m_hltSvc, new Hlt::DataHolder<CONT>(*con),loca);
+      info() << " located data at hlt " << loca << endreq;
+    }
+  }
+
+  // retrieve a container from the HltDataProvider (at initialization level)
+  template <class CONT>
+  void hltretrieve(CONT*& con, const std::string& name) {
+    con = NULL; if (name == "") return;
+    std::string loca = "/Event/"+name;
+    if (! exist<Hlt::DataHolder<CONT> > (m_hltSvc,loca)) 
+      fatal() << " input location does not exist " << loca << endreq;
+    Hlt::DataHolder<CONT>* holder = get< Hlt::DataHolder<CONT> >(m_hltSvc,loca);
+    if (!holder) error() << " not data holder at " << loca << endreq;
+    con = &(holder->object());  
+    info() << " retrieved data from hlt " << loca << endreq;
+  }
+  
+  // retrieve a pat track container from the pat store with a given name
+  void patretrieve(PatTrackContainer*& con, PatDataStore*& store,
+                   const std::string& name);
+
+  // retrieve a pat vertex container from the pat store with a given name
+  void patretrieve(PatVertexContainer*& con, PatDataStore*& store,
+                   const std::string& name);
+
+protected:
+
+  // pointer to the pat data Store
+  PatDataStore* m_patDataStore;
+
+  // hlt data provided service
+  IDataProviderSvc* m_hltSvc;
+
+  // names of the pat input containers
+  std::string m_patInputTracksName;
+  std::string m_patInputTracks2Name;
+  std::string m_patInputVerticesName;
+  
+  // pointers to the pat containers
+  PatTrackContainer* m_patInputTracks;
+  PatTrackContainer* m_patInputTracks2;
+  PatVertexContainer* m_patInputVertices;
+  
+  // names of the selection containers
+  std::string m_inputTracksName;
+  std::string m_inputTracks2Name;
+  std::string m_inputVerticesName;
+  std::string m_primaryVerticesName;
+
+  std::string m_outputTracksName;
+  std::string m_outputVerticesName;
+
+  // pointers to the selection containers
+  Hlt::TrackContainer* m_inputTracks;
+  Hlt::TrackContainer* m_inputTracks2;
+  Hlt::VertexContainer* m_inputVertices;
+  Hlt::VertexContainer* m_primaryVertices;
+
+  Hlt::TrackContainer* m_outputTracks;
+  Hlt::VertexContainer* m_outputVertices;
+
+
+protected:
+
+  //-------------
+  // Configuration
+  //-------------
+
+  // register in a value in the configuration with a key
+  template <class T>
+  void confregister(const std::string& key, const T& value) {
+    std::string mykey = m_selectionName+"/"+key; m_conf->add(mykey,value);
+    info() << " HLT [" << mykey << "] = " 
+           << m_conf->retrieve<T>(mykey) << endreq;    
+  }
+
+  void printInfo(const std::string& title, const Hlt::TrackContainer& con);
+  void printInfo(const std::string& title, const LHCb::Track& track);
+
+protected:
+
+  // hlt configuration
+  Hlt::Configuration* m_conf;
+
+  std::vector<std::string> m_inputSelections;
+
+
+  //------------------------
+  // Histograms and Counters
+  //------------------------
 
 protected:
 
   // Counter of Input and Accepted Events
   HltCounter m_counterInput;
   HltCounter m_counterAccepted;
-
-
-//   HltCounter m_countEmptyTracks;
-//   HltCounter m_countEmptyTracks2;
-//   HltCounter m_countInputVertices;
-//   HltCounter m_countEmptyVertices;
-//   HltCounter m_countEmptyPVs;
-//   HltCounter m_countInputPVs;
-//   HltCounter m_countInputTracks;
-//   HltCounter m_countInputTracks2;
-
 
   // Input histograms for tracks and vertices
   HltHisto m_histoInputVertices;
@@ -139,195 +329,7 @@ protected:
   HltHisto m_histoCandidates;
   HltHisto m_histoOutputVertices;
   HltHisto m_histoOutputTracks;
-  HltHisto m_histoOutputTracks2;
-
-
-protected:
-
-  /** set the decision type to true in selection summary info
-   *        (see Event/HltEnums.h for types)
-   *        automatically set decision/pass to true
-   **/
-  inline void setDecisionType(int decisionType, int idsel= -1) {
-    LHCb::HltSelectionSummary& sel = selectionSummary(idsel);    
-    sel.setDecisionType(decisionType,true);
-    if (m_isTrigger) m_summary->setDecisionType(decisionType,true);
-    setDecision(true);
-  }
   
-
-  /** save a data object (derived from ContainedObject) as Track or RecVertex
-   * into the selecion summary info.
-   * by the default the selection summary is taked from the option SelectionName
-   * user can save an object into other selection summary, indicating the ID
-   * of the selection summary 
-   * (for IDs of selection summaries see Event/HltEnums.h) 
-   **/
-  template <class T>
-  void saveObjectInSummary(const T& t, int idsel = -1) {
-    LHCb::HltSelectionSummary& sel = selectionSummary(idsel);
-    ContainedObject* obj = (ContainedObject*) &t;
-    sel.addData(*obj);
-  }
-  
-  
-  /** save a container of data objeces (i.e Tracks and Vertices) into the
-   *  selection summary info
-   * by the default the selection summary is taked from the option SelectionName
-   * user can save an object into other selection summary, indicating the ID
-   * of the selection summary 
-   * (for IDs of selection summaries see Event/HltEnums.h) 
-   **/
-  template <class CONT>
-  inline void saveInSummary(const CONT& cont, int idsel = -1) {
-    for (typename CONT::const_iterator it = cont.begin(); 
-         it != cont.end(); ++it) saveObjectInSummary(**it,idsel);
-  }
-
-
-  /** retrieve a vector of objects saved in a summary selection info
-   *  (for the IDs of teh selecion summaries see Event/HltEnums.h)
-   **/
-  template <class T>
-  void retrieveFromSummary(int idsel, std::vector<T*>& tobjs) {
-    HltSummaryFunctor::retrieve(*m_summary,idsel,tobjs);
-  }
-  
-
-protected:
-  
-  // initialize the containers
-  bool initContainers();
-
-  // initialize the histograms
-  void initHistograms();  
-
-  // initialize the counters
-  void initCounters();
-
-  template <class CONT>
-  void doregister(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
-    std::string loca = "/Event/"+name;
-    if (exist< Hlt::DataHolder<CONT> > (m_hltSvc,loca)) {
-      fatal() << " output location already exist " << loca << endreq;
-    } else {
-      if (!con) con = new CONT();
-      put(m_hltSvc, new Hlt::DataHolder<CONT>(*con),loca);
-      info() << " located holder at " << loca << endreq;
-    }
-  }
-
-  template <class CONT>
-  void doretrieve(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
-    std::string loca = "/Event/"+name;
-    if (! exist<Hlt::DataHolder<CONT> > (m_hltSvc,loca)) 
-      fatal() << " input location does not exist " << loca << endreq;
-    Hlt::DataHolder<CONT>* holder = get< Hlt::DataHolder<CONT> >(m_hltSvc,loca);
-    if (!holder) error() << " not data holder at " << loca << endreq;
-    con = &(holder->object());  
-    info() << " retrieved holder at " << loca << endreq;
-  }
-
-  // retrive a track container from a store with a given name
-  void init(Hlt::TrackContainer*& con, IHltDataStore*& store,
-            const std::string& name);
-  
-  // retrieve a vertex container from a store with a given name
-  void init(Hlt::VertexContainer*& con, IHltDataStore*& store,
-            const std::string& name);
-  
-  // retrieve a pat track container from the pat store with a given name
-  void init(PatTrackContainer*& con, PatDataStore*& store,
-            const std::string& name);
-
-  // retrieve a pat vertex container from the pat store with a given name
-  void init(PatVertexContainer*& con, PatDataStore*& store,
-            const std::string& name);
-protected:
-
-  /** get the summary 
-   **/
-  LHCb::HltSummary& summary() {
-    if (!m_summary) 
-      m_summary = getOrCreate<LHCb::HltSummary,LHCb::HltSummary>(m_summaryLocation);
-    return *m_summary;
-  }
-
-  /** get the selection summary with a give ID (see Event/HltEnums.h)
-   *  by defaul: the selection summary indicated in the option "SelectionName"
-   **/
-  LHCb::HltSelectionSummary& selectionSummary(int id = -1);
-  
-protected:
-
-  // Is isTrigger a positive decision will be stored in the summary
-  bool m_isTrigger;
-
-  // TODO: do we need it?
-  bool m_decision;
-  
-  // name of the location of the summary
-  std::string m_summaryLocation;
-
-  // name of the selection summary
-  std::string m_selectionName;
-
-  // ID of the selection summary
-  int m_selectionSummaryID;
-  
- protected:
-
-  // pointer to the summary
-  LHCb::HltSummary* m_summary;
-
-  // pointer to the selection summary
-  LHCb::HltSelectionSummary* m_selectionSummary;
-
-  // minimun number of candidates
-  int m_minNCandidates;
-
-protected:
-  
-  void printInfo(const std::string& title, const Hlt::TrackContainer& con);
-  
-  // pointer to the pat data Store
-  PatDataStore* m_patDataStore;
-
-  // pointer to the hlt data store
-  IHltDataStore* m_hltDataStore;
-
-  // hlt data provided service
-  IDataProviderSvc* m_hltSvc;
-
-  // names of the pat input containers
-  std::string m_patInputTracksName;
-  std::string m_patInputTracks2Name;
-  std::string m_patInputVerticesName;
-  
-  // pointers to the pat containers
-  PatTrackContainer* m_patInputTracks;
-  PatTrackContainer* m_patInputTracks2;
-  PatVertexContainer* m_patInputVertices;
-
-  // names of the hlt containers
-  std::string m_inputTracksName;
-  std::string m_inputTracks2Name;
-  std::string m_inputVerticesName;
-  std::string m_primaryVerticesName;
-
-  std::string m_outputTracksName;
-  std::string m_outputVerticesName;
-
-  // pointers to the hlt containers
-  Hlt::TrackContainer* m_inputTracks;
-  Hlt::TrackContainer* m_inputTracks2;
-  Hlt::VertexContainer* m_inputVertices;
-  Hlt::VertexContainer* m_primaryVertices;
-
-  Hlt::TrackContainer* m_outputTracks;
-  Hlt::VertexContainer* m_outputVertices;
 
   // size of the input containers
   int m_nInputTracks;
@@ -342,5 +344,11 @@ protected:
   // size of the output containers
   int m_nOutputTracks;
   int m_nOutputVertices;
+
+private:  
+
+  // internal interface to compute size of the output selection objects
+  Hlt::ISizeHolder* m_outputHolder;
+
 };
 #endif // HLTBASE_HLTALGORITHM_H

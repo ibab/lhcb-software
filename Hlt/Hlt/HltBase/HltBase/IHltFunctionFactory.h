@@ -1,4 +1,4 @@
-// $Id: IHltFunctionFactory.h,v 1.1 2007-06-20 12:08:40 hernando Exp $
+// $Id: IHltFunctionFactory.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_IHLTFUNCTIONFACTORY_H 
 #define HLTBASE_IHLTFUNCTIONFACTORY_H 1
 
@@ -8,7 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
 #include "Event/HltEnums.h"
 #include "HltBase/HltTypes.h"
 
@@ -30,25 +29,18 @@ public:
 
   virtual void setVertices(std::vector<LHCb::RecVertex*>& vertex) = 0;
   
-  virtual Hlt::TrackFunction* trackFunction(int id) = 0;
+  virtual Hlt::TrackFunction* trackFunction(const std::string& name,
+                                            int& id) = 0;
 
-  virtual Hlt::TrackFilter* trackFilter(int id, const std::string& mode,  
-                                   double x0, double xf = 1e6) = 0;
-
-  virtual Hlt::TrackFilter* trackFilter(const Hlt::TrackFunction& fun, 
-                                   const std::string& mode,
-                                   double x0, double xf = 1e6) = 0;
+  virtual Hlt::TrackFilter* trackFilter(const std::string& name) = 0;
   
-  virtual Hlt::VertexFunction* vertexFunction(int id) = 0;
+  virtual Hlt::VertexFunction* vertexFunction(const std::string& name,
+                                              int& id) = 0;
+  
+  virtual Hlt::VertexFilter* vertexFilter(const std::string& name) = 0;
 
-  virtual Hlt::VertexFilter* vertexFilter(int id, const std::string& mode,
-                                          double x0, double xf = 1e6) = 0;
-
-  virtual Hlt::VertexFilter* vertexFilter(const Hlt::VertexFunction& fun, 
-                                          const std::string& mode,
-                                          double x0, double xf = 1e6) = 0;
-
-  virtual Hlt::TrackBiFunction* trackBiFunction(int id) = 0;
+  virtual Hlt::TrackBiFunction* trackBiFunction(const std::string& name,
+                                                int& id) = 0;
 
 };
 #endif // HLTBASE_IHLTFUNCTIONFACTORY_H

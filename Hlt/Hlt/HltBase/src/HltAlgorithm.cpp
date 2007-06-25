@@ -1,5 +1,9 @@
-// $Id: HltAlgorithm.cpp,v 1.10 2007-06-20 20:31:42 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.11 2007-06-25 20:40:11 hernando Exp $
 // Include files 
+
+// from boost
+#include <boost/functional/hash.hpp>
+#include <boost/lexical_cast.hpp>
 
 // from Gaudi
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -10,6 +14,7 @@
 
 #include "HltBase/ESequences.h"
 #include "Event/HltNames.h"
+#include "HltBase/HltConfigurationHelper.h"
 
 using namespace LHCb;
 
@@ -26,10 +31,11 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
 {
-  
+
   // location of the summary and the summary box name
-  declareProperty("SummaryLocation",
-                  m_summaryLocation = LHCb::HltSummaryLocation::Default);
+  declareProperty("DataSummaryLocation",
+                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
+
   declareProperty("SelectionName",
                   m_selectionName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
@@ -51,15 +57,19 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
+  m_selectionID = 0;
+  m_outputHolder = NULL;
+  m_inputSelections.clear();
   
-
-  m_selectionSummaryID = -1;
-
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltAlgorithm::~HltAlgorithm() {} 
+HltAlgorithm::~HltAlgorithm() {
+  delete m_outputHolder;
+  if (m_outputTracks) delete m_outputTracks;
+  if (m_outputVertices) delete m_outputVertices;
+} 
 
 //=============================================================================
 // Initialization
@@ -68,13 +78,22 @@ StatusCode HltAlgorithm::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if (m_selectionName != "") {
-    m_selectionSummaryID = 
-      HltNames::selectionSummaryID(m_selectionName);
-    info() << " selection summary Name " << m_selectionName 
-           << "  ID " << m_selectionSummaryID << endreq;
-  }
-  
+  m_hltSvc = NULL;
+  sc = serviceLocator()->service("HltDataSvc/EventDataSvc", m_hltSvc);
+  if (sc.isFailure() || !m_hltSvc) 
+    error() << " not able to create HltData Provider " << endreq;
+
+  m_datasummary = NULL;
+  hltretrieve(m_datasummary,m_dataSummaryLocation);
+  if (m_datasummary == NULL) 
+    fatal() << " not able to hltretrieve summary data " << endreq;
+
+  std::string loca = m_dataSummaryLocation+"/Configuration";
+  m_conf = NULL;
+  hltretrieve(m_conf,loca);
+  if (m_conf == NULL) 
+    fatal() << " not able to hltretrieve hlt configuration " << endreq;
+
   bool ok = true;
   ok = initContainers();
   if (!ok) return stop(" problems with Containers ");
@@ -82,87 +101,55 @@ StatusCode HltAlgorithm::initialize() {
   initCounters();
 
   initHistograms();
+
+  saveConfiguration();
+
+  //  infoConfiguration();
+
   return StatusCode::SUCCESS;
 
 }
 
-void HltAlgorithm::init(Hlt::TrackContainer*& con,
-                        IHltDataStore*& store,
-                        const std::string& name) {
-  con = NULL;
-  if (name != "") {
-    con = &(store->tracks(name));
-    debug() << " initialize container " << name << endreq;
-  } 
-}
-
-void HltAlgorithm::init(Hlt::VertexContainer*& con,
-                        IHltDataStore*& store, const std::string& name) {
-  con = NULL;
-  if (name != "") { con = &(store->vertices(name));
-  debug() << " initialize container " << name << endreq;} 
-}
-
-void HltAlgorithm::init(PatTrackContainer*& con,
-                        PatDataStore*& store,const std::string& name) {
+void HltAlgorithm::patretrieve(PatTrackContainer*& con,
+                               PatDataStore*& store,
+                               const std::string& name) {
   con = NULL;
   if (name != "") {con = store->tracks(name);
   debug() << " initialize pat container " << name << endreq;} 
 }
 
-void HltAlgorithm::init(PatVertexContainer*& con,
-                        PatDataStore*& store, const std::string& name) {
+void HltAlgorithm::patretrieve(PatVertexContainer*& con,
+                               PatDataStore*& store, 
+                               const std::string& name) {
   con = NULL;
   if (name != "") { con = store->vertices(name);
   debug() << " initialize pat container " << name << endreq;} 
 }
 
 bool HltAlgorithm::initContainers() {
-  
-
-  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc", m_hltSvc);
-  if (sc.isFailure() || !m_hltSvc) 
-    error() << " not able to create HltData Provider " << endreq;
 
   m_inputTracks = NULL; m_inputTracks2 = NULL;
-  doretrieve(m_inputTracks,m_inputTracksName);
-  doretrieve(m_inputTracks2,m_inputTracks2Name);
+  sumretrieve(m_inputTracks,m_inputTracksName);
+  sumretrieve(m_inputTracks2,m_inputTracks2Name);
 
   m_inputVertices = NULL; m_primaryVertices = NULL;
-  doretrieve(m_primaryVertices,m_primaryVerticesName);
-  doretrieve(m_inputVertices,m_inputVerticesName);
+  sumretrieve(m_primaryVertices,m_primaryVerticesName);
+  sumretrieve(m_inputVertices,m_inputVerticesName);
+
+  if (m_selectionName != "") sumregister(m_selectionName);
 
   m_outputTracks = NULL; m_outputVertices = NULL;
-  doregister(m_outputTracks,m_outputTracksName);
-  doregister(m_outputVertices,m_outputVerticesName);
-
-  // from HltDataStore
-
-  m_hltDataStore     = tool<IHltDataStore>( "HltDataStore" );
-  if (!m_hltDataStore) return false;
-  
-// //  get the input tracks and vertices containers 
-//   init(m_inputTracks,m_hltDataStore,m_inputTracksName);
-//   init(m_inputTracks2,m_hltDataStore,m_inputTracks2Name);
-
-//   init(m_primaryVertices,m_hltDataStore,m_primaryVerticesName);
-//   init(m_inputVertices,m_hltDataStore,m_inputVerticesName);
-
-//   init(m_outputTracks,m_hltDataStore,m_outputTracksName);
-//   init(m_outputVertices,m_hltDataStore,m_outputVerticesName);
-
-  //  release(m_hltDataStore);  
+  sumregister(m_outputVertices,m_outputVerticesName);
+  sumregister(m_outputTracks,m_outputTracksName);
 
   // from PatDataStore
+  m_patDataStore = NULL;
   m_patDataStore = tool<PatDataStore>("PatDataStore");
-  if (!m_hltDataStore) return false;
+  if (!m_patDataStore) return false;
   
-  init(m_patInputTracks,m_patDataStore,m_patInputTracksName);
-  init(m_patInputTracks2,m_patDataStore,m_patInputTracks2Name);
-  init(m_patInputVertices,m_patDataStore,m_patInputVerticesName);
-  
-  // release(patstore);
-  
+  patretrieve(m_patInputTracks,m_patDataStore,m_patInputTracksName);
+  patretrieve(m_patInputTracks2,m_patDataStore,m_patInputTracks2Name);
+  patretrieve(m_patInputVertices,m_patDataStore,m_patInputVerticesName);
 
   // info of using containers...
   infoContainer(m_patInputTracks," pat input tracks ",m_patInputTracksName);
@@ -216,6 +203,40 @@ void HltAlgorithm::initHistograms() {
     initializeHisto(m_histoOutputTracks,  "OutputTracks");
 }
 
+void HltAlgorithm::saveConfiguration() {
+  
+  if (m_selectionName == "") {
+    warning() << " Not able to store hlt configuration "
+              << name() << " missing selection name! " << endreq;
+    return;
+  }
+
+  std::string mykey = name()+"/Selection";
+  m_conf->add(mykey,m_selectionName);
+  info() << " HLT ["<<mykey<<"] = "
+         << m_conf->retrieve<std::string>(mykey) << endreq;
+  
+  confregister("Algo",name());
+
+  if (m_inputTracks) 
+    confregister("InputTracksName",m_inputTracksName);
+  if (m_inputTracks2) 
+    confregister("InputTracks2Name",m_inputTracks2Name);
+  if (m_inputVertices) 
+    confregister("InputVerticesName",m_inputVerticesName);
+  if (m_primaryVertices) 
+    confregister("PrimaryVerticesName",m_primaryVerticesName);
+  
+  if (m_outputTracks) 
+    confregister("OutputTracksName",m_outputTracksName);
+  if (m_outputVertices) 
+    confregister("OutputVerticesName",m_outputVerticesName);
+  
+  if (m_inputSelections.size()>0)
+    confregister("InputSelections",m_inputSelections);
+  
+}
+
 bool HltAlgorithm::beginExecute() {
 
   bool ok = HltBaseAlg::beginExecute();
@@ -226,13 +247,8 @@ bool HltAlgorithm::beginExecute() {
   if (m_outputTracks) m_outputTracks->clear();
   if (m_outputVertices) m_outputVertices->clear();
 
-  m_summary = NULL;
-  m_selectionSummary = NULL;
-
-  if (m_selectionSummaryID>0) {
-    selectionSummary();
-    if (!m_filter) m_selectionSummary->setDecisionType(HltEnums::Forced, true);
-  }
+  if (!m_filter)
+    selectionSummary().setDecisionType(HltEnums::Forced, true);
 
   // verbose() << " histograming inputs " << endreq;
 
@@ -267,13 +283,6 @@ bool HltAlgorithm::beginExecute() {
 
   increaseCounter(m_counterInput );
 
-  // Increase input counters
-  // increaseCounter( m_countNonEmpty );
-  // increaseCounter( m_countInputVertices, m_nInputVertices );
-  // increaseCounter( m_countInputPVs,      m_nPrimaryVertices );
-  // increaseCounter( m_countInputTracks,   m_nInputTracks );
-  // increaseCounter( m_countInputTracks2,  m_nInputTracks2 );
-
   return ok;
 }
 
@@ -290,6 +299,10 @@ bool HltAlgorithm::endExecute() {
             " output vertices ");
   if (!ok) return ok;
 
+  if (m_outputHolder) 
+    candidateFound(m_outputHolder->size());
+
+  debug() << " output candidates " << m_nCandidates << endreq;
   if (m_nCandidates >= m_minNCandidates) {
     increaseCounter(m_counterAccepted);
     setDecision(true);
@@ -299,36 +312,54 @@ bool HltAlgorithm::endExecute() {
   return ok;
 }
 
+void HltAlgorithm::setDecision(bool ok) {
+  HltBaseAlg::setDecision(ok);
+  if (m_filter) {
+    selectionSummary().setDecision(ok);
+    debug() << " set decision " << selectionSummary().decision()
+            << " at selection " << m_selectionID << endreq;
+  }
+}
+
+void HltAlgorithm::setDecisionType(int decisionType) {
+  selectionSummary().setDecisionType(decisionType,true);
+  if (m_isTrigger) m_datasummary->setDecisionType(decisionType,true);
+  setDecision(true);
+}
+
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
 
   StatusCode sc =  HltBaseAlg::finalize();
-  infoSubsetEvents  ( m_counterAccepted , m_counterInput,  " accepted/inputs ");  
+  infoSubsetEvents  ( m_counterAccepted , 
+                      m_counterInput,  " accepted/inputs ");  
   if (m_passPeriod >0) 
-    infoSubsetEvents  ( m_counterPassed , m_counterInput,  " passed/inputs ");
+    infoSubsetEvents  ( m_counterPassed , 
+                        m_counterInput,  " passed/inputs ");
 
   return sc;
   
 }
 
-
-HltSelectionSummary& HltAlgorithm::selectionSummary(int id) {
-  if (!m_summary) summary();
-  if (id>0) return m_summary->selectionSummary(id);
-  id = m_selectionSummaryID;
-  if (!m_selectionSummary)
-    debug() << " retrieving selection summary id " << id << endreq;
-  m_selectionSummary = &(m_summary->selectionSummary(id));
-  return *m_selectionSummary;
+void HltAlgorithm::printInfo(const std::string& title,
+                             const Hlt::TrackContainer& con) {
+  for (Hlt::TrackContainer::const_iterator it = con.begin(); 
+       it != con.end(); it++) 
+    printInfo(title,*(*it));
 }
 
 void HltAlgorithm::printInfo(const std::string& title,
-                             const Hlt::TrackContainer& con) {
-  info() << title << endreq;
-  for (Hlt::TrackContainer::const_iterator it = con.begin(); it != con.end(); 
-       it++) {
-    const LHCb::Track& track = *(*it);
-    info() << " track  " << track.key() << " slopes " 
-           << track.slopes()  << " pt " << track.pt() << endreq;
+                             const Track& track) {
+  info() << title << " track  " << track.key() << " slopes " 
+         << track.slopes()  << " pt " << track.pt() << endreq;
+}
+
+void HltAlgorithm::sumregister(const std::string& selname) {
+  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
+  if (m_datasummary->hasSelectionSummary(id))
+    fatal() << " selection already registered! " << selname << endreq;
+  else {
+    m_selectionName = selname;
+    m_selectionID = id;
   } 
 }

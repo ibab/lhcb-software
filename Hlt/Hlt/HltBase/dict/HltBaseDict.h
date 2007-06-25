@@ -13,6 +13,16 @@
 #include "HltBase/IL0Value.h"
 #include "HltBase/ITrackUpgrade.h"
 #include "HltBase/ITrackMatch.h"
+#include "HltBase/HltTypes.h"
 
+// struct __Instantiations
+// {
+
+//   Hlt::HolderTrackContainer m_105;
+//   Hlt::HolderVertexContainer m_106;
+//   Hlt::HolderConfiguration m_e110;
+
+//   __Instantiations();  
+// };
 #endif // DICT_HLTBASEDICT_H
 

@@ -10,4 +10,5 @@
   <class name = "IL0Value" />
   <class name = "ITrackUpgrade" />
   <class name = "ITrackMatch" />
+  <class name = "Hlt::Configuration" />
 </lcgdict>

@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.1 2007-06-20 12:08:41 hernando Exp $
+// $Id: ITrackUpgrade.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -16,9 +16,9 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_IITrackUpgrade ( "ITrackUpgrade", 1, 0 );
+static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade", 1, 0 );
 
-/** @class IITrackUpgrade IITrackUpgrade.h HltBase/IITrackUpgrade.h
+/** @class ITrackUpgrade ITrackUpgrade.h HltBase/ITrackUpgrade.h
  *
  *  functionality: 
  *      upgrade a track adding info from other subdetectors
@@ -27,11 +27,11 @@ static const InterfaceID IID_IITrackUpgrade ( "ITrackUpgrade", 1, 0 );
  *  @author Jose A. Hernando
  *  @date   2007-02-08
  */
-class IITrackUpgrade : virtual public IAlgTool {
+class ITrackUpgrade : virtual public IAlgTool {
 public: 
 
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IITrackUpgrade; }
+  static const InterfaceID& interfaceID() { return IID_ITrackUpgrade; }
 
   virtual StatusCode upgrade( const LHCb::Track& seed,
                               std::vector<LHCb::Track*>& tracks) = 0;

@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.7 2007-06-20 12:08:41 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.8 2007-06-25 20:40:11 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,7 @@
 
 // local
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EParser.h"
 #include "HltBase/ESequences.h"
 
 //-----------------------------------------------------------------------------
@@ -257,7 +257,7 @@ void HltBaseAlg::initializeHistosFromDescriptor() {
     int n = 100;
     float x0 = 0.;
     float xf = 1.;
-    if (ParserDescriptor::parseHisto1D(*it,title,n,x0,xf)) {
+    if (EParser::parseHisto1D(*it,title,n,x0,xf)) {
       book1D(title,x0,xf,n);
       debug() << " booking histo from descriptor " << title 
               << "( "<< n << " , "<< x0 <<" , " << xf << ") " 
@@ -282,7 +282,7 @@ void HltBaseAlg::initializeHisto( HltHisto& histo,
     int n = 100;
     float y0 = 0.;
     float yf = 100.;
-    bool ok =  ParserDescriptor::parseHisto1D(des,xtitle,n,y0,yf);
+    bool ok =  EParser::parseHisto1D(des,xtitle,n,y0,yf);
     if (ok && xtitle == title) { nbins = n; x0 = y0; xf = yf;}
   }
   histo = this->book1D( title, x0, xf, nbins);

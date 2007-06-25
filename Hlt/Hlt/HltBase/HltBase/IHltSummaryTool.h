@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.4 2007-03-16 16:29:36 cattanem Exp $
+// $Id: IHltSummaryTool.h,v 1.5 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
@@ -13,6 +13,7 @@
 namespace LHCb {
   class HltSummary;
   class Track;
+  class RecVertex;
 };
 
 static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
@@ -27,15 +28,44 @@ static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
  */
 class IHltSummaryTool : virtual public IAlgTool {
 public: 
-
+  
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IHltSummaryTool; }
 
-  virtual StatusCode load() = 0;
+  virtual const LHCb::HltSummary& summary() = 0;
+  
+  virtual bool decision() = 0;
+  
+  virtual bool decisionType(const std::string& name) = 0;
 
-  virtual void setSummary(const LHCb::HltSummary& summary) = 0;
+  virtual bool hasSelection(const std::string& name) = 0;
 
-  virtual bool isInSelection(const LHCb::Track& track, int selID ) = 0;
+  virtual bool selectionDecision(const std::string& name) = 0;
 
+  virtual bool selectionDecisionType(const std::string& name,
+                                     const std::string& type) = 0;
+
+  virtual std::vector<std::string> selections() = 0;
+
+  virtual std::vector<std::string> selectionFilters(const std::string& name) = 0;
+
+  virtual std::vector<std::string> selectionAncestors(const std::string& name) = 0;
+
+  virtual std::vector<LHCb::Track*> selectionTracks(const std::string& name)= 0;
+
+  virtual std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name)= 0;
+
+  virtual bool isInSelection(const std::string& name,
+                             const LHCb::Track& track ) = 0;
+
+  virtual std::vector<std::string> confKeys() = 0;
+  
+  virtual std::string confString(const std::string& name) = 0;
+  
+  virtual std::vector<std::string> confStringVector(const std::string& name)= 0;
+
+  // virtual bool isInSelection(const std::string& name,
+  //                           const LHCb::RecVectex& vertex) = 0;
+  
 };
 #endif // HLTBASE_IHLTSUMMARYTOOL_H

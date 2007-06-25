@@ -1,4 +1,4 @@
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EParser.h"
 #include <iostream>
 #include <stdlib.h>
 
@@ -10,9 +10,9 @@
  */
 
 
-std::vector<std::string> ParserDescriptor::parse(const std::string& descriptor)
+std::vector<std::string> EParser::parse(const std::string& descriptor,
+                                                 const std::string& marker)
 {
-  std::string marker = ",";
   std::string cromo = descriptor;
   typedef std::string::size_type stype;
   std::vector<std::string> gens;
@@ -29,11 +29,11 @@ std::vector<std::string> ParserDescriptor::parse(const std::string& descriptor)
 }
 
 
-bool ParserDescriptor::parseHisto1D(const std::string& descriptor,
+bool EParser::parseHisto1D(const std::string& descriptor,
                                     std::string& title,
                                     int& n, float& x0, float& xf)
 { 
-  std::vector<std::string> gens = ParserDescriptor::parse(descriptor);
+  std::vector<std::string> gens = EParser::parse(descriptor,",");
   // for (std::vector<std::string>::const_iterator it = gens.begin();
   //     it != gens.end(); it++)
   //  std::cout << *it << std::endl;
@@ -47,11 +47,11 @@ bool ParserDescriptor::parseHisto1D(const std::string& descriptor,
   return true;
 }
 
-bool ParserDescriptor::parseFilter(const std::string& descriptor,
+bool EParser::parseFilter(const std::string& descriptor,
                                    std::string& title, std::string& mode,
                                    float& x0, float& xf)
 { 
-  std::vector<std::string> gens = ParserDescriptor::parse(descriptor);
+  std::vector<std::string> gens = EParser::parse(descriptor,",");
   // for (std::vector<std::string>::const_iterator it = gens.begin();
   //     it != gens.end(); it++)
   //  std::cout << *it << std::endl;

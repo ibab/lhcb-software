@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.h,v 1.4 2007-06-20 12:08:40 hernando Exp $
+// $Id: HltBaseAlg.h,v 1.5 2007-06-25 20:40:11 hernando Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
@@ -277,7 +277,7 @@ protected:
   bool m_monitor;
 
   // setting the decision, set FilterPass to inform the Gaudi sequencer
-  inline void setDecision(bool ok) {
+  virtual void setDecision(bool ok) {
     if (m_filter) setFilterPassed(ok);
     debug() << " set decision " << ok << endreq;
   }
