@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.5 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltInit.cpp,v 1.6 2007-06-25 21:35:42 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -89,25 +89,26 @@ void HltInit::saveConfiguration() {
 
   // store the Hlt configuration
 
-  std::vector<std::string> algonames =  HltNames::selectionSummaryNames();
-  for (std::vector<std::string>::const_iterator it = algonames.begin();
-       it != algonames.end(); ++it) {
-    const std::string& name = *it;
-    int id = HltNames::selectionSummaryID(name);
-    m_hltConfiguration.add("SelectionID/"+name,id);
-    std::string sid = boost::lexical_cast<std::string>(id);
-    m_hltConfiguration.add("SelectionID/"+sid,name);
-  }
+  // Temporally OFF
+  // std::vector<std::string> algonames =  HltNames::selectionSummaryNames();
+//   for (std::vector<std::string>::const_iterator it = algonames.begin();
+//        it != algonames.end(); ++it) {
+//     const std::string& name = *it;
+//     int id = HltNames::selectionSummaryID(name);
+//     m_hltConfiguration.add("SelectionID/"+name,id);
+//     std::string sid = boost::lexical_cast<std::string>(id);
+//     m_hltConfiguration.add("SelectionID/"+sid,name);
+//   }
   
-  std::vector<std::string> infonames =  HltNames::particleInfoNames();
-  for (std::vector<std::string>::const_iterator it = infonames.begin();
-       it != infonames.end(); ++it) {
-    const std::string& name = *it;
-    int id = HltNames::particleInfoID(name);
-    m_hltConfiguration.add("ExtraInfoID/"+name,id);
-    std::string sid = boost::lexical_cast<std::string>(id);
-    m_hltConfiguration.add("ExtraInfoID/"+sid,name);
-  }
+//   std::vector<std::string> infonames =  HltNames::particleInfoNames();
+//   for (std::vector<std::string>::const_iterator it = infonames.begin();
+//        it != infonames.end(); ++it) {
+//     const std::string& name = *it;
+//     int id = HltNames::particleInfoID(name);
+//     m_hltConfiguration.add("ExtraInfoID/"+name,id);
+//     std::string sid = boost::lexical_cast<std::string>(id);
+//     m_hltConfiguration.add("ExtraInfoID/"+sid,name);
+//   }
 }
 
 

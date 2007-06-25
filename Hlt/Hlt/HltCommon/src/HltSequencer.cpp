@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.12 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.13 2007-06-25 21:35:43 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -288,7 +288,7 @@ StatusCode HltSequencer::endRun ( ) {
 //=========================================================================
 // reset the executed status of all members 
 //=========================================================================
-StatusCode HltSequencer::resetExecuted ( ) {
+void HltSequencer::resetExecuted ( ) {
 // void HltSequencer::resetExecuted ( ) {
   Algorithm::resetExecuted();
   std::vector<AlgorithmEntry>::const_iterator itE;
@@ -296,7 +296,6 @@ StatusCode HltSequencer::resetExecuted ( ) {
     Algorithm* myAlg = (*itE).algorithm();
     myAlg->resetExecuted();
   }
-  return StatusCode::SUCCESS;
 }
 //=========================================================================
 //  Decode the input names and fills the m_algs vector.
