@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.13 2007-06-22 13:51:25 ebos Exp $
+// $Id: StateTraj.cpp,v 1.14 2007-06-25 16:41:18 cattanem Exp $
 // Include files
 
 // Units
@@ -12,8 +12,8 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Constructor
-StateTraj::StateTraj( const State& state,
-                      const XYZVector& bField )
+StateTraj::StateTraj( const Gaudi::State& state,
+                      const Gaudi::XYZVector& bField )
   : DifTraj<kSize>( 10.*Units::km, 10.*Units::km ),
     m_pos( state.position() ),
     // True when approximating the trajectory as a straight line
@@ -23,9 +23,9 @@ StateTraj::StateTraj( const State& state,
     m_curv( Units::c_light*m_qOverP*( m_dir.Cross(bField) ) ) {}
 
 // Constructor
-StateTraj::StateTraj( const TrackVector& stateVector,
+StateTraj::StateTraj( const Gaudi::TrackVector& stateVector,
                       double z,
-                      const XYZVector& bField )
+                      const Gaudi::XYZVector& bField )
   : DifTraj<kSize>( 10.*Units::km, 10.*Units::km ),
     m_pos( stateVector(0), stateVector(1), z ),
     m_qOverP( stateVector(4) ),
@@ -59,9 +59,9 @@ XYZVector StateTraj::curvature( double /*arclength*/ ) const
 }
 
 void StateTraj::expansion( double arclength,
-                           XYZPoint& p,
-                           XYZVector& dp,
-                           XYZVector& ddp ) const 
+                           Gaudi::XYZPoint& p,
+                           Gaudi::XYZVector& dp,
+                           Gaudi::XYZVector& ddp ) const 
 {
   p   = position(arclength);
   dp  = direction(arclength);

@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r6 2007-06-25 ====================
+! 2007-06-25 - Marco Cattaneo
+ - Put back Gaudi:: namespace in StateTraj.cpp method calling sequences, 
+   needed to please doxygen (expects .h and .cpp to be the same)
+
 ! 2007-06-22 - Edwin Bos
  - Replaced TrackParameters::kappa with c_light as in the extrapolators.
 
