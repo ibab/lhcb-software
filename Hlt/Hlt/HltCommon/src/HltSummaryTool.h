@@ -1,11 +1,11 @@
-// $Id: HltSummaryTool.h,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.3 2007-06-25 21:57:17 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IHltSummaryTool.h"
+#include "HltBase/IHltConfSummaryTool.h"
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 
@@ -18,7 +18,7 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-02-08
  */
-class HltSummaryTool : public GaudiTool, virtual public IHltSummaryTool {
+class HltSummaryTool : public GaudiTool, virtual public IHltConfSummaryTool {
 public:
   
   /// Standard constructor

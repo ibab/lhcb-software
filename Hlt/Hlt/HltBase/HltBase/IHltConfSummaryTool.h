@@ -1,10 +1,11 @@
-// $Id: IHltConfSummaryTool.h,v 1.1 2007-06-25 21:48:12 hernando Exp $
-#ifndef HLTBASE_IHLTSUMMARYTOOL_H 
-#define HLTBASE_IHLTSUMMARYTOOL_H 1
+// $Id: IHltConfSummaryTool.h,v 1.2 2007-06-25 21:57:06 hernando Exp $
+#ifndef HLTBASE_IHLTCONFSUMMARYTOOL_H 
+#define HLTBASE_IHLTCONFSUMMARYTOOL_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -16,9 +17,9 @@ namespace LHCb {
   class RecVertex;
 };
 
-static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
+static const InterfaceID IID_IHltConfSummaryTool ( "IHltConfSummaryTool", 1, 0 );
 
-/** @class IHltSummaryTool IHltSummaryTool.h HltBase/IHltSummaryTool.h
+/** @class IHltConfSummaryTool IHltConfSummaryTool.h HltBase/IHltConfSummaryTool.h
  *
  *  functionality: 
  *      tool to simplify common task asked to the HltSummary  
@@ -26,11 +27,11 @@ static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
  *  @author Jose A. Hernando
  *  @date   2007-02-08
  */
-class IHltSummaryTool : virtual public IAlgTool {
+class IHltConfSummaryTool : virtual public IAlgTool {
 public: 
   
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IHltSummaryTool; }
+  static const InterfaceID& interfaceID() { return IID_IHltConfSummaryTool; }
 
   virtual const LHCb::HltSummary& summary() = 0;
   

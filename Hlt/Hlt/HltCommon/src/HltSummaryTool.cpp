@@ -32,7 +32,7 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
 {
   m_summary = NULL;
   
-  declareInterface<IHltSummaryTool>(this);
+  declareInterface<IHltConfSummaryTool>(this);
   
   declareProperty("SummaryLocation",
                   m_summaryLocation = LHCb::HltSummaryLocation::Default);

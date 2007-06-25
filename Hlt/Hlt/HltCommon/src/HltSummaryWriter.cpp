@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.1 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.2 2007-06-25 21:57:17 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -98,12 +98,12 @@ StatusCode HltSummaryWriter::execute() {
   loca = m_dataSummaryLocation+"/Configuration";  
   put(new Hlt::DataHolder<Hlt::Configuration>(*m_conf),loca);
 
-  debug() << " data decision " << m_datasummary->decision() << endreq;
+  verbose() << " data decision " << m_datasummary->decision() << endreq;
   std::vector<int> ids = m_datasummary->selectionSummaryIDs();
   for (std::vector<int>::iterator it = ids.begin(); 
        it != ids.end(); ++it) {
-    int id = *it;
-    printInfo(*m_datasummary,id);
+    int id = *it; 
+    // printInfo(*m_datasummary,id);
   }
 
   for (std::vector<int>::iterator it = m_selectionIDs.begin();

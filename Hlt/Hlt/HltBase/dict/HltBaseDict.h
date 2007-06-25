@@ -1,8 +1,7 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
 
-#include "HltBase/IHltDataStore.h"
-#include "HltBase/IHltSummaryTool.h"
+#include "HltBase/IHltConfSummaryTool.h"
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/IPrepareCaloSeed.h"
 #include "HltBase/IPrepareMuonSeed.h"
