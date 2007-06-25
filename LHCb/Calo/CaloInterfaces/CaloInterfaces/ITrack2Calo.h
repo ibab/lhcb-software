@@ -1,4 +1,4 @@
-// $Id: ITrack2Calo.h,v 1.1 2007-06-25 20:35:01 odescham Exp $
+// $Id: ITrack2Calo.h,v 1.2 2007-06-25 21:45:26 odescham Exp $
 #ifndef ITRACK2CALO_H 
 #define ITRACK2CALO_H 1
 
@@ -26,7 +26,6 @@ static const InterfaceID IID_ITrack2Calo ( "ITrack2Calo", 1, 0 );
  *  @date   2007-06-25
  */
 class ITrack2Calo : virtual public IAlgTool {
-friend class CaloCellID;
 public: 
 
   // Return the interface ID

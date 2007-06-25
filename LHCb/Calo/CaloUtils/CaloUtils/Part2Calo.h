@@ -1,4 +1,4 @@
-// $Id: Part2Calo.h,v 1.1 2007-06-25 20:33:34 odescham Exp $
+// $Id: Part2Calo.h,v 1.2 2007-06-25 21:44:13 odescham Exp $
 #ifndef PART2CALO_H 
 #define PART2CALO_H 1
 
@@ -16,7 +16,6 @@
  *  @date   2006-11-30
  */
 class Part2Calo : public Track2Calo, virtual public IPart2Calo {
-  friend class Track2Calo;
 public: 
   /// Standard constructor
   Part2Calo( const std::string& type, 
