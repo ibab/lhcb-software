@@ -42,11 +42,13 @@ def writeEnum(ofname,type,names):
     def mywrite(s):
         if (DEBUG): print s
         ofile.write(s)
+        
     mywrite("\t inline int "+type+"ID(const std::string& e){\n")
     for name in names:
         mywrite('\t\t if (e == "'+name+'") return '+NAMESPACE+name+";\n")
     mywrite("\t\t return -1; \n")
     mywrite("\t}\n")
+    
     mywrite("\t inline std::string "+type+"Str(int e){\n")
     mywrite("\t\t switch(e) { \n")
     for name in names:
@@ -55,6 +57,13 @@ def writeEnum(ofname,type,names):
     mywrite("\t\t}\n")
     mywrite("\t}\n")
 
+    mywrite("\t inline std::vector<std::string> "+type+"Names(){\n")
+    mywrite("\t std::vector<std::string> names;\n")
+    for name in names:
+        mywrite('\t names.push_back("'+name+'");\n')
+    mywrite('\t return names;\n')
+    mywrite("\t}\n")
+    
 def getEnums(ofilename):
     if (DEBUG): print " opening... ",ofilename
     ofile = open(ofilename,"r")
