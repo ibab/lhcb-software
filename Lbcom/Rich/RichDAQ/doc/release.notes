@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-06-25 - Chris Jones
+ - Minor improvements to DAQ decoding error printout
+
 ! 2007-06-22 - Chris Jones
  - Improvements to monitoring in RichRawdataFormatTool to handle cases when the
    L1 board ID is not recognised.

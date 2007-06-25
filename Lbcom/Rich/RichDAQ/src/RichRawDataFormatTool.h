@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.25 2007-04-23 17:23:42 cattanem Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.26 2007-06-25 21:31:49 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -161,7 +161,7 @@ namespace Rich
 
       /// Get the ODIN time tool
       const IEventTimeDecoder * timeTool() const;
-    
+
       /** Final printout of Level 1 stats
        *
        *  @param count The Summary object to printout
@@ -208,6 +208,11 @@ namespace Rich
         // compare the bits and return
         return ( (id1.data() & Mask) == (id2.data() & Mask) );
       }
+
+      /// Print the given data word as Hex and as bits, to the given precision
+      void rawDump( MsgStream & os, 
+                    const LongType word,
+                    const ShortType nBits = 32 ) const;
 
     private: // data
 
@@ -269,7 +274,7 @@ namespace Rich
       /// Turn on/off data integrity checks
       bool m_checkDataIntegrity;
 
-      /** @brief Turns on the use of a fake HPD RichSmartID for each HPD data data block. 
+      /** @brief Turns on the use of a fake HPD RichSmartID for each HPD data data block.
        *
        *  Useful for deep debugging cases when the HPD L0 ID is missing in the database.
        *

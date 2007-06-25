@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.58 2007-06-22 12:44:14 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.59 2007-06-25 21:31:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -697,6 +697,9 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   // Get bank version
   const BankVersion version = bankVersion( bank );
 
+  // Flag to indicate if a given L1 bank has been printed out in case of an error
+  bool l1BankErrorDump = true;
+
   if ( bankSize > 0 )
   {
 
@@ -740,7 +743,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
              << " : ODIN EvID=" << odin()->eventNumber() << " BxID=" << odin()->bunchId()
              << " : L1IngressHeader " << ingressWord
              << " -> Data Suppressed";
-        Error( mess.str(), 999999 );
+        Error( mess.str() );
       }
 
       // get list of active ingress inputs
@@ -757,7 +760,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
         std::ostringstream mess;
         mess << "L1 board " << L1ID << " : Ingress " << ingressWord
              << " is suppressed : " << inputs.size() << " Active HPDs";
-        Warning( mess.str() );
+        Warning( mess.str(), 1 );
       }
       else
       {
@@ -779,7 +782,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
                  << ingressWord.ingressID() << " HPD " << *iHPD << " is suppressed";
-            Warning( mess.str(), StatusCode::SUCCESS, 3 );
+            Warning( mess.str(), StatusCode::SUCCESS, 1 );
           }
 
           // Only try and decode this HPD if ODIN test was OK
@@ -869,11 +872,23 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               // decoding error ....
               error() << "Error in decoding -> Data is rejected for HPD " << hpdID << endreq;
 
-              error() << " -> Dump of raw L1 data :-" << endreq;
-              dumpRawBank( bank, error() );
+              if ( l1BankErrorDump )
+              {
+                error() << " -> Dump of raw L1 data :-" << endreq;
+                dumpRawBank( bank, error() );
+                l1BankErrorDump = false;
+              }
 
-              error() << " -> Badly decoded HPD :-" << endreq;
+              error() << " -> Ingress header : " << ingressWord << endreq;
+              error() << "  -> ";
+              rawDump(error(),ingressWord.data()); 
+              error() << endreq;
+              error() << " -> HPD data block : " << endreq;
+              error() << "  -> HPD Event ID = " << hpdBank->eventID() << " "; 
+              rawDump(error(),hpdBank->eventID().data(),hpdBank->eventID().activeBits());
+              error() << endreq;
               error() << *hpdBank << endreq;
+
             }
 
           } // ODIN OK and not suppressed
@@ -1287,7 +1302,8 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
   // Is this an empty bank ?
   if ( bankSize > 0 )
   {
-    const std::string & LINES = "----------------------------------------------------------------------------------------------------------------";
+    const std::string & LINES =
+      "----------------------------------------------------------------------------------------------------------------";
 
     // Bit numbers
     os << LINES << endreq;
@@ -1301,16 +1317,7 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
     typedef unsigned int Dtype;
     for ( const Dtype * dataW = bank.begin<Dtype>(); dataW != bank.end<Dtype>(); ++dataW )
     {
-      // Data words
-      std::ostringstream hexW;
-      hexW << std::hex << *dataW;
-      std::string tmpW = hexW.str();
-      if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
-      os << " -- " << tmpW << "  |";
-      for ( int iCol = 31; iCol >= 0; --iCol )
-      {
-        os << "  " << isBitOn( *dataW, iCol );
-      }
+      rawDump( os, *dataW );
       os << endreq;
     }
     os << LINES << endreq;
@@ -1321,5 +1328,21 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
     os << "  -> Bank is empty" << endreq;
   }
 
+}
+
+// Print the given data word as Hex and as bits, to the given precision
+void RawDataFormatTool::rawDump( MsgStream & os, 
+                                 const LongType word,
+                                 const ShortType nBits ) const
+{
+  std::ostringstream hexW;
+  hexW << std::hex << word;
+  std::string tmpW = hexW.str();
+  if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
+  os << tmpW << "  |";
+  for ( int iCol = nBits-1; iCol >= 0; --iCol )
+  {
+    os << "  " << isBitOn( word, iCol );
+  }
 }
 
