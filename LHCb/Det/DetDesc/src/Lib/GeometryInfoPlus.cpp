@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.21 2007-06-25 08:58:12 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.22 2007-06-25 14:51:43 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -332,7 +332,7 @@ StatusCode GeometryInfoPlus::localDeltaMatrix(const Gaudi::Transform3D& newDelta
   // Need to do this depending on whether there is an 
   // AlignmentCondition present. So check for that, and if there is,
   // also change the matrix in the AlignmentCondition data member.
-  if (this->hasAlignmentCondition()) myAlignmentCondition()->matrix(newDelta);
+  if (this->hasAlignmentCondition()) myAlignmentCondition()->matrix(newDelta );
   return setLocalDeltaMatrix(newDelta);
 }
 //=============================================================================
@@ -373,7 +373,7 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const Gaudi::Transform3D&
   }
 
   log() << MSG::VERBOSE << "updating local delta matrix" << endmsg;
-  m_localDeltaMatrix = new Gaudi::Transform3D(newDelta);
+  m_localDeltaMatrix = new Gaudi::Transform3D(newDelta.Inverse());
   m_deltaMatrices[0] = *m_localDeltaMatrix;
 
   if (!calculateFullMatrices(deltaBegin(), 
