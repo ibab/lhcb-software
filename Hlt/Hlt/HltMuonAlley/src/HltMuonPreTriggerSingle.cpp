@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerSingle.cpp,v 1.4 2007-06-20 16:12:57 hernando Exp $
+// $Id: HltMuonPreTriggerSingle.cpp,v 1.5 2007-06-25 21:02:12 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -31,9 +31,6 @@ HltMuonPreTriggerSingle::HltMuonPreTriggerSingle( const std::string& name,
 
   declareProperty("PtMin", m_ptMin = 0.);
   declareCondition("PtMin", m_ptMin);
-
-
-
 
 }
 //=============================================================================
@@ -90,7 +87,6 @@ StatusCode HltMuonPreTriggerSingle::execute() {
   if (m_outputTracks->size() == 0) return stop(" No tracks in PT window");
 
   setDecisionType(HltEnums::Muon);
-  saveInSummary(*m_outputTracks);
 
   if (m_debug) {
     debug() << " Pt1 " << pt1 << endreq;

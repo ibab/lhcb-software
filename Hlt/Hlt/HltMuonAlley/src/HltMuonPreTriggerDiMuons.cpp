@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.5 2007-06-20 16:12:57 hernando Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.6 2007-06-25 21:02:10 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -84,19 +84,22 @@ StatusCode HltMuonPreTriggerDiMuons::initialize() {
   _massAndIPCut=((massInfo> m_minMassWithIP)&& (ipInfo > m_minIP)).clone();
   _massCut=((massInfo> m_minMassNoIP)).clone();
   if(m_selection2SummaryName!=""){
-        m_selection2SummaryID=
-        HltNames::selectionSummaryID(m_selection2SummaryName);
+    //        m_selection2SummaryID=
+      // HltNames::selectionSummaryID(m_selection2SummaryName);
+    //JAH 
+    m_selection2SummaryID = 
+      HltConfigurationHelper::getID(*m_conf,"SelectionID",m_selection2SummaryName);
+    HltSelectionSummary& sel2 = 
+      m_datasummary->selectionSummary(m_selection2SummaryID);
+    Hlt::DataSizeHolder<Hlt::VertexContainer>* holder = 
+      new Hlt::DataSizeHolder< Hlt::VertexContainer > (m_selevertices2);
+    sel2.addData( *holder );
   }
   debug() << "==> Initialize" << endmsg;
-
-
 
   initializeHisto(h_mass,"Mass",0.,10000.,100);
   initializeHisto(h_IP,"IP",0,1.0,100);
   initializeHisto(h_DOCA,"DOCA",0.,1.0,100);
-
-
-
 //  checkInput(m_inputTracks," input tracks");
 //  checkInput(m_outputTracks," output tracks");
 //  checkInput(m_outputTracks2," output tracks 2 ");
@@ -111,6 +114,8 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
 //info()<<" sono qui "<<endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
+  m_outputVertices->clear();
+  m_selevertices2.clear();
   //info()<<" sono qui "<<endreq;
 
   //  ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
@@ -118,12 +123,7 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   //double pt1 = (*m_inputTracks->begin())->pt();
   //fillHisto( m_histoPt1, pt1, 1.);
   setDecision(false);
-  //  HltAlgorithm::monitor(*m_inputTracks,m_ptKey,m_histoPt);
-
-
-
-
-
+  //  HltAlgorithm::monitor(*m_inputTracks,m_ptKey,m_histoPt)
 
   // m_outputTracks->clear();
   m_otrack.clear();
@@ -159,41 +159,42 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   bool store1=false;
   
   
-  m_selevertices.clear();
-  ELoop::select(m_overtices,*_massAndIPCut,m_selevertices);
-  if(m_selevertices.size()>0)store=true;
+  m_selevertices2.clear();
+  ELoop::select(m_overtices,*_massAndIPCut,m_selevertices2);
+  if(m_selevertices2.size()>0)store=true;
   if(store){
-    float m=(*(m_selevertices.begin()))->info(m_massKey,0);
-    float d=(*(m_selevertices.begin()))->info(m_DOCAKey,0);
-    float p=(*(m_selevertices.begin()))->info(m_IPKey,0);
+    float m=(*(m_selevertices2.begin()))->info(m_massKey,0);
+    float d=(*(m_selevertices2.begin()))->info(m_DOCAKey,0);
+    float p=(*(m_selevertices2.begin()))->info(m_IPKey,0);
     
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0);
     fillHisto(h_IP,p,1.0); 
-    setDecisionType(HltEnums::DiMuon,m_selection2SummaryID);
-    saveInSummary(m_selevertices,m_selection2SummaryID);
+    HltSelectionSummary& sel2 = 
+      m_datasummary->selectionSummary(m_selection2SummaryID);
+    sel2.setDecisionType(HltEnums::DiMuon,true);
+    setDecision(true);
   }
   
 
   if(m_debug){  
-    debug()<<" mass and Ip cut "<<m_selevertices.size()<<endreq;
+    debug()<<" mass and Ip cut "<<m_selevertices2.size()<<endreq;
   }
-  m_selevertices.clear();
-  ELoop::select(m_overtices,*_massCut,m_selevertices);
-  if(m_selevertices.size()>0)store1=true;
+  m_outputVertices->clear();
+  ELoop::select(m_overtices,*_massCut,*m_outputVertices);
+  if(m_outputVertices->size()>0)store1=true;
   if(store1){
-    float m=(*(m_selevertices.begin()))->info(m_massKey,0);
-    float d=(*(m_selevertices.begin()))->info(m_DOCAKey,0);
-    //    float p=(*(m_selevertices.begin()))->info(m_IPKey,0);
+    float m=(*(m_outputVertices->begin()))->info(m_massKey,0);
+    float d=(*(m_outputVertices->begin()))->info(m_DOCAKey,0);
+    //    float p=(*(m_outputVertices->begin()))->info(m_IPKey,0);
     
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0); 
     setDecisionType(HltEnums::JPsi);
-    saveInSummary(m_selevertices);
   }
   
   if(m_debug){ 
-    debug()<<" mass  cut "<<m_selevertices.size()<<endreq;
+    debug()<<" mass  cut "<<m_outputVertices->size()<<endreq;
   }
   if(!store&&!store1)return stop("no mu pair is ok");
   setDecision(true);

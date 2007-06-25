@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2007-06-25 - Jose A. Hernando
+ - remove saveInSummary, DiMuon algos, report twice in the summary!, hack temporally
+
 ! 2007-06-20 - Jose A. Hernando
  - minor changes, remove begin,end Execute
 

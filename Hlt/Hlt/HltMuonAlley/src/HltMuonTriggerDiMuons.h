@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.h,v 1.4 2007-06-20 16:12:57 hernando Exp $
+// $Id: HltMuonTriggerDiMuons.h,v 1.5 2007-06-25 21:02:12 hernando Exp $
 #ifndef HLTMUONTRIGGERDIMUONS_H 
 #define HLTMUONTRIGGERDIMUONS_H 1
 
@@ -61,8 +61,8 @@ protected:
   Hlt::TrackContainer m_otrack;
   Hlt::TrackContainer m_otrack2;
 
-  Hlt::VertexContainer m_overtices;  
-  Hlt::VertexContainer m_selevertices;
+  Hlt::VertexContainer m_overtices;
+  Hlt::VertexContainer m_selevertices2;
   Hlt::VertexCreator _vertexCreator;
   HltHisto h_mass;
   HltHisto h_DOCA;
