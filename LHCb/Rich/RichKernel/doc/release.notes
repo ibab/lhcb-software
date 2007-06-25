@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.151 2007-06-22 13:40:22 jonrob Exp $
+! $Id: release.notes,v 1.152 2007-06-25 21:28:53 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-06-25 - Chris Jones
+ - Various minor updates to DAQ classes
 
 ! 2007-06-22 - Chris Jones
  - Add placement new operator to BoostMemPoolAlloc.h
