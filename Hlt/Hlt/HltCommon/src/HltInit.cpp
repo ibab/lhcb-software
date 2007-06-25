@@ -1,13 +1,16 @@
-// $Id: HltInit.cpp,v 1.4 2007-06-20 20:34:05 hernando Exp $
+// $Id: HltInit.cpp,v 1.5 2007-06-25 20:50:25 hernando Exp $
 // Include files 
 
 // from Gaudi
+#include <boost/lexical_cast.hpp>
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "HltInit.h"
 #include "Event/HltSummary.h"
-#include "HltBase/ESequences.h"
+// #include "HltBase/ESequences.h"
+#include "Event/HltNames.h"
+
 
 using namespace LHCb;
 
@@ -29,8 +32,11 @@ HltInit::HltInit( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // location of the summary and the summary box name
-  declareProperty("summaryName",
-                  m_summaryName = LHCb::HltSummaryLocation::Default);
+  declareProperty("TCKName", m_TCKName = "Default");
+
+  // location of the summary and the summary box name
+  declareProperty("DataSummaryLocation",
+                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
   
 }
 //=============================================================================
@@ -44,110 +50,80 @@ HltInit::~HltInit() {}
 StatusCode HltInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
+  // create the Hlt Data Svc
   m_hltSvc = NULL;
   std::string name = "HltDataSvc/EventDataSvc";
   sc = serviceLocator()->service(name,m_hltSvc,true);
   // m_hltSvc = svc<IDataManagerSvc>("HltDataSvc",true);  
-  if (!m_hltSvc) error() << " not able to create Hlt Svc " << endreq;
-  else debug() << " SUCCESSFULLY CREATED!! " << endreq;
+  if (!m_hltSvc) fatal() << " not able to create Hlt Svc " << endreq;
+  else info() << " created Hlt Data Svc! " << endreq;
   m_hltSvc->setRoot("/Event", new DataObject());
 
   IDataProviderSvc* hltsvc = NULL;
   sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
   if (!hltsvc) error() << " not able to create Hlt Svc provider " << endreq;
-  else debug() << " SUCCESSFULLY CREATED provider!! " << endreq;  
+  else debug() << " SUCCESSFULLY CREATED provider!! " << endreq;
 
-  info() << " hlt data svc " << (int) m_hltSvc << endreq;
-  info() << " event data svc " << (int) evtSvc() << endreq;
+  std::string loca = m_dataSummaryLocation;
+  put(hltsvc, new Hlt::DataHolder<LHCb::HltSummary>(m_datasummary),loca);  
+  info() << " stored hlt summary data " << endreq;
 
-  put(hltsvc, new Tracks(), "/Event/Hlt/Track/Caca");
-  debug() << " put tracks " << sc.isSuccess() << endreq;
-  Tracks* mtracks = get<Tracks>(hltsvc,"/Event/Hlt/Track/Caca");
-  if (!mtracks) error() << " can not retrieve tracks :(" << endreq;
-  debug() << " retrieved tracks :)" << endreq;
-  
+  loca = m_dataSummaryLocation+"/Configuration";
+  put(hltsvc,new Hlt::DataHolder<Estd::dictionary>(m_hltConfiguration),loca);
+  m_hltConfiguration.add("TCKName",m_TCKName);
+  info() << " stored hlt configuration " << m_TCKName << endreq;
 
 
-  
- //  sc = serviceLocator()->getService(name,IDataManagerSvc::interfaceID(),m_hltSvc);
-//   if (!sc) error() << " Not able to create HltDataSvc" << endreq;
-//  
+  // this two services should be different
+  debug() << " hlt data svc " << (int) m_hltSvc << endreq;
+  debug() << " event data svc " << (int) evtSvc() << endreq;
 
-  debug() << "==> Initialize" << endmsg;
-  IHltDataStore* store = tool<IHltDataStore>( "HltDataStore" );
-  m_tracks     = &(store->tracks());
-  m_vertices = &(store->vertices());
-  release(store);
-
-  m_patStore = tool<PatDataStore>( "PatDataStore" );
-  release(m_patStore);
+  saveConfiguration();
   
   return StatusCode::SUCCESS;
 }
+
+
+void HltInit::saveConfiguration() {
+
+  // store the Hlt configuration
+
+  std::vector<std::string> algonames =  HltNames::selectionSummaryNames();
+  for (std::vector<std::string>::const_iterator it = algonames.begin();
+       it != algonames.end(); ++it) {
+    const std::string& name = *it;
+    int id = HltNames::selectionSummaryID(name);
+    m_hltConfiguration.add("SelectionID/"+name,id);
+    std::string sid = boost::lexical_cast<std::string>(id);
+    m_hltConfiguration.add("SelectionID/"+sid,name);
+  }
+  
+  std::vector<std::string> infonames =  HltNames::particleInfoNames();
+  for (std::vector<std::string>::const_iterator it = infonames.begin();
+       it != infonames.end(); ++it) {
+    const std::string& name = *it;
+    int id = HltNames::particleInfoID(name);
+    m_hltConfiguration.add("ExtraInfoID/"+name,id);
+    std::string sid = boost::lexical_cast<std::string>(id);
+    m_hltConfiguration.add("ExtraInfoID/"+sid,name);
+  }
+}
+
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HltInit::execute() {
 
-  debug() << "==> Execute" << endmsg;
-
-  for (MapTracks::iterator it = m_tracks->begin(); 
-       it != m_tracks->end(); ++it)
-    (it->second).clear();
-      
-  for (MapVertices::iterator it2 = m_vertices->begin(); 
-       it2 != m_vertices->end(); ++it2)
-    (it2->second).clear();
-
-  HltSummary* sum = new HltSummary();
-  put( sum, m_summaryName );
-
- //  for (MapTracks::iterator it = m_tracks->begin(); it != m_tracks->end(); 
-//        ++it) {
-//     const std::string& name = it->first;
-//     if (Estd::has_key(m_patStore->beginTracks(),
-//                       m_patStore->endTracks(),name)) {
-//       Hlt::TrackContainer& tracks = it->second;
-//       PatTrackContainer* patTracks = m_patStore->tracks(name);
-//       if (patTracks->size()>0)
-//         std::copy(patTracks->begin(),patTracks->end(),
-//                   std::back_inserter(tracks));
-//       debug() << " pat loaded " << name << " " << tracks.size() << endreq;
-//       if (tracks.size() > 0) continue;
-//       if (!exist<Tracks>(name)) continue;
-//       Tracks* tesTracks = get<Tracks>(name);
-//       if (!tesTracks) continue;
-//       if (tesTracks->size() >0) 
-//         std::copy(tesTracks->begin(),tesTracks->end(),
-//                   std::back_inserter(tracks));
-//       debug() << " tes loaded " << name << " " << tracks.size() << endreq;
-//     }      
-//   } 
-
-//   for (MapVertices::iterator it = m_vertices->begin(); it != m_vertices->end(); 
-//        ++it) {
-//     const std::string& name = it->first;
-//     if (Estd::has_key(m_patStore->beginVertices(),
-//                       m_patStore->endVertices(),name)) {
-//       Hlt::VertexContainer& vertices = it->second;
-//       PatVertexContainer* patVertices = m_patStore->vertices(name);
-//       if (patVertices->size()>0)
-//         std::copy(patVertices->begin(),patVertices->end(),
-//                   std::back_inserter(vertices));
-//       debug() << " pat loaded " << name << " " << vertices.size() << endreq;
-//       if (vertices.size() > 0) continue;
-//       if (!exist<RecVertices>(name)) continue;
-//       RecVertices* tesVertices = get<RecVertices>(name);
-//       if (!tesVertices) continue;
-//       if (tesVertices->size() >0) 
-//         std::copy(tesVertices->begin(),tesVertices->end(),
-//                   std::back_inserter(vertices));
-//       debug() << " tes loaded " << name << " " << vertices.size() << endreq;
-//     }      
-//   } 
-
+  debug() << " decision " << m_datasummary.decision() << endreq;
+  m_datasummary.setPattern(0);
+  std::vector<int> ids = m_datasummary.selectionSummaryIDs();
+  for (std::vector<int>::iterator it = ids.begin(); 
+       it != ids.end(); ++it) {
+    int id = *it;
+    m_datasummary.selectionSummary(id).setPattern(0);
+  }
       
   return StatusCode::SUCCESS;
 }

@@ -1,13 +1,13 @@
-// $Id: HltSummaryTool.h,v 1.1 2007-02-08 17:38:06 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.2 2007-06-25 20:50:25 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IHltSummaryTool.h"         
-#include "HltBase/HltUtils.h"         
-
+#include "HltBase/IHltSummaryTool.h"
+#include "HltBase/HltTypes.h"
+#include "Event/HltSummary.h"
 
 /** @class HltSummaryTool HltSummaryTool.h
  *  
@@ -27,19 +27,49 @@ public:
                   const IInterface* parent);
 
   virtual ~HltSummaryTool( ); ///< Destructor
+
+  StatusCode initialize();
+
+  const LHCb::HltSummary& summary();
   
-  StatusCode load() {
-    m_summary = get<LHCb::HltSummary>(m_summaryLocation); 
-    if (!m_summary) return StatusCode::FAILURE;
-    return StatusCode::SUCCESS;
-  }
+  bool decision();
   
-  void setSummary(const LHCb::HltSummary& summary) 
-  {m_summary = (LHCb::HltSummary*) (&summary);}
+  bool decisionType(const std::string& name);
   
-  bool isInSelection(const LHCb::Track& track, int id);
+  bool hasSelection(const std::string& name);
+  
+  bool selectionDecision(const std::string& name);
+  
+  bool selectionDecisionType(const std::string& name, 
+                             const std::string& type);
+  
+  std::vector<std::string> selections();
+  
+  std::vector<std::string> selectionFilters(const std::string& name);
+  
+  std::vector<std::string> selectionAncestors(const std::string& name);
+  
+  std::vector<LHCb::Track*> selectionTracks(const std::string& name);
+  
+  std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name);
+  
+  bool isInSelection(const std::string& name,
+                     const LHCb::Track& track );
+
+  std::vector<std::string> confKeys();
+
+  std::string confString(const std::string& name) ;
+
+  std::vector<std::string> confStringVector(const std::string& name);  
 
 protected:
+
+  void getSummary();
+  
+protected:
+
+  IDataProviderSvc* m_hltSvc;
+  Hlt::Configuration* m_conf;
 
   std::string m_summaryLocation;
   LHCb::HltSummary* m_summary;

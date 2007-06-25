@@ -1,12 +1,13 @@
-// $Id: HltFunctionFactory.cpp,v 1.1 2007-06-20 12:17:37 hernando Exp $
-// Include files 
-
+// $Id: HltFunctionFactory.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltFunctionFactory.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/HltConfigurationHelper.h"
+#include "Event/HltSummary.h"
+#include "HltBase/EParser.h"
 
 using namespace LHCb;
 
@@ -29,133 +30,140 @@ HltFunctionFactory::HltFunctionFactory( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IHltFunctionFactory>(this);
- 
+
+  declareProperty("DataSummaryLocation", 
+                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
+
   declareProperty("Smart", m_smart = true);
 }
 
-Hlt::TrackFunction* HltFunctionFactory::trackFunction(int id) {
+StatusCode HltFunctionFactory::initialize() {
+  
+  IDataProviderSvc* hltsvc = NULL;
+  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  if (!hltsvc) fatal() << " not able to create Hlt Svc provider " << endreq;
+
+  m_conf = NULL;
+  std::string loca = m_dataSummaryLocation+"/Configuration";
+  Hlt::DataHolder<Hlt::Configuration>* holder = 
+    get<Hlt::DataHolder<Hlt::Configuration> >(hltsvc,loca);
+  if (!holder) fatal() << " not able to retrieve configuration " << endreq;
+
+  m_conf = &(holder->object());
+  
+  return sc;
+}
+
+Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& name,
+                                                      int& id) {
   Hlt::TrackFunction* fun = NULL;
-  if (id == HltEnums::rIP) {
+  if (name == "rIP") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<Track,RecVertex>(Hlt::rIP(),*m_vertices,
                                                       Estd::abs_min());
-    info() << " created function rIP " << id << endreq;
-  } else if (id == HltEnums::IP) {
+    debug() << " created function rIP " << name << endreq;
+  } else if (name == "IP") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<Track,RecVertex>(Hlt::IP(), *m_vertices,
                                                       Estd::abs_min());
-    info() << " created function IP " << id << endreq;
-  } else if (id == HltEnums::PT) {
+    debug() << " created function IP " << name << endreq;
+  } else if (name == "PT") {
     fun = new Hlt::PT();
-    info() << " created function PT " << id << endreq;
-  } else if (id == HltEnums::DOCA) {
+    debug() << " created function PT " << name << endreq;
+  } else if (name == "DOCA") {
     if (!m_vertices) error() << " tracks not set in factory " << endreq;
     fun =  new Estd::binder_function<Track,Track>(Hlt::DOCA(),*m_tracks,
                                                   Estd::abs_min());
-    info() << " created function DOCA " << id << endreq;
-  } else if (id == HltEnums::IDsFraction) {
+    debug() << " created function DOCA " << name << endreq;
+  } else if (name == "IDsFraction") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     fun =  new Estd::binder_function<Track,Track>(Hlt::MatchIDsFraction(), 
                                                   *m_tracks, Estd::abs_max());
-    info() << " created function IDsFrunction " << id << endreq;
+    debug() << " created function IDsFrunction " << name << endreq;
   }
-  
   if (m_smart && fun) {
+    id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::TrackFunction* fun1 = fun;
     fun = new Hlt::SmartFunction<Track>(id,*fun1);
-    info() << " created smart function " << id << endreq;
+    debug() << " created smart function " << name << " id " << id << endreq;
     delete fun1;
   }
-  if (!fun) error() << " requested track function not in factory " << endreq;
+  if (!fun) fatal() << " requested track function " << name 
+                    << " not in factory " << endreq;
   return fun;
 }
 
-Hlt::VertexFunction* HltFunctionFactory::vertexFunction(int id) {
+
+Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& name,
+                                                        int& id) {
   Hlt::VertexFunction* fun = NULL;
-  if (id == HltEnums::VertexDz) {
+  if (name == "VertexDz") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<RecVertex,RecVertex>(Hlt::DZ(),*m_vertices,
                                                           Estd::abs_min());    
-  } else if ( id == HltEnums::VertexPointing ) {
+  } else if ( name == "VertexPointing") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<RecVertex,RecVertex>(Hlt::FC(),*m_vertices,
                                                           Estd::abs_min());
-  } else if (id == HltEnums::VertexMinPT) {
+  } else if (name == "VertexMinPT") {
     fun = new Hlt::minPT();
-  } else if (id == HltEnums::VertexMaxPT) {
+  } else if (name == "VertexMaxPT") {
     fun = new Hlt::maxPT();
   }
-  if (!fun) error() << " requested vertex function not in factory " << endreq;
   if (m_smart && fun) {
+    id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::VertexFunction* fun1 = fun;
     fun = new Hlt::SmartFunction<RecVertex>(id,*fun1);
+    debug() << " created smart function " << name << " id " << id << endreq;
     delete fun1;
   }
+  if (!fun) fatal() << " requested vertex function " << name
+                    << " not in factory " << endreq;
   return fun;
 }
 
-Hlt::TrackFilter* HltFunctionFactory::trackFilter(int id,
-                                             const std::string& mode,
-                                             double x0, double xf) {
-  Hlt::Info<Track> info(id);
-  return trackFilter(info,mode,x0,xf);
-}
-
-
-Hlt::TrackFilter* HltFunctionFactory::trackFilter(const Hlt::TrackFunction& fun,
-                                                  const std::string& mode,
-                                                  double x0, double xf) {
-  if (mode == "<") return (fun < x0).clone();
-  else if (mode == ">") return (fun > x0).clone();
-  else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
-  else if (mode == "||>") {
-    Hlt::AbsFun<Track> afun(fun);
-    return (afun > x0).clone();
-  } else if ( mode == "||<") {
-    Hlt::AbsFun<Track> afun(fun);
-    return (afun < x0).clone();
-  } else if (mode == "||[]") {
-    Hlt::AbsFun<Track> afun(fun);
-    return ((afun > x0) && (afun < xf)).clone();
-  } 
-  error() << " not able to create filter " << mode << x0 << xf << endreq;
-  return NULL;
-}
-
-Hlt::VertexFilter* HltFunctionFactory::vertexFilter(int id,
-                                                    const std::string& mode,
-                                                    double x0, double xf) {
-  Hlt::Info<RecVertex> info(id);
-  return vertexFilter(info,mode,x0,xf);
-}
-
-
-Hlt::VertexFilter* HltFunctionFactory::vertexFilter(const Hlt::VertexFunction& fun,
-                                                    const std::string& mode,
-                                                    double x0, double xf) {
-  if (mode == "<") return (fun < x0).clone();
-  else if (mode == ">") return (fun > x0).clone();
-  else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
-  else if (mode == "||>") {
-    Hlt::AbsFun<RecVertex> afun(fun);
-    return (afun > x0).clone();
-  } else if ( mode == "||<") {
-    Hlt::AbsFun<RecVertex> afun(fun);
-    return (afun < x0).clone();
-  } else if (mode == "||[]") {
-    Hlt::AbsFun<RecVertex> afun(fun);
-    return ((afun > x0) && (afun < xf)).clone();
-  } 
-}
-
-Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(int id) {
+Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& name, int& id) {
   Hlt::TrackBiFunction* bfun = NULL;
-  switch(id) {
-  case(HltEnums::DOCA): bfun = new Hlt::DOCA();
-  }
-  if (!bfun)
-    error() << " track bifunction not in factory, id = " << id << endreq;
+  if (name == "DOCA")
+    bfun = new Hlt::DOCA();
+  id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
+  if (!bfun) fatal() << " requested track bifunction " << name
+                     << " not in factory " << endreq;
   return bfun;
+}
+
+Hlt::TrackFilter* HltFunctionFactory::trackFilter(const std::string& name) {
+
+  std::string funname= "";
+  std::string mode= "";
+  float x0 = 0.;
+  float xf = 1e6;
+  if (!EParser::parseFilter(name,funname,mode,x0,xf)) {
+    fatal() << " not able to parse " << name << endreq;
+    return NULL;  
+  }
+  int id= 0;
+  Hlt::TrackFunction* fun = trackFunction(funname,id);
+  delete fun;
+  Hlt::Info<Track> info(id);
+  return makeFilter(info,mode,x0,xf);
+}
+
+Hlt::VertexFilter* HltFunctionFactory::vertexFilter(const std::string& name) {
+
+  std::string funname= "";
+  std::string mode= "";
+  float x0 = 0.;
+  float xf = 1e6;
+  if (!EParser::parseFilter(name,funname,mode,x0,xf)) {
+    fatal() << " not able to parse " << name << endreq;
+    return NULL;  
+  }
+  int id= 0;
+  Hlt::VertexFunction* fun = vertexFunction(funname,id);
+  delete fun;
+  Hlt::Info<RecVertex> info(id);
+  return makeFilter(info,mode,x0,xf);
 }
 
 

@@ -1,10 +1,11 @@
-// $Id: HltTrackFilter.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
-// Include files 
+// $Id: HltTrackFilter.cpp,v 1.2 2007-06-25 20:50:26 hernando Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EDictionary.h"
+#include "HltBase/EParser.h"
 #include "Event/HltNames.h"
 
 // local
@@ -41,7 +42,7 @@ HltTrackFilter::~HltTrackFilter() {
   for (std::vector<Hlt::TrackFilter*>::iterator it = m_filters.begin();
        it != m_filters.end(); ++it)
     delete *it;
-} 
+}
 
 //=============================================================================
 // Initialization
@@ -58,38 +59,38 @@ StatusCode HltTrackFilter::initialize() {
   const std::vector<std::string>& hdes = m_filterDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
-    std::string filtername = "";
+    std::string filtername = *it;
+    std::string funname = "";
     std::string mode = "";
     float x0 = -1.e6;
     float xf =  1.e6;
-    if (!ParserDescriptor::parseFilter(*it,filtername,mode,x0,xf)) continue;
-
-    int id = HltNames::particleInfoID(filtername);
-
+    if (!EParser::parseFilter(filtername,funname,mode,x0,xf))continue;
+    
+    int id = 0;
     if (m_computeInfo) {
-      Hlt::TrackFunction* fun = factory->trackFunction(id);
-      if (!fun) error() << " error crearing function " << filtername 
+      Hlt::TrackFunction* fun = factory->trackFunction(funname,id);
+      if (!fun) error() << " error crearing function " << filtername
                         << " " << id << endreq;
       m_functions.push_back(fun);
     }
-    Hlt::TrackFilter* fil = factory->trackFilter(id,mode,x0,xf);    
-    if (!fil) error() << " error crearing filter " << filtername 
+    Hlt::TrackFilter* fil = factory->trackFilter(filtername);
+    if (!fil) error() << " error crearing filter " << filtername
                       << " " << id << endreq;
 
     m_filterNames.push_back(filtername);
     m_filterIDs.push_back(id);
     m_filterModes.push_back(mode);
     m_filters.push_back(fil);
-    m_tcounters.push_back(0);   
+    m_tcounters.push_back(0);
 
     if (m_histogramUpdatePeriod>0) {
       HltHisto histo = NULL;
       initializeHisto(histo,filtername,0.,100.,100);
       m_histos.push_back(histo);
-      
+
       HltHisto histo1 = NULL;
       initializeHisto(histo1,filtername+"Best",0.,100.,100);
-      m_histos1.push_back(histo1);  
+      m_histos1.push_back(histo1);
     }
 
     debug() << " filter " << filtername << " " << id << " "
@@ -104,6 +105,18 @@ StatusCode HltTrackFilter::initialize() {
   return StatusCode::SUCCESS;
 }
 
+void HltTrackFilter::saveConfiguration() {
+  HltAlgorithm::saveConfiguration();
+
+  std::string type = "HltTrackFilter";
+  confregister("Type",type);
+
+  const std::vector<std::string>& filters = m_filterDescriptor.value();
+  confregister("Filters",filters);
+
+}
+
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -113,7 +126,7 @@ StatusCode HltTrackFilter::execute() {
 
   int ncan = 0;
   for (size_t i = 0; i < m_filters.size(); ++i) {
-    
+
     // prepare next loop tracks
     int key = m_filterIDs[i];
     m_otracks.clear();
@@ -132,7 +145,7 @@ StatusCode HltTrackFilter::execute() {
       std::sort(vals.begin(),vals.end());
       double val = 0.;
       if (m_filterModes[i] == "<") val = vals[0];
-      else val = vals.back();      
+      else val = vals.back();
       if (m_debug) {
         std::string name = m_filterNames[i]+" : ";
         print(vals.begin(),vals.end(),name);
@@ -140,8 +153,8 @@ StatusCode HltTrackFilter::execute() {
       }
       if (m_monitor) {
         fillHisto(m_histos[i],vals,1.);
-        fillHisto(m_histos1[i],val,1.);                  
-      }      
+        fillHisto(m_histos1[i],val,1.);
+      }
     }
 
     // filter
@@ -163,13 +176,10 @@ StatusCode HltTrackFilter::execute() {
 
   ncan = m_outputTracks->size();
   candidateFound(ncan);
-  if (m_selectionSummaryID>0) 
-    saveInSummary(*m_outputTracks);
-
   debug() << " final candidates " << ncan << endreq;
-  
+
   if (ncan>0 && m_debug) printInfo("filtered tracks ", *m_outputTracks);
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -179,7 +189,7 @@ StatusCode HltTrackFilter::execute() {
 StatusCode HltTrackFilter::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  
+
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
     std::string title =  " event accepted " + m_filterNames[i] + " / input ";
     infoSubsetEvents(m_tcounters[i],m_counterEntries,title);

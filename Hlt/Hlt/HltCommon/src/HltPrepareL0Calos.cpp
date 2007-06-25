@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
                   L0CaloCandidateLocation::Full);
   
   declareProperty("OutputL0CaloCandidates", m_outputL0CaloCandidatesName = 
-                  "Hlt/L0CaloCandidate/Had");
+                  "Hlt/L0CaloCandidate/HadL0Calos");
 }
 //=============================================================================
 // Destructor
@@ -66,8 +66,8 @@ StatusCode HltPrepareL0Calos::initialize() {
 
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
-
-  doregister(m_calos,m_outputL0CaloCandidatesName);
+  
+  sumregister(m_calos,m_outputL0CaloCandidatesName);
 
 //   put(new Tracks(),"Hlt/Track/Caca");
 

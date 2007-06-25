@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.2 2007-06-25 20:50:26 hernando Exp $
 // Include files 
 
 
@@ -10,7 +10,8 @@
 #include "Event/HltNames.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/HltFunctions.h"
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EDictionary.h"
+#include "HltBase/EParser.h"
 #include "HltBase/IHltFunctionFactory.h"
 
 //-----------------------------------------------------------------------------
@@ -31,7 +32,7 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
 {
   declareProperty( "CheckForOverlaps",       m_checkForOverlaps = false );  
   declareProperty( "PatOutputVerticesName",  
-                   m_patOutputVerticesName = "Hlt/Vertex/MakerVertices");
+                   m_patOutputVerticesName = "Hlt/Vertex/VertexMakerBank");
 
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
@@ -81,19 +82,19 @@ StatusCode HltVertexMaker::initialize() {
   const std::vector<std::string>& hdes = m_filterDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
-    std::string filtername = "";
+    std::string filtername = *it;
+    std::string funname = "";
     std::string mode = "";
     float x0 = -1.e6;
     float xf =  1.e6;
-    if (!ParserDescriptor::parseFilter(*it,filtername,mode,x0,xf)) continue;
+    if (!EParser::parseFilter(filtername,funname,mode,x0,xf)) continue;
 
-    m_filterNames.push_back(filtername);
+    m_filterNames.push_back(funname);
     
-    int id = HltNames::particleInfoID(filtername);
-    m_filterIDs.push_back(id);
-
-    Hlt::TrackBiFunction* fun = factory->trackBiFunction(id);
+    int id = 0;
+    Hlt::TrackBiFunction* fun = factory->trackBiFunction(funname,id);
     m_functions.push_back(fun);
+    m_filterIDs.push_back(id);
     if (!fun) error() << " error crearing function " << filtername 
                       << " " << id << endreq;
 
@@ -186,7 +187,6 @@ StatusCode HltVertexMaker::execute() {
       
       if (!accepted) continue;
 
-
       verbose()<<" pair found [0] "<<track1.key() <<track1.slopes() << endreq;
       verbose()<<" pair found [1] "<<track2.key() <<track2.slopes() << endreq;
       // Write vertex
@@ -207,10 +207,18 @@ StatusCode HltVertexMaker::execute() {
   int ncan = m_outputVertices->size();
   debug() << " final candidates " << ncan << endreq;
   candidateFound(ncan);
-  if (m_selectionSummaryID>0) 
-    saveInSummary(*m_outputVertices);
   
   return StatusCode::SUCCESS;  
+}
+
+void HltVertexMaker::saveConfiguration() {
+  HltAlgorithm::saveConfiguration();
+
+  std::string type = "HltVertexMaker";
+  confregister("Type",type);
+
+  const std::vector<std::string>& filters = m_filterDescriptor.value();
+  confregister("Filters",filters);
 }
 
 

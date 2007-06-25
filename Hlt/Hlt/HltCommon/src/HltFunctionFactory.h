@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltFunctionFactory.h,v 1.2 2007-06-25 20:50:25 hernando Exp $
 #ifndef HLTFUNCTIONFACTORY_H 
 #define HLTFUNCTIONFACTORY_H 1
 
@@ -6,7 +6,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/IHltFunctionFactory.h"            // Interface
-
+#include "HltBase/HltTypes.h"
+#include "HltBase/HltFunctions.h"
 
 /** @class HltFunctionFactory HltFunctionFactory.h
  *  
@@ -23,33 +24,53 @@ public:
 
   virtual ~HltFunctionFactory( ); ///< Destructor
 
+  StatusCode initialize();
+
   void setVertices(std::vector<LHCb::RecVertex*>& vertices) 
   {m_vertices = &vertices;}
 
   void setTracks(std::vector<LHCb::Track*>& tracks) 
   {m_tracks = &tracks;}
   
-  Hlt::TrackFunction* trackFunction(int id);
+  Hlt::TrackFunction* trackFunction(const std::string& name, int& id);
   
-  Hlt::TrackFilter* trackFilter(const Hlt::TrackFunction& fun, 
-                                const std::string& mode,
-                                double x0, double xf = 1e6);  
+  Hlt::TrackFilter* trackFilter(const std::string& mode);  
   
-  Hlt::TrackFilter* trackFilter(int id, const std::string& mode, 
-                           double x0, double xf = 1e6);  
+  Hlt::VertexFunction* vertexFunction(const std::string& name, int& id);
   
-  Hlt::VertexFunction* vertexFunction(int id);
+  Hlt::VertexFilter* vertexFilter(const std::string& name);
 
-  Hlt::VertexFilter* vertexFilter(const Hlt::VertexFunction& fun, 
-                                  const std::string& mode,
-                                  double x0, double xf = 1e6);
-
-  Hlt::VertexFilter* vertexFilter(int id, const std::string& mode, 
-                                  double x0, double xf = 1e6);
-
-  virtual Hlt::TrackBiFunction* trackBiFunction(int id);
+  Hlt::TrackBiFunction* trackBiFunction(const std::string& name,
+                                        int& id);
 
 protected:
+
+  template <class T>
+  Estd::filter<T>* makeFilter(const Estd::function<T>& fun,
+                              const std::string& mode, 
+                              float x0, float xf) {
+    if (mode == "<") return (fun < x0).clone();
+    else if (mode == ">") return (fun > x0).clone();
+    else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
+    else if (mode == "||>") {
+      Hlt::AbsFun<T> afun(fun);
+      return (afun > x0).clone();
+    } else if ( mode == "||<") {
+      Hlt::AbsFun<T> afun(fun);
+      return (afun < x0).clone();
+    } else if (mode == "||[]") {
+      Hlt::AbsFun<T> afun(fun);
+      return ((afun > x0) && (afun < xf)).clone();
+    }
+    fatal() << " not mode " << mode << endreq;
+    return NULL;
+  }
+
+protected:
+
+
+  std::string m_dataSummaryLocation;
+  Hlt::Configuration* m_conf;
   
   bool m_smart;
   

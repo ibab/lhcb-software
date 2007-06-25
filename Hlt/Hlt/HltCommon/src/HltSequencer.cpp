@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.11 2007-06-20 16:06:21 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.12 2007-06-25 20:50:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,10 @@
 #include "HltSequencer.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EParser.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "HltBase/HltTypes.h"
+#include "Event/HltSummary.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSequencer
@@ -32,6 +35,8 @@ HltSequencer::HltSequencer( const std::string& name,
   declareProperty( "MeasureTime"         , m_measureTime    = false );
   declareProperty( "ReturnOK"            , m_returnOK       = false );
   declareProperty( "HistoDescriptor"       , m_hisDescriptor);
+  declareProperty( "DataSummaryLocation", 
+                   m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
 
   m_names.declareUpdateHandler (& HltSequencer::membershipHandler, this );
 }
@@ -77,7 +82,7 @@ StatusCode HltSequencer::initialize() {
       int n = 100;
       float x0 = 0.;
       float xf = 1.;
-      if (ParserDescriptor::parseHisto1D(*it,title,n,x0,xf)) 
+      if (EParser::parseHisto1D(*it,title,n,x0,xf)) 
         book1D(title,x0,xf,n);
     }
   }
@@ -101,6 +106,8 @@ StatusCode HltSequencer::initialize() {
       return Error( "Can not initialize " + (*itE).algorithm()->name(), 
                     status );
   }
+
+  saveConfiguration();
   
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
@@ -108,7 +115,59 @@ StatusCode HltSequencer::initialize() {
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
+void HltSequencer::saveConfiguration() {
+
+  IDataProviderSvc* hltsvc = NULL;
+  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  if (!hltsvc) error() << " not able to retrieve Hlt Svc provider " 
+                       << endreq;
+  
+  std::string loca = m_dataSummaryLocation+"/Configuration";
+  Hlt::DataHolder<Hlt::Configuration>* holder = 
+    get<Hlt::DataHolder<Hlt::Configuration> > (hltsvc,loca);
+  if (holder == NULL) error()<<" not able to get configuration " << endreq;
+  Estd::dictionary& conf = holder->object();
+  
+  std::string myname = name();
+
+  std::string key = "Type";
+  std::string value = "HltSequencer";
+  std::string mykey = name()+"/"+key; 
+  conf.add(mykey,value);
+  info() << " HLT [" << mykey << "] = " 
+         << conf.retrieve<std::string>(mykey) << endreq;     
+
+  key = "ModeOr";
+  int ivalue = (int) m_modeOR;
+  mykey = name()+"/"+key; 
+  conf.add(mykey,ivalue);
+  info() << " HLT [" << mykey << "] = " 
+         << conf.retrieve<int>(mykey) << endreq;
+
+  std::vector<std::string> algosnames;
+  std::vector<AlgorithmEntry>::iterator itE;
+  for ( itE = m_entries.begin(); m_entries.end() != itE; itE++) {
+    const std::string algoname = (*itE).algorithm()->name();
+    algosnames.push_back(algoname);
+  }
+  
+  key = "Members";
+  mykey = name()+"/"+key; 
+  conf.add(mykey,algosnames);
+  info() << " HLT [" << mykey << "] = " 
+         << conf.retrieve< std::vector<std::string> >(mykey) << endreq;
+  for (std::vector<std::string>::iterator it = algosnames.begin();
+       it != algosnames.end(); ++it) {
+    mykey = (*it)+"/HltSequencer";
+    conf.add(mykey,name());
+    info() << " HLT [" << mykey << "] = " 
+           << conf.retrieve<std::string> (mykey) << endreq;  
+  }
+  
+}
+
+
+//=======================================================================
 // Main execution
 //=============================================================================
 StatusCode HltSequencer::execute() {
@@ -229,15 +288,15 @@ StatusCode HltSequencer::endRun ( ) {
 //=========================================================================
 // reset the executed status of all members 
 //=========================================================================
-// StatusCode HltSequencer::resetExecuted ( ) {
-void HltSequencer::resetExecuted ( ) {
+StatusCode HltSequencer::resetExecuted ( ) {
+// void HltSequencer::resetExecuted ( ) {
   Algorithm::resetExecuted();
   std::vector<AlgorithmEntry>::const_iterator itE;
   for ( itE = m_entries.begin(); m_entries.end() != itE; itE++ ) {
     Algorithm* myAlg = (*itE).algorithm();
     myAlg->resetExecuted();
   }
-  //  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 //=========================================================================
 //  Decode the input names and fills the m_algs vector.

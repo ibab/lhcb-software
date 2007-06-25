@@ -1,4 +1,4 @@
-// $Id: HltVertexFilter.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltVertexFilter.h,v 1.2 2007-06-25 20:50:26 hernando Exp $
 #ifndef HLTVERTEXFILTER_H 
 #define HLTVERTEXFILTER_H 1
 
@@ -26,8 +26,11 @@ public:
 
   template <class CONT>
   void copy(const CONT& c1, CONT& c2)
-  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}  
-  
+  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
+
+protected:
+
+  void saveConfiguration();
 
 protected:
 

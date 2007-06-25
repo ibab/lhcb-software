@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.8 2007-06-20 16:06:21 hernando Exp $
+// $Id: HltSequencer.h,v 1.9 2007-06-25 20:50:25 hernando Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -44,13 +44,17 @@ public:
   virtual StatusCode beginRun  ();    ///< Algorithm beginRun
   virtual StatusCode endRun    ();    ///< Algorithm endRun
 
-  // StatusCode resetExecuted();         ///< Called before an event processing
-  void resetExecuted();         ///< Called before an event processing
+  StatusCode resetExecuted();         ///< Called before an event processing
+  // void resetExecuted();         ///< Called before an event processing
 
   /** for asynchronous changes in the list of algorithms */
   void membershipHandler( Property& theProp );
 
 protected:
+
+  std::string m_dataSummaryLocation;
+
+  void saveConfiguration();
 
   class AlgorithmEntry {
   public: 
@@ -102,5 +106,6 @@ private:
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   int  m_timer;                          ///< Timer number for the sequencer
+
 };
 #endif // GAUDISEQUENCER_H

@@ -1,9 +1,8 @@
-// $Id: HltTrackFromTes.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
+// $Id: HltTrackFromTes.cpp,v 1.3 2007-06-25 20:50:26 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "HltBase/ParserDescriptor.h"
 // local
 #include "HltTrackFromTes.h"
 #include "HltBase/HltFunctions.h"

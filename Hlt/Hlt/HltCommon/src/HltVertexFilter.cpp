@@ -1,10 +1,11 @@
-// $Id: HltVertexFilter.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltVertexFilter.cpp,v 1.2 2007-06-25 20:50:26 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "HltBase/ParserDescriptor.h"
+#include "HltBase/EParser.h"
+#include "HltBase/EDictionary.h"
 #include "Event/HltNames.h"
 
 // local
@@ -56,21 +57,21 @@ StatusCode HltVertexFilter::initialize() {
   const std::vector<std::string>& hdes = m_filterDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
-    std::string filtername = "";
+    std::string filtername = *it;
+    std::string funname = "";
     std::string mode = "";
     float x0 = -1.e6;
     float xf =  1.e6;
-    if (!ParserDescriptor::parseFilter(*it,filtername,mode,x0,xf)) continue;
+    if (!EParser::parseFilter(filtername,funname,mode,x0,xf)) continue;
 
-    int id = HltNames::particleInfoID(filtername);
-
+    int id = 0;
     if (m_computeInfo) {
-      Hlt::VertexFunction* fun = factory->vertexFunction(id);
+      Hlt::VertexFunction* fun = factory->vertexFunction(funname,id);
       if (!fun) error() << " error crearing function " << filtername 
                         << " " << id << endreq;
       m_functions.push_back(fun);
     }
-    Hlt::VertexFilter* fil = factory->vertexFilter(id,mode,x0,xf);    
+    Hlt::VertexFilter* fil = factory->vertexFilter(filtername);    
     if (!fil) error() << " error crearing filter " << filtername 
                       << " " << id << endreq;
 
@@ -160,10 +161,19 @@ StatusCode HltVertexFilter::execute() {
 
   debug() << " final candidates " << ncan << endreq;
   candidateFound(ncan);
-  if (m_selectionSummaryID>0) 
-    saveInSummary(*m_outputVertices);
 
   return StatusCode::SUCCESS;
+}
+
+void HltVertexFilter::saveConfiguration() {
+  HltAlgorithm::saveConfiguration();
+
+  std::string type = "HltVertexFilter";
+  confregister("Type",type);
+
+  const std::vector<std::string>& filters = m_filterDescriptor.value();
+  confregister("Filters",filters);
+
 }
 
 //=============================================================================

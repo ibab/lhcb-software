@@ -4,6 +4,19 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-25 - Jose A. Hernando
+	- HltPrepareVertices : prepare vertices (i.e PV2D)	
+	- HltSummaryWriter : write selections in the TES report-summary
+	- HltFunctionFactory : simplifying the interface of the factory (getting ready to be LoKi-like)	
+	- HltInit : do not use HltDataStore anymore, create data-summary in HltES and configuration of data-summary, store the enums into the configuration
+	- HltSummaryTool : implementation of a tool (for gaudipython) to have human like interface with the TES report-summary
+	- HltSequencer : register info into the configuration
+	- All: getting adapted to the new HltBase that uses the data-summary and configuration
+	- HltDataStore: removed!
+	- HltEnd: removed!
+	- removing all the monitoring algos (to go to monitoring package)	
+
+
 ! 2007-06-20 - Jose A. Hernando
  - HltFunctionFactory implementation of the alleys function factory
  - HltPrepareL0Calo select l0 calo objects that trigger L0

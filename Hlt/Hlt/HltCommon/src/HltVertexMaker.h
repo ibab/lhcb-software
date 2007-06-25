@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.2 2007-06-25 20:50:26 hernando Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -27,6 +27,8 @@ class HltVertexMaker : public HltAlgorithm {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
     
  protected:
+
+  void saveConfiguration();
   
   bool haveOverlaps(const LHCb::Track& track1, const LHCb::Track& track2 );
 

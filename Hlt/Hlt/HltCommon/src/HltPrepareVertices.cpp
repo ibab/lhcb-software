@@ -1,45 +1,49 @@
-// $Id: HltMonitor.cpp,v 1.7 2007-06-20 16:06:21 hernando Exp $
+// $Id: HltPrepareVertices.cpp,v 1.1 2007-06-25 20:50:25 hernando Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "HltBase/ParserDescriptor.h"
-// local
-#include "HltMonitor.h"
+#include "GaudiKernel/AlgFactory.h" 
 
+// local
+#include "HltPrepareVertices.h"
+#include "HltBase/HltSequences.h"
+#include "HltBase/HltFunctions.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltMonitor
+// Implementation file for class : HltPrepareVertices
 //
-// 2006-09-01 : Jose Angel Hernando Morata
+// 2006-07-28 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltMonitor );
+DECLARE_ALGORITHM_FACTORY( HltPrepareVertices );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltMonitor::HltMonitor( const std::string& name,
-                        ISvcLocator* pSvcLocator)
+HltPrepareVertices::HltPrepareVertices( const std::string& name,
+                                        ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltMonitor::~HltMonitor() {} 
+HltPrepareVertices::~HltPrepareVertices() {
+} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltMonitor::initialize() {
+StatusCode HltPrepareVertices::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  // initializeHistosFromDescriptor();
+  checkInput(m_patInputVertices," pat input vertices ");
+  checkInput(m_outputVertices," output vertices ");
 
   return StatusCode::SUCCESS;
 }
@@ -47,28 +51,26 @@ StatusCode HltMonitor::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-
-StatusCode HltMonitor::execute() {
+StatusCode HltPrepareVertices::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  // TODO
-  // monitor(m_tracks,m_keys);
-  // monitor(m_vertices,m_keys);
-
-  debug() << "==> Execute" << endmsg;
-
+  Hlt::copy(*m_patInputVertices,*m_outputVertices);  
+  
+  int ncan = m_outputVertices->size();
+  candidateFound(ncan);
+  
   return sc;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode HltMonitor::finalize() {
+StatusCode HltPrepareVertices::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  
-  return HltAlgorithm::finalize();
+
+  return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

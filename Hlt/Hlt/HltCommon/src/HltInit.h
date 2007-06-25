@@ -1,4 +1,4 @@
-// $Id: HltInit.h,v 1.4 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltInit.h,v 1.5 2007-06-25 20:50:25 hernando Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
@@ -6,16 +6,16 @@
 // from Gaudi
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltBase/IHltDataStore.h"
-#include "HltBase/HltContainers.h"
-#include "PatTools/PatDataStore.h"
+
+#include "Event/HltSummary.h"
+#include "HltBase/HltTypes.h"
 
 /** @class HltInit HltInit.h
  *  
  *  functionality:
- *         task to be done at the begining of the HLT sequence
- *         clean the HltDataStore collections
- *         create the HltSummary (empty) for this event
+ *         intialize a Hlt main algorithms
+ *         creates a hltDataSvc
+ *         store a HltConfiguration with enum infos
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-25
@@ -23,9 +23,6 @@
 class HltInit : public GaudiAlgorithm {
 public:
 
-  typedef std::map< std::string, Hlt::TrackContainer > MapTracks;
-  typedef std::map< std::string, Hlt::VertexContainer > MapVertices;
-  
 
   /// Standard constructor
   HltInit( const std::string& name, ISvcLocator* pSvcLocator );
@@ -38,16 +35,18 @@ public:
 
 protected:
 
+  void saveConfiguration();
+
+protected:
+
+  std::string m_TCKName;  
+  std::string m_dataSummaryLocation;
+
+protected:
+
   IDataManagerSvc* m_hltSvc;
-
-  std::string m_summaryName;
-
-  PatDataStore* m_patStore;
-
-  MapTracks* m_tracks;
-  MapVertices* m_vertices;
-
-private:
+  Hlt::Configuration m_hltConfiguration;
+  LHCb::HltSummary m_datasummary;
 
 };
 #endif // HLTDATASTOREINIT_H

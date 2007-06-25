@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltPrepareTracks.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -49,13 +49,9 @@ StatusCode HltPrepareTracks::initialize() {
   Hlt::CheckFlag back(Track::Backward);
   _nobackwards = (!back).clone();
 
-
   checkInput(m_patInputTracks," pat input tracks ");
   checkInput(m_outputTracks," output tracks ");
-  if (m_patInputVertices) {
-    checkInput(m_patInputVertices," pat input vertices ");
-    checkInput(m_outputVertices," output vertices ");
-  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -70,11 +66,6 @@ StatusCode HltPrepareTracks::execute() {
   m_outputTracks->clear();
   Hlt::select(*m_patInputTracks,*_nobackwards,*m_outputTracks);
   debug() << " non backward tracks " << m_outputTracks->size() << endreq;
-  if (m_patInputVertices) {
-    m_outputVertices->clear();
-    Hlt::copy(*m_patInputVertices,*m_outputVertices);  
-  }
-  
 
   int ncan = m_outputTracks->size();
   candidateFound(ncan);
