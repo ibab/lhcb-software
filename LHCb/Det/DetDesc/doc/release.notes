@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.312 2007-06-22 12:23:05 jpalac Exp $ 
+! $Id: release.notes,v 1.313 2007-06-25 10:01:28 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-25 - Juan PALACIOS
+  - src/Lib/GeometryInfoPlus.cpp
+    . Revert to previous revision. Changes of 2007-06-22 were actually 
+      incorrect.
+
+  - src/Lib/GlobalToLocalDelta.cpp
+    . Fix localDeltaMatrix function algebra again. Previous was still wrong!
 
 ! 2007-06-22 - Juan PALACIOS
   - src/Lib/GlobalToLocalDelta.cpp
