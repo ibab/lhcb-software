@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.10 2007-05-23 16:43:22 ebos Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.11 2007-06-25 09:56:50 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -42,8 +42,8 @@ TrackFastParabolicExtrapolator::~TrackFastParabolicExtrapolator()
 // Update the transport matrix
 //=============================================================================
 void TrackFastParabolicExtrapolator::updateTransportMatrix( const double dz, 
-                                                            TrackVector&,
-                                                            TrackMatrix& transMat )
+                                                            Gaudi::TrackVector&,
+                                                            Gaudi::TrackMatrix& transMat )
 {
   // Reset the transport matrix
   transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );

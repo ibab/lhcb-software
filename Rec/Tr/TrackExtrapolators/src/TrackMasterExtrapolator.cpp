@@ -101,11 +101,11 @@ StatusCode TrackMasterExtrapolator::initialize()
 // Transport matrix is calulated when transMat pointer is not NULL
 // Note: energy loss correction is _NOT_ applied.
 //=========================================================================
-StatusCode TrackMasterExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackMasterExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                double zOld,
                                                double zNew,
-                                               TrackMatrix* transMat,
-                                               ParticleID pid )
+                                               Gaudi::TrackMatrix* transMat,
+                                               LHCb::ParticleID pid )
 { 
   ITrackExtrapolator* thisExtrapolator = m_extraSelector->select( zOld, zNew );
   return thisExtrapolator->propagate( stateVec, zOld, zNew, transMat, pid );

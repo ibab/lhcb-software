@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.18 2007-05-23 16:40:53 ebos Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.19 2007-06-25 09:56:52 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -69,11 +69,11 @@ TrackHerabExtrapolator::~TrackHerabExtrapolator()
 
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
-StatusCode TrackHerabExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               double zOld,
                                               double zNew,
-                                              TrackMatrix* transMat,
-                                              ParticleID pid )
+                                              Gaudi::TrackMatrix* transMat,
+                                              LHCb::ParticleID pid )
 {
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::hiTolerance ) { 

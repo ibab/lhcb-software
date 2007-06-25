@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.9 2007-05-23 16:40:53 ebos Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.10 2007-06-25 09:56:57 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -60,11 +60,11 @@ TrackKiselExtrapolator::~TrackKiselExtrapolator()
 
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
-StatusCode TrackKiselExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               double zOld,
                                               double zNew,
-                                              TrackMatrix* transMat,
-                                              ParticleID pid)
+                                              Gaudi::TrackMatrix* transMat,
+                                              LHCb::ParticleID pid)
 {
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::hiTolerance ) { 

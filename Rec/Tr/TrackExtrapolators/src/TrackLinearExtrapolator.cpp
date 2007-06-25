@@ -18,11 +18,11 @@ DECLARE_TOOL_FACTORY( TrackLinearExtrapolator );
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
 //=============================================================================
-StatusCode TrackLinearExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                double zOld,
                                                double zNew,
-                                               TrackMatrix* transMat,
-                                               ParticleID pid )
+                                               Gaudi::TrackMatrix* transMat,
+                                               LHCb::ParticleID pid )
 {
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::hiTolerance ) { 

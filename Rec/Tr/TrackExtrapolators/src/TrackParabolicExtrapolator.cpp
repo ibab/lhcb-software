@@ -62,11 +62,11 @@ StatusCode TrackParabolicExtrapolator::initialize()
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
 //=============================================================================
-StatusCode TrackParabolicExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                   double zOld,
                                                   double zNew,
-                                                  TrackMatrix* transMat,
-                                                  ParticleID pid )
+                                                  Gaudi::TrackMatrix* transMat,
+                                                  LHCb::ParticleID pid )
 {
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::hiTolerance ) { 
@@ -175,8 +175,8 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 // Update the transport matrix
 //=============================================================================
 void TrackParabolicExtrapolator::updateTransportMatrix( const double dz, 
-                                                        TrackVector& stateVec,
-                                                        TrackMatrix& transMat )
+                                                        Gaudi::TrackVector& stateVec,
+                                                        Gaudi::TrackMatrix& transMat )
 {
   // Reset the transport matrix
   transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );

@@ -17,10 +17,10 @@ DECLARE_TOOL_FACTORY( TrackExtrapolator );
 //=============================================================================
 // Propagate a state vector from zOld to zNew
 //=============================================================================
-StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                          double zOld,
                                          double zNew,
-                                         ParticleID pid )
+                                         LHCb::ParticleID pid )
 {
   TrackMatrix* transMat = NULL;
   StatusCode sc = propagate( stateVec, zOld, zNew, transMat, pid );
@@ -33,11 +33,11 @@ StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
 //=============================================================================
-StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
+StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                          double zOld,
                                          double zNew,
-                                         TrackMatrix* transMat,
-                                         ParticleID pid )
+                                         Gaudi::TrackMatrix* transMat,
+                                         LHCb::ParticleID pid )
 {
   StatusCode sc = StatusCode::FAILURE;
 
