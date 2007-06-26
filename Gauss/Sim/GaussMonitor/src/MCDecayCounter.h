@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.h,v 1.3 2005-12-16 20:13:50 gcorti Exp $
+// $Id: MCDecayCounter.h,v 1.4 2007-06-26 13:30:56 gcorti Exp $
 #ifndef MCDECAYCOUNTER_H 
 #define MCDECAYCOUNTER_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // from LHCb
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 
 
 /** @class MCDecayCounter MCDecayCounter.h

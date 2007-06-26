@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v5r0 2007-06-26 =========================
+! 2007-06-26 - Gloria Corti
+ - Adapt to change in LHCb v22r6 with move of interfaces of MC tools in 
+	 MCInterfaces. This change is incompatible for use in DC06.
+
 !=================== GaussMonitor v4r5 2007-05-11 ===========================
 ! 2007-05-08 - Gloria CORTI
  - Use lifetime function from GaussGenUtil and adapt histogram boundaries
