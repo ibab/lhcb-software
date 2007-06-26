@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.14 2007-06-25 16:41:18 cattanem Exp $
+// $Id: StateTraj.cpp,v 1.15 2007-06-26 06:11:05 cattanem Exp $
 // Include files
 
 // Units
@@ -12,7 +12,7 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Constructor
-StateTraj::StateTraj( const Gaudi::State& state,
+StateTraj::StateTraj( const State& state,
                       const Gaudi::XYZVector& bField )
   : DifTraj<kSize>( 10.*Units::km, 10.*Units::km ),
     m_pos( state.position() ),
