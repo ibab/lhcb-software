@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.6 2007-06-25 21:35:42 hernando Exp $
+// $Id: HltInit.cpp,v 1.7 2007-06-26 13:36:44 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -87,6 +87,29 @@ StatusCode HltInit::initialize() {
 
 void HltInit::saveConfiguration() {
 
+
+  // Temporally ON
+  for (int i = 0; i < HltEnums::HltSelLastSelection; ++i) {
+    std::string name = HltNames::selectionSummaryStr(i);
+    if (name != "selectionSummaryUnknown") {
+      m_hltConfiguration.add("SelectionID/"+name,i);
+      info() << " HLT[SelectionID/" << name << "] = " << i << endreq;
+      std::string sid = boost::lexical_cast<std::string>(i);
+      m_hltConfiguration.add("SelectionID/"+sid,name);      
+    }
+  }
+  
+  for (int i = 0; i <= HltEnums::Calo3DChi2; ++i) {
+    std::string name = HltNames::particleInfoStr(i);
+    if (name != "particleInfoUnknown") {
+      m_hltConfiguration.add("InfoID/"+name,i);
+      info() << " HLT[InfoID/" << name << "] = " << i << endreq;
+      std::string sid = boost::lexical_cast<std::string>(i);
+      m_hltConfiguration.add("InfoID/"+sid,name);      
+    }    
+  }
+  
+  
   // store the Hlt configuration
 
   // Temporally OFF
