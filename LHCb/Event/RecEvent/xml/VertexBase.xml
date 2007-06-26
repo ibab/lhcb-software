@@ -117,7 +117,7 @@
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."
         type="ExtraInfo"
-        setMeth="FALSE"
+        setMeth="TRUE"
         getMeth="FALSE"
 	/>
 
@@ -146,8 +146,8 @@
 
       <method
         name="addInfo"
-        desc=" add/replace new information , associated with the key"
-        argList="int key, double info"
+        desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
+        argList="const int key, const double info"
         type="bool"
 	> 
 	<code>
@@ -158,7 +158,7 @@
       <method
         name="info"
         desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
-        argList="int key, double def"
+        argList="const int key, const double def"
         type="double"
         const="TRUE"
 	> 
