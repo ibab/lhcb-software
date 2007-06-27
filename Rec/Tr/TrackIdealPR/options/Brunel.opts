@@ -19,3 +19,11 @@ IdealTracksCreator.TrackSelectorTool.Selector.zOrigin = 9999.0;
 IdealTracksCreator.TrackSelectorTool.Selector.etaMin = -9999.0;
 IdealTracksCreator.TrackSelectorTool.Selector.etaMax = 9999.0;
 IdealTracksCreator.MinNHits = 15;
+
+
+// What you need to run BEFORE the algorithm to get muon hits created
+// create muon linker tables
+//DataOnDemandSvc.Algorithms+= {
+//      "DATA='/Event/Link/Raw/Muon/Coords' TYPE='MuonCoord2MCParticleLink''" };
+                                                                                
+//RecoMUONSeq.Members = { "MuonRec" };
