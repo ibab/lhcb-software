@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.51 2007-06-11 09:13:46 cattanem Exp $ 
+! $Id: release.notes,v 1.52 2007-06-27 14:09:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-27 - Vanya BELYAEV 
+
+ - LoKi/Reference.h
+    fix a compilation problem for Reflex dictionaries at Win32 platform
+ - LoKi/Exception.h
+    remove extra CVS keywords
 
 !=========================== LoKiCore v3r0 2007-06-11 ======================
 ! 2007-06-10 - Vanya BELYAEV
@@ -337,6 +344,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.51  2007/06/11 09:13:46  cattanem
+! move tag
+!
 ! Revision 1.50  2007/06/10 19:54:07  ibelyaev
 !  prepare for v3r0
 !
