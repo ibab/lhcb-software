@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-06-26 - Jose A. Hernando
+  - HltBase/IHltFunctionFactory simplifying interface for the factory
+
 ! 2007-06-25 - Jose A. Hernando
   - HltBase/EDictionary : a heterogenic map container map<string,T>
   - HltBase/EParser : A parser of string

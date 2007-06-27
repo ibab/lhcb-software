@@ -1,4 +1,4 @@
-// $Id: IHltFunctionFactory.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
+// $Id: IHltFunctionFactory.h,v 1.3 2007-06-27 05:58:43 hernando Exp $
 #ifndef HLTBASE_IHLTFUNCTIONFACTORY_H 
 #define HLTBASE_IHLTFUNCTIONFACTORY_H 1
 
@@ -29,18 +29,16 @@ public:
 
   virtual void setVertices(std::vector<LHCb::RecVertex*>& vertex) = 0;
   
-  virtual Hlt::TrackFunction* trackFunction(const std::string& name,
-                                            int& id) = 0;
+  virtual Hlt::TrackFunction* trackFunction(const std::string& name) = 0;
 
   virtual Hlt::TrackFilter* trackFilter(const std::string& name) = 0;
   
-  virtual Hlt::VertexFunction* vertexFunction(const std::string& name,
-                                              int& id) = 0;
+  virtual Hlt::VertexFunction* vertexFunction(const std::string& name) = 0;
   
   virtual Hlt::VertexFilter* vertexFilter(const std::string& name) = 0;
 
-  virtual Hlt::TrackBiFunction* trackBiFunction(const std::string& name,
-                                                int& id) = 0;
+  virtual Hlt::TrackBiFunction* trackBiFunction(const std::string& name) = 0;
+  
 
 };
 #endif // HLTBASE_IHLTFUNCTIONFACTORY_H
