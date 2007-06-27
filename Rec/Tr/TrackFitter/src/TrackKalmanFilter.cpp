@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.40 2007-05-04 15:11:33 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.41 2007-06-27 06:56:56 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -80,7 +80,7 @@ StatusCode TrackKalmanFilter::initialize()
 //=========================================================================
 // Helper to print a failure comment
 //=========================================================================
-StatusCode TrackKalmanFilter::failure( const std::string& comment ) {
+StatusCode TrackKalmanFilter::failure( const std::string& comment ) const {
   if ( m_debugLevel )
     debug() << "TrackKalmanFilter failure: " << comment << endreq;
   return StatusCode::FAILURE;
@@ -89,7 +89,7 @@ StatusCode TrackKalmanFilter::failure( const std::string& comment ) {
 //=========================================================================
 // Fit the track
 //=========================================================================
-StatusCode TrackKalmanFilter::fit( Track& track )
+StatusCode TrackKalmanFilter::fit( Track& track ) 
 {
   StatusCode sc; 
  
@@ -223,7 +223,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 // Predict the state to this node
 //=========================================================================
 StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
-                                       const Gaudi::TrackVector& refVec )
+                                       const Gaudi::TrackVector& refVec ) const
 {
   TrackVector prevStateVec = aState.stateVector();
   TrackSymMatrix prevStateCov = aState.covariance();
@@ -282,7 +282,7 @@ StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
 //=========================================================================
 StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode, 
                                                 const FitNode& aNode,
-                                                State& aState)
+                                                State& aState) const
 {
   // invert the transport matrix
   TrackMatrix invF = prevNode.transportMatrix();
@@ -308,7 +308,7 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
+StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState) const
 {
   // project the state into the measurement
   Measurement& meas = aNode.measurement();
@@ -320,7 +320,7 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
   if ( sc.isFailure() ) 
     return failure( "unable to project a state into a measurement" );
   const TrackProjectionMatrix& H = proj -> projectionMatrix();
-  double res                     = proj -> residual();
+  const double res                     = proj -> residual();
   
   aNode.setProjectionMatrix( H );
   aNode.setResidual( res ) ;
@@ -334,7 +334,7 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) 
+StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 {
   // Projection step
   StatusCode sc = project( node, state );
@@ -371,18 +371,15 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   //   V(0,0) = errorMeas2 ;
   //   C = Similarity( unit - ( K*H ), C ) + Similarity(K,V) ;
   // but the following expression is just as stable and less complex
-  // (see NIM.A552:566-575,2005). there is a bug in the += operator
-  // for expressions with symmetric matrices which is why we make it
-  // look so complicated
+  // (see NIM.A552:566-575,2005).
   static SymMatrix1x1 R ;
   R(0,0) = errorRes2;
   TrackSymMatrix tmp ;
   ROOT::Math::AssignSym::Evaluate(tmp, -2 * K * H * C) ;
-  C += tmp ;
-  C += Similarity(K,R) ;
-  
+  C += tmp + Similarity(K,R) ;  
+
   // update the residual and the error on the residual
-  double gain = 1.- Matrix1x1( H*K )(0,0);
+  const double gain = 1.- Matrix1x1( H*K )(0,0);
   res      *= gain;
   errorRes2 = gain * errorMeas2;
 
@@ -399,7 +396,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 // M. Needham 9/11/99
 //----------------------------------------------------------------
 StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
-                                      const FitNode& prevNode )
+                                      const FitNode& prevNode ) const
 {
   // Get the predicted state from the previous node
   const TrackVector& prevNodeX = (m_upstream) ? 
@@ -453,9 +450,9 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   if ( thisNode.hasMeasurement() ) {
     // update = smooth the residuals
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    double res = thisNode.residual() - Vector1(H*(thisNodeX - oldNodeX ))(0) ;
+    const double res = thisNode.residual() - Vector1(H*(thisNodeX - oldNodeX ))(0) ;
     thisNode.setResidual( res );
-    double errRes2 = thisNode.errResidual2() - 
+    const double errRes2 = thisNode.errResidual2() - 
       Matrix1x1(Similarity( H, covUpDate ))(0,0);
     if ( errRes2 < 0.) {
       return failure( "Negative residual error in smoother!" );
@@ -466,7 +463,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
+StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
 {
   // Get the predicted state from the downstream fit
   const TrackVector& predRevX = thisNode.predictedStateDown().stateVector();
@@ -497,14 +494,14 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
   // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    double res = thisNode.projectionTerm() - Vector1(H*smoothedX)(0) ;
+    const double res = thisNode.projectionTerm() - Vector1(H*smoothedX)(0) ;
     thisNode.setResidual( res );
-    double errRes2 = thisNode.errMeasure2() - 
+    const double errRes2 = thisNode.errMeasure2() - 
       Matrix1x1(Similarity( H, smoothedC ))(0,0);
     if ( errRes2 < 0.) return failure( "Negative residual error in smoother!" );
     thisNode.setErrResidual( sqrt(errRes2) );
     
-    double errMeasure2 = thisNode.errMeasure2() ;
+    const double errMeasure2 = thisNode.errMeasure2() ;
     thisNode.setUnbiasedResidual( res * errMeasure2 / errRes2 );
     thisNode.setErrUnbiasedResidual( sqrt( errMeasure2 * errMeasure2 / errRes2 )) ;
   }
@@ -515,10 +512,10 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const
 {
-  unsigned int nParams = TrackSymMatrix::kRows;
-  for ( unsigned int i = 0; i < nParams; ++i ) {
+
+  for ( unsigned int i = 0; i < TrackSymMatrix::kRows ; ++i ) {
     for ( unsigned int j = 0; j <=i; ++j ) {
       if ( mat(i,j) > 1e20 )
         return Warning( "Covariance errors too big to invert!",
@@ -531,7 +528,7 @@ StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& ma
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
 {
   for ( unsigned int i=0; i < TrackSymMatrix::kRows; ++i ) {
     if ( mat(i,i) <= 0. )
@@ -551,7 +548,7 @@ StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& 
 // M. Needham 13/6/2000
 // J.A. Hernando (we trust you) 15/05/05
 //=========================================================================
-StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m )
+StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m ) const
 {
   // check that the elements are not too large else dsinv will crash
   StatusCode sc = checkInvertMatrix( m );

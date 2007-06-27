@@ -3,6 +3,14 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-26 M. Needham
+ - In TrackMasterFitter:
+   * Add some const
+   * make seed method robust (ie not assumed states ordered by z)
+ - In TrackKalmanFilter
+   * Add some const
+   * Follow bug fix in += operator for Sym matrix
+
 !=========================== TrackFitter v2r16 2007-05-14 ===================
 ! 2007-06-13 - Eduardo Rodrigues
  - Default number of fit iterations set to 3 (in TrackMasterFitter.cpp)

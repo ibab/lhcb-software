@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.6 2006-06-14 20:08:43 jvantilb Exp $
+// $Id: TrackMasterFitter.h,v 1.7 2007-06-27 06:56:56 mneedham Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -47,19 +47,19 @@ public:
 protected:
 
   //! determine track state at various z positions
-  StatusCode determineStates( LHCb::Track& track );
+  StatusCode determineStates( LHCb::Track& track ) const;
 
   //! remove outliers from the node vector
-  bool outlierRemoved( LHCb::Track& track );
+  bool outlierRemoved( LHCb::Track& track ) const;
 
   //! inflate the covariance errors before next iteration
-  void reSeed( LHCb::Track& track, const Gaudi::TrackSymMatrix& seedCov);
+  void reSeed( LHCb::Track& track, const Gaudi::TrackSymMatrix& seedCov) const;
 
   //! update the reference vector for each measurement before next iteration
-  void updateRefVectors( LHCb::Track& track );
+  void updateRefVectors( LHCb::Track& track ) const;
 
   //! clear the (internal) nodes vector
-  void clearNodes( std::vector<LHCb::Node*>& nodes );
+  void clearNodes( std::vector<LHCb::Node*>& nodes ) const;
 
   //! determine the z-position of the closest approach to the beam line
   //! by linear extrapolation.
@@ -69,10 +69,10 @@ protected:
   unsigned int nNodesWithMeasurement( const LHCb::Track& track ) const;
 
   //! Retrieve the seed state
-  const LHCb::State& seedState( LHCb::Track& track );
+  const LHCb::State& seedState(const LHCb::Track& track ) const;
 
   //! Create the nodes from the measurements
-  StatusCode makeNodes( LHCb::Track& track );
+  StatusCode makeNodes( LHCb::Track& track ) const;
 
 protected:
 
@@ -113,7 +113,7 @@ private:
   double m_errorP;                  ///< Error on dp/p
   bool m_setRefInfo;
   //! helper to print a failure comment
-  StatusCode failure( const std::string& comment );
+  StatusCode failure( const std::string& comment ) const;
 
   bool m_debugLevel;
 

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.17 2007-05-04 15:11:34 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.18 2007-06-27 06:56:56 mneedham Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -44,35 +44,35 @@ public:
 
   //! predict the state at this node
   StatusCode predict( LHCb::FitNode& node, LHCb::State& state, 
-                      const Gaudi::TrackVector& refVec  );  
+                      const Gaudi::TrackVector& refVec  ) const;  
 
   //! predict the state at this node for the reverse fit
   StatusCode predictReverseFit( const LHCb::FitNode& prevNode, 
                                 const LHCb::FitNode& aNode,
-                                LHCb::State& aState );
+                                LHCb::State& aState ) const;
 
   //! predict the state at this node for the reverse fit
-  StatusCode project( LHCb::FitNode& aNode, const LHCb::State& aState );
+  StatusCode project( LHCb::FitNode& aNode, const LHCb::State& aState ) const;
 
   //! filter this node
-  StatusCode filter( LHCb::FitNode& node, LHCb::State& state );
+  StatusCode filter( LHCb::FitNode& node, LHCb::State& state ) const;
   
   //! smooth 2 nodes
-  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
+  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 ) const;
 
   //! smoother for bidirectional fit nodes
-  StatusCode biSmooth( LHCb::FitNode& node0 );
+  StatusCode biSmooth( LHCb::FitNode& node0 ) const;
 
 private:
 
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat );
+  StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const;
 
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat );
+  StatusCode checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
 
   // ! invert this matrix
-  StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat );
+  StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat ) const;
 
   //! extrapolator
   ITrackExtrapolator* m_extrapolator;
@@ -89,7 +89,7 @@ private:
   bool m_upstream;                  ///< Flag to set upstream fit
 
   //! helper to print a failure comment
-  StatusCode failure( const std::string& comment );
+  StatusCode failure( const std::string& comment ) const;
 
   bool m_debugLevel;
   
