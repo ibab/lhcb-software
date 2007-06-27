@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.11 2007-04-08 16:54:51 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.12 2007-06-27 15:22:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -6,9 +6,6 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
-
-// MCEvent
-#include "Event/MCOTDeposit.h"
 
 /// GSL
 #include "gsl/gsl_math.h"
@@ -55,19 +52,16 @@ StatusCode OTEffCalculator::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize OTEffCalculator", sc );
   
-  // retrieve pointer to random number service
-  IRndmGenSvc* randSvc = 0;
-  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true );
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve random number service",sc);
-  }
-
   // get interface to generator
-  sc = randSvc->generator(Rndm::Flat(0.,1.),m_genEff.pRef()); 
+  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  sc = randSvc->generator(Rndm::Flat(0.0,1.0),m_genEff.pRef()); 
   if ( sc.isFailure() ) {
-    return Error ("Failed to generate random number distribution",sc);
+    return Error("Failed to generate random number distribution",sc);
   }
-  randSvc->release();
+  sc = release(randSvc);
+  if (sc.isFailure()) {
+    return Error("Failed to release RndmGenSvc", sc);
+  }
 
   return StatusCode::SUCCESS;  
 }
@@ -77,7 +71,7 @@ OTEffCalculator::~OTEffCalculator()
   //destructor
 }
 
-double OTEffCalculator::effParamFunc(const double driftDistance)
+double OTEffCalculator::effParamFunc(const double driftDistance) const
 {
   // efficiency function parameterization
   // calculate the track path Length in the cell
@@ -87,7 +81,7 @@ double OTEffCalculator::effParamFunc(const double driftDistance)
   return (pathLength2 > 0.0?m_etaZero*(1.0-gsl_sf_exp(-2.0*m_rho*std::sqrt(pathLength2))):0.0);
 }
 
-void OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& accept)
+void OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& accept) const
 {
   // get a random number
   double testVal = m_genEff->shoot();

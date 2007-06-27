@@ -1,17 +1,12 @@
-// $Id: IOTRandomDepositCreator.h,v 1.2 2007-04-08 16:54:51 janos Exp $
+// $Id: IOTRandomDepositCreator.h,v 1.3 2007-06-27 15:22:24 janos Exp $
 #ifndef OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 
-// Forward declarations
-namespace LHCb
-{
-  class MCOTDeposit;
-}
-
-typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
+// MCEvent
+#include "Event/MCOTDeposit.h"
 
 static const InterfaceID IID_OTRandomDepositCreator( "IOTRandomDepositCreator", 1, 0 );
 
@@ -26,6 +21,8 @@ static const InterfaceID IID_OTRandomDepositCreator( "IOTRandomDepositCreator", 
 class IOTRandomDepositCreator : virtual public IAlgTool {
 public:
   /// Retrieve interface ID
+  typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
+
   static const InterfaceID& interfaceID() { return IID_OTRandomDepositCreator; }
 
   virtual void createDeposits(MCOTDepositVec* depVector) const = 0; 

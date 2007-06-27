@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.8 2007-05-29 15:10:56 mneedham Exp $
+// $Id: OTSmearer.h,v 1.9 2007-06-27 15:22:24 janos Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -12,10 +12,6 @@
 // Forward declaration
 class IMagneticFieldSvc;
 class DeOTDetector;
-namespace LHCb
-{
-  class MCOTDeposit;
-}
 
 /** @class OTSmearer OTSmearer.h "OTSimulation/OTSmearer.h"
  *

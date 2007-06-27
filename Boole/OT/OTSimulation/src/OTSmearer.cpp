@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.13 2007-05-29 15:10:56 mneedham Exp $
+// $Id: OTSmearer.cpp,v 1.14 2007-06-27 15:22:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -15,7 +15,6 @@
 
 // MCEvent
 #include "Event/MCHit.h"
-#include "Event/MCOTDeposit.h"
 
 //OTSimulation
 #include "OTSmearer.h"
@@ -51,14 +50,18 @@ StatusCode OTSmearer::initialize()
 {
  StatusCode sc = GaudiTool::initialize();
  if ( sc.isFailure() ) return Error( "Failed to initialize OTSmearer", sc );
+
  // get interface to generator
  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
- sc = randSvc->generator(Rndm::Gauss(0.,1.0),m_genDist.pRef()); 
+ sc = randSvc->generator(Rndm::Gauss(0.0, 1.0), m_genDist.pRef()); 
  if ( sc.isFailure() ) {
-   return Error ("Failed to generate random number distribution",sc);
+   return Error("Failed to generate random number distribution",sc);
  }
- release(randSvc);
-
+ sc = release(randSvc);
+ if (sc.isFailure()) {
+   return Error("Failed to release RndmGenSvc", sc);
+ }
+ 
  // retrieve pointer to magnetic field service
  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
 

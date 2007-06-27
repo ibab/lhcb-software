@@ -2,6 +2,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-06-27 - Jan Amoraal
+ - Fix unchecked statuts code in OTSmearer
+ - Minor clean-ups
+
 !====================== OTSimulation v3r11 2007-06-11 =====================
 ! 2007-06-11 - Marco Cattaneo
  - Remove obsolete file OTSimulation_load.cpp

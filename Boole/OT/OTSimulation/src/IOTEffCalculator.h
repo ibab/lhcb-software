@@ -1,15 +1,12 @@
-// $Id: IOTEffCalculator.h,v 1.2 2007-04-08 16:54:51 janos Exp $
+// $Id: IOTEffCalculator.h,v 1.3 2007-06-27 15:22:24 janos Exp $
 #ifndef OTSIMULATION_IOTEFFCALCULATOR_H 
 #define OTSIMULATION_IOTEFFCALCULATOR_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 
-// Forward declarations
-namespace LHCb 
-{
-  class MCOTDeposit;
-}
+// MCEvent
+#include "Event/MCOTDeposit.h"
 
 static const InterfaceID IID_IOTEffCalculator( "IOTEffCalculator", 1, 0 );
 
@@ -22,11 +19,14 @@ static const InterfaceID IID_IOTEffCalculator( "IOTEffCalculator", 1, 0 );
  */
 
 class IOTEffCalculator : virtual public IAlgTool {
+
 public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IOTEffCalculator; }
+  
   /// Actual operator function
-  virtual void calculate( LHCb::MCOTDeposit* aDeposit, bool& accept) = 0;
+  virtual void calculate( LHCb::MCOTDeposit* aDeposit, bool& accept) const = 0;
+
 };
 
 #endif // OTSIMULATION_IOTEFFCALCULATOR_H

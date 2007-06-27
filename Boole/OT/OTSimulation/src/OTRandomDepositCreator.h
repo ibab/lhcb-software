@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.h,v 1.9 2007-04-08 16:54:51 janos Exp $
+// $Id: OTRandomDepositCreator.h,v 1.10 2007-06-27 15:22:24 janos Exp $
 #ifndef OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 1
 
@@ -10,10 +10,6 @@
 //#include <string>
 
 // Forward declarations
-namespace LHCb 
-{
-  class MCOTDeposit;
-}
 class DeOTDetector;
 
 /** @class OTRandomDepositCreator OTRandomDepositCreator.h \

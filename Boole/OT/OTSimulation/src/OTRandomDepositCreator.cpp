@@ -1,13 +1,10 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.15 2007-04-08 16:54:51 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.16 2007-06-27 15:22:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
-
-// MCEvent
-#include "Event/MCOTDeposit.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -33,13 +30,12 @@ using namespace LHCb;
 DECLARE_TOOL_FACTORY( OTRandomDepositCreator );
 
 OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type, 
-					       const std::string& name, 
-					       const IInterface* parent) : 
+                                               const std::string& name, 
+                                               const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
   declareProperty( "noiseRate", m_noiseRate = 10.0*Gaudi::Units::kilohertz );
-  declareProperty( "readOutWindowToolName", 
-                   m_readoutWindowToolName ="OTReadOutWindow" ),
+  declareProperty( "readOutWindowToolName", m_readoutWindowToolName ="OTReadOutWindow" ),
 
   declareInterface<IOTRandomDepositCreator>(this);
 }
@@ -54,29 +50,20 @@ StatusCode OTRandomDepositCreator::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize OTRandomDepositCreator", sc );
 
-  // retrieve pointer to random number service
-  IRndmGenSvc* randSvc = 0;
-  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve random number service",sc);
-  }  
-
   // get interface to generator
-  sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
+  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  sc = randSvc->generator(Rndm::Flat(0.0,1.0),m_genDist.pRef()); 
   if ( sc.isFailure() ) {
-    return Error ("Failed to generate random number distribution",sc);
+    return Error("Failed to generate random number distribution",sc);
   }
-  randSvc->release();
+  sc = release(randSvc);
+  if (sc.isFailure()) {
+    return Error("Failed to release RndmGenSvc", sc);
+  }
 
   // Get OT geometry
-  IDataProviderSvc* detSvc; 
-  sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve Detector data svc",sc);
-  }
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
-  detSvc->release();
- 
+
   // Get channel deadtime
   m_deadTime = m_tracker->deadTime();
 
@@ -92,7 +79,7 @@ StatusCode OTRandomDepositCreator::initialize()
   m_windowSize = readoutTool->sizeOfReadOutGate() + m_deadTime;
   // release tool 
   release(readoutTool);
-
+  
   m_nMaxChanInModule = m_tracker->nMaxChanInModule();
   m_nNoise = nNoiseHits();
 
@@ -105,12 +92,12 @@ void OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector) const
   std::vector<DeOTModule*> otModules =  m_tracker->modules();
   unsigned int nModules = otModules.size();
   
-  for (unsigned int iDep = 0; iDep < m_nNoise; ++iDep) {
+  for (unsigned(iDep) = 0; iDep < m_nNoise; ++iDep) {
     double randomNum = m_genDist->shoot();
-    unsigned int moduleNum = (unsigned int)(nModules*randomNum);
+    unsigned int moduleNum = unsigned((nModules*randomNum));
     DeOTModule* aModule = otModules[moduleNum];
     
-    unsigned int strawID = (unsigned int)(m_nMaxChanInModule*m_genDist->shoot())+1u;
+    unsigned int strawID = unsigned(m_nMaxChanInModule*m_genDist->shoot())+1u;
 
     if (strawID <= aModule->nChannels()) {
       unsigned int stationID = aModule->elementID().station();
@@ -126,11 +113,11 @@ void OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector) const
 unsigned int OTRandomDepositCreator::nNoiseHits() const
 { 
   // number of hits to generate
-  return (unsigned int)(nChannels()*m_windowSize*m_noiseRate);
+  return unsigned((nChannels()*m_windowSize*m_noiseRate));
 }
 
 unsigned int OTRandomDepositCreator::nChannels() const 
 {
   /// return maximum number of channels
-  return m_nMaxChanInModule*(m_tracker->modules()).size();
+  return unsigned(m_nMaxChanInModule*(m_tracker->modules()).size());
 }
