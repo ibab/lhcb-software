@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-06-27 M Needham
+ - Set Ks Fit iterations to three
+
 !============================ TrackSys v4r6 2007-06-14 ======================
 ! 2007-06-13 Eduardo Rodrigues
  - Fitting options updated, now that the default number of fit iterations

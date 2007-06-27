@@ -88,7 +88,6 @@ FitKShort.TracksInContainer = "Rec/Track/KsTrack";
 FitKShort.Fitter.ZPositions          = { 990., 2165., 9450. };
 FitKShort.Fitter.StateAtBeamLine     = false;
 FitKShort.Fitter.SetRefInfo          = false;
-FitKShort.Fitter.NumberFitIterations = 1;
 
 // Velo-TT pattern
 TrackVeloTTPatSeq.Members += { "PatVeloTT" };
