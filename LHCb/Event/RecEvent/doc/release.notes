@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.61 2007-06-08 14:31:58 cattanem Exp $
+! $Id: release.notes,v 1.62 2007-06-27 14:01:00 jpalac Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2007-06-27 - Juan Palacios
+ - xml/VertexBase.xml
+   . Add setExtraInfo method.
 
 !========================= RecEvent v2r4 2007-06-07 ==========================
 ! 2007-06-07 - Marco Cattaneo
