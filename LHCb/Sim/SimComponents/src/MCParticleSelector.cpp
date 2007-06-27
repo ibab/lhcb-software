@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.5 2007-05-15 07:47:18 mneedham Exp $
+// $Id: MCParticleSelector.cpp,v 1.6 2007-06-27 11:34:45 mneedham Exp $
 
 #include "Event/MCParticle.h"
 
@@ -16,12 +16,12 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
   GaudiTool( type, name, parent )
 {
   // constructor
-  declareProperty("zOrigin",      m_zOrigin      = 50.0*Gaudi::Units::cm );
+  declareProperty("zOrigin",      m_zOrigin      = -50.0*Gaudi::Units::cm );
   declareProperty("pMin",         m_pMin         = 1.0*Gaudi::Units::GeV );
   declareProperty("pMax",         m_pMax         = 999999*Gaudi::Units::GeV );
   declareProperty("betaGammaMin", m_betaGammaMin = 1.0 );
-  declareProperty("etaMin",       m_etaMin       = 1.9 );
-  declareProperty("etaMax",       m_etaMax       = 4.9 );
+  declareProperty("etaMin",       m_etaMin       = -9999.);
+  declareProperty("etaMax",       m_etaMax       = 9999. );
   declareProperty("rejectElectrons", m_rejectElectrons  = false );
   declareProperty("SelectChargedParticles", m_selCharged = true );
   declareProperty("SelectNeutralParticles", m_selNeutral = true );
