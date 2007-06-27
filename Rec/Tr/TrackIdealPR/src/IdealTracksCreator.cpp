@@ -1,28 +1,19 @@
-// $Id: IdealTracksCreator.cpp,v 1.37 2007-06-09 10:44:33 mneedham Exp $
+// $Id: IdealTracksCreator.cpp,v 1.38 2007-06-27 15:14:35 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // from TrackEvent
 #include "Event/TrackTypes.h"
-
-// from GaudiKernel
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-//from XxxDet
-#include "VeloDet/DeVelo.h"
-#include "STDet/DeSTDetector.h"
-#include "OTDet/DeOTDetector.h"
 
 // from MCEvent
 #include "Event/MCHit.h"
 
 // from TrackFitEvent
-#include "Event/STMeasurement.h"
+#include "Event/Measurement.h"
 #include "Event/OTMeasurement.h"
-#include "Event/VeloRMeasurement.h"
-#include "Event/VeloPhiMeasurement.h"
 #include "Event/StateTraj.h"
 #include "Event/StateParameters.h"
 #include "Event/StateVector.h"
@@ -33,7 +24,7 @@
 
 // from TrackInterfaces
 #include "Kernel/ITrajPoca.h"
-
+#include "TrackInterfaces/IMeasurementProvider.h"
 #include "MCInterfaces/IMCReconstructible.h"
 
 // Local
@@ -65,47 +56,36 @@ DECLARE_ALGORITHM_FACTORY( IdealTracksCreator );
 IdealTracksCreator::IdealTracksCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name, pSvcLocator )
-  , m_velo(0)
-  , m_ttTracker(0)
-  , m_itTracker(0)
-  , m_otTracker(0)
   , m_trackSelector(0)
   , m_stateCreator(0)
   , m_itLinker(0,0,"")
   , m_ttLinker(0,0,"")
   , m_otLinker(0,0,"")
   , m_veloLinker(0,0,"")
+  , m_muonLinker(0,0,"")
 {
   /// default job Options
   declareProperty( "AddVeloClusters", m_addVeloClusters = true           );
   declareProperty( "AddTTClusters",   m_addTTClusters   = true           );
   declareProperty( "AddITClusters",   m_addITClusters   = true           );
   declareProperty( "AddOTTimes",      m_addOTTimes      = true           );
+  declareProperty( "AddMuonHits",      m_addMuonHits      = false        );
   declareProperty( "AddMeasurements", m_addMeasurements = true           );
   declareProperty( "InitState",       m_initState       = true           );
   declareProperty( "InitStateUpstreamFit", m_initStateUpstreamFit = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false    );
   declareProperty( "TracksOutContainer",
                    m_tracksOutContainer = TrackLocation::Ideal           );
-  declareProperty( "VeloGeometryPath",
-                   m_veloPath = DeVeloLocation::Default                  );
-  declareProperty( "TTGeometryPath",
-                   m_ttTrackerPath = DeSTDetLocation::location("TT")     );
-  declareProperty( "ITGeometryPath",
-                   m_itTrackerPath = DeSTDetLocation::location("IT")     );
-  declareProperty( "OTGeometryPath",
-                   m_otTrackerPath = DeOTDetectorLocation::Default       );
-  declareProperty( "TTClusterPositionTool",
-                   m_ttPositionToolName = "STOfflinePosition"            );
-  declareProperty( "ITClusterPositionTool",
-                   m_itPositionToolName =
-                   "STOfflinePosition/ITClusterPosition"                 );
-  declareProperty( "VeloPositionTool",
-                   m_veloPositionToolName = "VeloClusterPosition"        );
   declareProperty( "TrackSelectorTool",
                    m_selectorToolName =  "MCReconstructible"        );
   declareProperty( "MinNHits", m_minNHits = 6                            );
- declareProperty( "TrackTypes", m_tracktypes = boost::assign::list_of(1)(3)(4)(5)(6));
+  declareProperty( "TrackTypes", m_tracktypes = boost::assign::list_of(1)(3)(4)(5)(6));
+
+  declareProperty("ITEff", m_itEff = 1.0);
+  declareProperty("OTEff", m_otEff = 1.0);
+  declareProperty("TTEff", m_ttEff = 1.0);
+  declareProperty("VeloEff", m_veloEff = 1.0);
+  declareProperty("smearP", m_smearP = 0.0);
 
 };
 
@@ -124,31 +104,26 @@ StatusCode IdealTracksCreator::initialize()
 
   info() << "==> Initialize" << endreq;
 
-  // Load Geometry from XmlDDDB
-  // --------------------------
-  m_velo      = getDet<DeVelo>( m_veloPath );
-
-  m_ttTracker = getDet<DeSTDetector>( m_ttTrackerPath );
-  m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
-
-  m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
-
-  // Retrieve the STClusterPosition tools
-  m_ttPositionTool = tool<ISTClusterPosition>( m_ttPositionToolName );
-  m_itPositionTool = tool<ISTClusterPosition>( m_itPositionToolName );
-
-  // Retrieve the VeloClusterPosition tool
-  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
-
-  
   m_trackSelector = tool<IMCReconstructible>(m_selectorToolName,"TrackSelectorTool",this);
 
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
-  // Retrieve the magnetic field and the poca tool
-  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
+  // Retrieve the poca tool
   m_poca = tool<ITrajPoca>( "TrajPoca" );
+  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider");
+
+  sc = randSvc()->generator(Rndm::Flat(0.,1.),m_uniformDist.pRef());
+  if ( sc.isFailure() ) {
+    return Warning("Failed to get flat random number generator", 
+                   StatusCode::FAILURE); 
+  }
+
+  sc = randSvc()->generator(Rndm::Gauss(0.,1.),m_gaussDist.pRef());
+  if ( sc.isFailure() ) {
+    return Warning("Failed to get flat gauss random generator", 
+                   StatusCode::FAILURE); 
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -266,6 +241,17 @@ StatusCode IdealTracksCreator::execute()
         }
       }
 
+      // Add Muon hits
+      // -----------
+      if ( m_addMuonHits == true ) {
+        debug() << "... adding OTTimes" << endreq;
+        sc = addMuonHits( mcParticle, track );
+        if ( sc.isFailure() ) {
+          error() << "Unable to add outer tracker OTTimes" << endreq;
+          return StatusCode::FAILURE;
+        }
+      }
+     
       // Check if the track contains enough hits
       // ---------------------------------------
       if ( (int) track -> nLHCbIDs() < m_minNHits) {
@@ -350,56 +336,61 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
 					   Track* track ) const
 {
   unsigned int nOTMeas = 0;
-
   const OTTime* aTime = m_otLinker.first( mcPart );
   while ( NULL != aTime ) {
-    OTMeasurement meas =
-    OTMeasurement( *aTime, *m_otTracker );
+
+    // possible inefficiency
+    if (m_uniformDist->shoot() < m_otEff){
+
+      LHCbID id = LHCbID(aTime->channel()); 
+      track -> addToLhcbIDs(id);
       
-    track -> addToLhcbIDs( meas.lhcbID() );
+      if ( m_addMeasurements ) { // Add the measurement to the track
+
+        StatusCode sc;
+        Measurement* meas = m_measProvider->measurement(id);
+        if (meas != 0){
+
+        // Set the reference vector
+        StateVector tempState;
+        sc = m_stateCreator -> createStateVector( mcPart, meas->z(), tempState );
+        if ( sc.isSuccess() ) {
+            meas->setRefVector( tempState.parameters() );
+          
+            // Get the ambiguity using the Poca tool
+            XYZVector distance;
+            static XYZVector bfield = XYZVector();
+            StateTraj stateTraj = StateTraj( meas->refVector(), meas->z(), bfield );
+            double s1 = 0.0;
+            double s2 = (meas->trajectory()).arclength( stateTraj.position(s1) );
+            StatusCode msc = m_poca -> minimize(stateTraj, s1, meas->trajectory(),
+                                              s2, distance, 20*Gaudi::Units::mm );
+            if( msc.isFailure() ) {
+              warning() << "TrajPoca minimize failed in addOTTimes." << endreq;
+            }
+            int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+            OTMeasurement* otMeas = dynamic_cast<OTMeasurement*>(meas);
+            otMeas->setAmbiguity( ambiguity );
+          
+            // Set the z-position of the measurement
+            meas->setZ( stateTraj.position(s1).z() );
+          
+            // Reset using the updated z-position
+            StateVector myTempState;
+            sc = m_stateCreator->createStateVector(mcPart, meas->z(), myTempState);
+            if ( sc.isSuccess() ) meas->setRefVector( myTempState.parameters() );
+          
+            track -> addToMeasurements( *meas );
+            delete meas; 
+    	  }
+          else {
+            Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
+	  }
+        } // meas        
+      } // if ( m_addMeasurements ) 
       
-    StatusCode sc;
-    if ( m_addMeasurements ) { // Add the measurement to the track
-      // Set the reference vector
-      StateVector tempState;
-      sc = m_stateCreator -> createStateVector( mcPart, meas.z(), tempState );
-      if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState.parameters() );
-          
-        // Get the ambiguity using the Poca tool
-        XYZVector distance;
-        XYZVector bfield;
-        m_pIMF -> fieldVector( tempState.position(), bfield );
-        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-        double s1 = 0.0;
-        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-        StatusCode msc = m_poca -> minimize( stateTraj, s1, meas.trajectory(),
-                                               s2, distance, 20*Gaudi::Units::mm );
-        if( msc.isFailure() ) {
-          warning() << "TrajPoca minimize failed in addOTTimes." << endreq;
-        }
-        int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
-        meas.setAmbiguity( ambiguity );
-          
-        // Set the z-position of the measurement
-        meas.setZ( stateTraj.position(s1).z() );
-          
-        // Reset using the updated z-position
-        StateVector myTempState;
-        sc = m_stateCreator->createStateVector(mcPart, meas.z(), myTempState);
-        if ( sc.isSuccess() ) meas.setRefVector( myTempState.parameters() );
-          
-        track -> addToMeasurements( meas );
-          
-          
-      }
-      if ( sc.isFailure() )
-        Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
-        
-        
-    } // if ( m_addMeasurements ) 
-      
-    ++nOTMeas;      
+      ++nOTMeas;      
+    }
     aTime = m_otLinker.next();
   } // loop over OTTimes
 
@@ -418,23 +409,32 @@ StatusCode IdealTracksCreator::addTTClusters( const MCParticle* mcPart,
 
   const STCluster* aCluster = m_ttLinker.first( mcPart );
   while ( NULL != aCluster ) {
-    STMeasurement meas =
-      STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
-    track -> addToLhcbIDs( meas.lhcbID() );
-    if ( m_addMeasurements ) { // Add the measurement to the track
-      // Set the reference vector
-      StateVector tempState;
-      StatusCode sc = m_stateCreator->createStateVector(mcPart,meas.z(),tempState);
-      if ( sc.isSuccess() ) {
-        meas.setRefVector( tempState.parameters() ); 
-        track -> addToMeasurements( meas );
+
+    // possible inefficiency 
+    if (m_uniformDist->shoot() < m_ttEff){
+
+      LHCbID id = LHCbID(aCluster->channelID());
+      track->addToLhcbIDs(id);
+
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        // Set the reference vector
+        Measurement* meas = m_measProvider->measurement(id);
+        if (meas != 0){
+          StateVector tempState;
+          StatusCode sc = m_stateCreator->createStateVector(mcPart,
+                                                        meas->z(),tempState);
+          if ( sc.isSuccess() ) {
+            meas->setRefVector( tempState.parameters() ); 
+            track -> addToMeasurements( *meas );
+            delete meas; 
+          }
+          else {
+            Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
+          }
+        } // meas
       }
-      else {
-       Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
-      }
-        
-    }
-    ++nTTMeas;      
+      ++nTTMeas;
+	}
     aCluster = m_ttLinker.next();
   }  // loop cluster
 
@@ -453,48 +453,54 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
 
   const STCluster* aCluster = m_itLinker.first( mcPart );
   while ( NULL != aCluster ) {
-    STMeasurement meas = STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
-      
-    track -> addToLhcbIDs( meas.lhcbID() );
-      
-    StatusCode sc;
-    if ( m_addMeasurements ) { // Add the measurement to the track
-      // Set the reference vector
-      StateVector tempState;
-      sc = m_stateCreator->createStateVector(mcPart,meas.z(),tempState);
-      if ( sc.isSuccess() ) {
-        meas.setRefVector( tempState.parameters() );
-          
-        // Set the z-position of the measurement
-        XYZVector distance;
-        XYZVector bfield;
-        m_pIMF -> fieldVector( tempState.position(), bfield );
-        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-        double s1 = 0.0;
-        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-        StatusCode msc = m_poca->minimize(stateTraj, s1, meas.trajectory(), s2,
-                                          distance, 20*Gaudi::Units::mm);
-        if( msc.isFailure() ) {
-          warning() << "TrajPoca minimize failed in addITClusters." << endreq;
-        }
-        meas.setZ( stateTraj.position(s1).z() );
-          
-        // Reset using the updated z-position
-        StateVector myTempState;
-        sc = m_stateCreator->createStateVector(mcPart, meas.z(), myTempState);
-        if ( sc.isSuccess() ) meas.setRefVector( myTempState.parameters() );
 
-        track -> addToMeasurements( meas );                   
-      }
-      if ( sc.isFailure() )
-       Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
-                
-    } // if ( m_addMeasurements ) 
+    // possible inefficiency
+    if (m_uniformDist->shoot() < m_itEff){
+
+      LHCbID id = LHCbID(aCluster->channelID());      
+      track->addToLhcbIDs(id);
       
-    ++nITMeas;      
+      if ( m_addMeasurements ) { // Add the measurement to the track
+ 
+        Measurement* meas = m_measProvider->measurement(id);
+        if (meas != 0){
+      
+          StatusCode sc;
+          // Set the reference vector
+          StateVector tempState;
+          sc = m_stateCreator->createStateVector(mcPart,meas->z(),tempState);
+          if ( sc.isSuccess() ) {
+            meas->setRefVector( tempState.parameters() );
+          
+            // Set the z-position of the measurement
+            XYZVector distance;
+            static XYZVector bfield = XYZVector();
+            StateTraj stateTraj = StateTraj( meas->refVector(), meas->z(), bfield );
+            double s1 = 0.0;
+            double s2 = (meas->trajectory()).arclength( stateTraj.position(s1) );
+            StatusCode msc = m_poca->minimize(stateTraj, s1, meas->trajectory(), s2,
+                                              distance, 0.002*Gaudi::Units::mm);
+            if( msc.isFailure() ) {
+              warning() << "TrajPoca minimize failed in addITClusters." << endreq;
+            }
+            meas->setZ( stateTraj.position(s1).z() );
+          
+            // Reset using the updated z-position
+            StateVector myTempState;
+            sc = m_stateCreator->createStateVector(mcPart, meas->z(), myTempState);
+            if ( sc.isSuccess() ) meas->setRefVector( myTempState.parameters() );
+            track -> addToMeasurements( *meas );                 
+            delete meas;  
+          }
+          else {
+            Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
+	  }
+        } // meas != 0           
+      } // if ( m_addMeasurements )    
+      ++nITMeas;      
+    }
     aCluster = m_itLinker.next();
   }
-
   debug() << "- " << nITMeas << " STMeasurements in IT added" << endreq;
 
   return StatusCode::SUCCESS;
@@ -506,46 +512,78 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
 StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart, 
                                                 Track* track ) const
 {
-  unsigned int nVeloRMeas   = 0;
-  unsigned int nVeloPhiMeas = 0;
-
+  unsigned int nVeloMeas   = 0;
   const VeloCluster* aCluster = m_veloLinker.first( mcPart );
   while ( NULL != aCluster ) {
-    // Get the reference vector
-    const DeVeloSensor* sensor =
-      m_velo -> sensor( aCluster -> channelID().sensor() );
-    const double z = sensor->z();
-    // Check if VeloCluster is of type R or Phi
-    if ( sensor -> isR() || sensor -> isPileUp() ) {
-      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
-                                                  *m_veloPositionTool );
-      track -> addToLhcbIDs( meas.lhcbID() );
-      if ( m_addMeasurements ) { // Add the measurement to the track
-        StateVector tempState;
-        StatusCode sc = m_stateCreator -> createStateVector( mcPart, z, tempState);
-        if ( sc.isSuccess() ) meas.setRefVector( tempState.parameters()); 
-        else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
-        track -> addToMeasurements( meas ); 
-      }
-        ++nVeloRMeas;
-      } else {
-        VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
-                                                      *m_veloPositionTool );
-        track -> addToLhcbIDs( meas.lhcbID() );
+
+    // possible inefficiency
+    if (m_uniformDist->shoot() < m_veloEff){
+
+      LHCbID id = LHCbID(aCluster->channelID());
+      if (id.isVeloR() || id.isVeloPhi()){
+        // not pileup
+        track->addToLhcbIDs(id);
+        ++nVeloMeas;
         if ( m_addMeasurements ) { // Add the measurement to the track
-          StateVector tempState;
-          StatusCode sc = m_stateCreator -> createStateVector( mcPart, z, tempState);
-          if ( sc.isSuccess() ) meas.setRefVector( tempState.parameters() );
-          else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
-          track -> addToMeasurements( meas );     
-      }        
-      ++nVeloPhiMeas;
+          Measurement* meas = m_measProvider->measurement(id);
+          if (meas != 0){
+            StateVector tempState;
+            StatusCode sc = m_stateCreator->createStateVector(mcPart, meas->z(), tempState);
+            if ( sc.isSuccess()) {
+              meas->setRefVector( tempState.parameters());
+	    }		     
+            else {
+              Warning( "Failed to calculate ref. info. for VeloMeasurement" );
+	    }
+            track->addToMeasurements(*meas);
+            delete meas;		         
+	  }
+        } // add  measurements	
+      } // is r or phi
     }
     aCluster = m_veloLinker.next();
-  }
+  }  // while
+ 
+  debug() << "- " << nVeloMeas << " / " 
+          << " Velo Measurements added" << endreq;
   
-  debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
-          << " Velo R/Phi Measurements added" << endreq;
+  return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+//  
+//=============================================================================
+StatusCode IdealTracksCreator::addMuonHits( const MCParticle* mcPart, 
+                                                Track* track ) const
+{
+  unsigned int nMuonMeas   = 0;
+  const MuonCoord* aCluster = m_muonLinker.first( mcPart );
+  while ( NULL != aCluster ) {
+
+    LHCbID id = LHCbID(aCluster->key());
+    track->addToLhcbIDs(id);
+    ++nMuonMeas;
+
+    if ( m_addMeasurements ) { // Add the measurement to the track
+      Measurement* meas = m_measProvider->measurement(id);
+      if (meas != 0){
+        StateVector tempState;
+        StatusCode sc = m_stateCreator->createStateVector(mcPart, meas->z(), tempState);
+        if ( sc.isSuccess()) {
+          meas->setRefVector( tempState.parameters());
+	}		     
+        else {
+          Warning( "Failed to calculate ref. info. for VeloMeasurement" );
+	}
+        track->addToMeasurements(*meas);
+          delete meas;		         
+	}
+      } // add  measurements	
+    aCluster = m_muonLinker.next();
+  }  // while
+ 
+  debug() << "- " << nMuonMeas << " / " 
+          << " Muon Measurements added" << endreq;
   
   return StatusCode::SUCCESS;
 };
@@ -558,13 +596,14 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
 {
 
   // try to mimic the pattern recognition
-  // if (hasVelo(track) == true){
   if (track->hasVelo() == true) { 
     State state; state.setLocation(State::EndVelo);
     StatusCode sc = m_stateCreator->createState(mcPart,
                                      800.0 , 
                                      state );
     if ( sc.isSuccess()){
+      // smear p
+      smearQOverP(state);
       track->addToStates(state);
     }
     else {
@@ -572,13 +611,13 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
     }
   }
 
-  //  if (hasT(track) == true){
   if (track->hasT() == true){
     State state; state.setLocation(State::AtT);
     StatusCode sc = m_stateCreator->createState(mcPart,
                                      StateParameters::ZAtT , 
                                      state );
     if ( sc.isSuccess()){
+      smearQOverP(state);
       track->addToStates(state);
     }
     else {
@@ -588,22 +627,6 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
 
   return StatusCode::SUCCESS;
 };
-
-/*
-bool IdealTracksCreator::hasT(const Track* aTrack) const{
-  bool hasTPart = false;
-  if (aTrack->type() == Track::Ttrack || aTrack->type() == Track::Downstream 
-      || aTrack->type() == Track::Long) hasTPart = true;
-  return hasTPart;
-}
-
-bool IdealTracksCreator::hasVelo(const Track* aTrack) const{
-  bool hasVPart = false;
-  if (aTrack->type() == Track::Long || aTrack->type() == Track::Upstream 
-      || aTrack->type() == Track::Velo) hasVPart = true;
-  return hasVPart;
-}
-*/
 
 StatusCode IdealTracksCreator::initEvent() const{
 
@@ -634,6 +657,13 @@ StatusCode IdealTracksCreator::initEvent() const{
       return Error( "Unable to retrieve VeloCluster to MCParticle Linker table");
     }
   }  
+
+   if (m_addMuonHits == true){
+    m_muonLinker = MuonLinker( evtSvc(), msgSvc(), MuonCoordLocation::MuonCoords );
+    if ( m_muonLinker.notFound() ) {
+      return Error( "Unable to retrieve Muon to MCParticle Linker table");
+    }
+  } 
 
   return StatusCode::SUCCESS;
 }
@@ -670,7 +700,7 @@ void IdealTracksCreator::printTrack(const Track* track) const{
       << "  * # measurements = " << track -> nMeasurements() << endreq;
       
    // print the measurements
-   const std::vector<Measurement*>& meas = track -> measurements();
+   const std::vector<Measurement*>& meas = track->measurements();
    for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
            itMeas != meas.end(); ++itMeas ) {
        debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
@@ -700,4 +730,11 @@ bool IdealTracksCreator::wanted(const Track::Types& aType) const{
          std::find( m_tracktypes.begin(), m_tracktypes.end(),  
                     aType ) == m_tracktypes.end() ) ) selected = false;
   return selected;
+}
+
+void IdealTracksCreator::smearQOverP(State& aState) const{
+
+  const double smearedValue = aState.qOverP()*(
+     1.0 + (m_gaussDist->shoot() * m_smearP   ));
+  aState.setQOverP(smearedValue);
 }
