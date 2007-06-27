@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.2 2007-06-25 21:57:17 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,8 @@ StatusCode HltSummaryWriter::initialize() {
   info() << " Write in Summary : ";
   for (std::vector<int>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) 
-    info() << HltConfigurationHelper::getName(*m_conf,"SelectionID",*it);
+    info() << HltConfigurationHelper::getName(*m_conf,"SelectionID",*it)
+           << " ";
   info() << endreq;
   
   return StatusCode::SUCCESS;

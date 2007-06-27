@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltFunctionFactory.h,v 1.3 2007-06-27 06:01:49 hernando Exp $
 #ifndef HLTFUNCTIONFACTORY_H 
 #define HLTFUNCTIONFACTORY_H 1
 
@@ -32,16 +32,15 @@ public:
   void setTracks(std::vector<LHCb::Track*>& tracks) 
   {m_tracks = &tracks;}
   
-  Hlt::TrackFunction* trackFunction(const std::string& name, int& id);
+  Hlt::TrackFunction* trackFunction(const std::string& name);
   
   Hlt::TrackFilter* trackFilter(const std::string& mode);  
   
-  Hlt::VertexFunction* vertexFunction(const std::string& name, int& id);
+  Hlt::VertexFunction* vertexFunction(const std::string& name);
   
   Hlt::VertexFilter* vertexFilter(const std::string& name);
 
-  Hlt::TrackBiFunction* trackBiFunction(const std::string& name,
-                                        int& id);
+  Hlt::TrackBiFunction* trackBiFunction(const std::string& name);
 
 protected:
 

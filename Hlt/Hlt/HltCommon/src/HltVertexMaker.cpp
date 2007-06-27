@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.2 2007-06-25 20:50:26 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
 // Include files 
 
 
@@ -13,6 +13,7 @@
 #include "HltBase/EDictionary.h"
 #include "HltBase/EParser.h"
 #include "HltBase/IHltFunctionFactory.h"
+#include "HltBase/HltConfigurationHelper.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVertexMaker
@@ -90,9 +91,9 @@ StatusCode HltVertexMaker::initialize() {
     if (!EParser::parseFilter(filtername,funname,mode,x0,xf)) continue;
 
     m_filterNames.push_back(funname);
-    
-    int id = 0;
-    Hlt::TrackBiFunction* fun = factory->trackBiFunction(funname,id);
+
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
+    Hlt::TrackBiFunction* fun = factory->trackBiFunction(funname);
     m_functions.push_back(fun);
     m_filterIDs.push_back(id);
     if (!fun) error() << " error crearing function " << filtername 

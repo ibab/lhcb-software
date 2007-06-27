@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.2 2007-06-25 20:50:26 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "HltBase/EDictionary.h"
 #include "HltBase/EParser.h"
 #include "Event/HltNames.h"
+#include "HltBase/HltConfigurationHelper.h"
 
 // local
 #include "HltTrackFilter.h"
@@ -66,9 +67,9 @@ StatusCode HltTrackFilter::initialize() {
     float xf =  1.e6;
     if (!EParser::parseFilter(filtername,funname,mode,x0,xf))continue;
     
-    int id = 0;
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
     if (m_computeInfo) {
-      Hlt::TrackFunction* fun = factory->trackFunction(funname,id);
+      Hlt::TrackFunction* fun = factory->trackFunction(funname);
       if (!fun) error() << " error crearing function " << filtername
                         << " " << id << endreq;
       m_functions.push_back(fun);

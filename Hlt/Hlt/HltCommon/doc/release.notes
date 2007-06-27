@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-26 - Jose A. Hernando
+	- HltFunctionFactory and Filters, Maker, simplify interface
+
 ! 2007-06-25 - Jose A. Hernando
 	- HltPrepareVertices : prepare vertices (i.e PV2D)	
 	- HltSummaryWriter : write selections in the TES report-summary

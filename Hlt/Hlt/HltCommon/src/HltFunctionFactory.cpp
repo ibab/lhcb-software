@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -54,9 +54,12 @@ StatusCode HltFunctionFactory::initialize() {
   return sc;
 }
 
-Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& name,
-                                                      int& id) {
+Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn) 
+{
   Hlt::TrackFunction* fun = NULL;
+  std::vector<std::string> cromos = EParser::parse(fn,",");
+  std::string name = cromos[0];
+  debug() << " function name " << name << endreq;
   if (name == "rIP") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<Track,RecVertex>(Hlt::rIP(),*m_vertices,
@@ -82,7 +85,7 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& name,
     debug() << " created function IDsFrunction " << name << endreq;
   }
   if (m_smart && fun) {
-    id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::TrackFunction* fun1 = fun;
     fun = new Hlt::SmartFunction<Track>(id,*fun1);
     debug() << " created smart function " << name << " id " << id << endreq;
@@ -94,9 +97,10 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& name,
 }
 
 
-Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& name,
-                                                        int& id) {
+Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
   Hlt::VertexFunction* fun = NULL;
+  std::vector<std::string> cromos = EParser::parse(fn,",");
+  std::string name = cromos[0];
   if (name == "VertexDz") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
     fun =  new Estd::binder_function<RecVertex,RecVertex>(Hlt::DZ(),*m_vertices,
@@ -111,7 +115,7 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& name,
     fun = new Hlt::maxPT();
   }
   if (m_smart && fun) {
-    id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::VertexFunction* fun1 = fun;
     fun = new Hlt::SmartFunction<RecVertex>(id,*fun1);
     debug() << " created smart function " << name << " id " << id << endreq;
@@ -122,11 +126,12 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& name,
   return fun;
 }
 
-Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& name, int& id) {
+Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& fn) {
   Hlt::TrackBiFunction* bfun = NULL;
+  std::vector<std::string> cromos = EParser::parse(fn,",");
+  std::string name = cromos[0];
   if (name == "DOCA")
     bfun = new Hlt::DOCA();
-  id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
   if (!bfun) fatal() << " requested track bifunction " << name
                      << " not in factory " << endreq;
   return bfun;
@@ -142,11 +147,15 @@ Hlt::TrackFilter* HltFunctionFactory::trackFilter(const std::string& name) {
     fatal() << " not able to parse " << name << endreq;
     return NULL;  
   }
-  int id= 0;
-  Hlt::TrackFunction* fun = trackFunction(funname,id);
+  if (m_smart) {
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
+    Hlt::Info<Track> info(id);
+    return makeFilter(info,mode,x0,xf);
+  } 
+  Hlt::TrackFunction* fun = trackFunction(funname);
+  Hlt::TrackFilter* filter = makeFilter(*fun,mode,x0,xf);
   delete fun;
-  Hlt::Info<Track> info(id);
-  return makeFilter(info,mode,x0,xf);
+  return filter;
 }
 
 Hlt::VertexFilter* HltFunctionFactory::vertexFilter(const std::string& name) {
@@ -159,11 +168,15 @@ Hlt::VertexFilter* HltFunctionFactory::vertexFilter(const std::string& name) {
     fatal() << " not able to parse " << name << endreq;
     return NULL;  
   }
-  int id= 0;
-  Hlt::VertexFunction* fun = vertexFunction(funname,id);
-  delete fun;
-  Hlt::Info<RecVertex> info(id);
-  return makeFilter(info,mode,x0,xf);
+  if (m_smart) {
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
+    Hlt::Info<RecVertex> info(id);
+    return makeFilter(info,mode,x0,xf);
+  }
+  Hlt::VertexFunction* fun = vertexFunction(funname);
+  Hlt::VertexFilter* filter = makeFilter(*fun,mode,x0,xf);
+  delete fun;  
+  return filter;
 }
 
 
