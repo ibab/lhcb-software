@@ -1,6 +1,21 @@
 // Track checking on long tracks in the "best" container
 // -----------------------------------------------------
-CheckTrSeq.Members  += { "TrackChecker/CheckBestLong" };
-CheckBestLong.RejectFitFailures = true;
+CheckTrSeq.Members  += { "TrackChecker/CheckLongTrack" };
 
-CheckBestLong.TrackSelector.TrackTypes = { 3 };     // Long
+CheckLongTrack.fullDetail = true;
+
+// dont select electrons and hadronic interactions
+CheckLongTrack.Selector.Selector.rejectElectrons = true;
+CheckLongTrack.Selector.Selector.rejectInteractions = true;
+CheckLongTrack.Selector.Selector.zInteraction = 9400.;
+
+// select long tracks
+CheckLongTrack.SelectionCriteria = "ChargedLong";
+
+// split by track algorithm type
+CheckLongTrack.splitByAlgorithm = true;
+
+// make all plots
+CheckLongTrack.PlotsByMeasType = true;
+CheckLongTrack.CheckAmbiguity = true;
+
