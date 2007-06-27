@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.1 2007-06-22 16:37:57 psomogyi Exp $
+// $Id: DimInfoHisto.cpp,v 1.2 2007-06-27 13:50:49 psomogyi Exp $
 
 // Include files 
 
@@ -39,13 +39,17 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
                            int         verbosity ):
   m_serviceOK(false),
   m_serviceUpdated(false),
+  m_bookedHistogram(false),
   m_verbosity(verbosity),
   m_histoDimension(-1),
+  m_serviceSize(0),  
   m_serviceName(serviceName),
-  m_bookedHistogram(false),
-  m_serviceSize(0),
-  m_serviceType(DimInfoHisto::unknown),
-  DimInfo(serviceName.c_str(), refreshTime, -1) {
+  m_histogram1D(0),
+  m_histogramProfile(0),  
+  m_histogram2D(0),
+  m_serviceType(DimInfoHisto::unknown),  
+  DimInfo(serviceName.c_str(), refreshTime, -1)  
+{
   
   if (m_verbosity > 0)
     std::cout << "*** initialising DIM histogram for service " << m_serviceName
@@ -116,18 +120,21 @@ DimInfoHisto::~DimInfoHisto() {
   
   if (m_verbosity > 1)
     std::cout << "delete 1D histo " << std::endl;
-  if (m_serviceType == DimInfoHisto::h1D && m_histogram1D != NULL )
-    m_histogram1D->Delete();  
+  if (m_serviceType == DimInfoHisto::h1D && m_histogram1D != NULL ) {
+    if (m_histogram1D) delete m_histogram1D;
+  }
 
   if (m_verbosity > 1)
     std::cout << "delete profile histo " << std::endl;
-  if (m_serviceType == DimInfoHisto::hProfile && m_histogramProfile != NULL )
-    m_histogramProfile->Delete();  
+  if (m_serviceType == DimInfoHisto::hProfile && m_histogramProfile != NULL ) {
+    if (m_histogramProfile) delete m_histogramProfile;
+  }
   
   if (m_verbosity > 1)
     std::cout << "delete 2D histo " << std::endl;  
-  if (m_serviceType == DimInfoHisto::h2D && m_histogram2D != NULL)
-    m_histogram2D->Delete();
+  if (m_serviceType == DimInfoHisto::h2D && m_histogram2D != NULL) {
+    if (m_histogram2D) delete m_histogram2D;
+  }
   
   if (m_verbosity > 1)
     std::cout << "destructor of DimInfoHisto ends" << std::endl;
