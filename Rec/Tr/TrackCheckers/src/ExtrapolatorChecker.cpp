@@ -1,4 +1,4 @@
-// $Id: ExtrapolatorChecker.cpp,v 1.3 2007-05-07 08:07:13 mneedham Exp $
+// $Id: ExtrapolatorChecker.cpp,v 1.4 2007-06-27 15:05:06 mneedham Exp $
 // Include files 
 
 // local
@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"
@@ -19,6 +18,9 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 
+// boost
+#include <boost/assign/list_of.hpp>
+
 using namespace Gaudi;
 using namespace Gaudi::Units;
 using namespace LHCb;
@@ -30,15 +32,11 @@ DECLARE_ALGORITHM_FACTORY( ExtrapolatorChecker );
 //=============================================================================
 ExtrapolatorChecker::ExtrapolatorChecker( const std::string& name,
                             ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg( name , pSvcLocator )
+  TrackCheckerBase( name , pSvcLocator )
 {
-  declareProperty( "TrackSelector",
-                   m_trackSelectorName = "TrackCriteriaSelector" );
-
-  m_dets.push_back( "Velo" );
-  m_dets.push_back( "TT"   );
-  m_dets.push_back( "IT"   );
-  m_dets.push_back( "OT"   );
+ 
+  declareProperty("Detectors" , 
+                  m_dets = boost::assign::list_of("IT")("OT")("TT")("Velo"));
 }
 
 //=============================================================================
@@ -46,23 +44,6 @@ ExtrapolatorChecker::ExtrapolatorChecker( const std::string& name,
 //=============================================================================
 ExtrapolatorChecker::~ExtrapolatorChecker() {}; 
 
-//=============================================================================
-// Initialization. Check parameters
-//=============================================================================
-StatusCode ExtrapolatorChecker::initialize()
-{
-  // Mandatory initialization of GaudiAlgorithm
-  StatusCode sc = GaudiHistoAlg::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  m_trackSelector = tool<ITrackCriteriaSelector>( m_trackSelectorName,
-                                                  "TrackSelector", this );
-  m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator"       );
-  m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
-  m_magSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
-
-  return StatusCode::SUCCESS;
-};
 
 //=============================================================================
 // Main execution
@@ -77,11 +58,11 @@ StatusCode ExtrapolatorChecker::execute()
   for( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
     MCParticle* mcPart = *iPart;
     // Decide whether the MCParticle will be checked
-    if ( m_trackSelector->select( mcPart ) ) {
+    if ( selected( mcPart ) ) {
 
       // Get the state at the vertex
       State stateVtx;
-      m_stateCreator -> createStateVertex( mcPart, stateVtx );
+      idealStateCreator() -> createStateVertex( mcPart, stateVtx );
 
       // Find first MCHit
       std::string detName;
@@ -92,7 +73,7 @@ StatusCode ExtrapolatorChecker::execute()
       XYZPoint entryP = mcHit -> entry();
 
       // Extrapolate through RF foil
-      m_extrapolator -> propagate( stateVtx, entryP.z() );
+      extrapolator() -> propagate( stateVtx, entryP.z() );
       TrackVector vec    = stateVtx.stateVector();
       TrackSymMatrix cov = stateVtx.covariance();
 
@@ -138,7 +119,7 @@ StatusCode ExtrapolatorChecker::execute()
         double dz = entryP.z() - state.z();
 	
         // Extrapolate to next MCHit
-        m_extrapolator -> propagate( state, entryP.z() );
+        extrapolator()->propagate( state, entryP.z() );
         TrackVector vec    = state.stateVector();
         TrackSymMatrix cov = state.covariance();
 
@@ -201,13 +182,6 @@ StatusCode ExtrapolatorChecker::execute()
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ExtrapolatorChecker::finalize()
-{
-  return GaudiHistoAlg::finalize();
-}
 
 //=============================================================================
 // Find the next MCHit starting from a given z
@@ -291,7 +265,7 @@ void ExtrapolatorChecker::correctSlopes( const MCParticle* mcPart,
 
   // Get magnetic field vector
   Gaudi::XYZVector B;
-  m_magSvc -> fieldVector( mcHit -> midPoint() , B );
+  fieldSvc()->fieldVector( mcHit -> midPoint() , B );
 
   // Calculate new displacement vector and tx,ty slopes
   Gaudi::XYZVector d = mcHit -> displacement();

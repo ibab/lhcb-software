@@ -1,18 +1,11 @@
-// $Id: ExtrapolatorChecker.h,v 1.3 2007-05-31 15:33:54 cattanem Exp $
+// $Id: ExtrapolatorChecker.h,v 1.4 2007-06-27 15:05:06 mneedham Exp $
 #ifndef EXTRAPOLATORCHECKER_H 
 #define EXTRAPOLATORCHECKER_H 1
 
 // Include files
 
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
-
-// from Kernel/MCInterfaces
-#include "MCInterfaces/ITrackCriteriaSelector.h"
-#include "MCInterfaces/IIdealStateCreator.h"
-
-// from Tr/TrackInterfaces
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackCheckerBase.h"
 
 // Forward declarations
 namespace LHCb
@@ -20,8 +13,6 @@ namespace LHCb
   class MCParticle;
   class MCHit;
 }
-
-class IMagneticFieldSvc;
 
 /** @class ExtrapolatorChecker ExtrapolatorChecker.h
  *  
@@ -54,7 +45,7 @@ class IMagneticFieldSvc;
  *  @date   2006-07-06
  */
 
-class ExtrapolatorChecker : public GaudiHistoAlg {
+class ExtrapolatorChecker : public TrackCheckerBase {
 
 public:
 
@@ -64,14 +55,9 @@ public:
   /// Destructor
   virtual ~ExtrapolatorChecker();
 
-  /// Algorithm initialization
-  virtual StatusCode initialize();
 
   /// Algorithm execution
   virtual StatusCode execute();
-
-  /// Algorithm finalization
-  virtual StatusCode finalize();
 
 private:
 
@@ -94,18 +80,10 @@ private:
   /// Correct slopes for magnetic field given an MCHit and a MCParticle
   void correctSlopes( const LHCb::MCParticle* mcPart, const LHCb::MCHit* mcHit,
                       double& tx, double& ty ) const;
- 
-  // Interfaces
-  ITrackCriteriaSelector* m_trackSelector;///< Pointer to TrackCriteriaSelector
-  IIdealStateCreator*     m_stateCreator; ///< Pointer to IdealStateCreator
-  ITrackExtrapolator*     m_extrapolator; ///< Pointer to the extrapolator
-  IMagneticFieldSvc*      m_magSvc;       ///< Pointer to magnetic field service
 
   /// String of the available detectors.
   std::vector<std::string> m_dets;
 
-  // jobOptions
-  std::string m_trackSelectorName; ///< Tracks selector tool name
 
 };
 #endif // EXTRAPOLATORCHECKER_H

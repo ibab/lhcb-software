@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.1 2007-05-08 06:49:00 mneedham Exp $
+// $Id: TrackMonitor.h,v 1.2 2007-06-27 15:05:06 mneedham Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -6,7 +6,7 @@
  
 // from Gaudi
 #include "TrackMonitorBase.h"
-
+#include "Event/Track.h"
 
 /** @class TrackMonitor TrackMonitor.h "TrackCheckers/TrackMonitor"
  * 
@@ -33,11 +33,17 @@ class TrackMonitor : public TrackMonitorBase {
 
  private:
 
-  void fillHistograms(const LHCb::Track* aTrack);
+  std::string algorithm(LHCb::Track::History history ) const;
+
+  void fillHistograms(const LHCb::Track* aTrack, 
+                      const std::string& type);
   double m_refZ;
   double m_xMax;
   double m_yMax;
+  bool m_splitByAlgorithm;
+  
 
 };
+
 
 #endif // TRACKMONITOR_H

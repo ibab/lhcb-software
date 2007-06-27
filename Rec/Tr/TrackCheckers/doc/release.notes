@@ -4,6 +4,15 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-06-27 M. Needham
+ - Add new checking base class TrackCheckerBase
+ - New checkers TrackResChecker (replaces TrackChecker), TrackEffChecker
+ - Remove TrackChecker
+ - ExtrapolatorChecker derives from TrackCheckerBase, particles 
+   selected using IMCReconstructible not TrackCriteriaSelector
+ - For configuration for long track see TrackChecking.opts in TrackSys
+ 
+
 !======================= TrackCheckers v2r14 2007-05-31 ======================
 ! 2007-05-31 - Marco Cattaneo
  - Follow change in interface locations to Kernel/MCInterfaces package

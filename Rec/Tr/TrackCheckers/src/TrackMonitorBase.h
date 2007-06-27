@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.h,v 1.1 2007-05-08 06:49:00 mneedham Exp $
+// $Id: TrackMonitorBase.h,v 1.2 2007-06-27 15:05:06 mneedham Exp $
 #ifndef TRACKMONITORBASE_H
 #define TRACKMONITORBASE_H 1
  
@@ -8,12 +8,16 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 #include <string>
+#include <map>
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Kernel/ITrajPoca.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
+
+#include "Event/Track.h"
+
 
 /** @class TrackMonitorBase TrackMonitorBase.h "TrackCheckers/TrackMonitorBase"
  * 
@@ -51,7 +55,7 @@ class TrackMonitorBase : public GaudiHistoAlg {
   /** Get a pointer to the track selection tool
   *  @return field service
   */
-  ITrackSelector* selector() const;
+  ITrackSelector* selector(LHCb::Track::Types aType) const;
 
   /** Get a pointer to the track extrapolator
   *  @return extrapolator
@@ -63,18 +67,33 @@ class TrackMonitorBase : public GaudiHistoAlg {
   */
   const std::string& inputContainer() const; 
 
+  /** Whether to split by algorithm
+  *  @return splitByAlgorithm true or false
+  */ 
+  bool splitByAlgorithm() const;
+  
+  typedef std::map<LHCb::Track::Types,ITrackSelector*> Selectors;
+
+  /** To avoid hard coding...
+  *  @return all string
+  */ 
+  const std::string& all() const;
 
  private:
 
-  std::string m_extrapolatorName; 
-  std::string m_selectorName;
+  mutable Selectors m_selectors; 
+    
+
+  std::string m_extrapolatorName;
   std::string m_tracksInContainer;    ///< Input Tracks container location
  
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface  
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
-  ITrackSelector* m_selector;         ///< Pointer to selector   
   ITrackExtrapolator* m_extrapolator; ///< Pointer to extrapolator
-                                                                         
+
+  bool m_splitByAlgorithm;
+  std::string m_allString;  
+                                                                       
 };
 
 inline IMagneticFieldSvc* TrackMonitorBase::fieldSvc() const{
@@ -85,8 +104,9 @@ inline ITrajPoca* TrackMonitorBase::pocaTool() const{
   return m_poca;
 }
 
-inline ITrackSelector* TrackMonitorBase::selector() const{
-  return m_selector;
+inline ITrackSelector* TrackMonitorBase::selector(LHCb::Track::Types aType) const{
+  return m_splitByAlgorithm == true ? m_selectors[aType] : 
+                                      m_selectors[LHCb::Track::TypeUnknown];
 }
 
 inline ITrackExtrapolator* TrackMonitorBase::extrapolator() const{
@@ -95,6 +115,15 @@ inline ITrackExtrapolator* TrackMonitorBase::extrapolator() const{
 
 inline const std::string& TrackMonitorBase::inputContainer() const{
   return m_tracksInContainer;
+}
+
+inline bool TrackMonitorBase::splitByAlgorithm() const{
+  return m_splitByAlgorithm;
+}
+
+
+inline const std::string& TrackMonitorBase::all() const{
+  return m_allString;
 }
 
 #endif // TRACKMONITORBASE_H
