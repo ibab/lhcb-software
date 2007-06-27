@@ -23,6 +23,7 @@ namespace LHCb{
   class STCluster;
   class VeloCluster;
   class OTTime;
+  class MuonCoord;
 }
 
 class LHCbIDsToMCHits: public GaudiTool, virtual public ILHCbIDsToMCHits,
@@ -85,6 +86,7 @@ private:
   typedef LinkedTo<LHCb::MCHit,LHCb::STCluster> STLinks;
   typedef LinkedTo<LHCb::MCHit,LHCb::OTTime> OTLinks;
   typedef LinkedTo<LHCb::MCHit,LHCb::VeloCluster> VeloLinks;
+  typedef LinkedTo<LHCb::MCHit,LHCb::MuonCoord> MuonLinks;
 
   template<typename ID, typename LINKER>
   void linkToDetTruth(const ID& id, LINKER& aLinker, LinkMap& output ) const;
@@ -93,14 +95,19 @@ private:
   void linkTT(const LHCb::LHCbID& id, LinkMap& output) const;
   void linkOT(const LHCb::LHCbID& id, LinkMap& output) const;
   void linkVelo(const LHCb::LHCbID& id, LinkMap& output) const;
+  void linkMuon(const LHCb::LHCbID& id, LinkMap& output) const;
 
   mutable STLinks m_itLinks;
   mutable STLinks m_ttLinks;
   mutable OTLinks m_otLinks;
   mutable VeloLinks m_veloLinks;
+  mutable MuonLinks m_muonLinks;
 
-  mutable bool m_configured;
-  void initEvent() const;
+  mutable bool m_configuredOT;
+  mutable bool m_configuredIT;
+  mutable bool m_configuredTT;
+  mutable bool m_configuredVelo;
+  mutable bool m_configuredMuon;
 
    
   std::string m_endString;

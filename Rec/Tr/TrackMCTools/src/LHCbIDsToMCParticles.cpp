@@ -1,4 +1,4 @@
-// $Id: LHCbIDsToMCParticles.cpp,v 1.1 2007-05-15 08:34:15 mneedham Exp $
+// $Id: LHCbIDsToMCParticles.cpp,v 1.2 2007-06-27 06:58:53 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -10,9 +10,8 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/OTTime.h"
+#include "Event/MuonCoord.h"
 
-//static const ToolFactory<LHCbIDsToMCParticles>  s_factory;
-//const IToolFactory& LHCbIDsToMCParticlesFactory = s_factory;
 DECLARE_TOOL_FACTORY( LHCbIDsToMCParticles );
 using namespace LHCb;
 
@@ -24,7 +23,12 @@ LHCbIDsToMCParticles::LHCbIDsToMCParticles(const std::string& type,
   m_ttLinks(0,0,""),
   m_otLinks(0,0,""),
   m_veloLinks(0,0,""),
-  m_configured(false) {
+  m_muonLinks(0,0,""),
+  m_configuredOT(false),
+  m_configuredIT(false),
+  m_configuredTT(false),
+  m_configuredVelo(false),
+  m_configuredMuon(false){
 
   // constructer
   declareInterface<ILHCbIDsToMCParticles>(this);
@@ -67,8 +71,6 @@ StatusCode LHCbIDsToMCParticles::link(const Track& aTrack, LinkMap& output) cons
 
 StatusCode LHCbIDsToMCParticles::link(const LHCbID& id, LinkMap& output) const{
 
- if (!m_configured) initEvent();
-
  // switch statement from hell
  const unsigned int type = id.detectorType();
  switch(type){
@@ -84,6 +86,8 @@ StatusCode LHCbIDsToMCParticles::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::OT:   
    linkOT(id,output);
    break;
+ case LHCbID::Muon:
+   linkMuon(id,output);
  default:
    Warning("Unknown type !", StatusCode::SUCCESS, 1);
    break;
@@ -94,40 +98,80 @@ StatusCode LHCbIDsToMCParticles::link(const LHCbID& id, LinkMap& output) const{
 
 void LHCbIDsToMCParticles::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) { m_configured = false; }
-}
-
-void LHCbIDsToMCParticles::initEvent() const{
-
-  m_configured = true;
-
-  m_itLinks = STLinks( evtSvc(), msgSvc(),LHCb::STClusterLocation::ITClusters );
-  m_ttLinks = STLinks( evtSvc(), msgSvc(),LHCb::STClusterLocation::TTClusters );
-  m_otLinks = OTLinks( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
-  m_veloLinks = VeloLinks( evtSvc(), msgSvc(),LHCb::VeloClusterLocation::Default );
-
+  if ( IncidentType::BeginEvent == incident.type() ) {
+    m_configuredOT = false; 
+    m_configuredIT = false;
+    m_configuredTT = false;
+    m_configuredVelo = false;
+    m_configuredMuon = false;
+  }
 }
 
 void LHCbIDsToMCParticles::linkIT(const LHCbID& lhcbid, LinkMap& output) const{
 
+  if (!m_configuredIT){
+    m_configuredIT = true;
+    m_itLinks = STLinks(evtSvc(), msgSvc(),
+                        LHCb::STClusterLocation::ITClusters );
+    if (m_itLinks.notFound()) {
+      throw GaudiException("no ITLinker", "LHCbIDsToMCParticles" ,
+                          StatusCode::FAILURE);
+    }
+  }
   linkToDetTruth(lhcbid.stID(),m_itLinks, output);
- 
 }
 
 void LHCbIDsToMCParticles::linkTT(const LHCbID& lhcbid, LinkMap& output) const{
 
-  linkToDetTruth(lhcbid.stID(),m_ttLinks, output);
- 
+  if (!m_configuredTT){
+    m_configuredTT = true;
+    m_ttLinks = STLinks(evtSvc(), msgSvc(),
+                        LHCb::STClusterLocation::TTClusters);
+    if (m_ttLinks.notFound()) {
+      throw GaudiException("no TTLinker", "LHCbIDsToMCParticles" ,
+                           StatusCode::FAILURE);
+    }
+  }  
+  linkToDetTruth(lhcbid.stID(),m_ttLinks, output); 
 }
 
 void LHCbIDsToMCParticles::linkOT(const LHCbID& lhcbid, LinkMap& output) const{
 
+  if (!m_configuredOT){
+    m_configuredOT = true;
+    m_otLinks = OTLinks( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
+    if (m_otLinks.notFound()) {
+      throw GaudiException("no OTLinker", "LHCbIDsToMCParticles" ,
+                           StatusCode::FAILURE);
+    }
+  }  
   linkToDetTruth(lhcbid.otID(),m_otLinks, output);
- 
 }
 
 void LHCbIDsToMCParticles::linkVelo(const LHCbID& lhcbid, LinkMap& output) const{
 
-  linkToDetTruth(lhcbid.veloID(),m_veloLinks, output);
- 
+  if (!m_configuredVelo){
+    m_configuredVelo = true;
+    m_veloLinks = VeloLinks(evtSvc(), msgSvc(),
+                            LHCb::VeloClusterLocation::Default);
+    if (m_veloLinks.notFound()) {
+      throw GaudiException("no VeloLinker", "LHCbIDsToMCParticles" ,
+                           StatusCode::FAILURE);
+    }
+  }  
+  linkToDetTruth(lhcbid.veloID(),m_veloLinks, output); 
 }
+
+void LHCbIDsToMCParticles::linkMuon(const LHCbID& lhcbid, LinkMap& output) const{
+
+  if (!m_configuredMuon){
+    m_configuredMuon = true;
+    m_muonLinks = MuonLinks( evtSvc(), msgSvc(),LHCb::MuonCoordLocation::MuonCoords);
+    if (m_muonLinks.notFound()) {
+      throw GaudiException("no MuonLinker", "LHCbIDsToMCParticles" ,
+                           StatusCode::FAILURE);
+    }
+  }  
+  linkToDetTruth(lhcbid.muonID(),m_muonLinks, output);
+}
+
