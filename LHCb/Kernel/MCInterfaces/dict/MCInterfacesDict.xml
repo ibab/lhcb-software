@@ -12,9 +12,7 @@
   <class name = "Rich::MC::IMCTruthTool"      />
   <class name = "Rich::Rec::MC::IMCTruthTool" />
   <class name = "ISiDepositedCharge"          />
-  <class name = "ITrackCriteriaSelector"      />
   <class name = "ITrackGhostClassification"   />
-  <class name = "ITrackReconstructible"       />
   <class name = "IVisPrimVertTool"            />
 
 </lcgdict>

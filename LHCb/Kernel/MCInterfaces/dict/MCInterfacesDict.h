@@ -10,9 +10,7 @@
 
 // Previously in TrackMCInterfaces
 #include "MCInterfaces/IIdealStateCreator.h"
-#include "MCInterfaces/ITrackCriteriaSelector.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
-#include "MCInterfaces/ITrackReconstructible.h"
 #include "MCInterfaces/ILHCbIDsToMCParticles.h"
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 

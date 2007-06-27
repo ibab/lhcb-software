@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2006-6-27 M Needham
+ - Remove obsolete interfaces: ITrackReconstructible, ITrackCriteriaSelector
+
 !==================== MCInterfaces v1r0 2007-06-11 ===========================
 ! 2007-06-09 - Matt Needham
  - Extend the IIdealStateCreator interface to use state vector 
