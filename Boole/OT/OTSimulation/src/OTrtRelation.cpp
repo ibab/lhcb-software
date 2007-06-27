@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.14 2007-04-08 16:54:51 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.15 2007-06-27 15:44:55 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +13,6 @@
 
 // MCEvent
 #include "Event/MCHit.h"
-#include "Event/MCOTDeposit.h"
 
 // OTSimulation
 #include "OTrtRelation.h"
@@ -59,7 +58,7 @@ OTrtRelation::~OTrtRelation()
   //destructor
 }
 
-void OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
+void OTrtRelation::convertRtoT(MCOTDeposit* aDeposit) const
 {
   // r-t relation
   // retrieve MC info
@@ -77,12 +76,12 @@ void OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   aDeposit->addTime(time);
 }
 
-double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint)
+double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint) const
 {
   // r-t relation with correction for the magnetic field
 
   // get magnetic field
-  Gaudi::XYZVector bField;
+  static Gaudi::XYZVector bField;
   /// fieldVector always returns success. Save to ignore
   m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
 
@@ -90,10 +89,10 @@ double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aP
 }
 
 double OTrtRelation::driftDistance( const double driftTime, 
-                                    const Gaudi::XYZPoint& aPoint )
+                                    const Gaudi::XYZPoint& aPoint ) const
 {
   // inverse r-t relation with correction for the magnetic field
-  Gaudi::XYZVector bField;
+  static Gaudi::XYZVector bField;
   /// fieldVector always returns success. Save to ignore
   m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
   return m_tracker->driftDistance(driftTime, bField.y());

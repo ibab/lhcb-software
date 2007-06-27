@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.h,v 1.7 2007-04-08 16:54:52 janos Exp $
+// $Id: OTrtRelation.h,v 1.8 2007-06-27 15:44:55 janos Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
@@ -10,10 +10,6 @@
 
 // Forward declarations
 class DeOTDetector;
-namespace LHCb 
-{
-  class MCOTDeposit;
-}
 class IMagneticFieldSvc;
 
 
@@ -46,13 +42,13 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation'. Fills the deposit time entry.
-  void convertRtoT(LHCb::MCOTDeposit* aDeposit);
+  void convertRtoT(LHCb::MCOTDeposit* aDeposit) const;
   
   /// r-t relation with correction for the magnetic field
-  double driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint);
+  double driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint) const;
   
   /// inverse r-t relation with correction for the magnetic field
-  double driftDistance( const double driftTime, const Gaudi::XYZPoint& aPoint );
+  double driftDistance( const double driftTime, const Gaudi::XYZPoint& aPoint ) const;
 
 private:
  
