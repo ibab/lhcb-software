@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.15 2007-06-15 16:05:37 pkoppenb Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.16 2007-06-27 12:47:20 pkoppenb Exp $
 // Include files 
 #include <math.h>
 
@@ -78,20 +78,27 @@ StatusCode Particle2MCWithChi2::initialize() {
   int pos = name().find_last_of(".");
   std::string pname = name().substr(0,pos);  
   _verbose << "Name is " << name() << " last . is at " << pos 
-           << " -> parent is " << pname << " " 
-           << pname.substr(pname.find_last_of("."),pname.size())<< endmsg ;
+           << " -> parent is " << pname << endmsg ;
 
   IAlgManager* algMgr = svc<IAlgManager>("ApplicationMgr");
   IAlgorithm* algo;
+  if (NULL==algMgr) {
+    warning() << "No Algorithm manager found" << endmsg ;
+    return StatusCode::SUCCESS; // ignore
+  }
   StatusCode sc = algMgr->getAlgorithm( pname, algo );
   if ( NULL!=algo ){
     IProperty* prop;
     algo->queryInterface( IID_IProperty, (void**)&prop );
     DoubleProperty value;
-    value.assign(prop->getProperty( "Chi2Cut" ));
-    m_chi2SpeedUpCut = value ;
-    _info << "Will be using Chi2Cut of " << pname << " = " << m_chi2SpeedUpCut << endmsg ;
-  } else _debug << "No chi2 cut found " << endmsg ;
+    if ( NULL!=prop ){
+      value.assign(prop->getProperty( "Chi2Cut" ));
+      m_chi2SpeedUpCut = value ;
+      _info << "Will be using Chi2Cut of " << pname << " = " << m_chi2SpeedUpCut << endmsg ;
+    } else {
+      _info << "Algorithm " << algo << " has no property Chi2Cut" << endmsg ;
+    }
+    } else _info << "No algorithm " << algo << " found " << endmsg ;
   
   return StatusCode::SUCCESS;
 };

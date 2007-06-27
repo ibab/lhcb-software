@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.115 2007-06-20 13:19:54 pkoppenb Exp $
+! $Id: release.notes,v 1.116 2007-06-27 12:47:20 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-06-27 - Patrick Koppenburg
+ - Particle2MCWithChi2: Check all pointers before following them!
 
 !========================== DaVinciAssociators v9r2 2007-06-20 ================
 ! 2007-06-20 - Philippe Charpentier
