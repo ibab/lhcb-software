@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-06-27 - Jose A. Hernando
+  - HltBase/ITrackMatchUpgrade interface to upgrade matched tracks
+
 ! 2007-06-26 - Jose A. Hernando
   - HltBase/IHltFunctionFactory simplifying interface for the factory
 

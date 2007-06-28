@@ -9,5 +9,10 @@
   <class name = "IL0Value" />
   <class name = "ITrackUpgrade" />
   <class name = "ITrackMatch" />
+  <class name = "IHltFunctionFactory" />
   <class name = "Hlt::Configuration" />
+  <class name = "Hlt::TrackFunction" />
+  <class name = "Hlt::TrackFilter" />
+  <class name = "Hlt::VertexFunction" />
+  <class name = "Hlt::VertexFilter" />
 </lcgdict>

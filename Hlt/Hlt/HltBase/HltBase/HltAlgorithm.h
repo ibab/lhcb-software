@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.10 2007-06-25 20:40:11 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.11 2007-06-28 22:06:28 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -293,8 +293,16 @@ protected:
            << m_conf->retrieve<T>(mykey) << endreq;    
   }
 
-  void printInfo(const std::string& title, const Hlt::TrackContainer& con);
+  template <class T>
+  void printInfo(const std::string& title, const T& con) {
+    typedef typename T::const_iterator iter;
+    for (iter it = con.begin(); it != con.end(); ++it)
+      printInfo(title,*(*it));  
+  }
+  
   void printInfo(const std::string& title, const LHCb::Track& track);
+
+  void printInfo(const std::string& title, const LHCb::RecVertex& ver);
 
 protected:
 

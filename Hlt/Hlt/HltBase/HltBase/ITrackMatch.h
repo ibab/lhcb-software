@@ -1,4 +1,4 @@
-// $Id: ITrackMatch.h,v 1.1 2007-06-20 12:08:41 hernando Exp $
+// $Id: ITrackMatch.h,v 1.2 2007-06-28 22:06:28 hernando Exp $
 #ifndef HLTBASE_ITRACKMATCH_H 
 #define HLTBASE_ITRACKMATCH_H 1
 
@@ -32,10 +32,6 @@ public:
   virtual StatusCode match(const LHCb::Track& track0, 
                            const LHCb::Track& track1,
                            double& quality)=0;
-  
-  virtual StatusCode match(const LHCb::Track& track0, 
-                           const LHCb::Track& track1, 
-                           LHCb::Track& track)=0;
 
 };
 #endif // HLTBASE_IMATCHTVELOTRACKS_H

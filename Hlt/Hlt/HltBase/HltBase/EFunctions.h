@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.6 2007-06-20 12:08:40 hernando Exp $
+// $Id: EFunctions.h,v 1.7 2007-06-28 22:06:28 hernando Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -37,7 +37,7 @@ namespace Estd
   public:
     virtual ~function() {}
     virtual double operator() (const T& t) const = 0;
-    virtual Self* clone() const  = 0;
+    virtual Self* clone() const = 0;
   };
 
 
@@ -51,7 +51,7 @@ namespace Estd
     typedef typename Base::argument_type argument_type ;
   public:
     virtual ~filter() {}
-    virtual bool operator() (const T& t) const = 0;
+    virtual bool operator() (const T& t) const  = 0;
     virtual Self* clone() const = 0;
   };
 

@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
+// $Id: ITrackUpgrade.h,v 1.3 2007-06-28 22:06:28 hernando Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -33,7 +33,9 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackUpgrade; }
 
-  virtual StatusCode upgrade( const LHCb::Track& seed,
-                              std::vector<LHCb::Track*>& tracks) = 0;
+  virtual StatusCode setReco(const std::string& name) = 0;
+
+  virtual StatusCode upgrade( std::vector<LHCb::Track*>& itracks,
+                              std::vector<LHCb::Track*>& otracks) = 0;
 };
 #endif 

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.6 2007-06-20 20:31:42 hernando Exp $
+// $Id: HltFunctions.h,v 1.7 2007-06-28 22:06:28 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -14,6 +14,7 @@
 
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
+#include "HltBase/ITrackMatch.h"
 
 namespace Hlt {  
  
@@ -161,6 +162,14 @@ namespace Hlt {
     Hlt::VertexFunction* clone() const {return new maxPT();}
   };
 
+  class TrackMatch : public Hlt::TrackBiFunction {
+  public:
+    explicit TrackMatch(ITrackMatch& tool) {_tool = &tool;}
+    double operator() (const LHCb::Track& t1, const LHCb::Track& t2) const
+    {double chi = 0.;_tool->match(t1,t2,chi);return chi;}
+    Hlt::TrackBiFunction* clone() const {return new Hlt::TrackMatch(*_tool);}
+    ITrackMatch* _tool;
+  };
 
 
   /* rIP:

@@ -13,6 +13,7 @@
 #include "HltBase/ITrackUpgrade.h"
 #include "HltBase/ITrackMatch.h"
 #include "HltBase/HltTypes.h"
+#include "HltBase/IHltFunctionFactory.h"
 
 // struct __Instantiations
 // {

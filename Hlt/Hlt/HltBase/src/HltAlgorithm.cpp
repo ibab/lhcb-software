@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.11 2007-06-25 20:40:11 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.12 2007-06-28 22:06:28 hernando Exp $
 // Include files 
 
 // from boost
@@ -342,16 +342,16 @@ StatusCode HltAlgorithm::finalize() {
 }
 
 void HltAlgorithm::printInfo(const std::string& title,
-                             const Hlt::TrackContainer& con) {
-  for (Hlt::TrackContainer::const_iterator it = con.begin(); 
-       it != con.end(); it++) 
-    printInfo(title,*(*it));
-}
-
-void HltAlgorithm::printInfo(const std::string& title,
                              const Track& track) {
   info() << title << " track  " << track.key() << " slopes " 
          << track.slopes()  << " pt " << track.pt() << endreq;
+}
+
+void HltAlgorithm::printInfo(const std::string& title,
+                             const RecVertex& vertex) {
+  info() << title << " vertex  " << vertex.key() << " position " 
+         << vertex.position()  << endreq;
+  printInfo(title,vertex.tracks());
 }
 
 void HltAlgorithm::sumregister(const std::string& selname) {
