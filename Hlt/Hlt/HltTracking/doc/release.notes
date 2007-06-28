@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-06-28 - Jose A. Hernando
+	- HltTrackUpgradeTool : master tracking tool to upgrade one seed
+  - ITracksFromTrack : temporally interface to not break compilation (it will move to Tr/TrackInterfaces)
+
 ! 2007-06-25 - Jose A. Hernando
 	- HltTracking : register info in configuration
 	- HltTrackUpgrade : new master tracking algo, in preparation for track seed interface ITrackUpgrade.h
