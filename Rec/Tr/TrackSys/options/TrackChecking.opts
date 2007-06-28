@@ -1,6 +1,6 @@
 // Track checking on long tracks in the "best" container
 // -----------------------------------------------------
-CheckTrSeq.Members  += { "TrackChecker/CheckLongTrack" };
+CheckTrSeq.Members  += { "TrackResChecker/CheckLongTrack" };
 
 CheckLongTrack.fullDetail = true;
 
@@ -19,3 +19,18 @@ CheckLongTrack.splitByAlgorithm = true;
 CheckLongTrack.PlotsByMeasType = true;
 CheckLongTrack.CheckAmbiguity = true;
 
+
+// example of how to use the TrackEffChecker
+CheckTrSeq.Members  += { "TrackEffChecker/EffLong" };
+EffLong.fullDetail = true;
+
+// dont select electrons and hadronic interactions
+EffLong.Selector.Selector.rejectElectrons = true;
+EffLong.Selector.Selector.rejectInteractions = true;
+EffLong.Selector.Selector.zInteraction = 9400.;
+
+// select long tracks
+EffLong.SelectionCriteria = "ChargedLong";
+
+// split by track algorithm type
+EffLong.splitByAlgorithm = true;

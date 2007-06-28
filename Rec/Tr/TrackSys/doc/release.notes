@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-07-28 M Needham
+ - TrackChecking.opts updated to add TrackEffChecker example
+
 ! 2007-07-27 M Needham
  - TrackChecking.opts updated 
 
