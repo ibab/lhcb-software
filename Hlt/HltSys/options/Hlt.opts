@@ -13,7 +13,7 @@ HltInitSeq.Members = {"PatInitEvent",
 };
 
 HltEndSeq.Members = {"HltSummaryWriter"};
-HltSummaryWriter.OutputLevel = 2;
+HltSummaryWriter.OutputLevel = 3;
 
 HltAllAlleys.Members ={
   "HltSequencer/HltMuonAlley",
@@ -23,5 +23,5 @@ HltAllAlleys.Members ={
 HltAllAlleys.ModeOr=true;
 
 // different configurations
-#include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
+// #include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
