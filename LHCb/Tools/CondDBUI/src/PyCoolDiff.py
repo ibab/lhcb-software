@@ -19,13 +19,8 @@ _handler = logging.StreamHandler()
 _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
 _log.addHandler( _handler )
 
-# Initialize COOL Application
+# COOL application
 _app = None
-
-if 'CORAL_LFC_BASEDIR' in os.environ:
-    # Load CORAL LFCReplicaService into the context of cool::Application
-    _app.loadComponent("CORAL/Services/LFCReplicaService")
-
 
 def diff( originalDB, modifiedDB, diffDB,
           nodeName = "/",
@@ -41,9 +36,11 @@ def diff( originalDB, modifiedDB, diffDB,
     originalDB, modifiedDB and diffDB have to be COOL connection strings.
     """
     _log.debug("Get COOL Database Service")
+    global _app
     if _app is None:
         _app = cool.Application()
-        if 'CORAL_LFC_BASEDIR' in os.environ:
+        import os
+        if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
             # Load CORAL LFCReplicaService into the context of cool::Application
             _app.loadComponent("CORAL/Services/LFCReplicaService")
 
