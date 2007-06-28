@@ -3,6 +3,10 @@
 !-----------------------------------------------------------------------------
 
 !=========================== AlignSolvTools v2r0 2007-05-15 ==================
+! 2007-06-28 - Adlene Hicheur
+ - Split tools into subtools with a common interface
+ - Changed SolvExample algorithm accordingly
+ 
 ! 2007-05-15 - Marco Cattaneo
  - Fix extern "C" calling sequence for Windows
  - Clean up requirements

@@ -1,4 +1,4 @@
-// $Id: SolvExample.h,v 1.2 2007-05-11 15:41:31 ahicheur Exp $
+// $Id: SolvExample.h,v 1.3 2007-06-28 16:33:56 ahicheur Exp $
 #ifndef SOLVEXAMPLE_H 
 #define SOLVEXAMPLE_H 1
 
@@ -35,7 +35,7 @@ protected:
 private:
 
   IAlignSolvTool* m_solver; ///< Interface to solve tool
-  
+  std::string m_solvtoolname; ///< Solver Name
 
 };
 #endif // SOLVEXAMPLE_H

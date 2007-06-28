@@ -1,4 +1,4 @@
-// $Id: SolvExample.cpp,v 1.4 2007-05-11 10:02:11 ahicheur Exp $
+// $Id: SolvExample.cpp,v 1.5 2007-06-28 16:33:56 ahicheur Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ SolvExample::SolvExample( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
+declareProperty( "SolvMethod",m_solvtoolname="SpmInvTool");
 }
 //=============================================================================
 // Destructor
@@ -45,8 +45,8 @@ StatusCode SolvExample::initialize() {
 
 
 // solver tool
-  m_solver = tool<IAlignSolvTool>( "AlignSolvTool" );
 
+ m_solver = tool<IAlignSolvTool>(m_solvtoolname);
 
   debug() << "==> Initialize" << endmsg;
 
