@@ -1,4 +1,4 @@
-// $Id: IPart2Calo.h,v 1.2 2007-06-25 21:45:26 odescham Exp $
+// $Id: IPart2Calo.h,v 1.3 2007-06-28 14:46:37 odescham Exp $
 #ifndef IPART2CALO_H 
 #define IPART2CALO_H 1
 
@@ -10,7 +10,7 @@
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 // from CaloInterfaces
-#include "CaloUtils/ITrack2Calo.h"
+#include "CaloInterfaces/ITrack2Calo.h"
 
 static const InterfaceID IID_IPart2Calo ( "IPart2Calo", 1, 0 );
 
