@@ -564,7 +564,19 @@ class CondDB:
         assert self.db != None, "No database connected !"
         return list(self.db.listAllNodes())
 
-
+    def getCOOLNode(self, node):
+        """
+        Get the COOL node at path 'node'.
+        This functions checks if the node is a folderset or a folder
+        before getting it.
+        """
+        if self.db.existsFolderSet(node):
+            return self.db.getFolderSet(node)
+        elif self.db.existsFolder(node):
+            return self.db.getFolder(node)
+        else:
+            return None
+    
     def payloadToMd5(self, path = '/', tag = '', initialMd5Sum = None):
         '''
         Computes the md5 sum for the payload stored under the given node.
