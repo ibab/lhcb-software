@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.264 2007-06-18 15:39:07 jpalac Exp $
+! $Id: release.notes,v 1.265 2007-06-28 11:28:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-06-27 - Juan Palacios
+ - Clean up MakeResonances
+   . Move most work done by Decay::initialize(...) to Daeay constructors.
+   . Give some variables meaningful names for clarity.
+   . Remove all the MotherToNGammas hacks. Users requiring special treatment
+     for X -> N*gamma should set ParticleAdder as vertex fitter from options.
+
 
 !========================== DaVinciTools v15r4p1 2007-06-18 =================
 
