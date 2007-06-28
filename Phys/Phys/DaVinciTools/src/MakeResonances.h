@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.14 2007-05-10 10:01:17 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.15 2007-06-28 11:28:18 jpalac Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -13,9 +13,6 @@
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-29
  * 
- *  Modified by: Luis Fernandez, 16/04/2005
- *  Possibility to make X -> ngammas added through property MotherToNGammas
- *  -> X is created at 0, leaving gammas' origin unchanged
  * 
  */
 class IFilterCriterion ;
@@ -47,17 +44,10 @@ protected:
   const LHCb::Particle* makeMother(const LHCb::Particle::ConstVector&,
                                    const LHCb::ParticleID&);
   StatusCode makePlots(const LHCb::Particle::ConstVector&,IPlotTool*); ///< make plots
-  inline bool consideredPID(const int& pid)const{
-    verbose() << "consideredPID " << pid << endmsg ;
-    bool out = false ;// not in list
-    for ( std::vector<int>::const_iterator ap = m_allPids.begin() ; ap != m_allPids.end() ; ++ap ){
-      if ( *ap == pid ) {
-        out = true; // in list
-        break ;
-      }
-    }
-    verbose() << "consideredPID " << pid << " " << out << endmsg ;
-    return out ; 
+  inline const bool consideredPID(const int& pid)const
+  {
+    return 
+      std::find(m_allPids.begin(), m_allPids.end(), pid) != m_allPids.end();
   }
   
 private:
@@ -91,7 +81,6 @@ private:
   double     m_minMomentum;         ///< Minimum P of combination
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
   //  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
-  bool       m_motherToNGammas;     ///< make mother to n gammas
   int        m_nEvents ;            ///< Number of events
   int        m_nAccepted ;          ///< Number of events accepted
   int        m_nCandidates ;        ///< Number of candidates
@@ -110,20 +99,65 @@ private:
   class Decay{
     class PidParticles ; // forward declaration
   public:
-    StatusCode initialize(const int&, const std::vector<int>& , 
-                          const double&, const double&, const double&,
-                          const double&, ICheckOverlap*,
-                          IParticleDescendants*); ///< give pids
-    Decay(){
+
+    StatusCode initialize(const std::vector<int>& pIDs); ///< give pids
+
+    Decay()
+      :
+      m_motherPid(0),
+      m_minMass(0.),
+      m_maxMass(100000.),
+      m_minP(-1.),
+      m_minPt(-1.),
+      m_checkOverlap(NULL),
+      m_particleDescendants(NULL),
+      m_checkP(false),
+      m_checkOrder(false)
+    {
       std::vector<int> a;
-      m_checkOrder = false ;
-      initialize(0,a,0.,100000.,-1.,-1.,NULL, NULL).ignore();
+      initialize(a).ignore();
+    }
+    
+    Decay(const LHCb::ParticleID& pid, 
+          const std::vector<int>& dpid, 
+          const double& minMass, 
+          const double& maxMass, 
+          const double& minMomentum,
+          const double& minPt, 
+          ICheckOverlap* checkOverlapTool,
+          IParticleDescendants* particleDescendantsTool)
+      :
+      m_motherPid(pid),
+      m_minMass(minMass),
+      m_maxMass(maxMass),
+      m_minP(minMomentum),
+      m_minPt(minPt),
+      m_checkOverlap(checkOverlapTool),
+      m_particleDescendants(particleDescendantsTool),
+      m_checkP(( minPt>0.) || (minMomentum>0.)),
+      m_checkOrder(false)
+    {
+      initialize(dpid).ignore();
     };
+
     ~Decay(){};
-    bool fillPidParticles(const LHCb::Particle::ConstVector&); ///< fill maps at each even
-    bool getNextCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
-    bool getFirstCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
+
+    /** 
+     * fill maps at each even
+     */
+    bool fillPidParticles(const LHCb::Particle::ConstVector&);
+
+    /**
+     * Return a vector of daughters
+     */
+    bool getNextCandidates(LHCb::Particle::ConstVector&);
+    /**
+     * Return a vector of daughters
+     */
+    bool getFirstCandidates(LHCb::Particle::ConstVector&);
+
     LHCb::ParticleID getMotherPid()const{return m_motherPid;};
+
     bool goodFourMomentum(const Gaudi::XYZTVector& P)const{
       if (!inMassRange(P.M())) return false;
       if (!m_checkP) return true;
@@ -132,10 +166,21 @@ private:
 
   protected:
     bool iterate(); ///< Iterate to next positions
+
     bool getCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
-    bool inMassRange(const double& m)const{return ((m >= m_minMass) && (m<= m_maxMass));}
-    bool goodMomentum(const Gaudi::XYZTVector& P)const{return (P.R()>m_minP && P.Pt()>m_minPt);}
+
+    bool inMassRange(const double& m) const
+    {
+      return ((m >= m_minMass) && (m<= m_maxMass));
+    }
+
+    bool goodMomentum(const Gaudi::XYZTVector& P) const
+    {
+      return (P.R()>m_minP && P.Pt()>m_minPt);
+    }
+
     bool foundOverlap(const LHCb::Particle::ConstVector&);
+
     void replaceResonanceByDaughters(LHCb::Particle::ConstVector&);
 
   private:
