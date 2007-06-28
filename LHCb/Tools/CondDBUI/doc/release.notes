@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.58 2007-06-28 14:45:04 marcocle Exp $
+! $Id: release.notes,v 1.59 2007-06-28 18:36:20 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
@@ -11,7 +11,12 @@
  - Added the function conddbui.merge to copy the content of a database
    into another (where folders already exist). It is needed to merge the
    database obtained with PyCoolDiff.diff into the master database.
- 
+ - Made PyCoolDiff working also when the provided tag is not valid for all the
+   folders
+ - Added the utility function CondDB.getCOOLNode to retrieve a IFolder or
+   IFolderSet object from the database without having to check the type of the
+   requested node.
+
 !===================== Tools/CondDBUI v2r3 2007-06-15 =========================
                             NEEDS LCGCMT >= 52
 ! 2007-06-06 - Marco Clemencic
