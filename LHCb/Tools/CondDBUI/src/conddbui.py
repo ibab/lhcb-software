@@ -14,11 +14,12 @@ import os, md5, random, sys, re, time, datetime
 
 import PyCoolCopy
 from PyCool import cool
+import PyCool
 
 # Initialize COOL Application
 _app = cool.Application()
 
-if 'CORAL_LFC_BASEDIR' in os.environ:
+if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
     # Load CORAL LFCReplicaService into the context of cool::Application
     _app.loadComponent("CORAL/Services/LFCReplicaService")
 
@@ -1446,3 +1447,104 @@ def _fix_xml(xml_data,folderset_path):
     xml_data = fix_system_ids(xml_data,folderset_path)
     xml_data = fix_env_vars(xml_data)
     return xml_data
+
+def copy( sourceDb, targetDb,
+          nodeName = '/',
+          since = cool.ValidityKeyMin,
+          until = cool.ValidityKeyMax,
+          channels = cool.ChannelSelection.all(),
+          tags = []
+          ):
+    """
+    Wrapper around PyCoolCopy.copy needed because PyCoolCopy does not support yet
+    LFCReplicaSvc.
+    """
+    if type(sourceDb) is str:
+        sourceDb = CondDB(sourceDb).db
+    if type(targetDb) is str:
+        targetDb = CondDB(targetDb,create_new_db=True,readOnly=False).db
+    PyCoolCopy.copy(sourceDb, targetDb, nodeName, since, until, channels, tags)
+
+def merge( sourceDB, targetDB,
+           nodeName = "/",
+           since = cool.ValidityKeyMin,
+           until = cool.ValidityKeyMax,
+           channels = cool.ChannelSelection.all(),
+           originalTAG = ""
+           ):
+    """
+    Merge the data found in the source database into the target database.
+    If the destination folder does not exists, it is created with the same
+    metadata of the original one. If it exists, we check if the folders
+    have the same metatadata.
+    The data are then copied from the source folder into the destination.
+    """
+    import logging
+
+    _log = logging.getLogger( __name__ )
+    _log.setLevel( logging.INFO )
+
+    _handler = logging.StreamHandler()
+    _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
+    _log.addHandler( _handler )
+
+    from PyCoolDiff import CondDBDiffError
+    
+    src = CondDB(sourceDB)
+    tgt = CondDB(targetDB, create_new_db = True, readOnly = False)
+    # loop over source DB hierarchy
+    for root, foldersets, folders in PyCool.walk(src.db,'/'):
+        for f in folders:
+            if root[-1] == '/':
+                folderPath = root + f
+            else:
+                folderPath = root + '/' + f
+            
+            src_folder = src.db.getFolder(folderPath)
+            is_single_version = \
+                src_folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
+            
+            _log.info("Processing folder %s",folderPath)
+            
+            # check if the folder is new or not
+            if tgt.db.existsFolder(folderPath):
+                _log.debug("Dest folder exists")
+                tgt_folder = tgt.db.getFolder(folderPath)
+                # compare folder metadata
+                # if ( orig_folder.folderSpecification() !=
+                #      dest_folder.folderSpecification() ):
+                if ( src_folder.payloadSpecification() !=
+                     tgt_folder.payloadSpecification()
+                     ) or (
+                     src_folder.versioningMode() !=
+                     tgt_folder.versioningMode() ):
+                    raise CondDBDiffError("Original and modified folder " +
+                                          "metadata (specification and " +
+                                          "versioning) do not match",
+                                          folderPath)
+            else:
+                _log.debug("Create dest folder")
+                tgt_folder = tgt.db.createFolder(folderPath,
+                                                 src_folder.folderSpecification(),
+                                                 src_folder.description(),
+                                                 True)
+            
+            _log.debug("prepare the storage buffer")
+            tgt_folder.setupStorageBuffer()
+            
+            # get ready to iterate over new data
+            if is_single_version or originalTAG.upper() in [ "", "HEAD" ]:
+                localTAG = ''
+            else:
+                localTAG = src_folder.resolveTag(originalTAG)
+            
+            object_iterator = src_folder.browseObjects( since, until, channels,
+                                                        localTAG )
+            # loop over the content of the source folder
+            for obj in object_iterator:
+                _log.debug(str(obj.since()))
+                tgt_folder.storeObject(obj.since(), obj.until(),
+                                       obj.payload(), obj.channelId())
+            tgt_folder.flushStorageBuffer()
+            
+ 
