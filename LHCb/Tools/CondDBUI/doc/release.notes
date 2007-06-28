@@ -1,15 +1,22 @@
 ! =============================================================================
-! $Id: release.notes,v 1.57 2007-06-15 15:41:42 cattanem Exp $
+! $Id: release.notes,v 1.58 2007-06-28 14:45:04 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+! 2007-06-28 - Marco Clemencic
+ - Fixed the local copy of PyCoolDiff
+ - Added a wrapper for PyCoolCopy.copy to support LFCReplicaSvc
+ - Added the function conddbui.merge to copy the content of a database
+   into another (where folders already exist). It is needed to merge the
+   database obtained with PyCoolDiff.diff into the master database.
+ 
 !===================== Tools/CondDBUI v2r3 2007-06-15 =========================
                             NEEDS LCGCMT >= 52
 ! 2007-06-06 - Marco Clemencic
- - Fixed a problem in copy_files_do_db.py: the destination path was not taken
-   into account when correctinf the relative paths to included files (SYSTEM
+ - Fixed a problem in copy_files_to_db.py: the destination path was not taken
+   into account when correcting the relative paths to included files (SYSTEM
    tag)
 
 ! 2007-06-04 - Marco Clemencic
