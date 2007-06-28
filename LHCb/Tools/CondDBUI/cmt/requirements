@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2007-06-15 15:41:42 cattanem Exp $
+# $Id: requirements,v 1.23 2007-06-28 14:45:41 marcocle Exp $
 package CondDBUI
 
 version v2r3
@@ -63,6 +63,4 @@ path_prepend PYTHONPATH          "$(pyqt_base)/slc3_gcc323/lib/python2.3.4/site-
 
 # Sessions path
 #set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
-
-alias CondDBBrowser "python ${CONDDBUIROOT}/python/browser.py"
 
