@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.3 2007-06-28 22:07:39 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -38,8 +38,8 @@ HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
   declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
                   L0CaloCandidateLocation::Full);
   
-  declareProperty("OutputL0CaloCandidates", m_outputL0CaloCandidatesName = 
-                  "Hlt/L0CaloCandidate/HadL0Calos");
+  //  declareProperty("OutputL0CaloCandidates", m_outputL0CaloCandidatesName = 
+  //                "Hlt/L0CaloCandidate/HadL0Calos");
 }
 //=============================================================================
 // Destructor
@@ -67,7 +67,7 @@ StatusCode HltPrepareL0Calos::initialize() {
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
   
-  sumregister(m_calos,m_outputL0CaloCandidatesName);
+  // sumregister(m_calos,m_outputL0CaloCandidatesName);
 
 //   put(new Tracks(),"Hlt/Track/Caca");
 
@@ -105,11 +105,20 @@ StatusCode HltPrepareL0Calos::execute() {
   }
   
   // select the calos above an et cut
-  m_calos->clear();
-  Hlt::select(m_ocalos,*_etFilter,*m_calos);
-  int ncan = m_calos->size();
+  m_calos.clear();
+  Hlt::select(m_ocalos,*_etFilter,m_calos);
+
+  Tracks* output = new Tracks();
+  for (std::vector<L0CaloCandidate*>::iterator it = m_calos.begin();
+       it != m_calos.end(); ++it) {
+    Track* tcalo = makeTrack(*(*it));
+    output->insert(tcalo);
+    m_outputTracks->push_back(tcalo);
+  }
+  put(output,m_caloCandidatesLocation+"/TCalo");
+  
+  int ncan = m_calos.size();
   debug() << " number of calos above et " << ncan << endreq;
-  candidateFound(ncan);
 
   return sc;
 }
@@ -123,5 +132,26 @@ StatusCode HltPrepareL0Calos::finalize() {
 
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
+
+Track* HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo) {
+  
+  // Get energy and position of L0 calo candidate:
+  double x      = calo.position().x();
+  double y      = calo.position().y();
+  double z      = calo.position().z();
+  double ex     = calo.posTol()*(4./sqrt(12.0));
+  double ey     = calo.posTol()*(4./sqrt(12.0));
+  double et     = calo.et();
+  
+  double e      = fabs(et) *( sqrt(x*x + y*y + z*z)/
+                              sqrt(x*x + y*y));
+
+  State state;
+  state.setState(x,y,z,ex,ey,1./e);
+  Track* track = new Track();
+  track->addToStates(state);
+  return track;
+}
+
 
 //=============================================================================

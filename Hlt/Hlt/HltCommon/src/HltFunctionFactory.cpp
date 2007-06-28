@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -83,7 +83,18 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     fun =  new Estd::binder_function<Track,Track>(Hlt::MatchIDsFraction(), 
                                                   *m_tracks, Estd::abs_max());
     debug() << " created function IDsFrunction " << name << endreq;
+  } else if (name == "Calo2DChi2") {
+    if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
+    ITrackMatch* imatch = tool<ITrackMatch>("HltRZVeloTCaloMatch");
+    fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
+                                                  *m_tracks, Estd::abs_min());
+  } else if (name == "Calo3DChi2") {
+    if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
+    ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
+    fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
+                                                  *m_tracks, Estd::abs_min());
   }
+
   if (m_smart && fun) {
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::TrackFunction* fun1 = fun;

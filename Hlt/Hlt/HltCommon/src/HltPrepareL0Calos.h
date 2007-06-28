@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltPrepareL0Calos.h,v 1.2 2007-06-28 22:07:39 hernando Exp $
 #ifndef HLTPREPAREL0CALOS_H 
 #define HLTPREPAREL0CALOS_H 1
 
@@ -36,6 +36,8 @@ public:
     int m_type;
   };
 
+  LHCb::Track* makeTrack(const LHCb::L0CaloCandidate& calo);
+
 protected:
 
   int m_caloType;
@@ -49,7 +51,7 @@ protected:
 
 protected:
 
-  std::vector<LHCb::L0CaloCandidate*>* m_calos;
+  std::vector<LHCb::L0CaloCandidate*> m_calos;
   std::vector<LHCb::L0CaloCandidate*> m_ocalos;
 
   Estd::function<LHCb::L0CaloCandidate>* _etFun;

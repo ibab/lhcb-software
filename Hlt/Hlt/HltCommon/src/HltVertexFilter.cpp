@@ -1,4 +1,4 @@
-// $Id: HltVertexFilter.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltVertexFilter.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -160,8 +160,8 @@ StatusCode HltVertexFilter::execute() {
     m_tcounters[i] +=1;
   }
 
-  debug() << " final candidates " << ncan << endreq;
-  candidateFound(ncan);
+  if (m_debug)
+    printInfo(" filtered vertices", *m_outputVertices);
 
   return StatusCode::SUCCESS;
 }

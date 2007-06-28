@@ -11,6 +11,7 @@
 #include "HltBase/HltFunctions.h"
 #include "HltBase/HltConfigurationHelper.h"
 #include "HltBase/HltSummaryHelper.h"
+#include "HltBase/IHltFunctionFactory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSummaryTool
@@ -55,6 +56,9 @@ StatusCode HltSummaryTool::initialize() {
 //   if (!holder) fatal() << " not able to retrieve configuration " << endreq;
 
 //   m_conf = &(holder->object());
+
+  //  IHltFunctionFactory* ctool;
+  // ctool = tool<IHltFunctionFactory>("HltFunctionFactory");
   
   return sc;
 } 
@@ -69,7 +73,7 @@ void HltSummaryTool::getSummary() {
   Hlt::DataHolder< Hlt::Configuration >* m_holder = 
     get< Hlt::DataHolder<Hlt::Configuration> >(loca);
   m_conf = &(m_holder->object());
-  
+ 
 }
 
 const HltSummary& HltSummaryTool::summary() {

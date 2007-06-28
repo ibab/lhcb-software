@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-06-26 - Jose A. Hernando
+	- HltPrepareL0Calos to convert into tracks
+
+! 2007-06-26 - Jose A. Hernando
 	- HltFunctionFactory and Filters, Maker, simplify interface
 
 ! 2007-06-25 - Jose A. Hernando

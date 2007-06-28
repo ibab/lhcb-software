@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
 // Include files 
 
 
@@ -199,15 +199,10 @@ StatusCode HltVertexMaker::execute() {
         verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
         sv->addInfo(m_filterIDs[i],m_vals[i]);
       }
-      
-      
+      if (m_debug)
+        printInfo(" make vertex ",*sv);
     } // loop on tracks2
   } // loop on tracks1
-  
-  
-  int ncan = m_outputVertices->size();
-  debug() << " final candidates " << ncan << endreq;
-  candidateFound(ncan);
   
   return StatusCode::SUCCESS;  
 }

@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -173,11 +173,6 @@ StatusCode HltTrackFilter::execute() {
     if (ncan <=0) break;
     m_tcounters[i] +=1;
   }
-
-
-  ncan = m_outputTracks->size();
-  candidateFound(ncan);
-  debug() << " final candidates " << ncan << endreq;
 
   if (ncan>0 && m_debug) printInfo("filtered tracks ", *m_outputTracks);
 
