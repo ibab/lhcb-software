@@ -7,7 +7,8 @@
 //---------------------------
 // HLT Had Alley
 //--------------------------
-HltSummaryWriter.Save += {"HadL0Entry",
+HltSummaryWriter.Save += {"PV2D",
+                          "HadL0Entry",
                           "HadPreTriggerSingle",
                           "HadTrigger"};
 
@@ -16,10 +17,8 @@ HltHadAlley.Members = {"L0Entry/HadL0Entry",
                        "HltPrepareL0Calos/HadL0Prepare",
                        "GaudiSequencer/DVHltHadAlley",
                        "HltTrackFilter/HadSingleTFRZVelo",
-                       "HltTrackL0CaloMatch/HadSingleTFRZVelo2",
                        "HltTracking/HadSingleTRVelo",
                        "HltTrackFilter/HadSingleTFVelo",
-                       "HltTrackL0CaloMatch/HadSingleTFVelo2",
                        "GaudiSequencer/HltDecodeT",
                        "HltTracking/HadSingleTRForward",
                        "HltTrackFilter/HadPreTriggerSingle",
@@ -27,7 +26,7 @@ HltHadAlley.Members = {"L0Entry/HadL0Entry",
                        "HltTrackFilter/HadCompanionTFVelo",
                        "HltTracking/HadCompanionTRForward",
                        "HltTrackFilter/HadCompanionTFForward",
-                       "HltVertexMaker/HadDiHadronTVMaker",
+                       "HltVertexMaker/HadDiHadronVMaker",
                        "HltVertexFilter/HadTrigger"
 };
 HltHadAlley.MeasureTime = true;
@@ -41,30 +40,26 @@ HadL0Entry.L0ChannelsName = {"hadron"};
 HadL0Entry.SelectionName = "HadL0Entry";
 HadL0Entry.OutputLevel = 3;
 
-HadL0Prepare.selectionName = "HadL0Calos";
+HadL0Prepare.OutputTracksName = "HadL0Calos";
 HadL0Prepare.OutputLevel = 3;
 
 HadSingleTFRZVelo.InputTracksName     = "RZVelo";
+HadSingleTFRZVelo.InputTracks2Name    = "HadL0Calos";
 HadSingleTFRZVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFRZVelo.OutputTracksName    = "HadSingleTFRZVelo";
-HadSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50."};
+HadSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
+                                      "Calo2DChi2,<,4."
+};
 HadSingleTFRZVelo.HistogramUpdatePeriod = 1;
 HadSingleTFRZVelo.HistoDescriptor = {"rIP,400,-1.,3.",
-                                     "rIPBest,400,-1.,3."
+                                     "rIPBest,400,-1.,3.",
+                                     "Calo2DChi2,100.,0.,20.",
+                                     "Calo2DChi2Best,100.,0.,20."
 };
 HadSingleTFRZVelo.OutputLevel = 3;
 
 
-HadSingleTFRZVelo2.InputL0CaloCandidatesName = "HadL0Calos";
-HadSingleTFRZVelo2.InputTracksName           = "HadSingleTFRZVelo";
-HadSingleTFRZVelo2.OutputTracksName          = "HadSingleTFRZVelo2";
-HadSingleTFRZVelo2.InfoKeyName = "Calo2DChi2";
-HadSingleTFRZVelo2.MaxChi2 = 5.;
-HadSingleTFRZVelo2.MatchToolName = "HltVeloRZL0HadCaloMatchTool";
-HadSingleTFRZVelo2.OutputLevel = 3;
-HadSingleTFRZVelo2.HistogramUpdatePeriod = 1;
-
-HadSingleTRVelo.InputTracksName  = "HadSingleTFRZVelo2";
+HadSingleTRVelo.InputTracksName  = "HadSingleTFRZVelo";
 HadSingleTRVelo.OutputTracksName = "HadSingleTRVelo";
 HadSingleTRVelo.RecoName = "Velo";
 HadSingleTRVelo.OutputLevel = 3;
@@ -73,28 +68,20 @@ HadSingleTFVelo.InputTracksName  = "HadSingleTRVelo";
 HadSingleTFVelo.OutputTracksName = "HadSingleTFVelo";
 HadSingleTFVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFVelo.HistogramUpdatePeriod = 1;
-HadSingleTFVelo.FilterDescriptor = {"IP,||[],-50,50."
+HadSingleTFVelo.FilterDescriptor = {"IP,||[],-50,50.",
+                                    "Calo3DChi2,<,4."
 };
 HadSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
-                                   "IPBest,400,-1.,3."
+                                   "IPBest,400,-1.,3.",
+                                   "Calo2DChi2,100.,0.,20.",
+                                   "Calo2DChi2Best,100.,0.,20."
 };
 HadSingleTFVelo.OutputLevel = 3;
 
-HadSingleTFVelo2.InputTracksName  = "HadSingleTFVelo";
-HadSingleTFVelo2.OutputTracksName = "HadSingleTFVelo2";
-HadSingleTFVelo2.InfoKeyName = "Calo3DChi2";
-HadSingleTFVelo2.MaxChi2 = 5.;
-HadSingleTFVelo2.MatchToolName = "HltVeloL0HadCaloMatchTool";
-HadSingleTFVelo2.OutputLevel = 3;
-HadSingleTFVelo2.HistogramUpdatePeriod = 1;
-
-HadSingleTRForward.InputTracksName  = "HadSingleTFVelo2";
+HadSingleTRForward.InputTracksName  = "HadSingleTFVelo";
 HadSingleTRForward.OutputTracksName = "HadSingleTRForward";
 HadSingleTRForward.RecoName = "Forward";
-HadSingleTRForward.OrderByPt = true;
 HadSingleTRForward.OutputLevel = 3;
-PatHadSingleTRForward.OutputLevel = 3;
-
 
 HadPreTriggerSingle.InputTracksName  = "HadSingleTRForward";
 HadPreTriggerSingle.OutputTracksName = "HadPreTriggerSingle";
@@ -109,6 +96,7 @@ HltRecoVelo.InputTracksName  = "RZVelo";
 HltRecoVelo.OutputTracksName = "Velo";
 HltRecoVelo.RecoName = "Velo";
 HltRecoVelo.OutputLevel = 3;
+
 
 HadCompanionTFVelo.InputTracksName     = "Velo";
 HadCompanionTFVelo.OutputTracksName    = "HadCompanionTFVelo";
@@ -129,7 +117,7 @@ HadCompanionTRForward.InputTracksName  = "HadCompanionTFVelo";
 HadCompanionTRForward.OutputTracksName = "HadCompanionTRForward";
 HadCompanionTRForward.RecoName = "Forward";
 HadCompanionTRForward.OutputLevel = 3;
-PatHadCompanionTRForward.OutputLevel = 3;
+
 
 HadCompanionTFForward.InputTracksName  = "HadCompanionTRForward";
 HadCompanionTFForward.OutputTracksName = "HadCompanionTFForward";
@@ -139,11 +127,11 @@ HadCompanionTFForward.HistoDescriptor = {"PT,100,0.,8000.",
                                          "PTBest,100,0.,8000."};
 HadCompanionTFForward.OutputLevel = 3;
 
-HadDiHadronTVMaker.InputTracksName    = "HadPreTriggerSingle";
-HadDiHadronTVMaker.InputTracks2Name   = "HadCompanionTFForward";
-HadDiHadronTVMaker.OutputVerticesName = "HadDiHadronTVMaker";
-HadDiHadronTVMaker.OutputLevel = 3;
-HadDiHadronTVMaker.FilterDescriptor = {"DOCA,<,0.2"
+HadDiHadronVMaker.InputTracksName    = "HadPreTriggerSingle";
+HadDiHadronVMaker.InputTracks2Name   = "HadCompanionTFForward";
+HadDiHadronVMaker.OutputVerticesName = "HadDiHadronVMaker";
+HadDiHadronVMaker.OutputLevel = 3;
+HadDiHadronVMaker.FilterDescriptor = {"DOCA,<,0.2"
 };
 HadDiHadronTVMaker.HistogramUpdatePeriod = 1;
 HadDiHadronTVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
@@ -152,7 +140,7 @@ HadDiHadronTVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
 };
 
 
-HadTrigger.InputVerticesName   = "HadDiHadronTVMaker";
+HadTrigger.InputVerticesName   = "HadDiHadronVMaker";
 HadTrigger.PrimaryVerticesName = "PV2D";
 HadTrigger.OutputVerticesName  = "HadTrigger";
 HadTrigger.OutputLevel = 3;

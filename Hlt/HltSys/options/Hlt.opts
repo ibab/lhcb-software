@@ -23,5 +23,5 @@ HltAllAlleys.Members ={
 HltAllAlleys.ModeOr=true;
 
 // different configurations
-// #include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
+#include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
