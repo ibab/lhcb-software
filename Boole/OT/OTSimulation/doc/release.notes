@@ -2,8 +2,9 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v3r12 2007-06-29 =====================
 ! 2007-06-27 - Jan Amoraal
- - Fix unchecked statuts code in OTSmearer
+ - Fix unchecked status code in OTSmearer
  - Minor clean-ups
 
 !====================== OTSimulation v3r11 2007-06-11 =====================
