@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.100 2007-05-16 16:25:17 gcorti Exp $
+! $Id: release.notes,v 1.101 2007-06-29 13:21:06 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-06-29 - Vanya BELYAEV
+
+ - Generators/F77Utils.h, src/Lib/F77Utils.h
+     a) add  new function F77Utils::getUnit to obtain free FORTRAN unit
+        trrough scan of all available units between 99 and 10
+     b) for other function add optional argument "verbose" 
+        with the default value equal to "false"(backward compatible).
+        It is *VERY* convinient for debugging...
+-  src/Lib/f77units.F 
+     add new function: INTEGER FUNCITON F77GETUNIT
 
 !====================== Generators v7r1 2007-05-08 ===========================
 ! 2007-05-08 - Patrick Robbe

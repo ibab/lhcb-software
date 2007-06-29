@@ -1,8 +1,11 @@
-C $Id: f77units.F,v 1.1 2006-10-04 13:36:46 ibelyaev Exp $
+C $Id: f77units.F,v 1.2 2007-06-29 13:21:06 ibelyaev Exp $
 C ----------------------------------------------------------------------
-C CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+C CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 C ----------------------------------------------------------------------
-C $Log: not supported by cvs2svn $ 
+C $Log: not supported by cvs2svn $
+C Revision 1.1  2006/10/04 13:36:46  ibelyaev
+C  add utilities to open/close Fortran file
+C 
 C ----------------------------------------------------------------------
       INTEGER FUNCTION f77clfile ( LUN )
 C-----------------------------------------------------------------------
@@ -182,6 +185,35 @@ C-----------------------------------------------------------------------
       RETURN
       END
 C-----------------------------------------------------------------------
+      INTEGER FUNCTION f77GETUNIT ( N ) 
+C-----------------------------------------------------------------------
+C  Purpose   : search free fortran unit 
+C  Arguments : 
+C
+C  Author    : Vanya BELYAEV ibelyaev@physics.syr.edu
+C  Created   : 2007-06-28
+C-----------------------------------------------------------------------
+      IMPLICIT NONE
+C-----------------------------------------------------------------------
+      INTEGER N 
+C-----------------------------------------------------------------------
+      INTEGER i
+      LOGICAL yes 
+C-----------------------------------------------------------------------
+      N = 0 
+      DO i = 99,10,-1           ! scal all units 
+        INQUIRE(unit=i,opened=yes)
+        IF ( .not. yes ) THEN
+          N = i 
+          GO TO 100
+        ENDIF
+      ENDDO
+C-----------------------------------------------------------------------
+ 100  CONTINUE 
+      f77getunit = N 
+ 999  RETURN
+      END
+      
 
 
 C-----------------------------------------------------------------------
