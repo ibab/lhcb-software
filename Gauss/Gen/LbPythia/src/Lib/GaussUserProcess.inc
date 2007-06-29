@@ -1,14 +1,4 @@
-C $Id: GaussUserProcess.inc,v 1.1 2007-01-12 15:21:17 ranjard Exp $
-C----------------------------------------------------------------------
-C CVS tag $Name: not supported by cvs2svn $m version $Revision: 1.1 $
-C----------------------------------------------------------------------
-C $Log: not supported by cvs2svn $
-C Revision 1.2  2006/10/25 11:29:45  ibelyaev
-C  fixed to allow usage of Hidden Valley generator
-C
-C Revision 1.1  2006/10/04 14:16:50  ibelyaev
-C  possibility to read LHE files + maney minor improvements
-C
+C $Id: GaussUserProcess.inc,v 1.2 2007-06-29 13:37:19 ibelyaev Exp $
 C----------------------------------------------------------------------
 C  Purpose : 
 C
@@ -32,6 +22,9 @@ C*    Read the event in "new" (xml-like) LHE format
 C*    Use Hidden Valley production
       INTEGER HIDVALLEYPROCESS
       PARAMETER(HIDVALLEYPROCESS=4)
+C*    Read ALPGEN partonic event 
+      INTEGER ALPGENREADPROCESS
+      PARAMETER(ALPGENREADPROCESS=5)
 C----------------------------------------------------------------------
 C The END 
 C----------------------------------------------------------------------

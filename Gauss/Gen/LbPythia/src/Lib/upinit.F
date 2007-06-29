@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.7 2007-01-12 15:21:18 ranjard Exp $ 
+C $Id: upinit.F,v 1.8 2007-06-29 13:37:19 ibelyaev Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -62,6 +62,9 @@ C...Else not implemented.
       ELSEIF ( PYTHIAGAUSSPROCESS .EQ. HIDVALLEYPROCESS ) THEN
         CALL HIDVALLEY_UPINIT ( IISET ) 
         GOTO 999
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ALPGENREADPROCESS ) THEN
+        IF ( IISET .EQ. 1 ) CALL ALPGEN_UPINIT  
+        GOTO 999
       ELSE 
         WRITE(MSTU(11),5001) 
       ENDIF
@@ -84,6 +87,11 @@ C...Else not implemented.
       END
       
       SUBROUTINE HIDVALLEY_UPINIT(IISET) 
-      PRINT*, 'WARNING... Dummy HIDVALLEY_UPINIT Routine !'
+      INTEGER IISET 
+      PRINT*, 'HIDVALLEY_UPINIT: WARNING... Dummy Routine !'
+      END
+      
+      SUBROUTINE ALPGEN_UPINIT
+      PRINT*, 'ALPGEN_UPINIT:    WARNING... Dummy Routine !'
       END
       

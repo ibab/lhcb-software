@@ -4,6 +4,31 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-06-29 - Vanya BELYAEV
+
+ - Put few modificationto be able to read ALPGEN partonic events 
+   and process them through Pythia for showering
+
+  src/Lib/GaussUserProcess.inc
+     define new "process type": ALPGENREADPROCESS 
+  src/Lib/upevnt.F,src/Lib/upinit.F
+     add a branches for ALPGENREADPROCESS to call 
+     (dummy) routines ALPGEN_UPINIT and ALPGEN_UPEVNT 
+
+  Split the concrete tool ReadLHEfileProduction into several pieces
+  to allow flexible manipulation with various input files/generators
+
+  src/component/ReadFile.h,src/component/ReadFile.cpp
+     new base class LbPythia::ReadFile for reading of 
+     partonic events from arbitrary geenrator 
+  src/component/ReadLHE.cpp, src/component/ReadLHE.h
+     concrete tool LbPythia::ReadLHE to read "Les Houches  Events" (xml-format)
+  src/component/ReadLHEfileProduction.cpp
+     concrete tool ReadLHEfileProduction to read "Les Houches  Events" (xml-format)
+  src/component/ReadAlpGen.cpp, src/component/ReadAlpGen.h
+     concrete tool LbPythia::ReadAlpGen to read ALPGEN partonic files
+ 
+
 !===================== LbPythia v5r1 2007-05-16 ============================
 ! 2007-05-16 - Gloria CORTI
  - Move declaration of factory for PythiaProduction from cpp (in Lib) to
