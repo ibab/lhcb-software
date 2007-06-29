@@ -1,7 +1,9 @@
-// $Id: STOfflinePosition.cpp,v 1.10 2007-03-20 17:36:56 jvantilb Exp $
+// $Id: STOfflinePosition.cpp,v 1.11 2007-06-29 14:37:25 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
+
+#include "LHCbMath/Power.h"
  
 // Event
 #include "Event/STDigit.h"
@@ -17,6 +19,7 @@
 #include "STFun.h"
 #include "STOfflinePosition.h" 
 
+
 using namespace boost::assign;
 using namespace LHCb;
 
@@ -28,10 +31,12 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
   GaudiTool(type, name, parent)
 {
   m_errorVec += 0.22, 0.12, 0.24, 0.21;
+  // proposed new tune  m_errorVec += 0.24, 0.13, 0.26, 0.23;
   declareProperty("ErrorVec",m_errorVec);
   declareProperty("SharingCorr",m_sharingCorr = 112.);
   declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
-
+  declareProperty("trim", m_trim = 0.0);
+ 
   declareInterface<ISTClusterPosition>(this);
 }
 
@@ -43,8 +48,9 @@ STOfflinePosition::~STOfflinePosition()
 ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster* 
                                                      aCluster) const 
 {
-  double stripNum = STFun::position(aCluster->stripValues());
-  
+  std::pair<double, unsigned int> info = STFun::position(aCluster->stripValues(),m_trim);
+  double stripNum = info.first;
+
   STChannelID firstChan = aCluster->firstChannel();
   STChannelID theChan = STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
@@ -53,8 +59,8 @@ ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster*
   
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction(stripNum, aCluster->size());
-  theInfo.fractionalError = error(aCluster->size());
+  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),info.second);
+  theInfo.fractionalError = error(info.second);
                                                                              
   return theInfo;
 }
@@ -62,8 +68,9 @@ ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster*
 ISTClusterPosition::Info
 STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
 {  
-  double stripNum = STFun::position(digits);
- 
+  std::pair<double, unsigned int> info = STFun::position(digits,m_trim);
+  double stripNum = info.first;
+
   STChannelID firstChan = digits.front()->channelID();
   STChannelID theChan = STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
@@ -71,8 +78,8 @@ STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
                                                                              
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction( stripNum, digits.size() );
-  theInfo.fractionalError = error(digits.size());
+  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),info.second);
+  theInfo.fractionalError = error(info.second);
 
   return theInfo;
 }
@@ -103,10 +110,10 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const
 
   if (m_sharingCorr > 0.0) {
     if (newDist<0.) {
-      newDist = -pow(-newDist/m_sharingCorr, 1.0/3.0);
+      newDist = -Gaudi::Math::cbrt(-newDist/m_sharingCorr);
     }
     else {
-      newDist = pow(newDist/m_sharingCorr, 1.0/3.0);
+      newDist = Gaudi::Math::cbrt(newDist/m_sharingCorr);
     }
   } // apply corr
 

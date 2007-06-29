@@ -1,1 +1,4 @@
+// default tune
 ToolSvc.ITClusterPosition.ErrorVec ={ 0.20, 0.10, 0.22, 0.18};
+// proposed new tune
+//ToolSvc.ITClusterPosition.ErrorVec ={ 0.22, 0.11, 0.24, 0.2};

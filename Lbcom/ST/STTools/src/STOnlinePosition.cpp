@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.11 2007-03-21 17:08:42 jvantilb Exp $
+// $Id: STOnlinePosition.cpp,v 1.12 2007-06-29 14:37:25 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -43,7 +43,7 @@ STOnlinePosition::~STOnlinePosition()
 ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster* 
                                                      aCluster ) const
 {
-  double stripNum = STFun::position(aCluster->stripValues());
+  double stripNum = STFun::position(aCluster->stripValues()).first;
   double interStripPos = stripFraction(stripNum - floor(stripNum));
 
   // Increase strip number by one when interstrip fraction equals 1
@@ -69,7 +69,7 @@ ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster*
 ISTClusterPosition::Info 
 STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
 {  
-  double stripNum = STFun::position(digits);
+  double stripNum = STFun::position(digits).first;
   double interStripPos = stripFraction(stripNum - floor(stripNum));
   LHCb::STChannelID firstChan = digits.front()->channelID();
  

@@ -1,10 +1,11 @@
-// $Id: STFun.h,v 1.4 2007-03-23 14:18:21 cattanem Exp $
+// $Id: STFun.h,v 1.5 2007-06-29 14:37:24 mneedham Exp $
 #ifndef STFun_H
 #define STFun_H 1
 
 #include "GaudiKernel/SmartRefVector.h"
 #include "Event/STDigit.h"
 #include "Event/STCluster.h"
+#include <utility>
 
 namespace STFun{
 
@@ -13,7 +14,7 @@ namespace STFun{
   * @param  digits vector of digits
   * @return mean strip
   */
-  double position(const SmartRefVector<LHCb::STDigit>& digits);
+  std::pair<double, unsigned int > position(const SmartRefVector<LHCb::STDigit>& digits, double trim = 0);
 
 
   /**
@@ -21,7 +22,7 @@ namespace STFun{
   * @param  stripts vector of strip values
   * @return mean strip
   */
-  double position(const LHCb::STCluster::ADCVector& strips);
+  std::pair<double, unsigned int > position(const LHCb::STCluster::ADCVector& strips, double trim = 0);
 
 };
 

@@ -1,39 +1,61 @@
-// $Id: STFun.cpp,v 1.4 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STFun.cpp,v 1.5 2007-06-29 14:37:24 mneedham Exp $
 #include "STFun.h"
 
-double STFun::position(const SmartRefVector<LHCb::STDigit>& digits)
+
+std::pair<double, unsigned int > STFun::position(const SmartRefVector<LHCb::STDigit>& digits, double trim)
 {
-  // mean u - weighted according to charge dep
-  double totalCharge = 0.0;
-  double firstMoment = 0.0;
- 
+  double maxCharge = 0.0;
   SmartRefVector<LHCb::STDigit>::const_iterator iterDigit = digits.begin();
-  while (iterDigit != digits.end()){
-    totalCharge += (*iterDigit)->depositedCharge();
-    firstMoment += (*iterDigit)->depositedCharge()
-      * (*iterDigit)->channelID().strip();
-    ++iterDigit;
-  }
+  for (; iterDigit != digits.end(); ++iterDigit){
+    if ((*iterDigit)->depositedCharge() > maxCharge) maxCharge =(*iterDigit)->depositedCharge(); 
+  } // iterDigit
+
+  const double trimVal = trim*maxCharge;
+
+  unsigned int nUsed = 0;
+  double trimmedCharge = 0.0; double firstMoment =0.0; 
+  iterDigit = digits.begin();
+  for (; iterDigit != digits.end() ; ++iterDigit){
+    if ((*iterDigit)->depositedCharge() > trimVal){
+      firstMoment += ((*iterDigit)->depositedCharge()*(double)(*iterDigit)->channelID().strip());
+      trimmedCharge += (*iterDigit)->depositedCharge() ;
+      ++nUsed;
+    }
+  } // iterDigit
  
   // mean u
-  return (firstMoment/totalCharge);
+  return std::make_pair(firstMoment/trimmedCharge, nUsed);
 }
 
-double STFun::position(const LHCb::STCluster::ADCVector& strips)
+std::pair<double, unsigned int> STFun::position(const LHCb::STCluster::ADCVector& strips, double trim)
 { 
-  // mean u - weighted according to charge dep
-  double totalCharge = 0.0;
+ // mean u - weighted according to charge dep
   double firstMoment = 0.0;
- 
-  unsigned int i = 0;
+  double trimmedCharge = 0; 
+
+  // mean
+  double maxCharge = 0.0;
   LHCb::STCluster::ADCVector::const_iterator iter = strips.begin();
   while (iter != strips.end()){
-    totalCharge += iter->second;
-    firstMoment += iter->second * (double)i;
+    if (iter->second > maxCharge) maxCharge = iter->second;
+    ++iter; 
+  }
+  const double trimVal = trim*maxCharge;
+
+  // calc trimmed mean
+  unsigned int i =0; unsigned int nUsed = 0;
+  iter = strips.begin();
+  while (iter != strips.end()){
+    if (iter->second > trimVal){
+      trimmedCharge += iter->second;
+      firstMoment += iter->second
+                   *(double)i;
+      ++nUsed;
+    }
     ++iter;
     ++i;
   }
  
   // mean u
-  return (firstMoment/totalCharge);
+  return std::make_pair(firstMoment/trimmedCharge, nUsed);
 }

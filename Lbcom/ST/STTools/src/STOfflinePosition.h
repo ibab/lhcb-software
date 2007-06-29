@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.h,v 1.5 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STOfflinePosition.h,v 1.6 2007-06-29 14:37:25 mneedham Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
@@ -48,6 +48,7 @@ private:
   std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
   double m_sharingCorr;            ///< Charge sharing correction factor
   int m_maxNtoCorr;                ///< Maximum size of cluster for S-shape corr
+  double m_trim;
 
 };
 

@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2007-06-29 M Needham 
+ -  Add possibility to trim ST Measurements (turned off for now)
+
 !=========================== STTools v3r1 2007-03-23 ==========================
 ! 2007-03-23 - Marco Cattaneo
  - Remove obsolete file STTools_load.cpp
