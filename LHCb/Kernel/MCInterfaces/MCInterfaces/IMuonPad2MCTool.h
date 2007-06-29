@@ -1,4 +1,4 @@
-// $Id: IMuonPad2MCTool.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+// $Id: IMuonPad2MCTool.h,v 1.2 2007-06-29 12:07:18 cattanem Exp $
 #ifndef IMUONPAD2MCTOOL_H 
 #define IMUONPAD2MCTOOL_H 1
 
@@ -7,7 +7,11 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/MuonTileID.h"
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/MCParticle.h"
+
+namespace LHCb
+{
+  class MCParticle;
+}
 
 
 static const InterfaceID IID_IMuonPad2MCTool ( "IMuonPad2MCTool", 1, 0 );

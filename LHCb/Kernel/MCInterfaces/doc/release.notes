@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r1 2007-06-29 ===========================
+! 2007-06-29 - Marco Cattaneo
+ - Remove unneccessary include of MCParticle.h in IMuonPad2MCTool.h
+
 ! 2006-6-27 M Needham
  - Remove obsolete interfaces: ITrackReconstructible, ITrackCriteriaSelector
 
