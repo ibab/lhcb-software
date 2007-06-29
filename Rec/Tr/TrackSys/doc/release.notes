@@ -4,12 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r7 2007-07-29 ======================
 ! 2007-07-28 M Needham
  - TrackChecking.opts updated to add TrackEffChecker example
 
 ! 2007-07-27 M Needham
  - TrackChecking.opts updated 
-
 
 ! 2007-06-27 M Needham
  - Set Ks Fit iterations to three
