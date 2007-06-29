@@ -4,12 +4,11 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
-
+!======================= TrackIdealPR v2r12 2007-06-29 =======================
 ! 2006-06-27 M. Needham
  - Add possibility of allowing inefficiency in hits addition
  - Add possibility of smearing seed state p
  - Add possibility of adding muon hits 
-
 
 !======================= TrackIdealPR v2r11 2007-05-31 =======================
 ! 2007-06-09 M. Needham
