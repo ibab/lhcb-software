@@ -4,7 +4,13 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+
+! 2007-06-28 M Needham
+ - Remove unused inclusion of TrackCriteriaSelector header
+
+
 !======================= TrackCheckers v3r0 2007-06-29 =======================
+
 ! 2007-06-27 M. Needham
  - Add new checking base class TrackCheckerBase
  - New checkers TrackResChecker (replaces TrackChecker), TrackEffChecker
