@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-06-29 - Eduardo Rodrigues
+ - correct useless "make seed method robust fix": the states on a track
+   are ordered in z by construction
+
 ! 2006-06-26 M. Needham
  - In TrackMasterFitter:
    * Add some const

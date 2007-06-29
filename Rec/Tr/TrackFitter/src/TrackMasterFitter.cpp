@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.31 2007-06-27 06:56:56 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.32 2007-06-29 09:58:09 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -464,12 +464,7 @@ unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track )
 //=============================================================================
 const State& TrackMasterFitter::seedState( const Track& track ) const
 {
-
-  const std::vector<State*>& states = track.states();
-  return (m_upstream ? **std::max_element(states.begin(), states.end(),
-                                         TrackFunctor::increasingByZ<State>()): 
-                       **std::min_element(states.begin(), states.end(),
-					  TrackFunctor::increasingByZ<State>()));
+  return (m_upstream) ? (*track.states().back()) : (track.firstState());
 }
 
 //=========================================================================
