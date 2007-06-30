@@ -34,6 +34,9 @@
 // added the method makeMuonTrack to create a track object for each MuonPID
 // added a foifactor to enlarge the foi if needed. default = 1.
 // 07/05/2007 : Erica Polycarpo, Miriam Gandelman
+//
+// added a smartRef to the muonTracks
+// 30/06/2007 : Miriam Gandelman
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -96,7 +99,7 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << " MuonID v5r1 - DC06" << endmsg;
+  info()   << " MuonID v5r2 " << endmsg;
 
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
@@ -254,6 +257,7 @@ StatusCode MuonID::execute() {
       if (pMuid->IsMuon()) {
 	LHCb::Track* mutrack = makeMuonTrack(*pMuid);
 	mutracks->insert( mutrack, (*iTrack)->key() );  
+        pMuid->setMuonTrack( mutrack );
       }
 
       sc = calcSharedHits(pMuid, pMuids);

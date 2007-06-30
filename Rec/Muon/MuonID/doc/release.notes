@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+!========================== MuonID v5r2 2007-06-30 ===================
+! 2007-06-30 - Miriam Gandelman
+ - added a smartRef to the muonTracks
 !========================== MuonID v5r1 2007-05-18 ===================
 ! 2007-05-18 - Jose Hernando
  - deleting the muon measurement

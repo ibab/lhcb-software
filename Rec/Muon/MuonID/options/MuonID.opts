@@ -1,5 +1,8 @@
 #pragma print on
 //-----------------------------------------------------------------
+// MuonID v5r2
+// June 2007 Added a SmartRef to the muonTracks 
+//           Miriam
 // MuonID v5r1 
 // May 2007 new muonTrack object created for each MuonPID
 //          new parameter in the opts file to enlarge the FOI if needed
