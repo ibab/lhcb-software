@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.315 2007-06-25 16:07:24 jpalac Exp $ 
+! $Id: release.notes,v 1.316 2007-06-30 09:30:55 mneedham Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-29 M Needham
+  - Use cbrt in Gaudi::Math rather than pow 
 
 ! 2007-06-25 - Juan PALACIOS
 

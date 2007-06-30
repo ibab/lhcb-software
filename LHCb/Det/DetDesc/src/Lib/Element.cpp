@@ -1,10 +1,11 @@
-// $Id: Element.cpp,v 1.10 2006-06-16 11:53:53 cattanem Exp $
+// $Id: Element.cpp,v 1.11 2007-06-30 09:30:55 mneedham Exp $
 /// STL and STD 
 #include <math.h>
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
+#include "LHCbMath/Power.h"
 ///
 
 
@@ -174,7 +175,7 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
 };    
 
 void Element::ComputeInteractionLength(){
-  double intLen = 35.0 * pow(N(),1./3.) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
+  double intLen = 35.0 * Gaudi::Math::cbrt(N()) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
   setAbsorptionLength(intLen);
 }
 
