@@ -4,7 +4,7 @@
   <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: MuonPID.xml,v 1.1 2006-01-17 15:46:08 cattanem Exp $
+  * $Id: MuonPID.xml,v 1.2 2007-06-30 18:25:41 miriamg Exp $
   *****************************************************************************
   * XML-description of MuonPID class                                          *
   * author: Erica Polycarpo                                                   *
@@ -41,6 +41,9 @@ acceptance"/>
 
       <relation type="LHCb::Track" name="IDTrack"
         desc="The track that has been IDed by the Muon system"/>
+    
+      <relation type="LHCb::Track" name="muonTrack"
+        desc="The track segment as reconstructed in the Muon system"/>
     
       <location name="Default" place="Rec/Muon/MuonPID"/>
     </class>
