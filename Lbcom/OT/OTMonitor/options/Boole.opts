@@ -5,5 +5,5 @@ OTTimeChecker.fullDetail = true;
 
 /// Following is need for OTTimeClassification
 /// Swithc on mc linking for spill over
-OTTime2MCHitLinker.SpillOver = true;
+OTMCHitLinker.LinkSpillOver = true;
 MoniOTSeq.Members += { "OTTimeClassification" };

@@ -9,9 +9,6 @@
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// Linkers
-#include "Linker/LinkerTool.h"
-
 // Forward declarations
 namespace LHCb{
  class OTTime;
@@ -48,12 +45,8 @@ public:
 private:
   ///Some handy typedefs
   typedef std::map<std::string, unsigned int>::const_iterator InfoIter;
-  typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> AsctTool;
-  typedef AsctTool::DirectType Table;
-  typedef Table::Range Range;
-  typedef Table::iterator iterator;
 
-  void fillInfo(const LHCb::MCHit* aHit) const;
+  void fillInfo(const std::vector<LHCb::MCHit*>& hits) const;
   std::string  findSpill(const LHCb::MCHit* aHit) const;
   
   unsigned int tCount() const;

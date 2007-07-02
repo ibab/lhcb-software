@@ -2,6 +2,10 @@
 ! Package manager : J. Amoraal
 !---------------------------------------------------------------------------
 
+! 2007-07-02 Jan Amoraal
+- Minor changes to reflect changes in OTAssociators. Note code is still compatible
+  with DC06 data since the MC information is retrieved via the channelIDs(keys).
+ 
 !==================== OTMonitor v2r7 2007-06-11 =====================
 ! 2007-05-29 M Needham
  - Add time spectrum histogram to OTTimeChecker

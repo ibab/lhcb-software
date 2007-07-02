@@ -8,6 +8,9 @@
 #include "Event/OTTime.h"
 #include "Event/MCHit.h"
 
+// Linker
+#include "Linker/LinkedTo.h"
+
 // BOOST
 #include "boost/lexical_cast.hpp"
 #include <boost/assign/std/vector.hpp>
@@ -73,20 +76,19 @@ StatusCode OTTimeClassification::execute(){
   OTTimes* times = get<OTTimes>(m_timesLocation);
 
   // linker
-  AsctTool associator(evtSvc(), m_asctLocation);
-  const Table* aTable = associator.direct();
-  if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
+  LinkedTo<MCHit> myLink(evtSvc(), msgSvc(), m_asctLocation);
+  if (myLink.notFound()) Error( "Failed to find OT MCHits linker table", StatusCode::FAILURE );
 
   // histos per digit
   OTTimes::const_iterator iTime = times->begin() ;
   for ( ; iTime != times->end(); ++iTime) {
-  Range range = aTable->relations(*iTime);
+    unsigned int key = unsigned((*iTime)->channel()); 
+    std::vector<MCHit*> range = myLink.range(key);
     if (range.empty()) {
       //empty range
       ++m_infoMap["noise"];
-    }
-    else {
-      fillInfo((*range.begin()).to());
+    } else {
+      fillInfo(range);
     }
   } // loop iterDep
 
@@ -112,8 +114,8 @@ StatusCode  OTTimeClassification::finalize(){
  InfoIter iter = m_infoMap.begin();
  for ( ; iter != m_infoMap.end(); ++iter) {
    if ((iter->first != "noise")&&(iter->first != "primary") && (iter->first != "unknown") 
-     &&(iter->first != "secondary")) {     
-       info() << iter->first+" " << iter->second/ double(total) << endmsg;
+       &&(iter->first != "secondary")) {     
+     info() << iter->first+" " << iter->second/ double(total) << endmsg;
    }
  }
 
@@ -131,34 +133,37 @@ unsigned int OTTimeClassification::tCount() const{
   return total;
 }
 
-void OTTimeClassification::fillInfo(const MCHit* aHit) const {
- 
-  // find out which spill came from....
-  std::string spill = this->findSpill(aHit);
-
-  if (spill == "/") {
-    // event spill...
-    const MCParticle* particle = aHit->mcParticle();
-    if (0 != particle) {
-      const MCVertex* origin = particle->originVertex();
-      /// Where does the hit come from (in current spill)?
-      if (origin != 0) {
-        Gaudi::XYZPoint point = origin->position();
-        double r = gsl_hypot(point.x(), point.y());
-        plot(point.z()/Gaudi::Units::cm, "z", 0.0, 1200.0, 600 );
-        plot2D(point.z()/Gaudi::Units::cm, r/Gaudi::Units::cm, "r vs z", 0.0, 1000.0, 0.0, 500.0, 500, 500); 
-        if ((origin->type() < MCVertex::HadronicInteraction)&&(origin->type() != 0)) {
+void OTTimeClassification::fillInfo(const std::vector<MCHit*>& hits) const {
+  std::vector<MCHit*>::const_iterator iHit = hits.begin();
+  for ( ; iHit != hits.end(); ++iHit) {
+    // find out which spill came from...
+    const MCHit* aHit = (*iHit);
+    std::string spill = this->findSpill(aHit);
+    
+    if (spill == "/") {
+      // event spill...
+      const MCParticle* particle = aHit->mcParticle();
+      if (0 != particle) {
+        const MCVertex* origin = particle->originVertex();
+        /// Where does the hit come from (in current spill)?
+        if (origin != 0) {
+          Gaudi::XYZPoint point = origin->position();
+          double r = gsl_hypot(point.x(), point.y());
+          plot(point.z()/Gaudi::Units::cm, "z", 0.0, 1200.0, 600 );
+          plot2D(point.z()/Gaudi::Units::cm, r/Gaudi::Units::cm, "r vs z", 0.0, 1000.0, 0.0, 500.0, 500, 500); 
+          if ((origin->type() < MCVertex::HadronicInteraction)&&(origin->type() != 0)) {
           ++m_infoMap["primary"];  
         } else if (origin->type() == 0) {
           ++m_infoMap["unknown"];
         } else {
           ++m_infoMap["secondary"];
         }
-      }  // vertex
-    } // particle
-  } else {
+        }  // vertex
+      } // particle
+    } else {
     ++m_infoMap[spill];   
-  } 
+    } 
+  }
 }
 
 std::string OTTimeClassification::findSpill(const MCHit* aHit) const {

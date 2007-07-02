@@ -1,10 +1,10 @@
-// $Id: OTTimeChecker.cpp,v 1.14 2007-05-31 09:12:26 mneedham Exp $
+// $Id: OTTimeChecker.cpp,v 1.15 2007-07-02 16:08:40 janos Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Linker
-#include "Linker/LinkerTool.h"
+#include "Linker/LinkedTo.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -73,15 +73,9 @@ StatusCode OTTimeChecker::execute() {
   MCHits* mcHitCont = get<MCHits>( MCHitLocation::OT );
 
   // Get linker table
-  typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> OTTime2MCHitAsct;
-  typedef OTTime2MCHitAsct::DirectType Table;
-  typedef Table::Range Range;
-  typedef Table::iterator iterator;
+  LinkedTo<LHCb::MCHit> myLink(evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default+"2MCHits");
+  if (myLink.notFound()) Error( "Failed to find OT MCHits linker table", StatusCode::FAILURE );
 
-  OTTime2MCHitAsct associator( evtSvc(), OTTimeLocation::Default+"2MCHits" );
-  const Table* aTable = associator.direct();
-  if (!aTable) return Error( "Failed to find table", StatusCode::FAILURE );
-  
   // Calculate efficiencies from MCHits to OTTimes
   // loop over OTTimes, find the MCHit and store multiplicity
   HitMultVec hitMultCont;
@@ -89,8 +83,10 @@ StatusCode OTTimeChecker::execute() {
   int nGhosts = 0;  
   OTTimes::const_iterator iterTime = timeCont->begin();
   for ( ; iterTime != timeCont->end(); ++iterTime) {
+    unsigned int key = unsigned((*iterTime)->channel()); 
+    std::vector<LHCb::MCHit*> range = myLink.range(key);
     // get MC truth for this time
-    Range range = aTable->relations(*iterTime);
+    //Range range = aTable->relations(*iterTime);
     if (range.empty()) {
       ++nGhosts;
       continue;
@@ -98,13 +94,10 @@ StatusCode OTTimeChecker::execute() {
 
     // fill the non-ghosts in a temporary vector of MCHits
     std::vector<const MCHit*> mcHitVec;
-    iterator iterHit = range.begin();    
-    for ( ; iterHit != range.end(); ++iterHit) {
-      const MCHit* aHit = iterHit->to();
-      if ( 0 == aHit ) continue;
-      // Check if the hit is in the right spill
-      if (mcHitCont != aHit->parent()) continue;
-      mcHitVec.push_back( aHit );
+    std::vector<LHCb::MCHit*>::const_iterator iH = range.begin();
+    for ( ; iH != range.end(); ++iH) {
+      if (mcHitCont != (*iH)->parent()) continue;
+      mcHitVec.push_back( (*iH) );
     }
     if (mcHitVec.empty()) {
       ++nGhosts;
