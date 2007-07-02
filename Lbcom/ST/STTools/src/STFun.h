@@ -1,4 +1,4 @@
-// $Id: STFun.h,v 1.5 2007-06-29 14:37:24 mneedham Exp $
+// $Id: STFun.h,v 1.6 2007-07-02 09:51:30 cattanem Exp $
 #ifndef STFun_H
 #define STFun_H 1
 
@@ -19,7 +19,7 @@ namespace STFun{
 
   /**
   * calculate mean strip
-  * @param  stripts vector of strip values
+  * @param  strips vector of strip values
   * @return mean strip
   */
   std::pair<double, unsigned int > position(const LHCb::STCluster::ADCVector& strips, double trim = 0);
