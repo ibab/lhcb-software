@@ -1,0 +1,49 @@
+# $Id: requirements,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $ 
+# =============================================================================
+# Created    : 2006-10-22
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
+# =============================================================================
+package           LbAlpGen
+version           v2r0
+
+# =============== structure ===================================================
+branches          cmt doc src options LbAlpGen
+
+# =============== exported includes ===========================================
+include_dirs      $(LBALPGENROOT) 
+
+# =============== environment =================================================
+set               LBALPGENOPTS $(LBALPGENROOT)/options 
+
+# =============== dependencies ================================================
+use               LbPythia     v* Gen 
+use               alpgen       v* LCG_GeneratorsInterfaces
+use               Boost        v* LCG_Interfaces 
+
+macro alpgen_native_version "2.1.2"
+
+# =============== constituents ================================================
+library           LbAlpGenLib Lib/*.cpp  Lib/*.F  
+#library           LbAlpGen    Components/*.cpp
+application       AlpGen      Main/*.cpp Main/*.F 
+
+# =============== standard patterns ===========================================
+apply_pattern     linker_library    library=LbAlpGenLib
+#apply_pattern     component_library library=LbAlpGen
+apply_pattern     application_path 
+
+#macro HepMC_linkopts '-L$(HepMC_home)/lib -lHepMC '
+
+
+# =============================================================================
+private           
+macro_append      AlpGenlinkopts  $(Boost_linkopts_program_options)
+
+private 
+macro_prepend fincludes $(ppcmd)"$(alpgen_path)/share/alpgen-author/alplib"
+
+
+
+# =============================================================================
+# The END 
+# =============================================================================

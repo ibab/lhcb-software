@@ -1,0 +1,19 @@
+! $Id: release.notes,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! Package     : Gen/LbAlpGen
+! Responsible : Vanya Belyaev ibelyaev@physics.syr.edu
+! Purpose     : read ALPGEN-generated partonic level events 
+! -----------------------------------------------------------------------------
+
+! 2007-07-02 - Vanya BELYAEV 
+ - New package
+   essentially the executable is just a restructurized "pyuser" example 
+   form ALPGEN distribution
+   Library contains the code for ocnvertion of ALPGEN structures into 
+   pythia partonic events to perform PYTHIA fragmentation
+   The concrete production tool is in Gen/LbPythia
+ 
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
