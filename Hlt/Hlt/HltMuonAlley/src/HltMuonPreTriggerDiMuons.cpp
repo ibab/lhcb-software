@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.6 2007-06-25 21:02:10 hernando Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.7 2007-07-02 21:06:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -94,6 +94,8 @@ StatusCode HltMuonPreTriggerDiMuons::initialize() {
     Hlt::DataSizeHolder<Hlt::VertexContainer>* holder = 
       new Hlt::DataSizeHolder< Hlt::VertexContainer > (m_selevertices2);
     sel2.addData( *holder );
+    debug() << " added " << m_selection2SummaryName << " ID "
+            << m_selection2SummaryID << " at HLT " << endreq;
   }
   debug() << "==> Initialize" << endmsg;
 
@@ -103,6 +105,9 @@ StatusCode HltMuonPreTriggerDiMuons::initialize() {
 //  checkInput(m_inputTracks," input tracks");
 //  checkInput(m_outputTracks," output tracks");
 //  checkInput(m_outputTracks2," output tracks 2 ");
+
+  checkInput(m_inputTracks," input tracks ");
+  checkInput(m_outputVertices," output vertices ");
 
   return StatusCode::SUCCESS;
 }
@@ -114,6 +119,7 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
 //info()<<" sono qui "<<endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
+  debug() << " entering " << endreq;
   m_outputVertices->clear();
   m_selevertices2.clear();
   //info()<<" sono qui "<<endreq;
