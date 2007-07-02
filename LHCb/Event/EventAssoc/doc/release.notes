@@ -4,6 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v4r2 2007-07-02 ==========================
 ! 2007-06-29 - Vanya BELYAEV
  - dict/selection.py 
     add dictionary for LHCb::RelationWeighted1D<LHCb::Particle,LHCb::VertexBase,double>
@@ -11,8 +12,7 @@
  - dict/selection.h, dict/selection.xml
     regenerate the files
 
-
-!======================= EventAssoc v4r0 2007-03-23 ==========================
+!======================= EventAssoc v4r1 2007-03-23 ==========================
 ! 2007-03-23 - Vanya BELYAEV
  - dict/selection.py, .h, .xml
      add a dictionary for class 
