@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.6 2007-06-13 16:36:55 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.7 2007-07-02 09:40:12 cattanem Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -9,7 +9,7 @@
 class IDetectorElement;
 class IGeometryInfo;
 
-/** @namespace DetDesc  GlobalToLocalDelta.h DetDesc/GlobalToLocalDelta.h
+/** @file  GlobalToLocalDelta.h
  *  
  *  Free functions to go from a 3D global "delta" matrix to the
  *  corresponding matrix in the frame of the detector element's 
@@ -26,7 +26,8 @@ namespace DetDesc {
    * @param  DE detector element in question.
    * @param  globalDelta 3D transformation that takes 
    *         global nominal position matrix and applies misalignment:
-   *         Misalinged position matrix = globalDelta*M_nominal_global
+   *         Misaligned position matrix = globalDelta*M_nominal_global
+
    * @return 3D transformation that applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-05-31
@@ -40,7 +41,8 @@ namespace DetDesc {
    * @param  GI IGeometryInfo from detector element in question.
    * @param  globalDelta 3D transformation that takes 
    *         global nominal position matrix and applies misalignment:
-   *         Misalinged position matrix = globalDelta*M_nominal_global
+   *         Misaligned position matrix = globalDelta*M_nominal_global
+
    * @return 3D transformation that applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-05-31

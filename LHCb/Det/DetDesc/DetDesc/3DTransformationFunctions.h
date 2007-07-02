@@ -1,21 +1,18 @@
-// $Id: 3DTransformationFunctions.h,v 1.1 2007-06-13 16:35:56 jpalac Exp $
+// $Id: 3DTransformationFunctions.h,v 1.2 2007-07-02 09:40:12 cattanem Exp $
 #ifndef DETDESC_3DTRANSFORMATIONFUNCTIONS_H 
 #define DETDESC_3DTRANSFORMATIONFUNCTIONS_H 1
 
 // Include files
 #include "GaudiKernel/Transform3DTypes.h"
 #include <vector>
-/** @namespace DetDesc 3DTransformationFunctions.h DetDesc/3DTransformationFunctions.h
- *  
- *
- *  @author Juan Palacios
- *  @date   2007-06-13
- */
 
 namespace DetDesc {
 
   /**
    * Build the local to global transformation matrix given 
+   *
+   * @author Juan Palacios
+   * @date   2007-06-13
    *
    * @param translationParams vector containing the X,Y,Z coordinates of the translation
    *        part of the transformation
