@@ -1,5 +1,5 @@
 package GENSER
-version v3r0
+version v3r1
 
 branches doc cmt src
 
@@ -8,7 +8,7 @@ use GaudiPolicy  v*
 
 include_path none
 
-macro pythia6_native_version "410.2"
+macro pythia6_native_version "411.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
 
@@ -20,12 +20,9 @@ use photos v* LCG_GeneratorsInterfaces
 macro lhapdf_native_version "5.2.3"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(lhapdf_home)/../share/PDFsets
-macro lhapdf_linkopts "-L$(lhapdf_home)/lib \
-                       -llhapdf -llhapdf_dummy "
-
 
 macro herwig_native_version "6.510.2"
-macro jimmy_native_version "4.2"
+macro jimmy_native_version "4.31.2"
 
 macro hijing_native_version "1.383bs.2"
 

@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v3r1 2007-07-02 ==========================
+! 2007-07-02 - Gloria Corti
+ - Remove lhapdf_linkopts now corrected in LCG_GeneratorsInterfaces
+ - Take more recent versions for Pythia (411.2) and Jimmy (4.31.2)
+
 !========================== GENSER v3r0 2007-03-27 ==========================
 ! 2007-03-27 - Gloria Corti
  - requirements - Use latest version of Pythia 6.410.2 from LCG installation
