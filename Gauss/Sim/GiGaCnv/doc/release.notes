@@ -15,10 +15,10 @@
    check it in queryInterface method
    . src/Lib/GiGaCnvSvcBase.cpp
    . src/component/GiGaGeo.cpp
+   . src/component/GiGaKine.cpp
  - Clean up of CVS directives ($Name and $Log)
    . src/Lib/GiGaVolumeUtils.cpp  
    . src/component/GiGaInstall.cpp
-   . src/component/GiGaKine.cpp
 
 !========================= GiGaCnv v18r0 2007-03-16 ==========================
 ! 2007-03-16 - Gloria Corti
