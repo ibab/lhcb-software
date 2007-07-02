@@ -1,15 +1,5 @@
-// $Id: GiGaVolumeUtils.cpp,v 1.2 2003-05-30 15:53:13 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/07/09 20:33:54  ibelyaev
-//  move GiGaVolumeUtils into public location
-//
-// Revision 1.1  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-// 
-// ============================================================================
+// $Id: GiGaVolumeUtils.cpp,v 1.3 2007-07-02 08:50:10 gcorti Exp $
+
 // Include files
 // Geant4 
 #include "G4LogicalVolume.hh"
@@ -18,10 +8,12 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4Region.hh"
 #include "G4RegionStore.hh"
+
 // GiGaCnv 
 #include "GiGaCnv/GiGaAssembly.h"
 #include "GiGaCnv/GiGaAssemblyStore.h"
 #include "GiGaCnv/GiGaVolumeUtils.h"
+
 // local
 
 // ============================================================================

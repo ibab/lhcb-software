@@ -1,31 +1,26 @@
-// $Id: GiGaInstall.cpp,v 1.3 2006-01-31 10:24:59 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/01/23 09:20:37  ibelyaev
-//  few fixes for Win2K platform
-//
-// Revision 1.1  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// ============================================================================
+// $Id: GiGaInstall.cpp,v 1.4 2007-07-02 08:49:47 gcorti Exp $
+
 // Include files
 // STD & STL 
 #include <cstdlib>
 #include <string>
+
 // MathCore -> CLHEP
 #include "ClhepTools/MathCore2Clhep.h"
+
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
+
 // Geant4 
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4PVPlacement.hh"
+
 // GiGaCnv
 #include "GiGaCnv/GiGaAssembly.h"
 #include "GiGaCnv/GiGaVolume.h"
+
 // local
 #include "GiGaInstall.h"
 
