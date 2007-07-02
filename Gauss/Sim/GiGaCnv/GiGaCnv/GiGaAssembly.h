@@ -1,25 +1,16 @@
-// $Id: GiGaAssembly.h,v 1.3 2006-01-31 10:37:31 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.1  2002/01/22 18:24:41  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// ============================================================================
+// $Id: GiGaAssembly.h,v 1.4 2007-07-02 08:48:54 gcorti Exp $
 #ifndef GIGACNV_GIGAASSEMBLY_H 
 #define GIGACNV_GIGAASSEMBLY_H 1
+
 // Include files
 // STD & STL 
 #include  <vector>
 #include  <string>
-// LHCbDefinitions
-#include "Kernel/Transform3DTypes.h"
+
 // GaudiKernel
+#include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/StatusCode.h" 
+
 // GiGaCnv
 #include "GiGaCnv/GiGaVolumePair.h"
 

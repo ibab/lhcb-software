@@ -1,22 +1,11 @@
-// $Id: GiGaInstall.h,v 1.3 2006-01-31 10:24:59 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/01/25 15:52:25  gcorti
-// adapt to CLHEP 19.0
-//
-// Revision 1.1  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// ============================================================================
+// $Id: GiGaInstall.h,v 1.4 2007-07-02 08:49:07 gcorti Exp $
 #ifndef GIGACNV_GIGAINSTALL_H
 #define GIGACNV_GIGAINSTALL_H 1
+
 // Include files
 #include <string>
-// LHCbDefinitions
-#include "Kernel/Transform3DTypes.h"
-// GaudiKernel
+// from Gaudi
+#include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/StatusCode.h"
 
 
