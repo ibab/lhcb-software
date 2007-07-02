@@ -53,12 +53,11 @@ StatusCode OTTime2MCDepositLinker::execute()
   LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
 
   // Get MCOTTimes
-  LHCb::MCOTTimes* mcTime = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  LHCb::MCOTTimes* mcTime = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );  
   
-  StatusCode sc;
-  sc = setMCTruth( timeCont, mcTime );
+  StatusCode sc = setMCTruth( timeCont, mcTime );
   if ( !sc.isSuccess() ) return Error( "Failed to set the mc truth link", sc );
-
+  
   LinkerWithKey<LHCb::MCOTDeposit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
  
   // loop and link OTTimes to MC truth

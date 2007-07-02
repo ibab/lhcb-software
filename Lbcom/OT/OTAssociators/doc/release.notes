@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.41 2006-07-24 11:14:41 cattanem Exp $
+! $Id: release.notes,v 1.42 2007-07-02 16:15:29 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2007-07-02 - Jan Amoraal
+ - Added new assocciator algorithms. The deposits, hits and particles are linked to the
+   channelIDs which are also the keys. Note one cannot use the relations like interface anymore 
+   to retrieve the MC information. See the code or doxygen for examples on how to retrieve the 
+   information.
 
 !===================== OTAssociators v4r1 2006-07-24 =====================
 ! 2006-07-21 - Jan Amoraal
