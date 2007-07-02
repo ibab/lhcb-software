@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.3 2001-04-19 08:56:05 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.4 2007-07-02 14:00:50 robbep Exp $
 
 #include "TriggerCard.h"
 
@@ -21,8 +21,10 @@ void TriggerCard::reset( ) {
   }
   m_etMax  = 0;
   m_etTot  = 0;
-  m_colMax = -1;
-  m_rowMax = -1;
+  m_colMax = m_detElem -> cardFirstValidColumn( m_number ) - 
+    m_detElem -> cardFirstColumn( m_number ) ;
+  m_rowMax = m_detElem -> cardFirstValidRow( m_number ) -
+    m_detElem -> cardFirstRow( m_number ) ;
   m_empty  = true;
 };
 
@@ -38,21 +40,21 @@ void TriggerCard::addEt( int col, int row, int digit ) {
     m_etTot += digit;
     if ( 255 < m_etTot ) {  m_etTot = 255 ; }
   }
-  et[col][row] = digit;
-  
+  et[col][row] = digit; 
+
 // Update the maximum...
 
   m_etMax = 0;
   int i;
-  for ( i = 0; nColCaloCard > i; ++i ){
+  for ( i = 0; nColCaloCard > i; ++i ) {
     int j;
     for ( j = 0; nRowCaloCard > j; ++j ) {
       int cellEt = et[i][j] + et[i+1][j] + et[i][j+1] + et[i+1][j+1];
       if ( 255 < cellEt ) { cellEt= 255; };
       if ( cellEt > m_etMax ) {
-	m_etMax  = cellEt;
-	m_colMax = i;
-	m_rowMax = j;
+        m_etMax  = cellEt;
+        m_colMax = i;
+        m_rowMax = j;
       }
     }
   }

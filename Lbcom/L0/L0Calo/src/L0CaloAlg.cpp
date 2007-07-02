@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.42 2007-06-06 14:59:26 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.43 2007-07-02 14:00:49 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -350,26 +350,31 @@ StatusCode L0CaloAlg::execute() {
   int hCard;
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
-    if ( !m_hcalFe[hCard].empty() ) {
-      int maxEcalEt = 0;
-      int hCol = m_hcalFe[hCard].colMax();
-      int hRow = m_hcalFe[hCard].rowMax();
-      int eLink;
-      for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
-        eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
-        if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
-          if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
-            maxEcalEt = m_ecalFe[eCard].etMax();
-          }
+    //    Add also if HCAL energy is 0
+    // if ( !m_hcalFe[hCard].empty() ) {
+    //
+    int maxEcalEt = 0;
+    int hCol = m_hcalFe[hCard].colMax();
+    int hRow = m_hcalFe[hCard].rowMax();
+    int eLink;
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+        if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
+          maxEcalEt = m_ecalFe[eCard].etMax();
         }
       }
-      int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
-      sumEt  += etMax ;
-      if(  hadron.et() < etMax ) {
-        cardMax = hCard;
-        hadron.setCandidate( etMax, m_hcalFe[hCard].cellIdMax() );
-      }
-    } // card not empty
+    }
+    
+    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
+    sumEt  += etMax ;
+    if(  hadron.et() < etMax ) {
+      cardMax = hCard;
+      hadron.setCandidate( etMax, m_hcalFe[hCard].cellIdMax() );
+    }
+    //
+    //} // card not empty
+    //
   } // hCard
 
   //===========================================================================
@@ -560,13 +565,21 @@ void L0CaloAlg::sumHcalData( ) {
     
     m_hcalFe[card].addEt( col, row, adc);
     if ( (0 == row) && (0 <= down) ) {
-      m_hcalFe[down].addEt  ( col,          nRowCaloCard, adc);
+      if ( ( ( m_hcal -> cardFirstColumn( card ) + col ) >=
+             m_hcal -> cardFirstValidColumn( down ) ) &&
+           ( ( m_hcal -> cardFirstColumn( card ) + col ) <=
+             m_hcal -> cardLastValidColumn( down ) ) ) 
+        m_hcalFe[down].addEt  ( col,          nRowCaloCard, adc);
     }
     if ( (0 == col) && (0 <= left) ) {
-      m_hcalFe[left].addEt  ( nColCaloCard, row,          adc);
+      if ( ( ( m_hcal -> cardFirstRow( card ) + row ) >=
+             m_hcal -> cardFirstValidRow( left ) ) && 
+           ( ( m_hcal -> cardFirstRow( card ) + row ) <=
+             m_hcal -> cardLastValidRow( left ) ) ) 
+        m_hcalFe[left].addEt  ( nColCaloCard, row,          adc) ;
     }
     if ( (0 == col) && (0 == row) && (0 <= corner)) {
-      m_hcalFe[corner].addEt( nColCaloCard, nRowCaloCard, adc);
+      m_hcalFe[corner].addEt( nColCaloCard, nRowCaloCard, adc) ;
     }
   }
 }
@@ -673,10 +686,27 @@ void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
   if ( 255 >= et ) { m_et = et; } else { m_et = 255; }
 
   // If the cluster is identified by a non-existent cell, one uses the other
-  // corner of the cluster (+1,+1) to compute the position. This should exist.
-
+  // cells of the cluster in the order:
+  // the top cell: (+1,0)
+  // the right cell: (0,+1) if the top does not exist
+  // the corner cell: (+1,+1) if the two others do not exist
+  
   if ( !m_det->valid( ID ) ) {
-    LHCb::CaloCellID tmp( ID.calo(), ID.area(), ID.row()+1, ID.col()+1);
+
+    LHCb::CaloCellID topCell( ID.calo() , ID.area() , ID.row()+1 , ID.col() ) ;
+    m_ID = topCell ;
+    
+    if ( ! m_det -> valid( topCell ) ) {
+      LHCb::CaloCellID rightCell( ID.calo() , ID.area() , ID.row() , 
+                                  ID.col()+1 );
+      m_ID = rightCell ;
+      
+      if ( ! m_det -> valid( rightCell ) ) {
+        LHCb::CaloCellID cornerCell( ID.calo() , ID.area() , ID.row() + 1 , 
+                                     ID.col() + 1 ) ;
+        m_ID = cornerCell ;
+      }
+    }
   }
 };
 

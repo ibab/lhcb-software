@@ -2,6 +2,20 @@
 ! Package Manager : Olivier Callot
 !--------------------------------------------------------------------------
 
+! 2007-07-02 - Patrick Robbe
+ - L0CaloAlg.cpp: 
+    * update HCAL energy with ECAL in front also if HCAL Et=0
+    * for particular cases where Front-End boards are partially used
+      (HCAL for example), only transmit data to neighbour cards if
+      the connection is physically present and not masked in the 
+      hardware.
+    * if the candidate's cellID is not valid, use (in this order) the top 
+      cellID, the right cellID (if the top is not valid) or the corner cellID 
+      (it the right is not valid) instead, to follow what is done in the
+      hardware
+ - TriggerCard.cpp: use left bottom valid cell of the board as default address
+   when the card has 0 energy deposited in it.
+
 !========================= L0Calo v9r8 2007-06-05 =========================
 ! 2007-06-05 - Marco Cattaneo
  - Adapt usage of rootInTES to Gaudi v19r4 conventions
