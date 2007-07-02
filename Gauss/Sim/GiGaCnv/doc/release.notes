@@ -4,6 +4,22 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GiGaCnv v18r1 2007-07-02 ==========================
+! 2007-07-02 - Gloria Corti
+ - Adapt to change introduced from LHCb v22r2 with removal of LHCbDefinitions:
+   the definitions are in GaudiKernel
+   . GiGaCnv/GiGaAssembly.h
+   . GiGaCnv/GiGaVolumePair.h
+   . src/component/GiGaInstall.h
+ - Adapt to changes in Gaudi v19r with introduction of INameInterface: need to
+   check it in queryInterface method
+   . src/Lib/GiGaCnvSvcBase.cpp
+   . src/component/GiGaGeo.cpp
+ - Clean up of CVS directives ($Name and $Log)
+   . src/Lib/GiGaVolumeUtils.cpp  
+   . src/component/GiGaInstall.cpp
+   . src/component/GiGaKine.cpp
+
 !========================= GiGaCnv v18r0 2007-03-16 ==========================
 ! 2007-03-16 - Gloria Corti
  - Remove left-over commented lines related to remove method

@@ -1,8 +1,11 @@
-// $Id: GiGaKine.cpp,v 1.3 2007-01-12 15:45:56 ranjard Exp $
+// $Id: GiGaKine.cpp,v 1.4 2007-07-02 08:51:07 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/01/12 15:45:56  ranjard
+// v18r0 - use GAUDI v19r0
+//
 // Revision 1.2  2002/12/13 14:25:22  ibelyaev
 //  few trivial bug fixes
 //
@@ -109,6 +112,8 @@ StatusCode GiGaKine::queryInterface( const InterfaceID& ID ,
     { *II = static_cast<IConversionSvc*>   ( this ) ; }
   else if( IService        ::interfaceID () == ID )
     { *II = static_cast<IService*>         ( this ) ; }
+  else if ( INamedInterface ::interfaceID ()  == ID )
+    { *II  = static_cast<INamedInterface*>   ( this )   ; }
   else if( IInterface      ::interfaceID () == ID )
     { *II = static_cast<IInterface*>       ( this ) ; }
   else 

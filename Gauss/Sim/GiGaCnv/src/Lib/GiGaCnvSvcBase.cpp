@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.20 2007-03-16 11:34:57 gcorti Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.21 2007-07-02 08:50:47 gcorti Exp $ 
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 
 // Include files
@@ -327,6 +327,8 @@ StatusCode GiGaCnvSvcBase::queryInterface( const InterfaceID& iid , void** ppI )
     { *ppI = static_cast<IConversionSvc*>     ( this )     ; } 
   else if( IService          ::interfaceID()  == iid ) 
     { *ppI = static_cast<IService*>           ( this )     ; } 
+  else if ( INamedInterface ::interfaceID ()  == iid )
+    { *ppI  = static_cast<INamedInterface*>   ( this )   ; }
   else if( IInterface        ::interfaceID()  == iid ) 
     { *ppI = static_cast<IInterface*>         ( this )     ; } 
   else                                            

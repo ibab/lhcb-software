@@ -1,4 +1,4 @@
-// $Id: GiGaGeo.cpp,v 1.19 2007-01-12 15:45:56 ranjard Exp $ 
+// $Id: GiGaGeo.cpp,v 1.20 2007-07-02 08:51:07 gcorti Exp $ 
 #define GIGACNV_GiGaGeo_CPP 1 
 // ============================================================================
 #include <string>
@@ -808,6 +808,8 @@ StatusCode GiGaGeo::queryInterface( const InterfaceID& iid , void** ppI )
     { *ppI  = static_cast<IConversionSvc* >   ( this )   ; }
   else if ( IService        ::interfaceID ()  == iid )
     { *ppI  = static_cast<IService*>          ( this )   ; }
+  else if ( INamedInterface ::interfaceID ()  == iid )
+    { *ppI  = static_cast<INamedInterface*>   ( this )   ; }
   else if ( IInterface      ::interfaceID ()  == iid )
     { *ppI  = static_cast<IInterface*>        ( this )   ; }
   else                                           
