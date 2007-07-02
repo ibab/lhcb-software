@@ -5,10 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r4 2007-07-02 ========================
 ! 2007-07-02 M. Needham
  - Bug fix in MCParticleSelector defaults 
 
-!====================== SimComponents v2r4 2007-06-29 ========================
 ! 2007-06-27 M Needham
  - Changes defaults in MCParticleSelector so they make no cuts 
 
