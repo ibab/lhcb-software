@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.11 2007-06-28 22:06:28 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.12 2007-07-02 21:03:47 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -164,8 +164,7 @@ protected:
   int m_minNCandidates;
 
   // Is isTrigger a positive decision will be stored in the summary
-  bool m_isTrigger;  
-
+  bool m_isTrigger;
 
 protected:
 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.12 2007-06-28 22:06:28 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.13 2007-07-02 21:03:47 hernando Exp $
 // Include files 
 
 // from boost
@@ -254,11 +254,11 @@ bool HltAlgorithm::beginExecute() {
 
   ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
             " input tracks ");
-  if (!ok) return ok;
+  // if (!ok) return ok;
 
   ok = size(m_inputTracks2,m_nInputTracks2,m_histoInputTracks2,
             " input tracks 2 ");
-  if (!ok) return ok;
+  // if (!ok) return ok;
 
   ok = size(m_patInputTracks,m_nPatInputTracks,m_histoPatInputTracks,
             " pat input tracks ");
@@ -271,7 +271,7 @@ bool HltAlgorithm::beginExecute() {
   ok = size(m_primaryVertices,m_nPrimaryVertices,m_histoInputPVs,
             " input primary vertices ");
   if (!ok) return ok;
-
+  
   ok = size(m_inputVertices,m_nInputVertices,m_histoInputVertices,
             " input vertices ");
   if (!ok) return ok;
