@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-02 J.A. Hernando
+	- options/Hlt.opts, HltMuonAlleyConfSequence, recuperating muon alley conf sequence
+
 ! 2007-06-20 J.A. Hernando
   modified to use HltBase 
   - options/Hlt.opts HltReco.opts HltMuonAlleySequence.opts HltHadAlleyConfSequence.opts  

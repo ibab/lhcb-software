@@ -36,13 +36,22 @@ HltHadAlley.MeasureTime = true;
 //-------------------------------------------------------------------------
 
 
+//
+// Enter if there is a L0Hadron yes
+//
 HadL0Entry.L0ChannelsName = {"hadron"};
 HadL0Entry.SelectionName = "HadL0Entry";
 HadL0Entry.OutputLevel = 3;
 
+//
+// select the L0Calo candidates above
+//
 HadL0Prepare.OutputTracksName = "HadL0Calos";
 HadL0Prepare.OutputLevel = 3;
 
+//
+// select RZVelo tracks with an IP and matched to L0Calo
+//
 HadSingleTFRZVelo.InputTracksName     = "RZVelo";
 HadSingleTFRZVelo.InputTracks2Name    = "HadL0Calos";
 HadSingleTFRZVelo.PrimaryVerticesName = "PV2D";
@@ -58,17 +67,22 @@ HadSingleTFRZVelo.HistoDescriptor = {"rIP,400,-1.,3.",
 };
 HadSingleTFRZVelo.OutputLevel = 3;
 
-
+//
+// Velo reconstruction of selected RZVelo
+//
 HadSingleTRVelo.InputTracksName  = "HadSingleTFRZVelo";
 HadSingleTRVelo.OutputTracksName = "HadSingleTRVelo";
 HadSingleTRVelo.RecoName = "Velo";
 HadSingleTRVelo.OutputLevel = 3;
 
+//
+// Select Velo tracks with an IP and matched to L0Calo
+//
 HadSingleTFVelo.InputTracksName  = "HadSingleTRVelo";
 HadSingleTFVelo.OutputTracksName = "HadSingleTFVelo";
 HadSingleTFVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFVelo.HistogramUpdatePeriod = 1;
-HadSingleTFVelo.FilterDescriptor = {"IP,||[],-50,50.",
+HadSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                     "Calo3DChi2,<,4."
 };
 HadSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
@@ -78,11 +92,17 @@ HadSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
 };
 HadSingleTFVelo.OutputLevel = 3;
 
+//
+// Make forward the selected velo tracks
+//
 HadSingleTRForward.InputTracksName  = "HadSingleTFVelo";
 HadSingleTRForward.OutputTracksName = "HadSingleTRForward";
 HadSingleTRForward.RecoName = "Forward";
 HadSingleTRForward.OutputLevel = 3;
 
+//
+// Select forward track with a given Pt
+//
 HadPreTriggerSingle.InputTracksName  = "HadSingleTRForward";
 HadPreTriggerSingle.OutputTracksName = "HadPreTriggerSingle";
 HadPreTriggerSingle.FilterDescriptor = {"PT,>,2500."};
@@ -92,12 +112,19 @@ HadPreTriggerSingle.HistoDescriptor = {"PT,100,0.,6000.",
 };
 HadPreTriggerSingle.OutputLevel = 3;
 
+
+//
+// do the rest of velo tracks
+//
 HltRecoVelo.InputTracksName  = "RZVelo";
 HltRecoVelo.OutputTracksName = "Velo";
 HltRecoVelo.RecoName = "Velo";
 HltRecoVelo.OutputLevel = 3;
 
 
+//
+// select velo tracks as companions 
+//
 HadCompanionTFVelo.InputTracksName     = "Velo";
 HadCompanionTFVelo.OutputTracksName    = "HadCompanionTFVelo";
 HadCompanionTFVelo.PrimaryVerticesName = "PV2D";
@@ -113,12 +140,18 @@ HadCompanionTFVelo.HistoDescriptor = {"IP,600,-1.,.3",
 };
 HadCompanionTFVelo.OutputLevel = 3;
 
+//
+// Do forward the companion tracks
+//
 HadCompanionTRForward.InputTracksName  = "HadCompanionTFVelo";
 HadCompanionTRForward.OutputTracksName = "HadCompanionTRForward";
 HadCompanionTRForward.RecoName = "Forward";
 HadCompanionTRForward.OutputLevel = 3;
 
 
+//
+// Select companion tracks if they have a fiven Pt
+//
 HadCompanionTFForward.InputTracksName  = "HadCompanionTRForward";
 HadCompanionTFForward.OutputTracksName = "HadCompanionTFForward";
 HadCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
@@ -127,6 +160,9 @@ HadCompanionTFForward.HistoDescriptor = {"PT,100,0.,8000.",
                                          "PTBest,100,0.,8000."};
 HadCompanionTFForward.OutputLevel = 3;
 
+//
+// Make vertices with the forward companion tracks 
+//
 HadDiHadronVMaker.InputTracksName    = "HadPreTriggerSingle";
 HadDiHadronVMaker.InputTracks2Name   = "HadCompanionTFForward";
 HadDiHadronVMaker.OutputVerticesName = "HadDiHadronVMaker";
@@ -139,7 +175,9 @@ HadDiHadronTVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
 
 };
 
-
+//
+// select vertices if Pt, poiting, and distance
+//
 HadTrigger.InputVerticesName   = "HadDiHadronVMaker";
 HadTrigger.PrimaryVerticesName = "PV2D";
 HadTrigger.OutputVerticesName  = "HadTrigger";

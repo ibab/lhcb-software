@@ -12,16 +12,22 @@ HltInitSeq.Members = {"PatInitEvent",
                       "HltInit"  
 };
 
-HltEndSeq.Members = {"HltSummaryWriter"};
+HltEndSeq.Members = {"HltSelectionDataToTes",
+                     "HltSummaryWriter"};
+
+HltSelectionDataToTes.TracksSelections = {"HadPreTriggerSingle"};
+HltSelectionDataToTes.OutputLevel = 3;
+
 HltSummaryWriter.OutputLevel = 3;
 
 HltAllAlleys.Members ={
-  "HltSequencer/HltMuonAlley",
-  "HltSequencer/HltHadAlley"
+  "HltSequencer/HltMuonAlley"
+  ,"HltSequencer/HltHadAlley"
   // ,"HltSequencer/HltCaloAlley"
 };
 HltAllAlleys.ModeOr=true;
 
 // different configurations
-#include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
+// #include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
+#include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
