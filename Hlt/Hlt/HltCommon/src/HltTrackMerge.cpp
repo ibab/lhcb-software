@@ -1,4 +1,4 @@
-// $Id: HltTrackMerge.cpp,v 1.1 2007-06-20 20:34:05 hernando Exp $
+// $Id: HltTrackMerge.cpp,v 1.2 2007-07-02 21:04:26 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,6 @@ StatusCode HltTrackMerge::execute() {
 
   int n = m_outputTracks->size();
   debug() << " merged tracks " << n <<endreq;
-  candidateFound(n);
   
   return StatusCode::SUCCESS;
 }
