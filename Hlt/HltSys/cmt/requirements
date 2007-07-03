@@ -16,7 +16,6 @@ use HltCaloAlley        v1r2    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r1	Hlt   # Jose Angel Hernando-Morata
 
-use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r2    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r0    Hlt   # Alessia Satta
 
