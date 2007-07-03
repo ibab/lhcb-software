@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.1 2007-06-28 16:33:56 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.2 2007-07-03 16:21:45 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -43,6 +43,8 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
 {
   declareInterface<IAlignSolvTool>(this);
   declareProperty( "LowerModCut",par_modcut=0);
+  declareProperty("WriteMonNTuple",par_writentp=false);
+  
 }
 //=============================================================================
 // Destructor
@@ -165,8 +167,9 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
     }
 
-
-
+    
+    if (par_writentp) MonitorDiag(z,w,D);
+    
 
     
     
@@ -185,102 +188,45 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D) 
 {
 
-  NTuple::Item<float> nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
-  NTuple::Item<float> nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
-  
-  //  NTuple::Array<float> nt_vec;
-  //  NTuple::Matrix<float> nt_mat;
-  
+
   
   std::string m_NtpName = "/NTUPLES/MONITOR";
   
   info() <<"Booking Monitoring Ntuple"<< endmsg;
   NTuplePtr MonNtp(ntupleSvc(),m_NtpName);
-  if (MonNtp) debug() <<"Ntuple already booked"<<endmsg;
+  if (MonNtp)  {m_tuple=MonNtp; debug() <<"Ntuple already booked"<<endmsg;
+  }
+  
   else {
-    MonNtp = ntupleSvc()->book(m_NtpName,CLID_ColumnWiseTuple,"SolvMonitor");
-
-    if (MonNtp) {
+    m_tuple = ntupleSvc()->book(m_NtpName,CLID_ColumnWiseTuple,"SolvMonitor");
+    
+    if (m_tuple) {
       StatusCode stat;
 
-      stat = MonNtp->addItem("mode",nteig_mode);
-      stat = MonNtp->addItem("eigenval",nteig_eigval);
-      stat = MonNtp->addItem("eparam",nteig_eigmod);
-      stat = MonNtp->addItem("erreparam",nteig_erreigmod);
-
-
-      /*      stat = MonNtp->addItem("tx",nteig_tx);
-      stat = MonNtp->addItem("ty",nteig_ty);
-      stat = MonNtp->addItem("tz",nteig_tz);
-      stat = MonNtp->addItem("rx",nteig_rx);
-      stat = MonNtp->addItem("ry",nteig_ry);
-      stat = MonNtp->addItem("rz",nteig_rz);*/
+      stat = m_tuple->addItem("mode",nteig_mode);
+      stat = m_tuple->addItem("eigenval",nteig_eigval);
+      stat = m_tuple->addItem("eparam",nteig_eigmod);
+      stat = m_tuple->addItem("erreparam",nteig_erreigmod);      
       
-      debug() << "Ntuple "<<m_NtpName<< " is now booked..."<<endmsg;
+      
+      info() << "Ntuple "<<m_NtpName<< " is now booked..."<<endmsg;
       
       
     } else error()<<"Error in Ntuple booking"<<endmsg;
     
     
   }
+  
 
+  
   for (int i=0;i<w.size();i++) {
     nteig_mode = i;
     nteig_eigval = w[i];
     if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
     if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*m_scale)); else nteig_erreigmod = 0.0;
-    StatusCode sc = MonNtp->writeRecord();
-    
-    if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;
-    
+    StatusCode sc = m_tuple->write(); 
+    if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;   
   }
-  
-
-  /*  for(int k=0;k<nweak;k++) {
-  nteig_tx = z[j][i]*(-D[j]/w[j]);
-  nteig_ty = z[j][i+1]*(-D[j]/w[j]);
-  nteig_tz = z[j][i+2]*(-D[j]/w[j]);
-  nteig_rx = z[j][i+3]*(-D[j]/w[j]);
-  nteig_ry = z[j][i+4]*(-D[j]/w[j]);
-  nteig_rz = z[j][i+5]*(-D[j]/w[j]);
-
-  StatusCode sc = MonNtp->writeRecord();
-  }*/
-  
-      
-    int nweak = 6;
-    
-    int nmod = 21;
-    
-    for(int k=0;k<nweak;k++) {
-      std::stringstream temp;
-      std::string istr;
-      
-      bool conv = (temp << k);
-      if (conv) {
-        istr = temp.str();      
-      }
-      
-      std::string eigpath = "eigenvec"+istr+".txt";
-      
-      std::fstream eigenvec(eigpath.c_str(), std::ios::out);
-      
-       for (int i=0;i<nmod;i++) {
-        for (int m=0;m<6;m++) {  
-
- //Print the eigenmodes
-          eigenvec << std::setw(12) << z[i+m*nmod][k]<< std::endl;
-          //with GSL, convention for z is transposed:
-          //  eigenvec << std::setw(12) << z[k][i+m*nmod]<< std::endl;
-    
-           }
-        
-      }
-       eigenvec.close();
-       
-       
-    }  
-
 
   
 }
