@@ -14,6 +14,9 @@
 //local
 #include "PrepareElectronSeed.h"
 
+//boost
+#include <boost/assign/list_of.hpp>
+
 DECLARE_TOOL_FACTORY( PrepareElectronSeed );
 
 
@@ -28,6 +31,12 @@ PrepareElectronSeed::PrepareElectronSeed(const std::string& type,
   declareInterface<IPrepareCaloSeed>(this);
   declareProperty("debugMode",m_debugMode = false);
   
+  // Resolution of the L0Cand at T3, tune JA 2007-03-22
+  declareProperty("sigmaX2", m_sigmaX2 = boost::assign::list_of(9.)(30.25)(225.) );
+  declareProperty("sigmaY2", m_sigmaY2 = boost::assign::list_of(4.)(12.25)(64.) );
+  declareProperty("sigmaTx2", m_sigmaTx2 = boost::assign::list_of(9.e-6)(9.e-6)(36.e-6) );
+  declareProperty("sigmaTy2", m_sigmaTy2 = boost::assign::list_of(25.e-6)(49.e-6)(64.e-6) );
+
 }
 
 // Standard Destructor -------------------------------------
@@ -52,18 +61,6 @@ StatusCode PrepareElectronSeed::initialize()
     //tool for debug information
     m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
   }
-  
-  /*
-   *  Resolution of the L0Cand at T3, tune JA 2007-03-22
-   *  3 regions:  sigmaX:  3 / 5.5 / 15 mm
-   *              sigmaY:  2 / 3.5 /  8 mm
-   *              sigmaTx: 1.5 / 2 / 3 mrad
-   *              sigmaTy: 1.5 / 2.5 / 3 mrad
-   */
-  sigmaX2[0]=9.; sigmaX2[1]=30.25; sigmaX2[2]=225.; 
-  sigmaY2[0]=4.; sigmaY2[1]=12.25; sigmaY2[2]=64.; 
-  sigmaTx2[0]=2.25e-6; sigmaTx2[1]=4.e-6; sigmaTx2[2]=9.e-6;  
-  sigmaTy2[0]=2.25e-6; sigmaTy2[1]=6.25e-6; sigmaTy2[2]=9.e-6; 
   
   // cell sizes for ECal IP / MP / OP
   cellSize[0]=40.5567; cellSize[1]=60.85; cellSize[2]=121.7; 
@@ -90,7 +87,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
                                              LHCb::State& seedStateNeg )
 {
 
-  if(m_debugMode) debug()<<"execute!"<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug()<<"execute!"<<endmsg;
 
   //initialize Calo decoding for this event
   m_caloDaq->setBank();
@@ -115,7 +112,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   
   if( sc.isFailure() ) warning()<< " didn't manage to set cand positions and energy..." << endmsg;
   
-  if(m_debugMode) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << endmsg;
     verbose() << format(" electron s1 = %8.1f  s2 = %8.1f  s3 = %8.1f  s4 = %8.1f ",e_s1,e_s2,
                         e_s3,e_s4 )  << endmsg;
@@ -183,7 +180,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
     else                            bary_cor = candy + parOP[1]*tan( (bary-candy) / parOP[0] ); 
   }
   
-  if(m_debugMode){
+  if(msgLevel(MSG::VERBOSE)){
     verbose() << endmsg;
     verbose() << format(" cluster part  = %1i",ecalRegion) << endmsg;
     verbose() << format(" electron cand x    = %4.2f         cand y = %4.2f",candx,candy) << endmsg;
@@ -214,7 +211,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   double stateNeg_x  = barx_cor * zT3 / zcluster + alpha/ecluster;
   double stateNeg_tx = (barx_cor-stateNeg_x)/(zcluster-zT3);
 
-  if(m_debugMode){
+  if(msgLevel(MSG::VERBOSE)){
     verbose() << endmsg;
     verbose() << format(" ecluster = %4.1f GeV",ecluster)  << endmsg;
     verbose() << format(" State p : X = %4.1f  Y = %4.1f  TX = %4.3f  TY = %4.3f  Q/P = %4.3f",
@@ -234,16 +231,16 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   
   // set the covariance matrix
   Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
-  stateCov(0,0) = sigmaX2[ecalRegion]; 
-  stateCov(1,1) = sigmaY2[ecalRegion];
-  stateCov(2,2) = sigmaTx2[ecalRegion];
-  stateCov(3,3) = sigmaTy2[ecalRegion];
+  stateCov(0,0) = m_sigmaX2[ecalRegion]; 
+  stateCov(1,1) = m_sigmaY2[ecalRegion];
+  stateCov(2,2) = m_sigmaTx2[ecalRegion];
+  stateCov(3,3) = m_sigmaTy2[ecalRegion];
   stateCov(4,4) = 8.41e-6;
 
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);
   
-   if(m_debugMode) m_DataStore->region = ecalRegion;
+  if(m_debugMode) m_DataStore->region = ecalRegion;
 
 
   return StatusCode::SUCCESS;
@@ -259,7 +256,7 @@ StatusCode PrepareElectronSeed::SetCandPosAndE(const LHCb::L0CaloCandidate& cand
                                                double& y1, double& y2, double& y3, double& y4,
                                                double& e1, double& e2, double& e3, double& e4,
                                                double& s1, double& s2, double& s3, double& s4 ){
-  if(m_debugMode)
+  if(msgLevel(MSG::VERBOSE))
     verbose() << " SetCandPosAndE is running" << endmsg;
   
   // get the candcell ID
