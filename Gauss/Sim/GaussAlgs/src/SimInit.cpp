@@ -1,4 +1,4 @@
-// $Id: SimInit.cpp,v 1.5 2007-01-12 15:23:42 ranjard Exp $
+// $Id: SimInit.cpp,v 1.6 2007-07-03 16:54:01 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -99,6 +99,7 @@ StatusCode SimInit::execute() {
   header->setEvtNumber( evt->evtNumber() );
   header->setEvtTime( m_detDataSvc->eventTime().ns() );
   header->setRandomSeeds( seeds );
+  header->setCondDBTags( this->condDBTags() );
   put( header, LHCb::MCHeaderLocation::Default );
 
   return StatusCode::SUCCESS;
