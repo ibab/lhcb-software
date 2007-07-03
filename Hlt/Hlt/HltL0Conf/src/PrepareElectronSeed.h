@@ -42,7 +42,11 @@ public:
 private:
   bool m_debugMode;
   
-  double sigmaX2[3], sigmaY2[3], sigmaTx2[3], sigmaTy2[3];
+  std::vector<double> m_sigmaX2;
+  std::vector<double> m_sigmaY2;
+  std::vector<double> m_sigmaTx2;
+  std::vector<double> m_sigmaTy2;
+  
   double parIP[2], parMP[2], parOP[2];
   double cellSize[3];
   double sParIP[2], sParMP[2], sParOP[2];
