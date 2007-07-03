@@ -1,4 +1,4 @@
-// $Id: Generation.h,v 1.8 2006-02-05 21:02:45 robbep Exp $
+// $Id: Generation.h,v 1.9 2007-07-03 16:31:36 gcorti Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
@@ -18,7 +18,7 @@ namespace HepMC {
 }
 
 namespace LHCb {
-  class HepMCEvent ;
+  class HepMCEvent;
 }
 
 /** @class Generation Generation.h "Generation.h"
@@ -147,12 +147,13 @@ private:
   /// Counter of events after the full event generator level cut
   unsigned int m_nAfterFullEvent ;
 
-
   /** Update the counters counting on interactions.
    *  @param[in,out] theCounter Counter of events
    *  @param[in]     theEvent  The interaction to study
    */
   void updateInteractionCounters( interactionCounter & theCounter ,
                                   const LHCb::HepMCEvent * theEvent ) ;
+
+  
 };
 #endif // GENERATORS_GENERATION_H

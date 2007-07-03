@@ -1,8 +1,5 @@
-// $Id: Generation.cpp,v 1.25 2007-01-12 15:17:37 ranjard Exp $
+// $Id: Generation.cpp,v 1.26 2007-07-03 16:31:36 gcorti Exp $
 // Include files 
-
-// local
-#include "Generation.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -15,9 +12,6 @@
 // from LHCb
 #include "Kernel/ParticleID.h"
 
-// from HepMC
-#include "HepMC/GenEvent.h"
-
 // from Generators
 #include "Generators/ISampleGenerationTool.h"
 #include "Generators/IPileUpTool.h"
@@ -29,6 +23,9 @@
 
 // Gaudi Common Flat Random Number generator
 extern Rndm::Numbers randgaudi ;
+
+// local
+#include "Generation.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Generation
@@ -100,6 +97,7 @@ Generation::Generation( const std::string& name,
     m_intCAcceptedName[ Threec ] = "accepted interactions with >= 3c" ;
     m_intCAcceptedName[ PromptC ] = "accepted interactions with >= prompt C" ;
     m_intCAcceptedName[ bAndc ] = "accepted interactions with b and c" ;
+
 }
 
 //=============================================================================
@@ -172,24 +170,26 @@ StatusCode Generation::execute() {
 
   // Get the header and update the information
   LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
-  theGenHeader -> setEvType( m_eventType );  
+  if( !theGenHeader->evType() ){
+    theGenHeader -> setEvType( m_eventType );  
+  }
 
   unsigned int  nPileUp ;
   double        currentLuminosity ;
-  LHCb::HepMCEvents   * theEvents     ; LHCb::HepMCEvents::iterator itEvents ;
-  LHCb::GenCollisions * theCollisions ; 
+  
+  LHCb::HepMCEvents::iterator itEvents ;
+
+  // Create temporary containers for this event
+  LHCb::HepMCEvents* theEvents = new LHCb::HepMCEvents( );
+  LHCb::GenCollisions* theCollisions = new LHCb::GenCollisions( );
 
   interactionCounter theIntCounter ;
-
-  // Create containers for this event
-  theEvents = new LHCb::HepMCEvents( ) ;
-  theCollisions = new LHCb::GenCollisions( ) ;
 
   // Generate a set of interaction until a good one is found
   bool goodEvent = false ;
   while ( ! goodEvent ) {
-    theEvents -> clear() ;     
-    theCollisions -> clear() ;
+    theEvents->clear() ;
+    theCollisions->clear() ;
     
     // Compute the number of pile-up interactions to generate 
     if ( 0 != m_pileUpTool ) 
@@ -201,15 +201,15 @@ StatusCode Generation::execute() {
     }
     // generate a set of Pile up interactions according to the requested type
     // of event
-    goodEvent = m_sampleGenerationTool -> generate( nPileUp , theEvents , 
-                                                    theCollisions ) ;
+    goodEvent = m_sampleGenerationTool -> generate( nPileUp, theEvents, 
+                                                    theCollisions );
 
     // increase event and interactions counters
     ++m_nEvents ;    m_nInteractions += nPileUp ;
 
     // Update interaction counters
     theIntCounter.assign( 0 ) ;
-    for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ; 
+    for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ; 
           ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
     
     GenCounters::AddTo( m_intC , theIntCounter ) ;
@@ -217,7 +217,7 @@ StatusCode Generation::execute() {
     // Decay the event if it is a good event
     if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
       unsigned short iPile( 0 ) ;
-      for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ;
+      for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ;
             ++itEvents ) {
         sc = decayEvent( *itEvents ) ;
         (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
@@ -232,7 +232,7 @@ StatusCode Generation::execute() {
       if ( goodEvent ) {
         ++m_nBeforeFullEvent ;
         goodEvent = m_fullGenEventCutTool -> studyFullEvent( theEvents , 
-                                                             theCollisions ) ;
+                                                             theCollisions );
         if ( goodEvent ) ++m_nAfterFullEvent ;
       }
     }
@@ -243,16 +243,57 @@ StatusCode Generation::execute() {
 
   GenCounters::AddTo( m_intCAccepted , theIntCounter ) ;
 
-  // Now update the header information and put the event in Gaudi event store
-  theGenHeader -> setLuminosity( currentLuminosity ) ;
+  // Now either create the info in the TES or add it to the existing one
+  LHCb::HepMCEvents* eventsInTES = 
+    getOrCreate<LHCb::HepMCEvents,LHCb::HepMCEvents>( m_hepMCEventLocation );
 
-  LHCb::GenCollisions::const_iterator it ;
-  for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
-    theGenHeader -> addToCollisions( *it ) ;
+  LHCb::GenCollisions* collisionsInTES = 
+    getOrCreate<LHCb::GenCollisions,LHCb::GenCollisions>( m_genCollisionLocation );
+  
+  // Copy the HepMCevents and Collisions from the temporary containers to 
+  // those in TES and update the header information
+  theGenHeader->setLuminosity( currentLuminosity );
 
-  put( theEvents , m_hepMCEventLocation ) ;
-  put( theCollisions , m_genCollisionLocation ) ;
+  // Check that number of temporary HepMCEvents is the same as GenCollisions
+  if( theEvents->size() != theCollisions->size() ) {
+    return Error("Number of HepMCEvents and GenCollisions do not match" );
+  }
 
+  itEvents = theEvents->begin();
+  for( LHCb::GenCollisions::const_iterator it = theCollisions->begin();
+       theCollisions->end() != it; ++it ) {
+    
+    // HepMCEvent
+    LHCb::HepMCEvent* theHepMCEvent = new LHCb::HepMCEvent();
+    theHepMCEvent->setGeneratorName( (*itEvents)->generatorName() );
+    (*theHepMCEvent->pGenEvt()) = (*(*itEvents)->pGenEvt());
+    eventsInTES->insert( theHepMCEvent );
+    ++itEvents;
+    
+    // GenCollision
+    LHCb::GenCollision* theGenCollision = new LHCb::GenCollision();
+    theGenCollision->setIsSignal( (*it)->isSignal() );
+    theGenCollision->setProcessType( (*it)->processType() );
+    theGenCollision->setSHat( (*it)->sHat() );
+    theGenCollision->setTHat( (*it)->tHat() );
+    theGenCollision->setUHat( (*it)->uHat() );
+    theGenCollision->setPtHat( (*it)->ptHat() );
+    theGenCollision->setX1Bjorken( (*it)->x1Bjorken() );
+    theGenCollision->setX2Bjorken( (*it)->x2Bjorken() );
+    theGenCollision->setEvent( theHepMCEvent );
+    collisionsInTES->insert( theGenCollision );
+    
+    // GenHeader
+    theGenHeader->addToCollisions( theGenCollision );
+    
+  }
+
+  // Clear and delete the temporary containers
+  theEvents->clear();
+  theCollisions->clear();
+  delete(theEvents);
+  delete(theCollisions);
+  
   return sc ;
 }
 

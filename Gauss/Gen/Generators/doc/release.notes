@@ -1,19 +1,27 @@
-! $Id: release.notes,v 1.101 2007-06-29 13:21:06 ibelyaev Exp $
+! $Id: release.notes,v 1.102 2007-07-03 16:31:36 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-! 2007-06-29 - Vanya BELYAEV
+!====================== Generators v7r2 2007-07-03 ===========================
+! 2007-07-03 - Gloria Corti
+ - Allow possibility of running different instances of Generation algorithm 
+   (ex. pp collisions and p-gas) in the same job. To do this the collisions
+   and hepmc events are kept in temporary containers and contents added to
+   containers in TES that are created in case they do not already exist.
+   The header information is updated accordingly.
+   . src/component/Generation.cpp
 
+! 2007-06-29 - Vanya BELYAEV
  - Generators/F77Utils.h, src/Lib/F77Utils.h
      a) add  new function F77Utils::getUnit to obtain free FORTRAN unit
         trrough scan of all available units between 99 and 10
      b) for other function add optional argument "verbose" 
         with the default value equal to "false"(backward compatible).
         It is *VERY* convinient for debugging...
--  src/Lib/f77units.F 
+ - src/Lib/f77units.F 
      add new function: INTEGER FUNCITON F77GETUNIT
 
 !====================== Generators v7r1 2007-05-08 ===========================
