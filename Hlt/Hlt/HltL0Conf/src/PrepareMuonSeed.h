@@ -8,7 +8,8 @@
 // Interface
 #include "HltBase/IPrepareMuonSeed.h"            
 
-
+//local
+#include "L0ConfDataStore.h"
 
 /** @class PrepareMuonSeed PrepareMuonSeed.h
  *  
@@ -19,14 +20,12 @@
  */
 //forward declarations
 class IMuonPosTool;
-//class ITrackPtKick;
 class L0MuonCandidate;
 
 
 class PrepareMuonSeed : public GaudiTool, virtual public IPrepareMuonSeed
 {
 public:
-
   // Standard constructor
   PrepareMuonSeed( const std::string& type,const std::string& name,const IInterface* parent);
 
@@ -40,12 +39,20 @@ public:
                                   LHCb::State& seedState );
                                  
 private:
-  bool m_debugInfo;
-  double sigmaX2[4], sigmaY2[4], sigmaTx2[4], sigmaTy2[4];
+  
+  bool m_debugMode;
+  
+  std::vector<double> m_sigmaX2;
+  std::vector<double> m_sigmaY2;
+  std::vector<double> m_sigmaTx2;
+  std::vector<double> m_sigmaTy2;
+
   
   IMuonPosTool      *m_iPosTool;
-  //  ITrackPtKick* m_fCalcPtKick; 
-
+  
+  //debug information
+  L0ConfDataStore* m_DataStore;
+  
 };
 
 
