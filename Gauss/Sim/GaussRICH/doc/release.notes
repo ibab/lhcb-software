@@ -3,11 +3,13 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-!2007-04-30 - Sajan Easo
-  In RichPhotoelectric effect,now creating normal G4electron instead
-  of the richphotoelectron to be compatible with the Geant 4.8.2. This is
-  a temporary measure until the richphotoelectron particle is created
-  with the new conventions of Geant 4.8.2.
+
+!========================= GaussRICH v7r1 2007-07-03 =========================
+! 2007-04-30 - Sajan Easo
+ - In RichPhotoelectric effect,now creating normal G4electron instead
+   of the richphotoelectron to be compatible with the Geant 4.8.x. This is
+   a temporary measure until the richphotoelectron particle is created
+   with the new conventions of Geant 4.8.x.
 
 ! 2007-04-02 - Chris Jones
  - Minor compilation fix for Gauss v30r3
