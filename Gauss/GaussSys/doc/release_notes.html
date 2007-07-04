@@ -3,6 +3,299 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v30r3">2007-07-03 - GaussSys v30r3</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v22r6 (and Gaudi v19r4)
+   Pythia6 411.2, photos 215.2, lhapdf 5.2.3 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r0 (based on geant4.8.3)
+   DecFiles v13r10, ParamFiles v6r1 
+   DDDB v1r0, (XmlDDDB v40r0 for visualization,) FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6.510.2, Jimmy 4.31.2
+   Hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)</A></H3>
+<H3><A NAME="Details">
+   Post-DC06 version.
+   Use DDDB for geometry and conditions.
+   Also built on amd64 but for visualization that has compilation problems.
+   Temporarly use LHCbDefinitions v2r0 to allow using the same EvtGen v8r15 
+   for DC06 and for development.
+</A></H3>
+
+!======================== Gauss v30r3 2007-07-04 =============================
+! 2007-07-04 - Gloria Corti
+ - Use v* instead of explicit version number in requirements
+ - Use TimingAuditor for monitor of timing of application instead of option
+   of GaudiSequencer
+   . Monitor.opts
+   . Gauss.opts
+ - Use standard options for Root histogram service and move them to monitoring
+   . Monitor.opts
+   . Common.opts
+
+! 2007-06-20 - Gloria Corti
+ - Adapt to use of DDDB instead of CondDB and XmlDDDB
+   . Common.opts
+   . v200601.opts
+ - Adapt requirements to use DDDB and change version number
+
+!====================== GaussMonitor v5r0 2007-06-26 =========================
+! 2007-06-26 - Gloria Corti
+ - Adapt to change in LHCb v22r6 with move of interfaces of MC tools in
+         MCInterfaces. This change is incompatible for use in DC06.
+ 
+!========================= GaussRICH v7r1 2007-07-03 =========================
+! 2007-04-30 - Sajan Easo
+ - In RichPhotoelectric effect,now creating normal G4electron instead
+   of the richphotoelectron to be compatible with the Geant 4.8.x. This is
+   a temporary measure until the richphotoelectron particle is created
+   with the new conventions of Geant 4.8.x.
+ 
+! 2007-04-02 - Chris Jones
+ - Minor compilation fix for Gauss v30r3
+ 
+!======================== GaussAlgs v3r0 2007-07-03 ===========================
+! 2007-07-03 - Gloria Corti
+ - Fill in MCHeader the CondDB tags used for the job (requires LHCb v22r6)
+   Not compatible with Gauss v25 series
+   . SimInit.cpp
+ 
+!========================= GiGaCnv v18r1 2007-07-02 ==========================
+! 2007-07-02 - Gloria Corti
+ - Adapt to change introduced from LHCb v22r2 with removal of LHCbDefinitions:
+   the definitions are in GaudiKernel
+   . GiGaCnv/GiGaAssembly.h
+   . GiGaCnv/GiGaVolumePair.h
+   . src/component/GiGaInstall.h
+ - Adapt to changes in Gaudi v19r with introduction of INameInterface: need to
+   check it in queryInterface method
+   . src/Lib/GiGaCnvSvcBase.cpp
+   . src/component/GiGaGeo.cpp
+   . src/component/GiGaKine.cpp
+ - Clean up of CVS directives ($Name and $Log)
+   . src/Lib/GiGaVolumeUtils.cpp
+   . src/component/GiGaInstall.cpp
+
+!============================ ClhepTools v2r1 ===============================
+! 2007-06-22 - Gloria Corti
+ - Adapt to move of definitions of Gaudi:: math types to GaudiKernel
+   . MathCore2Clhep.h - change include from Kernel/ to GaudiKernel
+   . use GaudiKernel instead of LHCbDefinitions
+
+!===================== LbPythia v5r1 2007-05-16 ============================
+! 2007-05-16 - Gloria CORTI
+ - Move declaration of factory for PythiaProduction from cpp (in Lib) to
+   LbPythia_load.cpp to have in component library. This was giving problems
+   with Gaudi v19r3
+   . PythiaProduction.cpp
+   . LbPythia_load.cpp
+
+!====================== Generators v7r2 2007-07-03 ===========================
+! 2007-07-03 - Gloria Corti
+ - Allow possibility of running different instances of Generation algorithm
+   (ex. pp collisions and p-gas) in the same job. To do this the collisions
+   and hepmc events are kept in temporary containers and contents added to
+   containers in TES that are created in case they do not already exist.
+   The header information is updated accordingly.
+   . src/component/Generation.cpp
+ 
+! 2007-06-29 - Vanya BELYAEV
+ - Generators/F77Utils.h, src/Lib/F77Utils.h
+     a) add  new function F77Utils::getUnit to obtain free FORTRAN unit
+        trrough scan of all available units between 99 and 10
+     b) for other function add optional argument "verbose"
+        with the default value equal to "false"(backward compatible).
+        It is *VERY* convinient for debugging...
+ - src/Lib/f77units.F
+     add new function: INTEGER FUNCITON F77GETUNIT
+ 
+!====================== Generators v7r1 2007-05-08 ===========================
+! 2007-05-08 - Patrick Robbe
+ - Clean cut tools to remove unused functions:
+    . src/component/DaughtersInLHCb.cpp
+    . src/component/DaughtersInLHCb.h
+    . src/component/ListOfDaughtersInLHCb.cpp
+    . src/component/ListOfDaughtersInLHCb.h
+    . src/component/SelectedDaughterInLHCb.cpp
+    . src/component/SelectedDaughterInLHCb.h
+
+! 2007-05-03 - Gloria CORTI
+ - Slighlty change message levels at initialization to see in info()
+   primary interation vertex for flat vertex ( FlatZSmearVertex.cpp )
+ - Explicitely use LHCbDefinitions so that package is compatible with
+   Gauss version using latest Gaudi v19r3 as well as DC06 version.
+
+! 2007-04-01 - Patrick Robbe
+ - Add new tool (RepeatDecay) to re-use the same event several times,
+   calling only the decay phase.
+
+!========================== GENSER v3r1 2007-07-02 ==========================
+! 2007-07-02 - Gloria Corti
+ - Remove lhapdf_linkopts now corrected in LCG_GeneratorsInterfaces
+ - Take more recent versions for Pythia (411.2) and Jimmy (4.31.2)
+
+!========================= LbHijing v3r1 2007-05-22 ==========================
+! 2007-06-22 - Gloria Corti
+ - Use LbPythia instead of Generators otherwise problems for undefined
+   reference to "lutran"
+
+!===================== LbBcVegPy v1r5 2007-05-10 =====================
+! 2007-05-08 - Patrick Robbe for Jibo He
+ - Add new cut tool (BcDaughtersInLHCb) to cut on daughters of Bc
+ - Modify options to now use Special method to generate Bc events
+   and to generate pile-up.
+
+! ====================== BcVegPy v1r1 2007-06-22 ==========================
+! 2007-05-10 - Patrick Robbe for Jibo He
+ - bcvegpy_upinit: remove messages printed during initialization
+   and correct cross section printout.
+
+!======================== LbHerwig v5r1 2007-06-22 ==========================
+! 2007-05-07 - Karl Harrison
+ - LbHerwig/herwig6510.h modified to reflect changes in sizes of
+  HERWIG common-block arrays
+  In terms of HERWIG parameters, the new settings correspond to:
+     NMXHEP = 10000
+     NMXDKS = 4000
+     NMXCDK = 4000
+ - Subroutines BSDATE and BSTIME of src/Lib/mcatnlo/mcatnlo_date.f
+   rewritten, to avoid dependencies on C functions that caused crashes
+   => Contents of src/Lib/mcatnlo modified:
+      - Removed: mcatnlo_date.f, mcatnlo_uxdate.c, mcatnlo_uxdate.ph
+      - Added: mcatnlo_date.F
+
+! 2007-04-25 - Karl Harrison
+ - Changes made to treatment of decays, to be compatible with procedure
+   used in Herwig for determining multiplicities for underlying event.
+
+   Previously, decays known to the decay tool (e.g. EvtGen) were switched
+   of in Herwig.  Since Herwig counts final-state (i.e. non-decaying)
+   particles when determining multiplicities, this means that multiplicities
+   after the decay tool were too high - approximately by a factor of 2.
+
+   The procedure now is to enable all decays in Herwig, then remove from
+   the event record all particles resulting from decays that should be
+   handled by the decay tool, and update status codes.
+
+   => Changes made in:
+      LbHerwig/herwig6510.h
+      LbHerwig/Herwig.h
+      src/component/HerwigProduction.cpp
+      src/Lib/utility/Herwig.cpp
+
+      Added Fortran routine for removing decay products from event record:
+      src/Lib/herwig/hwrmdk.F
+
+!=========================== LbMIB v1r0 2007-05-16 ===========================
+! 2007-05-16 - Gloria CORTI
+ - Fix problem with temporary file name in method instead of reset source
+   name, causing error when reading binary and name of binary (not used)
+   is not set in options.
+ - Minor clean up of the code
+   . modify some print level
+   . print event type
+   . lenght of lines
+ - Prepare example options with explanations from what Magnus provided and
+   options for generating events in a single go from horizontal and tertiary
+   collimator for both muons and hadrons: essentially executing 4 times
+   the algorithm with different configurations, both for the case of staged
+   and full shield. Guidelines on event numbers are provided in the example
+   options that is for a single algorithm.
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+   Note that the existing configuration at Point8 is StagedShield.
+ - For more details refer to
+    http://cern.ch/lhcb-background/Machine/CollimatorSources.html
+ 
+! 2007-03-28 - Magnus LIENG
+ - First version of new package.
+   The LbMIB is an generator created to import external particle distribution
+   files, and recreate the particles in the Gauss simulation.
+ 
+   The various steps in the procedure are described below.
+ 
+   Init:            If given a flat file of the format
+                    "<PID> <Weight> <T> <x> <y> <dx> <dy>", the file is read
+                    and converted to a temporary LbMIB binary file. If a
+                    LbMIB binary file is given, this step is ignored. See
+                    http://lhcb-background.web.cern.ch/lhcb-background/Machine
+                    /Background.html for more information on the flat particle
+                    file format.
+ 
+                    The files are normalized so that the sum of the weights of
+                    the particles in the file give the particle flux at a
+                    z-position over one second. The weight of an individual
+                    particle represent a relative likelyhood to be generated.
+ 
+                    Envelopes are created in memory, i.e. for every X number of
+                    particles, the current sum of weights is kept in memory.
+                    This is to increase search speed during the random
+                    particle selection procedure.
+ 
+   Execute:         The number of particles to generate is calculated from the
+                    sum of particle weights, frequency and scaling factor. The
+                    amount of particles is given by a poisson distribution with
+                    Average=SumOfWeights*ScalingFactor/Frequency.
+ 
+                    For each particle to be generated a random number between 0
+                    and the sum of particle weights is selected. The envelopes
+                    are searched to locate the envelope containing the random
+                    particle. When the envelope is found, the LbMIB binary
+                    file is searched to find the correct particle within the
+                    envelope. The particle is the generated.
+ 
+   Finalize:        Temporary LbMIB binary file is deleted.
+ 
+   The list of options to steer the behaviour of the code and how to use them
+   is given below:
+   HepMCEvents         The TS location of the Event
+   GenHeader           The TS location of the Generation Header
+   GenCollisions       The TS location of the Collision
+ 
+   ParticleSourceFile  Particle input file to read.
+ 
+   FileIsBinary        True if the file is a LbMIB binary file. False if flat
+                       file. If True, the file convertion at init is skipped.
+   SaveTempBinFile     True will keep the temporary LbMIB binary file. False
+                       will delete it at the end of the run. If given a LbMIB
+                       binary file, this option is ignored.
+   TempBinFileName     This option gives the name of the LbMIB binary file
+                       created. If given a LbMIB binary file, this option is
+                       ignored.
+ 
+   ScalingFactor       Scaling factor used to modify the number of particles
+                       created in an event.
+   BunchFrequency      Scaling factor used to modify the number of particles
+                       created in an event. Indicates the frequency used to
+                       generate the input file.
+ 
+   Luminosity          Luminosity to be set in header.
+                                                                                              
+   GenerationHist      True to generate histograms.
+ 
+   ForcePartPerEvt     -1  : Use random number of particles in event.
+                       >=0 : Force the generation of this amount particles per
+                             event.
+ 
+   ReadFileFromOffset  -1  : Choose random particles using weight based
+                             envelope method.
+                       >=0 : Pick particles sequentially from file starting at
+                             this particle number. Envelope generation and
+                             random particle selection is ignored.
+                             Weight information is saved in vertex.
+ 
+   EnvelopeSize        Amount of particles contained in one envelope.
+ 
+   ZParticleOrigin     Z position to generate particles. Regardless of this
+                       option, the particles are created so that they should
+                       pass z=0 at t=0.
+   ZDirection          Z direction to generate particles (+1/-1)
+ 
+   EventType           Event type code.
+ 
+!=============================================================================
 </PRE><H1><A NAME="v30r2">2007-03-27 - GaussSys v30r2</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
 <H3><A NAME="Use">This version uses:
@@ -505,7 +798,7 @@ Purpose: LHCb Simulation program
    applyCut function arguments). The signal decay is now always performed
    before applying any generator cut.
  
-!===================== LbPythia v5r00 2007-03-13 ============================
+!===================== LbPythia v5r0 2007-03-13 ==============================
 ! 2007-03-08 - Patrick Robbe
  - Adapt PythiaProduction to new IProductionTool interface
  
