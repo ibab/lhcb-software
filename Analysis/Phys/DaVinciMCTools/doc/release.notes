@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.164 2007-06-18 16:04:56 jpalac Exp $
+! $Id: release.notes,v 1.165 2007-07-04 13:39:03 spradlin Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-04 - Patrick Spradlin
+  - DecayChainNtuple: Fixed an off-by-one indexing bug in vertex variances
 
 !========================== DaVinciMCTools v9r3 2007-06-18 ===================
 
