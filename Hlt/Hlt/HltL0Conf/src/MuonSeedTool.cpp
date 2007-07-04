@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.1 2007-07-04 12:11:14 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.2 2007-07-04 15:31:10 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -81,10 +81,12 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
   std::vector<MuonTileID> mpads3 = muonL0Cand.muonTileIDs(2); 
   
-  MuonTileID mpad2 = *(mpads2.begin());
-
-  seedTrack.addToLhcbIDs( mpad2 );
-  seedTrack.addToLhcbIDs( *(mpads3.begin()) );
+  MuonTileID mpad2 = mpads2.front();
+  
+  LHCb::LHCbID id2 = LHCbID( mpad2 );
+  seedTrack.addToLhcbIDs(id2);
+  LHCb::LHCbID id3 = LHCbID( mpads3.front() );
+  seedTrack.addToLhcbIDs(id3);
   
   int regionL0Cand;
   if (mpad2){
@@ -116,7 +118,8 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                   y, dyTileM1,
                                   z, dzTileM1);
 
-    seedTrack.addToLhcbIDs( mpad1 );
+    LHCb::LHCbID tmpId = LHCbID( mpad1 );
+    seedTrack.addToLhcbIDs( tmpId );
     
     if (!sc) {
       err()<<"Unable to get Position for M1"<<endmsg;
