@@ -1,3 +1,5 @@
+// $Id: DecayChainNTuple.cpp,v 1.22 2007-07-04 13:15:38 spradlin Exp $
+// ============================================================================
 // Always define MCCheck
 #define MCCheck 1
 
@@ -791,9 +793,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     m_vx[m_n] = v->position().x();
     m_vy[m_n] = v->position().y();
     m_vz[m_n] = v->position().z();
-    m_vxvar[m_n] = v->covMatrix()(1,1);
-    m_vyvar[m_n] = v->covMatrix()(2,2);
-    m_vzvar[m_n] = v->covMatrix()(3,3);
+    m_vxvar[m_n] = v->covMatrix()(0,0);
+    m_vyvar[m_n] = v->covMatrix()(1,1);
+    m_vzvar[m_n] = v->covMatrix()(2,2);
   }
 
   // PV w.r.t. which the particle has the smallest IPS
@@ -848,9 +850,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   m_sIPSPVx[m_n] = sPV.x();
   m_sIPSPVy[m_n] = sPV.y();
   m_sIPSPVz[m_n] = sPV.z();
-  m_sIPSPVxvar[m_n] = sIPSPV->covMatrix()(1,1);
-  m_sIPSPVyvar[m_n] = sIPSPV->covMatrix()(2,2);
-  m_sIPSPVzvar[m_n] = sIPSPV->covMatrix()(3,3);
+  m_sIPSPVxvar[m_n] = sIPSPV->covMatrix()(0,0);
+  m_sIPSPVyvar[m_n] = sIPSPV->covMatrix()(1,1);
+  m_sIPSPVzvar[m_n] = sIPSPV->covMatrix()(2,2);
 
   m_iptool->calcImpactPar(part,*sIPSPV,ipcheck,ipecheck);
 

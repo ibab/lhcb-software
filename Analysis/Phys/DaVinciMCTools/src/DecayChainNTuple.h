@@ -1,3 +1,5 @@
+// $Id: DecayChainNTuple.h,v 1.15 2007-07-04 13:15:38 spradlin Exp $
+// ============================================================================
 #ifndef DECAYCHAINNTUPLE_H
 #define DECAYCHAINNTUPLE_H 1
 
@@ -398,7 +400,7 @@ private:
 
 #ifdef MCCheck
     // Look if a the particle is associated to signal
-    NTuple::Array<float> m_Sig;
+    NTuple::Array<long> m_Sig;
 
     // Extrapolated state vector of the associated MCParticle track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
     NTuple::Array<float> m_MCstateX;
