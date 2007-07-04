@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2007-06-15 16:17:33 jpalac Exp $
+# $Id: requirements,v 1.57 2007-07-04 14:00:10 pkoppenb Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v9r3
+version           v9r3p1
 
 # This template is an example for a standard Algorithm package
 #
