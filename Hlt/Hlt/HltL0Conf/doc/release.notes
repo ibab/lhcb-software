@@ -4,6 +4,24 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 - Johannes Albrecht
+	-src/PrepareElectronSeed
+			- size of search window now as job option
+			- tidy up the code
+	- src/PrepareMuonSeed
+			- size of search window now as job option
+			- tidy up the code
+	- src/MuonSeedTool
+			- first implementation of new tool to prepare L0Muon cand to a muon track
+			 	analogue to PrepareMuonSeed but without propagation to T3
+	- src/ElectronSeedTool
+			- first implementation of new tool to prepare L0Electron cand to a track
+			 	analogue to PrepareElectronSeed but without propagation to T3
+	-src/L0ConfirmTool
+			- first release of tool: extrapolates seed track to T3 and then searches 
+			  tracks in T-stations using the TsaConfirmTool
+	- hadron seeded track search not yet supported with new tools	
+
 !========================== HltL0Conf v1r2 2007-05-25 ===================
 ! 2007-05-25 - Patrick Koppenburg
  - Fix release.notes
