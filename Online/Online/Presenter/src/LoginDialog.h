@@ -22,6 +22,7 @@ class LoginDialog : public TGTransientFrame
     
     void build();
     void login();
+    void cancelLogin();
     void defaultPw(const char *);
     //void connectToDatabase(int intp); //*SIGNAL*
     
