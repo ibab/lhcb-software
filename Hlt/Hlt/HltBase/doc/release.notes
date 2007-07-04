@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 Johannes Albrecht
+	- HltBase/ICaloSeedTool.h	
+			first release of new tool: creates track at Calo from L0Cand
+	- HltBase/IMuonSeedTool.h
+			first release of new tool: creates track at M2 from L0Cand
+
 ! 2007-06-27 - Jose A. Hernando
   - HltBase/ITrackMatchUpgrade interface to upgrade matched tracks
 
