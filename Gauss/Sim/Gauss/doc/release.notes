@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v30r3 2007-07-04 =============================
+! 2007-07-04 - Gloria Corti
+ - Use v* instead of explicit version number in requirements
+ - Use TimingAuditor for monitor of timing of application instead of option
+   of GaudiSequencer
+   . Monitor.opts
+   . Gauss.opts
+ - Use standard options for Root histogram service and move them to monitoring
+   . Monitor.opts
+   . Common.opts
+
 ! 2007-06-20 - Gloria Corti
  - Adapt to use of DDDB instead of CondDB and XmlDDDB
    . Common.opts
