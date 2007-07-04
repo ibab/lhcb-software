@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.24 2007-03-26 11:41:05 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.25 2007-07-04 08:33:01 gcorti Exp $ 
 
 /** @file 
  * 
@@ -9,8 +9,15 @@
  */
 
 // ROOT is chosen as default for Histograms and ntuple persistency.
-ApplicationMgr.HistogramPersistency = "ROOT";
-
+#include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds = true;
+ 
+// Use TimingAuditor for timing
+ApplicationMgr.ExtSvc += { "AuditorSvc"};
+ApplicationMgr.AuditAlgorithms = True;
+AuditorSvc.Auditors += {"TimingAuditor"};
+//ToolSvc.SequencerTimerTool.OutputLevel = 4;
+ 
 //---------------------------------------------------------------------
 // Generator Monitor Histograms: set of histograms from HepMC
 //---------------------------------------------------------------------
