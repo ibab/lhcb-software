@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.5 2007-03-13 14:32:31 cattanem Exp $
+ *  $Id: TrackSelector.h,v 1.6 2007-07-04 15:29:53 mneedham Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -90,6 +90,11 @@ private:
   double m_maxPCut;    ///< Max p cut
   double m_maxPtCut;   ///< Max pt cut
   double m_maxHitCut;  ///< Max hit cut
+
+  double m_minEtaCut;
+  double m_maxEtaCut;
+  double m_likCut;
+
 
   /// Track types to accept
   typedef std::vector<std::string> TrackTypes;

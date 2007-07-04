@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 M Needham
+ - Add selection by eta/likelihood to track selector
+
 ! 2007-06-25 M Needham
  - Small change in Measurement provider (following new functionality in LHCbID)
 

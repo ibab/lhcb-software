@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.10 2006-08-02 10:59:31 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.11 2007-07-04 15:29:53 mneedham Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -40,12 +40,18 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
   declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
+  declareProperty("MinEtaCut", m_minEtaCut  = boost::numeric::bounds<double>::lowest());
+
 
   declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
   declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
 
+  declareProperty( "MaxEtaCut",  m_maxEtaCut   = boost::numeric::bounds<double>::highest() );
+
+  declareProperty("LikCut", m_likCut =  boost::numeric::bounds<double>::lowest());
+ 
   m_trTypes =
     boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream")("Ttrack");
   declareProperty( "TrackTypes", m_trTypes );
@@ -149,7 +155,19 @@ bool TrackSelector::accept ( const Track& aTrack ) const
       debug() << " -> #hits " << nMeas << " failed cut" << endreq;
     return false;
   }
-
+ 
+  // eta
+  double eta = aTrack.pseudoRapidity();
+  if ( eta < m_minEtaCut || nMeas > m_maxEtaCut )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> #eta " << eta << " failed cut" << endreq;
+    return false;
+  }
+ 
+  // remove seeds with bad likelihood
+  if (aTrack.info(Track::Likelihood, -9999.) < m_likCut ) return false;
+ 
   if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
   return true;
 }
