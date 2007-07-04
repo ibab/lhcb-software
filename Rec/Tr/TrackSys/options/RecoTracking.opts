@@ -16,6 +16,8 @@ RecoVELOSeq.Members += { "PatInitEvent"
                          ,"PatVeloLoadClusters"
                          ,"PatVeloRTracking"
                          ,"PatVeloSpaceTracking"
+                         ,"PatFilterUsedClusters"
+                         ,"PatVeloGeneralTracking" 
 };
 
 // Decode also VeloClusters, needed for track fit

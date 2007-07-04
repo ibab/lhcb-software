@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 David Hutchcroft
+ - Added PatFilterUsedClusters and PatVeloGeneralTracking to RecoTracking.opts
+ - Modified VeloOpenTracking.opts to just run PatVeloGeneralTracking with 
+   "open" cuts
+
 !============================ TrackSys v4r7 2007-07-29 ======================
 ! 2007-07-28 M Needham
  - TrackChecking.opts updated to add TrackEffChecker example

@@ -1,7 +1,7 @@
-PatVeloRTracking.AdjacentSectors = true;
-PatVeloRTracking.rExtraTol = 28.;
-PatVeloRTracking.rMatchTol = 7.2;
+RecoVeloSeq.Members -= {"PatVeloRTracking"
+                      , "PatVeloSpaceTracking"
+                      , "PatFilterUsedClusters"
+                       };
 
-ToolSvc.PatVeloSpaceTool.PhiMatchTol = 0.90;
-ToolSvc.PatVeloSpaceTool.PhiFirstTol = 0.30;
-ToolSvc.PatVeloSpaceTool.AdjacentSectors = true;
+PatVeloGeneralTracking.PointErrorMin = 2*mm;
+ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;
