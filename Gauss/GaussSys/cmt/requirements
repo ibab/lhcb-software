@@ -28,8 +28,7 @@ use LbMIB               v1r0      Gen
 use GiGa        	v19r0	  Sim        
 use GiGaCnv     	v18r1	  Sim
 use SimSvc              v5r0      Sim
-macro GiGaVisUI_use     "GiGaVisUI  v4r0  Sim" slc4-amd64 ""
-use ${GiGaVisUI_use}
+use GiGaVisUI           v4r0      Sim
 use VisSvc              v5r0      Vis
 use ClhepTools          v2r1      Tools
 
