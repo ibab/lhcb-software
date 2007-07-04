@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.24 2007-06-20 09:47:38 gcorti Exp $ 
+// $Id: Common.opts,v 1.25 2007-07-04 08:34:12 gcorti Exp $ 
 
 /** @file 
  * 
@@ -12,8 +12,6 @@
 
 #units "$STDOPTS/units.opts"
 
-//AuditorSvc.Auditors = { "ChronoAuditor" };
-
 // External services that will be always used
 ApplicationMgr.ExtSvc = { "ToolSvc" ,
                           "ParticlePropertySvc" ,
@@ -23,9 +21,6 @@ ApplicationMgr.ExtSvc = { "ToolSvc" ,
 // Configuration of various services that are used: 
 RndmGenSvc.Engine.SetSingleton   = true;
 ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
-
-// Prepend histograms with "h" 
-RootHistSvc.ForceAlphaIds = true;
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
