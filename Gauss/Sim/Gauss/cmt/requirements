@@ -16,94 +16,84 @@ branches src doc options cmt job
 #-- Databases
 use XmlDDDB             v40r0   Det   -no_auto_imports
 use DDDB                v1r*    Det   -no_auto_imports
+use ParamFiles          v6r1          -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v13r10  Gen   -no_auto_imports
-use ParamFiles          v6r0          -no_auto_imports
 use Geant4Files		v82r0	      -no_auto_imports
 
 #===========================================================================
 
-#-- CMT and GaudiPolicy
-use GaudiPolicy      v6r5
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
  
-#-- External libraries taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces    -no_auto_imports
-use HepMC v* LCG_Interfaces    -no_auto_imports
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
  
-#-- Gaudi libraries (from GAUDI_v19r3)
-use GaudiKernel      v22r2
-use GaudiSvc         v15r3     -no_auto_imports
-use GaudiAlg         v9r13     -no_auto_imports
-use GaudiAud         v8r1      -no_auto_imports
-use GaudiPoolDb      v2r12     -no_auto_imports
-use RootHistCnv      v9r13     -no_auto_imports
-use GaudiPython      v* 
+# From GAUDI project
+use GaudiSvc           v*              -no_auto_imports
+#use GaudiAud           v8r1                 -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports 
+use RootHistCnv        v*                   -no_auto_imports
  
-#-- LHCb libraries (from LHCB_v22r3)
-#-- Explicitly use EventSys packages to avoid dependency on unnessary packages
-use GaudiConf        v10r3          -no_auto_imports
-use GaudiObjDesc     v9r9           -no_auto_imports
-use KernelSys        v6r4    Kernel -no_auto_imports
-use DetSys           v9r4    Det    -no_auto_imports
- 
-use EventBase        v2r2    Event  -no_auto_imports
-use MCEvent          v2r2    Event  -no_auto_imports
-use GenEvent         v5r0p1  Event  -no_auto_imports
-use PackedEvent      v3r1    Event  -no_auto_imports
- 
-use LHCbAlgs         v2r7    Kernel -no_auto_imports
-use SimComponents    v2r1    Sim    -no_auto_imports
+# From LHCB project
+#use GaudiObjDesc     v9r9           -no_auto_imports
+use KernelSys          v*     Kernel         -no_auto_imports
+use DetSys             v*     Det            -no_auto_imports
+use LHCbAlgs           v*     Kernel         -no_auto_imports
+use SimComponents      v*     Sim            -no_auto_imports
  
 #===========================================================================
 
-#== Gauss libraries
+# From GAUSS project
 
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v3r1 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v* Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v5r1 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v* Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
-macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r5 Gen"
+macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v* Gen"
 use $(LbBcVegPy_use)
 
 #-- Optional Hidden Valley
-macro LbHidValley_use "" Linux&HidValley "LbHidValley v2r0 Gen"
+macro LbHidValley_use "" Linux&HidValley "LbHidValley v* Gen"
 use $(LbHidValley_use)
 
 #-- Generator
-use ParticleGuns         v3r2    Gen
-use LbMIB                v1r0    Gen
-use LbPythia             v5r1    Gen
-use Generators           v7r1    Gen
+use ParticleGuns         v*    Gen
+use LbMIB                v*    Gen
+use LbPythia             v*    Gen
+use Generators           v*    Gen
 
 #-- Simulation
-use GiGa                 v19r0   Sim
-use GiGaCnv              v18r1   Sim
-use GaussTools           v13r0   Sim
-use GaussAlgs		 v2r4    Sim
-use GaussKine            v1r5    Sim
-use GaussPhysics         v5r0    Sim
-use GaussTracker         v6r0    Sim
-use GaussRICH            v7r1    Sim
-use GaussCalo            v9r0    Sim
+use GiGaCnv              v*    Sim
+use GaussTools           v*    Sim
+use GaussAlgs		 v*    Sim
+use GaussKine            v*    Sim
+use GaussPhysics         v*    Sim
+use GaussTracker         v*    Sim
+use GaussRICH            v*    Sim
+use GaussCalo            v*    Sim
 
 #-- Optional visualisation and UI
-macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v4r0 Sim"
+macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
 use $(GiGaVisUI_use)
 
 #-- Optional GDML
-macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
+macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v* Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v4r5    Sim
-use CaloMoniSim         v3r1    Calo
-use VeloGauss           v2r1    Velo
-use MuonMoniSim         v2r2    Muon
+use GaussMonitor        v*    Sim
+use CaloMoniSim         v*    Calo
+use VeloGauss           v*    Velo
+use MuonMoniSim         v*    Muon
 
 #===========================================================================
 #== Necessary enviroment variables
