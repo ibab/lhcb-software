@@ -19,6 +19,9 @@
 //boost
 #include <boost/assign/list_of.hpp>
 
+using namespace LHCb;
+
+
 DECLARE_TOOL_FACTORY( ElectronSeedTool );
 
 
@@ -105,8 +108,7 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
   //===================================================================================================
 
   //set the calo id to LHCbids of the track
-  const LHCb::CaloCellID& candId = eL0Cand.id();
-  seedTrack.addToLhcbIDs( candId );
+  seedTrack.addToLhcbIDs( LHCbID( eL0Cand.id() ) );
 
   // get candidates cells x, y, energy and size for electron candidate
   StatusCode sc = SetCandPosAndE( eL0Cand , 
