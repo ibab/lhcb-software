@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 M Needham
+ - Retune of matching accounting for better fit/new velo pattern
+
 !======================= TrackMatching v2r14 2007-06-04 ======================
 ! 2007-05-30 M Needham
  - Faster version with less ghosts ---> see February 2006 Heidelberg
