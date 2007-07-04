@@ -47,7 +47,7 @@ ANUM          = LoKi.AParticles.Count
 AUNIQUE       = LoKi.AParticles.Unique 
 
 ## @see LoKi::Cuts::AMASS
-AM            = LoKi.AParticles.InvariantMass 
+AMASS         = LoKi.AParticles.InvariantMass 
 ## @see LoKi::Cuts::AMASS
 AM            = AMASS()
 ## @see LoKi::Cuts::AM12
@@ -71,7 +71,7 @@ AMOMT         = LoKi.AParticles.TransverseMomentum
 ## @see LoKi::Cuts::APT
 APT           = AMOMT()
 ## @see LoKi::Cuts::AETAP
-AETAP         = LoKi::AParticles.Eta 
+AETAP         = LoKi.AParticles.Eta 
 ## @see LoKi::Cuts::AETA
 AETA          = AETAP()
 

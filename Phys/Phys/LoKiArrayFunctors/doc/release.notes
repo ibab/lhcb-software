@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.2 2007-06-18 16:49:28 pkoppenb Exp $ 
+$Id: release.notes,v 1.3 2007-07-04 10:27:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2007-07-04 - Vanya BELYAEV
+ - python/LoKiArrayFunctors/functions.py
+   fix the errors and typos 
+ - cmt/requirements 
+   version increment to v1r1 
 
 !========================== LoKiArrayFunctors v1r0 2007-06-18 ===================
 ! 2007-06-10 - Vanya BELYAEV
