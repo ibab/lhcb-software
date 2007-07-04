@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 - David Hutchcroft
+ - Use track type instead of history to identify Velo only tracks
+
 !===================== RichRecBase v3r5 2007-05-25 =======================
 ! 2007-05-25 - Marco Cattaneo
  - Move IRichRecMCTruthTool interface to new MCInterfaces package
