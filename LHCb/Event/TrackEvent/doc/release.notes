@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 - David Hutchcroft
+ - Added 4 more history types to Track.xml for the various PatVelo algorithms
+
 !======================= TrackEvent v4r5 2007-06-25 ==========================
 ! 2007-06-22 - Edwin Bos
  - Removed kappa. Consistently use c_light in extrapolators and StateTraj.

@@ -56,7 +56,7 @@
         <enumval name = "HistoryUnknown" value="0" desc="unknown history (i.e. history not set)"/>
         <enumval name = "TrackIdealPR"   value="1" desc="track produced with the ideal pattern recognition"/>
         <enumval name = "TrackSeeding"   value="2" desc="track produced with the seeding pattern recognition"/>
-        <enumval name = "PatVelo"        value="3" desc="track produced with the VELO pattern recognition"/>
+        <enumval name = "PatVelo"        value="3" desc="track produced with the 2D then 3D VELO pattern recognition"/>
         <enumval name = "PatVeloTT"      value="4" desc="track produced with the online Velo-TT pattern recognition"/>
         <enumval name = "TrackVeloTT"    value="5" desc="track produced with the offline Velo-TT pattern recognition"/>
         <enumval name = "PatForward"     value="6" desc="track produced with the forward pattern recognition"/>
@@ -64,6 +64,10 @@
         <enumval name = "PatKShort"      value="8" desc=""/>
         <enumval name = "TsaTrack"       value="9" desc=""/>
         <enumval name = "MuonID"         value="10" desc="track produced with the Muon pattern recognition"/>
+        <enumval name = "PatVeloR"       value="11" desc="produced with the 2D VELO pattern recognition"/>
+        <enumval name = "PatVeloGeneric" value="12" desc="produced with the VELO Generic pattern recognition"/>
+        <enumval name = "PatVeloGeneral" value="13" desc="produced with the VELO General pattern recognition"/>
+        <enumval name = "PatVeloOpen"    value="14" desc="produced with the VELO open pattern recognition"/>
       </enum>
 
       <enum
