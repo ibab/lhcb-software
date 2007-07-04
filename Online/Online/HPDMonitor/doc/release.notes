@@ -4,6 +4,10 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-07-04 - Ulrich Kerzel
+ - increase start-index for color palette to 1000, new ROOT versions
+   seem to define more colours...
+
 ! 2007-06-01 - Ulrich Kerzel
  - HPDGui: use status-bar for auto-start messages
 

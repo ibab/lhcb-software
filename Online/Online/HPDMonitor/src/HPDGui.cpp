@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.33 2007-06-01 10:36:09 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.34 2007-07-04 08:06:37 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -341,7 +341,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
     std::cout << "define own colour palette" << std::endl;
   
   const int colNum     = 1024;   // Number of colors in the palette
-  int       startIndex =  300;    // starting index of allocated colors
+  int       startIndex = 1000;    // starting index of allocated colors
   int       palette[colNum];
   float     val;
   int       iCount     =    0;
