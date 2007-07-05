@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.39 2007-06-06 15:13:18 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.40 2007-07-05 09:53:05 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -185,6 +185,8 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
   
+  declareProperty("LazyConnect",       m_lazyConnect     = true );
+  
   if ( s_XMLstorageSpec.get() == NULL){
     // attribute list spec template
     s_XMLstorageSpec = std::auto_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
@@ -245,32 +247,12 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
       return StatusCode::FAILURE;
     }
-    log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
     
-    sc = i_openConnection();
-    if (!sc.isSuccess()) return sc;
-    log << MSG::INFO << "Connected to database \"" << connectionString() << "\"" << endmsg;
-
-    // Check the existence of the provided tag.
-    sc = i_checkTag();
-
-    // Try again if requested
-    int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
-    while (!sc.isSuccess() && (trials_to_go > 0)){
-      log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
-          << trials_to_go << " trials left." << endmsg;
-      seal::TimeInfo::sleep(m_checkTagTimeOut);
-      sc = i_checkTag();
-      --trials_to_go;
+    if ( ! m_lazyConnect ) {
+      sc = i_initializeConnection();
+      if (!sc.isSuccess()) return sc;
     }
-
-    // Fail if the tag is not found
-    if (!sc.isSuccess()){
-      log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
-      return sc;
-    }
-
-    log << MSG::INFO << "Using TAG \"" << tag() << "\"" << endmsg;
+    
 
   } 
   else {
@@ -325,6 +307,17 @@ StatusCode CondDBAccessSvc::finalize(){
   if ( m_rndmSvc ) m_rndmSvc->release();
 
   return Service::finalize();
+}
+
+//=============================================================================
+// Connect to the database
+//=============================================================================
+StatusCode CondDBAccessSvc::i_initializeConnection(){
+  MsgStream log(msgSvc(), name() );
+  log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
+  StatusCode sc = i_openConnection();
+  if (!sc.isSuccess()) return sc;
+  return i_validateDefaultTag();
 }
 
 //=============================================================================
@@ -398,9 +391,34 @@ StatusCode CondDBAccessSvc::i_openConnection(){
   }
 
   touchLastAccess();
+  log << MSG::INFO << "Connected to database \"" << connectionString() << "\"" << endmsg;
   return StatusCode::SUCCESS;
 }
 
+StatusCode CondDBAccessSvc::i_validateDefaultTag() {
+  MsgStream log(msgSvc(), name() );
+        
+  // Check the existence of the provided tag.
+  StatusCode sc = i_checkTag();
+
+  // Try again if requested
+  int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
+  while (!sc.isSuccess() && (trials_to_go > 0)){
+    log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
+        << trials_to_go << " trials left." << endmsg;
+    seal::TimeInfo::sleep(m_checkTagTimeOut);
+    sc = i_checkTag();
+    --trials_to_go;
+  }
+        
+  // Fail if the tag is not found
+  if (!sc.isSuccess()){
+    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
+    return sc;
+  }
+  log << MSG::INFO << "Using TAG \"" << tag() << "\"" << endmsg;
+  return StatusCode::SUCCESS;
+}
 //=============================================================================
 // TAG handling
 //=============================================================================
@@ -435,6 +453,7 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
   DataBaseOperationLock dbLock(this);
 
   log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
+  /// @TODO: check all sub-nodes to validate the tag and not only the root
   if (m_rootFolderSet) {
     // HEAD tags are always good
     //if ( (tag.empty()) || (tag == "HEAD") ) return StatusCode::SUCCESS;

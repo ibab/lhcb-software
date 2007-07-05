@@ -1,9 +1,16 @@
-# $Id: release.notes,v 1.105 2007-06-15 15:27:09 cattanem Exp $
+# $Id: release.notes,v 1.106 2007-07-05 09:53:05 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2007-07-05 - Marco Clemencic
+ - Added the possibility to connect to the database only when needed (and made
+   it the default), so a job does not need the database does not need to be
+   able to connect to it or to be reconfigured.
+   To restore the old behavior (connection at initialize) use the option:
+      CondDBAccessSvc.LazyConnect = False;
 
 !===================== Det/DetCond v11r4 2007-06-15 ==========================
                            NEEDS: LCGCMT >= 52

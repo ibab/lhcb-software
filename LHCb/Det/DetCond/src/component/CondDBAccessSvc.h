@@ -1,9 +1,10 @@
-// $Id: CondDBAccessSvc.h,v 1.28 2007-05-11 10:04:56 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.29 2007-07-05 09:53:05 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/GaudiException.h"
 #include "Kernel/ICondDBInfo.h"
 #include "DetCond/ICondDBAccessSvc.h"
 #include "DetCond/ICondDBReader.h"
@@ -208,8 +209,18 @@ private:
   /// Pointer to the random generator service
   IRndmGenSvc *m_rndmSvc;
 
+  /// Lazy connection flag.
+  /// If true (the default), the connection to  (lazy = connect only when needed).
+  bool m_lazyConnect;
+
+  /// Connect to the COOL database. It sets 'm_db'.
+  StatusCode i_initializeConnection();
+  
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_openConnection();
+
+  /// Connect to the COOL database. It sets 'm_db'.
+  StatusCode i_validateDefaultTag();
 
   /// Check if the TAG set exists in the DB.
   inline StatusCode i_checkTag() const { return i_checkTag(tag()); }
@@ -359,9 +370,22 @@ private:
       log(m_owner->msgSvc(),m_owner->name()+".DataBaseOperationLock"),
       busy_lock(m_owner->m_busy) // lock the access to the db
     {
-      if (!owner->m_db->isOpen()){
+      // If the database has not been instantiated yet, we may be using
+      // lazy connection and we have to connect now.
+      if (!m_owner->m_db) {
+        // we have to release the lock because i_initializeConnection
+        // needs to lock the DB
+        busy_lock.unlock();
+        StatusCode sc = m_owner->i_initializeConnection();
+        busy_lock.lock();
+        if (! sc.isSuccess())
+          throw GaudiException("Cannot initialize connection",
+                               "DataBaseOperationLock::DataBaseOperationLock",
+                               sc);
+      }
+      if (!m_owner->m_db->isOpen()){
         log << MSG::INFO << "Connecting to database" << endmsg;
-        owner->m_db->openDatabase(); // ensure that the db is open
+        m_owner->m_db->openDatabase(); // ensure that the db is open
       }
     }
  
