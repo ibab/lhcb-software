@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.165 2007-07-04 13:39:03 spradlin Exp $
+! $Id: release.notes,v 1.166 2007-07-05 10:51:39 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-05 - Patrick Koppenburg
+ - TrueMCFilterCriterion bug fix: Make it active all the time.
 
 ! 2007-07-04 - Patrick Spradlin
   - DecayChainNtuple: Fixed an off-by-one indexing bug in vertex variances

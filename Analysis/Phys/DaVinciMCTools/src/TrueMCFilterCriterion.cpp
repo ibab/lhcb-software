@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.16 2007-06-15 16:18:39 jpalac Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.17 2007-07-05 10:51:39 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -77,6 +77,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 //                               LHCb::CaloClusterLocation::Default);
 
   verbose() << "Initialised happily" << endreq ;
+  setActive(); 
 
   return sc ;
 }
