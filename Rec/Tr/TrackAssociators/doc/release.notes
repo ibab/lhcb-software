@@ -4,6 +4,7 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!===================== TrackAssociators v2r5 2007-07-05 ====================
 ! 2007-07-05 - Edwin Bos
  - Added Muon hits in association decision,
  - jobOption "DecideUsingMuons" = false by default
