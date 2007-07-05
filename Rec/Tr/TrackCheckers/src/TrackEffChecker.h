@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.h,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackEffChecker.h,v 1.2 2007-07-05 16:12:31 mneedham Exp $
 #ifndef TRACKEFFCHECKER_H
 #define TRACKEFFCHECKER_H 1
  
@@ -8,6 +8,10 @@
 #include "TrackCheckerBase.h"
 
 #include "Event/Track.h"
+
+namespace LHCb{
+  class MCParticle;
+}
 
 /** @class TrackEffChecker TrackEffChecker.h "TrackCheckers/TrackEffChecker"
  * 
@@ -43,6 +47,9 @@ class TrackEffChecker : public TrackCheckerBase {
 
   void plots(const std::string& type, 
              const LHCb::Track* track ) const;
+
+  void plots(const std::string& type, 
+             const LHCb::MCParticle* part) const;
 
   double weightedMeasurementSum(const LHCb::Track* aTrack) const;
 

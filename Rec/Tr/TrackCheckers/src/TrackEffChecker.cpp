@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackEffChecker.cpp,v 1.2 2007-07-05 16:12:27 mneedham Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -114,12 +114,14 @@ void TrackEffChecker::effInfo(){
   LHCb::MCParticles::const_iterator iterP = partCont->begin();
   for (; iterP != partCont->end(); ++iterP){
      if (selected(*iterP) == true){
+       plots("mcSelected", *iterP);
        ++nToFind;
        TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
        if (info.track != 0) {
          ++nFound;
          counter("clone") += info.clone;
          plots("selected",info.track);
+         plots("mcSelectedAndRec", *iterP);
        }
     }
   } // loop particles 
@@ -137,6 +139,16 @@ void TrackEffChecker::effInfo(){
            -0.5,20.5, -0.5, 100.5,21, 101);
   }
 }
+
+
+void TrackEffChecker::plots(const std::string& type, 
+                            const LHCb::MCParticle* part) const{
+
+  plot(part->p()/Gaudi::Units::GeV,type+"/1","p", 0., 100., 20);
+  plot(part->pt()/Gaudi::Units::GeV,type+"/2","pt", 0., 10., 20);
+  plot(part->pseudoRapidity(),type+"/3","eta",1., 6., 20);
+}
+
 
 void TrackEffChecker::plots(const std::string& type, 
                             const LHCb::Track* track ) const{
