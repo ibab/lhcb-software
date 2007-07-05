@@ -3,7 +3,11 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
-%% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
+
+! 2007-07-05 - Patrick Koppenburg
+ - Start with a clean package for DC06. Removed all files in src and options.
+ - Increment to v5r0
+ - remove src/ and library from requirements and branches.
 
 !========================== HltSelChecker v4r1 2006-02-03 ===================
 ! 2006-01-19 - Luis Fernandez

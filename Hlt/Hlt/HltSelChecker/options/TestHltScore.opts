@@ -1,3 +1,0 @@
-ApplicationMgr.DLLs += { "HltSelChecker" };
-ApplicationMgr.TopAlg += { "TestHltScore" };
-TestHltScore.OutputLevel = 3 ;
