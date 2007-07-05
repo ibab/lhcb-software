@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $ Id: $
+# $Id: copy_files_to_db.py,v 1.9 2007-07-05 08:37:52 marcocle Exp $
 import sys
 
 import conddbui
@@ -20,24 +20,24 @@ def main():
     parser = OptionParser()
     parser.add_option("-c", "--connect-string",
                       dest="connectString", type="string",
-                      help="cool::DatabaseId to use for the connection",
-                      default="sqlite://none;schema=sqlite.db;user=none;password=none;dbname=DDDB")
+                      help="cool::DatabaseId to use for the connection [default: %default]",
+                      default="sqlite:LocalDDDB.db/DDDB")
     parser.add_option("-s", "--source",
                       dest="source", type="string",
                       help="directory where the files to copy to the DB are",
                       metavar="SRCDIR")
     parser.add_option("-d", "--dest",
                       dest="dest", type="string",
-                      help="directory, in the database, where to copy the files (default: '/')",
+                      help="directory, in the database, where to copy the files [default: %default]",
                       default="/",
                       metavar="DESTPATH")
     parser.add_option("-x", "--drop-db",
                       action="store_true", dest="drop",
-                      help="drop the database before the copy",
+                      help="drop the database before the copy [default: %default]",
                       default=False)
     parser.add_option("-X", "--noext",
                       action="store_true", dest="noextension",
-                      help="Remove filename extension when creating a COOL Folder",
+                      help="Remove filename extension when creating a COOL Folder [default: %default]",
                       default=False)
     parser.add_option("", "--include-from-file",
                       dest="includeFile", type="string",
