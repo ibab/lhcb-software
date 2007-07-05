@@ -3,10 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r16 2007-07-05 ===================
 ! 2007-07-05 - Edwin Bos
  - Removed transportMatrix() use from TrackKalmanFilter
 
-!=========================== TrackFitter v2r16 2007-06-29 ===================
 ! 2007-06-29 - Eduardo Rodrigues
  - correct useless "make seed method robust fix": the states on a track
    are ordered in z by construction
