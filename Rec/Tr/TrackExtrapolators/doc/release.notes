@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-07-05 - Edwin Bos
+ - Removed m_F data member and associated getter and setter methods.
+ - Added State,z,TrackMatrix propagate method.
+
 !======================= TrackExtrapolators v2r13 2007-06-25 =================
 ! 2007-06-25 - Marco Cattaneo
  - Fix doxygen warnings

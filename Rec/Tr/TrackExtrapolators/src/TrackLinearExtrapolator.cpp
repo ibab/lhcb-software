@@ -1,3 +1,4 @@
+// $Id: TrackLinearExtrapolator.cpp,v 1.20 2007-07-05 08:30:18 ebos Exp $
 // Include files
 
 // from Gaudi
@@ -31,7 +32,7 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   }
 
   if( transMat != NULL ) {
-    (*transMat) = ROOT::Math::SMatrixIdentity();
+    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     (*transMat)(0,2) = dz;
     (*transMat)(1,3) = dz;
   }

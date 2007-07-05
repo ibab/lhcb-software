@@ -1,3 +1,4 @@
+// $Id: TrackExtrapolator.cpp,v 1.23 2007-07-05 08:29:37 ebos Exp $
 // Include files
 
 // from Gaudi
@@ -56,8 +57,10 @@ StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 //=============================================================================
 // Propagate a state vector from zOld to zNew
 //=============================================================================
-StatusCode TrackExtrapolator::propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix,
-					LHCb::ParticleID pid) 
+StatusCode TrackExtrapolator::propagate( LHCb::StateVector& state,
+					 double z,
+					 Gaudi::TrackMatrix* transportmatrix,
+					 LHCb::ParticleID pid ) 
 {
   StatusCode sc = propagate(state.parameters(),state.z(),z,transportmatrix,pid) ;
   if (sc.isSuccess()) state.setZ(z);
@@ -89,10 +92,25 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          double z,
                                          ParticleID pid )
 {
-  StatusCode sc = propagate( state.stateVector(), state.z(), z, &m_F, pid );
+  Gaudi::TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  StatusCode sc = propagate( state, z, &transMat, pid );
+  
+  return sc;
+}
+
+//=============================================================================
+// Propagate a state to a given z-position
+// Transport matrix is calulated when transMat pointer is not NULL
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( State& state, 
+                                         double z,
+                                         Gaudi::TrackMatrix* transMat,
+                                         ParticleID pid )
+{
+  StatusCode sc = propagate( state.stateVector(), state.z(), z, transMat, pid );
   state.setZ(z);
   state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-                       ( m_F, state.covariance() ) );
+                       ( *transMat, state.covariance() ) );
   
   return sc;
 }
@@ -385,28 +403,16 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
 }
 
 //=============================================================================
-// Get reference to last used transport matrix
-//=============================================================================
-const TrackMatrix& TrackExtrapolator::transportMatrix() const
-{
-  return m_F;
-};
-
-//=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TrackExtrapolator::TrackExtrapolator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_F()
 {
   declareInterface<ITrackExtrapolator>( this );
 
   declareProperty( "Iterations", m_maxIter = 5 );
-
-  // create transport matrix
-  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 }
 
 //=============================================================================

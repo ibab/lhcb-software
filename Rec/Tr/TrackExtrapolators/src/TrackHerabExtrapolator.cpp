@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.19 2007-06-25 09:56:52 cattanem Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.20 2007-07-05 08:30:02 ebos Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -106,7 +106,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 
   // update the transport matrix
   if( transMat != NULL ) {
-    (*transMat) = ROOT::Math::SMatrixIdentity();    
+    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );    
     for( i = 0; i < 5; ++i ) {
       for( int j = 0; j < 5; ++j ) {
         (*transMat)(i,j) = fQp[(5*j)+i];

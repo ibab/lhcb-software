@@ -1,3 +1,4 @@
+// $Id: TrackExtrapolator.h,v 1.12 2007-07-05 08:29:33 ebos Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
@@ -55,9 +56,18 @@ public:
                                 double z,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
+  /// Propagate a state to a given z-position
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  virtual StatusCode propagate( LHCb::State& state,
+                                double z,
+                                Gaudi::TrackMatrix* transMat,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
   /// Propagate a statevector to a given z-position
-  virtual StatusCode propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix,
-			       LHCb::ParticleID pid ) ;
+  virtual StatusCode propagate( LHCb::StateVector& state,
+				double z,
+				Gaudi::TrackMatrix* transportmatrix,
+				LHCb::ParticleID pid ) ;
 
   /// Propagate a track to the closest point to the specified point
   virtual StatusCode propagate( const LHCb::Track& track,
@@ -158,9 +168,6 @@ public:
                                Gaudi::XYZVector& mom,
                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
-  /// retrieve transport matrix
-  virtual const Gaudi::TrackMatrix& transportMatrix() const;
-
   /// Standard constructor
   TrackExtrapolator( const std::string& type, 
 		     const std::string& name,
@@ -169,11 +176,6 @@ public:
   /// Destructor
   virtual ~TrackExtrapolator( );
 
-protected:
-  
-  /// Transport matrix
-  Gaudi::TrackMatrix m_F; 
-  
 private :
   
   /// Maximum number of steps in propagation to a plane

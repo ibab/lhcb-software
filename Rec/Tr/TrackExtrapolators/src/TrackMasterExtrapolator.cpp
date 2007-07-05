@@ -1,3 +1,4 @@
+// $Id: TrackMasterExtrapolator.cpp,v 1.25 2007-07-05 08:29:51 ebos Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -114,13 +115,21 @@ StatusCode TrackMasterExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 //=========================================================================
 //  Main method: Extrapolate a State
 //=========================================================================
-StatusCode TrackMasterExtrapolator::propagate( State& state, 
+StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state, 
                                                double zNew,
-                                               ParticleID partId )
+                                               Gaudi::TrackMatrix* transMat,
+                                               LHCb::ParticleID partId )
 {
   StatusCode sc = StatusCode::SUCCESS ;
-  // reset transport matrix
-  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  // Create transport update matrix
+  TrackMatrix updateMatrix = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  TrackMatrix* upMat = NULL;
+  // Check transport matrix
+  if( transMat != NULL )
+    {
+      *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+      upMat = &updateMatrix;
+    }
 
   //check if not already at required z position
   const double zStart = state.z();
@@ -175,7 +184,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	double tWall = fabs( it->z2 - it->z1 ) ;
 	//for thick scatterers it is always z2. double zWall = it->z2 ;
 	ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),zWall);
-	sc = thisExtrapolator->propagate( state, zWall );
+	sc = thisExtrapolator->propagate( state, zWall, upMat );
 	
 	// check for success
 	if ( sc.isFailure() ) {
@@ -185,7 +194,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	}
 	
 	//update f
-	updateTransportMatrix( thisExtrapolator->transportMatrix() );  
+	if( transMat != 0 ) { *transMat *= updateMatrix; }
 	
 	// multiple scattering
 	if ( m_applyMultScattCorr ) {
@@ -214,7 +223,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     double ztarget = start.z() + vect.z() ;
     if(state.z() != ztarget) {
       ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
-      sc = thisExtrapolator->propagate( state, ztarget );
+      sc = thisExtrapolator->propagate( state, ztarget, upMat );
       
       // check for success
       if ( sc.isFailure() ) {
@@ -224,7 +233,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       }
       
       //update f
-      updateTransportMatrix( thisExtrapolator->transportMatrix() );  
+      if( transMat != 0 ) { *transMat *= updateMatrix; }
     }
 
   } // loop over steps
