@@ -25,6 +25,10 @@ HltEnd.OnTES = true; // store all on TES
 //---------------------------------------------------------------------
 #include "$HLTSYSROOT/options/HltProtoParticles.opts"
 //---------------------------------------------------------------------
+// Empty Sequencer for MC truth filtering --- fill in HltSelChecker
+//---------------------------------------------------------------------
+HltSelections.Members += { "GaudiSequencer/SeqHltTruthFilter" } ;
+//---------------------------------------------------------------------
 // Standard HLT Particles
 //---------------------------------------------------------------------
 HltSelections.Members += { "GaudiSequencer/HltShared" };
