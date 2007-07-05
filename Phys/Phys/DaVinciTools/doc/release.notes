@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.266 2007-06-28 11:30:42 jpalac Exp $
+! $Id: release.notes,v 1.267 2007-07-05 13:54:25 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-07-05 - Patrick Koppenburg
+ - PhysDesktop: check msgLevel defor debug() and verbose(). Print key() when
+   useful.
 
 ! 2007-06-28 - Juan Palacios
   - cmt/requirements

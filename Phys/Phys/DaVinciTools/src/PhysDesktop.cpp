@@ -141,16 +141,16 @@ StatusCode PhysDesktop::initialize()
 
   const StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return Warning( "Failed to initialize base class GaudiTool", sc );
-  debug() << ">>>   PhysDesktop::initialize() " << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>>   PhysDesktop::initialize() " << endmsg;
 
   // Register to the Incident service to be notified at the end of one event
   incSvc()->addListener( this, IncidentType::EndEvent, 100 );
 
   if ( m_pMakerType == "" ){
-    debug() << "No ParticleMaker requested in job options"
-           << endmsg
-           << "Only previously produced particles will be loaded"
-           << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "No ParticleMaker requested in job options"
+                                      << endmsg
+                                      << "Only previously produced particles will be loaded"
+                                      << endmsg;
   } else {
     // Retrieve the ParticleMaker tool:
     info() << "Using ParticleMaker : " << m_pMakerType << endmsg;
@@ -164,7 +164,7 @@ StatusCode PhysDesktop::initialize()
   // Check if InputLocation has been set
   if ( m_inputLocn.empty() ){
     if ( m_pMakerType == "" ) warning() << "No inputLocations nor ParticleMaker defined" << endmsg ;
-    debug() << "Empty list of input locations -> No particles from previous processing" << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "Empty list of input locations -> No particles from previous processing" << endmsg;
   } else {
     info() << "Particles and Vertices will be loaded from :- "  << endreq ;
     for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
@@ -232,11 +232,11 @@ const LHCb::Vertex::ConstVector& PhysDesktop::secondaryVertices() const {
 //============================================================================
 StatusCode PhysDesktop::cleanDesktop(){
 
-  verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
   // Some particle have been saved to the TES, so they belong to it
   // others do not and need to be deleted by the PhysDesktop
-  verbose() << "Number of particles before cleaning = "
-            << m_parts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of particles before cleaning = "
+                                        << m_parts.size() << endmsg;
 
   int iTEScount = 0;
   while ( !m_parts.empty() ) {
@@ -247,10 +247,10 @@ StatusCode PhysDesktop::cleanDesktop(){
     else delete ipart; 
   }
 
-  verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
-  verbose() << "Removing all vertices from desktop" << endmsg;
-  verbose() << "Number of vertices before cleaning = "
-            << m_secVerts.size() + m_primVerts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all vertices from desktop" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices before cleaning = "
+                                        << m_secVerts.size() + m_primVerts.size() << endmsg;
 
   iTEScount = 0;
   while ( m_secVerts.size() > 0 ) {
@@ -269,7 +269,7 @@ StatusCode PhysDesktop::cleanDesktop(){
   m_partsInTES.clear();
   m_vertsInTES.clear();
 
-  verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
   i_p2PVTable()->clear();
   
   return StatusCode::SUCCESS;
@@ -289,33 +289,33 @@ StatusCode PhysDesktop::finalize(){
 //=============================================================================
 const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 
-  verbose() << "save(const LHCb::Particle) in desktop" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "save(const LHCb::Particle) in desktop" << endmsg;
 
   // Input particle is given check if it already exist in the stack
   if( ( 0 != partToSave ) && ( inDesktop( partToSave ) )) {
-    verbose() << "Input particle momentum = "
-              << partToSave->momentum().px() << " ,"
-              << partToSave->momentum().py() << " ,"
-              << partToSave->momentum().pz() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle momentum = "
+                                          << partToSave->momentum().px() << " ,"
+                                          << partToSave->momentum().py() << " ,"
+                                          << partToSave->momentum().pz() << endmsg;
     return partToSave;
   }
 
   // Create new particle on the heap
   LHCb::Particle* saveP = new LHCb::Particle();
-  verbose() << "New particle momentum = "
-            << saveP->momentum().px() << " ,"
-            << saveP->momentum().py() << " ,"
-            << saveP->momentum().pz() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "New particle momentum = "
+                                        << saveP->momentum().px() << " ,"
+                                        << saveP->momentum().py() << " ,"
+                                        << saveP->momentum().pz() << endmsg;
 
   // Input LHCb::Particle from stack is given as input to fill newly created particle
   if( ( 0 != partToSave) && ( !inDesktop ( partToSave ) ) ) {
     // Copy contents to newly created particle
     LHCb::Particle& savePcont = *saveP;
     savePcont = *partToSave;
-    verbose() << "Input particle momentum = "
-              << saveP->momentum().px() << " ,"
-              << saveP->momentum().py() << " ,"
-              << saveP->momentum().pz() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle momentum = "
+                                          << saveP->momentum().px() << " ,"
+                                          << saveP->momentum().py() << " ,"
+                                          << saveP->momentum().pz() << endmsg;
     // Check if link to endProducts exist and set it
     if( 0 != partToSave->endVertex() ) {
       const LHCb::Vertex* saveV = save( partToSave->endVertex() );
@@ -328,10 +328,10 @@ const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 
   // Put in the desktop container
   setInDesktop(saveP);
-  verbose() << "Momentum of new particle in desktop = "
-            << saveP->momentum().px() << " ,"
-            << saveP->momentum().py() << " ,"
-            << saveP->momentum().pz() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Momentum of new particle in desktop = "
+                                        << saveP->momentum().px() << " ,"
+                                        << saveP->momentum().py() << " ,"
+                                        << saveP->momentum().pz() << endmsg;
   m_parts.push_back(saveP);
   return saveP;
 
@@ -341,30 +341,30 @@ const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 //=============================================================================
 const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 
-  verbose() << "save (LHCb::Vertex) in desktop" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "save (LHCb::Vertex) in desktop" << endmsg;
 
   // Input vertex is given check if it already exist in the stack
   if( ( 0 != vtxToSave ) && ( inDesktop( vtxToSave ) ) ) {
-    verbose() << "Input vertex position = "
-              << vtxToSave->position().x() << " ,"
-              << vtxToSave->position().y() << " ,"
-              << vtxToSave->position().z() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Input vertex position = "
+                                          << vtxToSave->position().x() << " ,"
+                                          << vtxToSave->position().y() << " ,"
+                                          << vtxToSave->position().z() << endmsg;
     return vtxToSave;
   }
 
   // Create new vertex on the heap
   LHCb::Vertex* saveV = new LHCb::Vertex();
-  verbose() << "New vertex position = "
-            << saveV->position().x() << " ,"
-            << saveV->position().y() << " ,"
-            << saveV->position().z() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "New vertex position = "
+                                        << saveV->position().x() << " ,"
+                                        << saveV->position().y() << " ,"
+                                        << saveV->position().z() << endmsg;
 
   // Input vertex from stack is given as input to fill new created vertex
   if( ( 0 != vtxToSave ) && ( !inDesktop( vtxToSave ) ) ) {
-    verbose() << "Input vertex position = "
-              << saveV->position().x() << " ,"
-              << saveV->position().y() << " ,"
-              << saveV->position().z() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Input vertex position = "
+                                          << saveV->position().x() << " ,"
+                                          << saveV->position().y() << " ,"
+                                          << saveV->position().z() << endmsg;
     // Copy contents to newly created vertex
     LHCb::Vertex& saveVcont = *saveV;
     saveVcont = *vtxToSave;
@@ -380,10 +380,10 @@ const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 
   // Put in the desktop container
   setInDesktop(saveV);
-  verbose() << "Position of new vertex in desktop = "
-            << saveV->position().x() << " ,"
-            << saveV->position().y() << " ,"
-            << saveV->position().z() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Position of new vertex in desktop = "
+                                        << saveV->position().x() << " ,"
+                                        << saveV->position().y() << " ,"
+                                        << saveV->position().z() << endmsg;
   m_secVerts.push_back(saveV);
   return saveV;
 
@@ -395,14 +395,14 @@ const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 //=============================================================================
 StatusCode PhysDesktop::saveDesktop() const {
 
-  verbose() << "Save all new particles and vertices in desktop " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Save all new particles and vertices in desktop " << endmsg;
   return saveDesktop( m_parts, m_secVerts );
   
 }
 //=============================================================================
 void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) const 
 {
-   verbose() << "Save Particles to TES " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Save Particles to TES " << endmsg;
 
   LHCb::Particles* particlesToSave = new LHCb::Particles();
 
@@ -413,18 +413,20 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
     // Check if this was already in a Gaudi container (hence in TES)
     if(  0 == (*icand)->parent() ) {
       particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
-      verbose() << "  Saving " << (*icand)->particleID().pid()
-                << " with P= " << (*icand)->momentum() << " m="
-                << (*icand)->measuredMass() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "  Saving " << (*icand)->key() 
+                                            << " " << (*icand)->particleID().pid()
+                                            << " with P= " << (*icand)->momentum() << " m="
+                                            << (*icand)->measuredMass() << endmsg ;
     } else {
-      verbose() << "Skipping " << (*icand)->particleID().pid()
-                << " with P= " << (*icand)->momentum() << " m="
-                << (*icand)->measuredMass() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Skipping " << (*icand)->key()
+                                            << (*icand)->particleID().pid()
+                                            << " with P= " << (*icand)->momentum() << " m="
+                                            << (*icand)->measuredMass() << endmsg ;
     }
   }
-  verbose() << "Saving " << particlesToSave->size()
-            << " new particles in " << location << " from " << pToSave.size()
-            << " total particles in desktop " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << particlesToSave->size()
+                                        << " new particles in " << location << " from " << pToSave.size()
+                                        << " total particles in desktop " << endmsg;
 
   put(particlesToSave,location);
   // now save relations table
@@ -445,9 +447,9 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 
   std::string location(m_outputLocn+"/Vertices");
 
-  verbose() << "Saving " << verticesToSave->size()
-            << " new vertices in " << location << " from " << vToSave.size()
-            << " vertices in desktop " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
+                                        << " new vertices in " << location << " from " << vToSave.size()
+                                        << " vertices in desktop " << endmsg;
 
   put(verticesToSave,location);
   
@@ -462,11 +464,12 @@ void PhysDesktop::saveTable(const  LHCb::Particle::ConstVector& pToSave) const {
     Particle2Vertex::Range r = m_p2VtxTable.relations(*p);
     for ( Particle2Vertex::Range::const_iterator i = r.begin() ; i!= r.end() ; ++i){
       table->relate(*p,i->to(),i->weight());
-      verbose() << "Saving a " << (*p)->particleID().pid() << " related to " 
-               <<  i->to()->position() << " at " << i->weight() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Saving a " << (*p)->key() << " " 
+                                            << (*p)->particleID().pid() << " related to " 
+                                            <<  i->to()->position() << " at " << i->weight() << endmsg ;
     }
   }
-  debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" << endmsg ;
   std::string location(m_outputLocn+"/Particle2VertexRelations");
   put(table, location);
   return ;
@@ -478,7 +481,7 @@ void PhysDesktop::saveTable(const  LHCb::Particle::ConstVector& pToSave) const {
 StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) const
 {
 
-  verbose() << " PhysDesktop SaveTrees(LHCb::Particle::ConstVector)" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << " PhysDesktop SaveTrees(LHCb::Particle::ConstVector)" << endmsg;
 
   // Find all particles that will need to be saved and put them in
   // a container
@@ -486,9 +489,10 @@ StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) co
   LHCb::Vertex::ConstVector allvToSave;
   for( p_iter icand = pToSave.begin();
        icand != pToSave.end(); icand++ ) {
-    verbose() << "  Getting " << (*icand)->particleID().pid()
-              << " with P= " << (*icand)->momentum() << " parent "
-              << (*icand)->parent() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "  Getting " << (*icand)->key() << " " 
+                                          << (*icand)->particleID().pid()
+                                          << " with P= " << (*icand)->momentum() << " parent "
+                                          << (*icand)->parent() << endmsg ;
     // Find all descendendant from this particle
     findAllTree( *icand, allpToSave, allvToSave);
   }
@@ -502,8 +506,8 @@ StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) co
 //=============================================================================
 StatusCode PhysDesktop::saveTrees( int partid ) const {
 
-  verbose() << "PhysDesktop saveParticles(pid code)"
-            << "type = " << partid << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop saveParticles(pid code)"
+                                        << "type = " << partid << endmsg;
 
   LHCb::Particle::ConstVector pToSave;
   for( p_iter icand = m_parts.begin(); icand != m_parts.end(); icand++ ) {
@@ -525,14 +529,16 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
        i!=pToSave.end();++i) {
     LHCb::Particle *clone = (*i)->clone();
     cloned.push_back(clone);
-    verbose() << "Clone " << clone->particleID().pid() << " with momentum " <<
-      clone->momentum() << " m=" << clone->measuredMass() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Clone " << (*i)->key() << " to " << clone->key() << " " 
+                                          << clone->particleID().pid() << " with momentum " 
+                                          << clone->momentum() << " m=" << clone->measuredMass() << endmsg ;
     // now clone the relations too
     Particle2Vertex::Range r = m_p2VtxTable.relations(*i);
     for ( Particle2Vertex::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
       m_p2VtxTable.relate(clone,j->to(),j->weight());
-      verbose() << "Cloning a " << clone->particleID().pid() << " related to " 
-               <<  j->to()->position() << " at " << j->weight() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Cloning a " << clone->key() 
+                                            << " " << clone->particleID().pid() << " related to " 
+                                            <<  j->to()->position() << " at " << j->weight() << endmsg ;
     }
   }
   return saveTrees(cloned);
@@ -563,9 +569,9 @@ void PhysDesktop::findAllTree( const LHCb::Particle* part,
 //=============================================================================
 StatusCode PhysDesktop::getEventInput(){
 
-  verbose() << ">>> Hello from getEventInput " << endmsg;
-  verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
-            << ", " << m_primVerts.size() << ", " <<  m_secVerts.size()<< endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << ">>> Hello from getEventInput " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
+                                        << ", " << m_primVerts.size() << ", " <<  m_secVerts.size()<< endmsg;
   
   // OD : Before makeParticles in case new vertex are produced (?)
   if ( !m_primVerts.empty()) m_primVerts.clear(); // to make sure it is clean in this event
@@ -579,7 +585,7 @@ StatusCode PhysDesktop::getEventInput(){
 
   // Retrieve Primary vertices
   if( "None" == m_primVtxLocn ) {
-    verbose() << "Not loading any primary vertices" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Not loading any primary vertices" << endmsg;
   } else {
     StatusCode sc = getPrimaryVertices();
     if (!sc) return sc;
@@ -604,9 +610,9 @@ StatusCode PhysDesktop::getEventInput(){
 StatusCode PhysDesktop::makeParticles(){
   // Make particles starting from MC or reconstruction objects
 
-  verbose() << "PhysDesktop:Calling " << m_pMakerType
-            << "::makeParticles() "
-            << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop:Calling " << m_pMakerType
+                                        << "::makeParticles() "
+                                        << endmsg;
 
   // Remember that these particles belong to the Desktop and are not
   // in a TES container yet
@@ -614,7 +620,7 @@ StatusCode PhysDesktop::makeParticles(){
   StatusCode sc = m_pMaker->makeParticles(particles);
 
   if (!sc) {
-    verbose() << " not able to make particles " << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " not able to make particles " << endmsg;
     return sc;
   }
 
@@ -633,11 +639,11 @@ StatusCode PhysDesktop::makeParticles(){
     }
   }
 
-  verbose() << "Number of Particles from " << m_pMakerType
-            << " : " << m_parts.size() << endmsg;
-  verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
-  verbose() << "Number of Vertices from " << m_pMakerType
-            << " : " << m_secVerts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles from " << m_pMakerType
+                                        << " : " << m_parts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " << m_pMakerType
+                                        << " : " << m_secVerts.size() << endmsg;
 
   return sc;
 }
@@ -646,8 +652,8 @@ StatusCode PhysDesktop::makeParticles(){
 //=============================================================================
 StatusCode PhysDesktop::getParticles(){
 
-  debug() << "Looking for particles in " << m_inputLocn.size() 
-          << " places" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Looking for particles in " << m_inputLocn.size() 
+                                    << " places" << endmsg ;
 
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
        iloc != m_inputLocn.end(); iloc++ ) {
@@ -661,8 +667,8 @@ StatusCode PhysDesktop::getParticles(){
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
     // Msg number of Particles retrieved
-    verbose() << "    Number of Particles retrieved from "
-              << location << " = " << parts->size() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of Particles retrieved from "
+                                          << location << " = " << parts->size() << endmsg;
     
     for( LHCb::Particles::iterator icand = parts->begin(); 
          icand != parts->end(); icand++ ) {
@@ -670,8 +676,8 @@ StatusCode PhysDesktop::getParticles(){
       m_parts.push_back(*icand);
     }
     
-    verbose() << "Number of Particles after adding "
-              << location << " = " << m_parts.size() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles after adding "
+                                          << location << " = " << m_parts.size() << endmsg;
     
     
     // Retrieve the vertices:
@@ -683,21 +689,21 @@ StatusCode PhysDesktop::getParticles(){
     LHCb::Vertices* verts = get<LHCb::Vertices>( location );
     
     if( verts->empty() ) {
-      verbose() << "No vertices retrieved from " << location << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "No vertices retrieved from " << location << endmsg;
     } else {  
-      verbose() << "    Number of vertices retrieved from "
-                << location << " = " << verts->size() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of vertices retrieved from "
+                                            << location << " = " << verts->size() << endmsg;
       for( LHCb::Vertices::iterator ivert = verts->begin();
            ivert != verts->end(); ++ivert ) {
         setInDesktop(*ivert);
         m_secVerts.push_back(*ivert);
       }
-      verbose() << "Number of vertices after adding "
-                << location << " = " << m_secVerts.size() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices after adding "
+                                            << location << " = " << m_secVerts.size() << endmsg;
     }
   }
-  verbose() << "    Total number of particles " << m_parts.size() << endmsg;
-  verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -713,13 +719,13 @@ StatusCode PhysDesktop::getRelations(){
     if (!exist<Particle2Vertex::Table>(location)){
       Warning("No relations table at "+location).ignore();
       continue ;
-    } else debug() << "Reading table from " << location << endmsg ;
+    } else if (msgLevel(MSG::DEBUG)) debug() << "Reading table from " << location << endmsg ;
     Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
     Particle2Vertex::Range all = table->relations();
     for ( Particle2Vertex::Range::const_iterator i = all.begin() ; i!= all.end() ; ++i){
       (m_p2VtxTable.relate(i->from(),i->to(),i->weight())).ignore() ;
-      verbose() << "Reading a " << i->from()->particleID().pid() << " related to " 
-               <<  i->to()->position() << " at " << i->weight() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Reading a " << i->from()->particleID().pid() << " related to " 
+                                            <<  i->to()->position() << " at " << i->weight() << endmsg ;
     }
   }
   return StatusCode::SUCCESS ; // could be sc
@@ -733,33 +739,33 @@ StatusCode PhysDesktop::getPrimaryVertices(){
   if ( m_primVtxLocn == "" ) primVtxLocn = m_OnOffline->getPVLocation() ;
   else primVtxLocn = m_primVtxLocn ;
 
-  verbose() << "Getting PV from " << primVtxLocn << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << primVtxLocn << endmsg;
 
   if ( !exist<LHCb::RecVertices>( primVtxLocn )){
     return StatusCode::SUCCESS; // no PV
   }
   LHCb::RecVertices* verts = get<LHCb::RecVertices>( primVtxLocn );
   if( ! verts ) {
-    verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;
   } else if( verts->empty() ) {
-    verbose() << " No vertices retrieved from  " << primVtxLocn << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primVtxLocn << endmsg;
   } else {
-    verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
 
     for( LHCb::RecVertices::const_iterator ivert = verts->begin();
          ivert != verts->end(); ivert++ ) {
-      verbose() << "    Vertex coordinates = ( "
-                << (*ivert)->position().x()
-                << " , " << (*ivert)->position().y()
-                << " , " << (*ivert)->position().z() << " ) " << endmsg;
-      verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
-                << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    Vertex coordinates = ( "
+                                            << (*ivert)->position().x()
+                                            << " , " << (*ivert)->position().y()
+                                            << " , " << (*ivert)->position().z() << " ) " << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
+                                            << endmsg;
       // Put them in local containers
       setInDesktop(*ivert);
       m_primVerts.push_back(*ivert);
     }
   }
-  verbose() << "Number of Vertices from " << primVtxLocn << " are " << m_primVerts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " << primVtxLocn << " are " << m_primVerts.size() << endmsg;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -788,18 +794,19 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
     LHCb::Particle::ConstVector pEmpty;
     LHCb::Vertex::ConstVector vEmpty;
     sc = saveDesktop(pEmpty,vEmpty);
-    debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
   }  
   return sc ;
 }
 //=============================================================================
 const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
   if (  particle2Vertices(part).empty() ){
-    verbose() << "Table is empty for particle " << part->particleID().pid() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Table is empty for particle " << part->key() << " " 
+                                          << part->particleID().pid() << endmsg ;
     StatusCode sc = m_pvRelator->relatedPVs(part,&m_p2VtxTable);
     if (!sc) Error("Error in relatedPVs");
   }
-  verbose() << "P2V returns particle2Vertices" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "P2V returns particle2Vertices" << endmsg ;
   if ( particle2Vertices(part).empty() ) return NULL ;
   else return particle2Vertices(part).back().to();
 }
@@ -808,11 +815,11 @@ void PhysDesktop::relate(const LHCb::Particle*   part,
                          const LHCb::VertexBase* vert,
                          const double weight)
 {
-  verbose() << "Relating with weight " << weight 
-           << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Relating with weight " << weight 
+                                        << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
   i_p2PVTable()->relate(part, vert, weight);
-  verbose() << "Related  with weight " << weight 
-           << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Related  with weight " << weight 
+                                        << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
 }
 //=============================================================================
 double PhysDesktop::weight(const LHCb::Particle*   part, 
@@ -826,9 +833,9 @@ double PhysDesktop::weight(const LHCb::Particle*   part,
 Particle2Vertex::Range 
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
 {
-  verbose() << "PhysDesktop::particle2Vertices. Empty: " 
-            <<  i_p2PVTable()->relations(part).empty() 
-            << " " << i_p2PVTable()->relations(part).size()<< endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::particle2Vertices. Empty: " 
+                                        <<  i_p2PVTable()->relations(part).empty() 
+                                        << " " << i_p2PVTable()->relations(part).size()<< endmsg ;
   return i_p2PVTable()->relations(part);
 }
 //=============================================================================
