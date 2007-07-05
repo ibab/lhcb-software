@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.59 2007-06-28 18:36:20 marcocle Exp $
+! $Id: release.notes,v 1.60 2007-07-05 08:40:17 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-07-05 - Marco Clemencic
+ - Added a script to dump a database snapshot to XML files:
+     dump_db_to_files.py.
+   The user can/should provide a tag and the "event time" (as nanoseconds).
 
 ! 2007-06-28 - Marco Clemencic
  - Fixed the local copy of PyCoolDiff
