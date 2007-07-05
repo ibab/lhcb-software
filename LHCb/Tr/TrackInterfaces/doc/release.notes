@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-07-05 - Edwin Bos
+ - Removed transportMatrix getter from and added a propagate method to the
+ - ITrackExtrapolator interface
+
 ! 2007-07-03 J.A Hernando
  - ITracksFromTrack.h interface for the HLT 
 

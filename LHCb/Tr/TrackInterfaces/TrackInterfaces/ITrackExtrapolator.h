@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.15 2007-06-07 08:53:15 wouter Exp $
+// $Id: ITrackExtrapolator.h,v 1.16 2007-07-05 08:27:11 ebos Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -65,8 +65,10 @@ public:
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a statevector
-  virtual StatusCode propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix=0,
-			       LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+  virtual StatusCode propagate( LHCb::StateVector& state,
+				double z,
+				Gaudi::TrackMatrix* transportmatrix=0,
+				LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const LHCb::Track& track,
@@ -77,6 +79,13 @@ public:
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( LHCb::State& state,
                                 double z,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
+  /// Propagate a state to a given z-position
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  virtual StatusCode propagate( LHCb::State& state,
+                                double z,
+                                Gaudi::TrackMatrix* transMat,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a track to the closest point to the specified point
@@ -171,8 +180,5 @@ public:
                                Gaudi::XYZVector& mom,
                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
-  /// Getters & setters
-  virtual const Gaudi::TrackMatrix& transportMatrix() const = 0;
-  
 };
 #endif // TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
