@@ -1,6 +1,9 @@
 Package: OnlineTasks
 Author:  Markus Frank
 
+! 2007-07-05 Eric van Herwijnen
+  Modified Adder.sh and Adder options
+
 ! 2007-04-31 Niko
   Fix minor bugs in options files
 

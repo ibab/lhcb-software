@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #  Generic script to setup the environment for an Online Gaudi/Gaucho task
 #  
 # Todo: remove hard-coded DIM_DNS_NODE
@@ -47,7 +47,7 @@ cd $LHCBHOME/lhcb/ONLINE/ONLINE_v3r1/Online/OnlineTasks/v1r3/cmt
 
 cd $oldpwd
 
-export DIM_DNS_NODE=hltdev001.daq.lhcb
+#export DIM_DNS_NODE=hltdev001.daq.lhcb
 
 #evh  if [ -z $DIM_DNS_NODE ] ; then
 #evh	if [ -r /etc/dim.conf ] ; then
