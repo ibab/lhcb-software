@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r6 2007-07-05 =======================
 ! 2007-07-04 - David Hutchcroft
  - Use track type instead of history to identify Velo only tracks
 
