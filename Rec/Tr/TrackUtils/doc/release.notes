@@ -4,8 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r13 2007-07-05 ======================
 ! 2007-07-04 - David Hutchcroft
- - Fixed for PatVeloR tracks so that states correctly prepared (also fixed warning)
+ - Fixed TrackToDST for PatVeloR tracks so that states correctly prepared
+   (also fixed warning)
 
 !========================== TrackUtils v1r12 2007-03-28 ======================
 ! 2007-03-22 - David Hutchcroft
