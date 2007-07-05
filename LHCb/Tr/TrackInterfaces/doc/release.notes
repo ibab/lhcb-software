@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-07-05 - David Hutchcroft
+ - Corrected comment in ITracksFromTrack.h 
+
 ! 2007-07-05 - Edwin Bos
  - Removed transportMatrix getter from and added a propagate method to the
  - ITrackExtrapolator interface

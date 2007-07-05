@@ -1,4 +1,4 @@
-// $Id: ITracksFromTrack.h,v 1.1 2007-07-03 12:18:01 hernando Exp $
+// $Id: ITracksFromTrack.h,v 1.2 2007-07-05 13:45:59 dhcroft Exp $
 #ifndef TRACKINTERFACES_ITRACKSFROMTRACK_H 
 #define TRACKINTERFACES_ITRACKSFROMTRACK_H 1
 
@@ -25,7 +25,7 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITracksFromTrack; }
   
-  /// Take an RZ Velo track and make 3D Velo track(s)
+  /// Take an existing track and make new tracks from it (usually with hits from more detectors)
   virtual StatusCode tracksFromTrack( const LHCb::Track& seed, 
 				      std::vector<LHCb::Track*>& tracks ) = 0;
 
