@@ -18,6 +18,7 @@ HltEndSeq.Members = {"HltSelectionDataToTes",
 HltSelectionDataToTes.TracksSelections = {"HadPreTriggerSingle"};
 HltSelectionDataToTes.OutputLevel = 3;
 
+// HltSummaryWriter.SaveAll = true;
 HltSummaryWriter.OutputLevel = 3;
 
 HltAllAlleys.Members ={
