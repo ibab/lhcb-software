@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.11 2007-06-29 14:37:25 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.12 2007-07-05 12:22:16 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -30,12 +30,12 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   GaudiTool(type, name, parent)
 {
-  m_errorVec += 0.22, 0.12, 0.24, 0.21;
-  // proposed new tune  m_errorVec += 0.24, 0.13, 0.26, 0.23;
+  //  m_errorVec += 0.22, 0.12, 0.24, 0.21;
+  m_errorVec += 0.24, 0.13, 0.26, 0.23;
   declareProperty("ErrorVec",m_errorVec);
   declareProperty("SharingCorr",m_sharingCorr = 112.);
   declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
-  declareProperty("trim", m_trim = 0.0);
+  declareProperty("trim", m_trim = 0.3);
  
   declareInterface<ISTClusterPosition>(this);
 }

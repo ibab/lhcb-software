@@ -2,9 +2,15 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+
+! 2007-07-05 M Needham
+ - Turn on trimming
+
+
 !=========================== STTools v3r2 2007-07-02 ==========================
 ! 2007-07-02 - Marco Cattaneo
  - Fix a doxygen warning
+
 
 ! 2007-06-29 M Needham 
  -  Add possibility to trim ST Measurements (turned off for now)
