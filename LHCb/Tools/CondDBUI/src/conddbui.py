@@ -1435,7 +1435,7 @@ def _fix_xml(xml_data,folderset_path):
             if os.environ.has_key(name):
                 val = os.environ[name]
             else:
-                val = name
+                val = '$'+name
                 
             data = data[0:pos] + val + data[e:]
             m = envVarRE.search(data,pos+1)
