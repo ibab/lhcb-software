@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-07-05 - Patrick Koppenburg
+ - PrintHeader: print header in info(). Avoids other useless printout
+   in debug().
+ - Increment to v2r10
+
 !======================== LHCbAlgs v2r9 2007-06-04 ===========================
 ! 2007-06-04 - Marco Cattaneo
  - Adapt to Gaudi v19r4 change of setFilterPassed return type
