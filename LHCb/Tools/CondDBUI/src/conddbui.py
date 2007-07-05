@@ -1017,15 +1017,14 @@ class CondDB:
         outputs:
             none
         """
+        if tagName.upper() in ['','HEAD']:
+            return True # HEAD tags are always valid
         if self.db.existsFolderSet(path):
             # the path points to a folderset, I check the tag in all its subnodes
             nodes = self.getChildNodes(path)
             try:
                 for n in nodes:
-                    if self.db.existsFolderSet(n):
-                        f = self.db.getFolderSet(n)
-                    else:
-                        f = self.db.getFolder(n)
+                    f = self.getCOOLNode(n)
                     f.resolveTag(tagName)
             except:
                 return False
