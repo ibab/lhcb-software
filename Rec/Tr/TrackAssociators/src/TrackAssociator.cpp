@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.12 2007-05-03 11:56:47 ebos Exp $
+// $Id: TrackAssociator.cpp,v 1.13 2007-07-05 15:14:53 ebos Exp $
 // Include files
 
 // local
@@ -26,6 +26,9 @@
 // from Event/OTEvent
 #include "Event/OTTime.h"
 
+// from Event/MuonEvent
+#include "Event/MuonCoord.h"
+
 // from Event/Event
 #include "Event/MCVertex.h"
 
@@ -42,12 +45,14 @@ TrackAssociator::TrackAssociator( const std::string& name,
   m_fractionOK(0.),
   m_nTotVelo(0.),
   m_nTotTT1(0.),
-  m_nTotSeed(0.)
+  m_nTotSeed(0.),
+  m_nTotMuon(0.)
 {
   declareProperty( "TracksInContainer",
                    m_tracksInContainer = TrackLocation::Default );
   declareProperty( "LinkerOutTable", m_linkerOutTable = "" );
   declareProperty( "FractionOK"    , m_fractionOK = 0.70 );
+  declareProperty( "DecideUsingMuons", m_decideUsingMuons = false );
 }
 
 //=============================================================================
@@ -125,6 +130,15 @@ StatusCode TrackAssociator::execute() {
     return StatusCode::FAILURE;
   }
 
+  // Get the linker table MuonCoord => MCParticle
+  LinkedTo<MCParticle,MuonCoord>
+    muonLink(evtSvc(),msgSvc(),LHCb::MuonCoordLocation::MuonCoords);
+  if( muonLink.notFound() ) {
+    error() << "Unable to retrieve MuonCoord to MCParticle linker table."
+            << endreq;
+    return StatusCode::FAILURE;
+  }
+
   // Loop over the Tracks
   Tracks::const_iterator it;
   for( it = tracks->begin(); tracks->end() != it; ++it ) {
@@ -132,10 +146,12 @@ StatusCode TrackAssociator::execute() {
     m_nTotVelo = 0.;
     m_nTotTT1  = 0.;
     m_nTotSeed = 0.;
+    m_nTotMuon = 0.;
     m_parts.clear();
     m_nVelo.clear();
     m_nTT1.clear();
     m_nSeed.clear();
+    m_nMuon.clear();
     
     static bool measRemoved;
 
@@ -181,7 +197,7 @@ StatusCode TrackAssociator::execute() {
             if( mcParts != mcParticle->parent() ) {
               debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            else { countMCPart( mcParticle, 1., 0., 0. ); }
+            else { countMCPart( mcParticle, 1., 0., 0., 0. ); }
             mcParticle = veloLink.next();
           }
           continue;
@@ -198,7 +214,7 @@ StatusCode TrackAssociator::execute() {
             if( mcParts != mcParticle->parent() ) {
               debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            else { countMCPart( mcParticle, 0., 1., 0. ); }
+            else { countMCPart( mcParticle, 0., 1., 0., 0. ); }
             mcParticle = ttLink.next();
           }
           continue;
@@ -216,7 +232,7 @@ StatusCode TrackAssociator::execute() {
             if( mcParts != mcParticle->parent() ) {
               debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            else { countMCPart( mcParticle, 0., 0., 1. ); }
+            else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
             mcParticle = itLink.next();
           }
           continue;
@@ -234,8 +250,25 @@ StatusCode TrackAssociator::execute() {
             if( mcParts != mcParticle->parent() ) {
               debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            else { countMCPart( mcParticle, 0., 0., 1. ); }
+            else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
             mcParticle = otLink.next();
+          }
+        }
+        if( (*iId).isMuon() ) {
+          ++nMeas;
+          // Count number of Muon hits
+          m_nTotMuon += 1.;
+          MuonTileID muonID = (*iId).muonID();
+          MCParticle* mcParticle = muonLink.first( muonID );
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with MuonCoord " << muonID << endreq;
+          }
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+            }
+            else { countMCPart( mcParticle, 0., 0., 0., 1. ); }
+            mcParticle = muonLink.next();
           }
         }
       }
@@ -294,6 +327,27 @@ StatusCode TrackAssociator::execute() {
       }
     }
 
+    // Add parent muon hits to daughter MCParticle
+    if(m_decideUsingMuons) {
+      unsigned int j1, j2;
+      for( j1 = 0; m_parts.size() > j1; ++j1 ) {
+	if( m_nMuon[j1] < m_fractionOK * m_nTotMuon ) { continue; }
+	const MCVertex* vOrigin = m_parts[j1]->originVertex();
+	while( 0 != vOrigin ) {
+	  const MCParticle* mother = vOrigin->mother();
+	  if( 0 == mother ) break;
+	  for( j2 = 0; m_parts.size() > j2; ++j2 ) {
+	    if( m_nSeed[j2] < m_fractionOK * m_nTotSeed ) { continue; }
+	    if( mother == m_parts[j2] ) {
+	      m_nMuon[j2] += m_nMuon[j1];
+	      m_nMuon[j1] = m_nMuon[j2];
+	    }
+	  }
+	  vOrigin = mother->originVertex();
+	}
+      }
+    }
+    
     // For each MCParticle with a Measurement associated,
     //  Relate the Track to the MCParticles matching the below criteria,
     //  using as weight the ratio of ( total # Measurements associated
@@ -309,6 +363,10 @@ StatusCode TrackAssociator::execute() {
     //  AND
     //   if # associated TT hits > ( total # TT hits - 2 ) ??
     //   or if total # Velo hits > 2 AND total # IT+OT hits > 2
+    // When taking Muon hits into account, also:
+    //  AND
+    //   if 0.70 <= ( # Muon hits associated to the MCParticle /
+    //                total # Muon hits )
     double ratio;
     for( unsigned int jj = 0; m_parts.size() > jj; ++jj ) {
       bool veloOK = true;
@@ -325,6 +383,11 @@ StatusCode TrackAssociator::execute() {
       }
       bool TT1OK = m_nTT1[jj] > m_nTotTT1 - 2;
       if( 2 < m_nTotVelo && 2 < m_nTotSeed ) { TT1OK = true; }
+      bool muonOK = true;
+      if(m_decideUsingMuons) {
+	ratio = m_nMuon[jj] / m_nTotMuon;
+	if( m_fractionOK > ratio ) { muonOK = false; }
+      }
 
       verbose() << " MC " << m_parts[jj]->key() 
                 << " Velo " <<  m_nVelo[jj] << "/" << m_nTotVelo
@@ -333,8 +396,10 @@ StatusCode TrackAssociator::execute() {
                 << endreq;
 
       //=== Decision. Use TT1. Fill Linker
-      if( veloOK && seedOK && TT1OK ) {
-        ratio = ( m_nVelo[jj] + m_nSeed[jj] + m_nTT1[jj] ) / nMeas;
+      if( veloOK && seedOK && TT1OK && muonOK ) {
+	double muons = 0.;
+	if(m_decideUsingMuons) { muons = m_nMuon[jj]; }
+        ratio = ( m_nVelo[jj] + m_nSeed[jj] + m_nTT1[jj] + muons ) / nMeas;
         myLinker.link( tr, m_parts[jj], ratio );
       }
     }
@@ -357,7 +422,8 @@ StatusCode TrackAssociator::finalize() {
 void TrackAssociator::countMCPart( const MCParticle* part, 
                                    double incVelo, 
                                    double incTT1,
-                                   double incSeed ) {
+                                   double incSeed,
+				   double incMuon ) {
   bool found = false;
   // Loop over the MCParticles vector to see whether part is already in m_parts
   for( unsigned int jj = 0; m_parts.size() > jj; ++jj ) {
@@ -365,6 +431,7 @@ void TrackAssociator::countMCPart( const MCParticle* part,
       m_nVelo[jj] += incVelo;
       m_nTT1[jj] += incTT1;
       m_nSeed[jj] += incSeed;
+      m_nMuon[jj] += incMuon;
       // Prevent next if loop to run when this one already did the work
       found = true;
       // Stop looping when successful 
@@ -377,5 +444,6 @@ void TrackAssociator::countMCPart( const MCParticle* part,
     m_nVelo.push_back( incVelo );
     m_nTT1.push_back( incTT1 );
     m_nSeed.push_back( incSeed );
+    m_nMuon.push_back( incMuon );
   }
 }

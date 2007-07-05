@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.8 2006-05-22 10:28:09 erodrigu Exp $
+// $Id: TrackAssociator.h,v 1.9 2007-07-05 15:14:49 ebos Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -54,7 +54,8 @@ private:
   void countMCPart( const LHCb::MCParticle* part,
                     double incVelo,
                     double incTT1,
-                    double incSeed );
+                    double incSeed,
+		    double incMuon );
 
   bool m_debugLevel;
 
@@ -62,6 +63,7 @@ private:
   std::string m_tracksInContainer;  //< Name of the input Tracks container
   std::string m_linkerOutTable;     //< Name of the output Linker table
   double      m_fractionOK;         //< minimal good matching fraction
+  bool        m_decideUsingMuons;   //< use muon hits in link decision
 
   // Vector containing the MCParticles which
   // have a Measurement of any type associated to them
@@ -79,9 +81,14 @@ private:
   // has the same vector index in m_parts
   std::vector< double > m_nSeed;
 
+  // Number of Muon Measurements assigned to the MCParticle which
+  // has the same vector index in m_parts
+  std::vector< double > m_nMuon;
+
   double m_nTotVelo;   // Total number of Velo hits
   double m_nTotTT1;    // Total number of TT hits
   double m_nTotSeed;   // Total number of IT+OT hits
+  double m_nTotMuon;   // Total number of Muon hits
   
 };
 #endif // TRACKASSOCIATOR_H

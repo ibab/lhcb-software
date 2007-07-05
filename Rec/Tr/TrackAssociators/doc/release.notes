@@ -4,6 +4,10 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2007-07-05 - Edwin Bos
+ - Added Muon hits in association decision,
+ - jobOption "DecideUsingMuons" = false by default
+
 !===================== TrackAssociators v2r4 2007-05-03 ====================
 ! 2007-05-03 - Marco Cattaneo
  - Remove obsolete file TrackAssociators_load.cpp
