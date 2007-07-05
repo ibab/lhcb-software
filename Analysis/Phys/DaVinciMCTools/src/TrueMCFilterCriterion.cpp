@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.17 2007-07-05 10:51:39 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.18 2007-07-05 13:09:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -62,9 +62,9 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 
   std::string MCDecay = m_pMCDecFinder->decay();
   if (MCDecay == "")  {
-    fatal() << "MC decay is empty! " << endreq;
+    fatal() << "MC decay is empty! " << endmsg;
     return StatusCode::FAILURE;
-  } else info() << "MC decay is " << MCDecay << endreq ;
+  } else info() << "MC decay is " << MCDecay << endmsg ;
 
   // For Particle -> MCParticle association  
   m_pLinker = new Particle2MCLinker(this,
@@ -76,7 +76,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 //   m_pCl2MCPTable = get<Table>("Relations/" + 
 //                               LHCb::CaloClusterLocation::Default);
 
-  verbose() << "Initialised happily" << endreq ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Initialised happily" << endmsg ;
   setActive(); 
 
   return sc ;
@@ -86,30 +86,32 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 //=============================================================================
 bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
  
-  verbose() << "TrueMCFilterCriterion" << endreq ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "TrueMCFilterCriterion" << endmsg ;
 
   const LHCb::MCParticle* MC = m_pLinker->firstMCP( part );
   
   if( NULL == MC ){
-    debug() << "Empty association range" << endreq;
-    debug() << "No association for " 
-            << part->particleID().pid() << " " << part->momentum()  << endreq ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Empty association range" << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "No association for " << part->key() << " "
+                                      << part->particleID().pid() << " " << part->momentum()  << endmsg ;
     return m_filterOut ; // true if one wants to kill all, false else
   }
 
-  debug() << "Particle      " << part->particleID().pid() << " " 
-          << part->momentum() 
-          << endreq ;
+  if ( msgLevel ( MSG::DEBUG )) debug() << "Particle      " << part->key() << " " 
+                                        << part->particleID().pid() << " " 
+                                        << part->momentum() 
+                                        << endmsg ;
 
   bool signal = false;
 
   while ( NULL != MC ){
 
-    debug() << "Associated to " << MC->particleID().pid() << " " 
-            << MC->momentum() << endreq ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Associated to " << MC->key() << " " 
+                                      << MC->particleID().pid() << " " 
+                                      << MC->momentum() << endmsg ;
     signal = findMCParticle(MC);
     
-    if(signal) debug() << "which is a signal particle" << endreq;
+    if(signal) if (msgLevel(MSG::DEBUG)) debug() << "which is a signal particle" << endmsg;
     if(signal) break; // just take one associated MCParticle
     MC = m_pLinker->nextMCP();
   }
@@ -122,13 +124,13 @@ bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
 //=============================================================================
 bool TrueMCFilterCriterion::findMCParticle( const LHCb::MCParticle* MC ) {
 
-  verbose() << "TrueMCFilterCriterion find MC" << endreq ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "TrueMCFilterCriterion find MC" << endmsg ;
 
   // MC list
   LHCb::MCParticle::Vector mclist; // LF
   LHCb::MCParticles* kmcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !kmcparts ){
-    fatal() << "Unable to find MC particles at '" << LHCb::MCParticleLocation::Default << "'" << endreq;
+    fatal() << "Unable to find MC particles at '" << LHCb::MCParticleLocation::Default << "'" << endmsg;
     return false;
   }
 
@@ -147,20 +149,22 @@ bool TrueMCFilterCriterion::findMCParticle( const LHCb::MCParticle* MC ) {
      
   }
   
-  verbose() << "Found " << mclist.size() << " MC particles from true decay" << endreq ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Found " << mclist.size() << " MC particles from true decay" << endmsg ;
   if (mclist.empty()) return false ;
 
-  verbose() << "Looking for " << MC->particleID().pid() << " " << MC->momentum() << endreq ;  
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for " << MC->key() 
+                                        << " " << MC->particleID().pid() << " " << MC->momentum() << endmsg ;  
   LHCb::MCParticle::Vector::iterator mcp ; // LF
   for ( mcp = mclist.begin() ; mcp != mclist.end() ; ++mcp ){
-    verbose() << "Looping on  " << (*mcp)->particleID().pid() << " " 
-              << (*mcp)->momentum() << endreq ;  
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on  " << (*mcp)->key() 
+                                          << " " << (*mcp)->particleID().pid() << " " 
+                                          << (*mcp)->momentum() << endmsg ;  
     if ( (*mcp) == MC ) {
-      verbose() << "Particle found" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Particle found" << endmsg;
       return true ; // found 
     }
   }
-  verbose() << "Particle not found" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Particle not found" << endmsg;
   return false ;
   
 }
