@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.17 2007-06-01 11:53:59 mneedham Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.18 2007-07-05 15:00:50 cattanem Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -33,8 +33,7 @@
  *  value are rejected.
  *
  *  @author:   Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
- *  @date:     16-05-2001
- *  @modified: 14-01-2006
+ *  @date:     16-05-2001 modified: 14-01-2006
  */
 
 class DeVelo;
