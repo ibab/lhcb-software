@@ -1,7 +1,13 @@
+#ifndef DimInfoHistos_DimInfoHistos_H
+#define DimInfoHistos_DimInfoHistos_H 1
+
+
 #include "dic.hxx"
 #include "dis.hxx"
 #include <string>
 #include <iostream>
+#include <vector>
+using namespace std;
 
 //forward declaration
 
@@ -17,7 +23,8 @@
 
 class DimService;
 
-class DimInfoHistoService : public DimService {
+
+class DimInfoHistoService : public DimService  {
 public:
    DimInfoHistoService(std::string hname, float* data, int size, int dimension);
    virtual ~DimInfoHistoService();
@@ -27,6 +34,8 @@ public:
    void serviceHandler();
    int size;	
 };
+
+
 
 class DimInfoHistos : public DimInfo {
   
@@ -46,13 +55,15 @@ public :
 	int m_entries;
 	int m_size;
 	float* m_data;
+	float* m_data_sum;
 	float getbuffercontent(int ibuffer) const;
 	DimInfoHistoService* m_dimSvc;
 	DimService* m_dimTitleSvc;
-	
+
 
 private:
   void infoHandler();// Overloaded method infoHandler, called whenever commands arrive 
 
 
   };
+#endif    // DimInfoHistos_DimInfoHistos_H

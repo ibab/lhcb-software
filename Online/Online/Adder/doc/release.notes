@@ -1,6 +1,11 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+
+! 20070705 - Eric vH       ==================== Adder v4r3 ==========================
+Use DimWait instead of sleep; do the addition inside a DimTimer callback. 
+
+
 ! 20070209 - Eric vH       ==================== Adder v4r2 ==========================
 Added servername option to allow more flexibility in the hierarchy of adders. 
 

@@ -5,15 +5,18 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
 #include "DimInfoHistos.h"
+#include "dis.hxx"
+#include "Tim.h"
 
-#include<time.h>
 
 /** @class Adder
 
-
+5
 */
 
 // Forward declarations
+class Tim;
+
 
 class Adder : public Algorithm {
 public:
@@ -41,7 +44,7 @@ private:
   std::vector<std::vector <std::string> > hSvcname;
   std::vector<std::vector <std::string> >  hSvcname2d;
   std::vector<std::vector <std::string> > pSvcname;
-  std::vector<std::vector <std::string> > commentSvcname;
+ // std::vector<std::vector <std::string> > commentSvcname;
   
   //the number of histograms found
   std::vector<int> nbof1dhistos;
@@ -52,6 +55,13 @@ private:
   std::vector<std::vector<DimInfoHistos*> > hinfo;
   std::vector<std::vector<DimInfoHistos*> > hinfo2d;
   std::vector<std::vector<DimInfoHistos*> > pinfo;
+  
+  DimBrowser dbr;  
+  Tim* tim;
+ // std::vector<DimInfoHistos*> infohistos;
+  std::vector<std::vector<DimInfoHistos*> > infohistos;
 };
+
+
 
 #endif    // Adder_Adder_H

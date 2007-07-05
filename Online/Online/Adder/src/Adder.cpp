@@ -44,7 +44,7 @@ Adder::Adder(const std::string& name, ISvcLocator* ploc)
   declareProperty("refreshtime",m_refreshtime);
   declareProperty("dimclientdns",m_dimclientdns);
   declareProperty("servername",m_servername);
-}
+  }
 
 //------------------------------------------------------------------------------
 StatusCode Adder::initialize() {
@@ -71,7 +71,6 @@ StatusCode Adder::initialize() {
 StatusCode Adder::execute() {
   //------------------------------------------------------------------------------
   MsgStream         msg( msgSvc(), name() );
-  msg << MSG::INFO << "executing adder...." << endreq;
   char *service; 
   char *format;
   int type;
@@ -87,8 +86,12 @@ StatusCode Adder::execute() {
   std::string servicestr;
 
   //counter keeps track of the number of iterations over the event loop
-  counter++;
+  //the adder main program creates dimservice objects
+  //and creates an array of them
+  //the adding is triggered by the dim timer
   
+  counter++;
+
 
   for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
      //j counts the histograms
@@ -107,13 +110,17 @@ StatusCode Adder::execute() {
      std::vector<DimInfoHistos*>	tmphinfo2d;
      std::vector<DimInfoHistos*>	tmppinfo;
      DimInfoHistos * temp;
+
      commentSvcnames=m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";
-     std::vector<std::string> tmpcommentSvcnames;	     
+ //    std::vector<std::string> tmpcommentSvcnames;
+     std::string tmpcommentSvcnames;	     
      if (counter==1) {
-        //only do this once, at startup of the adder to see if Dim services
+        //do this once, at startup of the adder to see if Dim services
 	//exist for the histograms given in the joboptions
-	DimClient::setDnsNode(m_dimclientdns.c_str());
-        DimBrowser dbr;  
+	if (j==0) {	   
+	   DimClient::setDnsNode(m_dimclientdns.c_str());
+           DimBrowser dbr;  
+	}
         msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
         dbr.getServices(hSvcnames.c_str());
 	icount=0;
@@ -126,7 +133,7 @@ StatusCode Adder::execute() {
 	   std::string::size_type loc=servicestr.find("H1D/"+m_nodename+"_Adder_",0);
 	   if (loc == std::string::npos ) {  
 	      tmphSvcnames.push_back(servicestr);
-              msg << MSG::DEBUG << "Found service: " << servicestr  <<endreq;     
+     //         msg << MSG::DEBUG << "Found service: " << servicestr  <<endreq;     
 	      icount++;
 	   }
 	}  
@@ -138,7 +145,7 @@ StatusCode Adder::execute() {
 	   std::string::size_type loc2d=servicestr.find("H2D/"+m_nodename+"_Adder_",0);
 	   if (loc2d == std::string::npos ) {
 	      tmphSvcnames2d.push_back(servicestr);
-              msg << MSG::DEBUG << "Found 2D service: " << servicestr << endreq;   
+         //     msg << MSG::DEBUG << "Found 2D service: " << servicestr << endreq;   
 	      icount2d++;  	         
 	   }
 	}   
@@ -149,9 +156,8 @@ StatusCode Adder::execute() {
 	   servicestr=service;
 	   std::string::size_type locp=servicestr.find("HPD/"+m_nodename+"_Adder_",0);
 	   if (locp == std::string::npos ) {
-	     // pSvcname[j].push_back(servicestr);
 	      tmppSvcnames.push_back(servicestr);
-	      msg << MSG::DEBUG << "Found profile service: " << servicestr << endreq;   
+	//      msg << MSG::DEBUG << "Found profile service: " << servicestr << endreq;   
 	      icountp++;  	            
 	    }
 	 } 
@@ -167,102 +173,95 @@ StatusCode Adder::execute() {
 	   servicestr=service;
 	   std::string::size_type loc=servicestr.find(m_nodename+"_Adder_",0);
 	   if (loc == std::string::npos ) {  
-	      tmpcommentSvcnames.push_back(servicestr);
+	      tmpcommentSvcnames=servicestr;
               msg << MSG::DEBUG << "Found comment service: " << servicestr  <<endreq;     
+	      break;
 	   }
 	} 
-	commentSvcname.push_back(tmpcommentSvcnames);
-     }  
-     else {
-        icount=nbof1dhistos[j];
-	icount2d=nbof2dhistos[j];
-	icountp=nbofphistos[j];
-     }	
 
-     msg << MSG::DEBUG << "icount: " << icount << " icount2d " << icount2d << " icountp " << icountp << endreq; 
-     //this is the dim buffer
 
-     if (counter==1) {
         if (icount>0) {
            for (int i=0;i<=icount-1;i++) { 
-	      temp = new DimInfoHistos(hSvcname[j][i],m_refreshtime);
-              lib_rtl_sleep(m_refreshtime*100);          
+	      temp = new DimInfoHistos(hSvcname[j][i],m_refreshtime);      
 	      tmphinfo.push_back(temp);
-	      msg << MSG::DEBUG << "Created object: " << hSvcname[j][i] << endreq;      
+	   //   msg << MSG::DEBUG << "Created object: " << hSvcname[j][i] << endreq;      
+	      
 	   }
         }	
 	if (icount2d>0) {
            for (int i=0;i<=icount2d-1;i++) { 
-	      temp = new DimInfoHistos(hSvcname2d[j][i],m_refreshtime);
-              lib_rtl_sleep(m_refreshtime*100);          
+	      temp = new DimInfoHistos(hSvcname2d[j][i],m_refreshtime);        
 	      tmphinfo2d.push_back(temp);
-	      msg << MSG::DEBUG << "Created object: " << hSvcname2d[j][i] << endreq;       
+	   //   msg << MSG::DEBUG << "Created object: " << hSvcname2d[j][i] << endreq;       
 	   }  
         }
 	if (icountp>0) {
            for (int i=0;i<=icountp-1;i++) { 
-	      temp = new DimInfoHistos(pSvcname[j][i],m_refreshtime);
-              lib_rtl_sleep(m_refreshtime*100);          
+	      temp = new DimInfoHistos(pSvcname[j][i],m_refreshtime);         
 	      tmppinfo.push_back(temp);
-	      msg << MSG::DEBUG << "Created object: " << pSvcname[j][i] << endreq;      
-	   }
-     
+	  //    msg << MSG::DEBUG << "Created object: " << pSvcname[j][i] << endreq;       
+
+	   }    
         }
 	//update the array of dim buffers  
 	hinfo.push_back(tmphinfo);  
 	hinfo2d.push_back(tmphinfo2d);  
 	pinfo.push_back(tmppinfo); 
-     }
-     DimInfoTitle * ttemp;
-     char* temptitle=0;
-     if (icount>0) {
-        for (int i=0;i<=icount-1;i++) {          
-	   if ((i==0)&&(counter==1)) {
-	      ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100); 
+        DimInfoTitle * ttemp=0;
+        char* temptitle=0;
+        if (icount>0) {
+	   //   ttemp = new DimInfoTitle(commentSvcname[j][0]);
+	      ttemp = new DimInfoTitle(tmpcommentSvcnames);
 	      temptitle=ttemp->getTitle();	     
-              hinfo[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);   
+              hinfo[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);  
 	      hinfo[j][0]->declareInfo(adderhSvcnames);
-	   }
-	   else {
-	      if (i!=0) hinfo[j][0]->add(hinfo[j][i]);
-	   }   
+	      //initialise the sum
+	      hinfo[j][0]->add(hinfo[j][0]);
         }
-        hinfo[j][0]->updateSum(); 
-     }
-     if (icount2d>0) {
-        for (int i=0;i<=icount2d-1;i++) {
-	   if ((i==0)&&(counter==1)) {
-	      ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100); 
+  	   
+        if (icount2d>0) {
+	   //   ttemp = new DimInfoTitle(commentSvcname[j][0]);
+	      ttemp = new DimInfoTitle(tmpcommentSvcnames);
 	      temptitle=ttemp->getTitle();	     
-              hinfo2d[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);   
+              hinfo2d[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);  
 	      hinfo2d[j][0]->declareInfo(adderhSvcnames2d);
-	   }
-	   else {
-	      if (i!=0) hinfo2d[j][0]->add2d(hinfo2d[j][i]);
-	   }   
+	      //initialise the sum
+	      hinfo2d[j][0]->add2d(hinfo2d[j][0]);
+
         }
-        hinfo2d[j][0]->updateSum(); 
-     }
-     if (icountp>0) {
-        for (int i=0;i<=icountp-1;i++) {
-	   if ((i==0)&&(counter==1)) {
-	     ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100); 
+        if (icountp>0) {
+	    //  ttemp = new DimInfoTitle(commentSvcname[j][0]);
+	      ttemp = new DimInfoTitle(tmpcommentSvcnames);
 	      temptitle=ttemp->getTitle();	     
-              pinfo[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);   
+              pinfo[j][0]->declareTitleInfo(addercommentSvcnames,temptitle); 
 	      pinfo[j][0]->declareInfo(adderpSvcnames);
-	   }
-	   else {
-	      if (i!=0) pinfo[j][0]->addp(pinfo[j][i]);
-	   }   
+	      //initialise the sum
+	      pinfo[j][0]->addp(pinfo[j][0]);
+
         }
-        pinfo[j][0]->updateSum(); 
-     }    
-  }
-  lib_rtl_sleep(m_refreshtime*1000); 
- 
+     } //loop over counter
+  } //loop over j
+
+  if (counter==1) { 
+    for (int j=0; j<= (int)m_histogramname.size()-1;j++)  {
+	if (nbof1dhistos[j]>0) {     
+	      infohistos.push_back(hinfo[j]);
+	   }
+	if (nbof2dhistos[j]>0) {
+	      infohistos.push_back(hinfo2d[j]); 
+	}
+	if (nbofphistos[j]>0) {	   	 
+	      infohistos.push_back(pinfo[j]);
+	}
+      }
+
+   
+     msg << MSG::DEBUG << "Making Tim for " << infohistos.size() << " histograms" << endreq;  
+     tim= new Tim(m_refreshtime,infohistos);
+  } 	
+  
+ // lib_rtl_sleep(m_refreshtime*100); 
+  dim_wait();
   return StatusCode::SUCCESS;
 }
 
@@ -272,6 +271,7 @@ StatusCode Adder::finalize() {
   //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "finalizing...." << endreq;
-
   return StatusCode::SUCCESS;
 }
+
+

@@ -1,4 +1,5 @@
 #include "DimInfoTitle.h"
+#include "RTL/rtl.h"
 
 #include <iostream>
 #include <string>
@@ -12,11 +13,10 @@ namespace win {
 #endif
 
 //constructor
-DimInfoTitle::DimInfoTitle(std::string commentSvcname, int rtime)
-  : DimInfo((commentSvcname).c_str(),rtime,-1.0),
+DimInfoTitle::DimInfoTitle(std::string commentSvcname)
+  : DimInfo((commentSvcname).c_str(),-1),
     m_data(0),m_hasData(false){
- // std::cerr << "DimInfoTitle(" << commentSvcname << "). " << std::endl;
-  m_rtime=rtime;
+//  std::cerr << "DimInfoTitle(" << commentSvcname << "). " << std::endl;
   int len = commentSvcname.length();
   std::string::size_type slash=commentSvcname.find_last_of("/",len);
   std::string m_servicetype=commentSvcname.substr(slash+1);
@@ -29,11 +29,6 @@ DimInfoTitle::DimInfoTitle(std::string commentSvcname, int rtime)
 }
 
 
-DimInfoTitle::DimInfoTitle(std::string commentSvcname) : 
-  DimInfo((commentSvcname).c_str(),-1.0){
-//  std::cerr << "DimInfoTitle(" << commentSvcname << ") called with no refresh time. Using 5 s" << std::endl;
-  DimInfoTitle(commentSvcname,5);
-}
 
 //destructor
 DimInfoTitle::~DimInfoTitle() {  
@@ -48,8 +43,15 @@ void DimInfoTitle::infoHandler()
 
 
 char* DimInfoTitle::getTitle() {
-//std::cerr << "DimInfoTitle returning data: " << m_data << std::endl;
-  if(m_hasData == true ) return m_data;
+
+  while (1) {
+        if(m_hasData == true ) {
+	//   std::cerr << "DimInfoTitle sending data. " << m_data << std::endl;
+	   return m_data;
+	}
+	else lib_rtl_sleep(1000);
+//	std::cerr << "DimInfoTitle waiting for data. " << std::endl;
+  }	
   return 0;
 }
 

@@ -1,5 +1,5 @@
 package Adder
-version v4r2
+version v4r3
 
 branches cmt doc src
 
@@ -15,7 +15,7 @@ use Gaucho       v*  Online
 use GaudiAud     v*
 use GaudiSvc     v*
 
-library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src/Adder.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp 
+library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src/Adder.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp ../src/Tim.cpp
 
 apply_pattern component_library library=Adder
 

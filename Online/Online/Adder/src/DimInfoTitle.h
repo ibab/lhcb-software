@@ -14,15 +14,12 @@
 class DimInfoTitle : public DimInfo {
   
 public : 
-	DimInfoTitle(std::string commentSvcname, int rtime);
 	DimInfoTitle(std::string commentSvcname);
 	virtual ~DimInfoTitle();
 	char* getTitle();
 
 private:
   void infoHandler();// Overloaded method infoHandler, called whenever commands arrive 
-  // refresh interval
-	int m_rtime;
   
   // ROOT histogram
 
