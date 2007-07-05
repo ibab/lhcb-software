@@ -1,4 +1,4 @@
-// $Id: IVeloExpectation.h,v 1.3 2007-05-29 13:42:38 mneedham Exp $ 
+// $Id: IVeloExpectation.h,v 1.4 2007-07-05 14:05:17 cattanem Exp $ 
 #ifndef _IVeloExpectation_H
 #define _IVeloExpectation_H
  
@@ -91,8 +91,6 @@ public:
   *  @endcode 
   *
   *  @param aTrack Reference to the Track to test
-  *  @param zStart --> start of scan range
-  *  @param zStop --> end of scan range
   *
   *  @return number of hits missed before first hit
   */

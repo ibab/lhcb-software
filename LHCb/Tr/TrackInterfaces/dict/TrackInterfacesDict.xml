@@ -16,6 +16,7 @@
   <class name    = "ITrackProjectorSelector" />
   <class name    = "ITrackPtKick"            />
   <class name    = "ITrackSelector"          />
+  <class name    = "ITracksFromTrack"        />
   <class name    = "ITrackVelodEdxCharge"    />
   <class name    = "ITrajectoryProvider"     />
   <class name    = "IVeloExpectation"        />

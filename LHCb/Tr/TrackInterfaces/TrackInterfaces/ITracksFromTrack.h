@@ -1,15 +1,18 @@
-// $Id: ITracksFromTrack.h,v 1.2 2007-07-05 13:45:59 dhcroft Exp $
+// $Id: ITracksFromTrack.h,v 1.3 2007-07-05 14:05:17 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKSFROMTRACK_H 
 #define TRACKINTERFACES_ITRACKSFROMTRACK_H 1
 
 // Include files
 // from STL
-#include <string>
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-#include "Event/Track.h"
+// Forward declarations
+namespace LHCb {
+ class Track;
+};
 
 static const InterfaceID IID_ITracksFromTrack ( "ITracksFromTrack", 1, 0 );
 

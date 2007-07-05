@@ -4,15 +4,20 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r6 2007-07-05 ======================
+! 2007-07-05 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Cleanup ITracksFromTrack.h
+
 ! 2007-07-05 - David Hutchcroft
  - Corrected comment in ITracksFromTrack.h 
 
 ! 2007-07-05 - Edwin Bos
  - Removed transportMatrix getter from and added a propagate method to the
- - ITrackExtrapolator interface
+   ITrackExtrapolator interface
 
 ! 2007-07-03 J.A Hernando
- - ITracksFromTrack.h interface for the HLT 
+ - Add ITracksFromTrack.h interface
 
 !====================== TrackInterfaces v3r5 2007-06-08 ======================
 ! 2007-06-07 W. Hulsbergen

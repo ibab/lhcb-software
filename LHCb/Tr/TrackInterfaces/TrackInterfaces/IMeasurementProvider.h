@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.7 2007-06-07 08:52:44 wouter Exp $
+// $Id: IMeasurementProvider.h,v 1.8 2007-07-05 14:05:17 cattanem Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -45,8 +45,6 @@ public:
    *  This method is in fact called internally by "load( Track& track )".
    *  @return Pointer the the Measurement created
    *  @param  id:  input LHCbID
-   *  @param  par: extra parameter for the XxxMeasurement constructor
-   *               (refer to XxxMeasurement.h for details)
    */
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id) const = 0;
 

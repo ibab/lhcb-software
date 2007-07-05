@@ -18,6 +18,7 @@
 #include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackPtKick.h"
 #include "TrackInterfaces/ITrackSelector.h"
+#include "TrackInterfaces/ITracksFromTrack.h"
 #include "TrackInterfaces/ITrackVelodEdxCharge.h"
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrajFitter.h"
