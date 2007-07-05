@@ -1,6 +1,6 @@
-// $Id: MuonMeasurementProvider.cpp,v 1.2 2007-06-11 16:54:37 cattanem Exp $
+// $Id: MuonMeasurementProvider.cpp,v 1.3 2007-07-05 15:08:24 cattanem Exp $
 
-/** @class MuonMeasurementProvider MuonMeasurementProvider.h
+/** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
  * Implementation of VeloRMeasurementProvider tool
  * see interface header for description
