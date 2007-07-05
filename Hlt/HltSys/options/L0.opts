@@ -8,14 +8,9 @@ ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
 // Read from Raw Event
 //------------------------------
 
-ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto"}; 
-ApplicationMgr.DLLs += { "L0DU" };
-
-// USER: please select one of the following: read the L0 from RawBuffer or emulate (rerun) the L0
-
 // Read L0 from RawBuffer
 // L0.Members += { "L0DUFromRaw"};
 
 // Emulate L0
 #include "$L0DUROOT/options/L0Sequence.opts"
-
+L0.Members += {"L0MuonCandidatesFromRaw"};
