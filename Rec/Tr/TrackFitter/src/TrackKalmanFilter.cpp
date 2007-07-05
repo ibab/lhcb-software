@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.41 2007-06-27 06:56:56 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.42 2007-07-05 08:28:22 ebos Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -238,7 +238,8 @@ StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
 
     // TODO: I want to call the extrapolator with the reference vector not 
     //       a State (JvT)
-    StatusCode sc = m_extrapolator -> propagate( aState, z );
+    TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    StatusCode sc = m_extrapolator -> propagate( aState, z, &transMat );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
       mess << "unable to predict state at next measurement at z = " << z;
@@ -247,7 +248,7 @@ StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
     aState.setLocation( (aNode.state()).location() );
     
     // store transport matrix F
-    const TrackMatrix& F = m_extrapolator -> transportMatrix();
+    const TrackMatrix& F = transMat;
     aNode.setTransportMatrix( F );
 
     // Use Taylor expansion
