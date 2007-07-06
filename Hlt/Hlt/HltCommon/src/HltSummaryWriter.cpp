@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.4 2007-07-06 20:39:47 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -99,14 +99,6 @@ StatusCode HltSummaryWriter::execute() {
   loca = m_dataSummaryLocation+"/Configuration";  
   put(new Hlt::DataHolder<Hlt::Configuration>(*m_conf),loca);
 
-  verbose() << " data decision " << m_datasummary->decision() << endreq;
-  std::vector<int> ids = m_datasummary->selectionSummaryIDs();
-  for (std::vector<int>::iterator it = ids.begin(); 
-       it != ids.end(); ++it) {
-    int id = *it; 
-    // printInfo(*m_datasummary,id);
-  }
-
   for (std::vector<int>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
     int id = *it;
@@ -117,14 +109,16 @@ StatusCode HltSummaryWriter::execute() {
       error() << " No selection in summary Data! " << endreq;
   }
 
-  debug() << " report decision " << m_summary->decision() << endreq;
-  ids = m_summary->selectionSummaryIDs();
-  for (std::vector<int>::iterator it = ids.begin(); 
-       it != ids.end(); ++it) {
-    int id = *it;
-    printInfo(*m_summary,id);
-  }
-      
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << " summary decision " << m_summary->decision() << endreq;
+    std::vector<int> ids = m_summary->selectionSummaryIDs();
+    for (std::vector<int>::iterator it = ids.begin(); 
+         it != ids.end(); ++it) {
+      int id = *it;
+      printInfo(*m_summary,id);
+    }
+  }    
   return StatusCode::SUCCESS;
 }
 
@@ -145,15 +139,21 @@ void HltSummaryWriter::writeSelection(int id) {
 void HltSummaryWriter::printInfo(const HltSummary& sum, int id) {
   bool ok = sum.hasSelectionSummary(id);
   std::string name = 
-    HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
-  bool dec = false;
-  int ncan  = 0;
-  if (ok) {
-    dec = sum.selectionSummary(id).decision();
-    ncan = HltSummaryHelper::ncandidates(sum,id);
+    HltConfigurationHelper::getName(*m_conf,"SelectionID",id); 
+  debug() << " summary selection " << name << " ID " << id << " ? " 
+          << ok << endreq;
+  if (!ok) return;
+  if (!m_conf->has_key(name+"/SelectionType")) return;
+  std::string type = m_conf->retrieve<std::string>(name+"/SelectionType");
+  if (type == "Tracks") {
+    const std::vector<Track*>& tracks = 
+      HltSummaryHelper::retrieve< std::vector<Track*> >(sum,id);
+    printInfo(name+" tracks ", tracks);
+  } else if (type == "Vertices") {
+    const std::vector<RecVertex*>& vertices = 
+      HltSummaryHelper::retrieve< std::vector<RecVertex*> >(sum,id);
+    printInfo(name+" vertices ", vertices);
   }
-  debug() << " selection \t" << name 
-          << "\t decision \t" << dec << " ncandidates \t" << ncan << endreq;
 }
 
 //=============================================================================
@@ -165,3 +165,15 @@ StatusCode HltSummaryWriter::finalize() {
 }
 
 //=============================================================================
+void HltSummaryWriter::printInfo(const std::string& title,
+                             const Track& track) {
+  info() << title << " track  " << track.key() << " slopes " 
+         << track.slopes()  << " pt " << track.pt() << endreq;
+}
+
+void HltSummaryWriter::printInfo(const std::string& title,
+                             const RecVertex& vertex) {
+  info() << title << " vertex  " << vertex.key() << " position " 
+         << vertex.position()  << endreq;
+  printInfo(title,vertex.tracks());
+}

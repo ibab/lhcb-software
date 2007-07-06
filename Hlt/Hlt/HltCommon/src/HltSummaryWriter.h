@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.h,v 1.1 2007-06-25 20:50:26 hernando Exp $
+// $Id: HltSummaryWriter.h,v 1.2 2007-07-06 20:39:47 hernando Exp $
 #ifndef HLTSUMMARYWRITER_H 
 #define HLTSUMMARYWRITER_H 1
 
@@ -30,6 +30,17 @@ public:
   void writeSelection(int id);
 
   void printInfo(const LHCb::HltSummary& sum, int id);
+
+  template <class T>
+  void printInfo(const std::string& title, const T& con) {
+    typedef typename T::const_iterator iter;
+    for (iter it = con.begin(); it != con.end(); ++it)
+      printInfo(title,*(*it));  
+  }
+  
+  void printInfo(const std::string& title, const LHCb::Track& track);
+  
+  void printInfo(const std::string& title, const LHCb::RecVertex& ver);
 
 protected:
 
