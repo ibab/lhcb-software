@@ -4,13 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
-
+!======================= TrackCheckers v3r0 2007-07-06 =======================
 ! 2007-07-04 M Needham
  - Add plots to TrackEffChecker
-
-
-!======================= TrackCheckers v3r0 2007-06-29 =======================
-
 
 ! 2007-06-28 M Needham
  - Remove unused inclusion of TrackCriteriaSelector header
