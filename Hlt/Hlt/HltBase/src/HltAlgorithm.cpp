@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.13 2007-07-02 21:03:47 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.14 2007-07-06 16:53:39 hernando Exp $
 // Include files 
 
 // from boost
@@ -227,10 +227,16 @@ void HltAlgorithm::saveConfiguration() {
   if (m_primaryVertices) 
     confregister("PrimaryVerticesName",m_primaryVerticesName);
   
-  if (m_outputTracks) 
+  if (m_outputTracks) {
     confregister("OutputTracksName",m_outputTracksName);
-  if (m_outputVertices) 
+    confregister("SelectionType",std::string("Tracks"));
+  }
+  if (m_outputVertices) {
     confregister("OutputVerticesName",m_outputVerticesName);
+    confregister("SelectionType",std::string("Vertices"));
+  }
+  if ((m_outputTracks) && (m_outputVertices))
+    error() << " Output tracks and vertices it is not allowed! " << endreq;
   
   if (m_inputSelections.size()>0)
     confregister("InputSelections",m_inputSelections);

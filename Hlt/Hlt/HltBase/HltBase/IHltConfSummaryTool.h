@@ -1,4 +1,4 @@
-// $Id: IHltConfSummaryTool.h,v 1.2 2007-06-25 21:57:06 hernando Exp $
+// $Id: IHltConfSummaryTool.h,v 1.3 2007-07-06 16:53:39 hernando Exp $
 #ifndef HLTBASE_IHLTCONFSUMMARYTOOL_H 
 #define HLTBASE_IHLTCONFSUMMARYTOOL_H 1
 
@@ -50,8 +50,6 @@ public:
 
   virtual std::vector<std::string> selectionFilters(const std::string& name) = 0;
 
-  virtual std::vector<std::string> selectionAncestors(const std::string& name) = 0;
-
   virtual std::vector<LHCb::Track*> selectionTracks(const std::string& name)= 0;
 
   virtual std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name)= 0;
@@ -60,6 +58,10 @@ public:
                              const LHCb::Track& track ) = 0;
 
   virtual std::vector<std::string> confKeys() = 0;
+
+  virtual int confInt(const std::string& name) = 0;
+  
+  virtual double confDouble(const std::string& name) = 0;
   
   virtual std::string confString(const std::string& name) = 0;
   

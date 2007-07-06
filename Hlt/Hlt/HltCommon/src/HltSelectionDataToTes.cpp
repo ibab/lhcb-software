@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.cpp,v 1.1 2007-07-02 22:11:59 hernando Exp $
+// $Id: HltSelectionDataToTes.cpp,v 1.2 2007-07-06 16:55:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -26,11 +26,10 @@ HltSelectionDataToTes::HltSelectionDataToTes( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("TracksSelections", 
-                  m_tracksLocations);
+
+  declareProperty("CopyAll",m_copyAll = false);
   
-  declareProperty("VerticesSelections", 
-                  m_verticesLocations);
+  declareProperty("Copy", m_selections);
 
   declareProperty("DataSummaryLocation",
                   m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
@@ -67,27 +66,33 @@ StatusCode HltSelectionDataToTes::initialize() {
   m_conf = &(holder->object());
 
   m_tracksSelIDs.clear();
-  std::vector<std::string> values = m_tracksLocations.value();
-  for (std::vector<std::string>::iterator it = values.begin();
-       it != values.end(); ++it) {
-    std::string name = *it;
-    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-    m_tracksSelIDs.push_back(id);
-    debug() << " write on TES track selection data " << name << " ID "
-            << id << endreq;
-  }
-
   m_verticesSelIDs.clear();
-  values = m_verticesLocations.value();
-  for (std::vector<std::string>::iterator it = values.begin();
-       it != values.end(); ++it) {
-    std::string name = *it;
-    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-    m_verticesSelIDs.push_back(id);
-    debug() << " write on TES vertex selection data " << name << " ID "
-            << id << endreq;
+  std::vector<int> ids;
+  if (m_copyAll) ids = m_datasummary->selectionSummaryIDs();
+  else {
+    std::vector<std::string> sels = m_selections.value();
+    for (std::vector<std::string>::iterator it = sels.begin();
+         it != sels.end(); ++it) {
+      std::string name = *it;
+      int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);    
+      ids.push_back(id);
+    }
   }
 
+  for (std::vector<int>::iterator it = ids.begin(); it != ids.end(); ++it) {
+    int id = *it;
+    const std::string name  = 
+      HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
+    std::string type = " unknown";
+    if (m_conf->has_key(name+"/SelectionType")) {
+      type  = m_conf->retrieve<std::string>(name+"/SelectionType");
+      if (type == "Tracks") m_tracksSelIDs.push_back(id);
+      else if (type == "Vertices") m_verticesSelIDs.push_back(id);
+    }
+    info() << " write on TES selection data " << name << " ID "
+           << id << " type " << type << endreq;
+  }
+  
   return sc;
 }
 
@@ -106,8 +111,10 @@ StatusCode HltSelectionDataToTes::execute() {
     std::string name = 
       HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
     debug() << " copying " << name << endreq;
-    Tracks* otracks = copy<Track,Tracks>(id);
-    if (otracks) put(otracks,loca+name);
+    if (!exist<Tracks>(loca+name)) {
+      Tracks* otracks = copy<Track,Tracks>(id);
+      if (otracks) put(otracks,loca+name);
+    } 
   }
 
   loca = "Hlt/Vertex/";
@@ -117,8 +124,10 @@ StatusCode HltSelectionDataToTes::execute() {
     std::string name = 
       HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
     debug() << " copying " << name << endreq;
-    RecVertices* overtices = copy<RecVertex,RecVertices>(id);
-    if (overtices) put(overtices,loca+name);
+    if (!exist<RecVertices>(loca+name)) { 
+      RecVertices* overtices = copy<RecVertex,RecVertices>(id);
+      if (overtices) put(overtices,loca+name);
+    } 
   }
   
   return sc;

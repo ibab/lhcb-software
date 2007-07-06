@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.h,v 1.1 2007-07-02 22:11:59 hernando Exp $
+// $Id: HltSelectionDataToTes.h,v 1.2 2007-07-06 16:55:57 hernando Exp $
 #ifndef HLTSELECTIONDATATOTES_H 
 #define HLTSELECTIONDATAFROMTES_H 1
 
@@ -36,8 +36,7 @@ public:
 
 protected:
 
-  StringArrayProperty m_tracksLocations;
-  StringArrayProperty m_verticesLocations;
+  StringArrayProperty m_selections;
 
   std::vector<int> m_tracksSelIDs;
   std::vector<int> m_verticesSelIDs;
@@ -58,6 +57,8 @@ protected:
   
 
 protected:
+
+  bool m_copyAll;
 
   std::string m_dataSummaryLocation;
 

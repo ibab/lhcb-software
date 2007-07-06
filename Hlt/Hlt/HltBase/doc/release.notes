@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-07-06 Jose A. Hernando
+	- HltBase/IHltConfSummaryTool, extended interface
+  - src/HltAlgorithm.cpp: adding configuration type for Tracks and Vertices
+
 ! 2007-07-04 Johannes Albrecht
 	- HltBase/ICaloSeedTool.h	
 			first release of new tool: creates track at Calo from L0Cand

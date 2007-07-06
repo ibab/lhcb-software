@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-07-06 - Jose A. Hernando
+	- HltSelectionDataToTes to copy selection to TES
+    option to copy all or a list of selections
+  - HltSummaryTool extending the interface
 
 ! 2007-07-02 - Jose A. Hernando
 	- HltSelectionDataToTes to copy selection tracks or vertices to TES

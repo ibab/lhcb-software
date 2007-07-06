@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.3 2007-06-25 21:57:17 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.4 2007-07-06 16:55:57 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/IHltConfSummaryTool.h"
+#include "Kernel/IHltSummaryTool.h"
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 
@@ -18,7 +19,10 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-02-08
  */
-class HltSummaryTool : public GaudiTool, virtual public IHltConfSummaryTool {
+class HltSummaryTool : public GaudiTool, 
+                       virtual public IHltConfSummaryTool,
+                       virtual public IHltSummaryTool
+{
 public:
   
   /// Standard constructor
@@ -47,8 +51,6 @@ public:
   
   std::vector<std::string> selectionFilters(const std::string& name);
   
-  std::vector<std::string> selectionAncestors(const std::string& name);
-  
   std::vector<LHCb::Track*> selectionTracks(const std::string& name);
   
   std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name);
@@ -57,6 +59,10 @@ public:
                      const LHCb::Track& track );
 
   std::vector<std::string> confKeys();
+
+  int confInt(const std::string& name);
+
+  double confDouble(const std::string& name);
 
   std::string confString(const std::string& name) ;
 

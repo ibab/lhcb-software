@@ -34,6 +34,7 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
   m_summary = NULL;
   
   declareInterface<IHltConfSummaryTool>(this);
+  declareInterface<IHltSummaryTool>(this);
   
   declareProperty("SummaryLocation",
                   m_summaryLocation = LHCb::HltSummaryLocation::Default);
@@ -139,14 +140,6 @@ HltSummaryTool::selectionFilters(const std::string& name) {
   return filters;
 }
 
-std::vector<std::string> 
-HltSummaryTool::selectionAncestors(const std::string& name) {
-  getSummary();
-  std::vector<std::string> ancestors;
-  info() << " Not implemented jet! " << endreq;
-  return ancestors;
-}
-
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
   getSummary();
@@ -180,6 +173,18 @@ bool HltSummaryTool::isInSelection(const std::string& name,
 
 std::vector<std::string> HltSummaryTool::confKeys() {
   return m_conf->keys();
+}
+
+int HltSummaryTool::confInt(const std::string& name) {
+  int val = -1;
+  if (m_conf->has_key(name)) val = m_conf->retrieve<int>(name);
+  return val;
+}
+
+double HltSummaryTool::confDouble(const std::string& name) {
+  double val = 0.;
+  if (m_conf->has_key(name)) val = m_conf->retrieve<double>(name);
+  return val;
 }
 
 std::string HltSummaryTool::confString(const std::string& name) {
