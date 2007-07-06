@@ -54,5 +54,5 @@ EventSelector.PrintFreq  = 100;
 // Data Cards
 //
 
-#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
+// #include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
 

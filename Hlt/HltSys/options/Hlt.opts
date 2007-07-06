@@ -15,12 +15,9 @@ HltInitSeq.Members = {"PatInitEvent",
 HltEndSeq.Members = {"HltSelectionDataToTes",
                      "HltSummaryWriter"};
 
-// to convert a selection into TES
-
-// HltSelectionDataToTes.TracksSelections = {"HadPreTriggerSingle"};
-
+HltSelectionDataToTes.CopyAll = true;
+HltSelectionDataToTes.OutputLevel = 2;
 // HltSummaryWriter.SaveAll = true;
-HltSummaryWriter.OutputLevel = 3;
 
 HltAllAlleys.Members ={
   "HltSequencer/HltMuonAlley"
