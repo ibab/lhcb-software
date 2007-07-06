@@ -1,4 +1,4 @@
-// $Id: DecayChainNTuple.cpp,v 1.22 2007-07-04 13:15:38 spradlin Exp $
+// $Id: DecayChainNTuple.cpp,v 1.23 2007-07-06 09:16:53 lcarson Exp $
 // ============================================================================
 // Always define MCCheck
 #define MCCheck 1
@@ -1869,10 +1869,12 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
     else{
       debug() << "The head does not come from a MC primary vertex" << endreq;
     }
-    
-    //    LHCb::GenCollision* headCollision = headOriVtx->collision();
-    const Gaudi::XYZPoint& MCPVPosition = headOriVtx->position();
-    
+
+
+    const LHCb::MCVertex* MCPV = headOriVtx->primaryVertex();
+    const Gaudi::XYZPoint& MCPVPosition = MCPV->position();
+   
+  
     debug() << "Head collision vtx [mm] x = "
             << MCPVPosition.x()
             << " , y = " << MCPVPosition.y()
