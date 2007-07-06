@@ -15,8 +15,7 @@ HltInitSeq.Members = {"PatInitEvent",
 HltEndSeq.Members = {"HltSelectionDataToTes",
                      "HltSummaryWriter"};
 
-HltSelectionDataToTes.CopyAll = true;
-HltSelectionDataToTes.OutputLevel = 2;
+// HltSelectionDataToTes.CopyAll = true;
 // HltSummaryWriter.SaveAll = true;
 
 HltAllAlleys.Members ={
