@@ -1,0 +1,29 @@
+/** @file TrueB2HH.opts
+ *  
+ *  Options for running exclusive HLT only on truth
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-05-05
+ */
+//--------------------------------------------------------------
+//
+// Truth filter for B->HH
+//
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueB2HH"};
+SelectTrueB2HH.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
+SelectTrueB2HH.Filter.Selections =  { "pi+ : TrueMCFilterCriterion/B2HH" } ;
+
+SelectTrueB2HH.Filter.B2HH.MCDecayFinder.Decay = "{[B0 -> ^pi- ^pi+ {,gamma}{,gamma}]cc, [[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}]cc, [[B_s0]nos -> ^K- ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> ^K+ ^pi- {,gamma}{,gamma}]cc, [B_s0 -> ^K- ^K+ {,gamma}{,gamma}]cc}" ;
+
+//
+// Overwrite B->HH input
+//
+HltSelB2HH.PhysDesktop.InputLocations =  { "Phys/SelectTrueB2HH" } ;    //GP: (14,1)
+//
+// Dummy MakeResonances to check that both tracks are there
+//
+SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2HH"};
+AllTrueB2HH.PhysDesktop.InputLocations = {"Phys/SelectTrueB2HH"};
+AllTrueB2HH.DecayDescriptor = "B0 -> pi+ pi-" ; // always for B -> hh with pions
+HltExclusiveCorrs.Algorithms += { "AllTrueB2HH" };
+

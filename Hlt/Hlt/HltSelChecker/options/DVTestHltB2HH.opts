@@ -1,0 +1,39 @@
+/** @file DVTestHltB2HH.opts
+ *
+ *  Test file for HLT B->hh selection
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-05-05
+ */
+//--------------------------------------------------------------
+//
+// Preselection
+//
+#include "$B2UDSROOT/options/DVPreselB2HH.opts"
+HltExclusiveCorrs.Algorithms += { "PreselB2HH" };
+//
+// Hlt test
+//
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+//
+// Plots
+//
+#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//
+// True filter criterion - will only run HLT on true signal
+//
+#include "$HLTSELCHECKERROOT/options/TrueB2HH.opts"
+//
+// Options
+//
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bd2Kpi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+
+ApplicationMgr.EvtMax = -1 ;
+EventSelector.FirstEvent = 1 ;
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+HltSelB2HH.HistoProduce = true ;
+HltSelB2HH.DaughterPlots.Variables  = { "P", "Pt", "IP", "IPs" } ;
+HltSelB2HH.MotherPlots.Variables = { "WM", "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
