@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.4 2007-07-06 16:55:57 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.5 2007-07-06 17:16:26 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -33,6 +33,12 @@ public:
   virtual ~HltSummaryTool( ); ///< Destructor
 
   StatusCode initialize();
+
+  StatusCode load() {getSummary();return StatusCode::SUCCESS;}  
+
+  void setSummary(const LHCb::HltSummary& summary) {};
+  
+  bool isInSelection(const LHCb::Track& track, int id);
 
   const LHCb::HltSummary& summary();
   

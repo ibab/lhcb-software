@@ -171,6 +171,12 @@ bool HltSummaryTool::isInSelection(const std::string& name,
   return ok;
 }
 
+bool HltSummaryTool::isInSelection( const Track& track, int id) {
+  std::string name = HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
+  return isInSelection(name,track);
+}
+
+
 std::vector<std::string> HltSummaryTool::confKeys() {
   return m_conf->keys();
 }
@@ -200,4 +206,5 @@ std::vector<std::string> HltSummaryTool::confStringVector(const std::string& nam
     val = m_conf->retrieve<std::vector<std::string> >(name);
   return val;
 }
+
 
