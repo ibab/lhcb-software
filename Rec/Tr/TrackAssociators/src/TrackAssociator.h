@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.9 2007-07-05 15:14:49 ebos Exp $
+// $Id: TrackAssociator.h,v 1.10 2007-07-06 15:25:04 ebos Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -7,10 +7,14 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from Event/LinkerEvent
+#include "Linker/LinkedTo.h"
+
 // Forward declarations
 
 namespace LHCb {
   class MCParticle;
+  class MuonCoord;
 }
 
 /** @class TrackAssociator TrackAssociator.h
@@ -89,6 +93,8 @@ private:
   double m_nTotTT1;    // Total number of TT hits
   double m_nTotSeed;   // Total number of IT+OT hits
   double m_nTotMuon;   // Total number of Muon hits
-  
+
+  typedef LinkedTo<LHCb::MCParticle,LHCb::MuonCoord> MuonLink;
+  mutable MuonLink m_muonLink;
 };
 #endif // TRACKASSOCIATOR_H

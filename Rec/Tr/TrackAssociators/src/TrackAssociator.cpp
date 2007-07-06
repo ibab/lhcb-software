@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.13 2007-07-05 15:14:53 ebos Exp $
+// $Id: TrackAssociator.cpp,v 1.14 2007-07-06 15:25:11 ebos Exp $
 // Include files
 
 // local
@@ -12,7 +12,6 @@
 
 // from Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
-#include "Linker/LinkedTo.h"
 
 // from Event/Event
 #include "Event/MCParticle.h"
@@ -46,7 +45,8 @@ TrackAssociator::TrackAssociator( const std::string& name,
   m_nTotVelo(0.),
   m_nTotTT1(0.),
   m_nTotSeed(0.),
-  m_nTotMuon(0.)
+  m_nTotMuon(0.),
+  m_muonLink(0,0,"")
 {
   declareProperty( "TracksInContainer",
                    m_tracksInContainer = TrackLocation::Default );
@@ -131,12 +131,13 @@ StatusCode TrackAssociator::execute() {
   }
 
   // Get the linker table MuonCoord => MCParticle
-  LinkedTo<MCParticle,MuonCoord>
-    muonLink(evtSvc(),msgSvc(),LHCb::MuonCoordLocation::MuonCoords);
-  if( muonLink.notFound() ) {
-    error() << "Unable to retrieve MuonCoord to MCParticle linker table."
-            << endreq;
-    return StatusCode::FAILURE;
+  if(m_decideUsingMuons) {
+    m_muonLink = MuonLink(evtSvc(),msgSvc(),LHCb::MuonCoordLocation::MuonCoords);
+    if( m_muonLink.notFound() ) {
+      error() << "Unable to retrieve MuonCoord to MCParticle linker table."
+	      << endreq;
+      return StatusCode::FAILURE;
+    }
   }
 
   // Loop over the Tracks
@@ -254,23 +255,25 @@ StatusCode TrackAssociator::execute() {
             mcParticle = otLink.next();
           }
         }
-        if( (*iId).isMuon() ) {
-          ++nMeas;
-          // Count number of Muon hits
-          m_nTotMuon += 1.;
-          MuonTileID muonID = (*iId).muonID();
-          MCParticle* mcParticle = muonLink.first( muonID );
-          if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with MuonCoord " << muonID << endreq;
-          }
-          while( 0 != mcParticle ) {
-            if( mcParts != mcParticle->parent() ) {
-              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-            }
-            else { countMCPart( mcParticle, 0., 0., 0., 1. ); }
-            mcParticle = muonLink.next();
-          }
-        }
+	if(m_decideUsingMuons) {
+	  if( (*iId).isMuon() ) {
+	    ++nMeas;
+	    // Count number of Muon hits
+	    m_nTotMuon += 1.;
+	    MuonTileID muonID = (*iId).muonID();
+	    MCParticle* mcParticle = m_muonLink.first( muonID );
+	    if( m_debugLevel && 0 == mcParticle ) {
+	      debug() << "No MCParticle linked with MuonCoord " << muonID << endreq;
+	    }
+	    while( 0 != mcParticle ) {
+	      if( mcParts != mcParticle->parent() ) {
+		debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+	      }
+	      else { countMCPart( mcParticle, 0., 0., 0., 1. ); }
+	      mcParticle = m_muonLink.next();
+	    }
+	  }
+	}
       }
     }
 
