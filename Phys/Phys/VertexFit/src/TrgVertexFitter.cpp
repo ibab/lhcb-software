@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.15 2007-02-06 10:13:58 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.16 2007-07-06 12:46:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,8 @@ StatusCode TrgVertexFitter::initialize(){
 //=============================================================================
 StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
                                  LHCb::Particle& P, LHCb::Vertex& V) const{
-  fit(parts,V);
+  StatusCode sc = fit(parts,V);
+  if (!sc) return sc ;
   return m_stuffer->fillParticle(parts,V,P);
   
 }

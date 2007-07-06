@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           VertexFit
-version           v4r2p2
+version           v4r2p3
 
 # Structure, i.e. directories to process. 
 #============================================================================
