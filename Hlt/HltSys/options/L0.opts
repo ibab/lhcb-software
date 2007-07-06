@@ -13,4 +13,4 @@ ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
 
 // Emulate L0
 #include "$L0DUROOT/options/L0Sequence.opts"
-L0.Members += {"L0MuonCandidatesFromRaw"};
+// L0.Members += {"L0MuonCandidatesFromRaw"};
