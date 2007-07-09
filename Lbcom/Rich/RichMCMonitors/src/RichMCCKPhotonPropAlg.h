@@ -5,7 +5,7 @@
  * Header file for monitor algorithm Rich::MC::MCCKPhotonPropAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonPropAlg.h,v 1.1 2007-06-22 12:45:54 jonrob Exp $
+ * $Id: RichMCCKPhotonPropAlg.h,v 1.2 2007-07-09 13:51:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -29,7 +29,7 @@
 #include "RichKernel/RichStatDivFunctor.h"
 
 // tool Interfaces
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
