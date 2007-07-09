@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-07-09 - Juan Palacios
+ - LHCbMath/GeomFun.icpp
+   . closestPointParams(line, line, double, double)  was assuming lines with 
+     normalised direciton vectors. Fix to work with arbirtary length 
+     direction vectors.
  - Fix LHCbMath/Power.hpp doxygen
 
 !========================= LHCbMath v2r1 2007-02-06 ===========================
