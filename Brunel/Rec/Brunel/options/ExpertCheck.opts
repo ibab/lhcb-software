@@ -26,10 +26,12 @@ ITClusterMonitor.FullDetail = true;
 Check.DetectorList  += { "TT" }; 
 CheckTTSeq.Members  += { "STEffChecker/TTEffChecker" };
 TTEffChecker.FullDetail = true;
+TTEffChecker.MCParticleSelector.zOrigin = 50.0;
 
 Check.DetectorList  += { "IT" }; 
 CheckITSeq.Members  += { "STEffChecker/ITEffChecker" };
 ITEffChecker.FullDetail = true;
+ITEffChecker.MCParticleSelector.zOrigin = 50.0;
 
 // OT - These histograms should be identical to those already done in Boole.
 Moni.DetectorList   += { "OT" }; 

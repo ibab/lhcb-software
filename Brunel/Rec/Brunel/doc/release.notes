@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v31r7>2007-07-02 Brunel v31r7</A></H1><PRE>
+ - In ExpertCheck.opts, adapt STChecker opts to new MCParticleSelector defaults
+ - In v200601.opts, use new input file, since old one has been deleted
+
 </PRE><H1><A NAME=v31r6>2007-06-01 Brunel v31r6</A></H1><PRE>
  - Use ParamFiles v6r1
  - Clean up use statements in requirements:

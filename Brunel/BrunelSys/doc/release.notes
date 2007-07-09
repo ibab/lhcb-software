@@ -3,6 +3,46 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r7>2007-07-06 Brunel v31r7</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r7, Lbcom v6r7, Rec v4r7
+ and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires 
+programs based on LHCb v22r5 or later
+
+- New features
+  . Fast fit with parameterized material now available, but not used by default.
+    Needs SQLDDDB v2r1
+  . Added PatFilterUsedClusters and PatVeloGeneralTracking to default tracking
+    and added handling of corresponding new track type (TrackEvent v4r5,
+    RichRecBase v3r6, PatVelo v2r16, TrackUtils v1r13, TrackSys v4r7)
+    (See details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=6&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
+
+- New tuning (see Matt's talk at  </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
+  . Use zero magnetic field by default when creating a StateTraj. This is faster
+    and has negligible effect on the track fit (TrackProjectors v2r13)
+  . Set Ks Fit iterations to three (TrackSys v4r7)
+  . Remove use of pow (PatKShort v1r7)
+  . Reserve space in vectors (PatKShort v1r7)
+  . Retune track matching to account for better fit/new velo pattern 
+    (TrackMatching v2r15)
+  . Add trimning of ST Measurements (STTools v3r2)
+
+- Monitoring changes
+  . Restructuring of TrackCheckers with new base class
+    (TrackCheckers v3r0, TrackSys v4r7)
+  . Changes in MC Particle selection, modifies ST efficiency calculation (by <1%)
+    (SimComponents v2r7, ExpertCheck.opts)
+  . Input file of default job has changed, previous one has been deleted
+    (v200601.opts)
+
+- Bug fixes
+  . Fix uninitialized variables (PatVeloTT v2r13, TsaAlgorithms v2r5)
+  . Fix bug in propagation of StateVector (TrackExtrapolators v2r13)
+  . Transport the covariance matrix correctly (TrackMCTools v2r12)
+  . Make Q/p on all states of output tracks consistent (PatKShort v1r7)
+  . Fix in OTCluster drift radius calculation (TsaKernel v2r5)
+
 </PRE><H1><A NAME=v31r6>2007-06-15 Brunel v31r6</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6, Rec v4r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7

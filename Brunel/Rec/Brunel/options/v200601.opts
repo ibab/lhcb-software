@@ -29,7 +29,7 @@ ApplicationMgr.EvtMax = -1;
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "0601-11144100.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------
@@ -40,8 +40,12 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 // Event input - same as job ID 9003473
 //---------------------------------------------------------------------------
+//--     Event Type = 11144103
+//--     Configuration = DC06 - phys-v2-lumi2
+//--     DIGI 1 datasets produced by Boole - v12r10
+//--     Database version = v30r14
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001359/DIGI/0001/00001359_00000005_4.digi' TYP='POOL_ROOT' OPT='READ'"
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi' TYP='POOL_ROOT' OPT='READ'"
 }; // B->J/Psi(mumu)Ks events with Boole v12r4, Gauss v25r2, XmlDDDB v30r8
 
 // Datafile below was default input file for Brunel v30r1 to v30r9
@@ -50,11 +54,11 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
 // Uncomment next lines to use latest Boole .digi as input
 //////////////////////////////////////////////////////////////////////////////
-//HistogramPersistencySvc.OutputFile = "0601-11144100-Boole-v14r0.root";
-//EventSelector.Input = { "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v14r0/00001330_00000103_4.digi' TYP='POOL_ROOT' OPT='READ'" }; // B->J/Psi(mumu)Ks events with Boole v14r0, Gauss v25r0, XmlDDDB v30r8
-//DstWriter.Output = "DATAFILE='PFN:0601-11144100-Boole-v14r0.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//HistogramPersistencySvc.OutputFile = "0601-11144100-Boole-v14r2.root";
+//EventSelector.Input = { "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v14r2/00001330_00000103_4.digi' TYP='POOL_ROOT' OPT='READ'" }; // B->J/Psi(mumu)Ks events with Boole v14r2, Gauss v25r0, XmlDDDB v30r8
+//DstWriter.Output = "DATAFILE='PFN:0601-11144100-Boole-v14r2.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
