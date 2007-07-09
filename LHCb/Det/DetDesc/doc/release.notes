@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.317 2007-07-02 09:40:12 cattanem Exp $ 
+! $Id: release.notes,v 1.318 2007-07-09 15:37:01 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v17r5 2007-07-02 ==============================
+!====================== DetDesc v17r5 2007-07-09 ==============================
+! 2007-07-09 - Marco Cattaneo
+ - Add dependency on LHCbMath to access cbrt from LHCbMath/Power.h
+
 ! 2007-07-02 - Marco Cattaneo
  - Fix some doxygen warnings
 
