@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.5 2007-02-26 17:17:13 cattanem Exp $
+// $Id: GeomFun.h,v 1.6 2007-07-09 17:35:41 jpalac Exp $
 #ifndef LHCBMATH_GEOMFUN_H
 #define LHCBMATH_GEOMFUN_H 1
 
@@ -17,6 +17,7 @@ namespace Gaudi{
      *  aPoint must be constructible from object with x(), y(), z() methods.
      *  
      *  @author  Matthew Needham
+     *  @author  Juan Palacios
      *  @param   line: generic line
      *  @param   plane: generic plane
      *  @param   intersect: Intersection point
