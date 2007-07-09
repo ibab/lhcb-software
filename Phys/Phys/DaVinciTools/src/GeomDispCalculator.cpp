@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.17 2007-07-09 10:39:50 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.18 2007-07-09 13:51:42 pkoppenb Exp $
 
 // Include files
 
@@ -301,12 +301,20 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
   errMatrix.Place_at(particle2.covMatrix().Sub<Gaudi::SymMatrix6x6>(0,0),6,6);
 
   // calculate the vector of derivatives
-
+  if ( msgLevel(MSG::VERBOSE)) verbose() << "The big matrix is \n" 
+                                         << errMatrix << endmsg ;
+  
   Gaudi::XYZVector u;
   Gaudi::XYZVector u1;
   Gaudi::XYZVector u2;
 
   calcDerivVectors(part0, part1, u, u1, u2);
+
+  if ( msgLevel(MSG::VERBOSE)){
+    verbose() << "Deriv Vector u  = " << u << endmsg ;
+    verbose() << "Deriv Vector u1 = " << u1 << endmsg ;
+    verbose() << "Deriv Vector u2 = " << u2 << endmsg ;
+  }
 
   ROOT::Math::SVector<double,12> derivTotal;
   derivTotal.Place_at(Gaudi::Vector6( u.x(),  u.y(),  u.z(), 

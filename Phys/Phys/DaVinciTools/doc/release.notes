@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.269 2007-07-09 10:41:53 pkoppenb Exp $
+! $Id: release.notes,v 1.270 2007-07-09 13:51:42 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2007-07-09 - Patrick Koppenburg
- - Correct bug in GeometryTool that returned too large distances between lines.
+ - Correct bug in GeometryTools that returned too large distances between lines.
  - More printout in geomTool and Simple plots.
 
 ! 2007-07-05 - Patrick Koppenburg
