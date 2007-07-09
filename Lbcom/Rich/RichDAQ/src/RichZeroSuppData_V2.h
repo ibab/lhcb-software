@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData_V2.h,v 1.6 2007-03-26 11:21:41 jonrob Exp $
+ *  $Id: RichZeroSuppData_V2.h,v 1.7 2007-07-09 16:27:07 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -59,7 +59,7 @@ namespace Rich
 
         /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
          *
-         *  @param hpdID  Level0 board Rich::DAQ::hardware identifier
+         *  @param l0ID   Level0 board Rich::DAQ::hardware identifier
          *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
          */
         explicit RichZeroSuppData( const Level0ID l0ID,

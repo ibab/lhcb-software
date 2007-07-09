@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.7 2007-04-23 17:23:42 cattanem Exp $
+ *  $Id: RichZSPacked_V2.h,v 1.8 2007-07-09 16:27:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -207,7 +207,7 @@ namespace Rich
 
         /** Get row information from address
          *  @param address The 8-bit address
-         *  @param Offset for ALICE mode
+         *  @param aliceModeOffset Offset for ALICE mode
          *  @return The LHCB pixel row number
          */
         inline ShortType rowFromAddress( const ShortType address,

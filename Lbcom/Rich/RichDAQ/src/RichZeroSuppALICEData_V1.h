@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppALICEData_V1.h,v 1.2 2007-03-26 11:21:41 jonrob Exp $
+ *  $Id: RichZeroSuppALICEData_V1.h,v 1.3 2007-07-09 16:27:07 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -64,7 +64,7 @@ namespace Rich
 
         /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
          *
-         *  @param hpdID  Level0 board hardware identifier
+         *  @param l0ID   Level0 board hardware identifier
          *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
          */
         explicit RichZeroSuppALICEData( const Level0ID l0ID,
@@ -90,7 +90,6 @@ namespace Rich
         /** Constructor from a block of raw data
          *
          *  @param data     Pointer to the start of the data block
-         *  @param dataSize The size of the data block (excluding header HPD word)
          */
         explicit RichZeroSuppALICEData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data,        // start of data

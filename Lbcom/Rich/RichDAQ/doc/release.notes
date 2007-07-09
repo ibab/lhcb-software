@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r11 2007-07-09 =========================
+! 2007-07-09 - Marco Cattaneo
+ - Fix doxygen warnings
+
 ! 2007-06-25 - Chris Jones
  - Minor improvements to DAQ decoding error printout
 
