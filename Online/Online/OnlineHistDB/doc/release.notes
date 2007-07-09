@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2007-07-09 10:17:42 ggiacomo Exp $
+! $Id: release.notes,v 1.8 2007-07-09 17:29:59 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
@@ -8,7 +8,11 @@
 	- better Task support (including saveset frequency), new OnlineHistTask class in API
 	- avoid deleting histogram that are on a page
 	- support for uploading reference files through web interface
-	- new OnlineRootHist class in API for interfacing with OnlineHistogram to ROOT TH1 objects
+	- new OnlineRootHist class in API for interfacing OnlineHistogram to ROOT TH1 objects
+		(this introduces dependency on ROOT !)
+	- new methods for unset display options
+	- throw whole SQLException objcet in case of error
+	 
 
 ! 20070508 - OnlineHistDB v2r1
 	- improved query methods, some bug fixes

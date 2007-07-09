@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.1 2007-07-09 10:17:42 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.2 2007-07-09 17:29:59 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistogram.h"
@@ -27,6 +27,11 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
 					 void* value,
 					 std::string PageName = "_DEFAULT_",
 					 int Instance=-1);
+  virtual bool unsetHistoSetDisplayOption(std::string ParameterName);
+  virtual bool unsetDisplayOption(std::string ParameterName);
+  virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
+
+
 };
 
 
@@ -40,8 +45,8 @@ class OnlineRootHistStorage
 			       std::string Page="_NONE_",
 			       int Instance = 1);
   /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
-  bool removeHistogram(OnlineRootHist* h,
-		       bool RemoveWholeSet = false);
+  bool removeRootHistogram(OnlineRootHist* h,
+			   bool RemoveWholeSet = false);
  protected:
   void updateRootHistograms();  
  private:

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.5 2007-07-09 10:17:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.6 2007-07-09 17:29:59 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -274,7 +274,8 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
       statement << "'";
     } 
   }
-  statement  <<	"); end;";
+  statement  <<	", reset => 1); end;";
+  if(debug() > 3) cout << "Sending statement: "<<statement.str() << endl;
   Statement *fstmt=m_conn->createStatement (statement.str());
   try{
     fstmt->registerOutParam(1, OCCIINT); 
@@ -407,9 +408,13 @@ bool OnlineHistogram::linkDisplayParameter(std::string& ParameterName,
   OnlineDisplayOption* mydo=getDO(ParameterName);
 
   if (mydo) {
+    std::string myvalue ="";
     switch (mydo->type()) {
     case OnlineDisplayOption::STRING :
-      st->setString(pos, *(static_cast<std::string*> (value)));
+      myvalue = *(static_cast<std::string*> (value));
+      // never send empty strings since they are taken as NULL by PL/SQL
+      if (myvalue == "") myvalue=" "; 
+      st->setString(pos, myvalue);
       break;
     case OnlineDisplayOption::FLOAT :
       st->setFloat(pos,*(static_cast<float*> (value)));
@@ -435,6 +440,7 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
   stringstream statement;
   statement << "begin :out := OnlineHistDB.DeclareHistoSetDisplayOptions(:x1,K" << 
     ParameterName << " => :x2);end;";
+  if(debug() > 3) cout << "Sending statement: "<<statement.str() << endl; 
   Statement *fstmt=m_conn->createStatement (statement.str());
   try{
     fstmt->registerOutParam(1, OCCIINT); 
@@ -460,9 +466,6 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
   }
   return out;
 }
-
-
-
 
 bool OnlineHistogram::setDisplayOption(std::string ParameterName, 
 				       void* value) {
@@ -499,6 +502,10 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
   }
   return out;
 }
+
+
+
+
 
 bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName, 
 						void* value,
@@ -547,6 +554,114 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
   return out;
 }
 
+
+bool OnlineHistogram::unsetHistoSetDisplayOption(std::string ParameterName) {
+  bool out = true;
+  OnlineDisplayOption* mydo= getDO(ParameterName);
+  if (!mydo) {
+    errorMessage("OnlineHistogram::unsetHistoSetDisplayOption : not existing Parameter "+ParameterName);
+    out=false;
+  }  
+  if (!m_hsdisp) {
+    stringstream error;
+    error << "OnlineHistogram::unsetHistoSetDisplayOption : no display options defined for set " << m_hsid;
+    errorMessage(error.str());
+    out=false;
+  }
+  if(out) {
+    int curdoid=0;
+    if (SET !=  m_domode) { 
+      // get current histogram set options
+      if (HIST == m_domode) curdoid = m_hdisp;
+      if (HISTPAGE  == m_domode) curdoid = m_shdisp;
+      getDisplayOptions(m_hsdisp);
+    }
+    mydo->unset();
+    stringstream function;
+    function << "DeclareHistoSetDisplayOptions('" << m_hsid << "'";
+    setDisplayOptions(function.str());
+    if (SET !=  m_domode) { 
+      // reload options for current mode
+      getDisplayOptions(curdoid);
+    } 
+  }
+  return out;
+}
+
+
+bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
+  bool out = true;
+  if(m_nhs ==1) // take the set and never mind
+    out= unsetHistoSetDisplayOption(ParameterName);
+  else {
+    OnlineDisplayOption* mydo= getDO(ParameterName);
+    
+    if (!mydo) {
+      errorMessage("OnlineHistogram::unsetDisplayOption : not existing Parameter "+ParameterName);
+      out=false;
+    }  
+    if (!m_hdisp) {
+      stringstream error;
+      error << "OnlineHistogram::unsetDisplayOption : no display options defined for histogram  " << m_hid;
+      errorMessage(error.str());
+      out=false;
+    }
+    if(out) {
+      int curdoid=0;
+      if (HIST !=  m_domode) { 
+	// get current histogram options
+	if (HISTPAGE  == m_domode) curdoid = m_shdisp;
+	getDisplayOptions(m_hdisp);
+      }
+      mydo->unset();
+      stringstream function;
+      function << "DeclareHistDisplayOptions('" << m_hid << "'";
+      setDisplayOptions(function.str());
+      if (HIST !=  m_domode) { 
+	// reload options for current mode
+	getDisplayOptions(curdoid);
+      } 
+    }
+  }
+  return out;
+}
+
+bool OnlineHistogram::unsetHistoPageDisplayOption(std::string ParameterName)
+{
+  bool out = true;
+  if (m_page == "_NONE_") {
+    errorMessage("OnlineHistogram::unsetHistoPageDisplayOption aborted: histogram is not on a page");
+    out = false;
+  }				 
+  else {
+    OnlineDisplayOption* mydo= getDO(ParameterName);    
+    if (!mydo) {
+      errorMessage("OnlineHistogram::unsetHistoPageDisplayOption : not existing Parameter "+ParameterName);
+      out=false;
+    }  
+    if (!m_shdisp) {
+      stringstream error;
+      error << "OnlineHistogram::unsetHistoPageDisplayOption : no display options defined for histogram " << m_hid;
+      errorMessage(error.str());
+      out=false;
+    }
+    if(out) {
+      if (HISTPAGE != m_domode) { // should never happen
+	getDisplayOptions(m_shdisp);
+	m_domode = HISTPAGE;
+      }
+      mydo->unset();
+      stringstream function;
+      function << "DeclareHistoPageDisplayOptions(theHID => '" <<
+	m_hid << "',thePage => '" << m_page << "',TheInstance =>" << 
+	m_instance;
+      setDisplayOptions(function.str());
+    }
+  }
+  return out;
+}
+
+
 bool OnlineHistogram::getDisplayOption(std::string ParameterName,
 				       void* option)
 {
@@ -581,15 +696,12 @@ bool OnlineHistogram::getDisplayOption(std::string ParameterName,
 }
 
 OnlineHistogram::OnlineDisplayOption::~OnlineDisplayOption() {
-  if(m_value) {
-    if (m_type == STRING) delete  static_cast<std::string*>(m_value);
-    if (m_type == FLOAT) delete  static_cast<float*>(m_value);
-    if (m_type == INT) delete  static_cast<int*>(m_value);
-  }
+  unset();
 }
 
 void OnlineHistogram::OnlineDisplayOption::set(std::string value) { 
   if (m_type == STRING && value != "_unset_") {
+    if ( value == "") value = " ";
     if(m_value) *(static_cast<std::string*>(m_value)) = value;
     else m_value = new std::string(value);
   }
@@ -606,6 +718,16 @@ void OnlineHistogram::OnlineDisplayOption::set(float value) {
     else m_value = new float(value);
   }
 }
+
+void OnlineHistogram::OnlineDisplayOption::unset() {
+  if(m_value) {
+    if (m_type == STRING) delete  static_cast<std::string*>(m_value);
+    if (m_type == FLOAT) delete  static_cast<float*>(m_value);
+    if (m_type == INT) delete  static_cast<int*>(m_value);
+    m_value = 0;
+  }
+}
+
 
 OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string ParameterName) {
   OnlineDisplayOption* out=0;

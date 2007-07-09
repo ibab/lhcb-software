@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.4 2007-07-09 10:17:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.5 2007-07-09 17:29:59 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -37,6 +37,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
 					 void* value,
 					 std::string PageName = "_DEFAULT_",
 					 int Instance=-1);
+  virtual bool unsetHistoSetDisplayOption(std::string ParameterName); 
+  virtual bool unsetDisplayOption(std::string ParameterName); 
+  virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
+  
   bool getDisplayOption(std::string ParameterName,
 					 void* option);
 
@@ -98,6 +102,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
     void set(std::string value); 
     void set(int value); 
     void set(float value);
+    void unset();
     bool isSet() { return (m_value != NULL);}     
   private:
     std::string m_name;
@@ -166,7 +171,7 @@ class OnlineHistogramStorage
 				std::string Page="_NONE_",
 				int Instance = 1);
   /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
-  bool removeHistogram(OnlineHistogram* h,
+  virtual bool removeHistogram(OnlineHistogram* h,
 		       bool RemoveWholeSet = false);		 
 private: 
   OnlineHistDBEnv* m_Histenv;

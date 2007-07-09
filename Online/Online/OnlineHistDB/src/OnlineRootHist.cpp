@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.1 2007-07-09 10:17:42 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.2 2007-07-09 17:29:59 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
@@ -7,7 +7,6 @@ OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
 		 int Instance) : OnlineHistogram(Env,Identifier,Page,Instance)
 { 
   setFromDB();
-  setDrawOptions();
 }
 
 
@@ -93,6 +92,27 @@ bool OnlineRootHist::setHistoPageDisplayOption(std::string ParameterName,
   return out;
 }
 
+bool OnlineRootHist::unsetHistoSetDisplayOption(std::string ParameterName) {
+  bool out;
+  out = OnlineHistogram::unsetHistoSetDisplayOption(ParameterName);
+  if(out) setFromDB();
+  return out;
+}
+
+bool OnlineRootHist::unsetDisplayOption(std::string ParameterName) {
+  bool out;
+  out = OnlineHistogram::unsetDisplayOption(ParameterName);
+  if(out) setFromDB();
+  return out;
+}
+
+bool OnlineRootHist::unsetHistoPageDisplayOption(std::string ParameterName) {
+  bool out;
+  out = OnlineHistogram::unsetHistoPageDisplayOption(ParameterName);
+  if(out) setFromDB();
+  return out;
+}
+
 
 OnlineRootHistStorage::OnlineRootHistStorage(OnlineHistDBEnv* Env) :
   m_Histenv(Env) {}
@@ -141,7 +161,7 @@ OnlineRootHist* OnlineRootHistStorage::getRootHist(std::string Identifier,
   return h;
 }
 
-bool OnlineRootHistStorage::removeHistogram(OnlineRootHist* h,
+bool OnlineRootHistStorage::removeRootHistogram(OnlineRootHist* h,
 				   bool RemoveWholeSet) {
   bool out=h->remove(RemoveWholeSet);
   if (out) {
@@ -160,4 +180,5 @@ bool OnlineRootHistStorage::removeHistogram(OnlineRootHist* h,
   }
   return out;  
 }
+
 
