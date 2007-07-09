@@ -5,6 +5,107 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r7>2007-07-09 RecSys v4r7</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r7.
+
+- Packages modified: PatVelo v2r16, PatVeloTT v2r13, PatPV v2r9, PatKShort v1r7, 
+   PatForward v2r15, TrackFitEvent v3r6, TrackProjectors v2r13, TrackUtils v1r13,
+   TrackFitter v2r17, TrackTools v2r16, TrackMatching v2r15, TsaAlgorithms v2r5,
+   TrackExtrapolators v2r13, TrackMCTools v2r12, TrackIdealPR v2r12, 
+   TrackCheckers v3r0, TrackAssociators v2r5, TrackSys v4r7
+
+- In PatVelo v2r16
+  . Each of R, Space, Generic, Open and General tracking set their own track
+    history type
+  . PatVeloGeneralTracking: designed to run after the 2D and 3D tracking to 
+                            catch tracks not from the interaction point
+  . PatVeloFilterUsedClusters: Marks as used only clusters in existing 3D tracks
+  . Removed clone cleaning from PatVeloTrackTool
+  . Made linear fit a semi public part of PatVeloSpaceTrack
+
+- In PatVeloTT v2r13
+  . Fix uninitialized variables in PatTTMagnetTool.cpp
+  . Fix wrong endreq usage in PatVTTTrack.h, PatVeloTT.cpp and PatVeloTTTool.cpp
+  . Protect usage of debug() MsgStream with test on msgLevel(MSG::DEBUG)
+
+- In PatPV v2r9
+  . Modify returning status code fatal which is in fact not fatal
+
+- In PatKShort v1r7
+  . Make Q/p on all states of output tracks consistent 
+  . Remove use of pow
+  . Reserve space in vectors
+
+- In PatForward v2r15
+  . Add ITracksFromTrack interface to PatForwardTool
+
+- In TrackFitEvent v3r6
+  . Replaced TrackParameters::kappa with c_light as in the extrapolators.
+
+- In TrackProjectors v2r13
+  . Introduced jobOption: "UseBField". If true, then the StateTraj in the
+    projector is made using the B from the magnetic field service. If false,
+    then B = (0,0,0) is used, making the StateTraj behave like a LineTraj. The
+    latter option is faster and set as default.
+
+- In TrackExtrapolators v2r13
+  . Fix bug in propagation of StateVector in TrackExtrapolator
+  . Removed m_F data member and associated getter and setter methods.
+  . Added State,z,TrackMatrix propagate method.
+
+- In TrackUtils v1r13
+  . Fixed TrackToDST for PatVeloR tracks so that states correctly prepared
+
+- In TrackFitter v2r17
+  . Add some const
+  . Remove workaround following bug fix in += operator for Sym matrix
+  . Removed transportMatrix() use from TrackKalmanFilter
+
+- In TrackMatching v2r15
+  . Retune of matching accounting for better fit/new velo pattern
+
+- TsaAlgorithms v2r5
+  . Initialize variable in TsaCollector
+
+- In TrackTools v2r16
+  . Add selection by eta/likelihood to track selector
+  . Small change in Measurement provider (following new functionality in LHCbID)
+
+- In TrackMCTools v2r12
+  . Transport the covariance matrix correctly
+  . Follow addition of propagate method to extrapolator class
+  . Remove obsolete files TrackAcceptance.h/cpp TrackCriteriaSelector
+  . LHCbIDsToMCParticles, LHCbIDsToMCHits:
+    + Extend functionality to include muons
+    + Check that all linker tables exist before using them (exception if missing)
+
+- In TrackIdealPR v2r12
+  . Add possibility of allowing inefficiency in hits addition
+  . Add possibility of smearing seed state p
+  . Add possibility of adding muon hits 
+
+- In TrackCheckers v3r0
+  . Add new checking base class TrackCheckerBase
+  . New checkers TrackResChecker (replaces TrackChecker), TrackEffChecker
+  . Remove TrackChecker
+  . ExtrapolatorChecker derives from TrackCheckerBase, particles 
+    selected using IMCReconstructible not TrackCriteriaSelector
+  . For configuration for long track see TrackChecking.opts in TrackSys
+
+- In TrackAssociators v2r5
+  . Added Muon hits in association decision,
+  . jobOption "DecideUsingMuons" = false by default
+
+- In TrackSys v4r7
+  . Added PatFilterUsedClusters and PatVeloGeneralTracking to RecoTracking.opts
+  . Modified VeloOpenTracking.opts to just run PatVeloGeneralTracking with 
+    "open" cuts
+  . TrackChecking.opts updated to add TrackEffChecker example
+  . Set Ks Fit iterations to three
+
+- In TrackMatching v2r15, TrackExtrapolators v2r13, TrackTools v2r16
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v4r6>2007-06-14 RecSys v4r6</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r6.
 

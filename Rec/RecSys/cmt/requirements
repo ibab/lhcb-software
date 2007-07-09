@@ -1,5 +1,5 @@
 package RecSys
-version v4r6
+version v4r7
 
 branches cmt doc
  
@@ -17,31 +17,31 @@ use CaloPIDs            v4r7    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r8    Calo  # Olivier Deschamps
 
 # Track Fit
-use TrackSys            v4r6    Tr    # Eduardo Rodrigues
-use TrackExtrapolators  v2r12   Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r11   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r5    Tr    # Eduardo Rodrigues
-use TrackTools          v2r15   Tr    # Eduardo Rodrigues
-use TrackFitter         v2r16   Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r12   Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r11   Tr    # Eduardo Rodrigues
-use TrackUtils          v1r12   Tr    # Eduardo Rodrigues
-use TrackMatching       v2r14   Tr    # Eduardo Rodrigues
-use TrackAssociators    v2r4    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackSys            v4r7    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r13   Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r12   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r6    Tr    # Eduardo Rodrigues
+use TrackTools          v2r16   Tr    # Eduardo Rodrigues
+use TrackFitter         v2r17   Tr    # Eduardo Rodrigues
+use TrackProjectors     v2r13   Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackIdealPR        v2r12   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r13   Tr    # Eduardo Rodrigues
+use TrackMatching       v2r15   Tr    # Eduardo Rodrigues
+use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackCheckers       v2r14   Tr    # Eduardo Rodrigues
+use TrackCheckers       v3r0    Tr    # Eduardo Rodrigues
 use TrackSeeding        v1r1    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # Track Pattern Recognition
 use PatUtils            v1r3    Pat   # Olivier Callot
-use PatVelo             v2r15   Pat   # David Hutchcroft
-use PatVeloTT           v2r12   Pat   # Mariusz Witek
-use PatForward          v2r14   Pat   # Stephanie Hansmann-Menzemer
-use PatPV               v2r8    Pat   # Mariusz Witek
+use PatVelo             v2r16   Pat   # David Hutchcroft
+use PatVeloTT           v2r13   Pat   # Mariusz Witek
+use PatForward          v2r15   Pat   # Stephanie Hansmann-Menzemer
+use PatPV               v2r9    Pat   # Mariusz Witek
 use PatChecker          v2r13   Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r5    Pat   # Olivier Callot
-use TsaAlgorithms       v2r4    Tr    # Matt Needham
-use PatKShort           v1r6    Pat   # Olivier Callot
+use TsaAlgorithms       v2r5    Tr    # Matt Needham
+use PatKShort           v1r7    Pat   # Olivier Callot
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
