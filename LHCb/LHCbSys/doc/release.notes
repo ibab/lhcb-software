@@ -5,6 +5,76 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r7>2007-07-05 LHCbSys v22r7</A></H1><PRE>
+This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
+
+- Packages modified: GaudiObjDesc v10r1, EventSys v23r7, TrackEvent v4r5,
+    RecEvent v2r5, EventAssoc v4r2, DetSys v9r7, DetDesc v17r5, OTDet v7r4,
+    DetCond v11r5, CondDBUI v2r4, TrackInterfaces v3r6, MCInterfaces v1r1,
+    RichRecBase v3r6, TsaKernel v2r5, LHCbAlgs v2r10, SimComponents v2r4
+
+- In GaudiObjDesc v10r1
+  . Add to DTD the possibility to define the namespace to be used for the 
+    generated classes. Default value is "LHCb"
+
+- In TrackEvent v4r5
+  . Removed kappa. Consistently use c_light in extrapolators and StateTraj
+  . Added 4 more history types to Track.xml for the various PatVelo algorithms
+
+- In RecEvent v2r5
+  . Add setExtraInfo method to VertexBase
+
+- In DetDesc v17r5
+  . Use cbrt in Gaudi::Math rather than pow 
+  . AlignmentCondition.cpp: Tidy up makeMatrices method by using functions from 
+    DetDesc/3DTransformationFunctions.h
+  . GeometryInfoPlus.cpp: fix bug: local copy of the misalignment matrix was
+    holding the inverse of what the code thought it was holding.
+  . GlobalToLocalDelta.cpp: fix localDeltaMatrix function, algebra was wrong
+
+- In DetCond v11r5
+  . Added the possibility to connect to the database only when needed (and made
+    it the default), so a job does not need the database does not need to be
+    able to connect to it or to be reconfigured.
+
+- In CondDBUI v2r4
+  . Added dump_db_to_files.py script to dump a database snapshot to XML files
+  . Fixed the local copy of PyCoolDiff
+  . Added a wrapper for PyCoolCopy.copy to support LFCReplicaSvc
+  . Added the function conddbui.merge to copy the content of a database
+    into another (where folders already exist).
+  . Made PyCoolDiff working also when the provided tag is not valid for all the
+    folders
+  . Added the utility function CondDB.getCOOLNode to retrieve a IFolder or
+    IFolderSet object from the database without having to check the type of the
+    requested node
+
+- In TrackInterfaces v3r6
+  . Removed transportMatrix getter from and added a propagate method to the
+    ITrackExtrapolator interface
+  . Add ITracksFromTrack.h interface
+
+- In MCInterfaces v1r1
+  . Remove obsolete interfaces: ITrackReconstructible, ITrackCriteriaSelector
+
+- In RichRecBase v3r6
+  . Use track type instead of history to identify Velo only tracks
+
+- In TsaKernel v2r5
+  . Bug fix in OTCluster drift radius calc, trajectories run towards readout....
+
+- In LHCbAlgs v2r10
+  . PrintHeader: print header in info(). Avoids other useless printout in debug()
+
+- In SimComponents v2r4
+  . Change MCParticleSelector defaults to not apply Eta cut.
+
+- In EventAssoc v4r2, OTDet v7r4
+  . Add more dictionaries
+
+- In DetDesc v17r5, OTDet v7r4, TrackInterfaces v3r6
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v22r6>2007-06-15 LHCbSys v22r6</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
