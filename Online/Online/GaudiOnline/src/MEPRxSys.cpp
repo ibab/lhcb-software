@@ -53,8 +53,6 @@ struct IOVec: public iovec {
 };
 #endif // _WIN32
 
-static int s = -1;
-
 std::string sys_err_msg(void) {
 #ifdef _WIN32  
   char msg[512];
@@ -81,6 +79,7 @@ std::string dotted_addr(u_int32_t addr)
 int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname, 
           bool mepreq, std::string &errmsg) 
 {
+  int retSockFd = -1;
 #ifndef _WIN32
   char netdev_name[10];
   int fd;
@@ -97,11 +96,12 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
   addr.s_addr = myaddr;
 #endif
   struct sockaddr_in saddr = {AF_INET, 0, addr,0, }; 
-  if ((s = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
+  if ((retSockFd = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
     errmsg = "socket";
     goto drop_out;
   }
-  if (setsockopt(s, SOL_SOCKET, SO_RCVBUF, (const char *)
+
+  if (setsockopt(retSockFd, SOL_SOCKET, SO_RCVBUF, (const char *)
      &rxbufsiz, sizeof(rxbufsiz))) {
     errmsg = "setsockopt SO_RCVBUF";
     goto shut_out;
@@ -109,17 +109,18 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
   if (myaddr == INADDR_NONE) { 
 #ifdef linux
     sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
-    if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
+    if (setsockopt(retSockFd, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
        1 + strlen(netdev_name))) {
       errmsg = "setsockopt SO_BINDTODEVICE";
       goto shut_out;
     }
+
 #else
     errmsg = "inet_addr(" + ifname + ")";
     goto shut_out;
 #endif
   } else {
-    if (bind(s, (const struct sockaddr *) &saddr, sizeof(saddr))) {
+    if (bind(retSockFd, (const struct sockaddr *) &saddr, sizeof(saddr))) {
       errmsg = "bind";
       goto shut_out;
     } 
@@ -127,19 +128,19 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
   if (mepreq) {
     int val;
     val = MEP_REQ_TTL;
-    if (setsockopt(s, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
+    if (setsockopt(retSockFd, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
       errmsg = "setsockopt SOL_IP TTL";
       goto shut_out;
     }
   } 
-  return 0;
+  return retSockFd;
 shut_out:
-  shutdown(s, SHUT_RD);
+  shutdown(retSockFd, SHUT_RD);
 drop_out:
-  return 1;
+  return -1;
 }
 
-int recv_msg(void *buf, int len,  int flags)
+int recv_msg(int sockfd, void *buf, int len,  int flags)
 {
   int ioflags = 0;
 #ifndef _WIN32
@@ -153,20 +154,20 @@ int recv_msg(void *buf, int len,  int flags)
   int rlen = recv(s, (char *) buf, len, ioflags);
   return ((rlen == -1 && WSAGetLastError() == WSAEMSGSIZE) ? len : rlen);  
 #else 
-  return (recvmsg(s, &msg, ioflags | MSG_DONTWAIT));
+  return (recvmsg(sockfd, &msg, ioflags | MSG_DONTWAIT));
 #endif
 }
 
 #ifdef _WIN32
-int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int flags) {
+int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, int flags) {
   int ioflags = 0;
   struct in_addr in;
   in.S_un.S_addr = addr;
   struct sockaddr_in sinaddr = {AF_INET, protocol, in, 0,}; 
-  return (sendto(s, (const char *) buf, len, ioflags, 
+  return (sendto(sockfd, (const char *) buf, len, ioflags, 
            (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
 #else
-int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
+int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
   struct IOVec bufs(buf, len);  
   struct MsgHdr msg(&bufs, 1);
   struct in_addr in;
@@ -174,9 +175,10 @@ int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags
   static struct sockaddr_in _addr = { AF_INET, protocol, in, 0,};
   msg.msg_name = &_addr;
   msg.msg_namelen = sizeof(_addr);
-  return (sendmsg(s, &msg, MSG_DONTWAIT | MSG_CONFIRM));
+  return (sendmsg(sockfd, &msg, MSG_DONTWAIT | MSG_CONFIRM));
 #endif
 }
+
 
 int parse_addr(const std::string &straddr, u_int32_t &addr)
 {
@@ -229,13 +231,13 @@ void usleep(int us)
 #endif
 }
 
-int rx_select(int sec)
+int rx_select(int sockfd, int sec)
 {
   fd_set rfds;
   FD_ZERO(&rfds);
-  FD_SET(s, &rfds);
+  FD_SET(sockfd, &rfds);
   struct timeval timeout = {sec, 0}; /* seconds */
-  int maxfd = s + 1;
+  int maxfd = sockfd + 1;
   int n;
   
   n = select(maxfd, &rfds, NULL, NULL, &timeout);
@@ -244,7 +246,7 @@ int rx_select(int sec)
 #else
   if (n == -1) return -1;
 #endif
-  if (n == 1 && !FD_ISSET(s, &rfds)) return MEPRX_WRONG_FD;
+  if (n == 1 && !FD_ISSET(sockfd, &rfds)) return MEPRX_WRONG_FD;
   return n;
 }
 

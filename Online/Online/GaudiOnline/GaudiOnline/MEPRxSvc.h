@@ -78,6 +78,8 @@ namespace LHCb  {
     typedef Workers::iterator          RXIT;
     friend struct MEPRx;
   protected:
+	int                         m_dataSock;	/*Raw socket for receiving data.*/
+	int                         m_mepSock;	/*Raw socket to send MEP requests.*/
     bool                        m_receiveEvents;
     bool                        m_forceStop;
     bool                        m_RTTCCompat;
@@ -92,6 +94,9 @@ namespace LHCb  {
     int                         m_refCount;
     int                         m_MEPBufSize;
     int                         m_ethInterface;
+    int                         m_initialMEPRQ;	/* Number of initial MEPRQs to send.*/
+    int                         m_MEPsPerMEPRQ; /* Number of MEPs requested per MEPRQ.*/
+    int                         m_MEPRecvTimeout; /* Select timeout for waiting for a MEP.*/
     u_int32_t                   m_partitionID;
     u_int32_t                   m_IPOdin;
     u_int32_t                   m_odinIPAddr;
@@ -163,7 +168,7 @@ namespace LHCb  {
     StatusCode error(const std::string& msg);
     StatusCode allocRx();
     StatusCode releaseRx();
-    StatusCode openSocket();
+    int openSocket(int protocol);
     // counter functions
     void clearCounters();
     int setupCounters(int);

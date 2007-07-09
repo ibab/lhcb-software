@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.47 2007-02-26 19:01:14 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.48 2007-07-09 14:41:12 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -44,7 +44,6 @@ namespace LHCb {
 #define IP_HEADER_LEN 20
 #define IP_PROTO_HLT  0xF2
 
-#define MEP_REQ_TOS 0xFD  /* the D is historic from the MDPs :-) */
 #ifndef MEP_ADD_ERROR
 #define MEP_ADD_ERROR -9999
 #endif
@@ -59,7 +58,7 @@ namespace LHCb {
   a <<  MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __FUNCDNAME__ << ":" << __LINE__ << endmsg;} while(0);
 #else
 #define ERRMSG(a,x) do {  \
-  a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
+  a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<<  ":(" << __LINE__ << ")" << endmsg;} while(0);
 #endif
 
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
@@ -154,7 +153,7 @@ namespace LHCb  {
     int createMDFMEP(u_int8_t *buf, int nEvt);
     void incompleteEvent();
     int spaceAction();
-    int addMEP(const MEPHdr *hdr, int srcid);
+    int addMEP(int sockfd, const MEPHdr *hdr, int srcid);
   };
 }
 
@@ -316,7 +315,7 @@ int MEPRx::spaceAction() {
   return sendSpace();
 }
 
-int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
+int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   MEPEVENT* e = (MEPEVENT*)event().data;
   if (m_seen[srcid]) multipleSrc(srcid);
   m_seen[srcid] = 1;       
@@ -330,7 +329,7 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
     m_brx          = 0;
     m_pf           = hdr->m_nEvt;
   }
-  int len = MEPRxSys::recv_msg((u_int8_t*)e->data + m_brx + 4, MAX_R_PACKET, 0);
+  int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, MAX_R_PACKET, 0);
   if (len < 0) {
     ERRMSG(m_log,"failed to receive message");
     return MEP_ADD_ERROR;
@@ -378,6 +377,9 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RTTCCompat",       m_RTTCCompat = false);
   declareProperty("RxIPAddr",         m_rxIPAddr = "127.0.0.1");
+  declareProperty("InitialMEPRQs",    m_initialMEPRQ = 1);
+  declareProperty("MEPsPerMEPRQ",     m_MEPsPerMEPRQ = 1);
+  declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
 }
@@ -388,7 +390,7 @@ MEPRxSvc::~MEPRxSvc(){
 }
 
 void MEPRxSvc::removePkt()   {
-  int len = MEPRxSys::recv_msg(m_trashCan,MAX_R_PACKET,0);
+  int len = MEPRxSys::recv_msg(m_dataSock, m_trashCan,MAX_R_PACKET,0);
   if (len < 0) {
     if (!MEPRxSys::rx_would_block())   {
       MsgStream log(msgSvc(),"MEPRx");
@@ -438,7 +440,7 @@ StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName) {
 StatusCode MEPRxSvc::sendMEPReq(int m) {
   if ( m_dynamicMEPRequest )   {
     mepreq.nmep = m;
-    int n = MEPRxSys::send_msg(m_odinIPAddr, MEP_REQ_TOS, &mepreq, MEP_REQ_LEN, 0);
+    int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq, MEP_REQ_LEN, 0);
     if (n == MEP_REQ_LEN)   {
       return StatusCode::SUCCESS;
     }
@@ -465,7 +467,7 @@ void MEPRxSvc::freeRx() {
     lib_rtl_lock(m_freeDscLock);
     m_freeDsc.push_back(rx);
     lib_rtl_unlock(m_freeDscLock);
-    sendMEPReq(1);
+    sendMEPReq(m_MEPsPerMEPRQ);
     return; 
   }
   error("timeout on getting space.");
@@ -495,7 +497,7 @@ StatusCode MEPRxSvc::run() {
   }
 
   for (;;) {
-    int n = MEPRxSys::rx_select(2);  
+    int n = MEPRxSys::rx_select(m_dataSock, m_MEPRecvTimeout);  
     if (n ==  -1) {
       ERRMSG(log,"select");
       continue;
@@ -505,23 +507,35 @@ StatusCode MEPRxSvc::run() {
       continue;
     }
     if (n == 0) {
+
+      /* We haven't received a MEP for quite some time. Let's send
+       * send another MEP request and see if it helps.
+       */
+      if(!sendMEPReq(m_MEPsPerMEPRQ).isSuccess()) {
+        log << MSG::WARNING << "Timed out, but could not send a MEP Request." << endmsg;
+      } else {
+        log << MSG::DEBUG << "Timed out, sent a MEP Request for " << 
+      	m_MEPsPerMEPRQ << " MEPs." << endmsg;
+      }
+
       static int ncrh = 1;
       if (!m_receiveEvents) {
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
         return StatusCode::SUCCESS;
-      } 
+      }
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." <<  m_freeDsc.size()  << " Event# ";
         ncrh = 10;
-  for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
-  log << " nrx ";
-  for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
-  log << endmsg;
+        for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
+        log << " nrx ";
+        for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
+        log << endmsg;
       }
+
       continue;
     }
-    int len = MEPRxSys::recv_msg(hdr, HDR_LEN, MEPRX_PEEK);
+    int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK);
     if (len < 0) {
       if (!MEPRxSys::rx_would_block()) 
         ERRMSG(log,"recvmsg");
@@ -571,7 +585,7 @@ StatusCode MEPRxSvc::run() {
         }
       } 
     }
-    if ((*rxit)->addMEP(mephdr, srcid) == MEP_SENT) {
+    if ((*rxit)->addMEP(m_dataSock, mephdr, srcid) == MEP_SENT) {
       rx = *rxit;
       m_workDsc.erase(rxit);
       lib_rtl_lock(m_usedDscLock);
@@ -696,20 +710,20 @@ StatusCode MEPRxSvc::releaseRx() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MEPRxSvc::openSocket() {
+int MEPRxSvc::openSocket(int protocol) {
   std::string msg;
-  if (MEPRxSys::open_sock(m_IPProtoIn, 
+  int retSock;
+  if ((retSock = MEPRxSys::open_sock(protocol, 
                           m_sockBuf,
                           m_ethInterface,
                           m_rxIPAddr, 
                           m_dynamicMEPRequest, 
-                          msg)) 
+                          msg)) < 0) 
   {
     MsgStream log(msgSvc(),"MEPRx");
     ERRMSG(log,msg);
-    return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
+  return retSock;
 }
 
 int MEPRxSvc::getSrcID(u_int32_t addr)  {
@@ -766,7 +780,8 @@ StatusCode MEPRxSvc::initialize()  {
   }
   log << MSG::DEBUG << "Entering initialize....." << endmsg;
   if ( !checkProperties().isSuccess() )  return StatusCode::FAILURE;
-  if ( !openSocket().isSuccess()      )  return StatusCode::FAILURE;
+  if((m_mepSock = openSocket(MEP_REQ_TOS)) < 0) return StatusCode::FAILURE;
+  if((m_dataSock = openSocket(m_IPProtoIn)) < 0) return StatusCode::FAILURE;
   if ( !allocRx().isSuccess()         )  return StatusCode::FAILURE;
 
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
@@ -775,7 +790,8 @@ StatusCode MEPRxSvc::initialize()  {
     }
     if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
       m_incidentSvc->addListener(this, "DAQ_CANCEL");
-      m_incidentSvc->addListener(this, "DAQ_ENABLE");      
+      m_incidentSvc->addListener(this, "DAQ_ENABLE");
+      /*Add another one for sending mep requests.*/
     } 
     else { 
       return error("Failed to access incident service.");
@@ -786,6 +802,13 @@ StatusCode MEPRxSvc::initialize()  {
     else {
       return error("Failed to access monitor service.");
     }
+
+    /*Send some MEP requests to start with.*/
+    if(!sendMEPReq(m_initialMEPRQ).isSuccess()) {
+      log << MSG::WARNING << "Could not send " << m_initialMEPRQ
+        << " initial MEP requests." << endmsg;
+    }
+
     return StatusCode::SUCCESS;
 }
 

@@ -1,6 +1,12 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2007-07-09 Sai Suman
+ - Added an additional socket for sending MEP Requests.
+ - Added a socket descriptor as an argument to recv_msg(), send_msg(),
+   and added a protocol number to open_sock().
+ - Added job options InitialMEPRQs and MEPsPerMEPRQ to MEPRxSvc.
+
 ! 2007-06-10 Markus Frank
  - Fix locking mechanism in the SocketSender and SocketReceiver class;
    Check if while processing a network request, a possible
