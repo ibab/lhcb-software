@@ -113,7 +113,7 @@ bool Gaudi::Math::closestPointParams(const aLine& line0,
 
   const double v0Dotv1 = v0.Dot(v1);
   const double v0mag2  = v0.Mag2();
-  const double v1mag2  = v1.Mag2()
+  const double v1mag2  = v1.Mag2();
   const double dnom = gsl_pow_2(v0Dotv1) -  (v0mag2*v1mag2);
   if ( dnom > 1e-10 ) {
     typename aLine::Vector p0_p1 = (p0 - p1);
