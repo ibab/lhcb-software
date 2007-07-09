@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.268 2007-07-09 10:39:49 pkoppenb Exp $
+! $Id: release.notes,v 1.269 2007-07-09 10:41:53 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -6,6 +6,7 @@
 
 ! 2007-07-09 - Patrick Koppenburg
  - Correct bug in GeometryTool that returned too large distances between lines.
+ - More printout in geomTool and Simple plots.
 
 ! 2007-07-05 - Patrick Koppenburg
  - PhysDesktop: check msgLevel defor debug() and verbose(). Print key() when

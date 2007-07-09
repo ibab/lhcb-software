@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.17 2007-01-15 10:32:38 jpalac Exp $
+// $Id: SimplePlotTool.cpp,v 1.18 2007-07-09 10:41:53 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -67,7 +67,7 @@ StatusCode SimplePlotTool::firstInitialize () {
   StatusCode sc = GaudiHistoTool::initialize();
   if (!sc) return sc;
 
-  debug() << m_minima << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << m_minima << endmsg ;
 
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   m_contextTool = tool<IContextTool>("ContextTool",this );
@@ -110,7 +110,7 @@ StatusCode SimplePlotTool::reInitialize () {
       return StatusCode::FAILURE;
     }
     m_histos.push_back(H);
-    info() << "Histogram with variable " << H.getVar() << " with boundaries" 
+    info() << "Histogram with variable " << H.getVar() << " with boundaries " 
            << H.getMin() << " " << H.getMax() << endreq ;
   }
   info() << "Done initialization for " <<  m_variables.size() 
@@ -122,7 +122,7 @@ StatusCode SimplePlotTool::reInitialize () {
 // 
 //=============================================================================
 StatusCode SimplePlotTool::setPath(const std::string& path) {
-  debug() << "Setting path to " << path << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Setting path to " << path << endmsg;
   setHistoDir(path);
   return StatusCode::SUCCESS;  
 }; 
@@ -143,7 +143,7 @@ StatusCode SimplePlotTool::fillPlots(const LHCb::Particle::ConstVector& PV,
 StatusCode SimplePlotTool::fillPlots(const LHCb::Particle* p,
                                      const std::string trailer) {
 
-  debug() << "Filling plots for " << p->particleID().pid() << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Filling plots for " << p->particleID().pid() << endmsg;
   for ( std::vector<MyHisto>::iterator H = m_histos.begin() ; 
         H != m_histos.end() ; ++H ){
     StatusCode sc = doPlot(p,(*H),trailer);
@@ -165,7 +165,7 @@ StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H,
   double hmin = H.getMin();
   double hmax = H.getMax();
 
-  debug() << "Filling plot for " << var << " of " << name << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Filling plot for " << var << " of " << name << endmsg;
 
   // -----------------------------------------
   // MASS 
@@ -206,7 +206,7 @@ StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H,
         ParticleProperty *dp = m_ppSvc->findByPythiaID(abs(dpid));
         double dmn = pp->mass() - dp->mass() ;
         plot(P->measuredMass()-maxmass,"Mass difference of "+name, dmn-fabs(hmin),dmn+hmax );
-        debug() << "Mass of " << P->particleID().pid() << " is " << P->measuredMass() 
+        if (msgLevel(MSG::DEBUG)) debug() << "Mass of " << P->particleID().pid() << " is " << P->measuredMass() 
                  << ", mass of daughter (" << dpid << ") is " << maxmass
                  << " -> difference = " << P->measuredMass()-maxmass << endmsg;
       } 
