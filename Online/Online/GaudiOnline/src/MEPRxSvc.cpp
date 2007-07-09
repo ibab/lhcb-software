@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.48 2007-07-09 14:41:12 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.49 2007-07-09 15:03:16 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -508,15 +508,9 @@ StatusCode MEPRxSvc::run() {
     }
     if (n == 0) {
 
-      /* We haven't received a MEP for quite some time. Let's send
-       * send another MEP request and see if it helps.
+      /* We haven't received a MEP for quite some time. Update counter.
        */
-      if(!sendMEPReq(m_MEPsPerMEPRQ).isSuccess()) {
-        log << MSG::WARNING << "Timed out, but could not send a MEP Request." << endmsg;
-      } else {
-        log << MSG::DEBUG << "Timed out, sent a MEP Request for " << 
-      	m_MEPsPerMEPRQ << " MEPs." << endmsg;
-      }
+      m_numMEPRecvTimeouts++;
 
       static int ncrh = 1;
       if (!m_receiveEvents) {
@@ -542,6 +536,7 @@ StatusCode MEPRxSvc::run() {
       continue;
     }
     m_totRxPkt++;  
+    m_numMEPRecvTimeouts = 0;
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
       /* we do not expect nor want this */
       removePkt();
@@ -756,6 +751,7 @@ int MEPRxSvc::setupCounters(int n) {
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
   PUBCNT(incEvt,   "Incomplete events");
+  PUBCNT(numMEPRecvTimeouts, "MEP Receive Timeouts");
   m_notReqPkt = m_swappedMEP = 0;
   m_nCnt = n;
   return 0;

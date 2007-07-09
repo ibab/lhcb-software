@@ -126,7 +126,7 @@ namespace LHCb  {
     /* Counters per source */ 
     std::vector<u_int64_t> m_rxOct, m_rxPkt;
     /* Global counters */
-    int m_totRxPkt, m_totRxOct, m_incEvt;
+    int m_totRxPkt, m_totRxOct, m_incEvt, m_numMEPRecvTimeouts;
     /* Error counters */
     std::vector<u_int32_t> m_badPkt, m_misPkt;
     u_int32_t m_swappedMEP;
