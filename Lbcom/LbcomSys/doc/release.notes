@@ -6,6 +6,15 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r7>2007-07-02 LbcomSys v6r7</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r7
+
+- Packages modified: STTools v3r2
+
+- In STTools v3r2
+  . Fix a doxygen warning
+  . Add trimming of ST Measurements
+
 </PRE><H1><A NAME=v6r6>2007-06-05 LbcomSys v6r6</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r6
 
