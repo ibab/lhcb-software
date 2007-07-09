@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r8 2007-07-09 =====================
 ! 2007-06-22 - Chris Jones
  - Add a minimum background value job option to Rich::Rec::BackgroundEstiAvHPD
 
