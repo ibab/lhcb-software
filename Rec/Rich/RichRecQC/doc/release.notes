@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r13 2007-07-09 ==========================
 ! 2007-06-14 - Chris Jones
  - Add new root directory containing various ROOT scripts for producing
    RICH performance measures from the histograms produced by the various
