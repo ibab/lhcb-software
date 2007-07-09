@@ -18,10 +18,11 @@ function update_histo_display() {
        "DeclareHistoSetDisplayOptions(".$_POST["id"] :
        "DeclareHistDisplayOptions('".$_POST["id"]."'") );
   foreach  (array('LABEL_X','LABEL_Y','LABEL_Z','YMIN','YMAX','STATS','FILLSTYLE','FILLCOLOR',
-                  'LINESTYLE','LINECOLOR','LINEWIDTH','DRAWOPTS') as $var) 
+                  'LINESTYLE','LINECOLOR','LINEWIDTH','DRAWOPTS') as $var) {
     if ($_POST[$var] != '') $command.=",K${var} => '".$_POST[$var]."'";
-  $command.="); end;";
-  //echo "command is $command <br>";
+  }
+  $command.=",reset => 1); end;";
+  echo "command is $command <br>";
   $stid = OCIParse($conn,$command);
   ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
