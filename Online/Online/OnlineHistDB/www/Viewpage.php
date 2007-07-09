@@ -67,24 +67,25 @@ function page_form($page) {
     " $readonly >".$_POST["PAGEDOC"]."</textarea></tr></table><br>\n";
   echo "displays <span class='normal'> ".$_POST["NHISTO"]." </span> histograms:<br>";
   echo "<table border=0 >\n";
-  echo"<tr><td colspan=5><hr></tr>\n";
+  echo"<tr><td colspan=6><hr></tr>\n";
   if ($canwrite) {
-    for ($i=1;$i<=15;$i++) {
+    for ($i=1;$i<=16;$i++) {
       printf("<tr><td>Histogram ID <input type='text' size=7 name='HISTO_SH${i}' value='%s'>".
-	"<td>X position <input type='text' size=7 name='CENTER_X_SH${i}' value='%.2f'></td>".
-	"<td>Y position <input type='text' size=7 name='CENTER_Y_SH${i}' value='%.2f'></td>".
-	"<td>X size <input type='text' size=7 name='SIZE_X_SH${i}' value='%.2f'></td>".
-	     "<td>Y size <input type='text' size=7 name='SIZE_Y_SH${i}' value='%.2f'></td></tr>\n",
+	     "<td>X position <input type='text' size=5 name='CENTER_X_SH${i}' value='%.2f'></td>".
+	     "<td>Y position <input type='text' size=5 name='CENTER_Y_SH${i}' value='%.2f'></td>".
+	     "<td>X size <input type='text' size=5 name='SIZE_X_SH${i}' value='%.2f'></td>".
+	     "<td>Y size <input type='text' size=5 name='SIZE_Y_SH${i}' value='%.2f'></td>".
+	     ($i<=$_POST["NHISTO"] ?  "<td><B>Delete</B><input type='checkbox' name='REMOVE${i}' value=1> </td></tr>\n" : ""),
 	     $_POST["HISTO_SH${i}"],$_POST["CENTER_X_SH${i}"],$_POST["CENTER_Y_SH${i}"],
 	     $_POST["SIZE_X_SH${i}"],$_POST["SIZE_Y_SH${i}"]);
       if ($i<=$_POST["NHISTO"]){
-	echo "<tr><td colspan=5>";
+	echo "<tr><td colspan=6>";
 	showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"],$_POST["INSTANCE_SH${i}"]);
-	echo"</td></tr><tr><td colspan=5><hr></tr>\n";
+	echo"</td></tr><tr><td colspan=6><hr></tr>\n";
       }
 
       if ($i==$_POST["NHISTO"])
-	echo"</table><table border=0><tr><td colspan=5>&nbsp</tr><tr><td colspan=5> Add other histograms:</tr>";
+	echo"</table><table border=0><tr><td colspan=6>&nbsp</tr><tr><td colspan=6> Add other histograms:</tr>";
     }
     echo "</table>";
     echo "<table align=right><tr><td><input type='submit' name='Go' value='".($page=='new__' ? "Insert new page" : "Update Page")."'></tr></table><br>\n";
@@ -96,9 +97,9 @@ function page_form($page) {
 	"<td>&nbsp&nbsp&nbsp Y position <span class='normal' >".$_POST["CENTER_Y_SH${i}"]."</span></td>".
 	"<td>&nbsp&nbsp&nbsp X size <span class='normal' >".$_POST["SIZE_X_SH${i}"]."</span></td>".
 	"<td>&nbsp&nbsp&nbsp Y size <span class='normal' >".$_POST["SIZE_Y_SH${i}"]."</span></td></tr>\n";    
-      echo "<tr><td colspan=5>";
+      echo "<tr><td colspan=6>";
       showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"],$_POST["INSTANCE_SH${i}"]);
-      echo"</td></tr><tr><td colspan=5><hr></tr>\n";
+      echo"</td></tr><tr><td colspan=6><hr></tr>\n";
     }
   } 
 } 

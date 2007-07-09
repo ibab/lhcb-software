@@ -19,17 +19,12 @@ if (isset($_COOKIE["user"])) {
   while( OCIFetchInto($stid, $row, OCI_NUM)) 
     $task[$i++]=$row[0];
 
-  $i=0;$subsys=array();
-  $stid = OCIParse($conn,"select SSName from SUBSYSTEM");
-  OCIExecute($stid, OCI_DEFAULT);
-  while( OCIFetchInto($stid, $row, OCI_NUM)) 
-    $subsys[$i++]=$row[0];
+  $task=getTasks($conn);
 
-  $i=0; $page=array();
-  $stid = OCIParse($conn,"select PageName from PAGE");
-  OCIExecute($stid, OCI_DEFAULT);
-  while( OCIFetchInto($stid, $row, OCI_NUM)) 
-    $page[$i++]=$row[0];
+  $subsys=getSubSystems($conn);
+
+  $folder=array();
+  $page=getPages($conn);
   
   ocilogoff($conn);
   //  $alltask=implode("_%_",$task);
@@ -54,7 +49,7 @@ Subsystem <select name="searchsubsys"> <option> any
 Page <select name="searchpage"> <option> any
 <?
    foreach ($page as $p) 
-     echo "<option> $p";
+     echo "<option value=\"${p}\">".$folder[$p]."/$p";
 ?>
 </select> <br>
 or HID <input type="Text" name="searchHID" size=10> <br>
@@ -87,6 +82,16 @@ or HID <input type="Text" name="searchHID" size=10> <br>
 <h4> Page Configuration</h4> 
 <a class='asalink' href="Viewpage.php" target="mymain"> View Pages</a><br>
 <a class='asalink' href="Viewpage.php?page=new__" target="mymain"> Create new Page</a><br>
+<hr>
+<h4> Task Editor & <br> Reference Histograms</h4> 
+ <form action="Task.php" METHOD="GET" target="mymain">
+ Task <select name="task"> 
+<?
+ foreach ($task as $t) 
+    if ($t != "ANALYSIS") echo "<option> $t";
+?>
+</select>
+<input type="submit" target="mymain" name="Go" value="Go">
 <hr>
 <a href='AnalysisHistCreator.php' target=mymain> <h4> Create Analysis Histogram</h4> </a>
 <?

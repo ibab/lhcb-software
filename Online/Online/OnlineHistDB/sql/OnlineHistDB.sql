@@ -5,7 +5,8 @@ create or replace package OnlineHistDB as
  TYPE inttlist is TABLE OF int;
  procedure DeclareSubSystem(subsys varchar2);	
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
-	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0);
+	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0, SFreq float := NULL, 
+	Ref  varchar2:='NONE' );
  procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype IN varchar2:= '');
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
  function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  mytype IN varchar2 ) 
@@ -179,6 +180,24 @@ end UpdateDimServiceName;
 
 -----------------------
 
+function HistogramPages(theHID IN HISTOGRAM.HID%TYPE, PageNames OUT varchar2) return number is
+ npages int :=0;
+ cursor vsh is SELECT PAGE from SHOWHISTO where showhisto.HISTO =theHID;
+ mypage PAGE.PAGENAME%TYPE;
+begin
+ PageNames := ' ';
+ open vsh;
+ LOOP	
+  fetch vsh into mypage;
+  EXIT WHEN vsh%NOTFOUND;
+  npages := npages+1;
+  if (LENGTH(PageNames) < 448) then
+    PageNames := PageNames || mypage || ' ';
+  end if;
+ end LOOP;
+ return npages;
+end HistogramPages;
+
 --------------------------
 --PUBLIC FUNCTIONS:
 -----------------------
@@ -218,7 +237,8 @@ exception
 
 -----------------------
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
-	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0) is
+	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0 , SFreq float := NULL, 
+	Ref  varchar2:='NONE' ) is
  tn TASK.TASKNAME%TYPE;
  cursor ct is  select TASKNAME from TASK where TASKNAME=Name;
  t boolean;
@@ -232,7 +252,7 @@ exception
    insert into TASK(TASKNAME) VALUES(Name);
  end if;
 
- update TASK set RUNONPHYSICS=KRunOnPhysics,RUNONCALIB=KRunOnCalib,RUNONEMPTY=KRunOnEmpty where TASKNAME=Name;
+ update TASK set RUNONPHYSICS=KRunOnPhysics,RUNONCALIB=KRunOnCalib,RUNONEMPTY=KRunOnEmpty,SaveFrequency=SFreq where TASKNAME=Name;
  if (ss1 != 'NONE') then -- 'NONE' means do nothing
   if (ss1 != 'NULL') then
     DeclareSubSystem(ss1);
@@ -240,18 +260,25 @@ exception
   else
     update TASK set SUBSYS1=NULL where TASKNAME=Name;
   end if;
+ end if;
+ if (ss2 != 'NONE') then 
   if (ss2 != 'NULL') then
     DeclareSubSystem(ss2);
     update TASK set SUBSYS2=ss2 where TASKNAME=Name;
   else
     update TASK set SUBSYS2=NULL where TASKNAME=Name;
   end if;
+ end if;
+ if (ss3 != 'NONE') then 
   if (ss3 != 'NULL') then
     DeclareSubSystem(ss3);
     update TASK set SUBSYS3=ss3 where TASKNAME=Name;
   else
     update TASK set SUBSYS3=NULL where TASKNAME=Name;
   end if;
+ end if;
+ if (Ref != 'NONE') then 
+  update TASK set REFERENCE=Ref  where TASKNAME=Name;
  end if;
 exception
  when OTHERS then 
@@ -1031,12 +1058,23 @@ end GetHistogramData;
 -----------------------
 
 function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
+ cursor vh is SELECT HID from HISTOGRAM where HSET=theSet;
+ myhid HISTOGRAM.HID%TYPE;
+ pagenames varchar2(500);
+ np int;
 begin
  savepoint beforeDHSdelete;
+ open vh;
+ LOOP	
+  fetch vh into myhid;
+  EXIT WHEN vh%NOTFOUND;
+  np := HistogramPages(myhid, PageNames); -- check if histogram is on a page
+  if (np > 0) then
+   raise_application_error(-20005,'Histogram '||myhid||' is on pages --'||PageNames||'-- and cannot be removed');
+  end if;
+ end LOOP;
  delete from DISPLAYOPTIONS where DOID in (select HSDISPLAY from histogramset where hsid=theSet);
  delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HSET=theSet);
- delete from DISPLAYOPTIONS where DOID in (select SDISPLAY from showhisto,histogram 
-                       where showhisto.HISTO = histogram.HID and histogram.HSET=theSet);
  delete from histogramset where hsid=theSet;
  return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
 EXCEPTION
@@ -1048,9 +1086,12 @@ end DeleteHistogramSet;
 
 function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number is
  cursor vh is SELECT HSID,NHS,IHS from VIEWHISTOGRAM WHERE HID=theHID;
+ np int;
+ pagenames varchar2(500);
  myhsid HISTOGRAMSET.HSID%TYPE;
  mynhs HISTOGRAMSET.NHS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;
+ 
 begin
  savepoint beforeDHdelete;
  open vh;
@@ -1058,8 +1099,11 @@ begin
  if (vh%NOTFOUND) then
   return 0;
  else
+  np := HistogramPages(theHID, PageNames); -- check if histogram is on a page
+  if (np > 0) then
+   raise_application_error(-20005,'Histogram '||theHID||' is on pages --'||PageNames||'-- and cannot be removed');
+  end if;
   delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HID=theHID);
-  delete from DISPLAYOPTIONS where DOID in (select SDISPLAY from showhisto where showhisto.HISTO =theHID);
   if (mynhs = 1) then
    return DeleteHistogramSet(myhsid);
   else

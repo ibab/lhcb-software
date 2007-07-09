@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.6 2007-05-04 13:20:34 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.7 2007-07-09 10:17:41 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -9,11 +9,14 @@
  */
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistogram.h"
+#include "OnlineHistDB/OnlineRootHist.h"
 #include "OnlineHistDB/OnlineHistPage.h"
+#include "OnlineHistDB/OnlineHistTask.h"
 
 
-
-class  OnlineHistDB : public OnlineHistDBEnv
+class  OnlineHistDB : public OnlineHistDBEnv, 
+    public OnlineTaskStorage, public OnlineHistogramStorage, 
+    public OnlinePageStorage, public OnlineRootHistStorage
 {
  public:
   OnlineHistDB (std::string passwd, 
@@ -26,14 +29,6 @@ class  OnlineHistDB : public OnlineHistDBEnv
   
   // declarations of main DB objects
   
-  /// create or update a Task definition
-  bool declareTask(std::string Name, 
-		   std::string SubDet1="NULL", 
-		   std::string SubDet2="NULL", 
-		   std::string SubDet3="NULL",
-		   bool RunsOnPhysics=false, 
-		   bool RunsOnCalib=false, 
-		   bool RunsOnEmpty=false);
   /// declare a  subsystem
   bool declareSubSystem(std::string SubSys);
   /// declare an Histogram to the DB by its DIM service name
@@ -50,9 +45,6 @@ class  OnlineHistDB : public OnlineHistDBEnv
 					    std::string Name,
 					    std::vector<OnlineHistogram*> &Sources,
 					    std::vector<float>* Parameters = NULL);
-  /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
-  bool removeHistogram(OnlineHistogram* h,
-		       bool RemoveWholeSet = false);		 
   /// declare to the DB an Analysis algorithm implemented in the Analysis library
   bool declareCheckAlgorithm(std::string Name, 
 			     int Npars, 
@@ -66,12 +58,6 @@ class  OnlineHistDB : public OnlineHistDBEnv
 			       std::string* pars=NULL,
 			       std::string doc="NONE");
   // access methods
-  /// get an OnlineHistPage object, to create a new page or view/edit an existing one
-  OnlineHistPage* getPage(std::string Name, std::string Folder="");
-  /// get an OnlineHistogram object, holding informations of an existing histogram, that can be used to view/edit an histogram record
-  OnlineHistogram* getHistogram(std::string Identifier,
-				std::string Page="_NONE_",
-				int Instance = 1);
   /// get number of parameters needed by algorithm AlgName (and optionally the number of input histograms)
   int getAlgorithmNpar(std::string AlgName,
 		       int* Ninput = NULL) const;
@@ -132,14 +118,14 @@ class  OnlineHistDB : public OnlineHistDBEnv
 
  private:
   // private dummy copy constructor and assignment operator
-  OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy") {}
+  OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"), 
+    OnlineTaskStorage(this), OnlineHistogramStorage(this), OnlinePageStorage(this,this),
+    OnlineRootHistStorage(this) {}
   OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;}
   int m_DBschema;
   Statement *m_stmt;
   int m_nit;
   int m_maxNit;
-  std::vector<OnlineHistPage*> m_myPage;
-  std::vector<OnlineHistogram*> m_myHist;
   int genericStringQuery(std::string command,std::vector<string>& list);
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,

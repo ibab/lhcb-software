@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.4 2007-03-21 15:33:04 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.5 2007-07-09 10:17:41 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -23,9 +23,11 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int maxANsize = 100;
   static const unsigned int maxTNsize = 250;
   static const unsigned int maxHTsize = 3;
-  static const std::string DB="DEVDB10";
-  static const std::string ACCOUNT="LHCB_MON_GIACOMO";
+  static const std::string DB="lbora01:1528/HISTOGRAMDB";
+  static const std::string ACCOUNT="HIST_WRITER";
 }
+
+
 
 
 class OnlineHistDBEnv {
@@ -43,8 +45,13 @@ class OnlineHistDBEnv {
 		  std::string User, 
 		  int ExcLevel) 
     : m_conn(Conn), m_user(toUpper(User)), m_debug(0), m_excLevel(ExcLevel) {}
+  OnlineHistDBEnv(OnlineHistDBEnv &m) {
+    m_env = m.m_env; m_conn= m.m_conn; m_user=m.m_user;
+    m_debug = m.debug(); m_excLevel = m.excLevel();
+  }
   virtual ~OnlineHistDBEnv() {};
-  Connection* conn() const {return m_conn;}
+  //Connection* conn() const {return m_conn;}
+  
   void dumpError(SQLException& ex,std::string MethodName) const {
     if (m_debug > -1) {
       cout << ( (ex.getErrorCode() < -20500) ? "------- FATAL ERROR: ----------" :

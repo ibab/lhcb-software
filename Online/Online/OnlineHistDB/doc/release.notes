@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.6 2007-05-08 09:41:49 ggiacomo Exp $
+! $Id: release.notes,v 1.7 2007-07-09 10:17:42 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
+
+
+! 20070709  
+	- new default DB location (oracle server at point 8)
+	- better Task support (including saveset frequency), new OnlineHistTask class in API
+	- avoid deleting histogram that are on a page
+	- support for uploading reference files through web interface
+	- new OnlineRootHist class in API for interfacing with OnlineHistogram to ROOT TH1 objects
 
 ! 20070508 - OnlineHistDB v2r1
 	- improved query methods, some bug fixes

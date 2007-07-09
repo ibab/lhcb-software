@@ -36,6 +36,7 @@ function histo_header($id,$htype,$mode)
   global $conn;
   global $fulllist;
   global $PHP_SELF;
+  global $Reference_home;
   $script=$PHP_SELF;
   if($mode == "display") {
     $script='write/histo_header.php';
@@ -45,7 +46,7 @@ function histo_header($id,$htype,$mode)
   }
   $identifier= ($htype == "HID") ? $_POST["NAME"] : $_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"];
   echo "<form action='${script}' method='POST'>\n"; 
-  echo " ID <span class=normal>$id</span> &nbsp&nbsp&nbsp Task <span class=normal>".$_POST["TASKNAME"]."</span>".
+  echo " ID <span class=normal>$id</span> &nbsp&nbsp&nbsp Task <a class=normal href='Task.php?task=".$_POST["TASKNAME"]."'>".$_POST["TASKNAME"]."</a>".
     " &nbsp&nbsp&nbsp Algorithm <span class=normal>".$_POST["HSALGO"]."</span>".
     " &nbsp&nbsp&nbsp Type <span class=normal>".$_POST["HSTYPE"]."</span><br>\n".    
     " Name <span class=normal>".$_POST["HSTITLE"].
@@ -64,7 +65,7 @@ function histo_header($id,$htype,$mode)
        ($histo["SUBSYS3"] ? $histo["SUBSYS3"] : "")) : "none";
     echo "Related detectors: <B>${detectors}</B><br>";
     if($histo["REFERENCE"])
-      echo "Reference histogram available at ".$histo["REFERENCE"]."<br>\n";
+      echo "Latest Reference histogram available in ${Reference_home}/".$histo["REFERENCE"]."<br>\n";
     else
       echo "No Reference histogram available<br>";
     echo "Created on <span class=normal>".$histo["CRE_DATE"]."</span><br>\n";
@@ -438,6 +439,70 @@ function histo_analysis($id,$htype,$mode) {
     echo "<center> <input type='submit' value='See Parameters for all histograms in set' name='analist'></center>\n";
     echo "</form>";
   }
+}
+
+function task_form($taskname,$mode)
+{
+  global $taskRec;
+  global $canwrite;
+  global $debug;
+  global $PHP_SELF;
+  global $conn;
+  global $Reference_home,$Installation;
+  $script=$PHP_SELF;
+  $ro=  ($canwrite ? "" : "DISABLED");
+  if($mode == "display") {
+    $script='write/task.php';
+    foreach (array("SUBSYS1","SUBSYS2","SUBSYS3","RUNONPHYSICS","RUNONCALIB","RUNONEMPTY","SAVEFREQUENCY","REFERENCE") 
+	     as $field)
+      $_POST[$field]=$taskRec[$field];
+  }
+  echo "<form action='${script}' method='POST'>\n"; 
+  echo "<input type='hidden' name='TASKNAME' value='${taskname}'>\n";
+  $dets=getSubSystems($conn);
+  array_unshift($dets,"");
+  echo "<B>Related Detectors/Subsystems</B>:<br><table>\n";
+  for ($id=1;$id<=3;$id++) {
+    $vname="SUBSYS${id}";
+    $vcont=$_POST[$vname];
+    echo "<select $ro name=\"${vname}\">";
+    foreach ($dets as $d) {
+      printf( "<option %s> %s", ($d == $vcont) ? "SELECTED" : "", $d);
+    }
+    echo "</select>\n";
+  }
+  echo "</table><br>\n";
+  
+  echo "<B>Run configuration:</B><br><table>\n";
+  printf("Runs on Physics events <input $ro type='checkbox' name='RUNONPHYSICS' value='1' %s><br>\n",
+	 $_POST["RUNONPHYSICS"] ? "checked" : "");
+  printf("Runs on Calibration events <input $ro type='checkbox' name='RUNONCALIB' value='1' %s><br>\n",
+	 $_POST["RUNONCALIB"] ? "checked" : "");
+  printf("Runs on Empty events <input $ro type='checkbox' name='RUNONEMPTY' value='1' %s><br>\n",
+	 $_POST["RUNONEMPTY"] ? "checked" : "");
+  echo "</table><br>\n";
+
+  echo "<B>Saveset configuration:</B><br><table>\n";
+  printf("Saving frequency <input $ro type='text' name='SAVEFREQUENCY' size=5 value='%.1f'><br>\n",
+	 $_POST["SAVEFREQUENCY"]);
+  echo "</table><br>\n";
+
+  echo "<B>Reference histograms:</B><br><table>\n";
+  if($_POST["REFERENCE"])
+      echo "Latest Reference histograms available in ${Reference_home}/".$_POST["REFERENCE"]."<br>\n";
+    else
+      echo "No Reference histogram available<br>";
+  if ($Installation == "Pit" || $Installation == "test_dev") {
+    echo "<a href=write/reference.php?task=$taskname> Upload Reference Histograms</a>";
+  }
+  echo "</table><br>\n";
+
+   if( $canwrite) {
+    $action= ($mode == "display") ? "Update Task record" : "Confirm";
+    echo "<table align=right><tr><td> <input align=center type='submit' name='Update_task' value='${action}'></tr></table>";
+  }
+  echo "</form>";
+
 }
 
 

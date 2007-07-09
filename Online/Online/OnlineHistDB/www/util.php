@@ -1,32 +1,13 @@
 <? 
 $canwrite=0;
+$debug=0;
 // for the moment, web server must know the DB password to allow read/write or 
 // read-only access. This won't be needed when the DB will be in production
 // on the LHCB oracle server 
-$VerySecretPassword="";
 
 // ----------------------------------------------------
 // functions for connecting to DB
-
-function HistDBconnect($exitonfailure=0,$user="nobody",$password="nobody",$db="devdb10") 
-{  
-  global $canwrite;
-  global $VerySecretPassword;
-  if ($user == "nobody") {
-    $user=$_COOKIE["user"];
-    $password=$_COOKIE["password"];    
-  }
-  $canwrite= ( ($password == $VerySecretPassword) ? 1 : 0);  
-  $theconnection=ocilogon($user,$VerySecretPassword,$db);    
-  if ($exitonfailure) {
-    if (!$theconnection) {
-      $e = ocierror();
-      print htmlentities($e['message']);
-      exit;
-    }
-  }
-  return $theconnection;
-}
+include 'dbconnect.php';
 
 // ----------------------------------------------------
 // functions for manipulating dates and special characters in SQL fields
@@ -88,5 +69,35 @@ function myfloatformat($fl,$exp=4) {
   else
     return "%.3e";
  }
+
+function getTasks($conn) {
+  $i=0;$task=array();
+  $stid = OCIParse($conn,"select TASKNAME from TASK");
+  OCIExecute($stid, OCI_DEFAULT);
+  while( OCIFetchInto($stid, $row, OCI_NUM)) 
+    $task[$i++]=$row[0];
+  return $task;
+}
+
+function getSubSystems($conn) {
+  $i=0;$subsys=array();
+  $stid = OCIParse($conn,"select SSName from SUBSYSTEM");
+  OCIExecute($stid, OCI_DEFAULT);
+  while( OCIFetchInto($stid, $row, OCI_NUM)) 
+    $subsys[$i++]=$row[0];
+  return $subsys;
+}
+
+function getPages($conn) {
+  global $folder;
+  $i=0; $page=array();
+  $stid = OCIParse($conn,"select PageName,Folder from PAGE");
+  OCIExecute($stid, OCI_DEFAULT);
+  while( OCIFetchInto($stid, $row, OCI_NUM)) {
+    $page[$i++]=$row[0];
+    $folder[$row[0]]=$row[1];
+  }
+  return $page;
+}
 
 ?>

@@ -11,7 +11,7 @@ $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
 
 $nh=0;
 for ($i=1;$i<=15;$i++) {
-  if  ($_POST["HISTO_SH${i}"]) {
+  if  ($_POST["HISTO_SH${i}"] && $_POST["REMOVE${i}"] != 1 ) {
     $nh++;
     foreach (array("HISTO","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY")
 	     as $field)

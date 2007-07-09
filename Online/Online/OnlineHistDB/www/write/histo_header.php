@@ -5,12 +5,7 @@
 <body>
 <?php 
 include '../util.php'; include '../dbforms.php'; 
-$conn=HistDBconnect();
-if (!$conn) {
-  $e = ocierror();
-  print htmlentities($e['message']);
-  exit;
-}
+$conn=HistDBconnect(1);
 
 function update_histo_header() {
   global $conn;

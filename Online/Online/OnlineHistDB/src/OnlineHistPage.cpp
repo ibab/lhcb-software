@@ -1,12 +1,12 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.5 2007-03-21 13:15:15 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.6 2007-07-09 10:17:42 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
-OnlineHistPage::OnlineHistPage(std::string Name, 
-			       std::string Folder,
-			       Connection* Conn,
-			       std::string User) :
-  OnlineHistDBEnv(Conn,User,1), m_name(Name), m_folder(Folder)
+OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
+			       OnlineHistogramStorage* Storage,
+			       std::string Name, 
+			       std::string Folder) :
+  OnlineHistDBEnv(Env), m_Hstorage(Storage), m_name(Name), m_folder(Folder)
 {
   // check if page exists already in DB
   int out=0;
@@ -44,16 +44,12 @@ OnlineHistPage::OnlineHistPage(std::string Name,
 	dumpError(ex,"OnlineHistPage::OnlineHistPage");
       }
     while ( rset->next () ) {
-      //cout << "found histogram " << rset->getString(1) <<" on page "<<Name <<endl;
-      OnlineHistogram* newh= new OnlineHistogram(rset->getString(1),
-						 m_conn,
-						 m_user,
-						 Name,
-						 rset->getInt(6));
+      OnlineHistogram* newh= m_Hstorage->getHistogram(rset->getString(1),
+						      Name,
+						      rset->getInt(6));
       newh->setDebug(debug());
       newh->setExcLevel(excLevel());
       m_h.push_back(newh);
-      m_privh.push_back(newh);
       m_cx.push_back(rset->getFloat(2));
       m_cy.push_back(rset->getFloat(3));
       m_sx.push_back(rset->getFloat(4));
@@ -67,12 +63,7 @@ OnlineHistPage::OnlineHistPage(std::string Name,
 
 
 
-OnlineHistPage::~OnlineHistPage(){
-  // delete all histograms created here
-  std::vector<OnlineHistogram*>::iterator ih;
-  for (ih = m_privh.begin();ih != m_privh.end(); ++ih) 
-    delete *ih; 
-}
+OnlineHistPage::~OnlineHistPage(){}
 
 
 bool OnlineHistPage::declareHistogram(OnlineHistogram* h,
@@ -202,3 +193,35 @@ bool OnlineHistPage::save() {
     }
   return out;
 }
+
+OnlinePageStorage::OnlinePageStorage(OnlineHistDBEnv* Env, OnlineHistogramStorage* Hstorage) :
+  m_Pagenv(Env), m_Hstorage(Hstorage) {}
+
+OnlinePageStorage::~OnlinePageStorage() 
+{
+  if (m_Pagenv->debug() > 2) cout << "Deleting "<<
+    m_myPage.size() << " OnlineHistPage objects"<<endl;
+  std::vector<OnlineHistPage*>::iterator ip;
+  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) 
+    delete *ip; 
+}
+
+OnlineHistPage* OnlinePageStorage::getPage(std::string Name, 
+					   std::string Folder) {
+  OnlineHistPage* page = 0;
+  // see if page object exists already
+  std::vector<OnlineHistPage*>::iterator ip;
+  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) {
+    if ((*ip)->name() == Name) {
+      page = *ip;
+      break;
+    }
+  }
+  // otherwise create new one
+  if ( 0 == page) {
+    page = new OnlineHistPage(*m_Pagenv, m_Hstorage, Name, Folder);
+    m_myPage.push_back(page);
+  }
+  return page;
+}
+

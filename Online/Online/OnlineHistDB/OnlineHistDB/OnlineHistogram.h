@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.3 2007-03-21 13:15:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.4 2007-07-09 10:17:41 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -13,9 +13,8 @@
 class  OnlineHistogram : public OnlineHistDBEnv
 {
  public:
-  OnlineHistogram(std::string Identifier,
-		  Connection* Conn,
-		  std::string User,
+  OnlineHistogram(OnlineHistDBEnv &env,
+		  std::string Identifier,
 		  std::string Page="_NONE_",
 		  int Instance=1);
   virtual ~OnlineHistogram();
@@ -30,14 +29,14 @@ class  OnlineHistogram : public OnlineHistDBEnv
 					  int Instance=-1);
   bool initHistoPageDisplayOptionsFromHist(std::string PageName = "_DEFAULT_",
 					   int Instance=-1); 
-  bool setHistoSetDisplayOption(std::string ParameterName, 
+  virtual bool setHistoSetDisplayOption(std::string ParameterName, 
+					void* value);
+  virtual bool setDisplayOption(std::string ParameterName, 
 				void* value);
-  bool setDisplayOption(std::string ParameterName, 
-			void* value);
-  bool setHistoPageDisplayOption(std::string ParameterName, 
-				 void* value,
-				 std::string PageName = "_DEFAULT_",
-				 int Instance=-1);
+  virtual bool setHistoPageDisplayOption(std::string ParameterName, 
+					 void* value,
+					 std::string PageName = "_DEFAULT_",
+					 int Instance=-1);
   bool getDisplayOption(std::string ParameterName,
 					 void* option);
 
@@ -79,7 +78,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int creation() const {return m_creation;}
   int obsoleteness() const {return m_obsoleteness;}
   DisplayOptionMode domode() const {return m_domode;}
-  
+  bool remove(bool RemoveWholeSet);
   
  private:
   // private dummy copy constructor and assignment operator 
@@ -155,5 +154,23 @@ class  OnlineHistogram : public OnlineHistDBEnv
 		   int instance=1);
 };
 
+
+class OnlineHistogramStorage
+{
+ public:
+  OnlineHistogramStorage(OnlineHistDBEnv* Env);
+  virtual ~OnlineHistogramStorage();
+  void updateHistograms();
+  /// get an OnlineHistogram object, holding informations of an existing histogram, that can be used to view/edit an histogram record
+  OnlineHistogram* getHistogram(std::string Identifier,
+				std::string Page="_NONE_",
+				int Instance = 1);
+  /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
+  bool removeHistogram(OnlineHistogram* h,
+		       bool RemoveWholeSet = false);		 
+private: 
+  OnlineHistDBEnv* m_Histenv;
+  std::vector<OnlineHistogram*> m_myHist;
+};
 
 #endif // ONLINEHISTOGRAM_H

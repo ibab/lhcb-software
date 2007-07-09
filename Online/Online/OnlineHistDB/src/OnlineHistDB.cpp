@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.6 2007-05-07 08:32:02 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.7 2007-07-09 10:17:42 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -12,34 +12,27 @@
 OnlineHistDB::OnlineHistDB(std::string passwd, 
 			   std::string user, 
 			   std::string db) : 
-  OnlineHistDBEnv(user), m_DBschema(3),
-  m_stmt(0), m_nit(0), m_maxNit(1000)
+  OnlineHistDBEnv(user), 
+  OnlineTaskStorage(this), OnlineHistogramStorage(this), 
+  OnlinePageStorage(this, this), OnlineRootHistStorage(this),
+  m_DBschema(3), m_stmt(0), m_nit(0), m_maxNit(1000)
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
 }
 
 OnlineHistDB::~OnlineHistDB () {  
-  std::vector<OnlineHistPage*>::iterator ip;
-  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) 
-    delete *ip; 
-  std::vector<OnlineHistogram*>::iterator ih;
-  for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
-    delete *ih; 
   // a rollback is needed, otherwise all changes are committed at termination
   m_conn->rollback();
   m_env->terminateConnection (m_conn);
-  Environment::terminateEnvironment (m_env);}
+  Environment::terminateEnvironment (m_env);
+}
 
 
 bool OnlineHistDB::commit() {
   bool out=true;
   // send to DB the cached histogram creation statements 
   sendHistBuffer();
-  // send the current page configurations
-  //std::vector<OnlineHistPage*>::iterator ip;
-  //for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) 
-  //  (*ip)->save(); 
   Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.mycommit(:x1); end;");
   try{
     fstmt->setInt(1,m_DBschema);
@@ -52,9 +45,9 @@ bool OnlineHistDB::commit() {
   m_conn->terminateStatement (fstmt);  
 
   // update stored histogram if needed
-  std::vector<OnlineHistogram*>::iterator ih;
-  for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
-    (*ih)->update();
+  updateHistograms();
+  updateRootHistograms();
+
   if(debug()>0) cout << "Transaction succesfully committed"<<endl;
   return out;
 }
@@ -66,34 +59,8 @@ void OnlineHistDB::setHistogramBufferDepth(int N) {
 
 
 
-bool OnlineHistDB::declareTask(std::string Name, 
-			       std::string SubDet1, 
-			       std::string SubDet2, 
-			       std::string SubDet3,
-			       bool RunsOnPhysics, 
-			       bool RunsOnCalib, 
-			       bool RunsOnEmpty)
-{
-  bool out=true;
-  Statement *tstmt=m_conn->createStatement 
-    ("begin OnlineHistDB.DeclareTask(:x1,:x2,:x3,:x4,:x5,:x6,:x7); end;");
-  try{
-    tstmt->setString(1, Name);
-    tstmt->setString(2, SubDet1);
-    tstmt->setString(3, SubDet2);
-    tstmt->setString(4, SubDet3);
-    tstmt->setInt(5, (int)RunsOnPhysics);
-    tstmt->setInt(6, (int)RunsOnCalib);
-    tstmt->setInt(7, (int)RunsOnEmpty);
-    tstmt->executeUpdate ();
-  }catch(SQLException ex)
-    {
-      dumpError(ex,"OnlineHistDB::declareTask for Task="+Name);
-      out=false;
-    }
-  m_conn->terminateStatement (tstmt);  
-  return out;
-}
+
+
 
 bool OnlineHistDB::declareSubSystem(std::string SubSys)
 {
@@ -249,72 +216,58 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   return out;
 }
 
-OnlineHistPage* OnlineHistDB::getPage(std::string Name, 
-				       std::string Folder) {
-  OnlineHistPage* page = 0;
-  // see if page object exists already
-  std::vector<OnlineHistPage*>::iterator ip;
-  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) {
-    if ((*ip)->name() == Name) {
-      page = *ip;
-      break;
-    }
-  }
-  // otherwise create new one
-  if ( 0 == page) {
-    page = new OnlineHistPage(Name,Folder,m_conn,m_user);
-    page->setDebug(debug());
-    page->setExcLevel(excLevel());
-    m_myPage.push_back(page);
-  }
-  return page;
-}
 
-OnlineHistogram* OnlineHistDB::getHistogram(std::string Identifier, 
-					    std::string Page,
-					    int Instance) {
-  OnlineHistogram* h=0;
-  // see if the histogram object exists already
-  std::vector<OnlineHistogram*>::iterator ih;
-  for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-    if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
-	(*ih)->instance() == Instance ) {
-      h = *ih;
-      break;
-    }
-  }
-  if (!h) {
-    Statement *astmt=m_conn->createStatement 
-      ("begin :x1 := OnlineHistDB.GetHID(:x2,:x3); end;");
-    try{
-      astmt->registerOutParam(1, OCCIINT);
-      astmt->setString(2, Identifier);
-      astmt->registerOutParam(3, OCCIINT);
-      astmt->execute();
-    }catch(SQLException ex) {
-      dumpError(ex,"OnlineHistDB::getHistogram for Histogram "+Identifier);
-    }
-    if(astmt->getInt(1)) {
-      h= new OnlineHistogram(Identifier,m_conn,m_user,Page,Instance);
-      h->setDebug(debug());
-      h->setExcLevel(excLevel());
-      if (h->isAbort()) {
-	cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
-	    << Identifier <<endl;
-	delete h;
-	h=0;
-      }
-      else 
-	m_myHist.push_back(h);
-    }
-    else {
-      	cout << "Warning from OnlineHistDB::getHistogram : histogram " << Identifier <<
-	  " not found in the DB" << endl;
-    }
-    m_conn->terminateStatement (astmt);  
-  }
-  return h;
-}
+
+
+//OnlineRootHist* OnlineHistDB::getRootHist(std::string Identifier,
+//					  std::string Page,
+//					  int Instance ) {}
+
+// OnlineRootHist* OnlineHistDB::getRootHist(std::string Identifier,
+// 					  std::string Page,
+// 					  int Instance ) {
+//   OnlineRootHist* h=0;
+//   // // see if the histogram object exists already
+// //   std::vector<OnlineHistogram*>::iterator ih;
+// //   for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+// //     if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
+// // 	(*ih)->instance() == Instance ) {
+// //       h = *ih;
+// //       break;
+// //     }
+// //   }
+//   if (!h) {
+//     Statement *astmt=m_conn->createStatement 
+//       ("begin :x1 := OnlineHistDB.GetHID(:x2,:x3); end;");
+//     try{
+//       astmt->registerOutParam(1, OCCIINT);
+//       astmt->setString(2, Identifier);
+//       astmt->registerOutParam(3, OCCIINT);
+//       astmt->execute();
+//     }catch(SQLException ex) {
+//       dumpError(ex,"OnlineHistDB::getHistogram for Histogram "+Identifier);
+//     }
+//     if(astmt->getInt(1)) {
+//       h= new OnlineRootHist(*this,Identifier,Page,Instance);
+//       if (h->isAbort()) {
+// 	cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
+// 	    << Identifier <<endl;
+// 	delete h;
+// 	h=0;
+//       }
+//       else 
+// 	m_myHist.push_back(h);
+//     }
+//     else {
+//       	cout << "Warning from OnlineHistDB::getHistogram : histogram " << Identifier <<
+// 	  " not found in the DB" << endl;
+//     }
+//     m_conn->terminateStatement (astmt);  
+//   }
+//   return h;
+// }
+
+
 
 int OnlineHistDB::getAlgorithmNpar(std::string AlgName, int* Ninput) const
 {
@@ -413,51 +366,11 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
   }
   if (ok) {
     std::string Name="ANALYSIS/"+Algorithm+"/"+Title;
-    outh=new OnlineHistogram(Name,m_conn,m_user);
-    outh->setDebug(debug());
-    outh->setExcLevel(excLevel());
+    outh=getHistogram(Name);
   }
   return outh;
 }
 
-bool OnlineHistDB::removeHistogram(OnlineHistogram* h,
-				   bool RemoveWholeSet) {
-  bool out=true;
-  string command;
-  if (RemoveWholeSet)
-    command = "begin :out := OnlineHistDB.DeleteHistogramSet(:1); end;";
-  else
-    command = "begin :out := OnlineHistDB.DeleteHistogram(:1); end;";
-  Statement *dst=m_conn->createStatement(command);
-  try{
-    dst->registerOutParam(1, OCCIINT);
-    if (RemoveWholeSet)
-      dst->setInt(2,h->hsid());
-    else
-      dst->setString(2,h->hid());
-    dst->execute();
-    out = (dst->getInt(1) == 1);
-  }catch(SQLException ex) {
-    dumpError(ex,"OnlineHistDB::removeHistogram for Histogram "+h->identifier());
-    cout << "Histogram is probably on a page, remove it from all pages first"<<endl;
-    out=false;
-  }
-  if(out) {
-    std::vector<OnlineHistogram*>::iterator ih = m_myHist.begin();
-    while (ih != m_myHist.end()) {
-      if((RemoveWholeSet && (*ih)->hsid() == h->hsid()) ||
-	 (*ih)->hid() == h->hid() ) {
-	if (h != (*ih)) delete *ih;
-	ih=m_myHist.erase(ih);
-      }
-      else {
-	ih++;
-      }
-    }
-    delete h;
-  }
-  return out;  
-}
 
 int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& list) {
   int nout=0;

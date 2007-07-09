@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.4 2007-03-21 13:15:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.5 2007-07-09 10:17:42 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -8,18 +8,18 @@
 #include <math.h>
 #include "OnlineHistDB/OnlineHistogram.h"
 
-OnlineHistogram::OnlineHistogram(std::string Identifier,
-				 Connection* Conn,
-				 std::string User,
+OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
+				 std::string Identifier,
 				 std::string Page,
 				 int Instance) :
-  OnlineHistDBEnv(Conn,User,1), m_isAbort(false), m_identifier(Identifier), 
+  OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance),
   m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
     load();
   }
 
 void OnlineHistogram::update() {
+  // update the object from DB if the NIM service name has changed (or is not found)
   ResultSet *rset;
   Statement *query = m_conn->createStatement("SELECT SN FROM DIMSERVICENAME WHERE PUBHISTO=:1");
   query->setString(1,m_hid);
@@ -33,9 +33,11 @@ void OnlineHistogram::update() {
 
 void OnlineHistogram::setPage(std::string Page,
 			      int Instance) {
-  m_page =Page;
-  m_instance =Instance;
-  load();
+  if ( Page != m_page && Instance != m_instance) {
+    m_page =Page;
+    m_instance =Instance;
+    load();
+  }
 }
 
 bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
@@ -177,6 +179,32 @@ OnlineHistogram::~OnlineHistogram()
 }
 
 
+bool OnlineHistogram::remove(bool RemoveWholeSet) {
+  bool out=true;
+  string command;
+  if (RemoveWholeSet)
+    command = "begin :out := OnlineHistDB.DeleteHistogramSet(:1); end;";
+  else
+    command = "begin :out := OnlineHistDB.DeleteHistogram(:1); end;";
+  Statement *dst=m_conn->createStatement(command);
+  try{
+    dst->registerOutParam(1, OCCIINT);
+    if (RemoveWholeSet)
+      dst->setInt(2,hsid());
+    else
+      dst->setString(2,hid());
+    dst->execute();
+    out = (dst->getInt(1) == 1);
+  }catch(SQLException ex) {
+    dumpError(ex,"OnlineHistDB::removeHistogram for Histogram "+identifier());
+    cout << "Histogram is probably on a page, remove it from all pages first"<<endl;
+    out=false;
+  }
+  if(out) m_isAbort=true;
+  return out;  
+}
+
+
 // DISPLAY OPTIONS
 
 void OnlineHistogram::getDisplayOptions(int doid) {
@@ -224,6 +252,7 @@ void OnlineHistogram::getDisplayOptions(int doid) {
 
 
 int OnlineHistogram::setDisplayOptions(std::string function) {
+  //update the DB with the current display options
   int out;
   stringstream statement;
   statement << "begin :out := OnlineHistDB." << function ;
@@ -254,7 +283,7 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
   } catch(SQLException ex)
     {
       dumpError(ex,"OnlineHistogram::"+function);
-      out=false;
+      out=0;
     }
   m_conn->terminateStatement (fstmt); 
   return out;
@@ -811,3 +840,70 @@ bool OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
 
 
 
+
+
+
+OnlineHistogramStorage::OnlineHistogramStorage(OnlineHistDBEnv* Env) :
+  m_Histenv(Env) {}
+
+OnlineHistogramStorage::~OnlineHistogramStorage() 
+{
+  if (m_Histenv->debug() > 2) cout << "Deleting "<<
+    m_myHist.size() << " OnlineHistogram objects"<<endl;
+  std::vector<OnlineHistogram*>::iterator ih;
+  for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
+    delete *ih; 
+}
+
+void OnlineHistogramStorage::updateHistograms() {
+  std::vector<OnlineHistogram*>::iterator ih;
+  for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
+    (*ih)->update(); 
+}
+
+OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier, 
+					    std::string Page,
+					    int Instance) {
+  OnlineHistogram* h=0;
+  // see if the histogram object exists already
+  std::vector<OnlineHistogram*>::iterator ih;
+  for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+    if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
+	(*ih)->instance() == Instance ) {
+      h = *ih;
+      break;
+    }
+  }
+  if (!h) {
+    h= new OnlineHistogram(*m_Histenv,Identifier,Page,Instance);
+    if (h->isAbort()) {
+      cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
+	  << Identifier <<endl;
+      delete h;
+      h=0;
+    }
+    else 
+      m_myHist.push_back(h);
+  }
+  return h;
+}
+
+bool OnlineHistogramStorage::removeHistogram(OnlineHistogram* h,
+				   bool RemoveWholeSet) {
+  bool out=h->remove(RemoveWholeSet);
+  if (out) {
+    std::vector<OnlineHistogram*>::iterator ih = m_myHist.begin();
+    while (ih != m_myHist.end()) {
+      if((RemoveWholeSet && (*ih)->hsid() == h->hsid()) ||
+	 (*ih)->hid() == h->hid() ) {
+	if (h != (*ih)) delete *ih;
+	ih=m_myHist.erase(ih);
+      }
+      else {
+	ih++;
+      }
+    }
+    delete h;
+  }
+  return out;  
+}
