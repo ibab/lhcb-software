@@ -4,6 +4,7 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+!========================== RichMCMonitors v1r4 2007-07-09 ===================
 ! 2007-06-22 - Chris Jones
  - Add new monitor for MRichOpticalPhotons
 
