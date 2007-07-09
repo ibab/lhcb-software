@@ -4,10 +4,10 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!===================== TrackAssociators v2r5 2007-07-09 ====================
 ! 2007-07-06 - Edwin Bos
  - Fix for default absence of muon type linker table committed.
 
-!===================== TrackAssociators v2r5 2007-07-05 ====================
 ! 2007-07-05 - Edwin Bos
  - Added Muon hits in association decision,
  - jobOption "DecideUsingMuons" = false by default
