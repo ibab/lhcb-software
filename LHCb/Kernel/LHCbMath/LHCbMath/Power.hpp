@@ -6,10 +6,8 @@
 // ============================================================================
 
 // ============================================================================
-/** @file
+/** @file Power.hpp
  *
- *  This file has been taken from the LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
  *
  *  @author Juan PALACIOS juan.palacios@cern.ch
  *  @date 2006-10-26 
