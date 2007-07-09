@@ -6,7 +6,7 @@
   // make a new pid object
   GlobalPID * pid = new GlobalPID();
 
-  pid->loadTTree("all_limit_m_minSig_10-4_rmapx_fullstat0.rich.tuples.root");
+  pid->loadTTree("/usera/jonesc/gangadir/workspace/Local/346/DLLs_1.0e-3.tuples.root");
 
   // K-pi RICH
   pid->configReset();
@@ -29,7 +29,7 @@
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("normal_primed0.rich.tuples.root");
+  pid->loadTTree("/usera/jonesc/gangadir/workspace/Local/347/DLLs_2.0e-3.tuples.root");
 
   // K-pi RICH
   pid->configReset();

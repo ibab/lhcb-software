@@ -4,7 +4,7 @@
   const double GeV(1000);
 
   // make a new pid object
-  GlobalPID * pid = new GlobalPID();
+  GlobalPID * pid = new GlobalPID(dataFile);
 
   pid->configReset();
   pid->config.title     = "Kaon ID";

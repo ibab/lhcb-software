@@ -157,8 +157,8 @@ public: // User methods
   /// Main method to mae the Eff. V Pur. curve
   void makeCurve( const Long64_t nTracks = -1 );
 
-  /// Save the current canvases to file
-  void saveFigures();
+  /// Save the current canvases to file. Optional argument is the image type
+  void saveFigures( const std::string & type = "png" );
 
   /// Reset the config object
   void configReset();

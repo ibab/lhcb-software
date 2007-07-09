@@ -481,13 +481,12 @@ void GlobalPID::reset()
   configReset();
 }
 
-void GlobalPID::saveFigures()
+void GlobalPID::saveFigures( const std::string & type )
 {
   // print to file each canvas
   for ( CanvasData::iterator i = figures.begin(); i != figures.end(); ++i )
   {
-    //saveImage( i->second, (i->first+".eps").c_str() );
-    saveImage( i->second, (i->first+".png").c_str() );
+    saveImage( i->second, (i->first+"."+type).c_str() );
   }
 }
 
@@ -647,19 +646,23 @@ void GlobalPID::Show(Long64_t entry)
 void GlobalPID::saveImage ( TCanvas * canvas,
                             std::string name )
 {
-  typedef std::map<std::string,bool> LocalFileMap;
-  static LocalFileMap fileMap;
-  bool goOn(true);
-  while ( goOn )
+  if ( canvas )
   {
-    LocalFileMap::iterator iF = fileMap.find(name);
-    if ( iF != fileMap.end() )
+    typedef std::map<std::string,bool> LocalFileMap;
+    static LocalFileMap fileMap;
+    bool goOn(true);
+    while ( goOn )
     {
-      name = "NEWFIG_"+name;
-    } else { goOn = false; }
+      LocalFileMap::iterator iF = fileMap.find(name);
+      if ( iF != fileMap.end() )
+      {
+        name = "NEWFIG_"+name;
+      } else { goOn = false; }
+    }
+    fileMap[name] = true;
+    std::cout << "Printing image " << name << std::endl;
+    canvas->SaveAs( name.c_str() );
   }
-  fileMap[name] = true;
-  canvas->SaveAs( name.c_str() );
 }
 
 void GlobalPID::makeCode()

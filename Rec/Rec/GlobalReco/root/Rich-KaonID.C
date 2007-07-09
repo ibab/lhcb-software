@@ -4,8 +4,7 @@
   const double GeV(1000);
 
   // make a new pid object
-  //GlobalPID * pid = new GlobalPID("normal_primed0.rich.tuples.root");
-  GlobalPID * pid = new GlobalPID();
+  GlobalPID * pid = new GlobalPID(dataFile);
 
   // K-pi RICH
   pid->configReset();
