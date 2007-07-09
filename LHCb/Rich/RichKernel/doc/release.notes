@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.152 2007-06-25 21:28:53 jonrob Exp $
+! $Id: release.notes,v 1.153 2007-07-09 15:31:09 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
 
+!====================== RichKernel v7r7 2007-07-09 ====================
 ! 2007-06-25 - Chris Jones
  - Various minor updates to DAQ classes
 
