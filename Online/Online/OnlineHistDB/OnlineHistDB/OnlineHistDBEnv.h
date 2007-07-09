@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.5 2007-07-09 10:17:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.6 2007-07-09 17:23:23 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -61,7 +61,13 @@ class OnlineHistDBEnv {
       cout<<ex.getMessage() << endl;
     }     
     if(m_excLevel >1  || (m_excLevel == 1 && ex.getErrorCode() < -20500))
-      throw(ex.getErrorCode());
+      throw(ex);
+  }
+  void errorMessage(std::string Error) const {
+    if (m_debug > -1) {
+      cout << "------- WARNING: ----------"  <<endl;
+      cout<< Error <<endl;
+    }     
   }
   Environment* m_env;
   Connection* m_conn;
