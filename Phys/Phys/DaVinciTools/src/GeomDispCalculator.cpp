@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.16 2007-01-15 10:32:35 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.17 2007-07-09 10:39:50 pkoppenb Exp $
 
 // Include files
 
@@ -90,7 +90,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
                                                  vtx.z(),
                                                  transParticle);
   if ( !sctrans.isSuccess() ) {
-    debug() << "Transporter failed" << endreq;
+    if ( msgLevel(MSG::DEBUG)) debug() << "Transporter failed" << endmsg;
     return sctrans;
   }
 
@@ -237,7 +237,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
                                                  position.z(),
                                                  transParticle);
   if ( !sctrans.isSuccess() ) {
-    debug() << "Transporter failed" << endreq;
+    if ( msgLevel(MSG::DEBUG)) debug() << "Transporter failed" << endmsg;
     return sctrans;
   }
 
@@ -277,12 +277,22 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
 
   //  typedef Gaudi::Line<Gaudi::XYZPoint, Gaudi::XYZVector> Line;
 
+  if ( msgLevel(MSG::VERBOSE)){
+    verbose() << "Calculating distance of " << endmsg ;
+    verbose() << "P1: " << particle1.referencePoint() << " & " 
+              << particle1.momentum().Vect() << endmsg ;
+    verbose() << "P2: " << particle2.referencePoint() << " & " 
+              << particle2.momentum().Vect() << endmsg ;
+  }
+
   const Gaudi::XYZLine part0(particle1.referencePoint(), 
-                             particle1.momentum().Vect());
+                             particle1.momentum().Vect().unit());
   const Gaudi::XYZLine part1(particle2.referencePoint(), 
-                             particle2.momentum().Vect());
+                             particle2.momentum().Vect().unit());
 
   dist = Gaudi::Math::distance(part0, part1);
+
+  if ( msgLevel(MSG::VERBOSE)) verbose() << "Getting " << dist << endmsg ;
   
   // calculate error on distance
 
@@ -306,6 +316,8 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
   
   distErr = sqrt(std::fabs(ROOT::Math::Dot(derivTotal,errMatrix*derivTotal)));
 
+  if ( msgLevel(MSG::DEBUG)) debug() << "Returning " << dist << " +/- " << distErr << endmsg ;
+  
   return StatusCode::SUCCESS;
 
 }
