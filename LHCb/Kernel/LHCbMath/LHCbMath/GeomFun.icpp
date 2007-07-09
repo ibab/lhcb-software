@@ -106,17 +106,19 @@ bool Gaudi::Math::closestPointParams(const aLine& line0,
                                      double& mu0, double& mu1) {
 
   const typename aLine::Point&  p0 = line0.beginPoint();
-  const typename aLine::Vector  v0 = line0.direction().Unit();
+  const typename aLine::Vector  v0 = line0.direction();
   const typename aLine::Point&  p1 = line1.beginPoint();
-  const typename aLine::Vector  v1 = line1.direction().Unit();
+  const typename aLine::Vector  v1 = line1.direction();
   bool canCalculate = true; 
 
-  const double e_pDote_w = v0.Dot(v1);
-  const double dnom = 1.0 - gsl_pow_2(e_pDote_w);
+  const double v0Dotv1 = v0.Dot(v1);
+  const double v0mag2  = v0.Mag2();
+  const double v1mag2  = v1.Mag2()
+  const double dnom = gsl_pow_2(v0Dotv1) -  (v0mag2*v1mag2);
   if ( dnom > 1e-10 ) {
-    typename aLine::Vector PenMinWb = (p0 - p1);
-    mu0 = ( -1/dnom )*( PenMinWb.Dot(v0) - PenMinWb.Dot(v1)*e_pDote_w );
-    mu1 = (  1/dnom )*( PenMinWb.Dot(v1) - PenMinWb.Dot(v0)*e_pDote_w );
+    typename aLine::Vector p0_p1 = (p0 - p1);
+    mu0 = ( v1mag2*p0_p1.Dot(v0)      - v0Dotv1*( p0_p1.Dot(v1) ) ) / dnom;
+    mu1 = ( v0Dotv1*( p0_p1.Dot(v0) ) -   v0mag2*p0_p1.Dot(v1)  )   / dnom;
   } 
   else {
     /// parallel lines, any two points will do!
