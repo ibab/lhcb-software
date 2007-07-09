@@ -11,7 +11,7 @@
   + Determines on the fly how many iterations are need to deal with the
     non-flat secondary mirrors
   + Add an optional test to check if the reconstructed photon direction 
-    properly intersects the actually mirror segment it is supposed to have
+    properly intersects the actual mirror segment it is supposed to have
     reflected off.
  - Split the RichPhotonSignal into two
   + Base class RichPhotonSignalGaussProb that implements a single gaussian
