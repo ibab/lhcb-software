@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r14 2007-07-09 ======================
 ! 2007-06-22 - Chris Jones
  - Update default tools to reject change in name for the tool 
    Rich::Rec::PhotonSignalGaussProb
