@@ -4,10 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r5 2007-07-10 ==========================
 ! 2007-07-10 M. Needham
  - Remove VeloMissed from track enum
 
-!======================= TrackEvent v4r5 2007-07-05 ==========================
 ! 2007-07-04 - David Hutchcroft
  - Added 4 more history types to Track.xml for the various PatVelo algorithms
 
