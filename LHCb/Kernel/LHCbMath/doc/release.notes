@@ -8,6 +8,7 @@
 
 ! 2007-07-10 - Juan Palacios
  - LHCbMath/GeomFun.icpp
+	 . Bug fix to parallel(line, line) method.
    . Bug-fix in closestPointParams method.
 
 
