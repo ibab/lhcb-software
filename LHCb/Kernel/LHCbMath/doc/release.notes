@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2007-07-10 - Juan Palacios
+ - LHCbMath/GeomFun.icpp
+   . Bug-fix in closestPointParams method.
+
+
 !========================= LHCbMath v2r2 2007-07-10 ===========================
 ! 2007-07-10 - Marco Cattaneo
  - More doxygen fixes
