@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-07-10 - Jose A. Hernando
+ - extending the interface of IHltSummaryTool
+
 !===================== LHCbKernel v7r5 2007-06-07 ========================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns
