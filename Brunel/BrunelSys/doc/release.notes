@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v31r7>2007-07-06 Brunel v31r7</A></H1><PRE>
+</PRE><H1><A NAME=v31r7>2007-07-10 Brunel v31r7</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r7, Lbcom v6r7, Rec v4r7
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
@@ -18,7 +18,7 @@ programs based on LHCb v22r5 or later
     RichRecBase v3r6, PatVelo v2r16, TrackUtils v1r13, TrackSys v4r7)
     (See details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=6&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
 
-- New tuning (see Matt's talk at  </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
+- New tuning for tracking (see Matt's talk at  </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
   . Use zero magnetic field by default when creating a StateTraj. This is faster
     and has negligible effect on the track fit (TrackProjectors v2r13)
   . Set Ks Fit iterations to three (TrackSys v4r7)
@@ -27,6 +27,17 @@ programs based on LHCb v22r5 or later
   . Retune track matching to account for better fit/new velo pattern 
     (TrackMatching v2r15)
   . Add trimning of ST Measurements (STTools v3r2)
+
+- New tuning for Rich
+  . Relax completely the max number of raw input tracks cut for Rich reco. Max 
+    cut of 400 on the number of tracks used by the RICH remains (RichRecSys v3r5)
+  . Explicitly set the min signal option to 1e-3 (RichRecSys v3r5)
+  . Increase max number of iterations of quartz solving in photon creator to 3
+     (RichRecSys v3r5)
+  . Update the default minimum pixel dll signal cut from 1e-25 to 1e-3
+    (RichGlobalPID v3r4)
+  . Improvement to the way the photon reconstruction is done inside
+    Rich::Rec::PhotonRecoUsingQuarticSoln (RichRecTools v3r12)
 
 - Monitoring changes
   . Restructuring of TrackCheckers with new base class
