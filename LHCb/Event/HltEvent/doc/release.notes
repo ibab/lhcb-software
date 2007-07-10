@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-07-10 - Jose A. Hernando
+ - more enums
+ - remove HltSummaryFunctor, moved to HltBase and renamed to HltSummaryHelper
+
 ! 2007-06-20 - Jose A. Hernando
  - more enums
 
