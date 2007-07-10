@@ -5,11 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r7>2007-07-05 LHCbSys v22r7</A></H1><PRE>
+</PRE><H1><A NAME=v22r7>2007-07-10 LHCbSys v22r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
-- Packages modified: GaudiObjDesc v10r1, EventSys v23r7, TrackEvent v4r5,
-    RecEvent v2r5, EventAssoc v4r2, DetSys v9r7, DetDesc v17r5, OTDet v7r4,
+- Packages modified: KernelSys v6r7, RichKernel v7r7, LHCbMath v2r2,
+    GaudiObjDesc v10r1, EventSys v23r7, TrackEvent v4r5, RecEvent v2r5,
+    EventAssoc v4r2, DetSys v9r7, DetDesc v17r5, OTDet v7r4, RichDet v10r6, 
     DetCond v11r5, CondDBUI v2r4, TrackInterfaces v3r6, MCInterfaces v1r1,
     RichRecBase v3r6, TsaKernel v2r5, LHCbAlgs v2r10, SimComponents v2r4
 
@@ -17,9 +18,20 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Add to DTD the possibility to define the namespace to be used for the 
     generated classes. Default value is "LHCb"
 
+- In RichKernel v7r7
+  . Various minor updates to DAQ classes
+  . Add placement new operator to BoostMemPoolAlloc.h
+  . Update number of L1 inputs from 9 to 12, to match latest firmware
+
+- In LHCBMath v2r2
+  . LHCbMath/GeomFun.icpp: closestPointParams(line, line, double, double) was
+    assuming lines with normalised direction vectors. Fix to work with arbitrary
+    length direction vectors.
+
 - In TrackEvent v4r5
   . Removed kappa. Consistently use c_light in extrapolators and StateTraj
   . Added 4 more history types to Track.xml for the various PatVelo algorithms
+  . Removed VeloMissed from AdditionalInfo enum in Track.xml
 
 - In RecEvent v2r5
   . Add setExtraInfo method to VertexBase
@@ -31,6 +43,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . GeometryInfoPlus.cpp: fix bug: local copy of the misalignment matrix was
     holding the inverse of what the code thought it was holding.
   . GlobalToLocalDelta.cpp: fix localDeltaMatrix function, algebra was wrong
+
+- In RichDet v7r7
+  . Small change to take into account the misalignmet of the Si sensor in the
+    conversion from smartID to detection point
 
 - In DetCond v11r5
   . Added the possibility to connect to the database only when needed (and made
@@ -72,7 +88,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 - In EventAssoc v4r2, OTDet v7r4
   . Add more dictionaries
 
-- In DetDesc v17r5, OTDet v7r4, TrackInterfaces v3r6
+- In DetDesc v17r5, OTDet v7r4, TrackInterfaces v3r6, LHCbMath v2r2
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v22r6>2007-06-15 LHCbSys v22r6</A></H1><PRE>
