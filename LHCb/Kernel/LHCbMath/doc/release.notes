@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r2 2007-07-10 ===========================
+! 2007-07-10 - Marco Cattaneo
+ - More doxygen fixes
+
 ! 2007-07-09 - Juan Palacios
  - LHCbMath/GeomFun.icpp
    . closestPointParams(line, line, double, double)  was assuming lines with 

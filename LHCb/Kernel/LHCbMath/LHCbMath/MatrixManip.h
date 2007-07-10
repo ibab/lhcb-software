@@ -1,4 +1,4 @@
-// $Id: MatrixManip.h,v 1.1 2006-05-31 14:27:56 jpalac Exp $
+// $Id: MatrixManip.h,v 1.2 2007-07-10 07:25:53 cattanem Exp $
 #ifndef LHCBMATH_MATRIXMANIP_H 
 #define LHCBMATH_MATRIXMANIP_H 1
 
@@ -6,7 +6,7 @@
 
 #include "Math/SMatrix.h"
 
-/** @namespace MatrixManip MatrixManip.h LHCbMath/MatrixManip.h
+/** @file
  *  
  *  Transform to and from symmetric and standard Smatrices.
  *  

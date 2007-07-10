@@ -5,7 +5,7 @@
  *  3D line typedefs
  *
  *  CVS Log :-
- *  $Id: LineTypes.h,v 1.2 2007-02-26 17:17:13 cattanem Exp $
+ *  $Id: LineTypes.h,v 1.3 2007-07-10 07:25:51 cattanem Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -20,9 +20,9 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/Line.h"
 
-/** @namespace Gaudi
+/** @file
  *  
- *  General Gaudi namespace
+ *  Typedefs for line types
  * 
  *  @author Juan PALACIOS
  *  @date   2005-11-21
