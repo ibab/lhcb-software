@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2007-07-10 - Patrick Koppenburg
+ - src/HltSelChecker.cpp
+   . Generic nTuple filling algorithm, much much simpler than DecayChainNTuple
+
 ! 2007-07-06 - Patrick Koppenburg
  - options/Plots.opts
    . Include this is you want plots
