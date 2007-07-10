@@ -6,14 +6,33 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r7>2007-07-02 LbcomSys v6r7</A></H1><PRE>
+</PRE><H1><A NAME=v6r7>2007-07-09 LbcomSys v6r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7
 
-- Packages modified: STTools v3r2
+- Packages modified: STTools v3r2, RichDAQ v3r11, RichMCMonitors v1r4,
+    RichTools v2r14
 
 - In STTools v3r2
-  . Fix a doxygen warning
   . Add trimming of ST Measurements
+
+- In RichDAQ v3r11
+  . Minor improvements to DAQ decoding error printout
+  . Improvements to monitoring in RichRawdataFormatTool to handle cases when the
+    L1 board ID is not recognised.
+  . Set ingress header properly in decoded data
+  . Change ODIN orbitNumber() to bunchId() in BXID comparision between ODIN and 
+    RICH decoded data
+  . Fix bug accidentally introduced in last release when HPDs are suppressed
+
+- In RichMCMonitors v1r4
+  . Add new monitor for MRichOpticalPhotons
+
+- In RichTools v2r14
+  . Update default tools to reject change in name for the tool 
+    Rich::Rec::PhotonSignalGaussProb
+
+- In STTools v3r2, RichDAQ v3r11
+  . Fix doxygen warnings
 
 </PRE><H1><A NAME=v6r6>2007-06-05 LbcomSys v6r6</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r6
