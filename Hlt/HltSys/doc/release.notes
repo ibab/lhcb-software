@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-10 - Patrick Koppenburg
+ - Removed all DLLs declarations from options files. Obsolete.
+
 ! 2007-07-05 - Patrick Koppenburg
  - HltProtoParticles.opts: Restored clone killer. This is TEMPORARY.
    There should not be clones in Hlt/Forward.

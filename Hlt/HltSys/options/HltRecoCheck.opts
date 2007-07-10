@@ -7,16 +7,12 @@
 // MC truth links for DST. Requires unpacking of MC Particles and vertices
 //------------------------------------------------------------------------
 
-ApplicationMgr.DLLs += { "SimComponents" };
-
 ApplicationMgr.TopAlg += {"GaudiSequencer/MCUnpack"}; 
 
 MCUnpack.Members += { "UnpackMCParticle" };
 MCUnpack.Members += { "UnpackMCVertex" };
 
 //------------------------------------------
-
-ApplicationMgr.DLLs += {"PatChecker"};
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/MCPat"}; 
 
@@ -28,8 +24,6 @@ MCPat.Members += {"PatLHCbID2MCParticle",
 //PatChecker.OutputLevel = 2;
 
 //------------------------------------------
-
-ApplicationMgr.DLLs += {"HltRecChecker"}; 
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/MCHlt"};
 

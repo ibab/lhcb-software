@@ -19,7 +19,7 @@ use HltRecChecker	v1r1	Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r2    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r0    Hlt   # Alessia Satta
 
-use HltSelections       v5r3    Hlt   # Patrick Koppenburg
+use HltSelections       v5r4    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle

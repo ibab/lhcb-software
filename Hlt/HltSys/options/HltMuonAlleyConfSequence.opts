@@ -56,8 +56,6 @@ L0MuonEntry.SelectionName = "L0MuonEntry";
 L0MuonEntry.L0ChannelsName = {"muon" ,"dimuon"};
 // L0MuonEntry.OutputLevel = 3;
 
-ApplicationMgr.DLLs += {"HltL0MuonConf","HltMuon","HltL0Conf"};
-ApplicationMgr.DLLs += {"HltL0Conf","TsaAlgorithms"};
 #include "$HLTLOCONFOPTS/TsaConfirmTool.opts"
 //#include "$HLTL0CONFOPTS/TsaConfirmTool.opts"
 //#include "$TRACKSYSROOT/options/TsaSeeding.opts"

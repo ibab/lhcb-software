@@ -15,8 +15,6 @@
 //----------------------------
 //  HLT Hadron Alley
 //----------------------------
-ApplicationMgr.DLLs += {"HltHadAlley"};
-
 HltHadAlley.Members += {   "L0Entry/L0HadEntry",
                            "GaudiSequencer/HltRecoVeloRZSeq",
                            "HltTrackIPSelection/HltTrack2DIPSelection",
@@ -85,8 +83,6 @@ HltMuonTriggerSingleMuon.Members +={"HltTrackIPSelection/HltTrackMuonIPSelection
 //----------------------------
 //  HLT Calo Alley
 //----------------------------
-//ApplicationMgr.DLLs += {"HltCaloAlley"};
-
 HltCaloAlley.Members += {  "L0Entry/L0CaloEntry",
                            "HltSequencer/HltRecoVeloRZSeq",
                            "HltTrackIPSelection/HltTrack2DIPSelection",

@@ -75,7 +75,6 @@ PatPV3D.InputTracksName = "Hlt/Track/Velo";
 
 // Decode TT
 //-------------
-ApplicationMgr.DLLs += { "STAlgorithms"};
 HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters",
                          "PatTTCoordFromRaw"
 };
