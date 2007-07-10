@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.6 2007-07-09 17:29:59 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.7 2007-07-10 13:41:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -19,16 +19,21 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
   }
 
 void OnlineHistogram::update() {
-  // update the object from DB if the NIM service name has changed (or is not found)
+  // update the object from DB if the NIM service name has changed 
   ResultSet *rset;
   Statement *query = m_conn->createStatement("SELECT SN FROM DIMSERVICENAME WHERE PUBHISTO=:1");
+  bool reload=false;
   query->setString(1,m_hid);
   rset =  query->executeQuery ();
   if(rset->next ()) {
-    if (rset->getString(1) != m_dimServiceName) load();
+    if (rset->getString(1) != m_dimServiceName) 
+      reload = true;
   }
-  else
+  if (reload) {
+    if (debug() > 3) cout << "Reloading Histogram " << identifier() << endl;
     load();
+  }
+  m_conn->terminateStatement(query);
 }
 
 void OnlineHistogram::setPage(std::string Page,
@@ -135,6 +140,7 @@ void OnlineHistogram::load() {
 	}
       getVector(query, 3, m_anaId);
       getVector(query, 4, m_anaName);
+      m_conn->terminateStatement (query);
     } // end of analysis part
     
     // display options
@@ -200,6 +206,7 @@ bool OnlineHistogram::remove(bool RemoveWholeSet) {
     cout << "Histogram is probably on a page, remove it from all pages first"<<endl;
     out=false;
   }
+  m_conn->terminateStatement (dst);
   if(out) m_isAbort=true;
   return out;  
 }

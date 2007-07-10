@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.7 2007-07-09 10:17:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.8 2007-07-10 13:41:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -43,10 +43,6 @@ bool OnlineHistDB::commit() {
     out=false;
   }
   m_conn->terminateStatement (fstmt);  
-
-  // update stored histogram if needed
-  updateHistograms();
-  updateRootHistograms();
 
   if(debug()>0) cout << "Transaction succesfully committed"<<endl;
   return out;
@@ -363,6 +359,7 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
 	dumpError(ex,"OnlineHistDB::declareAnalysisHistogram for Title "+Title);
 	ok=false;
       }
+    m_conn->terminateStatement (astmt);
   }
   if (ok) {
     std::string Name="ANALYSIS/"+Algorithm+"/"+Title;
@@ -380,6 +377,7 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
     list.push_back(rset->getString(1));
     nout++;
   }
+  m_conn->terminateStatement (qst);
   return nout;
 }
 
@@ -398,6 +396,7 @@ int OnlineHistDB::getHistograms(std::string query,
     if(types) types->push_back(rset->getString(2));
     nout++;
   }
+  m_conn->terminateStatement (qst);
   return nout;
 }
 

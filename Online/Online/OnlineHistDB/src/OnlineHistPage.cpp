@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.6 2007-07-09 10:17:42 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.7 2007-07-10 13:41:16 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -58,6 +58,8 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
     astmt->closeResultSet (rset);
     m_conn->terminateStatement (astmt);
   }
+  else
+    m_conn->terminateStatement (astmt); 
 }
 
 
@@ -191,6 +193,7 @@ bool OnlineHistPage::save() {
       dumpError(ex,"OnlineHistPage::save for page "+m_name);
       out=false;
     }
+  m_conn->terminateStatement (astmt); 
   return out;
 }
 
