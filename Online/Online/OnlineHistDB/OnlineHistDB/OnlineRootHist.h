@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.2 2007-07-09 17:29:59 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.3 2007-07-10 13:50:01 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistogram.h"
@@ -31,6 +31,9 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
   virtual bool unsetDisplayOption(std::string ParameterName);
   virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
 
+  virtual void Draw(Option_t* option="");
+  virtual void DrawPanel();
+  virtual TH1* myDrawCopy(Option_t* option="");
 
 };
 

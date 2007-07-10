@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.2 2007-07-09 17:29:59 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.3 2007-07-10 13:50:00 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
@@ -111,6 +111,19 @@ bool OnlineRootHist::unsetHistoPageDisplayOption(std::string ParameterName) {
   out = OnlineHistogram::unsetHistoPageDisplayOption(ParameterName);
   if(out) setFromDB();
   return out;
+}
+
+void OnlineRootHist::Draw(Option_t* option) {
+  setDrawOptions();
+  TH1::Draw(option);
+}
+void OnlineRootHist::DrawPanel() {
+  setDrawOptions();
+  TH1::DrawPanel();
+}
+TH1* OnlineRootHist::myDrawCopy(Option_t* option) {
+  setDrawOptions();
+  return TH1::DrawCopy(option);
 }
 
 
