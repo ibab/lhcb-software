@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r3>2007-07-10 Boole v14r3</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6
+ and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r5 or greater
+
+- New tuning
+  . Update number of Rich L1 inputs from 9 to 12, to match latest firmware
+    (RichKernel v7r7, RichDAQ v3r11)
+
+- Monitoring changes
+  . Changes in MC Particle selection, modifies ST efficiency calculation (by <1%)
+    (SimComponents v2r7, BooleMoni.opts)
+  . Input files of default job have changed, previous ones have been deleted
+    (v200601.opts)
+
+- Bug fixes
+  . Fix unchecked StatusCode in OTSmearer (OTSimulation v3r12)
+
 </PRE><H1><A NAME=v14r2>2007-06-15 Boole v14r2</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7

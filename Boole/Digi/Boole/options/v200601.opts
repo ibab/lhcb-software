@@ -31,10 +31,10 @@ ApplicationMgr.EvtMax = -1;
 //SpilloverSelector.FirstEvent = 497; // Skip corresponding spillover events
 
 //---------------------------------------------------------------------------
-// Input and output files. Same as production job ID 7173814
+// Input and output files
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "00001330_00000103_4.root"; // Monitoring histos
+HistogramPersistencySvc.OutputFile = "00001820_00000001_4.root"; // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -46,25 +46,29 @@ PoolDbCacheSvc.Catalog = {
 // Spillover 
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_2.sim' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // Minimum bias events with Gauss v25r0, XmlDDDB v30r8
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+}; 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
-EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // B->J/Psi(mumu)Ks events with Gauss v25r0, XmlDDDB v30r8
+//--     Event Type = 11144103
+//--     Configuration = DC06 - phys-v2-lumi2
+//--     SIM 1 datasets produced by Gauss - v25r9
+//--     Database version = v30r14
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:00001330_00000103_4.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:00001820_00000001_4.digi' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //---------------------------------------------------------------------------
 // Possible second output stream emulating real Raw Data (i.e. no MC truth)
 //---------------------------------------------------------------------------
 //#include "$BOOLEOPTS/RawWriter.opts"
-//RawWriter.Output = "DATAFILE='PFN:00001330_00000103_4.raw' TYP='POOL_ROOTTREE' OPT='REC'";
+//RawWriter.Output = "DATAFILE='PFN:00001820_00000001_4.raw' TYP='POOL_ROOTTREE' OPT='REC'";
 
