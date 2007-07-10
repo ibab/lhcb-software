@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.8 2007-07-09 17:29:59 ggiacomo Exp $
+! $Id: release.notes,v 1.9 2007-07-10 13:50:19 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
+
+! 20070710  - OnlineHistDB v2r2
+	- fix a problem with pending occi statements
+	- overloaded draw methods for OnlineRootHist 
 
 ! 20070709  
 	- new default DB location (oracle server at point 8)
@@ -11,7 +15,7 @@
 	- new OnlineRootHist class in API for interfacing OnlineHistogram to ROOT TH1 objects
 		(this introduces dependency on ROOT !)
 	- new methods for unset display options
-	- throw whole SQLException objcet in case of error
+	- throw whole SQLException object in case of error
 	 
 
 ! 20070508 - OnlineHistDB v2r1
