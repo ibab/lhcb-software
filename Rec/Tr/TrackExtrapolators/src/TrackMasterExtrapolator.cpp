@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.25 2007-07-05 08:29:51 ebos Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.26 2007-07-10 08:05:51 ebos Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -120,7 +120,7 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
                                                Gaudi::TrackMatrix* transMat,
                                                LHCb::ParticleID partId )
 {
-  StatusCode sc = StatusCode::SUCCESS ;
+  StatusCode sc(StatusCode::SUCCESS,true) ;
   // Create transport update matrix
   TrackMatrix updateMatrix = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   TrackMatrix* upMat = NULL;
@@ -194,7 +194,10 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 	}
 	
 	//update f
-	if( transMat != 0 ) { *transMat *= updateMatrix; }
+	if( transMat != 0 ) {
+          TrackMatrix tempMatrix = *transMat;
+          *transMat = updateMatrix * tempMatrix; 
+	}
 	
 	// multiple scattering
 	if ( m_applyMultScattCorr ) {
@@ -233,7 +236,10 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
       }
       
       //update f
-      if( transMat != 0 ) { *transMat *= updateMatrix; }
+      if( transMat != 0 ) {
+	TrackMatrix tempMatrix = *transMat;
+        *transMat = updateMatrix * tempMatrix; 
+      }
     }
 
   } // loop over steps
