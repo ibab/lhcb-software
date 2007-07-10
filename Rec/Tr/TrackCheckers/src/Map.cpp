@@ -22,8 +22,7 @@ const TrackMaps::InfoMap& TrackMaps::infoDescription()
    if ( s_map.empty() ) { 
      s_map = boost::assign::map_list_of("Likelihood",LHCb::Track::Likelihood)
                                        ("PatQuality",LHCb::Track::PatQuality)
-                                       ("MatchChi2",LHCb::Track::MatchChi2)
-                                       ("VeloMissed",LHCb::Track::VeloMissed);
+                                       ("MatchChi2",LHCb::Track::MatchChi2);
    };
    return s_map ;
 }
@@ -50,10 +49,8 @@ const TrackMaps::InfoHistMap& TrackMaps::infoHistDescription()
    static InfoHistMap s_map ;
    if ( s_map.empty() ) { 
      s_map = boost::assign::map_list_of(LHCb::Track::Likelihood,HistoRange("1",-50., 10.))
-                                       (LHCb::Track::PatQuality,HistoRange("2",0., 20.))
-                                       (LHCb::Track::MatchChi2,HistoRange("3", 0., 1000.))
-
-(LHCb::Track::VeloMissed,HistoRange("4", -10., 10.));
+       (LHCb::Track::PatQuality,HistoRange("2",0., 20.))
+       (LHCb::Track::MatchChi2,HistoRange("3", 0., 1000.));
    }
    return s_map ;
 }
