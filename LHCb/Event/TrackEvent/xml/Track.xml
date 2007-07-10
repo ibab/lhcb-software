@@ -132,7 +132,6 @@
         <enumval name = "Likelihood" value = "1" desc=""/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
-        <enumval name = "VeloMissed"  value = "32" desc="Missed Velo hits"/>
 
        </enum>
 
