@@ -50,16 +50,16 @@ use MuonPIDChecker      v2r0    Muon  # Erica Polycarpo, Miriam Gandelman
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichRecSys          v3r4    Rich  # Chris Jones
+use RichRecSys          v3r5    Rich  # Chris Jones
 #use RichRingRefit       v1r11   Rich  # Chris Jones
 use RichLocalPID        v3r4    Rich  # Chris Jones
-use RichGlobalPID       v3r3    Rich  # Chris Jones
+use RichGlobalPID       v3r4    Rich  # Chris Jones
 use RichPIDMerge	v2r4    Rich  # Chris Jones
-use RichRecAlgorithms   v2r7    Rich  # Chris Jones
-use RichRecTools        v3r11   Rich  # Chris Jones
+use RichRecAlgorithms   v2r8    Rich  # Chris Jones
+use RichRecTools        v3r12   Rich  # Chris Jones
 use RichRecMCTools      v2r12   Rich  # Chris Jones
 use RichRecMonitors     v2r11   Rich  # Chris Jones
-use RichRecQC           v2r12   Rich  # Chris Jones
+use RichRecQC           v2r13   Rich  # Chris Jones
 use RichHLTSys          v3r0    Rich  # Chris Jones
 use RichTrgGlobalPID    v3r6    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
