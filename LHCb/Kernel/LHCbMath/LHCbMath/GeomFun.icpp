@@ -1,5 +1,5 @@
 #include "gsl/gsl_math.h"
-
+#include "Math/VectorUtil.h"
 template<typename aLine, typename aPlane, typename aPoint>
 bool Gaudi::Math::intersection(const aLine& line,
                                const aPlane& plane,
@@ -144,16 +144,15 @@ template <typename aLine>
 double Gaudi::Math::distance(const aLine& line0,
                              const aLine& line1)
 {
-
-  if (parallel(line0, line1) ) {
-    return impactParameter(line0.beginPoint(), line1);
-  } else {
-    typename aLine::Point p0;
-    typename aLine::Point p1;
-    const bool cp = Gaudi::Math::closestPoints(line0, line1, p0, p1);
-    return sqrt( typename aLine::Vector(p1-p0).mag2() );
-  }
   
+  typename aLine::Point p0;
+  typename aLine::Point p1;
+  const bool goodLines = Gaudi::Math::closestPoints(line0, line1, p0, p1);
+  if (!goodLines) {
+    // lines are parallel
+    return impactParameter(line0.beginPoint(), line1);
+  }  
+  return sqrt( typename aLine::Vector(p1-p0).mag2() );
 }
 
 template <typename aLine>
@@ -163,6 +162,7 @@ bool Gaudi::Math::parallel(const aLine& line0,
 
   const typename aLine::Vector& v0 = line0.direction();
   const typename aLine::Vector& v1 = line1.direction();
-  return 1. - fabs(v0.Dot(v1)) < 1e-10;
+  const double cosTheta= v0.Dot(v1)/(v0.r()*v1.r());
+  return 1. - fabs(cosTheta) < 1e-10;
 }
 
