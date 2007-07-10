@@ -86,13 +86,13 @@ function DeclareDisplayOptions(KLABEL_X IN varchar2 := NULL,KLABEL_Y IN varchar2
 			KDRAWOPTS IN varchar2,theDOID IN DISPLAYOPTIONS.DOID%TYPE := NULL,reset IN int := 0) return number is
  myid number := 0;
 begin
-if (theDOID is NULL) then
+ if (theDOID is NULL) then
   insert into DISPLAYOPTIONS(DOID,LABEL_X,LABEL_Y,LABEL_Z,YMIN,YMAX,STATS,FILLSTYLE,FILLCOLOR,
 		LINESTYLE,LINECOLOR,LINEWIDTH,DRAWOPTS) 
 	   VALUES(DISPLAYOPTIONS_ID.NEXTVAL,KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,KFILLSTYLE,KFILLCOLOR,
 		  KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS);
   SELECT DISPLAYOPTIONS_ID.CURRVAL into myid  from ERGOSUM;
-else
+ else
   if reset = 0 then
    UPDATE DISPLAYOPTIONS SET  LABEL_X=TNNS(KLABEL_X,LABEL_X),LABEL_Y=TNNS(KLABEL_Y,LABEL_Y),LABEL_Z=TNNS(KLABEL_Z,LABEL_Z),
 		YMIN=TNNF(KYMIN,YMIN),YMAX=TNNF(KYMAX,YMAX),
@@ -107,8 +107,8 @@ else
     WHERE DOID=theDOID;
   end if;
   myid := theDOID;
-end if;
-return myid;
+ end if;
+ return myid;
 end DeclareDisplayOptions;
 
 ---------------------------------------------------------------------
@@ -122,6 +122,7 @@ function myGetHID(theHistoSetName IN varchar2,theSubtitle IN varchar2 := NULL,Su
 	is select HSID,IHS from VIEWHISTOGRAM where SUBTITLE=Xsubtit AND TITLE=Xtit AND ALGO=Xalg and TASK=Xtask;
  cursor myhs(Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask TASK.TASKNAME%TYPE) 
 	is select HSID from VIEWHISTOGRAM where TITLE=Xtit AND ALGO=Xalg and TASK=Xtask;
+ out VIEWHISTOGRAM.HSTYPE%TYPE := 0;
  myhsid VIEWHISTOGRAM.HSTYPE%TYPE;
  myihs VIEWHISTOGRAM.IHS%TYPE;
 begin
@@ -133,22 +134,23 @@ begin
   fetch myhs into myhsid;
   if (myhs%NOTFOUND) then
    Subindex := 0;
-   return 0;
   else
    Subindex := 1;
-   return myhsid;
+   out := myhsid;
   end if;
+  close myhs;
  else
   open myh(theSubtitle,title,algo,tk);
   fetch myh into myhsid,myihs;
   if (myh%NOTFOUND) then
    Subindex := 0;
-   return 0;
   else
    Subindex := myihs;
-   return myhsid;
+   out := myhsid;
   end if;
+  close myh;
  end if;
+ return out;
 end myGetHID;
 
 procedure CheckNullValueS( value IN OUT varchar2 ) is
@@ -195,6 +197,7 @@ begin
     PageNames := PageNames || mypage || ' ';
   end if;
  end LOOP;
+ close vsh;
  return npages;
 end HistogramPages;
 
@@ -208,20 +211,22 @@ function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return
 	is select HSID,IHS from VIEWHISTOGRAM where NAME=theHistoName;
  myhsid VIEWHISTOGRAM.HSID%TYPE;
  myihs VIEWHISTOGRAM.IHS%TYPE;
+ out VIEWHISTOGRAM.HSID%TYPE := 0;
 begin
  open myh;
  fetch myh into myhsid,myihs;
  if (myh%NOTFOUND) then
   Subindex := 0;
-  return 0;
  else
   Subindex := myihs;
-  return myhsid;
+  out := myhsid;
  end if;
+ close myh;
+ return out;
 end GetHID;
 
 -----------------------
- procedure DeclareSubSystem(subsys varchar2) is
+procedure DeclareSubSystem(subsys varchar2) is
  cursor cs is  select SSName from SUBSYSTEM where SSName=subsys;
  myssname SUBSYSTEM.SSNAME%TYPE;
  begin
@@ -230,6 +235,7 @@ end GetHID;
  if cs%NOTFOUND then
    insert into SUBSYSTEM(SSNAME) VALUES(subsys);
  end if;
+ close cs;
 exception
  when OTHERS then 
   raise_application_error(-20050,SQLERRM);
@@ -251,6 +257,7 @@ exception
  if ct%NOTFOUND then
    insert into TASK(TASKNAME) VALUES(Name);
  end if;
+ close ct;
 
  update TASK set RUNONPHYSICS=KRunOnPhysics,RUNONCALIB=KRunOnCalib,RUNONEMPTY=KRunOnEmpty,SaveFrequency=SFreq where TASKNAME=Name;
  if (ss1 != 'NONE') then -- 'NONE' means do nothing
@@ -344,6 +351,7 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
    UpdateDimServiceName(hid,ServiceName);
   end if;
  end if;
+ close mysn;
 end  DeclareHistByServiceName;
 -----------------------
 
@@ -411,12 +419,15 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
        INSERT INTO ANASETTINGS(ANA,HISTO,MASK,WARNINGS,ALARMS) VALUES(aset.ANA,myhid,1,aset.WARNINGS,aset.ALARMS);
       end LOOP;     
     end if;
+    close myhinset;
   end if;	
+  close myhs;
  else -- histogram exists, only check dimension 
   if (mytype != oldtype) then
    UPDATE HISTOGRAMSET SET HSTYPE=mytype where HSID=myhsid;
   end if;
  end if;
+ close myh;
  return myhid;
 exception
  when OTHERS then 
@@ -437,6 +448,7 @@ begin
  else
    UpdateDimServiceName(theHID,theDSN);
  end if;
+ close myh;
  return out;
 end SetDimServiceName;
 -----------------------
@@ -454,6 +466,7 @@ begin
  else
    update ALGORITHM set ALGTYPE='CHECK',NPARS=nin,ALGPARS=pars where ALGNAME=Name;
  end if;
+ close al;
  if (LENGTH(doc) > 0 ) then
     update ALGORITHM set ALGDOC=doc where ALGNAME=Name;
  end if;
@@ -480,6 +493,7 @@ begin
  else
    update ALGORITHM set ALGTYPE='HCREATOR',NINPUT=Ninp,HCTYPE=thetype where ALGNAME=Name;
  end if;
+ close al;
  if (nin > 0) then
     update ALGORITHM set NPARS=nin,ALGPARS=pars where ALGNAME=Name;
  end if;
@@ -514,6 +528,7 @@ begin
  if hs%NOTFOUND then
     raise_application_error(-20001,'Histogram set '||theSet||' does not exist');
  end if; 
+ close hs;
 
  open ana;
  while (ii < instance) LOOP
@@ -542,10 +557,12 @@ begin
      end LOOP;
     end if;
    end if;
+   close al;
  else
   -- analysis already exists: update parameters
    UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr where ANA=myid and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
  end if;
+ close ana;
  return myid;
 exception
  when OTHERS then 
@@ -575,6 +592,7 @@ begin
  if (mySetDisp is NULL) then
   update HISTOGRAMSET set HSDISPLAY=mydoid where HSID=theSet;
  end if;
+ close checko;
  return mydoid;
 EXCEPTION
  when OTHERS then
@@ -611,6 +629,7 @@ begin
     update HISTOGRAM set DISPLAY=mydoid where HID=theHID;
   end if; 
  end if;
+ close checko;
  return mydoid;
 EXCEPTION
  when OTHERS then
@@ -641,6 +660,7 @@ begin
  if (myDisp is NULL) then
    update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance;
  end if;
+ close checko;
  return mydoid;
 EXCEPTION
  when OTHERS then
@@ -655,27 +675,30 @@ function GetDisplayOptions(theDOID IN int, KLABEL_X OUT varchar2 ,KLABEL_Y OUT v
 			KDRAWOPTS OUT varchar2 )   return number is
 cursor mydo is select LABEL_X,LABEL_Y,LABEL_Z,YMIN,YMAX,STATS,FILLSTYLE,FILLCOLOR,LINESTYLE,LINECOLOR,LINEWIDTH,DRAWOPTS
 	from DISPLAYOPTIONS where DOID=theDOID;
+out int;
 begin
-open mydo;
-fetch mydo into KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
-		KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS;
-if (mydo%NOTFOUND) then
- return 0;
-else
- CheckNullValueS(KLABEL_X);
- CheckNullValueS(KLABEL_Y);
- CheckNullValueS(KLABEL_Z);
- CheckNullValueF(KYMIN);
- CheckNullValueF(KYMAX);
- CheckNullValueI(KSTATS);
- CheckNullValueI(KFILLSTYLE);
- CheckNullValueI(KFILLCOLOR);
- CheckNullValueI(KLINESTYLE);
- CheckNullValueI(KLINECOLOR);
- CheckNullValueI(KLINEWIDTH);
- CheckNullValueS(KDRAWOPTS);
- return 1;
-end if;
+ open mydo;
+ fetch mydo into KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
+ 		KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS;
+ if (mydo%NOTFOUND) then
+  out :=  0;
+ else
+  CheckNullValueS(KLABEL_X);
+  CheckNullValueS(KLABEL_Y);
+  CheckNullValueS(KLABEL_Z);
+  CheckNullValueF(KYMIN);
+  CheckNullValueF(KYMAX);
+  CheckNullValueI(KSTATS);
+  CheckNullValueI(KFILLSTYLE);
+  CheckNullValueI(KFILLCOLOR);
+  CheckNullValueI(KLINESTYLE);
+  CheckNullValueI(KLINECOLOR);
+  CheckNullValueI(KLINEWIDTH);
+  CheckNullValueS(KDRAWOPTS);
+  out := 1;
+ end if;
+ close mydo;
+ return out;
 end GetDisplayOptions;
 -----------------------
 
@@ -690,6 +713,7 @@ begin
  if (thePage is not NULL) then
   open checkp;
   fetch checkp into doid;
+  close checkp;
  end if;
  if (doid is NULL) then
   open checkh;
@@ -703,6 +727,7 @@ begin
     end if;
    end if;
   end if;
+  close checkh;
  end if;
  if (doid is NULL) then
    doid := 0;
@@ -715,6 +740,7 @@ procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN t
  cursor anaset(Xh HISTOGRAM.HID%TYPE) is select MASK from ANASETTINGS where ANA=theAna and HISTO=Xh;
  mk ANASETTINGS.MASK%TYPE;
 begin
+ savepoint beforeSSAwrite;
  open anaset(theHisto);
  fetch anaset into mk;
  if(anaset%NOTFOUND) then -- try with parent
@@ -729,7 +755,11 @@ begin
  else
   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr WHERE ANA=theAna and HISTO=theHisto;
  end if;
- 
+ close anaset;
+EXCEPTION
+ when others then
+  ROLLBACK TO beforeSSAwrite;
+  raise_application_error(-20050,SQLERRM);
 end SetSpecialAnalysis;
 
 
@@ -745,6 +775,7 @@ begin
      Ninp:=-1;
      raise_application_error(-20006,'Cannot find Algorithm '||theAlg);
  end if;
+ close np;
 end GetAlgoNpar;
 
 -----------------------
@@ -760,6 +791,7 @@ begin
      raise_application_error(-20006,'Cannot find Algorithm '||theAlg);
  end if;
  name := mypars(Ipar);
+ close np;
 end GetAlgoParname;
 
 -----------------------
@@ -778,6 +810,7 @@ begin
  if (myhs%NOTFOUND) then
   raise_application_error(-20010,'Histogram Set '||theHistoSet||' not found');
  end if;
+ close myhs;
  open mya;
  LOOP	
   fetch mya into myaid,myalg;
@@ -788,6 +821,7 @@ begin
   ananames.EXTEND;
   ananames(na) := myalg;
  end LOOP;
+ close mya;
  if (na != myna) then
   raise_application_error(-20910,'Fatal DB inconsistency for Histogram Set '||theHistoSet||': contact DB manager');
  end if;
@@ -809,6 +843,7 @@ begin
  end if;
  warn := myw(Ipar);
  alr := mya(Ipar);
+ close anaset;
 EXCEPTION
  when others then
   raise_application_error(-20050,SQLERRM);
@@ -826,6 +861,7 @@ begin
      raise_application_error(-20005,'Cannot find Histogram Creator '||theHID);
  end if;
  value := myp(Ipar);
+ close hcp;
 EXCEPTION
  when others then
   raise_application_error(-20050,SQLERRM);
@@ -846,12 +882,13 @@ procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSe
  myhcid HCREATOR.HCID%TYPE;
 begin
  SAVEPOINT beforeHCwrite;
-  -- check algorithm
-  open al(theAlg);
-  fetch al into algotype,algonh,algonp,myhctype;
-  if (al%NOTFOUND or algotype!='HCREATOR') then
-    raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
-  end if;
+ -- check algorithm
+ open al(theAlg);
+ fetch al into algotype,algonh,algonp,myhctype;
+ if (al%NOTFOUND or algotype!='HCREATOR') then
+   raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
+ end if;
+ close al;
  -- CHECK IF THE HISTOGRAM IS ALREADY DEFINED
  open histo;
  fetch histo into myhsid;
@@ -889,6 +926,7 @@ begin
   command := command||' where HCID='''||myhcid||'''';
   EXECUTE IMMEDIATE command;
  end if;
+ close histo;
 exception
  when OTHERS then  
   ROLLBACK TO beforeHCwrite;
@@ -976,6 +1014,7 @@ begin
   EXECUTE IMMEDIATE
     'DELETE FROM SHOWHISTO '||condition;
  end if;
+ close cpg;
  -- now create/update SHOWHISTO entries
  for i IN 1..Nin LOOP
    open sh(theName,hlist(i),instlist(i));
@@ -1005,6 +1044,7 @@ begin
  if (cpg%NOTFOUND) then 
    myNh := -1;
  end if;  
+ close cpg;
  return  myNh;
 end GetPage;
 -----------------------
@@ -1034,26 +1074,31 @@ cursor myh(Xhid HISTOGRAM.HID%TYPE) is SELECT HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HS
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
 	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
 cursor mysn(Xhid HISTOGRAM.HID%TYPE) is SELECT SN from DIMSERVICENAME where PUBHISTO=Xhid;
+out number := 1;
 begin
-open vh;
-fetch vh into theHid,theHsid,theIhs,theNhs,theHstype,theSubtitle,theHstitle,theAlgo,theTask;
-if (vh%NOTFOUND) then
- raise_application_error(-20050,'Histogram '||theName||' not found');
- return 0;
-end if;
-open myh(theHid);
-fetch myh into theNanalysis,theDescr,theDoc,theHSDisplay,theIsanalysishist,theCreation,theObsolete,theDisplay;
-theDIMServiceName := 'Unknown';
-open mysn(theHid);
-fetch mysn into theDIMServiceName;
-if (thePage != '_NONE_') then
- open mysh(theHid);
- fetch mysh into theSHDisplay;
- if (mysh%NOTFOUND) then
-   theSHDisplay := 0;
- end if;   
-end if;
-return 1;
+ open vh;
+ fetch vh into theHid,theHsid,theIhs,theNhs,theHstype,theSubtitle,theHstitle,theAlgo,theTask;
+ if (vh%NOTFOUND) then
+  raise_application_error(-20050,'Histogram '||theName||' not found');
+  out := 0;
+ end if;
+ close vh; 
+ open myh(theHid);
+ fetch myh into theNanalysis,theDescr,theDoc,theHSDisplay,theIsanalysishist,theCreation,theObsolete,theDisplay;
+ theDIMServiceName := 'Unknown';
+ close myh;
+ open mysn(theHid);
+ fetch mysn into theDIMServiceName;
+ close mysn;
+ if (thePage != '_NONE_') then
+  open mysh(theHid);
+  fetch mysh into theSHDisplay;
+  if (mysh%NOTFOUND) then
+    theSHDisplay := 0;
+  end if;
+  close mysh;   
+ end if;
+ return out;
 end GetHistogramData;
 -----------------------
 
@@ -1073,6 +1118,7 @@ begin
    raise_application_error(-20005,'Histogram '||myhid||' is on pages --'||PageNames||'-- and cannot be removed');
   end if;
  end LOOP;
+ close vh;
  delete from DISPLAYOPTIONS where DOID in (select HSDISPLAY from histogramset where hsid=theSet);
  delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HSET=theSet);
  delete from histogramset where hsid=theSet;
@@ -1112,6 +1158,7 @@ begin
    return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
   end if;
  end if;
+ close vh;
 EXCEPTION
  when OTHERS then
   ROLLBACK TO beforeDHdelete;
