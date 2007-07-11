@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.29 2007-06-28 11:28:17 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.30 2007-07-11 19:38:37 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -76,7 +76,7 @@ StatusCode MakeResonances::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if (!sc) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
   info() << "Mass Cuts are " << endmsg;
   info() << ">>>   Upper Mass Window  " 
          << std::min(m_massWindow,m_upperMassWindow) << endmsg;
@@ -96,7 +96,7 @@ StatusCode MakeResonances::initialize() {
             << endmsg ;
       return StatusCode::FAILURE ;    
     }
-    verbose() << "Got overlap and particle descendants tools" << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Got overlap and particle descendants tools" << endmsg ;
   }
   // histogramming 
 
@@ -109,7 +109,7 @@ StatusCode MakeResonances::initialize() {
       }
       if (m_daughterPlotsPath == "") m_daughterPlotsPath = "I"+name();
       else m_daughterPlots->setPath(m_daughterPlotsPath);
-      info() << "Daughter plots will be in " << m_daughterPlotsPath << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Daughter plots will be in " << m_daughterPlotsPath << endmsg ;
     }
     m_motherPlots = tool<IPlotTool>(m_motherPlotTool,this);
     if ( m_motherPlotTool != "none" ){
@@ -119,7 +119,7 @@ StatusCode MakeResonances::initialize() {
       }
       if (m_motherPlotsPath == "") m_motherPlotsPath = "O"+name();
       else m_motherPlots->setPath(m_motherPlotsPath);
-      info() << "Mother plots will be in " << m_motherPlotsPath << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Mother plots will be in " << m_motherPlotsPath << endmsg ;
     }    
   }
 
@@ -135,16 +135,16 @@ StatusCode MakeResonances::createDecays(){
   if ( !dsds ) return StatusCode::FAILURE ;
   
   if ( m_decayDescriptors.empty() ){
-    debug() << "No decay descriptors array defined. Pushing back " 
+    if (msgLevel(MSG::DEBUG)) debug() << "No decay descriptors array defined. Pushing back " 
             << getDecayDescriptor() << endmsg ;
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
-  debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
 
   for ( std::vector<std::string>::const_iterator dd = m_decayDescriptors.begin() ;
         dd != m_decayDescriptors.end() ; ++dd ){
     
-    debug() << " setting up " << *dd << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << " setting up " << *dd << endmsg;
 
     // initialize string decode
     StatusCode sc = dsds->setDescriptor(*dd);
@@ -152,11 +152,11 @@ StatusCode MakeResonances::createDecays(){
 
     std::string mother;
     strings daughters;
-    debug() << "Getting strings for " << dsds->getDescriptor() << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "Getting strings for " << dsds->getDescriptor() << endmsg;
     sc = dsds->getStrings(mother, daughters);
     if (sc.isFailure()) return sc;  
     std::sort(daughters.begin(),daughters.end()); // helps a lot, and used to avoid duplication of mothers in cc
-    debug() << "Sorted daughters to " << daughters << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Sorted daughters to " << daughters << endmsg ;
     sc = createDecay(mother, daughters);
     if (sc.isFailure()) return sc;
     
@@ -165,13 +165,13 @@ StatusCode MakeResonances::createDecays(){
       // LF : avoid duplication of mothers when using []cc
       strings daughtersBeforecc = daughters; // daughters have been sorted
       std::string motherBeforecc = mother ;
-      debug() << "Sorted before cc daughters to " << daughtersBeforecc << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Sorted before cc daughters to " << daughtersBeforecc << endmsg;
       
-      debug() << "Setting up cc for " << dsds->getDescriptor() << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Setting up cc for " << dsds->getDescriptor() << endmsg;
       sc = dsds->getStrings_cc(mother, daughters);
       if (sc.isFailure()) return sc;
       std::sort(daughters.begin(),daughters.end()); // needed to compare daughters for original and cc
-      debug() << "Sorted cc daughters to " << daughters << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Sorted cc daughters to " << daughters << endmsg ;
 
       if(daughtersBeforecc == daughters){
         warning() << "You have chosen two charged-conjugated modes with identical final states: " 
@@ -182,7 +182,7 @@ StatusCode MakeResonances::createDecays(){
       sc = createDecay(mother, daughters);
       if (sc.isFailure()) return sc;
       
-    } else verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
+    } else if (msgLevel(MSG::VERBOSE)) verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
   }
   
   return StatusCode::SUCCESS;
@@ -195,7 +195,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   info() << "Creating " << mother << " -> " << daughters << endmsg;
   
   // mother
-  verbose() << "Found ParticlePropertySvc " << ppSvc() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Found ParticlePropertySvc " << ppSvc() << endmsg ;
 
   ParticleProperty* pmother = ppSvc()->find(mother);
 
@@ -203,11 +203,11 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
     err() << "Cannot find particle property for mother " << mother << endmsg ;
     return StatusCode::FAILURE;
   } else {
-    verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
   }
   
   const int pid = pmother->pdgID() ;
-  verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
   if (!consideredPID(pid)) m_allPids.push_back(pid) ;
   
   //daughters
@@ -219,19 +219,19 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
       err() << "Cannot find particle property for daughter " << *d << endmsg ;
       return StatusCode::FAILURE;
     }
-    verbose() << "Found pid of " << *d << " = " << (pd->pdgID()) << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Found pid of " << *d << " = " << (pd->pdgID()) << endmsg ;
     daughterPIDs.push_back(pd->pdgID()) ;
     
     // add to list of all PIDs
     if (!consideredPID(pd->pdgID())) m_allPids.push_back(pd->pdgID()) ;
   }
-  verbose() << "Pushed back " << daughterPIDs.size() << " daughters" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Pushed back " << daughterPIDs.size() << " daughters" << endmsg ;
   //  OK
 
   const double mass = pmother->mass();
   const double minmass = mass - std::min(m_massWindow,m_lowerMassWindow);
   const double maxmass = mass + std::min(m_massWindow,m_upperMassWindow);
-  verbose() << "Mass cuts are " << minmass << " " << maxmass << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Mass cuts are " << minmass << " " << maxmass << endmsg ;
 
   // decay container
   Decay decay(LHCb::ParticleID(pid),daughterPIDs,
@@ -261,7 +261,7 @@ StatusCode MakeResonances::execute() {
     return StatusCode::FAILURE ;  
   }
   if (Daughters.empty()) {
-    debug() << "No daughters found at all" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "No daughters found at all" << endmsg ;
     return StatusCode::SUCCESS;
   }
   sc = makePlots(Daughters,m_daughterPlots);
@@ -274,9 +274,9 @@ StatusCode MakeResonances::execute() {
   // The LOOP ///
   for ( Decays::iterator decay = m_decays.begin() ; 
         decay != m_decays.end() ; ++decay ){
-    verbose() << "New Decay loop" << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "New Decay loop" << endmsg ;
     if (!decay->fillPidParticles(Daughters)){
-      debug() << "Not all necessary particles found for decay" << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Not all necessary particles found for decay" << endmsg ;
       continue ;
     }
     sc = applyDecay(*decay, Resonances); // make the resonances
@@ -293,7 +293,7 @@ StatusCode MakeResonances::execute() {
   }  
   sc = makePlots(Final,m_motherPlots);
   if (!sc) return sc;
-  debug() << "Saving " << Final.size() << " candidates" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Saving " << Final.size() << " candidates" << endmsg ;
   sc = desktop()->saveTrees(Final);
   if (!sc) {
     err() << "Unable to save mothers" << endmsg;
@@ -317,7 +317,7 @@ StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& vIn,
                                        LHCb::Particle::ConstVector& vOut, 
                                        IFilterCriterion* fc) const{
   if (fc==NULL) { // not possible yet
-    debug() << "Null filter criterion" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Null filter criterion" << endmsg ;
     vOut = vIn ;
     return StatusCode::SUCCESS;
   }
@@ -327,14 +327,14 @@ StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& vIn,
     if ( consideredPID((*p)->particleID().pid() )){
       if (fc->isSatisfied(*p)) {
         vOut.push_back(*p);
-        debug() << "Particle " << (*p)->key() << " " << *p 
+        if (msgLevel(MSG::DEBUG)) debug() << "Particle " << (*p)->key() << " " << *p 
                 << " passes cuts" << endmsg ;
       } else {    
-        verbose() << "Particle "  << (*p)->key() << " " << *p 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Particle "  << (*p)->key() << " " << *p 
                   << " fails cuts" << endmsg ;
       }
     } else {
-      verbose() << "Particle "  << (*p)->key() << " " << *p 
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Particle "  << (*p)->key() << " " << *p 
                 << " is discarded" << endmsg ;
     }
     
@@ -347,23 +347,23 @@ StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& vIn,
 StatusCode MakeResonances::applyDecay(Decay& decay, 
                                       LHCb::Particle::ConstVector& Resonances){
   StatusCode sc = StatusCode::SUCCESS ;
-  verbose() << "In applyDecay" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "In applyDecay" << endmsg ;
   LHCb::Particle::ConstVector DaughterVector ;
   bool inloop = decay.getFirstCandidates(DaughterVector); // get first daughter vector
   while (inloop){ 
-    verbose() << "In while loop " << DaughterVector.size() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "In while loop " << DaughterVector.size() << endmsg ;
     // Find invariant mass
     Gaudi::XYZTVector sum4(0,0,0,0) ;
     for ( LHCb::Particle::ConstVector::const_iterator p = DaughterVector.begin() ; 
           p!=DaughterVector.end() ; ++p){
-      verbose() << "Particle " << (*p)->key() << " ID=" 
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Particle " << (*p)->key() << " ID=" 
                 << (*p)->particleID().pid() << " with momentum " << 
         (*p)->momentum() << " m=" << (*p)->measuredMass() << endmsg ;
       sum4 += (*p)->momentum() ;
     }
-    verbose() << " -> momentum " << sum4 << " m=" << sum4.M() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " -> momentum " << sum4 << " m=" << sum4.M() << endmsg ;
     if (decay.goodFourMomentum(sum4)) {
-      verbose() << "Found a candidate with mass " << sum4.M() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Found a candidate with mass " << sum4.M() << endmsg ;
       // LF
       // vertex fit or make mother to n gammas!
       const LHCb::Particle* Mother = makeMother(DaughterVector,
@@ -371,14 +371,14 @@ StatusCode MakeResonances::applyDecay(Decay& decay,
       if (0==Mother){
         sc = Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
       } else {
-        verbose() << "Getting mother " << Mother->particleID().pid()
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Getting mother " << Mother->particleID().pid()
                   << " " << Mother->momentum() << endmsg ;
         Resonances.push_back(Mother);
       }
     } // mass cut
     inloop = decay.getNextCandidates(DaughterVector);
   }
-  debug() << "Found " << Resonances.size() << " candidates with PID " 
+  if (msgLevel(MSG::DEBUG)) debug() << "Found " << Resonances.size() << " candidates with PID " 
           << decay.getMotherPid().pid() << endmsg ;
   return sc ;  
 }
@@ -389,7 +389,7 @@ const LHCb::Particle*
 MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
                            const LHCb::ParticleID& motherPid){
 
-  verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS;
   LHCb::Vertex CandidateVertex(Gaudi::XYZPoint(0.,0.,0.)) ;
@@ -400,13 +400,13 @@ MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
     Warning("Failed to fit vertex",StatusCode::SUCCESS,1).ignore();
     return NULL;
   }
-  debug() << "Fit vertex at " << CandidateVertex.position()
+  if (msgLevel(MSG::DEBUG)) debug() << "Fit vertex at " << CandidateVertex.position()
           << " with chi^2 " << CandidateVertex.chi2() << endmsg;
   // may add a chi^2 cut here
   
   if (!sc) return NULL;
   
-  verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
   return desktop()->save(&Candidate);
 
 };
@@ -418,7 +418,7 @@ StatusCode MakeResonances::makePlots(const LHCb::Particle::ConstVector& PV,
 
   if (!produceHistos()) return StatusCode::SUCCESS;
   if (!PT) return StatusCode::SUCCESS;
-  debug() << "Plotting " << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Plotting " << endmsg;
 
   return PT->fillPlots(PV) ;
 }
@@ -427,7 +427,7 @@ StatusCode MakeResonances::makePlots(const LHCb::Particle::ConstVector& PV,
 //#############################################################################
 StatusCode MakeResonances::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
   info() << "Found " << m_nCandidates << " candidates in " << m_nAccepted << " accepted events among " 
          << m_nEvents << " events" << endmsg ;
 
