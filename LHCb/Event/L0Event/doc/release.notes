@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.66 2007-06-08 14:28:40 cattanem Exp $
+! $Id: release.notes,v 1.67 2007-07-11 12:51:20 pkoppenb Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+! 2007-07-11 - Patrick Koppenburg
+ - Make all getter methods in L0DUReport const
 
 !======================== L0Event v16r3 2007-06-07 ===========================
 ! 2007-06-07 - Marco Cattaneo

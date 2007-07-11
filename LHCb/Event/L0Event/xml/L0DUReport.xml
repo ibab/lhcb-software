@@ -74,7 +74,8 @@
       <method
         name="decision"
         desc="return L0DU global decision"
-        type="bool">
+        type="bool"
+        const="TRUE">
         <code> 
           return ((m_report != 0) ? true : false) ;
         </code>
@@ -85,7 +86,8 @@
         name="channelDecision"
         argList="unsigned int channel"
         desc="return channel decision by channel number"
-        type="bool">
+        type="bool"
+        const="TRUE">
         <code> 
           return ((((m_report >> channel ) &amp; 1) !=0) ? true : false );
         </code>
@@ -95,7 +97,8 @@
         name="conditionValue"
         argList="unsigned int cond"
         desc="return condition value by condition number"
-        type="bool">
+        type="bool"
+        const="TRUE">
         <code> 
           return ((((m_conditionPattern >> cond ) &amp; 1) !=0) ? true : false );
         </code>
@@ -106,7 +109,8 @@
         name="channelDecisionByName"
         argList="std::string name"
         desc="return channel decision by channel name"
-        type="bool">
+        type="bool"
+        const="TRUE">
         <code> 
           for(unsigned int ichan = 0 ; ichan != m_channelNames.size();ichan++){
           if(name == m_channelNames[ichan]){
@@ -122,7 +126,8 @@
         name="conditionValueByName"
         argList="std::string name"
         desc="return condition value by condition name"
-        type="bool">
+        type="bool"
+        const="TRUE">
         <code> 
           for(unsigned int icond = 0 ; icond != m_conditionNames.size();icond++){
           if(name == m_conditionNames[icond]){
@@ -138,7 +143,8 @@
         name="channelName"
         argList="unsigned int channel"
         desc="return channel name"
-        type="std::string">
+        type="std::string"
+        const="TRUE">
         <code> 
           if(channel == 0){
           return "Global L0 Decision";
@@ -159,7 +165,8 @@
         name="conditionName"
         argList="unsigned int cond"
         desc="return condition name"
-        type="std::string">
+        type="std::string"
+        const="TRUE">
         <code> 
           if(cond &lt; (m_conditionNames.size()) ){
           return m_conditionNames[cond];
