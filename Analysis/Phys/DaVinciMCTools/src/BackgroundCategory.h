@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.17 2007-02-24 14:31:00 pkoppenb Exp $
+// $Id: BackgroundCategory.h,v 1.18 2007-07-11 16:53:47 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -38,7 +38,13 @@ typedef std::vector<const LHCb::Particle*> ParticleVector;
  *				     (correctpid_match_weight/best_match_weight) is less
  *				     than the cut. The default is 10.
  *
- *  InclusiveDecay  = is this an inclusive decay?
+ *  InclusiveDecay - is this an inclusive decay? If you want to reconstruct an exclusive
+ *			semi-leptonic decay chain, set this to 0 and the SemileptonicDecay property to 1.
+ *
+ *  SemileptonicDecay - is this a smei-leptonic decay? If so, all neutrinos will be ignored when deciding if
+ *			the decay is correctly reconstructed or not. 
+ *
+ *  NumNeutrinos - The number of neutrinos expected in our decay chain.
  *  
  *  ResonanceCut - The maximum lifetime at which a particle is considered a short lived resonance.
  *  		   Defaults to 10^-6 nanoseconds.
@@ -95,6 +101,8 @@ private:
   const LHCb::MCParticle* m_commonMother;
 
   int m_inclusiveDecay; //are we studying an inclusive decay?
+  int m_semileptonicDecay; //are we studying a semileptnoic decay?
+  int m_numNeutrinos; //How many neutrinos expected in our decay chain?
   int m_useSoftPhotonCut ; //whether to use the ignore soft photons cut
   double m_softPhotonCut ; //ignore soft photons cut
   double m_lowMassCut ; /// cut applied to low-mass background

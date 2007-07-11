@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.25 2007-06-06 08:20:30 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.26 2007-07-11 16:53:40 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -54,6 +54,8 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("SoftPhotonCut", m_softPhotonCut = 300.*MeV) ;
   declareProperty("UseSoftPhotonCut", m_useSoftPhotonCut = 1) ;
   declareProperty("InclusiveDecay", m_inclusiveDecay = 0);
+  declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
+  declareProperty("NumNeutrinos", m_numNeutrinos = 0);
   declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.8); 
   //Override decision only if match quality for PID correct match is no 
   //no worse than by 1 order of magnitude in weight compared to alternatives.
@@ -287,14 +289,13 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 			verbose() << "Categorising step 12" << endmsg;
 			
 			if (m_inclusiveDecay == 1) {
-        if (condition_C(particles_in_decay, mc_particles_linked_to_decay) 
-            && condition_D(reconstructed_mother)) {
-          return Signal;
-        }
-      }
+			        if (condition_C(particles_in_decay, mc_particles_linked_to_decay) && condition_D(reconstructed_mother)) {
+				          return Signal;
+			        }
+			}
 
 			if (condition_C(particles_in_decay, mc_particles_linked_to_decay)
-          && condition_F(reconstructed_mother) ) {
+			          && condition_F(reconstructed_mother) ) {
 				verbose() << "Categorising step 13" << endmsg;
 				//This is a Low-mass background
 				return LowMassBkg;
@@ -401,31 +402,44 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
   //This condition checks that all the final state daughters of the MCparticle
   //returned by condition A match up to the MCParticles associated to the  final state 
   //daughters of the candidate Particle. In effect, condition A checked whether all
-  //the particles used to make our B came from on decay, and this checks if there 
+  //the particles used to make our B came from one decay, and this checks if there 
   //are any particles coming from said decay which we missed out in our reconstruction. 
 {
 	//verbose() << "Beginning to check condition B" << endmsg;
 	bool carryon;
-  verbose() << "Checking condition B step 1" << endmsg;
+	int neutrinosFound = 0;
+	verbose() << "Checking condition B step 1" << endmsg;
 	MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
-  verbose() << "Checking condition B step 2" << endmsg;
+	verbose() << "Checking condition B step 2" << endmsg;
 	MCParticleVector::const_iterator iPP = finalstateproducts.begin();
-  verbose() << "Checking condition B step 3 " << endmsg;
-  if (finalstateproducts.empty() ) Exception("Condition B 3 : No final states").ignore();
+	verbose() << "Checking condition B step 3 " << endmsg;
+	if (finalstateproducts.empty() ) Exception("Condition B 3 : No final states").ignore();
 	MCParticleVector::const_iterator iP;
-  verbose() << "Checking condition B step 4" << endmsg;
+	verbose() << "Checking condition B step 4" << endmsg;
 	
 	do {
 		carryon = false;
 		verbose() << "Checking condition B step 5" << endmsg;
 		if (*iPP) {
 
-			if ( (*iPP)->particleID().abspid() == 12  || //neutrinos are ignored
-           (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
-           (*iPP)->particleID().abspid() == 16  || //neutrinos are ignored
-           ( m_useSoftPhotonCut && (*iPP)->particleID().abspid() == 22 &&
-             (*iPP)->momentum().e() < m_softPhotonCut ) ) {  //soft photons are ignored
+			if ( ( m_semileptonicDecay && 
+				(neutrinosFound < m_numNeutrinos) && 
+				( 
+					(*iPP)->particleID().abspid() == 12  || //neutrinos are ignored
+					(*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
+					(*iPP)->particleID().abspid() == 16
+				)
+			     )  || //neutrinos are ignored if the decay is semileptonic
+				( 
+					m_useSoftPhotonCut && (*iPP)->particleID().abspid() == 22 &&
+					(*iPP)->momentum().e() < m_softPhotonCut 
+				) 
+			   ) {  //soft photons are ignored
 			
+				if (    (*iPP)->particleID().abspid() == 12  || //neutrinos are ignored
+                                        (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
+                                        (*iPP)->particleID().abspid() == 16) neutrinosFound +=1;
+
 				carryon = true;
 
 			}	
@@ -435,16 +449,16 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 			if (!carryon) { //if the particle is not to be ignored
 				for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
 					if ( *iP == 0) continue; //if no matching MCParticle
-					if ( (*iP)->particleID().abspid() == 12 ) continue; //neutrinos are ignored
-					if ( (*iP)->particleID().abspid() == 14 ) continue; //neutrinos are ignored
-					if ( (*iP)->particleID().abspid() == 16 ) continue; //neutrinos are ignored
+					//if ( m_semileptonicDecay && (*iP)->particleID().abspid() == 12 ) continue; //neutrinos are ignored
+					//if ( m_semileptonicDecay && (*iP)->particleID().abspid() == 14 ) continue; //neutrinos are ignored
+					//if ( m_semileptonicDecay && (*iP)->particleID().abspid() == 16 ) continue; //neutrinos are ignored
 					if ( m_useSoftPhotonCut && (*iP)->particleID().abspid() == 22 && 
-               (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
+						(*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
 					verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
 					//verbose() << "Checking condition B step 7" << endmsg;
 					SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 					//verbose() << "Checking condition B step 7b" << endmsg;
-          if ( (*iVV)->products().empty() || isStable( (*iP)->particleID().abspid() )  ) {
+          				if ( (*iVV)->products().empty() || isStable( (*iP)->particleID().abspid() )  ) {
 						//verbose() << "Checking condition B step 8" << endmsg;
 						verbose() << "Associated Particle:" << (*iP) << endmsg;
 						verbose() << "MC-final state Particle:" << (*iPP) << endmsg;

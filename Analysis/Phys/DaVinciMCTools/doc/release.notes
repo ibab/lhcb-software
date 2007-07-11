@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.168 2007-07-06 09:16:31 lcarson Exp $
+! $Id: release.notes,v 1.169 2007-07-11 16:55:27 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-11 - vladimir gligorov
+ - new options added for background category: SemileptonicDecay and Numneutrinos, see
+   BackgroundCategory.h for documentation.
 
 ! 2007-07-06 - Laurence Carson
  - MCPVPosition bug fix: Code now uses PV instead of OriVtx.
