@@ -1,9 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.318 2007-07-09 15:37:01 cattanem Exp $ 
+! $Id: release.notes,v 1.319 2007-07-11 15:57:36 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-07-11 - Juan PALACIOS
+ - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
+   . Add methods
+
+     const Gaudi::Transform3D localDeltaFromGlobalTransform(const IDetectorElement* DE,
+                                                            const Gaudi::Transform3D& globalTransform)
+     const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
+                                                            const Gaudi::Transform3D& globalTransform)
+
+     to get the local delta matrix starting from a global position matrix.
 
 !====================== DetDesc v17r5 2007-07-09 ==============================
 ! 2007-07-09 - Marco Cattaneo
