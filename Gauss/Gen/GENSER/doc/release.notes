@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v3r2 2007-07-11 ===========================
+! 2007-07-11 - Gloria Corti
+ - Add macros for alpgen. To be removed when the interface package will be
+   available in LCGCMT/LCG_GeneratorsInterfaces.
+   Take the latest available version 2.1.2
+
 !========================== GENSER v3r1 2007-07-02 ==========================
 ! 2007-07-02 - Gloria Corti
  - Remove lhapdf_linkopts now corrected in LCG_GeneratorsInterfaces

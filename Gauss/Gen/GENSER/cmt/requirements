@@ -1,5 +1,5 @@
 package GENSER
-version v3r1
+version v3r2
 
 branches doc cmt src
 
@@ -25,5 +25,15 @@ macro herwig_native_version "6.510.2"
 macro jimmy_native_version "4.31.2"
 
 macro hijing_native_version "1.383bs.2"
+
+macro alpgen_native_version "2.1.2"
+macro alpgen_path  $(LCG_external)/MCGenerators/alpgen/$(alpgen_native_version)
+macro alpgen_home  $(alpgen_path)/$(LCG_system)
+macro alpgen_linkopts "-L$(alpgen_home)/lib/archive \
+                        -lalpgen "
+macro alpsho_linkopts "-L$(alpgen_home)/lib \
+                        -lalpsho "
+ 
+macro alpgen_name "alpgen"
 
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c"
