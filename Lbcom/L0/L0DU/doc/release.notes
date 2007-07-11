@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.57 2006-10-20 14:59:16 cattanem Exp $
+$Id: release.notes,v 1.58 2007-07-11 12:53:09 pkoppenb Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
+
+! 2007-07-11 - Patrick Koppenburg
+ - L0Filter: new algorithm that allows to filter events based on
+   L0 decision. Allows selection for particular channels as well.
 
 !========================== L0DU v7r4 2006-10-20 =========================
 ! 2006-10-20 - Marco Cattaneo
