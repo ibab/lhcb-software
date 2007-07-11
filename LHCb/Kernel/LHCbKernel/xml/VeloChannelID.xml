@@ -74,11 +74,7 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
       <method type="std::ostream&amp;" name="fillStream" 
         virtual="FALSE" const="TRUE"
         desc="special serializer to ASCII stream" >
-        <arg name = "s" type = "std::ostream" inout = "BOTH" />
-        <code>
-    s &lt;&lt; m_channelID;
-    return s;
-       </code>   
+        <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
       </method> 
 
       <enum access='PUBLIC'

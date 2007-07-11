@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-07-11 - Chris Jones
+ - Add human-friendly printout for LHCbID, STChannelID, OTChannelID,
+   VeloChannelID and MuonTileID
+
 !===================== LHCbKernel v7r6 2007-07-10 ========================
 ! 2007-07-10 - Jose A. Hernando
  - extending the interface of IHltSummaryTool

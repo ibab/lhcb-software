@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.1 2005-12-02 16:28:07 cattanem Exp $
+// $Id: MuonTileID.cpp,v 1.2 2007-07-11 13:33:34 jonrob Exp $
 // Include files
 
 #include "Kernel/MuonTileID.h"
@@ -142,7 +142,23 @@ std::string LHCb::MuonTileID::toString() const {
 		region(),
 		nX(),
 		nY()); 
-  std::string result = bufnm;
-  return result;  		
+  return std::string ( bufnm );
 
+}
+
+std::ostream& LHCb::MuonTileID::fillStream(std::ostream& s) const
+{
+  s << "{ ";
+  if      ( !isValid()   ) { s << "WARNING : Unvalid MuonTileID"; }
+  else if ( !isDefined() ) { s << "WARNING : Undefined MuonTileID"; }
+  else
+  {
+    s << "MuonTileID : " << (int)(*this)
+      << " : station=" << station()
+      << " region=" << region()
+      << " quarter=" << quarter()
+      << " nX=" << nX()
+      << " nY=" << nY();
+  }
+  return s << " }";
 }

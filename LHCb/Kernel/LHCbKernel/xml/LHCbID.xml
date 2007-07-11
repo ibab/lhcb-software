@@ -71,7 +71,6 @@ m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
          </code>
        </method>
 
-       
        <method
          type  = "bool"
          name  = "isVeloR"
@@ -312,6 +311,18 @@ if (isMuon()) return m_lhcbID &amp; IDMask;
 return 0;
         </code>
       </method>
+
+      <method 
+          name    = "fillStream" 
+          desc    = "Print this LHCbID in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+      </method>
+
     </class>
   </package>
 </gdd>

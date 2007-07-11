@@ -58,7 +58,7 @@
         <code>return (type() == LHCb::STChannelID::typeIT ? true : false);</code>
       </method>
 
-      <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
+      <attribute type='bitfield' name='channelID' desc='ST Channel ID'>
         <bitfield name='strip' length='10'  desc='strip' setMeth='FALSE' />
         <bitfield name='sector' length='5'  desc='sector' setMeth='FALSE'/>
         <bitfield name='detRegion' length='3'  desc='detRegion' setMeth='FALSE'/>
@@ -72,6 +72,18 @@
         <bitfield name='uniqueSector' length='sector, detRegion, layer, station' 
                   desc='Unique layer' setMeth='FALSE'/>
       </attribute>
+
+      <method 
+          name    = "fillStream" 
+          desc    = "Print this STChannelID in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+      </method>
+
     </class>
   </package>
 </gdd>

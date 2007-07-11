@@ -82,6 +82,18 @@
         <bitfield name='uniqueStraw' length='straw, module, quarter, layer, station'
                   desc='Unique straw' setMeth='FALSE'/>
       </attribute>
+
+      <method 
+          name    = "fillStream" 
+          desc    = "Print this OTChannelID in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+      </method>
+
     </class>
   </package>
 </gdd>
