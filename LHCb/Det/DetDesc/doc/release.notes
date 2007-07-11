@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.320 2007-07-11 16:15:00 cattanem Exp $ 
+! $Id: release.notes,v 1.321 2007-07-11 16:37:25 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -16,6 +16,17 @@
                                                             const Gaudi::Transform3D& globalTransform)
 
      to get the local delta matrix starting from a global position matrix.
+
+   . Add methods
+
+  const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
+                                                         const Gaudi::Transform3D& globalTransform); 
+  const Gaudi::Transform3D localDeltaFromParentTransform(const IGeometryInfo* ParentGI,
+                                                         const IGeometryInfo* GI,
+                                                         const Gaudi::Transform3D& globalTransform);
+
+     to get the local delta matrix starting from a position matrix giving the position of
+     an element with respect to one of its ancestors.
 
 ! 2007-07-09 - Marco Cattaneo
  - Add dependency on LHCbMath to access cbrt from LHCbMath/Power.h
