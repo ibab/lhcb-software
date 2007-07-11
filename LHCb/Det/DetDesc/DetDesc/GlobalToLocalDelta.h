@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.7 2007-07-02 09:40:12 cattanem Exp $
+// $Id: GlobalToLocalDelta.h,v 1.8 2007-07-11 15:56:59 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -89,6 +89,40 @@ namespace DetDesc {
                             std::vector<double>& trans,
                             std::vector<double>& rot,
                             std::vector<double>& pivot);
+
+
+  /**
+   * Obtain the local delta transformation starting from a global position transformation.
+   * @param  DE detector element in question.
+   * @param  globalTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T'
+   *         Misaligned position matrix T' = T * globalDelta^-1 * globalDelta'
+
+   * @return 3D transformation that globalDelta' applies misalignment from nominal
+   *         position in the frame of the detector element's parent.
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromGlobalTransform(const IDetectorElement* DE,
+                                                         const Gaudi::Transform3D& globalTransform);
+
+
+  /**
+   * Obtain the local delta transformation starting from a global position transformation.
+   * @param  GI the IGeometryInfo of the detector element in question
+   * @param  globalTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T'
+   *         Misaligned position matrix T' = T * globalDelta^-1 * globalDelta'
+
+   * @return 3D transformation that globalDelta' applies misalignment from nominal
+   *         position in the frame of the detector element's parent.
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
+                                                         const Gaudi::Transform3D& globalTransform);
 
   
 }

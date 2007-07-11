@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.11 2007-06-25 14:52:20 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.12 2007-07-11 15:56:59 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -51,6 +51,19 @@ void localDeltaParameters(const IGeometryInfo* GI,
   DetDesc::getZYXTransformParameters(localDelta, trans, rot, pivot);
 
 }
+
+const Gaudi::Transform3D localDeltaFromGlobalTransform(const IDetectorElement* DE,
+                                                       const Gaudi::Transform3D& globalTransform) {
+  return localDeltaFromGlobalTransform(DE->geometry(), globalTransform);
+}
+
+const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
+                                                       const Gaudi::Transform3D& globalTransform) {
+  const Gaudi::Transform3D d_0 = GI->localDeltaMatrix().Inverse();
+  const Gaudi::Transform3D T_inv   = GI->matrix();
+  return d_0 * T_inv * globalTransform;
+}
+
   
 } // namespace DetDesc
 //=============================================================================
