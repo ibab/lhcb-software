@@ -64,6 +64,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     to get the local delta matrix starting from a global position matrix, and
     from a position matrix giving the position of an element with respect to one
     of its ancestors.
+    (See details in talk at </PRE><a href="http://indico.cern.ch/getFile.py/access?contribId=1&amp;resId=0&amp;materialId=slides&amp;confId=10161"">T-Rec on 2007-07-09</a><PRE>)
 
 - In RichDet v7r7
   . Small change to take into account the misalignmet of the Si sensor in the
