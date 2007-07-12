@@ -23,6 +23,8 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Extend IHltSummaryTool interface
   . Add human-friendly printout for LHCbID, STChannelID, OTChannelID,
     VeloChannelID and MuonTileID
+  . IVeloClusterPosition interface updated, new method that can accept
+    const reference to StateVector added
 
 - In RichKernel v7r7
   . Various minor updates to DAQ classes
