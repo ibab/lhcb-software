@@ -5,18 +5,24 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r7>2007-07-10 LHCbSys v22r7</A></H1><PRE>
+</PRE><H1><A NAME=v22r7>2007-07-11 LHCbSys v22r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
-- Packages modified: KernelSys v6r7, RichKernel v7r7, LHCbMath v2r2,
-    GaudiObjDesc v10r1, EventSys v23r7, TrackEvent v4r5, RecEvent v2r5,
-    EventAssoc v4r2, DetSys v9r7, DetDesc v17r5, OTDet v7r4, RichDet v10r6, 
-    DetCond v11r5, CondDBUI v2r4, TrackInterfaces v3r6, MCInterfaces v1r1,
-    RichRecBase v3r6, TsaKernel v2r5, LHCbAlgs v2r10, SimComponents v2r4
+- Packages modified: KernelSys v6r7, LHCbKernel v7r6, RichKernel v7r7,
+    LHCbMath v2r2, GaudiObjDesc v10r1, EventSys v23r7, TrackEvent v4r5,
+    RecEvent v2r5, HltEvent v8r3, L0Event v16r4, EventAssoc v4r2, DetSys v9r7,
+    DetDesc v17r5, OTDet v7r4, RichDet v10r6, DetCond v11r5, CondDBUI v2r4, 
+    TrackInterfaces v3r6, MCInterfaces v1r1, RichRecBase v3r6, TsaKernel v2r5,
+    LHCbAlgs v2r10, SimComponents v2r4
 
 - In GaudiObjDesc v10r1
   . Add to DTD the possibility to define the namespace to be used for the 
     generated classes. Default value is "LHCb"
+
+- In LHCbKernel v7r6
+  . Extend IHltSummaryTool interface
+  . Add human-friendly printout for LHCbID, STChannelID, OTChannelID,
+    VeloChannelID and MuonTileID
 
 - In RichKernel v7r7
   . Various minor updates to DAQ classes
@@ -27,6 +33,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . LHCbMath/GeomFun.icpp: closestPointParams(line, line, double, double) was
     assuming lines with normalised direction vectors. Fix to work with arbitrary
     length direction vectors.
+	. Bug fix to parallel(line, line) method.
 
 - In TrackEvent v4r5
   . Removed kappa. Consistently use c_light in extrapolators and StateTraj
@@ -34,7 +41,15 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Removed VeloMissed from AdditionalInfo enum in Track.xml
 
 - In RecEvent v2r5
-  . Add setExtraInfo method to VertexBase
+  . In VertexBase: add setExtraInfo method
+  . In MuonPID: add data member SmartRef to muon Track 
+
+- In HltEvent v8r3
+  . More enums
+  . Remove HltSummaryFunctor, moved to HltBase and renamed to HltSummaryHelper
+
+- In L0Event v16r4
+  . Make all getter methods in L0DUReport const
 
 - In DetDesc v17r5
   . Use cbrt in Gaudi::Math rather than pow 
@@ -43,6 +58,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . GeometryInfoPlus.cpp: fix bug: local copy of the misalignment matrix was
     holding the inverse of what the code thought it was holding.
   . GlobalToLocalDelta.cpp: fix localDeltaMatrix function, algebra was wrong
+  . DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp: add methods
+    to get the local delta matrix starting from a global position matrix, and
+    from a position matrix giving the position of an element with respect to one
+    of its ancestors.
 
 - In RichDet v7r7
   . Small change to take into account the misalignmet of the Si sensor in the
