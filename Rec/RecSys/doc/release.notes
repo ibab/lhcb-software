@@ -14,7 +14,7 @@ This version uses Gaudi v19r4 and LHCb v22r7.
    TrackExtrapolators v2r13, TrackMCTools v2r12, TrackIdealPR v2r12, 
    TrackCheckers v3r0, TrackAssociators v2r5, TrackSys v4r7, RichRecSys v3r5,
    RichGlobalPID v3r4, RichRecAlgorithms v2r8, RichRecQC v2r13,
-   RichRecTools v3r12
+   RichRecTools v3r12, MuonID v5r2
 
 - In PatVelo v2r16
   . Each of R, Space, Generic, Open and General tracking set their own track
@@ -40,7 +40,8 @@ This version uses Gaudi v19r4 and LHCb v22r7.
 
 - In PatForward v2r15
   . Add ITracksFromTrack interface to PatForwardTool
-
+  . Add doClean option in PatForward to switch on/off the track cleaning.
+ 
 - In TrackFitEvent v3r6
   . Replaced TrackParameters::kappa with c_light as in the extrapolators.
 
@@ -137,6 +138,9 @@ This version uses Gaudi v19r4 and LHCb v22r7.
     + Add an (experimental) RichPhotonSignalJeffreysErf that uses a modified
       probability distribution that attempts to deal with outliers, essentially
       by giving the distribution larger tails)
+
+- In MuonID v5r2
+  . Add SmartRef to Muon track
 
 - In TrackMatching v2r15, TrackExtrapolators v2r13, TrackTools v2r16
   . Fix doxygen warnings
