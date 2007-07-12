@@ -4,6 +4,9 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-07-12 - Alessia Satta ( for Sandra Amato)
+ - add distance info in T-velo matching tool
+
 ! 2007-07-04 - Johannes Albrecht
 	-src/PrepareElectronSeed
 			- size of search window now as job option
