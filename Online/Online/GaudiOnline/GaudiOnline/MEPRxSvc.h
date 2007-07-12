@@ -24,6 +24,8 @@
 #include "GaudiKernel/IMonitorSvc.h"
 #include "RTL/rtl.h"
 #include "RTL/types.h"
+#include "dis.hxx"
+
 
 // Forward declarations
 class MsgStream;
@@ -46,6 +48,8 @@ namespace LHCb  {
     *  @version 1.1
     */
   struct MEPRx;
+  class MEPRxSvc;
+  class MEPRQCommand;
 
   struct DAQErrorEntry {    
     enum DAQErrorType { 
@@ -117,6 +121,10 @@ namespace LHCb  {
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
 
+    MEPRQCommand                *m_mepRQCommand;
+
+    
+
     IIncidentSvc*               m_incidentSvc; 
     IMonitorSvc*                m_monSvc;
 
@@ -126,7 +134,8 @@ namespace LHCb  {
     /* Counters per source */ 
     std::vector<u_int64_t> m_rxOct, m_rxPkt;
     /* Global counters */
-    int m_totRxPkt, m_totRxOct, m_incEvt, m_numMEPRecvTimeouts;
+    int m_totRxPkt, m_totRxOct, m_incEvt;
+    int m_numMEPRecvTimeouts, m_numMEPRQ, m_totMEPRQ, m_totMEPRQPkt;
     /* Error counters */
     std::vector<u_int32_t> m_badPkt, m_misPkt;
     u_int32_t m_swappedMEP;
@@ -175,6 +184,37 @@ namespace LHCb  {
     void publishCounters(void);
     void handle(const Incident& inc); 
   };
+
+  /**
+   * A simple DIM command implementation that causes an explicit MEP request to be sent.
+   */
+  class MEPRQCommand : public DimCommand {
+
+    MEPRxSvc *m_mepRxObj;
+    MsgStream *m_log;
+
+    public:
+
+    // Constructor
+    MEPRQCommand(MEPRxSvc *mepRxObj, MsgStream *log) : DimCommand("sendMEPRQ", "I") {
+      m_mepRxObj = mepRxObj;
+      m_log = log;
+    }
+
+    ~MEPRQCommand() { delete m_log; }
+
+    virtual void commandHandler(void) {
+      int numMEPs = getInt();
+        *m_log << MSG::INFO << "Received command, sending " << numMEPs << " MEP requests....";
+      if(m_mepRxObj->sendMEPReq(numMEPs).isSuccess())
+        *m_log << MSG::INFO << "OK." << endmsg;
+      else
+        *m_log << MSG::INFO << "FAILED." << endmsg;
+    }
+  };
+
+
+
   
 }      // End namespace LHCb
 

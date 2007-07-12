@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.49 2007-07-09 15:03:16 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.50 2007-07-12 09:49:52 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -155,6 +155,7 @@ namespace LHCb  {
     int spaceAction();
     int addMEP(int sockfd, const MEPHdr *hdr, int srcid);
   };
+
 }
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
@@ -382,11 +383,16 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
+
+  std::string serviceName(RTL::processName());
+  serviceName = serviceName + "/send_meprq";
+  m_mepRQCommand = new MEPRQCommand(this, new MsgStream(msgSvc(), "MEPRx"));
 }
 
 // Standard Destructor
 MEPRxSvc::~MEPRxSvc(){
   delete [] (u_int8_t*) m_trashCan;
+  delete m_mepRQCommand;
 }
 
 void MEPRxSvc::removePkt()   {
@@ -442,6 +448,8 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
     mepreq.nmep = m;
     int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq, MEP_REQ_LEN, 0);
     if (n == MEP_REQ_LEN)   {
+      m_totMEPRQ += m;
+      m_totMEPRQPkt++;
       return StatusCode::SUCCESS;
     }
     if (n == -1)  {
@@ -748,9 +756,12 @@ int MEPRxSvc::setupCounters(int n) {
   m_rxPkt.resize(n,0);
   m_badPkt.resize(n,0);
   m_misPkt.resize(n,0);
+  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPRQPkt = m_numMEPRecvTimeouts = m_totMEPRQ = 0;
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
   PUBCNT(incEvt,   "Incomplete events");
+  PUBCNT(totMEPRQ, "Total Requested MEPs");
+  PUBCNT(totMEPRQPkt, "Total Sent MEP Request Packets");
   PUBCNT(numMEPRecvTimeouts, "MEP Receive Timeouts");
   m_notReqPkt = m_swappedMEP = 0;
   m_nCnt = n;
