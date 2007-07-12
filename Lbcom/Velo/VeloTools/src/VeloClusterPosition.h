@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.7 2007-07-12 06:31:25 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.8 2007-07-12 08:21:12 cattanem Exp $
 #ifndef VELOCLUSTERPOSITION_H 
 #define VELOCLUSTERPOSITION_H 1
 
@@ -38,13 +38,13 @@ public:
                        const IInterface* parent);
   virtual ~VeloClusterPosition( ); ///< Destructor
   //
-  virtual toolInfo position(const LHCb::VeloCluster* cluster) const;
-  virtual toolInfo position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* aCluster) const;
+  virtual toolInfo position(const LHCb::VeloCluster* aCluster,
                             const Gaudi::XYZPoint& aPoint,
                             const Pair& aDirection) const;
-  virtual toolInfo position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* aCluster,
                             const LHCb::StateVector& aState) const;
-  virtual Pair fracPosLA(const LHCb::VeloCluster* cluster) const;
+  virtual Pair fracPosLA(const LHCb::VeloCluster* aCluster) const;
   double angleOfTrack(const Pair localSlopes,
                       Gaudi::XYZVector& parallel2Track) const;
   double projectedAngle() const;
