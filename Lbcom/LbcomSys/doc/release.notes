@@ -6,11 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r7>2007-07-09 LbcomSys v6r7</A></H1><PRE>
+</PRE><H1><A NAME=v6r7>2007-07-11 LbcomSys v6r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7
 
 - Packages modified: STTools v3r2, RichDAQ v3r11, RichMCMonitors v1r4,
-    RichTools v2r14
+    RichTools v2r14, L0DU v7r5
 
 - In STTools v3r2
   . Add trimming of ST Measurements
@@ -30,6 +30,12 @@ This version uses Gaudi v19r4 and LHCb v22r7
 - In RichTools v2r14
   . Update default tools to reject change in name for the tool 
     Rich::Rec::PhotonSignalGaussProb
+
+- In L0DU v7r5
+  . Remove IL0Candidate.h, was moved to L0Event a year ago
+  . Remove obsolete file L0DU_load.cpp
+  . L0Filter: new algorithm that allows to filter events based on
+    L0 decision. Allows selection for particular channels as well.
 
 - In STTools v3r2, RichDAQ v3r11
   . Fix doxygen warnings
