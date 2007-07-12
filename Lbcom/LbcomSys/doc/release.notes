@@ -6,11 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r7>2007-07-11 LbcomSys v6r7</A></H1><PRE>
+</PRE><H1><A NAME=v6r7>2007-07-12 LbcomSys v6r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7
 
 - Packages modified: STTools v3r2, RichDAQ v3r11, RichMCMonitors v1r4,
-    RichTools v2r14, L0DU v7r5
+    RichTools v2r14, L0DU v7r5, VeloTools v2r1
 
 - In STTools v3r2
   . Add trimming of ST Measurements
@@ -37,7 +37,12 @@ This version uses Gaudi v19r4 and LHCb v22r7
   . L0Filter: new algorithm that allows to filter events based on
     L0 decision. Allows selection for particular channels as well.
 
-- In STTools v3r2, RichDAQ v3r11
+- In VeloTools v2r1
+  . new parametrizations
+  . new method with StateVector object
+  . fixed return statement when sensor pointer is invalid 
+
+- In STTools v3r2, RichDAQ v3r11, VeloTools v2r1
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v6r6>2007-06-05 LbcomSys v6r6</A></H1><PRE>
