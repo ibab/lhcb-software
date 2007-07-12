@@ -4,10 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r12 2007-07-12 ==========================
 ! 2007-07-12 - Chris Jones
  - Replace native erf ( not available on windows :( ) with gsl version
 
-!===================== RichRecTools v3r12 2007-07-09 ==========================
 ! 2007-06-22 - Chris Jones
  - Improvement to the way the photon reconstruction is done inside
    Rich::Rec::PhotonRecoUsingQuarticSoln

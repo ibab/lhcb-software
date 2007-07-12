@@ -2,7 +2,7 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.49 2007-07-09 17:15:06 cattanem Exp $
+# $Id: requirements,v 1.50 2007-07-12 15:03:38 cattanem Exp $
 #============================================================================
 
 # Comments :-
@@ -19,6 +19,7 @@ include_path none
 use RichRecBase      v*   Rich
 use RichDet          v*   Det
 use TrackInterfaces  v*   Tr
+use GSL              v*   LCG_Interfaces
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp
