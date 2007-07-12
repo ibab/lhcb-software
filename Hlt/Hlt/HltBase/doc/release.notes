@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-07-12 Jose A. Satta
+  - add a variable in match velo T ( for Sandra Amato)
+
 ! 2007-07-06 Jose A. Hernando
 	- HltBase/IHltConfSummaryTool, extended interface
   - src/HltAlgorithm.cpp: adding configuration type for Tracks and Vertices

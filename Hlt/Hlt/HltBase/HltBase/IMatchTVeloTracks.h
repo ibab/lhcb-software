@@ -1,4 +1,4 @@
-// $Id: IMatchTVeloTracks.h,v 1.2 2007-03-16 16:29:36 cattanem Exp $
+// $Id: IMatchTVeloTracks.h,v 1.3 2007-07-12 16:51:06 asatta Exp $
 #ifndef HLTBASE_IMATCHTVELOTRACKS_H 
 #define HLTBASE_IMATCHTVELOTRACKS_H 1
 
@@ -30,12 +30,12 @@ public:
   static const InterfaceID& interfaceID() { return IID_IMatchTVeloTracks; }
 
   
-  virtual StatusCode match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack)=0;
+  virtual StatusCode match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack, float &x_dist)=0;
   
                                  
   
   virtual StatusCode match3dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack, 
-                                 LHCb::Track& matchedTrack)=0;
+                                 LHCb::Track& matchedTrack, float &x_dist, float &y_dist)=0;
   
 
 protected:
