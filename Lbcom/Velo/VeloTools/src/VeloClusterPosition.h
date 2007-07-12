@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.6 2007-06-01 10:36:18 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.7 2007-07-12 06:31:25 szumlat Exp $
 #ifndef VELOCLUSTERPOSITION_H 
 #define VELOCLUSTERPOSITION_H 1
 
@@ -8,6 +8,7 @@
 #include "Kernel/IVeloClusterPosition.h"            // Interface
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/SiPositionInfo.h"
+#include "Event/StateVector.h"
 
 /** @class VeloClusterPosition VeloClusterPosition.h
  *  
@@ -41,6 +42,8 @@ public:
   virtual toolInfo position(const LHCb::VeloCluster* cluster,
                             const Gaudi::XYZPoint& aPoint,
                             const Pair& aDirection) const;
+  virtual toolInfo position(const LHCb::VeloCluster* cluster,
+                            const LHCb::StateVector& aState) const;
   virtual Pair fracPosLA(const LHCb::VeloCluster* cluster) const;
   double angleOfTrack(const Pair localSlopes,
                       Gaudi::XYZVector& parallel2Track) const;
@@ -58,6 +61,7 @@ protected:
   double errorOnR(const double projAngle, const double pitch) const;
   double errorOnPhi(const double projAngle, const double pitch) const;
   void setOutsideFlag() const;
+  void unsetOutsideFlag() const;
   bool outsideFlag() const;
   
 private:

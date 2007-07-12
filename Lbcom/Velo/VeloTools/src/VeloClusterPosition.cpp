@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.11 2007-06-01 10:36:17 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.12 2007-07-12 06:31:25 szumlat Exp $
 // Include files
 
 // stl
@@ -257,11 +257,17 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
   if(sensor==0){
     Error("No valid pointer to sensor", StatusCode::FAILURE );
+    anInfo.strip=LHCb::VeloChannelID(0);
+    anInfo.fractionalPosition=0.;
+    anInfo.fractionalError=0.;
+    //
+    return ( anInfo );    
   }
   // transform global point to the local reference frame
   Gaudi::XYZPoint aLocalPoint=sensor->globalToLocal(aGlobalPoint);
   StatusCode pointStatus=sensor->isInActiveArea(aLocalPoint);
   // local point is often outside active area - make a reasonable guess
+  unsetOutsideFlag();
   if(pointStatus.isFailure()){
     if(sensor->isR()||sensor->isPileUp()){
       // easy to deal with - use cluster information for error estimate
@@ -508,10 +514,29 @@ void VeloClusterPosition::setOutsideFlag() const
   m_isOutsideSensor=true;
 }
 //============================================================================
+void VeloClusterPosition::unsetOutsideFlag() const
+{
+  m_isOutsideSensor=false;
+}
+//============================================================================
 bool VeloClusterPosition::outsideFlag() const
 {
   return ( m_isOutsideSensor );
 }
+//============================================================================
+toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
+                                       const LHCb::StateVector& aState) const
+{
+  debug()<< " ==> position (VectorState) " <<endmsg;
+  unsigned int sensorNumber=cluster->channelID().sensor();
+  const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
+  double z=sensor->z();
+  // build space point in global ref. frame
+  Gaudi::XYZPoint aPoint(aState.x(), aState.y(), z);
+  // build state pair
+  Pair aDirection;
+  aDirection.first=aState.tx();
+  aDirection.second=aState.ty();
+  return ( position(cluster, aPoint, aDirection) );
+}
 //
-
-

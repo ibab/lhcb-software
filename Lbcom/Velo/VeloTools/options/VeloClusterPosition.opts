@@ -1,12 +1,35 @@
-ToolSvc.VeloClusterTool.PrintInfo=false;
-// these are default flags for the tool, if you want to use the EtaFit
-// to calculate position of a cluster set first flag to false and second 
-// one to true
-ToolSvc.VeloClusterTool.UseWeightedMean=true;
-ToolSvc.VeloClusterTool.UseEtaFit=false;
 // first parameter is im um second one is dimensionless
 // the order is important! the dimension is important!
-ToolSvc.VeloClusterTool.DefaultRSensorResolution={-3.23, 0.23};
-ToolSvc.VeloClusterTool.DefaultPhiSensorResolution={-3., 0.28};
-ToolSvc.VeloClusterTool.ParaTypes={2., 5., 7., 10., 20., 30.};
-ToolSvc.VeloClusterTool.DefaultEtaPar={0.5, 0.25, -8.13};
+ToolSvc.VeloClusterPosition.DefaultRSensorResolution={-3.23, 0.23};
+ToolSvc.VeloClusterPosition.DefaultPhiSensorResolution={-3., 0.28};
+// parametrizations for diffrent PROJECTED angle bins
+ToolSvc.VeloClusterPosition.AngleLimitsR={
+        1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 
+        12., 13., 14., 15., 16., 17., 18., 19., 20., 21.,
+        22., 23., 24., 90.
+};
+ToolSvc.VeloClusterPosition.AngleLimitsPhi={
+        1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 
+        12., 13., 14., 15., 16., 17., 18., 19., 20., 21.,
+        22., 23., 24., 90.
+};
+ToolSvc.VeloClusterPosition.RConstPara={
+  -3.66, -3.15, -4.03, -4.79, 5.35, -5.88, -6.31, -6.58, -5.98, -4.86,
+  -3.85, -1.63, -2.01, 1.38, 2.89, 4.71, 6.08, 7.63, 8.47, 10.0, 10.1,
+  13.4, 14.1, 19.1, 19.1
+};
+ToolScv.VeloClusterPosition.RSlopePara={
+  .295, .282, .288, .289, .285, .279, .271, .262, .240, .216,
+  .191, .154, .130, .106, .085, .059, .041, .024, .14, .002, .0095,
+  -.027, -.026, -.086, -.086
+};
+ToolSvc.VeloClusterPosition.PhiConstPara={
+  -3.66, -3.15, -4.03, -4.79, 5.35, -5.88, -6.31, -6.58, -5.98, -4.86,
+  -3.85, -1.63, -2.01, 1.38, 2.89, 4.71, 6.08, 7.63, 8.47, 10.0, 10.1,
+  13.4, 14.1, 19.1, 19.1
+};
+ToolSvc.VeloCLusterPosition.PhiSlopePara={
+  .295, .282, .288, .289, .285, .279, .271, .262, .240, .216,
+  .191, .154, .130, .106, .085, .059, .041, .024, .14, .002, .0095,
+  -.027, -.026, -.086, -.086
+};

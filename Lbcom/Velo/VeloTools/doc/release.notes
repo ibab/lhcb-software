@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+!========================== VeloTools v2r1 2007-07-11 ========================
+! 2007-07-11 - Tomasz Szumlak
+ - new parametrizations
+ - new method with StateVector object
+ - fixed return statement when sensor pointer is invalid 
 
 !========================== VeloTools v2r0 2007-05-16 ========================
 ! 2007-06-01 - Tomasz Szumlak
