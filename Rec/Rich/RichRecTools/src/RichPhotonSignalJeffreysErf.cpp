@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalJeffreysErf
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalJeffreysErf.cpp,v 1.1 2007-06-22 14:35:58 jonrob Exp $
+ *  $Id: RichPhotonSignalJeffreysErf.cpp,v 1.2 2007-07-12 14:51:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -38,8 +38,8 @@ double PhotonSignalJeffreysErf::signalProbFunc( const double thetaDiff,
                                                 const double thetaExpRes ) const
 {
   // See http://scripts.iucr.org/cgi-bin/paper?he0278 for details
-  const double a = erf( thetaDiff/(             thetaExpRes*sqrt(2)) );
-  const double b = erf( thetaDiff/(m_errScale * thetaExpRes*sqrt(2)) );
+  const double a = gsl_sf_erf( thetaDiff/(             thetaExpRes*sqrt(2.0)) );
+  const double b = gsl_sf_erf( thetaDiff/(m_errScale * thetaExpRes*sqrt(2.0)) );
   return 0.5*(a-b)/(thetaDiff*log(m_errScale));
 }
 

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonSignalJeffreysErf
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalJeffreysErf.h,v 1.1 2007-06-22 14:35:58 jonrob Exp $
+ *  $Id: RichPhotonSignalJeffreysErf.h,v 1.2 2007-07-12 14:51:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,9 @@
 
 // base class
 #include "RichPhotonSignalGaussProb.h"
+
+// GSL
+#include "gsl/gsl_sf_erf.h"
 
 namespace Rich
 {
