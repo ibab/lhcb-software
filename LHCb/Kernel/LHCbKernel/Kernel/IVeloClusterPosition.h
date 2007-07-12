@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.9 2007-07-12 07:50:20 szumlat Exp $
+// $Id: IVeloClusterPosition.h,v 1.10 2007-07-12 08:07:05 cattanem Exp $
 #ifndef KERNEL_IVELOCLUSTERPOSITION_H 
 #define KERNEL_IVELOCLUSTERPOSITION_H 1
 
@@ -21,6 +21,7 @@ namespace LHCb
 {
   class VeloCluster;
   class VeloChannelID;
+  class StateVector;
 }
 
 class IVeloClusterPosition : virtual public IAlgTool{
