@@ -1,4 +1,4 @@
-// $Id: CopyStripETC.cpp,v 1.1 2006-07-18 16:27:29 pkoppenb Exp $
+// $Id: CopyStripETC.cpp,v 1.2 2007-07-12 15:00:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ CopyStripETC::CopyStripETC( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
   , m_longType(8)
 {
-  declareProperty( "InputCollectionName", m_inputCollectionName = "<not set>");
+  declareProperty( "InputCollectionName", m_inputCollectionName = "TagCreator");
   declareProperty( "OutputCollectionName", m_outputCollectionName = "<not set>");
 
 }
@@ -64,10 +64,10 @@ StatusCode CopyStripETC::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // it's a typedef SmartDataPtr<NTuple::Tuple> NTuplePtr
-  NTuplePtr ntIN(evtColSvc(), "EventSelector_1/TagCreator/1" );
+  NTuplePtr ntIN(evtColSvc(), "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" );
 
   if ( !ntIN ) {
-    err() << "Nothing at " << "EventSelector_1/"+m_inputCollectionName+"/1" << endmsg ;
+    err() << "Nothing at " << "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" << endmsg ;
     return StatusCode::FAILURE ;
   } else {
     if (sc) sc = fillOutputETC(ntIN);

@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.cpp,v 1.2 2006-07-18 16:27:30 pkoppenb Exp $
+// $Id: ReadStripETC.cpp,v 1.3 2007-07-12 15:00:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ ReadStripETC::ReadStripETC( const std::string& name,
   m_vetoedFields.push_back("nCharged");
   m_vetoedFields.push_back("nPrim");
   
-  declareProperty( "CollectionName", m_inputCollectionName = "<not set>");
+  declareProperty( "CollectionName", m_inputCollectionName = "TagCreator");
   declareProperty( "VetoedFields", m_vetoedFields);
   declareProperty( "Selections", m_selections); /// empty means all
 
@@ -79,10 +79,10 @@ StatusCode ReadStripETC::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // it's a typedef SmartDataPtr<NTuple::Tuple> NTuplePtr
-  NTuplePtr ntIN(evtColSvc(), "EventSelector_1/TagCreator/1" );
+  NTuplePtr ntIN(evtColSvc(), "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" );
 
   if ( !ntIN ) {
-    err() << "Nothing at " << "EventSelector_1/"+m_inputCollectionName+"/1" << endmsg ;
+    err() << "Nothing at " << "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" << endmsg ;
     return StatusCode::FAILURE ;
   } else {
     if ( !m_usedSelectionsFilled ) sc = fillUsedSelections(ntIN);

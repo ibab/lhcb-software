@@ -4,6 +4,10 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r2 2007-07-12 =======================
+! 2007-07-12 - Marco Cattaneo
+ - Adapt CopyStripETC and ReadStripETC to new DataStreamTool in Gaudi v19r4 
+
 !============================ RecUtils v1r1 2006-07-20 =======================
 ! 2006-07-18 - P. Koppenburg
  - New algorithm CopyStripETC that copies the contents of the ETC used as 
