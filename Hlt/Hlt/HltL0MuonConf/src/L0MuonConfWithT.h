@@ -1,4 +1,4 @@
-// $Id: L0MuonConfWithT.h,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: L0MuonConfWithT.h,v 1.2 2007-07-12 17:45:06 asatta Exp $
 #ifndef L0MUONCONFWITHT_H 
 #define L0MUONCONFWITHT_H 1
 
@@ -54,8 +54,8 @@ private:
   m_outputMuonTracks;///< Pointer to the muon track containe
   LHCb::State* m_myState;
 
-  
+  std::string   m_myOutput; 
   std::string m_outputMuonTracksName;   ///< output container name
-
+ double sigmaX2[4], sigmaY2[4], sigmaTx2[4], sigmaTy2[4];
 };
 #endif // L0MUONCONFWITHT_H

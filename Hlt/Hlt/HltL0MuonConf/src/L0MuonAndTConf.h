@@ -1,4 +1,4 @@
-// $Id: L0MuonAndTConf.h,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: L0MuonAndTConf.h,v 1.2 2007-07-12 17:45:06 asatta Exp $
 #ifndef L0MUONANDTCONF_H 
 #define L0MUONANDTCONF_H 1
 
@@ -26,13 +26,14 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  double  calcDLL(LHCb::Track* track);
   
 protected:
 
 private:
   IMuonPosTool*      m_iPosTool;
   float m_maxdist;
-  bool m_skipFilter;
+//  bool m_skipFilter;
+  double  calcDLL(LHCb::Track* track, LHCb::MuonTileID & tileM4, LHCb::MuonTileID & tileM5);
+
 };
 #endif // L0MUONANDTCONF_H

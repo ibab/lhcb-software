@@ -4,6 +4,9 @@
 ! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+! 2007-07-12 - Alessia Satta
+ - several upgrades for T confirmation
+
 ! 2007-06-20 - Jose A. Hernando
  - minor changes, conflict with output tracks in SpaceMuonMatch
 

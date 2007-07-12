@@ -1,9 +1,8 @@
-// $Id: RZMuonMatch.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
+// $Id: RZMuonMatch.cpp,v 1.3 2007-07-12 17:45:06 asatta Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-
 // local
 #include "RZMuonMatch.h"
 
@@ -54,7 +53,8 @@ StatusCode RZMuonMatch::initialize() {
 StatusCode RZMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
-  setFilterPassed(false);
+//  setFilterPassed(false);
+//  HltAlgorithm::beginExecute();
   debug()<<" pat "<<m_patInputTracks->size()<<" hlt "<<m_inputTracks->size()
         <<endreq;
   int tt=0;
@@ -77,7 +77,8 @@ StatusCode RZMuonMatch::execute() {
       debug()<<" enter loop new muon "<<m_inputTracks->size()<<endreq;
       Track* muon=(*itMuon);
       //  std::vector<Track* >::const_iterator pMuon;
-      StatusCode sc=m_matchToolPointer->match2dVelo(*pTr2d,*muon);
+      float x_dist;
+      StatusCode sc=m_matchToolPointer->match2dVelo(*pTr2d,*muon, x_dist );
       
       
 
@@ -85,15 +86,29 @@ StatusCode RZMuonMatch::execute() {
     
       if(StatusCode::SUCCESS == sc) {
         debug()<<" success "<<endreq;
-        
+        debug() << "x_dist " << x_dist << endmsg;     
         m_outputTracks->push_back(pTr2d);
               
         pTr2d->setFlag(Track::PIDSelected,true);
+        pTr2d->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist); 
+
+        std::vector< LHCb::LHCbID > list_lhcb= muon->lhcbIDs();
+        for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
+          if(iM1->isMuon()){
+             debug()<<" adding tile "<<iM1->muonID().station()<<endreq;
+             //This does not work, don't know why...
+             //pTr2d->addToLhcbIDs(iM1->muonID());
+
+          }
+        }
+
+
 //trasmit if L0 or muon seg
         if(muon->checkFlag(Track::L0Candidate)){
-          
+         debug() << "matched from L0 " << endmsg;          
         pTr2d->setFlag(Track::L0Candidate,true);
 }else{
+        debug() << "matched from muon track " << endmsg;
         pTr2d->setFlag(Track::L0Candidate,false);
 }
         debug()<<" selected track "<<endreq;
@@ -107,7 +122,9 @@ StatusCode RZMuonMatch::execute() {
       
       }
     }
-  }
+  }  
+  
+//  HltAlgorithm::endExecute();
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: L0MuonAndTConf.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
+// $Id: L0MuonAndTConf.cpp,v 1.3 2007-07-12 17:45:06 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ L0MuonAndTConf::L0MuonAndTConf( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "maxDist",m_maxdist=100);
-  declareProperty( "skipFilter",m_skipFilter=false);
+//  declareProperty( "skipFilter",m_skipFilter=false);
   
 }
 //=============================================================================
@@ -56,20 +56,27 @@ StatusCode L0MuonAndTConf::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
+//  HltAlgorithm::beginExecute();
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {   
-    if(calcDLL(*itT)<m_maxdist){ 
+     MuonTileID tileM4, tileM5;
+    if(calcDLL(*itT, tileM4, tileM5)<m_maxdist){ 
       setFilterPassed(true);
        //if(!skipFilter){
 //	(*itT)->setFlag(Track::L0Candidate,true);
   //     }
+       (*itT)->addToAncestors (*itT);
+       (*itT)->addToLhcbIDs(tileM4);
+       (*itT)->addToLhcbIDs(tileM5);
        m_outputTracks->push_back(*itT);
+
 
     }
     
   }
-
-  if(m_skipFilter) setFilterPassed(true);
+  
+//  HltAlgorithm::endExecute();
+//  if(m_skipFilter) setFilterPassed(true);
   
   return StatusCode::SUCCESS;
 }
@@ -88,7 +95,7 @@ StatusCode L0MuonAndTConf::finalize() {
 
 
 
-double  L0MuonAndTConf::calcDLL(Track* track)
+double  L0MuonAndTConf::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID & tileM5)
 {
 
   double distDLL=0;
@@ -168,11 +175,17 @@ double  L0MuonAndTConf::calcDLL(Track* track)
       ((y_Mi-y)/dy)*((y_Mi-y)/dy);
    
     if(station==3){
-      if(float(dist_temp)<float(dist_tempM4))dist_tempM4=dist_temp;
+      if(float(dist_temp)<float(dist_tempM4)){
+         dist_tempM4=dist_temp;
+         tileM4 = (*iCoord)->key();
+      }
     }
 
     if(station==4){
-      if(float(dist_temp)<float(dist_tempM5))dist_tempM5=dist_temp;
+      if(float(dist_temp)<float(dist_tempM5)){
+         dist_tempM5=dist_temp;
+         tileM5 = (*iCoord)->key();
+      }
     }
     
 

@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.cpp,v 1.2 2007-06-20 16:11:55 hernando Exp $
+// $Id: MuonTConfWithT.cpp,v 1.3 2007-07-12 17:45:06 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -67,13 +67,19 @@ StatusCode MuonTConfWithT::initialize() {
 StatusCode MuonTConfWithT::execute() {
 
   debug() << "==> Execute" << endmsg;
-  setFilterPassed(true);
+  //HltAlgorithm::beginExecute();
+  //setFilterPassed(true);
+
 
   m_countEvent++;
 
 //info()<<" sono qui "<<endreq;
    std::vector<LHCb::Track*>* foundTracksTmp = new std::vector<LHCb::Track*>;
   foundTracksTmp->reserve(50);
+  LHCb::Tracks* output = new LHCb::Tracks();
+  output->reserve(50);
+
+
 //info()<<" e ora qui"<<endreq;
   
   m_inputL0Muons = get<L0MuonCandidates>(L0MuonCandidateLocation::Default); 
@@ -135,6 +141,8 @@ int nummu=0;
        iterTrack++ ) {
        //info()<<" track "<<endreq;
       LHCb::Track* fitTrack =  (*iterTrack)->clone();
+      fitTrack->addToAncestors (*itT);
+
       fitTrack->addToLhcbIDs(tileM2);
       fitTrack->addToLhcbIDs(tileM3);
  
@@ -144,6 +152,7 @@ int nummu=0;
       outTr->setFlag(Track::L0Candidate,false);
 
       m_outputTracks->push_back(outTr);
+      output->insert(outTr);
      // info()<<" hlt container"<<endreq;
 //      setFilterPassed(true);
       delete  (*iterTrack);
@@ -158,11 +167,14 @@ int nummu=0;
     
   }//end loop muons
 
+put(output, "Hlt/Track/MuonTrackConf");
 
   delete foundTracksTmp;
-  setFilterPassed(true);
+//  setFilterPassed(true);
 //info()<<" output size "<< m_outputTracks->size()<<" "<< 
 //m_outputMuonTracks->size()<<endreq;
+//  HltAlgorithm::endExecute();	
+//  setFilterPassed(true);
  
   return StatusCode::SUCCESS;
 }
