@@ -1,4 +1,4 @@
-// $Id: MatchTVeloTracks.h,v 1.1 2007-03-08 07:49:08 asatta Exp $
+// $Id: MatchTVeloTracks.h,v 1.2 2007-07-12 16:56:55 asatta Exp $
 #ifndef MATCHTVELOTRACKS_H 
 #define MATCHTVELOTRACKS_H 1
 
@@ -27,12 +27,12 @@ public:
   StatusCode finalize();
 
 
-  StatusCode match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack);
+  StatusCode match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack, float &x_dist);
   
 
 
   StatusCode match3dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack,
-                                 LHCb::Track& matchedTrack);
+                                 LHCb::Track& matchedTrack, float &x_dist, float &y_dist);
   float calcP(LHCb::Track& velotrack,LHCb::Track& Ttrack);
   
 protected:

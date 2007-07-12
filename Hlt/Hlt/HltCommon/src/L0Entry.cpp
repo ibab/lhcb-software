@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.6 2007-06-20 12:17:38 hernando Exp $
+// $Id: L0Entry.cpp,v 1.7 2007-07-12 16:56:55 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode L0Entry::initialize() {
   configs.push_back( Config("hadron",9) );
   configs.push_back( Config("muon",11) );
   configs.push_back( Config("dimuon",13) );
-
+  configs.push_back( Config("muonnoglob",15) );
   for (std::vector< std::string>::const_iterator it = values.begin();
        it != values.end(); ++it) {
     const std::string& name = *it;

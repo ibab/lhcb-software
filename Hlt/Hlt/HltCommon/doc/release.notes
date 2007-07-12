@@ -3,7 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
-
+! 2007-07-12 - Alessia Satta
+        - L0Entry add the new L0 muon line
+        - match velo T add variable
 ! 2007-07-06 - Jose A. Hernando
 	- HltSelectionDataToTes to copy selection to TES
     option to copy all or a list of selections

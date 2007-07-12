@@ -1,4 +1,4 @@
-// $Id: MatchTVeloTracks.cpp,v 1.2 2007-03-11 09:41:34 asatta Exp $
+// $Id: MatchTVeloTracks.cpp,v 1.3 2007-07-12 16:56:55 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode MatchTVeloTracks::finalize()
   
 }
 
-StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack)
+StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack, float &x_distance )
 {
   double trackDrDz = veloTrack.firstState().tx();
   int zone = veloTrack.specific();
@@ -125,8 +125,8 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
     //debug()<<xM1 <<" "<<dxdz<<" "<<zM1<<" "<<endreq;
     
     //  double x_muon_magnet=xM2-(xM3-xM2)/(zM3-zM2)*(zM2-z_magnet_center$
-    
-    float x_distance= x_velo_mag -x_muon_magnet;
+    x_distance= x_velo_mag -x_muon_magnet;
+
     //debug()<<"distanza in X  "<<x_distance<<" "<<x_muon_magnet<<" "
     //       <<x_velo_mag<<" "<<endreq;
     
@@ -148,7 +148,9 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
 
 StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
                                          LHCb::Track& Ttrack,
-                                         LHCb::Track& matchedTrack){
+                                         LHCb::Track& matchedTrack,
+                                         float &x_dist,
+                                         float &y_dist ){
   
   double trackDxDz = veloTrack.firstState().tx();
   double trackDyDz = veloTrack.firstState().ty();
@@ -177,8 +179,8 @@ StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
     
   yVelo_mag = trackY +  (trackDyDz) * (zT - trackZ);
   float xMuon_magnet=slopexT*(z_magnet_center-zT)+xT;
-  float x_dist=xVelo_mag - xMuon_magnet;
-  float y_dist=yVelo_mag-yT;
+  x_dist=xVelo_mag - xMuon_magnet;
+  y_dist=yVelo_mag-yT;
   if(fabs(x_dist)<m_x_cut&&fabs(y_dist)<m_y_cut){
     //fill output track parameter
     matchedTrack.copy(veloTrack);
@@ -187,9 +189,24 @@ StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
     float qoverp=calcP(veloTrack,Ttrack);
     if(qoverp!=0)matchedTrack.firstState().setQOverP(1.0/qoverp);   
     matchedTrack.setHistory( Track::TrackMatching );
-  
-    matchedTrack.addToAncestors( veloTrack );
-    matchedTrack.addToAncestors( Ttrack );
+
+    matchedTrack.addToAncestors(veloTrack);
+    debug() << "velo track " << &veloTrack << endmsg;
+    const SmartRefVector<Track> ancestors = veloTrack.ancestors();
+    for (SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
+        it4 != ancestors.end();  ++it4){
+          matchedTrack.addToAncestors(*(*it4));
+          debug() << "velo track ancestors "  << (*it4) << endmsg;
+    }
+    const SmartRefVector<Track> Tancestors = Ttrack.ancestors();
+    for (SmartRefVector<Track>::const_iterator it4 = Tancestors.begin();
+        it4 != Tancestors.end();  ++it4) {
+        matchedTrack.addToAncestors(*(*it4));
+        debug() << "T ancestors " << (*it4) << endmsg;
+
+    }
+    //matchedTrack.addToAncestors( veloTrack.ancestors() );
+    //matchedTrack.addToAncestors( Ttrack.ancestors() );
     return StatusCode::SUCCESS;    
   }  
   return StatusCode::FAILURE;
