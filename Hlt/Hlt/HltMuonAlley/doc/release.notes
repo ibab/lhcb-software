@@ -3,7 +3,9 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
-
+! 2007-07-12 - Alessia Satta
+ - add code for improved L0 dimuon confirmation
+ 
 ! 2007-06-25 - Jose A. Hernando
  - remove saveInSummary, DiMuon algos, report twice in the summary!, hack temporally
 
