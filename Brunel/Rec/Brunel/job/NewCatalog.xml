@@ -31,37 +31,9 @@
     <logical/>
   </File>
 
-  <File ID="00F45A3E-25CB-DA11-A600-0011D877C648">
+  <File ID="70737DCB-49D9-DB11-A9D4-0002B3B0DEA0">
     <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_1.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="5C221E4E-7CCB-DA11-8D32-0011D877C648">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_2.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="8473CEB6-9ECB-DA11-B122-0011D877C648">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_3.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="5C28BF0C-B310-DB11-B6C8-003048278BFE">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="6451F97B-4341-DB11-B7F0-0011095AEAAE">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001359/SIM/0001/00001359_00000005_1.sim"/>
+      <pfn filetype="ROOT_All" name="castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim"/>
     </physical>
     <logical/>
   </File>
