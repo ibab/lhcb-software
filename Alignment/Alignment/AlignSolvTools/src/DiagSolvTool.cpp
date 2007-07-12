@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.2 2007-07-03 16:21:45 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.3 2007-07-12 09:21:28 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -39,7 +39,7 @@ DECLARE_TOOL_FACTORY( DiagSolvTool );
 DiagSolvTool::DiagSolvTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTupleTool ( type, name , parent )
 {
   declareInterface<IAlignSolvTool>(this);
   declareProperty( "LowerModCut",par_modcut=0);
@@ -182,10 +182,32 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   return infjob;
 }
 
-
-
-
 void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D) 
+{
+// Creating the tuple in memory
+  Tuples::Tuple MonTuple = nTuple("SolvMonitor","Spectral Monitoring ntuple" );
+  
+// Fill the ntuple
+
+  for (int i=0;i<w.size();i++) {
+    nteig_mode = i;
+    nteig_eigval = w[i];
+    if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
+    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*m_scale)); else nteig_erreigmod = 0.0;
+
+    MonTuple->column("mode",nteig_mode);
+    MonTuple->column("eigenval",nteig_eigval);
+    MonTuple->column("eparam",nteig_eigmod);
+    MonTuple->column("erreparam",nteig_erreigmod);      
+
+    StatusCode sc = MonTuple->write();  
+    if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;
+  }
+  
+}
+
+
+/*void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D) 
 {
 
 
@@ -229,7 +251,7 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
   }
 
   
-}
+}*/
 
 
 // Routine to equilibrate the matrix for better conditioning

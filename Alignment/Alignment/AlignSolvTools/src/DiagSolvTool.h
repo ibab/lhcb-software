@@ -1,10 +1,11 @@
-// $Id: DiagSolvTool.h,v 1.2 2007-07-03 16:21:45 ahicheur Exp $
+// $Id: DiagSolvTool.h,v 1.3 2007-07-12 09:21:29 ahicheur Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleTool.h"
 #include "GaudiKernel/NTuple.h"
 
 #include "AlignmentInterfaces/IAlignSolvTool.h"            // Interface
@@ -19,7 +20,7 @@ class AlVec;
  *  @author Adlene Hicheur
  *  @date   2007-06
  */
-class DiagSolvTool : public GaudiTool, virtual public IAlignSolvTool {
+class DiagSolvTool : public GaudiTupleTool, virtual public IAlignSolvTool {
 public: 
   /// Standard constructor
   DiagSolvTool( const std::string& type, 
@@ -47,8 +48,10 @@ private:
   
   //Monitoring Ntuple variables
   NTuple::Tuple* m_tuple;
-  NTuple::Item<float> nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
-  NTuple::Item<float> nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
+  //  NTuple::Item<float> nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
+  //  NTuple::Item<float> nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
+  float nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
+  float nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
 
   int SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector);
   void MonitorDiag(AlMat& z, AlVec& w, AlVec& D);
