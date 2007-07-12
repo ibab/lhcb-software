@@ -2,9 +2,10 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v23r7 2007-07-02 ======================
-! 2007-07-02 - Marco Cattaneo
- - Use TrackEvent v4r5, RecEvent v2r5, EventAssoc v4r2
+!======================== EventSys v23r7 2007-07-11 ======================
+! 2007-07-11 - Marco Cattaneo
+ - Use TrackEvent v4r5, RecEvent v2r5, HltEvent v8r3, L0Event v16r4, 
+       EventAssoc v4r2
 
 !======================== EventSys v23r6 2007-06-08 ======================
 ! 2007-06-08 - Marco Cattaneo
