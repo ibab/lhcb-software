@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.18 2007-07-09 13:51:42 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.19 2007-07-12 08:03:01 jpalac Exp $
 
 // Include files
 
@@ -286,9 +286,9 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
   }
 
   const Gaudi::XYZLine part0(particle1.referencePoint(), 
-                             particle1.momentum().Vect().unit());
+                             particle1.momentum().Vect());
   const Gaudi::XYZLine part1(particle2.referencePoint(), 
-                             particle2.momentum().Vect().unit());
+                             particle2.momentum().Vect());
 
   dist = Gaudi::Math::distance(part0, part1);
 
