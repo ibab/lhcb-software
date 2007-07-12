@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
+// $Id: MuonPosTool.h,v 1.2 2007-07-12 16:41:29 asatta Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -57,7 +57,7 @@ private:
   std::vector<unsigned int> m_padGridY;
   std::vector<float> m_padSizeX;
   std::vector<float> m_padSizeY;
-  IDataProviderSvc* m_DDS;
+//  IDataProviderSvc* m_DDS;
   std::vector<float> m_xpos[5];
   std::vector<float> m_ypos[5];
   std::vector<float> m_zpos[5];

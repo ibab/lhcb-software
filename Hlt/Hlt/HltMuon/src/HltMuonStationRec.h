@@ -1,4 +1,4 @@
-// $Id: HltMuonStationRec.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
+// $Id: HltMuonStationRec.h,v 1.2 2007-07-12 16:41:29 asatta Exp $
 #ifndef HLTMUONSTATIONREC_H 
 #define HLTMUONSTATIONREC_H 1
 
@@ -53,7 +53,7 @@ HltMuonPoint*& ref ) {
 //	itP->y()<<" "<<x- itP->x()<<" "<<y- 
 //      itP->y()<<endreq;
       if(fabs(x- itP->x())<1000){
-        double deltaY = y- itP->y();
+        double deltaY = fabs(y- itP->y());
         if(fabs(deltaY)<fabs(deltaYmin)-10){
         //same margin in Y
           deltaXmin=x-itP->x();

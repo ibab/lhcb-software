@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.cpp,v 1.2 2007-01-11 16:03:05 cattanem Exp $
+// $Id: MuonPosTool.cpp,v 1.3 2007-07-12 16:41:29 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@ MuonPosTool::MuonPosTool( const std::string& type,
   : GaudiTool ( type, name , parent ) 
     , m_stationNumber(0)
     , m_regionNumber(0)
-    , m_DDS()
+    //, m_DDS()
     ,m_debug(false){
   declareInterface<IMuonPosTool>(this);
   return ;
@@ -52,13 +52,14 @@ StatusCode MuonPosTool::initialize(){
   /// get tile tool
 
   // Locate the detector service needed by the this tool
-  m_DDS = svc<IDataProviderSvc>("DetectorDataSvc", true);
-  if( !m_DDS ) {
-    fatal() << "    Unable to locate DetectorDataSvc" << endreq;
-    return StatusCode::FAILURE;
-  }
+  //m_DDS = svc<IDataProviderSvc>("DetectorDataSvc", true);
+  //if( !m_DDS ) {
+  //  fatal() << "    Unable to locate DetectorDataSvc" << endreq;
+  //  return StatusCode::FAILURE;
+ // }
 
-  MuonBasicGeometry basegeometry(m_DDS,msgSvc()); 
+//  MuonBasicGeometry basegeometry( svc<IDataProviderSvc>("DetectorDataSvc", true),msgSvc()); 
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc()); 
   m_stationNumber=basegeometry.getStations();
   m_regionNumber=basegeometry.getRegions();
 
@@ -144,7 +145,7 @@ StatusCode MuonPosTool::initialize(){
 
 
 StatusCode MuonPosTool::finalize() {
-  if( m_DDS )      m_DDS->release();
+  //if( m_DDS )      m_DDS->release();
   //if( m_tileTool ) toolSvc()->releaseTool( m_tileTool ); 
   return GaudiTool::finalize() ;
 }

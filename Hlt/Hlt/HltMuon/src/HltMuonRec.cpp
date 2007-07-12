@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.3 2007-06-20 16:12:13 hernando Exp $
+// $Id: HltMuonRec.cpp,v 1.4 2007-07-12 16:41:29 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -885,10 +885,10 @@ StatusCode HltMuonRec::detectClone()
                          itMuonTrackFirst->point(3).x())
          +itMuonTrackFirst->point(3).x();
        double y_extra5=itMuonTrackFirst->point(3).y()*18800.0/17600.0;
-       double distuno=pow((itMuonTrackFirst->point(4).x()*-x_extra5),2)+
-         pow((itMuonTrackFirst->point(4).y()*-y_extra5),2);
-       double distdue=pow((itMuonTrackSecond->point(4).x()*-x_extra5),2)+
-         pow((itMuonTrackSecond->point(4).y()*-y_extra5),2);
+       double distuno=pow((itMuonTrackFirst->point(4).x()-x_extra5),2)+
+         pow((itMuonTrackFirst->point(4).y()-y_extra5),2);
+       double distdue=pow((itMuonTrackSecond->point(4).x()-x_extra5),2)+
+         pow((itMuonTrackSecond->point(4).y()-y_extra5),2);
        if(distuno>distdue){
          itMuonTrackFirst->setClone();
        }else
@@ -925,10 +925,10 @@ StatusCode HltMuonRec::strongCloneKiller()
                          itMuonTrackFirst->point(3).x())
          +itMuonTrackFirst->point(3).x();
        double y_extra5=itMuonTrackFirst->point(3).y()*18800.0/17600.0;
-       double distuno=pow((itMuonTrackFirst->point(4).x()*-x_extra5),2)+
-         pow((itMuonTrackFirst->point(4).y()*-y_extra5),2);
-       double distdue=pow((itMuonTrackSecond->point(4).x()*-x_extra5),2)+
-         pow((itMuonTrackSecond->point(4).y()*-y_extra5),2);
+       double distuno=pow((itMuonTrackFirst->point(4).x()-x_extra5),2)+
+         pow((itMuonTrackFirst->point(4).y()-y_extra5),2);
+       double distdue=pow((itMuonTrackSecond->point(4).x()-x_extra5),2)+
+         pow((itMuonTrackSecond->point(4).y()-y_extra5),2);
        if(distuno>distdue){
          itMuonTrackFirst->setClone();
        }else
