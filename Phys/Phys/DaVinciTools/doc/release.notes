@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.271 2007-07-11 19:38:36 pkoppenb Exp $
+! $Id: release.notes,v 1.272 2007-07-12 08:03:24 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2007-07-12 - Juan Palacios
+ - src/GeomDispCalculator.cpp
+   . Fix discrepancy between momenta and covariance matrix used to calculate 
+     error on distance between two particles.
+
 ! 2007-07-11 - Patrick Koppenburg
- - protect rpintout in MakeResonances and SimplePlots
+ - protect printout in MakeResonances and SimplePlots
 
 ! 2007-07-09 - Patrick Koppenburg
  - Correct bug in GeometryTools that returned too large distances between lines.
