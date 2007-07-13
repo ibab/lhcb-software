@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r7>2007-07-11 LHCbSys v22r7</A></H1><PRE>
+</PRE><H1><A NAME=v22r7>2007-07-14 LHCbSys v22r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r7, LHCbKernel v7r6, RichKernel v7r7,
@@ -13,7 +13,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     RecEvent v2r5, HltEvent v8r3, L0Event v16r4, EventAssoc v4r2, DetSys v9r7,
     DetDesc v17r5, OTDet v7r4, RichDet v10r6, DetCond v11r5, CondDBUI v2r4, 
     TrackInterfaces v3r6, MCInterfaces v1r1, RichRecBase v3r6, TsaKernel v2r5,
-    LHCbAlgs v2r10, SimComponents v2r4
+    LHCbAlgs v2r10, SimComponents v2r4, GaudiConf v10r4
 
 - In GaudiObjDesc v10r1
   . Add to DTD the possibility to define the namespace to be used for the 
@@ -106,6 +106,9 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - In SimComponents v2r4
   . Change MCParticleSelector defaults to not apply Eta cut.
+
+- In GaudiConf v10r4
+  . Add Rec/Track/Muon to DstContent.opts
 
 - In EventAssoc v4r2, OTDet v7r4
   . Add more dictionaries
