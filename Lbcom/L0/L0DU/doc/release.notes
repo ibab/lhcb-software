@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.59 2007-07-11 14:53:47 cattanem Exp $
+$Id: release.notes,v 1.60 2007-07-13 14:21:57 odescham Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
+
+
+! 2007-07-13 - A. Satta & O.D.
+ - New trigger channels in L0DU-reconfigure.opts (DiMuon & MuonNoGlob)
 
 !========================== L0DU v7r5 2006-07-11 =========================
 ! 2007-07-11 - Marco Cattaneo

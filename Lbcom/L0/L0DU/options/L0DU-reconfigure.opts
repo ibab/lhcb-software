@@ -12,14 +12,11 @@
 // From PU system           :  PuPeak1(Cont), PUPeak2(Cont), PUHits(Mult)
 //                             PuPeak1(Add),  PuPeak2(Add)
 
-// Tuning for DC'04 data (Eduardo Rodrigues, 14/03/2005)
-
-
 L0DU.ResetConfiguration = true;    // Reset the hardcoded configuration & parametrisation
 L0DU.ADCconvert = true;       // Calo(Et) and Muon(Pt) converted into MeV Unit (default) - thresholds has to be set accordingly
 
 //-----------------------------------------------
-// Set-up L0DU Elementary Conditions  (18 for the default algorithm)
+// Set-up L0DU Elementary Conditions  (21 for the default algorithm)
 L0DU.Conditions           = { "Global_SPD"     , "Global_PU"     ,  "Total_Et" , "Peak2_Sum"};
 L0DU.Conditions          += { "Electron_High"  , "Electron_Low"  };
 L0DU.Conditions          += { "Photon_High"    , "Photon_Low"    };
@@ -28,8 +25,10 @@ L0DU.Conditions          += { "LocalPi0_High"  , "LocalPi0_Low"  };
 L0DU.Conditions          += { "GlobalPi0_High" , "GlobalPi0_Low" };
 L0DU.Conditions          += { "Muon_High"      , "Muon_Low"      };
 L0DU.Conditions          += { "DiMuon_High"    , "DiMuon_Low"    };
+L0DU.Conditions          += { "MuonNoGlob_High"    , "MuonNoGlob_Low"    };
+L0DU.Conditions          += { "Muon2"      };
 
-// -> 4 global conditions
+// -> 4+1 global conditions
 
 L0DU.Global_SPD.Data      = "Spd(Mult)"   ;
 L0DU.Global_SPD.Comparator= "<"           ;     
@@ -47,7 +46,11 @@ L0DU.Peak2_Sum.Data        =  "PUPeak2(Cont)" ;
 L0DU.Peak2_Sum.Comparator  =  "<"  ;
 L0DU.Peak2_Sum.Threshold   =  3.00 ;
 
-// -> 7 "High threshold" conditions
+L0DU.Muon2.Data        =  "Muon2(Pt)";
+L0DU.Muon2.Comparator  =  ">"  ;
+L0DU.Muon2.Threshold   =  0.10 * GeV;
+
+// -> 8 "High threshold" conditions
 
 L0DU.Electron_High.Data        =  "Electron(Et)";
 L0DU.Electron_High.Comparator  =  ">"  ;
@@ -78,7 +81,12 @@ L0DU.DiMuon_High.Comparator  =  ">"  ;
 L0DU.DiMuon_High.Threshold   =  1.50 * GeV;
 
 
-// -> 7 "Low threshold" conditions
+L0DU.MuonNoGlob_High.Data        =  "Muon1(Pt)";
+L0DU.MuonNoGlob_High.Comparator  =  ">"  ;
+L0DU.MuonNoGlob_High.Threshold   =   1.50 * GeV ;
+
+
+// -> 8 "Low threshold" conditions
 
 L0DU.Electron_Low.Data        =  "Electron(Et)";
 L0DU.Electron_Low.Comparator  =  ">"  ;
@@ -108,9 +116,14 @@ L0DU.DiMuon_Low.Data        =  "Muon1(Pt)+Muon2(Pt)";
 L0DU.DiMuon_Low.Comparator  =  ">"  ;
 L0DU.DiMuon_Low.Threshold   =  1.50 * GeV;
 
+L0DU.MuonNoGlob_Low.Data        =  "Muon1(Pt)";
+L0DU.MuonNoGlob_Low.Comparator  =  ">"  ;
+L0DU.MuonNoGlob_Low.Threshold   =   1.50 * GeV ;
+
+
 
 //-----------------------------------------------
-// Set-up L0DU Channels (14 for the default algorithm  = 7 "low-threshold" + 7 "high-threshold")
+// Set-up L0DU Channels (16 for the default algorithm  = 8 "low-threshold" + 8 "high-threshold")
 
 L0DU.Channels   = { "L0electron_High"   , "L0electron_Low" };
 L0DU.Channels  += { "L0photon_High"     , "L0photon_Low"   };
@@ -119,6 +132,7 @@ L0DU.Channels  += { "L0globalPi0_High"  , "L0globalPi0_Low"};
 L0DU.Channels  += { "L0hadron_High"     , "L0hadron_Low"   };
 L0DU.Channels  += { "L0muon_High"       , "L0muon_Low"     };
 L0DU.Channels  += { "L0dimuon_High"     , "L0dimuon_Low"   };
+L0DU.Channels  += { "L0muonnoglob_High"     , "L0muonnoglob_Low"   };
 
 
 L0DU.L0electron_High.Conditions  = { "Electron_High"  , "Global_SPD","Global_PU","Total_Et","Peak2_Sum" };
@@ -133,8 +147,10 @@ L0DU.L0globalPi0_High.Conditions = { "GlobalPi0_High" , "Global_SPD","Global_PU"
 L0DU.L0globalPi0_Low.Conditions  = { "GlobalPi0_Low"  , "Global_SPD","Global_PU","Total_Et","Peak2_Sum" };
 L0DU.L0muon_High.Conditions = { "Muon_High" , "Global_SPD","Global_PU","Total_Et","Peak2_Sum" };
 L0DU.L0muon_Low.Conditions  = { "Muon_Low" , "Global_SPD","Global_PU","Total_Et","Peak2_Sum" };
-L0DU.L0dimuon_High.Conditions = { "DiMuon_High" , "Total_Et" };
-L0DU.L0dimuon_Low.Conditions  = { "DiMuon_Low" , "Total_Et" };
+L0DU.L0dimuon_High.Conditions = { "DiMuon_High" ,  "Muon2" , "Total_Et" };
+L0DU.L0dimuon_Low.Conditions  = { "DiMuon_Low" , "Muon2", "Total_Et" };
+L0DU.L0muonnoglob_High.Conditions = { "MuonNoGlob_High" , "Total_Et" };
+L0DU.L0muonnoglob_Low.Conditions  = { "MuonNoGlob_Low" , "Total_Et" };
 
 
 L0DU.L0electron_Low.AcceptRate   =  0   ;   // Fraction of accepted channel trigger (%)
@@ -151,5 +167,7 @@ L0DU.L0muon_Low.AcceptRate       =  0   ;
 L0DU.L0muon_High.AcceptRate      = 100   ;
 L0DU.L0dimuon_Low.AcceptRate     =  0   ;
 L0DU.L0dimuon_High.AcceptRate    = 100   ;
+L0DU.L0muonnoglob_Low.AcceptRate       =  0   ;
+L0DU.L0muonnoglob_High.AcceptRate      = 100   ;
 
 
