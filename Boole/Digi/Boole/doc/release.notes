@@ -3,9 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r3>2007-07-05 Boole v14r3</A></H1><PRE>
+</PRE><H1><A NAME=v14r3>2007-07-13 Boole v14r3</A></H1><PRE>
  - In BooleMoni.opts, adapt STChecker options to new MCParticleSelector defaults
  - In v200601.opts, use new input files, since old ones have been deleted
+ - Remove FromDigi.opts, can only work for DC04 data
 
 </PRE><H1><A NAME=v14r2>2007-06-05 Boole v14r2</A></H1><PRE>
  - Use ParamFiles v6r1
