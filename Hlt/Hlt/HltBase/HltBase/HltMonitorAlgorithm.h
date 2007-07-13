@@ -1,10 +1,9 @@
-// $Id: HltMonitorAlgorithm.h,v 1.5 2007-06-20 12:08:40 hernando Exp $
+// $Id: HltMonitorAlgorithm.h,v 1.6 2007-07-13 09:45:51 hernando Exp $
 #ifndef HLTBASE_HLTMONITORALGORITHM_H 
 #define HLTBASE_HLTMONITORALGORITHM_H 1
 
 // Include files
 #include "Event/HltSummary.h"
-#include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
 
 #include "HltBase/HltBaseAlg.h"
@@ -144,18 +143,6 @@ protected:
    *  by defaul: the selection summary indicated in the option "SelectionName"
    **/
   const LHCb::HltSelectionSummary& selectionSummary(int id);
-  
-  /** retrieve a vector of objects saved in a summary selection info
-   *  (for the IDs of teh selecion summaries see Event/HltEnums.h)
-   **/
-  template <class T>
-  void retrieveFromSummary(int idsel, std::vector<T*>& tobjs) {
-    HltSummaryFunctor::retrieve(summary(),idsel,tobjs);
-  }
-  
-  /** returns true if this tracks is saved in a selection
-   **/
-  bool isInSelection(const LHCb::Track& track, int id);
   
 protected:
 

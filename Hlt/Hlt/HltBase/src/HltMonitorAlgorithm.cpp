@@ -1,4 +1,4 @@
-// $Id: HltMonitorAlgorithm.cpp,v 1.3 2007-02-08 17:32:39 hernando Exp $
+// $Id: HltMonitorAlgorithm.cpp,v 1.4 2007-07-13 09:45:53 hernando Exp $
 // Include files
 
 // local
@@ -131,15 +131,3 @@ const HltSelectionSummary& HltMonitorAlgorithm::selectionSummary(int id) {
   return *m_selectionSummary;
 }
 
-bool HltMonitorAlgorithm::isInSelection(const Track& track, int id) {
-  bool ok = false;
-  if (!hasSelection(id)) return ok;
-  std::vector<Track*> tracks;
-  retrieveFromSummary(id,tracks);
-  for (std::vector<Track*>::const_iterator it = tracks.begin(); 
-       it != tracks.end(); it++) {
-    const Track& otrack = *(*it);
-    if (HltUtils::matchIDs(otrack,track)) ok = true;
-  }
-  return ok;
-}

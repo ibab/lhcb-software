@@ -1,10 +1,10 @@
-// $Id: HltAlgorithm.h,v 1.12 2007-07-02 21:03:47 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.13 2007-07-13 09:45:51 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
 #include "Event/HltSummary.h"
-#include "Event/HltSummaryFunctor.h"
+#include "Event/HltEnums.h"
 #include "Event/HltNames.h"
 
 #include "HltBase/HltBaseAlg.h"

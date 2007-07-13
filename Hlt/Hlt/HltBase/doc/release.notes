@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2007-07-12 Jose A. Satta
+! 2007-07-12 Jose A. 
+  - removing obsolete HltSummaryFunctor
+
+! 2007-07-12 A. Satta
   - add a variable in match velo T ( for Sandra Amato)
 
 ! 2007-07-06 Jose A. Hernando
