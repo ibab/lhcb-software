@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.4 2007-06-20 16:13:14 hernando Exp $
+// $Id: HltRecChecker.cpp,v 1.5 2007-07-13 08:54:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode HltRecChecker::initialize() {
 
 StatusCode HltRecChecker::execute() {
 
-  bool ok = true;
+  //  bool ok = true;
   
   checkQuark();
   
@@ -77,6 +77,7 @@ void HltRecChecker::checkTracks() {
   for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
        it != m_inputTracks->end(); ++it) {
     const Track& track = *(*it);
+    printTrack(&track).ignore();
     MCParticle* par = link.first( track.key() );
     if (!par) continue;
     const MCParticle& mother = MCHlt::ancestor( (*par) );
@@ -109,9 +110,40 @@ void HltRecChecker::checkVertices() {
   
 }
 
+//=========================================================================
+//  Print a track
+//=========================================================================
+StatusCode HltRecChecker::printTrack(const LHCb::Track* T) {
+  if (!msgLevel(MSG::DEBUG)) return StatusCode::SUCCESS ;
+  if ( NULL==T ){
+    Warning("NULL Track");
+    return StatusCode::SUCCESS;
+  }
+  
+  if ( T->firstState().qOverP()!=0.){
+    Gaudi::SymMatrix6x6 cov6D ; 
+    T->posMomCovariance(cov6D);
+    debug() << "    Track " << T->key() << " " << T->type() << " " 
+            << T->position() << " " << T->momentum() << "\n"
+            << cov6D << endmsg ;
+  } else { // velo tracks
+    Gaudi::XYZPoint p ;
+    Gaudi::SymMatrix3x3 cov3D ; 
+    T->position(p,cov3D);
+    debug() << "    Track " << T->key() << " " << T->type() << " " 
+            << p << "\n" << cov3D << endmsg ; 
+  }
+  
+  if (!T->ancestors().empty()) debug() << "Looking at " << T->ancestors().size() << " ancestors" << endmsg ;
+  for ( SmartRefVector< LHCb::Track >::const_iterator t = 
+          T->ancestors().begin(); t!= T->ancestors().end(); ++t ) {
+    const LHCb::Track* at = *t ;
+    StatusCode sc = printTrack(at);
+    if (!sc) return sc;
+  }
 
-
-
+  return StatusCode::SUCCESS;
+}
 
 StatusCode HltRecChecker::finalize() {
   return HltAlgorithm::finalize();

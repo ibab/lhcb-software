@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2007-07-13 - Patrick Koppenburg
+ - Added printTrack method in HltRecChecker. Only runs in debug() mode.
+
 ! 2007-06-20 - Jose A. Hernando
  - minor changes, remove begin,end Execute
 

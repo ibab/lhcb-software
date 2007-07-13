@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.h,v 1.3 2006-10-24 09:50:49 hernando Exp $
+// $Id: HltRecChecker.h,v 1.4 2007-07-13 08:54:09 pkoppenb Exp $
 #ifndef HLTRECCHECKER_H 
 #define HLTRECCHECKER_H 1
 
@@ -32,6 +32,9 @@ protected:
   void checkTracks();
   
   void checkVertices();  
+
+  StatusCode printTrack(const LHCb::Track*);
+  
 
 protected:
 
