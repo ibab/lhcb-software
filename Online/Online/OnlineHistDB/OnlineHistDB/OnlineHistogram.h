@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.6 2007-07-13 15:55:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.7 2007-07-13 17:19:26 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -185,12 +185,16 @@ class OnlineHistogramStorage
   OnlineHistogram* getHistogram(std::string Identifier,
 				std::string Page="_NONE_",
 				int Instance = 1);
+  OnlineHistogram* getNewHistogram(std::string Identifier,
+				   std::string Page="_NONE_",
+				   int Instance = 1);
   /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
   virtual bool removeHistogram(OnlineHistogram* h,
 		       bool RemoveWholeSet = false);		 
 private: 
   OnlineHistDBEnv* m_Histenv;
   std::vector<OnlineHistogram*> m_myHist;
+  bool m_avoid_hdup;
 };
 
 #endif // ONLINEHISTOGRAM_H

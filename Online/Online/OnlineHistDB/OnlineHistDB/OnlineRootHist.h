@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.4 2007-07-13 15:55:25 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.5 2007-07-13 17:19:27 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistogram.h"
@@ -46,6 +46,9 @@ class OnlineRootHistStorage
   OnlineRootHist* getRootHist(std::string Identifier,
 			       std::string Page="_NONE_",
 			       int Instance = 1);
+  OnlineRootHist* getNewRootHist(std::string Identifier,
+				 std::string Page="_NONE_",
+				 int Instance = 1);
   /// remove an histogram (TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE)
   bool removeRootHistogram(OnlineRootHist* h,
 			   bool RemoveWholeSet = false);
@@ -54,6 +57,7 @@ class OnlineRootHistStorage
  private:
   OnlineHistDBEnv* m_Histenv;
   std::vector<OnlineRootHist*> m_myHist;
+  bool m_avoid_dup;
 };
 
 #endif // ONLINEROOTHIST_H

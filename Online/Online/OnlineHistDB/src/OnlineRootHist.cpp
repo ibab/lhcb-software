@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.4 2007-07-13 15:55:26 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.5 2007-07-13 17:19:28 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
@@ -116,7 +116,7 @@ TH1* OnlineRootHist::myDrawCopy(Option_t* option) {
 
 
 OnlineRootHistStorage::OnlineRootHistStorage(OnlineHistDBEnv* Env) :
-  m_Histenv(Env) {}
+  m_Histenv(Env), m_avoid_dup(true) {}
 
 OnlineRootHistStorage::~OnlineRootHistStorage() 
 {
@@ -139,16 +139,19 @@ OnlineRootHist* OnlineRootHistStorage::getRootHist(std::string Identifier,
 					    std::string Page,
 					    int Instance) {
   OnlineRootHist* h=0;
-  // see if the histogram object exists already
-  std::vector<OnlineRootHist*>::iterator ih;
-  for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-    if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
-	(*ih)->instance() == Instance ) {
-      h = *ih;
-      break;
+  if (m_avoid_dup) {
+    // see if the histogram object exists already
+    std::vector<OnlineRootHist*>::iterator ih;
+    for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+      if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
+	  (*ih)->instance() == Instance ) {
+	h = *ih;
+	break;
+      }
     }
   }
   if (!h) {
+    if (Instance > 999) Instance=1;
     h= new OnlineRootHist(*m_Histenv,Identifier,Page,Instance);
     if (h->isAbort()) {
       cout<<"Error from OnlineHistDB::getRootHist : cannot create histogram object " 
@@ -161,6 +164,18 @@ OnlineRootHist* OnlineRootHistStorage::getRootHist(std::string Identifier,
   }
   return h;
 }
+
+OnlineRootHist* OnlineRootHistStorage::getNewRootHist(std::string Identifier, 
+					    std::string Page,
+					    int Instance) {
+  OnlineRootHist* h=0;
+  m_avoid_dup = false;
+  h = getRootHist(Identifier, Page, Instance);
+  m_avoid_dup = true;
+  return h;
+}
+
+
 
 bool OnlineRootHistStorage::removeRootHistogram(OnlineRootHist* h,
 				   bool RemoveWholeSet) {

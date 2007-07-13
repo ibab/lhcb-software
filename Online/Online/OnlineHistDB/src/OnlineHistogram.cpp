@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.8 2007-07-13 15:55:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.9 2007-07-13 17:19:28 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1190,7 +1190,7 @@ bool OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
 
 
 OnlineHistogramStorage::OnlineHistogramStorage(OnlineHistDBEnv* Env) :
-  m_Histenv(Env) {}
+  m_Histenv(Env), m_avoid_hdup(true)  {}
 
 OnlineHistogramStorage::~OnlineHistogramStorage() 
 {
@@ -1211,13 +1211,15 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
 					    std::string Page,
 					    int Instance) {
   OnlineHistogram* h=0;
-  // see if the histogram object exists already
-  std::vector<OnlineHistogram*>::iterator ih;
-  for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-    if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
-	(*ih)->instance() == Instance ) {
-      h = *ih;
-      break;
+  if (m_avoid_hdup) {
+    // see if the histogram object exists already
+    std::vector<OnlineHistogram*>::iterator ih;
+    for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+      if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
+	  (*ih)->instance() == Instance ) {
+	h = *ih;
+	break;
+      }
     }
   }
   if (!h) {
@@ -1231,6 +1233,16 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
     else 
       m_myHist.push_back(h);
   }
+  return h;
+}
+
+OnlineHistogram* OnlineHistogramStorage::getNewHistogram(std::string Identifier, 
+							 std::string Page,
+							 int Instance) {
+  OnlineHistogram* h=0;
+  m_avoid_hdup = false;
+  h = getHistogram(Identifier, Page, Instance);
+  m_avoid_hdup = true;
   return h;
 }
 
