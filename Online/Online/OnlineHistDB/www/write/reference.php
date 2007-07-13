@@ -16,12 +16,12 @@ if ($_POST["DoUpload"]) {
   
   // get task's histogram list
   $conn=HistDBconnect(1);
-  $query="select HID from VIEWHISTOGRAM where TASK='${task}'";
+  $query="select NAME from VIEWHISTOGRAM where TASK='${task}'";
   $stid = OCIParse($conn,$query);
   OCIExecute($stid);
   $hlist='';
   while (OCIFetchInto($stid, $his, OCI_ASSOC )) 
-    $hlist .= " ".$his['HID'];  
+    $hlist .= " '".$his['NAME']."'";  
   ocifreestatement($stid);
 
   // update link to reference
@@ -39,7 +39,8 @@ if ($_POST["DoUpload"]) {
 
     //  check uploaded file
     echo "Checking Reference File...<br>\n";
-    $command="./refcheck $task $hlist";
+    //$command="LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/root/5.14.00d/slc4_ia32_gcc34/root/lib ./refcheck $task $file $hlist > out 2>&1";
+    $command="./refcheck2  $task $file $hlist";
     system($command, $retval);
     if($retval != 0) 
       echo "<font color=red> Something wrong while executing the check command</font><br>";

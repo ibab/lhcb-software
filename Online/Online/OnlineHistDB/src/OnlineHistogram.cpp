@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.7 2007-07-10 13:41:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.8 2007-07-13 15:55:25 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -14,11 +14,12 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
 				 int Instance) :
   OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance),
-  m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
+  m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
+    verifyPage();
     load();
   }
 
-void OnlineHistogram::update() {
+void OnlineHistogram::checkServiceName() {
   // update the object from DB if the NIM service name has changed 
   ResultSet *rset;
   Statement *query = m_conn->createStatement("SELECT SN FROM DIMSERVICENAME WHERE PUBHISTO=:1");
@@ -36,11 +37,23 @@ void OnlineHistogram::update() {
   m_conn->terminateStatement(query);
 }
 
-void OnlineHistogram::setPage(std::string Page,
+bool OnlineHistogram::setPage(std::string Page,
 			      int Instance) {
+  bool out=true;
   if ( Page != m_page && Instance != m_instance) {
     m_page =Page;
     m_instance =Instance;
+    out=verifyPage();
+    if (out)
+      load();
+  }
+  return out;
+}
+
+void OnlineHistogram::unsetPage() {
+  if (m_page != "_NONE_") {
+    m_page = "_NONE_";
+    m_instance = 1;
     load();
   }
 }
@@ -63,7 +76,28 @@ bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
   return out;
 }
 
-
+bool OnlineHistogram::verifyPage() {
+  // check that page exists and histogram is on it
+  bool out=true;
+  if (m_page != "_NONE_") {
+    ResultSet *rset;
+    Statement *query = 
+      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2 AND INSTANCE=:3");
+    query->setString(1,m_hid);
+    query->setString(2,m_page);
+    query->setInt(3,m_instance);
+    try{
+      rset =  query->executeQuery();
+      if(!rset->next ()) 
+	out=false;
+    } 
+    catch(SQLException ex) {
+      dumpError(ex,"OnlineHistogram::verifyPage");
+      out=false;
+    }
+  }
+  return out;
+}
 
 void OnlineHistogram::load() {
   std::string com="begin :out := OnlineHistDB.GetHistogramData(:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18,:19,:20,:21,:22, :23); end;";
@@ -149,19 +183,20 @@ void OnlineHistogram::load() {
 }
 
 void OnlineHistogram::createDisplayOptions() {
-  m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING));
-  m_do.push_back(new OnlineDisplayOption("LABEL_Y",OnlineDisplayOption::STRING));
-  m_do.push_back(new OnlineDisplayOption("LABEL_Z",OnlineDisplayOption::STRING));
-  m_do.push_back(new OnlineDisplayOption("YMIN",OnlineDisplayOption::FLOAT));
-  m_do.push_back(new OnlineDisplayOption("YMAX",OnlineDisplayOption::FLOAT));
-  m_do.push_back(new OnlineDisplayOption("STATS",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("FILLSTYLE",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("FILLCOLOR",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("LINESTYLE",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("LINECOLOR",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("LINEWIDTH",OnlineDisplayOption::INT));
-  m_do.push_back(new OnlineDisplayOption("DRAWOPTS",OnlineDisplayOption::STRING));
-  
+  if(!m_DOinit) {
+    m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING));
+    m_do.push_back(new OnlineDisplayOption("LABEL_Y",OnlineDisplayOption::STRING));
+    m_do.push_back(new OnlineDisplayOption("LABEL_Z",OnlineDisplayOption::STRING));
+    m_do.push_back(new OnlineDisplayOption("YMIN",OnlineDisplayOption::FLOAT));
+    m_do.push_back(new OnlineDisplayOption("YMAX",OnlineDisplayOption::FLOAT));
+    m_do.push_back(new OnlineDisplayOption("STATS",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("FILLSTYLE",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("FILLCOLOR",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("LINESTYLE",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("LINECOLOR",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("LINEWIDTH",OnlineDisplayOption::INT));
+    m_do.push_back(new OnlineDisplayOption("DRAWOPTS",OnlineDisplayOption::STRING));
+  }
   if(m_shdisp) {
     m_domode=HISTPAGE;
     getDisplayOptions(m_shdisp);
@@ -174,6 +209,8 @@ void OnlineHistogram::createDisplayOptions() {
     m_domode=SET;
     getDisplayOptions(m_hsdisp);
   }
+  if(!m_DOinit) m_InitDOmode=m_domode;
+  m_DOinit=true;
 }
 
 
@@ -297,26 +334,120 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
   return out;
 }
 
-bool OnlineHistogram::initDisplayOptionsFromSet() {
+
+bool OnlineHistogram::checkHSDisplayFromDB() {
+  bool out=true;
+  ResultSet *rset;
+  Statement *query = 
+    m_conn->createStatement("SELECT HSDISPLAY FROM HISTOGRAMSET WHERE HSID=:1 AND HSDISPLAY IS NOT NULL");
+  query->setInt(1,m_hsid);
+  try{
+    rset =  query->executeQuery();
+    if(!rset->next ()) 
+      out=false;
+  } 
+  catch(SQLException ex) {
+    dumpError(ex,"OnlineHistogram::checkHSDisplayFromDB");
+    out=false;
+  }
+  return out;
+}
+bool OnlineHistogram::checkHDisplayFromDB() {
+  bool out=true;
+  ResultSet *rset;
+  Statement *query = 
+    m_conn->createStatement("SELECT DISPLAY FROM HISTOGRAM WHERE HID=:1 AND DISPLAY IS NOT NULL");
+  query->setString(1,m_hid);
+  try{
+    rset =  query->executeQuery();
+    if(!rset->next ()) 
+      out=false;
+  } 
+  catch(SQLException ex) {
+    dumpError(ex,"OnlineHistogram::checkHSDisplayFromDB");
+    out=false;
+  }
+  return out;
+}
+int OnlineHistogram::nPageInstances() {
+  int out=0;
+  ResultSet *rset;
+  Statement *query = 
+    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1");
+  query->setString(1,m_hid);
+  try{
+    rset =  query->executeQuery();
+    while(rset->next ()) 
+      out++;
+  } 
+  catch(SQLException ex) {
+    dumpError(ex,"OnlineHistogram::nPageInstances");
+    out=0;
+  }
+  return out;
+}
+
+
+bool OnlineHistogram::useSetForHistDisplay() {
+  // decide if associate display options to set or single histogram
+  bool out=true;
+  if(m_nhs > 1) { // use set for single histogram sets
+    if (m_InitDOmode >= SET) // use hist if some display options were already defined.. 
+      out = false;
+    else {
+      // .. or have been defined by another histogram in set in the meantime
+      if(!m_hsdisp && checkHSDisplayFromDB())
+	out = false;
+    }
+  }
+  return out;
+}
+bool OnlineHistogram::useHistForPageDisplay() {
+  // decide if associate display options to hist or histInPage
+  bool out=true;
+  if("_NONE_" != m_page) { // use hist if no page is specified
+    if( m_nhs == 1 ) { // check for set options
+      if (m_InitDOmode >= SET) // use page if some display options were already defined... 
+	out = false;
+      else {
+	// ... or have been defined by another histogram instance in the meantime
+	if(!m_hsdisp && checkHSDisplayFromDB())
+	  out = false;
+      }
+    }
+    else {
+      if (m_InitDOmode >= HIST) // use page if some hist display options were already defined... 
+	out = false;
+      else {
+	// ... or have been defined by another histogram instance in the meantime
+	if(!m_hdisp && checkHDisplayFromDB())
+	  out = false;
+      }
+    }
+  }
+  return out;
+}
+
+bool OnlineHistogram::initHistDisplayOptionsFromSet() {
   bool out=true;
   if (m_hsdisp == 0) load();
   if (m_hsdisp == 0) {
-    cout << "Warning from OnlineHistogram::initDisplayOptionsFromSet :" <<
+    cout << "Warning from OnlineHistogram::initHistDisplayOptionsFromSet :" <<
       " no Set display options available"<<endl;
     out = false;
   }
   else {
-    //if (m_hdisp != 0) {
-    //  cout << "OnlineHistogram::initDisplayOptionsFromSet aborted:" <<
-    //	" special display options already defined"<<endl;
-    //  out = false;
-    //}
-    //else {
+    if (m_hdisp != 0) 
+      errorMessage("Warning from OnlineHistogram::initHistDisplayOptionsFromSet: HistDisplayOptions were already defined and will be reinitialized");
     if (m_domode != SET) getDisplayOptions(m_hsdisp);
-    m_domode = HIST;
     std::string function="DeclareHistDisplayOptions('"+m_hid+"'";
-    m_hdisp = setDisplayOptions(function);
-    //}
+    int newhsdisp= setDisplayOptions(function);
+    if(newhsdisp) {
+      m_hdisp = newhsdisp;
+      if (m_domode < HIST) m_domode = HIST;     
+    }
+    else 
+      out= false;
   }
   return out;
 }
@@ -339,12 +470,8 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
 	  out = false;
 	}
 	else {
-//        if (m_shdisp != 0) {
-// 	    cout << "OnlineHistogram::initHistoPageDisplayOptionsFromSet aborted:" <<
-// 	      " special HistoPage display options already defined"<<endl;
-// 	    out = false;
-// 	  }
-// 	  else {
+	  if (m_shdisp != 0) 
+	    errorMessage("Warning from OnlineHistogram::initHistoPageDisplayOptionsFromSet: HistoPageDisplayOptions were already defined and will be reinitialized");
 	  if (m_domode != SET) {
 	    getDisplayOptions(m_hsdisp);
 	    m_domode = SET;
@@ -353,12 +480,15 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
 	  function << "DeclareHistoPageDisplayOptions(theHID => '" <<
 	    m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
 	    Instance;
-	  if ((m_shdisp=setDisplayOptions(function.str())) > 0) {
+	  int newshdisp=  setDisplayOptions(function.str());
+	  if (newshdisp > 0) {
+	    m_shdisp = newshdisp;
 	    m_domode = HISTPAGE;
 	    m_page = PageName;
 	    m_instance = Instance;
 	  }
-//	  }
+	  else 
+	    out= false;
 	}
   }
   return out;
@@ -382,12 +512,8 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
       out = false;
     }
     else {
-// 	  if (m_shdisp != 0) {
-// 	    cout << "OnlineHistogram::initHistoPageDisplayOptionsFromHist aborted:" <<
-// 	      " special HistoPage display options already defined"<<endl;
-// 	    out = false;
-// 	  }
-// 	  else {
+      if (m_shdisp != 0) 
+	errorMessage("Warning from OnlineHistogram::initHistoPageDisplayOptionsFromHist: HistoPageDisplayOptions were already defined and will be reinitialized");
       if (m_domode != HIST) {
 	getDisplayOptions(m_hdisp);
 	m_domode = HIST;
@@ -396,13 +522,14 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
       function << "DeclareHistoPageDisplayOptions(theHID => '" <<
 	m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
 	Instance;
-      if ((m_shdisp=setDisplayOptions(function.str())) > 0) {
+      int newshdisp=  setDisplayOptions(function.str());
+      if (newshdisp > 0) {
+	m_shdisp = newshdisp;
 	m_domode = HISTPAGE;
 	m_page = PageName;
 	m_instance = Instance;
       }
     }
-// 	}
   }
   return out;
 }
@@ -445,6 +572,7 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
   bool out = true;
   int thedoid=0;
   stringstream statement;
+  // update HistoSet DB options
   statement << "begin :out := OnlineHistDB.DeclareHistoSetDisplayOptions(:x1,K" << 
     ParameterName << " => :x2);end;";
   if(debug() > 3) cout << "Sending statement: "<<statement.str() << endl; 
@@ -459,6 +587,7 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
     if (out) {
       fstmt->execute();
       if ((thedoid = fstmt->getInt(1)) >0) m_hsdisp = thedoid;
+      else out = false;
     }
   }catch(SQLException ex)
     {
@@ -467,21 +596,29 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
       out=false;
     }
   m_conn->terminateStatement (fstmt); 
-  if( out && m_domode <= SET && thedoid > 0) {
-    m_domode = SET;
-    getDisplayOptions(thedoid);
+  if( out ) {
+    if(SET == m_domode) // update current option value
+      getDO(ParameterName)->set(value);
+    if(m_domode < SET) { // reload all current options from HistoSet
+      m_domode = SET;
+      getDisplayOptions(m_hsdisp);
+    }
   }
   return out;
 }
 
-bool OnlineHistogram::setDisplayOption(std::string ParameterName, 
+bool OnlineHistogram::setHistDisplayOption(std::string ParameterName, 
 				       void* value) {
   bool out = true;
   int thedoid=0;
   stringstream statement;
-  if(m_nhs ==1) // take the set and never mind
+  if( useSetForHistDisplay() ) // use the set if we don't need to be more specific
     out= setHistoSetDisplayOption(ParameterName, value);
   else {
+    if(m_hdisp == 0 && m_hsdisp != 0)
+      initHistDisplayOptionsFromSet();
+
+    // update Hist DB options
     statement << "begin :out := OnlineHistDB.DeclareHistDisplayOptions(:x1,K" << 
       ParameterName << " => :x2);end;";
     Statement *fstmt=m_conn->createStatement (statement.str());
@@ -495,23 +632,25 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
       if (out) {
 	fstmt->execute();
 	if ((thedoid = fstmt->getInt(1)) >0) m_hdisp = thedoid;
+	else out = false;
       }
     }catch(SQLException ex)
       {
-	dumpError(ex,"OnlineHistogram::setDisplayOption for parameter"+ParameterName);
+	dumpError(ex,"OnlineHistogram::setHistDisplayOption for parameter"+ParameterName);
 	out = false;
       }
     m_conn->terminateStatement (fstmt); 
-    if(out && m_domode <= HIST && thedoid > 0) { // update current display options
-      m_domode = HIST;
-      getDisplayOptions(thedoid);
+    if(out) { 
+      if (HIST == m_domode) // update current option value
+	getDO(ParameterName)->set(value);
+      if (m_domode < HIST) {// reload all current options from Hist
+	m_domode = HIST;
+	getDisplayOptions(m_hdisp);
+      }
     }
   }
   return out;
 }
-
-
-
 
 
 bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName, 
@@ -522,12 +661,19 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
   if (Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (PageName == "_NONE_") {
-    cout << "OnlineHistogram::setHistoPageDisplayOption aborted:" <<
-      " no page specified"<<endl;
+    errorMessage("OnlineHistogram::setHistoPageDisplayOption aborted: no page specified");
     out = false;
   }				 
   else {
     int thedoid=0;
+    
+    if (m_shdisp == 0) {
+      if(m_hdisp != 0)
+	initHistoPageDisplayOptionsFromHist(PageName,Instance);
+      else if (m_hsdisp != 0)
+	initHistoPageDisplayOptionsFromSet(PageName,Instance);
+    }
+
     stringstream statement;
     statement << "begin :out := OnlineHistDB.DeclareHistoPageDisplayOptions(:x1,:x2,:x3,K" 
 	      << ParameterName << " => :x4);end;";
@@ -544,6 +690,7 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
       if (out) {
 	fstmt->execute();
 	if ((thedoid = fstmt->getInt(1)) >0) m_shdisp = thedoid;
+	else out = false;
       }
     }catch(SQLException ex)
       {
@@ -551,15 +698,31 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
 	out = false;
       }
     m_conn->terminateStatement (fstmt); 
-    if(out && m_domode <= HISTPAGE  && thedoid > 0 ) { // update current display options
-      m_domode = HISTPAGE;
-      m_page = PageName;
-      m_instance = Instance;
-      getDisplayOptions(thedoid);
+    if (out) {
+      if (HISTPAGE == m_domode && PageName == m_page && Instance == m_instance) // update current option value
+	getDO(ParameterName)->set(value);
+      else { // reload all current options from HistoPage
+	m_domode = HISTPAGE;
+	m_page = PageName;
+	m_instance = Instance;
+	getDisplayOptions(m_shdisp);
+      }
     }
   }
   return out;
 }
+
+
+bool OnlineHistogram::setDisplayOption(std::string ParameterName, 
+					       void* value) {
+  bool out;
+  if (useHistForPageDisplay()) // use the hist  if we don't need to be page-specific
+    out=setHistDisplayOption(ParameterName,value);
+  else
+    out=setHistoPageDisplayOption(ParameterName,value);
+  return out;
+}
+
 
 
 bool OnlineHistogram::unsetHistoSetDisplayOption(std::string ParameterName) {
@@ -596,9 +759,9 @@ bool OnlineHistogram::unsetHistoSetDisplayOption(std::string ParameterName) {
 }
 
 
-bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
+bool OnlineHistogram::unsetHistDisplayOption(std::string ParameterName) {
   bool out = true;
-  if(m_nhs ==1) // take the set and never mind
+  if(0 == m_hdisp && m_hsdisp) // take the set 
     out= unsetHistoSetDisplayOption(ParameterName);
   else {
     OnlineDisplayOption* mydo= getDO(ParameterName);
@@ -668,9 +831,17 @@ bool OnlineHistogram::unsetHistoPageDisplayOption(std::string ParameterName)
   return out;
 }
 
+bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
+  bool out = true;
+  if (HISTPAGE == m_domode)
+    out = unsetHistoPageDisplayOption(ParameterName);
+  else
+    out = unsetHistDisplayOption(ParameterName);
+  return out;
+}
 
 bool OnlineHistogram::getDisplayOption(std::string ParameterName,
-				       void* option)
+				       void* option) 
 {
   bool out=true;
   OnlineDisplayOption* mydo= getDO(ParameterName);
@@ -704,6 +875,20 @@ bool OnlineHistogram::getDisplayOption(std::string ParameterName,
 
 OnlineHistogram::OnlineDisplayOption::~OnlineDisplayOption() {
   unset();
+}
+
+void OnlineHistogram::OnlineDisplayOption::set(void *value){
+  switch (m_type) {
+  case STRING :
+    set(*(static_cast<std::string*>(value)));
+    break;
+  case FLOAT :
+    set(*(static_cast<float*>(value)));
+    break;
+  case INT :
+    set(*(static_cast<int*>(value)));
+    break;
+  }
 }
 
 void OnlineHistogram::OnlineDisplayOption::set(std::string value) { 
@@ -747,6 +932,38 @@ OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string Paramet
   }
   return out;
 }
+
+void OnlineHistogram::dump() {
+  cout<<" ----- HISTOGRAM RECORD " << m_hid << "------------------"<<endl;
+  cout<<" Pointer "<< this <<endl;
+  cout<<" Identifier: "<< m_identifier<<endl;
+  if (m_page != "_NONE_")
+    cout<<" attached to Page :" << m_page << " instance "<<m_instance <<endl;
+  dumpDisplayOptions();
+}
+
+void OnlineHistogram::dumpDisplayOptions() {
+  std::vector<OnlineDisplayOption*>::iterator ip;
+  cout<<" ----- Display Options for Histogram "<<m_identifier << " -----"<<endl;
+  cout<<"   Mode : " << m_domode <<" HSDISP="<<m_hsdisp<<" HDISP="<<m_hdisp
+      <<" SHDISP="<<m_shdisp<<endl;
+  for (ip = m_do.begin();ip != m_do.end(); ++ip) {
+    cout << "    " <<  (*ip)->name() << " : ";
+    if ((*ip)->isSet()) {
+      if((*ip)->type() == OnlineDisplayOption::STRING) 
+	cout << *(static_cast<const std::string*>((*ip)->value()));
+      if((*ip)->type() == OnlineDisplayOption::FLOAT)
+	cout << *(static_cast<const float*>((*ip)->value()));
+      if((*ip)->type() == OnlineDisplayOption::INT)
+	cout << *(static_cast<const int*>((*ip)->value()));
+    }
+    else
+      cout << "unset";
+    cout <<endl;
+  }
+}
+
+
 
 
 
@@ -987,7 +1204,7 @@ OnlineHistogramStorage::~OnlineHistogramStorage()
 void OnlineHistogramStorage::updateHistograms() {
   std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
-    (*ih)->update(); 
+    (*ih)->checkServiceName(); 
 }
 
 OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier, 
@@ -1036,3 +1253,4 @@ bool OnlineHistogramStorage::removeHistogram(OnlineHistogram* h,
   }
   return out;  
 }
+

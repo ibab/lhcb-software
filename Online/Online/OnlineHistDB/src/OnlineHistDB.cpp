@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.8 2007-07-10 13:41:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.9 2007-07-13 15:55:25 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -9,11 +9,11 @@
 
 
 
-OnlineHistDB::OnlineHistDB(std::string passwd, 
-			   std::string user, 
+OnlineHistDB::OnlineHistDB(std::string passwd,
+			   std::string user,
 			   std::string db) : 
-  OnlineHistDBEnv(user), 
-  OnlineTaskStorage(this), OnlineHistogramStorage(this), 
+  OnlineHistDBEnv(user),
+  OnlineTaskStorage(this), OnlineHistogramStorage(this),
   OnlinePageStorage(this, this), OnlineRootHistStorage(this),
   m_DBschema(3), m_stmt(0), m_nit(0), m_maxNit(1000)
 {
@@ -383,16 +383,20 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
 
 int OnlineHistDB::getHistograms(std::string query,
 				std::vector<OnlineHistogram*>* list, 
-				std::vector<string>* names,
-				std::vector<string>* types)
+				std::vector<string>* ids,
+				std::vector<string>* types,
+				bool useRootHist)
 {
   int nout=0;
   string command="select VH.NAME,VH.HSTYPE from VIEWHISTOGRAM VH "+query;
   Statement *qst=m_conn->createStatement(command);
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
-    if(list) list->push_back(getHistogram(rset->getString(1)));
-    if(names) names->push_back(rset->getString(1));
+    if(list) list->push_back( useRootHist ?
+			      getRootHist(rset->getString(1)) :
+			      getHistogram(rset->getString(1))
+			      );
+    if(ids) ids->push_back(rset->getString(1));
     if(types) types->push_back(rset->getString(2));
     nout++;
   }
@@ -402,72 +406,96 @@ int OnlineHistDB::getHistograms(std::string query,
 
 int OnlineHistDB::getAllHistograms(std::vector<OnlineHistogram*>* list ,
 				   std::vector<string>* ids,
-				   std::vector<string>* types) {
-  return getHistograms("",list,ids,types);
+				   std::vector<string>* types,
+				   bool useRootHist) {
+  return getHistograms("",list,ids,types,useRootHist);
 }
 
 
 int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list ,
 					    std::vector<string>* ids,
-					    std::vector<string>* types)
+					    std::vector<string>* types,
+					    bool useRootHist)
 {
-  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list,ids,types);
+  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",
+		       list,ids,types,useRootHist);
 }
 
 int OnlineHistDB::getAnalysisHistograms(std::vector<OnlineHistogram*>* list ,
 					std::vector<string>* ids,
-					std::vector<string>* types)
+					std::vector<string>* types,
+					bool useRootHist)
 {
-  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",list,ids,types);
+  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",
+		       list,ids,types,useRootHist);
 }
 
 int OnlineHistDB::getHistogramsBySubsystem(std::string SubSys,
 					   std::vector<OnlineHistogram*>* list ,
 					   std::vector<string>* ids,
-					   std::vector<string>* types)
+					   std::vector<string>* types,
+					   bool useRootHist)
 {  
   stringstream ss;
   ss << ", TASK T WHERE VH.TASK=T.TASKNAME AND (T.SUBSYS1 ='" << SubSys <<
     "' OR  T.SUBSYS2 ='"  << SubSys << "' OR  T.SUBSYS3 ='" << SubSys <<
     "')";
-  return getHistograms( ss.str() , list, ids,types);
+  return getHistograms( ss.str() , list, ids,types,useRootHist);
 }
 
 int OnlineHistDB::getHistogramsByTask(std::string Task,
 				      std::vector<OnlineHistogram*>* list ,
 				      std::vector<string>* ids,
-				      std::vector<string>* types)
+				      std::vector<string>* types,
+				      bool useRootHist)
 {  
   stringstream ss;
   ss << " WHERE VH.TASK='" << Task << "'";
-  return getHistograms( ss.str() , list, ids,types);
+  return getHistograms( ss.str() , list, ids,types,useRootHist);
 }
 
 int OnlineHistDB::getHistogramsByPage(std::string Page,
 				      std::vector<OnlineHistogram*>* list ,
 				      std::vector<string>* ids,
-				      std::vector<string>* types)
+				      std::vector<string>* types,
+				      bool useRootHist)
 {  
+  int nout=0;
   stringstream ss;
-  ss << " , SHOWHISTO SH WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
-  return getHistograms( ss.str() , list, ids,types);
+  ss << "select VH.NAME,VH.HSTYPE,SH.INSTANCE from VIEWHISTOGRAM VH, SHOWHISTO SH "
+     << "WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
+  Statement *qst=m_conn->createStatement(ss.str());
+  ResultSet *rset = qst->executeQuery ();
+  while(rset->next ()) {
+    if(list) list->push_back( useRootHist ?
+			      getRootHist(rset->getString(1),Page,rset->getInt(3)) :
+			      getHistogram(rset->getString(1),Page,rset->getInt(3))
+			      );
+    if(ids) ids->push_back(rset->getString(1));
+    if(types) types->push_back(rset->getString(2));
+    nout++;
+  }
+  m_conn->terminateStatement (qst);
+  return nout;
 }
 int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>* list ,
 				     std::vector<string>* ids,
-				     std::vector<string>* types)
+				     std::vector<string>* types,
+				     bool useRootHist)
 {
   stringstream ss;
   ss << " WHERE VH.TASK||'/'||VH.ALGO||'/'||VH.TITLE='" << SetName << "'";
-  return getHistograms( ss.str() , list, ids,types);
+  return getHistograms( ss.str() , list, ids,types,useRootHist);
 }
 
 int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>* list ,
 				     std::vector<string>* ids,
-				     std::vector<string>* types)
+				     std::vector<string>* types,
+				     bool useRootHist)
 {
   stringstream ss;
   ss << " WHERE VH.HSID=" << Set.hsid() ;
-  return getHistograms( ss.str() , list, ids, types);
+  return getHistograms( ss.str() , list, ids, types,useRootHist);
 }
 
 int OnlineHistDB::getPageFolderNames(std::vector<string>& list, std::string Parent )

@@ -324,7 +324,11 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
  if mysn%NOTFOUND then -- if service name is known, do nothing
   -- decode service name
   mytype := REGEXP_SUBSTR(ServiceName,'^.{3}');
-  tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_(.+)_[^/]*/.+$','\1');
+  tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_([^/]+)_[^/]*/.+$','\1');
+  if (tk = ServiceName) then -- try without farm node
+   tk := REGEXP_REPLACE(ServiceName,'^.{3}/([^/]+)/.+$','\1');
+
+  end if;
   if (tk = ServiceName) then
      raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
   end if;
@@ -619,16 +623,11 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram '||theHID||' does not exist!');
  end if;
- if (myNhs = 1) then -- take the set and never mind
-  mydoid := DeclareHistoSetDisplayOptions(myHSID,KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
-	KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS,reset);
- else 
-  mydoid := DeclareDisplayOptions(KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
-			KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS,myDisp,reset);
-  if (myDisp is NULL) then
-    update HISTOGRAM set DISPLAY=mydoid where HID=theHID;
-  end if; 
- end if;
+ mydoid := DeclareDisplayOptions(KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
+		KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS,myDisp,reset);
+ if (myDisp is NULL) then
+   update HISTOGRAM set DISPLAY=mydoid where HID=theHID;
+ end if; 
  close checko;
  return mydoid;
 EXCEPTION

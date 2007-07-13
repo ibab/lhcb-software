@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.5 2007-07-09 17:29:59 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.6 2007-07-13 15:55:25 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -19,31 +19,36 @@ class  OnlineHistogram : public OnlineHistDBEnv
 		  int Instance=1);
   virtual ~OnlineHistogram();
   typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
-  void update();
-  void setPage(std::string Page,
+  void checkServiceName();
+  bool setPage(std::string Page,
 	       int Instance=1);
+  void unsetPage();
   bool setDimServiceName(std::string DimServiceName);
   // DISPLAY OPTIONS
-  bool initDisplayOptionsFromSet(); 
+  bool initHistDisplayOptionsFromSet(); 
   bool initHistoPageDisplayOptionsFromSet(std::string PageName = "_DEFAULT_",
 					  int Instance=-1);
   bool initHistoPageDisplayOptionsFromHist(std::string PageName = "_DEFAULT_",
 					   int Instance=-1); 
+  virtual bool setDisplayOption(std::string ParameterName, 
+				void* value);
   virtual bool setHistoSetDisplayOption(std::string ParameterName, 
 					void* value);
-  virtual bool setDisplayOption(std::string ParameterName, 
+  virtual bool setHistDisplayOption(std::string ParameterName, 
 				void* value);
   virtual bool setHistoPageDisplayOption(std::string ParameterName, 
 					 void* value,
 					 std::string PageName = "_DEFAULT_",
 					 int Instance=-1);
   virtual bool unsetHistoSetDisplayOption(std::string ParameterName); 
-  virtual bool unsetDisplayOption(std::string ParameterName); 
+  virtual bool unsetHistDisplayOption(std::string ParameterName); 
   virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
-  
-  bool getDisplayOption(std::string ParameterName,
-					 void* option);
+  virtual bool unsetDisplayOption(std::string ParameterName);
 
+  bool getDisplayOption(std::string ParameterName,
+			void* option);
+  /// number of instances of this histogram on any page
+  int nPageInstances();
   // ANALYSIS OPTIONS
   int declareAnalysis(std::string Algorithm, 
 		      std::vector<float>* warningThr=NULL, 
@@ -83,7 +88,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int obsoleteness() const {return m_obsoleteness;}
   DisplayOptionMode domode() const {return m_domode;}
   bool remove(bool RemoveWholeSet);
-  
+  void dump();
+  void dumpDisplayOptions();
+
  private:
   // private dummy copy constructor and assignment operator 
   OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv("dummy") {}
@@ -99,6 +106,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
     std::string name() const { return m_name; }
     DisplayOptionType type() const { return m_type; }
     const void* value() const { return m_value; }
+    void set(void* value); 
     void set(std::string value); 
     void set(int value); 
     void set(float value);
@@ -133,12 +141,19 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int m_creation;
   int m_obsoleteness;
   //display options
+  bool m_DOinit;
+  DisplayOptionMode m_InitDOmode;
   DisplayOptionMode m_domode;
   int m_hsdisp;
   int m_hdisp;
   int m_shdisp;
   std::vector<OnlineDisplayOption*> m_do;
+  bool verifyPage();
   void load();
+  bool checkHSDisplayFromDB();
+  bool checkHDisplayFromDB();
+  bool useSetForHistDisplay();
+  bool useHistForPageDisplay();
   OnlineDisplayOption* getDO(std::string ParameterName); 
   void getDisplayOptions(int doid); 
   bool linkDisplayParameter(std::string& ParameterName,

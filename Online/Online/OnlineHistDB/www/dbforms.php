@@ -487,15 +487,17 @@ function task_form($taskname,$mode)
 	 $_POST["SAVEFREQUENCY"]);
   echo "</table><br>\n";
 
-  echo "<B>Reference histograms:</B><br><table>\n";
-  if($_POST["REFERENCE"])
+  if($mode == "display") {
+    echo "<B>Reference histograms:</B><br><table>\n";
+    if($_POST["REFERENCE"])
       echo "Latest Reference histograms available in ${Reference_home}/".$_POST["REFERENCE"]."<br>\n";
     else
       echo "No Reference histogram available<br>";
-  if ($Installation == "Pit" || $Installation == "test_dev") {
-    echo "<a href=write/reference.php?task=$taskname> Upload Reference Histograms</a>";
+    if ( ($Installation == "Pit" || $Installation == "test_dev") && $canwrite) {
+      echo "<a href=write/reference.php?task=$taskname> Upload Reference Histograms</a>";
+    }
+    echo "</table><br>\n";
   }
-  echo "</table><br>\n";
 
    if( $canwrite) {
     $action= ($mode == "display") ? "Update Task record" : "Confirm";

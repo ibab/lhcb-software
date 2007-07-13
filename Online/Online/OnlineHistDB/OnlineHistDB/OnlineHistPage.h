@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.5 2007-07-09 10:17:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.6 2007-07-13 15:55:25 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -10,6 +10,7 @@
 
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistogram.h"
+#include "OnlineHistDB/OnlineRootHist.h"
 
 
 
@@ -23,15 +24,24 @@ class OnlineHistPage : public OnlineHistDBEnv
   virtual ~OnlineHistPage();
   bool setDoc(std::string Doc) {m_doc=Doc;return save();}
   bool setFolder(std::string Folder) {m_folder=Folder;return save();}
-  bool declareHistogram(OnlineHistogram* h,
-		    float Cx,
-		    float Cy,
-		    float Sx,
-		    float Sy,
-		    unsigned int instance=1);
+  OnlineHistogram* declareHistogram(OnlineHistogram* h,
+				    float Cx,
+				    float Cy,
+				    float Sx,
+				    float Sy,
+				    unsigned int instance=1);
+  OnlineHistogram* addHistogram(OnlineHistogram* h,
+				float Cx,
+				float Cy,
+				float Sx,
+				float Sy);
   bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
-  const std::vector<OnlineHistogram*>& hlist() {return m_h;}
+  void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
+    std::vector<OnlineHistogram*>::iterator ix;
+    for (ix = m_h.begin();ix != m_h.end(); ++ix)
+      hlist->push_back(*ix);
+  }
   bool getHistLayout(OnlineHistogram* h,
 		     float &Cx,
 		     float &Cy,
@@ -58,7 +68,9 @@ class OnlineHistPage : public OnlineHistDBEnv
   std::vector<float> m_sx;
   std::vector<float> m_sy;
   int findHistogram(OnlineHistogram* h,
-		    unsigned int instance=1) const;
+		    unsigned int instance,
+		    bool &knownHisto) const;
+  unsigned int newHistogramInstance(OnlineHistogram* h) const;
   bool save();
 };
 
@@ -68,7 +80,7 @@ class OnlinePageStorage
   OnlinePageStorage(OnlineHistDBEnv* Env, OnlineHistogramStorage* Hstorage);
   virtual ~OnlinePageStorage();
   /// get an OnlineHistPage object, to create a new page or view/edit an existing one
-  OnlineHistPage* getPage(std::string Name, std::string Folder="");
+  OnlineHistPage* getPage(std::string Name, std::string Folder="_DEFAULT_");
  private:
   OnlineHistDBEnv* m_Pagenv;
   OnlineHistogramStorage* m_Hstorage;

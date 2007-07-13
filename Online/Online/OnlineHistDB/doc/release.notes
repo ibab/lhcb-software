@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.9 2007-07-10 13:50:19 ggiacomo Exp $
+! $Id: release.notes,v 1.10 2007-07-13 15:55:25 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
+
+! 20070713  - OnlineHistDB v2r3
+	- better support for display options, option level 
+	  (set,hist,histOnPage) is chosen now automatically
+	  by OnlineHistogram::setDisplayOption;
+	- new OnlineHistPage::addHistogram method to add new histograms
+	  without the need of counting instances
+	- add tool for checking uploaded reference files to web interface
+	- looser checks on DIM service names (accept names without farm nodes)
+	- minor bug fixing
 
 ! 20070710  - OnlineHistDB v2r2
 	- fix a problem with pending occi statements

@@ -1,5 +1,5 @@
 <?
-$Installation="pit";
+$Installation="Pit";
 $Reference_home="";
 function HistDBconnect($exitonfailure=0,$user="nobody",$password="nobody",$db="lbora01:1528/HISTOGRAMDB") 
 {  

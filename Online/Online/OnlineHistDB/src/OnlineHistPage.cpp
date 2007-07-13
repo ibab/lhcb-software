@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.7 2007-07-10 13:41:16 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.8 2007-07-13 15:55:25 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -24,11 +24,12 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
       dumpError(ex,"OnlineHistPage::OnlineHistPage");
     }
   if (out>=0) { // page already exists
-    if (Folder != (m_folder=astmt->getString(3))) {
+    m_folder=astmt->getString(3);
+    if (Folder != "_DEFAULT_" &&  Folder != m_folder) {
       cout << "warning from OnlineHistPage::OnlineHistPage:" <<
 	" page "<< Name <<" already exists in folder "<<m_folder << 
-	endl << "  Please explicitly use the setFolder method to change the folder" 
-	   << endl;
+	endl ;
+      //<< "  Please explicitly use the setFolder method to change the folder" << endl;
     }
     m_doc = astmt->getString(4);
     m_conn->terminateStatement (astmt); 
@@ -68,22 +69,25 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
 OnlineHistPage::~OnlineHistPage(){}
 
 
-bool OnlineHistPage::declareHistogram(OnlineHistogram* h,
-				  float Cx,
-				  float Cy,
-				  float Sx,
-				  float Sy,
-				  unsigned int instance) {
-  bool out=false;
+OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
+						  float Cx,
+						  float Cy,
+						  float Sx,
+						  float Sy,
+						  unsigned int instance) {
+  OnlineHistogram* outh=0;
   if (h->isAbort() == false) {
-    int ih=findHistogram(h,instance);
+    bool knownHisto=false;
+    int ih=findHistogram(h,instance,knownHisto);
     
     if (-1 == ih ) { // new histogram
+      instance = newHistogramInstance(h);
       m_h.push_back(h);
       m_cx.push_back(Cx);
       m_cy.push_back(Cy);
       m_sx.push_back(Sx);
       m_sy.push_back(Sy);
+      ih=m_h.size()-1;
     }
     else {
       m_cx[ih] = Cx;
@@ -91,12 +95,32 @@ bool OnlineHistPage::declareHistogram(OnlineHistogram* h,
       m_sx[ih] = Sx;
       m_sy[ih] = Sy;
     }
-    out = save();
-    h->setPage(m_name,instance);
+    if (save()) {
+      if(knownHisto) {
+	// object has been already used in a previous instance: create new object with proper instance
+	outh = m_Hstorage->getHistogram(h->identifier(), m_name, instance);
+	m_h[ih] = outh;
+      }
+      else 
+	outh=h;
+      outh->setPage(m_name,instance);
+    }
+    else {
+      outh=0;
+    }
   }
-  return out;
+  return outh;
 }
 
+OnlineHistogram* OnlineHistPage::addHistogram(OnlineHistogram* h,
+					      float Cx,
+					      float Cy,
+					      float Sx,
+					      float Sy) {
+  OnlineHistogram* outh;
+  outh=declareHistogram(h,Cx,Cy,Sx,Sy,999999);
+  return outh;
+}
 
 bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 				   float &Cx,
@@ -105,7 +129,8 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 				   float &Sy,
 				   unsigned int instance) const {
   bool found=false;
-  int jh=findHistogram(h,instance);
+  bool known;
+  int jh=findHistogram(h,instance,known);
   if (-1 != jh) {
     found = true;
     Cx = m_cx[jh];
@@ -119,7 +144,8 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
 				     unsigned int instance) {
   bool out=false;
-  int jh=findHistogram(h,instance);
+  bool known;
+  int jh=findHistogram(h,instance,known);
   if (-1 != jh) {
     m_h.erase(m_h.begin()+jh);
     m_cx.erase(m_cx.begin()+jh);
@@ -132,11 +158,14 @@ bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
 }
 
 int OnlineHistPage::findHistogram(OnlineHistogram* h,
-				  unsigned int instance) const {
+				  unsigned int instance,
+				  bool &knownHisto) const {
   int ih=-1;
   unsigned int ii=0;
+  knownHisto=false;
   for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-    if ((m_h[jh])->hid() == h->hid()) { 
+    if ((m_h[jh])->hid() == h->hid()) { // this histogram is already on page
+      if (m_h[jh] == h) knownHisto = true; // the same object is already on page
       if (++ii == instance) {
 	ih=jh;
 	break;
@@ -146,7 +175,14 @@ int OnlineHistPage::findHistogram(OnlineHistogram* h,
   return ih;
 }
 
-
+unsigned int OnlineHistPage::newHistogramInstance(OnlineHistogram* h) const {
+  int ih=1;
+  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
+    if ((m_h[jh])->hid() == h->hid()) 
+      ih++;
+  }
+  return ih;
+}
 
 bool OnlineHistPage::save() {
   bool out=true;

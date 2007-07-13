@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.7 2007-07-09 10:17:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.8 2007-07-13 15:55:25 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -70,39 +70,47 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// get the full list of histograms
   int getAllHistograms(std::vector<OnlineHistogram*>* list = NULL,
 		       std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+		       std::vector<string>* types = NULL,
+		       bool useRootHist = false);
   /// get the list of histograms on which some check analysis has to be performed 
   int getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list = NULL,
 				std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+				std::vector<string>* types = NULL,
+				bool useRootHist = false);
   /// get the list of histograms that have to be produced by analysis task
   int getAnalysisHistograms(std::vector<OnlineHistogram*>* list = NULL,
 			    std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			    std::vector<string>* types = NULL,
+			    bool useRootHist = false);
   /// get the list of histograms related to subsystem SubSys
   int getHistogramsBySubsystem(std::string SubSys,
 			       std::vector<OnlineHistogram*>* list = NULL,
 			       std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			       std::vector<string>* types = NULL,
+			       bool useRootHist = false);
   /// get the list of histograms related to task Task
   int getHistogramsByTask(std::string Task,
 			  std::vector<OnlineHistogram*>* list = NULL,
 			  std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			  std::vector<string>* types = NULL,
+			  bool useRootHist = false);
   /// get the list of histograms displayed on page Page
   int getHistogramsByPage(std::string Page,
 			  std::vector<OnlineHistogram*>* list = NULL,
 			  std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			  std::vector<string>* types = NULL,
+			  bool useRootHist = false);
   /// get the list of histograms in a Set
   int getHistogramsBySet(std::string SetName,
 			 std::vector<OnlineHistogram*>* list = NULL,
 			 std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			 std::vector<string>* types = NULL,
+			 bool useRootHist = false);
   int getHistogramsBySet(const OnlineHistogram& Set,
 			 std::vector<OnlineHistogram*>* list,
 			 std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+			 std::vector<string>* types = NULL,
+			 bool useRootHist = false);
   /// get the list of page folders, Parent can be "ROOT", a page folder name or "_ALL_" for all folders  
   int getPageFolderNames(std::vector<string>& list, std::string Parent="_ALL_");
   /// get the list of pages in a folder
@@ -130,7 +138,8 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,
 		    std::vector<string>* ids = NULL,
-		    std::vector<string>* types = NULL);
+		    std::vector<string>* types = NULL,
+		    bool useRootHist = false);
 };
 
 #endif // ONLINEHISTDB_H

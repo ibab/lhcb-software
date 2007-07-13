@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.3 2007-07-10 13:50:01 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.4 2007-07-13 15:55:25 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistogram.h"
@@ -21,15 +21,14 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
   /// overloaded methods for setting display options  
   virtual bool setHistoSetDisplayOption(std::string ParameterName, 
 					void* value);
-  virtual bool setDisplayOption(std::string ParameterName, 
-				void* value);
+  virtual bool setHistDisplayOption(std::string ParameterName, 
+				    void* value);
   virtual bool setHistoPageDisplayOption(std::string ParameterName, 
 					 void* value,
 					 std::string PageName = "_DEFAULT_",
 					 int Instance=-1);
-  virtual bool unsetHistoSetDisplayOption(std::string ParameterName);
-  virtual bool unsetDisplayOption(std::string ParameterName);
-  virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
+  virtual bool setDisplayOption(std::string ParameterName, 
+				void* value);
 
   virtual void Draw(Option_t* option="");
   virtual void DrawPanel();

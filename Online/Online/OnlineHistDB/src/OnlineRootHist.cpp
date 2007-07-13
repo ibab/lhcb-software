@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.3 2007-07-10 13:50:00 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.4 2007-07-13 15:55:26 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
@@ -6,7 +6,7 @@ OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
 		 std::string Page,
 		 int Instance) : OnlineHistogram(Env,Identifier,Page,Instance)
 { 
-  setFromDB();
+  if (!isAbort()) setFromDB();
 }
 
 
@@ -24,6 +24,7 @@ void OnlineRootHist::setFromDB() {
   if(getDisplayOption("LINESTYLE", &iopt)) this->SetLineStyle(iopt);
   if(getDisplayOption("LINECOLOR", &iopt)) this->SetLineColor(iopt);
   if(getDisplayOption("LINEWIDTH", &iopt)) this->SetLineWidth(iopt);
+  if(getDisplayOption("STATS",     &iopt)) this->SetStats(true);
   
 }
 
@@ -32,7 +33,6 @@ void OnlineRootHist::setDrawOptions() {
   //float fopt=0.;
   //std::string sopt="";
   if(getDisplayOption("STATS"  ,   &iopt)) {
-    this->SetStats(true);
     gStyle->SetOptStat(iopt);
   }
 }
@@ -74,16 +74,16 @@ bool OnlineRootHist::setHistoSetDisplayOption(std::string ParameterName,
   return out;
 }
 
-bool OnlineRootHist::setDisplayOption(std::string ParameterName, 
-					      void* value) {
+bool OnlineRootHist::setHistDisplayOption(std::string ParameterName, 
+					  void* value) {
   bool out;
-  out = OnlineHistogram::setDisplayOption(ParameterName,value);
+  out = OnlineHistogram::setHistDisplayOption(ParameterName,value);
   if(out) setFromDB();
   return out;
 }
 
 bool OnlineRootHist::setHistoPageDisplayOption(std::string ParameterName, 
-					      void* value,
+					       void* value,
 					       std::string PageName,
 					       int Instance) {
   bool out;
@@ -92,26 +92,14 @@ bool OnlineRootHist::setHistoPageDisplayOption(std::string ParameterName,
   return out;
 }
 
-bool OnlineRootHist::unsetHistoSetDisplayOption(std::string ParameterName) {
+bool OnlineRootHist::setDisplayOption(std::string ParameterName, 
+				      void* value) {
   bool out;
-  out = OnlineHistogram::unsetHistoSetDisplayOption(ParameterName);
+  out = OnlineHistogram::setDisplayOption(ParameterName,value);
   if(out) setFromDB();
   return out;
 }
 
-bool OnlineRootHist::unsetDisplayOption(std::string ParameterName) {
-  bool out;
-  out = OnlineHistogram::unsetDisplayOption(ParameterName);
-  if(out) setFromDB();
-  return out;
-}
-
-bool OnlineRootHist::unsetHistoPageDisplayOption(std::string ParameterName) {
-  bool out;
-  out = OnlineHistogram::unsetHistoPageDisplayOption(ParameterName);
-  if(out) setFromDB();
-  return out;
-}
 
 void OnlineRootHist::Draw(Option_t* option) {
   setDrawOptions();
@@ -143,7 +131,7 @@ OnlineRootHistStorage::~OnlineRootHistStorage()
 void OnlineRootHistStorage::updateRootHistograms() {
   std::vector<OnlineRootHist*>::iterator ih;
   for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
-    (*ih)->update(); 
+    (*ih)->checkServiceName(); 
 }
 
 

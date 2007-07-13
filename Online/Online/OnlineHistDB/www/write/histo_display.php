@@ -8,6 +8,8 @@ include '../util.php'; include '../dbforms.php';
 $conn=HistDBconnect(1);
 
 
+
+
 function update_histo_display() {
   global $conn;
 
@@ -22,7 +24,7 @@ function update_histo_display() {
     if ($_POST[$var] != '') $command.=",K${var} => '".$_POST[$var]."'";
   }
   $command.=",reset => 1); end;";
-  echo "command is $command <br>";
+  if ($debug>1) echo "command is $command <br>";
   $stid = OCIParse($conn,$command);
   ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
@@ -32,6 +34,13 @@ function update_histo_display() {
   }
   else
     return 0;
+}
+
+function hidtype($Htype) {
+  if ($Htype == "HID" || $Htype == "SHID")
+    return "hid";
+  else
+    return "hsid";
 }
 
 $id=$_POST["id"];
@@ -55,7 +64,7 @@ else {
 }
 
 ocilogoff($conn);
-echo "<p><a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
+echo "<p><a href='../Histogram.php?".hidtype($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
 
 if ($page) {
   $getp=toGet($page);
