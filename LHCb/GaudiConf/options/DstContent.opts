@@ -8,6 +8,7 @@ DstWriter.ItemList +=
 {
   "/Event/DAQ/RawEvent#1"
 , "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
+, "/Event/Rec/Track/Muon#1"
 };
 
 // If DST comes from stripping ETC, add also selection results
