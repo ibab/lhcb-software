@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.100 2007-07-06 12:46:37 pkoppenb Exp $
+! $Id: release.notes,v 1.101 2007-07-13 08:52:53 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-07-13 - Patrick Koppenburg
+ - More verbose printout in TrgVertexFitter. Protect all printouts.
 
 ! 2007-07-06 - Patrick Koppenburg
  - Check Statuscode in TrgVertexFitter

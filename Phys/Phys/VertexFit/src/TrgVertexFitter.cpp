@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.16 2007-07-06 12:46:37 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.17 2007-07-13 08:52:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     
     const Particle* parPointer = *iPart;
     if ( !parPointer) {
-      fatal() << "Pointer to particle failed: " << parPointer->particleID() << endreq;
+      fatal() << "Pointer to particle failed: " << parPointer->particleID().pid() << endmsg;
       return StatusCode::FAILURE;
     }
     const Particle& par = *(parPointer);
@@ -109,17 +109,19 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
             iDaught!=daughters.end();++iDaught) {
         const Particle* daughtPointer = *iDaught;
         if ( !daughtPointer) {
-          fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID() << endreq;
+          fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID().pid() << endmsg;
           return StatusCode::FAILURE;
         }
-        verbose() << "Daughter particle added to list for fit: " << daughtPointer->particleID() << endreq;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter particle added to list for fit: " 
+                                              << daughtPointer->particleID().pid() << endmsg;
         partsToFit.push_back(daughtPointer);
       }
       
     }
     // 3) FL: Long lived composite
     else if ( m_useDaughters && endVertexPointer && !(isResonance(par)) ){
-      verbose() << "Long lived particle added to list for fit: " << par.particleID() << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Long lived particle added to list for fit: " 
+                                            << par.particleID().pid() << endmsg;
       partsToFit.push_back(parPointer);
 		  nLongLived++;
     }
@@ -127,24 +129,29 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     // 4) In any other case, particle will be used directly in the fit
     else {
       partsToFit.push_back(parPointer);
-      verbose() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
-      verbose() << "Point on particle: " << parPointer->referencePoint() << endreq;
-      verbose() << "Error on point on particle: " << parPointer->covMatrix() << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle added to list for fit: " 
+                                            << parPointer->particleID().pid() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Point on particle: " 
+                                            << parPointer->referencePoint() 
+                                            << ", Error:\n " << parPointer->covMatrix() << endmsg;
     }
   }
 
   // Number of particles to be used for the fit
   // Can be different than # of input particles!
   int nPartsToFit = partsToFit.size();
-  verbose() << "Number of particles that will be used for the fit: " << nPartsToFit << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of particles that will be used for the fit: " 
+                                        << nPartsToFit << endmsg;
   
   // Number of photons to be added at the end
-  verbose() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of photons that will be added to the vertex: " 
+                                        << inputPhotons.size() << endmsg;
   
   // FL: check this first
   if ( nLongLived==1 && inputPhotons.size()>0 ){
   
-    verbose() << "Special case: won't refit, but add " << inputPhotons.size() << " gamma(s) to existing vertex" << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Special case: won't refit, but add " << inputPhotons.size() 
+                                          << " gamma(s) to existing vertex" << endmsg;
 	 
     // Get the composite vertex in case of no fit (no X -> n gammas)
       
@@ -167,9 +174,12 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
       if(ngammas == Vtemp->outgoingParticles().size()) continue;
     
       // We have our vertex
-      verbose() << " composite ID " << composite->particleID().pid() << " will be used to add gammas" << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << " composite ID " << composite->particleID().pid() 
+                                            << " will be used to add gammas" << endmsg;
     
-      verbose() << " composite decay vertex position: " << Vtemp->position() << " , and chi2 " << Vtemp->chi2() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << " composite decay vertex position: " 
+                                            << Vtemp->position() 
+                                            << " , and chi2 " << Vtemp->chi2() << endmsg;
 				
       if(Vtemp) V = *Vtemp;
       else{
@@ -181,7 +191,7 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   }  
   // Check wether enough particles
   else if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
-    fatal() << "Not enough particles to fit!" << endreq;
+    fatal() << "Not enough particles to fit!" << endmsg;
     return StatusCode::FAILURE;
   } else {  
   
@@ -189,7 +199,7 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   
     StatusCode scFit = doFit( partsToFit, V );
     if ( !scFit) {
-      fatal() << "doFit failed" << endreq;
+      fatal() << "doFit failed" << endmsg;
       return StatusCode::FAILURE;
 
     }
@@ -199,10 +209,11 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   // Add daugthers
   for(Particle::ConstVector::const_iterator iterP = partsToFit.begin(); iterP != partsToFit.end(); iterP++) {
     V.addToOutgoingParticles(*iterP);
-    verbose() << "Particle added to vertex outgoingParticles: " << (*iterP)->particleID().pid() << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle added to vertex outgoingParticles: " 
+                                          << (*iterP)->particleID().pid() << endmsg;
   }
 
-  debug() << "Returning vertex " << V.position() << " with error " 
+  if (msgLevel(MSG::DEBUG)) debug() << "Returning vertex " << V.position() << " with error\n" 
           <<  V.covMatrix() << " Size: " << V.outgoingParticles().size() << endmsg ;  
 
   return StatusCode::SUCCESS;
@@ -232,8 +243,8 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
     const Gaudi::XYZPoint& point = par.referencePoint();
     const Gaudi::SymMatrix7x7& cov = par.covMatrix();
 
-    verbose() << "cov " << cov << endmsg ;
-    verbose() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "cov\n " << cov << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
     
 
     const Gaudi::XYZVector slopes = par.slopes();
@@ -271,16 +282,31 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
   StatusCode stPosAndErr = vertexPositionAndError(AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, 
                                                   vX, vY, vZ, V);
   if (!stPosAndErr){
-    fatal() << "vertexPositionAndError failed" << endreq;
+    fatal() << "vertexPositionAndError failed" << endmsg;
     return StatusCode::FAILURE;
   };
 
   // Chi2
   double chi2 = 0;
   for (int i=0; i!=nPartsToFit; i++){
+    if (msgLevel(MSG::VERBOSE)) { 
+      verbose() << "Adding to chi2 x: " << X0Array[i] << "+" 
+                << MXArray[i] << "*" << vZ << "-" << vX 
+                << " (=" << (X0Array[i]+MXArray[i]*vZ-vX) << ")^2 *" 
+                << InvSig2XArray[i] << " = " 
+                << pow( (X0Array[i]+MXArray[i]*vZ-vX), 2)*InvSig2XArray[i]
+                << endmsg;
+      verbose() << "Adding to chi2 y: " << Y0Array[i] << "+" 
+                << MYArray[i] << "*" << vZ << "-" << vY 
+                << " (=" << (Y0Array[i]+MYArray[i]*vZ-vY) << ")^2 *" 
+                << InvSig2YArray[i] << " = " 
+                << pow( (Y0Array[i]+MYArray[i]*vZ-vY), 2)*InvSig2YArray[i]
+                << endmsg;   
+    }
     chi2 += pow( (X0Array[i]+MXArray[i]*vZ-vX), 2)*InvSig2XArray[i];
     chi2 += pow( (Y0Array[i]+MYArray[i]*vZ-vY), 2)*InvSig2YArray[i];
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Chi2 is " << chi2 << endmsg ;
   V.setChi2(chi2);
   V.setNDoF(ndof);
   return StatusCode::SUCCESS;
@@ -295,8 +321,8 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
                                                    double& vX, double& vY, double& vZ, Vertex &V) const
 {
           
-  verbose() << "X : " << AX << " " << BX << " " << CX << " " << DX << " " << EX << " " << endmsg ;
-  verbose() << "Y : " << AY << " " << BY << " " << CY << " " << DY << " " << EY << " " << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "X : " << AX << " " << BX << " " << CX << " " << DX << " " << EX << " " << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose()  << "Y : " << AY << " " << BY << " " << CY << " " << DY << " " << EY << " " << endmsg ;
 
   // Vertex position
   vZ = ( CX*AX/BX + CY*AY/BY - EX - EY ) / (DX +DY - CX*CX/BX - CY*CY/BY);
