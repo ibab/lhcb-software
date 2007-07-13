@@ -1,7 +1,7 @@
 // Define rDST content for Brunel real data
 
 // Sequence for altering content of rDST compared to DST
-Output.DetectorList += { "RDST" };
+Output.DetectorList += { "L0", "RDST" };
 OutputRDSTSeq.Members += { "TrackToDST/TrackToRDST" };
 TrackToRDST.veloStates = {"ClosestToBeam"};
 TrackToRDST.longStates = {"ClosestToBeam"};

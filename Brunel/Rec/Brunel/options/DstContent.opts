@@ -3,7 +3,7 @@
 DstWriter.Preload = false;
 
 // Sequence for altering DST content
-Output.DetectorList += { "DST" };
+Output.DetectorList += { "L0", "DST" };
 OutputDSTSeq.Members += { "TrackToDST" };
 
 // Objects to write out 

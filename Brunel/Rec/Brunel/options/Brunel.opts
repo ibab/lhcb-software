@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Output" };
 
 // Initialisation phase
-Init.DetectorList = { "Etc", "Brunel", "Calo" };
+Init.DetectorList += { "Etc", "Brunel", "Calo" };
 InitBrunelSeq.Members += { "RecInit/Brunel" };
 
 // Convert Calo 'packed' banks to 'short' banks if needed

@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------
 // MC truth links for DST. Requires unpacking of MC Particles and vertices
 //------------------------------------------------------------------------
-MCLinks.DetectorList = { "Unpack", "Tr" };
+MCLinks.DetectorList += { "L0", "Unpack", "Tr" };
 
 // Unpack Sim data
 MCLinksUnpackSeq.Members += { "UnpackMCParticle" };

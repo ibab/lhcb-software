@@ -34,6 +34,7 @@ use Associators        v*    Associators    -no_auto_imports
 use RichDAQ            v*    Rich           -no_auto_imports
 use STTools            v*    ST             -no_auto_imports
 use STCheckers         v*    ST             -no_auto_imports
+use L0DU               v*    L0             -no_auto_imports
 
 # The whole REC project
 use RecSys             v*                   -no_auto_imports
