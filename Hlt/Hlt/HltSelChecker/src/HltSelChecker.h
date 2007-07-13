@@ -1,4 +1,4 @@
-// $Id: HltSelChecker.h,v 1.1 2007-07-09 18:45:08 pkoppenb Exp $
+// $Id: HltSelChecker.h,v 1.2 2007-07-13 08:51:11 pkoppenb Exp $
 #ifndef HLTSELCHECKER_H 
 #define HLTSELCHECKER_H 1
 
@@ -36,10 +36,13 @@ private:
   StatusCode saveMC(std::string, const LHCb::Particle*, Tuple&) ;
   StatusCode twoBody(std::string, const LHCb::Particle*, Tuple&);
   Gaudi::XYZPoint extrapolatedMC(double,const LHCb::MCParticle*);
-  
+  StatusCode printParticle(const LHCb::Particle* P);
+  StatusCode printTrack(const LHCb::Track*);
+
 private:
   IBackgroundCategory* m_background; ///< Background category @todo Restore
   bool m_doMC ; ///< do mC?
+  bool m_doPrint ; ///< Print Particles
   Particle2MCLinker* m_pLinker;   ///<  Associator
 };
 #endif // HLTSELCHECKER_H

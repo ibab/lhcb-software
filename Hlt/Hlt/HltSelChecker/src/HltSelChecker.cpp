@@ -1,4 +1,4 @@
-// $Id: HltSelChecker.cpp,v 1.1 2007-07-09 18:45:08 pkoppenb Exp $
+// $Id: HltSelChecker.cpp,v 1.2 2007-07-13 08:51:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ HltSelChecker::HltSelChecker( const std::string& name,
   , m_pLinker()
 {
   declareProperty("DoMC",m_doMC = true );
+  declareProperty("DoPrint",m_doPrint = false );
 }
 //=============================================================================
 // Destructor
@@ -128,7 +129,7 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
     StatusCode sc = saveMC(part,P,tuple);
     if (!sc) return sc;
   }
-  if ( P->daughters().size()==2 ){
+  if ( P->daughters().size()==2 ){ // don't do more now
     StatusCode sc = twoBody(part,P,tuple);
     if (!sc) return sc;
   }
@@ -145,10 +146,15 @@ StatusCode HltSelChecker::twoBody(std::string part, const LHCb::Particle* P,
   if (msgLevel(MSG::DEBUG)) debug() << "==> twoBody " << P->key()<< endmsg;
   const Particle* D1 = P->daughters()[0];
   const Particle* D2 = P->daughters()[1];
-  StatusCode sc = saveP("D1",D1,tuple);
+  if ( part=="Mo" ) part = "D" ; // rename
+  StatusCode sc = saveP(part+"1",D1,tuple);
   if (!sc) return sc;
-  sc = saveP("D2",D2,tuple);
+  sc = saveP(part+"2",D2,tuple);
   if (!sc) return sc;
+
+  printParticle(D1);
+  printParticle(D2);
+
   double ca, cae;
   geomDispCalculator()->calcCloseAppr(*D1, *D2, ca, cae);
   tuple->column( part+"CA",  ca);
@@ -176,7 +182,11 @@ StatusCode HltSelChecker::saveMC(std::string part, const LHCb::Particle* P,
     tuple->column(part+"MCW",   weight);
     tuple->column(part+"MCPid", MC->particleID().pid());
     tuple->column(part+"MCP",   MC->momentum());
-    tuple->column(part+"MCV",   extrapolatedMC(P->referencePoint().Z(),MC));
+    if ( NULL==P->endVertex() ){ // final state
+      tuple->column(part+"MCV",extrapolatedMC(P->referencePoint().Z(),MC));
+    } else {
+      tuple->column(part+"MCV",(MC->endVertices()[MC->endVertices().size()-1])->position() );
+    }
     tuple->column(part+"MCM",   MC->virtualMass());
   } else {
     tuple->column(part+"MCW",   -1. );
@@ -209,6 +219,63 @@ Gaudi::XYZPoint HltSelChecker::extrapolatedMC(double z,
                                         << " is extrapolated to " 
                                         << p << endmsg ;
   return p;
+  
+}
+//=========================================================================
+//  Print a track
+//=========================================================================
+StatusCode HltSelChecker::printTrack(const LHCb::Track* T) {
+  if ( NULL==T ){
+    Warning("NULL Track");
+    return StatusCode::SUCCESS;
+  }
+  
+  if ( T->firstState().qOverP()!=0.){
+    Gaudi::SymMatrix6x6 cov6D ; 
+    T->posMomCovariance(cov6D);
+    info() << "    Track " << T->key() << " " << T->type() << " " 
+           << T->position() << " " << T->momentum() << "\n"
+           << cov6D << endmsg ;
+  } else { // velo tracks
+    Gaudi::XYZPoint p ;
+    Gaudi::SymMatrix3x3 cov3D ; 
+    T->position(p,cov3D);
+    info() << "    Track " << T->key() << " " << T->type() << " " 
+            << p << "\n" << cov3D << endmsg ; 
+  }
+  
+  info() << "      LHCbIDs (" << T->lhcbIDs().size() << ") " ;
+  for ( std::vector< LHCb::LHCbID >::const_iterator i = T->lhcbIDs().begin();
+        i !=  T->lhcbIDs().end(); ++i){
+    info() << (*i).lhcbID() << " " ;
+  }
+  info() << endmsg;
+
+  if ( !T->ancestors().empty()) info() << "Looking at " << T->ancestors().size() << " ancestors" << endmsg ;
+  for ( SmartRefVector< LHCb::Track >::const_iterator t = 
+          T->ancestors().begin(); t!= T->ancestors().end(); ++t ) {
+    const LHCb::Track* at = *t ;
+    StatusCode sc = printTrack(at);
+    if (!sc) return sc;
+  }
+  return StatusCode::SUCCESS;
+}
+//=========================================================================
+//  Print a particle
+//=========================================================================
+StatusCode HltSelChecker::printParticle(const LHCb::Particle* P) {
+  if (!m_doPrint) return StatusCode::SUCCESS ;
+  info() << "Particle " << P->key() << " " << P->particleID().pid() 
+         << " " << P->referencePoint() << " " << P->momentum() << "\n" 
+         << P->covMatrix() << endmsg ;
+  const LHCb::ProtoParticle* pp = P->proto() ;
+  if ( NULL!=pp ){
+    info() << "  ProtoParticle " << pp->key() << endmsg ;
+    const LHCb::Track* T = pp->track() ;
+    StatusCode sc = printTrack(T);
+    if (!sc) return sc;
+  }
+  return StatusCode::SUCCESS ;
   
 }
 //=============================================================================

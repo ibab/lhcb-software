@@ -1,0 +1,55 @@
+/** @file DVTestHltBs2PhiPhi.opts
+ *
+ *  Test file for HLT Bs->PhiPhi selection
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-10
+ */
+//--------------------------------------------------------------
+//
+// Preselection
+//
+#include "$B2UDSROOT/options/DVPreselBs2PhiPhi.opts"
+HltExclusiveCorrs.Algorithms += { "PreselBs2PhiPhi" };
+//
+// Hlt test
+//
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+//
+// Plots
+//
+#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//
+// True filter criterion - will only run HLT on true signal
+//
+#include "$HLTSELCHECKERROOT/options/TrueBs2PhiPhi.opts"
+//
+// Options
+//
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2PhiPhi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
+HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBs2PhiPhi" } ;
+OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBs2PhiPhi" } ;
+
+ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bs2PhiPhi.root' TYP='ROOT' OPT='NEW'" ] ;
+
+HltSelChecker.OutputLevel = 3 ;
+HltSelChecker.Context = "HLT" ;
+//HltSelChecker.DoPrint = true ;
+OfflineChecker.GeomTools = { "" : "TrgDispCalculator" };
+OfflineChecker.OutputLevel = 3 ;
+//OfflineChecker.DoPrint = true ;
+// OfflineChecker.GeomDispCalculator.OutputLevel = 1 ;
+
+ApplicationMgr.EvtMax = 100 ;
+EventSelector.FirstEvent = 1 ;
+
+
+
+
+

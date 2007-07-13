@@ -29,9 +29,6 @@ HltExclusiveCorrs.Algorithms += { "PreselB2HH" };
 EventSelector.Input   = {
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bd2Kpi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
-ApplicationMgr.EvtMax = -1 ;
-EventSelector.FirstEvent = 1 ;
-
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
@@ -39,16 +36,37 @@ HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2HH" } ;
 OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselB2HH" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                             //GP: (45,1)
-NTupleSvc.Output =  [ "FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'" ] ;//GP: (46,1)
-
-/*
-HltSelB2HH.MotherFilter.VtxFilterCriterion.OutputLevel = 1 ;
-HltSelB2HH.TrgVertexFitter.OutputLevel = 1 ;
-*/
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2HH.root' TYP='ROOT' OPT='NEW'" ] ;//GP: (46,1)
 
 HltSelChecker.OutputLevel = 3 ;
-// HltSelChecker.Context = "HLT" ;
+HltSelChecker.Context = "HLT" ;
+HltSelChecker.DoPrint = false ;
 // OfflineChecker.GeomTools = { "" : "TrgDispCalculator" };
-
 OfflineChecker.OutputLevel = 3 ;
+OfflineChecker.DoPrint = false ;
+// OfflineChecker.GeomDispCalculator.OutputLevel = 1 ;
 
+/*
+ApplicationMgr.TopAlg += { "HltRecChecker" };
+HltRecChecker.InputTracksName = "Hlt/Track/Forward" ;
+//HltRecChecker.OutputLevel = 2 ;
+
+ApplicationMgr.TopAlg += { "HltRecChecker/HltRecCheckerVelo" };
+HltRecCheckerVelo.InputTracksName = "Hlt/Track/Velo" ;
+//HltRecCheckerVelo.OutputLevel = 2 ;
+*/
+
+ApplicationMgr.EvtMax = -1 ;
+EventSelector.FirstEvent = 1 ;
+/*
+HltRecoVelo.OutputLevel = 1 ;
+PatHltRecoVelo.OutputLevel = 1 ;
+ToolSvc.PatVeloTrackTool.OutputLevel = 1 ;
+PatHadSingleTRVelo.OutputLevel = 1 ;
+*/
+// 0.00381935 <- 0.0030553 
+// 0.000173233
+
+ApplicationMgr.TopAlg += { "HltSelChecker/PionsChecker" };
+PionsChecker.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
+PionsChecker.GeomTools = { "" : "TrgDispCalculator" };
