@@ -12,6 +12,7 @@ set L0DUOPTS	$(L0DUROOT)/options
 use L0Event     v*    Event
 use DAQEvent    v*    Event
 use CaloDet     v*    Det
+use L0Muon      v*    L0
 # ================ component library =====================================
 library		L0DU  *.cpp
 

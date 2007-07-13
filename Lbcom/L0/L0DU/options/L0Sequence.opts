@@ -1,7 +1,4 @@
 
-ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto"}; 
-ApplicationMgr.DLLs += { "L0DU" };
-
 L0.Members += { "L0CaloAlg/L0Calo", 
                 "L0MuonAlg/L0Muon",
                 "PuVetoAlg/L0PuVeto",

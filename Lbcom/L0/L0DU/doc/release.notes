@@ -1,7 +1,17 @@
-$Id: release.notes,v 1.60 2007-07-13 14:21:57 odescham Exp $
+$Id: release.notes,v 1.61 2007-07-13 18:01:37 pkoppenb Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
 
+! 2007-07-13 - Patrick Koppenburg
+ - src/L0Strip.*
+   . New algorithm to make Stripped ETC. To be expanded.
+ - options/Boole.opts
+   . Use these options to create an ETC of L0-accepted events in boole.
+ - options/Brunel.opts
+   . Use these options to reconstruct only L0-accepted events in Brunel.
+ - options/ETC.opts
+   . ETC writer options.
+ - Removed DLLs declaration in L0Sequence.opts
 
 ! 2007-07-13 - A. Satta & O.D.
  - New trigger channels in L0DU-reconfigure.opts (DiMuon & MuonNoGlob)
