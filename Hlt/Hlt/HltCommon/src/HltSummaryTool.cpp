@@ -130,6 +130,12 @@ std::vector<std::string> HltSummaryTool::selections() {
   return names;  
 }
 
+size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
+  getSummary();
+  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
+  return HltSummaryHelper::ncandidates(*m_summary,id);
+}
+
 std::vector<std::string> 
 HltSummaryTool::selectionFilters(const std::string& name) {
   getSummary();

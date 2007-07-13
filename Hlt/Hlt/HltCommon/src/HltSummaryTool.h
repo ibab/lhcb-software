@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.5 2007-07-06 17:16:26 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.6 2007-07-13 09:25:40 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -54,9 +54,11 @@ public:
                              const std::string& type);
   
   std::vector<std::string> selections();
+
+  size_t selectionNCandidates(const std::string& name);
   
   std::vector<std::string> selectionFilters(const std::string& name);
-  
+
   std::vector<LHCb::Track*> selectionTracks(const std::string& name);
   
   std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name);
