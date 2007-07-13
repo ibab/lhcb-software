@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.6 2007-07-13 15:55:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.7 2007-07-13 16:37:39 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -37,6 +37,7 @@ class OnlineHistPage : public OnlineHistDBEnv
 				float Sy);
   bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
+  bool removeAllHistograms();
   void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
     std::vector<OnlineHistogram*>::iterator ix;
     for (ix = m_h.begin();ix != m_h.end(); ++ix)

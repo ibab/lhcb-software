@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.8 2007-07-13 15:55:25 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.9 2007-07-13 16:37:39 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -154,6 +154,16 @@ bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
     m_sy.erase(m_sy.begin()+jh);
     out = save();
   }
+  return out;
+}
+
+bool OnlineHistPage::removeAllHistograms() {
+  m_h.clear();
+  m_cx.clear();
+  m_cy.clear();
+  m_sx.clear();
+  m_sy.clear();
+  bool out = save();
   return out;
 }
 

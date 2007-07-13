@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.10 2007-07-13 15:55:25 ggiacomo Exp $
+! $Id: release.notes,v 1.11 2007-07-13 16:39:19 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
@@ -9,6 +9,7 @@
 	  by OnlineHistogram::setDisplayOption;
 	- new OnlineHistPage::addHistogram method to add new histograms
 	  without the need of counting instances
+	- new OnlineHistPage::removeAllHistograms method
 	- add tool for checking uploaded reference files to web interface
 	- looser checks on DIM service names (accept names without farm nodes)
 	- minor bug fixing
