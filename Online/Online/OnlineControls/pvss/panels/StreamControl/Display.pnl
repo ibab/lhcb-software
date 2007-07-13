@@ -1,15 +1,15 @@
 V 10
 1
-LANG:1 14 StorageDisplay
+LANG:1 13 StreamDisplay
 PANEL,-1 -1 805 2000 N "_3DFace" 2
 "$offset"
-"$storage"
-"#uses \"StorageControlPanel.cpp\"
+"$stream"
+"#uses \"StreamControlPanel.cpp\"
 main()  {
-  string storage = isDollarDefined(\"$storage\")  ? $storage : \"TestStorage\";
+  string stream  = isDollarDefined(\"$stream\")  ? $stream : \"Storage\";
   int    offset  = isDollarDefined(\"$offset\")   ? $offset  : 100;
-  StorageControlPanel_initDisplay(storage, \"\", offset);
-  DebugN(\"Module:\",myModuleName(),\"Panel:\",myPanelName(),\"Offset:\",offset);
+  StreamControlPanel_initDisplay(stream, \"\", offset);
+  DebugN(\"Module:\",myModuleName(),\"Panel:\",myPanelName(),\"Stream:\",stream,\"Offset:\",offset);
 }
 " 0
  E E E E 1 -1 -1 0  0 0
@@ -43,11 +43,11 @@ T
 1
 LANG:1 4 Show
 "main()  {
-  string storage = m_storageName.text;
-  StorageControlPanel_removeDisplay(storage,m_displayedPartitions.text);
-  StorageControlPanel_initDisplay(storage, \"\");
-  // storage = StorageControlPanel_showDisplay(storage,50);
-  // m_displayedPartitions.text = storage;
+  string stream = m_streamName.text;
+  StreamControlPanel_removeDisplay(stream,m_displayedPartitions.text);
+  StreamControlPanel_initDisplay(stream, \"\");
+  // stream = StreamControlPanel_showDisplay(stream,50);
+  // m_displayedPartitions.text = stream;
 }
 " 0
  E E E
@@ -72,7 +72,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 1
 LANG:1 0 
 2 2
-"m_storageName"
+"m_streamName"
 ""
 1 250 10 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
@@ -90,7 +90,7 @@ E E 0 1 1 2 1 E U  1 E 250 10 420 30
 LANG:1 101 -*-MS Shell Dlg-bold-r-normal-*-21-*-100-100-*-*-iso8859-1|-21,0,0,0,758,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
-LANG:1 12 Storage name
+LANG:1 11 Stream name
 2 7
 "m_partition"
 ""

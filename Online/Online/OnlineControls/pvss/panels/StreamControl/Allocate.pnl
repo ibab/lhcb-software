@@ -1,13 +1,14 @@
 V 10
 1
-LANG:1 17 StorageAllocPanel
+LANG:1 16 StreamAllocPanel
 PANEL,-1 -1 374 394 N "_3DFace" 2
 "$partition"
-"$storage"
-"#uses \"StorageControlPanel.cpp\"
+"$stream"
+"#uses \"StreamControlPanel.cpp\"
 main()  {
-  DebugN(\"Storage:\"+$storage+\" Partition:\"+$partition);
-  StorageControlPanel_initAllocPanel($storage, $partition);
+  string strm = $stream;
+  DebugN(\"Stream:\"+strm+\" Partition:\"+$partition);
+  StreamControlPanel_initAllocPanel($stream, $partition);
 }
 " 0
  E E E E 1 -1 -1 0  0 0
@@ -306,7 +307,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 17 Check Consistency
-"main()  {  StorageControlPanel_checkStrmAllocation();  }
+"main()  {  StreamControlPanel_checkStrmAllocation();  }
 " 0
  E E E
 13 64
@@ -329,7 +330,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 17 Check Consistency
-"main()  {  StorageControlPanel_checkRecvAllocation();  }
+"main()  {  StreamControlPanel_checkRecvAllocation();  }
 " 0
  E E E
 13 67
@@ -352,7 +353,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 6 Cancel
-"main()  {  StorageControlPanel_AllocCancel(m_partition.text);  }
+"main()  {  StreamControlPanel_AllocCancel(m_partition.text);  }
 " 0
  E E E
 13 68
@@ -375,11 +376,11 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 2 Ok
-"main()  {  StorageControlPanel_AllocOk(m_partition.text);  }
+"main()  {  StreamControlPanel_AllocOk(m_partition.text);  }
 " 0
  E E E
 2 69
-"m_storageName"
+"m_streamName"
 ""
 1 340 10 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
@@ -489,7 +490,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 5 Reset
-"main()  {  StorageControlPanel_AllocReset(m_partition.text);  }
+"main()  {  StreamControlPanel_AllocReset(m_partition.text);  }
 " 0
  E E E
 13 75
@@ -512,7 +513,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 4 Save
-"main()  {  StorageControlPanel_AllocSave(m_partition.text);  }
+"main()  {  StreamControlPanel_AllocSave(m_partition.text);  }
 " 0
  E E E
 0

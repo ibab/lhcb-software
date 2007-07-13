@@ -1,21 +1,21 @@
 V 10
 1
-LANG:1 14 StorageControl
+LANG:1 13 StreamControl
 PANEL,-1 -1 707 588 N "_3DFace" 1
 "$2"
-"#uses \"StorageControlPanel.cpp\"
+"#uses \"StreamControlPanel.cpp\"
 main()  {
-  string storage = \"\";
+  string stream = \"\";
   string partition = isDollarDefined(\"$partition\") ? getDollarValue(\"$partition\") : \"LHCb\";
   if ( isDollarDefined(\"$2\") )
-    storage = dpSubStr($2,DPSUB_DP);
-  else if ( isDollarDefined(\"$storage\") ) 
-    storage = getDollarValue(\"$storage\");
+    stream = dpSubStr($2,DPSUB_DP);
+  else if ( isDollarDefined(\"$stream\") ) 
+    stream = getDollarValue(\"$stream\");
   else
-    storage = \"TestStorage\";  
+    stream = \"TestStream\";  
   m_command.visible    = 1;
   m_command.text       = \"Show\";
-  StorageControlPanel_showPanel(storage,partition,\"display\",\"StorageControl/Allocate.pnl\");
+  StreamControlPanel_showPanel(stream,partition,\"display\",\"StreamControl/Allocate.pnl\");
   setValue(\"display.m_Ok\",\"visible\",0);
   setValue(\"display.m_Cancel\",\"visible\",0);
 }
@@ -51,35 +51,35 @@ T
 1
 LANG:1 4 Show
 "main()  {  
-  string displayed_partitions, partition, storage;
+  string displayed_partitions, partition, stream;
   getValue(\"display.m_partition\",\"text\",partition);
-  getValue(\"display.m_storageName\",\"text\",storage);
+  getValue(\"display.m_streamName\",\"text\",stream);
   if ( m_command.text == \"Show\" )  {
     m_command.text = \"Summary\";
     //m_command.text = \"Setup\";
-    StorageControlPanel_hidePanel(\"display\");  
-    StorageControlPanel_showPanel(storage,partition,\"display\",\"StorageControl/ShowStorage.pnl\");
+    StreamControlPanel_hidePanel(\"display\");  
+    StreamControlPanel_showPanel(stream,partition,\"display\",\"StreamControl/ShowStream.pnl\");
     setValue(\"display.m_freePartition\",\"visible\",0);
   }
   else if ( m_command.text == \"Setup\" )  {
     m_command.text = \"Show\";
     getValue(\"display.m_displayedPartitions\",\"text\",displayed_partitions);
-    StorageControlPanel_removeDisplay(storage,displayed_partitions);
-    StorageControlPanel_hidePanel(\"display\");  
-    StorageControlPanel_showPanel(storage,partition,\"display\",\"StorageControl/Allocate.pnl\");
+    StreamControlPanel_removeDisplay(stream,displayed_partitions);
+    StreamControlPanel_hidePanel(\"display\");  
+    StreamControlPanel_showPanel(stream,partition,\"display\",\"StreamControl/Allocate.pnl\");
     setValue(\"display.m_Ok\",\"visible\",0);
     setValue(\"display.m_Cancel\",\"visible\",0);
   }
   else if ( m_command.text == \"Summary\" )  {
     m_command.text = \"Setup\";
-    StorageControlPanel_hidePanel(\"display\");  
-    StorageControlPanel_showPanel(storage,partition,\"display\",\"StorageControl/Display.pnl\",140);
+    StreamControlPanel_hidePanel(\"display\");  
+    StreamControlPanel_showPanel(stream,partition,\"display\",\"StreamControl/Display.pnl\",140);
     LayerOn(2);
     setValue(\"display.m_partition\",\"text\",partition);
-    setValue(\"display.m_storageName\",\"visible\",1);
+    setValue(\"display.m_streamName\",\"visible\",1);
     int x,y;
-    getValue(\"display.m_storageName\",\"position\",x,y);
-    setValue(\"display.m_storageName\",\"position\",x,y-50);
+    getValue(\"display.m_streamName\",\"position\",x,y);
+    setValue(\"display.m_streamName\",\"position\",x,y-50);
     //setValue(\"display.m_command\",\"visible\",0);
     getValue(\"display.m_command\",\"position\",x,y);
     setValue(\"display.m_command\",\"position\",x,y-50);

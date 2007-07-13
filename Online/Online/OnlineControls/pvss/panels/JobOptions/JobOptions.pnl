@@ -3,7 +3,7 @@ V 10
 LANG:1 11 Job Options
 PANEL,-1 -1 635 357 N "_3DFace" 0
 "main() {  jo_edit1=jo_editType=JobOptionsEditor_init();                        }" 0
- E E E E 1 0 0 0  140 10
+ E E E E 1 0 0 0  0 0
 ""0  1
 E "#uses \"JobOptions.cpp\"
 int jo_editType = 0;
@@ -382,73 +382,10 @@ LANG:1 2 Ok
 LAYER, 1 
 1
 LANG:1 6 Layer2
-29 11
-"m_textEditor"
-""
-1 160 120 E E E 1 E 0 E N "_WindowText" E N {255,255,255} E E
- E E
-6 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
- 160 120 620 321
-23 RICHTEXT.RichtextCtrl.1
-24
-1 "Change" "()"
-""
--600 "Click" "()"
-""
--601 "DblClick" "()"
-""
--602 "KeyDown" "(int KeyCode, int Shift)"
-""
--604 "KeyUp" "(int KeyCode, int Shift)"
-""
--603 "KeyPress" "(int KeyAscii)"
-""
--605 "MouseDown" "(int Button, int Shift, long x, long y)"
-""
--606 "MouseMove" "(int Button, int Shift, long x, long y)"
-""
--607 "MouseUp" "(int Button, int Shift, long x, long y)"
-""
-2 "SelChange" "()"
-""
-1550 "OLEStartDrag" "(anytype Data, long AllowedEffects)"
-""
-1551 "OLEGiveFeedback" "(long Effect, bool DefaultCursors)"
-""
-1552 "OLESetData" "(anytype Data, int DataFormat)"
-""
-1553 "OLECompleteDrag" "(long Effect)"
-""
-1554 "OLEDragOver" "(anytype Data, long Effect, int Button, int Shift, float x, float y, int State)"
-""
-1555 "OLEDragDrop" "(anytype Data, long Effect, int Button, int Shift, float x, float y)"
-""
-0 "destroyed" "()"
-""
-0 "signal" "(string name, int argc, void argv)"
-""
-0 "propertyChanged" "(string name)"
-""
-0 "exception" "(int code, string source, string description, string help)"
-""
-0 "EnabledChanged" "(bool value)"
-""
-0 "BackColorChanged" "(string value)"
-""
-0 "FontChanged" "(string value)"
-""
-0 "TextRTFChanged" "(string value)"
-""
-E20 21
+20 21
 "m_needTell1Setup"
 ""
-1 190 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 160 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -460,7 +397,7 @@ LANG:1 0
 1
 LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
 0 ""
- 188 318 402 342
+ 158 318 402 342
 1
 T 
 1
@@ -488,7 +425,7 @@ LANG:1 0
 1
 LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
 0 ""
- 398 318 602 342
+ 398 318 622 342
 1
 T 
 1
@@ -501,7 +438,24 @@ E E
 0 0 0 0 0
 1
 E E
-EE0
+EE29 23
+"m_textEditor"
+""
+1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 160 120 621 321
+15 PVSS.TextEdit.1
+1
+0 "TextChanged" "()"
+""
+E0
 LAYER, 2 
 1
 LANG:1 6 Layer3

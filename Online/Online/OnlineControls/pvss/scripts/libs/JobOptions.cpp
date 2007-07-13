@@ -335,12 +335,14 @@ void JobOptions_uninstall() {
 }
 /// Editor: Initialize widget
 int JobOptionsEditor_init()  {
-  DebugN("--------------------------------------------------------------------------------");
+  bool isChild = isDollarDefined("$1") || isDollarDefined("$2");
+  DebugN("--------------------------------------------------------------------------------"+isChild);
   //JobOptions_uninstall();
   //JobOptions_install();
   setValue("m_textEditor","visible",true);
   setValue("m_needDefaults","visible",true);
   setValue("m_needTell1Setup","visible",true);
+  setValue("m_OK","visible",isChild);
   JobOptionsEditor_setToolTips();
   JobOptionsEditor_closeEditors();
   JobOptionsEditor_showCreator(0);

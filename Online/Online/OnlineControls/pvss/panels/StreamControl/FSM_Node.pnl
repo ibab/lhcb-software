@@ -1,19 +1,20 @@
 V 10
 1
-LANG:1 16 StorageNodePanel
+LANG:1 15 StreamNodePanel
 PANEL,-1 -1 570 255 N "_3DFace" 2
 "$1"
 "$2"
-"#uses \"StorageControlPanel.cpp\"
+"#uses \"StreamControlPanel.cpp\"
 main()  {
   string dunit = $1;
   int pos = strpos(dunit,\"_Slice\");
-  string storage = substr(dunit,0,pos);
-  string storage_partition = storage + \"_Partition_\" + substr(dunit,pos+strlen(\"_Slice\"),2);
-  string partition = StorageControlPanel_getPartitionNameFromSlice(storage,dunit);
+  string stream = substr(dunit,0,pos);
+  string stream_partition = stream + \"_Partition_\" + substr(dunit,pos+strlen(\"_Slice\"),2);
+  DebugN(dunit,stream,$2);
+  string partition = StreamControlPanel_getPartitionNameFromSlice(stream,dunit);
   string node      = substr($2,strlen(dunit)+1);
-  DebugN(storage ,storage_partition ,partition,node,$1,$2 );
-  StorageControlPanel_initXXXX(storage,partition,storage_partition,node);
+  DebugN(stream ,stream_partition ,partition,node,$1,$2 );
+  StreamControlPanel_initXXXX(stream,partition,stream_partition,node);
 }
 " 0
  E E E E 1 -1 -1 0  0 0

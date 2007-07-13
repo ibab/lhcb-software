@@ -1,11 +1,15 @@
 V 10
 1
-LANG:1 16 StorageShowPanel
+LANG:1 16 StreamShowPanel
+
 PANEL,-1 -1 676 529 N "_3DFace" 2
 "$partition"
-"$storage"
-"#uses \"StorageControlPanel.cpp\"
-main()  {  StorageControlPanel_init($storage, $partition);    }
+"$stream"
+"#uses \"StreamControlPanel.cpp\"
+main()  {
+  //DebugN(\"1=\"+$1+\" 2=\"+$2);
+  StreamControlPanel_init($stream, $partition);
+}
 " 0
  E E E E 1 -1 -1 0  0 0
 ""0  1
@@ -18,7 +22,7 @@ LAYER, 0
 1
 LANG:1 0 
 2 39
-"m_storageName"
+"m_streamName"
 ""
 1 480 10 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
@@ -153,7 +157,7 @@ LANG:1 0
 E E
 0 0 0 0 0
 1
-E "main(int button)  {  StorageControlPanel_radioSelectionChanged(button,m_partition.text); }
+E "main(int button)  {  StreamControlPanel_radioSelectionChanged(button,m_partition.text); }
 " 0
 
 25 21
@@ -207,7 +211,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 14 Free Partition
-"main() {  StorageControlPanel_freePartition(m_storageName.text,m_partition.text);  }" 0
+"main() {  StreamControlPanel_freePartition(m_streamName.text,m_partition.text);  }" 0
  E E E
 30 32
 "m_inputFrame"
@@ -288,7 +292,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 10 Show summ.
-"main()  {  StorageControlPanel_showSummary();  }" 0
+"main()  {  StreamControlPanel_showSummary();  }" 0
  E E E
 0
 LAYER, 2 
@@ -418,7 +422,7 @@ LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0
 0
 
 E
-"main()    {  StorageControlPanel_showPartition(m_storageName.text,m_partitionList.selectedText);  }" 0
+"main()    {  StreamControlPanel_showPartition(m_streamName.text,m_partitionList.selectedText);  }" 0
 
 E
 

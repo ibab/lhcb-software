@@ -1,22 +1,28 @@
 V 10
 1
-LANG:1 16 StorageInstaller
+LANG:1 15 StreamInstaller
 PANEL,-1 -1 501 609 N "_3DFace" 0
 "main()  {
-  m_storageSelect.appendItem(\"TestStorage\");
-  m_storageSelect.appendItem(\"Storage\");
-  m_storageSelect.selectedPos(1);
+  m_streamSelect.appendItem(\"TestStorage\");
+  m_streamSelect.appendItem(\"Storage\");
+  m_streamSelect.appendItem(\"TestMonitoring\");
+  m_streamSelect.appendItem(\"Monitoring\");
+  m_streamSelect.selectedPos(1);
+
+  m_monitoringInput.appendItem(\"TestStorage\");
+  m_monitoringInput.appendItem(\"Storage\");
+  m_monitoringInput.selectedPos(1);
   for(int i=0; i<16;++i)  {
     string name;
     sprintf(name,\"Slice%02X\",i);
-    m_storageTaskMgrTreeName.appendItem(name);
+    m_streamTaskMgrTreeName.appendItem(name);
   }
-  m_storageTaskMgrTreeName.selectedPos(1);
+  m_streamTaskMgrTreeName.selectedPos(1);
 }" 0
  E E E E 1 -1 -1 0  20 13
 ""0  1
-E "#uses \"StorageControlPanel.cpp\"
-#uses \"StorageTaskMgr.cpp\"
+E "#uses \"StreamControlPanel.cpp\"
+#uses \"StreamTaskMgr.cpp\"
 " 0
  2
 "CBRef""1"
@@ -44,9 +50,9 @@ E E 0 0 1 0 1 E 0.666666666666667 0 0.793814432989691 -3.333333333333339 49.6804
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
-LANG:1 25 StorageControl Data Types
+LANG:1 24 StreamControl Data Types
 13 1
-"m_installStorageControlTypes"
+"m_installStreamControlTypes"
 ""
 1 19.99999999999957 80.00000000000003 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
@@ -65,10 +71,10 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 23 Install datapoint types
-"main()  {  StorageControlPanel_install();  }" 0
+"main()  {  StreamControlPanel_install();  }" 0
  E E E
 13 2
-"m_uninstallStorageControlTypes"
+"m_uninstallStreamControlTypes"
 ""
 1 19.99999999999957 110 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
@@ -87,7 +93,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 22 Delete datapoint types
-"main()  {  StorageControlPanel_uninstall();    }" 0
+"main()  {  StreamControlPanel_uninstall();    }" 0
  E E E
 30 9
 "FRAME2"
@@ -102,14 +108,14 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 1.03030303030303 0 3.402061855670093 -10.6060606060606 205.7731958762888 0 E 20 13 351 111
+E E 0 0 1 0 1 E 1.03030303030303 0 3.608247422680401 -10.6060606060606 203.0927835051548 0 E 20 13 351 111
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
-LANG:1 30 StorageTask Manager Data Types
+LANG:1 29 StreamTask Manager Data Types
 13 10
-"m_installStorageTaskMgrTypes"
+"m_installStreamTaskMgrTypes"
 ""
 1 19.9999999999997 269.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
@@ -128,10 +134,10 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 23 Install datapoint types
-"main()  {  StorageTaskMgr_install();  }" 0
+"main()  {  StreamTaskMgr_install();  }" 0
  E E E
 13 11
-"m_uninstallStorageTaskMgrTypes"
+"m_uninstallStreamTaskMgrTypes"
 ""
 1 19.9999999999997 299.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
@@ -150,12 +156,12 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 22 Delete datapoint types
-"main()  {  StorageTaskMgr_uninstall();    }" 0
+"main()  {  StreamTaskMgr_uninstall();    }" 0
  E E E
 13 12
-"m_storageTaskMgrDeleteTree"
+"m_streamTaskMgrDeleteTree"
 ""
-1 22 391.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 410 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 18 0 0 0 0 0
 E E E
@@ -167,17 +173,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 389.9999999999998 174 413.9999999999998
+ 18 408 172 432
 
 T 
 1
 LANG:1 11 Delete Tree
-"main() {  StorageTaskMgr_deleteTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+"main() {  StreamTaskMgr_deleteTree(m_streamSelect.selectedText,m_streamTaskMgrTreeName.text);  }" 0
  E E E
 13 14
 "PUSH_BUTTON4"
 ""
-1 22 421.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 440 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -189,19 +195,36 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 419.9999999999998 174 443.9999999999998
+ 18 438 172 462
 
 T 
 1
 LANG:1 11 Create Tree
-"main() {  StorageTaskMgr_createTree(m_storageSelect.selectedText,
-                                    m_storageTaskMgrTreeName.text,
-                                    m_num_recvClass0.text,
-                                    m_num_recvClass1.text,
-                                    m_num_strmClass0.text,
-                                    m_num_strmClass1.text
-                                    );  
+"main() {  
+  bool isMonitoring = m_isMonitoring.state(0);
+  if ( isMonitoring )  {
+    DebugN(\"Monitoring:\"+isMonitoring+\" Input:\"+m_monitoringInput.selectedText+\" \"+m_monitoringClass1.text);
+    StreamTaskMgr_createTree(m_streamSelect.selectedText,
+                             m_streamTaskMgrTreeName.text,
+                             m_num_recvClass0.text,
+                             m_num_recvClass1.text,
+                             m_num_strmClass0.text,
+                             m_num_strmClass1.text,
+                             m_monitoringInput.selectedText,
+                             m_monitoringClass1.text
+                             );  
   }
+  else {
+    StreamTaskMgr_createTree(m_streamSelect.selectedText,
+                             m_streamTaskMgrTreeName.text,
+                             m_num_recvClass0.text,
+                             m_num_recvClass1.text,
+                             m_num_strmClass0.text,
+                             m_num_strmClass1.text,
+                             \"\",0
+                             );  
+  }
+}
 " 0
  E E E
 30 16
@@ -222,9 +245,9 @@ E E 0 0 1 0 1 E 0.666666666666667 0 0.515463917525773 -3.33333333333334 -6.70103
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
-LANG:1 19 Select Storage Name
+LANG:1 18 Select Stream Name
 22 17
-"m_storageSelect"
+"m_streamSelect"
 ""
 1 100 20 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
@@ -264,11 +287,11 @@ E E 0 1 1 2 1 E U  1 E 20 20 100 40
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
-LANG:1 13 Storage Name:
+LANG:1 12 Stream Name:
 22 19
-"m_storageTaskMgrTreeName"
+"m_streamTaskMgrTreeName"
 ""
-1 182 391.9999999999998 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 20 380 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 29 0 0 0 0 0
 E E E
@@ -280,7 +303,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 180 389.9999999999998 334 413.9999999999998
+ 18 378 172 402
 0
 
 E
@@ -300,8 +323,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 22 371.9999999999998 172 391.9999999999998
-0 2 2 "0s" 0 0 0 64 0 0  22 371.9999999999998 1
+E E 0 1 1 2 1 E U  1 E 20 360 170 380
+0 2 2 "0s" 0 0 0 64 0 0  20 360 1
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
@@ -310,7 +333,7 @@ LANG:1 18 FSM Tree creation:
 13 21
 "PUSH_BUTTON6"
 ""
-1 22 451.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 470 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 31 0 0 0 0 0
 E E E
@@ -322,17 +345,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 449.9999999999998 174 473.9999999999998
+ 18 468 172 492
 
 T 
 1
 LANG:1 12 Generate FSM
-"main() {  StorageTaskMgr_genFSM(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+"main() {  StreamTaskMgr_genFSM(m_streamSelect.selectedText,m_streamTaskMgrTreeName.text);  }" 0
  E E E
 13 22
 "PUSH_BUTTON7"
 ""
-1 182 451.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 180 470 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 33 0 0 0 0 0
 E E E
@@ -344,17 +367,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 180 449.9999999999998 254 473.9999999999998
+ 178 468 252 492
 
 T 
 1
 LANG:1 10 Start Tree
-"main() {  StorageTaskMgr_startTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+"main() {  StreamTaskMgr_startTree(m_streamSelect.selectedText,m_streamTaskMgrTreeName.text);  }" 0
  E E E
 13 23
 "PUSH_BUTTON8"
 ""
-1 262 451.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 270 470 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 35 0 0 0 0 0
 E E E
@@ -366,17 +389,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 260 449.9999999999998 334 473.9999999999998
+ 268 468 342 492
 
 T 
 1
 LANG:1 9 Stop Tree
-"main() {  StorageTaskMgr_stopTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+"main() {  StreamTaskMgr_stopTree(m_streamSelect.selectedText,m_streamTaskMgrTreeName.text);  }" 0
  E E E
 13 24
 "PUSH_BUTTON9"
 ""
-1 22 521.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 540 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 37 0 0 0 0 0
 E E E
@@ -388,22 +411,40 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 519.9999999999998 174 543.9999999999998
+ 18 538 172 562
 
 T 
 1
 LANG:1 17 Create All Slices
-"main() {  StorageTaskMgr_createAllTree(m_storageSelect.selectedText,
-                                       m_num_recvClass0.text,
-                                       m_num_recvClass1.text,
-                                       m_num_strmClass0.text,
-                                       m_num_strmClass1.text);  
-  }" 0
+"main() {  
+  bool isMonitoring = m_isMonitoring.enabled;
+  if ( isMonitoring )  {
+    StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
+                             m_streamTaskMgrTreeName.text,
+                             m_num_recvClass0.text,
+                             m_num_recvClass1.text,
+                             m_num_strmClass0.text,
+                             m_num_strmClass1.text,
+                             \"\",0
+                             );  
+  }
+  else {
+    StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
+                             m_streamTaskMgrTreeName.text,
+                             m_num_recvClass0.text,
+                             m_num_recvClass1.text,
+                             m_num_strmClass0.text,
+                             m_num_strmClass1.text,
+                             m_monitoringInput.selectedText,
+                             m_monitoringClass1.text
+                             );  
+  }
+}" 0
  E E E
 13 25
 "PUSH_BUTTON10"
 ""
-1 22 551.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 570 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 39 0 0 0 0 0
 E E E
@@ -415,17 +456,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 549.9999999999998 174 573.9999999999998
+ 18 568 172 592
 
 T 
 1
 LANG:1 16 Generate All FSM
-"main() {  StorageTaskMgr_genAllFSM(m_storageSelect.selectedText);  }" 0
+"main() {  StreamTaskMgr_genAllFSM(m_streamSelect.selectedText);  }" 0
  E E E
 13 26
 "PUSH_BUTTON11"
 ""
-1 182 551.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 180 570 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 41 0 0 0 0 0
 E E E
@@ -437,17 +478,17 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 180 549.9999999999998 254 573.9999999999998
+ 178 568 252 592
 
 T 
 1
 LANG:1 12 Start Slices
-"main() {  StorageTaskMgr_startAllTree(m_storageSelect.selectedText);  }" 0
+"main() {  StreamTaskMgr_startAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 27
 "PUSH_BUTTON12"
 ""
-1 262 551.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 270 570 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 43 0 0 0 0 0
 E E E
@@ -459,12 +500,12 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 260 549.9999999999998 334 573.9999999999998
+ 268 568 342 592
 
 T 
 1
 LANG:1 11 Stop Slices
-"main() {  StorageTaskMgr_stopAllTree(m_storageSelect.selectedText);  }" 0
+"main() {  StreamTaskMgr_stopAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 28
 "PUSH_BUTTON13"
@@ -485,8 +526,8 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 
 T 
 1
-LANG:1 15 Install Storage
-"main() {  StorageTaskMgr_installStorage(m_storageSelect.selectedText);  }" 0
+LANG:1 14 Install Stream
+"main() {  StreamTaskMgr_installStream(m_streamSelect.selectedText);  }" 0
  E E E
 13 29
 "PUSH_BUTTON14"
@@ -507,13 +548,13 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 
 T 
 1
-LANG:1 17 Uninstall Storage
-"main() {  StorageTaskMgr_uninstallStorage(m_storageSelect.selectedText);  }" 0
+LANG:1 16 Uninstall Stream
+"main() {  StreamTaskMgr_uninstallStream(m_streamSelect.selectedText);  }" 0
  E E E
 13 30
 "PUSH_BUTTON15"
 ""
-1 22 491.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 510 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 49 0 0 0 0 0
 E E E
@@ -525,12 +566,12 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 20 489.9999999999998 174 513.9999999999998
+ 18 508 172 532
 
 T 
 1
 LANG:1 17 Delete All Slices
-"main() {  StorageTaskMgr_deleteAllTree(m_storageSelect.selectedText);  }" 0
+"main() {  StreamTaskMgr_deleteAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 31
 "PUSH_BUTTON16"
@@ -552,7 +593,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 19 Connect TaskManager
-"main()  {  StorageTaskMgr_connectTaskManager(m_storageSelect.selectedText);  }" 0
+"main()  {  StreamTaskMgr_connectTaskManager(m_streamSelect.selectedText);  }" 0
  E E E
 2 33
 "PRIMITIVE_TEXT3"
@@ -726,7 +767,7 @@ LANG:1 16 # Class 0 Tasks:
 21 42
 "m_num_strmClass1"
 ""
-1 294 231 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 294 230 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 71 0 0 0 0 0
 E E E
@@ -738,7 +779,7 @@ LANG:1 0
 1
 LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
 0 ""
- 292 229 336 253
+ 292 228 336 252
 0
 
 E
@@ -761,6 +802,119 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 1 1 2 1 E U  1 E 182 230 280 248
 0 2 2 "0s" 0 0 0 192 0 0  182 230 1
+1
+LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+0 ""
+1
+LANG:1 16 # Class 1 Tasks:
+20 44
+"m_isMonitoring"
+""
+1 190 430 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+74 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 428 312 452
+1
+T 
+1
+LANG:1 0 
+
+0 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE2 45
+"PRIMITIVE_TEXT9"
+""
+1 20 20 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+76 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 190 380 270 400
+0 2 2 "0s" 0 0 0 64 0 0  190 380 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 27 Monitoring [if applicable]:
+22 46
+"m_monitoringInput"
+""
+1 220 430 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+78 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 218 428 342 452
+0
+
+E
+E
+E
+ 1 0
+21 48
+"m_monitoringClass1"
+""
+1 300 400 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+81 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 298 398 342 422
+0
+
+E
+E
+E
+
+N 0 100 1 10 1 1
+2 49
+"PRIMITIVE_TEXT10"
+""
+1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+83 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 192 402 290 420
+0 2 2 "0s" 0 0 0 192 0 0  192 402 1
 1
 LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
 0 ""
