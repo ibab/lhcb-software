@@ -35,6 +35,7 @@ use RichDAQ            v*    Rich   -no_auto_imports
 use RichMCAssociators  v*    Rich   -no_auto_imports
 use VeloAlgorithms     v*    Velo   -no_auto_imports
 use VeloSimulation     v*    Velo   -no_auto_imports
+use L0DU               v*    L0     -no_auto_imports
 
 # From BOOLE project
 use RichDigiQC         v*    Rich   -no_auto_imports
