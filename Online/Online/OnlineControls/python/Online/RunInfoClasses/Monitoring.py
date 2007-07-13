@@ -24,6 +24,7 @@ def printTasks(msg,tasks):
     v = eval(vals)
     fmt = ' %-32s %-16s %%s'%(name,msg)
     m0  = ' %-32s %-16s %%s'%('','')
+    # print '----',i
     if len(v)>0:
       for j in v:
         log(fmt%str(j))
@@ -204,7 +205,7 @@ class Monitoring:
 
     res = StreamDescriptor(self.manager,self.storage).getPartition(self.name)
     if not res:
-      error('Failed to access monitoring information')
+      error('Failed to access storage information for partition '+self.name+' ['+str(self.storage)+']')
       return None
 
     dp, part_name, slot = res
@@ -264,17 +265,19 @@ class Monitoring:
     # Define the sender tasks on the relay to feed monitoring nodes
     relaySenders = []
     monSources = {}
+    print 'Relay Nodes',relayNodes 
     for i,nodes in monStreamsByType.items():
       rcv = []
+      print 'MonNodes:',nodes 
       for k in nodes:
         if monStreamsByNode.has_key(k) and monStreamsByNode[k].issuperset([i]):
-          if not monSources.has_key(k): monSources[k]=[]
           rcv.append((monTargets[k][0],monTargets[k][1]))
-          monSources[k].append((task[0],task[1]))
-      if len(rcv)>0:
-        for j in relayNodes:
-          task = [j,self.name+'_'+j+'_SND'+i,'SND'+i,'SND'+i,rcv]
-          relaySenders.append(task)
+          if not monSources.has_key(k): monSources[k]=[]
+        if len(rcv)>0:
+          for j in relayNodes:
+            task = [j,self.name+'_'+j+'_SND'+i,'SND'+i,'SND'+i,rcv]
+            monSources[k].append((task[0],task[1]))
+            relaySenders.append(task)
 
     # Update task information for the receivers on the monitoring farm
     for i in monReceivers:  i.append(monSources[i[0]])

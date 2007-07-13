@@ -20,7 +20,8 @@ def run():
   wr.run()
   
   sims = []
-  sim = [] # ['Slice00']
+  sim = []
+  sim = ['Slice00']
   for slice in sim:
     s = StreamingSimulator.Simulator(mgr,name+'_'+slice)
     s.run()
