@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.7 2007-06-06 15:06:01 cattanem Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.8 2007-07-13 15:25:24 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -35,7 +35,9 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
 {
   declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
   declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default       );
+  declareProperty( "InputMuonTracks",     m_muonTrackLoc = TrackLocation::Muon          );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -64,11 +66,24 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
   // check data is not already there
   if ( exist<MuonPIDs>( m_muonPIDloc ) )
   {
-    return Warning( "Data already exists at " + m_muonPIDloc, StatusCode::SUCCESS );
+    return Warning( "Data already exists at " + m_muonPIDloc +
+                    " -> Will NOT replace", StatusCode::SUCCESS );
   }
 
   // load ProtoParticles
   const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
+
+  // Are Muon Tracks available ?
+  const Tracks * muonTracks = ( !exist<Tracks>(m_muonTrackLoc) ? NULL :
+                                get<Tracks>(m_muonTrackLoc) );
+  if ( !muonTracks )
+  {
+    Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS );
+  }
+  else if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Found " << muonTracks->size() << " Muon Tracks at " << m_muonTrackLoc << endreq;
+  }
 
   // new MuonPID container
   MuonPIDs * mpids = new MuonPIDs();
@@ -113,7 +128,16 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
       pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
 
-    }// has muon info
+      // Muon Track (if it exists, it will have same key as primary track)
+      Track * muonTrack = ( NULL != muonTracks ? muonTracks->object(track->key()) : NULL );
+      if ( muonTrack )
+      {
+        if ( msgLevel(MSG::DEBUG) )
+        { debug() << "Adding MuonTrack " << muonTrack->key() << " to MuonPID object" << endreq; }
+        pid->setMuonTrack( muonTrack );
+      }
+
+    } // has muon info
 
   }
 

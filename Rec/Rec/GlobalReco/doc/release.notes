@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-07-13 - Chris Jones
+ - Set the new MuonTrack SmartRef in MuonPID data objects when recreating them 
+   using the algorithm MuonPIDsFromProtoParticlesAlg
+
 ! 2007-06-22 - Chris Jones
  - Add a check to the neutral Protoparticle maker to test if ProtoParticles
    already exist at the output location

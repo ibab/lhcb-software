@@ -5,7 +5,7 @@
  * Header file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.2 2007-02-19 11:38:06 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.3 2007-07-13 15:25:24 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -53,6 +53,9 @@ private:
 
   /// Output location of RichPIDs in TES
   std::string m_muonPIDloc;
+
+  /// Location of Muon Tracks in TES
+  std::string m_muonTrackLoc;
 
 };
 
