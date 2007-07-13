@@ -19,6 +19,9 @@ programs based on LHCb v22r5 or later
     RichRecBase v3r6, PatVelo v2r16, TrackUtils v1r13, TrackSys v4r7)
     (See details in talk at </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=6&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
 
+- Persistency changes
+  . Rec/Muon/Tracks added to DST (GaudiConf v10r4)
+
 - New tuning for tracking (see Matt's talk at  </PRE><a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10160">T-Rec on 2007-07-02</a><PRE>)
   . Use zero magnetic field by default when creating a StateTraj. This is faster
     and has negligible effect on the track fit (TrackProjectors v2r13)
@@ -45,8 +48,8 @@ programs based on LHCb v22r5 or later
     (TrackCheckers v3r0, TrackSys v4r7)
   . Changes in MC Particle selection, modifies ST efficiency calculation (by <1%)
     (SimComponents v2r7, ExpertCheck.opts)
-  . Input file of default job has changed, previous one has been deleted
-    (v200601.opts)
+  . Update default input files to replace obsolete ones that have been deleted
+    (v200601.opts, DC06.opts, NewCatalog.xml)
 
 - Bug fixes
   . Fix uninitialized variables (PatVeloTT v2r13, TsaAlgorithms v2r5)
@@ -54,6 +57,8 @@ programs based on LHCb v22r5 or later
   . Transport the covariance matrix correctly (TrackMCTools v2r12)
   . Make Q/p on all states of output tracks consistent (PatKShort v1r7)
   . Fix in OTCluster drift radius calculation (TsaKernel v2r5)
+  . Adapt CopyStripETC and ReadStripETC to new DataStreamTool in Gaudi v19r4
+    (RecUtils v1r2)
 
 </PRE><H1><A NAME=v31r6>2007-06-15 Brunel v31r6</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6, Rec v4r6
