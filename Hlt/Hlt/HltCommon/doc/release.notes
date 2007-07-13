@@ -2,7 +2,11 @@
 ! Package     : Hlt/HltCommon
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+
+! 2007-07-12 - Jose A. Hernando
+  - HltSummaryTool adding NCandidates method
+
 ! 2007-07-12 - Alessia Satta
         - L0Entry add the new L0 muon line
         - match velo T add variable

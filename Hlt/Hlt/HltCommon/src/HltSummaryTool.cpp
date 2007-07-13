@@ -5,7 +5,6 @@
 
 // local
 #include "HltSummaryTool.h"
-#include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
 #include "Event/HltEnums.h"
 #include "HltBase/HltFunctions.h"
