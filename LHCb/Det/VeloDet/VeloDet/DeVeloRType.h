@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.21 2007-02-28 18:32:28 marcocle Exp $
+// $Id: DeVeloRType.h,v 1.22 2007-07-14 20:19:38 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -98,6 +98,9 @@ public:
   /// Determine if local point is in corner cut-offs
   virtual bool isCutOff(double x, double y) const;
 
+  /// Return the length of a strip
+  virtual double stripLength(const unsigned int strip) const;
+
   /// Zone for a given local phi
   unsigned int zoneOfPhi(double phi) const {
     unsigned int zone=0;
@@ -131,7 +134,7 @@ public:
 
   /// Return the local pitch of the sensor for a given strip +/- fraction
   inline double rPitch(unsigned int strip, double fraction) const {
-    return exp(fraction)*m_rPitch[strip];
+    return exp(m_pitchSlope*(strip+fraction))*m_innerPitch;
   }
 
   /// Return the local pitch at a given radius 
@@ -162,9 +165,6 @@ public:
   double phiMaxStrip(unsigned int strip) const {
     return m_stripPhiLimits[strip].second; 
   }
-
-  /// Convert local phi to ideal global phi
-  virtual double localPhiToGlobal(double phiLocal) const;
 
   /// Return the strip limits for panoramix
   inline StatusCode stripLimits(unsigned int strip, double &radius,

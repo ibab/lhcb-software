@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.28 2007-03-22 10:27:50 dhcroft Exp $
+// $Id: DeVeloSensor.cpp,v 1.29 2007-07-14 20:19:38 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -181,8 +181,12 @@ void DeVeloSensor::initSensor()
     m_isDownstream = (m_type == "PhiDL" || m_type == "PhiDR");
     m_fullType = m_type;
   }
-
-
+  // test new parameters ....
+  if(m_isR) { 
+    m_isDownstream = param<int>("DownstreamR");
+  } else if (m_isPhi) {
+    m_isDownstream = param<int>("DownstreamPhi");
+  }
 }
 
 //=========================================================================

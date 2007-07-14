@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.cpp,v 1.3 2006-11-30 07:57:41 cattanem Exp $
+// $Id: VeloDetChecker.cpp,v 1.4 2007-07-14 20:19:38 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -458,6 +458,7 @@ void VeloDetChecker::CheckRSensorGeometry() {
     rTuple->column( "pitch", rSensor->rPitch(strip));
     rTuple->column( "phiMin",rSensor->phiMinStrip(strip));
     rTuple->column( "phiMax",rSensor->phiMaxStrip(strip));
+    rTuple->column( "length",rSensor->stripLength(strip));
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits=rSensor->globalStripLimits(strip);
     std::vector<double> beginXYZ;
     beginXYZ.push_back(stripLimits.first.x());
@@ -491,6 +492,7 @@ void VeloDetChecker::CheckPhiSensorGeometry() {
     
     phiTuple->column( "angleOfStrip",phiSensor->angleOfStrip(strip));
     phiTuple->column( "trgPhiDirectionOfStrip",phiSensor->trgPhiDirectionOfStrip(strip));
+    phiTuple->column( "length",phiSensor->stripLength(strip));
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits=phiSensor->globalStripLimits(strip);
     std::vector<double> beginXYZ;
     beginXYZ.push_back(stripLimits.first.x());

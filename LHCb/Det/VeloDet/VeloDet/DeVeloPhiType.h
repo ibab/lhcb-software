@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.23 2007-03-21 17:04:42 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.24 2007-07-14 20:19:38 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -109,6 +109,9 @@ public:
   /// Determine if local point is in corner cut-offs
   virtual bool isCutOff(double x, double y) const;
 
+  /// Return the length of a strip
+  virtual double stripLength(const unsigned int strip) const;
+
   /// The phi position of a strip at a given radius in the local frame
   inline double phiOfStrip(unsigned int strip, double fraction, 
                            const double radius) const {
@@ -139,9 +142,6 @@ public:
       return (effectiveStrip*m_outerPitch) + m_outerTilt;
     }
   }
-
-  /// Convert local phi to ideal global phi
-  virtual double localPhiToGlobal(double phiLocal) const;
 
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
@@ -209,6 +209,7 @@ private:
   double m_rGap;
   std::vector<unsigned int> m_stripsInZone;
   static std::vector<std::pair<double,double> > m_stripLines;
+
   /// First corner
   double m_corner1X1;
   double m_corner1Y1;
@@ -232,6 +233,9 @@ private:
   /// Pattern is based on sequence of six strips (outer, inner, outer, inner, outer, outer)
   void BuildRoutingLineMap();
 
+  /// Store vector of strip lengths
+  void calcStripLengths();
+
   /// Return the element in the pattern (0 to 5)
   unsigned int patternElement(unsigned int routLine){return ((routLine-1)%6);};
   /// Return number of times pattern has been repeated
@@ -248,6 +252,21 @@ private:
   // Set output level for message service
   bool m_debug;
   bool m_verbose;
+
+  // These are references to local statics accessed via static functions
+  // implemented in DeVeloRType.cpp. I stree this because these are
+  // NOT ALLOWED TO BE INLINED!
+  // Sematically, these data menber should be statics, but this does not work with
+  // Windows(tm) DLLs in the CMT framework because they are accessed
+  // by inlined accessors. So we have to live with this detour.
+  // The staic bool m_staticDataInvalid is not (and never should be!)
+  // accessed by any inline function. It's sole purpose is to speed
+  // up the initialize() method when the information common to all sensors
+  // is already up to date.
+  std::vector<double>& m_stripLengths;
+
+  // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
+  static bool m_staticDataInvalid;
 
 };
 #endif // VELODET_DEVELOPHITYPE_H

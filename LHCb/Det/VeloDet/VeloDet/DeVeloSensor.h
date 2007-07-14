@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.32 2007-03-21 17:04:42 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.33 2007-07-14 20:19:38 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -8,6 +8,7 @@
 
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -105,6 +106,9 @@ public:
   /// Determine if local point is in corner cut-offs
   virtual bool isCutOff(double x, double y) const = 0;
 
+  /// Return the length of a strip
+  virtual double stripLength(const unsigned int strip) const = 0;
+
   /// Convert local position to global position
   /// Local from is +ve x (and Upstream for phi sensors)
   inline Gaudi::XYZPoint localToGlobal(const Gaudi::XYZPoint& localPos) const {
@@ -153,7 +157,11 @@ public:
   }
  
   /// Convert local phi to ideal global phi
-  virtual double localPhiToGlobal(double phiLocal) const = 0;
+  double localPhiToGlobal(double phiLocal) const {
+    if(isDownstream()) phiLocal = -phiLocal;
+    if(isRight()) phiLocal += Gaudi::Units::pi;
+    return phiLocal;
+  }
   
   /// Return the z position of the sensor in the global frame
   inline double z() const {return m_z;}

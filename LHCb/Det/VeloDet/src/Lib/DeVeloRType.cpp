@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.41 2007-03-22 10:27:50 dhcroft Exp $
+// $Id: DeVeloRType.cpp,v 1.42 2007-07-14 20:19:38 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -315,13 +315,17 @@ double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
   return phiMax;
 }
 //==============================================================================
-/// Convert local phi to ideal global phi
+/// Return the length of a strip
 //==============================================================================
-double DeVeloRType::localPhiToGlobal(double phiLocal) const {
-  if(!isDownstream()) phiLocal = -phiLocal;
-  if(isRight()) phiLocal += Gaudi::Units::pi;
-  return phiLocal;
-} 
+double DeVeloRType::stripLength(const unsigned int strip) const { 
+  double phiMin=m_stripPhiLimits[strip].first;
+  double phiMax=m_stripPhiLimits[strip].second;
+  if(phiMin < 0) phiMin += 2*Gaudi::Units::pi;
+  if(phiMax < 0) phiMax += 2*Gaudi::Units::pi;
+  double radius=m_rStrips[strip];
+  double length=2*(phiMax-phiMin)*radius;
+  return length;
+}
 //==============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
 //==============================================================================

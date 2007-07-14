@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.167 2007-05-25 13:03:55 cattanem Exp $
+! $Id: release.notes,v 1.168 2007-07-14 20:19:38 mtobin Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-07-14 - Mark Tobin
+ - Corrected isDownstream method so that it will work for data and DC06
+ (currently requires HEAD tag in SQLDDDB v2r1).
+ - Removed virtual method localPhiToGlobal in DeVeloSensor and replaced with
+ correct inline method.
+ - Add method to return strip lengths for each strip.
+ - Fix bug in rPitch(strip,fraction) method.
 
 !======================== VeloDet v11r3 2007-05-25 ===========================
 ! 2007-05-25 - Marco Cattaneo
