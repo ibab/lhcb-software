@@ -28,10 +28,10 @@ DigiWriter.RequireAlgs = { "L0Filter" } ;  // ... but keep this one!
 
 // L0Filter.OutputLevel = 2 ;
 //---------------------------------------------------------------------------
-// Some input (Bs->J/psi Phis digi)
+// Some input (BB)
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001617/DIGI/0000/00001617_00000003_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001889/DIGI/0000/00001889_00000136_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 ApplicationMgr.EvtMax = -1 ;
 

@@ -12,7 +12,8 @@ ApplicationMgr.ExtSvc  += { "TagCollectionSvc/EvtTupleSvc" };
 // Output sequence
 //----------------------------------------------------------
 ApplicationMgr.OutStream += { "Sequencer/SeqWriteTag" } ;
-SeqWriteTag.Members =  { "L0Filter", "L0ETC/TagCreator" ,
+SeqWriteTag.Members =  { // "L0Filter",  // write always
+                         "L0ETC/TagCreator" ,
                          "TagCollectionStream/WR" } ;//GP: (53,1)
 
 //----------------------------------------------------------
@@ -39,3 +40,4 @@ WR.ItemList =  { "/Event#1" } ;
 EvtTupleSvc.Output =  {  } ;
 
 PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
+
