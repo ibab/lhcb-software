@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r7>2007-07-12 RecSys v4r7</A></H1><PRE>
+</PRE><H1><A NAME=v4r7>2007-07-16 RecSys v4r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7.
 
 - Packages modified: PatVelo v2r16, PatVeloTT v2r13, PatPV v2r9, PatKShort v1r7, 
@@ -14,7 +14,7 @@ This version uses Gaudi v19r4 and LHCb v22r7.
    TrackExtrapolators v2r13, TrackMCTools v2r12, TrackIdealPR v2r12, 
    TrackCheckers v3r0, TrackAssociators v2r5, TrackSys v4r7, RichRecSys v3r5,
    RichGlobalPID v3r4, RichRecAlgorithms v2r8, RichRecQC v2r13,
-   RichRecTools v3r12, MuonID v5r2, RecUtils v1r2
+   RichRecTools v3r12, MuonID v5r2, GlobalReco v6r11, RecUtils v1r2
 
 - In PatVelo v2r16
   . Each of R, Space, Generic, Open and General tracking set their own track
@@ -141,6 +141,12 @@ This version uses Gaudi v19r4 and LHCb v22r7.
 
 - In MuonID v5r2
   . Add SmartRef to Muon track
+
+- In GlobalReco v6r11
+  . Set the new MuonTrack SmartRef in MuonPID data objects when recreating them 
+    using the algorithm MuonPIDsFromProtoParticlesAlg
+  . Add a check to the neutral Protoparticle maker to test if ProtoParticles
+    already exist at the output location
 
 - In RecUtils v1r2
   . Adapt CopyStripETC and ReadStripETC to new DataStreamTool in Gaudi v19r4 

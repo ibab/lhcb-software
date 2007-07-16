@@ -65,4 +65,4 @@ use RichTrgGlobalPID    v3r6    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r10   Rec   # Chris Jones
+use GlobalReco          v6r11   Rec   # Chris Jones
