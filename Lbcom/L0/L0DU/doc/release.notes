@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.62 2007-07-15 16:57:47 pkoppenb Exp $
+$Id: release.notes,v 1.63 2007-07-16 07:25:02 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
 
+!========================== L0DU v7r5 2006-07-16 =========================
 ! 2007-07-15 - Patrick Koppenburg
  - src/L0Strip.*
    . Added L0 information
@@ -24,7 +25,6 @@ Package Manager : Olivier Deschamps
 ! 2007-07-13 - A. Satta & O.D.
  - New trigger channels in L0DU-reconfigure.opts (DiMuon & MuonNoGlob)
 
-!========================== L0DU v7r5 2006-07-11 =========================
 ! 2007-07-11 - Marco Cattaneo
  - Remove IL0Candidate.h, was moved to L0Event a year ago
  - Remove obsolete file L0DU_load.cpp
