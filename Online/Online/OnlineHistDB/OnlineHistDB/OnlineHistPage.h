@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.7 2007-07-13 16:37:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.8 2007-07-16 12:47:31 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -22,37 +22,52 @@ class OnlineHistPage : public OnlineHistDBEnv
 		 std::string Name, 
 		 std::string Folder);
   virtual ~OnlineHistPage();
+  /// number of histograms on page
+  int nh() const {return m_h.size();}
+  /// page name
+  const std::string& name() const { return m_name;}
+  /// page folder name
+  const std::string& folder() const { return m_folder;}
+  /// short page description
+  const std::string& doc() const { return m_doc;}
+
+  /// set short page description
   bool setDoc(std::string Doc) {m_doc=Doc;return save();}
+  /// set page folder name. If not existing, page folder is created.
   bool setFolder(std::string Folder) {m_folder=Folder;return save();}
+  /// adds or updates an histogram on the page. Use instance$>$1 to use the
+  /// same histogram more than once. Returns the object attached to page (the input
+  /// one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
   OnlineHistogram* declareHistogram(OnlineHistogram* h,
 				    float Cx,
 				    float Cy,
 				    float Sx,
 				    float Sy,
 				    unsigned int instance=1);
+  /// like declareHistogram, but a new instance is always created
   OnlineHistogram* addHistogram(OnlineHistogram* h,
 				float Cx,
 				float Cy,
 				float Sx,
 				float Sy);
+  /// removes histogram from page, or one of its instances, returning true on success
   bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
+  /// clean up the page removing all histograms
   bool removeAllHistograms();
+  /// fills the hlist vector with pointers to teh histograms attached to this page
   void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
     std::vector<OnlineHistogram*>::iterator ix;
     for (ix = m_h.begin();ix != m_h.end(); ++ix)
       hlist->push_back(*ix);
   }
+  /// get the layout of given histogram. returns false if histogram is not found
   bool getHistLayout(OnlineHistogram* h,
 		     float &Cx,
 		     float &Cy,
 		     float &Sx,
 		     float &Sy,
 		     unsigned int instance=1) const;
-  int nh() const {return m_h.size();}
-  const std::string& name() const { return m_name;}
-  const std::string& folder() const { return m_folder;}
-  const std::string& doc() const { return m_doc;}
 
  private:
   // private dummy copy constructor and assignment operator 

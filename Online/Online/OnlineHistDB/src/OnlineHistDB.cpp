@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.9 2007-07-13 15:55:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -54,7 +54,16 @@ void OnlineHistDB::setHistogramBufferDepth(int N) {
 }
 
 
-
+bool OnlineHistDB::removeHistogram(OnlineHistogram* h,
+				   bool RemoveWholeSet) {
+  bool out=false;
+  OnlineRootHist *rh = dynamic_cast<OnlineRootHist*> (h);
+  if(rh)
+    out = OnlineRootHistStorage::removeHistogram(rh,RemoveWholeSet);
+  else if(h)
+    out = OnlineHistogramStorage::removeHistogram(h,RemoveWholeSet);
+  return out;
+}
 
 
 

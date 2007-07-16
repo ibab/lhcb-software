@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.5 2007-07-13 17:19:28 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.6 2007-07-16 12:47:32 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(OnlineHistDBEnv& Env,
@@ -177,8 +177,8 @@ OnlineRootHist* OnlineRootHistStorage::getNewRootHist(std::string Identifier,
 
 
 
-bool OnlineRootHistStorage::removeRootHistogram(OnlineRootHist* h,
-				   bool RemoveWholeSet) {
+bool OnlineRootHistStorage::removeHistogram(OnlineRootHist* h,
+					    bool RemoveWholeSet) {
   bool out=h->remove(RemoveWholeSet);
   if (out) {
     std::vector<OnlineRootHist*>::iterator ih = m_myHist.begin();

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.9 2007-07-13 16:37:39 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -29,7 +29,6 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
       cout << "warning from OnlineHistPage::OnlineHistPage:" <<
 	" page "<< Name <<" already exists in folder "<<m_folder << 
 	endl ;
-      //<< "  Please explicitly use the setFolder method to change the folder" << endl;
     }
     m_doc = astmt->getString(4);
     m_conn->terminateStatement (astmt); 
@@ -59,8 +58,14 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
     astmt->closeResultSet (rset);
     m_conn->terminateStatement (astmt);
   }
-  else
+  else {
+    if (m_folder == "_DEFAULT_") {
+      std::string mes = "No folder set for page " + m_name +
+	".  Please use the setFolder method";
+      errorMessage(mes);
+    }
     m_conn->terminateStatement (astmt); 
+  }
 }
 
 
@@ -103,7 +108,9 @@ OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
       }
       else 
 	outh=h;
-      outh->setPage(m_name,instance);
+      bool setp = outh->setPage(m_name,instance);
+      if (!setp) 
+	errorMessage("Could not setting page "+m_name+" on histogram "+outh->identifier());
     }
     else {
       outh=0;
@@ -196,50 +203,56 @@ unsigned int OnlineHistPage::newHistogramInstance(OnlineHistogram* h) const {
 
 bool OnlineHistPage::save() {
   bool out=true;
-  stringstream hlist,cx,cy,sx,sy;
-  hlist << "OnlineHistDB.histotlist(";
-  cx << "OnlineHistDB.floattlist(";
-  cy << "OnlineHistDB.floattlist(";
-  sx << "OnlineHistDB.floattlist(";
-  sy << "OnlineHistDB.floattlist(";
-  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-    hlist << "'" << m_h[jh]->hid() << "'"; 
-    cx << m_cx[jh] ;
-    cy << m_cy[jh] ;
-    sx << m_sx[jh] ;
-    sy << m_sy[jh] ;
-    if (jh < m_h.size()-1) {
-      hlist << ",";
-      cx <<  ",";
-      cy <<  ",";
-      sx <<  ",";
-      sy <<  ",";
-    }
+  if (m_folder == "_DEFAULT_") {
+    errorMessage("Page "+m_name+" has no folder and cannot be saved");
+    out = false;
   }
-  hlist << ")";
-  cx <<  ")";
-  cy <<  ")";
-  sx <<  ")";
-  sy <<  ")";
-  stringstream command;
-  command << "begin OnlineHistDB.DeclarePage(theName => '"<< m_name <<
-    "',theFolder => '"<< m_folder <<
-    "',theDoc => '"<< m_doc <<
-    "',hlist => " << hlist.str() <<
-    ",Cx => " << cx.str() <<
-    ",Cy => " << cy.str() <<
-    ",Sx => " << sx.str() <<
-    ",Sy => " << sy.str() << "); end;";
-
-  Statement *astmt=m_conn->createStatement(command.str()); 
-  try{
-    astmt->execute();
-  }catch(SQLException ex)
-    {
-      dumpError(ex,"OnlineHistPage::save for page "+m_name);
-      out=false;
+  else {
+    stringstream hlist,cx,cy,sx,sy;
+    hlist << "OnlineHistDB.histotlist(";
+    cx << "OnlineHistDB.floattlist(";
+    cy << "OnlineHistDB.floattlist(";
+    sx << "OnlineHistDB.floattlist(";
+    sy << "OnlineHistDB.floattlist(";
+    for (unsigned int jh=0; jh<m_h.size() ; jh++) {
+      hlist << "'" << m_h[jh]->hid() << "'"; 
+      cx << m_cx[jh] ;
+      cy << m_cy[jh] ;
+      sx << m_sx[jh] ;
+      sy << m_sy[jh] ;
+      if (jh < m_h.size()-1) {
+	hlist << ",";
+	cx <<  ",";
+	cy <<  ",";
+	sx <<  ",";
+	sy <<  ",";
+      }
     }
-  m_conn->terminateStatement (astmt); 
+    hlist << ")";
+    cx <<  ")";
+    cy <<  ")";
+    sx <<  ")";
+    sy <<  ")";
+    stringstream command;
+    command << "begin OnlineHistDB.DeclarePage(theName => '"<< m_name <<
+      "',theFolder => '"<< m_folder <<
+      "',theDoc => '"<< m_doc <<
+      "',hlist => " << hlist.str() <<
+      ",Cx => " << cx.str() <<
+      ",Cy => " << cy.str() <<
+      ",Sx => " << sx.str() <<
+      ",Sy => " << sy.str() << "); end;";
+    
+    Statement *astmt=m_conn->createStatement(command.str()); 
+    try{
+      astmt->execute();
+    }catch(SQLException ex)
+      {
+	dumpError(ex,"OnlineHistPage::save for page "+m_name);
+	out=false;
+    }
+    m_conn->terminateStatement (astmt); 
+  }
   return out;
 }
 

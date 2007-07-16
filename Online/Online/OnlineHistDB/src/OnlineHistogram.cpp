@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.9 2007-07-13 17:19:28 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -40,7 +40,7 @@ void OnlineHistogram::checkServiceName() {
 bool OnlineHistogram::setPage(std::string Page,
 			      int Instance) {
   bool out=true;
-  if ( Page != m_page && Instance != m_instance) {
+  if ( Page != m_page || Instance != m_instance) {
     m_page =Page;
     m_instance =Instance;
     out=verifyPage();
@@ -386,7 +386,24 @@ int OnlineHistogram::nPageInstances() {
   }
   return out;
 }
-
+int OnlineHistogram::nThisPageInstances() {
+  int out=0;
+  ResultSet *rset;
+  Statement *query = 
+    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2");
+  query->setString(1,m_hid);
+  query->setString(2,m_page);
+  try{
+    rset =  query->executeQuery();
+    while(rset->next ()) 
+      out++;
+  } 
+  catch(SQLException ex) {
+    dumpError(ex,"OnlineHistogram::nThisPageInstances");
+    out=0;
+  }
+  return out;
+}
 
 bool OnlineHistogram::useSetForHistDisplay() {
   // decide if associate display options to set or single histogram
