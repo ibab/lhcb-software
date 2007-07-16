@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-07-16 - Jose A. Hernando
+ - more enums for the dimuon alley
+
 !======================== HltEvent v8r3 2007-07-10 ===========================
 ! 2007-07-10 - Jose A. Hernando
  - more enums
