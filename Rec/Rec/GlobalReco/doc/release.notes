@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r11 2007-07-16 ======================
 ! 2007-07-13 - Chris Jones
  - Set the new MuonTrack SmartRef in MuonPID data objects when recreating them 
    using the algorithm MuonPIDsFromProtoParticlesAlg
