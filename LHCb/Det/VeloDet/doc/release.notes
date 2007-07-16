@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.168 2007-07-14 20:19:38 mtobin Exp $
+! $Id: release.notes,v 1.169 2007-07-16 14:47:13 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v11r4 2007-07-16 ===========================
 ! 2007-07-14 - Mark Tobin
  - Corrected isDownstream method so that it will work for data and DC06
  (currently requires HEAD tag in SQLDDDB v2r1).
