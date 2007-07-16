@@ -22,6 +22,11 @@ HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" 
 HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
 HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
 /*
+ * Hacking of errors
+ */
+SeqHltCharged.Members += { "HltInsertTrackErrParam"} ;
+HltInsertTrackErrParam.InputLocation = "Hlt/Track/ForwardCLEANED" ;
+/*
  * ChargedProtoPAlg
  */
 SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
