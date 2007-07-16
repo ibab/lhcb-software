@@ -11,6 +11,8 @@ It can process DC06 data, but output format is different from DC06, requires
 programs based on LHCb v22r5 or later
 
 - New features
+  . New algorithm (L0Filter) and options ($L0DUROOT/options/Brunel.opts), running
+    in new L0 sequence, to reconstruct only events passing L0 (L0DU v6r5)
   . Fast fit with parameterized material now available, but not used by default.
     Needs SQLDDDB v2r1
   . Add SmartRef to Muon track in MuonPID (MuonID v5r2, RecEvent v2r5)
