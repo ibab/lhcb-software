@@ -3,13 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-
- - New empty L0 sequence added in all ProcessPhases
-
-</PRE><H1><A NAME=v31r7>2007-07-02 Brunel v31r7</A></H1><PRE>
+</PRE><H1><A NAME=v31r7>2007-07-16 Brunel v31r7</A></H1><PRE>
  - In ExpertCheck.opts, adapt STChecker opts to new MCParticleSelector defaults
  - Update default input files to replace obsolete ones that have been deleted
    (v200601.opts, DC06.opts, NewCatalog.xml)
+ - New empty L0 sequence added in all ProcessPhases
 
 </PRE><H1><A NAME=v31r6>2007-06-01 Brunel v31r6</A></H1><PRE>
  - Use ParamFiles v6r1
