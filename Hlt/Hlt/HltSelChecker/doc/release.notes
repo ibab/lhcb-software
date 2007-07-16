@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2007-07-16 - Patrick Koppenburg
+ - Less printout in HltSelChecker algorithm
+
 ! 2007-07-13 - Patrick Koppenburg
  - New options for PhiPhi
  - More printout in HltSelChecker

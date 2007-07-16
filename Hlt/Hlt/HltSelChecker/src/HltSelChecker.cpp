@@ -1,4 +1,4 @@
-// $Id: HltSelChecker.cpp,v 1.2 2007-07-13 08:51:11 pkoppenb Exp $
+// $Id: HltSelChecker.cpp,v 1.3 2007-07-16 17:21:09 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -159,11 +159,12 @@ StatusCode HltSelChecker::twoBody(std::string part, const LHCb::Particle* P,
   geomDispCalculator()->calcCloseAppr(*D1, *D2, ca, cae);
   tuple->column( part+"CA",  ca);
   tuple->column( part+"CAe", cae);
-  info() << "Distance of " << D1->referencePoint() << " " << D1->momentum() 
-         << endmsg ;
-  info() << "        and " << D2->referencePoint() << " " << D2->momentum() 
-         << " is " << ca << " +/- " << cae << endmsg ;  
-
+  if (msgLevel(MSG::DEBUG)){
+    debug() << "Distance of " << D1->referencePoint() << " " << D1->momentum() 
+            << endmsg ;
+    debug() << "        and " << D2->referencePoint() << " " << D2->momentum() 
+            << " is " << ca << " +/- " << cae << endmsg ;  
+  }
   if (msgLevel(MSG::DEBUG)) debug() << "==> twoBody done " << P->key()<< endmsg;
   return StatusCode::SUCCESS ;
 }

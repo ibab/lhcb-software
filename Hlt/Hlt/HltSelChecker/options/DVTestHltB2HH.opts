@@ -70,3 +70,10 @@ PatHadSingleTRVelo.OutputLevel = 1 ;
 ApplicationMgr.TopAlg += { "HltSelChecker/PionsChecker" };
 PionsChecker.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
 PionsChecker.GeomTools = { "" : "TrgDispCalculator" };
+
+ApplicationMgr.TopAlg += { "HltSelChecker/PionsOffChecker" };
+PionsOffChecker.PhysDesktop.InputLocations = { "Phys/StdLoosePions" } ;
+
+// SeqHltCharged.Members -= { "HltInsertTrackErrParam"} ;
+//HltInsertTrackErrParam.OutputLevel = 1 ;
+//PionsChecker.OutputLevel = 1 ;
