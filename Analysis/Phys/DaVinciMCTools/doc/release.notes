@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.169 2007-07-11 16:55:27 gligorov Exp $
+! $Id: release.notes,v 1.170 2007-07-17 12:49:56 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file
 
 ! 2007-07-11 - vladimir gligorov
  - new options added for background category: SemileptonicDecay and Numneutrinos, see
