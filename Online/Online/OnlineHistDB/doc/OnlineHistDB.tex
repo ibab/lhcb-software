@@ -76,6 +76,12 @@
  get an OnlineHistPage object, to create a new page or view/edit an existing one
 
 
+\item    bool {\bf removePage}(OnlineHistPage* Page);
+
+
+ removes completely the page, and all associated options (HANDLE WITH CARE!)
+
+
 \item    bool {\bf declareSubSystem}(std::string SubSys);
 
 
@@ -153,7 +159,7 @@
 \item    bool {\bf removePageFolder}(std::string Folder);
 
 
- removes Page Folder only if it's empty (useful for cleanup)
+ removes Page Folder only if it doesn't have pages (useful for cleanup)
 
 
 \item    int {\bf getAlgorithmNpar}(std::string AlgName,\\\mbox{}~~~~~~~~~
