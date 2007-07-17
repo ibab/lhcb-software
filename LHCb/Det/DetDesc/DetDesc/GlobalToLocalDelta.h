@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.9 2007-07-11 16:36:35 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.10 2007-07-17 11:57:25 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -130,10 +130,10 @@ namespace DetDesc {
    * @param  parentDE the IDetectorElement of the parent with respect to which the position
    *         is taken
    * @param  DE detector element in question.
-   * @param  globalTransform 3D transformation that describes 
-   *         the total "misaligned" global matrix T_k'
+   * @param  parentTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T_k' in the frame of parentDE
    *         Misaligned position matrix T_k' = T_k * globalDelta^-1 * globalDelta'
-
+   *
    * @return 3D transformation that globalDelta' applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-07-11
@@ -143,7 +143,7 @@ namespace DetDesc {
   */
   const Gaudi::Transform3D localDeltaFromParentTransform(const IDetectorElement* parentDE,
                                                          const IDetectorElement* DE,
-                                                         const Gaudi::Transform3D& globalTransform);
+                                                         const Gaudi::Transform3D& parentTransform);
 
 
   /**
@@ -152,10 +152,10 @@ namespace DetDesc {
    * @param  parentGI the IGeometryInfo of the parent with respect to which the position
    *         is taken
    * @param  GI the IGeometryInfo of the detector element in question
-   * @param  globalTransform 3D transformation that describes 
-   *         the total "misaligned" global matrix T'
+   * @param  parentTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T' in the frame of parentGI
    *         Misaligned position matrix T_k' = T_k * globalDelta^-1 * globalDelta'
-
+   *
    * @return 3D transformation that globalDelta' applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-07-11
@@ -163,9 +163,9 @@ namespace DetDesc {
    * @todo Add check for parentGI really being a parent of GI
    *
   */
-  const Gaudi::Transform3D localDeltaFromParentTransform(const IGeometryInfo* ParentGI,
+  const Gaudi::Transform3D localDeltaFromParentTransform(const IGeometryInfo* parentGI,
                                                          const IGeometryInfo* GI,
-                                                         const Gaudi::Transform3D& globalTransform);
+                                                         const Gaudi::Transform3D& parentTransform);
 
   
 }
