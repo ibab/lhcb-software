@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -15,7 +15,7 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
   try{
     astmt->registerOutParam(1, OCCIINT); 
     astmt->setString(2, Name);
-    astmt->registerOutParam(3,OCCISTRING,30);
+    astmt->registerOutParam(3,OCCISTRING,300);
     astmt->registerOutParam(4,OCCISTRING,100);
     astmt->execute();
     out=astmt->getInt(1);
@@ -174,6 +174,23 @@ bool OnlineHistPage::removeAllHistograms() {
   return out;
 }
 
+bool OnlineHistPage::remove() {
+  bool out=true;
+  string command = "begin :out := OnlineHistDB.DeletePage(:1); end;";
+  Statement *dst=m_conn->createStatement(command);
+  try{
+    dst->registerOutParam(1, OCCIINT);
+    dst->setString(2,m_name);
+    dst->execute();
+    out = (dst->getInt(1) == 1);
+  }catch(SQLException ex) {
+    dumpError(ex,"OnlineHistPage::remove for Page "+m_name);
+    out=false;
+  }
+  m_conn->terminateStatement (dst);
+  return out;  
+}
+
 int OnlineHistPage::findHistogram(OnlineHistogram* h,
 				  unsigned int instance,
 				  bool &knownHisto) const {
@@ -287,3 +304,20 @@ OnlineHistPage* OnlinePageStorage::getPage(std::string Name,
   return page;
 }
 
+bool OnlinePageStorage::removePage(OnlineHistPage* Page) {
+  bool out=Page->remove();
+  if (out) {
+    std::vector<OnlineHistPage*>::iterator ip = m_myPage.begin();
+    while (ip != m_myPage.end()) {
+      if( (*ip)->name() == Page->name() ) {
+	if (Page != (*ip)) delete *ip;
+	ip=m_myPage.erase(ip);
+      }
+      else {
+	ip++;
+      }
+    }
+    delete Page;
+  }
+  return out;  
+}

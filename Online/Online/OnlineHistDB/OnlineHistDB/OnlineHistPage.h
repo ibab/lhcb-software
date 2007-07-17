@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.8 2007-07-16 12:47:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.9 2007-07-17 15:54:13 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -35,7 +35,7 @@ class OnlineHistPage : public OnlineHistDBEnv
   bool setDoc(std::string Doc) {m_doc=Doc;return save();}
   /// set page folder name. If not existing, page folder is created.
   bool setFolder(std::string Folder) {m_folder=Folder;return save();}
-  /// adds or updates an histogram on the page. Use instance$>$1 to use the
+  /// adds or updates an histogram on the page. Use instance > 1 to use the
   /// same histogram more than once. Returns the object attached to page (the input
   /// one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
   OnlineHistogram* declareHistogram(OnlineHistogram* h,
@@ -55,6 +55,7 @@ class OnlineHistPage : public OnlineHistDBEnv
 		       unsigned int instance=1);
   /// clean up the page removing all histograms
   bool removeAllHistograms();
+  bool remove();
   /// fills the hlist vector with pointers to teh histograms attached to this page
   void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
     std::vector<OnlineHistogram*>::iterator ix;
@@ -97,6 +98,8 @@ class OnlinePageStorage
   virtual ~OnlinePageStorage();
   /// get an OnlineHistPage object, to create a new page or view/edit an existing one
   OnlineHistPage* getPage(std::string Name, std::string Folder="_DEFAULT_");
+  /// removes completely the page, and all associated options (HANDLE WITH CARE!)
+  bool removePage(OnlineHistPage* Page);
  private:
   OnlineHistDBEnv* m_Pagenv;
   OnlineHistogramStorage* m_Hstorage;

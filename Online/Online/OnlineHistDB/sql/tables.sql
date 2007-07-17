@@ -207,7 +207,7 @@ create table PAGEFOLDER (
 create table PAGE (
  PageName varchar2(50)  constraint PG_pk primary key
 	USING INDEX (create index PG_pk_ix on PAGE(PageName) TABLESPACE INDX01),
- Folder varchar2(30) CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
+ Folder varchar2(300) CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
  NHisto integer,
  PageDoc  varchar2(100)
 );

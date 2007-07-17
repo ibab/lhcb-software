@@ -1,0 +1,78 @@
+\item    int {\bf nh}() const ;
+
+ number of histograms on page
+
+
+\item    const std::string\& {\bf name}() const ;
+
+ page name
+
+
+\item    const std::string\& {\bf folder}() const ;
+
+ page folder name
+
+
+\item    const std::string\& {\bf doc}() const ;
+
+ short page description
+
+
+\item    bool {\bf setDoc}(std::string Doc) ;
+
+ set short page description
+
+
+\item    bool {\bf setFolder}(std::string Folder) ;
+
+ set page folder name. If not existing, page folder is created.
+
+
+\item    OnlineHistogram* {\bf declareHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+				    float Cx,\\\mbox{}~~~~~~~~~
+				    float Cy,\\\mbox{}~~~~~~~~~
+				    float Sx,\\\mbox{}~~~~~~~~~
+				    float Sy,\\\mbox{}~~~~~~~~~
+				    unsigned int instance=1);
+
+ adds or updates an histogram on the page. Use instance $>$ 1 to use the
+ same histogram more than once. Returns the object attached to page (the input
+ one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
+
+
+\item    OnlineHistogram* {\bf addHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+				float Cx,\\\mbox{}~~~~~~~~~
+				float Cy,\\\mbox{}~~~~~~~~~
+				float Sx,\\\mbox{}~~~~~~~~~
+				float Sy);
+
+ like declareHistogram, but a new instance is always created
+
+
+\item    bool {\bf removeHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+		       unsigned int instance=1);
+
+ removes histogram from page, or one of its instances, returning true on success
+
+
+\item    bool {\bf removeAllHistograms}();
+
+
+ clean up the page removing all histograms
+
+
+\item    void {\bf getHistogramList}(std::vector$<$OnlineHistogram*$>$ *hlist) ;
+
+ fills the hlist vector with pointers to teh histograms attached to this page
+
+
+\item    bool {\bf getHistLayout}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+		     float \&Cx,\\\mbox{}~~~~~~~~~
+		     float \&Cy,\\\mbox{}~~~~~~~~~
+		     float \&Sx,\\\mbox{}~~~~~~~~~
+		     float \&Sy,\\\mbox{}~~~~~~~~~
+		     unsigned int instance=1) const;
+
+ get the layout of given histogram. returns false if histogram is not found
+
+

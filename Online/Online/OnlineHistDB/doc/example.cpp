@@ -1,29 +1,39 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.4 2007-03-21 13:15:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.5 2007-07-17 15:54:13 ggiacomo Exp $
+#include <stdio.h>
 #include <OnlineHistDB/OnlineHistDB.h>
 int main ()
 {
+ OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
+					  OnlineHistDBEnv_constants::ACCOUNT,
+					  OnlineHistDBEnv_constants::DB);
+  
  bool ok=true;
- std::string password="ask_to_DB_manager";
- OnlineHistDB *HistDB = new OnlineHistDB(password);
+  
+ ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
+ OnlineHistTask* mytask = HistDB->getTask("EXAMPLE");
+ if (mytask)
+   mytask->setSavingFrequency(3.5);
+  
+ if (ok) {
+   string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips_after_use_of_CRack";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R1";
+   HistDB->declareHistByServiceName(ServiceName); 
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R2";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M3R1";
+   HistDB->declareHistByServiceName(ServiceName);
+   
+   HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
+   HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
+   
+   ok &= HistDB->sendHistBuffer(); // needed to send histogram buffer to DB
+ }
 
- HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
 
- string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips_after_use_of_CRack";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R1";
- HistDB->declareHistByServiceName(ServiceName); 
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R2";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M3R1";
- HistDB->declareHistByServiceName(ServiceName);
 
- HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
- HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
-
- if (!HistDB->sendHistBuffer()) // needed to send histogram buffer to DB
-   ok=false;
  OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
  if(thisH)
    thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
@@ -83,35 +93,36 @@ int main ()
    if(pg) {
      pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
      pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
-     pg->declareHistogram(h3,0. ,0. ,0.5,1. );
+     pg->declareHistogram(h3,0.5,0.5,0.5,0.4);
    
      int lc=2, fs=7, fc=3;
      float ymax=20000.;
-     h1->setHistoSetDisplayOption("LINECOLOR",(void*) &lc);
-     h1->setHistoSetDisplayOption("FILLSTYLE",(void*) &fs);
-     h1->setHistoSetDisplayOption("FILLCOLOR",(void*) &fc); 
-     h1->setHistoSetDisplayOption("YMAX",(void*) &ymax); 
-   
-   
-     lc=3;
-     h2->initDisplayOptionsFromSet();
-     h2->setDisplayOption("LINECOLOR",(void*)  &lc);
+     h1->setDisplayOption("LINECOLOR",(void*) &lc);
+     h1->setDisplayOption("FILLSTYLE",(void*) &fs);
+     h1->setDisplayOption("FILLCOLOR",(void*) &fc); 
+     h1->setDisplayOption("YMAX",(void*) &ymax); 
 
+     h1->dump();
 
-     fc=4;
-     h3->initHistoPageDisplayOptionsFromSet("Example Page");
-     h3->setHistoPageDisplayOption("FILLCOLOR",(void*) &fc);
+     // second instance of h1
+     OnlineHistogram* newh = pg->declareHistogram(h1,0.5,0. ,0.5,0.4,2);
+     ymax=200000.;
+     newh->setDisplayOption("YMAX",(void*) &ymax); 
+     newh->unsetDisplayOption("LINECOLOR");
+
+     newh->dump();
    }
  }
 
 
 
  // commit all changes only if there are no errors from histogram declarations
- if (!HistDB->sendHistBuffer())  ok=false;
+ ok &= HistDB->sendHistBuffer();
  if (ok) 
    HistDB->commit();
  else 
    cout << "commit aborted because of previous errors" <<endl;
+
 
  std::vector<string> folders;
  std::vector<string> pages;
@@ -125,7 +136,7 @@ int main ()
    for (j=0;j<np;j++) {
      cout << "     Page " << pages[j] <<endl;
      histos.clear();
-     int nh=HistDB->getHistogramsByPage(pages[j],histos);
+     int nh=HistDB->getHistogramsByPage(pages[j],&histos);
      for (k=0;k<nh;k++) {
        cout << "           Histogram " << histos[k]->identifier() <<endl;
      }    
@@ -152,7 +163,7 @@ std::vector<string> mylist;
    cout << "Algorithm "<<mylist[i]<<endl;
  }
 
-
+ HistDB->setDebug(3);
  delete HistDB;
 }
 

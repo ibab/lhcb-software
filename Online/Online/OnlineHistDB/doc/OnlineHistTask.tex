@@ -1,0 +1,70 @@
+\item    std::string {\bf name}() ;
+
+ task name
+
+
+\item    int {\bf ndet}() ;
+
+ number of associated subdetector/subsystems (up to 3)
+
+
+\item    std::string {\bf det}(int i) ;
+
+ name of associated subdetector/subsystems (-1 $<$ i $<$ ndet() )
+
+
+\item    bool {\bf runsOnPhysics}() ;
+
+ true if task is configured to run for physics events
+
+
+\item    bool {\bf runsOnCalib}() ;
+
+ true if task is configured to run for calibration events
+
+
+\item    bool {\bf runsOnEmpty}() ;
+
+ true if task is configured to run for empty events
+
+
+\item    float {\bf savingFrequency}() ;
+
+ task saving frequency
+
+
+\item    std::string {\bf reference}() ;
+
+ location of latest reference file
+
+
+\item    bool {\bf setSubDetectors}(std::string SubDet1="NULL",\\\mbox{}~~~~~~~~~ 
+			std::string SubDet2="NULL",\\\mbox{}~~~~~~~~~ 
+			std::string SubDet3="NULL");
+
+ sets the associated subdetector/subsystems. "NULL" unsets the value 
+
+
+\item    bool {\bf addSubDetector}(std::string SubDet);
+
+
+ adds an associated subdetector/subsystems, returning true on success
+
+
+\item    bool {\bf setRunConfig}(bool RunsOnPhysics,\\\mbox{}~~~~~~~~~ 
+		    bool RunsOnCalib,\\\mbox{}~~~~~~~~~ 
+		    bool RunsOnEmpty) ;
+
+ sets run configuration bits
+
+
+\item    bool {\bf setSavingFrequency}(float SavingFrequency) ;
+
+ sets task saving frequency
+
+
+\item    bool {\bf setReference}(std::string Reference) ;
+
+ sets the location of latest reference file
+
+

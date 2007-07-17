@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.6 2007-07-09 17:23:23 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.7 2007-07-17 15:54:12 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -32,11 +32,20 @@ namespace OnlineHistDBEnv_constants {
 
 class OnlineHistDBEnv {
  public:
+  /// get verbosity level (0 for no debug messages, up to 3)
   typedef enum { H1D, H2D, P1D, P2D, CNT} HistType;
   int debug() const { return m_debug;}
+  /// set verbosity level
   void setDebug(int DebugLevel) { m_debug=DebugLevel;}
-  /// exception level: 0 means never throw exc. to client code, 1 means only severe errors, 2 means throw all exceptions
+  /// exception level: 0 means never throw exc. to client code, 1 means only
+  /// severe errors (default value), 2 means throw all exceptions.
+  /// The default value is 1, meaning that exceptions are thrown only in
+  /// case of severe DB inconsistency. All other errors, e.g. syntax errors,
+  /// can be checked from the method return values and from the warning
+  /// messages on the standard output.
+  /// exception can catched using {\it catch(SQLException ex)}
   int excLevel() const {return m_excLevel;}
+  ///
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
  protected:
   OnlineHistDBEnv(std::string User) 

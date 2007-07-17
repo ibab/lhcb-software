@@ -1,0 +1,37 @@
+\item    void {\bf setFromDB}();
+
+
+ updates ROOT TH1 display properties from Histogram DB (via OnlineHistogram object) 
+ called by constructor
+
+
+\item    void {\bf setDrawOptions}();
+
+
+ updates current drawing options from Histogram DB (via OnlineHistogram object)
+
+
+\item    bool {\bf saveToDB}();
+
+
+ saves current ROOT display options to OnlineHistogram object and to Histogram DB
+
+
+\item    virtual void {\bf Draw}(Option\_t* option="");
+
+
+ overloaded TH1 Draw method, calls setDrawOptions()
+
+
+\item    virtual void {\bf DrawPanel}();
+
+
+ overloaded TH1 DrawPanel method, calls setDrawOptions()
+
+
+\item    virtual TH1* {\bf myDrawCopy}(Option\_t* option="");
+
+
+ calls TH1 DrawCopy method and setDrawOptions()
+
+

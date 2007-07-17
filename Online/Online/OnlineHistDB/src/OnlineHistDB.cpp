@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -65,13 +65,61 @@ bool OnlineHistDB::removeHistogram(OnlineHistogram* h,
   return out;
 }
 
-
+bool OnlineHistDB::removePageFolder(std::string Folder) {
+  bool out=true;
+  // check that there are no pages on folder
+  Statement *qst=m_conn->createStatement("SELECT PAGENAME FROM PAGE WHERE FOLDER='"
+					 +Folder+"'");
+  try{
+    ResultSet *rset = qst->executeQuery ();
+    if(rset->next ()) {
+      errorMessage("Folder "+Folder+" contains page "+rset->getString(1)+
+		   " and cannot be removed");
+      out = false;
+    }
+    else {
+      // check son folders
+      Statement *rqst=m_conn->createStatement("SELECT PAGEFOLDERNAME FROM PAGEFOLDER WHERE PARENT='"
+					     +Folder+"'");
+      try{
+	ResultSet *rrset = rqst->executeQuery ();
+	while (rrset->next ()) {
+	  out &= this->removePageFolder(rrset->getString(1));
+	}	
+      }catch(SQLException ex)
+	{
+	  dumpError(ex,"OnlineHistDB::removePageFolder for Folder="+Folder);
+	  out=false;
+	}
+      m_conn->terminateStatement (rqst);
+    }
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistDB::removePageFolder for Folder="+Folder);
+      out=false;
+    }
+  if(out) {
+    Statement *dst=m_conn->createStatement("DELETE FROM  PAGEFOLDER WHERE PAGEFOLDERNAME='"
+					   +Folder+"'");
+    try{
+      dst->execute();
+      if (debug()>1) cout << "Deleted Page Folder "<< Folder <<endl;
+    }catch(SQLException ex)
+      {
+	dumpError(ex,"OnlineHistDB::removePageFolder for Folder="+Folder);
+	out=false;
+      }
+    m_conn->terminateStatement (dst);
+  }
+  m_conn->terminateStatement (qst);
+  return out;
+}
 
 bool OnlineHistDB::declareSubSystem(std::string SubSys)
 {
   bool out=true;
-   Statement *tstmt=m_conn->createStatement 
-     ("begin OnlineHistDB.DeclareSubSystem(:x1); end;");
+  Statement *tstmt=m_conn->createStatement 
+    ("begin OnlineHistDB.DeclareSubSystem(:x1); end;");
   try{
     tstmt->setString(1, SubSys);
     tstmt->executeUpdate();

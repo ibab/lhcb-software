@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.8 2007-07-16 12:47:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.9 2007-07-17 15:54:13 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -19,13 +19,6 @@ class  OnlineHistogram : public OnlineHistDBEnv
 		  int Instance=1);
   virtual ~OnlineHistogram();
   void checkServiceName();
-  /// sets page on which histogram is displayed (reload display options if needed)
-  bool setPage(std::string Page,
-	       int Instance=1);
-  /// unsets page associated to histogram object
-  void unsetPage();
-  /// sets the DIM service name that is currently publishing the histogram. Returns true on success
-  bool setDimServiceName(std::string DimServiceName);
   bool isAbort() const {return m_isAbort;}
   /// full histogram unique identifier Taskname/AlgorithmName/HistogramName
   std::string identifier() const {return m_identifier;}
@@ -65,7 +58,14 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// if the histogram is no more in use, returns the end--of--validity date
   /// as a unix timestamp, otherwise returns 0.
   int obsoleteness() const {return m_obsoleteness;}
-  /// removes an histogram, and optionally its full set. (TEMPORARY)
+  /// sets page on which histogram is displayed (reload display options if needed). Histogram has to be already
+  /// been attached to the page through OnlineHistPage::declareHistogram()
+  bool setPage(std::string Page,
+	       int Instance=1);
+  /// unsets page associated to histogram object
+  void unsetPage();
+  /// sets the DIM service name that is currently publishing the histogram. Returns true on success
+  bool setDimServiceName(std::string DimServiceName);
   bool remove(bool RemoveWholeSet);
   /// dumps histogram data
   void dump();
@@ -147,7 +147,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// set (then, you can specify values for single histograms with the {\it
   /// setAnalysis} method. 
   /// You can create more than one analysis
-  /// with the same algorithm by using instance$>$1. If the analysis
+  /// with the same algorithm by using instance > 1. If the analysis
   /// identified by Algorithm and instance already exists, parameters are
   /// updated. Returns the internal analysis ID.
   int declareAnalysis(std::string Algorithm, 
@@ -224,7 +224,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int m_hdisp;
   int m_shdisp;
   std::vector<OnlineDisplayOption*> m_do;
-  bool verifyPage();
+  bool verifyPage(std::string Page, int Instance);
   void load();
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();

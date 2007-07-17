@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{2}
-\docrev{0}
+\docrev{4}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -33,7 +33,7 @@ The present design of DB tables is shown in figure \ref{DBschema}
 Histograms are uniquely identified by the expression:\\
 {\it Taskname}/{\it Algorithmname}/{\it HistogramName}\\
 The histogram name can contain a subname:
-{\it HistogramName} = {\it HistogramSetName}\_\$\$\_{\it Subname}\\
+{\it HistogramName} = {\it HistogramSetName}\_\${\it Subname} \\
 Histograms differing only by {\it Subname} are part of the same
 Histogram set. These should be histograms that have identical binning,
 e.g. containing the same distribution for different channels of a detector.
@@ -45,7 +45,7 @@ where {\it HSID} is an integer number identifying the histogram set,
 and {\it IHS} is a sequence number (starting from 1) to identify histograms in
 the same set.
 
-\subsubsection{Properties of TASK}
+\subsubsection{Properties of TASK} 
 \begin{description}
 \item{TaskName} (string of max length 100) \\
 unique task identifier
@@ -55,7 +55,8 @@ specify for which type of data task is running
 up to 3 subdetector/subsystem can be associated to task. 
 \item{Reference}  (string of length 100)\\
 link to the location of reference histograms for this task
-\end{description}
+\item{SaveFrequency} saving frequency for the corresponding saveset
+\end{description} 
 
 \subsubsection{Properties of HISTOGRAMSET}
 \begin{description}
@@ -229,6 +230,15 @@ set of needed parameters
 \section{DB implementation}
 A first prototype of the DB has been implemented under Oracle on the
 CERN Oracle server and is available for tests.
+	
+In June 2007 the DB has migrated to the LHCb Oracle server at point8,
+that can be seen from the cern network only.
+
+The connection string is \\
+\centerline{$<$account$>$/$<$password$>$@lbora01:1528/HISTOGRAMDB}
+where $<$account$>$ is \\
+{HIST\_READER}   (read--only, password=''welcome'') or \\
+{HIST\_WRITER} 
 
 The DB can be accessed through a C++ API or interactively through a
 Web interface written in PHP. In order to minimize client load and
@@ -241,6 +251,10 @@ precompiled on the Oracle server.
 It is available for test at the address\\
 {\it https://webafs3.cern.ch/ggrazian/lhcb/OnlineHistDB/index.php}
 
+while the production address (visible only from the CERN network)
+will be \\
+\centerline{ \it http://lbweb01:8090/histogramdb}  
+
 It is intended to be the most suitable tool to browse available
 histograms, edit the display options and the automatic analysis, including
 the definition of histograms to be produced at analysis level.
@@ -248,6 +262,17 @@ the definition of histograms to be produced at analysis level.
 Presently, it is also possible to edit the viewer page configurations, though
 a graphical editor in the presenter application will likely be the
 most suitable tool for that task.
+
+It is also suited for uploading {\bf reference histograms}. Users should
+provide ROOT files containing all the reference histograms of a given
+task, that could be simply a saveset files. \\
+These can be uploaded through the ``Task Editor'' link at \\
+{ \it http://lbweb01:8090/histogramdb} \\
+A tool is provided to check the file content for missing or unknown histograms.
+According to the convention of \cite{dbdesign}, files are saved as \\
+$<$Reference\_root$>$/$<$task name$>$/$<$datatype$>$\_$<$startrun$>$.\\
+where the fields $<$datatype$>$ and $<$startrun$>$ allow to define
+different reference for different run condition and time range. 
 
 \section{C++ Interface}
 
@@ -261,16 +286,17 @@ The C++ API allows to perform practically any operation on the DB .
 
 You can add entries to the DB through the methods beginning with {\it
 declare}, that create the specified entry if not existing, or 
-update its fields otherwise. Thus, running the same code twice is
-equivalent to run it once.
+update its fields otherwise. If you use these methods, running the
+same code twice is equivalent to run it once.
 
 
 \subsection{OnlineHistDB class}
 Each instantiation of this class opens a transaction with the DB
-server. Its methods allow the creation of histograms and pages, and
-the definitions of tasks, subsystems and algorithms. Histograms and
-pages can be edited through the pointers to OnlineHistogram and
-OnlineHistPage objects returned by the {\it getHistogram} and {\it
+server. Its methods allow to define new DB entries (histograms,
+tasks, subsystems, pages, algorithms) and query the DB content. \\
+Histograms, tasks and pages can be manipulated using the corresponding
+classes described in the next sections. For each DB entry, an object can be
+instantiated through the {\it getHistogram},  {\it getTask} and {\it
 getPage} methods. Such objects make sense only within the transaction
 and should never be deleted by the user (they are destroyed by the
 OnlineHistDB destructor). 
@@ -281,7 +307,7 @@ commit} method.
 By default, DB errors don't throw exceptions to the client code but
 for severe inconsistencies (i.e. bugs). The default behaviour can be
 changed (see section \ref{dbenvclass}). Normally, one can detect
-errors by the method return values and choose if commit or not. 
+errors by the method return values and choose if commit or not. \\
 Histogram declarations are a special case since, 
 in order to improve performance, they are stored in
 a buffer, with default depth 1000, and actually sent to the DB
@@ -294,202 +320,8 @@ the buffer is emptied.
 
 
 \begin{list}{$\bullet$}{}
-\item {\bf HistDB}(std::string passwd, 
-		std::string user=OnlineHistDBEnv\_constants::ACCOUNT, 
-		std::string db=OnlineHistDBEnv\_constants::DB);
 
-constructor
-
-\item bool {\bf commit}();
-
-commits all changes to the DB. Returns true if there are no errors.
-
-
-\item bool {\bf declareTask}(std::string Name, 
-		   std::string SubDet1="NULL", 
-		   std::string SubDet2="NULL", 
-		   std::string SubDet3="NULL",
-		   bool RunsOnPhysics=false, 
-		   bool RunsOnCalib=false,\\ 
-		   bool RunsOnEmpty=false);
-
-creates or updates a Task definition, returning true on success. Tasks can be associated to up to
-three subdetectors/subsystems. 
-
-
-\item   bool {\bf declareSubSystem}(std::string SubSys);
-
-declares a  subsystem, returning true on success
-
-\item   void {\bf declareHistByServiceName}(const std::string \&ServiceName);
-
-declares an Histogram by its DIM service name. In the LHCb
-DAQ, this is intended to be used only by the Experiment Control
-System to dynamically update the DB with the published histograms.\\
-Tasks not known to the DB are automatically created.\\
-If histogram already exists, just updates the current DIM service name 
-
-
-\item void {\bf declareHistogram}(std::string TaskName, 
-			std::string AlgorithmName, 
-			std::string HistogramName, 
-			HistType Type); 
-
-declares an Histogram by its identifying attributes (no need to know
-the DIM service name). The enum HistType is defined in section \ref{dbenvclass}.
-
-
-\item void {\bf setHistogramBufferDepth}(int N);
-
-when creating histograms with the {\it declareHistByServiceName}
-method, the histogram list is actually send to the DB server every N
-histograms (or at commit) in order to optimize performance. The
-default buffer depth (recommended value) is 1000.  
-
-\item bool {\bf sendHistBuffer}();
-
-forces sending histogram declaration buffer to the DB. Returns true if
-there are no errors.
-
-\item OnlineHistogram* {\bf declareAnalysisHistogram}( std::string 
-Algorithm, std::string Name, std::vector $<$OnlineHistogram*$>$
-\&Sources, std::vector$<$float$>$* Parameters = NULL);
-
-declares an histogram to be produced at analysis
-level using algorithm Algorithm. Name is the histogram name. Sources
-must contain the pointers to the input histograms. Parameters is a
-pointer to a parameter vector, optionally needed by the algorithm. If
-the algorithm requires an histogram set as input, use any histogram of the
-set. Returns the pointer to the new histogram object.
- 
-
-\item bool {\bf removeHistogram}(OnlineHistogram* h,
-		       bool RemoveWholeSet = false);
-
-removes an histogram, and optionally its full set. {bf This is
-a temporary method to be used if needed at the development stage. Will
-be removed at production stage} 
-
-\item  bool {\bf declareCheckAlgorithm}(std::string Name, 
-			     int Npars, 
-			     std::string* pars=NULL, 
-			     std::string doc="NONE");
-
-declares to the DB an Analysis algorithm implemented in the Analysis
-library. Npars is the number of algorithm's parameters, pars should
-point to an array containing the parameter names, doc is a short
-description of the algorithm.
-
-
-\item  bool {\bf declareCreatorAlgorithm}(std::string Name, 
-			       int Ninput=0, 
-			       HistType OutputType = H1D,
-			       int Npars=0, 
-			       std::string* pars=NULL,
-	                       std::string doc="NONE");
-
-declares to the DB an available algorithm to produce histograms at
-analysis time. Ninput is the number of input histograms, Npars the
-number of optional parameters (pars containing their names), doc is a short
-description of the algorithm.
-
-
-\item  int {\bf getAlgorithmNpar}(std::string AlgName, int* Ninput = NULL);
-
-gets the number of parameters, and
-optionally the number of input histograms, needed by algorithm AlgName.
-
-
-\item std::string {\bf getAlgParName}(std::string AlgName,
-		       int Ipar);
-
-gets the name of parameter Ipar (starting from 1) of algorithm AlgName
-
-\item  OnlineHistPage* {\bf getPage}(std::string Name, std::string Folder="");
-
-gets a pointer to an OnlineHistPage object, to create a new page (in this case
-Folder must be specified) or view/edit an existing one
-
-
-\item  OnlineHistogram* {\bf getHistogram}(std::string Name,
-				std::string Page="\_NONE\_");
-
-gets a pointer to an OnlineHistogram object
-that can be used to view/edit an histogram record. If Page
-is specified, the default display options for the histogram are those
-associated to the page (if available). 
-\end{list}
-
-
-Query methods:
-
-\begin{list}{$\bullet$}{}
-
-\item int {\bf getHistogramsWithAnalysis}(std::vector$<$OnlineHistogram*$>$\&
-list);
-
-gets the list of histograms on which some check analysis has to be
-performed. Returns the number of histograms found. list must be
-created by the user.
-
-\item int {\bf getAnalysisHistograms}(std::vector$<$OnlineHistogram*$>$\& list);
-
-gets the list of histograms that have to be produced by analysis
-task. Returns the number of histograms found. list must be
-created by the user.
-
-\item int {\bf getHistogramsBySubsystem}(std::string
-SubSys,std::vector$<$OnlineHistogram*$>$\& list);
-
-gets the list of histograms related to subsystem SubSys. Returns the
-number of histograms found. list must be created by the user.
-
-\item  int {\bf getHistogramsByTask}(std::string
-Task,std::vector$<$OnlineHistogram*$>$\& list);
-
-  gets the list of histograms related to task Task. Returns the
-number of histograms found. list must be created by the user.
-
-\item  int {\bf getHistogramsByPage}(std::string Page,std::vector$<$OnlineHistogram*$>$\& list);
-
-  gets the list of histograms displayed on page Page. Returns the
-number of histograms found. list must be created by the user.
-
-\item  int {\bf getHistogramsBySet}(std::string SetName,std::vector$<$OnlineHistogram*$>$\& list);\\
-int {\bf getHistogramsBySet}(const OnlineHistogram\& Set,std::vector$<$OnlineHistogram*$>$\& list);
-
-  gets the list of histograms in a Set. Returns the
-number of histograms found. list must be created by the user.
-
-\item   int {\bf getPageFolderNames}(std::vector<string>\& list);
-
- gets the list of available page folders. Returns the
-number of folders found. list must be created by the user.
-
-\item   int {\bf getPageNamesByFolder}(std::string Folder,
-			   std::vector<string>\& list);
-
-  gets the list of pages in a folder. Returns the
-number of pages found. list must be created by the user.
-
-\item   int {\bf getPageNames}(std::vector<string>\& list);
-
-gets the list of all available pages. Returns the
-number of pages found. list must be created by the user.
-
-\item  int {\bf  getSubsystems}(std::vector<string>\& list);
-
-gets the list of known subsystems. list must be created by the user.
-
-\item  int {\bf  getTasks}(std::vector<string>\& list);
-
-gets the list of task names. list must be created by the user.
-
-\item  int {\bf  getAlgorithms}(std::vector<string>\& list, std::string type="\_ALL\_");
-
-gets the list of algorithm names. list must be created by the user.
-type can be "\_ALL\_", "CHECK", "HCREATOR"
-
+\input{OnlineHistDB}
 
 \end{list}
 
@@ -501,224 +333,38 @@ OnlineHistDB object, i.e. a DB transaction, through the {\it
 getHistogram} method.
 
 \begin{list}{$\bullet$}{}
-\item   std::string {\bf identifier}();
-
-full histogram unique identifier Taskname/AlgorithmName/HistogramName
-\item   std::string {\bf page}();
-
-page on which histogram is displayed (if specified)
-\item void {\bf setPage}(std::string Page);
-
-set page on which histogram is displayed (reload display options if needed)
-
-
-\item   std::string {\bf hid}();
-
-internal histogram ID (equivalent to hsid()/ihs())
-\item   int {\bf hsid}();
-
-internal histogram set ID
-\item   std::string {\bf dimServiceName}();
-
-name of the DIM service that is currently publishing the histogram 
-
-\item bool setDimServiceName(std::string DimServiceName);
-
-setes the DIM service name that is currently publishing the
-histogram. Returns true on success
-
-\item   int {\bf nhs}();
-
-number of histograms in set
-\item   int {\bf ihs}();
-
-position of this histogram in set (starting from 1). Can be larger
-than nhs() if some histogram in the set has been deleted
-\item   std::string {\bf  hstype}();
-
-histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
-\item   std::string {\bf hsname}();
-
-histogram set name
-\item   std::string {\bf subname}();
-
-subname 
-\item   std::string {\bf task}();
-
-task name
-\item   std::string {\bf algo}();
-
-algorithm name
-
-\item   std::string {\bf descr}();
-
-short description of the histogram
-\item   std::string {\bf doc}();
-
-link to a more extensive documentation
-
-\item   int {\bf creation}();
-
-creation date, as a unix timestamp
-\item   int {\bf obsoleteness}();
-
-if the histogram is no more in use, returns the end--of--validity date
-as a unix timestamp, otherwise returns 0. 
+\input{OnlineHistogram}
 \end{list}
 
-Methods for display options:
+\subsection{OnlineRootHist class}
+
+This class inherits from OnlineHistogram and ROOT's TH1 classes. It
+can be used as an interface between the histogram DB and ROOT, in
+order to load or save display parameters trasparently.
+
 \begin{list}{$\bullet$}{}
-\item typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;\\
-     DisplayOptionMode {\bf domode}();
-  
-specifies if the display options in this object are: not defined,
-associated to the histogram set, associated to the histogram,
-associated to the histogram on  page {\it page()}
-  
-\item  bool {\bf initDisplayOptionsFromSet}(); 
-
-initializes display options associated to this histogram with the
-options defined for the histogram set (if available). Returns true on
-success.
-
-\item  bool {\bf initHistoPageDisplayOptionsFromSet}(std::string PageName = "\_DEFAULT\_");
-
-initializes display options associated to this histogram on page
-PageName (default is {\it page()}) with the
-options defined for the histogram set (if available). Returns true on
-success.
-
-\item  bool {\bf initHistoPageDisplayOptionsFromHist}(std::string PageName = "\_NONE\_"); 
-
-initializes display options associated to this histogram on page
-PageName (default is {\it page()}) with the
-options defined for the histogram (if available). Returns true on
-success.
-
-\item   bool {\bf setHistoSetDisplayOption}(std::string ParameterName, 
-				void* value);
-
-sets a display option for the whole histogram set. The available
-parameter names and the corresponding types are listed in section
-\ref{dispopts}. Returns true on success.
-
-
-\item bool {\bf setDisplayOption}(std::string ParameterName, 
-			void* value);
-
-sets a display option for the present histogram.
-\item  bool {\bf setHistoPageDisplayOption}(std::string ParameterName, 
-				 void* value,
-				 std::string PageName = ``\_DEFAULT\_'');
-
-sets a display option for the present histogram on page
-PageName (default is {\it page()})
-
-\item   bool {\bf getDisplayOption}(std::string ParameterName,
-					 void* option);
-
-if display option  ParameterName has been defined, puts its value into
-option and returns true. In case different sets of display options
-exists for histogram set, histogram and histogram in page, the most
-specific one is used.
-
+\input{OnlineRootHist}
 \end{list}
 
-Methods for analysis options:
+
+\subsection{OnlineHistTask class}
+
+OnlineHistTask objects are instantiated within an
+OnlineHistDB object, i.e. a DB transaction, through the {\it getTask} method.
+
 \begin{list}{$\bullet$}{}
-\item   int {\bf  nanalysis}();
-
-number of analysis to be performed on the histogram set
-\item   const std::vector$<$int$>$\& {\bf anaId}();
-
-vector of length {\it  nanalysis}() containing the analysis internal IDs
-\item   const std::vector$<$std::string$>$\& {\bf anaName}();
-
-vector of length {\it  nanalysis}() containing the analysis algorithm names
-\item   boolean {\bf isAnaHist}();
-
-true if the histogram is produced at analysis level
-\item  int {\bf declareAnalysis}(std::string Algorithm, 
-		      std::vector $<$float$>$* warningThr=NULL,  
-		      std::vector $<$float$>$* alarmThr=NULL, 
-		      int instance=1); 
-
-declare an analysis to be performed on the histogram set. If the algorithm
-requires some parameters, the warning and alarm values must be
-specified as vectors of floats and will be set for all histograms in
-set (then, you can specify values for single histograms with the {\it
-setAnalysis} method. 
-You can create more than one analysis
-with the same algorithm by using instance$>$1. If the analysis
-identified by Algorithm and instance already exists, parameters are
-updated. Returns the internal analysis ID.
-
-\item   bool {\bf setAnalysis}(int AnaID, \\
-		   std::vector$<$float$>$* warningThr = NULL, 
-		   std::vector$<$float$>$* alarmThr = NULL);
-
-updates parameters for analysis with ID AnaID (for this histogram only). Returns true
-on success
-\item   bool {\bf getAnaSettings}(int AnaID,
-		      std::vector$<$float$>$* warn, 
-		      std::vector$<$float$>$* alarm); 
-
-gets parameters for analysis with ID AnaID. Returns true
-on success
-\item   bool {\bf maskAnalysis}(int AnalysisAnaID,bool Mask=true); 
-
-masks analysis with ID AnaID. Use Mask=false to unmask. Returns true
-on success
+\input{OnlineHistTask}
 \end{list}
-
 
 
 \subsection{OnlineHistPage class}
 
+OnlineHistPage objects are instantiated within an
+OnlineHistDB object, i.e. a DB transaction, through the {\it
+getPage} method.
+
 \begin{list}{$\bullet$}{}
-\item   const std::string\& {\bf name}();
-
-page name
-\item   const std::string\& {\bf folder}();
-
-page folder name
-\item   int {\bf nh}();
-
-number of histograms on page
-\item   const std::string\& {\bf doc}();
-
-short page description
-\item bool {\bf setDoc}(std::string Doc);
-
-set short page description
-\item  bool {\bf setFolder}(std::string Folder);
-
-set page folder name. If not existing, page folder is created.
-\item   bool {\bf declareHistogram}(OnlineHistogram* h,
-		    float Cx,
-		    float Cy,
-		    float Sx,
-		    float Sy,
-		    int instance=1);
-
-adds or updates an histogram on the page. Use instance$>$1 to use the
-same histogram more than once. Returns true on success
-
-\item   bool {\bf removeHistogram}(OnlineHistogram* h, unsigned int instance=1);
-
-removes histogram from page, returning true on success
-\item   const std::vector$<$OnlineHistogram*$>$\& { \bf hlist}();
-
-returns the list of histograms on this page
-\item   bool {\bf getHistLayout}(OnlineHistogram* h,
-		     float \&Cx,
-		     float \&Cy,
-		     float \&Sx,
-		     float \&Sy,
-		     unsigned int instance=1);
-
-get the layout of given histogram. returns false if histogram is not found
-
+\input{OnlineHistPage}
 \end{list}
 
 
@@ -726,22 +372,7 @@ get the layout of given histogram. returns false if histogram is not found
 All previous classes derivate from this one, that has a few public
 members:
 \begin{list}{$\bullet$}{}
-\item typedef enum { H1D, H2D, P1D, P2D, CNT} HistType;
-\item  int {\bf debug}() const;
-\item void setDebug(int DebugLevel);
-
-debug level: -1 means no messages, 0 (default) means only error
-messages, $>$0 some debugging information is printed 
-
-\item int {\bf excLevel}() const;
-\item void setExcLevel(int ExceptionLevel);
-
-exception level: 0 means never throw exc. to client code, 1 means only
-severe errors (default value), 2 means throw all exceptions.\\
-The default value is 1, meaning that exceptions are thrown only in
-case of severe DB inconsistency. All other errors, e.g. syntax errors,
-can be checked from the method return values and from the warning
-messages on the standard output.
+\input{OnlineHistDBEnv}
 \end{list}
 
 Note that the debug and exception levels defined for the OnlineHistDB object are
@@ -759,33 +390,43 @@ int main ()
 \end{verbatim}
 Open DB transaction:
 \begin{verbatim}
- std::string password="ask_to_DB_manager";
- OnlineHistDB *HistDB = new OnlineHistDB(password);
+ OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
+				OnlineHistDBEnv_constants::ACCOUNT,
+			 	OnlineHistDBEnv_constants::DB);
  bool ok=true;
 \end{verbatim}
-Declare the features of your task and your histograms
+Declare the features of your task 
 \begin{verbatim}
- HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
-
- string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips_after_use_of_CRack";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R1";
- HistDB->declareHistByServiceName(ServiceName); 
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R2";
- HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M3R1";
- HistDB->declareHistByServiceName(ServiceName);
- HistDB->declareHistByServiceName(ServiceName);
- HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
- HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
-  if (!HistDB->sendHistBuffer()) // needed to send histogram buffer to DB
-   ok=false;
-
- OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
- if(thisH)
-   thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
+ ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
+ OnlineHistTask* mytask = HistDB->getTask("EXAMPLE");
+ if (mytask)
+   mytask->setSavingFrequency(3.5);
+\end{verbatim}
+Declare some histograms (this is not normally needed for histograms
+handled by the Online system)
+\begin{verbatim}
+ if (ok) {
+   string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips_after_use_of_CRack";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R1";
+   HistDB->declareHistByServiceName(ServiceName); 
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M1R2";
+   HistDB->declareHistByServiceName(ServiceName);
+   ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M3R1";
+   HistDB->declareHistByServiceName(ServiceName);
+   
+   // alternative declaration not using DIM Service Name
+   HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
+   HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
+   // DIM Service Name can be specified afterwards
+   OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
+    if(thisH)
+     thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
+    
+   ok &= HistDB->sendHistBuffer(); // needed to send histogram buffer to DB
+ }
 \end{verbatim}
 Now declare an histogram to be produced at analysis level by some
 algorithm, and an automatic check to be performed on it (the
@@ -796,8 +437,7 @@ library)
 				 "bin-by-bin subtraction");
 
  OnlineHistogram* s1=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips");
- OnlineHistogram* s2=HistDB->getHistogram(
-                    "EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
+ OnlineHistogram* s2=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
  OnlineHistogram* htrips=0;
  std::vector<OnlineHistogram*> sources;
  if(s1 && s2) {
@@ -819,7 +459,7 @@ library)
  } 
 \end{verbatim}
 Now create a page and edit the display options of its
-histograms. Start by setting options for the whole histogram set.
+histograms. 
 \begin{verbatim}
  OnlineHistogram* h1=HistDB->getHistogram
    ("EXAMPLE/OccupancyMap/Hit_Map_$Region_M1R1");
@@ -829,33 +469,49 @@ histograms. Start by setting options for the whole histogram set.
    ("EXAMPLE/OccupancyMap/Hit_Map_$Region_M3R1");
 
  if (h1 && h2 && h3) {
+   std::string hcpar[2]={"w1","w2"};
+   algok = HistDB->declareCreatorAlgorithm("Weighted mean",
+					   2,
+					   OnlineHistDBEnv::H1D,
+					   2,
+					   hcpar,
+				"weighted mean of two histograms with weights w1 and w2");
+   sources.clear();
+   sources.push_back(h1);
+   sources.push_back(h2);
+   std::vector<float> weights(2,1.);
+   weights[1]=0.5;
+   if(algok) HistDB->declareAnalysisHistogram("Weighted mean",
+					      "Silly plot",
+					      sources,
+					      &weights);
+
    OnlineHistPage* pg=HistDB->getPage("My Example Page","Examples/My examples");
    if(pg) {
      pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
      pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
-     pg->declareHistogram(h3,0. ,0. ,0.5,1. );
+     pg->declareHistogram(h3,0.5,0.5,0.5,0.4);
    
      int lc=2, fs=7, fc=3;
      float ymax=20000.;
-     h1->setHistoSetDisplayOption("LINECOLOR",(void*) &lc);
-     h1->setHistoSetDisplayOption("FILLSTYLE",(void*) &fs);
-     h1->setHistoSetDisplayOption("FILLCOLOR",(void*) &fc); 
-     h1->setHistoSetDisplayOption("YMAX",(void*) &ymax); 
-\end{verbatim}
-to set more specific display options for single histograms or
-histograms in a given page, remember to initialize the option set if
-you want to keep the less specific options
-\begin{verbatim}
-     lc=3;
-     h2->initDisplayOptionsFromSet();
-     h2->setDisplayOption("LINECOLOR",(void*)  &lc);
+     h1->setDisplayOption("LINECOLOR",(void*) &lc);
+     h1->setDisplayOption("FILLSTYLE",(void*) &fs);
+     h1->setDisplayOption("FILLCOLOR",(void*) &fc); 
+     h1->setDisplayOption("YMAX",(void*) &ymax); 
 
-     fc=4;
-     h3->initHistoPageDisplayOptionsFromSet("Example Page");
-     h3->setHistoPageDisplayOption("FILLCOLOR",(void*) &fc);
+     h1->dump();
+
+     // second instance of h1
+     OnlineHistogram* newh = pg->declareHistogram(h1,0.5,0. ,0.5,0.4,2);
+     ymax=200000.;
+     newh->setDisplayOption("YMAX",(void*) &ymax); 
+     newh->unsetDisplayOption("LINECOLOR");
+
+     newh->dump();
    }
  }
 \end{verbatim}
+
 Now display the list of pages with their histograms
 \begin{verbatim}
  std::vector<string> folders;
@@ -902,11 +558,13 @@ and the lists of subsystems, tasks, and algorithms:
 
 finally commit changes to the DB if there were no errors
 \begin{verbatim}
- if (!HistDB->sendHistBuffer())  ok=false;
+ ok &= HistDB->sendHistBuffer();
  if (ok) 
    HistDB->commit();
  else 
    cout << "commit aborted because of previous errors" <<endl;
+
+ HistDB->setDebug(3); // close transaction verbosely
  delete HistDB;
 }
 \end{verbatim}

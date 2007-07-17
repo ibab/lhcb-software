@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.2 2007-07-16 12:47:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.3 2007-07-17 15:54:13 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -30,7 +30,7 @@ class OnlineHistTask : public OnlineHistDBEnv
   std::string name() {return m_name;}
   /// number of associated subdetector/subsystems (up to 3)
   int ndet() {return m_ndet;}
-  /// name of associated subdetector/subsystems (0 $<=$ i $<$ ndet() )
+  /// name of associated subdetector/subsystems (-1 < i < ndet() )
   std::string det(int i) { return (i>=0 && i<3) ?  m_sd[i] : "NULL";}
   /// true if task is configured to run for physics events
   bool runsOnPhysics() {return m_RunsOnPhysics;}

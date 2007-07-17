@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.9 2007-07-16 12:47:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.10 2007-07-17 15:54:12 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -34,9 +34,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   void setHistogramBufferDepth(int N);
   
   // declarations of main DB objects
-  /// removes an histogram, and optionally its full set. ({bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
-  virtual bool removeHistogram(OnlineHistogram* h,
-			       bool RemoveWholeSet = false);	
   /// declares a  subsystem, returning true on success
   bool declareSubSystem(std::string SubSys);
   /// declares an Histogram by its DIM service name. In the LHCb
@@ -80,6 +77,16 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			       int Npars=0, 
 			       std::string* pars=NULL,
 			       std::string doc="NONE");
+
+  // deleting methods (handle with care!)
+
+  /// removes an histogram, and optionally its full set. 
+  /// ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
+  virtual bool removeHistogram(OnlineHistogram* h,
+			       bool RemoveWholeSet = false);	
+  /// removes Page Folder only if it doesn't have pages (useful for cleanup)
+  bool removePageFolder(std::string Folder);
+
   // access methods
   /// gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
   int getAlgorithmNpar(std::string AlgName,

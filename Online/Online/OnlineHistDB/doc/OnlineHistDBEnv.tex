@@ -1,0 +1,27 @@
+\item   typedef enum { H1D, H2D, P1D, P2D, CNT} HistType;
+\item    int {\bf debug}() const ;
+
+ get verbosity level (0 for no debug messages, up to 3)
+
+
+\item    void {\bf setDebug}(int DebugLevel) ;
+
+ set verbosity level
+
+
+\item    int {\bf excLevel}() const ;
+
+ exception level: 0 means never throw exc. to client code, 1 means only
+ severe errors (default value), 2 means throw all exceptions.
+ The default value is 1, meaning that exceptions are thrown only in
+ case of severe DB inconsistency. All other errors, e.g. syntax errors,
+ can be checked from the method return values and from the warning
+ messages on the standard output.
+ exception can catched using {\it catch(SQLException ex)}
+
+
+\item    void {\bf setExcLevel}(int ExceptionLevel) ;
+
+
+
+

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.10 2007-07-16 12:47:32 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -15,7 +15,10 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
   OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance),
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
-    verifyPage();
+    if (!verifyPage(Page,Instance)) {
+      m_page = "_NONE_";
+      m_instance =1;
+    }
     load();
   }
 
@@ -41,11 +44,13 @@ bool OnlineHistogram::setPage(std::string Page,
 			      int Instance) {
   bool out=true;
   if ( Page != m_page || Instance != m_instance) {
-    m_page =Page;
-    m_instance =Instance;
-    out=verifyPage();
-    if (out)
+    out=verifyPage(Page,Instance);
+    if (out) {
+      m_page = Page;
+      m_instance = Instance;
       load();
+      m_InitDOmode = m_domode;
+    }
   }
   return out;
 }
@@ -76,7 +81,7 @@ bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
   return out;
 }
 
-bool OnlineHistogram::verifyPage() {
+bool OnlineHistogram::verifyPage(std::string Page, int Instance) {
   // check that page exists and histogram is on it
   bool out=true;
   if (m_page != "_NONE_") {
@@ -84,8 +89,8 @@ bool OnlineHistogram::verifyPage() {
     Statement *query = 
       m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2 AND INSTANCE=:3");
     query->setString(1,m_hid);
-    query->setString(2,m_page);
-    query->setInt(3,m_instance);
+    query->setString(2,Page);
+    query->setInt(3,Instance);
     try{
       rset =  query->executeQuery();
       if(!rset->next ()) 

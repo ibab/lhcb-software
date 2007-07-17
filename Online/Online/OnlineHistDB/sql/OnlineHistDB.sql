@@ -54,7 +54,7 @@ create or replace package OnlineHistDB as
  procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
 			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist);
  function GetPage(theName IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
- PROCEDURE DeletePage(theName IN varchar2);
+ function DeletePage(theName IN varchar2) return number;
  function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
 	theHid OUT varchar2,theHsid OUT int,
 	theIhs OUT int,theNhs OUT int, theHstype OUT string, theHstitle OUT string, theSubtitle OUT string,
@@ -1048,11 +1048,17 @@ begin
 end GetPage;
 -----------------------
 
-PROCEDURE DeletePage(theName IN varchar2) is
+function DeletePage(theName IN varchar2) return number is
 begin
+ savepoint beforePAGEdelete;
  delete from displayoptions where doid in (select sdisplay from showhisto where page=theName);
  delete from showhisto where page=theName;
  delete from page where PAGENAME=theName;
+ return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)	
+EXCEPTION
+ when OTHERS then
+  ROLLBACK TO beforePAGEdelete;
+  raise_application_error(-20050,SQLERRM);  
 end DeletePage;
 -----------------------
 

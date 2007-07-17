@@ -1,0 +1,291 @@
+\item    std::string {\bf identifier}() const ;
+
+ full histogram unique identifier Taskname/AlgorithmName/HistogramName
+
+
+\item    std::string {\bf page}() const ;
+
+ page to which this histogram object is attached
+
+
+\item    int {\bf instance}() const ;
+
+ counter (starting from 1) to distinguish several instances of the same histogram on the same page
+
+
+\item    std::string {\bf dimServiceName}() const  ;
+
+ name of the DIM service that is currently publishing the histogram
+
+
+\item    int {\bf hsid}() const ;
+
+ internal histogram set ID
+
+
+\item    int {\bf ihs}() const ;
+
+ position of this histogram in set (starting from 1). Can be larger than nhs() if some histogram in the set has been deleted
+
+
+\item    std::string {\bf hid}() const ;
+
+ internal histogram ID (equivalent to hsid()/ihs())
+
+
+\item    int {\bf nhs}() const ;
+
+ number of histograms in set
+
+
+\item    std::string {\bf hstype}() const ;
+
+ histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+
+
+\item    std::string {\bf hname}() const ;
+
+ histogram name
+
+
+\item    std::string {\bf hsname}() const ;
+
+ histogram set name
+
+
+\item    std::string {\bf subname}() const ;
+
+ subname
+
+
+\item    std::string {\bf task}() const ;
+
+ task name
+
+
+\item    std::string {\bf algorithm}() const ;
+
+ algorithm name
+
+
+\item    std::string {\bf descr}() const ;
+
+ short description of the histogram
+
+
+\item    std::string {\bf doc}() const ;
+
+ link to a more extensive documentation
+
+
+\item    int {\bf creation}() const ;
+
+ creation date, as a unix timestamp
+
+
+\item    int {\bf obsoleteness}() const ;
+
+ if the histogram is no more in use, returns the end--of--validity date
+ as a unix timestamp, otherwise returns 0.
+
+
+\item    bool {\bf setPage}(std::string Page,\\\mbox{}~~~~~~~~~
+	       int Instance=1);
+
+ sets page on which histogram is displayed (reload display options if needed). Histogram has to be already
+ been attached to the page through OnlineHistPage::declareHistogram()
+
+
+\item    void {\bf unsetPage}();
+
+
+ unsets page associated to histogram object
+
+
+\item    bool {\bf setDimServiceName}(std::string DimServiceName);
+
+
+ sets the DIM service name that is currently publishing the histogram. Returns true on success
+
+
+\item    bool {\bf remove}(bool RemoveWholeSet);
+
+
+ removes an histogram, and optionally its full set. (TEMPORARY)
+
+
+\item    void {\bf dump}();
+
+
+ dumps histogram data
+
+
+\item    void {\bf dumpDisplayOptions}();
+
+
+ dumps histogram display options
+
+
+\item    int {\bf nPageInstances}();
+
+
+ number of instances of this histogram on any page
+
+
+\item    int {\bf nThisPageInstances}();
+
+
+ number of instances of this histogram on its current page
+
+
+\item   typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
+\item    DisplayOptionMode {\bf domode}() const ;
+
+ specifies if the display options in this object are: not defined,
+ associated to the histogram set, associated to the histogram,
+ associated to the histogram on  page {\it page()}
+
+
+\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
+				void* value);
+
+ sets a display option.  The available parameter names and the corresponding types are listed 
+ in section \ref{dispopts}. Returns true on success.
+ This method chooses the most appropriate display option mode calling one of the next methods  
+
+
+\item    virtual bool {\bf setHistoSetDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
+					void* value);
+
+ sets a display option for the whole histogram set
+
+
+\item    virtual bool {\bf setHistDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
+				void* value);
+
+ sets a display option for the present histogram.
+
+
+\item    virtual bool {\bf setHistoPageDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
+					 void* value,\\\mbox{}~~~~~~~~~
+					 std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+					 int Instance=-1);
+
+ sets a display option for the present histogram on page PageName (default is {\it page()})
+
+
+\item    virtual bool {\bf unsetDisplayOption}(std::string ParameterName);
+
+
+ unsets a display option in the current display mode
+
+
+\item    virtual bool {\bf unsetHistoSetDisplayOption}(std::string ParameterName); 
+
+
+ unsets a display option for the whole histogram set
+
+
+\item    virtual bool {\bf unsetHistDisplayOption}(std::string ParameterName); 
+
+
+ unsets a display option for the present histogram.
+
+
+\item    virtual bool {\bf unsetHistoPageDisplayOption}(std::string ParameterName);
+
+
+ unsets a display option for the present histogram on its page (if defined)
+
+
+\item    bool {\bf getDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~
+			void* option);
+
+ if display option  ParameterName has been defined, puts its value into
+ option and returns true. In case different sets of display options
+ exists for histogram set, histogram and histogram in page, the most
+ specific one is used.
+
+
+\item    bool {\bf initHistDisplayOptionsFromSet}(); 
+
+
+ initializes display options associated to this histogram with the
+ options defined for the histogram set (if available). Returns true on
+ success.
+
+
+\item    bool {\bf initHistoPageDisplayOptionsFromSet}(std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+					  int Instance=-1);
+
+ initializes display options associated to this histogram on page
+ PageName (default is {\it page()}) with the
+ options defined for the histogram set (if available). Returns true on
+ success.
+
+
+\item    bool {\bf initHistoPageDisplayOptionsFromHist}(std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+					   int Instance=-1);
+
+ initializes display options associated to this histogram on page
+ PageName (default is {\it page()}) with the
+ options defined for the histogram (if available). Returns true on
+ success.
+
+
+\item    int {\bf nanalysis}() const ;
+
+ number of analysis to be performed on the histogram set
+
+
+\item    const std::vector$<$int$>$\& {\bf anaId}() const ;
+
+ vector of length {\it  nanalysis}() containing the analysis internal IDs
+
+
+\item    const std::vector$<$std::string$>$\& {\bf anaName}() const ;
+
+ vector of length {\it  nanalysis}() containing the analysis algorithm names
+
+
+\item    boolean {\bf isAnaHist}() const ;
+
+ true if the histogram is produced at analysis level
+
+
+\item    int {\bf declareAnalysis}(std::string Algorithm,\\\mbox{}~~~~~~~~~ 
+		      std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
+		      std::vector$<$float$>$* alarmThr=NULL,\\\mbox{}~~~~~~~~~ 
+		      int instance=1);
+
+ declare an analysis to be performed on the histogram set. If the algorithm
+ requires some parameters, the warning and alarm values must be
+ specified as vectors of floats and will be set for all histograms in
+ set (then, you can specify values for single histograms with the {\it
+ setAnalysis} method. 
+ You can create more than one analysis
+ with the same algorithm by using instance $>$ 1. If the analysis
+ identified by Algorithm and instance already exists, parameters are
+ updated. Returns the internal analysis ID.
+
+
+\item    bool {\bf setAnalysis}(int AnaID,\\\mbox{}~~~~~~~~~ 
+		   std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
+		   std::vector$<$float$>$* alarmThr=NULL);
+
+ updates parameters for analysis with ID AnaID (for this histogram only). Returns true on success
+
+
+\item    bool {\bf getAnaSettings}(int AnaID,\\\mbox{}~~~~~~~~~
+		      std::vector$<$float$>$* warn,\\\mbox{}~~~~~~~~~ 
+		      std::vector$<$float$>$* alarm) const;
+
+ gets parameters for analysis with ID AnaID. Returns true on success
+
+
+\item    bool {\bf maskAnalysis}(int AnaID,\\\mbox{}~~~~~~~~~
+		    bool Mask=true);
+
+ masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
+
+

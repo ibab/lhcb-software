@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.6 2007-07-16 12:47:31 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.7 2007-07-17 15:54:13 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistogram.h"
@@ -13,6 +13,7 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
 		 std::string Page="_NONE_",
 		 int Instance=1);
   /// updates ROOT TH1 display properties from Histogram DB (via OnlineHistogram object) 
+  /// called by constructor
   void setFromDB();
   /// updates current drawing options from Histogram DB (via OnlineHistogram object)
   void setDrawOptions();
@@ -31,8 +32,11 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
 				void* value);
 
   // overloaded TH1 drawing methods
+  /// overloaded TH1 Draw method, calls setDrawOptions()
   virtual void Draw(Option_t* option="");
+  /// overloaded TH1 DrawPanel method, calls setDrawOptions()
   virtual void DrawPanel();
+  /// calls TH1 DrawCopy method and setDrawOptions()
   virtual TH1* myDrawCopy(Option_t* option="");
 
 };
