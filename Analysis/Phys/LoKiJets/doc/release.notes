@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.6 2007-04-19 13:49:52 pkoppenb Exp $ 
+! $Id: release.notes,v 1.7 2007-07-17 12:56:39 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file. Rlease when needed.
 
 !========================== LoKiJets v2r3p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
@@ -128,6 +131,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.6  2007/04/19 13:49:52  pkoppenb
+! tagged as v2r3p1
+!
 ! Revision 1.5  2007/03/27 11:21:18  ibelyaev
 !  v2r3:  ugly patch to solve the proplem with copy constructor
 !
