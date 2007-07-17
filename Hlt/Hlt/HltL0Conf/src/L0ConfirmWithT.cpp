@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.1 2007-07-04 12:36:45 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.2 2007-07-17 14:09:43 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -82,8 +82,8 @@ StatusCode L0ConfirmWithT::extrapolateToT3( LHCb::State& statePos, LHCb::State& 
   double zT3 = 9315.;//middle T3
   double zState = statePos.z();
   double deltaZ = zState - zT3;
-  double xT3 = 0;
-  double yT3 = 0;
+  double xT3Pos = 0;double xT3Neg = 0;double yT3 = 0;
+  double txPos = 0;double txNeg =0;double ty = 0;
   
   /*
    *  this is a preliminary solution, if track types for muon and calo 
@@ -93,10 +93,10 @@ StatusCode L0ConfirmWithT::extrapolateToT3( LHCb::State& statePos, LHCb::State& 
   if( zState > 13700 ){
     //muon seed, has sensible tx,ty
 
-    xT3 = statePos.x() - statePos.tx() * deltaZ;
+    xT3Pos = statePos.x() - statePos.tx() * deltaZ;
     yT3 = statePos.y() - statePos.ty() * deltaZ;
-    
-    stateNeg.setState(0,0,0,0,0,0);
+    txPos = statePos.tx();
+    ty = statePos.ty();
   }
   else if(zState == 12700){
     //ecal seeding, extrapolate according to parametrized cluster energy
@@ -104,26 +104,41 @@ StatusCode L0ConfirmWithT::extrapolateToT3( LHCb::State& statePos, LHCb::State& 
     double alpha = 1536443.236032;
     double eCluster = 1./double(statePos.qOverP());
     
-    xT3 = statePos.x() * zT3 / zState - alpha/eCluster;
+    xT3Pos = statePos.x() * zT3 / zState - alpha/eCluster;
     yT3 = statePos.y() * zT3 / zState;
-    double txPos = (statePos.x()-xT3)/deltaZ;
-    double ty = (statePos.y()-yT3)/deltaZ;
+    txPos = (statePos.x()-xT3Pos)/deltaZ;
+    ty = (statePos.y()-yT3)/deltaZ;
 
-    double xT3Neg = statePos.x() * zT3 / zState + alpha/eCluster;
-    double txNeg = (statePos.x()-xT3Neg)/deltaZ;
+    xT3Neg = statePos.x() * zT3 / zState + alpha/eCluster;
+    txNeg = (statePos.x()-xT3Neg)/deltaZ;
+    
+  }
+  else if( 12830 == zState ){
+    //HCal seeding with enough energy in ECal
+    double eCluster = 1./double(statePos.qOverP());
 
-    stateNeg.setX( xT3Neg );
-    stateNeg.setY( yT3 );
-    stateNeg.setZ( zT3 );
-    stateNeg.setTx( txNeg );
-    stateNeg.setTy( ty );
-    statePos.setTx( txPos );
-    statePos.setTy( ty );
+    xT3Pos  = statePos.x()*zT3/zState - ( 11.5+1.585e6/eCluster );
+    yT3  = statePos.y()*zT3/zState;
+    txPos = (statePos.x()-xT3Pos)/deltaZ;
+    ty = (statePos.y()-yT3)/deltaZ;
+    xT3Neg  = statePos.x()*zT3/zState + ( 11.5+1.585e6/eCluster );
+    txNeg = (statePos.x()-xT3Neg)/(deltaZ);
+  }
+  else if( 13690 == zState ){
+    //HCal seeding only
+    double eCluster = 1./double(statePos.qOverP());
+    
+    xT3Pos  = statePos.x()*zT3/zState - ( 17.+1.712e6/eCluster );
+    yT3  = statePos.y()*zT3/zState;
+    txPos = (statePos.x()-xT3Pos)/deltaZ;
+    ty = (statePos.y()-yT3)/deltaZ;
+    xT3Neg  = statePos.x()*zT3/zState + ( 17.+1.712e6/eCluster );
+    txNeg = (statePos.x()-xT3Neg)/(deltaZ);
+
   }
   
-  statePos.setX( xT3 );
-  statePos.setY( yT3 );
-  statePos.setZ( zT3 );
-
+  statePos.setState( xT3Pos , yT3 , zT3 , txPos , ty , statePos.qOverP()); 
+  stateNeg.setState( xT3Neg , yT3 , zT3 , txNeg , ty , stateNeg.qOverP());
+  
   return StatusCode::SUCCESS;
 }
