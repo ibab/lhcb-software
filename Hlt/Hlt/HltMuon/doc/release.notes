@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file
+
 ! 2007-07-12 - Alessia Satta
  - bug fix in clone killer procedure
 
