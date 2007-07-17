@@ -4,6 +4,14 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-07-17 - Johannes Albrecht
+	- src/HadronSeedTool
+			- first implementation of new tool to prepare L0Hadron cand to a track
+			 	analogue to PrepareHadronSeed but without propagation to T3
+			- seed preparation not completely tuned
+	- src/L0ConfirmTool
+			- clean up code
+			- include propagation of HadronSeed to T3
 
 ! 2007-07-04 - Johannes Albrecht
 	-src/PrepareElectronSeed
