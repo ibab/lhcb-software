@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.19 2007-02-22 13:30:24 robbep Exp $
+// $Id: Signal.cpp,v 1.20 2007-07-17 14:23:13 robbep Exp $
 // Include files 
 
 // local
@@ -198,6 +198,7 @@ void Signal::printCounters( ) const {
 //=============================================================================
 StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal ) 
   const {
+
   StatusCode sc = StatusCode::SUCCESS ;
   // Create a new event to contain isolated signal decay tree
   LHCb::HepMCEvent * mcevt = new LHCb::HepMCEvent( ) ;
@@ -263,13 +264,17 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
 
     // loop over child particle of this vertex after sorting them
     std::list< const HepMC::GenParticle * > outParticles ;
-    std::copy( oVertex -> particles_out_const_begin() , 
-               oVertex -> particles_out_const_end() , outParticles.begin() ) ;
+    for ( HepMC::GenVertex::particles_out_const_iterator itP = 
+            oVertex -> particles_out_const_begin() ; 
+          itP != oVertex -> particles_out_const_end() ; ++itP )
+      outParticles.push_back( (*itP ) ) ;
+
     outParticles.sort( HepMCUtils::compareHepMCParticles ) ;
 
     std::list< const HepMC::GenParticle * >::const_iterator child ;
     for ( child = outParticles.begin( ) ; child != outParticles.end( ) ; 
           ++child ) {
+      
       // Create a new particle for each daughter of theOldParticle
       HepMC::GenParticle * newPart =
         new HepMC::GenParticle ( (*child) -> momentum () ,
