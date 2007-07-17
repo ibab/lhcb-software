@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.102 2007-07-03 16:31:36 gcorti Exp $
+! $Id: release.notes,v 1.103 2007-07-17 14:16:37 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-07-17 - Patrick Robbe
+ - src/Lib/Signal.cpp: fix generation of clean events
 
 !====================== Generators v7r2 2007-07-03 ===========================
 ! 2007-07-03 - Gloria Corti
