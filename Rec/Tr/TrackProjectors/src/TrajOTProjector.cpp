@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.25 2007-06-25 16:50:16 cattanem Exp $
+// $Id: TrajOTProjector.cpp,v 1.26 2007-07-17 09:26:12 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -102,22 +102,23 @@ StatusCode TrajOTProjector::project( const State& state,
 				      measTraj, s2, dist, m_tolerance );
   if( sc.isFailure() ) { return sc; }
 
-  // Get the sign of the distance
-  int signDist = ( dist.x() > 0. ) ? 1 : -1;
-
-  // set the ambiguity "on the fly"!
-  meas.setAmbiguity(signDist);
-
-  // Determine the (oriented!) axis onto which we project
-  DualVector unit = signDist*dual( dist.unit() );
+  // Determine the (oriented!) axis onto which we project. This ugly
+  // construct is the result of a bug fix that was not supposed to
+  // change the sign of the ambiguity.
+  XYZVector measdir = measTraj.direction(s2) ;
+  int signdir       = measdir.y() >0 ? 1 : -1 ;
+  DualVector unit   = signdir * dual( (measdir.Cross( refTraj.direction(s1) ) ).Unit() ) ;
   
   // project the space-point derivatives onto the axis
   // to get the derivatives of the residual
   m_H = unit*refTraj.derivative(s1);
 
-  // Calculate the expected drift distance
-  double distToWire = dot( unit, dist ) +
-    Vector1( m_H * ( state.stateVector() - refVec ) )(0);
+  // Calculate the reference distance and set the ambiguity "on the fly"
+  double distToWireRef = dot( unit, dist ) ;
+  meas.setAmbiguity( distToWireRef > 0 ? 1 : -1 ) ;
+  
+  // Add the first order correction
+  double distToWire = distToWireRef + Vector1( m_H * ( state.stateVector() - refVec ) )(0);
 
   // Calculate the residual: 
   m_residual = -( distToWire - meas.ambiguity()*driftDistance( meas, s2 ) );
@@ -164,11 +165,13 @@ TrajOTProjector::alignmentDerivatives( const Measurement& meas,
   static XYZVector dist;
   m_poca -> minimize( refTraj, s1, measTraj, s2, dist, m_tolerance );
 
-  // Set up the vector onto which we project everything
-  // note that it is signed, and given that 'dist' 
-  int signDist = ( dist.x() > 0. ) ? 1 : -1;
-  DualVector unit = signDist*dual( dist.Unit() );
-
+  // Set up the vector onto which we project everything. This ugly
+  // construct is the result of a bug fix that was not supposed to
+  // change the sign of the ambiguity.
+  XYZVector measdir = measTraj.direction(s2) ;
+  int signdir       = measdir.y() >0 ? 1 : -1 ;
+  DualVector unit   = signdir * dual( (measdir.Cross( refTraj.direction(s1) ) ).Unit() ) ;
+ 
   // compute the projection matrix from parameter space onto the (signed!) unit
   // NOTE: we need an extra minus sign as this is the derivative to the 2nd
   //  traj in poca, not the 1st as in project, hence 'dist' points towards us.

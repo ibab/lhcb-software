@@ -1,4 +1,4 @@
-// $Id: TrackProjectorSelector.cpp,v 1.1 2006-12-15 19:11:38 graven Exp $
+// $Id: TrackProjectorSelector.cpp,v 1.2 2007-07-17 09:25:42 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -29,11 +29,12 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
   declareInterface<ITrackProjectorSelector>( this );
   //FIXME: as soon as the warnings in GaudiAlg on multiple tools are gone, we 
   //       can remove the different names for the 
-  declareProperty( "VeloR",   m_projNames[Measurement::VeloR]   = "TrajProjector<Velo>/VeloR" );
-  declareProperty( "VeloPhi", m_projNames[Measurement::VeloPhi] = "TrajProjector<Velo>/VeloPhi" );
-  declareProperty( "TT",      m_projNames[Measurement::TT]      = "TrajProjector<ST>/TT" );
-  declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/IT" );
+  declareProperty( "VeloR",   m_projNames[Measurement::VeloR]   = "TrajProjector<Velo>/TrajVeloRProjector" );
+  declareProperty( "VeloPhi", m_projNames[Measurement::VeloPhi] = "TrajProjector<Velo>/TrajVeloPhiProjector" );
+  declareProperty( "TT",      m_projNames[Measurement::TT]      = "TrajProjector<ST>/TrajTTProjector" );
+  declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/TrajITProjector" );
   declareProperty( "OT",      m_projNames[Measurement::OT]      = "TrajOTProjector" );
+  declareProperty( "Muon",    m_projNames[Measurement::Muon]    = "TrajProjector<Muon>/TrajMuonProjector" );
 }
 
 //-----------------------------------------------------------------------------
@@ -50,9 +51,10 @@ StatusCode TrackProjectorSelector::initialize()
   if ( sc.isFailure() ) return Error( "Failed to initialize!", sc );
 
   m_projectors.clear();
+
   for (ProjectorNames::const_iterator i=m_projNames.begin();i!=m_projNames.end();++i) { 
-     m_projectors.insert(i->first, tool<ITrackProjector>( i->second ));
-     debug() << " projector for " << i->first << " : " << i->second << endmsg;
+    m_projectors.insert(i->first, tool<ITrackProjector>( i->second)) ;
+    debug() << " projector for " << i->first << " : " << i->second << endmsg;
   }
   return StatusCode::SUCCESS;
 }

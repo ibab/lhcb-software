@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.6 2007-06-25 16:50:16 cattanem Exp $
+// $Id: TrajProjector.cpp,v 1.7 2007-07-17 09:26:20 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -78,8 +78,7 @@ StatusCode TrajProjector<T>::project( const State& state,
   if( sc.isFailure() ) { return sc; }
 
   // Set up the vector onto which we project everything
-  // note that it is signed!
-  DualVector unit = T::sign( dist, measTraj, s2 )*dual( dist.Unit() );
+  DualVector unit = dual( (measTraj.direction(s2).Cross( refTraj.direction(s1) ) ).Unit() ) ;
 
   // compute the projection matrix from parameter space onto the (signed!) unit
   m_H = unit*refTraj.derivative(s1);
@@ -134,8 +133,7 @@ TrajProjector<T>::alignmentDerivatives( const Measurement& meas,
   m_poca -> minimize( refTraj, s1, measTraj, s2, dist, m_tolerance );
 
   // Set up the vector onto which we project everything
-  // note that it is signed, and given that 'dist' 
-  DualVector unit = T::sign( dist, measTraj, s2 )*dual( dist.Unit() );
+  DualVector unit = dual( (measTraj.direction(s2).Cross( refTraj.direction(s1) ) ).Unit() ) ;
 
   // compute the projection matrix from parameter space onto the (signed!) unit
   // NOTE: we need an extra minus sign as this is the derivative to the 2nd
@@ -179,26 +177,23 @@ template <typename T>
 TrajProjector<T>::~TrajProjector() {}
 
 /// declare and instantiate ST and Velo projectors...
-struct ST
-{
-  static double defaultTolerance() { return 0.002; }
-  static int sign( const XYZVector& delta, const Trajectory&, double ) 
-  { 
-    return ( delta.x() > 0. ) ? 1 : -1;
-  }
+struct ST {
+   static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
 };
 
 typedef TrajProjector<ST> TrajSTProjector;
 DECLARE_TOOL_FACTORY( TrajSTProjector );
 
-struct Velo
-{
-  static double defaultTolerance() { return 0.0005; }
-  static int sign( const XYZVector& delta, const Trajectory& meas, double marclen ) 
-  {
-    return ( delta.Cross( meas.direction(marclen) ).z() > 0.) ? 1 : -1;
-  }
+struct Velo {
+  static double defaultTolerance() { return 0.0005*Gaudi::Units::mm; }
 };
 
 typedef TrajProjector<Velo> TrajVeloProjector;
 DECLARE_TOOL_FACTORY( TrajVeloProjector );
+
+struct Muon {
+  static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
+};
+
+typedef TrajProjector<Muon> TrajMuonProjector;
+DECLARE_TOOL_FACTORY( TrajMuonProjector );
