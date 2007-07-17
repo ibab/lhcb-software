@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.321 2007-07-11 16:37:25 jpalac Exp $ 
+! $Id: release.notes,v 1.322 2007-07-17 11:57:46 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-07-17 - Juan Palacios
+ - DetDesc/GlobalToLocalDelta.h
+   . Clarify signature and doxygen documentation localDeltaFromGlobalTransform methods.
 
 !====================== DetDesc v17r5 2007-07-11 ==============================
 ! 2007-07-11 - Juan PALACIOS
