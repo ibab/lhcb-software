@@ -1,4 +1,4 @@
-#include "$DAVINCIROOT/options/DC06_bbincl_v2_lumi2.opts"
-//#include "$DAVINCIROOT/options/DC06_bbincl_v2_lumi5.opts"
-//#include "$DAVINCIROOT/options/DC06_bbincl_v2_lumi2-biased.opts"
-//#include "$DAVINCIROOT/options/DC06_bbincl_v2_lumi5-biased.opts"
+/*
+ *  Stripped bb-inclusive at 2 10^32 DST
+ */
+#include "$DAVINCIROOT/options/DC06_stripped_bbincl_lumi2.opts"
