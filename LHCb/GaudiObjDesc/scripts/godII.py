@@ -21,6 +21,7 @@ class godII:
     self.gNamespaces = 1
     self.gAssocDicts = 1
     self.allocatorType = 'FROMXML'
+    self.default_namespace = 'LHCb'
     self.parseArgs(args[1:])
 #--------------------------------------------------------------------------------
   def usage(self):
@@ -51,6 +52,9 @@ Produce c++ source files and dictionary files from xml descriptions
   -r <path>      define the root path to the GOD tools
                    -r <path>   use path
                    default     use environment variable $GAUDIOBJDESCROOT
+  -n <namespace> define the default namespace to use if not given in XML
+                   -n <namespace> use given namespace
+                   default        use namespace LHCb
   --allocator=<type>
                  chose the type of allocator to use. Allowed values are:
                    FROMXML    use what is specified in the XML (default)
@@ -67,7 +71,7 @@ Produce c++ source files and dictionary files from xml descriptions
   """ % (self.argv0, self.version, self.argv0)
 #--------------------------------------------------------------------------------
   def parseArgs(self,args):
-    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:',['allocator='])
+    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:n:',['allocator='])
     except getopt.GetoptError, (e):
       print '%s: ERROR: %s' % (self.argv0, e.msg)
       self.usage()
@@ -134,7 +138,13 @@ Produce c++ source files and dictionary files from xml descriptions
             error = 1
       if o in ('-l'):
         print '%s: INFO: Option -l depricated and not used anymore' % (self.argv0)
-    
+      if o in ('-n'):
+        if len(a) == 0:
+          print '%s: ERROR Option %s used without parameter' % (self.argv0,o)
+          error = 1
+        else:
+          self.default_namespace = a
+
     self.xmlSources = args
     
     if error:
@@ -196,6 +206,14 @@ Produce c++ source files and dictionary files from xml descriptions
     for srcFile in srcFiles:
       gdd = x.parseSource(srcFile)
       godPackage = gdd['package'][0]
+
+      # Set default namespace if not set in <package>
+      try:
+        ns = godPackage['attrs']['namespace']
+      except KeyError:
+        ns = self.default_namespace
+        godPackage['attrs']['namespace'] = ns
+
 
       package = genPackage.genPackage(godPackage)
 

@@ -231,6 +231,7 @@ class genSrcUtils(importUtils.importUtils):
     return s
 #--------------------------------------------------------------------------------
   def genMethods(self,modifier,godClass,clname=''):
+    import os
     s = ''
     if godClass.has_key('method'):
       for met in godClass['method']:

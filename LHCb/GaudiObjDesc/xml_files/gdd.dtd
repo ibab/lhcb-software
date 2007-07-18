@@ -4,6 +4,7 @@
 <!ATTLIST gdd
         version          CDATA                             "1.0"
 >
+
 <!ELEMENT import EMPTY>
 <!ATTLIST import
         name             CDATA                             #REQUIRED
@@ -11,10 +12,11 @@
         soft             (TRUE | FALSE)                    "FALSE"
         namespace        CDATA                             #IMPLIED
 >
+
 <!ELEMENT package ((import*, class*, namespace*, assoc*)*)>
 <!ATTLIST package
         name             CDATA                             #REQUIRED
-        namespace        CDATA                             "LHCb"
+        namespace        CDATA                             #IMPLIED
 >
 <!-- ELEMENT class ((class?, ..... -->
 <!ELEMENT class ((desc?, base?, copyconstructor?, assignmentoperator?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
@@ -25,7 +27,7 @@
         id                CDATA                            #IMPLIED
         version           CDATA                            #IMPLIED
         location          CDATA                            #IMPLIED
-        namespace         CDATA                            "LHCb"
+        namespace         CDATA                            #IMPLIED
         stdVectorTypeDef  (TRUE | FALSE)                   "FALSE"  
         keyedContTypeDef  (TRUE | FALSE)                   "FALSE"  
         contObjectTypeDef (TRUE | FALSE)                   "FALSE"
@@ -50,7 +52,7 @@
         name             CDATA                             #REQUIRED
         author           CDATA                             #IMPLIED
         desc             CDATA                             #REQUIRED
-        scope            CDATA                             "LHCb"
+        scope            CDATA                             #IMPLIED
 >
 <!ELEMENT base EMPTY>
 <!ATTLIST base

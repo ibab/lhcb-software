@@ -705,7 +705,15 @@ class genClasses(genSrcUtils.genSrcUtils):
 
       classDict = package.dict
       classname = godClass['attrs']['name']
-      scoped_classname = godClass['attrs']['namespace']+'::'+classname
+
+      # Get/set class namespace to package namespace if not set in class
+      try:
+        namespace = godClass['attrs']['namespace']
+      except KeyError:
+        namespace = package.dict['packagenamespace']
+        godClass['attrs']['namespace'] = namespace
+
+      scoped_classname = namespace+'::'+classname
 
       fileName = '%s.h' % classname
 
@@ -718,7 +726,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['desc']                         = self.genDesc(godClass)
       classDict['author']                       = godClass['attrs']['author']
       classDict['today']                        = time.ctime()
-      classDict['classNamespace']               = godClass['attrs']['namespace']
+      classDict['classNamespace']               = namespace
       classDict['inheritance']                  = self.genInheritance(godClass)
       classDict['classContainerTypedefs']       = self.genClassContainerTypedefs(godClass)
       classDict['classTypedefs']                = self.genClassTypedefs(godClass)

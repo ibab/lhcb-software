@@ -32,9 +32,12 @@ class genClassDicts:
       pass
 #--------------------------------------------------------------------------------
   def genPackageDict(self,godPackage):    
+    pkg_namespace = godPackage['attrs']['namespace']
     if godPackage.has_key('class'):
       for cl in godPackage['class']:
-        clname = cl['attrs']['namespace']+'::'+cl['attrs']['name']
+        clnamespace = cl['attrs'].get('namespace',pkg_namespace)
+        clname = clnamespace+'::'+cl['attrs']['name']
+        #clname = cl['attrs']['namespace']+'::'+cl['attrs']['name']
         ##clname = cl['attrs']['name']
         # add include file line
         self.sIncludes = self.conc(self.sIncludes, '#include "%s%s.h"' % (self.srcOutputDir, cl['attrs']['name']))

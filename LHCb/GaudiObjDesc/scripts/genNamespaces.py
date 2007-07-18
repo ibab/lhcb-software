@@ -39,6 +39,8 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
   def doit(self,package,godNamespaces,outputDir,lname):
     
+    default_scope = package.dict['packagenamespace']
+
 
     for godNamespace in godNamespaces:
 
@@ -47,7 +49,8 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
       namespaceDict = package.dict
       namespacename = godNamespace['attrs']['name']
-      scoped_namespacename = godNamespace['attrs']['scope']+'::'+namespacename
+      scope = godNamespace['attrs'].get('scope',default_scope);
+      scoped_namespacename = scope+'::'+namespacename
 
       fileName = '%s.h' % namespacename
 
@@ -57,7 +60,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
       namespaceDict['desc']             = self.genDesc(godNamespace)
       namespaceDict['author']           = self.genAuthor(godNamespace)
       namespaceDict['today']            = time.ctime()
-      namespaceDict['namespaceScope']   = godNamespace['attrs']['scope']
+      namespaceDict['namespaceScope']   = scope
       namespaceDict['typedefs']         = self.genTypedefs('all',godNamespace)
       namespaceDict['enums']            = self.genEnums('all',godNamespace)
       namespaceDict['enumOstreamOverloads'] = self.genEnumOstreamOverloads(godNamespace)

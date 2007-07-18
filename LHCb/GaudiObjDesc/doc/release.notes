@@ -4,6 +4,14 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r2 2007-07-18 ======================
+! 2007-07-18 - Marco Cattaneo for Brett Viren
+ - Apply (Gaudi) Savannah patch 1230 to improve namespace handling:
+   1) If a <class> doesn't specify a namespace it will inherit it from its
+      <package> 
+   2) A default package namespace can be provided to godII's command line via
+      "-n TheNamespace". 
+
 !======================== GaudiObjDesc v10r1 2007-06-22 ======================
 ! 2007-06-13 Stefan
  - patch from Dave Casper (dcasper@uci.edu)
