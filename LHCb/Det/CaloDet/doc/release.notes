@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.77 2007-06-18 16:13:56 odescham Exp $ 
+! $Id: release.notes,v 1.78 2007-07-18 12:20:15 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!======================== CaloDet v8r3 2007-07-18 =============================
+! 2007-07-18 - Marco Cattaneo
+ - Fix doxygen warnings
 
 ! 2007-06-18 Olivier Deschamps
  - Add new method : cardFirstValidRow(), cardLastValidRow(), + idem for columns

@@ -1,6 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.28 2007-06-18 16:13:56 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: DeCalorimeter.h,v 1.29 2007-07-18 12:20:15 cattanem Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -46,6 +44,7 @@ namespace CaloPlane
   } ;
 }
 
+/// Locations of DeCalorimeter detector elements in the TDS
 namespace DeCalorimeterLocation {
   static const std::string Spd  = "/dd/Structure/LHCb/DownstreamRegion/Spd"  ;
   static const std::string Prs  = "/dd/Structure/LHCb/DownstreamRegion/Prs"  ;
@@ -719,12 +718,3 @@ inline int DeCalorimeter::cardIndexByCode( const int crate, const int slot )
 // ============================================================================
 #include "CaloDet/DeCalorimeter.icpp"
 // ============================================================================
-
-
-
-
-
-
-
-
-
