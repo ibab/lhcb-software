@@ -1,8 +1,0 @@
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Phys/StdJpsi2PVRelations' TYPE='Particle2VertexAsctAlg/StdJpsi2PVRelations'"
-};
-StdJpsi2PVRelations.InputLocation = {"Phys/StdMCUnbiasedJpsi2MuMu"};
-StdJpsi2PVRelations.OutputLocation = {"Phys/StdJpsi2PVRelations"};
-StdJpsi2PVRelations.Particle2VertexIPSAsct.UseSignificance = false;
-StdJpsi2PVRelations.Particle2VertexIPSAsct.MaxToBeAssociated = 1;
-StdJpsi2PVRelations.OutputLevel = 1;

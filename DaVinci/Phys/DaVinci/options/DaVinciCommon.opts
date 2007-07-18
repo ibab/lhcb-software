@@ -16,8 +16,6 @@
 //    ... for physics check on MC data
 #include "$ANALYSISSYSROOT/options/PhysMCSys.opts"
 //--------------------------------------------------------------
-#include "$DAVINCIROOT/options/DaVinciTransporter.opts"
-//--------------------------------------------------------------
 // Get the event time (for CondDb) from ODIN 
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 

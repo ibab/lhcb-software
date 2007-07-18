@@ -19,7 +19,7 @@ ApplicationMgr.AppName = "DaVinci" ;
 // Emulate L0
 //-----------------------------------------------------------
 #include "$L0DUROOT/options/L0Sequence.opts"
-ApplicationMgr.TopAlg += {"GaudiSequencer/L0","L0Entry"};
+ApplicationMgr.TopAlg += {"GaudiSequencer/L0","L0Filter"};
 
 ApplicationMgr.OutStream += { "DigiWriter" } ; 
 DigiWriter.RequireAlgs    = { "L0Entry" } ; 
