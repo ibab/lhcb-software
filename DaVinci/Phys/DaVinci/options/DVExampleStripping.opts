@@ -1,0 +1,31 @@
+/** @file
+ *
+ *  Example file to run a DaVinci job on stripped data.
+ *
+ *  See https://twiki.cern.ch/twiki/bin/view/LHCb/DC06StrippingHowTo
+ * 
+ *  @author P. Koppenburg
+ *  @date 2007-07-18
+ */
+
+//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs are in
+// DaVinciCommon.
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+ApplicationMgr.TopAlg += { "GaudiSequencer/AnaBu2LLKSeq" };
+AnaBu2LLKSeq.Members += { "CheckSelResult/CheckPreselBu2LLK"
+                        , "PrintHeader/PrintOfficialPreselBu2LLK"
+                        ,  "GaudiSequencer/SeqPreselBu2LLK" };
+CheckPreselBu2LLK.Algorithms = { "PreselBu2LLK" };
+
+// Run B->llK preselection
+#include "$B2DILEPTONROOT/options/DoPreselBu2LLK.opts"
+// But not as topalg! 
+// This line depends on how your options are written
+ApplicationMgr.TopAlg -= { "GaudiSequencer/SeqPreselBu2LLK" };
+
+ApplicationMgr.EvtMax = -1 ;
+// Sample input file
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+EventSelectiom.PrintFreq = 100 ;

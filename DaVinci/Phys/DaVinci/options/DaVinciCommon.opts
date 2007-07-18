@@ -1,6 +1,6 @@
 /** @file 
  *  Configuration options for the execution of any DaVinci application.
- *  Standard services and DLLs.
+ *  Standard services.
  * 
  *  @author G.Corti
  *  @date 2003-03-14
@@ -44,11 +44,6 @@ EventSelector.PrintFreq  = 10;
 
 //--------------------------------------------------------------
 // Histogram persistency 
-// Root DLL for histogram persistency is needed for CALOPID. Hbook 
-// might be needed for users. 
-ApplicationMgr.DLLs += { "RootHistCnv" };
-//ApplicationMgr.DLLs += { "HbookCnv" };
-// Need a histogram persistency or Calo crashes :-(
 ApplicationMgr.HistogramPersistency = "ROOT";
 
 // Default Database dependent configurations. The latest
@@ -63,6 +58,10 @@ ApplicationMgr.AppName = "DaVinci" ;
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
 
+/*
+ * standard particles options
+ */
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
 
 //-------------------------------------------------------------
 // Check StatusCodes

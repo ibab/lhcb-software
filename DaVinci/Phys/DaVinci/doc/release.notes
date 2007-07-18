@@ -8,6 +8,8 @@
  - Removed obsolete data samples
  - New BB inclusive stripped DC06 sample used as test data
  - Cleanup obsolete files
+ - Include StandardOptions by default. Remove it frome everywhere else.
+ - New example on how to look at stripped BB.
 
 !========================== DaVinci v19r3 2007-06-18 ===================
 

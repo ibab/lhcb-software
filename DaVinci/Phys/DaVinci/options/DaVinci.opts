@@ -9,8 +9,7 @@
  */
 
 //--------------------------------------------------------------
-// Standard Gaudi configuration and additional DLLs are in
-// DaVinciCommon. 
+// Standard Gaudi configuration
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 //--- Example of Particle with Assigned pID only for HLT studies
 // #include "$PARTICLEMAKERROOT/options/PreLoadNoPIDParticles.opts"
@@ -34,9 +33,6 @@
 //        DaVinci.exe $BS2PHIETACROOT/options/DVPreselBs2Phi2KK_Etac.opts
 //----------------------------------------------------------------
 //--------------------------------------------------------------
-// Include CommonParticles
-//#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
-//#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
 // CRJ : turn on monitoring of standard particles
 //#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
 // Test the stripping

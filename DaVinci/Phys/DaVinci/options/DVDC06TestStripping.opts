@@ -10,10 +10,6 @@
  */
 #include "$DAVINCIROOT/options/loadParticlesSeq.opts"
 /*
- * standard particles options
- */
-#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
-/*
  * Monitoring of standard Particles. Needs MC.
  */
 //#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
