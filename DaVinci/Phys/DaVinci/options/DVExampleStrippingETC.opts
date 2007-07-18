@@ -1,0 +1,23 @@
+/** @file
+ *
+ *  Example file to run a DaVinci job on stripped data ETC
+ *
+ *  See https://twiki.cern.ch/twiki/bin/view/LHCb/DC06StrippingHowTo
+ * 
+ *  @author P. Koppenburg
+ *  @date 2007-07-18
+ */
+
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DVExampleStripping.opts"
+
+EventSelector.Input   = {
+"COLLECTION='TagCreator/1' DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/SETC/0000/SETC_00001883_00002264.root' TYP='POOL_ROOT' SEL='(PreselHeavyDimuon>0)'",
+"COLLECTION='TagCreator/1' DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/SETC/0000/SETC_00001883_00002382.root' TYP='POOL_ROOT' SEL='(PreselHeavyDimuon>0)'",
+"COLLECTION='TagCreator/1' DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/SETC/0000/SETC_00001883_00002466.root' TYP='POOL_ROOT' SEL='(PreselHeavyDimuon>0)'",
+"COLLECTION='TagCreator/1' DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/SETC/0000/SETC_00001883_00002627.root' TYP='POOL_ROOT' SEL='(PreselHeavyDimuon>0)'" 
+};
+ApplicationMgr.ExtSvc  += { "TagCollectionSvc/EvtTupleSvc" };
+
+PoolDbCacheSvc.Catalog = { "xmlcatalog_file:options/DVExampleStripping.xml" } ;
+

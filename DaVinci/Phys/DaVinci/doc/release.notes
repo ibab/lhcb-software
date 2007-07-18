@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-07-18 - Patrick Koppenburg
+ - options/DVExampleStrippingETC.opts
+ - options/DVExampleStripping.opts
+   . Two new example files to run a preselection on stripped DST and ETC
+
+! 2007-07-18 - Patrick Koppenburg
  - Removed obsolete data samples
  - New BB inclusive stripped DC06 sample used as test data
  - Cleanup obsolete files
