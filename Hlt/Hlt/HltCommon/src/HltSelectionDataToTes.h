@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.h,v 1.2 2007-07-06 16:55:57 hernando Exp $
+// $Id: HltSelectionDataToTes.h,v 1.3 2007-07-18 14:04:22 hernando Exp $
 #ifndef HLTSELECTIONDATATOTES_H 
 #define HLTSELECTIONDATAFROMTES_H 1
 
@@ -46,9 +46,9 @@ protected:
   {
     typedef typename std::vector<T*> CONT;
     typedef typename CONT::const_iterator CONTITER; 
-    if (!m_datasummary->selectionSummary(id).decision()) return NULL;
-    const CONT& cont = HltSummaryHelper::retrieve<CONT>(*m_datasummary,id);
     TESCONT* tcont = new TESCONT();
+    if (!m_datasummary->selectionSummary(id).decision()) return tcont;
+    const CONT& cont = HltSummaryHelper::retrieve<CONT>(*m_datasummary,id);
     for (CONTITER it = cont.begin(); it != cont.end(); ++it) {
       const T& t = *(*it); T* tc = t.clone(); tcont->insert(tc);
     }

@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.cpp,v 1.2 2007-07-06 16:55:57 hernando Exp $
+// $Id: HltSelectionDataToTes.cpp,v 1.3 2007-07-18 14:04:22 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -113,7 +113,7 @@ StatusCode HltSelectionDataToTes::execute() {
     debug() << " copying " << name << endreq;
     if (!exist<Tracks>(loca+name)) {
       Tracks* otracks = copy<Track,Tracks>(id);
-      if (otracks) put(otracks,loca+name);
+      put(otracks,loca+name);
     } 
   }
 
@@ -126,7 +126,7 @@ StatusCode HltSelectionDataToTes::execute() {
     debug() << " copying " << name << endreq;
     if (!exist<RecVertices>(loca+name)) { 
       RecVertices* overtices = copy<RecVertex,RecVertices>(id);
-      if (overtices) put(overtices,loca+name);
+      put(overtices,loca+name);
     } 
   }
   
