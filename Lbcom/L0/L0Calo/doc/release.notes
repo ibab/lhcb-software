@@ -2,6 +2,7 @@
 ! Package Manager : Olivier Callot
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r9 2007-07-18 =========================
 ! 2007-07-02 - Patrick Robbe
  - L0CaloAlg.cpp: 
     * update HCAL energy with ECAL in front also if HCAL Et=0
