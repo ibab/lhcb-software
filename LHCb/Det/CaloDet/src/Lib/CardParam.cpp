@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/06/14 16:10:16  odescham
+// fix FEBoard connections
+//
 // Revision 1.3  2007/02/22 23:17:18  odescham
 // Define the monitoring system in DeCalorimeter
 //
@@ -46,6 +49,7 @@ CardParam::CardParam( int iArea ,
     , m_LeftNumber     ( -1 )
     , m_CornerNumber   ( -1 ) 
     , m_PreviousNumber ( -1 )
+    , m_validationNumber( -1 )
     ,m_isPin (false)
     ,m_number( iNum)
     ,m_crate( iCrate)

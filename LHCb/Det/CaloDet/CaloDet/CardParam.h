@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.8 2007-07-18 12:20:15 cattanem Exp $
+/// $Id: CardParam.h,v 1.9 2007-07-19 20:37:00 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -95,7 +95,6 @@ private:
   std::vector<LHCb::CaloCellID> m_ids;
   int m_crate;
   int m_slot;
-  int m_code;
   int m_tell1;
 };
 

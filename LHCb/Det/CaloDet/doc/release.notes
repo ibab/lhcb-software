@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.78 2007-07-18 12:20:15 cattanem Exp $ 
+! $Id: release.notes,v 1.79 2007-07-19 20:37:00 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2007-07-19 - Olivier Deschamps
+ - Fix initialisation in CardParam.h
+
+
 
 !======================== CaloDet v8r3 2007-07-18 =============================
 ! 2007-07-18 - Marco Cattaneo
