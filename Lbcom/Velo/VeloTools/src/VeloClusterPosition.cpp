@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.12 2007-07-12 06:31:25 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.13 2007-07-19 15:53:21 truf Exp $
 // Include files
 
 // stl
@@ -244,7 +244,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
   //
   return ( weightedLAPos(cluster) );
 }
-//============================================================================
+//TRuf July 19, 2007 temporary fix =====================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Pair& aDirection) const
@@ -257,160 +257,60 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
   if(sensor==0){
     Error("No valid pointer to sensor", StatusCode::FAILURE );
-    anInfo.strip=LHCb::VeloChannelID(0);
-    anInfo.fractionalPosition=0.;
-    anInfo.fractionalError=0.;
-    //
-    return ( anInfo );    
   }
-  // transform global point to the local reference frame
-  Gaudi::XYZPoint aLocalPoint=sensor->globalToLocal(aGlobalPoint);
-  StatusCode pointStatus=sensor->isInActiveArea(aLocalPoint);
-  // local point is often outside active area - make a reasonable guess
-  unsetOutsideFlag();
-  if(pointStatus.isFailure()){
-    if(sensor->isR()||sensor->isPileUp()){
-      // easy to deal with - use cluster information for error estimate
-      Warning("Point outside active area - radius of the cluster will be used");
-      pointStatus.setCode(StatusCode::SUCCESS);
-    }
-    if(sensor->isPhi()){
-      // gues will be more coarse...
-      setOutsideFlag();
-      Warning("Point outside active area - rMin and rMax will be used to estimate error");
-      pointStatus.setCode(StatusCode::SUCCESS);
-    }
-  }
-  // transform global slopes to local
-  double localSlopeXZ=0., localSlopeYZ=0.;
-  if(pointStatus.isSuccess()){
-    if(sensor->isLeft()&&(!(sensor->isDownstream()))){
-      debug()<< " left R sensor on Phi module (upstream) " <<endmsg;
-      // the local ref. frame is the same as global, do nothing
-      localSlopeXZ=aDirection.first;
-      localSlopeYZ=aDirection.second;
-    }
-    else if(sensor->isLeft()&&sensor->isDownstream()){    
-      debug()<< " left R sensor on R module (downstream) " <<endmsg;
-      localSlopeXZ=(aDirection.first)*(-1);
-      localSlopeYZ=aDirection.second;
-    }
-    else if(sensor->isRight()&&sensor->isDownstream()){
-      debug()<< " right R sensor on R module (downstream) " <<endmsg;
-      localSlopeXZ=aDirection.first;
-      localSlopeYZ=(aDirection.second)*(-1);
-    }
-    else if(sensor->isRight()&&(!(sensor->isDownstream()))){
-      debug()<< " right R sensor on Phi module (downstream) " <<endmsg;
-      localSlopeXZ=(aDirection.first)*(-1);
-      localSlopeYZ=(aDirection.second)*(-1);
-    }
-  }else{
-    info()<< " ==> Local point is outside active area! " <<endmsg;
-    info()<< " --------------------------------------- " <<endmsg;
-    anInfo.strip=LHCb::VeloChannelID(0);
-    anInfo.fractionalPosition=0.;
-    anInfo.fractionalError=0.;
-    //
-    return ( anInfo );
-  }
-  // a track angle and vector parallel to the track
-  double alphaOfTrack=0.;
-  Gaudi::XYZVector parallel2Track(0., 0., 0.);
-  double modParallel2Track=0.;
-  Pair localSlopes=std::make_pair(localSlopeXZ, localSlopeYZ);
-  alphaOfTrack=angleOfTrack(localSlopes, parallel2Track);
-  modParallel2Track=sqrt(parallel2Track.Mag2());
   // calculate fractional position
   Pair fractionalPair=fracPosLA(cluster);
   // inter-strip position translate into (0., 1.) range
   double isp=fractionalPair.first;
-  // fill partially the toolInfo structure
   LHCb::VeloChannelID centreChannel=cluster->channelID();
+// fill partially the toolInfo structure
   anInfo.strip=centreChannel;
   anInfo.fractionalPosition=isp;
-  //--------------------------------------------------------------------------
-  // now comes part that is specific to the sensor type  
-  //--------------------------------------------------------------------------
-  // calculate projected angle - sensor specific!
-  //--------------------------------------------------------------------------
-  // cosine of angle between vector parallel to the track and vector
-  // normal to the strip - depends on local strip geometry
-  double cosTrackOnNormal=0.;
-  // projection of the parallel to track on normal to local strip
-  double trackOnNormal=0.;
-  // projection of the parallel to track on Z axis
-  double trackOnZ=0.;
-  // local pitch
-  double localPitch=0.;
-  // projected angle of the track wrt local strip
-  double projectedAngle=0.;
+  unsigned int centreStrip=centreChannel.strip();
+
   // error estimate
   double error=0.;
-  unsigned int centreStrip=centreChannel.strip();
+  Gaudi::XYZVector trackdir = Gaudi::XYZVector(aDirection.first,aDirection.second,1.);
   //--------------------------------------------------------------------------
-  // R sensor
+  // R sensor is easy, projected angle = theta
   //--------------------------------------------------------------------------
   if(sensor->isR()||(sensor->isPileUp())){ 
     const DeVeloRType* rSensor=dynamic_cast<const DeVeloRType*>(sensor);
     double rOfCluCentre=rSensor->rOfStrip(centreStrip, isp);
     double localPitch=rSensor->rPitch(rOfCluCentre);
-    // vector normal to tangent to the entry strip
-    Gaudi::XYZVector perp2RStrip(aLocalPoint.x(), aLocalPoint.y(), 0.);
-    double modPerp2RStrip=sqrt(perp2RStrip.Mag2());
-    // the vector normalized
-    Gaudi::XYZVector perp2RStripVersor(perp2RStrip.x()/modPerp2RStrip,
-                                       perp2RStrip.y()/modPerp2RStrip,
-                                       0.
-    );
-    cosTrackOnNormal=parallel2Track.Dot(perp2RStripVersor);
-    trackOnNormal=fabs(modParallel2Track*cosTrackOnNormal);
-    trackOnZ=modParallel2Track*cos(alphaOfTrack);
-    m_projectedAngle=atan(trackOnNormal/trackOnZ);
-    error=errorOnR(projectedAngle/Gaudi::Units::degree, 
+    // for r sensors, this is a good approximation, sqrt(tx**2+ty**2)
+    m_projectedAngle=trackdir.rho();
+    error=errorOnR(m_projectedAngle/Gaudi::Units::rad, 
                    localPitch/Gaudi::Units::micrometer);
+    // make an adhoc correction for the position, Velo Simulation bug in DC06 !
+    // 10mu / rad 
+    // anInfo.fractionalPosition = isp + m_projectedAngle*0.01/localPitch;                
   }
   //--------------------------------------------------------------------------
-  // Phi sensor
+  // Phi sensor is more complicated 
   //--------------------------------------------------------------------------
   if(sensor->isPhi()){
     const DeVeloPhiType* phiSensor=dynamic_cast<const DeVeloPhiType*>(sensor);
-    // calculate local pitch
-    double x2=aLocalPoint.x()*aLocalPoint.x();
-    double y2=aLocalPoint.y()*aLocalPoint.y();
-    double radiusOnPhi=sqrt(x2+y2);
-    if(outsideFlag()){
-      unsigned int stripZone=phiSensor->zoneOfStrip(centreStrip);
-      if(stripZone){
-        // outer strip
-        radiusOnPhi=phiSensor->rMax(stripZone);
-      }else{
-        // inner strip
-        radiusOnPhi=phiSensor->rMin(stripZone);
-      }
-    }
-    localPitch=phiSensor->phiPitch(radiusOnPhi);
-    // get the centre strip geometry for phi sensor
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> stripLimits;
-    stripLimits=phiSensor->localStripLimits(centreStrip);
-    Gaudi::XYZPoint stripAPoint=stripLimits.first;
-    Gaudi::XYZPoint stripBPoint=stripLimits.second;
-    // vector normal entry strip - Phi
-    Gaudi::XYZVector perp2PhiStrip((stripAPoint.y()-stripBPoint.y()),   
-                                   (stripBPoint.x()-stripAPoint.x()),
-                                   0.
-    );
-    double modPerp2PhiStrip=sqrt(perp2PhiStrip.Mag2());
-    // the vector normalized
-    Gaudi::XYZVector perp2PhiStripVersor(perp2PhiStrip.x()/modPerp2PhiStrip,
-                                         perp2PhiStrip.y()/modPerp2PhiStrip,
-                                         0.
-    );
-    cosTrackOnNormal=parallel2Track.Dot(perp2PhiStripVersor);
-    trackOnNormal=fabs(modParallel2Track*cosTrackOnNormal);
-    trackOnZ=modParallel2Track*cos(alphaOfTrack);
-    m_projectedAngle=atan(trackOnNormal/trackOnZ);
-    error=errorOnPhi(projectedAngle/Gaudi::Units::degree,
+   // transform global point to the local reference frame
+    Gaudi::XYZPoint aLocalPoint=sensor->globalToLocal(aGlobalPoint);
+    double radiusOnPhi=aLocalPoint.rho();
+    // make velo trajectory
+    std::auto_ptr<LHCb::Trajectory>  traj  = m_veloDet->trajectory(LHCb::LHCbID(centreChannel),isp);
+    double r_e = traj->endPoint().rho();
+    double r_b = traj->beginPoint().rho();
+    double max_r = r_e;
+    if (r_e<r_b){max_r = r_b;}
+    double min_r = r_e;
+    if (r_e>r_b){min_r = r_b;}
+    if (radiusOnPhi > max_r){radiusOnPhi = max_r;}
+    if (radiusOnPhi < min_r){radiusOnPhi = min_r;}
+       
+    double localPitch = phiSensor->phiPitch(radiusOnPhi);
+    // this is a hack, but should be ok since sensors are never tilted so much that it matters
+    double stereoAngle = acos(traj->direction(0.5).Dot(aGlobalPoint)/aGlobalPoint.rho());
+    // for phi sensors, projection angle is diluted by stereo angle
+    m_projectedAngle = trackdir.rho()*stereoAngle;
+    error=errorOnR(m_projectedAngle/Gaudi::Units::rad,
                      localPitch/Gaudi::Units::micrometer);
   }
   anInfo.fractionalError=error;
@@ -468,22 +368,28 @@ StatusCode VeloClusterPosition::createResParaTable()
   }
   return ( StatusCode::SUCCESS );
 }
-//============================================================================
+//TRuf July 19, 2007 temporary fix =====================================================
 double VeloClusterPosition::errorOnR(const double projAngle,
                                      const double pitch) const
 {
+  std::vector<double> m_params;
+  m_params+=0.038, 0.00033, -25.52, 0.167, 1.447, 0.0069, 0.121, 0.00032;
   debug()<< " ==> errorOnR() " <<endmsg;
-  // pick up appropriate parametrization - iterate over rTable
-  ResVector::const_iterator resIT=m_rParaTable.begin();
-  for( ; resIT!=m_rParaTable.end(); ++resIT){
-    if(projAngle<(*resIT).first) break;
+  double x = projAngle;
+  double error;
+  if (x < 0){x = -x;}
+  // make cutoff at unphysical angles
+  if (x > 0.4) {
+    error = 0.28;
+  } else {
+   double p0 = m_params[0]+m_params[1]*pitch;
+   double p1 = m_params[2]+m_params[3]*pitch;
+   double p2 = m_params[4]+m_params[5]*pitch;
+   double p3 = m_params[6]+m_params[7]*pitch;
+   error=p0*sin(p1*x+p2)+p3; 
   }
-  // 
-  double paraConst=(*resIT).second.first;
-  double paraSlope=(*resIT).second.second;
-  double error=paraSlope*pitch+paraConst;
-  //
-  return ( error/pitch );
+  // make some fine tuning
+  return ( 1.08 * error );
 }
 //============================================================================
 double VeloClusterPosition::errorOnPhi(const double projAngle,
