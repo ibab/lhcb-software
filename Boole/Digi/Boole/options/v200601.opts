@@ -4,13 +4,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
-ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
 //#include "$BOOLEOPTS/ExpertCheck.opts"     // Switch on expert check histos
 //InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
-//#include "$STDOPTS/ExtendedDigi.opts"      // Add MCHits to .digi file
 
 //---------------------------------------------------------------------------
 // Set up DC06 geometry, conditions, magnetic field
@@ -43,7 +41,7 @@ PoolDbCacheSvc.Catalog = {
 };
 
 //---------------------------------------------------------------------------
-// Spillover 
+// Spillover input data files (minimum bias)
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -64,11 +62,22 @@ EventSelector.Input   = {
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
+ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
+//DigiWriter.RequireAlgs += { "L0Filter" }; // uncomment to write only L0Selected events
+//#include "$STDOPTS/ExtendedDigi.opts"     // uncomment to add MCHits to .digi file
 DigiWriter.Output = "DATAFILE='PFN:00001820_00000001_4.digi' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //---------------------------------------------------------------------------
-// Possible second output stream emulating real Raw Data (i.e. no MC truth)
+// Uncomment next line to write ETC containing L0 result
+//---------------------------------------------------------------------------
+//ApplicationMgr.OutStream += { "Sequencer/SeqWriteTag" };
+// ETC file defined as follows in $L0DUROOT/options/ETC.opts
+//WR.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+
+//---------------------------------------------------------------------------
+// Uncomment next two lines to enable second output stream emulating real Raw 
+// Data (i.e. no MC truth). Uncomment also third line to write only L0Selected events  
 //---------------------------------------------------------------------------
 //#include "$BOOLEOPTS/RawWriter.opts"
 //RawWriter.Output = "DATAFILE='PFN:00001820_00000001_4.raw' TYP='POOL_ROOTTREE' OPT='REC'";
-
+//RawWriter.RequireAlgs += { "L0Filter" }; // uncomment to write only L0Selected events

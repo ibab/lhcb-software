@@ -56,6 +56,7 @@ Digi.DetectorList += {
                       , "MUON"
                       , "L0"
                      };
+Trigger.DetectorList  += { "L0" };
 Relations.DetectorList = { 
                            "VELO"
                          , "TT"
@@ -151,6 +152,13 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
 // Modify printout defaults
 #include "$BOOLEOPTS/BooleMessage.opts"
+
+// Run the L0Filter always, may be used for selective output
+TriggerL0Seq.Members += { "L0Filter" };
+
+// Set up tag collection for L0 filter result, and switch off by default
+#include "$L0DUROOT/options/ETC.opts"
+ApplicationMgr.OutStream -= { "Sequencer/SeqWriteTag" } ;
 
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring

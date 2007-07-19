@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r4>2007-07-19 Boole v14r4</A></H1><PRE>
+ - Run L0Filter algorithm after L0 simulation, to make L0 result available if
+   needed (Boole.opts)
+ - Add possibility to write an ETC containing the L0 result
+   (Boole.opts, uncomment relevant line in v200601.opts)
+ - Add possibility to write .digi only for L0 selected events
+   (uncomment relevant line in v200601.opts)
+
 </PRE><H1><A NAME=v14r3>2007-07-13 Boole v14r3</A></H1><PRE>
  - In BooleMoni.opts, adapt STChecker options to new MCParticleSelector defaults
  - In v200601.opts, use new input files, since old ones have been deleted
