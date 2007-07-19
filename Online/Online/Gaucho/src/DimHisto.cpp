@@ -1,4 +1,4 @@
-// $Id: DimHisto.cpp,v 1.3 2007-01-24 20:42:24 frankb Exp $
+// $Id: DimHisto.cpp,v 1.4 2007-07-19 07:22:44 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -59,7 +59,7 @@ DimHisto::DimHisto(std::string hname, const AIDA::IBaseHistogram* InfoVar, ISvcL
 
 //destructor
 DimHisto::~DimHisto() {
-  if(!m_dimHistoScv) delete [] m_dimHistoScv;
+    delete m_dimHistoScv;
 }
 
 
@@ -138,7 +138,7 @@ DimHistoService::DimHistoService(std::string hname, const AIDA::IBaseHistogram* 
 }
 
 //destructor
-DimHistoService::~DimHistoService() {
+DimHistoService::~DimHistoService() {  
   if(!m_data) delete [] m_data;
 }
 

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.9 2007-03-05 16:52:26 evh Exp $
+! $Id: release.notes,v 1.10 2007-07-19 07:22:44 evh Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
+!======================== Gaucho v5r6 2007-07-19 ==========================
+! 2007-07-19 - Eric van Herwijnen
+ - Fix bug with histogram services remaining after receiving stop dim command
 !======================== Gaucho v5r5 2007-03-05 ==========================
 ! 2007-03-05 - Eric van Herwijnen
  - Added support for histogram database insertion
