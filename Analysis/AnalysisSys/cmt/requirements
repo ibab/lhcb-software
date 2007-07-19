@@ -1,6 +1,6 @@
 
 package AnalysisSys
-version v1r4
+version v1r5
 
 branches doc cmt
 
@@ -8,13 +8,13 @@ branches doc cmt
 
 #===================================================================
 use  CommonParticles            v3r8     Phys   # Juan Palacios, WGs
-use  FlavourTagging             v7r2p1   Phys   # Marco Musy
+use  FlavourTagging             v7r3   Phys   # Marco Musy
 
 ####################################################################
-use  DaVinciMCTools     	v9r3     Phys   # Juan Palacios
-use  DaVinciAssociators         v9r2     Phys   # Philippe Charpentier
+use  DaVinciMCTools     	v9r4     Phys   # Juan Palacios
+use  DaVinciAssociators         v9r2p1   Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v2r3     Phys   # Marco Musy
+use  FlavourTaggingChecker      v2r4     Phys   # Marco Musy
 use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1     Phys   # Chris Jones
 ####################################################################
@@ -38,7 +38,7 @@ use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
 use               LoKiJets         v2r3p1   Phys
 
 ####################################################################
-use  Stripping          v6r1p2  Tools             # Juan Palacios
+use  Stripping          v6r1p3  Tools             # Juan Palacios
 
 ####################################################################
 use  MicroDSTAlgorithm  v1r1    MicroDST          # Ulrich Kerzel
