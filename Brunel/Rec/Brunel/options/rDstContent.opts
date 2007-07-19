@@ -11,5 +11,8 @@ TrackToRDST.upstreamStates = {"ClosestToBeam"};
 
 DstWriter.Preload = false;
 
+// Do not try to write out if Reco ProcessPhase did not complete
+DstWriter.RequireAlgs += { "Reco" };
+
 // Objects to write out
 #include "$STDOPTS/rDstContent.opts"

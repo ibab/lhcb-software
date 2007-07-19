@@ -20,15 +20,18 @@ PoolDbCacheSvc.AgeLimit = 0;
 // Get the event time (for CondDb) from ODIN
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
+// Run the full job inside a single sequencer TopAlg
+ApplicationMgr.TopAlg = { "GaudiSequencer/BrunelSequencer" };
+
 //----------------------------------------------------------------------------
 // Instantiate all Brunel phases. MC specific phases not populated in this file
 //----------------------------------------------------------------------------
-ApplicationMgr.TopAlg += { "ProcessPhase/Init",
-                           "ProcessPhase/Reco",
-                           "ProcessPhase/Moni",
-                           "ProcessPhase/MCLinks", // Links to MC truth
-                           "ProcessPhase/Check",   // Checking with MC truth
-                           "ProcessPhase/Output" };
+BrunelSequencer.Members = { "ProcessPhase/Init",
+                            "ProcessPhase/Reco",
+                            "ProcessPhase/Moni",
+                            "ProcessPhase/MCLinks", // Links to MC truth
+                            "ProcessPhase/Check",   // Checking with MC truth
+                            "ProcessPhase/Output" };
 
 // Initialisation phase
 Init.DetectorList += { "Etc", "Brunel", "Calo" };
@@ -37,6 +40,10 @@ InitBrunelSeq.Members += { "RecInit/Brunel" };
 // Convert Calo 'packed' banks to 'short' banks if needed
 InitCaloSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
 #include "$CALODAQROOT/options/CaloBankHandler.opts"
+
+// Setup L0 filtering. Has no effect unless "L0" is added to Init.DetectorList
+#include "$L0DUROOT/options/L0Sequence.opts"
+InitL0Seq.Members += { "GaudiSequencer/L0", "L0Filter"}; // run L0 before Reco
 
 // Reconstruction phase
 #include "$RECSYSROOT/options/Reco.opts"

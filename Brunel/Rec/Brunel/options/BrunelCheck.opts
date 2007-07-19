@@ -5,8 +5,7 @@
 // Detectors to check
 //--------------------------------------------------------------
 Check.DetectorList += {
-                       "L0" 
-                     , "Pat"
+                       "Pat"
                      , "RICH"
                      , "MUON"
                      };

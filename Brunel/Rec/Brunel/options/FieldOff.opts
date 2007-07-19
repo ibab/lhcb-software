@@ -11,7 +11,7 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 #include "$TRACKSYSROOT/options/NoFieldTracking.opts"
 #pragma print on

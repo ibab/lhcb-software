@@ -29,7 +29,7 @@ TagReader.CollectionName = "TagCreator" ;
 // Set up DC06 geometry, conditions, magnetic field
 //---------------------------------------------------------------------------
 #pragma print on
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 //---------------------------------------------------------------------------
 // Write an ETC for the selected DST - must be done AFTER writing the DST

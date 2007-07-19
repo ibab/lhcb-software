@@ -16,9 +16,9 @@ ToolSvc.SequencerTimerTool.OutputLevel = 4;
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList += { "L0"
-  //                     , "MUON"
-                    };
+Moni.DetectorList += {
+//                     "MUON"
+                     };
 
 //--------------------------------------------------------------
 // Monitoring algorithms

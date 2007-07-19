@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v31r8>2007-07-19 Brunel v31r8</A></H1><PRE>
+ - Update options files to take geometry tags from $DDDBROOT/options
+ - Brunel processing now all takes place in a single GaudiSequencer TopAlg
+   (called BrunelSequencer). This allows any algorithm to stop further processing
+   of a given event. 
+ - Empty L0 sequences added in last release are no longer needed and are removed
+ - New possibility to process only L0 selected events: switch on by uncommenting
+   the option Init.DetectorList += { "L0" };
+
 </PRE><H1><A NAME=v31r7>2007-07-16 Brunel v31r7</A></H1><PRE>
  - In ExpertCheck.opts, adapt STChecker opts to new MCParticleSelector defaults
  - Update default input files to replace obsolete ones that have been deleted

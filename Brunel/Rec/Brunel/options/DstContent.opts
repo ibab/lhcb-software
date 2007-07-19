@@ -3,8 +3,11 @@
 DstWriter.Preload = false;
 
 // Sequence for altering DST content
-Output.DetectorList += { "L0", "DST" };
+Output.DetectorList  += { "DST" };
 OutputDSTSeq.Members += { "TrackToDST" };
+
+// Do not try to write out if Reco ProcessPhase did not complete
+DstWriter.RequireAlgs += { "Reco" };
 
 // Objects to write out 
 #include "$STDOPTS/DstContent.opts"
