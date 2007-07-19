@@ -87,11 +87,4 @@
     <logical/>
   </File>
 
-  <File ID="E067BCA9-DE35-DC11-BD29-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="00001820_00000001_5.L0Yes.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
 </POOLFILECATALOG>
