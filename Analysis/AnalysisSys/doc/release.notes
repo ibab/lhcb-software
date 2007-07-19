@@ -3,6 +3,15 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r4>2007-07-?? Analysis v1r5 - Potential DC06 Stripping version</A></H1><PRE>
+ - Uses LHCB_v22r7
+
+#######################################MM#######################################
+#                                  ANALYSIS v1r5                               #
+################################################################################
+#################################### EXTERNAL ##################################
+
+
 </PRE><H1><A NAME=v1r4>2007-06-18 Analysis v1r4 - Potential DC06 Stripping version</A></H1><PRE>
  - Uses LHCB_v22r6
  - Various fixes related to changes in Gaudi, re-structuring of LoKi and re-packaging of some MC interfaces.
