@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-07-20 - Patrick Koppenburg
- - options/TrueBd2MuMuKstar.opts, DVTestBd2MuMuKstar.opts
+ - options/DVTestHltB2DiMuon.opts
+ - options/DVTestHltB2JpsiX_MuMu.opts
+ - options/DVTestBd2MuMuKstar.opts
+   . More options to test channels. With corresponding truth
 
 ! 2007-07-16 - Patrick Koppenburg
  - Less printout in HltSelChecker algorithm

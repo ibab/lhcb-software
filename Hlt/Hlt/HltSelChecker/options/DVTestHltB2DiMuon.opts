@@ -1,6 +1,6 @@
-/** @file DVTestHltBd2MuMuKstar.opts
+/** @file DVTestHltB2DiMuon.opts
  *
- *  Test file for HLT Bd->MuMuK* selection
+ *  Test file for HLT B -> mu mu X selection
  *
  *  @author P. Koppenburg
  *  @date 2007-07-20
@@ -9,8 +9,9 @@
 //
 // Preselection
 //
-#include "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBd2KstarMuMu" };
+#include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
+HltExclusiveCorrs.Algorithms += { "PreselHeavyDimuon" };
+PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // Hlt test
 //
@@ -22,21 +23,21 @@ HltExclusiveCorrs.Algorithms += { "PreselBd2KstarMuMu" };
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
+#include "$HLTSELCHECKERROOT/options/TrueB2DiMuon.opts"
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bs2psiphi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2MuMuKstar" } ;
+HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2DiMuon" } ;
 OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBd2KstarMuMu" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2DiMuon.root' TYP='ROOT' OPT='NEW'" ] ;
 
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;
@@ -44,5 +45,6 @@ HltSelChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.EvtMax = -1 ;
+ApplicationMgr.EvtMax = 100 ;
 EventSelector.FirstEvent = 1 ;
+
