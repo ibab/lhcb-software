@@ -3,8 +3,10 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+
+!========================== VeloTools v2r2 2007-07-19 ========================
 ! 2007-07-19 - Thomas Ruf
- - major change to position methode using direction and point
+ - major change to position method using direction and point
  - new error parametrization as function of projected track angle
    same for R and Phi sensors. Parameters hardwired in the code.
    Only seen as temporary solution in order to have something working
