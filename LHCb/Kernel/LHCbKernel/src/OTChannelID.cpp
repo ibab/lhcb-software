@@ -1,4 +1,4 @@
-// $Id: OTChannelID.cpp,v 1.1 2007-07-11 13:33:34 jonrob Exp $
+// $Id: OTChannelID.cpp,v 1.2 2007-07-20 16:06:59 jonrob Exp $
 // Include files
 
 // local
@@ -12,17 +12,16 @@
 
 std::ostream& LHCb::OTChannelID::fillStream(std::ostream& s) const
 {
-  s << "{ OTChannelID : " << channelID()
-    << " : TDCtime=" << tdcTime()
-    << " straw=" << straw()
-    << " module=" << module()
-    << " quarter=" << quarter()
-    << " layer=" << layer()
-    << " station=" << station();
-  if ( uniqueLayer()   ) s << " uniqueLayer";
-  if ( uniqueQuarter() ) s << " uniqueQuarter";
-  if ( uniqueModule()  ) s << " uniqueModule";
-  if ( uniqueStraw()   ) s << " uniqueStraw";
-  s << " }";
-  return s;
+  return s << "{ OTChannelID : " << channelID()
+           << " : TDCtime=" << tdcTime()
+           << " straw=" << straw()
+           << " module=" << module()
+           << " quarter=" << quarter()
+           << " layer=" << layer()
+           << " station=" << station()
+           << " uniqueStraw=" << uniqueStraw()
+           << " uniqueModule=" << uniqueModule()
+           << " uniqueQuarter=" << uniqueQuarter()
+           << " uniqueLayer=" << uniqueLayer()
+           << " }";
 }

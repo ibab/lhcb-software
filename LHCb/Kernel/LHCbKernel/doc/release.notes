@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-07-20 - Chris Jones
+ - Minor fix to logic in OTChannelID fillStream printout
+
 !===================== LHCbKernel v7r6 2007-07-11 ========================
 ! 2007-07-11 - Chris Jones
  - Add human-friendly printout for LHCbID, STChannelID, OTChannelID,
