@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2007-07-20 - Patrick Koppenburg
+ - options/TrueBd2MuMuKstar.opts, DVTestBd2MuMuKstar.opts
+
 ! 2007-07-16 - Patrick Koppenburg
  - Less printout in HltSelChecker algorithm
 

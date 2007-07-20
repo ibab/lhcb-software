@@ -20,7 +20,7 @@ SelectTrueBs2PhiPhi.Filter.Bs2PhiPhi.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) 
 //
 HltSharedPhi.PhysDesktop.InputLocations =  { "Phys/SelectTrueBs2PhiPhi" } ;    
 //
-// Dummy MakeResonances to check that both tracks are there
+// Dummy MakeResonances to check that all tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2PhiPhi"};
 AllTrueBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/SelectTrueBs2PhiPhi"};

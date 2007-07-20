@@ -41,10 +41,8 @@ NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2HH.root' TYP='ROOT' OPT='NEW'" ] ;/
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;
 HltSelChecker.DoPrint = false ;
-// OfflineChecker.GeomTools = { "" : "TrgDispCalculator" };
 OfflineChecker.OutputLevel = 3 ;
 OfflineChecker.DoPrint = false ;
-// OfflineChecker.GeomDispCalculator.OutputLevel = 1 ;
 
 /*
 ApplicationMgr.TopAlg += { "HltRecChecker" };
