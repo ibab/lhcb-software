@@ -15,9 +15,12 @@ HltInitSeq.Members = {"PatInitEvent",
 HltEndSeq.Members = {"HltSelectionDataToTes",
                      "HltSummaryWriter"};
 
+HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
+//HltSelectionDataToTes.OutputLevel=3;
+
 // HltSelectionDataToTes.CopyAll = true;
 // HltSummaryWriter.SaveAll = true;
-
+HltSummaryWriter.OutputLevel=3;
 HltAllAlleys.Members ={
   "HltSequencer/HltMuonAlley"
   ,"HltSequencer/HltHadAlley"
