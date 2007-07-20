@@ -5,9 +5,10 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.31 2007-07-20 09:26:08 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.32 2007-07-20 09:27:40 jonrob Exp $
  *
  * @author Antonis Papanestis
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-10-28
  */
 //-----------------------------------------------------------------------------

@@ -5,9 +5,10 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.22 2007-07-20 09:26:15 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.23 2007-07-20 09:27:46 jonrob Exp $
  *
  *  @author Antonis Papanestis
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-10-28
  */
 //-----------------------------------------------------------------------------
@@ -37,13 +38,11 @@ namespace Rich
    *  A tool to preform the manipulation of RichSmartID channel identifiers
    *
    *  @author Antonis Papanestis
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2003-10-28
    *
    *  @todo Move application of panel offset in RichSmartIDTool::globalToPDPanel
    *        into DeRichHPDPanel class
-   *  @todo Implement return status code on all smartid <-> position and
-   *        position <-> position coversions, to allow failed conversions to
-   *        be properly flagged
    */
   //-----------------------------------------------------------------------------
 
