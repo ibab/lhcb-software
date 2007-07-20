@@ -4,9 +4,10 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.22 2007-07-20 09:24:41 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.23 2007-07-20 09:28:42 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-10-28
  */
 //---------------------------------------------------------------------------------
@@ -45,6 +46,7 @@ namespace Rich
    *  Interface to tools providing manipulation of RichSmartID channel identifiers
    *
    *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2003-10-28
    */
   //---------------------------------------------------------------------------------
