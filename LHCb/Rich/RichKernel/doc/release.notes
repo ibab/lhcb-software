@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.153 2007-07-09 15:31:09 cattanem Exp $
+! $Id: release.notes,v 1.154 2007-07-20 09:24:51 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-07-20 - Chris Jones
+ - Add two new methods, anodeGlobalPosition, which return the position 
+   for a given RichSmartID or Rich::HPDPixelCluster on the anode 
+   pixel chip.
 
 !====================== RichKernel v7r7 2007-07-09 ====================
 ! 2007-06-25 - Chris Jones
