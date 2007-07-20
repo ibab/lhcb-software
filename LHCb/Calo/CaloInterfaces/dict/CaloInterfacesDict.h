@@ -1,4 +1,4 @@
-// $Id: CaloInterfacesDict.h,v 1.2 2007-06-08 14:08:15 cattanem Exp $
+// $Id: CaloInterfacesDict.h,v 1.3 2007-07-20 13:14:22 cattanem Exp $
 #ifndef DICT_CALOINTERFACESDICT_H 
 #define DICT_CALOINTERFACESDICT_H 1
 
@@ -13,6 +13,8 @@
 #include "CaloInterfaces/ICaloSplitTool.h"           
 #include "CaloInterfaces/ICaloSubClusterTag.h"       
 #include "CaloInterfaces/ICaloTrackIdEval.h"         
-#include "CaloInterfaces/ICaloTrackMatch.h"          
+#include "CaloInterfaces/ICaloTrackMatch.h"         
+#include "CaloInterfaces/IPart2Calo.h"
+#include "CaloInterfaces/ITrack2Calo.h"
 
 #endif //DICT_CALOINTERFACESDICT_H 

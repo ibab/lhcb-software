@@ -1,4 +1,4 @@
-// $Id: IPart2Calo.h,v 1.3 2007-06-28 14:46:37 odescham Exp $
+// $Id: IPart2Calo.h,v 1.4 2007-07-20 13:14:22 cattanem Exp $
 #ifndef IPART2CALO_H 
 #define IPART2CALO_H 1
 
@@ -11,6 +11,13 @@
 #include "Event/ProtoParticle.h"
 // from CaloInterfaces
 #include "CaloInterfaces/ITrack2Calo.h"
+
+namespace LHCb 
+{
+  class Particle;
+  class ProtoParticle;
+}
+
 
 static const InterfaceID IID_IPart2Calo ( "IPart2Calo", 1, 0 );
 

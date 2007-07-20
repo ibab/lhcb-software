@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.38 2007-06-25 20:35:01 odescham Exp $
+! $Id: release.notes,v 1.39 2007-07-20 13:14:22 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloInterfaces v7r4 2007-07-20 ====================
+! 2007-07-20 - Marco Cattaneo
+ - Add the new interfaces to the dictionary....
+ - Remove unneccessary includes from these interfaces, use forward declarations
 
 ! 2007-06-25 - Olivier Deschamps
  - New interfaces : ITrack2Calo and IPart2Calo --> match Track/Part to calo 

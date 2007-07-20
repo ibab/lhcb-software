@@ -12,6 +12,8 @@
   <class name    = "ICaloSubClusterTag"       />
   <class name    = "ICaloTrackIdEval"         />
   <class name    = "ICaloTrackMatch"          />
+  <class name    = "IPart2Calo"               />
+  <class name    = "ITrack2Calo"              />
 
 </lcgdict>
 

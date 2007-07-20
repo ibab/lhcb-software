@@ -1,4 +1,4 @@
-// $Id: ITrack2Calo.h,v 1.2 2007-06-25 21:45:26 odescham Exp $
+// $Id: ITrack2Calo.h,v 1.3 2007-07-20 13:14:22 cattanem Exp $
 #ifndef ITRACK2CALO_H 
 #define ITRACK2CALO_H 1
 
@@ -9,13 +9,20 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 // from LHCb
-#include "Event/Track.h"
 #include "Event/State.h"
-#include "Event/CaloCluster.h"
-#include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Kernel/CaloCellID.h"
+#include "Kernel/ParticleID.h"
+
+// Forward declarations
+namespace LHCb 
+{
+  class Track;
+  class CaloHypo;
+  class CaloCluster;
+}
+
 
 static const InterfaceID IID_ITrack2Calo ( "ITrack2Calo", 1, 0 );
 
