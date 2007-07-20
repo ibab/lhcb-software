@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-07-20 - Juan Palacios
+ - Add interface IFilterParticles and base class FilterParticlesBase.
+
+
 !========================= DaVinciKernel v6r4 2007-06-11 ====================
 ! 2007-06-11 - Marco Cattaneo
  - Put back IParticleTransporter interface (was in PhysEvent)
