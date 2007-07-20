@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r8 2007-07-20 ======================
+! 2007-07-20 - Marco Cattaneo
+ - Fix TrackMatch options in NoFieldTracking.opts, change on 30/5 had wrong names
+
 !============================ TrackSys v4r7 2007-07-05 ======================
 ! 2007-07-04 David Hutchcroft
  - Added PatFilterUsedClusters and PatVeloGeneralTracking to RecoTracking.opts

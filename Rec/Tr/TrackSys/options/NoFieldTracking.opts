@@ -65,11 +65,11 @@ TsaSeed.stubExtender.tyCut = 0.1;
 // Match pattern
 TrackMatch.Chi2MatchingCut = 4000;
 TrackMatch.MomentumCut = 0.;
-TrackMatch.ptCut = 0;
+TrackMatch.pt2Cut = 0;
 TrackMatch.maxStepSize = 10000.;
-TrackMatch.yParams = {2.5e7};
-TrackMatch.tyParams = {5e-4};
-TrackMatch.chi2T = 1000;
+TrackMatch.yTParams = {2.5e7};
+TrackMatch.tyTParams = {5e-4};
+TrackMatch.chi2TCut = 1000;
 TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
 //TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
 
