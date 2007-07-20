@@ -1,4 +1,4 @@
-// $Id: Track2Calo.cpp,v 1.1 2007-06-25 20:33:34 odescham Exp $
+// $Id: Track2Calo.cpp,v 1.2 2007-07-20 13:48:09 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,9 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
+#include "Event/Track.h"
+#include "Event/CaloCluster.h"
+#include "Event/CaloHypo.h"
 // local
 #include "CaloUtils/Track2Calo.h"
 
