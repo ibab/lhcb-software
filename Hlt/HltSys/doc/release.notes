@@ -5,11 +5,15 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-20 - Alessia Satta
+ - Options to store the summary for muon alley and to provide muon on TES 
+   for HltSelections
+
 ! 2007-07-16 - Patrick Koppenburg
  - Added hacking of errors according to DC04 parameterisation by Hugo
 
-! 2007-07-13 - Patrick Koppenburg
- - New option form muon t conf following the spli in two sub alley etc
+! 2007-07-13 - Alessia Satta
+ - New option from muon t conf following the split in two sub alley etc
 
 ! 2007-07-12 - Patrick Koppenburg
  - New package HltSelChecker
