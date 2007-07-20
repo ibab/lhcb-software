@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.85 2007-06-25 20:33:34 odescham Exp $
+! $Id: release.notes,v 1.86 2007-07-20 12:21:22 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v7r4 2007-07-20 =========================
 ! 2007-06-25 - Olivier Deschamps
  - New tools : Track2Calo and Part2Calo --> match Track/Part to calo 
   (requested by Jose for L0 on/offline matching)
                CaloElectron tool update accordingly
-
 
 !========================== CaloUtils v7r3 2007-06-07 =========================
 ! 2007-05-30 - Olivier Descha;p
