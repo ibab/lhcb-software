@@ -7,7 +7,7 @@ Purpose: LHCb High Level Trigger packages.
 
 ! 2007-07-20 - Alessia Satta
  - Options to store the summary for muon alley and to provide muon on TES 
-   for HltSelections
+   for HltSelections and change L0DU setting
 
 ! 2007-07-16 - Patrick Koppenburg
  - Added hacking of errors according to DC04 parameterisation by Hugo
