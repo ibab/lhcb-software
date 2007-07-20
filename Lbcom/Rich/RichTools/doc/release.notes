@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-07-20 - Chris Jones
+ - Add implementations for two new methods, anodeGlobalPosition, which return 
+   the position for a given RichSmartID or Rich::HPDPixelCluster on the anode
+   pixel chip.
+
 !=========================== RichTools v2r14 2007-07-09 ======================
 ! 2007-06-22 - Chris Jones
  - Update default tools to reject change in name for the tool 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.30 2007-04-23 13:08:01 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.31 2007-07-20 09:26:08 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -46,10 +46,10 @@ StatusCode Rich::SmartIDTool::initialize()
   m_richS = getDet<DeRichSystem>(DeRichLocation::RichSystem);
 
   // HPD panel names
-  const std::string pdPanelName[2][2] = {{ DeRichHPDPanelLocation::Rich1Panel0,
-                                           DeRichHPDPanelLocation::Rich1Panel1 },
-                                         { DeRichHPDPanelLocation::Rich2Panel0,
-                                           DeRichHPDPanelLocation::Rich2Panel1 } };
+  const std::string pdPanelName[2][2] = { { DeRichHPDPanelLocation::Rich1Panel0,
+                                            DeRichHPDPanelLocation::Rich1Panel1 },
+                                          { DeRichHPDPanelLocation::Rich2Panel0,
+                                            DeRichHPDPanelLocation::Rich2Panel1 } };
 
   //loop over riches and photo detector panels
   for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
@@ -73,6 +73,7 @@ StatusCode Rich::SmartIDTool::initialize()
 
 //=============================================================================
 // Returns the position of a RichSmartID cluster in global coordinates
+// on the HPD entrance window
 //=============================================================================
 StatusCode
 Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster,
@@ -101,12 +102,55 @@ Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster,
 
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
+// on the HPD entrance window
 //=============================================================================
 StatusCode
 Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
                                     Gaudi::XYZPoint& detectPoint ) const
 {
   return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID, detectPoint);
+}
+
+//=============================================================================
+// Returns the position of a RichSmartID cluster in global coordinates
+// on the anode pixel chip
+//=============================================================================
+StatusCode
+Rich::SmartIDTool::anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
+                                         Gaudi::XYZPoint& detectPoint ) const
+{
+  // Default return status is OK
+  StatusCode sc = StatusCode::SUCCESS;
+  // reset global coordinate to zero
+  detectPoint = Gaudi::XYZPoint(0,0,0);
+  // does cluster have any hits !!
+  if ( !cluster.smartIDs().empty() )
+  {
+    // get position for each point in cluster
+    for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+          iS != cluster.smartIDs().end(); ++iS )
+    {
+      Gaudi::XYZPoint tmpP;
+      sc = sc && anodeGlobalPosition(*iS,tmpP);
+      detectPoint += (Gaudi::XYZVector)tmpP;
+    }
+    // normalise
+    detectPoint /= (double)cluster.size();
+  }
+  return sc;
+}
+
+//=============================================================================
+// Returns the position of a RichSmartID in global coordinates
+// on the anode pixel chip
+//=============================================================================
+StatusCode
+Rich::SmartIDTool::anodeGlobalPosition ( const LHCb::RichSmartID smartID,
+                                         Gaudi::XYZPoint& detectPoint ) const
+{
+  // Should maybe update detPointOnAnode method to return its own StatusCode ?
+  detectPoint = m_photoDetPanels[smartID.rich()][smartID.panel()]->detPointOnAnode(smartID);
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
