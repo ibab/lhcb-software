@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.272 2007-07-12 08:03:24 jpalac Exp $
+! $Id: release.notes,v 1.273 2007-07-20 13:54:06 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-07-20 - Patrick Koppenburg
+ - src/DecodeSimpleDecayStrings.cpp
+   . Protect against typos in decay descriptor in cc
+   . Check outputlevel before formatting
 
 ! 2007-07-12 - Juan Palacios
  - src/GeomDispCalculator.cpp

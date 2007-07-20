@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.7 2007-05-10 10:01:16 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.8 2007-07-20 13:54:06 pkoppenb Exp $
 // Include files 
 
 // from ANSI C++
@@ -69,11 +69,11 @@ StatusCode DecodeSimpleDecayString::initialize(){
   
   m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc");
   if(!m_ppSvc ) {
-    fatal() << "ParticlePropertySvc Not Found" << endreq;
+    fatal() << "ParticlePropertySvc Not Found" << endmsg;
     return StatusCode::FAILURE;
   }
   sc = reset();
-  verbose() << "Returning " << sc << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Returning " << sc << endmsg ;
   return sc ;
   
 };
@@ -86,17 +86,18 @@ StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
   StatusCode sc = reset();
   if ( sc.isFailure() ) return sc ;
   m_descriptor = descriptor;
-  debug() << "Going to strip cc in " << descriptor << endreq ;  
-  sc = this->strip_cc(); // strip cc part -> sets is_cc
+  if (msgLevel(MSG::DEBUG)) debug() << "Going to strip cc in " << descriptor << endmsg ;  
+  sc = strip_cc(); // strip cc part -> sets is_cc
   if ( sc.isFailure() ) return sc ;
-  debug() << "cc is " << m_iscc << " -> " 
-      << m_descriptor << endreq ;  
-  sc = this->splitDescriptor(m_descriptor, m_mother, m_daughters); // split
+  if (msgLevel(MSG::DEBUG)) debug() << "cc is " << m_iscc << " -> " 
+      << m_descriptor << endmsg ;  
+  sc = splitDescriptor(m_descriptor, m_mother, m_daughters); // split
   if ( sc.isFailure() ) return sc ;
-  debug() << "Mother: " << m_mother << ", " << m_daughters.size()
-      << " daughters: " << m_daughters << endreq ;  
+  if (msgLevel(MSG::DEBUG)) debug() << "Mother: " << m_mother << ", " << m_daughters.size()
+      << " daughters: " << m_daughters << endmsg ;  
   if ( m_iscc ) {
-    sc = this->do_cc();
+   if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << descriptor << endmsg ;  
+    sc = do_cc();
     if ( sc.isFailure() ) return sc ;
   }
   
@@ -109,7 +110,7 @@ StatusCode DecodeSimpleDecayString::reset(){
   m_daughters.clear();
   m_daughters_cc.clear();
   m_iscc = false ;
-  verbose() << "Reset of DecodeSimpleDecayString done" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Reset of DecodeSimpleDecayString done" << endmsg ;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -137,12 +138,12 @@ StatusCode DecodeSimpleDecayString::getStrings_cc(std::string& mother,
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getPIDs(int& mother,
                                             ints& daughters) const {
-  return this->buildPIDs( m_mother, m_daughters, mother, daughters)  ;
+  return buildPIDs( m_mother, m_daughters, mother, daughters)  ;
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getPIDs_cc(int& mother,
                                             ints& daughters) const {
-  return this->buildPIDs( m_mother_cc, m_daughters_cc, mother, daughters)  ;
+  return buildPIDs( m_mother_cc, m_daughters_cc, mother, daughters)  ;
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
@@ -150,12 +151,12 @@ StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
                                               int& mother,
                                               ints& daughters) const {
   
-  StatusCode sc = this->PID(in_m, mother);
+  StatusCode sc = PID(in_m, mother);
   if ( ! sc.isSuccess() ) return sc ;
   strings::const_iterator id;
   for ( id = in_d.begin(); id != in_d.end(); id++ ) {    
     int pid ;
-    sc = this->PID(*id, pid);
+    sc = PID(*id, pid);
     if ( ! sc.isSuccess() ) return sc ;
     daughters.push_back( pid);
   }
@@ -166,7 +167,10 @@ StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
 StatusCode DecodeSimpleDecayString::PID(const std::string& ps, int& pid) const
 {
   ParticleProperty* part = m_ppSvc->find( ps );
-  if (!part)  return StatusCode::FAILURE ;
+  if (NULL==part){
+    Error("No particle Property found for "+ps);
+    return StatusCode::FAILURE ;
+  }
   pid = part->jetsetID() ;
   return StatusCode::SUCCESS ;
 }
@@ -199,9 +203,9 @@ DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
 // Conjugator
 //=============================================================================
 StatusCode DecodeSimpleDecayString::do_cc(void) {
-  
-  std::string descriptor_cc = this->conjugate(m_descriptor);
-  StatusCode sc = this->splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
+  if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << m_descriptor << endmsg ;  
+  std::string descriptor_cc = conjugate(m_descriptor);
+  StatusCode sc = splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
   return sc;  
 }
 //=============================================================================
@@ -215,12 +219,14 @@ const{
   StatusCode sc = splitDescriptor(descriptor,mother ,daughters);
   if (sc.isFailure()) return std::string();
   ParticleProperty* part = m_ppSvc->find( mother );
+  if (NULL==part) Exception("Cannot find ParticleProperty for "+mother);
   ParticleProperty* cc   = m_ppSvc->findByStdHepID( -part->jetsetID() );
   if (cc==0) cc = part;
   answer += cc->particle();
   answer += " -> ";
   for (strings::iterator i = daughters.begin(); i != daughters.end(); ++i) {
     ParticleProperty* part = m_ppSvc->find( *i );
+    if (NULL==part) Exception("Cannot find ParticleProperty for "+mother);
     ParticleProperty* cc   = m_ppSvc->findByStdHepID( -part->jetsetID() );
     if (cc==0) cc = part;
     answer += " " ;
