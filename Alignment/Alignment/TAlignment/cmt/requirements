@@ -4,11 +4,13 @@
 #============================================================================
 package           TAlignment
 version           v3r1
+
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc python src options
 include_path      none
+
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -24,12 +26,15 @@ use 	TrackFitEvent		v*	Tr
 use   	TrackInterfaces   	v*      Tr
 use 	STDet			v*	Det
 use     LHCbKernel              v*      Kernel
+
 #============================================================================
 # Component library building rule
 #============================================================================
 public
 library		TAlignment	../src/*.cpp -import=AIDA
+
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library		library=TAlignment
+

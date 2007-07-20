@@ -1,0 +1,33 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Escher for data produced with Brunel v30r7 or greater  ///
+///   geometry lhcb-200601 (DC06)                                           ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print on
+
+#include "$TALIGNMENTROOT/options/Escher_nikhef.opts"	// 
+
+//for histos
+#include "$STDOPTS/RootHist.opts"
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+// Uncomment the line below to read the xml version of the dbase
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+//---------------------------------------------------------------------------
+// Use sqlite dbase
+//---------------------------------------------------------------------------
+// DC06 database tags
+// Comment the two lines below to switch back to the xml dbase
+//DDDB.DefaultTAG = "DC06";
+//LHCBCOND.DefaultTAG = "DC06";
+#include "$DDDBROOT/options/DC06.opts"
+
+// DC06 magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
+
+
+
+
+

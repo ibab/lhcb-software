@@ -1,0 +1,89 @@
+// Main job options for running Escher
+//
+//
+//***************************************
+
+// Standard LHCb application setup
+#include "$STDOPTS/LHCbApplication.opts"
+
+//Pool persitency
+#include "$STDOPTS/DstDicts.opts"
+
+// Start Main Escher sequence
+ApplicationMgr.TopAlg += { "GaudiSequencer/EscherMainSeq" } ;
+EscherMainSeq.MeasureTime = true ;
+EscherMainSeq.Members += { "LbAppInit/Escher" };
+ApplicationMgr.AppName = "Escher" ;
+Escher.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel = 3;
+
+// Start TransportSvc, needed by track fit
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+TransportSvc.OutputLevel = 6; /// Turn off error in TransportSvc.
+
+// Data on demand service for decoding RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+#include "$STDOPTS/DecodeRawEvent.opts"
+
+EscherMainSeq.Members += { "GaudiSequencer/DecodingSeq" } ;
+DecodingSeq.MeasureTime = true;
+
+// Decode Velo
+DecodingSeq.Members += { "DecodeVeloRawBuffer", 
+                         "DecodeVeloRawBuffer/DecodeVeloClusters" };
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters     = true;
+
+// Decode TT/ST
+DecodingSeq.Members += {"RawBankToSTClusterAlg/createITClusters", 
+                        "RawBankToSTLiteClusterAlg/createITLiteClusters"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+#include "$STTOOLSROOT/options/Brunel.opts"
+
+// Decode OT 
+DecodingSeq.Members += { "OTTimeCreator" };
+
+//**************************
+// Track fit:
+//**************************
+EscherMainSeq.Members += { //"TConditionsChecker/CondChecker" , 
+                           "GaudiSequencer/TrackFitSeq" 
+};
+
+TrackFitSeq.Members += { "TrackFilterAlg/FilterTracks", 
+                         "TrackEventFitter/FitTracks" };
+TrackFitSeq.MeasureTime = true;
+FilterTracks.TracksInputContainer = "Rec/Track/Best";
+FilterTracks.TracksOutputContainer = "Alignment/FilteredTracks";
+FilterTracks.TrackType = "Long";
+FilterTracks.Selector.TracksLocation = "Rec/Track/Best";
+FilterTracks.Selector.BFieldStatus = true;
+FilterTracks.Selector.IsolatedTrackNStripsTolerance = 2;
+FilterTracks.Selector.IsolatedTrackNStrawsTolerance = 1;
+FilterTracks.Selector.MinMomentumCut = -999999;
+FilterTracks.Selector.Chi2PerDoFMaxCut = 999999;
+FilterTracks.Selector.Chi2ProbMinCut = 0.01;
+FilterTracks.Selector.Chi2ProbMinCut = 0.3;
+FilterTracks.Selector.NHolesMaxCut = 1;
+FilterTracks.Selector.NSharedHitsMaxCut = 0;
+FilterTracks.Selector.NCloseHitsMaxCut = 3;
+FilterTracks.Selector.OutputLevel = 3;
+FilterTracks.OutputLevel = 3;
+FitTracks.TracksInContainer = "Alignment/FilteredTracks"; //"Alignment/OTTracks";
+FitTracks.TracksOutContainer = "Alignment/OTTracks";
+//FitTracks.Fitter.NumberFitIterations = 3;
+CondChecker.OutputLevel = 3;
+
+//**************************
+// Alignment options
+//**************************
+EscherMainSeq.Members += { "GaudiSequencer/AlignmentSeq" };
+AlignmentSeq.Members += { "AlignAlgorithm/AlignOTStations"//,
+                         //"AlignAlgorithm/AlignOTLayers",
+                         //"AlignAlgorithm/AlignOTModules"
+};
+AlignmentSeq.MeasureTime = true;
+#include "$TALIGNMENTROOT/options/OTAlignment.opts"

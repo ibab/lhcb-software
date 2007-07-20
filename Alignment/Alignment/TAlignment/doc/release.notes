@@ -3,6 +3,14 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-07-20 - Jan Amoraal
+ - Added a small treack filter algorithm which filters tracks by type
+ - Update and corretly apply DetElem alignment deltas using Juan's geometry free functions
+ - Added a small alignment python script
+ - Made AlignOTDetector more generic by using templates
+ - Minor speed improvements and cleaning up
+ - Removed src/IAlignDetectorSelector.h since it has been moved to AlignmentInterfaces
+
 - Johan Blouw (same tag) 15/05/2007
   - removed *_load.cpp as it is not needed anymore
 
