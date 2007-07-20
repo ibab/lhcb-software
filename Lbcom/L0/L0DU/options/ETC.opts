@@ -36,8 +36,6 @@ TagWriter.EvtDataSvc = "EvtTupleSvc";
 WR.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";//GP: (45,1)
 WR.TagCollectionSvc = "TagCollectionSvc/EvtTupleSvc";
 WR.ItemList =  { "/Event#1" } ;
-// WR.ItemList += { "DAQ/ODIN#1" };
+WR.ItemList += { "DAQ/ODIN#1" };
 EvtTupleSvc.Output =  {  } ;
-
-PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
 
