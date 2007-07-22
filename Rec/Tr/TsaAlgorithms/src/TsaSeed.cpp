@@ -96,6 +96,7 @@ StatusCode TsaSeed::execute(){
 
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
+  std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
 
   std::vector<SeedStub*> stubs[3];            //  IT stubs per station
   for (unsigned iS = 0; iS < 3; ++iS) stubs[iS].reserve(100);
@@ -227,6 +228,17 @@ StatusCode TsaSeed::execute(){
     if (sc.isFailure()) {
       return Error("failed to add hits", StatusCode::FAILURE,1);
     }
+
+    SeedTracks::iterator iterT = seedSel->begin();
+    for (; iterT != seedSel->end(); ++iterT){
+      std::vector<Tsa::Cluster*> clusVector = (*iterT)->clusters();
+      std::for_each(clusVector.begin(),clusVector.end(), 
+                    std::bind2nd(std::mem_fun(&Tsa::Cluster::setOnTrack),false));
+      if ((*iterT)->select() == false) (*iterT)->setLive(false) ;
+      (*iterT)->setSelect(false);
+      tempSel.push_back(*iterT);
+    }
+    sc = m_finalSelection->execute(tempSel);
   }
   //stopTimer();
 

@@ -4,9 +4,16 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+
+! 2007-07-22 M Needham
+ - Bug fix in selection routine fixed
+ - Retuning to follow bug fix
+
+
 !======================= TsaAlgorithms v2r5 2007-07-09 ======================
 ! 2007-06-18 M. Needham
  - Initialize variable in TsaCollector
+
 
 !======================= TsaAlgorithms v2r4 2007-05-31 ======================
 ! 2007-05-31 - Marco Cattaneo

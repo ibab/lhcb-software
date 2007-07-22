@@ -1,4 +1,4 @@
-// $Id: TsaSelectorBase.cpp,v 1.1 2006-12-06 14:35:02 mneedham Exp $
+// $Id: TsaSelectorBase.cpp,v 1.2 2007-07-22 10:47:36 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -17,7 +17,7 @@ TsaSelectorBase::TsaSelectorBase(const std::string& type,
                                  const IInterface* parent):
 GaudiTool(type, name, parent)
 {
-  declareProperty("fracUsed", m_fracUsed = 0.4);
+  declareProperty("fracUsed", m_fracUsed = 0.35);
  
   declareInterface<ITsaSeedStep>(this);
 };
@@ -51,7 +51,7 @@ StatusCode TsaSelectorBase::select(std::vector<SeedTrack*>& seeds){
  
   // loop again and reset used.
   for (iter = seeds.begin() ; iter != seeds.end(); ++iter){
-    std::vector<Tsa::Cluster*> xClusVector = (*iter)->xClusters();
+    std::vector<Tsa::Cluster*> xClusVector = (*iter)->clusters();
     if ((*iter)->select()  ==false){
       std::for_each(xClusVector.begin(),xClusVector.end(), std::bind2nd(std::mem_fun(&Tsa::Cluster::setOnTrack),false));
     }
