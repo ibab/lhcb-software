@@ -9,7 +9,7 @@
 //
 // Truth filter for Bs -> DsDs
 //
-SeqHltTruthFilter.Members += { "PrintMCTree"};
+//SeqHltTruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B_s0", "B_s~0" } ;
 SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBs2DsDs"};
 SelectTrueBs2DsDs.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
@@ -19,7 +19,7 @@ SelectTrueBs2DsDs.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsDs",
 
 SelectTrueBs2DsDs.Filter.Bs2DsDs.MCDecayFinder.Decay = "[B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc,  [B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc" ;
 
-SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
+//SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
 //
 // Overwrite Shared Ds input
 //
