@@ -1,24 +1,26 @@
-// $Id: DeOTModule.cpp,v 1.27 2007-02-13 11:56:18 janos Exp $
-/// GaudiKernel
+// $Id: DeOTModule.cpp,v 1.28 2007-07-23 09:33:25 wouter Exp $
+// GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
-/// LHCbKernel
+// LHCbKernel
 #include "Kernel/LineTraj.h"
 
-/// LHCbMath
+// LHCbMath
 #include "LHCbMath/Line.h"
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
 
-/// DetDesc
+// DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-/// GSL
+// GSL
 #include "gsl/gsl_math.h"
 
-/// local
+// local
 #include "OTDet/DeOTModule.h"
 
 /** @file DeOTModule.cpp
@@ -39,7 +41,7 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_elementID(0u),
   m_uniqueModuleID(0u),
   m_nStraws(0u),
-  m_stereoAngle(0.0),
+  m_angle(0.0),
   m_sinAngle(0.0),
   m_cosAngle(0.0),
   m_xPitch(0.0),
@@ -78,9 +80,9 @@ StatusCode DeOTModule::initialize() {
   m_layerID = (unsigned int)layer->params()->param<int>("layerID");
   m_stationID = (unsigned int)station->params()->param<int>("stationID");
   m_nStraws = (unsigned int)param<int>("nStraws");
-  m_stereoAngle = layer->params()->param<double>("stereoAngle");
-  m_sinAngle = sin(m_stereoAngle);
-  m_cosAngle = cos(m_stereoAngle);  
+  m_angle = layer->params()->param<double>("stereoAngle");
+  m_sinAngle = sin(m_angle);
+  m_cosAngle = cos(m_angle);  
   OTChannelID aChan = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, 0u);
   setElementID(aChan);
   m_uniqueModuleID = aChan.uniqueModule();
@@ -93,6 +95,12 @@ StatusCode DeOTModule::initialize() {
   m_sensThickness = ot->params()->param<double>("sensThickness");
   m_nModules = (unsigned int)ot->params()->param<int>("nModules");
 
+  // Added for the A-team. This is the calibration for the
+  // simulation. In the end, we need to read this from a database.
+  m_propagationVelocity = 1/(4.0*Gaudi::Units::ns/Gaudi::Units::m) ;
+  m_resolution          =  0.200*Gaudi::Units::mm ;
+  m_rtrelation = OTDet::RtRelation(0*Gaudi::Units::ns, 42*Gaudi::Units::ns,boost::assign::list_of(0.0)(m_cellRadius)) ;
+  
   // Get the lenght of the module
   //const ILVolume* lv = (this->geometry())->lvolume();
   const ISolid* solid = this->geometry()->lvolume()->solid();
@@ -366,6 +374,51 @@ StatusCode DeOTModule::cacheInfo() {
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
   m_centerModule = globalPoint(0.,0.,0.);
 
+  // I'll extract these from trajectories, although that's a bit
+  // nonsense, of course. Right now store the midpoint of the
+  // straw.
+  m_vectorMonoLayer = (g4[0]-g3[0]).unit() * m_xPitch ;
+  for( int imono=0; imono<2; ++imono) {
+    std::auto_ptr<Trajectory> traj = trajectoryFirstWire(imono) ;
+    Gaudi::XYZPoint p1 = traj->position(traj->beginRange()) ;
+    Gaudi::XYZPoint p2 = traj->position(traj->endRange()) ;
+    m_vectorStraw[imono]       = p2 - p1 ;
+    m_positionMonoLayer[imono] = p1  ; 
+  }
+
+  // Update the stereo angle. We correct by 'pi' if necessary.
+  Gaudi::XYZVector dir = m_dir ;
+  if(dir.y()<0) dir *= -1 ;
+  m_angle = atan2(-dir.x(),dir.y()) ;
+  m_cosAngle    = cos( m_angle ) ;
+  m_sinAngle    = sin( m_angle ) ;
+
+  // propagation velocity along y-direction (includes correction for readout side)
+  m_propagationVelocityY = m_propagationVelocity * m_vectorStraw[0].y()/m_vectorStraw[0].r() ;
+  
+  // now the calibration. This is a real mess and it will only work
+  // for MC. Cannot use ReadOutGate tool becaus eof circular
+  // dependency. FIXME.
+  
+  const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
+  double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
+  
+  // the t0 will be defined such that 
+  // 
+  //  tdc = drifttime + propagationtime + delta-tof + t0 
+  //
+  // the delta-tof is the tof compared to a straight line to the
+  // midpoint of the straw. does that make sense, actually?
+
+  // The following just makes sense for MC, of course.
+  m_strawt0.resize( 2*m_nStraws, 0 ) ;
+  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
+  for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
+    Gaudi::XYZLineF  strawline = lineTrajectory( istraw ) ;
+    double defaulttof = strawline.position(0.5).r() / Gaudi::Units::c_light;
+    m_strawdefaulttof[istraw - 1] = defaulttof ;
+    m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
+  }
   return StatusCode::SUCCESS;
 }
 

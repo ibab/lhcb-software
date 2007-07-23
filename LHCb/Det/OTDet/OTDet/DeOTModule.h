@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.26 2007-03-05 11:37:45 janos Exp $
+// $Id: DeOTModule.h,v 1.27 2007-07-23 09:33:25 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -8,8 +8,13 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
+#include "Kernel/LineTraj.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "LHCbMath/LineTypes.h"
+
+/// OTDet
+#include "OTDet/RtRelation.h"
 
 namespace LHCb
 {
@@ -207,9 +212,9 @@ public:
    * @param  chanAndDist vector of pairs of channel and drift distance
    * @return void
    */
-  void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
-                                 const Gaudi::XYZPoint& exitPoint,
-                                 std::vector<std::pair<LHCb::OTChannelID, double> >& chanAndDist) const;
+  void calculateHits(const Gaudi::XYZPoint& entryPoint,
+		     const Gaudi::XYZPoint& exitPoint,
+		     std::vector<std::pair<LHCb::OTChannelID, double> >& chanAndDist) const;
   
   /** Calculate the distance from a given vector in space to the straw 
    * @param aStraw straw
@@ -267,6 +272,48 @@ public:
    */
   std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::OTChannelID& aChan,
                                               const double = 0 /*offset*/ ) const;
+
+
+  /** Get a simple line representing the trajectory of straw wire. */
+  Gaudi::XYZLineF lineTrajectory(unsigned int straw) const ;
+
+
+  /** Set the t0 for a straw in this module */
+  void setStrawT0(unsigned int iStraw, float t0)  ;
+
+  /** Time offset correction for a straw */
+  float strawT0(unsigned int iStraw) const ;
+
+  /** Set the rt-relation for all straws in this module */
+  void setRtRelation(const OTDet::RtRelation& rtr) ;
+
+  /** Rt-realtion for  all straws in this module */
+  const OTDet::RtRelation& rtRelation() const ;
+
+  /** Drift distance for given drift time */
+  float driftDistance(float drifttime ) const ;
+
+  /** Drift distance for given drift time. Extrapolate outside cell if
+      time is outside [tmin,tmax]. Usefull for pattern recognition,
+      but kind of slow. */
+  float untruncatedDriftDistance( float drifttime ) const ;
+  
+  /** Maximum drift time */
+  float maxDriftTime() const ;
+
+  /** Resolution for given drift time */ 
+  float resolution(float drifttime ) const ;
+  
+  /** Drifttime resolution for given drift time */ 
+  float driftTimeResolution( float drifttime ) const ;
+  
+  /** Propagation velocity */
+  float propagationVelocity() const ;
+
+  /** Propagation velocity in y direction. Takes in account the
+      readoutside f the wire. (A positive value is toward the readout
+      side.) */
+  float propagationVelocityY() const ;
 
 private:
   
@@ -330,7 +377,7 @@ private:
   LHCb::OTChannelID m_elementID; ///< element ID
   unsigned int m_uniqueModuleID; ///< module ID number
   unsigned int m_nStraws;        ///< half the number of straws inside module
-  double m_stereoAngle;          ///< stereo angle of the layer
+  double m_angle;          ///< stereo angle of the layer
   double m_sinAngle;             ///< sine of stereo angle
   double m_cosAngle;             ///< cosine of stereo angle
   double m_xPitch;               ///< pitch in x between straws
@@ -353,7 +400,15 @@ private:
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
   Gaudi::XYZPoint m_centerModule;               ///< center of module 
-
+  Gaudi::XYZVectorF m_vectorMonoLayer ;         ///< vector representing direction of mono layer
+  Gaudi::XYZPointF  m_positionMonoLayer[2] ;    ///< position of begin point of first straw in mono layer
+  Gaudi::XYZVectorF m_vectorStraw[2];           ///< vector representing lone along straw
+  std::vector<float> m_strawt0 ;                ///< vector with t0 for every straw
+  std::vector<float> m_strawdefaulttof ;        ///< vector with default tof correction for straw
+  OTDet::RtRelation m_rtrelation ;              ///< rt-relation
+  float m_resolution ;                          ///< resolution
+  float m_propagationVelocity ;                 ///< propagation velocity
+  float m_propagationVelocityY ;                ///< propagation velocity in y-direction (cached for speed)
 };
 
 // -----------------------------------------------------------------------------
@@ -472,7 +527,7 @@ inline double DeOTModule::cellRadius() const {
 }
 
 inline double DeOTModule::angle() const {
-  return m_stereoAngle;
+  return m_angle;
 }
 
 inline double DeOTModule::sinAngle() const {
@@ -581,5 +636,56 @@ inline bool DeOTModule::isEfficientB(const double y) const {
   return !((m_moduleID < 8u) && (m_quarterID < 2u) && 
 	   ((m_yMaxLocal - y) < m_inefficientRegion));
 }
+
+inline Gaudi::XYZLineF DeOTModule::lineTrajectory(unsigned int aStraw) const {
+  unsigned int mono     = monoLayerA(aStraw) ? 0u : 1u ;
+  unsigned int tmpstraw = mono==0u ? aStraw-1u : aStraw - m_nStraws -1u ;
+  return Gaudi::XYZLineF( m_positionMonoLayer[mono] + tmpstraw * m_vectorMonoLayer, m_vectorStraw[mono] ) ;
+}
+
+inline float DeOTModule::driftDistance( float drifttime ) const {
+  return m_rtrelation.radius(drifttime) ;
+}
+
+inline float DeOTModule::untruncatedDriftDistance( float drifttime ) const {
+  return m_rtrelation.extrapolatedradius(drifttime) ;
+}
+
+inline float DeOTModule::maxDriftTime() const {
+  return m_rtrelation.tmax() ;
+}
+
+inline float DeOTModule::resolution(float /*drifttime*/ ) const {
+  return m_resolution ;
+}  
+
+inline float DeOTModule::driftTimeResolution( float drifttime ) const {
+  return m_resolution / m_rtrelation.drdt( drifttime ) ;
+}
+
+inline float DeOTModule::propagationVelocity() const {
+  return m_propagationVelocity ;
+}
+
+inline float DeOTModule::propagationVelocityY() const {
+  return m_propagationVelocityY ;
+}
+
+inline float DeOTModule::strawT0( unsigned int istraw ) const {
+  return m_strawt0[istraw-1] ;
+}
+
+inline void DeOTModule::setStrawT0( unsigned int istraw, float t0 ) {
+  m_strawt0[istraw-1] = t0 ;
+}
+
+inline const OTDet::RtRelation& DeOTModule::rtRelation() const {
+  return m_rtrelation ;
+}
+
+inline void DeOTModule::setRtRelation( const OTDet::RtRelation& rtr) {
+  m_rtrelation = rtr ;
+}
+
 
 #endif  // OTDET_DEOTMODULE_H

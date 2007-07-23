@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.88 2007-06-22 13:22:02 cattanem Exp $
+! $Id: release.notes,v 1.89 2007-07-23 09:33:25 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-07-23 - Wouter Hulsbergen (a-team changes)
+ - interface to rt/t0-calibration
+ - interface to fast creation of straw trajectory
 
 !========================== OTDet v7r4 2007-06-22 =========================
 ! 2007-06-22 - Marco Cattaneo
