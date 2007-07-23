@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r14 2007-07-23 ======================
+! 2007-07-23 - Wouter Hulsbergen
+ - Add TrajMuonProjector
+
 !====================== TrackProjectors v2r13 2007-06-25 ======================
 ! 2007-06-25 - Marco Cattaneo
  - Put back Gaudi:: namespace in .cpp calling sequences, 
