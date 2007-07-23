@@ -3,21 +3,23 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
-
 !
 ! Plan is to add all channels stripped by Hans:
 !   Done:  B2DiMuon B2HH B2JpsiX_MuMu Bd2D0Kstar Bd2MuMuKstar Bs2DsH Bs2PhiPhi 
-!          Bs2MuMu 
-!   To do: Dst-PiD-HH 
-!   Not yet in HLT : Bd2DstMu Bs2DsDs Bu2KD Bd2PiPiPi Bu2Kmumu
-!   Not in HLT : Bd2KstD2KSPiPi Bs2phigamma Bu2Kee 
+!          Bs2MuMu Dst-PiD-HH Bd2DstMu Bu2llK
+!   To do: Bd2DstPi (not stripped by Hans)
+!   Not yet in HLT : Bs2DsDs Bu2KD Bd2PiPiPi 
+!   Not in HLT : Bd2KstD2KSPiPi Bs2phigamma
 
 
 ! 2007-07-23 - Patrick Koppenburg
  - options/DVTestHltBd2D0Kstar.opts
  - options/DVTestHltBs2DsH.opts
  - options/DVTestHltB2MuMu.opts
-   . New options for B->D0K* and Bs->DsH
+ - options/DVTestHltDstar.opts
+ - options/DVTestHltB2DstarMu.opts
+ - options/DVTestHltBu2LLK.opts
+   . New options for B->D0K*, Bs->DsH, B->MuMu, D* (no PID), B->D*MuNu, Bu->llK, 
 
 ! 2007-07-20 - Patrick Koppenburg
  - options/DVTestHltB2DiMuon.opts

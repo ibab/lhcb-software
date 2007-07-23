@@ -1,6 +1,6 @@
-/** @file DVTestHltBd2D0Kstar.opts
+/** @file DVTestHltDstar.opts
  *
- *  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
+ *  Test file for HLT D*->D0(hh)pi selection
  *
  *  @author P. Koppenburg
  *  @date 2007-07-20
@@ -9,9 +9,8 @@
 //
 // Preselection
 //
-#include "$B2D0XROOT/options/DVPreselBd2D0Kst_D02HH.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
-PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
+#include "$B2DSTARXROOT/options/DVPreselDstarNoPID.opts"
+HltExclusiveCorrs.Algorithms += { "DVPreselDstarNoPID" };
 //
 // Hlt test
 //
@@ -23,21 +22,21 @@ PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueBd2D0Kstar.opts"
+#include "$HLTSELCHECKERROOT/options/TrueDstar.opts"
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2D0Kst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Dst-PiD-HH-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2D0Kstar" } ;
-OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBd2D0Kst_D02HH" } ;
+HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelDstar" } ;
+OfflineChecker.PhysDesktop.InputLocations = { "Phys/DVPreselDstarNoPID" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2D0Kstar.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Dstar.root' TYP='ROOT' OPT='NEW'" ] ;
 
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;
@@ -45,6 +44,6 @@ HltSelChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.EvtMax = 400 ;
+ApplicationMgr.EvtMax = 500 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 1 ;

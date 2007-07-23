@@ -1,0 +1,41 @@
+/** @file TrueDstar.opts
+ *  
+ *  Options for running exclusive HLT only on truth
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-20
+ */
+//--------------------------------------------------------------
+//
+// Truth filter for Bd -> D0K*
+//
+//SeqHltTruthFilter.Members += { "PrintMCTree"};
+PrintMCTree.ParticleNames = { "D*(2010)+", "D*(2010)-" } ;
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDstar"};
+SelectTrueDstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
+SelectTrueDstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Dstar",
+                                       "pi+ : TrueMCFilterCriterion/Dstar"} ;
+
+SelectTrueDstar.Filter.Dstar.MCDecayFinder.Decay = "{[D*(2010)+ -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^pi- {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^pi+ ^pi- {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^K- {,gamma}{,gamma}) ^pi+  {,gamma}]cc}" ;
+
+//SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
+//
+// Overwrite Shared D* input
+//
+HltSharedDstarWithD02KPi.PhysDesktop.InputLocations =  { "Phys/HltSharedD02KPi", "Phys/SelectTrueDstar" } ;  
+HltSharedDstarWithD02KK.PhysDesktop.InputLocations =  { "Phys/HltSharedD02KK", "Phys/SelectTrueDstar" } ;  
+HltSharedDstarWithD02PiPi.PhysDesktop.InputLocations =  { "Phys/HltSharedD02PiPi", "Phys/SelectTrueDstar" } ;  
+//
+// Overwrite Shared D0
+//
+HltSharedD02PiPi.PhysDesktop.InputLocations  = { "Phys/SelectTrueDstar" } ;
+HltSharedD02KPi.PhysDesktop.InputLocations  = { "Phys/SelectTrueDstar" } ;
+HltSharedD02KK.PhysDesktop.InputLocations  = { "Phys/SelectTrueDstar" } ;
+//
+// Dummy MakeResonances to check that all tracks are there
+//
+SeqHltTruthFilter.Members += { "MakeResonances/AllTrueDstar"};
+AllTrueDstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDstar"};
+AllTrueDstar.DecayDescriptor = "[D*(2010)+ -> pi+ pi- pi+]cc" ; // all particles need to be there
+HltExclusiveCorrs.Algorithms += { "AllTrueDstar" };
+

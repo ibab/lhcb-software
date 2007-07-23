@@ -1,17 +1,16 @@
-/** @file DVTestHltBd2D0Kstar.opts
+/** @file DVTestHltBu2LLK.opts
  *
- *  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
+ *  Test file for HLT Bu->LLK* selection
  *
  *  @author P. Koppenburg
- *  @date 2007-07-20
+ *  @date 2007-07-23
  */
 //--------------------------------------------------------------
 //
 // Preselection
 //
-#include "$B2D0XROOT/options/DVPreselBd2D0Kst_D02HH.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
-PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
+#include "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts"
+HltExclusiveCorrs.Algorithms += { "PreselBu2LLK" };
 //
 // Hlt test
 //
@@ -23,21 +22,22 @@ PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueBd2D0Kstar.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBu2LLK.opts"
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2D0Kst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kmumu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2D0Kstar" } ;
-OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBd2D0Kst_D02HH" } ;
+HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBu2LLK" } ;
+OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBu2LLK" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2D0Kstar.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2LLK.root' TYP='ROOT' OPT='NEW'" ] ;
 
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;
@@ -45,6 +45,5 @@ HltSelChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.EvtMax = 400 ;
+ApplicationMgr.EvtMax = 500 ;
 EventSelector.FirstEvent = 1 ;
-EventSelector.PrintFreq = 1 ;
