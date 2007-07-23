@@ -5,6 +5,66 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r8>2007-07-23 LHCbSys v22r8</A></H1><PRE>
+This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
+
+- Packages modified: GaudiObjDesc v10r2, DetSys v9r8, CaloDet v8r3, OTDet v7r5,
+    STDet v3r5, VeloDet v12r0, TrackInterfaces v3r7, CaloInterfaces v7r4,
+    CaloUtils v7r4
+
+- In GaudiObjDesc v10r2
+  . Apply (Gaudi) Savannah patch 1230 to improve namespace handling:
+    + If a <class> doesn't specify a namespace it will inherit it from its
+      <package> 
+    + A default package namespace can be provided to godII's command line via
+      "-n TheNamespace"
+
+- In CaloDet v8r3
+  . Add new method : cardFirstValidRow(), cardLastValidRow(), + idem for columns
+  . Fix uninitialised variable in CardParam
+
+- In OTDet v7r5 (a-team changes)
+  . Add interface to rt/t0-calibration
+  . Add interface to fast creation of straw trajectory
+
+- In STDet v3r5 (a-team changes)
+  . Add interface to fast creation of straw trajectory
+  . Add access to stereo angle
+
+- In VeloDet v12r0 (a-team changes)
+  . Added cache of half box offset vectors to DeVelo
+  . The VELO sensors now provide a link to the sensor of the same type on the at
+    the same station on other side of the VELO
+  . Added cache for ideal phi(r) to DeVeloPhi(R)Type
+  . Using fast casts in DeVelo
+  . Using sparse vector instead of map for sensor number -> sensor mapping
+  . Added cache for global r,phi and halfbox frame r,phi per strip.  The cache
+    update is properly registered with the update manager.
+  . Added fast and safe casting methods
+  . r(phi) sensors now know their associated phi(r) sensor on the same module
+  . Made DeVeloSensors aware of their station number
+
+- In VeloDet v11r4 (released with v12r0)
+  . Corrected isDownstream method so that it will work for data and DC06
+    (Requires HEAD tag in SQLDDDB v2r1).
+  . Removed virtual method localPhiToGlobal in DeVeloSensor and replaced with
+    correct inline method.
+  . Add method to return strip lengths for each strip.
+  . Fix bug in rPitch(strip,fraction) method.
+
+- In TrackInterfaces v3r7
+  . changed MeasurementProvider to allow creation of y trajectory for Muon hits
+
+- In CaloInterfaces v7r4
+  . New interfaces : ITrack2Calo and IPart2Calo --> match Track/Part to calo 
+
+- In CaloUtils v7r4
+  . New tools for L0 on/offline matching: Track2Calo and Part2Calo --> match
+    Track/Part to Calo. CaloElectron tool updated accordingly
+
+- In OTDet v7r5, CaloDet v8r3
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v22r7>2007-07-14 LHCbSys v22r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
