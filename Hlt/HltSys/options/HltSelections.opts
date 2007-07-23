@@ -32,35 +32,12 @@ HltSelections.Members += { "GaudiSequencer/SeqHltTruthFilter" } ;
 // Standard HLT Particles
 //---------------------------------------------------------------------
 HltSelections.Members += { "GaudiSequencer/HltShared" };
-HltShared.MeasureTime = true ;
-HltShared.IgnoreFilterPassed = true ; // We want the all
-#include "$HLTSELECTIONSROOT/options/HltSharedKstar.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedPhi.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedD0.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedDs.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedDstar.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedDiMuon.opts"
-#include "$HLTSELECTIONSROOT/options/HltSharedDiElectron.opts"
+#include "$HLTSELECTIONSROOT/options/HltShared.opts"
 //---------------------------------------------------------------------
 // Exclusive selections
 //---------------------------------------------------------------------
 HltSelections.Members += { "GaudiSequencer/HltExclusive" };
-HltExclusive.MeasureTime = true ;
-HltExclusive.IgnoreFilterPassed = true ; // We want the all
-#include "$HLTSELECTIONSROOT/options/HltSelBs2PhiPhi.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelB2DiElectron.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelB2DiMuon.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelB2HH.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelB2JpsiX_MuMu.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelB2MuMu.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBd2D0Kstar.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBd2DstarPi.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBd2MuMuKstar.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBs2DsH.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBs2PhiGamma.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBs2PhiPhi.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelBu2LLK.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelDstar.opts"
+#include "$HLTSELECTIONSROOT/options/HltSelelctions.opts"
 
 //--------------------------------------------------------------------
 // Decision

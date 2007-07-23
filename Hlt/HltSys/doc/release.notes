@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-23 - Patrick Koppenburg
+ - Moved inclusion of explicit selections to HltSelections package
+
 ! 2007-07-20 - Alessia Satta
  - Options to store the summary for muon alley and to provide muon on TES 
    for HltSelections and change L0DU setting
