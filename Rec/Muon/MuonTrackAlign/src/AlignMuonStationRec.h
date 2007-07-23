@@ -1,4 +1,4 @@
-// $Id: AlignMuonStationRec.h,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
+// $Id: AlignMuonStationRec.h,v 1.2 2007-07-23 09:37:23 cattanem Exp $
 #ifndef ALIGNMUONSTATIONREC_H 
 #define ALIGNMUONSTATIONREC_H 1
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IMessageSvc.h" 
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "iostream.h" 
+
 /** @class AlignMuonStationRec AlignMuonStationRec.h
  *  Represent one of the muon stations
  *

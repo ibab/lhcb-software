@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
+// $Id: MuonRead.cpp,v 1.2 2007-07-23 09:37:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -202,7 +202,7 @@ StatusCode MuonRead::execute() {
     if(muonhits!=NULL){
       for( LHCb::MCHits::const_iterator iMc = muonhits->begin(); iMc != muonhits->end(); ++iMc ) {
         if((*iMc)->mcParticle()!=NULL){
-          if(fabs((*iMc)->mcParticle()->particleID().pid())==13) {
+          if(abs((*iMc)->mcParticle()->particleID().pid())==13) {
             
             if((*iMc)->midPoint().z()>8000 && (*iMc)->midPoint().z()<14000) iMS=0;
             if((*iMc)->midPoint().z()>15000 && (*iMc)->midPoint().z()<16000) iMS=1;
