@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.37 2007-06-22 13:22:01 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.38 2007-07-23 09:59:04 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -108,13 +108,13 @@ public:
   DeOTStation* findStation(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the station for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non onst method to return the station for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTStation* findStation(const Gaudi::XYZPoint& aPoint);
@@ -132,13 +132,13 @@ public:
   DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the layer for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non const method to return the layer for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint);
@@ -156,13 +156,13 @@ public:
   DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the quarter for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non const method to return the quarter for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint);
@@ -180,13 +180,13 @@ public:
   DeOTModule* findModule(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the module for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non const method to return the module for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTModule* findModule(const Gaudi::XYZPoint& aPoint);

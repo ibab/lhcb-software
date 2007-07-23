@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.11 2007-06-22 13:22:01 cattanem Exp $
+// $Id: DeOTStation.h,v 1.12 2007-07-23 09:59:04 cattanem Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -82,13 +82,13 @@ class DeOTStation : public DetectorElement {
   DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the layer for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
 
   /** Non const method to return the layer for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint);

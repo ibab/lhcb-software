@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.14 2007-06-22 13:22:01 cattanem Exp $
+// $Id: DeOTQuarter.h,v 1.15 2007-07-23 09:59:04 cattanem Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -80,13 +80,13 @@ class DeOTQuarter : public DetectorElement {
   DeOTModule* findModule(const LHCb::OTChannelID& aChannel);
 
   /** Const method to return the module for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   const DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
   
   /** Non const method to return the module for a given XYZ point
-   * @param  aChannel  an OT channel id
+   * @param  aPoint the given point
    * @return const pointer to detector element
    */
   DeOTModule* findModule(const Gaudi::XYZPoint& aPoint);
