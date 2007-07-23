@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r5 2007-07-23 ====================
 ! 2007-07-20 - Juan Palacios
  - Add interface IFilterParticles and base class FilterParticlesBase.
  - cmt/requirements

@@ -17,6 +17,7 @@
   <class name = "IDirectionFit"/>
   <class name = "IFilterCriteriaTESTool"/>
   <class name = "IFilterCriterion"/>
+  <class name = "IFilterParticles"/>
   <class name = "IGeomDispCalculator"/>
   <class name = "IJetMaker"/>
   <class name = "ILifetimeFitter"/>
