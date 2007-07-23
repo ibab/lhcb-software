@@ -5,6 +5,36 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r8>2007-07-23 RecSys v4r8</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r8.
+
+- Packages added   : MuonTrackAlign - Track reconstruction for Muon Alignment
+- Packages modified: PatVelo v2r17, TsaAlgorithms v2r6, TrackSys v4r8,
+    TrackFitEvent v3r7, TrackProjectors v2r14,TrackTools v2r17,TrackIdealPR v2r13
+
+- In PatVelo v2r17
+  . Fix for using uninitialised variable in PatVeloGeneralTracking
+
+- In TsaAlgorithms v2r6
+  . Bug in selection routine fixed
+  . Retuning to follow bug fix
+
+- In TrackSys v4r8
+ - Fix TrackMatch options in NoFieldTracking.opts, option names were wrong
+
+- In TrackFitEvent v3r7
+  . Changed MuonMeasurements to single trajectory 
+  . Fixed a doxygen warning
+
+- In TrackProjectors v2r14
+  . Add TrajMuonProjector
+
+- In TrackTools v2r17
+  . Changed MeasurementProvider to allow creation of y trajectory for Muon hits
+
+- TrackIdealPR v2r13
+  . Adapted to change in MeasurementProvider
+
 </PRE><H1><A NAME=v4r7>2007-07-16 RecSys v4r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7.
 

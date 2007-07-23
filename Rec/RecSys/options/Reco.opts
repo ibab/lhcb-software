@@ -2,8 +2,7 @@
 // Job options for Brunel Reco Phase
 //--------------------------------------------------------------
 Reco.DetectorList += {
-                      "L0" 
-                     ,"VELO" 
+                      "VELO" 
                      ,"TT"
                      ,"IT"
                      ,"OT"
