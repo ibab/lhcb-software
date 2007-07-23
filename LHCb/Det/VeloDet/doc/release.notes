@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.170 2007-07-23 01:08:55 krinnert Exp $
+! $Id: release.notes,v 1.171 2007-07-23 06:30:51 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r0 2007-07-23 ===========================
 ! 2007-07-19 - Kurt Rinnert
  - added cache of half box offset vectors to DeVelo (this was previously
    provided to the VELO pattern recognition by the soon obsolete
