@@ -1,8 +1,9 @@
+!$Id: release.notes,v 1.107 2007-07-23 09:52:13 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-
+!======================== STDet v3r5 2007-07-23 ==========================
 ! 2007-07-23 - Wouter Hulsbergen (a-team changes)
  - interface to fast creation of straw trajectory
  - access to stereo angle
