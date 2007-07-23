@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.8 2007-07-05 14:05:17 cattanem Exp $
+// $Id: IMeasurementProvider.h,v 1.9 2007-07-23 11:21:15 spozzi Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -45,15 +45,18 @@ public:
    *  This method is in fact called internally by "load( Track& track )".
    *  @return Pointer the the Measurement created
    *  @param  id:  input LHCbID
+   *  @param  localY: creates y trajectory for muon, if true
    */
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id) const = 0;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id,
+					  bool localY = false ) const = 0;
 
   /** Construct a measurement with a statevector. This takes care that
       things like errors depending on track angle are correctly
       set. */
 
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
-					  const LHCb::StateVector& ref) const = 0;
+					  const LHCb::StateVector& ref,
+					  bool localY = false ) const = 0;
 
   /** update a measurement with a statevector **/
   virtual StatusCode update( LHCb::Measurement& m, const LHCb::StateVector& state ) const = 0 ;
