@@ -7,7 +7,7 @@
 
     <class
       name        = 'MuonMeasurement'
-      author      = 'Jose Hernando, Miriam Gandelman, Erica Polycarpo'
+      author      = 'Jose Hernando, Miriam Gandelman, Erica Polycarpo, Silvia Pozzi'
       desc        = 'MuonMeasurement is a measurement made from a Muon Hit'
       serializers = 'FALSE'>
 
@@ -15,12 +15,20 @@
       <import name='Event/Measurement' />
       <import name='Kernel/MuonTileID' />
 
+      <enum
+        name   = 'MuonMeasurementType'
+        desc   = 'x or y measurement'
+        value  = 'X=1,
+	          Y=2'
+        access = 'PUBLIC' />
+
       <constructor
         desc = 'Constructor from a Muon Hit'>
         <arg type='LHCb::LHCbID' name='lhcbID' const='TRUE' />
         <arg type='Gaudi::XYZPoint' name='position' const='TRUE' />
         <arg type='double' name='dx' />
         <arg type='double' name='dy' />
+        <arg type='MuonMeasurement::MuonMeasurementType' name='xy' />
       </constructor>
 
      <constructor
@@ -28,28 +36,16 @@
         <arg type='LHCb::MuonMeasurement' name='other' const='TRUE'/>
       </constructor>
 
-     <attribute
-        type    = 'std::auto_ptr &lt; LHCb::Trajectory &gt;'
-        name    = 'trajectoryY'
-        desc    = 'the trajectory representing the Y measurement (owner)'
-        access  = 'PROTECTED'
-        setMeth = 'FALSE' />
-
       <attribute
         type = 'Gaudi::XYZPoint'
         name = 'position'
         desc = 'Position of the pad center'/>
 
       <attribute
-        type = 'double'
-        name = 'dx'
-        desc = 'Half of pad length in x'/>
+        type = 'MuonMeasurementType'
+        name = 'muonProjection'
+        desc = 'x or y muon measurement'/>
 
-      <attribute
-        type = 'double'
-        name = 'dy'
-        desc = 'Half of pad length in y'/>
-	
       <method
         type    = 'LHCb::MuonMeasurement*'
         name    = 'clone'
@@ -58,26 +54,6 @@
         const   = 'TRUE'>
         <code>
           return new LHCb::MuonMeasurement(*this);
-        </code>
-      </method>
-
-      <method
-        type    = 'double'
-        name    = 'errX2'
-        desc    = 'X error squared'
-        const   = 'TRUE'>
-        <code>
-          return m_dx*m_dx/3.;
-        </code>
-      </method>
-
-      <method
-        type    = 'double'
-        name    = 'errY2'
-        desc    = 'Y error squared'
-        const   = 'TRUE'>
-        <code>
-          return m_dy*m_dy/3.;
         </code>
       </method>
 
