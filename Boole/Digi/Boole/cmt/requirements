@@ -19,30 +19,31 @@ use ParamFiles         v6r1         -no_auto_imports
 use FieldMap           v4r7         -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
+# and to give a cmt broadcast dependency for user checked out component packages
 
 # From GAUDI project
 use GaudiSvc           v*           -no_auto_imports
 use GaudiPoolDb        v*           -no_auto_imports
 use GaudiPython        v*           -no_auto_imports
 
-# From LBCOM project
-use STAlgorithms       v*    ST     -no_auto_imports
-use STCheckers         v*    ST     -no_auto_imports
-use STDAQ              v*    ST     -no_auto_imports
-use L0Muon             v*    L0     -no_auto_imports
-use OTMonitor          v*    OT     -no_auto_imports
-use RichDAQ            v*    Rich   -no_auto_imports
-use RichMCAssociators  v*    Rich   -no_auto_imports
-use VeloAlgorithms     v*    Velo   -no_auto_imports
-use VeloSimulation     v*    Velo   -no_auto_imports
-use L0DU               v*    L0     -no_auto_imports
+# From LHCbSys
+use LHCbAlgs           v*    Kernel -no_auto_imports
+use SimComponents      v*    Sim    -no_auto_imports
 
-# From BOOLE project
-use RichDigiQC         v*    Rich   -no_auto_imports
-use RichReadout        v*    Rich   -no_auto_imports
+# The whole LBCOM project
+use LbcomSys           v*           -no_auto_imports
+
+# The whole BOOLE project (cannot use BooleSys at it uses Boole...)
+use CaloDigit          v*    Calo   -no_auto_imports
 use CaloMoniDigi       v*    Calo   -no_auto_imports
 use DigiAlg            v*    Digi   -no_auto_imports
+use MuonAlgs           v*    Muon   -no_auto_imports
 use MuonBackground     v*    Muon   -no_auto_imports
+use MuonMoniDigi       v*    Muon   -no_auto_imports
+use OTSimulation       v*    OT     -no_auto_imports
+use RichDigiQC         v*    Rich   -no_auto_imports
+use RichMCAssociators  v*    Rich   -no_auto_imports
+use RichReadout        v*    Rich   -no_auto_imports
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
