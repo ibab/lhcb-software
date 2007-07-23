@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.14 2007-06-07 08:57:19 wouter Exp $
+// $Id: MeasurementProvider.h,v 1.15 2007-07-23 11:27:37 spozzi Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -35,10 +35,11 @@ public:
   StatusCode load( LHCb::Track& track ) const ;  
   
   /** See interface class */ 
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id) const ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY=false) const ;
   
   /** See interface class */ 
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& ref) const ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& ref, 
+					  bool localY=false) const ;
 
   /** See interface class */ 
   virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;

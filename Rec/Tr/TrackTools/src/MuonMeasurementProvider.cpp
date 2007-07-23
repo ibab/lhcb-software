@@ -1,4 +1,4 @@
-// $Id: MuonMeasurementProvider.cpp,v 1.3 2007-07-05 15:08:24 cattanem Exp $
+// $Id: MuonMeasurementProvider.cpp,v 1.4 2007-07-23 11:27:37 spozzi Exp $
 
 /** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
@@ -32,8 +32,9 @@ public:
   virtual ~MuonMeasurementProvider() {}
   
   virtual StatusCode initialize() ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id ) const  ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector ) const ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY ) const  ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector,
+					  bool localY) const ;
   virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;
   virtual double nominalZ( const LHCb::LHCbID& id ) const ;
   virtual StatusCode load( LHCb::Track& track ) const ; 
@@ -88,7 +89,7 @@ StatusCode MuonMeasurementProvider::initialize()
 /// Create a measurement
 //-----------------------------------------------------------------------------
 
-LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id ) const
+LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id, bool localY ) const
 {
   LHCb::Measurement* meas(0) ;
   if( !id.isMuon() ) {
@@ -100,8 +101,10 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id 
     if (sc.isFailure()){
       warning() << "Failed to get x,y,z of tile " << muid << endreq;
     } else {
-      meas = new LHCb::MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy);
-      debug() << " Created muon measurement! " << muid << endreq; 
+      LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? 
+	LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
+      meas = new LHCb::MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy, dir);
+      debug() << " Created muon measurement! " << muid << " x "<< x<<" y "<<y<<" z "<<z<<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endreq; 
     }
   }
   return meas ;
@@ -110,10 +113,10 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id 
 //-----------------------------------------------------------------------------
 /// Create a measurement with statevector. For now very inefficient.
 //-----------------------------------------------------------------------------
-LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector ) const 
+LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector, bool localY ) const 
 {
   // default implementation
-  LHCb::Measurement* rc = measurement(id) ;
+  LHCb::Measurement* rc = measurement(id, localY) ;
   if(rc) {
     StatusCode sc = update(*rc,refvector) ;
     if(!sc.isSuccess()) {

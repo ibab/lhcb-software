@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.32 2007-06-25 14:35:40 mneedham Exp $
+// $Id: MeasurementProvider.cpp,v 1.33 2007-07-23 11:27:37 spozzi Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -107,6 +107,8 @@ StatusCode MeasurementProvider::load( Track& track ) const
   if(hasTState) tState = track.stateAt(LHCb::State::AtT);
   
   const std::vector<LHCbID>& ids = track.lhcbIDs();
+
+  std::vector<Measurement*> newmeasurements ;
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
     const LHCbID& id = *it;
@@ -120,8 +122,17 @@ StatusCode MeasurementProvider::load( Track& track ) const
 		<< endreq;
 		continue;
     }
-    Measurement* meas = measurement( id );
-    if( meas ) {
+
+    newmeasurements.push_back( measurement( id, false ) ) ;
+    // add also y measurements for muon
+    if( id.detectorType() == LHCb::LHCbID::Muon ) 
+      newmeasurements.push_back( measurement( id, true ) ) ;
+  }
+
+  for( std::vector<Measurement*>::const_iterator imeas = newmeasurements.begin() ;
+       imeas != newmeasurements.end(); ++imeas)
+    if( *imeas ) {
+      Measurement* meas = *imeas ;
       if( m_initializeReference ) {
 	// Of course we would prefer to call directly the constructor
 	// with reference, but unfortunatel we first need a generic
@@ -130,11 +141,11 @@ StatusCode MeasurementProvider::load( Track& track ) const
 	LHCb::State state = track.closestState( meas->z() ) ;
 	if( hasTState ) state.setQOverP(tState.qOverP());
 	m_providermap[meas->type()]->update( *meas, LHCb::StateVector(state.stateVector(),state.z()) ) ;
-     }
+      }
       track.addToMeasurements( *meas );
       delete meas;
     }
-  }
+
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
 
@@ -167,16 +178,16 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
 // Construct a Measurement of the type of the input LHCbID
 //=============================================================================
 
-Measurement* MeasurementProvider::measurement ( const LHCbID& id ) const
+Measurement* MeasurementProvider::measurement ( const LHCbID& id, bool localY ) const
 {
   const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
-  return provider ? provider->measurement(id) : 0 ; 
+  return provider ? provider->measurement(id, localY) : 0 ; 
 }
 
-Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::StateVector& state ) const
+Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::StateVector& state, bool localY ) const
 {
   const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
-  return provider ? provider->measurement(id,state) : 0 ; 
+  return provider ? provider->measurement(id,state, localY) : 0 ; 
 }
 
 StatusCode  MeasurementProvider::update( LHCb::Measurement& m, const LHCb::StateVector& refvector ) const 

@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.1 2007-06-07 08:57:17 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.2 2007-07-23 11:27:37 spozzi Exp $
 // Include files
 
 //=============================================================================
@@ -37,8 +37,9 @@ public:
   virtual StatusCode initialize() ;
   virtual void handle(const Incident&) ;
   virtual StatusCode load( LHCb::Track& track ) const ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id ) const  ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector ) const ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool /*localY*/ ) const  ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector,
+					  bool /*localY*/  ) const ;
   virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;
   virtual double nominalZ( const LHCb::LHCbID& id ) const  ;
 
@@ -145,7 +146,7 @@ LHCb::Measurement* MeasurementProviderT<T>::createUnchecked( const typename T::C
 }
 
 template <typename T>
-LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id ) const
+LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id, bool ) const
 {
   LHCb::Measurement* meas(0) ;
   if ( !T::checkType(id) ) {
@@ -167,10 +168,11 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id 
 
 template <typename T>
 LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id, 
-							 const LHCb::StateVector& refvector ) const 
+							 const LHCb::StateVector& refvector, 
+							 bool localY) const 
 {
   // default implementation
-  LHCb::Measurement* rc = measurement(id) ;
+  LHCb::Measurement* rc = measurement(id,localY) ;
   if(rc) {
     StatusCode sc = update(*rc,refvector) ;
     if(!sc.isSuccess()) {
