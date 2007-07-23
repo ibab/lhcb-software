@@ -3,6 +3,32 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r4>2007-07-23 Boole v14r4</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r8, Lbcom v6r8
+ and DDDB v1r* (SQLDDDB v2r2 or greater), ParamFiles v6r1, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r5 or greater
+
+- New functionality
+  . Add possibility to write an ETC containing the L0 result
+    (Uncomment relevant line in v200601.opts)
+  . Add possibility to write .digi only for L0 selected events
+    (Uncomment relevant line in v200601.opts)
+
+- New tuning
+  . Changes to L0Calo to make it correspond better to the hardware
+    (L0Calo v9r9, CaloDet v8r3)
+  . Speed improvements in Velo detector element (VeloDet v12r0)
+
+- New packaging
+  . Add in Boole requirements a no_auto_imports dependency to all used component
+    libraries, so they can be reached by cmt broadcast when checked out in 
+    User_release_area
+
+- Bug fixes
+  . Fix uninitialised variable in CardParam (CaloDet v8r3)
+
 </PRE><H1><A NAME=v14r3>2007-07-16 Boole v14r3</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r7, Lbcom v6r7
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
