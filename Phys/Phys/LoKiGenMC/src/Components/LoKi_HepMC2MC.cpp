@@ -1,14 +1,4 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.7 2007-04-16 16:16:45 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/04/09 09:00:53  ibelyaev
-//  regular update
-//
-// Revision 1.5  2006/03/19 12:13:09  ibelyaev
-//  minor update
-//
+// $Id: LoKi_HepMC2MC.cpp,v 1.8 2007-07-23 17:29:54 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -40,8 +30,6 @@
 #include "Kernel/IHepMC2MC.h"
 #include "Kernel/HepMC2MC.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -56,8 +44,6 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
-// ============================================================================
 /** @class LoKi_HepMC2MC
  *  The most simplest implementation of IHepMC2MC interface
  *
@@ -65,16 +51,16 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-class LoKi_HepMC2MC : 
-  public virtual IHepMC2MC         ,
-  public virtual IIncidentListener ,
-  public         GaudiTool  
+class LoKi_HepMC2MC 
+  : public virtual IHepMC2MC         
+  , public virtual IIncidentListener 
+  , public         GaudiTool  
 {
   // friend factory for instantiation
   friend class ToolFactory<LoKi_HepMC2MC> ;
   //
 public:
-
+  // ==========================================================================
   /** return a relation table for HepMC::GenParticle -> LHCb::MCParticle 
    *  relations 
    *  
@@ -111,7 +97,7 @@ public:
     return m_table->direct() ;
     //
   } ;
-  
+  // ==========================================================================
   /** return a relation table for LHCb::MCParticle -> HepMC::GenParticle 
    *  relations 
    *  
@@ -148,9 +134,9 @@ public:
     return m_table->inverse() ;
     //
   };
-  //
+  // ==========================================================================
 public:
-  
+  // ==========================================================================  
   /// standard initialization of the tool 
   virtual StatusCode initialize () 
   {
@@ -166,11 +152,12 @@ public:
     
     return StatusCode::SUCCESS ;
   };
+  // ==========================================================================
   /// handle new incident 
   virtual void handle ( const Incident& ) { m_table = 0 ; }
-  
+  // ==========================================================================  
 protected:
-  
+  // ==========================================================================
   /** standart constructor 
    *  @param type tool type 
    *  @param name tool name 
@@ -191,8 +178,10 @@ protected:
     // 
     declareProperty  ( "Location"    , m_location  ) ;
   };
+  // ==========================================================================
   /// destructor (virual and protected)
   virtual ~LoKi_HepMC2MC () {} ;
+  // ==========================================================================
 private:
   // default constructor  is disabled 
   LoKi_HepMC2MC ()  ;
@@ -214,11 +203,7 @@ private:
   std::string    m_location  ;
 };
 // ============================================================================
-
-// ============================================================================
-DECLARE_TOOL_FACTORY( LoKi_HepMC2MC ) ;
-// ============================================================================
-
+DECLARE_TOOL_FACTORY( LoKi_HepMC2MC ) 
 // ============================================================================
 // The END 
 // ============================================================================

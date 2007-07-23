@@ -1,17 +1,4 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.6 2007-06-01 11:53:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2007/04/16 16:16:45  pkoppenb
-// removed polemic comment
-//
-// Revision 1.4  2006/08/29 11:35:46  ibelyaev
-//  many fixes after detailed tests
-//
-// Revision 1.3  2006/04/09 10:16:08  ibelyaev
-//  minor fixes
-//
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.7 2007-07-23 17:29:54 ibelyaev Exp $
 // ============================================================================
 // Include file
 // ============================================================================
@@ -79,12 +66,12 @@
  *  @date 2005-07-13
  */
 // ============================================================================
-class LoKi_MC2CollisionAlg 
-  : public GaudiAlgorithm 
+class LoKi_MC2CollisionAlg : public GaudiAlgorithm 
 {
   friend class AlgFactory<LoKi_MC2CollisionAlg> ;
 public:
-   /// initialization of the algorithm
+  // ==========================================================================
+  /// initialization of the algorithm
   virtual StatusCode intialize () 
   {
     StatusCode sc = GaudiAlgorithm::initialize() ;
@@ -93,9 +80,12 @@ public:
     svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
     return StatusCode::SUCCESS ;
   } ;
- /// execution of the algorithm
+  // ==========================================================================
+  /// execution of the algorithm
   virtual StatusCode execute() ;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /**standard constructor 
    * @param name algorithm instance name 
    * @param pSvc pointer to Service Locator 
@@ -115,8 +105,10 @@ protected:
     
     setProperty     ( "StatPrint"     , "true"       )  ;
   } ;
+  // ==========================================================================
   // destructor: protected and virtual 
   virtual ~LoKi_MC2CollisionAlg(){} ;
+  // ==========================================================================
 private:
   // default constructor is disabled 
   LoKi_MC2CollisionAlg () ;
@@ -135,15 +127,13 @@ private:
   double      m_threshold  ; ///< threshold
 };
 // ============================================================================
-/// factory 
-// ============================================================================
-DECLARE_ALGORITHM_FACTORY(LoKi_MC2CollisionAlg);
+DECLARE_ALGORITHM_FACTORY(LoKi_MC2CollisionAlg)
 // ============================================================================
 namespace 
 {
   // the actual type of relation table 
   typedef LHCb::Relation1D<LHCb::MCVertex,LHCb::GenCollision> Table  ;
-} ;
+} 
 // ============================================================================
 StatusCode LoKi_MC2CollisionAlg::execute() 
 {
@@ -222,8 +212,7 @@ StatusCode LoKi_MC2CollisionAlg::execute()
   { counter ( "#links" ) += table->relations().size() ; }
   //
   return StatusCode::SUCCESS ;
-} ;
-
+}
 // ============================================================================
 // The END
 // ============================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.19 2007-06-11 09:15:46 cattanem Exp $ 
+! $Id: release.notes,v 1.20 2007-07-23 17:29:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-23 - Vanya BELYAEV
+ - many tiny fixed to speedup compilation, reduce dictionaries and 
+   improve doxygen
+ - cmt/requirements 
+   version increment to v3r1
 
 !========================== LoKiGenMC v3r0 2007-06-11 =========================
 ! 2007-06-10 - Vanya BELYAEV
@@ -366,6 +372,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.19  2007/06/11 09:15:46  cattanem
+! move tag
+!
 ! Revision 1.18  2007/06/10 20:04:46  ibelyaev
 !  prepare for v3r0
 !

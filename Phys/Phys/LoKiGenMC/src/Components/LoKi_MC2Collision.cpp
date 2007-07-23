@@ -1,14 +1,4 @@
-// $Id: LoKi_MC2Collision.cpp,v 1.3 2007-04-16 16:16:45 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/04/09 09:00:53  ibelyaev
-//  regular update
-//
-// Revision 1.1  2006/03/18 18:26:43  ibelyaev
-//  add (primary)MCVErtex->GenCollision links
-//
+// $Id: LoKi_MC2Collision.cpp,v 1.4 2007-07-23 17:29:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,8 +30,6 @@
 #include "Kernel/IMC2Collision.h"
 #include "Kernel/MC2Collision.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for class : LoKi_MC2Collision
@@ -58,8 +46,6 @@
  *  @date 2006-03-18 
  */
 // ============================================================================
-
-// ============================================================================
 /** @class LoKi_MC2Collision
  *  The most simplest implementation of IMC2Collision interface
  *
@@ -67,15 +53,16 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-class LoKi_MC2Collision : 
-  public virtual IMC2Collision     ,
-  public virtual IIncidentListener ,
-  public         GaudiTool  
+class LoKi_MC2Collision 
+  : public virtual IMC2Collision     
+  , public virtual IIncidentListener 
+  , public         GaudiTool  
 {
   // friend factory for instantiation
   friend class ToolFactory<LoKi_MC2Collision> ;
   //
 public:
+  // ==========================================================================
   /** get the relation table for LHCb::MCVertex -> LHCb::GenCollision 
    * 
    *  @code 
@@ -108,7 +95,9 @@ public:
     }
     return m_table ;
   } ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// standard initialization of the tool 
   virtual StatusCode initialize () 
   {
@@ -124,10 +113,12 @@ public:
 
     return StatusCode::SUCCESS ;
   };
+  // ==========================================================================
   /// handle new incident 
   virtual void handle ( const Incident& ) { m_table = 0 ; }
+  // ==========================================================================
 protected:
-  
+  // ==========================================================================  
   /** standart constructor 
    *  @param type tool type 
    *  @param name tool name 
@@ -148,8 +139,10 @@ protected:
     // 
     declareProperty  ( "Location"    , m_location  ) ;
   };           
+  // ==========================================================================  
   /// destructor (virual and protected)
   virtual ~LoKi_MC2Collision () {} ;
+  // ==========================================================================  
 private:
   // default constructor  is disabled 
   LoKi_MC2Collision ()  ;
@@ -169,11 +162,7 @@ private:
   std::string    m_location  ;
 } ;
 // ============================================================================
-
-// ============================================================================
-DECLARE_TOOL_FACTORY( LoKi_MC2Collision ) ;
-// ============================================================================
-
+DECLARE_TOOL_FACTORY( LoKi_MC2Collision ) 
 // ============================================================================
 // The END
 // ============================================================================

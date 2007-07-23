@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.11 2007-06-10 20:04:46 ibelyaev Exp $ 
+# $Id: requirements,v 1.12 2007-07-23 17:29:51 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGenMC
-version            v3r0
+version            v3r1
 
 # ================ structure ==================================================
 branches           cmt doc src options dict python LoKi
@@ -42,6 +42,9 @@ macro LoKiGenMCDict_use_linkopts $(use_linkopts)
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2007/06/10 20:04:46  ibelyaev
+#  prepare for v3r0
+#
 #
 # =============================================================================
 # The END

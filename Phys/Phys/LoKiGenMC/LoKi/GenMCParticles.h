@@ -1,4 +1,4 @@
-// $Id: GenMCParticles.h,v 1.7 2007-06-10 20:04:46 ibelyaev Exp $
+// $Id: GenMCParticles.h,v 1.8 2007-07-23 17:29:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1
@@ -34,6 +34,7 @@ namespace LoKi
 {
   namespace GenMCParticles 
   {   
+    // ========================================================================
     /** @class IsAMotherForMC
      *  Trivial predicate which evaluates to 'true'
      *  for (HepMC)particles which are "origins" for 
@@ -45,8 +46,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsAMotherForMC 
-      : public LoKi::Predicate<const HepMC::GenParticle*> 
+    class IsAMotherForMC : public LoKi::Predicate<const HepMC::GenParticle*> 
     {
     public:
       /** constructor from the particle and relation table 
@@ -124,6 +124,7 @@ namespace LoKi
       MCPs                                          m_mcps  ;
       LoKi::Interface<LHCb::HepMC2MC>               m_table ;
     };
+    // =========================================================================
     /** @class IsFromHepMC
      *  trivial predicate which 
      *  evaluates to 'true' for MC-particles,
@@ -134,8 +135,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsFromHepMC 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsFromHepMC : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /** constructor from the particle and a table 

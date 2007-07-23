@@ -1,4 +1,4 @@
-// $Id: GenMCParticleCuts.h,v 1.6 2007-06-10 20:04:45 ibelyaev Exp $
+// $Id: GenMCParticleCuts.h,v 1.7 2007-07-23 17:29:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLECUTS_H 
 #define LOKI_GENMCPARTICLECUTS_H 1
@@ -69,8 +69,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    typedef LoKi::GenMCParticles::IsAMotherForMC     GMCMOTH   ;
-    // ========================================================================    
+    typedef LoKi::GenMCParticles::IsAMotherForMC                      GMCMOTH ;
+    // ========================================================================
     /** trivial predicate which 
      *  evaluates to 'true' for MC-particles,
      *  which originates from certain HepMC particle 
@@ -115,7 +115,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    typedef LoKi::GenMCParticles::IsFromHepMC         FROMGTREE ;
+    typedef LoKi::GenMCParticles::IsFromHepMC                       FROMGTREE ;
     // ========================================================================
   }  // end of namespace LoKi::Cuts
 }  // end of namespace LoKi
