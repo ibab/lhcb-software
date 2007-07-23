@@ -9,8 +9,8 @@
 //
 // Truth filter for Bd -> D0K*
 //
-SeqHltTruthFilter.Members += { "PrintMCTree"};
-//PrintMCTree.ParticleNames = { "B0", "B~0" } ;
+//SeqHltTruthFilter.Members += { "PrintMCTree"};
+PrintMCTree.ParticleNames = { "B0", "B~0" } ;
 SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBd2D0Kstar"};
 SelectTrueBd2D0Kstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
 SelectTrueBd2D0Kstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2D0Kstar",
