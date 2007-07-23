@@ -4,6 +4,11 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2007-07-23 - Patrick Koppenburg
+ - options/DVTestHltBd2D0Kstar.opts
+ - options/DVTestHltBs2DsH.opts
+   . New options for B->D8K* and Bs->DsH
+
 ! 2007-07-20 - Patrick Koppenburg
  - options/DVTestHltB2DiMuon.opts
  - options/DVTestHltB2JpsiX_MuMu.opts

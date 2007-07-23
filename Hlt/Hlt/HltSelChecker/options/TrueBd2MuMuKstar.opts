@@ -19,7 +19,7 @@ SelectTrueBd2MuMuKstar.Filter.Bd2MuMuKstar.MCDecayFinder.Decay = "[[B0]nos => ^K
 //
 // Overwrite Shared K* input
 //
-HltSharedKstar.PhysDesktop.InputLocations =  { "Phys/SelectTrueBd2MuMuKstar" } ;    
+HltSharedKstar2KPi.PhysDesktop.InputLocations =  { "Phys/SelectTrueBd2MuMuKstar" } ;    
 //
 // Overwrite Shared dimuon input
 //

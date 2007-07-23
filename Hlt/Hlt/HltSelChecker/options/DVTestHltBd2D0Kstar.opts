@@ -1,6 +1,6 @@
-/** @file DVTestHltB2JpsiX_MuMu.opts
+/** @file DVTestHltBd2D0Kstar.opts
  *
- *  Test file for HLT B -> J/psi(MuMu) X selection
+ *  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  *
  *  @author P. Koppenburg
  *  @date 2007-07-20
@@ -9,8 +9,9 @@
 //
 // Preselection
 //
-#include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
-HltExclusiveCorrs.Algorithms += { "PreselHeavyDimuon" };
+#include "$B2D0XROOT/options/DVPreselBd2D0Kst_D02HH.opts"
+HltExclusiveCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
+PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // Hlt test
 //
@@ -22,21 +23,21 @@ HltExclusiveCorrs.Algorithms += { "PreselHeavyDimuon" };
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueB2JpsiX_MuMu.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBd2D0Kstar.opts"
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bs2psiphi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2D0Kst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2JpsiX_MuMu" } ;
-OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselHeavyDimuon" } ;
+HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2D0Kstar" } ;
+OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBd2D0Kst_D02HH" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2JpsiX_MuMu.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2D0Kstar.root' TYP='ROOT' OPT='NEW'" ] ;
 
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;
@@ -46,3 +47,4 @@ OfflineChecker.OutputLevel = 3 ;
 
 ApplicationMgr.EvtMax = 100 ;
 EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq = 1 ;
