@@ -1,8 +1,4 @@
-// $Id: BuildMCTrees.cpp,v 1.1 2006-11-29 14:27:49 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: BuildMCTrees.cpp,v 1.2 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +25,7 @@ LoKi::MCTrees::buildTrees
   output.reserve ( input.size() ) ;
   buildTrees ( input.begin() , input.end() , std::back_inserter( output ) ) ;
   return output ;
-} ;
+} 
 // ============================================================================
 LHCb::MCParticle::ConstVector
 LoKi::MCTrees::buildTrees 
@@ -39,7 +35,7 @@ LoKi::MCTrees::buildTrees
   output.reserve ( input.size() ) ;
   buildTrees ( input.begin() , input.end() , std::back_inserter( output ) ) ;
   return output ;
-} ;
+} 
 // ============================================================================
 LHCb::MCParticle::ConstVector
 LoKi::MCTrees::buildTrees 
@@ -50,7 +46,7 @@ LoKi::MCTrees::buildTrees
   output.reserve ( input->size() ) ;
   buildTrees ( input->begin() , input->end() , std::back_inserter( output ) ) ;
   return output ;
-} ;
+} 
 // ============================================================================
 LHCb::MCParticle::ConstVector
 LoKi::MCTrees::buildTrees 
@@ -60,7 +56,7 @@ LoKi::MCTrees::buildTrees
   output.reserve ( input.size() ) ;
   buildTrees ( input.begin() , input.end() , std::back_inserter( output ) ) ;
   return output ;
-} ;
+} 
 // ============================================================================
 LoKi::Keeper<LHCb::MCParticle>
 LoKi::MCTrees::buildTrees 
@@ -70,7 +66,7 @@ LoKi::MCTrees::buildTrees
   _o.reserve ( input.size() ) ;
   buildTrees ( input.begin() , input.end() , std::back_inserter ( _o ) );
   return LoKi::Keeper<LHCb::MCParticle>( _o.begin() , _o.end() ) ;
-} ;
+} 
 // ============================================================================
 LoKi::UniqueKeeper<LHCb::MCParticle>
 LoKi::MCTrees::buildTrees 
@@ -81,9 +77,7 @@ LoKi::MCTrees::buildTrees
   _o.reserve ( _i.size() ) ;
   buildTrees ( _i.begin() , _i.end() , std::back_inserter ( _o ) );
   return LoKi::UniqueKeeper<LHCb::MCParticle>( _o.begin() , _o.end() ) ;
-} ;
-// ============================================================================
-
+} 
 // ============================================================================
 // The END 
 // ============================================================================

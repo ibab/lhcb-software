@@ -1,9 +1,4 @@
-// $Id: GenAlgs.h,v 1.9 2007-06-03 20:39:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: GenAlgs.h,v 1.10 2007-07-23 17:23:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -18,9 +13,9 @@
 // ============================================================================
 #include "LoKi/Algs.h"
 // ============================================================================
-// LoKiGen
+// Event
 // ============================================================================
-#include "LoKi/GenExtract.h"
+#include "Event/HepMCEvent.h"
 // ============================================================================
 /** @file
  *
@@ -310,7 +305,7 @@ namespace LoKi
     inline bool found
     ( const LHCb::HepMCEvent* event ,
       const PREDICATE&        cut   )
-    { return ( 0 == event ) ? false :  found ( event->pGenEvt() , cut ) ; } ;
+    { return ( 0 == event ) ? false :  found ( event->pGenEvt() , cut ) ; } 
     // ========================================================================
     /** useful helper function (a'la STL) to efficiently check the
      *  presence of at least one (HepMC) particle, which satisfies the
@@ -1128,7 +1123,6 @@ namespace LoKi
       HepMC::GenParticle* _t2 = const_cast<HepMC::GenParticle*> ( particle ) ;
       return fun(_t2) < fun(_t1) ? tmp : particle ;
     }
-    // ========================================================================
   }  // end of namespace LoKi::GenAlgs
 } // end of namespace LoKi
 // ============================================================================

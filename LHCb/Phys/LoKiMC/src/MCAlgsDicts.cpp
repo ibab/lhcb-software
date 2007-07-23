@@ -1,6 +1,4 @@
-// $Id: MCAlgsDicts.cpp,v 1.1 2007-06-04 09:22:56 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// $Id: MCAlgsDicts.cpp,v 1.2 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -18,7 +16,7 @@
 // ============================================================================
 // count in the tree 
 // ============================================================================
-std::size_t LoKi::Dicts::Algs::count_if 
+std::size_t LoKi::Dicts::MCAlgs::count_if 
 ( const LHCb::MCParticle*      particle  , 
   const LoKi::MCTypes::MCCuts& cut       ,
   const bool                   decayOnly ) 
@@ -26,7 +24,7 @@ std::size_t LoKi::Dicts::Algs::count_if
 // ============================================================================
 // count in the tree 
 // ============================================================================
-std::size_t LoKi::Dicts::Algs::count_if 
+std::size_t LoKi::Dicts::MCAlgs::count_if 
 ( const LHCb::MCVertex*        vertex    , 
   const LoKi::MCTypes::MCCuts& cut       ,
   const bool                   decayOnly ) 
@@ -34,7 +32,7 @@ std::size_t LoKi::Dicts::Algs::count_if
 // ============================================================================
 // check in the tree 
 // ============================================================================
-bool LoKi::Dicts::Algs::found 
+bool LoKi::Dicts::MCAlgs::found 
 ( const LHCb::MCParticle*      particle  , 
   const LoKi::MCTypes::MCCuts& cut       ,
   const bool                   decayOnly ) 
@@ -42,7 +40,7 @@ bool LoKi::Dicts::Algs::found
 // ============================================================================
 // check in the tree 
 // ============================================================================
-bool LoKi::Dicts::Algs::found 
+bool LoKi::Dicts::MCAlgs::found 
 ( const LHCb::MCVertex*        vertex    , 
   const LoKi::MCTypes::MCCuts& cut       ,
   const bool                   decayOnly ) 
@@ -50,7 +48,7 @@ bool LoKi::Dicts::Algs::found
 // ============================================================================
 // find minimal value in the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::min_value 
+double LoKi::Dicts::MCAlgs::min_value 
 ( const LHCb::MCParticle*       particle  , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -60,7 +58,7 @@ double LoKi::Dicts::Algs::min_value
 // ============================================================================
 // find maximal value in the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::max_value 
+double LoKi::Dicts::MCAlgs::max_value 
 ( const LHCb::MCParticle*       particle  , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -70,7 +68,7 @@ double LoKi::Dicts::Algs::max_value
 // ============================================================================
 // find minimal value in the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::min_value 
+double LoKi::Dicts::MCAlgs::min_value 
 ( const LHCb::MCVertex*         vertex    , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       , 
@@ -80,7 +78,7 @@ double LoKi::Dicts::Algs::min_value
 // ============================================================================
 // find maximal value in the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::max_value 
+double LoKi::Dicts::MCAlgs::max_value 
 ( const LHCb::MCVertex*         vertex    , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -90,7 +88,7 @@ double LoKi::Dicts::Algs::max_value
 // ============================================================================
 // accumulate over the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::accumulate 
+double LoKi::Dicts::MCAlgs::accumulate 
 ( const LHCb::MCParticle*       particle  , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -103,7 +101,7 @@ double LoKi::Dicts::Algs::accumulate
 // ============================================================================
 // accumulate over the tree 
 // ============================================================================
-double LoKi::Dicts::Algs::accumulate 
+double LoKi::Dicts::MCAlgs::accumulate 
 ( const LHCb::MCVertex*         vertex    , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -117,7 +115,7 @@ double LoKi::Dicts::Algs::accumulate
 // find a minimal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::min_element 
+LoKi::Dicts::MCAlgs::min_element 
 ( const LHCb::MCParticle*       particle  , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -127,7 +125,7 @@ LoKi::Dicts::Algs::min_element
 // find a minimal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::min_element 
+LoKi::Dicts::MCAlgs::min_element 
 ( const LHCb::MCVertex*         vertex    , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -137,7 +135,7 @@ LoKi::Dicts::Algs::min_element
 // find a maximal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::max_element 
+LoKi::Dicts::MCAlgs::max_element 
 ( const LHCb::MCParticle*       particle  , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -147,7 +145,7 @@ LoKi::Dicts::Algs::max_element
 // find a minimal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::max_element 
+LoKi::Dicts::MCAlgs::max_element 
 ( const LHCb::MCVertex*         vertex    , 
   const LoKi::MCTypes::MCFunc&  fun       , 
   const LoKi::MCTypes::MCCuts&  cut       ,
@@ -157,7 +155,7 @@ LoKi::Dicts::Algs::max_element
 // find a mimimal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::min_element 
+LoKi::Dicts::MCAlgs::min_element 
 ( const LHCb::MCParticle::Container* particles , 
   const LoKi::MCTypes::MCFunc&       fun       , 
   const LoKi::MCTypes::MCCuts&       cut       ) 
@@ -172,7 +170,7 @@ LoKi::Dicts::Algs::min_element
 // find a maximal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::max_element 
+LoKi::Dicts::MCAlgs::max_element 
 ( const LHCb::MCParticle::Container* particles , 
   const LoKi::MCTypes::MCFunc&       fun       , 
   const LoKi::MCTypes::MCCuts&       cut       ) 
@@ -187,7 +185,7 @@ LoKi::Dicts::Algs::max_element
 // find a mimimal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::min_element 
+LoKi::Dicts::MCAlgs::min_element 
 ( const LHCb::MCParticle::ConstVector& particles , 
   const LoKi::MCTypes::MCFunc&         fun       , 
   const LoKi::MCTypes::MCCuts&         cut       ) 
@@ -201,7 +199,7 @@ LoKi::Dicts::Algs::min_element
 // find a maximal element 
 // ============================================================================
 const LHCb::MCParticle* 
-LoKi::Dicts::Algs::max_element 
+LoKi::Dicts::MCAlgs::max_element 
 ( const LHCb::MCParticle::ConstVector& particles , 
   const LoKi::MCTypes::MCFunc&       fun       , 
   const LoKi::MCTypes::MCCuts&       cut       ) 

@@ -1,4 +1,4 @@
-// $Id: MCFinder.h,v 1.5 2007-06-10 19:59:04 ibelyaev Exp $
+// $Id: MCFinder.h,v 1.6 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDER_H 
 #define LOKI_MCFINDER_H 1
@@ -12,6 +12,7 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Interface.h"
+#include "LoKi/MCFinderObj.h"
 // ============================================================================
 /** @file
  *
@@ -29,8 +30,10 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /// forward decalration 
   class MCFinderObj ; 
+  // ==========================================================================
   /** @class MCFinder MCFinder.h LoKi/MCFinder.h
    *
    *  Helper class whcih simplify the manipulation with 
@@ -39,8 +42,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-11
    */
-  class MCFinder 
-    : public LoKi::Interface<LoKi::MCFinderObj>
+  class MCFinder : public LoKi::Interface<LoKi::MCFinderObj>
   {
   public: 
     /// Standard constructor
@@ -55,6 +57,7 @@ namespace LoKi
     // the default constructor is disabled 
     MCFinder() ;
   } ;
+  // ==========================================================================
 } // end of the namespace LoKi
 // ============================================================================
 // The END 

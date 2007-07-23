@@ -1,29 +1,9 @@
-// $Id: BuildMCTrees.h,v 1.5 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $,  
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/29 14:27:48  ibelyaev
-//  add BuildMCTrees
-//
-// Revision 1.3  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-//
+// $Id: BuildMCTrees.h,v 1.6 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BUILDMCTREES_H 
 #define LOKI_BUILDMCTREES_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/MCParticle.h"
 // ============================================================================
 // LoKiMC 
 // ============================================================================
@@ -31,8 +11,6 @@
 #include "LoKi/MCParticles.h"
 #include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -48,7 +26,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::MCTrees 
@@ -58,8 +35,8 @@ namespace LoKi
    */
   namespace MCTrees 
   {
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 
+    // ========================================================================
+    /** Simple function which 'builds' the trees from flat list 
      *
      *  @code
      *
@@ -103,10 +80,9 @@ namespace LoKi
         ++output ;
       }
       return output ;
-    };
-    
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    }
+    // ========================================================================    
+    /** Simple function which 'builds' the trees from flat list 'in place' 
      *
      *  @code
      *
@@ -149,10 +125,9 @@ namespace LoKi
         ++output ;
       }
       return output ;
-    };
-    
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    }
+    // ========================================================================
+    /** Simple function which 'builds' the trees
      *
      *  @code
      *
@@ -170,9 +145,8 @@ namespace LoKi
     LHCb::MCParticle::Vector
     buildTrees 
     ( const LHCb::MCParticle::Vector& input ) ;
-
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    // ========================================================================
+    /** Simple function which 'builds' the trees
      *
      *  @code
      *
@@ -183,16 +157,14 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LHCb::MCParticle::ConstVector
     buildTrees 
     ( const LHCb::MCParticle::ConstVector& input ) ;
-    
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    // ========================================================================
+    /** Simple function which 'builds' the trees
      *
      *  @code
      *
@@ -203,16 +175,14 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LHCb::MCParticle::ConstVector
     buildTrees 
     ( const LHCb::MCParticle::Container* input ) ;
-    
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    // ========================================================================
+    /** Simple function which 'builds' the trees 
      *
      *  @code
      *
@@ -223,16 +193,14 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LHCb::MCParticle::ConstVector
     buildTrees 
     ( const LoKi::Types::MCRange& input ) ;
-    
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    // ========================================================================
+    /** Simple function which 'builds' the trees 
      *
      *  @code
      *
@@ -243,17 +211,14 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LoKi::Keeper<LHCb::MCParticle>
     buildTrees 
     ( const LoKi::Keeper<LHCb::MCParticle>& input ) ;
-
-
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 'in place' 
+    // ========================================================================
+    /** Simple function which 'builds' the trees 
      *
      *  @code
      *
@@ -264,19 +229,15 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LoKi::UniqueKeeper<LHCb::MCParticle>
     buildTrees 
     ( const LoKi::UniqueKeeper<LHCb::MCParticle>& input ) ;
-
-
-  }  // end of namespace LoKi::MCTrees 
-
+    // ========================================================================
+  }  // end of namespace LoKi::MCTrees
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

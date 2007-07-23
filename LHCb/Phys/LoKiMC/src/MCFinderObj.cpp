@@ -1,4 +1,4 @@
-// $Id: MCFinderObj.cpp,v 1.5 2007-06-04 09:57:30 cattanem Exp $
+// $Id: MCFinderObj.cpp,v 1.6 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -21,8 +21,6 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCFinderObj.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for classes LoKi::MCFinder 
@@ -40,9 +38,7 @@
  *  @date 2006-03-11 
  */
 // ============================================================================
-
-// ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name object name 
  *  @param finder the mc-decay finder itself
  *  @param algo   data provider 
@@ -50,7 +46,7 @@
  */
 // ============================================================================
 LoKi::MCFinderObj::MCFinderObj 
-( const std::string&    name , 
+( const std::string&    name     , 
   const IMCDecayFinder* finder   , 
   const GaudiAlgorithm* algo     , 
   const IReporter*      reporter ) 
@@ -58,9 +54,9 @@ LoKi::MCFinderObj::MCFinderObj
   , m_finder   ( finder ) 
   , m_tool     ( 0      )
   , m_algo     ( algo   )
-{} ;
+{} 
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name object name 
  *  @param finder the mc-decay finder itself
  *  @param algo   data provider 
@@ -76,15 +72,15 @@ LoKi::MCFinderObj::MCFinderObj
   , m_finder   ( finder ) 
   , m_tool     ( algo   )
   , m_algo     ( 0      )
-{} ;
+{} 
 // ===========================================================================
-LoKi::MCFinderObj::~MCFinderObj(){} ;
+LoKi::MCFinderObj::~MCFinderObj(){} 
 // ============================================================================
 // clear the internal storages 
 // ============================================================================
 void LoKi::MCFinderObj::clear() { m_decays.clear() ; }  
 // ===========================================================================
-/** find MC decays.
+/*  find MC decays.
  *  
  *  It is just a short cut for very convinient and simple DecayFinder 
  *  tool by Olivier Dormond   
@@ -120,7 +116,7 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
               "')::findDecay: invalid data provider!" ) ;
   // "fictive" return 
   return LoKi::Types::MCRange() ;  
-};
+}
 // ===========================================================================
 /** find MC decays.
  *  
@@ -149,7 +145,7 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
     return LoKi::Types::MCRange() ;                                 // RETURN 
   }
   return _findDecays( decay , *particles ) ;
-} ;
+} 
 // ============================================================================
 /** find MC decays.
  *  
@@ -188,7 +184,7 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
   const LoKi::UniqueKeeper<LHCb::MCParticle>& particles ) const 
 { return findDecays ( decay , particles.begin() , particles.end() ) ; }
 // ============================================================================
-/** find MC decays.
+/*  find MC decays.
  *  
  *  It is just a short cut for very convinient and simple DecayFinder 
  *  tool by Olivier Dormond   
@@ -211,9 +207,7 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
 {
   return _findDecays
     ( decay , LoKi::MCTypes::MCContainer( range.begin() , range.end() ) ) ;
-} ;
-// ============================================================================
-
+} 
 // ============================================================================
 // The END 
 // ============================================================================

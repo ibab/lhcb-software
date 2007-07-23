@@ -1,11 +1,4 @@
-// $Id: PrintHepMCDecay.cpp,v 1.4 2007-02-26 11:03:03 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/25 19:14:19  ibelyaev
-//  improve Doxygen
-//
+// $Id: PrintHepMCDecay.cpp,v 1.5 2007-07-23 17:23:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,15 +13,15 @@
 // ============================================================================
 #include "GaudiKernel/MsgStream.h"
 // ============================================================================
-// Event
-// ===========================================================================
-#include "Event/HepMCEvent.h"
+// HepMC
+// ============================================================================
+#include "HepMC/GenVertex.h"
 // ============================================================================
 // LoKiCore
 // ============================================================================
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/Report.h"
-#include "LoKi/Print.h"
+#include "LoKi/Primitives.h"
 // ===========================================================================
 // LoKiGen
 // ===========================================================================
@@ -37,8 +30,6 @@
 // Local 
 // ===========================================================================
 #include "LoKi/PrintHepMCDecay.h"
-// ===========================================================================
-
 // ============================================================================
 /** @file
  *
@@ -60,9 +51,7 @@
  *  @date 2006-05-26 
  */
 // ============================================================================
-
-// ============================================================================
-/// Simple function to print decay in more or less "readable" format 
+// Simple function to print decay in more or less "readable" format 
 // ============================================================================
 MsgStream& LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
@@ -75,9 +64,9 @@ MsgStream& LoKi::Print::printHepMCDecay
   { LoKi::Print::printHepMCDecay 
       ( particle , stream.stream() , cut , level , blank ) ; }
   return stream ;
-} ;
+} 
 // ============================================================================
-/// Simple function to print decay in more or less "readable" format 
+// Simple function to print decay in more or less "readable" format 
 // ============================================================================
 std::string LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
@@ -88,9 +77,9 @@ std::string LoKi::Print::printHepMCDecay
   std::ostringstream stream ;
   LoKi::Print::printHepMCDecay ( particle , stream, cut , level , blank ) ;
   return stream.str() ;
-} ;
+} 
 // ============================================================================
-/// Simple function to print decay in more or less "readable" format 
+// Simple function to print decay in more or less "readable" format 
 // ============================================================================
 std::ostream& LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
@@ -125,7 +114,80 @@ std::ostream& LoKi::Print::printHepMCDecay
       ( *begin , stream , cut , level - 1 , blank ) ; }          // RECURSION
   //
   return stream << " ) " ;                                       // RETURN  
-} ;
+}
+// ============================================================================
+/*  Simple function to print HepMC decay in more or less "readable" format 
+ *
+ *  @code
+ *
+ *  const HepMC::GenParticle* p = ... ;
+ * 
+ *  printHepMCDecay( p , std::cout ) ;
+ *
+ *  @endcode 
+ *
+ *  @param particle pointer to HepMC::GenParticle to be printed 
+ *  @param stream   stream to be used 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-01-18
+ */
+// ============================================================================
+std::ostream& LoKi::Print::printHepMCDecay 
+( const HepMC::GenParticle*      particle , 
+  std::ostream&                  stream   ) 
+{
+  return printHepMCDecay 
+    ( particle , stream , 
+      LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+}
+// ============================================================================
+/*  Simple function to print HepMC decay in more or less "readable" format 
+ *
+ *  @code
+ *
+ *  const HepMC::GenParticle* p = ... ;
+ * 
+ *  printHepMCDecay( p , always() ) ;
+ *
+ *  @endcode 
+ *
+ *  @param particle pointer to HepMC::GenParticle to be printed 
+ *  @param stream   stream to be used 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-01-18
+ */
+// ============================================================================ 
+MsgStream& LoKi::Print::printHepMCDecay 
+( const HepMC::GenParticle*    particle , 
+  MsgStream&                   stream   ) 
+{
+  return printHepMCDecay 
+    ( particle , stream , 
+      LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+}
+// ============================================================================
+/*  Simple function to print HepMC decay in more or less "readable" format 
+ *
+ *  @code
+ *
+ *  const HepMC::GenParticle* p = ... ;
+ * 
+ *  info() << printHepMCDecay( p ) ;
+ *
+ *  @endcode 
+ *
+ *  @param particle pointer to HepMC::GenParticle to be printed 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-01-18
+ */
+// ============================================================================
+std::string LoKi::Print::printHepMCDecay 
+( const HepMC::GenParticle*    particle ) 
+{
+  return printHepMCDecay 
+    ( particle , LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+}
+// ============================================================================
 
 // ============================================================================
 // The END 

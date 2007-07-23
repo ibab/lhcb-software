@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.25 2007-06-11 09:17:01 cattanem Exp $ 
+! $Id: release.notes,v 1.26 2007-07-23 17:27:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-07-23 - Vanya BELYAEV
+ - many minor fixes to speedup compilation, reduce dictionaries
+    and improve Doxygen 
+ - cmt/requirements 
+    version increment to v3r1
 
 !========================== LoKiMC v3r0 2007-06-11 ============================
 ! 2007-06-10 - Vanya BELYAEV
@@ -334,6 +340,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.25  2007/06/11 09:17:01  cattanem
+! move tag
+!
 ! Revision 1.24  2007/06/10 19:59:05  ibelyaev
 !  prepare for v3r0
 !

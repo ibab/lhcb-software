@@ -1,20 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.10 2007-06-03 20:39:37 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2007/03/04 16:41:18  ibelyaev
-//  add 3 new functions for jet-studies
-//
-// Revision 1.8  2006/08/26 11:28:01  ibelyaev
-//  add GSTATUS functor: HepMC::GenParticle::status()
-//
-// Revision 1.7  2006/05/26 17:32:11  ibelyaev
-//  update to allow HepMCParticleMaker to be OK
-//
-// Revision 1.6  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
+// $Id: GenParticleCuts.h,v 1.11 2007-07-23 17:23:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -23,6 +7,8 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/MoreFunctions.h"
+#include "LoKi/Monitoring.h"
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenPIDOperators.h"
@@ -48,193 +34,27 @@ namespace LoKi
 {
   namespace Cuts 
   {
-    /** @var GTRUE 
-     *  primitive predicate, "always true"
-     *  @see LoKi::BooleanConstant
-     *  @see LoKi::Cuts::PTRUE 
-     *  @see LoKi::Cuts::VTRUE 
-     *  @see LoKi::Cuts::MCTRUE 
-     *  @see LoKi::Cuts::MCVTRUE 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*> GTRUE  ( true  ) ;
-
-    /** @var GFALSE
-     *  primitive predicate, "always false"
-     *  @see LoKi::BooleanConstant
-     *  @see LoKi::GenTypes::GTRUE 
-     *  @see LoKi::Cuts::PFALSE 
-     *  @see LoKi::Cuts::VFALSE 
-     *  @see LoKi::Cuts::MCFALSE 
-     *  @see LoKi::Cuts::MCVFALSE 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*> GFALSE ( false ) ;
-    
-    /** @var GALL
-     *  primitive predicate, "always true"
-     *  @see LoKi::BooleanConstant
-     *  @see LoKi::GenTypes::GTRUE
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*> GALL  = GTRUE    ;
-    
-    /** @var GNONE
-     *  primitive predicate, "always false"
-     *  @see LoKi::BooleanConstant
-     *  @see LoKi::GenTypes::GFALSE
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*> GNONE = GFALSE   ;
-    
-    /** @var GONE
-     *  primitive function, "always 1"
-     *  @see LoKi::Constant
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::Constant       <const HepMC::GenParticle*> GONE   ( 1.0   ) ;
-    
-    /** @var GZERO
-     *  primitive function, "always 0"
-     *  @see LoKi::Constant
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date 2005-03-27
-     */
-    const LoKi::Constant       <const HepMC::GenParticle*> GZERO  ( 0.0   ) ;    
-
-
-    /** Minimum from 2 functions 
-     *  
+    // ========================================================================
+    /** @var G3Q
+     *  The trivial evaluator of 3*chareg of the particle 
+     *
      *  @code 
+     *
+     *  const HepMC::GenParticle* p = ... ;
      *  
-     *  GFun f1 = ... ;
-     *  GFun f2 = ... ;
-     *  
-     *  GFun f = GMIN( f1 , f2 ) ;
-     *  
+     *  const bool positive = 0 < G3Q( p ) ;
+     *
      *  @endcode 
-     *  
-     *  @see LoKi::Min
-     */
-    typedef LoKi::Min<const HepMC::GenParticle*>                      GMIN;
-
-    /** Maxumum from 2 functions 
-     *  
-     *  @code 
-     *  
-     *  GFun f1 = ... ;
-     *  MCFun f2 = ... ;
-     *  
-     *  MCFun f = MCMAX( f1 , f2 ) ;
-     *  
-     *  @endcode 
-     *  
-     *  @see LoKi::Max
-     */
-    typedef LoKi::Max<const HepMC::GenParticle*>                     GMAX;
-    
-    /** Simple "switch"
-     *  The function evaluated the predicate and returns 
-     *  one of the predefined values, depending on result on 
-     *  predicate evaluation.
-     *  In some sense it is a conversion of "predicate" to "function"
      * 
-     *  @code
+     *  Algorithm: 
      *
-     *   const HepMC::GenParticle* mcp = ...  ;
+     *   HepMC::GenParticle:pdg_id -> LHCb::ParticleID -> threeCharge 
      *
-     *   GFun fun = GSSWITCH( GHADRON , 1 , -1 ) 
-     *
-     *   const double value = fun( p ) ;
-     *
-     *  @endcode 
-     *
-     *  For this example function returns 1 if  the particle is hadron and 
-     *   particle and -1 otherwise 
-     *
-     *  @see LoKi::SipleSwitch 
-     *
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @author Vanya BELYAVE ibelyaev@physics.syr.edu
+     *  @date 2006-03-07
      */
-    typedef LoKi::SimpleSwitch<const HepMC::GenParticle*>           GSSWITCH;
-    
-    /** switch"
-     *  The function evaluates the predicate and returns 
-     *  the values of one of the predefined functions, 
-     *  depending on result on predicate evaluation.
-     * 
-     *  @code
-     *
-     *   const HepMC::Particle* mcp = ...  ;
-     *
-     *   GFun fun = GSWITCH( HADRON , GP , GE ) ;
-     *
-     *   const double value = fun( p ) ;
-     *
-     *  @endcode 
-     *
-     *  For this example function returns the value of 
-     *  P for hadrons and E for other particles 
-     *
-     *  @see LoKi::Switch 
-     *
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     */
-    typedef LoKi::Switch<const HepMC::GenParticle*>                  GSWITCH;
-
-    /** @var GBAR
-     *  the most primitive function - it return the "barcode" 
-     *  of HepMC::GenParticle object
-     *
-     *  @see LoKi::Cuts::BarCode
-     *  @see HepMC::GenParticle
-     *
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date   2005-03-26
-     */
-    const   LoKi::GenParticles::BarCode                     GBAR     ;
-
-    /** @var GBARCODE
-     *  the most primitive function - it return the "barcode" 
-     *  of HepMC::GenParticle object
-     *
-     *  @see LoKi::Cuts::BarCode
-     *  @see HepMC::GenParticle
-     *
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date   2005-03-26
-     */
-    const   LoKi::GenParticles::BarCode                     GBARCODE ;
-    
-    /** @var GID 
-     *  primitive evaluator of ParticleID for HepMC::GenParticle
-     *
-     *  The schematic algorithm:
-     *
-     *   HepMC::GenParticle::pdg_id() -> 
-     *                     ParticleID -> ParticleID::pid() 
-     *
-     *   @code 
-     *   
-     *    const HepMC::GenParticle* p = ... ; 
-     *   
-     *    const  long pid = (long) GID( p ) ;
-     *
-     *   @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Identifier 
-     * 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-26
-     */
-    const   LoKi::GenParticles::Identifier                  GID      ;
-    
+    const LoKi::GenParticles::ThreeCharge                                 G3Q ;    
+    // ========================================================================    
     /** @var GABSID
      *  primitive evaluator of absolute value for 
      *      ParticleID for HepMC::GenParticle
@@ -258,27 +78,332 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-26
      */
-    const   LoKi::GenParticles::AbsIdentifier               GABSID   ;
-    
-
-    /** @var GSTATUS 
-     *  the primitive evaluator of HepMC::Particle::status()
+    const   LoKi::GenParticles::AbsIdentifier                          GABSID ;
+    // ========================================================================
+    /** @var GALL
+     *  primitive predicate, "always true"
+     *  @see LoKi::BooleanConstant
+     *  @see LoKi::GenTypes::GTRUE
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
+     */
+    const LoKi::BooleanConstant<const HepMC::GenParticle*>      GALL ( true ) ;
+    // ========================================================================    
+    /** @typedef GANCESTOR
+     *  trivial function which evaluates for true for all 
+     *  'ancestors' of given particle
      *
      *  @code 
+     *  
+     *   const HepMC::GenParticle bquark = ... ;
+     *
+     *   // get all particles from b-quark 
+     *  typedef std::vector<const HepMC::GenParticle*> GPs ;
+     *  GPs gps ;
+     *  const HepMCEvents* events = ... ;
+     *  LoKi::Extract::genParticles 
+     *                 (  events                     ,   // source  
+     *                    std::back_inserter ( gps ) ,   // target 
+     *                    GANCESTOR ( bquark )      ) ; // predicate    
      * 
-     *  const HepMC::GenParticle* p = ... ;
-     *  const int status = (int) GSTATUS( p ) ;
+     *  @endcode 
+     *  
+     *  @see LoKi::GenParticles::IsAnAncestor
+     *  
+     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr
+     *  @date   2005-05-16
+     */
+    typedef LoKi::GenParticles::IsAnAncestor                        GANCESTOR ;
+    // ========================================================================
+    /** @var GBAR
+     *  the most primitive function - it return the "barcode" 
+     *  of HepMC::GenParticle object
+     *
+     *  @see LoKi::Cuts::BarCode
+     *  @see HepMC::GenParticle
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    const   LoKi::GenParticles::BarCode                                  GBAR ;
+    // ========================================================================
+    /** @var GBARCODE
+     *  the most primitive function - it return the "barcode" 
+     *  of HepMC::GenParticle object
+     *
+     *  @see LoKi::Cuts::BarCode
+     *  @see HepMC::GenParticle
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    const   LoKi::GenParticles::BarCode                              GBARCODE ;
+    // ========================================================================    
+    /** @var GBARYON 
+     *  Check for particle type   
+     *
+     *  @code
      * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool baryon  = GBARYON  ( p ) ;
+     *
      *  @endcode 
      *
      *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Status     
-     * 
+     *  @see LoKi::GenParticles::IsBaryon 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-08-26
+     *  @date 2006-01-18
      */
-    const   LoKi::GenParticles::Status                      GSTATUS  ;
-
+    const  LoKi::GenParticles::IsBaryon                              GBARYON  ;
+    // ========================================================================
+    /** @var GBEAUTY
+     *  Check for bottom quark 
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool beauty  = GBEAUTY ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::HasQuark
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::HasQuark   GBEAUTY ( LHCb::ParticleID::bottom ) ;    
+    // ========================================================================    
+    /** @var GCHARGED
+     *  Check for particle charge 
+     *
+     *  @code
+     * 
+     *   const HepMC::Particle* p  = ...         ;
+     *
+     *   const bool charged = GCHARGED ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsCharged
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const  LoKi::GenParticles::IsCharged                             GCHARGED ;
+    // ========================================================================    
+    /** @var GCHARM
+     *  Check for charm quark 
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool charm  = GCHARM ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see MCParticle
+     *  @see LoKi::GenParticles::HasQuark
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::HasQuark     GCHARM ( LHCb::ParticleID::charm ) ;
+    // ========================================================================
+    /** @typedef GCOUNTER
+     *  Simple monitoring counter for predicates
+     *
+     *  @code 
+     *
+     *  // some predicate to be monitored
+     *  GCut cut = ... ;
+     *
+     *  // Create the monitored predicate using the generic counter
+     *  // either local counter, or the counter from IStatSvc or ICounterSvc
+     *  StatEntity* counter = ... ; ///< the generic counter
+     *  GCut mon = COUNTER ( cut , counter ) ;
+     *
+     *  for ( ... ) 
+     *    {
+     *      ...
+     *      const HepMC::GenParticle* p = ... ;
+     *      const bool result = mon( p ) ; ///< use the predicate
+     *      ...
+     *    }
+     *
+     *  ...
+     *  info () 
+     *     << " Monitoring results : "                       << endreq 
+     *     << " NEntries:  #" << counter->entries ()         << endreq 
+     *     << " Efficiency:(" << counter->eff     ()   
+     *     << "+="            << counter->effErr  () << ")%" << endreq ;
+     *
+     *  @endcode
+     *
+     *  The alternative (recommended) way to create the monitored predicate:
+     *  @code 
+     *
+     *  GCut cut = ... ;
+     *
+     *  GCut mon = monitor ( cut , counter("SomeEffCounter") ) ;
+     *  
+     *  @endcode 
+     *
+     *  The substitution of the predicate by monitored predicate 
+     *  cound be done "on-flight" without the disturbing of the
+     *  actual processing:
+     *  @code
+     *
+     *  // some predicate to be monitored
+     *  GCut cut = ... ;
+     *
+     *  if ( monitoring ) 
+     *    {
+     *       cut = monitor ( cut , "Efficiency1" ) ;
+     *    }
+     *
+     *  @endcode
+     *
+     *  @attention The string representation of the object 
+     *             is delegated to the underlying prediate,  
+     *             therefore the object is NOT recontructable 
+     *             from its string representations. It is done 
+     *             on purpose to avoid the disturbing of ids. 
+     * 
+     *  @see LoKi::Monitoring::Counter
+     *  @see LoKi::monitor
+     *  @see StatEntity
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */        
+    typedef LoKi::Monitoring::Counter<const HepMC::GenParticle*>     GCOUNTER ;
+    // ========================================================================
+    /** @var GCTAU 
+     *  evaluator of particle proper lifetime c*tau (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::ProperLifeTime 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::ProperLifeTime                            GCTAU ;
+    // ========================================================================    
+    /** @typedef GDELTAR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  GFun r2 = GDELTAR2( v ) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaR2  
+     *  @see LoKi::GenParticless::DeltaEta
+     *  @see LoKi::GenParticless::DeltaPhi
+     *  @see LoKi::Cuts::GDR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaR2                              GDELTAR2 ;
+    // ========================================================================
+    /** @typedef GDETA
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double eta = ... ;
+     * 
+     *   // create the function: 
+     *  GFun deta = GDETA(eta) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = deta ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaEta 
+     *  @see LoKi::GenParticless::Eta
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaEta                                GDETA ;
+    // ========================================================================
+    /** @typedef GDPHI
+     *  simple evaluator of "delta phi" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double phi = ... ;
+     * 
+     *   // create the function: 
+     *  GFun dphi = GDPHI(phi) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = dphi ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaPhi 
+     *  @see LoKi::GenParticless::Phi
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaPhi                                GDPHI ;
+    // ========================================================================
+    /** @typedef GDR2 
+     *  simple evaluator of "delta R2" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  GFun r2 = GDR2( v ) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaR2  
+     *  @see LoKi::GenParticless::DeltaEta
+     *  @see LoKi::GenParticless::DeltaPhi
+     *  @see LoKi::Cuts::GDELTAR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaR2                                  GDR2 ;
+    // ========================================================================
+    /** @var GE
+     *  evaluator of particle energy (in HepMC units)
+     *
+     *
+     *  @see LoKi::GenParticles::Energy
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Energy                                       GE ;
+    // ========================================================================
     /** @var GETA
      *  trivial evaluator of pseudorapitidy for HepMC::GenParticle
      *
@@ -288,52 +413,251 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-26
      */
-    const   LoKi::GenParticles::PseudoRapidity              GETA     ;
-    
-    /** @var GPHI
-     *  trivial evaluator of 'phi' for HepMC::GenParticle
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Phi
-     * 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-26
+    const   LoKi::GenParticles::PseudoRapidity                           GETA ;
+    // ========================================================================    
+    /** @var GFALSE
+     *  primitive predicate, "always false"
+     *  @see LoKi::BooleanConstant
+     *  @see LoKi::GenTypes::GTRUE 
+     *  @see LoKi::Cuts::PFALSE 
+     *  @see LoKi::Cuts::VFALSE 
+     *  @see LoKi::Cuts::MCFALSE 
+     *  @see LoKi::Cuts::MCVFALSE 
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
      */
-    const   LoKi::GenParticles::Phi                         GPHI     ;
-
-    /** @var GTHETA
-     *  trivial evaluator of 'theta' for HepMC::GenParticle
+    const LoKi::BooleanConstant<const HepMC::GenParticle*>   GFALSE ( false ) ;
+    // ========================================================================    
+    /** @typdef GFAEVX 
+     *  helper adapter which delegates the evaluation of the 
+     *  "vertex" function to end vertex of the particle
      *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Theta
+     *  Extract all particles, which are decayed after z > 1000 
+     *
+     *  @code 
      * 
+     *  const LHCb::HepMCEvents* events 
+     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+     *  
+     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
+     *  
+     *  PARTICLES parts ;
+     * 
+     *  // create the predicate:
+     *  GCut cut = GFAEVX( GVZ  , 10000  ) >  1000 ;
+     * 
+     *  LoKi::Extract::genParticles 
+     *    ( events , std::back_inserter ( parts )  , cut ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GVZ
+     *  @see HepMC::GenParticle 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::Extract::genParticles 
+     *  @see LoKi::GenParticles::AdapterToEndVertex
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2005-03-26
+     *  @date 2006-02-08
      */
-    const   LoKi::GenParticles::Theta                       GTHETA   ;
-
-    /** @var GVEV
-     *  primitive predicate to check teh validity of "end_vertex" 
-     *  for HepMC::GenPArticle object
+    typedef LoKi::GenParticles::AdapterToEndVertex                     GFAEVX ;    
+    // ========================================================================    
+    /** @typedef GFAPVX 
+     *  helper adapter which delegates the evaluation of the 
+     *  "vertex" function to production vertex of the particle
+     *
+     *  Extract all particles, which are produces at |z|<10 
+     *
+     *  @code 
+     * 
+     *  const LHCb::HepMCEvents* events 
+     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+     *  
+     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
+     *  
+     *  PARTICLES parts ;
+     * 
+     *  // create the predicate:
+     *  GCut cut = GFAPVX( abs( GVZ  ) , 0 )  < 10 ;
+     * 
+     *  LoKi::Extract::genParticles 
+     *    ( events , std::back_inserter ( parts )  , cut ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GVZ 
+     *  @see HepMC::GenParticle 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::Extract::genParticles 
+     *  @see LoKi::GenParticles::AdapterToProductionVertex
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    typedef LoKi::GenParticles::AdapterToProductionVertex              GFAPVX ;
+    // ========================================================================
+    /** @typedef GFROMTREE
+     *  trivial function which evaluates for true for all 
+     *  particles whcih belongs to "descendents" of given particle/vertex 
+     * 
+     *  @code 
+     *  
+     *   const HepMC::GenParticle bquark = ... ;
+     *
+     *   // get all particles from b-quark 
+     *  typedef std::vector<const HepMC::GenParticle*> GPs ;
+     *  GPs gps ;
+     *  const HepMCEvents* events = ... ;
+     *  LoKi::Extract::genParticles 
+     *                 (  events                     ,   // source  
+     *                    std::back_inserter ( gps ) ,   // target 
+     *                    GFROMTREE ( bquark )       ) ; // predicate    
+     * 
+     *  @endcode 
+     *  
+     *  @see LoKi::GenParticles::FromHepMCTree 
+     *  
+     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr
+     *  @date   2005-05-16
+     */
+    typedef LoKi::GenParticles::FromHepMCTree                       GFROMTREE ;
+    // ========================================================================    
+    /** @var GHADRON 
+     *  Check for particle type   
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool hadron  = GHADRON  ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsHadron 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const  LoKi::GenParticles::IsHadron                               GHADRON ;
+    // ========================================================================
+    /** @var GID 
+     *  primitive evaluator of ParticleID for HepMC::GenParticle
      *
      *  The schematic algorithm:
      *
-     *    0 != HepMC::GenParticle::end_vertex() 
+     *   HepMC::GenParticle::pdg_id() -> 
+     *                     ParticleID -> ParticleID::pid() 
      *
      *   @code 
      *   
      *    const HepMC::GenParticle* p = ... ; 
      *   
-     *    const bool valid  = GVEV ( p ) ;
+     *    const  long pid = (long) GID( p ) ;
      *
      *   @endcode 
      *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::Identifier 
+     * 
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-26
      */
-    const   LoKi::GenParticles::ValidEndVertex              GVEV     ;
-
-    /** the evaluator of euclidian distance with 
+    const   LoKi::GenParticles::Identifier                                GID ;
+    // ========================================================================    
+    /** @typedef GINTREE
+     *  simple meta function to check the presence of the particle in the 
+     *  decay tree of the particle:
+     *
+     *  @code
+     *   // check for semiletonic decays of B-meson:
+     *   const HepMC::GenParticle* B = ... ;
+     *   // create the predicate:
+     *   GCut hasEorMu = GINTREE ( "e+" == GABSID || "mu+" == GABSID ) ;
+     *   // use the predicate!
+     *   const bool semileptonic = hasEorMu ( B ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::GenAlgs::found 
+     *  @see LoKi::GenParticles::InTree
+     *  @author Vanya BELYAEV ibelyaev@physic.syr.edu
+     *  @date 2007-06-03
+     */
+    typedef LoKi::GenParticles::InTree                                GINTREE ;
+    // ========================================================================   
+    /** @var GLEPTON 
+     *  Check for particle type   
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool lepton  = GLEPTON  ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsLepton 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const  LoKi::GenParticles::IsLepton                               GLEPTON ;
+    // ========================================================================
+    /** @var GM
+     *  evaluator of particle mass (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GM0
+     *  @see LoKi::Cuts::GMASS
+     *  @see LoKi::GenParticles::Mass
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Mass                                         GM ;
+    // ========================================================================
+    /** @var GM0
+     *  evaluator of particle mass (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GM
+     *  @see LoKi::Cuts::GMASS
+     *  @see LoKi::GenParticles::Mass
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Mass                                        GM0 ;
+    // ========================================================================
+    /** @var GMASS
+     *  evaluator of particle mass (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GM
+     *  @see LoKi::Cuts::GM0
+     *  @see LoKi::GenParticles::Mass
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Mass                                      GMASS ;
+    // ========================================================================
+    /** @var GMESON  
+     *  Check for particle type   
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool meson   = GMESON   ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsMeson  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const  LoKi::GenParticles::IsMeson                                 GMESON ;
+    // ========================================================================
+    /** @typedef GMOMDIST 
+     *  The evaluator of euclidian distance with 
      *  respect to the given 4-momentum, useful 
      *  e.g. for trivial "kinematical matching". 
      *  One can find 
@@ -402,37 +726,28 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    typedef LoKi::GenParticles::MomentumDistance            GMOMDIST ;
-
-    /** simple evaluator of transverse momentum 
-     *  relative to some 3-vector (e.g. jet axis) 
-     * 
-     *  @code 
+    typedef LoKi::GenParticles::MomentumDistance                     GMOMDIST ;
+    // ========================================================================
+    /** @var GNEUTRAL
+     *  Check for particle charge 
      *
-     *  // vector (e.g. jet axis)
-     *  const LoKi::ThreeVector& vct = ... ;
-     *  
-     *  // particle 
-     *  const HepMC::GenParticle* particle = ... ;
+     *  @code
      * 
-     *  // create function 
-     *  GFun ptDir = GPTDIR( vct ) ;
-     * 
-     *  // use the function:
-     *  const double pt = ptDir( particle ) ;
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool neutral = GNEUTRAL ( p ) ;
      *
      *  @endcode 
      *
-     *  @see HepMC::GenParticle 
-     *  @see LoKi::ThreeVector 
-     *  @see LoKi::GenParticles::TransverseMomentumRel
-     *  
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-23 
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsNeutral
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
      */
-    typedef LoKi::GenParticles::TransverseMomentumRel       GPTDIR   ;
-    
-    /** simple evaluator of number of particles in the tree 
+    const  LoKi::GenParticles::IsNeutral                             GNEUTRAL ;
+    // ========================================================================    
+    /** @typedef GNINTREE
+     *  simple evaluator of number of particles in the tree 
      *  which satisfy a certain predicate 
      *
      *  @warning current implementation is valid only for 
@@ -471,60 +786,262 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    typedef LoKi::GenParticles::NInTree                     GNINTREE ;
-
-    /** trivial function which evaluates for true for all 
-     *  particles whcih belongs to "descendents" of given particle/vertex 
+    typedef LoKi::GenParticles::NInTree                              GNINTREE ;
+    // ========================================================================
+    /** @var GNLT 
+     *  evaluator of particle NOMINAL proper lifetime c*tau (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::NominalLifeTime 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::NominalLifeTime                            GNLT ;
+    // ========================================================================    
+    /** @var GNONE
+     *  primitive predicate, "always false"
+     *  @see LoKi::BooleanConstant
+     *  @see LoKi::GenTypes::GFALSE
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
+     */
+    const LoKi::BooleanConstant<const HepMC::GenParticle*>    GNONE ( false ) ;
+    // ========================================================================    
+    /** @var GNUCLEUS
+     *  Check for particle type   
+     *
+     *  @code
+     * 
+     *   const HepMC::GenParticle* p  = ...         ;
+     *
+     *   const bool nucleus = GNUCLEUS ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::IsNucleus
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const  LoKi::GenParticles::IsNucleus                             GNUCLEUS ;
+    // ========================================================================
+    /** @var GONE
+     *  primitive function, "always 1"
+     *  @see LoKi::Constant
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
+     */
+    const LoKi::Constant<const HepMC::GenParticle*>                GONE ( 1 ) ;
+    // ========================================================================    
+    /** @var GP 
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GP0
+     *  @see LoKi::GenParticles::Momentum
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Momentum                                     GP ;
+    // ========================================================================
+    /** @var GP0
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GP
+     *  @see LoKi::GenParticles::Momentum
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::Momentum                                    GP0 ;
+    // ========================================================================
+    /** @var GPHI
+     *  trivial evaluator of 'phi' for HepMC::GenParticle
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::Phi
+     * 
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-26
+     */
+    const   LoKi::GenParticles::Phi                                      GPHI ;
+    // ========================================================================
+    /** @typedef GPLOT
+     *  Simple monitoring histogram for the functions
+     *
+     *  @code 
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  // Create the monitored function using the histogram:
+     *  AIDA::IHistogram1D* histo = ... ;
+     *  GFun mon = PLOT ( fun , histo ) ;
+     *
+     *  for ( ... ) 
+     *    {
+     *      ...
+     *      const LHCb::Particle* p = ... ;
+     *      const double result = mon( p ) ; ///< use the function
+     *      ...
+     *    }
+     *
+     *  @endcode
+     *
+     *  The alternative (recommended) way to create the monitored function
+     *  @code 
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  AIDA::IHistogram1D* histo = ... ;
+     *  GFun mon = monitor ( fun , histo ) ;
+     *  
+     *  @endcode 
+     *
+     *  The substitution of the function by monitored function 
+     *  cound be done "on-flight" without the disturbing of the
+     *  actual processing:
+     *  @code
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  if ( monitoring ) 
+     *    {
+     *       AIDA::IHistogram1D* histo = ... ;
+     *       fun = monitor ( fun , histo ) ;
+     *    }
+     *
+     *  @endcode
+     * 
+     *  @attention The string representation of the object 
+     *             is delegated to the underlying function,  
+     *             therefore the object is NOT recontructable 
+     *             from its string representations. It is done 
+     *             on purpose to avoid the disturbing of ids. 
+     * 
+     *  @see LoKi::Monitoring::Plot
+     *  @see LoKi::monitor
+     *  @see AIDA::IHistogram1D
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */        
+    typedef LoKi::Monitoring::Plot<const HepMC::GenParticle*>           GPLOT ;
+    // ========================================================================
+    /** @var GPT 
+     *  evaluator of particle transverse momentum (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GPT0
+     *  @see LoKi::GenParticles::TransverseMomentum
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::TransverseMomentum                          GPT ;
+    // ========================================================================
+    /** @var GPT0
+     *  evaluator of particle transverse momentum (in HepMC units)
+     *
+     *  @see LoKi::Cuts::GPT
+     *  @see LoKi::GenParticles::TransverseMomentum
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::TransverseMomentum                         GPT0 ;
+    // ========================================================================
+    /** @typedef GPTDIR 
+     *  simple evaluator of transverse momentum 
+     *  relative to some 3-vector (e.g. jet axis) 
      * 
      *  @code 
-     *  
-     *   const HepMC::GenParticle bquark = ... ;
      *
-     *   // get all particles from b-quark 
-     *  typedef std::vector<const HepMC::GenParticle*> GPs ;
-     *  GPs gps ;
-     *  const HepMCEvents* events = ... ;
-     *  LoKi::Extract::genParticles 
-     *                 (  events                     ,   // source  
-     *                    std::back_inserter ( gps ) ,   // target 
-     *                    GFROMTREE ( bquark )       ) ; // predicate    
+     *  // vector (e.g. jet axis)
+     *  const LoKi::ThreeVector& vct = ... ;
+     *  
+     *  // particle 
+     *  const HepMC::GenParticle* particle = ... ;
      * 
-     *  @endcode 
-     *  
-     *  @see LoKi::GenParticles::FromHepMCTree 
-     *  
-     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr
-     *  @date   2005-05-16
-     */
-    typedef LoKi::GenParticles::FromHepMCTree                  GFROMTREE ;
-    
-    /** trivial function which evaluates for true for all 
-     *  'ancestors' of given particle
+     *  // create function 
+     *  GFun ptDir = GPTDIR( vct ) ;
+     * 
+     *  // use the function:
+     *  const double pt = ptDir( particle ) ;
      *
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::ThreeVector 
+     *  @see LoKi::GenParticles::TransverseMomentumRel
+     *  
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-23 
+     */
+    typedef LoKi::GenParticles::TransverseMomentumRel                  GPTDIR ;
+    // ========================================================================    
+    /** @typedef GPTREL
+     *  simple evaluator of transverse momentum 
+     *  relative to some 3-vector (e.g. jet axis) 
+     * 
      *  @code 
-     *  
-     *   const HepMC::GenParticle bquark = ... ;
      *
-     *   // get all particles from b-quark 
-     *  typedef std::vector<const HepMC::GenParticle*> GPs ;
-     *  GPs gps ;
-     *  const HepMCEvents* events = ... ;
-     *  LoKi::Extract::genParticles 
-     *                 (  events                     ,   // source  
-     *                    std::back_inserter ( gps ) ,   // target 
-     *                    GANCESTOR ( bquark )      ) ; // predicate    
+     *  // vector (e.g. jet axis)
+     *  const LoKi::ThreeVector& vct = ... ;
+     *  
+     *  // particle 
+     *  const HepMC::GenParticle* particle = ... ;
      * 
+     *  // create function 
+     *  GFun ptDir = GPTREL ( vct ) ;
+     * 
+     *  // use the function:
+     *  const double pt = ptDir( particle ) ;
+     *
      *  @endcode 
+     *
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::ThreeVector 
+     *  @see LoKi::GenParticles::TransverseMomentumRel
+     *  @see LoKi::Cut::GPTDIR
      *  
-     *  @see LoKi::GenParticles::IsAnAncestor
-     *  
-     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr
-     *  @date   2005-05-16
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-23 
      */
-    typedef LoKi::GenParticles::IsAnAncestor                  GANCESTOR ;
-
-
-    /** quark content 
+    typedef LoKi::GenParticles::TransverseMomentumRel                  GPTREL ;
+    // ========================================================================    
+    /** @var GPX 
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumX
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumX                                   GPX ;
+    // ========================================================================
+    /** @var GPY
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumY
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumY                                   GPY ;
+    // ========================================================================
+    /** @var GPZ
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumZ
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumZ                                   GPZ ;
+    // ========================================================================
+    /** @typedef GQUARK 
+     *  quark content 
      * 
      *  @code
      * 
@@ -540,45 +1057,123 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    typedef LoKi::GenParticles::HasQuark             GQUARK ;
-
-    
-    /** @var GBEAUTY
-     *  Check for bottom quark 
-     *
-     *  @code
+    typedef LoKi::GenParticles::HasQuark                               GQUARK ;
+    // ========================================================================
+    /** Simple "switch"
+     *  The function evaluated the predicate and returns 
+     *  one of the predefined values, depending on result on 
+     *  predicate evaluation.
+     *  In some sense it is a conversion of "predicate" to "function"
      * 
-     *   const HepMC::GenParticle* p  = ...         ;
+     *  @code
      *
-     *   const bool beauty  = GBEAUTY ( p ) ;
+     *   const HepMC::GenParticle* mcp = ...  ;
      *
+     *   GFun fun = GSSWITCH( GHADRON , 1 , -1 ) 
+     *
+     *   const double value = fun( p ) ;
+     *
+     *  @endcode 
+     *
+     *  For this example function returns 1 if  the particle is hadron and 
+     *   particle and -1 otherwise 
+     *
+     *  @see LoKi::SipleSwitch 
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     */
+    typedef LoKi::SimpleSwitch<const HepMC::GenParticle*>            GSSWITCH ;
+    // ========================================================================    
+    /** @typedef GSTAT
+     *  Simple monitoring counter for the functions
+     *
+     *  @code 
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  // Create the monitored function using the generic counter
+     *  // either local counter, or the counter from IStatSvc or ICounterSvc
+     *  StatEntity* counter = ... ; ///< the generic counter
+     *  GFun mon = STAT ( fun , counter ) ;
+     *
+     *  for ( ... ) 
+     *    {
+     *      ...
+     *      const HepMC::GenParticle* p = ... ;
+     *      const double result = mon( p ) ; ///< use the function
+     *      ...
+     *    }
+     *
+     *  ...
+     *  info () 
+     *     << " Monitoring results : "                 << endreq 
+     *     << " NEntries:  #" << counter->entries  ()  << endreq 
+     *     << " TotalSum:   " << counter->flag     ()  << endreq 
+     *     << " Mean+-RMS:  " << counter->flagMean () 
+     *     << "+="            << counter->flagRMS  ()  << endreq      
+     *     << " Min/Max:    " << counter->flagMin  ()  
+     *     << "/"             << counter->flagMax  ()  << endreq ;
+     *
+     *  @endcode
+     *
+     *  The alternative (recommended) way to create the monitored function
+     *  @code 
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  GFun mon = monitor ( fun , counter("SomeCounter") ) ;
+     *  
+     *  @endcode 
+     *
+     *  The substitution of the function by monitored function 
+     *  cound be done "on-flight" without the disturbing of the
+     *  actual processing:
+     *  @code
+     *
+     *  // some function to be monitored
+     *  GFun fun = ... ;
+     *
+     *  if ( monitoring ) 
+     *    {
+     *       fun = monitor ( fun , "MonitoredFun" ) ;
+     *    }
+     *
+     *  @endcode
+     *
+     *  @attention The string representation of the object 
+     *             is delegated to the underlying function,  
+     *             therefore the object is NOT recontructable 
+     *             from its string representations. It is done 
+     *             on purpose to avoid the disturbing of ids. 
+     * 
+     *  @see LoKi::Monitoring::Stat
+     *  @see LoKi::monitor
+     *  @see StatEntity
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */        
+    typedef LoKi::Monitoring::Stat<const HepMC::GenParticle*>           GSTAT ;
+    // ========================================================================
+    /** @var GSTATUS 
+     *  the primitive evaluator of HepMC::Particle::status()
+     *
+     *  @code 
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *  const int status = (int) GSTATUS( p ) ;
+     * 
      *  @endcode 
      *
      *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::HasQuark
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::HasQuark GBEAUTY( LHCb::ParticleID::bottom ) ;    
-    
-    /** @var GCHARM
-     *  Check for charm quark 
-     *
-     *  @code
+     *  @see LoKi::GenParticles::Status     
      * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool charm  = GCHARM ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see MCParticle
-     *  @see LoKi::GenParticles::HasQuark
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
+     *  @date 2006-08-26
      */
-    const  LoKi::GenParticles::HasQuark GCHARM ( LHCb::ParticleID::charm  ) ;
-
+    const   LoKi::GenParticles::Status                                GSTATUS ;
+    // ========================================================================
     /** @var GSTRANGE
      *  Check for strange quark 
      *
@@ -595,8 +1190,53 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    const  LoKi::GenParticles::HasQuark GSTRANGE ( LHCb::ParticleID::strange ) ;
-    
+    const LoKi::GenParticles::HasQuark GSTRANGE ( LHCb::ParticleID::strange ) ;
+    // ========================================================================    
+    /** switch"
+     *  The function evaluates the predicate and returns 
+     *  the values of one of the predefined functions, 
+     *  depending on result on predicate evaluation.
+     * 
+     *  @code
+     *
+     *   const HepMC::Particle* mcp = ...  ;
+     *
+     *   GFun fun = GSWITCH( HADRON , GP , GE ) ;
+     *
+     *   const double value = fun( p ) ;
+     *
+     *  @endcode 
+     *
+     *  For this example function returns the value of 
+     *  P for hadrons and E for other particles 
+     *
+     *  @see LoKi::Switch 
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     */
+    typedef LoKi::Switch<const HepMC::GenParticle*>                   GSWITCH ;
+    // ========================================================================
+    /** @var GTHETA
+     *  trivial evaluator of 'theta' for HepMC::GenParticle
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::Theta
+     * 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2005-03-26
+     */
+    const   LoKi::GenParticles::Theta                                  GTHETA ;
+    // ========================================================================
+    /** @var GTIME 
+     *  evaluator of particle proper lifetime c*tau (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::ProperLifeTime 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::ProperLifeTime                            GTIME ;
+    // ========================================================================
     /** @var GTOP
      *  Check for TOP  quark 
      *
@@ -613,447 +1253,56 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    const  LoKi::GenParticles::HasQuark GTOP  ( LHCb::ParticleID::top     ) ;
-    
-    /** @var GCHARGED
-     *  Check for particle charge 
-     *
-     *  @code
-     * 
-     *   const HepMC::Particle* p  = ...         ;
-     *
-     *   const bool charged = GCHARGED ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsCharged
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
+    const LoKi::GenParticles::HasQuark         GTOP ( LHCb::ParticleID::top ) ;
+    // ========================================================================    
+    /** @var GTRUE 
+     *  primitive predicate, "always true"
+     *  @see LoKi::BooleanConstant
+     *  @see LoKi::Cuts::PTRUE 
+     *  @see LoKi::Cuts::VTRUE 
+     *  @see LoKi::Cuts::MCTRUE 
+     *  @see LoKi::Cuts::MCVTRUE 
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
      */
-    const  LoKi::GenParticles::IsCharged GCHARGED ;
-    
-    /** @var GNEUTRAL
-     *  Check for particle charge 
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool neutral = GNEUTRAL ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsNeutral
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsNeutral  GNEUTRAL ;
-    
-    /** @var GLEPTON 
-     *  Check for particle type   
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool lepton  = GLEPTON  ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsLepton 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsLepton  GLEPTON  ;
-
-    /** @var GMESON  
-     *  Check for particle type   
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool meson   = GMESON   ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsMeson  
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsMeson GMESON   ;
-
-    /** @var GBARYON 
-     *  Check for particle type   
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool baryon  = GBARYON  ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsBaryon 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsBaryon GBARYON  ;
-
-    /** @var GHADRON 
-     *  Check for particle type   
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool hadron  = GHADRON  ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsHadron 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsHadron GHADRON  ;
-
-   /** @var GNUCLEUS
-     *  Check for particle type   
-     *
-     *  @code
-     * 
-     *   const HepMC::GenParticle* p  = ...         ;
-     *
-     *   const bool nucleus = GNUCLEUS ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::IsNucleus
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const  LoKi::GenParticles::IsNucleus GNUCLEUS ;
-
-    /** @var GP 
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *
-     *  @see LoKi::GenParticles::Momentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Momentum GP ;
-
-    /** @var GPT 
-     *  evaluator of particle transverse momentum (in HepMC units)
-     *
-     *
-     *  @see LoKi::GenParticles::TransverseMomentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::TransverseMomentum GPT ;
-
-    /** @var GE
-     *  evaluator of particle energy (in HepMC units)
-     *
-     *
-     *  @see LoKi::GenParticles::Energy
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Energy      GE ;
-
-    /** @var GM
-     *  evaluator of particle mass (in HepMC units)
-     *
-     *
-     *  @see LoKi::GenParticles::Mass
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Mass GM ;
-
-
-    /** @var GPX 
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumX
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumX GPX ;
-
-    /** @var GPY
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumY
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumY GPY ;
-
-    /** @var GPZ
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumZ
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumZ GPZ ;
-
-    /** @var GTIME 
-     *  evaluator of particle proper lifetime c*tau (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::ProperLifeTime 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::ProperLifeTime GTIME  ;
-
-    /** evaluator of particle proper lifetime c*tau (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::ProperLifeTime 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    typedef LoKi::GenParticles::ProperLifeTime GCTAU ;
-    
-    /** evaluator of particle NOMINAL proper lifetime c*tau (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::NominalLifeTime 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::NominalLifeTime GNLT ;
-    
-    /** helper adapter which delegates the evaluation of the 
-     *  "vertex" function to production vertex of the particle
-     *
-     *  Extract all particles, which are produces at |z|<10 
-     *
-     *  @code 
-     * 
-     *  const LHCb::HepMCEvents* events 
-     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
-     *  
-     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
-     *  
-     *  PARTICLES parts ;
-     * 
-     *  // create the predicate:
-     *  GCut cut = GFAPVX( abs( GVZ  ) , 0 )  < 10 ;
-     * 
-     *  LoKi::Extract::genParticles 
-     *    ( events , std::back_inserter ( parts )  , cut ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Cuts::GVZ 
-     *  @see HepMC::GenParticle 
-     *  @see HepMC::GenVertex 
-     *  @see LoKi::Extract::genParticles 
-     *  @see LoKi::GenParticles::AdapterToProductionVertex
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-08
-     */
-    typedef LoKi::GenParticles::AdapterToProductionVertex  GFAPVX ;
-
-    /** helper adapter which delegates the evaluation of the 
-     *  "vertex" function to end vertex of the particle
-     *
-     *  Extract all particles, which are decayed after z > 1000 
-     *
-     *  @code 
-     * 
-     *  const LHCb::HepMCEvents* events 
-     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
-     *  
-     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
-     *  
-     *  PARTICLES parts ;
-     * 
-     *  // create the predicate:
-     *  GCut cut = GFAEVX( GVZ  , 10000  ) >  1000 ;
-     * 
-     *  LoKi::Extract::genParticles 
-     *    ( events , std::back_inserter ( parts )  , cut ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Cuts::GVZ
-     *  @see HepMC::GenParticle 
-     *  @see HepMC::GenVertex 
-     *  @see LoKi::Extract::genParticles 
-     *  @see LoKi::GenParticles::AdapterToEndVertex
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-08
-     */
-    typedef LoKi::GenParticles::AdapterToEndVertex         GFAEVX ;    
-    
-    /** @var G3Q
-     *  The trivial evaluator of 3*chareg of the particle 
-     *
-     *  @code 
-     *
-     *  const HepMC::GenParticle* p = ... ;
-     *  
-     *  const bool positive = 0 < G3Q( p ) ;
-     *
-     *  @endcode 
-     * 
-     *  Algorithm: 
-     *
-     *   HepMC::GenParticle:pdg_id -> LHCb::ParticleID -> threeCharge 
-     *
-     *  @author Vanya BELYAVE ibelyaev@physics.syr.edu
-     *  @date 2006-03-07
-     */
-    const LoKi::GenParticles::ThreeCharge                  G3Q    ;    
-    
-    /** @typedef GDPHI
-     *  simple evaluator of "delta phi" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double phi = ... ;
-     * 
-     *   // create the function: 
-     *  GFun dphi = GDPHI(phi) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = dphi ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaPhi 
-     *  @see LoKi::GenParticless::Phi
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaPhi                    GDPHI ;
-
-    /** @typedef GDETA
-     *  simple evaluator of "delta eta" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double eta = ... ;
-     * 
-     *   // create the function: 
-     *  GFun deta = GDETA(eta) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = deta ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaEta 
-     *  @see LoKi::GenParticless::Eta
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaEta                    GDETA ;
-
-    /** @typedef GDR2 
-     *  simple evaluator of "delta eta" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double et
-     * 
-     *   // create the function: 
-     *  GFun r2 = GDR2( v ) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = r2 ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaR2  
-     *  @see LoKi::GenParticless::DeltaEta
-     *  @see LoKi::GenParticless::DeltaPhi
-     *  @see LoKi::Cuts::GDELTAR2 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaR2                     GDR2     ;
-
-    /** @typedef GDELTAR2 
-     *  simple evaluator of "delta eta" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double et
-     * 
-     *   // create the function: 
-     *  GFun r2 = GDELTAR2( v ) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = r2 ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaR2  
-     *  @see LoKi::GenParticless::DeltaEta
-     *  @see LoKi::GenParticless::DeltaPhi
-     *  @see LoKi::Cuts::GDR2 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaR2                     GDELTAR2 ;
+    const LoKi::BooleanConstant<const HepMC::GenParticle*>    GTRUE ( true  ) ;
     // ========================================================================
-    /** @typedef GINTREE
-     *  simple meta function to check the presence of the particl in the 
-     *  decay tree of the particle:
-     *
-     *  @code
-     *   // check for semiletonic decays of B-meson:
-     *   const HepMC::GenParticle* B = ... ;
-     *   // create the predicate:
-     *   GCut hasEorMu = GINTREE ( "e+" == GABSID || "mu+" == GABSID ) ;
-     *   // use the predicate!
-     *   const bool semileptonic = hasEorMu ( B ) ;
-     *
-     *  @endcode 
-     *  @see LoKi::GenAlgs::found 
-     *  @see LoKi::GenParticles::InTree
-     *  @author Vanya BELYAEV ibelyaev@physic.syr.edu
-     *  @date 2007-06-03
+    /** @var GVALID 
+     *  Simple predicate which checks the ildty of the pointer 
+     *  @author Vanya BELYAEV belyaev@physics.syr.edu
+     *  @date 2007-07-22
      */
-    typedef LoKi::GenParticles::InTree                      GINTREE  ;
-    // ========================================================================   
+    const LoKi::Valid<const HepMC::GenParticle*>                       GVALID ;
+    // ========================================================================
+    /** @var GVEV
+     *  primitive predicate to check the validity of "end_vertex" 
+     *  for HepMC::GenParticle object
+     *
+     *  The schematic algorithm:
+     *
+     *    0 != HepMC::GenParticle::end_vertex() 
+     *
+     *   @code 
+     *   
+     *    const HepMC::GenParticle* p = ... ; 
+     *   
+     *    const bool valid  = GVEV ( p ) ;
+     *
+     *   @endcode 
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-26
+     */
+    const   LoKi::GenParticles::ValidEndVertex                           GVEV ;
+    // ========================================================================
+    /** @var GZERO
+     *  primitive function, "always 0"
+     *  @see LoKi::Constant
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+     *  @date 2005-03-27
+     */
+    const LoKi::Constant<const HepMC::GenParticle*>               GZERO ( 0 ) ;    
+    // ========================================================================
   } // end of namespace LoKi::Cuts  
 } // end of namespace LoKi
 // ============================================================================

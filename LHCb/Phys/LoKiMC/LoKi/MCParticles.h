@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.13 2007-06-04 09:57:29 cattanem Exp $
+// $Id: MCParticles.h,v 1.14 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -13,7 +13,6 @@
 // Event 
 // ============================================================================
 #include "Event/MCParticle.h"
-#include "Event/MCVertex.h"
 // ============================================================================
 // MCInterfaces
 // ============================================================================
@@ -31,10 +30,6 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCPIDOperators.h"
 // ============================================================================
-// forward declarations 
-// ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -49,7 +44,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {  
   /** @namespace LoKi::MCParticles MCParticles.h LoKi/MCParticles.h  
@@ -59,13 +53,13 @@ namespace LoKi
    */
   namespace  MCParticles 
   {
+    // ========================================================================
     /** @class Momentum 
      *  evaluator of the momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum 
-      : public LoKi::Function<const LHCb::MCParticle*> 
+    class Momentum : public LoKi::Function<const LHCb::MCParticle*> 
     {
     public:
       /// clone method (mandatory!)
@@ -75,15 +69,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class Energy 
      *  evaluator of the energy of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Energy 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class Energy : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -93,15 +86,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class TransverseMomentum
      *  evaluator of the transverse momentum of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TransverseMomentum 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class TransverseMomentum : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -111,15 +103,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class MomentumX
      *  evaluator of the x component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumX 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumX : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -129,15 +120,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class MomentumY
      *  evaluator of the y component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumY 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumY : public LoKi::Function<const LHCb::MCParticle*>
     {  
     public:
       /// clone method (mandatory!)
@@ -147,15 +137,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class MomentumZ
      *  evaluator of the z component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumZ
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumZ : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -165,15 +154,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class PseudoRapidity
      *  evaluator of the seudorapidity of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class PseudoRapidity : public LoKi::Function<const LHCb::MCParticle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -183,15 +171,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class Theta
      *  evaluator of the pseudorapidity of the particle 
      *  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2002-07-15
      */
-    class Theta 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class Theta : public LoKi::Function<const LHCb::MCParticle*>
     {  
     public:
       /// clone method (mandatory!)
@@ -201,15 +188,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class Phi
      *  evaluator of the 'Phi' of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class Phi : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -219,15 +205,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class Mass
      *  evaluator of the mass of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Mass 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class Mass : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -237,15 +222,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class Identifier
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class Identifier : public LoKi::Function<const LHCb::MCParticle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -255,15 +239,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class AbsIdentifier
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class AbsIdentifier : public LoKi::Function<const LHCb::MCParticle*>
     {      
     public:
       /// clone method (mandatory!)
@@ -272,8 +255,8 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
-    };
-    
+    }; 
+    // ========================================================================    
     /** @class Oscillated
      *
      *  It evaluates to 'true' for oscillated particles 
@@ -281,8 +264,7 @@ namespace LoKi
      *  @author Vanya Belyaev ibelyaev@physics.syr.edu
      *  @date   2006-02-05
      */
-    class Oscillated
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class Oscillated : public LoKi::Predicate<const LHCb::MCParticle*>
     {      
     public:
       /// clone method (mandatory!)
@@ -292,15 +274,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class ThreeCharge
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ThreeCharge 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class ThreeCharge : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -310,7 +291,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
+    // ========================================================================    
     /** @class ProperLifeTime 
      *  evaluator of the proper lifetime of the particle 
      *  
@@ -321,8 +302,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class ProperLifeTime 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class ProperLifeTime : public LoKi::Function<const LHCb::MCParticle*>
     { 
     public:
       /// clone method (mandatory!)
@@ -332,15 +312,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class HasQuark 
      *  simple predicate , return true if particle has quark 'quark'
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class  HasQuark  
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class  HasQuark : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       HasQuark (  const LHCb::ParticleID::Quark quark ) ;
@@ -359,14 +338,13 @@ namespace LoKi
     private :
       LHCb::ParticleID::Quark m_quark ;
     };
-
+    // ========================================================================    
     /** @class IsCharged
      *  simple predicate , return true if the particle is charged 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsCharged 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsCharged : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -376,14 +354,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsNeutral
      *  simple predicate , return true if the particle is neutral
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNeutral 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNeutral : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -393,14 +370,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsLepton
      *  simple predicate , return true if the particle is a lepton
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsLepton 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsLepton : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -410,14 +386,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsMeson
      *  simple predicate , return true if the particle is a meson
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsMeson 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsMeson : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -427,14 +402,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsBaryon
      *  simple predicate , return true if the particle is a baryon
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsBaryon 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsBaryon : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -444,14 +418,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsHadron
      *  simple predicate , return true of particle is hadron
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsHadron 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsHadron : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -461,14 +434,13 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class IsNucleus
      *  simple predicate , return true of particle is nucleus
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNucleus 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNucleus : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// clone method (mandatory!)
@@ -478,15 +450,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class FromMCDecayTree 
      *  simple predicate whoch evaluates if the MC particle belons to 
      *  MC decay tree of other MC particle
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class FromMCDecayTree 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class FromMCDecayTree : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     protected:
       typedef std::vector<const LHCb::MCParticle*> MCCont ;
@@ -570,8 +541,7 @@ namespace LoKi
           if ( code.isFailure() ) { sc = code ; }
         } 
         return sc ;
-      };
-      
+      }; 
       /** set new LHCb::MCParticles 
        *  @param first begin of sequence 
        *  @param last  end of the sequence  
@@ -584,13 +554,12 @@ namespace LoKi
         m_cont.clear() ;
         return add ( first , last ) ;
       };
-
     private:
       FromMCDecayTree();
     private:
       MCCont m_cont ;
     };
-    
+    // ========================================================================    
     /** @class NinMCdownTree 
      *  Simple function to count teh appearence 
      *  of predicate over the decay tree (down!)
@@ -615,7 +584,7 @@ namespace LoKi
     private:
       LoKi::MCTypes::MCCut m_cut ;
     };
-    
+    // ========================================================================    
     /** @class MCMotherFunction
      *  simple adapter function which 
      *  delegates the evaluation of 
@@ -646,7 +615,7 @@ namespace LoKi
       double               m_val ;
       LoKi::MCTypes::MCFun m_fun ;
     };
-    
+    // ========================================================================    
     /** @class MCMotherPredicate 
      *  simple adapter function which 
      *  delegates the evaluation of 
@@ -679,7 +648,7 @@ namespace LoKi
       bool                 m_val ;
       LoKi::MCTypes::MCCut m_cut ;
     };
-    
+    // ========================================================================    
     /** @class IsParticle
      *  Trivial predicate to check 
      *  if particle is identical
@@ -687,8 +656,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-02-02
      */
-    class IsParticle : 
-      public LoKi::Predicate<const LHCb::MCParticle*> 
+    class IsParticle : public LoKi::Predicate<const LHCb::MCParticle*> 
     {
     public:
       typedef std::vector<const LHCb::MCParticle*> Objects;
@@ -731,7 +699,7 @@ namespace LoKi
     private:
       Objects m_objects ; 
     };
-    
+    // ========================================================================    
     /** @class IsContainedObject 
      *  Trivial predicate to check 
      *  if particle is identical
@@ -739,8 +707,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-02-02
      */
-    class IsContainedObject : 
-      public LoKi::Predicate<const LHCb::MCParticle*> 
+    class IsContainedObject : public LoKi::Predicate<const LHCb::MCParticle*> 
     {
     public:
       typedef std::vector<const ContainedObject*> Objects;
@@ -775,9 +742,8 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     private:
       Objects m_objects ; 
-    };
-
-    
+    };    
+    // ========================================================================    
     /** @class MomentumDistance 
      *  Trivial evaluator of EUCLIDIAN distance 
      *  of 4-momentums; it could be useful e.g. 
@@ -804,13 +770,16 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class MomentumDistance : 
-      public LoKi::Function<const LHCb::MCParticle*> 
+    class MomentumDistance : public LoKi::Function<const LHCb::MCParticle*> 
     {
     public:
-      /** constructor from the given 4-momentum
-       *  @param vct 4-momentum 
-       */
+      /// constructor from four components
+      MomentumDistance
+      ( const double px , 
+        const double py , 
+        const double pz , 
+        const double e  ) ;
+      /// constructor from the given 4-momentum
       MomentumDistance ( const LoKi::LorentzVector& vct ) ;
       /** copy constructor
        *  @param right object to be copied 
@@ -830,7 +799,7 @@ namespace LoKi
     private:
       LoKi::LorentzVector m_vct ;
     };
-
+    // ========================================================================    
     /** @class TransverseMomentumRel
      *  Trivial evaluator of the transverse momenrum, 
      *  relatve to the given direction 
@@ -849,10 +818,11 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class TransverseMomentumRel :
-      public LoKi::Function<const LHCb::MCParticle*> 
+    class TransverseMomentumRel : public LoKi::Function<const LHCb::MCParticle*> 
     {
     public:
+      /// constructor from theta & phi 
+      TransverseMomentumRel ( const double theta , const double phi ) ;
       /** constructor
        *  @param vct direction vertor 
        *  @see LoKi::ThreeVector 
@@ -878,7 +848,7 @@ namespace LoKi
     private:
       LoKi::ThreeVector m_vct ;
     };
-    
+    // ========================================================================    
     /** @class DeltaPhi
      *  Simple evaluator of "DeltaPhi" for the particle
      *
@@ -887,8 +857,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaPhi : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /// constructor from the angle
@@ -932,6 +901,9 @@ namespace LoKi
     public:
       /// adjust delta phi into the raneg of [-180:180]degrees 
       const double adjust ( double phi ) const ;
+    public:
+      // accessor to phi0
+      double phi0() const { return m_phi ; }      
     private:
       // the default constructor is disabled 
       DeltaPhi ();
@@ -941,7 +913,7 @@ namespace LoKi
       // the angle itself 
       double                  m_phi  ; ///< the angle itself 
     } ;
-
+    // ========================================================================    
     /** @class DeltaEta
      *  Simple evaluator of "DeltaEta" for the particle
      *
@@ -950,8 +922,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaEta : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /// constructor from the eta
@@ -989,6 +960,9 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      // accessor to eta0
+      double eta0() const { return m_eta ; }
     private:
       // the default constructor is disabled 
       DeltaEta ();
@@ -997,8 +971,8 @@ namespace LoKi
       LoKi::MCParticles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
       // the angle itself 
       double                             m_eta  ; ///< the angle itself 
-   } ;
-
+    } ;
+    // ========================================================================    
     /** @class DeltaR2
      *  Simple evaluator of "DeltaPhi**2+ DeltaEta**2"
      *
@@ -1014,10 +988,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaR2 : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
+      /// constructor from eta and phi 
+      DeltaR2 ( const double eta , const double phi ) ;
       /// constructor from the vector 
       DeltaR2 ( const LoKi::ThreeVector&   v ) ;
       /// constructor from the vector 
@@ -1056,16 +1031,15 @@ namespace LoKi
       LoKi::MCParticles::DeltaPhi m_dphi ; ///< the actual evaluator of delta phi
       // the actual evaluator of delta eta
       LoKi::MCParticles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
-    } ;
-    
+    } ;    
+    // ========================================================================    
     /** @class ValidOrigin 
      *  Trivial predicat eto test teh valdity of "origin" vertex 
      *  for Monte Carlo particle
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class ValidOrigin 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class ValidOrigin : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// MANDATORY : virtual destructor 
@@ -1077,15 +1051,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-    
+    // ========================================================================    
     /** @class MCVertexFunAdapter 
      *  simple function adapter which forward the 
      *  real evaluation to "originVertex" 
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCVertexFunAdapter 
-      : public LoKi::Function<const LHCb::MCParticle*> 
+    class MCVertexFunAdapter : public LoKi::Function<const LHCb::MCParticle*> 
     {
     public  :
       /** constructor from vertex funtion 
@@ -1108,7 +1081,7 @@ namespace LoKi
       LoKi::MCTypes::MCVFun m_fun ;
       double                m_err ;
     };
-    
+    // ========================================================================    
     /** @class MCDecayPattern
      *  Simple predicate to test certain decay pattern, using
      *  nice tool IMCDecayFinder, developed by Olivier Dormond 
@@ -1135,8 +1108,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCDecayPattern 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCDecayPattern : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /** constructor 
@@ -1175,7 +1147,7 @@ namespace LoKi
       LoKi::Interface<IMCDecayFinder> m_finder ;
       std::string                     m_decay  ;
     };
-    
+    // ========================================================================    
     /** @class MCFilter
      *  The simple class-adapter to IMCParticleSelector tool
      *  @see IMCParticleSelector
@@ -1183,8 +1155,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
-    class MCFilter
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCFilter : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// constructor from selector 
@@ -1208,6 +1179,7 @@ namespace LoKi
       // the selector itself
       LoKi::Interface<IMCParticleSelector> m_selector ; ///< the selector itself
     };
+    // ========================================================================    
     /** @class MCReconstructuble
      *  Simple function which evaluates the "MCRecontructible" category
      *  @see IMCRecontructible
@@ -1215,8 +1187,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-01
      */
-    class MCReconstructible
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MCReconstructible : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /// constructor from the tool 
@@ -1235,7 +1206,8 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
     public:
       /// cast operator to the underlying tool 
-      operator const LoKi::Interface<IMCReconstructible>& () const { return m_eval ; }
+      operator const LoKi::Interface<IMCReconstructible>& () const
+      { return m_eval ; }
     private:
       // default constructor is disabled 
       MCReconstructible () ; ///< default constructor is disabled
@@ -1243,6 +1215,7 @@ namespace LoKi
       // the underlying tool
       LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
     } ;
+    // ========================================================================    
     /** @class MCReconstructubleAs
      *  Simple function which checks 
      *     the "MCRecontructible" category
@@ -1251,8 +1224,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-01
      */
-    class MCReconstructibleAs 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCReconstructibleAs : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// constructor from the tool and category 
@@ -1293,6 +1265,7 @@ namespace LoKi
       // the recontruction category 
       IMCReconstructible::RecCategory     m_cat  ; ///< the recontruction category
     } ;    
+    // ========================================================================    
     /** @class ChildFunction
      *  Simple adapter function which 
      *  apply the function to a daughter MC-particle
@@ -1313,8 +1286,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
-    class ChildFunction
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class ChildFunction : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** constructor from the function and daughter index 
@@ -1356,6 +1328,7 @@ namespace LoKi
       // return value for invalid particle 
       double               m_bad   ; ///< return value for invalid particle 
     } ;
+    // ========================================================================    
     /** @class ChildPredicate
      *  Simple adapter predicate  which 
      *  apply the predicate to a daughter  particle
@@ -1376,8 +1349,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
-    class ChildPredicate 
-      : public LoKi::Predicate<const LHCb::MCParticle*>
+    class ChildPredicate : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /** constructor from the function and daughter index 
@@ -1419,6 +1391,7 @@ namespace LoKi
       // bad value to be returned for invalid particle 
       bool                 m_bad   ;  ///< bad value
     };
+    // ========================================================================    
     /** @class InTree
      *  The trivial predicate which evaluates to true 
      *  if there is at least one particle in the decay 
@@ -1434,8 +1407,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree 
-      : public LoKi::Predicate<const LHCb::MCParticle*> 
+    class InTree : public LoKi::Predicate<const LHCb::MCParticle*> 
     {
     public:
       /** standard constructor 
@@ -1461,7 +1433,7 @@ namespace LoKi
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
     } ;
-    
+    // ========================================================================    
     /** @class NinTree
      *  The simple funtion which evaluates the number 
      *  of particle in decay tree which satisfies the certan criteria 
@@ -1475,8 +1447,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class NinTree 
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class NinTree : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** standard constructor 
@@ -1501,7 +1472,7 @@ namespace LoKi
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
     };
-    
+    // ========================================================================    
     /** @class SumTree
      *
      *  The simple function which accumulated the 
@@ -1519,8 +1490,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class SumTree
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class SumTree : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** standard constructor 
@@ -1564,6 +1534,7 @@ namespace LoKi
       bool                 m_decayOnly ;
       double               m_res       ;
     };
+    // ========================================================================    
     /** @class MultTree
      *
      *  The simple function which accumulated the 
@@ -1581,8 +1552,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MultTree
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MultTree : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** standard constructor 
@@ -1626,6 +1596,7 @@ namespace LoKi
       bool                 m_decayOnly ;
       double               m_res       ;
     };
+    // ========================================================================    
     /** @class MinTree
      *
      *  The trivial algorithm which scans the decay 
@@ -1642,8 +1613,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MinTree
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MinTree : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** standard constructor 
@@ -1689,6 +1659,7 @@ namespace LoKi
       bool                 m_decayOnly ;
       double               m_res       ;
     };
+    // ========================================================================    
     /** @class MaxTree
      *
      *  The trivial algorithm which scans the decay 
@@ -1705,8 +1676,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MaxTree
-      : public LoKi::Function<const LHCb::MCParticle*>
+    class MaxTree : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
       /** standard constructor 
@@ -1752,6 +1722,7 @@ namespace LoKi
       bool                 m_decayOnly ;
       double               m_res       ;
     };
+    // ========================================================================    
   } // end of namespace LHCb::MCParticles 
 } // end of namespace LoKi
 // ============================================================================

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file decorators.py LoKiCore/decorators.py
-#  The set of basic decorator for objects from LoKiGen library
+## @file LoKiCore/functions.py
+#  The full set of useful objects from LoKiGen library 
 #  The file is a part of LoKi and Bender projects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic decorators for obejcts from LoKiGen library """
+""" The full set of useful objects from LoKiGen library """
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
@@ -61,112 +61,132 @@ GVCut  = LoKi.PredicateFromPredicate ( _GV )
 ## All concrete types 
 # =============================================================================
 
-## @see LoKi::Cuts::GTRUE
-GTRUE     = LoKi.BooleanConstant( _GP )(True)
-## @see LoKi::Cuts::GFALSE
-GFALSE    = LoKi.BooleanConstant( _GP )(False)
-## @see LoKi::Cuts::GALL
-GALL      = GTRUE
-## @see LoKi::Cuts::GNONE
-GNONE     = GFALSE
-## @see LoKi::Cuts::GONE
-GONE      = LoKi.Constant ( _GP )(1.0)
-## @see LoKi::Cuts::GZERO
-GZERO     = LoKi.Constant ( _GP )(0.0)
-## @see LoKi::Cuts::GMIN
-GMIN      = LoKi.Min( _GP )
-## @see LoKi::Cuts::GMAX
-GMAX      = LoKi.Max( _GP )
-## @see LoKi::Cuts::GSWITCH
-GSWITCH   = LoKi.Switch( _GP )
-## @see LoKi::Cuts::GSSWITCH
-GSSWITCH  = LoKi.SimpleSwitch( _GP )
-## @see LoKi::Cuts::GVALID
-GVALID    = LoKi.Valid(_GP)()
-## @see LoKi::Cuts::GSAME
-GSAME     = LoKi.TheSame(_GP)
-## @see LoKi::Cuts::GBAR
-GBAR      = LoKi.GenParticles.BarCode()
-## @see LoKi::Cuts::GBARCODE 
-GBARCODE  = GBAR
-## @see LoKi::Cuts::GID
-GID       = LoKi.GenParticles.Identifier()
-## @see LoKi::Cuts::GABSID
-GABSID    = LoKi.GenParticles.AbsIdentifier()
-## @see LoKi::Cuts::GSTATUS
-GSTATUS   = LoKi.GenParticles.Status()
-## @see LoKi::Cuts::GETA
-GETA      = LoKi.GenParticles.PseudoRapidity()
-## @see LoKi::Cuts::GPHI
-GPHI      = LoKi.GenParticles.Phi()
-## @see LoKi::Cuts::GTHETA
-GTHETA    = LoKi.GenParticles.Theta()
-## @see LoKi::Cuts::GVEV
-GVEV      = LoKi.GenParticles.ValidEndVertex()
-## @see LoKi::Cuts::GMOMDIST
-GMOMDIST  = LoKi.GenParticles.MomentumDistance
-## @see LoKi::Cuts::GPTDIR
-GPTDIR    = LoKi.GenParticles.TransverseMomentumRel
-## @see LoKi::Cuts::GNINTREE
-GNINTREE  = LoKi.GenParticles.NInTree
-## @see LoKi::Cuts::GFROMTREE
-GFROMTREE = LoKi.GenParticles.FromHepMCTree
-## @see LoKi::Cuts::GANCESTOR
-GANCESTOR = LoKi.GenParticles.IsAnAncestor
-## @see LoKi::Cuts::GQUARK
-GQUARK    = LoKi.GenParticles.HasQuark
-## @see LoKi::Cuts::GBEAUTY
-##GBEAUTY   = GQUARK( _LHCb.ParticleID.bottom  )
-GBEAUTY   = GQUARK( 5 )
-## @see LoKi::Cuts::GCHARM
-##GCHARM    = GQUARK( _LHCb.ParticleID.charm   )
-GCHARM    = GQUARK( 4 )
-## @see LoKi::Cuts::GSTRANGE
-## GSTRANGE  = GQUARK( _LHCb.ParticleID.strange )
-GSTRANGE  = GQUARK( 3 )
-## @see LoKi::Cuts::GTOP
-##GTOP      = GQUARK( _LHCb.ParticleID.top     )
-GTOP      = GQUARK( 6 )
-## @see LoKi::Cuts::GNEUTRAL
-GNEUTRAL  = LoKi.GenParticles.IsNeutral() 
-## @see LoKi::Cuts::GLEPTON
-GLEPTON   = LoKi.GenParticles.IsLepton() 
-## @see LoKi::Cuts::GMESON
-GMESON   = LoKi.GenParticles.IsMeson() 
-## @see LoKi::Cuts::GBARYON
-GBARYON  = LoKi.GenParticles.IsBaryon() 
-## @see LoKi::Cuts::GHADRON
-GHADRON  = LoKi.GenParticles.IsHadron() 
-## @see LoKi::Cuts::GNUCLEUS
-GNUCLEUS = LoKi.GenParticles.IsNucleus() 
-## @see LoKi::Cuts::GP
-GP       = LoKi.GenParticles.Momentum() 
-## @see LoKi::Cuts::GPT
-GPT      = LoKi.GenParticles.TransverseMomentum() 
-## @see LoKi::Cuts::GE
-GE       = LoKi.GenParticles.Energy()
-## @see LoKi::Cuts::GM
-GM       = LoKi.GenParticles.Mass() 
-## @see LoKi::Cuts::GPX
-GPX      = LoKi.GenParticles.MomentumX() 
-## @see LoKi::Cuts::GPY
-GPY      = LoKi.GenParticles.MomentumY() 
-## @see LoKi::Cuts::GPZ
-GPZ      = LoKi.GenParticles.MomentumZ() 
-## @see LoKi::Cuts::GTIME
-GTIME    = LoKi.GenParticles.ProperLifeTime() 
-## @see LoKi::Cuts::GCTAU
-GTIME    = GTIME
-## @see LoKi::Cuts::GNLT
-GNLT     = LoKi.GenParticles.NominalLifeTime() 
-## @see LoKi::Cuts::GFAPVX
-GFAPVX   = LoKi.GenParticles.AdapterToProductionVertex
-## @see LoKi::Cuts::GFAEVX
-GFAEVX   = LoKi.GenParticles.AdapterToEndVertex
+
 ## @see LoKi::Cuts::G3Q
 G3Q      = LoKi.GenParticles.ThreeCharge() 
+## @see LoKi::Cuts::GABSID
+GABSID    = LoKi.GenParticles.AbsIdentifier()
+## @see LoKi::Cuts::GALL
+GALL      = LoKi.BooleanConstant ( _GP ) ( True ) 
+## @see LoKi::Cuts::GANCESTOR
+GANCESTOR = LoKi.GenParticles.IsAnAncestor
+## @see LoKi::Cuts::GBAR
+GBAR      = LoKi.GenParticles.BarCode ()
+## @see LoKi::Cuts::GBARCODE 
+GBARCODE  = LoKi.GenParticles.BarCode ()
+## @see LoKi::Cuts::GBARYON
+GBARYON  = LoKi.GenParticles.IsBaryon() 
+## @see LoKi::Cuts::GBEAUTY
+##GBEAUTY   = GQUARK( LHCb.ParticleID.bottom  )
+GBEAUTY   = LoKi.GenParticles.HasQuark ( 5 )
+## @see LoKi::Cuts::GCHARGED
+GCHARGED  = LoKi.GenParticles.IsCharged ()
+## @see LoKi::Cuts::GCHARM
+##GCHARM  = GQUARK( LHCb.ParticleID.charm  )
+GCHARM    = LoKi.GenParticles.HasQuark ( 4 )
+## @see LoKi::Cuts::GCOUNTER
+GCOUNTER  = LoKi.Monitoring.Counter ( _GP )
+## @see LoKi::Cuts::GCTAU
+GCTAU     = LoKi.GenParticles.ProperLifeTime ()
+## @see LoKi::Cuts::GDELTAR2
+GDELTAR2  = LoKi.GenParticles.DeltaR2   
+## @see LoKi::Cuts::GDETA
+GDETA     = LoKi.GenParticles.DeltaEta  
+## @see LoKi::Cuts::GDPHI
+GDPHI     = LoKi.GenParticles.DeltaPhi  
+## @see LoKi::Cuts::GDR2
+GDR2      = LoKi.GenParticles.DeltaR2   
+## @see LoKi::Cuts::GE
+GE        = LoKi.GenParticles.Energy  ()
+## @see LoKi::Cuts::GETA
+GETA      = LoKi.GenParticles.PseudoRapidity ()
+## @see LoKi::Cuts::GFALSE
+GFALSE    = LoKi.BooleanConstant( _GP )(False)
+## @see LoKi::Cuts::GFAEVX
+GFAEVX   = LoKi.GenParticles.AdapterToEndVertex
+## @see LoKi::Cuts::GFAPVX
+GFAPVX   = LoKi.GenParticles.AdapterToProductionVertex
+## @see LoKi::Cuts::GFROMTREE
+GFROMTREE = LoKi.GenParticles.FromHepMCTree
+## @see LoKi::Cuts::GHADRON
+GHADRON  = LoKi.GenParticles.IsHadron   () 
+## @see LoKi::Cuts::GID
+GID      = LoKi.GenParticles.Identifier ()
 ## @see LoKi::Cuts::GINTREE
 GINTREE  = LoKi.GenParticles.InTree
+## @see LoKi::Cuts::GLEPTON
+GLEPTON   = LoKi.GenParticles.IsLepton  () 
+## @see LoKi::Cuts::GM
+GM       = LoKi.GenParticles.Mass       () 
+## @see LoKi::Cuts::GM0
+GM0      = LoKi.GenParticles.Mass       () 
+## @see LoKi::Cuts::GMASS
+GMASS    = LoKi.GenParticles.Mass       () 
+## @see LoKi::Cuts::GMESON
+GMESON   = LoKi.GenParticles.IsMeson    () 
+## @see LoKi::Cuts::GMOMDIST
+GMOMDIST  = LoKi.GenParticles.MomentumDistance
+## @see LoKi::Cuts::GNEUTRAL
+GNEUTRAL  = LoKi.GenParticles.IsNeutral () 
+## @see LoKi::Cuts::GNINTREE
+GNINTREE  = LoKi.GenParticles.NInTree
+## @see LoKi::Cuts::GNLT
+GNLT     = LoKi.GenParticles.NominalLifeTime () 
+## @see LoKi::Cuts::GNONE
+GNONE    = LoKi.BooleanConstant( _GP )(False)
+## @see LoKi::Cuts::GNUCLEUS
+GNUCLEUS = LoKi.GenParticles.IsNucleus () 
+## @see LoKi::Cuts::GONE
+GONE      = LoKi.Constant ( _GP )( 1.0 )
+## @see LoKi::Cuts::GP
+GP       = LoKi.GenParticles.Momentum () 
+## @see LoKi::Cuts::GPHI
+GPHI      = LoKi.GenParticles.Phi     ()
+## @see LoKi::Cuts::GPLOT
+GPLOT     = LoKi.Monitoring.Plot ( _GP )
+## @see LoKi::Cuts::GPT
+GPT      = LoKi.GenParticles.TransverseMomentum     () 
+## @see LoKi::Cuts::GPT0
+GPT0     = LoKi.GenParticles.TransverseMomentum     () 
+## @see LoKi::Cuts::GPTDIR
+GPTDIR    = LoKi.GenParticles.TransverseMomentumRel
+## @see LoKi::Cuts::GPTREL
+GPTREL    = LoKi.GenParticles.TransverseMomentumRel
+## @see LoKi::Cuts::GPX
+GPX      = LoKi.GenParticles.MomentumX () 
+## @see LoKi::Cuts::GPY
+GPY      = LoKi.GenParticles.MomentumY () 
+## @see LoKi::Cuts::GPZ
+GPZ      = LoKi.GenParticles.MomentumZ () 
+## @see LoKi::Cuts::GQUARK
+GQUARK    = LoKi.GenParticles.HasQuark
+## @see LoKi::Cuts::GSSWITCH
+GSSWITCH  = LoKi.SimpleSwitch    ( _GP )
+## @see LoKi::Cuts::GSTAT
+GSTAT     = LoKi.Monitoring.Stat ( _GP )
+## @see LoKi::Cuts::GSTATUS
+GSTATUS   = LoKi.GenParticles.Status ( )
+## @see LoKi::Cuts::GSTRANGE
+## GSTRANGE  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.strange )
+GSTRANGE  = LoKi.GenParticles.HasQuark ( 3 )
+## @see LoKi::Cuts::GSWITCH
+GSWITCH   = LoKi.Switch          ( _GP )
+## @see LoKi::Cuts::GTHETA
+GTHETA    = LoKi.GenParticles.Theta ()
+## @see LoKi::Cuts::GTIME
+GTIME    = LoKi.GenParticles.ProperLifeTime () 
+## @see LoKi::Cuts::GTOP
+## GTOP  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.top )
+GTOP     = LoKi.GenParticles.HasQuark ( 6 )
+## @see LoKi::Cuts::GTRUE
+GTRUE    = LoKi.BooleanConstant ( _GP )( True )
+## @see LoKi::Cuts::GVALID
+GVALID   = LoKi.Valid           ( _GP ) ()
+## @see LoKi::Cuts::GVEV
+GVEV     = LoKi.GenParticles.ValidEndVertex()
+## @see LoKi::Cuts::GZERO
+GZERO     = LoKi.Constant       ( _GP )( 0.0 )    
+
 
 
 ## @see LoKi::Cuts::GVTRUE

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.4 2007-06-10 19:59:04 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.5 2007-07-23 17:27:31 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -30,51 +30,55 @@
   
   <class pattern   = "LoKi::Constant<*LHCb::MC*>"         />
   <class pattern   = "LoKi::BooleanConstant<*LHCb::MC*>"  />
-
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::MC*>"        />
-  <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::MC*>"    />
-  <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::MC*>"     />
-  <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::MC*>"      />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::MC*>"          />
-  <class pattern   = "LoKi::PredicateFromFunctionAndValue<*LHCb::MC*>" />
-
-  <class pattern   = "LoKi::And<*LHCb::MC*>"              />
-  <class pattern   = "LoKi::Or<*LHCb::MC*>"               />
-  <class pattern   = "LoKi::Not<*LHCb::MC*>"              />
-
-  <class pattern   = "LoKi::Less<*LHCb::MC*>"             />
-  <class pattern   = "LoKi::Equal<*LHCb::MC*>"            />
-  <class pattern   = "LoKi::LessOrEqual<*LHCb::MC*>"      />
-  <class pattern   = "LoKi::NotEqual<*LHCb::MC*>"         />
-
-  <class pattern   = "LoKi::Plus<*LHCb::MC*>"             />
-  <class pattern   = "LoKi::Minus<*LHCb::MC*>"            />
-  <class pattern   = "LoKi::Divide<*LHCb::MC*>"           />
-  <class pattern   = "LoKi::Multiply<*LHCb::MC*>"         />
-
-  <class pattern   = "LoKi::Min<*LHCb::MC*>"              />
-  <class pattern   = "LoKi::Max<*LHCb::MC*>"              />
-
-  <class pattern   = "LoKi::ComposeFunction<*LHCb::MC*>"  />
-  <class pattern   = "LoKi::ComposeFunction2<*LHCb::MC*>" />
-
-  <class pattern   = "LoKi::Compare<*LHCb::MC*>"          />
 
   <class pattern   = "LoKi::SimpleSwitch<*LHCb::MC*>"     />
   <class pattern   = "LoKi::Switch<*LHCb::MC*>"           />
-
   <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
-  <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
-  
+
+<!-- 
+     
+     <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::MC*>"    />
+     <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::MC*>"     />
+     <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::MC*>"      />
+     <class pattern   = "LoKi::PredicateFromFunctionAndValue<*LHCb::MC*>" />
+     
+     <class pattern   = "LoKi::And<*LHCb::MC*>"              />
+     <class pattern   = "LoKi::Or<*LHCb::MC*>"               />
+     <class pattern   = "LoKi::Not<*LHCb::MC*>"              />
+     
+     <class pattern   = "LoKi::Less<*LHCb::MC*>"             />
+     <class pattern   = "LoKi::Equal<*LHCb::MC*>"            />
+     <class pattern   = "LoKi::LessOrEqual<*LHCb::MC*>"      />
+     <class pattern   = "LoKi::NotEqual<*LHCb::MC*>"         />
+     
+     <class pattern   = "LoKi::Plus<*LHCb::MC*>"             />
+     <class pattern   = "LoKi::Minus<*LHCb::MC*>"            />
+     <class pattern   = "LoKi::Divide<*LHCb::MC*>"           />
+     <class pattern   = "LoKi::Multiply<*LHCb::MC*>"         />
+     
+     <class pattern   = "LoKi::Min<*LHCb::MC*>"              />
+     <class pattern   = "LoKi::Max<*LHCb::MC*>"              />
+     
+     <class pattern   = "LoKi::ComposeFunction<*LHCb::MC*>"  />
+     <class pattern   = "LoKi::ComposeFunction2<*LHCb::MC*>" />
+     
+     <class pattern   = "LoKi::Compare<*LHCb::MC*>"          />
+     
+     <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
+     
+-->
   
   <class pattern   = "LoKi::MCParticles::*"                />
   <class pattern   = "LoKi::MCVertices::*"                 />
   
   <function pattern = "LoKi::Kinematics::*"                />
   <function pattern = "LoKi::Print::*"                     />
-  <function pattern = "LoKi::MCChild::*"                     />
-  <function pattern = "LoKi::Dicts::Algs::*"               />
+  <function pattern = "LoKi::MCChild::*"                   />
+  <function pattern = "LoKi::Dicts::MCAlgs::*"             />
   <function pattern = "LoKi::Dicts::MCFinderDicts::*"      />
+  <function pattern = "LoKi::Dicts::moni*"                 />
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />

@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.3 2007-06-10 19:59:04 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.4 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/MoreFunctions.h"
 #include "LoKi/LoKiMC.h"
 #include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
@@ -14,13 +15,16 @@
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/MCAlgsDicts.h"
+#include "LoKi/MCMoniDicts.h"
 #include "LoKi/MCFinderDicts.h"
 // ============================================================================
 namespace
 {
   struct _Instantiations 
   {
-    // the basic types
+    /// fictive constructor 
+    _Instantiations () ;
+   // the basic types
     LoKi::Types::MCRange                          m_r1 ;
     LoKi::Types::MCVRange                         m_r2 ;
     // range lists
@@ -46,9 +50,14 @@ namespace
     /// the special operators for identifiers
     LoKi::Dicts::PIDOps<LoKi::MCParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::MCParticles::AbsIdentifier> m_i2 ;
-    /// fictive constructor 
-    _Instantiations () ;
-  } ;  
+    /// monitoring
+    LoKi::Monitoring::Counter<const LHCb::MCParticle*> m_m1 ;
+    LoKi::Monitoring::Stat<const LHCb::MCParticle*>    m_m2 ;
+    LoKi::Monitoring::Plot<const LHCb::MCParticle*>    m_m3 ;
+    LoKi::Monitoring::Counter<const LHCb::MCVertex*>   m_m4 ;
+    LoKi::Monitoring::Stat<const LHCb::MCVertex*>      m_m5 ;
+    LoKi::Monitoring::Plot<const LHCb::MCVertex*>      m_m6 ;
+   } ;  
 } // end of anonymout namespace 
 // ============================================================================
 // The END 

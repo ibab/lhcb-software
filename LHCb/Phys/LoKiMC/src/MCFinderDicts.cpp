@@ -1,4 +1,4 @@
-// $Id: MCFinderDicts.cpp,v 1.1 2007-06-10 19:59:05 ibelyaev Exp $
+// $Id: MCFinderDicts.cpp,v 1.2 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -90,10 +90,6 @@ LoKi::Types::MCRange LoKi::Dicts::MCFinderDicts::findDecays
   const LoKi::UniqueKeeper<LHCb::MCParticle>& mcps  ) 
 { return f.validPointer() ? f->findDecays ( decay , mcps ) : s_EMPTY ;}
 // ===========================================================================
-
-
-
-
 
 // ============================================================================
 // The END 

@@ -1,14 +1,4 @@
-// $Id: GenKinematics.h,v 1.6 2007-02-26 11:03:03 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/25 19:14:19  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.4  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
+// $Id: GenKinematics.h,v 1.7 2007-07-23 17:23:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -22,9 +12,6 @@
 // HepMC 
 // ============================================================================
 #include "HepMC/GenParticle.h"
-// ============================================================================
-
-
 // ============================================================================
 /** @file
  *
@@ -40,12 +27,11 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
 namespace LoKi 
 {  
   namespace Kinematics 
   { 
+    // ========================================================================
     /** The most trivial function.
      *  It seems to be almost useless from the first sight, but 
      *  effectivel it is useful in conjunction with 
@@ -61,20 +47,20 @@ namespace LoKi
       if ( 0 == p ) { return LoKi::LorentzVector() ; }
       return LoKi::LorentzVector ( p->momentum () ) ;
     };
-    
+    // ========================================================================
     /** @struct Gen4Momentum 
      *  the simple object which acts as a converter of HepMC::GenPartile
      *  to LoKi::LorentzVector 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    struct Gen4Momentum : 
-      public std::unary_function<const HepMC::GenParticle*,LoKi::LorentzVector>
+    struct Gen4Momentum 
+      : public std::unary_function<const HepMC::GenParticle*,LoKi::LorentzVector>
     {
-      inline LoKi::LorentzVector operator() 
+      LoKi::LorentzVector operator() 
         ( const HepMC::GenParticle* p ) const { return momentum ( p ) ; }  
     };
-    
+    // ========================================================================
     /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p particle 
      *  @return invariant mass 
@@ -84,7 +70,7 @@ namespace LoKi
      */
     double mass 
     ( const HepMC::GenParticle* p ) ;
-    
+    // ========================================================================    
     /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
@@ -96,7 +82,7 @@ namespace LoKi
     double mass 
     ( const HepMC::GenParticle* p1 , 
       const HepMC::GenParticle* p2 ) ;
-
+    // ========================================================================
     /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the third particle 
@@ -110,7 +96,7 @@ namespace LoKi
     ( const HepMC::GenParticle* p1 , 
       const HepMC::GenParticle* p2 ,
       const HepMC::GenParticle* p3 ) ;
-    
+    // ========================================================================    
     /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
@@ -126,13 +112,9 @@ namespace LoKi
       const HepMC::GenParticle* p2 ,
       const HepMC::GenParticle* p3 ,
       const HepMC::GenParticle* p4 ) ;
-
-  } ; // end of namespace LoKi::Kinematics 
-  
-} ; // end of namespace LoKi 
-// ============================================================================
-
-
+    // ========================================================================
+  } // end of namespace LoKi::Kinematics
+} // end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

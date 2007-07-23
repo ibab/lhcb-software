@@ -1,4 +1,4 @@
-// $Id: MCFinderDicts.h,v 1.1 2007-06-10 19:59:04 ibelyaev Exp $
+// $Id: MCFinderDicts.h,v 1.2 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDERDICTS_H 
 #define LOKI_MCFINDERDICTS_H 1
@@ -61,7 +61,7 @@ namespace LoKi
       ( const LoKi::MCFinder&       f     , 
         const std::string&          decay ,
         const LoKi::UniqueKeeper<LHCb::MCParticle>& mcps  ) ;
-    };
+    }
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi
 // ============================================================================

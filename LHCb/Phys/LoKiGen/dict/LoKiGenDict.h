@@ -1,11 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.2 2007-06-03 20:39:37 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/06/01 11:48:06  ibelyaev
-// prepare for v3r0
-// 
+// $Id: LoKiGenDict.h,v 1.3 2007-07-23 17:23:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -22,10 +15,12 @@
 #include "LoKi/LoKiGen.h"
 #include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
+#include "LoKi/Monitoring.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/GenExtractDicts.h"
 #include "LoKi/GenAlgsDicts.h"
+#include "LoKi/GenMoniDicts.h"
 // ============================================================================
 namespace LoKi
 {
@@ -101,12 +96,16 @@ namespace
     LoKi::Dicts::FunCalls<HepMC::GenVertex>                m_c2 ;
     LoKi::Dicts::CutCalls<HepMC::GenParticle>              m_c3 ;
     LoKi::Dicts::CutCalls<HepMC::GenVertex>                m_c4 ;
-    /// mathematics:
-    LoKi::Dicts::Maths<const HepMC::GenParticle*>          m_m1 ;   
-    LoKi::Dicts::Maths<const HepMC::GenVertex*>            m_m2 ;
     /// the special operators for identifiers 
     LoKi::Dicts::PIDOps<LoKi::GenParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::GenParticles::AbsIdentifier> m_i2 ;    
+    /// monitoring and historgamming
+    LoKi::Monitoring::Counter<const HepMC::GenParticle*>   m_40 ;
+    LoKi::Monitoring::Stat<const HepMC::GenParticle*>      m_41 ;
+    LoKi::Monitoring::Plot<const HepMC::GenParticle*>      m_42 ;
+    LoKi::Monitoring::Counter<const HepMC::GenVertex*>     m_50 ;
+    LoKi::Monitoring::Stat<const HepMC::GenVertex*>        m_51 ;
+    LoKi::Monitoring::Plot<const HepMC::GenVertex*>        m_52 ;
     /// fictive constructor 
     _Instantiations () ;
   } ;  

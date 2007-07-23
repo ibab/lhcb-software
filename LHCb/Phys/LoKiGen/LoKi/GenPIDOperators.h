@@ -1,11 +1,4 @@
-// $Id: GenPIDOperators.h,v 1.4 2007-06-01 11:48:06 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
+// $Id: GenPIDOperators.h,v 1.5 2007-07-23 17:23:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPIDOPERATORS_H 
 #define LOKI_GENPIDOPERATORS_H 1

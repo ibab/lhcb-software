@@ -1,12 +1,4 @@
-// $Id: MCAlgs.h,v 1.7 2007-06-04 09:22:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2007/06/03 20:41:10  ibelyaev
-//  update LoKi::Child namespace
-//
-//
+// $Id: MCAlgs.h,v 1.8 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCALGS_H 
 #define LOKI_MCALGS_H 1
@@ -46,12 +38,9 @@
 // ============================================================================
 namespace LoKi 
 {
-  /** @namespace  LoKi::MCAlgs MCAlgs.h LoKi/MCAlgs.h
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-09
-   */
   namespace MCAlgs 
   { 
+    // ========================================================================
     /** the trivial algorithm to count the number of MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -69,6 +58,7 @@ namespace LoKi
       OBJECT           last       , 
       const PREDICATE& predicate  , 
       const bool       decayOnly  ) ;
+    // ========================================================================
     /** the trivial algorithm to find the MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -86,6 +76,7 @@ namespace LoKi
       OBJECT           last      , 
       const PREDICATE& predicate , 
       const bool       decayOnly ) ;
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  minimal value for some functions for
@@ -110,6 +101,7 @@ namespace LoKi
       const PREDICATE&               cut       , 
       RESULT                         minval    , 
       const bool                     decayOnly ) ;
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  maximal value for some functions for
@@ -134,6 +126,7 @@ namespace LoKi
       const PREDICATE&               cut       , 
       RESULT                         maxval    , 
       const bool                     decayOnly ) ;
+    // ========================================================================
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
@@ -157,6 +150,7 @@ namespace LoKi
       RESULT                         result    ,
       OPERATION                      binop     , 
       const bool                     decayOnly ) ;
+    // ========================================================================
     /** the trivial algorithm to count number of MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -196,6 +190,7 @@ namespace LoKi
       return LoKi::MCAlgs::count_if 
         ( products.begin() , products.end() , predicate , decayOnly ) ;
     }
+    // ========================================================================
     /** the trivial algorithm to count number of MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -233,6 +228,7 @@ namespace LoKi
       return result + LoKi::MCAlgs::count_if 
         ( vertices.begin() , vertices.end() , predicate , decayOnly ) ;
     }     
+    // ========================================================================
     /** trivial algorithm which returns true if 
      *  the exist at least one particle in the tree which satisfy 
      *  the certain criteria
@@ -276,6 +272,7 @@ namespace LoKi
       return LoKi::MCAlgs::found 
         ( vertices.begin() , vertices.end() , predicate , decayOnly ) ;
     }
+    // ========================================================================
     /** trivial algorithm which returns true if 
      *  the exist at least one particle in the tree which satisfy 
      *  the certain criteria
@@ -315,6 +312,7 @@ namespace LoKi
       return LoKi::MCAlgs::found 
         ( products.begin() , products.end() , predicate , decayOnly ) ;
     }
+    // ========================================================================
     /** the trivial algorithm to count the number of MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -338,6 +336,7 @@ namespace LoKi
       //
       return result ;
     }
+    // ========================================================================
     /** the trivial algorithm to find the MC particles
      *  in the tree, which satisfy the certain criteria 
      *
@@ -362,6 +361,7 @@ namespace LoKi
       }
       return false ;
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  minimal value for some functions for
@@ -400,6 +400,7 @@ namespace LoKi
       //
       return minval ;                                        // RETURN 
     } 
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  minimal value for some functions for
@@ -435,6 +436,7 @@ namespace LoKi
       //
       return minval ;                                        // RETURN 
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  minimal value for some functions for
@@ -467,6 +469,7 @@ namespace LoKi
       }
       return minval ;
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  maximal value for some functions for
@@ -505,6 +508,7 @@ namespace LoKi
       //
       return maxval ;                                        // RETURN 
     } 
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  maximal value for some functions for
@@ -540,6 +544,7 @@ namespace LoKi
       //
       return maxval ;                                        // RETURN 
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  maximal value for some functions for
@@ -572,6 +577,7 @@ namespace LoKi
       }
       return maxval ;
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
@@ -608,6 +614,7 @@ namespace LoKi
       // 
       return result ;                                                // RETURN 
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
@@ -643,6 +650,7 @@ namespace LoKi
       //
       return result ;                                      // RETURN 
     }
+    // ========================================================================
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
@@ -844,15 +852,9 @@ namespace LoKi
       }
       return result ;
     }
-    // ========================================================================
-
-
- 
-  }  // end of namespace LoKi::MCTrees
+    // ======================================================================== 
+  } // end of namespace LoKi::GenAlgs
 } // end of namespace LoKi 
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

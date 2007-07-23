@@ -1,17 +1,4 @@
-// $Id: MCKinematics.h,v 1.4 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-// 
+// $Id: MCKinematics.h,v 1.5 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCKINEMATICS_H 
 #define LOKI_MCKINEMATICS_H 1
@@ -25,8 +12,6 @@
 // forward declarations 
 // ============================================================================
 namespace LHCb { class MCParticle ; }
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -42,7 +27,6 @@ namespace LHCb { class MCParticle ; }
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @namespace LoKi::Kinematics 
@@ -52,8 +36,8 @@ namespace LoKi
    */
   namespace Kinematics
   {
-    /** @fn mass 
-     *  trivial function to evaluate the mass MCParticle
+    // ========================================================================
+    /** Trivial function to evaluate the mass MCParticle
      *  @param  p particle 
      *  @return invariant mass 
      *  @see LHCb::MCParticle 
@@ -62,9 +46,8 @@ namespace LoKi
      */
     double mass 
     ( const LHCb::MCParticle* p ) ;
-    
-    /** @fn mass 
-     *  trivial function to evaluate the mass MCParticle
+    // ========================================================================
+    /** Trivial function to evaluate the mass MCParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @return invariant mass 
@@ -75,9 +58,8 @@ namespace LoKi
     double mass 
     ( const LHCb::MCParticle* p1 , 
       const LHCb::MCParticle* p2 ) ;
-    
-    /** @fn mass 
-     *  trivial function to evaluate the mass MCParticle
+    // ========================================================================
+    /** Trivial function to evaluate the mass MCParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @param  p3 the third particle 
@@ -90,9 +72,8 @@ namespace LoKi
     ( const LHCb::MCParticle* p1 , 
       const LHCb::MCParticle* p2 ,
       const LHCb::MCParticle* p3 ) ;
-
-    /** @fn mass 
-     *  trivial function to evaluate the mass MCParticle
+    // ========================================================================
+    /** Trivial function to evaluate the mass MCParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @param  p3 the third particle 
@@ -107,10 +88,9 @@ namespace LoKi
       const LHCb::MCParticle* p2 ,
       const LHCb::MCParticle* p3 ,
       const LHCb::MCParticle* p4 ) ;
-    
-  }  // end of namespace LoKi::Kinematics 
-}  // end of namespace LoKi 
-
+    // ========================================================================   
+  } // end of namespace LoKi::Kinematics 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

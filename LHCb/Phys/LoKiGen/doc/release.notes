@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.33 2007-06-11 09:14:51 cattanem Exp $ 
+! $Id: release.notes,v 1.34 2007-07-23 17:23:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,15 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2007-07-23 - Vanya BELYAEV
+
+ - many tiny updates to minimize the dependencies, 
+   reduce the dictionaries, decrease the compilation time
+   and improve the doxugen documentation
+ 
+ - cmt/requirements 
+    version increment to v3r1
 
 !=========================== LoKiGen v3r0 2007-06-11 ==========================
 ! 2007-06-10 - Vanya BELYAEV

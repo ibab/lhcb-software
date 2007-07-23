@@ -1,6 +1,10 @@
-// $Id: MCParticles.cpp,v 1.13 2007-06-04 09:57:30 cattanem Exp $
+// $Id: MCParticles.cpp,v 1.14 2007-07-23 17:27:31 ibelyaev Exp $
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -395,7 +399,7 @@ LoKi::MCParticles::HasQuark::fillStream
     return s << "STRANGE" ;
     break                 ;
   default                 :
-    return s << "MCQUARK[" << quark() << "]" ;
+    return s << "MCQUARK(" << quark() << ")" ;
     break                 ;
   }
   //
@@ -706,7 +710,7 @@ LoKi::MCParticles::NinMCdownTree::operator()
 std::ostream&
 LoKi::MCParticles::NinMCdownTree::fillStream
 ( std::ostream& s ) const 
-{ return s << "NINMCDOWN" ; }
+{ return s << "NINMCDOWN(" << m_cut << ")" ; }
 // ============================================================================
 LoKi::MCParticles::MCMotherFunction::MCMotherFunction
 ( const LoKi::MCParticles::MCMotherFunction& right ) 
@@ -744,7 +748,7 @@ LoKi::MCParticles::MCMotherFunction::operator()
 std::ostream&
 LoKi::MCParticles::MCMotherFunction::fillStream
 ( std::ostream& s ) const 
-{ return s << "MCMOTHER[" << m_fun << "," << m_val<< "]" ; }
+{ return s << "MCMOTHER(" << m_fun << "," << m_val<< ")" ; }
 // ============================================================================
 LoKi::MCParticles::MCMotherPredicate::MCMotherPredicate
 ( const LoKi::Predicate<const LHCb::MCParticle*>& cut , 
@@ -782,7 +786,7 @@ LoKi::MCParticles::MCMotherPredicate::operator()
 std::ostream&
 LoKi::MCParticles::MCMotherPredicate::fillStream
 ( std::ostream& s ) const 
-{ return s << "MCMOTHCUT[" << m_cut << ( m_val ? ",true" : ",false" ) << "]" ; }
+{ return s << "MCMOTHCUT(" << m_cut << ( m_val ? ",True" : ",False" ) << ")" ; }
 // ============================================================================
 /*  constructor from 1 particle 
  *  @param object object to be compared 
@@ -896,9 +900,7 @@ LoKi::MCParticles::IsContainedObject::fillStream
 ( std::ostream& s ) const 
 { return s << "ISMCCO" ; }
 // ============================================================================  
-/*  constructor
- *  @param vct the reference 4-momentum 
- */
+//  constructor
 // ============================================================================  
 LoKi::MCParticles::MomentumDistance::MomentumDistance
 ( const LoKi::LorentzVector& vct ) 
@@ -906,9 +908,20 @@ LoKi::MCParticles::MomentumDistance::MomentumDistance
   , m_vct ( vct ) 
 {}
 // ============================================================================
-/*  copy constructor
- *  @param right object to be copied 
- */
+// constructor from four components
+// ============================================================================
+LoKi::MCParticles::MomentumDistance::MomentumDistance
+( const double px , 
+  const double py , 
+  const double pz , 
+  const double e  ) 
+  : LoKi::Function<const LHCb::MCParticle*>() 
+  , m_vct () 
+{
+  m_vct.SetXYZT ( px , py , pz , e ) ;
+}
+// ============================================================================
+//  copy constructor
 // ============================================================================
 LoKi::MCParticles::MomentumDistance::MomentumDistance
 ( const LoKi::MCParticles::MomentumDistance& right ) 
@@ -945,7 +958,25 @@ LoKi::MCParticles::MomentumDistance::operator()
 // ============================================================================
 std::ostream& 
 LoKi::MCParticles::MomentumDistance::fillStream 
-( std::ostream& s ) const { return s << "MCMOMDIST" ; };
+( std::ostream& s ) const 
+{ return s << "MCMOMDIST*" 
+           << m_vct.Px () << ","
+           << m_vct.Py () << ","
+           << m_vct.Pz () << ","
+           << m_vct.E  () << ")" ; } ;
+// ============================================================================
+// constructor from theta & phi 
+// ============================================================================
+LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel 
+( const double theta , const double phi ) 
+  : LoKi::Function<const LHCb::MCParticle*>() 
+  , m_vct () 
+{
+  m_vct.SetXYZ 
+    ( ::sin ( theta ) * ::cos ( phi ) , 
+      ::sin ( theta ) * ::sin ( phi ) , 
+      ::cos ( theta )                 ) ;
+}
 // ============================================================================
 /*  constructor
  *  @param vct direction vector 
@@ -958,9 +989,7 @@ LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel
   , m_vct ( vct ) 
 {}
 // ============================================================================
-/*  copy constructor 
- *  @param right object to be copied 
- */
+//  copy constructor 
 // ============================================================================
 LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::MCParticles::TransverseMomentumRel& right ) 
@@ -994,8 +1023,10 @@ LoKi::MCParticles::TransverseMomentumRel::operator()
 //  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
-LoKi::MCParticles::TransverseMomentumRel::fillStream
-( std::ostream& s ) const { return s << "MCPTDIR" ; }
+LoKi::MCParticles::TransverseMomentumRel::fillStream ( std::ostream& s ) const
+{ return s << "MCPTDIR(" 
+           << m_vct.Theta () << "," 
+           << m_vct.Phi   () << ")" ; }
 // ============================================================================
 //  MANDATORY: virtual destructor 
 // ============================================================================
@@ -1069,7 +1100,8 @@ LoKi::MCParticles::MCVertexFunAdapter::operator()
 // ============================================================================
 std::ostream& 
 LoKi::MCParticles::MCVertexFunAdapter::fillStream
-( std::ostream& s ) const { return s << "MCVFASPF" ; }
+( std::ostream& s ) const 
+{ return s << "MCVFASPF(" << m_fun << ")" ; }
 // ============================================================================
 /*  constructor 
  *  @param decay  decay descriptor 
@@ -1158,7 +1190,12 @@ LoKi::MCParticles::MCDecayPattern::operator()
 // ============================================================================
 std::ostream& 
 LoKi::MCParticles::MCDecayPattern::fillStream
-( std::ostream& s ) const { return s << "MCDECAY['" << m_decay << "']" ; }
+( std::ostream& s ) const 
+{ 
+  s << "MCDECAY(" ;
+  if ( m_finder.validPointer() ) { s << "'" << m_finder->name() << "'," ; }  
+  return s << Gaudi::Utils::toString ( m_decay ) << ")" ;
+}
 // ============================================================================
 LoKi::MCParticles::MCFilter::MCFilter
 ( const IMCParticleSelector* selector ) 
@@ -1207,10 +1244,10 @@ std::ostream&
 LoKi::MCParticles::MCFilter::fillStream
 ( std::ostream& s ) const 
 { 
-  s << "MCFILTER[" ;
+  s << "MCFILTER('" ;
   if ( m_selector.validPointer() ) 
-  { s << m_selector->type() << "'" << m_selector->name() ; }
-  return s << "]" ;
+  { s << m_selector->type() << "'/'" << m_selector->name() ; }
+  return s << "')" ;
 }
 // ============================================================================
 //  constructor from the angle
@@ -1290,7 +1327,7 @@ LoKi::MCParticles::DeltaPhi::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::MCParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
-{ return s << "MCDPHI[" << m_phi << "]" ; }
+{ return s << "MCDPHI(" << m_phi << ")" ; }
 // ============================================================================
 //  adjust delta phi into the range of [-180:180]degrees 
 // ============================================================================
@@ -1373,7 +1410,17 @@ LoKi::MCParticles::DeltaEta::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::MCParticles::DeltaEta::fillStream ( std::ostream& s ) const 
-{ return s << "MCDETA[" << m_eta << "]" ; }
+{ return s << "MCDETA(" << m_eta << ")" ; }
+// ============================================================================
+//  constructor from the eta and  phi
+// ============================================================================
+LoKi::MCParticles::DeltaR2::DeltaR2 
+( const double eta , 
+  const double phi ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_dphi ( phi ) 
+  , m_deta ( eta ) 
+{}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
@@ -1430,7 +1477,7 @@ LoKi::MCParticles::DeltaR2::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::MCParticles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "MCDR2[]" ; }
+{ return s << "MCDR2(" << m_deta.eta0() << "," << m_dphi.phi0() << ")" ; }
 // ============================================================================
 // constructor form the tool 
 // ============================================================================
@@ -1491,8 +1538,8 @@ LoKi::MCParticles::MCReconstructible::operator()
 // OPTIONAL: "short representation"
 // ============================================================================
 std::ostream& 
-LoKi::MCParticles::MCReconstructible::fillStream( std::ostream& s ) const 
-{ return s << "MCREC" ; }
+LoKi::MCParticles::MCReconstructible::fillStream( std::ostream& s ) const
+{ return s << "MCREC('" << m_eval->name() << "')" ; }
 // ============================================================================
 // constructor from the tool and category 
 // ============================================================================
@@ -1898,8 +1945,8 @@ LoKi::MCParticles::SumTree::operator()
 // ============================================================================
 std::ostream& LoKi::MCParticles::SumTree::fillStream ( std::ostream& s ) const 
 {
-  s << "MCSUMTREE("   << LoKi::Print::print ( m_fun  ) 
-    << ","            << LoKi::Print::print ( m_cut  )
+  s << "MCSUMTREE("   << m_fun   
+    << ","            << m_cut  
     << ","            << LoKi::Print::print ( m_decayOnly ) ;
   if ( 0 != m_res ) 
   { s << ","          << LoKi::Print::print ( m_res  ) ; }
@@ -1977,8 +2024,8 @@ LoKi::MCParticles::MultTree::operator()
 // ============================================================================
 std::ostream& LoKi::MCParticles::MultTree::fillStream ( std::ostream& s ) const 
 {
-  s << "MCMULTTREE("   << LoKi::Print::print ( m_fun  ) 
-    << ","             << LoKi::Print::print ( m_cut  )
+  s << "MCMULTTREE("   << m_fun   
+    << ","             << m_cut  
     << ","             << LoKi::Print::print ( m_decayOnly ) ;
   if ( 1 != m_res ) 
   { s << ","           << LoKi::Print::print ( m_res  ) ; }
@@ -2056,8 +2103,8 @@ LoKi::MCParticles::MinTree::operator()
 // ============================================================================
 std::ostream& LoKi::MCParticles::MinTree::fillStream ( std::ostream& s ) const 
 {
-  s << "MCMINTREE("   << LoKi::Print::print ( m_fun  ) 
-    << ","            << LoKi::Print::print ( m_cut  )
+  s << "MCMINTREE("   << m_fun   
+    << ","            << m_cut  
     << ","            << LoKi::Print::print ( m_decayOnly ) ;
   if ( LoKi::Constants::PositiveInfinity != m_res ) 
   { s << ","          << LoKi::Print::print ( m_res  ) ; }
@@ -2135,16 +2182,14 @@ LoKi::MCParticles::MaxTree::operator()
 // ============================================================================
 std::ostream& LoKi::MCParticles::MaxTree::fillStream ( std::ostream& s ) const 
 {
-  s << "MCMAXTREE("   << LoKi::Print::print ( m_fun  ) 
-    << ","            << LoKi::Print::print ( m_cut  )
+  s << "MCMAXTREE("   << m_fun   
+    << ","            << m_cut  
     << ","            << LoKi::Print::print ( m_decayOnly ) ;
   if ( LoKi::Constants::NegativeInfinity != m_res ) 
   { s << ","          << LoKi::Print::print ( m_res  ) ; }
   return s << ")" ;
 }
 // ============================================================================
-
-
 
 // ============================================================================
 // The END 

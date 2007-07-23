@@ -1,9 +1,5 @@
-// $Id: GenParticles.cpp,v 1.14 2007-06-03 20:39:38 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+
+// $Id: GenParticles.cpp,v 1.15 2007-07-23 17:23:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,13 +7,11 @@
 // ============================================================================
 #include <cmath>
 // ============================================================================
-// LHCbKernel
-// ============================================================================
-#include "Kernel/ParticleID.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
+#include "LoKi/valid.h"
+#include "LoKi/MoreFunctions.h"
 #include "LoKi/ParticleProperties.h"
 // ============================================================================
 // LoKiGen
@@ -432,7 +426,7 @@ LoKi::GenParticles::ValidEndVertex::result_type
 LoKi::GenParticles::ValidEndVertex::operator() 
   ( LoKi::GenParticles::ValidEndVertex::argument p ) const 
 {
-  if ( 0 != p ) { return 0 != p->end_vertex() ; }
+  if ( 0 != p ) { return LoKi::valid ( p->end_vertex() ) ; }
   Error ( "HepMC::GenParticle* points to NULL, return 'false'" ) ;
   return false ;
 }
@@ -442,6 +436,19 @@ LoKi::GenParticles::ValidEndVertex::operator()
 std::ostream& 
 LoKi::GenParticles::ValidEndVertex::fillStream 
 ( std::ostream& s ) const { return s << "GVEV" ; }
+// ============================================================================  
+//  constructor
+// ============================================================================  
+LoKi::GenParticles::MomentumDistance::MomentumDistance
+( const double px , 
+  const double py , 
+  const double pz ,
+  const double e  ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_vct () 
+{
+  m_vct.SetXYZT( px , py , pz , e ) ;
+}
 // ============================================================================  
 /*  constructor
  *  @param vct the reference 4-momentum 
@@ -498,7 +505,47 @@ LoKi::GenParticles::MomentumDistance::operator()
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::MomentumDistance::fillStream 
-( std::ostream& s ) const { return s << "GMOMDIST" ; }
+( std::ostream& s ) const 
+{
+  return s << "GMOMDIST("  
+           <<  m_vct.Px () << "," 
+           <<  m_vct.Py () << "," 
+           <<  m_vct.Pz () << "," 
+           <<  m_vct.E  () << ")" ;
+}
+// ============================================================================
+/*  constructor from theta and phi
+ *  @param theta theta angle for the direction 
+ *  @param phi phi angle for the direction
+ */
+// ============================================================================
+LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
+( const double theta , 
+  const double phi   ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_vct() 
+{
+  m_vct.SetXYZ 
+    (  ::sin ( theta ) * ::cos ( phi ) , 
+       ::sin ( theta ) * ::sin ( phi ) , 
+       ::cos ( theta ) ) ;
+}
+// ============================================================================
+/*  constructor from x,y,z
+ *  @param x x-component of the direction vector  
+ *  @param y y-component of the direction vector  
+ *  @param z z-component of the direction vector  
+ */
+// ============================================================================
+LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
+( const double x , 
+  const double y ,
+  const double z ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_vct() 
+{
+  m_vct.SetXYZ (  x , y , z ) ;
+}
 // ============================================================================
 /*  constructor
  *  @param vct direction vector 
@@ -508,7 +555,18 @@ LoKi::GenParticles::MomentumDistance::fillStream
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::ThreeVector& vct ) 
   : LoKi::Function<const HepMC::GenParticle*>() 
-    , m_vct ( vct ) 
+  , m_vct ( vct ) 
+{}
+// ============================================================================
+/*  constructor
+ *  @param vct direction vector 
+ *  @see LoKi::LorentzVector 
+ */
+// ============================================================================
+LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
+( const LoKi::LorentzVector& vct ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_vct ( vct.Vect() ) 
 {}
 // ============================================================================
 /*  copy constructor 
@@ -550,7 +608,7 @@ LoKi::GenParticles::TransverseMomentumRel::operator()
     const LoKi::ThreeVector vd = va - m_vct * ab ;
     return ::sqrt( vd.mag2() ) ; 
   }
-  Error("Invalid HepMC::GenParticle*, return 'InvalidMomentum'") ; 
+  Error ( "Invalid HepMC::GenParticle*, return 'InvalidMomentum'") ; 
   return LoKi::Constants::InvalidMomentum ;
 }
 // ============================================================================
@@ -558,7 +616,12 @@ LoKi::GenParticles::TransverseMomentumRel::operator()
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::TransverseMomentumRel::fillStream
-( std::ostream& s ) const { return s << "GPTDIR" ; }
+( std::ostream& s ) const 
+{
+  return s << "GPTDIR(" 
+           <<  m_vct.Theta () << "," 
+           <<  m_vct.Phi   () << ")" ;
+}
 // ============================================================================
 /*  constructor from particle ("head")
  *  @param p pointer to HepMC::GenParticle 
@@ -786,7 +849,7 @@ LoKi::GenParticles::HasQuark::fillStream
     return s << "GSTRANGE" ;
     break                  ;
   default                  :
-    return s << "GQUARK[" << quark() << "]" ;
+    return s << "GQUARK(" << quark() << ")" ;
     break                  ;
   }
   //
@@ -1083,7 +1146,7 @@ LoKi::GenParticles::AdapterToProductionVertex::clone() const
 std::ostream& 
 LoKi::GenParticles::AdapterToProductionVertex::fillStream
 ( std::ostream& stream ) const 
-{ return stream << "GFAPVX[" << m_fun << "]" ; }
+{ return stream << "GFAPVX(" << m_fun << ")" ; }
 // ============================================================================
 //  the only one essential method 
 // ============================================================================
@@ -1135,7 +1198,7 @@ LoKi::GenParticles::AdapterToEndVertex::clone() const
 std::ostream& 
 LoKi::GenParticles::AdapterToEndVertex::fillStream
 ( std::ostream& stream ) const 
-{ return stream << "GFAEVX[" << m_fun << "]" ; }
+{ return stream << "GFAEVX(" << m_fun << ")" ; }
 // ============================================================================
 //  the only one essential method 
 // ============================================================================
@@ -1238,7 +1301,7 @@ LoKi::GenParticles::DeltaPhi::operator()
 {
   if ( 0 == p ) 
   {
-    Error ("HepMC::GenParticle* points to NULL, return 'InvalidAngle'") ;
+    Error ( "HepMC::GenParticle* points to NULL, return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   return adjust ( m_eval( p ) - m_phi ) ;
@@ -1247,7 +1310,7 @@ LoKi::GenParticles::DeltaPhi::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
-{ return s << "GDPHI[" << m_phi << "]" ; }
+{ return s << "GDPHI(" << m_phi << ")" ; }
 // ============================================================================
 //  adjust delta phi into the range of [-180:180]degrees 
 // ============================================================================
@@ -1330,7 +1393,15 @@ LoKi::GenParticles::DeltaEta::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaEta::fillStream ( std::ostream& s ) const 
-{ return s << "GDETA[" << m_eta << "]" ; }
+{ return s << "GDETA(" << m_eta << ")" ; }
+// ============================================================================
+//  constructor from eta and phi
+// ============================================================================
+LoKi::GenParticles::DeltaR2::DeltaR2 ( const double eta , const double phi ) 
+  : LoKi::Function<const HepMC::GenParticle*> () 
+  , m_dphi ( phi ) 
+  , m_deta ( eta ) 
+{}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
@@ -1387,7 +1458,7 @@ LoKi::GenParticles::DeltaR2::operator()
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "GDR2" ; }
+{ return s << "GDR2( " << m_deta.eta() << "," << m_dphi.phi() << ")" ; }
 // ============================================================================
 /*  constructor 
  *  @param cut    predicate to be used for counting
@@ -1466,9 +1537,9 @@ LoKi::GenParticles::NInTree::operator()
 std::ostream& 
 LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const 
 { 
-  s << "GNINTREE(" << m_cut ;
-  if ( HepMC::children != m_range ) { s << "," << m_range ; }
-  return s << ")" ;
+  return s << "GNINTREE(" 
+           << m_cut   << "," 
+           << m_range << ")" ;
 }
 // ============================================================================
 /*  standard constructor 
@@ -1512,13 +1583,6 @@ std::ostream&
 LoKi::GenParticles::InTree::fillStream( std::ostream& s ) const 
 { return s << "GINTREE(" << m_cut << ")" ; }
 // ============================================================================
-
-
-
-
-  
-
-
 
 
 // ============================================================================

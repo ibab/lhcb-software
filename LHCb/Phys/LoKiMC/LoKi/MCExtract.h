@@ -1,17 +1,4 @@
-// $Id: MCExtract.h,v 1.5 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/09 15:42:06  ibelyaev
-//  add LoKi::MCAlgs namespace with algorithms
-//
+// $Id: MCExtract.h,v 1.6 2007-07-23 17:27:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -22,17 +9,10 @@
 // ============================================================================
 #include <vector>
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/MCParticle.h"
-#include "Event/MCVertex.h"
-// ============================================================================
 // LoKi 
 // ============================================================================
 #include  "LoKi/Objects.h"
 #include  "LoKi/MCTypes.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -48,7 +28,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Extract 
@@ -58,7 +37,7 @@ namespace LoKi
    */
   namespace Extract 
   {    
-    
+    // ========================================================================
     template <class MCPARTICLE , class OUTPUT, class PREDICATE>
     inline OUTPUT getMCParticles 
     ( MCPARTICLE        begin  , 
@@ -69,10 +48,9 @@ namespace LoKi
       for ( ; begin != end ; ++begin ) 
       { output = getMCParticles ( *begin , output , cut ) ; }
       return output ;
-    };
-    
-    /** @fn getMCParticles 
-     *  Simple function to extract (recursively) all Monte Carlo 
+    }
+    // ========================================================================
+    /** Simple function to extract (recursively) all Monte Carlo 
      *  particles form the given 
      *  Monte Carlo particle
      *  Indeed it is just a flat representation of the whole 
@@ -120,8 +98,8 @@ namespace LoKi
       }
       const SmartRefVector<LHCb::MCVertex>& vs = particle->endVertices();
       return getMCParticles ( vs.begin() , vs.end() , output , cut ) ;
-    };
-    
+    }
+    // ========================================================================
     template <class OUTPUT, class PREDICATE> 
     inline OUTPUT  getMCParticles 
     ( const LHCb::MCVertex*   vertex , 
@@ -131,23 +109,22 @@ namespace LoKi
       if ( 0 == vertex ) { return output ; } // RETURN 
       const SmartRefVector<LHCb::MCParticle>& ps = vertex->products() ;
       return getMCParticles ( ps.begin() , ps.end() , output , cut ) ;
-    };
-    
+    }
+    // ========================================================================
     template <class OUTPUT> 
     inline OUTPUT  getMCParticles 
     ( const LHCb::MCParticle* particle , 
       OUTPUT                  output   )
     { return getMCParticles ( particle , output , LoKi::Objects::_ALL_ ) ; }
-    
+    // ========================================================================   
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT getMCParticles 
     ( MCPARTICLE        begin  , 
       MCPARTICLE        end    , 
       OUTPUT            output )
     { return getMCParticles ( begin , end , output , LoKi::Objects::_ALL_ ) ; }
-    
-    /** @fn mcParticles 
-     *  Simple function to extract all Monte Carlo particles that 
+    // ======================================================================== 
+    /** Simple function to extract all Monte Carlo particles that 
      *  make contribution to the given particle. 
      *  Indeed it is just a flat representation of the Monet Carlo decay tree.
      * 
@@ -182,32 +159,30 @@ namespace LoKi
     ( const LHCb::MCParticle* particle , 
       OUTPUT            output   , 
       const PREDICATE&  cut      )
-    { return getMCParticles ( particle , output , cut ) ; } ;
-    
+    { return getMCParticles ( particle , output , cut ) ; } 
+    // ========================================================================    
     template <class MCPARTICLE , class OUTPUT, class PREDICATE>
     inline OUTPUT mcParticles 
     ( MCPARTICLE        begin   , 
       MCPARTICLE        end     , 
       OUTPUT            output  , 
       const PREDICATE&  cut     )
-    { return getMCParticles ( begin , end , output , cut ) ; } ;
-    
+    { return getMCParticles ( begin , end , output , cut ) ; } 
+    // ========================================================================    
     template <class OUTPUT> 
     inline OUTPUT mcParticles 
     ( const LHCb::MCParticle* particle , 
       OUTPUT            output   )
     { return getMCParticles ( particle , output ) ; } ;
-    
+    // ========================================================================    
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT mcParticles 
     ( MCPARTICLE        begin   , 
       MCPARTICLE        end     , 
       OUTPUT            output  )
     { return getMCparticles ( begin , end , output ) ; } ;
-
-    
-    /** @fn getMCChildren 
-     *  extratc all children particle form the given MC-particle 
+    // ========================================================================    
+    /** Extract all children particle form the given MC-particle 
      *  in a form of the flat list 
      *
      *  @code 
@@ -251,11 +226,9 @@ namespace LoKi
         } 
       }
       return output ;
-    } ;
-
-    
-    /** @fn mcChildren 
-     *  extratc all children particle form the given MC-particle 
+    } 
+    // ========================================================================
+    /** Extract all children particle form the given MC-particle 
      *  in a form of the flat list 
      *
      *  @code 
@@ -279,12 +252,10 @@ namespace LoKi
     inline OUTPUT mcChildren 
     ( const LHCb::MCParticle* particle ,  
       OUTPUT                  output   )
-    { return getMCChildren( particle , output ) ; }
-
-  } // end of namespace Extract 
-  //
-}  // end of namespace LoKi
-
+    { return getMCChildren ( particle , output ) ; }
+    // ========================================================================
+  } // end of namespace Extract
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

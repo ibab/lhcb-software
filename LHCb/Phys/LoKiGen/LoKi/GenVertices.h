@@ -1,11 +1,4 @@
-// $Id: GenVertices.h,v 1.4 2006-11-25 19:14:19 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
+// $Id: GenVertices.h,v 1.5 2007-07-23 17:23:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENVERTICES_H 
 #define LOKI_GENVERTICES_H 1
@@ -20,10 +13,7 @@
 // ============================================================================
 #include "LoKi/Kinematics.h"
 #include "LoKi/Constants.h"
-#include "LoKi/Functions.h"
 #include "LoKi/GenTypes.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -38,8 +28,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-08 
  */
-// ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::GenVertices GenVertices.h LoKi/GenVertices.h
@@ -52,8 +40,8 @@ namespace LoKi
    */
   namespace GenVertices 
   {
-    
-    /** @struct BarCode 
+    // ========================================================================
+    /** @class BarCode 
      *  the most primitive function - it return the "barcode" 
      *  of HepMC::GenVertex object
      *
@@ -63,8 +51,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    struct BarCode : 
-      public LoKi::Function<const HepMC::GenVertex*> 
+    class BarCode : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -76,9 +63,8 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
-    
-    /** @struct PositionX
+    // ========================================================================    
+    /** @class PositionX
      *
      *  the most primitive function - it return the position 
      *  of HepMC::GenVertex object
@@ -89,8 +75,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    struct PositionX : 
-      public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionX : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -102,8 +87,8 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-
-    /** @struct PositionY
+    // ========================================================================
+    /** @class PositionY
      *
      *  the most primitive function - it return the position 
      *  of HepMC::GenVertex object
@@ -114,8 +99,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    struct PositionY : 
-      public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionY : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -127,8 +111,8 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-
-    /** @struct PositionZ
+    // ========================================================================
+    /** @class PositionZ
      *
      *  the most primitive function - it return the position 
      *  of HepMC::GenVertex object
@@ -139,8 +123,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    struct PositionZ : 
-      public LoKi::Function<const HepMC::GenVertex*> 
+    class  PositionZ : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -152,8 +135,8 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-
-    /** @struct PositionT
+    // ========================================================================
+    /** @class PositionT
      *
      *  the most primitive function - it return the time component of 
      *  the position for HepMC::GenVertex object
@@ -164,8 +147,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    struct PositionT : 
-      public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionT : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -177,7 +159,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
+    // ========================================================================    
     /** @class CountIF
      *  simple class which counts how many particles 
      *  satisfy the certain criteria
@@ -189,8 +171,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class CountIF
-      : public LoKi::Function<const HepMC::GenVertex*> 
+    class CountIF : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
       /** constructor from the criteria and "range"
@@ -201,6 +182,14 @@ namespace LoKi
       CountIF 
       ( const LoKi::Types::GCuts& cut   , 
         HepMC::IteratorRange      range ) ;
+      /** constructor from the criteria and "range"
+       *  @param range search region 
+       *  @param cut the criteria
+       *  @see HepMC::IteratorRange 
+       */
+      CountIF 
+      ( HepMC::IteratorRange      range ,
+        const LoKi::Types::GCuts& cut   ) ;
       /// copy constructor 
       CountIF ( const CountIF& right ) ;
       /// virtual destructor
@@ -218,7 +207,7 @@ namespace LoKi
       LoKi::Types::GCut    m_cut   ;
       HepMC::IteratorRange m_range ;
     } ;
-    
+    // ========================================================================    
     /** @class SumIF
      *  simple class which accumulates the function values 
      *  for particles from the given range which 
@@ -231,20 +220,55 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class SumIF
-      : public LoKi::Function<const HepMC::GenVertex*> 
+    class SumIF : public LoKi::Function<const HepMC::GenVertex*> 
     {
     public:
-      /** constructor from the criteria and "range"
+      /** constructor from the function and the "range" 
+       *  @param fun function to be accuulated  
+       *  @param range search region 
+       *  @see HepMC::IteratorRange 
+       */
+      SumIF 
+      ( const LoKi::Types::GFunc& fun   ,
+        HepMC::IteratorRange      range ) ;
+      /** constructor from the function and the "range"
+       *  @param fun function to be accuulated  
+       *  @param range search region 
+       *  @see HepMC::IteratorRange 
+       */
+      SumIF 
+      ( HepMC::IteratorRange      range ,
+        const LoKi::Types::GFunc& fun   ) ;
+      /** constructor from the function, "range" and criteria 
+       *  @param fun function to be accuulated  
+       *  @param range search region 
+       *  @param cut the criteria
+       *  @see HepMC::IteratorRange 
+       */
+      SumIF 
+      ( const LoKi::Types::GFunc& fun   ,
+        HepMC::IteratorRange      range , 
+        const LoKi::Types::GCuts& cut   ) ;
+      /** constructor from the function, "range" and criteria 
+       *  @param fun function to be accuulated  
        *  @param cut the criteria
        *  @param range search region 
        *  @see HepMC::IteratorRange 
        */
       SumIF 
       ( const LoKi::Types::GFunc& fun   ,
-        HepMC::IteratorRange      range , 
-        const LoKi::Types::GCuts& cut   = 
-        LoKi::BooleanConstant<const HepMC::GenParticle*>(true) ) ;
+        const LoKi::Types::GCuts& cut   ,
+        HepMC::IteratorRange      range ) ;
+      /** constructor from the function, "range" and criteria 
+       *  @param cut the criteria
+       *  @param fun function to be accuulated  
+       *  @param range search region 
+       *  @see HepMC::IteratorRange 
+       */
+      SumIF 
+      ( const LoKi::Types::GCuts& cut   ,
+        const LoKi::Types::GFunc& fun   ,
+        HepMC::IteratorRange      range ) ;
       /// copy constructor 
       SumIF ( const SumIF& right ) ;
       /// virtual destructor
@@ -263,11 +287,9 @@ namespace LoKi
       LoKi::Types::GCut    m_cut   ;
       HepMC::IteratorRange m_range ;
     } ;
-
-  } ; // end of namespace LoKi::GenVertices 
-  
-} ; // end of namespace LoKi 
-
+    // ========================================================================
+  } // end of namespace LoKi::GenVertices
+} // end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================
