@@ -4,7 +4,10 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
-!========================== VeloTools v2r2 2007-07-19 ========================
+!========================== VeloTools v2r2 2007-07-23 ========================
+! 2007-07-23 - Marco Cattaneo
+ - Remove obsolete options file (uses options names inconsistent with code)
+
 ! 2007-07-19 - Thomas Ruf
  - major change to position method using direction and point
  - new error parametrization as function of projected track angle

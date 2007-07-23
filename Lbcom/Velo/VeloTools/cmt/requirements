@@ -6,7 +6,7 @@ version           v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src
 
 include_path none
 
