@@ -2,6 +2,11 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+
+! 2007-07-23 - Wouter Hulsbergen (a-team changes)
+ - interface to fast creation of straw trajectory
+ - access to stereo angle
+
 !======================== STDet v3r4 2007-05-25 ==========================
 ! 2007-05-25 - Marco Cattaneo
  - Add dictionary for DeSTDetLocation::*

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.28 2007-02-16 12:31:02 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.29 2007-07-23 09:34:18 wouter Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -311,6 +311,18 @@ StatusCode DeSTSector::cacheInfo()
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_thickness));
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_thickness));
 
+  // For creating the 'fast' trajectories
+  m_vectorLayer   = (g4-g3).unit() * m_pitch ;
+  m_vectorStrip   = m_direction * m_stripLength ;
+  m_positionLayer = g3-0.5*m_vectorStrip ;
+  
+  // Update the stereo angle. We correct by 'pi' if necessary.
+  Gaudi::XYZVector dir = m_direction ;
+  if(dir.y()<0) dir *= -1 ;
+  m_angle    = atan2(-dir.x(),dir.y()) ;
+  m_cosAngle = cos( m_angle ) ;
+  m_sinAngle = sin( m_angle ) ;
+  
   return StatusCode::SUCCESS;
 }
 

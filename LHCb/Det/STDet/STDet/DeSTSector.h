@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.17 2007-04-10 14:35:37 cattanem Exp $
+// $Id: DeSTSector.h,v 1.18 2007-07-23 09:34:18 wouter Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -10,6 +10,7 @@
 #include "STDet/DeSTBaseElement.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
+#include "LHCbMath/LineTypes.h"
 
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"
@@ -103,6 +104,9 @@ public:
   */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
+  /** create an xyzline for a strip*/
+  Gaudi::XYZLineF lineTrajectory(unsigned int strip, float offset) const ;
+
   /** plane corresponding to the sector 
   * @return the plane 
   */
@@ -194,6 +198,15 @@ public:
   */
   std::string type() const;
 
+  /** @return stereo angle */
+  double angle() const;
+
+  /** @return sin of stereo angle */
+  double sinAngle() const;
+
+  /** @return cosine of stereo angle */
+  double cosAngle() const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
      
@@ -237,6 +250,13 @@ private:
   double m_deadWidth;
   std::vector<double> m_deadRegions;
   std::string m_type;
+
+  Gaudi::XYZVectorF m_vectorLayer ;
+  Gaudi::XYZPointF  m_positionLayer ;
+  Gaudi::XYZVectorF m_vectorStrip ; 
+  double m_angle ;
+  double m_cosAngle ;
+  double m_sinAngle ;
 
 };
 
@@ -290,6 +310,23 @@ inline Gaudi::Plane3D DeSTSector::entryPlane() const {
 
 inline Gaudi::Plane3D DeSTSector::exitPlane() const {
   return m_exitPlane;
+}
+
+inline double DeSTSector::angle() const {
+  return m_angle;
+}
+
+inline double DeSTSector::sinAngle() const {
+  return m_sinAngle;
+}
+
+inline double DeSTSector::cosAngle() const {
+  return m_cosAngle;
+}
+
+inline Gaudi::XYZLineF DeSTSector::lineTrajectory(unsigned int strip,float offset ) const {
+  float numstrips = offset + strip - m_firstStrip ;
+  return Gaudi::XYZLineF( m_positionLayer + numstrips * m_vectorLayer, m_vectorStrip ) ;
 }
 
 /** ouput operator for class DeSTSector
