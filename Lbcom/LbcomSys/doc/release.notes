@@ -6,6 +6,34 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r8>2007-07-20 LbcomSys v6r8</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r8
+
+- Packages modified: L0Calo v9r9, L0DU v7r6, VeloTools v2r2
+
+- In L0Calo v9r9
+  . L0CaloAlg.cpp: 
+    * update HCAL energy with ECAL in front also if HCAL Et=0
+    * for particular cases where Front-End boards are partially used
+      (HCAL for example), only transmit data to neighbour cards if
+      the connection is physically present and not masked in the hardware.
+    * if the candidate's cellID is not valid, use (in this order) the top 
+      cellID, the right cellID (if the top is not valid) or the corner cellID 
+      (it the right is not valid) instead, to follow what is done in the hardware
+  . TriggerCard.cpp: use left bottom valid cell of the board as default address
+    when the card has 0 energy deposited in it.
+
+- In L0DU v7r6
+  . Remove Brunel.opts (functionality moved to Brunel, from v31r8)
+  . Boole.opts changed to remove Boole dependency and renamed WriteETC.opts
+  . BooleRead.opts changed to remove Boole dependency and renamed ReadETC.opts
+
+- In VeloTools v2r2
+  . Major change to position method using direction and point
+  . New error parametrization as function of projected track angle
+    same for R and Phi sensors.
+  . Remove obsolete options file (uses options names inconsistent with code)
+
 </PRE><H1><A NAME=v6r7>2007-07-12 LbcomSys v6r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r7
 
