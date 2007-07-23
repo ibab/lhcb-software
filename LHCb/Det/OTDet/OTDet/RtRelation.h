@@ -50,7 +50,7 @@ namespace OTDet
   inline float RtRelation::drdt( float time ) const 
   {
     float fbin = time/m_dt ;
-    unsigned int ibin = std::min((unsigned int)(fbin),m_radius.size()-1) ;
+    unsigned int ibin = std::min((unsigned int)(fbin),(unsigned int)m_radius.size()-1) ;
     return (m_radius[ibin+1] - m_radius[ibin])/m_dt ;
   }
   
