@@ -19,7 +19,8 @@
  - options/DVTestHltDstar.opts
  - options/DVTestHltB2DstarMu.opts
  - options/DVTestHltBu2LLK.opts
-   . New options for B->D0K*, Bs->DsH, B->MuMu, D* (no PID), B->D*MuNu, Bu->llK, 
+ - options/DVTestHltBs2DsDs.opts
+   . New options for B->D0K*, Bs->DsH, B->MuMu, D* (no PID), B->D*MuNu, Bu->llK, Bs->DsDs
 
 ! 2007-07-20 - Patrick Koppenburg
  - options/DVTestHltB2DiMuon.opts

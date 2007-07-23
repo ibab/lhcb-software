@@ -1,0 +1,38 @@
+/** @file TrueBs2DsDs.opts
+ *  
+ *  Options for running exclusive HLT only on truth
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-23
+ */
+//--------------------------------------------------------------
+//
+// Truth filter for Bs -> DsDs
+//
+SeqHltTruthFilter.Members += { "PrintMCTree"};
+PrintMCTree.ParticleNames = { "B_s0", "B_s~0" } ;
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBs2DsDs"};
+SelectTrueBs2DsDs.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
+                                                "Phys/HltNoPIDsPions" } ;
+SelectTrueBs2DsDs.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsDs",
+                                        "pi+ : TrueMCFilterCriterion/Bs2DsDs"} ;
+
+SelectTrueBs2DsDs.Filter.Bs2DsDs.MCDecayFinder.Decay = "[B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc,  [B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc" ;
+
+SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
+//
+// Overwrite Shared Ds input
+//
+HltSharedDs2KKPi.PhysDesktop.InputLocations =  { "Phys/SelectTrueBs2DsDs" } ;   
+//
+// Overwrite Bs->DsPi
+//
+HltSelBs2DsDs.PhysDesktop.InputLocations  = {"Phys/HltSharedDs2KKPi",
+                                            "Phys/SelectTrueBs2DsDs"} ;
+//
+// Dummy MakeResonances to check that all tracks are there
+//
+SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2DsDs"};
+AllTrueBs2DsDs.PhysDesktop.InputLocations = {"Phys/SelectTrueBs2DsDs"};
+AllTrueBs2DsDs.DecayDescriptor = "B_s0 -> K+ K- pi+ K+ K- pi-" ; // all particles need to be there
+HltExclusiveCorrs.Algorithms += { "AllTrueBs2DsDs" };
