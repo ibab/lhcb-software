@@ -3,6 +3,35 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r8>2007-07-23 Brunel v31r8</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r8, Lbcom v6r8, Rec v4r8
+ and DDDB v1r* (SQLDDDB v2r2 or greater), ParamFiles v6r1, FieldMap v4r7
+
+- New features
+  . New Velo detector element can process both DC06 data and data from real
+    detector geometry (default is DC06, requires SQLDDDB v2r2) (VeloDet v11r4)
+  . Brunel processing now all takes place in a single GaudiSequencer TopAlg
+    (called BrunelSequencer). Allows any algorithm to stop further processing
+    of a given event. 
+  . New possibility to process only L0 selected events: switch on by uncommenting
+    the option Init.DetectorList += { "L0" };
+
+- New tuning
+  . Speed improvements in Velo detector element (VeolDet v12r0)
+  . Retune Tsa algorithms following bug fix (TsaAlgorithms v2r6)
+
+- New packaging
+  . Add in Brunel requirements a no_auto_imports dependency to all used component
+    libraries, so they can be reached by cmt broadcast when checked out in 
+    User_release_area
+
+- Bug fixes
+  . Fix uninitialised variable in PatVeloGeneralTracking (PatVelo v2r17)
+  . Fix uninitialised variable in CardParam (CaloDet v8r3)
+  . Fix bug in Tsa selection routine (TsaAlgorithms v2r6)
+  . Fix TrackMatch options in NoFieldTracking.opts, option names were wrong
+    (TrackSys v4r8)
+
 </PRE><H1><A NAME=v31r7>2007-07-10 Brunel v31r7</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r7, Lbcom v6r7, Rec v4r7
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
