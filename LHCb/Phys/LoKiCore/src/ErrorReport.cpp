@@ -1,8 +1,4 @@
-// $Id: ErrorReport.cpp,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: ErrorReport.cpp,v 1.5 2007-07-23 17:07:43 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -15,8 +11,6 @@
 #include "LoKi/Exception.h"
 #include "LoKi/Welcome.h"
 #include "LoKi/ErrorReport.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -34,9 +28,7 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/// standard (default) constructor
+//  standard (default) constructor
 // ============================================================================
 LoKi::ErrorReport::ErrorReport()
   : m_errors     (   ) 
@@ -45,11 +37,9 @@ LoKi::ErrorReport::ErrorReport()
   , m_reporter   ( 0 ) 
 {
   LoKi::Welcome::instance() ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** make a report 
+/*  make a report 
  *  @return status code 
  */
 // ============================================================================
@@ -99,9 +89,7 @@ StatusCode LoKi::ErrorReport::report() const
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-
-// ============================================================================
-/// destructor
+//  destructor
 // ============================================================================
 LoKi::ErrorReport::~ErrorReport() 
 { 
@@ -109,39 +97,30 @@ LoKi::ErrorReport::~ErrorReport()
   m_reporter = 0 ; 
   // make a report
   report();
-};
-// ============================================================================
-
-// ============================================================================
+}
 // ============================================================================
 LoKi::ErrorReport& LoKi::ErrorReport::instance()
 {
   static LoKi::ErrorReport s_report = ErrorReport() ;
   return s_report ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** get the LoKi reporter
+/*  get the LoKi reporter
  *  @return pointer to currently active LoKi error reporter tool
  */
 // ============================================================================
 const LoKi::IReporter* LoKi::ErrorReport::reporter    () const
-{ return m_reporter ; };
+{ return m_reporter ; }
 // ============================================================================
-
-// ============================================================================
-/** set new active Reporter 
+/*  set new active Reporter 
  *  @return status code 
  */
 // ============================================================================
 StatusCode LoKi::ErrorReport::setReporter 
 ( const LoKi::IReporter* reporter ) 
-{ m_reporter = reporter ; return StatusCode::SUCCESS ; } ;
+{ m_reporter = reporter ; return StatusCode::SUCCESS ; } 
 // ============================================================================
-
-// ============================================================================
-/** Print the error  message, return status code
+/*  Print the error  message, return status code
  *  @param msg    error message 
  *  @param st     status code 
  *  @return       status code 
@@ -159,11 +138,9 @@ StatusCode LoKi::ErrorReport::Error
   { Print ( "The ERROR   message '" + msg + 
             "' is suppressed from now" , st , MSG::ERROR ) ; }
   return st ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** Print the warning  message, return status code 
+/*  Print the warning  message, return status code 
  *  @param msg    warning message 
  *  @param st     status code  
  *  @return       status code 
@@ -181,11 +158,9 @@ StatusCode LoKi::ErrorReport::Warning
   { Print ( "The WARNING message '" + msg + 
             "' is suppressed from now" , st , MSG::WARNING ) ; }
   return st ; 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** Print the message and return status code 
+/*  Print the message and return status code 
  *  @param msg    warning message 
  *  @param st     status code 
  *  @param lev    print level 
@@ -198,7 +173,7 @@ StatusCode LoKi::ErrorReport::Print
   const MSG::Level   lev ) const 
 {  
   if( 0 != m_reporter ) { return m_reporter->Print( msg , st , lev ) ; }
-  ///
+  // 
   std::cerr << "LoKi::ErrorReport\t"  ;
   if      ( MSG::ALWAYS  == lev ) { std::cerr << "  ALWAYS "  ; }
   else if ( MSG::FATAL   == lev ) { std::cerr << "   FATAL "  ; }
@@ -215,11 +190,9 @@ StatusCode LoKi::ErrorReport::Print
   if( st.isFailure() ) { std::cerr << " (" << st.getCode() << ")"; }
 
   std::cerr << std::endl;
-  ///
+  // 
   return st ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 // Create and (re)-throw the exception
 // ============================================================================
@@ -237,10 +210,7 @@ StatusCode LoKi::ErrorReport::Exception
           "'/'" + exc.message() + "'" , sc , MSG::FATAL );
   throw  LoKi::Exception( "LoKi::" + msg , sc, exc);
   return  sc ;
-} ;
-// ============================================================================
-
-
+}
 // ============================================================================
 // Create and (re)-throw the exception
 // ============================================================================
@@ -257,9 +227,7 @@ StatusCode LoKi::ErrorReport::Exception
           + " : what='" + exc.what() + "'" , sc , MSG::FATAL );
   throw  LoKi::Exception( "LoKi::" + msg + " (re)throw:" + exc.what() , sc );
   return  sc ;
-} ;
-// ============================================================================
-
+}
 // ============================================================================
 // Create and throw the exception
 // ============================================================================
@@ -274,9 +242,7 @@ StatusCode LoKi::ErrorReport::Exception
   Print ( "Exception throw: " + msg , sc , MSG::FATAL );
   throw LoKi::Exception(  msg , sc );
   return  sc ;
-} ;
-// ============================================================================
-
+}
 // ============================================================================
 // The END 
 // ============================================================================

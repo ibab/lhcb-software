@@ -1,9 +1,4 @@
-// $Id: Print.h,v 1.8 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Print.h,v 1.9 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRINT_H 
 #define LOKI_PRINT_H 1
@@ -42,12 +37,15 @@ namespace LoKi
    */
   namespace Print
   {
+    // ============================================================================
     template <class TYPE> 
     inline  std::string toString ( const TYPE& value ) 
     { return Gaudi::Utils::toString ( value ) ; }
+    // ============================================================================
     template <class TYPE> 
     inline  std::string print    ( const TYPE& value ) 
     { return toString ( value ) ; }
+    // ============================================================================
     /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
@@ -60,6 +58,7 @@ namespace LoKi
     { 
       return Gaudi::Utils::toStream ( stream , object ) ; 
     }
+    // ============================================================================
     template <class TYPE>
     inline MsgStream& toStream 
     ( MsgStream&   stream , 
@@ -69,6 +68,7 @@ namespace LoKi
       { Gaudi::Utils::toStream ( stream.stream() , object ) ; }
       return stream ;      
     }
+    // ============================================================================
   } // end of namespace LoKi::Print
 } // end of namespace LoKi
 // ============================================================================

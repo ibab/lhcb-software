@@ -1,11 +1,4 @@
-// $Id: ILoKiSvc.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: ILoKiSvc.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ILOKISVC_H 
 #define LOKI_ILOKISVC_H 1
@@ -27,8 +20,7 @@
 class IParticlePropertySvc ;
 class ISvcLocator          ;
 class IToolSvc             ;
-// ============================================================================
-
+class IAlgContextSvc       ;
 // ============================================================================
 /** @file
  *
@@ -44,65 +36,60 @@ class IToolSvc             ;
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {  
+  // ==========================================================================
   /** @class ILoKi ILoKiSvc.h LoKi/ILoKiSvc.h
    *  
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-01-16
    */
-  class ILoKiSvc : 
-    virtual public IInterface       , 
-    virtual public IService         , 
-    virtual public IIncidentListener 
+  class ILoKiSvc 
+    : virtual public IInterface       
+    , virtual public IService         
+    , virtual public IIncidentListener 
   {
-  public:
-    
+  public:    
     /** get the pointer to service locator 
      *  @return ponter to Service Locator 
      *  @see ISvcLocator 
      */
-    virtual ISvcLocator*          svcLoc  () const = 0 ;
-    
+    virtual ISvcLocator*          svcLoc     () const = 0 ;    
     /** get the pointer to Particle Property Service 
      *  @return pointer to Particle Property Service 
      *  @see IParticlePropertySvc 
      */
-    virtual IParticlePropertySvc* ppSvc   () const = 0 ;
-    
+    virtual IParticlePropertySvc* ppSvc      () const = 0 ;    
     /** get the pointer to Tool Service 
      *  @return pointer to Tool Service 
      *  @see IToolSvc 
      */
-    virtual IToolSvc*             toolSvc () const = 0 ;
-   
+    virtual IToolSvc*             toolSvc    () const = 0 ;   
+    /** get the pointer to Tool Service 
+     *  @return pointer to Tool Service 
+     *  @see IToolSvc 
+     */
+    virtual IAlgContextSvc*       contextSvc () const = 0 ;   
     /** get "good" error reporter
      *  @return pointer to Good error reporter
      *  @see LoKi::IReporter
      */
-    virtual LoKi::IReporter*     reporter() const = 0 ;
-    
+    virtual LoKi::IReporter*     reporter    () const = 0 ;    
   public:
-    
     /** Retrieve interface ID
      *  mandatory method from IInterface 
      *  @see IInterface 
      *  @see InterfaceID 
      *  @return unique interface identifier 
      */
-    static const InterfaceID& interfaceID() ; 
-    
+    static const InterfaceID& interfaceID() ;
   protected:
-    
     // virtual protected destructor 
     virtual ~ILoKiSvc() ;
-    
   };
-  
-} // end of namespace LoKi 
-
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 //  The END 
 // ============================================================================

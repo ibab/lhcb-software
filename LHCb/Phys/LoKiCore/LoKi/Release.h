@@ -1,14 +1,4 @@
-// $Id: Release.h,v 1.4 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/25 19:12:56  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.2  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Release.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RELEASE_H 
 #define LOKI_RELEASE_H 1
@@ -30,8 +20,6 @@
 #include "LoKi/Convertible.h"
 #include "LoKi/AddRef.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -46,9 +34,9 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @struct Release Release.h LoKi/Release.h
    * 
    *  Helper utility to resolve the templated 
@@ -67,6 +55,7 @@ namespace LoKi
       return 0 != o ;
     }
   } ;
+  // ==========================================================================
   template <class TYPE>
   struct Release<TYPE,true>
     : public std::unary_function<IInterface*,bool>
@@ -77,7 +66,7 @@ namespace LoKi
       return 0 != o ;
     }
   } ;
-  
+  // ==========================================================================  
   /** helper function to invoke properly TYPE::release method 
    *  avoiding the template ambiguity for GCC compiler 
    *
@@ -91,10 +80,9 @@ namespace LoKi
     Release<TYPE,LoKi::Convertible<TYPE,IInterface>::value> actor ;
     // and perform the proper action!
     return actor( obj );
-  } ;
-  
+  } 
+  // ==========================================================================
 } //end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

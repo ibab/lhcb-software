@@ -1,21 +1,9 @@
-// $Id: Helpers.h,v 1.4 2007-02-26 13:13:08 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Helpers.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HELPERS_H 
 #define LOKI_HELPERS_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -31,7 +19,6 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
@@ -41,6 +28,7 @@ namespace LoKi
    */
   namespace Helpers 
   {
+    // ========================================================================
     /** Trivial helper which returns either the first element 
      *  of the container, or its default" value (for empty 
      *  container)
@@ -55,8 +43,8 @@ namespace LoKi
     {
       if ( !cnt.empty() ) { return *(cnt.begin()) ; }
       return typename CONTAINER::value_type() ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** Trivial helper which returns either the first element 
      *  of the container, or its default" value (for empty 
      *  or invalid container)
@@ -72,10 +60,9 @@ namespace LoKi
       if ( 0 != cnt ) { return _First(*cnt) ; }
       return typename CONTAINER::value_type() ; 
     }
-    
-  }; // end of namespace LoKi::Helpers 
-} ; // end of namespace LoKi 
-
+    // ========================================================================    
+  } // end of namespace LoKi::Helpers 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

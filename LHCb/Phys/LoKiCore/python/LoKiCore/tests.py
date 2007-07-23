@@ -1,8 +1,4 @@
-# $Id: tests.py,v 1.1 2007-06-01 11:35:27 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-# =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Id: tests.py,v 1.2 2007-07-23 17:07:42 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiCore/tests.py
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,14 +10,14 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 ## The most trivial test function
 def test() :
     """ The most trivial test function """
-    import LoKiCore.decorators 
+    import LoKiCore.decorators
+    import LoKiCore.math
     pass
 # =============================================================================
 ## Perform all known tests
 def testAll() :
     """ Perform all known tests """
     test()
-
     
 # =============================================================================
 if '__main__' == __name__ : testAll ()

@@ -1,20 +1,4 @@
-// $Id: Geometry.h,v 1.5 2007-02-26 13:13:08 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
-// Revision 1.2  2006/04/19 08:14:10  ibelyaev
-//  fix a bug in Geometry + 'Const'
-//
-// Revision 1.1  2006/02/17 19:12:53  ibelyaev
-//  add Cast and some other minor changes
-// 
+// $Id: Geometry.h,v 1.6 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GEOMETRY_H 
 #define LOKI_GEOMETRY_H 1
@@ -34,8 +18,6 @@
 // ============================================================================
 #include "LoKi/Kinematics.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -50,7 +32,6 @@
  *  @date 2006-02-17 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Geometry Geometry.h LoKi/Geometry.h
@@ -61,7 +42,7 @@ namespace LoKi
    */
   namespace Geometry 
   {
-    
+    // ========================================================================
     /** The trivial function, which evaluated the distance 
      *  between the point and the line. 
      *
@@ -79,7 +60,7 @@ namespace LoKi
     ( const LoKi::Point3D&  point , 
       const LoKi::Point3D&  p0    , 
       const LoKi::Vector3D& v0    ) ;
-    
+    // ========================================================================    
     /** The trivial function, which evaluates the distance 
      *  between two lines 
      *  Each line is parameterized with the point at the line 
@@ -98,7 +79,7 @@ namespace LoKi
       const LoKi::Vector3D& v1 ,
       const LoKi::Point3D&  p2 , 
       const LoKi::Vector3D& v2 ) ;
-    
+    // ========================================================================    
     /** The trivial function, 
      *  which evaluates the distance between two points 
      *  in "chi2" units 
@@ -120,7 +101,7 @@ namespace LoKi
       const LoKi::Point3D&       p2    , 
       const Gaudi::SymMatrix3x3& cov2  , 
       double&                    value ) ;
-
+    // ========================================================================
     /** The trivial function, 
      *  which evaluates the distance between two points 
      *  in "chi2" units 
@@ -140,11 +121,9 @@ namespace LoKi
       const LoKi::Point3D&       p2    , 
       const Gaudi::SymMatrix3x3& c     , 
       double&                    value ) ;
-
-
+    // ========================================================================
   } // end of the namespace LoKi::Geometry 
-} // end of the namespace LoKi 
-
+} // end of the namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

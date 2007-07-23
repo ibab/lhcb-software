@@ -1,11 +1,4 @@
-// $Id: Kinematics.cpp,v 1.7 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/05/02 14:29:11  ibelyaev
-//  censored
-//
+// $Id: Kinematics.cpp,v 1.8 2007-07-23 17:07:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,8 +17,6 @@
 // ============================================================================
 #include "Math/Boost.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace LoKi::Kinematics
@@ -42,9 +33,7 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/** simple function for evaluation of the euclidiam norm
+/*  simple function for evaluation of the euclidiam norm
  *  for LorentzVectors 
  *  (E**2+Px**2+Py**2+Pz**2)
  *  @param vct the vector
@@ -61,11 +50,9 @@ double LoKi::Kinematics::euclidianNorm2
     vct.x() * vct.x() + 
     vct.y() * vct.y() + 
     vct.z() * vct.z() ;
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/** simple function for evaluation of the euclidiam norm
+/*  simple function for evaluation of the euclidiam norm
  *  for LorentzVectors 
  *  sqrt(E**2+Px**2+Py**2+Pz**2)
  *  @param vct the vector
@@ -76,11 +63,9 @@ double LoKi::Kinematics::euclidianNorm2
 // ============================================================================
 double LoKi::Kinematics::euclidianNorm
 ( const LoKi::LorentzVector& vct ) 
-{ return sqrt ( euclidianNorm2 ( vct )  ) ; } ;
+{ return sqrt ( euclidianNorm2 ( vct )  ) ; } 
 // ============================================================================
-
-// ============================================================================
-/** simple function for evaluation of the square of 
+/*  simple function for evaluation of the square of 
  *  the euclidian distance inbetwee 2 LorentzVectors 
  *  (DeltaE**2+DeltaPx**2+DeltaPy**2+DeltaPz**2)
  *  @param vct1 the first vector
@@ -93,11 +78,9 @@ double LoKi::Kinematics::euclidianNorm
 double LoKi::Kinematics::delta2euclidian 
 ( const LoKi::LorentzVector& vct1 , 
   const LoKi::LorentzVector& vct2 ) 
-{ return euclidianNorm2 ( vct1 - vct2 ) ; } ;
+{ return euclidianNorm2 ( vct1 - vct2 ) ; } 
 // ============================================================================
-
-// ============================================================================
-/** simple function which evaluates the transverse 
+/*  simple function which evaluates the transverse 
  *  momentum with respect a certain 3D-direction
  *  @param mom the momentum
  *  @param dir the direction
@@ -115,12 +98,9 @@ double LoKi::Kinematics::transverseMomentumDir
   const LoKi::ThreeVector v( mom ) ;
   const LoKi::ThreeVector perp = v - dir * ( v.Dot( dir ) / dmag2 ) ;
   return perp.R() ;
-} ;
+}
 // ============================================================================
-
-
-// ============================================================================
-/** This routine returns the cosine angle theta 
+/*  This routine returns the cosine angle theta 
  *  The decay angle calculated  is that between 
  *  the flight direction of the daughter neson, "D",
  *  in the rest frame of "M" (the parent of "D"), 
@@ -154,11 +134,9 @@ double LoKi::Kinematics::decayAngle
   
   // cosine 
   return v3D.Dot( v3M ) ;
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/** This routine returns the cosine angle theta 
+/*  This routine returns the cosine angle theta 
  *  The decay angle calculated  is that between 
  *  the flight direction of the daughter neson, "D",
  *  in the rest frame of "Q" (the parent of "D"), 
@@ -199,9 +177,7 @@ double LoKi::Kinematics::decayAngle
   }
   //
   return ( pd * mq2 - pq * qd ) / sqrt( value ) ;
-};
-// ============================================================================
-
+}
 // // ============================================================================
 // /** This routine evaluates the cosine of "transversity angle", 
 //  *  useful e.g. to disantangle the different partiasl vaves in 

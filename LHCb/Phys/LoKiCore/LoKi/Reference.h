@@ -1,4 +1,4 @@
-// $Id: Reference.h,v 1.2 2007-06-27 14:09:39 ibelyaev Exp $
+// $Id: Reference.h,v 1.3 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_REFERENCE_H 
 #define LOKI_REFERENCE_H 1 
@@ -11,6 +11,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class Reference Reference.h LoKi/Reference.h
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-06-08
@@ -56,6 +57,7 @@ namespace LoKi
     // the underlying pointer 
     TYPE* m_data ; ///< the underlying pointer 
   };
+  // ==========================================================================
 } //end of namespace LoKi
 // ============================================================================
 // The END 

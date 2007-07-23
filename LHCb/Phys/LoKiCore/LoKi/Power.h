@@ -1,24 +1,12 @@
-// $Id: Power.h,v 1.7 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/25 19:12:56  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.5  2006/10/05 11:52:06  ibelyaev
-//  fix compilation warnings for slc4_ia32_gcc345
-//
+// $Id: Power.h,v 1.8 2007-07-23 17:07:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-#include "LoKi/Functions.h"
+#include "LoKi/Math.h"
 #include "LoKi/cpower.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -34,9 +22,9 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {  
+  // ==========================================================================
   /** @class Power Power.h LoKi/Power.h
    *
    *  Simple function which allows the efficient 
@@ -45,6 +33,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr 
    *  @date   2005-04-09
    */
+  // ==========================================================================
   template <class TYPE>
   class Power : public LoKi::Function<TYPE>
   {
@@ -100,18 +89,18 @@ namespace LoKi
     LoKi::FunctionFromFunction<TYPE>  m_fun ;
     int                               m_val ;
   };
-  
+  // ==========================================================================
   /** pow for LoKi functions
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
   template <class TYPE> 
-  inline LoKi::FunctionFromFunction<TYPE>
+  inline LoKi::Power<TYPE>
   pow ( const LoKi::Function<TYPE>& fun , 
         const int                   val ) 
   { return LoKi::Power<TYPE> ( fun , val ) ; }
-  
+  // ==========================================================================  
   /** pow2 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
@@ -119,10 +108,10 @@ namespace LoKi
    *  @date   2005-04-09
    */      
   template <class TYPE> 
-  inline LoKi::FunctionFromFunction<TYPE>
+  inline LoKi::Power<TYPE>
   pow2 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 2 ) ; }
-  
+  // ==========================================================================  
   /** pow3 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
@@ -130,10 +119,10 @@ namespace LoKi
    *  @date   2005-04-09
    */      
   template <class TYPE> 
-  inline LoKi::FunctionFromFunction<TYPE>
+  inline LoKi::Power<TYPE>
   pow3 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 3 ) ; }
-  
+  // ==========================================================================  
   /** pow4 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
@@ -141,10 +130,10 @@ namespace LoKi
    *  @date   2005-04-09
    */      
   template <class TYPE> 
-  inline LoKi::FunctionFromFunction<TYPE>
+  inline LoKi::Power<TYPE>
   pow4 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 4 ) ; }
-  
+  // ==========================================================================  
   /** pow2 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
@@ -152,14 +141,13 @@ namespace LoKi
    *  @date   2005-04-09
    */      
   template <class TYPE> 
-  inline LoKi::FunctionFromFunction<TYPE>
+  inline LoKi::Power<TYPE>
   square ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow2 ( fun ) ; }
-  
+  // ==========================================================================
 } //end of namespace LoKi
-
-// ============================================================================
-// The END 
 // ============================================================================
 #endif // LOKI_POWER_H
+// ============================================================================
+// The END 
 // ============================================================================

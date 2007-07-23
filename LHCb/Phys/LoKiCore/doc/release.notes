@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2007-06-27 14:09:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.53 2007-07-23 17:07:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,24 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-23 - Vanya BELYAEV 
+  - many fixes and reshufling of the code 
+  - improve in doxygen comments
+  - reduce the numebr of included headers to speedup the compilation
+  - new functionality 
+     LoKi/Monitoring.h : 
+      three new  metafunctions, Counter, Stat and Plot for self-monitoring 
+      Many thanks to Hugo RUIZ! 
+     LoKi/Info.f and LoKi/ExtraInfo.h 
+      generic utilities and functors for manipulation with "extraInfo" data 
+      members
+    LoKi/ILoKiSvc and LoKi/Services.h
+      add access to AlgContext Service
+
+ - cmt/requirements 
+    version increment to v3r1
+
 
 ! 2007-06-27 - Vanya BELYAEV 
 
@@ -344,6 +362,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.52  2007/06/27 14:09:40  ibelyaev
+!  minor changes to allow compilation of Reflex dictionaries at Win32
+!
 ! Revision 1.51  2007/06/11 09:13:46  cattanem
 ! move tag
 !

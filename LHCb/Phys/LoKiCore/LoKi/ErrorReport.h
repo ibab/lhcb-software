@@ -1,14 +1,4 @@
-// $Id: ErrorReport.h,v 1.6 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.4  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: ErrorReport.h,v 1.7 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -40,6 +30,7 @@ class GaudiException ;
 namespace LoKi
 {
   class IReporter; 
+  // ==========================================================================
   /** @class ErrorReport ErrorReport.h LoKi/ErrorReport.h
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2003-04-15
@@ -163,6 +154,7 @@ namespace LoKi
     //
     const LoKi::IReporter* m_reporter ;    
   };
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

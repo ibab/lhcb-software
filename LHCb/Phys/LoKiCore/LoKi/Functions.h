@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.18 2007-06-10 19:54:05 ibelyaev Exp $
+// $Id: Functions.h,v 1.19 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -251,13 +251,180 @@ namespace LoKi
     Predicate& operator=( const Predicate& );
   } ;
   // ==========================================================================
+  /** @struct FunctionFromFunction
+   *  helper structure to implement function from function
+   *
+   *  It is used by LoKi for implementation of compose 
+   *  functions, e.g. <tt>sin(Fun)</tt>, where <tt>Fun</tt> 
+   *  is a <tt>LoKi::Function</tt>
+   *
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-15
+   */
+  template <class TYPE>
+  class FunctionFromFunction : public Function<TYPE> 
+  {
+  public:
+    /// define all nesessary types 
+    _LOKI_FUNCTION_TYPES_( FunctionFromFunction , TYPE ) ;    
+    typedef FunB                  function ;
+    /// constructor 
+    FunctionFromFunction ( const function& fun      )
+      : FunB  () , m_fun ( fun.           clone ()  ) {};
+    /// deep 'copy'  
+    FunctionFromFunction ( const Self& right        )
+      : AuxFunBase ( right )
+      , FunB       ( right ) 
+      , m_fun ( 0  ) 
+    {
+      m_fun = typeid ( Self ) == typeid ( right ) ? 
+        right.m_fun -> clone () : right.clone() ;
+    };
+    /// destructor 
+    virtual ~FunctionFromFunction () { delete m_fun ; }
+    /// the only one essential method ("function")      
+    virtual result_type operator() ( argument p ) const { return fun( p ) ; }
+    /// clone method 
+    virtual Self* clone    () const { return new Self( *this ) ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return  m_fun->fillStream( s ) ; };
+    /// unique function ID
+    virtual std::size_t   id () const { return m_fun->id() ; }
+    /// delegate the object type
+    virtual std::string   objType () const { return m_fun -> objType() ; }
+  public:
+    /// the assignement operator is enabled now 
+    Self& operator= ( const Self& right )
+    {
+      if ( this == &right ) { return *this ; } 
+      // set new pointer 
+      FunB* newf = typeid ( Self ) == typeid ( right ) ? 
+        right.m_fun -> clone () : (FunB*) right.clone() ;
+      // delete own pointer 
+      delete m_fun ; 
+      m_fun = newf ;
+      return *this ;
+    };
+    /// the assignement operator is enabled now 
+    Self& operator= ( const FunB& right )
+    {
+      if ( this == &right ) { return *this ; } 
+      /// set new pointer 
+      FunB* newf = right.clone() ;
+      /// delete own pointer 
+      delete m_fun ;
+      m_fun = newf ;
+      return *this ;
+    };  
+  public:
+    /// evaluate the function
+    inline       result_type fun ( argument p ) const 
+    { return (*m_fun) ( p )  ; }
+    /// accessor to the function 
+    inline const function&   fun () const { return *m_fun ; }
+  private:
+    /// default constructor is private 
+    FunctionFromFunction();
+  private:
+    // the underlaying function 
+    const function* m_fun ; ///< the underlaying function 
+  };
+  // ==========================================================================
+  /** @struct PredicateFromPredicate
+   *  The helper structure to implement 
+   *  predicates from predicates
+   *
+   *  It is useful for construction of complex predicates 
+   *  from the simpler components:
+   *
+   *  @code 
+   *
+   *  typede Predicate<SomeType>              Pred ;
+   *  typedef PredicateFromPredicate<SomeType> PfP  ;
+   *  
+   *  void func( const Pred& A , const Pred& B ) 
+   *  {
+   *    // construct different predicates from other predicates  
+   *    PfP p1 = A && B   ;
+   *    PfP p2 = A || B   ;
+   *    PfP p3 = !A       ;
+   *    PfP p4 = ( A || B ) || !( A && B ) ;
+   *  }
+   *
+   *  @endcode 
+   *
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-15
+   */
+  template <class TYPE>
+  class PredicateFromPredicate : public Predicate<TYPE> 
+  {
+  public :
+    /// define all needed types 
+    _LOKI_PREDICATE_TYPES_( PredicateFromPredicate , TYPE ) ;
+    /// constructor 
+    PredicateFromPredicate ( const FunB& pr ) 
+      : FunB () , m_pr( pr.        clone () ) {} ;
+    /// deep copy  
+    PredicateFromPredicate ( const Self& pr ) 
+      : AuxFunBase ( pr ) 
+      , FunB       ( pr ) 
+      , m_pr       ( 0  )
+    {
+      m_pr = typeid ( Self ) == typeid ( pr ) ? 
+        pr.m_pr -> clone () : pr.clone() ;
+    };
+    /// destructor 
+    virtual ~PredicateFromPredicate()             { delete  m_pr             ; }
+    /// the only one essential method ("function")      
+    virtual result_type operator() ( argument p ) const { return (*m_pr)( p ); }
+    /// clone method 
+    virtual Self* clone   ()                const { return new Self( *this ) ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return  m_pr->fillStream( s ) ; };
+    /// unique function ID (hash) 
+    virtual std::size_t   id () const { return m_pr->id() ; }
+    /// delegate the object type
+    virtual std::string   objType () const { return m_pr -> objType() ; }
+  public:
+    /// the assignement operator is enabled now 
+    Self& operator= ( const Self& right )
+    {
+      if ( this == &right ) { return *this ; } 
+      /// set new pointer
+      FunB* newf = typeid ( Self ) == typeid ( right ) ? 
+        right.m_pr -> clone () : (FunB*) right.clone() ;
+      // delete own pointer 
+      delete m_pr  ; 
+      m_pr = newf  ;
+      return *this ;
+    };
+    /// the assignement operator is enabled now 
+    Self& operator= ( const FunB& right )
+    {
+      if ( this == &right ) { return *this ; } 
+      /// set new pointer 
+      FunB* newf = right.clone() ;
+      /// delete own pointer 
+      delete m_pr   ; 
+      m_pr = newf   ;
+      return *this ;
+    };  
+  protected:
+    // accessor to the underlying predicate 
+    inline const FunB& pr () const     { return *m_pr ; }
+    // evaluate  the underlying predicate
+    inline const result_type pr ( argument p ) const { return (*m_pr) ( p )  ; }
+  private:
+    /// default constructor is private 
+    PredicateFromPredicate();
+  private:
+    // the underlying predicate 
+    const FunB* m_pr ; ///< the underlying predicate 
+  };
 } // end of namespace LoKi
-// ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/BiFunctions.h"
-#include "LoKi/Primitives.h"
-#include "LoKi/Math.h"
 // ============================================================================
 // The END 
 // ============================================================================

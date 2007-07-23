@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.cpp,v 1.6 2007-06-10 19:54:07 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.7 2007-07-23 17:07:43 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,6 +24,11 @@
 #include "LoKi/Report.h"
 #include "LoKi/Welcome.h"
 #include "LoKi/Exception.h"
+#include "LoKi/shifts.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include "boost/functional/hash.hpp"
 // ============================================================================
 /** @file
  *
@@ -183,15 +188,17 @@ MsgStream&    operator<<
   return stream ;
 }
 // ============================================================================
-/*  simple fuctiin to generate the default generic 
+/*  simple fuction to generate the default generic 
  *  (hopefully unique?) ID for the functor 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
 // ==========================================================================
 std::size_t LoKi::genericID( const AuxFunBase& o ) 
 {
-  GaudiUtils::Hash<std::string> hash ;
-  return hash ( o.printOut() ) ;
+  // Use Boost::hash
+  std::size_t _id = boost::hash_value ( o.printOut() ) ;
+  // make a cyclic shift to 12 bits left 
+  return LoKi::Shifts::cyclicShiftLeft ( _id , 12 ) ;
 }
 // ==========================================================================
 

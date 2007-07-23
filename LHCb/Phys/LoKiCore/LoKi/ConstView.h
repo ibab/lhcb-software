@@ -1,11 +1,4 @@
-// $Id: ConstView.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: ConstView.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONSTVIEW_H 
 #define LOKI_CONSTVIEW_H 1
@@ -19,8 +12,6 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/ConstIterator.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -36,9 +27,9 @@
  *  @date 2006-03-29
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class ConstView ConstView.h LoKi/ConstView.h
    *  
    *
@@ -46,8 +37,7 @@ namespace LoKi
    *  @date   2006-03-29
    */
   template <class CONTAINER>
-  struct ConstView
-    : public std::pair
+  struct ConstView : public std::pair
   <
     typename LoKi::ConstIterator<typename CONTAINER::const_iterator> ,
     typename LoKi::ConstIterator<typename CONTAINER::const_iterator>
@@ -101,10 +91,8 @@ namespace LoKi
     ConstView slice ( size_type i1 , size_type i2 ) const 
     { return ConstView( begin() + i1 , begin() + i2 ) ; }
   };
-  
-  
-} // end of namespace LoKi 
-
+  // ==========================================================================  
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

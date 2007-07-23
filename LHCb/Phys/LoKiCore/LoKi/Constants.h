@@ -1,14 +1,4 @@
-// $Id: Constants.h,v 1.9 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/05/08 09:04:27  cattanem
-// Units now in Gaudi::Units namespace
-//
-// Revision 1.7  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Constants.h,v 1.10 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
@@ -24,8 +14,6 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -40,7 +28,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Constants Constants.h LoKi/Constants.h
@@ -52,7 +39,6 @@ namespace LoKi
    */
   namespace Constants
   {
-    
     /// representation of invalid time 
     const double InvalidTime         =  -1000 * Gaudi::Units::ns ;
     /// representation of invalid/infinite time 
@@ -66,7 +52,7 @@ namespace LoKi
     /// representation of invalid particle charge  
     const double InvalidCharge       =  -1000      ;
     /// representation of invalid PID 
-    const double InvalidPID          =  -1000      ;
+    const double InvalidPID          =      0      ;
     /// representation of invalid confedence level   
     const double InvalidConfLevel    =  -1000      ;
     /// representation of invalid energy
@@ -79,15 +65,13 @@ namespace LoKi
     const double InvalidAngle        =  -1000      ;
     /// representation of HUGE chi2 
     const double HugeChi2            = 1.e+10      ;
-    /// represetnation of positive INFINITY 
+    /// representation of positive INFINITY 
     const double PositiveInfinity    =  
     std::numeric_limits<double>::max() ;
     /// represetnation of positive INFINITY 
     const double NegativeInfinity    = -PositiveInfinity ;
   } // end of namespace Constants
-} // end of namespace LoKi  
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

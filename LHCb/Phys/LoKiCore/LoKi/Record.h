@@ -1,11 +1,4 @@
-// $Id: Record.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Record.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RECORD_H 
 #define LOKI_RECORD_H 1
@@ -14,8 +7,6 @@
 // ============================================================================
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/Tuples.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -31,7 +22,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {  
   /** @class Record Record.h LoKi/Record.h
@@ -67,14 +57,12 @@ namespace LoKi
    */
   class Record : public Tuples::Tuple 
   {
-  public:        
-    
+  public:
     /** standard constructor
      *  @param ntuple LoKi Tuple adapter 
      */
     Record ( const Tuples::Tuple& ntuple ) 
       : Tuples::Tuple ( ntuple ) {};
-    
     /** constructor 
      *  @param tuple pointer to LoKi Tuple adapter 
      *  @param format blank-separated list of variables, 
@@ -83,30 +71,21 @@ namespace LoKi
      */
     Record ( const Tuples::Tuple& tuple      , 
              const char*        format ... ) ;
-    
     /** copy conctructor 
      *  @param record the record to be copied 
      */
     Record ( const Record& record ) 
       : Tuples::Tuple ( record ) {};
-    
     /// destructor 
     virtual ~Record();
-
   private:
-    
     /// default constructor is private 
     Record ();
     /// assignemenet operator is private 
     Record& operator=( const Record& );
-    
   };
-  
+  // ============================================================================  
 }  // end of namespace LoKi 
-// ============================================================================
-
-
-
 // ============================================================================
 // The END 
 // ============================================================================

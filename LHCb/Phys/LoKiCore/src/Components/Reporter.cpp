@@ -1,17 +1,4 @@
-// $Id: Reporter.cpp,v 1.7 2006-12-15 08:37:20 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/09 18:26:53  ibelyaev
-//  fix welcome message
-//
-// Revision 1.5  2006/11/09 17:01:06  ibelyaev
-//  v1r8: improve printout
-//
-// Revision 1.4  2006/06/24 17:18:41  ibelyaev
-//  reduce the printout
-//
+// $Id: Reporter.cpp,v 1.8 2007-07-23 17:07:44 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================

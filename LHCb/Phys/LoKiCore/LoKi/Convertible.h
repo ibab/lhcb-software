@@ -1,14 +1,4 @@
-// $Id: Convertible.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/28 10:30:51  ibelyaev
-//  fix for WIn32 platform
-//
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Convertible.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONVERTIBLE_H 
 #define LOKI_CONVERTIBLE_H 1
@@ -22,8 +12,6 @@
 #else
 #include "boost/static_assert.hpp" 
 #endif
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,10 +27,11 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // ==========================================================================
 #ifdef WIN32
+  // ==========================================================================
   namespace detail
   {
     struct _Small {                 } ;
@@ -59,8 +48,9 @@ namespace LoKi
       enum { value = sizeof( Test( MakeT() ) ) == sizeof( _Small ) } ;
     } ;
   }
+  // ==========================================================================
 #endif 
-  
+  // ==========================================================================
   /** @struct Convertible Convertible.h LoKi/Convertible.h
    *
    *  The trivial structure to determina at compile-time the 
@@ -80,12 +70,12 @@ namespace LoKi
            value = LoKi::detail::Conversion<TYPE1*,TYPE2*>::value } ;
 #endif  
   } ;
+  // ==========================================================================
   template <class TYPE>
   struct Convertible<TYPE,TYPE> 
   { enum { same = true , value = true } ; } ;
-  
-} //end of namespace LoKi 
-
+  // ==========================================================================  
+} //end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

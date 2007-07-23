@@ -1,8 +1,4 @@
-// $Id: Calls.h,v 1.1 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: Calls.h,v 1.2 2007-07-23 17:07:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CALLS_H 
 #define LOKI_CALLS_H 1
@@ -21,6 +17,7 @@ namespace LoKi
 {
   namespace Dicts 
   {
+    // ========================================================================
     /** @class FunCalls Calls.h LoKi/Calls.h
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-29
@@ -37,6 +34,7 @@ namespace LoKi
       static typename Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
     } ;
+    // ========================================================================
     /** @class CutCalls Calls.h LoKi/Calls.h
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-29
@@ -53,6 +51,7 @@ namespace LoKi
       static typename Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Dicts
 } //end oif namespace LoKi
 // ============================================================================

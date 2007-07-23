@@ -1,14 +1,4 @@
-// $Id: Base.h,v 1.4 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/06/01 11:35:26  ibelyaev
-//  prepare for v3r0
-//
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Base.h,v 1.5 2007-07-23 17:07:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BASE_H 
 #define LOKI_BASE_H 1

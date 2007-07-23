@@ -1,17 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.8 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2006/12/15 08:37:20  ranjard
-// v2r0 - InstallArea and new Plugins
-//
-// Revision 1.6  2006/11/09 17:01:06  ibelyaev
-//  v1r8: improve printout
-//
-// Revision 1.5  2006/06/24 17:18:41  ibelyaev
-//  reduce the printout
-//
+// $Id: LoKiSvc.cpp,v 1.9 2007-07-23 17:07:44 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -21,6 +8,7 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IalgContextSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================
@@ -32,8 +20,6 @@
 #include "LoKi/Welcome.h"
 #include "LoKi/Exception.h"
 #include "LoKi/Services.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -51,9 +37,7 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/** @class LoKiSvc
+/*  @class LoKiSvc
  *  the simplest implementation of LoKi::ILoKiSvc interface 
  *  @see LoKi::ILoKiSvc 
  *  @date 2006-01-16 
@@ -66,7 +50,7 @@ class LoKiSvc :
 {
   friend class SvcFactory<LoKiSvc> ;
 public:
-  
+  // ==========================================================================
   /** get the pointer to service locator 
    *  @return ponter to Service Locator 
    *  @see LoKi::ILoKiSvc
@@ -74,7 +58,7 @@ public:
    */
   virtual ISvcLocator*          svcLoc() const 
   { return Service::serviceLocator() ; } ;
-  
+  // ==========================================================================  
   /** get the pointer to Particle Property Service 
    *  @return pointer to Particle Property Service 
    *  @see LoKi::ILoKiSvc
@@ -92,6 +76,7 @@ public:
     //
     return m_ppSvc ;
   } ;
+  // ==========================================================================
   /** get the pointer to Tool Service 
    *  @return pointer to Tool Service 
    *  @see LoKi::ILoKiSvc
@@ -114,6 +99,30 @@ public:
     //
     return m_toolSvc ;
   } ;  
+  // ==========================================================================
+  /** get the pointer to Algorithm Context Service 
+   *  @return pointer to Algorithm Context Service 
+   *  @see LoKi::ILoKiSvc
+   *  @see IToolSvc 
+   */
+  virtual IAlgContextSvc* contextSvc () const 
+  {
+    if ( 0 != m_contextSvc ) { return m_contextSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "AlgContextSvc" , m_contextSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_contextSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'AlgContextSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_contextSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IAlgContextSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_contextSvc ;
+  } ;  
+  // ==========================================================================
   /** get "good" error reporter
    *  @return pointer to Good error reporter
    *  @see LoKi::IReporter
@@ -132,6 +141,7 @@ public:
     //
     return m_reporter ;
   } ;
+  // ==========================================================================
 public:
   /// Inform that a new incident has occured
   virtual void handle ( const Incident& ) {} ;
@@ -152,9 +162,6 @@ public:
       log << endreq ;
     }
     //
-    LoKi::Services& svc = LoKi::Services::instance() ;
-    if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
-    //
     {
       IToolSvc* svc = toolSvc()   ;
       if ( 0 == svc        ) { return StatusCode::FAILURE ; }
@@ -164,12 +171,16 @@ public:
       if ( 0 == m_reporter ) { return StatusCode::FAILURE ; }
     }
     //
+    LoKi::Services& svc = LoKi::Services::instance() ;
+    if ( 0 == svc.lokiSvc() ) { svc.setLoKi ( this ) ; }
+    //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 == rep.reporter() && 0 != m_reporter ) 
     { rep.setReporter ( m_reporter ) ; }
     //
     return StatusCode::SUCCESS ;
   } ;  
+  // ==========================================================================
   /** general service finalizetion 
    *  @see IService 
    *  @return status code
@@ -177,14 +188,19 @@ public:
   virtual StatusCode finalize () 
   {
     //
-    LoKi::Services& svc = LoKi::Services::instance() ;
-    svc.releaseAll() ;
+    { // static services 
+      LoKi::Services& svc = LoKi::Services::instance() ;
+      svc.releaseAll() ;
+    }
     //
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
     { m_toolSvc -> releaseTool ( m_reporter ) ; }
+    //
     m_reporter = 0 ;
-    if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
-    if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; }    
+    //
+    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
+    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; }    
+    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; }    
     //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 != rep.reporter() ) { rep.setReporter( 0 ) ; }
@@ -198,7 +214,7 @@ public:
     //
     return Service::finalize() ;
   } ;
-
+  // ==========================================================================
   /** general service reinitialization
    *  @see IService 
    *  @return status code
@@ -208,12 +224,16 @@ public:
     StatusCode sc = Service::reinitialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    LoKi::Services& svc = LoKi::Services::instance() ;
-    svc.releaseAll();
-    if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
     //
-    if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
-    if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; }
+    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
+    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; }
+    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; }
+    //
+    { // static services:
+      LoKi::Services& svc = LoKi::Services::instance() ;
+      svc.releaseAll();
+      if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
+    }
     //
     { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
@@ -224,9 +244,9 @@ public:
     //
     return StatusCode::SUCCESS ;
   } ;
-  
-public: 
-  
+  // ==========================================================================  
+public:
+  // ==========================================================================
   /** Query interfaces of Interface
    *  @param iid ID of Interface to be retrieved
    *  @param ppI Pointer to Location for interface pointer
@@ -249,8 +269,10 @@ public:
     addRef() ;
     //
     return StatusCode::SUCCESS ;
-  } ;  
+  } ; 
+  // ========================================================================== 
 protected:
+  // ==========================================================================
   /** standard constructor 
    *  @param name service instance name 
    *  @param pSvc pointer to the service locator 
@@ -262,21 +284,25 @@ protected:
     //
     , m_ppSvc        ( 0 ) 
     , m_toolSvc      ( 0 ) 
+    , m_contextSvc   ( 0 ) 
     , m_reporter     ( 0 ) 
     , m_reporterName ( "LoKi::Reporter/ERROR")
     //
   { 
     declareProperty ( "Reporter" , m_reporterName ) ;
   } ;
-  /// virtual and protected destructor 
+  // ==========================================================================
+  /// virtual and protected destructor
   virtual ~LoKiSvc () 
   { 
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
     { m_toolSvc -> releaseTool ( m_reporter ) ; }
     m_reporter = 0 ;
-    if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
-    if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; } 
+    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
+    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; } 
+    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; } 
   } ;  
+  // ==========================================================================
 private:
   // default constructor is disabled
   LoKiSvc () ;
@@ -288,6 +314,7 @@ private:
   //
   mutable IParticlePropertySvc* m_ppSvc        ;
   mutable IToolSvc*             m_toolSvc      ;
+  mutable IAlgContextSvc*       m_contextSvc   ;
   mutable LoKi::IReporter*      m_reporter     ;
   std::string                   m_reporterName ;
 };

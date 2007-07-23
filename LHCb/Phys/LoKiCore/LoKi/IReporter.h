@@ -1,11 +1,4 @@
-// $Id: IReporter.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: IReporter.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IREPORTER_H 
 #define LOKI_IREPORTER_H 1
@@ -24,8 +17,6 @@
 // ============================================================================
 class GaudiException ;
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -40,37 +31,33 @@ class GaudiException ;
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
+  // ==========================================================================
   /** @class IReporter IReporter.h LoKi/IReporter.h
    *  
    *
    *  @author Ivan Belyaev ivelyaev@physics.syr.edu
    *  @date   2003-01-16
    */
-  class IReporter : public virtual   IAlgTool   , 
-                    public virtual   IErrorTool
+  class IReporter 
+    : public virtual   IAlgTool   
+    , public virtual   IErrorTool
   {
-  public:
-    
+  public: 
     /** Retrieve interface ID
      *  mandatory method from IInterface 
      *  @see IInterface 
      *  @see InterfaceID 
      *  @return unique interface identifier 
      */
-    static const InterfaceID& interfaceID() ; 
-    
-  protected: 
-    
+    static const InterfaceID& interfaceID() ;
+  protected:
     // destructor 
     virtual ~IReporter() ; 
   };
-  
-} // end of namespace LoKi 
-
-
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

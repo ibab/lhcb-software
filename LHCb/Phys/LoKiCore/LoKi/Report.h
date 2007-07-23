@@ -1,14 +1,4 @@
-// $Id: Report.h,v 1.6 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/25 19:12:56  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.4  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Report.h,v 1.7 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_REPORT_H 
 #define LOKI_REPORT_H 1
@@ -38,6 +28,7 @@ class GaudiException ;
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @class Report
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-17
@@ -125,9 +116,7 @@ namespace LoKi
     /// make a report 
     static void report      () ;
   } ;
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

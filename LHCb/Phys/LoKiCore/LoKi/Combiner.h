@@ -1,11 +1,4 @@
-// $Id: Combiner.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision.h$
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Combiner.h,v 1.5 2007-07-23 17:07:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1
@@ -22,8 +15,6 @@
 // ============================================================================
 #include "LoKi/Range.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -38,9 +29,9 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {  
+  // ==========================================================================
   /** @class Combiner_ Combiner.h LoKi/Combiner.h
    *
    *  Definition of (multy) container with (multy)iterator 
@@ -114,8 +105,7 @@ namespace LoKi
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-11
-   */
-  
+   */  
   template<class CONTAINER>
   class Combiner_
   {
@@ -374,10 +364,7 @@ namespace LoKi
     // 'State' of the combiner 
     BackUps             m_backups  ;
   }; // end of class Combiner_
-  //
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,9 +1,4 @@
-// $Id: Range.h,v 1.10 2007-06-01 11:35:27 ibelyaev Exp $
-// ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Range.h,v 1.11 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -14,8 +9,6 @@
 // ============================================================================
 #include <utility>
 #include <vector>
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -31,11 +24,11 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {  
   namespace Range_Local 
   {
+    // ========================================================================
     /** Helpful function to throw an out-of-range exception for class Range_
      *  @param index invalid index
      *  @param size  range size 
@@ -43,15 +36,16 @@ namespace LoKi
     void rangeException 
     ( const long   index , 
       const size_t size  ) ;
-  };
-
+    // ========================================================================
+  }
+  // ==========================================================================
   /** @struct RangeBase_ Range.h LoKi/Range.h
    *  helper class to simplify the dealing with LoKi ranges in Python
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-09-01
    */
   struct RangeBase_ {} ;
-  
+  // ==========================================================================  
   /** @class Range_ Range.h LoKi/Range.h
    *
    *  Useful class for representation of "sequence" of the objects
@@ -170,9 +164,8 @@ namespace LoKi
     // the base itself 
     Base m_base ;    ///<the base itself 
   }; // end of class Range_
-  
+  // ==========================================================================  
 } // end of namespace LoKi
-
 // ============================================================================
 // The END
 // ============================================================================

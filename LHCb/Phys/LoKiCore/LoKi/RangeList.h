@@ -1,10 +1,4 @@
-// $Id: RangeList.h,v 1.7 2007-06-01 11:35:27 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/25 19:12:56  ibelyaev
-//
+// $Id: RangeList.h,v 1.8 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
 #define LOKI_RANGELIST_H 1
@@ -31,6 +25,7 @@
 // ============================================================================
 namespace LoKi
 { 
+  // ==========================================================================
   /** @class RangeList RangeList.h LoKi/RangeList.h
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-11-18
@@ -105,6 +100,7 @@ namespace LoKi
     // list of ranges itself 
     Ranges m_ranges ;
   };
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // RangeList + <OTHER>
@@ -116,7 +112,7 @@ operator+( const LoKi::RangeList_<RANGE>& range1 ,
            const OTHER&                   range2 )
 {
   return LoKi::RangeList_<RANGE>(range1) += range2 ;
-} ;
+} 
 // ============================================================================
 // Range + RangeList
 // ============================================================================
@@ -127,7 +123,7 @@ operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 ,
            const typename LoKi::RangeList_<RANGE>&        range2 ) 
 {
   return LoKi::RangeList_<RANGE>( range1 )+= range2 ;
-} ;
+} 
 // ============================================================================
 // Range + Range
 // ============================================================================
@@ -138,7 +134,7 @@ operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 ,
            const typename LoKi::RangeList_<RANGE>::Range& range2 ) 
 {
   return  LoKi::RangeList_<RANGE>( range1 , range2 ) ;
-} ;
+} 
 // ============================================================================
 // The END 
 // ============================================================================

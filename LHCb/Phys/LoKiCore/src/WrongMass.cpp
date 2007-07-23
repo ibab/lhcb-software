@@ -1,14 +1,4 @@
-// $Id: WrongMass.cpp,v 1.4 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/09/01 12:08:29  ibelyaev
-//  make few steps to simplify python/Bender
-//
-// Revision 1.2  2006/05/02 14:29:11  ibelyaev
-//  censored
-//
+// $Id: WrongMass.cpp,v 1.5 2007-07-23 17:07:44 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,9 +7,6 @@
 #include "LoKi/Kinematics.h"
 #include "LoKi/WrongMass.h"
 #include "LoKi/ParticleProperties.h"
-// ============================================================================
-
-
 // ============================================================================
 /** @file
  *
@@ -35,9 +22,7 @@
  *  @date 2006-03-08
  */
 // ============================================================================
-
-// ============================================================================
-/** Use a wrong mass-hypothesis for the given 4-momentum 
+/*  Use a wrong mass-hypothesis for the given 4-momentum 
  *  @param v    vector of 4-momentum 
  *  @param name particle name  
  *  @return the 4-momneum with "wrong" mass hypothesis 
@@ -50,9 +35,9 @@ LoKi::LorentzVector
 LoKi::Kinematics::wrongMass
 ( const LoKi::LorentzVector& v    , 
   const std::string&         name ) 
-{ return wrongMass ( v , LoKi::Particles::massFromName ( name ) ) ; } ;
+{ return wrongMass ( v , LoKi::Particles::massFromName ( name ) ) ; } 
 // ============================================================================
-/** Use a wrong mass-hypothesis for the given 4-momentum 
+/*  Use a wrong mass-hypothesis for the given 4-momentum 
  *  @param v    vector of 4-momentum 
  *  @param name particle name  
  *  @return the 4-momentum with "wrong" mass hypothesis 
@@ -67,9 +52,9 @@ LoKi::Kinematics::wrongMass
   const LHCb::ParticleID&    pid  ) 
 {
   return wrongMass ( v , LoKi::Particles::massFromPID( pid ) ) ;
-} ;
+} 
 // ============================================================================
-/** Use a wrong mass-hypothesis for the given 4-momenta 
+/*  Use a wrong mass-hypothesis for the given 4-momenta 
  *  to evaluate the effective invarinat mass 
  *
  *  @param v1    the first 4-momentum 
@@ -92,9 +77,9 @@ LoKi::Kinematics::wrongMass
   return wrongMass 
     ( v1 ,  LoKi::Particles::massFromName ( name1 ) , 
       v2 ,  LoKi::Particles::massFromName ( name2 ) ) ;
-} ;
+} 
 // ============================================================================
-/** Use a wrong mass-hypothesis for the given 4-momenta 
+/*  Use a wrong mass-hypothesis for the given 4-momenta 
  *  to evaluate the effective invarinat mass 
  *
  *  @param v1    the first 4-momentum 
@@ -117,7 +102,7 @@ LoKi::Kinematics::wrongMass
   return wrongMass 
     ( v1 ,  LoKi::Particles::massFromPID ( pid1 ) , 
       v2 ,  LoKi::Particles::massFromPID ( pid2 ) ) ;
-} ;
+} 
 // ============================================================================
 
 

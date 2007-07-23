@@ -1,11 +1,4 @@
-// $Id: Base.cpp,v 1.3 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Base.cpp,v 1.4 2007-07-23 17:07:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -97,7 +90,7 @@ LoKi::Base& LoKi::Base::operator=
   return *this ;
 }
 // ============================================================================
-/** Print the error message and return with the given StatusCode.
+/*  Print the error message and return with the given StatusCode.
  *
  *  Also performs statistical analysis of the error messages and
  *  suppression after the defined number of error instances.
@@ -131,7 +124,7 @@ StatusCode LoKi::Base::Error
     LoKi::Report:: Error ( type() + "/" + name() + ":" + msg , st , mx ) ;
 } 
 // ============================================================================
-/** Print the warning message and return with the given StatusCode.
+/*  Print the warning message and return with the given StatusCode.
  *
  *  Also performs statistical analysis of the error messages and
  *  suppression after the defined number of error instances.
@@ -166,7 +159,7 @@ StatusCode LoKi::Base::Warning
     LoKi::Report:: Warning ( type() + "/" + name() + ": " +  msg , st , mx ) ;
 } 
 // ============================================================================
-/** Print the message and return status code 
+/*  Print the message and return status code 
  *  @see MsgStream
  *  @see IMessageSvc 
  *  @see StatusCode 

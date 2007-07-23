@@ -1,9 +1,4 @@
-// $Id: Cast.h,v 1.4 2007-06-03 20:38:24 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Cast.h,v 1.5 2007-07-23 17:07:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CAST_H 
 #define LOKI_CAST_H 1
@@ -30,6 +25,7 @@ namespace LoKi
    */
   namespace  Cast 
   {
+    // ========================================================================
     /** @struct ConstAway 
      *  The trivial function which performs 
      *  const_cast 
@@ -37,47 +33,47 @@ namespace LoKi
      *  @date   2006-02-17
      */     
     template <class TYPE>
-    struct ConstAway
-      : public std::unary_function<const TYPE*,TYPE*>
+    struct ConstAway : public std::unary_function<const TYPE*,TYPE*>
     { 
       inline TYPE* operator() ( const TYPE* o ) const 
       { return const_cast<TYPE*>( o ) ; } 
     } ;
+    // ========================================================================
     template <class TYPE>
-    struct ConstAway<const TYPE>
-      : public std::unary_function<const TYPE*,TYPE*>
+    struct ConstAway<const TYPE> : public std::unary_function<const TYPE*,TYPE*>
     { 
       inline TYPE* operator() ( const TYPE* o ) const 
       { return const_cast<TYPE*>( o ) ; } 
     } ;
+    // ========================================================================
     template <class TYPE>
-    struct ConstAway<TYPE*>
-      : public std::unary_function<TYPE*,TYPE*>
+    struct ConstAway<TYPE*> : public std::unary_function<TYPE*,TYPE*>
     { 
       inline TYPE* operator() ( TYPE* o ) const 
       { return o ; } 
     } ;
+    // ========================================================================
     template <class TYPE>
-    struct ConstAway<const TYPE*>
-      : public std::unary_function<const TYPE*,TYPE*>
+    struct ConstAway<const TYPE*> : public std::unary_function<const TYPE*,TYPE*>
     { 
       inline TYPE* operator() ( const TYPE* o ) const 
       { return const_cast<TYPE*> ( o )  ; } 
     } ;
+    // ========================================================================
     template <class TYPE>
-    struct ConstAway<const TYPE&>
-      : public std::unary_function<const TYPE&,TYPE&>
+    struct ConstAway<const TYPE&> : public std::unary_function<const TYPE&,TYPE&>
     { 
       inline TYPE& operator() ( const TYPE& o ) const 
       { return const_cast<TYPE&>( o )  ; } 
     } ;
+    // ========================================================================
     template <class TYPE>
-    struct ConstAway<TYPE&>
-      : public std::unary_function<TYPE&,TYPE&>
+    struct ConstAway<TYPE&> : public std::unary_function<TYPE&,TYPE&>
     { 
       inline TYPE& operator() ( TYPE& o ) const 
       { return o ; } 
     } ;
+    // ========================================================================
   } // end of the namespace LoKi::Cast  
 }  // end of namespace LoKi
 // ============================================================================

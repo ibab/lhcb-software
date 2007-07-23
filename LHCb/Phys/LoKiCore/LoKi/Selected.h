@@ -1,14 +1,4 @@
-// $Id: Selected.h,v 1.6 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/25 19:12:56  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.4  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Selected.h,v 1.7 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SELECTED_H 
 #define LOKI_SELECTED_H 1
@@ -28,8 +18,6 @@
 #include "LoKi/NamedRange.h"
 #include "LoKi/select.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -44,9 +32,9 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {  
+  // ==========================================================================
   /** @class Selected_ Selected.h LoKi/Selected.h
    * 
    *  Storage of "Selected"/"Useful"/"Tagged" objects
@@ -57,8 +45,7 @@ namespace LoKi
   template <class CONTAINER>
   class Selected_ 
   {
-  public:
-    
+  public:    
     /// actual container type 
     typedef          CONTAINER                              Container ;
     /// underlying map 
@@ -69,18 +56,15 @@ namespace LoKi
     typedef typename Range::iterator                        iterator  ;
     /// own type 
     typedef          Selected_<Container>                   _Self     ;
-    
+    //
     typedef typename Map::const_iterator                    map_iterator ;
     typedef typename Map::const_iterator                    mao_iterator ;
-    
+    //
   public:
-    
     /// Standard constructor
     Selected_() : m_map() {}
-    
-    // destructor 
+    /// destructor 
     virtual ~Selected_() { m_map.clear() ; } ;
-    
     /** get all particled tagged objects
      *  @param name  tag to be selected
      *  @return selected range of objects 
@@ -91,14 +75,12 @@ namespace LoKi
       // return valid range 
       return Range( cont.begin() , cont.end() , name );
     };
-    
     /** get all particled tagged objects
      *  @param name  tag to be selected
      *  @return selected range of objects 
      */
     Range operator() ( const std::string& name ) const 
     { return get( name ); };
-    
     /** add objects to the tagged container 
      *  @param name     tag for objects 
      *  @param storage  storage of objects 
@@ -110,7 +92,6 @@ namespace LoKi
                const STORAGE&     storage , 
                const CUT&         cut     ) 
     { return add( name , storage.begin() , storage.end() , cut ) ; };
-    
     /** add objects to the tagged container 
      *  @param name     tag for objects 
      *  @param first    begin of sequence of objects  
@@ -131,7 +112,6 @@ namespace LoKi
       // return valid range 
       return Range( cont.begin() , cont.end() , name );      
     };
-    
     /** add the object to the tagged container 
      *  @param name     tag for objects 
      *  @return selected range of objects 
@@ -147,31 +127,23 @@ namespace LoKi
       // return valid range 
       return Range( cont.begin() , cont.end() , name );      
     };
-    
     /// sequential access though iterators 
     map_iterator begin () const { return m_map.begin () ; }
     /// sequential access though iterators 
     map_iterator end   () const { return m_map.end   () ; }
-    
     /// clear the selected particles 
     _Self& clear() { m_map.clear() ; return *this ;}
-    
   private:
-    
     /// copy constructor is desibled 
     Selected_        ( const _Self& );
     /// assignement      is desibled 
     _Self& operator= ( const _Self& );
-    
   private:
-    
     // actual representation of the storage 
     Map m_map;
-    
-  };
-  
+  } ;
+  // ==========================================================================
 } // enfd of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

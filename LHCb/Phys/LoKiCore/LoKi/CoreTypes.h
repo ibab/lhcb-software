@@ -1,9 +1,4 @@
-// $Id: CoreTypes.h,v 1.5 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: CoreTypes.h,v 1.6 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CORETYPES_H 
 #define LOKI_CORETYPES_H 1

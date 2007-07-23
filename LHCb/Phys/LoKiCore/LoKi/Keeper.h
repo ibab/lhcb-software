@@ -1,9 +1,4 @@
-// $Id: Keeper.h,v 1.11 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Keeper.h,v 1.12 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KEEPER_H 
 #define LOKI_KEEPER_H 1
@@ -37,6 +32,7 @@
 namespace LoKi
 {
   template <class OBJECT> class UniqueKeeper ;  
+  // ==========================================================================
   /** @class Keeper Keeper.h LoKi/Keeper.h
    *  
    *  Usefull class to keep valid pointers to the 
@@ -299,6 +295,7 @@ namespace LoKi
     // the actual container of object
     Objects  m_objects ; ///< container of object
   } ;
+  // ==========================================================================
 }  // end of namespace LoKi
 // ============================================================================
 // "POST"-include 

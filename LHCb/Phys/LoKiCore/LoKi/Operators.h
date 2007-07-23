@@ -1,16 +1,11 @@
-// $Id: Operators.h,v 1.6 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Operators.h,v 1.7 2007-07-23 17:07:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_OPERATORS_H 
 #define LOKI_OPERATORS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-#include "LoKi/Functions.h"
+#include "LoKi/Primitives.h"
 // ============================================================================
 /** @file
  *
@@ -42,14 +37,14 @@
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&&  ( const  LoKi::Predicate<TYPE>& fun1 , 
               const  LoKi::Predicate<TYPE>& fun2 ) 
 { return LoKi::And<TYPE>  ( fun1   , fun2   )    ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator&&</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&   ( const  LoKi::Predicate<TYPE>& fun1 , 
               const  LoKi::Predicate<TYPE>& fun2 ) 
 { return fun1 && fun2 ; } ;
@@ -59,14 +54,14 @@ operator&   ( const  LoKi::Predicate<TYPE>& fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&&  ( const  LoKi::Predicate<TYPE>& fun  , 
               const  bool                   val  ) 
 { return fun && LoKi::BooleanConstant<TYPE>( val ) ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator&&</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&   ( const  LoKi::Predicate<TYPE>& fun  , 
               const  bool                   val  ) 
 { return fun && val ; } ;
@@ -76,14 +71,14 @@ operator&   ( const  LoKi::Predicate<TYPE>& fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&&  ( const  bool                   val  ,
               const  LoKi::Predicate<TYPE>& fun  ) 
 { return fun && val ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator&&</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::And<TYPE> 
 operator&   ( const  bool                   val  ,
               const  LoKi::Predicate<TYPE>& fun  ) 
 { return fun && val ; } ;
@@ -102,14 +97,14 @@ operator&   ( const  bool                   val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator|| ( const  LoKi::Predicate<TYPE>& fun1 , 
              const  LoKi::Predicate<TYPE>& fun2 ) 
 { return LoKi::Or<TYPE>     ( fun1   , fun2   ) ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator|</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator|  ( const  LoKi::Predicate<TYPE>& fun1 , 
              const  LoKi::Predicate<TYPE>& fun2 ) 
 { return fun1 || fun2 ; } ;
@@ -120,14 +115,14 @@ operator|  ( const  LoKi::Predicate<TYPE>& fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator||  ( const  LoKi::Predicate<TYPE>& fun  , 
               const  bool                   val  ) 
 { return fun || LoKi::BooleanConstant<TYPE>( val ) ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator|</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator|   ( const  LoKi::Predicate<TYPE>& fun  , 
               const  bool                   val  ) 
 { return fun || val  ; } ;
@@ -138,21 +133,21 @@ operator|   ( const  LoKi::Predicate<TYPE>& fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator|| ( const  bool                   val  ,
              const  LoKi::Predicate<TYPE>& fun  ) 
 { return fun || val ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator|</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Or<TYPE> 
 operator|  ( const  bool                   val  ,
              const  LoKi::Predicate<TYPE>& fun  ) 
 { return fun || val ; } ;
 // ============================================================================
 /// it is an alias for <tt>operator!</tt> method
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Not<TYPE> 
 operator!  ( const  LoKi::Predicate<TYPE>& fun  ) 
 { return LoKi::Not<TYPE>( fun )  ; } ;
 // ============================================================================
@@ -170,7 +165,7 @@ operator!  ( const  LoKi::Predicate<TYPE>& fun  )
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator<  ( const  LoKi::Function<TYPE>&  fun1 , 
              const  LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Less<TYPE>   ( fun1   , fun2   ) ; } ;
@@ -181,7 +176,7 @@ operator<  ( const  LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator<  ( const  LoKi::Function<TYPE>&  fun  , 
              const  double                 val  ) 
 { return fun < LoKi::Constant<TYPE>( val ) ; } ;
@@ -192,7 +187,7 @@ operator<  ( const  LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator<  ( const  double                 val  , 
              const  LoKi::Function<TYPE>&  fun  ) 
 { return LoKi::Constant<TYPE>( val ) < fun ; } ;
@@ -211,7 +206,7 @@ operator<  ( const  double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator>  ( const  LoKi::Function<TYPE>&  fun1 , 
              const  LoKi::Function<TYPE>&  fun2 ) 
 { return fun2 < fun1 ; }
@@ -222,7 +217,7 @@ operator>  ( const  LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator>  ( const  LoKi::Function<TYPE>&  fun  , 
              const  double                 val  ) 
 { return LoKi::Constant<TYPE>( val ) < fun ; } ;
@@ -233,7 +228,7 @@ operator>  ( const  LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Less<TYPE> 
 operator>  ( const  double                 val  , 
              const  LoKi::Function<TYPE>&  fun  ) 
 { return fun < LoKi::Constant<TYPE>( val ) ; } ;
@@ -252,7 +247,7 @@ operator>  ( const  double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::Equal<TYPE> 
 operator== ( const LoKi::Function<TYPE>&  fun1 , 
              const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Equal<TYPE>  ( fun1   , fun2   ) ; } ;
@@ -263,7 +258,7 @@ operator== ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::EqualToValue<TYPE> 
 operator== ( const LoKi::Function<TYPE>&  fun  , 
              const double                 val  ) 
 { return LoKi::EqualToValue<TYPE>( fun , val ) ; } ;
@@ -274,7 +269,7 @@ operator== ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::EqualToValue<TYPE> 
 operator== ( const double                 val  , 
              const LoKi::Function<TYPE>&  fun  )
 { return LoKi::EqualToValue<TYPE> ( val, fun ) ; } ;
@@ -284,7 +279,7 @@ operator== ( const double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator<= ( const  LoKi::Function<TYPE>&  fun1 , 
              const  LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::LessOrEqual<TYPE> ( fun1 , fun2 ) ;} ;
@@ -304,7 +299,7 @@ operator<= ( const  LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator<= ( const  LoKi::Function<TYPE>&  fun  , 
              const  double                 val  ) 
 { return  fun <= LoKi::Constant<TYPE> ( val ) ;} ;
@@ -315,7 +310,7 @@ operator<= ( const  LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator<= ( const  double                 val  ,
              const  LoKi::Function<TYPE>&  fun  )
 { return  LoKi::Constant<TYPE>( val ) <= fun ;} ;
@@ -334,7 +329,7 @@ operator<= ( const  double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator>= ( const  LoKi::Function<TYPE>&  fun1 , 
              const  LoKi::Function<TYPE>&  fun2 ) 
 { return ( fun2 <= fun1 ) ; }
@@ -344,7 +339,7 @@ operator>= ( const  LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator>= ( const  LoKi::Function<TYPE>&  fun  , 
              const  double                 val  ) 
 { return ( val <= fun ) ; }
@@ -354,7 +349,7 @@ operator>= ( const  LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::LessOrEqual<TYPE> 
 operator>= ( const  double                 val  ,
              const  LoKi::Function<TYPE>&  fun  )
 { return ( fun <= val ) ; }
@@ -374,7 +369,7 @@ operator>= ( const  double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::NotEqual<TYPE> 
 operator!= ( const LoKi::Function<TYPE>&  fun1 , 
              const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::NotEqual<TYPE> ( fun1 , fun2 ) ; } ;
@@ -386,7 +381,7 @@ operator!= ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::NotEqualToValue<TYPE> 
 operator!= ( const LoKi::Function<TYPE>&  fun  , 
              const double                 val  ) 
 { return LoKi::NotEqualToValue<TYPE> ( fun , val ) ; } ;
@@ -398,7 +393,7 @@ operator!= ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::PredicateFromPredicate<TYPE> 
+inline   LoKi::NotEqualToValue<TYPE> 
 operator!= ( const double                 val  ,
              const LoKi::Function<TYPE>&  fun  )
 { return LoKi::NotEqualToValue<TYPE> ( val , fun ) ; } ;
@@ -417,7 +412,7 @@ operator!= ( const double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Plus<TYPE> 
 operator+ ( const LoKi::Function<TYPE>&  fun1 , 
             const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Plus<TYPE>    ( fun1  , fun2 ) ; } ;
@@ -428,7 +423,7 @@ operator+ ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Plus<TYPE> 
 operator+ ( const LoKi::Function<TYPE>&  fun  , 
             const double                 val  ) 
 { return fun + LoKi::Constant<TYPE>( val )  ; } ;
@@ -439,7 +434,7 @@ operator+ ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Plus<TYPE> 
 operator+ ( const double                 val  ,
             const LoKi::Function<TYPE>&  fun  )
 { return fun + val ; } ;
@@ -458,7 +453,7 @@ operator+ ( const double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Minus<TYPE> 
 operator- ( const LoKi::Function<TYPE>&  fun1 , 
             const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Minus<TYPE>   ( fun1  , fun2 ) ; } ;
@@ -469,7 +464,7 @@ operator- ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Minus<TYPE> 
 operator- ( const LoKi::Function<TYPE>&  fun  , 
             const double                 val  ) 
 { return LoKi::Minus<TYPE>   ( fun  , LoKi::Constant<TYPE>( val )  ) ; } ;
@@ -480,7 +475,7 @@ operator- ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Minus<TYPE> 
 operator- ( const double                 val  ,
             const LoKi::Function<TYPE>&  fun  )
 { return LoKi::Minus<TYPE>   ( LoKi::Constant<TYPE>( val )  , fun ) ; } ;
@@ -499,7 +494,7 @@ operator- ( const double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Divide<TYPE> 
 operator/ ( const LoKi::Function<TYPE>&  fun1 , 
             const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Divide<TYPE>  ( fun1  , fun2 ) ; } ;
@@ -510,7 +505,7 @@ operator/ ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Divide<TYPE> 
 operator/ ( const LoKi::Function<TYPE>&  fun  , 
             const double                 val  ) 
 { return LoKi::Divide<TYPE>  ( fun  , LoKi::Constant<TYPE>( val ) ) ; } ;
@@ -521,7 +516,7 @@ operator/ ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Divide<TYPE> 
 operator/ ( const double                 val  ,
             const LoKi::Function<TYPE>&  fun  ) 
 { return LoKi::Divide<TYPE>  ( LoKi::Constant<TYPE>( val ) , fun ) ; } ;
@@ -540,7 +535,7 @@ operator/ ( const double                 val  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Multiply<TYPE> 
 operator* ( const LoKi::Function<TYPE>&  fun1 , 
             const LoKi::Function<TYPE>&  fun2 ) 
 { return LoKi::Multiply<TYPE>  ( fun1  , fun2 ) ; } ;
@@ -551,7 +546,7 @@ operator* ( const LoKi::Function<TYPE>&  fun1 ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Multiply<TYPE> 
 operator* ( const LoKi::Function<TYPE>&  fun  , 
             const double                 val  ) 
 { return fun * LoKi::Constant<TYPE>( val ) ; } ;
@@ -562,7 +557,7 @@ operator* ( const LoKi::Function<TYPE>&  fun  ,
  *  @return functor
  */
 template <class TYPE>
-inline   LoKi::FunctionFromFunction<TYPE> 
+inline   LoKi::Multiply<TYPE> 
 operator* ( const double                 val  ,
             const LoKi::Function<TYPE>&  fun  )
 { return fun * val ; } ;

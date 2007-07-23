@@ -1,11 +1,4 @@
-// $Id: ConstIterator.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: ConstIterator.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONSTITERATOR_H 
 #define LOKI_CONSTITERATOR_H 1
@@ -19,8 +12,6 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Const.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -36,10 +27,9 @@
  *  @date 2006-03-29
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @struct ConstIterator
    *  iterator which mimics the behaviou of the 
    *  general iterator over non-mutable sequence of non-mutable elements
@@ -52,8 +42,7 @@ namespace LoKi
    *  @date 2006-03-15
    */
   template <class ITERATOR>
-  struct ConstIterator
-    : public std::iterator 
+  struct ConstIterator : public std::iterator 
   <
     typename ITERATOR::iterator_category                        , // from the base  
     typename LoKi::Const<typename ITERATOR::value_type>::Value  , // Const!
@@ -99,64 +88,67 @@ namespace LoKi
     /// post-decrement 
     ConstIterator  operator--( int ) 
     { ConstIterator tmp(*this) ; m_it-- ; return tmp ; }
-    
+    //
     ConstIterator& operator+=( const difference_type offset ) 
     { std::advance ( m_it ,      offset ) ; return *this ; } ;
+    //
     ConstIterator& operator-=( const difference_type offset ) 
     { std::advance ( m_it , -1 * offset ) ; return *this ; } ;
-    
+    //
     difference_type operator-( const      ITERATOR& right ) const
     { return std::distance( m_it , right ) ; }
+    //
     difference_type operator-( const ConstIterator& right ) const
     { return (*this) - right.m_it          ; }
-    
+    //
     bool operator== ( const      ITERATOR& right ) const 
     { return m_it    == right      ; }
+    //
     bool operator== ( const ConstIterator& right ) const
     { return (*this) == right.m_it ; }
-  
+    //
     bool operator!= ( const      ITERATOR& right ) const 
     { return  !( *this == right )  ; }
     bool operator!= ( const ConstIterator& right ) const
     { return  !( *this == right )  ; }
-    
+    //
     ConstIterator  operator+( const difference_type offset ) 
     {
       ConstIterator tmp(*this) ;
       return tmp += offset ;
     };
+    //
     ConstIterator  operator-( const difference_type offset ) 
     {
       ConstIterator tmp(*this) ;
       return tmp -= offset ;
     };
-    
+    //
     friend ConstIterator 
     operator+ 
     ( const difference_type offset , 
       const ConstIterator&  right  ) { return right + offset ; } ;
-    
+    //
     friend difference_type
     operator-
     ( const ITERATOR&      right , 
       const ConstIterator& left  ) 
     { return std::distance ( right ,  left.m_it ) ; }
-    
+    //
     friend bool operator== 
     ( const ITERATOR&      right , 
       const ConstIterator& left  ) { return right == left ; }
-    
+    //
     friend bool operator!= 
     ( const ITERATOR&      right , 
       const ConstIterator& left  ) { return right != left ; }
-    
+    //
   private:
     // the underlying iterator  
     ITERATOR m_it ; ///< the underlying iterator  
   };
-  
-}  // end of namespace LoKi 
-
+  // ==========================================================================  
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

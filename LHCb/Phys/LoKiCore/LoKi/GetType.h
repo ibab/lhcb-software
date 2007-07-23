@@ -1,18 +1,13 @@
-// $Id: GetType.h,v 1.1 2006-10-10 09:03:21 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: GetType.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GETTYPE_H 
 #define LOKI_GETTYPE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @struct GetType GetType.h LoKi/GetType.h
    *  
    *  Helper utility to get "raw" type 
@@ -25,27 +20,26 @@ namespace LoKi
   {
     typedef TYPE Type ;
   } ;
-  
+  // ==========================================================================  
   template <class TYPE>
   struct GetType<const TYPE> 
   {
     typedef typename GetType<TYPE>::Type Type ;
   } ; 
-  
+  // ==========================================================================  
   template <class TYPE>
   struct GetType<TYPE&> 
   {
     typedef typename GetType<TYPE>::Type Type ;
   } ;
-  
+  // ==========================================================================  
   template <class TYPE>
   struct GetType<TYPE*> 
   {
     typedef typename GetType<TYPE>::Type Type ;
   } ;
-  
-} // end of namespace LoKi 
-
+  // ==========================================================================  
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

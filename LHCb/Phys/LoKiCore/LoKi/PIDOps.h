@@ -1,8 +1,4 @@
-// $Id: PIDOps.h,v 1.1 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: PIDOps.h,v 1.2 2007-07-23 17:07:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PIDOPS_H 
 #define LOKI_PIDOPS_H 1

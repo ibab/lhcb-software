@@ -1,14 +1,4 @@
-// $Id: Geometry.cpp,v 1.6 2007-02-26 13:13:09 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/07/12 11:27:25  cattanem
-// use SMatrix::Inverse instead of Sinverse
-//
-// Revision 1.4  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Geometry.cpp,v 1.7 2007-07-23 17:07:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,8 +13,6 @@
 #include "LoKi/Geometry.h"
 #include "LoKi/Constants.h"
 #include "LoKi/Report.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -42,9 +30,7 @@
  *  @date 2006-02-17 
  */
 // ============================================================================
-
-// ============================================================================
-/** The trivial function, which evaluated the distance 
+/*  The trivial function, which evaluated the distance 
  *  between the point and the line. 
  *
  *  The line is parameterized with the point 'p0' and the 
@@ -76,11 +62,9 @@ double LoKi::Geometry::distance
   const LoKi::Vector3D dist  = delta - ( v0 * delta.Dot(v0) / v02 ) ;
   // length of the distance vector 
   return dist.R() ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** The trivial function, which evaluates the distance 
+/*  The trivial function, which evaluates the distance 
  *  between two lines 
  *  Each line is parameterized with the point at the line 
  *  and the direction vectors
@@ -147,11 +131,9 @@ double LoKi::Geometry::distance
   dist -= v2 * t2 ;
   
   return dist.R() ;
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/** The trivial function, 
+/*  The trivial function, 
  *  which evaluates the distance between two points 
  *  in "chi2" units 
  *  
@@ -193,11 +175,9 @@ StatusCode LoKi::Geometry::chi2
   value = ROOT::Math::Similarity( delta , cov ) ;
   // 
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/** The trivial function, 
+/*  The trivial function, 
  *  which evaluates the distance between two points 
  *  in "chi2" units 
  *  
@@ -235,7 +215,7 @@ StatusCode LoKi::Geometry::chi2
   value = ROOT::Math::Similarity( delta , cov ) ;
   //
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 
 

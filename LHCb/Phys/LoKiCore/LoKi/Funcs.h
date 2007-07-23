@@ -1,8 +1,4 @@
-// $Id: Funcs.h,v 1.1 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: Funcs.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -18,12 +14,13 @@
 namespace LoKi 
 {
   /** @namespace LoKi::Dicts
-   *  Helper namespace fopr buildingth eproper dictionries for LoKi
+   *  Helper namespace for the building thee proper dictionries for LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-05-28
    */
   namespace Dicts
   {
+    // ========================================================================
     /** @struct Funcs Funcs.h LoKi/Funcs.h
      *  The fictive structure used for creation of Reflex dictionaries 
      *  The structure is moved from Phys/LoKiDict package 
@@ -34,36 +31,38 @@ namespace LoKi
     struct Funcs
     {
       //
-      LoKi::Constant<TYPE>          m_003  ;
-      LoKi::BooleanConstant<TYPE>   m_004  ;
+      LoKi::Constant<TYPE>               m_101  ;
+      LoKi::BooleanConstant<TYPE>        m_102  ;
+      LoKi::PredicateFromPredicate<TYPE> m_103  ;
+      LoKi::FunctionFromFunction<TYPE>   m_104  ;
       //
-      LoKi::PredicateFromPredicate<TYPE> m_005  ;
-      LoKi::FunctionFromFunction<TYPE>   m_006  ;
-      //
-      LoKi::And<TYPE>               m_3  ;
-      LoKi::Or<TYPE>                m_4  ;
-      LoKi::Not<TYPE>               m_5  ;
-      LoKi::Less<TYPE>              m_6  ;
-      LoKi::Equal<TYPE>             m_7  ;
-      LoKi::LessOrEqual<TYPE>       m_8  ;
-      LoKi::Plus<TYPE>              m_9  ;
-      LoKi::Minus<TYPE>             m_10 ;
-      LoKi::Multiply<TYPE>          m_11 ;
-      LoKi::Divide<TYPE>            m_12 ;
-      LoKi::Min<TYPE>               m_13 ;
-      LoKi::Max<TYPE>               m_14 ;
-      LoKi::ComposeFunction<TYPE>   m_15 ;
-      LoKi::ComposeFunction2<TYPE>  m_16 ;
-      LoKi::SimpleSwitch<TYPE>      m_18 ;
-      LoKi::Switch<TYPE>            m_19 ;
-      LoKi::Valid<TYPE>             m_20 ;
-      LoKi::TheSame<TYPE>           m_21 ;
-      LoKi::EqualToValue<TYPE>      m_22 ;
-      LoKi::NotEqual<TYPE>          m_23 ;
-      LoKi::NotEqualToValue<TYPE>   m_24 ;
+      LoKi::Valid<TYPE>                  m_201  ;
+      LoKi::SimpleSwitch<TYPE>           m_202  ;
+      LoKi::Switch<TYPE>                 m_203  ;
+      LoKi::EqualToValue<TYPE>           m_205  ;
+      // #ifndef LOKI_DICTIONARIES_FULL
+//       LoKi::TheSame<TYPE>                m_204  ;
+//       LoKi::Min<TYPE>                    m_301 ;
+//       LoKi::Max<TYPE>                    m_302 ;
+//       LoKi::And<TYPE>                    m_303 ;
+//       LoKi::Or<TYPE>                     m_304 ;
+//       LoKi::Not<TYPE>                    m_305 ;
+//       LoKi::Less<TYPE>                   m_306 ;
+//       LoKi::Equal<TYPE>                  m_307 ;
+//       LoKi::LessOrEqual<TYPE>            m_308 ;
+//       LoKi::Plus<TYPE>                   m_309 ;
+//       LoKi::Minus<TYPE>                  m_310 ;
+//       LoKi::Multiply<TYPE>               m_311 ;
+//       LoKi::Divide<TYPE>                 m_312 ;
+//       LoKi::ComposeFunction<TYPE>        m_313 ;
+//       LoKi::ComposeFunction2<TYPE>       m_314 ;
+//       LoKi::NotEqual<TYPE>               m_315 ;
+//       LoKi::NotEqualToValue<TYPE>        m_316 ;
+// #endif // LOKI_DICTIONARIES_FULL
       //
       Funcs () ; // undefined constructor 
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi
 // ============================================================================

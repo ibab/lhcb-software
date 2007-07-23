@@ -1,17 +1,4 @@
-// $Id: FuncAdapters.h,v 1.7 2007-02-26 13:13:08 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.5  2006/10/05 11:52:05  ibelyaev
-//  fix compilation warnings for slc4_ia32_gcc345
-//
-// Revision 1.4  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: FuncAdapters.h,v 1.8 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCADAPTERS_H 
 #define LOKI_FUNCADAPTERS_H 1
@@ -21,8 +8,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Functions.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -38,7 +23,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Adapters LoKi/FuncAdapters.h 
@@ -48,6 +32,7 @@ namespace LoKi
    */ 
   namespace Adapters
   {
+    // ========================================================================
     /** @class FunAdapter 
      *  The generic templated adapter for the functions 
      * 
@@ -117,7 +102,7 @@ namespace LoKi
     private:
       function m_fun ;
     };
-    
+    // ========================================================================    
     /** @class CutAdapter 
      *  The generic templated adapter for the predicates
      * 
@@ -187,9 +172,9 @@ namespace LoKi
     private:
       predicate m_cut ;
     };
-    
+    // ========================================================================    
   } // end of namespace Adapters
-  
+  // ==========================================================================
   /** helper templated function to make easier the 
    *  creation of adapter-functors:
    *
@@ -216,7 +201,7 @@ namespace LoKi
   template <class TYPE>
   inline LoKi::Adapters::FunAdapter<TYPE> aFun ( double (*fun) ( TYPE )  ) 
   { return LoKi::Adapters::FunAdapter<TYPE> ( fun ) ; } ;
-  
+  // ==========================================================================  
   /** helper templated function to make easier the 
    *  creation of adapter-functors:
    *
@@ -243,9 +228,8 @@ namespace LoKi
   template <class TYPE>
   inline LoKi::Adapters::CutAdapter<TYPE> aCut ( bool (*cut) ( TYPE )  ) 
   { return LoKi::Adapters::CutAdapter<TYPE> ( cut ) ; } ;
-  
+  // ==========================================================================  
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

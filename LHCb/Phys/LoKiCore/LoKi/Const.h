@@ -1,19 +1,9 @@
-// $Id: Const.h,v 1.3 2006-11-25 19:12:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, Version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
+// $Id: Const.h,v 1.4 2007-07-23 17:07:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONST_H 
 #define LOKI_CONST_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-
-
 // ============================================================================
 /** @file
  *
@@ -29,10 +19,9 @@
  *  @date 2006-03-29
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @struct Const Const.h LoKi/Const.h
    *  Auxillary structure to define "const-traits"
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -41,18 +30,20 @@ namespace LoKi
   template <class TYPE>
   struct  Const 
   { typedef           const TYPE                       Value ; } ;
+  // ==========================================================================
   template <class TYPE>
   struct  Const<const TYPE>
   { typedef typename  Const<TYPE>::value const         Value ; } ;
+  // ==========================================================================
   template <class TYPE>
   struct  Const<TYPE*>
   { typedef typename  Const<TYPE>::value const * const Value ; } ;
+  // ==========================================================================
   template <class TYPE>
   struct  Const<TYPE&>
   { typedef typename  Const<TYPE>::value const &       Value ; } ;
-
-} // end of namespace LoKi 
-
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

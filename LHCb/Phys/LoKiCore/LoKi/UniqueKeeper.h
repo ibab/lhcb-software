@@ -1,8 +1,4 @@
-// $Id: UniqueKeeper.h,v 1.7 2007-06-01 11:35:27 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: UniqueKeeper.h,v 1.8 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1
@@ -35,7 +31,9 @@
 // ============================================================================
 namespace LoKi 
 {  
+  // ==========================================================================
   template <class OBJECT> class Keeper ;
+  // ==========================================================================
   /** @class UniqueKeeper UniqueKeeper.h LoKi/UniqueKeeper.h
    *  
    *  Usefull class to keep valid UNIQUE pointer to the 
@@ -269,6 +267,7 @@ namespace LoKi
   private:
     Objects m_objects ;
   } ;  
+  // ==========================================================================
 } // end of the namespace LoKi
 // ============================================================================
 // "POST"-include 

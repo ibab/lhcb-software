@@ -1,4 +1,4 @@
-// $Id: Interface.h,v 1.6 2007-06-10 19:54:06 ibelyaev Exp $
+// $Id: Interface.h,v 1.7 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -26,6 +26,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class Interface Interface.h LoKi/Interface.h
    *
    *  Helper class for manipulations with interfaces 
@@ -104,6 +105,7 @@ namespace LoKi
     /// the object to be stored 
     TYPE* m_object ;
   } ;
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

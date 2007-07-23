@@ -1,4 +1,4 @@
-// $Id: BiFunctions.h,v 1.1 2007-06-10 19:54:05 ibelyaev Exp $
+// $Id: BiFunctions.h,v 1.2 2007-07-23 17:07:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BIFUNCTIONS_H 
 #define LOKI_BIFUNCTIONS_H 1
@@ -175,7 +175,6 @@ namespace LoKi
     /// assignement         is private 
     Self& operator=( const Self& );
   } ;
-
   // ==========================================================================
   /** mimic 2-argument predicate
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

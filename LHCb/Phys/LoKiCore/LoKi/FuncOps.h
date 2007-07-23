@@ -1,6 +1,4 @@
-// $Id: FuncOps.h,v 1.1 2007-06-01 11:35:26 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// $Id: FuncOps.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -17,6 +15,7 @@ namespace LoKi
 {
   namespace Dicts
   {
+    // ========================================================================
     /** @class Operators Bender/Operators.h
      *  Wrapper class for operatiosn with functions and predicates
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -106,7 +105,74 @@ namespace LoKi
       static Fun __rpow__   ( const Func&  fun1 , 
                               const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
       static Cut __invert__ ( const Cuts&  cut  ) { return !cut ; }
+      // hand-made pseudo-operators to simplify the treatment of math:
+      static Fun __sin__    ( const Func&  f    ) { return LoKi:: sin   ( f )  ; }
+      static Fun __cos__    ( const Func&  f    ) { return LoKi:: cos   ( f )  ; }
+      static Fun __tan__    ( const Func&  f    ) { return LoKi:: tan   ( f )  ; }
+      static Fun __sinh__   ( const Func&  f    ) { return LoKi:: sinh  ( f )  ; }
+      static Fun __cosh__   ( const Func&  f    ) { return LoKi:: cosh  ( f )  ; }
+      static Fun __tanh__   ( const Func&  f    ) { return LoKi:: tanh  ( f )  ; }
+      static Fun __asin__   ( const Func&  f    ) { return LoKi::asin   ( f )  ; }
+      static Fun __acos__   ( const Func&  f    ) { return LoKi::acos   ( f )  ; }
+      static Fun __atan__   ( const Func&  f    ) { return LoKi::atan   ( f )  ; }
+      static Fun __exp__    ( const Func&  f    ) { return LoKi:: exp   ( f )  ; }
+      static Fun __log__    ( const Func&  f    ) { return LoKi:: log   ( f )  ; }
+      static Fun __log10__  ( const Func&  f    ) { return LoKi:: log10 ( f )  ; }
+      static Fun __sqrt__   ( const Func&  f    ) { return LoKi:: sqrt  ( f )  ; }
+      static Fun __pow2__   ( const Func&  f    ) { return LoKi:: pow2  ( f )  ; }
+      static Fun __pow3__   ( const Func&  f    ) { return LoKi:: pow3  ( f )  ; }
+      static Fun __pow4__   ( const Func&  f    ) { return LoKi:: pow4  ( f )  ; }
+      static Fun __atan__   ( const Func&  f1   , 
+                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan__   ( const Func&  f1   , 
+                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan2__  ( const Func&  f1   , 
+                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan2__  ( const Func&  f1   , 
+                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      // ======================================================================
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   ) 
+      { return LoKi::min ( f1 , f2 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const double f2   ) 
+      { return LoKi::min ( f1 , f2 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   ) 
+      { return LoKi::min( f1 , f2 , f3 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   , 
+                              const Func&  f4   ) 
+      { return LoKi::min ( f1 , f2 , f3 , f4 ) ; }      
+      // ======================================================================
+      // max
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   ) 
+      { return LoKi::max ( f1 , f2 ) ; }
+      // max
+      static Fun __max__    ( const Func&  f1   , 
+                              const double f2   ) 
+      { return LoKi::max ( f1 , f2 ) ; }
+      // max
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   ) 
+      { return LoKi::max ( f1 , f2 , f3 ) ; }
+      // max
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   , 
+                              const Func&  f4   ) 
+      { return LoKi::max ( f1 , f2 , f3 , f4 ) ; }
+      // ======================================================================
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Dicts
 } // end of namespace LoKi
 // ============================================================================

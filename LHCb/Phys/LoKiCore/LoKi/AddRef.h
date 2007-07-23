@@ -1,14 +1,4 @@
-// $Id: AddRef.h,v 1.3 2007-02-26 13:13:08 cattanem Exp $
-// ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.3 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
-// Revision 1.1  2006/03/14 18:56:59  ibelyaev
-//  v1r1 : add a lot of new utilities
-// 
+// $Id: AddRef.h,v 1.4 2007-07-23 17:07:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ADDREF_H 
 #define LOKI_ADDREF_H 1
@@ -24,8 +14,6 @@
 #include "LoKi/Convertible.h"
 #include "LoKi/Release.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -40,9 +28,9 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {  
+  // ==========================================================================
   /** @struct AddRef AddRef.h LoKi/AddRef.h
    * 
    *  Helper utility to resolve the templated 
@@ -52,8 +40,7 @@ namespace LoKi
    *  @date   2006-03-11
    */
   template <class TYPE,bool>
-  struct AddRef
-    : public std::unary_function<TYPE*,void>
+  struct AddRef : public std::unary_function<TYPE*,bool>
   {
     bool operator() ( TYPE*       o ) 
     { 
@@ -61,9 +48,9 @@ namespace LoKi
       return 0 != o ;
     }
   } ;
+  // ==========================================================================
   template <class TYPE>
-  struct AddRef<TYPE,true>
-    : public std::unary_function<IInterface*,bool>
+  struct AddRef<TYPE,true> : public std::unary_function<IInterface*,bool>
   {
     bool operator() ( IInterface* o ) 
     { 
@@ -71,7 +58,7 @@ namespace LoKi
       return 0 != o ;
     }
   } ;
-  
+  // ==========================================================================  
   /** Helper function to invoke properly TYPE::addRef method 
    *  avoiding the template ambiguity for GCC compiler 
    *
@@ -85,10 +72,9 @@ namespace LoKi
     AddRef<TYPE,LoKi::Convertible<TYPE,IInterface>::value> actor ;
     // and perform the proper action!
     return actor ( obj ) ;
-  } ;
-  
+  } 
+  // ==========================================================================  
 } ; // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

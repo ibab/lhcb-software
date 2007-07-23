@@ -1,11 +1,4 @@
-// $Id: Tokens.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
+// $Id: Tokens.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TOKENS_H 
 #define LOKI_TOKENS_H 1
@@ -17,8 +10,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -36,17 +27,15 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /// useful typedef 
   typedef std::vector<std::string> Tokens;
-  
-  /** @class Tokens Tokens.h LoKi/Tokens.h
-   *   
-   *  Very simple tokenizer for LoKi 
+  // ==========================================================================
+  /** Very simple tokenizer for LoKi 
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-14
-   */
-  
+   */  
   inline size_t tokenize
   ( const std::string& value            , 
     Tokens&            tokens           , 
@@ -59,24 +48,23 @@ namespace LoKi
     std::string::const_iterator it2 = value.begin() ;
     while ( value.end() != it1 && value.end() != it2 ) 
     {
-      it2 = std::find_first_of( it1                  , 
-                                value.end         () ,
-                                separators.begin  () ,
-                                separators.end    () ) ;
+      it2 = std::find_first_of
+        ( it1                  , 
+          value.end         () ,
+          separators.begin  () ,
+          separators.end    () ) ;
       if ( it2 != it1 ) 
       {
         std::string aux( value , it1 - value.begin() , it2 - it1 ) ;
         tokens.push_back( aux ) ;
         it1  = it2 ;
       }
-      else { ++it1 ; }
-      
+      else { ++it1 ; }   
     }
     return tokens.size();
-  };
-  
-} // end of namespace LoKi 
-
+  }
+  // ==========================================================================  
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

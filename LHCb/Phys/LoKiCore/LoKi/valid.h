@@ -1,4 +1,4 @@
-// $Id: valid.h,v 1.1 2007-06-10 19:54:06 ibelyaev Exp $
+// $Id: valid.h,v 1.2 2007-07-23 17:07:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VALID_H 
 #define LOKI_VALID_H 1
@@ -8,6 +8,7 @@
 // STD & STL 
 // ============================================================================
 #include <vector>
+#include <functional>
 // ============================================================================
 #include "GaudiKernel/SmartRef.h"
 // ============================================================================
@@ -26,9 +27,15 @@ namespace LoKi
   bool valid ( const LoKi::Holder<TYPE1,TYPE2>& p ) ;
   // ==========================================================================
   template <class TYPE>
-  inline bool valid ( const TYPE*                  ptr ) { return ptr ; }
+  inline bool valid ( const TYPE*                  ptr ) { return 0 != ptr ; }
   template <class TYPE>
-  inline bool valid (       TYPE*                  ptr ) { return ptr ; }
+  inline bool valid (       TYPE*                  ptr ) { return 0 != ptr ; }
+  // ==========================================================================  
+  template <class TYPE>
+  inline bool valid ( const TYPE*&                 ptr ) { return 0 != ptr ; }
+  // ==========================================================================  
+  template <class TYPE>
+  inline bool valid (       TYPE*&                 ptr ) { return 0 != ptr ; }
   // ==========================================================================  
   template <class TYPE>
   inline bool valid ( const SmartRef<TYPE>&        ptr ) { return ptr ; }
@@ -50,11 +57,12 @@ namespace LoKi
   // ==========================================================================
   template <class TYPE1,class TYPE2>
   bool valid ( const LoKi::Holder<TYPE1,TYPE2>& p )
-  { return valid ( p.first ) && valid ( p.second ) ; }
+  { return valid ( p.first ) && valid ( p.second ) ; } 
   // ==========================================================================  
   template <class TYPE>
   inline bool valid ( const TYPE& /* ref */ ) { return true ; }
-} ;
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================
