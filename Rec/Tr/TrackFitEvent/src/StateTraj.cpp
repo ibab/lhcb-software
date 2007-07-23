@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.15 2007-06-26 06:11:05 cattanem Exp $
+// $Id: StateTraj.cpp,v 1.16 2007-07-23 13:34:22 cattanem Exp $
 // Include files
 
 // Units
@@ -115,7 +115,7 @@ StateTraj::Derivative StateTraj::derivative( double arclength ) const
   return deriv;        
 }
 
-double StateTraj::arclength( const XYZPoint& point ) const
+double StateTraj::arclength( const Gaudi::XYZPoint& point ) const
 {
   // for now assume we're a straight line, i.e. |m_curve|<<|m_dir|
   // and return our zeroth order approximation..

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r7 2007-07-23 ====================
+! 2007-07-23 - Marco Cattaneo
+ - Fixed a doxygen warning
+
 ! 2007-07-23 - Silvia Pozzi and Wouter Hulsbergen
 - changed MuonMeasurements to single trajectory 
 
