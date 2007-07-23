@@ -1,20 +1,4 @@
-// $Id: Particles4.h,v 1.7 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.5  2006/10/10 09:08:34  ibelyaev
-//  tiny fix needed for good&valid dictionaries
-//
-// Revision 1.4  2006/08/15 15:13:25  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.3  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles4.h,v 1.8 2007-07-23 17:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -38,8 +22,6 @@
 #include "LoKi/PhysRangeTypes.h"
 #include "LoKi/ImpParBase.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -54,12 +36,11 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
-    
+    // ========================================================================
     /** @class ImpPar
      *  class for evaluation of impact parameter of 
      *  particle with respect to vertex
@@ -122,7 +103,7 @@ namespace LoKi
       // default constructor is private 
       ImpPar();
     };
-    
+    // ========================================================================    
     /** @class ImpParChi2
      *  class for evaluation of impact parameter chi2 
      *  of particle with respect to vertex
@@ -185,7 +166,7 @@ namespace LoKi
       // default constructor is private 
       ImpParChi2();
     };
-    
+    // ========================================================================    
     /** @class MinImpPar
      *  class for evaluation of minimal valeu of 
      *  impact parameter of 
@@ -382,7 +363,7 @@ namespace LoKi
       // the actual IP evaluator 
       LoKi::Particles::ImpPar m_fun ; ///< the actual IP evaluator 
     };
-
+    // ========================================================================
     /** @class MinImpParChi2
      *  class for evaluation of minimal value of 
      *  chi2 of impact parameter of 
@@ -578,11 +559,9 @@ namespace LoKi
       // the actual IP evaluator 
       LoKi::Particles::ImpParChi2 m_fun ; ///< the actual IP evaluator 
     };
-    
+    // ========================================================================    
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================

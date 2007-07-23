@@ -1,34 +1,16 @@
-// $Id: Particles10.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/08/15 15:13:25  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles10.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/RecVertex.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/Particles9.h"
 #include "LoKi/PhysRangeTypes.h"
 // ============================================================================
-
+namespace LHCb { class RecVertex ; }
 // ============================================================================
 /** @file
  *
@@ -44,11 +26,11 @@
  *  @date 2006-02-22 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class HasTracksFromPV 
      *
      *  The simple predicate which evaluates to 'true' for 
@@ -66,8 +48,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksFromPV
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksFromPV : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from one primary vertex 
@@ -151,7 +132,7 @@ namespace LoKi
     private:
       LoKi::Particles::HasTracks m_cut ;
     } ;
-    
+    // ========================================================================    
     /** @class HasTracksInTreeFromPV 
      *
      *  The simple predicate which evaluates to 'true' for 
@@ -170,8 +151,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksInTreeFromPV
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksInTreeFromPV : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from one primary vertex 
@@ -264,12 +244,9 @@ namespace LoKi
     private:
       LoKi::Particles::HasTracksFromPV m_cut ;
     } ;
-    
-  }  // end of namespace Particles 
-  
-}  // end of namespace LoKi 
-
-
+    // ========================================================================    
+  } // end of namespace Particles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

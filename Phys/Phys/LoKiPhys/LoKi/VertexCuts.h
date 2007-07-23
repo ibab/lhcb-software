@@ -1,38 +1,22 @@
-// $Id: VertexCuts.h,v 1.6 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-//  $Log: not supported by cvs2svn $
-//  Revision 1.5  2006/11/27 12:01:32  ibelyaev
-//   prepare for LoKi v4r3
-//
-//  Revision 1.4  2006/08/15 15:13:25  ibelyaev
-//   update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-//  Revision 1.3  2006/03/19 13:03:28  ibelyaev
-//   minor update
-//
-//  Revision 1.2  2006/02/18 18:09:14  ibelyaev
-//   fix a typo
-//
-//  Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-//  New package: "Phys"-part of restructurized LoKi project  
-// 
+// $Id: VertexCuts.h,v 1.7 2007-07-23 17:35:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// Event
+// ============================================================================
+#include "Event/RecVertex.h"
+// ============================================================================
 // LoKiCore 
 // ============================================================================
 #include "LoKi/CoreCuts.h"
+#include "LoKi/MoreFunctions.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/Vertices.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -48,12 +32,10 @@
  *  @date   2006-02-16
  */
 // ============================================================================
-
 namespace LoKi 
 {
   namespace Cuts 
-  {
-    
+  {   
     // ========================================================================
     /** @var VALL
      *  the trivial functor which always evaluates to "true"
@@ -65,8 +47,6 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::BooleanConstant<const LHCb::VertexBase*>      VALL ( true ) ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var VTRUE
      *  the trivial functor which always evaluates to "true"
@@ -80,8 +60,6 @@ namespace LoKi
      */
     const LoKi::BooleanConstant<const LHCb::VertexBase*>      VTRUE = VALL ;
     // ========================================================================
-    
-    // ========================================================================
     /** @var VNONE
      *  the trivial functor which always evaluates to "false"
      *  
@@ -92,8 +70,6 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::BooleanConstant<const LHCb::VertexBase*>      VNONE ( false ) ;
-    // ========================================================================
-
     // ========================================================================
     /** @var VFALSE
      *  the trivial functor which always evaluates to "false"
@@ -107,8 +83,6 @@ namespace LoKi
      */
     const LoKi::BooleanConstant<const LHCb::VertexBase*>    VFALSE = VNONE ;
     // ========================================================================
-    
-    // ========================================================================
     /** @var VONE
      *  the trivial functor which always evaluates to 1
      *  
@@ -119,8 +93,6 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Constant<const LHCb::VertexBase*>             VONE ( 1  ) ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var VZERO
      *  the trivial functor which always evaluates to 0
@@ -133,8 +105,6 @@ namespace LoKi
      */
     const LoKi::Constant<const LHCb::VertexBase*>             VZERO ( 0 ) ;
     // ========================================================================
-
-    // ========================================================================
     /** @var VVALID
      *  the trivial functor which evaluayed the "validity" of the argument
      *  
@@ -145,8 +115,6 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Valid<const LHCb::VertexBase*>                     VVALID ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var PRIMARY
      *     
@@ -160,7 +128,6 @@ namespace LoKi
      *
      *  @endcode
      *
-     *
      *  @see LoKi::Vertices::IsPrimary
      *  @see LHCb::Vertex 
      *  @see LHCb::PrimVertex 
@@ -169,8 +136,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::IsPrimary                             PRIMARY ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var ISPRIMARY
      *     
@@ -184,7 +149,6 @@ namespace LoKi
      *
      *  @endcode
      *
-     *
      *  @see LoKi::Vertices::IsPrimary
      *  @see LoKi::Cuts::PRIMARY
      *  @see LHCb::Vertex 
@@ -194,8 +158,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::IsPrimary                 ISPRIMARY = PRIMARY ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var TECHINIQUE
      *      
@@ -217,8 +179,6 @@ namespace LoKi
      *  @date   2002-07-15
      */ 
     const LoKi::Vertices::Technique                       TECHNIQUE ;
-    // ========================================================================
-
     // ========================================================================
     /** @var VTECHINIQUE
      *      
@@ -242,8 +202,6 @@ namespace LoKi
      */ 
     const LoKi::Vertices::Technique         VTECHNIQUE = TECHNIQUE ;
     // ========================================================================
-    
-    // ========================================================================
     /** @var VCHI2
      *  evaluator of the Chi2 of the vertex  
      *  
@@ -263,8 +221,6 @@ namespace LoKi
      *  @date   2002-07-15
      */  
     const LoKi::Vertices::VertexChi2                            VCHI2 ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var VDOF
      *  evaluator of the Chi2 of the vertex  
@@ -286,8 +242,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::VertexDoF                             VDOF ;
-    // ========================================================================
-
     // ========================================================================
     /** @var VXNDOF
      *  evaluator of the Chi2 of the vertex  
@@ -311,8 +265,6 @@ namespace LoKi
      */
     const LoKi::Vertices::VertexDoF                    VXNDOF = VDOF ;
     // ========================================================================
-    
-    // ========================================================================
     /** @var VX 
      *  the trivial evaluator of X-position of the vertex 
      *
@@ -330,8 +282,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::PositionX                      VX ;
-    // ========================================================================
-    
     // ========================================================================
     /** @var VY 
      *  the trivial evaluator of Y-position of the vertex 
@@ -351,8 +301,6 @@ namespace LoKi
      */
     const LoKi::Vertices::PositionY                      VY ;
     // ========================================================================
-    
-    // ========================================================================
     /** @var VZ 
      *  the trivial evaluator of Z-position of the vertex 
      *
@@ -370,8 +318,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::PositionZ                      VZ ;
-    // ========================================================================
-    
     // ========================================================================
     /** @typedef VHASINFO
      *  Trivial predicate which evaluates LHCb::Vertex::hasInfo
@@ -397,8 +343,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::HasInfo                         VHASINFO ;
     // ========================================================================
-    
-    // ========================================================================
     /** @typedef HASVINFO
      *  Trivial predicate which evaluates LHCb::Vertex::hasInfo
      *  function
@@ -423,8 +367,6 @@ namespace LoKi
      *  @date 2006-02-15
      */
     typedef VHASINFO                                         HASVINFO ;
-    // ========================================================================
-   
     // ========================================================================
     /** @typedef VINFO
      *  Trivial function which evaluates LHCb::Vertex::info
@@ -452,8 +394,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::Info                                  VINFO ;
     // ========================================================================
-
-    // ========================================================================
     /** @var NTRACKS 
      *  The trivial function which evalautes to 
      *  number of outgoing particles
@@ -475,8 +415,6 @@ namespace LoKi
      */
     const LoKi::Vertices::NumberOfTracks                        NTRACKS ;
     // ========================================================================
-
-    // ========================================================================
     /** @var NPRONGS
      *  The trivial function which evalautes to 
      *  number of outgoing particles 
@@ -497,8 +435,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::NumberOfOutgoing                        NPRONGS ;
-    // ========================================================================
-
     // ========================================================================
     /** @typedef VVDIST
      *  Evaluator of the distance between the vertex and another
@@ -533,8 +469,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::VertexDistance                            VVDIST ;
     // ========================================================================
-
-    // ========================================================================
     /** @typedef VVD
      *  Evaluator of the distance between the vertex and another
      *  vertex or point
@@ -566,8 +500,6 @@ namespace LoKi
      *  @date   2004-07-07
      */
     typedef VVDIST                                                      VVD ;
-    // ========================================================================
-
     // ========================================================================
     /** @typedef VVDSIGN
      *  Evaluator of the signed distance between the vertex and another
@@ -601,8 +533,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::VertexSignedDistance                     VVDSIGN ;
     // ========================================================================
-    
-    // ========================================================================
     /** @typedef VVDCHI2
      *  evaluator of the distance in chi2 units  
      *  between vertex and the abother vertex or point
@@ -635,8 +565,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::VertexChi2Distance                       VVDCHI2 ;
     // ========================================================================
-    
-    // ========================================================================
     /** @typedef MINVVD
      *  class for evaluation of minimal GEOMETRY distance 
      *  between the vertex and set of other vertices 
@@ -664,8 +592,6 @@ namespace LoKi
      *  @date   2004-07-07
      */
     typedef LoKi::Vertices::MinVertexDistance                         MINVVD ;
-    // ========================================================================
-
     // ========================================================================
     /** @typedef MINVVDCHI2 
      *  class for evaluation of minimal chi2 distance 
@@ -695,8 +621,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::MinVertexChi2Distance                 MINVVDCHI2 ;
     // ========================================================================
-
-    // ========================================================================
     /** @typedef VIP 
      *  class for evaluation of Impact Parameter 
      *  of the vertex with respect to the particle 
@@ -708,8 +632,6 @@ namespace LoKi
      *  @date 2006-11-25
      */
     typedef LoKi::Vertices::ImpPar VIP ;
-    // ========================================================================
-
     // ========================================================================
     /** @typedef VIPCHI2
      *  class for evaluation of Impact Parameter 
@@ -723,7 +645,6 @@ namespace LoKi
      */
     typedef LoKi::Vertices::ImpParChi2 VIPCHI2 ;
     // ========================================================================
-
   }  // end of namespace LoKi::Cuts
 } // end of the namespace LoKi 
 // ============================================================================

@@ -1,14 +1,4 @@
-// $Id: VertexHolder.cpp,v 1.4 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/08/15 15:13:26  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.2  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
+// $Id: VertexHolder.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,8 +16,6 @@
 // ============================================================================
 #include "LoKi/VertexHolder.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class LoKi::Vertices::VertexHolder 
@@ -44,9 +32,7 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-// ============================================================================
-/// constructor from the 3Dpoint
+// constructor from the 3Dpoint
 // ============================================================================
 LoKi::Vertices::VertexHolder::VertexHolder
 ( const LoKi::Point3D& point      ) 
@@ -54,7 +40,7 @@ LoKi::Vertices::VertexHolder::VertexHolder
   , m_type   ( _point ) 
   , m_vertex (  0     ) 
   , m_point  (  point ) 
-{};
+{}
 // ============================================================================
 /// constructor from Vertex 
 // ============================================================================
@@ -64,7 +50,7 @@ LoKi::Vertices::VertexHolder::VertexHolder
   , m_type   ( _vertex ) 
   , m_vertex (  vertex ) 
   , m_point  () 
-{};
+{}
 // ============================================================================
 /// copy constructor 
 // ============================================================================
@@ -74,7 +60,7 @@ LoKi::Vertices::VertexHolder::VertexHolder
   , m_type     ( right.m_type   ) 
   , m_vertex   ( right.m_vertex ) 
   , m_point    ( right.m_point  ) 
-{};
+{}
 // ============================================================================
 LoKi::Vertices::VertexHolder::~VertexHolder(){}
 // ============================================================================
@@ -94,7 +80,7 @@ LoKi::Vertices::VertexHolder::position() const
   }
   Error ( s_print ) ;
   return s_error ;                                            // RETURN 
-} ;
+} 
 // ============================================================================
 
 // ============================================================================

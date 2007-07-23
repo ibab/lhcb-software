@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.30 2007-06-11 09:18:01 cattanem Exp $ 
+! $Id: release.notes,v 1.31 2007-07-23 17:35:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-23 - Vanya BELYAEV
+ - many small fixes to speed-up the compilation, 
+   reduce the dictionaries and improve doxygen 
+ - cmt/requirements 
+   version increment to v4r1 
 
 !========================== LoKiPhys v4r0 2007-06-11 ==========================
 ! 2007-06-10 - Vanya BELYAEV
@@ -209,6 +215,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.30  2007/06/11 09:18:01  cattanem
+! move tag
+!
 ! Revision 1.29  2007/06/10 20:07:17  ibelyaev
 !  prepare for v4r0
 !

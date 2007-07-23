@@ -1,14 +1,4 @@
-// $Id: PhysCnv.cpp,v 1.4 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/03/18 12:40:18  ibelyaev
-//  fix a warning for Win32
-//
-// Revision 1.2  2006/03/16 14:43:55  ibelyaev
-//  tiny fix
-//
+// $Id: PhysCnv.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,8 +19,6 @@
 // ============================================================================
 #include "LoKi/PhysCnv.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class : PhysCnv
@@ -47,10 +35,7 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-// ============================================================================
-/** @fn convert 
- *  Trivial conversion function 
+/*  Trivial conversion function 
  *  @param vct vector of const particles 
  *  @param return vector of non-const particles 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -66,10 +51,9 @@ LoKi::Cnv::convert
     ( vct.begin() , vct.end() , _v.begin() , 
       LoKi::Cast::ConstAway<LHCb::Particle>() ) ;
   return _v ;
-} ;
+} 
 // ============================================================================
-/** @fn convert 
- *  Trivial conversion function 
+/** Trivial conversion function 
  *  @param vct vector of const particles 
  *  @param return vector of non-const particles 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -85,10 +69,9 @@ LoKi::Cnv::convert
     ( vct.begin() , vct.end() , _v.begin() , 
       LoKi::Cast::ConstAway<LHCb::Particle>() ) ;
   return _v ;
-} ;
+} 
 // ============================================================================
-/** @fn convert 
- *  Trivial conversion function 
+/** Trivial conversion function 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
@@ -102,10 +85,9 @@ LoKi::Cnv::convert
     ( vct.begin() , vct.end() , _v.begin() , 
       LoKi::Cast::ConstAway<LHCb::Particle>() ) ;
   return _v ;
-} ;
+} 
 // ============================================================================
-/** @fn convert 
- *  Trivial conversion function 
+/** Trivial conversion function 
  *  @param vct vector of const vertices 
  *  @param return vector of non-const vertices 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -121,10 +103,9 @@ LoKi::Cnv::convert
     ( vct.begin() , vct.end() , _v.begin() , 
       LoKi::Cast::ConstAway<LHCb::Vertex>() ) ;
   return _v ;
-} ;
+} 
 // ============================================================================
-/** @fn convert 
- *  Trivial conversion function 
+/** Trivial conversion function 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
@@ -138,7 +119,7 @@ LoKi::Cnv::convert
     ( vct.begin() , vct.end() , _v.begin() , 
       LoKi::Cast::ConstAway<LHCb::Vertex>() ) ;
   return _v ;
-} ;
+} 
 // ============================================================================
 
 // ============================================================================

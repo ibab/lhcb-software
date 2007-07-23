@@ -1,29 +1,13 @@
-// $Id: Particles7.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles7.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES7_H 
 #define LOKI_PARTICLES7_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,12 +23,11 @@
  *  @date 2006-02-21 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
-    
+    // ========================================================================
     /** @class VFunAsPFun
      *  The simple adapter of "Vertex function"
      *  as "Particle function"
@@ -71,8 +54,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-02-27
      */
-    class VFunAsPFun 
-      : public LoKi::Function<const LHCb::Particle*>
+    class VFunAsPFun : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /** constructor form "Vertex function"
@@ -114,11 +96,9 @@ namespace LoKi
       LoKi::Types::VFun m_vfun ;
       double            m_bad  ;
     };
-      
+    // ========================================================================      
   }  // end of namespace LoKi::Particles
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

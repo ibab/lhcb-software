@@ -1,6 +1,4 @@
-// $Id: VertexCast.h,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version  $Revision: 1.3 $
+// $Id: VertexCast.h,v 1.4 2007-07-23 17:35:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCAST_H 
 #define LOKI_VERTEXCAST_H 1
@@ -12,8 +10,6 @@
 #include "Event/VertexBase.h"
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -29,8 +25,6 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
   /** @namespace LoKi::Vertices
@@ -40,6 +34,7 @@ namespace LoKi
    */  
   namespace Vertices 
   {
+    // ========================================================================
     /** helper casting function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-08-15 
@@ -50,7 +45,8 @@ namespace LoKi
     {
       return 0 == base ? (LHCb::Vertex*) 0 : 
         dynamic_cast<LHCb::Vertex*>( base ) ;
-    };
+    }
+    // ========================================================================
     /** helper casting function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-08-15 
@@ -61,7 +57,8 @@ namespace LoKi
     {
       return 0 == base ? (const LHCb::Vertex*) 0 : 
         dynamic_cast<const LHCb::Vertex*>( base ) ;
-    };
+    }
+    // ========================================================================
     /** helper casting function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-08-15 
@@ -72,7 +69,8 @@ namespace LoKi
     {
       return 0 == base ? (LHCb::RecVertex*) 0 : 
         dynamic_cast<LHCb::RecVertex*>( base ) ;
-    };
+    }
+    // ========================================================================
     /** helper casting function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-08-15 
@@ -83,10 +81,10 @@ namespace LoKi
     {
       return 0 == base ? (LHCb::RecVertex*) 0 : 
         dynamic_cast<const LHCb::RecVertex*>( base ) ;
-    };
+    }
+    // ========================================================================
   } // end of namespace Vertices
-} // end of namespace LoKi 
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

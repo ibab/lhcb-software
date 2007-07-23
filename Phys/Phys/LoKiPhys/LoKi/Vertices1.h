@@ -1,31 +1,9 @@
-// $Id: Vertices1.h,v 1.7 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.5  2006/08/15 15:13:26  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.4  2006/03/19 13:03:28  ibelyaev
-//  minor update
-//
-// Revision 1.3  2006/02/23 21:14:09  ibelyaev
-//   add new fuctors/predicates
-//
+// $Id: Vertices1.h,v 1.8 2007-07-23 17:35:50 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/VertexBase.h"
-#include "Event/Vertex.h"
-#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -37,7 +15,7 @@
 #include "LoKi/PhysRangeTypes.h"
 #include "LoKi/VertexHolder.h"
 // ============================================================================
-
+namespace LHCb { class RecVertex ; }
 // ============================================================================
 /** @file
  *
@@ -53,12 +31,11 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   namespace  Vertices 
   {
-    
+    // ========================================================================
     /** @class VertexDistance
      *  evaluator of the distance
      *  between vertex and the 'vertex'
@@ -67,9 +44,9 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexDistance : 
-      public    LoKi::Function<const LHCb::VertexBase*> , 
-      public    LoKi::Vertices::VertexHolder 
+    class VertexDistance 
+      : public    LoKi::Function<const LHCb::VertexBase*> 
+      , public    LoKi::Vertices::VertexHolder 
     {
     public:
       /// constructor 
@@ -103,7 +80,7 @@ namespace LoKi
       /// default constructor is private 
       VertexDistance();
     };
-
+    // ========================================================================
     /** @class VertexSignedDistance
      *  evaluator of the distance
      *  between vertex and the 'vertex', signed 
@@ -119,8 +96,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexSignedDistance : 
-      public    LoKi::Function<const LHCb::VertexBase*> 
+    class VertexSignedDistance : public LoKi::Function<const LHCb::VertexBase*> 
     {
     public:
       /// constructor 
@@ -160,7 +136,7 @@ namespace LoKi
     private:
       LoKi::Vertices::VertexDistance m_fun ;
     };
-    
+    // ========================================================================    
     /** @class VertexChi2Distance
      *  evaluator of the distance in chi2 units  
      *  between vertex and the 'vertex'
@@ -168,9 +144,9 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexChi2Distance : 
-      public    LoKi::Function<const LHCb::VertexBase*> , 
-      public    LoKi::Vertices::VertexHolder 
+    class VertexChi2Distance 
+      : public    LoKi::Function<const LHCb::VertexBase*> 
+      , public    LoKi::Vertices::VertexHolder 
     {
     public:
       /// constructor 
@@ -204,7 +180,7 @@ namespace LoKi
       /// default constructor is private 
       VertexChi2Distance();
     };
-    
+    // ========================================================================    
     /** @class MinVertexDistance
      *  class for evaluation of minimal GEOMETRY distance 
      *  between the vertex and other vertices 
@@ -212,9 +188,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexDistance :
-      public LoKi::Function<const LHCb::VertexBase*> , 
-      public LoKi::UniqueKeeper<LHCb::VertexBase>
+    class MinVertexDistance 
+      : public LoKi::Function<const LHCb::VertexBase*> 
+      , public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
       /** constructor from container of vertices 
@@ -256,7 +232,7 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LHCb::RecVertices*   vs  ) ;
+      ( const LHCb::RecVertex::Container*   vs  ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -326,8 +302,7 @@ namespace LoKi
     private:
       LoKi::Vertices::VertexDistance m_fun  ;
     };
-
-
+    // ========================================================================
     /** @class MinVertexChi2Distance
      *  class for evaluation of minimal chi2 distance 
      *  between the vertex and other vertices 
@@ -335,9 +310,9 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexChi2Distance :
-      public LoKi::Function<const LHCb::VertexBase*> , 
-      public LoKi::UniqueKeeper<LHCb::VertexBase>
+    class MinVertexChi2Distance 
+      : public LoKi::Function<const LHCb::VertexBase*> 
+      , public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
       /** constructor from container of vertices 
@@ -452,9 +427,9 @@ namespace LoKi
     private:
       LoKi::Vertices::VertexChi2Distance m_fun  ;
     };
-
-  }  // end of namespace LoKi::Vertices 
-}  // end of namespace LoKi
+    // ========================================================================
+  } // end of namespace LoKi::Vertices 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

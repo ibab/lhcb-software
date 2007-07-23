@@ -1,23 +1,9 @@
-// $Id: Particles11.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles11.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES11_H 
 #define LOKI_PARTICLES11_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -27,8 +13,6 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -44,11 +28,11 @@
  *  @date 2006-02-22 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   { 
+    // ========================================================================
     /** @class IsAParticle
      *  The trivial predicate which 
      *  evalautes to "true" if particle 
@@ -117,7 +101,7 @@ namespace LoKi
       // The default costructor is disabled 
       IsAParticle();
     } ;
-    
+    // ========================================================================    
     /** @class IsAParticleInTree
      *  The trivial predicate which 
      *  evalautes to "true" if particle or any of dauhter particles 
@@ -130,8 +114,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class IsAParticleInTree
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class IsAParticleInTree : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from one particle 
@@ -190,7 +173,7 @@ namespace LoKi
       // the evaluator 
       LoKi::Particles::IsAParticle m_cut ;
     } ;
-    
+    // ========================================================================    
     /** @class IsAParticleFromTree
      *  The trivial predicate which 
      *  evalautes to "true" if particle comes from the 
@@ -259,13 +242,9 @@ namespace LoKi
       // The defualt costructor is disabled 
       IsAParticleFromTree();
     } ;
-    
-    
-  }  // end of namespace Particles 
-  
-}  // end of namespace LoKi 
-
-
+    // ========================================================================    
+  } // end of namespace Particles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

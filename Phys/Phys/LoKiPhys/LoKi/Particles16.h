@@ -1,28 +1,14 @@
-// $Id: Particles16.h,v 1.2 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/12/16 13:22:26  ibelyaev
-//  add Particles16: DIRA&DANG
-//
+// $Id: Particles16.h,v 1.3 2007-07-23 17:35:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/VertexHolder.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -38,15 +24,14 @@
  *  @date 2006-03-20 
  */
 // ============================================================================
-
-
 namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class CosineDirectionAngle
      *  evaluator of the angle between particle momentum   
-     *  and the direction from fererence vertex/point 
+     *  and the direction from the reference vertex/point 
      *  to the particle decay vertex
      *  @see LoKi::Cuts::DIRA
      *  @see LoKi::Cuts::DANG
@@ -78,6 +63,7 @@ namespace LoKi
       /// default constructor is private 
       CosineDirectionAngle();
     } ;
+    // ========================================================================
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
 // ============================================================================

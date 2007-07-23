@@ -1,17 +1,4 @@
-// $Id: PhysHelpers.h,v 1.3 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.1  2006/02/20 09:46:02  ibelyaev
-//  LoKi/Helpers.h -> LoKi/PhysHelpers.h
-//
-// Revision 1.1  2006/02/19 21:49:11  ibelyaev
-//  restructirisation + new funtions
-//
+// $Id: PhysHelpers.h,v 1.4 2007-07-23 17:35:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSHELPERS_H 
 #define LOKI_PHYSHELPERS_H 1
@@ -21,8 +8,6 @@
 // LoKiCore
 // ============================================================================
 #include "LoKi/Helpers.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -38,7 +23,6 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
@@ -48,9 +32,8 @@ namespace LoKi
    */
   namespace Helpers 
   {
-
-    /** @rm _Min_vertex 
-     *  Helper function to evaluate minimal value of 
+    // ========================================================================
+    /** Helper function to evaluate minimal value of 
      *  impact parameter, distance, chi2 etc... for 
      *  the funtions. which are based on VertexHolder
      * 
@@ -89,9 +72,8 @@ namespace LoKi
       }
       return found ;
     };
-
-    /** @rm _Min_particle
-     *  Helper function to evaluate minimal value of 
+    // ========================================================================
+    /** Helper function to evaluate minimal value of 
      *  impact parameter, distance, chi2 etc... for 
      *  the funtions.
      * 
@@ -129,10 +111,9 @@ namespace LoKi
       }
       return found ;
     };
-
+    // ========================================================================
   } // end of namespace LoKi::Helpers 
-} // end of namespace LoKi 
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

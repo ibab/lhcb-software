@@ -1,34 +1,15 @@
-// $Id: Particles13.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/04/24 08:32:28  ibelyaev
-//  for for new signature of LHCb::Track::hasSatteAt method
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles13.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES13_H 
 #define LOKI_PARTICLES13_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/State.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
-#include "LoKi/PhysExtract.h"
 // ============================================================================
-
+namespace LHCb { class State ; }  
 // ============================================================================
 /** @file
  *
@@ -44,13 +25,12 @@
  *  @date 2006-02-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
-    
-    /** @struct TrackChi2 
+    // ========================================================================
+    /** @class TrackChi2 
      *  The trivial funtion which evaluates LHCb::Track::chi2
      *
      *  @see LHCb::Particle
@@ -61,9 +41,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackChi2 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackChi2 : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -76,8 +56,8 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-    
-    /** @struct TrackChi2PerDoF 
+    // ========================================================================    
+    /** @class TrackChi2PerDoF 
      *  The trivial funtion which evaluates LHCb::Track::chi2PerDoF
      *
      *  @see LHCb::Particle
@@ -88,9 +68,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackChi2PerDoF 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackChi2PerDoF : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2PerDoF() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -104,8 +84,7 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-
-    
+    // ========================================================================
     /** @class TrackHasState
      *  The trivial funtion which evaluates LHCb::Track::hasStateAt
      *
@@ -117,8 +96,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHasState
-      : public LoKi::Predicate<const LHCb::Particle*> 
+    class TrackHasState : public LoKi::Predicate<const LHCb::Particle*> 
     {
     public:
       /// constructor from the state location 
@@ -143,8 +121,8 @@ namespace LoKi
       // location of the state 
       LHCb::State::Location m_location ;
     } ;
-    
-    /** @struct TrackType
+    // ========================================================================
+    /** @class TrackType
      *  The trivial function which evaluates LHCb::Track::type
      *
      *  @see LHCb::Particle
@@ -156,9 +134,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackType
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackType : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackType() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -172,9 +150,8 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-    
-
-    /** @struct TrackHistory
+    // ========================================================================
+    /** @class TrackHistory
      *  The trivial function which evaluates LHCb::Track::history
      *
      *  @see LHCb::Particle
@@ -186,9 +163,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackHistory
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackHistory : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackHistory() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -202,8 +179,8 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-
-    /** @struct TrackHistoryFit
+    // ========================================================================
+    /** @class TrackHistoryFit
      *  The trivial function which evaluates LHCb::Track::historyFit
      *
      *  @see LHCb::Particle
@@ -215,9 +192,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackHistoryFit
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackHistoryFit : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackHistoryFit() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -231,8 +208,8 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-    
-    /** @struct TrackStatus
+    // ========================================================================    
+    /** @class TrackStatus
      *  The trivial function which evaluates LHCb::Track::status
      *
      *  @see LHCb::Particle
@@ -244,9 +221,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    struct TrackStatus
-      : public LoKi::Function<const LHCb::Particle*> 
+    class TrackStatus : public LoKi::Function<const LHCb::Particle*> 
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~TrackStatus() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -260,11 +237,9 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
     };
-
+    // ========================================================================
   }  // end of namespace Particles
-}  // end of namespace LoKi 
-
-
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

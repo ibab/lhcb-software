@@ -1,9 +1,4 @@
-// $Id: PhysTypes.h,v 1.6 2007-06-01 12:07:03 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: PhysTypes.h,v 1.7 2007-07-23 17:35:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1
@@ -18,8 +13,8 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
-#include "Event/VertexBase.h"
-#include "Event/Vertex.h"
+// ============================================================================
+namespace LHCb { class RecVertex ; }
 // ============================================================================
 namespace LoKi 
 {

@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2007/06/10 20:07:17  ibelyaev
+#  prepare for v4r0
+#
 # Revision 1.1  2007/06/01 12:07:03  ibelyaev
 #  prepare for version v4r0
 #
@@ -414,6 +417,12 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
+## @see LoKi::Monitoring::Counter
+COUNTER    = LoKi.Monitoring.Counter (_RCP)
+## @see LoKi::Monitoring::Stat 
+STAT       = LoKi.Monitoring.Stat    (_RCP)
+## @see LoKi::Monitoring::Counter
+PLOT       = LoKi.Monitoring.Plot    (_RCP)
 
 _PhysChild = LoKi.Child.PhysChild 
 

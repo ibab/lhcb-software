@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.8 2007-06-10 20:07:17 ibelyaev Exp $
+// $Id: Child.h,v 1.9 2007-07-23 17:35:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -34,8 +34,8 @@ namespace LoKi
   { 
     // ========================================================================
     /** get the number of children 
-     *  @param mother poiunter to mother particle 
-     *  @return number of daugthter particles 
+     *  @param mother pointer to the mother particle 
+     *  @return number of the daughter particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */
@@ -47,7 +47,7 @@ namespace LoKi
      *             to the original particle 
      *
      *  @param  particle (const) pointer to mother particle 
-     *  @param  index    index   index of the child particle 
+     *  @param  index    the index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
@@ -62,8 +62,8 @@ namespace LoKi
      *             to the original particle 
      *
      *  @param  particle (const) pointer to mother particle 
-     *  @param  index1   index   index of the child particle 
-     *  @param  index2   index   index of the child particle 
+     *  @param  index1   the index of the child particle 
+     *  @param  index2   the index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
@@ -81,9 +81,9 @@ namespace LoKi
      *             to the original particle 
      *
      *  @param  particle (const) pointer to mother particle 
-     *  @param  index1   index   index of the child particle 
-     *  @param  index2   index   index of the child particle 
-     *  @param  index3   index   index of the child particle 
+     *  @param  index1   the index of the child particle 
+     *  @param  index2   the index of the child particle 
+     *  @param  index3   the index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
@@ -102,10 +102,10 @@ namespace LoKi
      *             to the original particle 
      *
      *  @param  particle (const) pointer to mother particle 
-     *  @param  index1   index   index of the child particle 
-     *  @param  index2   index   index of the child particle 
-     *  @param  index3   index   index of the child particle 
-     *  @param  index4   index   index of the child particle 
+     *  @param  index1   the index of the child particle 
+     *  @param  index2   the index of the child particle 
+     *  @param  index3   the index of the child particle 
+     *  @param  index4   the index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
@@ -143,12 +143,12 @@ namespace LoKi
     ///    helper structure to force the loading of functions 
     struct PhysChild     
     {
-      /// ficvtive contructor
+      /// fictive contructor
       PhysChild() ; ///< fictive  constructor
     } ;
     // ========================================================================
-  }  // end of the namespace LoKi:Child 
-}  // end of the namespace LoKi
+  } // end of the namespace LoKi:Child 
+} // end of the namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

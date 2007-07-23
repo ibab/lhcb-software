@@ -1,4 +1,4 @@
-// $Id: PhysAlgsDicts.cpp,v 1.1 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: PhysAlgsDicts.cpp,v 1.2 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,23 +24,23 @@ std::size_t LoKi::Dicts::Algs::count_if
   const LoKi::PhysTypes::Cuts& cut      ) 
 { return LoKi::PhysAlgs::count_if ( particle , cut ) ; }
 // ============================================================================
-/// check the presence in the tree 
+// check the presence in the tree 
 // ============================================================================
 bool        LoKi::Dicts::Algs::found 
 ( const LHCb::Particle*        particle , 
   const LoKi::PhysTypes::Cuts& cut      ) 
 { return LoKi::PhysAlgs::found  ( particle , cut ) ; }
 // ============================================================================
-/// find the minimum over the tree 
+// find the minimum over the tree 
 // ============================================================================
 double LoKi::Dicts::Algs::min_value 
 ( const LHCb::Particle*        particle , 
   const LoKi::PhysTypes::Func& fun      , 
   const LoKi::PhysTypes::Cuts& cut      ,
   double                       result   ) 
-{ return LoKi::PhysAlgs::max_value ( particle , fun , cut , result ) ; }
+{ return LoKi::PhysAlgs::min_value ( particle , fun , cut , result ) ; }
 // ============================================================================
-/// find the maximum over the tree 
+// find the maximum over the tree 
 // ============================================================================
 double LoKi::Dicts::Algs::max_value 
 ( const LHCb::Particle*        particle , 
@@ -49,7 +49,7 @@ double LoKi::Dicts::Algs::max_value
   double                       result   ) 
 { return LoKi::PhysAlgs::max_value ( particle , fun , cut , result ) ; }
 // ============================================================================
-/// find the minimum element in  the tree 
+// find the minimum element in  the tree 
 // ============================================================================
 const LHCb::Particle* 
 LoKi::Dicts::Algs::min_element
@@ -58,7 +58,7 @@ LoKi::Dicts::Algs::min_element
   const LoKi::PhysTypes::Cuts& cut      ) 
 { return LoKi::PhysAlgs::min_element ( particle , fun , cut ) ; }
 // ============================================================================
-/// find the maximum element in  the tree 
+// find the maximum element in  the tree 
 // ============================================================================
 const LHCb::Particle* 
 LoKi::Dicts::Algs::max_element
@@ -69,7 +69,7 @@ LoKi::Dicts::Algs::max_element
 // ============================================================================
 // accumulate over the tree 
 // ============================================================================
-double accumulate  
+double LoKi::Dicts::Algs::accumulate  
 ( const LHCb::Particle*        particle , 
   const LoKi::PhysTypes::Func& fun      , 
   const LoKi::PhysTypes::Cuts& cut      , 

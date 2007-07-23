@@ -1,20 +1,4 @@
-// $Id: ImpParBase.cpp,v 1.5 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/12/01 08:17:55  ibelyaev
-//  fix for VertexBase argument
-//
-// Revision 1.3  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/03/18 12:40:18  ibelyaev
-//  fix a warning for Win32
-//
-// Revision 1.1  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
+// $Id: ImpParBase.cpp,v 1.6 2007-07-23 17:35:52 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,8 +18,6 @@
 // ============================================================================
 #include "LoKi/ImpParBase.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class LoKi::Vertices::ImpParBase
@@ -52,16 +34,12 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-// ============================================================================
 namespace
 {
   InstanceCounter<LoKi::Vertices::ImpParBase> s_IPBCounter ;  
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LHCb::VertexBase* vertex ,   
@@ -72,11 +50,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Point3D& point  ,   
@@ -87,11 +63,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Vertices::VertexHolder& holder ,   
@@ -102,13 +76,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+}
 // ============================================================================
-
-
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LHCb::VertexBase* vertex ,   
@@ -119,11 +89,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Point3D&                   point  ,   
@@ -134,11 +102,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+}
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Vertices::VertexHolder&    holder ,   
@@ -149,11 +115,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Vertices::ImpParBase&   tool )
@@ -164,9 +128,9 @@ LoKi::Vertices::ImpParBase::ImpParBase
 #ifdef LOKI_DEBUG
   s_IPBCounter.increment();
 #endif 
-} ;
+} 
 // ============================================================================
-/// destructor 
+//  destructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::~ImpParBase() 
 {
@@ -174,7 +138,7 @@ LoKi::Vertices::ImpParBase::~ImpParBase()
   s_IPBCounter.decrement();
 #endif 
   //
-};
+}
 // ============================================================================
 
 // ============================================================================

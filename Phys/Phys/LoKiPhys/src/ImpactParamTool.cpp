@@ -1,11 +1,4 @@
-// $Id: ImpactParamTool.cpp,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/03/14 19:06:36  ibelyaev
-//  v1r0 : prepare
-//
+// $Id: ImpactParamTool.cpp,v 1.4 2007-07-23 17:35:52 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,8 +13,6 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/ImpactParamTool.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,8 +30,6 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-// ============================================================================
 LoKi::Vertices::ImpactParamTool::ImpactParamTool 
 ( IGeomDispCalculator* tool ) 
   : LoKi::AuxFunBase () 
@@ -49,11 +38,9 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   if ( 0 == m_tool.getObject() ) 
   { throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
                           StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// copy 
+//  copy 
 // ============================================================================
 LoKi::Vertices::ImpactParamTool::ImpactParamTool
 ( const LoKi::Vertices::ImpactParamTool& tool ) 
@@ -64,11 +51,9 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   { throw LoKi::Exception
       ("ImpactParamTool( copy ):  Tool* points to NULL ",
        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-};
-
-
+}
 // ============================================================================
-/// virtual destructor
+//  virtual destructor
 // ============================================================================
 LoKi::Vertices::ImpactParamTool::~ImpactParamTool(){}
 // ============================================================================

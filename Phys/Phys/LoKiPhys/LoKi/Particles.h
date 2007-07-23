@@ -1,28 +1,13 @@
-// $Id: Particles.h,v 1.10 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2007/03/01 16:14:39  ibelyaev
-//  add PTREL and PTDIR functions
-//
-// Revision 1.8  2006/12/16 13:22:26  ibelyaev
-//  add Particles16: DIRA&DANG
-//
-// Revision 1.7  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.6  2006/03/20 20:36:16  ibelyaev
-//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
-//
-// Revision 1.5  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles.h,v 1.11 2007-07-23 17:35:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES_H 
 #define LOKI_PARTICLES_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// Event
+// ============================================================================
+#include "Event/ProtoParticle.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -44,8 +29,7 @@
 #include "LoKi/Particles15.h"
 #include "LoKi/Particles16.h"
 #include "LoKi/Particles17.h"
-// ============================================================================
-
+#include "LoKi/Particles18.h"
 // ============================================================================
 /** @file
  *
@@ -61,7 +45,6 @@
  *  @date 2006-01-28 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @namespace LoKi::Particles Particles.h LoKi/Particles.h

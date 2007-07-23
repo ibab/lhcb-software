@@ -1,17 +1,4 @@
-// $Id: Particles5.cpp,v 1.4 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/03/07 09:19:52  ibelyaev
-//  fix a stupud bug in LoKi::PhysAlgs::accumulate ; retag
-//
-// Revision 1.2  2006/10/27 13:39:33  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.1  2006/02/22 20:53:47  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
+// $Id: Particles5.cpp,v 1.5 2007-07-23 17:35:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,16 +7,10 @@
 #include <vector>
 #include <algorithm>
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiPhys
 // ============================================================================
 #include "LoKi/PhysAlgs.h"
 #include "LoKi/Particles5.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -47,9 +28,7 @@
  *  @date 2006-02-20 
  */
 // ============================================================================
-
-// ============================================================================
-/** standard constructor 
+/*  standard constructor 
  *  @param cut cut to be applied 
  */
 // ============================================================================
@@ -68,14 +47,14 @@ LoKi::Particles::InTree::InTree
   , m_cut                 ( right.m_cut ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::InTree::result_type 
 LoKi::Particles::InTree::operator() 
   ( LoKi::Particles::InTree::argument p ) const 
 { return LoKi::PhysAlgs::found( p , m_cut ) ; }
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::InTree::fillStream( std::ostream& s ) const 
@@ -84,7 +63,7 @@ LoKi::Particles::InTree::fillStream( std::ostream& s ) const
 
 
 // ============================================================================
-/** standard constructor 
+/*  standard constructor 
  *  @param cut cut to be applied 
  */
 // ============================================================================
@@ -103,14 +82,14 @@ LoKi::Particles::NinTree::NinTree
   , m_cut                 ( right.m_cut ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::NinTree::result_type 
 LoKi::Particles::NinTree::operator() 
   ( LoKi::Particles::NinTree::argument p ) const 
 { return LoKi::PhysAlgs::count_if( p , m_cut ) ; }
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::NinTree::fillStream( std::ostream& s ) const 
@@ -148,7 +127,7 @@ LoKi::Particles::SumTree::SumTree
   , m_res ( right.m_res ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::SumTree::result_type 
 LoKi::Particles::SumTree::operator() 
@@ -158,7 +137,7 @@ LoKi::Particles::SumTree::operator()
     ( p , m_fun , m_cut , m_res , std::plus<result_type>() ) ;
 } ;
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::SumTree::fillStream( std::ostream& s ) const 
@@ -195,7 +174,7 @@ LoKi::Particles::MultTree::MultTree
   , m_res ( right.m_res ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::MultTree::result_type 
 LoKi::Particles::MultTree::operator() 
@@ -203,7 +182,7 @@ LoKi::Particles::MultTree::operator()
 { return LoKi::PhysAlgs::accumulate
     ( p , m_fun , m_cut , m_res , std::multiplies<result_type>() ) ; };
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MultTree::fillStream( std::ostream& s ) const 
@@ -241,14 +220,14 @@ LoKi::Particles::MinTree::MinTree
   , m_res ( right.m_res ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::MinTree::result_type 
 LoKi::Particles::MinTree::operator() 
   ( LoKi::Particles::MinTree::argument p ) const 
 { return LoKi::PhysAlgs::min_value ( p , m_fun , m_cut , m_res ) ; };
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MinTree::fillStream( std::ostream& s ) const 
@@ -285,26 +264,19 @@ LoKi::Particles::MaxTree::MaxTree
   , m_res ( right.m_res ) 
 {};
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::MaxTree::result_type 
 LoKi::Particles::MaxTree::operator() 
   ( LoKi::Particles::MaxTree::argument p ) const 
 { return LoKi::PhysAlgs::max_value ( p , m_fun , m_cut , m_res ) ; };
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MaxTree::fillStream( std::ostream& s ) const 
 { return s << "MAXTREE[" << m_fun << "," << m_cut << "]" ; }
 // ============================================================================
-
-
-
-
-
-
-
 
 
 // ============================================================================

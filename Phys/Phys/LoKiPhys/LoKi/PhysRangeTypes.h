@@ -1,17 +1,4 @@
-// $Id: PhysRangeTypes.h,v 1.7 2007-06-01 12:07:03 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2007/04/16 16:16:26  pkoppenb
-// removed polemic comment
-//
-// Revision 1.5  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.4  2006/08/15 15:13:25  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
+// $Id: PhysRangeTypes.h,v 1.8 2007-07-23 17:35:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSRANGETYPES_H 
 #define LOKI_PHYSRANGETYPES_H 1
@@ -21,7 +8,6 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
-#include "Event/Vertex.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================

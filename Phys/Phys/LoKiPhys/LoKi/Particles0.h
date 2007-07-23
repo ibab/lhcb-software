@@ -1,31 +1,17 @@
-// $Id: Particles0.h,v 1.10 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2007/03/01 16:14:39  ibelyaev
-//  add PTREL and PTDIR functions
-//
+// $Id: Particles0.h,v 1.11 2007-07-23 17:35:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
-#include "LoKi/PIDOperators.h"
 #include "LoKi/Kinematics.h"
 // ============================================================================
 class IParticlePropertySvc ;
 class  ParticleProperty    ;
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -41,7 +27,6 @@ class  ParticleProperty    ;
  *  @date 2006-01-28 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @namespace LoKi::Particles 
@@ -51,7 +36,7 @@ namespace LoKi
    */   
   namespace Particles 
   {
-    
+    // ========================================================================
     /** @class HasKey 
      *  The trivial predicate, it relies on Particle::hasKey method 
      *
@@ -63,8 +48,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class HasKey 
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasKey : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -74,7 +58,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
-
+    // ========================================================================
     /** @class Key 
      *  The trivial function, it relies on Particle::key method 
      *
@@ -86,8 +70,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class  Key 
-      : public LoKi::Function<const LHCb::Particle*>
+    class  Key : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /** constructor from "bad" value, to be returned 
@@ -117,7 +100,7 @@ namespace LoKi
       LHCb::Particle::key_type m_bad    ;
       LHCb::Particle::key_type m_nokey  ;
     } ;
-    
+    // ========================================================================    
     /** @class InTES 
      *
      *  The trivial predicate which evaluates 
@@ -136,8 +119,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class InTES
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class InTES : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /** constructor fomr the location and the flag
@@ -172,7 +154,7 @@ namespace LoKi
       std::string m_location ;
       bool        m_fullpath  ;
     } ;
-    
+    // ========================================================================
     /** @class Identifier
      *  evaluator of the id of the particle 
      *  @see LoKi::Cuts::ID
@@ -182,8 +164,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Identifier : public LoKi::Function<const LHCb::Particle*>
     {  
     public:
       /// clone method (mandatory!)
@@ -193,7 +174,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
-
+    // ========================================================================
     /** @class AbsIdentifier
      *  evaluator of the id of the particle 
      *  @see LoKi::Cuts::ABSID
@@ -203,8 +184,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier 
-      : public LoKi::Function<const LHCb::Particle*>
+    class AbsIdentifier : public LoKi::Function<const LHCb::Particle*>
     {  
     public:
       /// clone method (mandatory!)
@@ -214,7 +194,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
-    
+    // ========================================================================    
     /** @class Charge
      *  the trivial evaluator of particle charge 
      *  it relies on LHCb::Particle::charge 
@@ -225,8 +205,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class Charge 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Charge : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -236,7 +215,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
-    
+    // ========================================================================
     /** @class SumCharge
      *  the trivial evaluator of particle charge 
      *  it relies on LoKi::Particles::Charge for the 
@@ -248,8 +227,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class SumCharge 
-      : public LoKi::Function<const LHCb::Particle*>
+    class SumCharge : public LoKi::Function<const LHCb::Particle*>
     {  
     public:
       /// clone method (mandatory!)
@@ -264,14 +242,13 @@ namespace LoKi
       // evaluator for basic particles 
       LoKi::Particles::Charge m_charge ;
     } ;
-    
+    // ========================================================================    
     /** @class Momentum 
      *  evaluator of the momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class Momentum : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /// clone method (mandatory!)
@@ -281,14 +258,13 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class Momentum2
      *  evaluator of the squared momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum2 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class Momentum2 : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /// clone method (mandatory!)
@@ -298,15 +274,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class Energy 
      *  evaluator of the energy of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Energy 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Energy : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -316,15 +291,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class TransverseMomentum
      *  evaluator of the transverse momentum of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TransverseMomentum 
-      : public LoKi::Function<const LHCb::Particle*>
+    class TransverseMomentum : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -334,15 +308,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================
     /** @class MomentumX
      *  evaluator of the x component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumX 
-      : public LoKi::Function<const LHCb::Particle*>
+    class MomentumX : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -352,15 +325,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class MomentumY
      *  evaluator of the y component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumY 
-      : public LoKi::Function<const LHCb::Particle*>
+    class MomentumY : public LoKi::Function<const LHCb::Particle*>
     {     
     public:
       /// clone method (mandatory!)
@@ -370,15 +342,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class MomentumZ
      *  evaluator of the z component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumZ 
-      : public LoKi::Function<const LHCb::Particle*>
+    class MomentumZ : public LoKi::Function<const LHCb::Particle*>
     {     
     public:
       /// clone method (mandatory!)
@@ -388,15 +359,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================
     /** @class PseudoRapidity
      *  evaluator of the seudorapidity of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity 
-      : public LoKi::Function<const LHCb::Particle*>
+    class PseudoRapidity : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -406,15 +376,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class Phi
      *  evaluator of the 'Phi' of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Phi : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -424,15 +393,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class Theta
      *  evaluator of the 'Theta' of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Theta 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Theta : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -442,15 +410,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class Mass
      *  evaluator of the mass of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Mass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class Mass : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -460,15 +427,14 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class MeasuredMass
      *  evaluator of the measured mass of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MeasuredMass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class MeasuredMass : public LoKi::Function<const LHCb::Particle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -478,7 +444,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================
     /** @class InvariantMass
      *  evaluator of invariant mass for different sub-combination of 
      *  daughter particles 
@@ -494,8 +460,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class InvariantMass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class InvariantMass : public LoKi::Function<const LHCb::Particle*>
     {
     public:      
       /// type for container of indices 
@@ -536,7 +501,7 @@ namespace LoKi
     private:
       Indices                     m_indices ;
     };
-
+    // ========================================================================    
     /** @class DeltaMass
      *  evaluator of the mass of the particle 
      *  
@@ -545,8 +510,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMass : public LoKi::Function<const LHCb::Particle*>
     {      
     public:
       /** constructor  
@@ -604,7 +568,7 @@ namespace LoKi
       double                 m_mass ;
       LoKi::Particles::Mass  m_eval ;
     };
-
+    // ========================================================================
     /** @class AbsDeltaMass
      *  evaluator of the absolute value for delta mass of the particle 
      *  
@@ -613,8 +577,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class AbsDeltaMass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class AbsDeltaMass : public LoKi::Function<const LHCb::Particle*>
     {      
     public:
       /** constructor  
@@ -667,11 +630,11 @@ namespace LoKi
       double m0() const { return m_eval.m0() ; }
     private:
       /// default constructor 
-       AbsDeltaMass();
+      AbsDeltaMass();
     private:
       LoKi::Particles::DeltaMass  m_eval ;
     };
-    
+    // ========================================================================
     /** @class DeltaMeasuredMass
      *  evaluator of the mass of the particle 
      *  
@@ -680,8 +643,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMeasuredMass 
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMeasuredMass : public LoKi::Function<const LHCb::Particle*>
     {      
     public:
       /// constructor  
@@ -739,7 +701,7 @@ namespace LoKi
       double                         m_mass      ;
       LoKi::Particles::MeasuredMass  m_eval;
     };
-    
+    // ========================================================================
     /** @class AbsDeltaMeasuredMass 
      *  evaluator of absolute value for measured mass 
      *
@@ -748,8 +710,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-08-04
      */
-    class AbsDeltaMeasuredMass 
-      : public  LoKi::Function<const LHCb::Particle*>
+    class AbsDeltaMeasuredMass : public  LoKi::Function<const LHCb::Particle*>
     {
     public :
       /** constructor  from particle mass 
@@ -811,7 +772,7 @@ namespace LoKi
       /// evaluator 
       LoKi::Particles::DeltaMeasuredMass m_eval ;
     };
-    
+    // ========================================================================    
     /** @class DeltaMeasuredMassChi2 
      *  evaluator of delta meadured mass in chi2 units 
      *
@@ -821,8 +782,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2003-01-17
      */
-    class DeltaMeasuredMassChi2 
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMeasuredMassChi2 : public LoKi::Function<const LHCb::Particle*>
     {      
     public:
       /// constructor  
@@ -880,7 +840,7 @@ namespace LoKi
     private:
       LoKi::Particles::DeltaMeasuredMass  m_eval;
     };
-    
+    // ========================================================================    
     /** @class ConfidenceLevel
      *  Trivial function which evaluates "confidence level" for 
      *  the particle
@@ -893,8 +853,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ConfidenceLevel 
-      : public LoKi::Function<const LHCb::Particle*>
+    class ConfidenceLevel : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -904,7 +863,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-
+    // ========================================================================
     /** @class  Weight
      *  Trivial function which evaluates "weight" for 
      *  the particle
@@ -917,8 +876,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Weight
-      : public LoKi::Function<const LHCb::Particle*>
+    class Weight : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -928,7 +886,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class IsBasic
      *  Trivial predicate which evaluates to "true" for 
      *  the "basic" particles 
@@ -941,8 +899,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class IsBasic
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class IsBasic : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -952,7 +909,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class NumberOfDaughters
      *  Trivial function which evaluates number of daughters for 
      *  the particle
@@ -965,8 +922,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class NumberOfDaughters
-      : public LoKi::Function<const LHCb::Particle*>
+    class NumberOfDaughters : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -976,94 +932,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
-    /** @class HasInfo
-     *  Trivial predicate which evaluates LHCb::Particle::hasInfo
-     *  function
-     *
-     *  It relies on the method LHCb::Particle::hasInfo
-     *
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::HASINFO 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-15
-     */
-    class HasInfo
-      : public LoKi::Predicate<const LHCb::Particle*>
-    {
-    public:
-      /** constructor from "info"
-       *  @param key info index/mark/key
-       */
-      HasInfo ( const int key ) ;
-      /// copy constructor 
-      HasInfo ( const HasInfo& right ) ;
-      /// destructor 
-      virtual ~HasInfo();
-      /// clone method (mandatory!)
-      virtual HasInfo* clone() const ;
-      /// the only one essential method 
-      result_type operator() ( argument p ) const ;
-      /// the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // the defautl constructor is disabled 
-      HasInfo();
-    private:
-      int m_info ;
-    };
-    
-    /** @class Info
-     *  Trivial function which evaluates LHCb::Particle::info
-     *  
-     *  It relies on the method LHCb::Particle::info
-     *
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::INFO 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-15
-     */
-    class Info
-      : public LoKi::Function<const LHCb::Particle*>
-    {
-    public:
-      /** constructor from "info"
-       *  @param key info index/mark/key
-       *  @param def default valeu for info 
-       *  @param bad bad value to be retured for invalid particle 
-       */
-      Info 
-      ( const int    key , 
-        const double def , 
-        const double bad ) ;
-      /** constructor from "info"
-       *  @param key info index/mark/key
-       *  @param def default valeu for info 
-       */
-      Info 
-      ( const int    key , 
-        const double def ) ;
-      /// copy constructor 
-      Info ( const Info& right ) ;
-      /// destructor 
-      virtual ~Info();
-      /// clone method (mandatory!)
-      virtual Info* clone() const ;
-      /// the only one essential method 
-      result_type operator() ( argument p ) const ;
-      /// the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // the default constructor is disabled 
-      Info();
-    private:
-      int    m_key ;
-      double m_def ;
-      double m_bad ;
-    };
-
+    // ========================================================================
     /** @class HasProto
      *  Trivial predicate which evaluates to true 
      *  for particles with the valid protoparticle 
@@ -1076,8 +945,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasProto
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasProto : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -1087,7 +955,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class HasVertex
      *  Trivial predicate which evaluates to true 
      *  for particles with the valid endVertex
@@ -1100,8 +968,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasVertex
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasVertex : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// clone method (mandatory!)
@@ -1111,7 +978,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+    // ========================================================================    
     /** @class TransverseMomentumRel 
      *  Evaluator of the particle's transverse momentum with respect to a 
      *  certain direction
@@ -1123,10 +990,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-01
      */
-    class TransverseMomentumRel 
-      : public LoKi::Function<const LHCb::Particle*>
+    class TransverseMomentumRel : public LoKi::Function<const LHCb::Particle*>
     {
     public:
+      /// constructor from theta phi
+      TransverseMomentumRel ( const double theta , 
+                              const double phi   ) ;      
       /// constructor from 3-vector 
       TransverseMomentumRel ( const LoKi::ThreeVector&   v ) ;      
       /// constructor from 4-vector 
@@ -1139,7 +1008,7 @@ namespace LoKi
       virtual  TransverseMomentumRel* clone() const ;
       /// MANDATORY: virtual destructor 
       virtual ~TransverseMomentumRel() ;
-      /// MANDATORY: the only one essential mehtod 
+      /// MANDATORY: the only one essential method 
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
@@ -1179,13 +1048,9 @@ namespace LoKi
       // the direction 
       LoKi::ThreeVector m_momentum ; ///< the direction 
     } ;
-
-
-
+    // ========================================================================
   }  // end of namespace LoKi::Particles
-}  // end of namespace LoKi 
-
-
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

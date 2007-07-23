@@ -1,18 +1,9 @@
-// $Id: Particles15.h,v 1.4 2007-06-01 12:07:03 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// 
+// $Id: Particles15.h,v 1.5 2007-07-23 17:35:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
 #define LOKI_PARTICLES15_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
 // ============================================================================
 // LoKiCore
 // ============================================================================
@@ -44,6 +35,7 @@ namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class Filter
      *  Simple adapter which allos to use the tool IFilterCriterion
      *  as LoKi functor
@@ -52,8 +44,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
-    class Filter
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class Filter : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from the filter 
@@ -74,8 +65,9 @@ namespace LoKi
     private:
       // the tool itself 
       LoKi::Interface<IFilterCriterion> m_filter ; ///< the tool itself 
-    } ;    
-  }  // end of namespace LoKi::Particles
+    } ;
+    // ========================================================================    
+  } // end of namespace LoKi::Particles
 } // end of namespace LoKi
 // ============================================================================
 // The END 

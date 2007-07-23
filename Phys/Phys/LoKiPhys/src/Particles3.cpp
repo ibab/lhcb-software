@@ -1,17 +1,4 @@
-// $Id: Particles3.cpp,v 1.7 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.5  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.4  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles3.cpp,v 1.8 2007-07-23 17:35:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,11 +15,6 @@
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
-// ============================================================================
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Constants.h"
@@ -42,8 +24,6 @@
 // ============================================================================
 #include "LoKi/Particles3.h"
 #include "LoKi/PhysHelpers.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -61,9 +41,7 @@
  *  @date 2006-02-10 
  */
 // ============================================================================
-
-// ============================================================================
-/// constructor from the particle and the tool  
+//  constructor from the particle and the tool  
 // ============================================================================
 LoKi::Particles::ClosestApproach::ClosestApproach
 ( const LHCb::Particle*                  particle , 
@@ -73,7 +51,7 @@ LoKi::Particles::ClosestApproach::ClosestApproach
   , m_particle ( particle ) 
 {}
 // ============================================================================
-/// constructor from the particle and the tool  
+//  constructor from the particle and the tool  
 // ============================================================================
 LoKi::Particles::ClosestApproach::ClosestApproach
 (  const LoKi::Vertices::ImpactParamTool& tool     ,
@@ -127,7 +105,7 @@ LoKi::Particles::ClosestApproach::fillStream
 // ============================================================================
 
 // ============================================================================
-/// constructor from the particle and the tool  
+//  constructor from the particle and the tool  
 // ============================================================================
 LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
 ( const LHCb::Particle*                  particle , 
@@ -189,7 +167,7 @@ LoKi::Particles::ClosestApproachChi2::fillStream
 
 
 // ============================================================================
-/// constructor from the particle(s) and the tool
+//  constructor from the particle(s) and the tool
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LHCb::Particle::Vector&          particles ,
@@ -199,7 +177,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LHCb::Particle::ConstVector&     particles ,
@@ -209,7 +187,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const SmartRefVector<LHCb::Particle>&  particles ,
@@ -219,7 +197,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::PhysTypes::Range&          particles ,
@@ -229,7 +207,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Keeper<LHCb::Particle>&    particles ,
@@ -239,7 +217,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
@@ -249,7 +227,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool
+//  constructor from the particle(s) and the tool
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -259,7 +237,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -269,7 +247,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -279,7 +257,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
@@ -289,7 +267,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
@@ -299,7 +277,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
@@ -347,7 +325,7 @@ LoKi::Particles::MinClosestApproach::fillStream
 // ============================================================================
 
 // ============================================================================
-/// constructor from the particle(s) and the tool
+//  constructor from the particle(s) and the tool
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LHCb::Particle::Vector&          particles ,
@@ -357,7 +335,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LHCb::Particle::ConstVector&     particles ,
@@ -367,7 +345,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const SmartRefVector<LHCb::Particle>&  particles ,
@@ -377,7 +355,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::PhysTypes::Range&          particles ,
@@ -387,7 +365,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Keeper<LHCb::Particle>&    particles ,
@@ -397,7 +375,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
@@ -407,7 +385,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool
+//  constructor from the particle(s) and the tool
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -417,7 +395,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -427,7 +405,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -437,7 +415,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -447,7 +425,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
@@ -457,7 +435,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
 // ============================================================================
-/// constructor from the particle(s) and the tool  
+//  constructor from the particle(s) and the tool  
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool&    tool      ,

@@ -1,4 +1,4 @@
-// $Id: PhysAlgsDicts.h,v 1.1 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: PhysAlgsDicts.h,v 1.2 2007-07-23 17:35:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSALGSDICTS_H 
 #define LOKI_PHYSALGSDICTS_H 1
@@ -50,6 +50,12 @@ namespace LoKi
       ( const LHCb::Particle*        particle , 
         const LoKi::PhysTypes::Func& fun      , 
         const LoKi::PhysTypes::Cuts& cut      ) ;
+      /// accumulate over the tree 
+      double accumulate  
+      ( const LHCb::Particle*        particle      , 
+        const LoKi::PhysTypes::Func& fun           , 
+        const LoKi::PhysTypes::Cuts& cut           ,    
+        double                       result  = 0.0 ) ;
     } // end of namespace LoKi::Dicts::Algs 
   } // end of namespace LoKi::Dicts
 } // end of namespace LoKi 

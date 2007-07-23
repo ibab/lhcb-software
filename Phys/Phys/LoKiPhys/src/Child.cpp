@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.5 2007-06-10 20:07:17 ibelyaev Exp $
+// $Id: Child.cpp,v 1.6 2007-07-23 17:35:52 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -9,6 +9,7 @@
 // LoKiPhys
 // ============================================================================
 #include "LoKi/Objects.h"
+#include "LoKi/valid.h"
 #include "LoKi/Child.h"
 #include "LoKi/PhysExtract.h"
 // ============================================================================
@@ -81,7 +82,7 @@ LHCb::Particle* LoKi::Child::child
   // ATTENTION: index starts from ONE 
   const LHCb::Particle* d = *(daugs.begin()+index-1) ;
   return const_cast<LHCb::Particle*>( d ) ;
-} ;
+} 
 // ============================================================================
 /*  trivial function to access all children particles 
  *  @see LHCb::Particle::daughters

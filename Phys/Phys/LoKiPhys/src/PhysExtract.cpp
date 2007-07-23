@@ -1,14 +1,4 @@
-// $Id: PhysExtract.cpp,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:09:15  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-// New package: "Phys"-part of restructurized LoKi project  
-// 
+// $Id: PhysExtract.cpp,v 1.4 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,8 +17,6 @@
 // ============================================================================
 #include "LoKi/PhysExtract.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for functions from the file LoKi/PhysExtract.h
@@ -45,10 +33,7 @@
  *  @date 2006-02-06 
  */
 // ============================================================================
-
-// ============================================================================
-/** @fn getMuon
- *  The most trivial function to extract LHCb::MuonPID object from 
+/*  The most trivial function to extract LHCb::MuonPID object from 
  *  the basic particle
  *  @see LHCb::MuonPID 
  *  @see LHCb::Particle
@@ -63,12 +48,9 @@ const LHCb::MuonPID* LoKi::Extract::getMuon
   const LHCb::ProtoParticle* proto = particle->proto() ;
   if ( 0 == proto    ) { return 0 ; }
   return proto->muonPID() ;
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/** @fn getRich
- *  The most trivial function to extract LHCb::RichPID object from 
+/** The most trivial function to extract LHCb::RichPID object from 
  *  the basic particle
  *  @see LHCb::RichPID 
  *  @see LHCb::Particle
@@ -83,7 +65,7 @@ const LHCb::RichPID* LoKi::Extract::getRich
   const LHCb::ProtoParticle* proto = particle->proto() ;
   if ( 0 == proto    ) { return 0 ; }
   return proto->richPID() ;
-} ;
+} 
 // ============================================================================
 
 

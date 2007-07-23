@@ -1,9 +1,4 @@
-// $Id: Vertices0.cpp,v 1.5 2007-06-01 12:07:03 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Vertices0.cpp,v 1.6 2007-07-23 17:35:57 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,8 +12,6 @@
 // ============================================================================
 // Event
 // ============================================================================
-#include "Event/VertexBase.h"
-#include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore
@@ -48,9 +41,6 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Vertices::IsPrimary* 
 LoKi::Vertices::IsPrimary::clone() const 
 { return new IsPrimary( *this ) ; }
@@ -62,14 +52,12 @@ LoKi::Vertices::IsPrimary::operator()
   if ( 0 != v ) { return  v->isPrimary() ; } // RETURN 
   Error ( " Invalid VertexBase, return 'false'" ) ;
   return false ;                   // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::IsPrimary::fillStream
 ( std::ostream& s ) const 
 { return s << "PRIMARY" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::Technique* 
 LoKi::Vertices::Technique::clone() const 
@@ -86,14 +74,12 @@ LoKi::Vertices::Technique::operator()
   //
   Error ( " Invalid Vertex, return -1000 " ) ;
   return -1000 ;                   // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::Technique::fillStream
 ( std::ostream& s ) const 
 { return s << "TECHNIQUE" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::VertexChi2* 
 LoKi::Vertices::VertexChi2::clone() const 
@@ -106,14 +92,12 @@ LoKi::Vertices::VertexChi2::operator()
   if ( 0 != v ) { return v -> chi2 () ; }                    // RETURN 
   Error ( " Invalid Vertex, return 'InvalidChi2'" ) ;
   return LoKi::Constants::InvalidChi2 ;                      // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexChi2::fillStream
 ( std::ostream& s ) const 
 { return s << "VCHI2" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::VertexDoF* 
 LoKi::Vertices::VertexDoF::clone() const 
@@ -126,14 +110,12 @@ LoKi::Vertices::VertexDoF::operator()
   if ( 0 != v ) { return v -> nDoF () ; }                    // RETURN 
   Error ( " Invalid Vertex, return -1000 " ) ;
   return -1000 ;                                             // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexDoF::fillStream
 ( std::ostream& s ) const 
 { return s << "VDOF" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::PositionX* 
 LoKi::Vertices::PositionX::clone() const 
@@ -146,14 +128,12 @@ LoKi::Vertices::PositionX::operator()
   if ( 0 != v ) { return v ->  position () .X() ; }         // RETURN 
   Error ( " Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::PositionX::fillStream
 ( std::ostream& s ) const 
 { return s << "VX" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::PositionY* 
 LoKi::Vertices::PositionY::clone() const 
@@ -166,15 +146,12 @@ LoKi::Vertices::PositionY::operator()
   if ( 0 != v ) { return v ->  position () . Y () ; }         // RETURN 
   Error ( " Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::PositionY::fillStream
 ( std::ostream& s ) const 
 { return s << "VY" ; }
-// ============================================================================
-
-
 // ============================================================================
 LoKi::Vertices::PositionZ* 
 LoKi::Vertices::PositionZ::clone() const 
@@ -187,14 +164,12 @@ LoKi::Vertices::PositionZ::operator()
   if ( 0 != v ) { return v ->  position () . Z () ; }         // RETURN 
   Error ( " Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::PositionZ::fillStream
 ( std::ostream& s ) const 
 { return s << "VZ" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::NumberOfOutgoing* 
 LoKi::Vertices::NumberOfOutgoing::clone() const 
@@ -209,14 +184,12 @@ LoKi::Vertices::NumberOfOutgoing::operator()
   if ( 0 != vertex ) { return vertex ->outgoingParticles().size() ; }   // RETURN 
   Error ( " Invalid Vertex, return '0'" ) ;
   return 0 ;                                                  // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::NumberOfOutgoing::fillStream
 ( std::ostream& s ) const 
 { return s << "NPRONGS" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo( const int info ) 
   : LoKi::Predicate<const LHCb::VertexBase*>() 
@@ -243,14 +216,12 @@ LoKi::Vertices::HasInfo::operator()
   if ( 0 != v ) { return v -> hasInfo( m_info ) ; }      // RETURN 
   Error ( " Invalid Vertex, return 'false'" ) ;
   return false;                                           // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::HasInfo::fillStream
 ( std::ostream& s ) const 
 { return s << "HASVINFO[" << m_info << "]" ; }
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::Info::Info
 ( const int    key , 
@@ -294,7 +265,7 @@ LoKi::Vertices::Info::operator()
   Error ( " Invalid Vertex, return " 
           + Gaudi::Utils::toString ( m_bad )  ) ;
   return m_bad;                                              // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::Info::fillStream
@@ -322,7 +293,7 @@ LoKi::Vertices::NumberOfTracks::operator()
   }
   //
   return rv ->tracks().size() ;                            // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::NumberOfTracks::fillStream

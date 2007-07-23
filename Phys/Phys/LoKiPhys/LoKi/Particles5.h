@@ -1,23 +1,9 @@
-// $Id: Particles5.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles5.h,v 1.5 2007-07-23 17:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES5_H 
 #define LOKI_PARTICLES5_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -26,8 +12,6 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -43,11 +27,11 @@
  *  @date 2006-02-20 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class InTree
      *  The trivial predicate which evaluates to true 
      *  if there is at least one particle in the decay 
@@ -63,8 +47,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree 
-      : public LoKi::PhysTypes::Cuts 
+    class InTree : public LoKi::PhysTypes::Cuts 
     {
     public:
       /** standard constructor 
@@ -87,7 +70,7 @@ namespace LoKi
     private:
       LoKi::PhysTypes::Cut m_cut ;
     };
-    
+    // ========================================================================    
     /** @class NinTree
      *  The simple funtion which evaluates the number 
      *  of particle in decay tree which satisfies the certan criteria 
@@ -101,8 +84,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class NinTree 
-      : public LoKi::PhysTypes::Func 
+    class NinTree : public LoKi::PhysTypes::Func 
     {
     public:
       /** standard constructor 
@@ -125,7 +107,7 @@ namespace LoKi
     private:
       LoKi::PhysTypes::Cut m_cut ;
     };
-    
+    // ========================================================================    
     /** @class SumTree
      *
      *  The simple function which accumulated the 
@@ -143,8 +125,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class SumTree
-      : public LoKi::PhysTypes::Func 
+    class SumTree : public LoKi::PhysTypes::Func 
     {
     public:
       /** standard constructor 
@@ -183,7 +164,7 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
     };
-
+    // ========================================================================
     /** @class MultTree
      *
      *  The simple function which accumulated the 
@@ -201,8 +182,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MultTree
-      : public LoKi::PhysTypes::Func 
+    class MultTree : public LoKi::PhysTypes::Func 
     {
     public:
       /** standard constructor 
@@ -241,7 +221,7 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
     };
-
+    // ========================================================================
     /** @class MinTree
      *
      *  The trivial algorithm which scans the decay 
@@ -258,8 +238,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MinTree
-      : public LoKi::PhysTypes::Func 
+    class MinTree : public LoKi::PhysTypes::Func 
     {
     public:
       /** standard constructor 
@@ -300,7 +279,7 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
     };
-
+    // ========================================================================
     /** @class MinTree
      *
      *  The trivial algorithm which scans the decay 
@@ -317,8 +296,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MaxTree
-      : public LoKi::PhysTypes::Func 
+    class MaxTree : public LoKi::PhysTypes::Func 
     {
     public:
       /** standard constructor 
@@ -359,12 +337,9 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
     };
-
-
+    // ========================================================================
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================

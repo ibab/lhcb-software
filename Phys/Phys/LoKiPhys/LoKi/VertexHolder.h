@@ -1,17 +1,4 @@
-// $Id: VertexHolder.h,v 1.5 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/08/15 15:13:25  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.2  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
+// $Id: VertexHolder.h,v 1.6 2007-07-23 17:35:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXHOLDER_H 
 #define LOKI_VERTEXHOLDER_H 1
@@ -23,11 +10,7 @@
 #include "LoKi/Functions.h"
 #include "LoKi/Kinematics.h"
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/VertexBase.h"
-// ============================================================================
-
+namespace LHCb { class VertexBase ; }
 // ============================================================================
 /** @file
  *
@@ -44,11 +27,12 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
-
+// ============================================================================
 namespace LoKi
 {
   namespace Vertices 
   {
+    // ========================================================================
     /** @class VertexHolder 
      *  simple helper class to keep the 
      *  information about the vertices/points, 
@@ -99,10 +83,9 @@ namespace LoKi
       mutable const LHCb::VertexBase*  m_vertex ;
       mutable       LoKi::Point3D      m_point  ;
     };
-    
+    // ========================================================================    
   } // end of namespace LoKi::Vertices;
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

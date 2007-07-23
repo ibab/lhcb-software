@@ -1,28 +1,10 @@
-// $Id: Particles9.cpp,v 1.4 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/27 13:39:33  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
-// Revision 1.1  2006/02/22 20:53:48  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
+// $Id: Particles9.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <algorithm>
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -33,8 +15,6 @@
 // ============================================================================
 #include "LoKi/Particles9.h"
 #include "LoKi/PhysAlgs.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -52,50 +32,48 @@
  *  @date 2006-02-22
  */
 // ============================================================================
-
-// ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track* p ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( p ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track::Vector& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track::ConstVector& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const SmartRefVector<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Keeper<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  (    ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::UniqueKeeper<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  (    ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Particles::HasTracks& right ) 
   : LoKi::AuxFunBase                        ( right ) 
   , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( right ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracks::result_type 
 LoKi::Particles::HasTracks::operator() 
@@ -112,58 +90,55 @@ LoKi::Particles::HasTracks::operator()
     return false ;
   }
   return std::binary_search ( begin() , end() , m_extract( p ) ) ;
-} ;
+} 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::HasTracks::fillStream
 ( std::ostream& stream ) const 
 { return stream << "TRACKS" ; }
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track* p ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( p ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track::Vector& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  ()
   , m_cut ( pp ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track::ConstVector& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , m_cut ( pp )  
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const SmartRefVector<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , m_cut ( pp )  
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::Keeper<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  (    ) 
   , m_cut ( pp ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::UniqueKeeper<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  (    ) 
   , m_cut ( pp ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::Particles::HasTracksInTree& right ) 
   : LoKi::AuxFunBase                        ( right ) 
   , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
   , m_cut                                   ( right.m_cut )
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::result_type 
 LoKi::Particles::HasTracksInTree::operator() 
@@ -181,14 +156,12 @@ LoKi::Particles::HasTracksInTree::operator()
   }
   // scan the tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
-} ;
+}
 // ============================================================================
 std::ostream& 
 LoKi::Particles::HasTracksInTree::fillStream
 ( std::ostream& stream ) const 
 { return stream << "TRACKSINTREE" ; }
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

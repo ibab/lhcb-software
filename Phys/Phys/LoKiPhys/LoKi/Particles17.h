@@ -1,14 +1,4 @@
-// $Id: Particles17.h,v 1.3 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/03/04 16:54:19  ibelyaev
-//  add DeltaPhi/DelatEta/DeltaR2 for jet studies
-//
-// Revision 1.1  2007/03/01 16:14:39  ibelyaev
-//  add PTREL and PTDIR functions
-// 
+// $Id: Particles17.h,v 1.4 2007-07-23 17:35:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES17_H 
 #define LOKI_PARTICLES17_H 1
@@ -41,7 +31,7 @@ namespace LoKi
 {
   namespace  Particles
   {
-    
+    // ========================================================================
     /** @class DeltaPhi
      *  Simple evaluator of "DeltaPhi" for the particle
      *
@@ -50,8 +40,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi 
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaPhi : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// constructor from the angle
@@ -93,6 +82,9 @@ namespace LoKi
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     public:
+      /// get phi_0
+      double phi() const { return  m_phi ; }
+    public:
       /// adjust delta phi into the raneg of [-180:180]degrees 
       const double adjust ( double phi ) const ;
     private:
@@ -104,7 +96,7 @@ namespace LoKi
       // the angle itself 
       double                  m_phi  ; ///< the angle itself 
     } ;
-    
+    // ========================================================================    
     /** @class DeltaEta
      *  Simple evaluator of "DeltaEta" for the particle
      *
@@ -113,8 +105,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta 
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaEta : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// constructor from the eta
@@ -152,6 +143,9 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      /// get eta_0
+      double eta() const { return  m_eta ; }
     private:
       // the default constructor is disabled 
       DeltaEta ();
@@ -160,8 +154,8 @@ namespace LoKi
       LoKi::Particles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
       // the angle itself 
       double                          m_eta  ; ///< the angle itself 
-   } ;
-
+    } ;
+    // ========================================================================
     /** @class DeltaR2
      *  Simple evaluator of "DeltaPhi**2+ DeltaEta**2"
      *
@@ -177,10 +171,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2
-      : public LoKi::Function<const LHCb::Particle*>
+    class DeltaR2 : public LoKi::Function<const LHCb::Particle*>
     {
     public:
+      /// constructor from the eta, phi
+      DeltaR2 ( double eta , double phi ) ;
       /// constructor from the vector 
       DeltaR2 ( const LoKi::ThreeVector&   v ) ;
       /// constructor from the vector 
@@ -220,11 +215,9 @@ namespace LoKi
       // the actual evaluator of delta eta
       LoKi::Particles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
     } ;
-
-
+    // ========================================================================
   } // end of namespace LoKi::Particles
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

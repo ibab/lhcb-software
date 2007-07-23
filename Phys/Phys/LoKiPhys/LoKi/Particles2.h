@@ -1,33 +1,14 @@
-// $Id: Particles2.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/01/22 11:18:25  ibelyaev
-//  fix for LoKiExample
-//
-// Revision 1.2  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.1  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
+// $Id: Particles2.h,v 1.5 2007-07-23 17:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES2_H 
 #define LOKI_PARTICLES2_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Particles1.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -43,12 +24,11 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
-
+    // ============================================================================
     /** @class TimeDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -64,8 +44,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDistance : 
-      public LoKi::Function<const LHCb::Particle*>
+    class TimeDistance : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// constructor 
@@ -102,8 +81,7 @@ namespace LoKi
     private:
       LoKi::Particles::VertexDistance m_fun ;
     };
-
-
+    // ============================================================================
     /** @class TimeSignedDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -119,8 +97,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeSignedDistance : 
-      public LoKi::Function<const LHCb::Particle*>
+    class TimeSignedDistance : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// constructor 
@@ -157,8 +134,7 @@ namespace LoKi
     private:
       LoKi::Particles::VertexSignedDistance m_fun ;
     };
-
-    
+    // ============================================================================    
     /** @class TimeDotDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -174,8 +150,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDotDistance : 
-      public LoKi::Function<const LHCb::Particle*>
+    class TimeDotDistance : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /// constructor 
@@ -210,12 +185,9 @@ namespace LoKi
       // the evaluator 
       LoKi::Particles::VertexDotDistance m_fun ;
     };
-  
-
+    // ============================================================================
   }  // end of namespace LoKi::Particles
 }  // end of namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================

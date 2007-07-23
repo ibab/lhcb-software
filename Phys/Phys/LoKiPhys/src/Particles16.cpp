@@ -1,14 +1,4 @@
-// $Id: Particles16.cpp,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/03/01 16:14:40  ibelyaev
-//  add PTREL and PTDIR functions
-//
-// Revision 1.1  2006/12/16 13:22:31  ibelyaev
-//  add Particles16: DIRA&DANG
-// 
+// $Id: Particles16.cpp,v 1.4 2007-07-23 17:35:54 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -38,7 +28,7 @@
  *  @date 2006-03-20 
  */
 // ============================================================================
-/// constructor from the vertex  
+// constructor from the vertex  
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LHCb::VertexBase* vertex ) 
@@ -46,7 +36,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
   , LoKi::Vertices::VertexHolder ( vertex ) 
 {}
 // ============================================================================
-/// constructor from the point 
+// constructor from the point 
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Point3D& point ) 
@@ -54,7 +44,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
   , LoKi::Vertices::VertexHolder ( point ) 
 {}
 // ============================================================================
-/// constructor from the holder 
+// constructor from the holder 
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Vertices::VertexHolder& holder ) 
@@ -62,7 +52,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
   , LoKi::Vertices::VertexHolder ( holder ) 
 {}
 // ============================================================================
-/// copy constructor
+// copy constructor
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Particles::CosineDirectionAngle& right ) 
@@ -71,11 +61,11 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
   , LoKi::Vertices::VertexHolder          ( right ) 
 {}
 // ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::~CosineDirectionAngle(){} ;
 // ============================================================================
-/// MANDATORY: clone method ("virtual destructor")
+// MANDATORY: clone method ("virtual destructor")
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle*
 LoKi::Particles::CosineDirectionAngle::clone() const 
@@ -113,7 +103,7 @@ LoKi::Particles::CosineDirectionAngle::operator()
       return -4000 ;
     }
   return  dot / ::sqrt( norm ) ;
-} ;
+} 
 // ============================================================================
 // OPTIONAL: printout 
 // ============================================================================

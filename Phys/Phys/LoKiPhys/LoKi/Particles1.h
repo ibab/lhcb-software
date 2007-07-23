@@ -1,7 +1,4 @@
-// $Id: Particles1.h,v 1.6 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
-// ============================================================================
+// $Id: Particles1.h,v 1.7 2007-07-23 17:35:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
 #define LOKI_PARTICLES1_H 1
@@ -17,8 +14,6 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Vertices1.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -33,12 +28,11 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
-  {
-    
+  { 
+    // ========================================================================
     /** @class VertexDistance
      *
      *  evaluator of the GEOMETRY 
@@ -58,8 +52,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexDistance : 
-      public    LoKi::Function<const LHCb::Particle*> 
+    class VertexDistance : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /// constructor 
@@ -99,7 +92,7 @@ namespace LoKi
       // the actual evaluator 
       LoKi::Vertices::VertexDistance m_fun ;
     } ;
-    
+    // ========================================================================
     /** @class VertexSignedDistance
      *
      *  evaluator of the GEOMETRY 
@@ -121,8 +114,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexSignedDistance : 
-      public    LoKi::Function<const LHCb::Particle*> 
+    class VertexSignedDistance : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /// constructor 
@@ -160,7 +152,7 @@ namespace LoKi
       // the actual evaluator 
       LoKi::Vertices::VertexSignedDistance m_fun ;
     } ;
-
+    // ========================================================================
     /** @class VertexDotDistance
      *
      *  evaluator of the
@@ -207,7 +199,7 @@ namespace LoKi
       /// default constructor is private
       VertexDotDistance();
     } ;
-    
+    // ========================================================================    
     /** @class VertexChi2Distance
      *
      *  evaluator of the chi2 of GEOMETRY 
@@ -227,8 +219,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexChi2Distance : 
-      public    LoKi::Function<const LHCb::Particle*> 
+    class VertexChi2Distance : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /// constructor 
@@ -263,7 +254,7 @@ namespace LoKi
       // the actual evaluator 
       LoKi::Vertices::VertexChi2Distance m_fun ;
     } ;
-    
+    // ========================================================================    
     /** @class MinVertexDistance
      *
      *  class for evaluation of minimal GEOMETRY distance 
@@ -275,8 +266,7 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexDistance 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class MinVertexDistance : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /** constructor from container of vertices 
@@ -393,8 +383,7 @@ namespace LoKi
     private:
       LoKi::Vertices::MinVertexDistance m_fun  ;
     };
-
-
+    // ========================================================================
     /** @class MinVertexChi2Distance
      *  class for evaluation of minimal chi2 distance 
      *  between the vertex and other vertices 
@@ -405,8 +394,7 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexChi2Distance 
-      : public LoKi::Function<const LHCb::Particle*> 
+    class MinVertexChi2Distance : public LoKi::Function<const LHCb::Particle*> 
     {
     public:
       /** constructor from container of vertices 
@@ -520,7 +508,7 @@ namespace LoKi
     private:
       LoKi::Vertices::MinVertexChi2Distance m_fun  ;
     } ;
-    
+    // ========================================================================    
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
 

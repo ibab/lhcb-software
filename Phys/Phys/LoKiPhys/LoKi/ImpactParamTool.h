@@ -1,17 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/28 14:06:26  ibelyaev
-//  fix for Win32
-//
-// Revision 1.3  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/14 19:06:36  ibelyaev
-//  v1r0 : prepare
-//
+// $Id: ImpactParamTool.h,v 1.6 2007-07-23 17:35:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -26,8 +13,6 @@
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -44,7 +29,7 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
-
+// ============================================================================
 namespace LoKi
 {
   /** @namespace LoKi::Vertices 
@@ -54,6 +39,7 @@ namespace LoKi
    */
   namespace Vertices 
   {
+    // ========================================================================
     /** @class ImpactParamTool 
      *  Helper class which allows safe manipulations with 
      *  IGeomDispCalculator tool 
@@ -61,8 +47,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
      *  @dte 2006-02-19
      */
-    class ImpactParamTool 
-      : virtual public LoKi::AuxFunBase 
+    class ImpactParamTool : virtual public LoKi::AuxFunBase 
     {    
     public:
       /// accessor to the tool itself 
@@ -84,10 +69,9 @@ namespace LoKi
       // the local pointer to the tool 
       LoKi::Interface<IGeomDispCalculator> m_tool ;
     } ;
-
+    // ========================================================================
   } // end of namespace LoKi::Vertices;
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

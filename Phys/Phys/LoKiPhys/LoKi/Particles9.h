@@ -1,27 +1,9 @@
-// $Id: Particles9.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
-// Revision 1.1  2006/02/22 20:53:47  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
+// $Id: Particles9.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES9_H 
 #define LOKI_PARTICLES9_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/Track.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -32,7 +14,7 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysExtract.h"
 // ============================================================================
-
+namespace LHCb { class Track ; }
 // ============================================================================
 /** @file
  *
@@ -48,11 +30,11 @@
  *  @date 2006-02-22 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class HasTracks 
      *  The simple predicate which checks if the particle 
      *  has a track from the specified list of tracks 
@@ -111,7 +93,7 @@ namespace LoKi
     private:
       LoKi::Extract::Particle2Track  m_extract ;
     } ;
-    
+    // ========================================================================    
     /** @class HasTracksInTree
      *  The simple predicate which checks if the particle 
      *  (or any of the daughter particle) 
@@ -127,8 +109,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasTracksInTree
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksInTree : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from one track 
@@ -172,11 +153,9 @@ namespace LoKi
     private: 
       LoKi::Particles::HasTracks     m_cut     ;
     } ;
-      
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi 
-
-
+    // ========================================================================
+  } // end of namespace LoKi::Particles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

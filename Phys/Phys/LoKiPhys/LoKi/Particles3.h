@@ -1,26 +1,13 @@
-// $Id: Particles3.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles3.h,v 1.6 2007-07-23 17:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiCore
 // ============================================================================
+#include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
 // ============================================================================
 // LoKiPhys 
@@ -28,8 +15,6 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
 #include "LoKi/ImpactParamTool.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -45,12 +30,11 @@
  *  @date 2006-02-19 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
-  {
-    
+  {   
+    // ========================================================================
     /** @class ClosestApproach
      *
      *  evaluator of the closest approach 
@@ -104,8 +88,7 @@ namespace LoKi
     private:
       mutable const LHCb::Particle* m_particle ;
     } ;
-
-
+    // ========================================================================
     /** @class ClosestApproachChi2
      *
      *  evaluator of the closest approach chi2 
@@ -121,9 +104,9 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class ClosestApproachChi2 : 
-      public LoKi::Function<const LHCb::Particle*> , 
-      public LoKi::Vertices::ImpactParamTool 
+    class ClosestApproachChi2 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Vertices::ImpactParamTool 
     {
     public:
       /// constructor from the particle and the tool  
@@ -154,7 +137,7 @@ namespace LoKi
     private:
       mutable const LHCb::Particle* m_particle ;
     } ;
-
+    // ========================================================================
     /** @class MinClosestApproach
      *
      *  evaluator of the minimal value of the 
@@ -275,7 +258,7 @@ namespace LoKi
     private:
       LoKi::Particles::ClosestApproach m_fun ;
     } ;
-
+    // ========================================================================
     /** @class MinClosestApproachChi2
      *
      *  evaluator of the minimal value of the chi2 of the  
@@ -396,11 +379,9 @@ namespace LoKi
     private:
       LoKi::Particles::ClosestApproachChi2 m_fun       ;
     } ;    
-
+    // ========================================================================
   }  // end of namespace LoKi::Particles
 }  // end of namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================

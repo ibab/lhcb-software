@@ -1,35 +1,15 @@
-// $Id: Particles12.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2007/02/26 09:19:22  ibelyaev
-//  add LoKi::Particles::IsMuon (alias: ISMUON)
-//
-// Revision 1.3  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
-// Revision 1.1  2006/02/23 21:14:09  ibelyaev
-//   add new fuctors/predicates
-//
+// $Id: Particles12.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-// ============================================================================
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 // ============================================================================
-
+namespace LHCb { class ProtoParticle ; }
 // ============================================================================
 /** @file
  *
@@ -45,12 +25,11 @@
  *  @date 2006-02-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
-  { 
-    
+  {   
+    // ========================================================================
     /** @class ProtoHasInfo
      *  The trivial predicate whcii evaluated for true 
      *  if the protoparticle "hasInfo".
@@ -65,8 +44,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class ProtoHasInfo 
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasInfo : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor form the index in ProtoParticle::ExtraInfo
@@ -76,8 +54,7 @@ namespace LoKi
       /// MANDAROTY: virtual destructor 
       virtual ~ProtoHasInfo() {}
       /// clone method (mandatory!)
-      virtual  ProtoHasInfo* clone() const 
-      { return new ProtoHasInfo(*this) ; }    
+      virtual  ProtoHasInfo* clone() const { return new ProtoHasInfo(*this) ; }    
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
@@ -89,7 +66,7 @@ namespace LoKi
       // index in ProtoParticle::ExtraInfo 
       int m_info ; ///< index in ProtoParticle::ExtraInfo
     } ;
-    
+    // ========================================================================    
     /** @class ProtoInfo
      *  Trivial function which evaluates LHCb::Particle::info
      *  
@@ -104,8 +81,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoInfo
-      : public LoKi::Function<const LHCb::Particle*>
+    class ProtoInfo : public LoKi::Function<const LHCb::Particle*>
     {
     public:
       /** constructor from "info"
@@ -145,8 +121,7 @@ namespace LoKi
       // default value for missing infomration 
       double m_bad ;
     } ;
-
-    
+    // ========================================================================    
     /** @class ProtoHasRichPID 
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::richPID 
@@ -161,8 +136,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasRichPID 
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasRichPID : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -175,7 +149,7 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
+    // ========================================================================    
     /** @class ProtoHasMuonPID 
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::muonPID 
@@ -190,8 +164,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasMuonPID 
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasMuonPID : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -204,7 +177,7 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
+    // ========================================================================    
     /** @class ProtoHasCaloHypos
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::calo() 
@@ -218,8 +191,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasCaloHypos
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasCaloHypos : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -232,8 +204,7 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-
-    
+    // ========================================================================    
     /** @class IsMuon
      *  The trivial predicate whith returns LHCb::MuonPID::isMuon
      *
@@ -245,8 +216,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-02-25
      */
-    class IsMuon 
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class IsMuon : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -258,12 +228,9 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
-  }  // end of namespace Particles 
-  
-}  // end of namespace LoKi 
-
-
+    // ========================================================================
+  } // end of namespace Particles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

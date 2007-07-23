@@ -1,24 +1,13 @@
-// $Id: Vertices2.h,v 1.1 2006-11-27 12:01:32 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: Vertices2.h,v 1.2 2007-07-23 17:35:50 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES2_H 
 #define LOKI_VERTICES2_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/VertexBase.h"
-#include "Event/RecVertex.h"
-#include "Event/Vertex.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Particles4.h"
-#include "LoKi/Vertices1.h"
 // ============================================================================
 /** @file 
  *  
@@ -26,11 +15,11 @@
  *  @date 2006-11-25
  */
 // ============================================================================
-
 namespace LoKi 
 {
   namespace Vertices 
   {
+    // ========================================================================
     /** @class  ImpPar
      *
      *  evaluator of the impact parameter of vertex 
@@ -44,8 +33,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpPar :
-      public LoKi::Function<const LHCb::VertexBase*> 
+    class ImpPar : public LoKi::Function<const LHCb::VertexBase*> 
     {
     public:
       /// constructor from the particle and tool 
@@ -89,7 +77,7 @@ namespace LoKi
       LoKi::Particles::ImpPar   m_evaluator ;
       const LHCb::Particle*     m_particle  ;
     };
-
+    // ========================================================================
     /** @class  ImpParChi2
      *
      *  evaluator of the impact parameter of vertex 
@@ -103,8 +91,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpParChi2 :
-      public LoKi::Function<const LHCb::VertexBase*> 
+    class ImpParChi2 : public LoKi::Function<const LHCb::VertexBase*> 
     {
     public:
       /// constructor from the particle and tool 
@@ -148,12 +135,9 @@ namespace LoKi
       LoKi::Particles::ImpParChi2 m_evaluator ;
       const LHCb::Particle*       m_particle  ;
     };
-    
-    
+    // ========================================================================    
   } // end of namespace LoKi::Vertices 
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

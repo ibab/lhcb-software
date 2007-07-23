@@ -1,20 +1,4 @@
-// $Id: LoKiPhys.h,v 1.9 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.7  2006/05/27 11:43:40  ibelyaev
-//  add PrintDecay utilities
-//
-// Revision 1.6  2006/03/20 20:36:16  ibelyaev
-//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
-//
-// Revision 1.5  2006/02/22 20:53:46  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
+// $Id: LoKiPhys.h,v 1.10 2007-07-23 17:35:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYS_H 
 #define LOKI_LOKIPHYS_H 1

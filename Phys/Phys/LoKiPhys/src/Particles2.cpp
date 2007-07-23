@@ -1,26 +1,10 @@
-// $Id: Particles2.cpp,v 1.5 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2007/01/22 11:18:31  ibelyaev
-//  fix for LoKiExample
-//
-// Revision 1.3  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles2.cpp,v 1.6 2007-07-23 17:35:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
+// Event
 // ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -30,8 +14,6 @@
 // LoKiPhys
 // ============================================================================
 #include "LoKi/Particles2.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -49,9 +31,7 @@
  *  @date 2006-02-10 
  */
 // ============================================================================
-
-// ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LHCb::VertexBase* vertex ) 
@@ -59,7 +39,7 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Point3D& vertex ) 
@@ -67,7 +47,7 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
@@ -75,7 +55,7 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Particles::VertexDistance& vertex ) 
@@ -83,7 +63,7 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
@@ -91,7 +71,7 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Particles::TimeDistance& vertex ) 
@@ -100,24 +80,24 @@ LoKi::Particles::TimeDistance::TimeDistance
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::~TimeDistance(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Particles::TimeDistance*
 LoKi::Particles::TimeDistance::clone() const
 { return new LoKi::Particles::TimeDistance(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TimeDistance::result_type 
 LoKi::Particles::TimeDistance::operator() 
   ( LoKi::Particles::TimeDistance::argument p ) const
 { return time ( p ) ; }
 // ============================================================================
-/// the actual computation 
+//  the actual computation 
 // ============================================================================
 LoKi::Particles::TimeDistance::result_type 
 LoKi::Particles::TimeDistance::time 
@@ -156,7 +136,7 @@ LoKi::Particles::TimeDistance::fillStream
 // ============================================================================
 
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LHCb::VertexBase* vertex ) 
@@ -164,7 +144,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Point3D& vertex ) 
@@ -172,7 +152,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
@@ -180,7 +160,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Particles::VertexSignedDistance& vertex ) 
@@ -188,7 +168,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
@@ -196,7 +176,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Particles::TimeSignedDistance& vertex ) 
@@ -205,24 +185,24 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::~TimeSignedDistance(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Particles::TimeSignedDistance*
 LoKi::Particles::TimeSignedDistance::clone() const
 { return new LoKi::Particles::TimeSignedDistance(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::result_type 
 LoKi::Particles::TimeSignedDistance::operator() 
   ( LoKi::Particles::TimeDistance::argument p ) const
 { return time ( p ) ; }
 // ============================================================================
-/// the actual computation 
+//  the actual computation 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::result_type 
 LoKi::Particles::TimeSignedDistance::time 
@@ -262,7 +242,7 @@ LoKi::Particles::TimeSignedDistance::fillStream
 
 
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LHCb::VertexBase* vertex ) 
@@ -270,7 +250,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Point3D& vertex ) 
@@ -278,7 +258,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
@@ -286,7 +266,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Particles::VertexDotDistance& vertex ) 
@@ -294,7 +274,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
   , m_fun ( vertex )
 {}
 // ============================================================================
-/// constructor 
+//  constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Particles::TimeDotDistance& vertex ) 
@@ -303,24 +283,24 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::~TimeDotDistance(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Particles::TimeDotDistance*
 LoKi::Particles::TimeDotDistance::clone() const
 { return new LoKi::Particles::TimeDotDistance(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::result_type 
 LoKi::Particles::TimeDotDistance::operator() 
   ( LoKi::Particles::TimeDotDistance::argument p ) const
 { return time ( p ) ; }
 // ============================================================================
-/// the actual computation 
+//  the actual computation 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::result_type 
 LoKi::Particles::TimeDotDistance::time 

@@ -1,27 +1,9 @@
-// $Id: Particles8.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/03/08 14:14:51  ibelyaev
-//  add Particles14.h/.cpp
-//
-// Revision 1.1  2006/02/22 20:53:47  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
+// $Id: Particles8.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES8_H 
 #define LOKI_PARTICLES8_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -31,7 +13,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 // ============================================================================
-
+namespace LHCb { class ProtoParticle ; }
 // ============================================================================
 /** @file
  *
@@ -47,12 +29,11 @@
  *  @date 2006-02-22 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Particles 
   {
-    
+    // ========================================================================
     /** @class HasProtos
      *  Trivial class which check if the particle has a 
      *  protoparticle from the list 
@@ -104,7 +85,7 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
+    // ========================================================================    
     /** @class HasProtosInTree
      *  Trivial class which check if the particle (or any of its 
      *  daughter particle) has a 
@@ -120,8 +101,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasProtosInTree
-      : public LoKi::Predicate<const LHCb::Particle*>
+    class HasProtosInTree : public LoKi::Predicate<const LHCb::Particle*>
     {
     public:
       /// constructor from one protoparticle 
@@ -165,11 +145,9 @@ namespace LoKi
     private: 
       LoKi::Particles::HasProtos m_cut ;
     } ;
-    
+    // ========================================================================    
   }  // end of namespace LoKi::Particles
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

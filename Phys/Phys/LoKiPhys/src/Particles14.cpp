@@ -1,29 +1,10 @@
-// $Id: Particles14.cpp,v 1.4 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/03/20 20:36:17  ibelyaev
-//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
-//
-// Revision 1.1  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
+// $Id: Particles14.cpp,v 1.5 2007-07-23 17:35:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <algorithm>
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
-#include "Event/Track.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -36,8 +17,6 @@
 #include "LoKi/Particles14.h"
 #include "LoKi/Child.h"
 // ============================================================================
-
-
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles
@@ -54,11 +33,7 @@
  *  @date 2006-02-22
  */
 // ============================================================================
-
-
-
-// ============================================================================
-/** constructor with daughter index (starts from 1).
+/*  constructor with daughter index (starts from 1).
  *  E.g. for 2-body decays it could be 1 or 2 
  *  @param index of daughter particles
  */
@@ -69,7 +44,7 @@ LoKi::Particles::DecayAngle::DecayAngle
   , m_child ( child ) 
 {}
 // ============================================================================
-/// copy constructor 
+// copy constructor 
 // ============================================================================
 LoKi::Particles::DecayAngle::DecayAngle
 ( const LoKi::Particles::DecayAngle& right ) 
@@ -98,17 +73,29 @@ LoKi::Particles::DecayAngle::operator()
   const LoKi::LorentzVector& dv = child -> momentum() ;
   // 
   return LoKi::Kinematics::decayAngle( dv , mv ) ;
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::DecayAngle::fillStream ( std::ostream& s ) const 
-{ return s << "LV0[" << m_child << "]" ;} ;
-// ============================================================================
-
+{ 
+  s << "LV0" ;
+  switch ( m_child ) 
+  {
+  case 1  :
+    s << "1"                   ; break ;
+  case 2  :
+    s << "2"                   ; break ;
+  case 3  :
+    s << "3"                   ; break ;
+  case 4  :
+    s << "4"                   ; break ;
+  default :
+    s << "(" << m_child << ")" ; break ;
+  }
+  return s ;
+} ;
 
 // ============================================================================
 // The END 

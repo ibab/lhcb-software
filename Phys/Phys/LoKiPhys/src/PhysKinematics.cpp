@@ -1,14 +1,4 @@
-// $Id: PhysKinematics.cpp,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:09:15  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-// New package: "Phys"-part of restructurized LoKi project  
-// 
+// $Id: PhysKinematics.cpp,v 1.4 2007-07-23 17:35:56 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,8 +14,6 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysKinematics.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -43,10 +31,7 @@
  *  @date 2006-02-06 
  */
 // ============================================================================
-
-// ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass LHCb::Particle
+/** Trivial function to evaluate the mass LHCb::Particle
  *  @param  p particle 
  *  @return invariant mass 
  *  @see LHCb::Particle 
@@ -66,10 +51,9 @@ double LoKi::Kinematics::mass
   }
   //
   return mass ( p->momentum() ) ;
-} ;
+} 
 // ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass LHCb::Particle
+/** Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @return invariant mass 
@@ -99,10 +83,9 @@ double LoKi::Kinematics::mass
   //
   return mass ( p1->momentum() , 
                 p2->momentum() ) ;
-} ;
+} 
 // ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass LHCb::Particle
+/** Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the third particle 
  *  @param  p3 the second particle 
@@ -142,10 +125,9 @@ double LoKi::Kinematics::mass
   return mass ( p1->momentum() , 
                 p2->momentum() ,
                 p3->momentum() ) ;
-} ;
+} 
 // ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass LHCb::Particle
+/** Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @param  p3 the third  particle 
@@ -195,7 +177,7 @@ double LoKi::Kinematics::mass
                 p2->momentum() ,
                 p3->momentum() , 
                 p4->momentum() ) ;
-} ;
+} 
 // ============================================================================
 
 // ============================================================================
