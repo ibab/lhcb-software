@@ -1,0 +1,30 @@
+package MuonTrackAlign
+version v1r0
+
+
+# ================ structure =========================================
+
+branches src cmt doc options
+
+include_dirs      $(MUONTRACKALIGNROOT)
+
+# ================ used packages =========================================
+use MuonDAQ     v*    Muon
+use MuonDet     v*    Det
+use PatTools    v*    Pat
+use MCEvent     v*    Event
+use LinkerEvent v*    Event
+#use HltMuon     v*    Hlt -no_auto_imports
+use   GaudiAlg      v*
+
+
+# build a component library
+
+library MuonTrackAlign  *.cpp
+apply_pattern component_library library=MuonTrackAlign
+
+
+
+#===============================================================
+
+

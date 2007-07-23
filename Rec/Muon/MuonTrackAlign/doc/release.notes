@@ -1,0 +1,14 @@
+! $Id: release.notes,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
+! Package     : MuonTrackAlign
+! Responsible : Alessia Satta
+! Purpose     : Track reconstruction for Muon Alignment purposes
+
+! 20010912 - MuonTrackAlign v1
+  cmt/requirements - replace "component" with your package name
+  doc/release.notes- do not forget to fill the release notes.
+  src/             - contains *.cpp files
+  component/       - contains *.h files which are included with
+                     #include "component/my.h"
+
+! ====================================================================
+ 
