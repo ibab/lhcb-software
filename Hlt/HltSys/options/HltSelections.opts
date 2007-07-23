@@ -37,7 +37,7 @@ HltSelections.Members += { "GaudiSequencer/HltShared" };
 // Exclusive selections
 //---------------------------------------------------------------------
 HltSelections.Members += { "GaudiSequencer/HltExclusive" };
-#include "$HLTSELECTIONSROOT/options/HltSelelctions.opts"
+#include "$HLTSELECTIONSROOT/options/HltSelections.opts"
 
 //--------------------------------------------------------------------
 // Decision
