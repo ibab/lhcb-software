@@ -6,8 +6,9 @@
 
 !
 ! Plan is to add all channels stripped by Hans:
-!   Done:  B2DiMuon B2HH B2JpsiX_MuMu Bd2D0Kstar Bd2MuMuKstar Bs2DsH Bs2PhiPhi
-!   To do: Bs2MuMu Dst-PiD-HH 
+!   Done:  B2DiMuon B2HH B2JpsiX_MuMu Bd2D0Kstar Bd2MuMuKstar Bs2DsH Bs2PhiPhi 
+!          Bs2MuMu 
+!   To do: Dst-PiD-HH 
 !   Not yet in HLT : Bd2DstMu Bs2DsDs Bu2KD Bd2PiPiPi Bu2Kmumu
 !   Not in HLT : Bd2KstD2KSPiPi Bs2phigamma Bu2Kee 
 
@@ -15,7 +16,8 @@
 ! 2007-07-23 - Patrick Koppenburg
  - options/DVTestHltBd2D0Kstar.opts
  - options/DVTestHltBs2DsH.opts
-   . New options for B->D8K* and Bs->DsH
+ - options/DVTestHltB2MuMu.opts
+   . New options for B->D0K* and Bs->DsH
 
 ! 2007-07-20 - Patrick Koppenburg
  - options/DVTestHltB2DiMuon.opts
