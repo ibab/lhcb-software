@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.24 2007-07-14 20:19:38 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.25 2007-07-23 01:08:54 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -19,6 +19,8 @@
 // Unique class identifier
 static const CLID CLID_DeVeloPhiType = 1008103 ;
 
+// Forward declaration needed for link to associated R sensor
+class DeVeloRType;
 
 /** @class DeVeloPhiType DeVeloPhiType.h VeloDet/DeVeloPhiType.h
  *  
@@ -143,6 +145,15 @@ public:
     }
   }
 
+  /// Global phi at strip centre with full alignment
+  inline float globalPhiOfStrip(unsigned int strip) const { return m_globalPhi[strip]; }
+  
+  /// phi at strip centre in the halfbox frame
+  inline float halfboxPhiOfStrip(unsigned int strip) const { return m_halfboxPhi[strip]; }
+  
+  /// phi at strip centre with ideal alignment
+  inline float idealPhiOfStrip(unsigned int strip) const { return m_idealPhi[strip]; }
+  
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
   inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction=0.) const{
@@ -189,6 +200,18 @@ public:
     return DeVeloSensor::localToGlobal(localOrig);
   }
     
+  /// Access to the associated R sensor on the same module
+  inline const DeVeloRType* associatedRSensor() const { return m_associatedRSensor; }
+    
+  /// Access to the phi sensor on the other side of the VELO
+  inline const DeVeloPhiType* otherSidePhiSensor() const { return m_otherSidePhiSensor; }
+  
+  /// Set the associated R sensor.  This should only be called by DeVelo::initialize()
+  inline void setAssociatedRSensor(const DeVeloRType* rs) { m_associatedRSensor = rs; }
+
+  /// Set the phi sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
+  inline void setOtherSidePhiSensor(const DeVeloPhiType* ps) { m_otherSidePhiSensor = ps; }
+
 
 protected:
 
@@ -197,6 +220,15 @@ private:
   void calcStripLines();
   /// Calculate the equation of line for the corner cut-offs
   void cornerLimits();
+  
+  /** Calculate the global and half box frame phi for the strip centres when the alignment changes.
+   *  Also caches the phi for ideal alignment.
+   */  
+  StatusCode updatePhiCache();
+  
+  /// Update the geometry cache when the alignment changes
+  StatusCode updateGeometryCache();
+  
   unsigned int m_nbInner;
   double m_middleRadius;
   double m_innerTilt;
@@ -230,6 +262,21 @@ private:
   //  double m_halfCoverage;
   bool m_down;
 
+  /// cache of global phi at the strip centres
+  std::vector<float> m_globalPhi;
+    
+  /// cache of phi in the halfbox frame at the strip centres
+  std::vector<float> m_halfboxPhi;
+    
+  /// cache of ideal phi 
+  std::vector<float> m_idealPhi;
+    
+  /// link to associated R sensor on the same module
+  const DeVeloRType* m_associatedRSensor;
+  
+  /// pointer to the phi sensor on the other side of the VELO
+  const DeVeloPhiType* m_otherSidePhiSensor;
+  
   /// Pattern is based on sequence of six strips (outer, inner, outer, inner, outer, outer)
   void BuildRoutingLineMap();
 
@@ -269,4 +316,10 @@ private:
   static bool m_staticDataInvalid;
 
 };
+
+/// fast cast to Phi sensor, returns 0 for wrong type
+inline const DeVeloPhiType* DeVeloSensor::phiType() const { 
+  return (m_isPhi ? static_cast<const DeVeloPhiType*>(this) : 0); 
+}
+  
 #endif // VELODET_DEVELOPHITYPE_H

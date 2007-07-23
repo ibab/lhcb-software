@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.35 2007-07-14 20:19:38 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.36 2007-07-23 01:08:55 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -11,6 +11,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // From LHCb
 #include "LHCbMath/LHCbMath.h"
@@ -54,9 +55,14 @@ std::vector<std::pair<double,double> > DeVeloPhiType::m_stripLines;
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloPhiType::DeVeloPhiType(const std::string& name) : 
-  DeVeloSensor(name),
-  m_stripLengths(VeloDet::deVeloPhiTypeStaticStripLengths())
+DeVeloPhiType::DeVeloPhiType(const std::string& name) 
+  : DeVeloSensor(name)
+  , m_globalPhi(m_numberOfStrips,0.0)
+  , m_halfboxPhi(m_numberOfStrips,0.0)
+  , m_idealPhi(m_numberOfStrips,0.0)
+  , m_associatedRSensor(0)
+  , m_otherSidePhiSensor(0)
+  , m_stripLengths(VeloDet::deVeloPhiTypeStaticStripLengths())
 {
 }
 //==============================================================================
@@ -153,6 +159,17 @@ StatusCode DeVeloPhiType::initialize()
 
   /// Build up map of strips to routing lines
   BuildRoutingLineMap();
+
+  // fill global phi cache
+  sc = updateGeometryCache();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    return sc;
+  }
+  
+  // register geometry conditions, update global r of strip cache
+  updMgrSvc()->
+    registerCondition(this,this->m_geometry,&DeVeloPhiType::updateGeometryCache);
 
   return StatusCode::SUCCESS;
 }
@@ -607,4 +624,35 @@ std::auto_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChanne
 
 }
 
+StatusCode DeVeloPhiType::updatePhiCache()
+{
+  for (unsigned int strip=0; strip<m_numberOfStrips; ++ strip) {
+    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>  limits = localStripLimits(strip);
+    double x = (limits.first.x()  + limits.second.x())/2.0;
+    double y = (limits.first.y()  + limits.second.y())/2.0;
+    
+    Gaudi::XYZPoint lp(x,y,0.0);
+    m_idealPhi[strip]=localPhiToGlobal(lp.phi());
+    
+    Gaudi::XYZPoint gp = localToGlobal(lp);
+    m_globalPhi[strip] = gp.phi();
+    
+    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
+    m_halfboxPhi[strip] = hbp.phi();
+  }
+  
+  return StatusCode::SUCCESS;
+}
 
+StatusCode DeVeloPhiType::updateGeometryCache()
+{
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
+  
+  StatusCode sc = updatePhiCache();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update phi cache." << endreq;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}

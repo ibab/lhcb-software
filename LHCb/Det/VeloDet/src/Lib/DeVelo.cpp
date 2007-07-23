@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.80 2007-03-22 10:27:50 dhcroft Exp $
+// $Id: DeVelo.cpp,v 1.81 2007-07-23 01:08:55 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -96,6 +96,17 @@ StatusCode DeVelo::initialize() {
   // JPP sensors no longer pre-sorted by Z in XML so sort them before
   // storing.
   std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
+ 
+  // this determines the size of our pseudo map
+  unsigned int maxSensorNumber=0;
+  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
+      ++iDESensor){
+     if (maxSensorNumber < (*iDESensor)->sensorNumber())
+       maxSensorNumber = (*iDESensor)->sensorNumber();
+  }
+  
+  // ok, now we now the size of our pseudo map
+  m_sensors.resize(maxSensorNumber+1,0);
   
   for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
       ++iDESensor,++m_nSensors){
@@ -106,7 +117,10 @@ StatusCode DeVelo::initialize() {
         << " index " << index
         << " R " << (*iDESensor)->isR() 
         << " PHI " << (*iDESensor)->isPhi()
-        << " PU " << (*iDESensor)->isPileUp() << endmsg;
+        << " PU " << (*iDESensor)->isPileUp()
+        << " SNO " <<  (*iDESensor)->sensorNumber()
+        << endmsg;
+    
     bool isLeftSensor=false;
     // Check if sensor is on Left/Right side of LHCb
     if((*iDESensor)->isLeft()){
@@ -162,6 +176,32 @@ StatusCode DeVelo::initialize() {
         << endreq;
   }
 
+  // Set the associated and other side sensor links.  This makes assumptions about the
+  // semantics of sensor number.  While this is a bad idea in general it is
+  // defendable inside the detector element itself. 
+  for (std::vector<DeVeloRType*>::const_iterator iRS=leftRSensorsBegin();
+      iRS != leftRSensorsEnd();
+      ++iRS) {
+    
+    // associated sensors on the left side
+    DeVeloRType*   lRS = *iRS;
+    DeVeloPhiType* lPS = const_cast<DeVeloPhiType*>(phiSensor(lRS->sensorNumber()+64));
+    lRS->setAssociatedPhiSensor(lPS);
+    if (lPS) lPS->setAssociatedRSensor(lRS);
+
+    // associated sensors on the right side
+    DeVeloRType*   rRS = const_cast<DeVeloRType*>(rSensor(lRS->sensorNumber()+1));
+    DeVeloPhiType* rPS = const_cast<DeVeloPhiType*>(phiSensor(lPS->sensorNumber()+1));
+    if (rRS) rRS->setAssociatedPhiSensor(rPS);
+    if (rPS) rPS->setAssociatedRSensor(rRS);
+
+    // other side sensor links
+    if (rRS) rRS->setOtherSideRSensor(lRS);
+    if (lRS) lRS->setOtherSideRSensor(rRS);
+    if (rPS) rPS->setOtherSidePhiSensor(lPS);
+    if (lPS) lPS->setOtherSidePhiSensor(rPS);
+    
+  } 
   
   msg << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
       << " Right " << m_nRightSensors << endreq;
@@ -203,24 +243,6 @@ const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
       << point.z() << endmsg;
   return -999;
-}
-
-// return pointer to sensor
-const DeVeloSensor* DeVelo::sensor(unsigned int sensorNumber) const
-{
-  return m_sensors[sensorNumber];
-}
-
-// return pointer to R sensor
-const DeVeloRType* DeVelo::rSensor(unsigned int sensorNumber) const
-{
-  return dynamic_cast<DeVeloRType*>(m_sensors[sensorNumber]);
-}
-
-// return pointer to Phi sensor
-const DeVeloPhiType* DeVelo::phiSensor(unsigned int sensorNumber) const
-{
-  return dynamic_cast<DeVeloPhiType*>(m_sensors[sensorNumber]);
 }
 
 //=============================================================================
@@ -297,6 +319,13 @@ StatusCode DeVelo::registerConditionCallBacks()
                                  condition(m_tell1ToSensorsConditionName.c_str()).path(),
                                  &DeVelo::updateTell1ToSensorsCondition);
   
+  // Half box offset  cache
+  updMgrSvc()->
+    registerCondition(this,(*leftRSensorsBegin())->geometry(),&DeVelo::updateLeftHalfBoxOffset);
+  
+  updMgrSvc()->
+    registerCondition(this,(*rightRSensorsBegin())->geometry(),&DeVelo::updateRightHalfBoxOffset);
+  
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
     msg << MSG::ERROR 
@@ -354,5 +383,35 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
     }
   }
 
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVelo::updateLeftHalfBoxOffset() {
+
+  // TODO: it is unclear whether it is a good idea to do this for the
+  // first sensor instead of computing an average.  However, this is
+  // what was done in the now obsolete PatVeloAlignTool.  So we stick with
+  // it for the time being in order to get the same results wiht the VELO
+  // pattern recognition.
+  Gaudi::XYZPoint localZero(0.,0.,0.);
+  
+  Gaudi::XYZPoint global = (*leftRSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  m_halfBoxOffsets[LeftHalf] = global-localZero;
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVelo::updateRightHalfBoxOffset() {
+
+  // TODO: it is unclear whether it is a good idea to do this for the
+  // first sensor instead of computing an average.  However, this is
+  // what was done in the now obsolete PatVeloAlignTool.  So we stick with
+  // it for the time being in order to get the same results wiht the VELO
+  // pattern recognition.
+  Gaudi::XYZPoint localZero(0.,0.,0.);
+  
+  Gaudi::XYZPoint global = (*rightRSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  m_halfBoxOffsets[RightHalf] = global-localZero;
+  
   return StatusCode::SUCCESS;
 }

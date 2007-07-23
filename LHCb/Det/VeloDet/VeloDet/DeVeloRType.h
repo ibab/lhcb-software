@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.22 2007-07-14 20:19:38 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.23 2007-07-23 01:08:54 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -19,6 +19,8 @@
 // Unique class identifier
 static const CLID CLID_DeVeloRType = 1008102 ;
 
+// Forward declaration needed for link to associated sensor
+class DeVeloPhiType;
 
 /** @class DeVeloRType DeVeloRType.h VeloDet/DeVeloRType.h
  *  
@@ -71,9 +73,6 @@ public:
                               double &residual,
                               double &chi2) const;
 
-  /// The number of zones in the detector
-  //  inline unsigned int numberOfZones(){return m_numberOfZones;}
- 
   /// The zones number for a given strip
   virtual unsigned int zoneOfStrip(const unsigned int strip) const {
     return static_cast<unsigned int>(strip/512);
@@ -142,6 +141,12 @@ public:
     return m_innerPitch + m_pitchSlope*(radius - innerRadius());
   }
 
+  /// Return the radius of the centre of the strip in the global frame
+  inline float globalROfStrip(unsigned int strip) const { return m_globalR[strip]; }
+
+  /// Return the radius of the centre of the strip in the global frame
+  inline float halfboxROfStrip(unsigned int strip) const { return m_halfboxR[strip]; }
+
   /** The minimum phi for a zone assuming the radius is not known.  
       This is a constant value for zone 0 and should be used with caution **/
   inline double phiMinZone(unsigned int zone) const {return m_phiMin[zone];}
@@ -175,6 +180,19 @@ public:
     return StatusCode::SUCCESS;
   }
 
+  /// Access to the associated Phi sensor on the same module
+  inline const DeVeloPhiType* associatedPhiSensor() const { return m_associatedPhiSensor; }
+    
+  /// Access to the r sensor on the other side of the VELO
+  inline const DeVeloRType* otherSideRSensor() const { return m_otherSideRSensor; }
+  
+  /// Set the associated phi sensor.  This should only be called by DeVelo::initialize()
+  inline void setAssociatedPhiSensor(const DeVeloPhiType* ps) { m_associatedPhiSensor = ps; }
+  
+  /// Set the r sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
+  inline void setOtherSideRSensor(const DeVeloRType* rs) { m_otherSideRSensor = rs; }
+
+
 private:
   /// Store the local radius for each strip in the sensor
   void calcStripLimits();
@@ -188,7 +206,15 @@ private:
   /// Return x and y position for the intersect of the cut-off line and a given radius
   void intersectCutOff(const double radius, double& x, double& y) const;
 
+  /// Calculate the global strip radii when the alignment changes
+  StatusCode updateGlobalR();
 
+  /// Calculate the strip radii in the halfbox frame when the alignment changes
+  StatusCode updateHalfboxR();
+
+  /// Update geomtry cache when the alignment changes
+  StatusCode updateGeometryCache();
+    
 private:
 
   //  unsigned int m_numberOfZones;
@@ -212,6 +238,18 @@ private:
   double m_quarterAngle;
   double m_phiGap;
 
+  /// cache for global strip radii
+  std::vector<float> m_globalR;
+
+  /// cache for strip radii in the halfbox frame
+  std::vector<float> m_halfboxR;
+
+  /// pointer to associated phi sensor
+  const DeVeloPhiType* m_associatedPhiSensor;
+  
+  /// pointer to the r sensor on the other side of the VELO
+  const DeVeloRType* m_otherSideRSensor;
+  
   // These are references to local statics accessed via static functions
   // implemented in DeVeloRType.cpp. I stree this because these are
   // NOT ALLOWED TO BE INLINED!
@@ -259,4 +297,11 @@ private:
   bool m_verbose;
 
 };
+
+/// fast cast to R sensor, returns 0 for wrong type
+inline const DeVeloRType* DeVeloSensor::rType() const { 
+  return (m_isR ? static_cast<const DeVeloRType*>(this) : 0); 
+}
+
+
 #endif // VELODET_DEVELORTYPE_H

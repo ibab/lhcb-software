@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.53 2007-03-21 17:04:41 mtobin Exp $
+// $Id: DeVelo.h,v 1.54 2007-07-23 01:08:54 krinnert Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -32,6 +32,10 @@ namespace DeVeloLocation{
 
 class DeVelo: public DetectorElement {
 
+public:
+
+  enum { LeftHalf=0, RightHalf=1, NHalfs=2 };
+    
 public:
   
   /// Constructors
@@ -470,13 +474,19 @@ public:
   }
 
   /// give access to sensor for given sensor number
-  const DeVeloSensor* sensor(unsigned int sensorNumber) const;
+  const DeVeloSensor* sensor(unsigned int sensorNumber) const {
+    return m_sensors[sensorNumber]; 
+  }
 
   /// give access to sensor for given sensor number
-  const DeVeloRType* rSensor(unsigned int sensorNumber) const;
+  const DeVeloRType* rSensor(unsigned int sensorNumber) const { 
+    return m_sensors[sensorNumber]->rType(); 
+  }
 
   /// give access to sensor for given sensor number
-  const DeVeloPhiType* phiSensor(unsigned int sensorNumber) const;
+  const DeVeloPhiType* phiSensor(unsigned int sensorNumber) const { 
+    return m_sensors[sensorNumber]->phiType();
+  }
 
   /// give access to sensor for given LHCb::VeloChannelID
   const DeVeloSensor* sensor(LHCb::VeloChannelID channel) const {
@@ -492,6 +502,9 @@ public:
   const DeVeloPhiType* phiSensor(LHCb::VeloChannelID channel) const {
     return phiSensor(channel.sensor());
   }
+
+  /// Access half box offset vectors (don't cache, depends on the geometry condition)
+  const Gaudi::XYZPoint& halfBoxOffset(unsigned int half) { return m_halfBoxOffsets[half]; }
 
   // public condition related methods 
 
@@ -520,6 +533,12 @@ public:
    */
   const Condition* tell1ToSensorsCondition() const { return m_tell1ToSensorsCondition; }
 
+  /// Update the left half box offset vector
+  StatusCode updateLeftHalfBoxOffset();
+  
+  /// Update the right half box offset vector
+  StatusCode updateRightHalfBoxOffset();
+  
    // private condition related methods 
 
 private:
@@ -627,7 +646,7 @@ private:
   unsigned int m_nRightPUSensors;
 
   /// Indices of R, Phi and Pile Up sensors in list of all sensors sorted by z
-  mutable std::map<unsigned int,DeVeloSensor*> m_sensors;
+  mutable std::vector<DeVeloSensor*> m_sensors;
 
   /// Custom operator for sorting sensors in terms of z position
   struct less_Z {
@@ -651,6 +670,8 @@ private:
 
   std::map<unsigned int, const DeVeloSensor*> m_sensorByTell1Id;
   std::map<unsigned int, unsigned int> m_tell1IdBySensorNumber;
+
+  Gaudi::XYZPoint m_halfBoxOffsets[NHalfs];
 
   // Set output level for message service
   bool m_debug;

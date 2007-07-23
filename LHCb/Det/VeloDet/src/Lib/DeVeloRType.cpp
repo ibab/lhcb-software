@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.42 2007-07-14 20:19:38 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.43 2007-07-23 01:08:55 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -11,6 +11,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // From LHCb
 #include "LHCbMath/LHCbMath.h"
@@ -119,6 +120,10 @@ DeVeloRType::DeVeloRType(const std::string& name) :
   DeVeloSensor(name),
   m_halfAngle(90.0 * Gaudi::Units::degree),
   m_quarterAngle(.5 * m_halfAngle),
+  m_globalR(m_numberOfStrips,0.0),
+  m_halfboxR(m_numberOfStrips,0.0),
+  m_associatedPhiSensor(0),
+  m_otherSideRSensor(0),
   m_rStrips(VeloDet::deVeloRTypeStaticRStrips()),
   m_rPitch(VeloDet::deVeloRTypeStaticRPitch()),
   m_phiMin(VeloDet::deVeloRTypeStaticPhiMin()),
@@ -183,6 +188,17 @@ StatusCode DeVeloRType::initialize()
   /// Build up map of strips to routing lines
   BuildRoutingLineMap();
   
+  // fill global r cache
+  sc = updateGeometryCache();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    return sc;
+  }
+  
+  // geometry conditions, update global r of strip cache
+  updMgrSvc()->
+    registerCondition(this,this->m_geometry,&DeVeloRType::updateGeometryCache);
+
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -688,4 +704,49 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
     
     return autoTraj;  
 
+}
+
+StatusCode DeVeloRType::updateGlobalR()
+{
+  for (unsigned int strip=0; strip<m_numberOfStrips; ++strip) {
+    double phi = (phiMaxStrip(strip) + phiMinStrip(strip))/2.0;
+    double r   = rOfStrip(strip);
+    Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
+    Gaudi::XYZPoint gp = localToGlobal(lp);
+    m_globalR[strip] = gp.rho();
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloRType::updateHalfboxR()
+{
+  for (unsigned int strip=0; strip<m_numberOfStrips; ++strip) {
+    double phi = (phiMaxStrip(strip) + phiMinStrip(strip))/2.0;
+    double r   = rOfStrip(strip);
+    Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
+    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
+    m_halfboxR[strip] = hbp.rho();
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloRType::updateGeometryCache()
+{
+  MsgStream msg(msgSvc(), "DeVeloRType");
+  
+  StatusCode sc = updateGlobalR();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update global r cache." << endreq;
+    return sc;
+  }
+  
+  sc = updateHalfboxR();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update halfbox r cache." << endreq;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
 }

@@ -1,8 +1,23 @@
-! $Id: release.notes,v 1.169 2007-07-16 14:47:13 cattanem Exp $
+! $Id: release.notes,v 1.170 2007-07-23 01:08:55 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2007-07-19 - Kurt Rinnert
+ - added cache of half box offset vectors to DeVelo (this was previously
+   provided to the VELO pattern recognition by the soon obsolete
+   PatVeloAlignTool).
+ - The VELO sensors now provide a link to the sensor of the same type on the at
+   the same station on other side of the VELO
+ - added cache for ideal phi(r) to DeVeloPhi(R)Type
+ - using fast casts in DeVelo
+ - using sparse vector instead of map for sensor number -> sensor mapping
+ - added cache for global r,phi and halfbox frame r,phi per strip.  The cache
+   update is properly registered with the update manager.
+ - added fast and safe casting methods
+ - r(phi) sensors now know their associated phi(r) sensor on the same module
+ - made DeVeloSensors aware of their station number
+                                  
 !======================== VeloDet v11r4 2007-07-16 ===========================
 ! 2007-07-14 - Mark Tobin
  - Corrected isDownstream method so that it will work for data and DC06
@@ -93,7 +108,7 @@
 !========================= VeloDet v10r8 2006-08-02 ========================
 ! 2006-08-01 - Kurt Rinnert
  - Bug fix in reverse iterator accessors which corrected rend() for the
- 	 number of pile up sensors (for reverse iterators + means - and - means +).
+    number of pile up sensors (for reverse iterators + means - and - means +).
 
 ! 2006-07-31 - Mark TOBIN
  - New residual calculation which uses inter strip fraction with
@@ -192,8 +207,8 @@
 
 ! 2006-03-27 - Kurt Rinnert
  - Added missing registration of condition update call back methods
-	to DeVelo::initialize() and DeVeloSensor::initialize(). They must
-	have got lost during some of previous updates.
+   to DeVelo::initialize() and DeVeloSensor::initialize(). They must
+   have got lost during some of previous updates.
 
 !========================= VeloDet v10r2 2006-03-23 ========================
 ! 2006-03-23 - Mark Tobin
@@ -243,15 +258,15 @@
 ! 2006-01-26 - Kurt Rinnert
  - Added caching of conditions for DeVelo and DeVeloSensor, this includes
    * data members holding the cache
-	 * interface to the cache
-	 * call back functions for update service
-	 * helper code for converting DB entries into cache 
+    * interface to the cache
+    * call back functions for update service
+    * helper code for converting DB entries into cache 
    These changes are backwards incompatible. XmlDDDB >= v30r0,
    XmlConditions > v1r4 and geometry > v200511 are required (at the time 
    of this writing no release with all the requirements was integrated yet)
  - The DeVeloSensor::stripCapacitance() method is no longer purely virtual. 
    The implementation in the derived classes was removed and  DeVeloSensor 
-	 now implements the method as an interface to the condition cache.
+    now implements the method as an interface to the condition cache.
  
 !========================= VeloDet v10r0 2005-12-14 ========================
 ! 2005-12-14 - Mark Tobin
@@ -503,7 +518,7 @@
 
 ! 2002-06-20 - Olivier Callot
  - Adapt to the new Velo structure with 42 half-stations, in place of 21 
-	 stations. Same for PuVeto. The functionality is unchanged.
+    stations. Same for PuVeto. The functionality is unchanged.
 
 ! 2002-06-18 - Olivier Callot
  - Fix some bugs in the new method, implemented the methods used by the
@@ -573,7 +588,7 @@
 ! 28/01/2002 - Olivier Callot
   - Modified the initialize() method to use the child detector elements, to get
     the individual wafer positions from XML. The type of wafer is still 
-	  hardcoded, as is the detection of PuVeto / Normal Velo boundary.
+     hardcoded, as is the detection of PuVeto / Normal Velo boundary.
     This requires XmlDDDB v7r2 or later.
 
 !=============================================================================
@@ -593,7 +608,7 @@
 !=============================================================================
 ! 26/11/2001 - Olivier Callot
   - Modifiy the detector element to add pseudo-strips in Phi wafer, as the 
-	  shape in SICBMC is still half a circle. These strips have number over 2048
+     shape in SICBMC is still half a circle. These strips have number over 2048
     and are properly handled by the strip-to-position routine.
 
 !=============================================================================
