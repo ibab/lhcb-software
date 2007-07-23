@@ -1,4 +1,4 @@
-// $Id: LoopDecorator.cpp,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
+// $Id: LoopDecorator.cpp,v 1.4 2007-07-23 17:41:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,6 +17,7 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   /// invalid formula
   const std::vector<std::string>& s_formula()
   {
@@ -38,16 +39,22 @@ namespace
     }
     return _formula ;
   }
+  // ==========================================================================
   /// invalid status code 
   const StatusCode s_BAD = StatusCode::FAILURE ;
+  // ==========================================================================
   /// invalid 4-momentum 
   const LoKi::LorentzVector s_vector = LoKi::LorentzVector() ;
+  // ==========================================================================
   /// invalid mass
   const double  s_mass = -100 * Gaudi::Units::TeV ;
+  // ==========================================================================
   /// invalid PID 
   const LHCb::ParticleID s_PID = LHCb::ParticleID() ;
+  // ==========================================================================
   /// invalid PID name 
   const std::string s_pidName = "<Invalid Loop/Particle>" ;
+  // ==========================================================================
 }
 // ============================================================================
 // get the effective formula of the loop, see LoKi::LoopObj::formula

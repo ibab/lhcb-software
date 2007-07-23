@@ -1,4 +1,4 @@
-// $Id: Loop.h,v 1.4 2007-06-10 20:13:34 ibelyaev Exp $
+// $Id: Loop.h,v 1.5 2007-07-23 17:41:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOP_H 
 #define LOKI_LOOP_H 1
@@ -27,18 +27,18 @@
  *  @date 2006-03-22 
  */
 // ============================================================================
-
 namespace LoKi 
 {  
+  // ==========================================================================
   /// forward declaration 
   class LoopObj ;
+  // ==========================================================================
   /** @class Loop Loop.h LoKi/Loop.h
    *  Useful handler for easy ans saf eoperation with class LoKi::LoopObj
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-22
    */
-  class Loop 
-    : public LoKi::Interface<LoKi::LoopObj>
+  class Loop : public LoKi::Interface<LoKi::LoopObj>
   {
   public:
     /// constructor from LoKi::LoopObj

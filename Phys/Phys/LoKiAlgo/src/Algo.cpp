@@ -1,9 +1,4 @@
-// $Id: Algo.cpp,v 1.14 2007-06-01 12:21:33 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: Algo.cpp,v 1.15 2007-07-23 17:41:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,7 +33,8 @@
 // ============================================================================
 namespace
 {
-  /// trivial function to extarct the formula form range list
+  // ==========================================================================
+  /// trivial function to extract the formula from range list
   inline std::string _formu ( const LoKi::Types::RangeList& ranges )
   {
     std::string result = "";
@@ -49,23 +45,25 @@ namespace
       result += ir->name() ;
     }
     return result ;
-  } ;
-  //
-} ;
+  } 
+  // ==========================================================================
+} 
+// ============================================================================
 LoKi::Algo::Lock::Lock ( LoKi::Algo* algo )
 {
   // keep the old current algorithm:
   m_old = LoKi::Algo::currentAlgo() ;
   // set a new current algorithm 
   LoKi::Algo::setCurrentAlgo( algo ) ;
-} ;
+} 
+// ============================================================================
 LoKi::Algo::Lock::~Lock() 
 {
   // restore the old current algorithm 
   LoKi::Algo::setCurrentAlgo( m_old ) ;
-} ;
+} 
 // =============================================================================
-/// initialize the static pointer 
+// initialize the static pointer 
 // =============================================================================
 LoKi::Algo* LoKi::Algo::s_currentAlgo = 0 ;
 // =============================================================================
@@ -75,9 +73,9 @@ LoKi::Algo* LoKi::Algo::setCurrentAlgo ( LoKi::Algo* value )
 {
   s_currentAlgo = value ;
   return s_currentAlgo ;
-} ;
+} 
 // ============================================================================
-/** standard constructor 
+/*  standard constructor 
  *  @param name algorithm instance name 
  *  @param pSvc pointer to Service Locator 
  */
@@ -99,13 +97,13 @@ LoKi::Algo::Algo
   declareProperty ( "Cuts"            , m_cutValues ) ;
   // 
   setProperty     ( "PropertiesPrint" , "true" ) ;
-} ;
+} 
 // ============================================================================
-/// virtual and protected destructor 
+// virtual and protected destructor 
 // ============================================================================
-LoKi::Algo::~Algo(){} ;
+LoKi::Algo::~Algo(){} 
 // ============================================================================
-/** 'Select' the particles to be used in local storage
+/* 'Select' the particles to be used in local storage
  *  
  *  - The Particles are selected from the desktop
  *
@@ -141,9 +139,9 @@ LoKi::Algo::select
     desktop()->particles();
   // add the particles to the local storage 
   return select ( name , particles.begin() , particles.end() , cut ) ;
-} ;
+} 
 // ============================================================================
-/** 'Select' the vertices to be used in local storage
+/* 'Select' the vertices to be used in local storage
  *  - Vertices are selected from desktop
  *  @param name name/tag assigned to the selected vertices
  *  @param cut  cut to be applied
@@ -188,9 +186,9 @@ LoKi::Algo::vselect
   const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
   // 
   return vselect ( name , secs.begin() , secs.end() , cut ) ;
-} ;
+} 
 // ============================================================================
-/// get the proper error reporter 
+// get the proper error reporter 
 // ============================================================================
 const LoKi::IReporter* 
 LoKi::Algo::reporter( const std::string& name ) const 
@@ -205,7 +203,7 @@ LoKi::Algo::reporter( const std::string& name ) const
   { Warning ( "LoKi::IReporter*('"+name+"') points to NULL" ) ; }
   // 
   return rep ;
-} ;
+} 
 // ============================================================================
 LoKi::Loop LoKi::Algo::loop 
 ( const std::string&       formula  , 
@@ -216,7 +214,7 @@ LoKi::Loop LoKi::Algo::loop
   if ( 0 == _pp ) 
   { Error ( "loop(" + formula + "): invaid particle name '"+pid+"'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
-};
+}
 // ============================================================================
 LoKi::Loop LoKi::Algo::loop 
 ( const std::string&       formula  , 
@@ -228,7 +226,7 @@ LoKi::Loop LoKi::Algo::loop
   { Error ( "loop(" + formula + "): invaid particle ID '" + 
             Gaudi::Utils::toString( pid.pid() ) + "'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
-};
+}
 // ============================================================================  
 LoKi::Loop LoKi::Algo::loop
 ( const std::string&       formula  , 
@@ -256,7 +254,7 @@ LoKi::Loop LoKi::Algo::loop
   }
   // return valid object 
   return LoKi::Loop( object ) ;
-} ;
+} 
 // ============================================================================
 LoKi::Loop LoKi::Algo::loop 
 ( const LoKi::Types::RangeList& formula  , 
@@ -267,7 +265,7 @@ LoKi::Loop LoKi::Algo::loop
   if ( 0 == _pp ) 
   { Error ( "loop(" + _formu ( formula ) + "): invaid particle name '"+pid+"'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
-};
+}
 // ============================================================================
 LoKi::Loop LoKi::Algo::loop 
 ( const LoKi::Types::RangeList& formula  , 
@@ -279,7 +277,7 @@ LoKi::Loop LoKi::Algo::loop
   { Error ( "loop(" + _formu ( formula ) + "): invaid particle ID '" + 
             Gaudi::Utils::toString ( pid.pid() ) + "'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
-};
+}
 // ============================================================================  
 LoKi::Loop LoKi::Algo::loop
 ( const LoKi::Types::RangeList& formula  , 
@@ -304,9 +302,9 @@ LoKi::Loop LoKi::Algo::loop
   }
   // return valid object 
   return LoKi::Loop( object ) ;
-} ;
+} 
 // ============================================================================
-/** save the particle into LoKi storage
+/*  save the particle into LoKi storage
  *  @param  tag particle tag (only for LoKi)
  *  @param  particle particle to be saved 
  *  @return status code  
@@ -326,7 +324,7 @@ StatusCode LoKi::Algo::save
   m_selected.add ( tag , saved ) ;
   
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 /** shortcut for the following symbolic expression:
  * 
@@ -394,7 +392,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   loop->restore () ; 
   // return selected/saved candidates
   return selected ( tag ) ;
-} ;    
+}     
 // ============================================================================
 /** shortcut for the following symbolic expression:
  * 
@@ -469,7 +467,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   loop->restore() ; 
   // return the selected/saved combinations 
   return selected ( tag ) ;
-} ;
+} 
 // ============================================================================
 /** shortcut for the following expression:
  *
@@ -549,7 +547,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   loop->restore() ; 
   // return the selected/saved objects 
   return selected ( tag ) ;
-} ;
+} 
 // ============================================================================
 /** shortcut for the following expression:
  *
@@ -636,9 +634,9 @@ LoKi::Types::Range LoKi::Algo::pattern
   loop->restore() ; 
   // return the selected/saved objects 
   return selected ( tag ) ;
-} ;
+} 
 // ============================================================================
-/// clear the internal LoKi storages 
+// clear the internal LoKi storages 
 // ============================================================================
 StatusCode LoKi::Algo::clear() 
 {
@@ -646,9 +644,9 @@ StatusCode LoKi::Algo::clear()
   m_vselected   .clear () ;
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// initialize the algorithm 
+// initialize the algorithm 
 // ============================================================================
 StatusCode LoKi::Algo::initialize () 
 {
@@ -664,9 +662,9 @@ StatusCode LoKi::Algo::initialize ()
   }
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// make the execution of the algorithm 
+// make the execution of the algorithm 
 // ============================================================================
 StatusCode LoKi::Algo::execute () 
 {
@@ -689,17 +687,17 @@ StatusCode LoKi::Algo::execute ()
   // clear all LoKi storages at the end 
   clear() ;
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-/// perform the real analysis
+// perform the real analysis
 // ============================================================================
 StatusCode LoKi::Algo::analyse() 
 {
   return Print ( "The default(empty) LoKi::Algo::analyse() method is invoked" , 
                  StatusCode::SUCCESS , MSG::ALWAYS );
-};
+}
 // ============================================================================
-/// finalize  the algorithm 
+// finalize  the algorithm 
 // ============================================================================
 StatusCode LoKi::Algo::finalize () 
 { 
@@ -712,9 +710,9 @@ StatusCode LoKi::Algo::finalize ()
   }
   //
   return DVAlgorithm::finalize () ;
-} ;
+} 
 // ============================================================================
-/// get the helper "geometry" object
+// get the helper "geometry" object
 // ============================================================================
 LoKi::Vertices::ImpParBase 
 LoKi::Algo::geo ( const LHCb::VertexBase* vertex ) const 
@@ -722,9 +720,9 @@ LoKi::Algo::geo ( const LHCb::VertexBase* vertex ) const
   IGeomDispCalculator* t = geomDispCalculator() ;
   if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
   return LoKi::Vertices::ImpParBase ( vertex , t ) ;
-} ;
+} 
 // ============================================================================
-/// get the helper "geometry" object
+// get the helper "geometry" object
 // ============================================================================
 LoKi::Vertices::ImpParBase 
 LoKi::Algo::geo ( const LoKi::Point3D& point ) const 
@@ -732,7 +730,7 @@ LoKi::Algo::geo ( const LoKi::Point3D& point ) const
   IGeomDispCalculator* t = geomDispCalculator() ;
   if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
   return LoKi::Vertices::ImpParBase ( point , t ) ;
-} ;
+} 
 // ============================================================================
 
 // ============================================================================

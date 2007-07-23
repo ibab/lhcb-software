@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.6 2007-06-10 20:13:35 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.7 2007-07-23 17:41:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,6 +34,7 @@
 // ============================================================================
 namespace
 {
+  // ==========================================================================
   /** helper function which allows to effectively avoid the 
    *  double counting in the loops with identical particles, 
    *  e.g. D0 -> K-(pi+pi+)pi- 
@@ -108,8 +109,8 @@ namespace
     }
     // as last points: compare the raw  C++ pointers 
     return p1 < p2 ;
-  };
-  
+  }
+  // ==========================================================================  
   //  dereference & copy
   template <class INPUT, class OUTPUT> 
   inline OUTPUT deref_copy 
@@ -119,8 +120,9 @@ namespace
   {
     for ( ; first != last ; ++first ) { *out = **first ; ++out ; }
     return out ;
-  } ;
-}  // end of anonymous namespace
+  } 
+  // ==========================================================================  
+} // end of anonymous namespace
 // ============================================================================
 //  default constructor 
 // ============================================================================
@@ -164,7 +166,7 @@ LoKi::LoopObj::~LoopObj()
   if ( m_pOwner && 0 != m_particle ) { delete m_particle ; m_particle = 0 ; }
   // delete vertex
   if ( m_vOwner && 0 != m_vertex   ) { delete m_vertex   ; m_vertex   = 0 ; }
-} ;
+} 
 // ============================================================================
 //  advance to the next VALID combination 
 // ============================================================================
@@ -196,7 +198,8 @@ LoKi::LoopObj& LoKi::LoopObj::next      ()
 // ============================================================================
 //  backup the current state of the loop 
 // ============================================================================
-LoKi::LoopObj& LoKi::LoopObj::backup  () { m_combiner.backup(); return *this ; };
+LoKi::LoopObj& LoKi::LoopObj::backup  () 
+{ m_combiner.backup(); return *this ; }
 // ============================================================================
 //  restore the loop from the last saved/backup state
 // ============================================================================

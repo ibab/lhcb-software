@@ -1,14 +1,4 @@
-// $Id: AlgoMC.cpp,v 1.5 2007-04-16 16:16:50 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/09/06 13:04:38  ibelyaev
-//  v2r0 : agg LoKi::AlgoMC::gselect functions
-//
-// Revision 1.3  2006/08/29 15:17:16  ibelyaev
-//  many minor fixes
-//
+// $Id: AlgoMC.cpp,v 1.6 2007-07-23 17:44:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,7 +33,7 @@
  *  @date 2006-03-31 
  */
 // ============================================================================
-/** standard constructor 
+/*  standard constructor 
  *  @param name algorithm instance name 
  *  @param pSvc pointer to Service Locator 
  */
@@ -103,11 +93,11 @@ LoKi::AlgoMC::AlgoMC
   declareProperty   ( "PV2MCTool"        , m_pv2mcName        ) ;  
   //
   declareProperty   ( "DisableMCMatch"   , m_disableMCMatch   ) ;
-} ;
+} 
 // ============================================================================
-/// virtual and protected destructor 
+// virtual and protected destructor 
 // ============================================================================
-LoKi::AlgoMC::~AlgoMC(){} ;
+LoKi::AlgoMC::~AlgoMC(){} 
 // ============================================================================
 /** 'Select' the MC particles to be used in local storage
  *  
@@ -144,9 +134,9 @@ LoKi::AlgoMC::mcselect
 {
   const LHCb::MCParticles* mcps = get<LHCb::MCParticles>( location );
   return mcselect ( tag , mcps , cut ) ;
-};
+}
 // ============================================================================
-/** 'Select' the MC vertices to be used in local storage
+/* 'Select' the MC vertices to be used in local storage
  *  
  *  - The MC vertices are selected from the TES location
  *
@@ -173,9 +163,9 @@ LoKi::AlgoMC::mcvselect
 {
   const LHCb::MCVertices* mcps = get<LHCb::MCVertices>( location );
   return mcvselect ( tag , mcps , cut ) ;
-};
+}
 // ============================================================================
-/// get LoKi::MCFinder objects
+// get LoKi::MCFinder objects
 // ============================================================================
 LoKi::MCFinder 
 LoKi::AlgoMC::mcFinder( const std::string& name ) const 
@@ -210,7 +200,7 @@ LoKi::AlgoMC::mcFinder( const std::string& name ) const
   m_mcfinders[name] = object ;
   
   return LoKi::MCFinder ( object ) ;
-} ;
+} 
 // ============================================================================
 // get LoKi::MCMatch obejct
 // ============================================================================
@@ -251,9 +241,9 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
   }
   //
   return LoKi::MCMatch( object ) ;
-} ;
+} 
 // ============================================================================
-/// clear the internal LoKi storages 
+// clear the internal LoKi storages 
 // ============================================================================
 StatusCode LoKi::AlgoMC::clear() 
 {
@@ -270,9 +260,9 @@ StatusCode LoKi::AlgoMC::clear()
     if ( 0 != obj ) { obj->clear() ; }
   }
   return sc ;
-} ;
+} 
 // ============================================================================
-/// initialize the algorithm 
+// initialize the algorithm 
 // ============================================================================
 StatusCode LoKi::AlgoMC::initialize () 
 { 
@@ -291,15 +281,15 @@ StatusCode LoKi::AlgoMC::initialize ()
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/// make the execution of the algorithm 
+// make the execution of the algorithm 
 // ============================================================================
-StatusCode LoKi::AlgoMC::execute    () { return LoKi::Algo::execute    () ; } ;
+StatusCode LoKi::AlgoMC::execute    () { return LoKi::Algo::execute    () ; } 
 // ============================================================================
-/// perform the real analysis 
+// perform the real analysis 
 // ============================================================================
-StatusCode LoKi::AlgoMC::analyse    () { return LoKi::Algo::analyse    () ; } ;
+StatusCode LoKi::AlgoMC::analyse    () { return LoKi::Algo::analyse    () ; } 
 // ============================================================================
-/// finalize the algorithm 
+// finalize the algorithm 
 // ============================================================================
 StatusCode LoKi::AlgoMC::finalize   () 
 {
@@ -326,35 +316,32 @@ StatusCode LoKi::AlgoMC::finalize   ()
   }
   // finalize the base class 
   return LoKi::Algo::finalize   () ; 
-} ;
+} 
 // ============================================================================
-/// get the pointer to IMC2Collision tool 
+// get the pointer to IMC2Collision tool 
 // ============================================================================
 const IMC2Collision* LoKi::AlgoMC::mc2collision    () const 
 {
   if ( 0 == m_mc2collision ) 
   { m_mc2collision = tool<IMC2Collision>( m_mc2collisionName , this ) ; }
   return m_mc2collision ;
-} ;
+} 
 // ============================================================================
-/// get the pointer to IHepMC2MC tool 
+// get the pointer to IHepMC2MC tool 
 // ============================================================================
 const IHepMC2MC* LoKi::AlgoMC::hepMC2MC  () const 
 {
   if ( 0 == m_hepmc2mc ) { m_hepmc2mc = tool<IHepMC2MC>( m_hepmc2mcName, this ) ; }
   return m_hepmc2mc ;
-} ;
+} 
 // ============================================================================
-/// get the pointer to IPV2MC tool 
+// get the pointer to IPV2MC tool 
 // ============================================================================
 const IPV2MC* LoKi::AlgoMC::pv2MC        () const 
 {
   if ( 0 == m_pv2mc ) { m_pv2mc = tool<IPV2MC> ( m_pv2mcName , this ) ; }
   return m_pv2mc ;
-} ;
-// ============================================================================
-
-
+}
 // ============================================================================
 LoKi::Types::GRange 
 LoKi::AlgoMC::gselect 
@@ -433,7 +420,7 @@ LoKi::AlgoMC::gselect
   //
   return gselect 
     ( tag , v->particles_begin ( range ) , v->particles_end   ( range ) , cut ) ;
-} ;
+} 
 // ============================================================================
 
 

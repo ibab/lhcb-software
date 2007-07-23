@@ -1,4 +1,4 @@
-// $Id: AlgoMC.h,v 1.6 2007-06-04 11:04:03 cattanem Exp $
+// $Id: AlgoMC.h,v 1.7 2007-07-23 17:44:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -34,8 +34,6 @@
 // ============================================================================
 #include "Kernel/IPV2MC.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -60,10 +58,10 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-03-31
    */
-  class AlgoMC 
-    : public LoKi::Algo
+  class AlgoMC : public LoKi::Algo
   {
-  public: 
+  public:
+    // ========================================================================
     /** 'Select' the MC particles to be used in local storage
      *  
      *  - The MC Particles are selected from the TES location
@@ -96,7 +94,7 @@ namespace LoKi
     ( const std::string&         tag                                          , 
       const LoKi::Types::MCCuts& cut                                          ,
       const std::string&         location = LHCb::MCParticleLocation::Default ) ;
-
+    // ========================================================================
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -131,8 +129,8 @@ namespace LoKi
       const LoKi::Types::MCCuts&  cut   ) 
     {
       return mcselect ( tag , range.begin() , range.end() , cut ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -157,8 +155,8 @@ namespace LoKi
        const LoKi::Types::MCCuts&      cut   ) 
      {
        return mcselect ( tag , range.begin() , range.end() , cut ) ;
-     } ;
-    
+     } 
+    // ========================================================================    
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -183,8 +181,8 @@ namespace LoKi
       const LoKi::Types::MCCuts&           cut   ) 
     {
        return mcselect ( tag , range.begin() , range.end() , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -214,7 +212,8 @@ namespace LoKi
         return LoKi::Types::MCRange() ;
       }
       return mcselect ( tag , range->begin() , range->end() , cut ) ;
-    } ;
+    } 
+    // ========================================================================    
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -244,10 +243,10 @@ namespace LoKi
       const CUT&           cut    ) 
     {
       return m_mcselected.add ( name , first , last , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
   public:
-    
+    // ========================================================================    
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  - The MC vertices are selected from the TES location
@@ -271,7 +270,7 @@ namespace LoKi
     ( const std::string&          tag                                          , 
       const LoKi::Types::MCVCuts& cut                                          ,
       const std::string&          location = LHCb::MCVertexLocation::Default ) ;
-    
+    // ========================================================================    
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  @code
@@ -296,8 +295,8 @@ namespace LoKi
       const LoKi::Types::MCVCuts&  cut   )
     {
       return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  @code
@@ -315,15 +314,15 @@ namespace LoKi
      *  @param cut  cut to be applied
      *  @return selected range of particles
      */
-//     LoKi::Types::MCVRange 
-//     mcvselect 
-//     ( const std::string&              tag   ,
-//       const LHCb::MCVertex::Vector&   range ,
-//       const LoKi::Types::MCVCuts&     cut   )
-//     {
-//       return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
-//     } ;
-    
+    LoKi::Types::MCVRange 
+    mcvselect 
+    ( const std::string&              tag   ,
+      const LHCb::MCVertex::Vector&   range ,
+      const LoKi::Types::MCVCuts&     cut   )
+    {
+      return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
+    } 
+    // ========================================================================    
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  @code
@@ -341,15 +340,15 @@ namespace LoKi
      *  @param cut  cut to be applied
      *  @return selected range of particles
      */
-//     LoKi::Types::MCVRange 
-//     mcvselect 
-//     ( const std::string&                   tag   ,
-//       const LHCb::MCVertex::ConstVector&   range ,
-//       const LoKi::Types::MCVCuts&          cut   )
-//     {
-//       return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
-//     } ;
-
+    LoKi::Types::MCVRange 
+    mcvselect 
+    ( const std::string&                   tag   ,
+      const LHCb::MCVertex::ConstVector&   range ,
+      const LoKi::Types::MCVCuts&          cut   )
+    {
+      return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
+    } 
+    // ========================================================================
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  @code
@@ -379,8 +378,8 @@ namespace LoKi
         return LoKi::Types::MCVRange() ;
       }
       return mcvselect ( tag , range->begin() , range->end()  , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -410,8 +409,10 @@ namespace LoKi
       const CUT&           cut    ) 
     {
       return m_mcvselected.add ( name , first , last , cut ) ;
-    } ;
+    } 
+    // ========================================================================
   public:    
+    // ========================================================================
     /** Extract the selected MC-particles from local LoKi storage  
      *   by their name/tag
      *  
@@ -426,7 +427,8 @@ namespace LoKi
      */
     LoKi::Types::MCRange 
     mcselected 
-    ( const std::string& tag ) const { return m_mcselected( tag ) ; } ;
+    ( const std::string& tag ) const { return m_mcselected( tag ) ; }
+    // ========================================================================
     /** Extract the selected MC-vertices from local LoKi storage  
      *  by their name/tag
      *  
@@ -441,10 +443,10 @@ namespace LoKi
      */
     LoKi::Types::MCVRange 
     mcvselected
-    ( const std::string& tag ) const { return m_mcvselected( tag ) ; } ;
-    
+    ( const std::string& tag ) const { return m_mcvselected( tag ) ; } 
+    // ========================================================================    
   public:
-    
+    // ========================================================================    
     /** 'Select' generator(HepMC) particles to be used in local storage.
      *  
      *   @code
@@ -470,7 +472,7 @@ namespace LoKi
     ( const std::string&        tag                                          , 
       const LoKi::Types::GCuts& cuts                                         ,
       const std::string&        location = LHCb::HepMCEventLocation::Default ) ;
-    
+    // ========================================================================    
     /** 'Select' generator(HepMC) from previously selected 'container' 
      *  
      *   @code
@@ -502,8 +504,8 @@ namespace LoKi
       const LoKi::Types::GCuts&  cut   ) 
     {
       return gselect ( tag , range.begin() , range.end() , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' generator(HepMC) from previously selected 'container' 
      *  
      *   @code
@@ -532,8 +534,8 @@ namespace LoKi
       const LoKi::Types::GCuts&           cut   ) 
     {
       return gselect ( tag , range.begin() , range.end() , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' generator(HepMC) from HepMC tree 
      *  
      *   @code
@@ -561,7 +563,7 @@ namespace LoKi
     ( const std::string&                  tag    ,
       const LHCb::HepMCEvent::Container*  events , 
       const LoKi::Types::GCuts&           cut    ) ;
-    
+    // ========================================================================    
     /** 'Select' generator(HepMC) from HepMC tree 
      *  
      *   @code
@@ -588,7 +590,7 @@ namespace LoKi
     ( const std::string&                  tag    ,
       const LHCb::HepMCEvent*             event  , 
       const LoKi::Types::GCuts&           cut    ) ;
-    
+    // ========================================================================    
     /** 'Select' generator(HepMC) from HepMC tree 
      *  
      *   @code
@@ -615,7 +617,7 @@ namespace LoKi
     ( const std::string&                  tag    ,
       const HepMC::GenEvent*              event  , 
       const LoKi::Types::GCuts&           cut    ) ;
-    
+    // ========================================================================    
     /** 'Select' generator(HepMC) from HepMC tree 
      *  
      *   @code
@@ -644,7 +646,7 @@ namespace LoKi
       const HepMC::GenVertex*             vertex ,
       HepMC::IteratorRange                range  ,
       const LoKi::Types::GCuts&           cut    ) ;
-
+    // ========================================================================
     /** 'Select' generator(HepMC) from arbitrary container
      *   @param tag the unique tag to be associated with selecte dparticles 
      *   @param first begin-iterator for container 
@@ -661,8 +663,8 @@ namespace LoKi
       const LoKi::Types::GCuts&           cut    ) 
     {
       return m_genselected.add ( tag , first , last , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** extract the selected HepMC-paricles from Local LoKi storages 
      *  by their name/tag 
      *
@@ -677,39 +679,49 @@ namespace LoKi
      */
     LoKi::Types::GRange 
     gselected ( const std::string& tag ) const { return m_genselected ( tag ) ; }
-    
-    public:
-  
+    // ========================================================================    
+  public:
+    // ========================================================================    
     /// get LoKi::MCFinder object
     LoKi::MCFinder 
     mcFinder ( const std::string& name = "" ) const ;
-
+    // ========================================================================
     // get LoKi::MCMatch obejct
     LoKi::MCMatch 
     mcTruth  ( const std::string& name = "" ) const ;
-
+    // ========================================================================
   public:
-    
+    // ========================================================================    
     /// get the pointer to IMC2Collision tool 
     const IMC2Collision*            mc2collision () const ;
+    // ========================================================================    
     /// get the pointer to IHepMC2MC tool 
     const IHepMC2MC*                hepMC2MC     () const ;
+    // ========================================================================    
     /// get the pointer to IPV2MC tool  
     const IPV2MC*                   pv2MC        () const ;
-    
+    // ========================================================================    
   public:
+    // ========================================================================    
     /// clear the internal LoKi storages 
     virtual StatusCode clear() ;
+    // ========================================================================    
   public:
+    // ========================================================================    
     /// initialize the algorithm 
     virtual StatusCode initialize () ;
+    // ========================================================================    
     /// make the execution of the algorithm 
     virtual StatusCode execute    () ;
+    // ========================================================================    
     /// perform the real analysis 
     virtual StatusCode analyse    () ;
+    // ========================================================================    
     /// finalize the algorithm 
     virtual StatusCode finalize   () ;
+    // ========================================================================    
   protected:
+    // ========================================================================    
     /** standard constructor 
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
@@ -717,58 +729,69 @@ namespace LoKi
     AlgoMC
     ( const std::string& name , 
       ISvcLocator*       pSvc ) ;
+    // ========================================================================    
     /// virtual and protected destructor 
     virtual ~AlgoMC() ;
+    // ========================================================================    
   protected:
+    // ========================================================================    
     /// the actual type for collection of TES address
     typedef std::vector<std::string> Addresses ;
+    // ========================================================================    
   private:
+    // ========================================================================    
     /// helper fuction to feed LoKi::MCMatchObj object with the data 
     template <class TABLE> 
     StatusCode _feedIt 
     ( LoKi::MCMatchObj* object    , 
       const Addresses&  addresses ) const ;
+    // ========================================================================    
   private:
+    // ========================================================================    
     // the actual storage of selected MC-particles
     LoKi::MCTypes::MCSelected  m_mcselected  ; ///< the actual storage of MC-particles
+    // ========================================================================    
     // the actual storage of selected MC-vertices
     LoKi::MCTypes::MCVSelected m_mcvselected ; ///< the actual storage of MC-vertices
+    // ========================================================================    
     // the actual storage of selected HepMC-particles
     LoKi::GenTypes::GenSelected  m_genselected  ; ///< the actual storage of HepMC-particles
     // the actual storage of selected HepMC-vertices
+    // ========================================================================    
     LoKi::GenTypes::GenVSelected m_genvselected ; ///< the actual storage of HepMC-vertices
-    //
+    // ========================================================================    
     // collection  of MCFinder objects
     typedef GaudiUtils::HashMap<std::string,LoKi::MCFinderObj*> MCfinders ;
     mutable MCfinders  m_mcfinders   ;
+    // ========================================================================    
     // collection  of IMCDecayFinder objects
     typedef GaudiUtils::HashMap<std::string,IMCDecayFinder*>    IMCfinders ;
     mutable IMCfinders m_imcfinders  ;
+    // ========================================================================    
     // collection of LoKi::MCMatchObj objects 
     typedef GaudiUtils::HashMap<std::string,LoKi::MCMatchObj*>  MCmatchers ;
     mutable MCmatchers m_mcmatchers  ;
-    //
+    // ========================================================================    
     Addresses    m_P2MC   ;
     Addresses    m_P2MCW  ;
     Addresses    m_PP2MC  ;
     Addresses    m_T2MC   ;
     Addresses    m_T2MCW  ;
-    ///
+    // ========================================================================    
     std::string                  m_mc2collisionName ;
     mutable const IMC2Collision* m_mc2collision     ;
-    // 
+    // ========================================================================    
     std::string                  m_hepmc2mcName     ;
     mutable const IHepMC2MC*     m_hepmc2mc         ;
-    //
+    // ========================================================================    
     std::string                  m_pv2mcName        ;
     mutable const IPV2MC*        m_pv2mc            ;
-    //
+    // ========================================================================    
     bool                         m_disableMCMatch   ;
   } ;
-  //
-} ; /// end of namespace LoKi ;
+} // end of namespace LoKi ;
 // ============================================================================
-/// helper fuction to feed LoKi::MCMatchObj object with the data 
+// helper fuction to feed LoKi::MCMatchObj object with the data 
 // ============================================================================
 template <class TABLE>
 inline StatusCode 
@@ -793,8 +816,7 @@ LoKi::AlgoMC::_feedIt
     object -> addMatchInfo ( table ) ;
   } ;
   return StatusCode::SUCCESS ;
-};
-
+}
 // ============================================================================
 /** @def LOKI_MCALGORITHM_BODY 
  *
