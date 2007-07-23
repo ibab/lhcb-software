@@ -45,6 +45,6 @@ HltSelChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.EvtMax = 100 ;
+ApplicationMgr.EvtMax = 500 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 1 ;

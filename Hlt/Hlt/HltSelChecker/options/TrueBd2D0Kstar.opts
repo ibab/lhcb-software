@@ -10,14 +10,14 @@
 // Truth filter for Bd -> D0K*
 //
 SeqHltTruthFilter.Members += { "PrintMCTree"};
-PrintMCTree.ParticleNames = { "B0", "B~0" } ;
+//PrintMCTree.ParticleNames = { "B0", "B~0" } ;
 SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBd2D0Kstar"};
 SelectTrueBd2D0Kstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
 SelectTrueBd2D0Kstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2D0Kstar",
                                             "pi+ : TrueMCFilterCriterion/Bd2D0Kstar"} ;
 
 SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.MCDecayFinder.Decay = "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
-SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
+// SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
 //
 // Overwrite Shared K* input
 //
