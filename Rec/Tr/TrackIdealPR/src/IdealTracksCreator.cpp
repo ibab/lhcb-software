@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.38 2007-06-27 15:14:35 mneedham Exp $
+// $Id: IdealTracksCreator.cpp,v 1.39 2007-07-23 11:34:01 spozzi Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -576,9 +576,16 @@ StatusCode IdealTracksCreator::addMuonHits( const MCParticle* mcPart,
           Warning( "Failed to calculate ref. info. for VeloMeasurement" );
 	}
         track->addToMeasurements(*meas);
-          delete meas;		         
-	}
-      } // add  measurements	
+	delete meas;
+	
+	const bool localY(true) ;
+	meas = m_measProvider->measurement(id,localY);
+	if ( sc.isSuccess()) 
+	  meas->setRefVector( tempState.parameters());
+	track->addToMeasurements(*meas);
+	delete meas;
+      }
+    } // add  measurements	
     aCluster = m_muonLinker.next();
   }  // while
  
