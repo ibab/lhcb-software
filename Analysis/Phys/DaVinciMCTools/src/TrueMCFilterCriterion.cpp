@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.19 2007-07-24 11:47:14 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.20 2007-07-24 19:49:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,7 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   declareProperty( "VetoSignal", m_filterOut = false );
   declareProperty( "ParticlePath", m_particlePaths );
   declareProperty( "MCParticlePath", m_mcParticlePath = LHCb::MCParticleLocation::Default);
+  declareProperty( "ExpectSignal", m_complain = false );
   m_decayMembers.clear();
 }
 //=============================================================================
@@ -119,7 +120,7 @@ bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
 //=========================================================================
 bool TrueMCFilterCriterion::preloadMCParticles ( ) {
   // MC list
-  const LHCb::MCParticles* kmcparts = get<LHCb::MCParticles>( m_mcParticlePath );
+  const LHCb::MCParticle::Container* kmcparts = get<LHCb::MCParticle::Container>( m_mcParticlePath );
   if( !kmcparts ){
     fatal() << "Unable to find MC particles at '" << m_mcParticlePath << "'" << endmsg;
     return false;
@@ -137,6 +138,7 @@ bool TrueMCFilterCriterion::preloadMCParticles ( ) {
                                         << imc->particleID().pid() << endmsg ;
       MCHead.push_back(imc);
     }
+    if (m_complain && MCHead.empty()) warning() << "Expected decay not found in this event" << endmsg ;
     LHCb::MCParticle::ConstVector::const_iterator ihead;
     for( ihead = MCHead.begin(); ihead != MCHead.end(); ++ihead){
       const LHCb::MCParticle* mc = *ihead;

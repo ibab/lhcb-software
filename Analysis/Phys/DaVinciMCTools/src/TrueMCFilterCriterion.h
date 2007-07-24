@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.h,v 1.10 2007-07-24 11:47:14 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.11 2007-07-24 19:49:12 pkoppenb Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
@@ -50,9 +50,10 @@ private:
   std::vector<std::string> m_particlePaths;  ///< paths of particles
   std::string m_mcParticlePath ; ///< path of MC particles
   
-  const LHCb::MCParticles* m_mcParticles ; ///< pointer to MC particles
+  const LHCb::MCParticle::Container* m_mcParticles ; ///< pointer to MC particles
   LHCb::MCParticle::Vector m_decayMembers ; ///< list of decay members in this decay
-  int m_eventCount ; ///< Count bthe number of new events
-
+  int m_eventCount ; ///< Count the number of new events
+  bool m_complain ;  ///< Complain about events without MC truth (i.e. for signal)
+  
 };
 #endif // TRUEMCFILTERCRITERION_H
