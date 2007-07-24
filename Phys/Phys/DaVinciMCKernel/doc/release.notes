@@ -4,6 +4,8 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r2 2007-07-24 =====================
+
 ! 2007-07-24 - Juan Palacios
  - Add interfaces IFilterMCParticles and IMCParticleArrayFilter.
  - Add skeleton implementation FilterMCParticlesBase
