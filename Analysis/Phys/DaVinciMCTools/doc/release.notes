@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.170 2007-07-17 12:49:56 pkoppenb Exp $
+! $Id: release.notes,v 1.171 2007-07-24 11:47:13 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-24 - Patrick Koppenburg
+ - TrueMCFilterCiterion: Call MCDecayFinder only once per event and not
+   once per Particle. Store temporary information. Gains a factor O(10) in timing
+   for simple decay descriptors. More for complex ones.
+   Also added the possibility no give non-standard MCParticle location as input.
 
 ! 2007-07-17 - Patrick Koppenburg
  - Removed _load file
