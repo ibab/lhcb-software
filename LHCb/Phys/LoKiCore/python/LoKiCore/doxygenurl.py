@@ -96,7 +96,7 @@ def _namspDoxName ( klassname ) :
 # =============================================================================
 ## Helper method to loop over projects and find the proper pages
 # =============================================================================
-def _getURL ( klass , dox , projects ) :
+def _getURL ( klass , dox , projects , latest = False ) :
     """
     Helper method to loop over projects and find the proper pages
     """ 
@@ -108,7 +108,10 @@ def _getURL ( klass , dox , projects ) :
             if httpExists( url ) : return url                ## RETURN 
         else :
             version = _projVersion ( project )
-            if not version : continue 
+            if not version :
+                if not latest : continue                  ## continue 
+                ## try to use the latest version 
+                version = 'latest'
             if 'GAUDI' == project : url = _GAUDIURL %(version,dox)
             else                  : url = _LHCBURL  %(project.lower(),version,dox)
             if httpExists ( url ) : return url               ## RETURN            
@@ -116,13 +119,20 @@ def _getURL ( klass , dox , projects ) :
 # =============================================================================
 ## get the URL with proper Doxygen documentation for the object
 # =============================================================================
-def getURL ( o , projects = None ) :
+def getURL ( o , projects = None , latest = False ) :
     """
     Get the URL with the proper Doxygen documentation for the object/class
+    
     The object could be:
+    
     - type or namespace name (string)
-    - the type
-    - the instance 
+    - the type (including the templated type)
+    - the namespace 
+    - the instance
+
+    It tries to get the projecc version from the current environment.
+    For 'latest=True', it also tries 'the latest' releases
+    
     """
     if not projects : projects = _PROJECTS
         
@@ -145,22 +155,22 @@ def getURL ( o , projects = None ) :
     ## transform it into doxygen file name
     dox = _classDoxName ( klass )
     ## loop over all projects
-    url = _getURL ( klass , dox , projects )
+    url = _getURL ( klass , dox , projects , latest  )
     if not url :  ## is it namespace ?
         from PyCintex import gbl
         if type(o) is gbl.PyRootType and not type(o.__init__) is gbl.MethodProxy :
             ## it is namespace !!!
             dox = _namspDoxName ( klass )
-            url = _getURL ( klass , dox , projects )
+            url = _getURL ( klass , dox , projects , latest )
     return url 
 # =============================================================================
 ## browse the doxygen documentation for the class/object
-def browse ( o , projects = None ) :
+def browse ( o , projects = None , latest = False ) :
     """
     Browse the doxygen documentation for the class/object
     """
     ## find the proper URL 
-    url = getURL ( o , projects )
+    url = getURL ( o , projects , latest )
     if not url : return None                                 ## RETURN
     import webbrowser
     print 'Trying to open URL=%s'%url 
