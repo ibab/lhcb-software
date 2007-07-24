@@ -4,7 +4,9 @@
   <class name = "IBackgroundCategory"/>
   <class name = "ICheatedLifetimeFitter"/>
   <class name = "IDebugTool"/>
+  <class name = "IFilterMCParticles"/>
   <class name = "IHepMC2MC"/>
+  <class name = "IParticleArrayFilter"/>
   <class name = "IMC2Collision"/>
   <class name = "IPV2MC"/>
 

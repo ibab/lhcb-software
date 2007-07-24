@@ -4,6 +4,14 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2007-07-24 - Juan Palacios
+ - Add interfaces IFilterMCParticles and IMCParticleArrayFilter.
+ - Add skeleton implementation FilterMCParticlesBase
+ - cmt/requirements
+   . Increase version to v2r2
+ - dict/DaVinciMCKernel.h, DavinciMCKernel.xml
+   . Add interfaces IFilterMCParticles and IMCParticleArrayFilter 
+     to dictionary.
 !====================== DaVinciMCKernel v2r1 2007-03-02 =====================
 ! 2007-03-02 - Marco Cattaneo
  - Add dictionary for all interfaces (previously in PhysDict)
