@@ -1,4 +1,4 @@
-// $Id: IParticleArrayFilter.h,v 1.1 2007-07-24 12:20:33 jpalac Exp $
+// $Id: IParticleArrayFilter.h,v 1.2 2007-07-24 12:40:15 jpalac Exp $
 #ifndef KERNEL_IPARTICLEARRAYFILTER_H 
 #define KERNEL_IPARTICLEARRAYFILTER_H 1
 
@@ -31,7 +31,7 @@ public:
   virtual StatusCode filter( const LHCb::Particle::ConstVector&, 
                              LHCb::Particle::ConstVector& ) const = 0;
   /// Filter and remove elements that do not pass filter from array
-  virtual StatusCode filter( LHCb::Particle::ConstVector&,) const = 0;
+  virtual StatusCode filter( LHCb::Particle::ConstVector& ) const = 0;
 
 
 
