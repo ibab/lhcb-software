@@ -1,4 +1,4 @@
-// $Id: AKinematics.h,v 1.1.1.1 2007-06-15 08:04:18 ibelyaev Exp $
+// $Id: AKinematics.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AKINEMATICS_H 
 #define LOKI_AKINEMATICS_H 1
@@ -42,7 +42,7 @@ namespace LoKi
       if ( 0 == child                ) { return LoKi::LorentzVector() ; }
       // get the final result:
       return child->momentum () ;
-    };
+    }
     // ========================================================================
     /** get the four momentum of the 2-particle sub-combination
      *  form the combination
@@ -89,7 +89,7 @@ namespace LoKi
         momentum ( comb , index2 , index3 ) ;
     }
     // ========================================================================
-    /** get the four momentum of the 3-particle sub-combination
+    /** get the four momentum of the 4-particle sub-combination
      *  form the combination
      *  @attention All indices starts from one. Zero corresponds to the 
      *              whole combination!

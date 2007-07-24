@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctors.h,v 1.1.1.1 2007-06-15 08:04:18 ibelyaev Exp $
+// $Id: LoKiArrayFunctors.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIEXHLT_H 
 #define LOKI_LOKIEXHLT_H 1
@@ -7,9 +7,12 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/MoreFunctions.h"
 #include "LoKi/ATypes.h"
-#include "LoKi/AParticles.h"
+#include "LoKi/AChild.h"
 #include "LoKi/AKinematics.h"
+#include "LoKi/AParticles.h"
+#include "LoKi/AParticleCuts.h"
 // ============================================================================
 // The END 
 // ============================================================================

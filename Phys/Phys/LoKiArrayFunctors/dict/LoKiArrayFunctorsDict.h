@@ -1,7 +1,7 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.1.1.1 2007-06-15 08:04:18 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_LOKICOREDICT_H 
-#define LOKI_LOKICOREDICT_H 1
+#ifndef LOKI_LOKIARRAYDICT_H 
+#define LOKI_LOKIARRAYDICT_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -11,9 +11,12 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKiArrayFunctors.h"
-// ============================================================================
+#include "LoKi/MoreFunctions.h"
 #include "LoKi/Dicts.h"
+// ============================================================================
+#include "LoKi/ATypes.h"
+#include "LoKi/LoKiArrayFunctors.h"
+#include "LoKi/AMoniDicts.h"
 // ============================================================================
 namespace LoKi
 {
@@ -46,6 +49,8 @@ namespace
 {
   struct _Instantiations 
   {
+     /// fictive constructor 
+    _Instantiations () ;
     // the basic functions 
     LoKi::Dicts::Funcs<LoKi::ATypes::Combination>          m_f1 ;
     // operators 
@@ -53,14 +58,17 @@ namespace
     /// mathematics:
     LoKi::Dicts::FunCalls<LoKi::ATypes::Combination>       m_c1 ;
     LoKi::Dicts::CutCalls<LoKi::ATypes::Combination>       m_c2 ;
-    /// mathematics:
-    LoKi::Dicts::Maths<LoKi::ATypes::Combination>          m_m1 ;   
-    /// fictive constructor 
-    _Instantiations () ;
+    //
+    LoKi::Monitoring::Counter<LoKi::ATypes::Combination>   m_m1 ;
+    LoKi::Monitoring::Stat<LoKi::ATypes::Combination>      m_m2 ;
+    LoKi::Monitoring::Plot<LoKi::ATypes::Combination>      m_m3 ;
+    //
+    LoKi::Switch<LoKi::ATypes::Combination>                m_s1 ;
+    LoKi::SimpleSwitch<LoKi::ATypes::Combination>          m_s2 ;
   } ;  
 }
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_LOKICOREDICT_H
+#endif // LOKI_LOKIARRAYDICT_H
 // ============================================================================
