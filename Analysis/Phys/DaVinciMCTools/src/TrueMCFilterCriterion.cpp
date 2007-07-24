@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.20 2007-07-24 19:49:12 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.21 2007-07-24 19:58:59 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   , m_pLinker(0)
   , m_mcParticles(0)
   , m_eventCount(0)
+  , m_foundDecay(0)
 {
   declareInterface<IFilterCriterion>(this);
   declareProperty( "VetoSignal", m_filterOut = false );
@@ -138,7 +139,9 @@ bool TrueMCFilterCriterion::preloadMCParticles ( ) {
                                         << imc->particleID().pid() << endmsg ;
       MCHead.push_back(imc);
     }
-    if (m_complain && MCHead.empty()) warning() << "Expected decay not found in this event" << endmsg ;
+    if (MCHead.empty()) {
+      if (m_complain)  warning() << "Expected decay not found in this event" << endmsg ;
+    } else m_foundDecay++ ;
     LHCb::MCParticle::ConstVector::const_iterator ihead;
     for( ihead = MCHead.begin(); ihead != MCHead.end(); ++ihead){
       const LHCb::MCParticle* mc = *ihead;
@@ -181,7 +184,7 @@ bool TrueMCFilterCriterion::findMCParticle( const LHCb::MCParticle* MC ) {
 StatusCode TrueMCFilterCriterion::finalize(){
   
   if( NULL != m_pLinker ) delete m_pLinker;
-  always() << "Tested " << m_eventCount << " events" << endmsg ;
+  always() << "Tested " << m_eventCount << " events of which " << m_foundDecay << " contained the decay" << endmsg ;
   return GaudiTool::finalize() ;
   
 }
