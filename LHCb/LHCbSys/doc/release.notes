@@ -5,12 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r8>2007-07-23 LHCbSys v22r8</A></H1><PRE>
+</PRE><H1><A NAME=v22r8>2007-07-24 LHCbSys v22r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - Packages modified: GaudiObjDesc v10r2, DetSys v9r8, CaloDet v8r3, OTDet v7r5,
     STDet v3r5, VeloDet v12r0, TrackInterfaces v3r7, CaloInterfaces v7r4,
-    CaloUtils v7r4, DaVinciKernel v6r5
+    CaloUtils v7r4, DaVinciKernel v6r5, DaVinciMCKernel v2r2
 
 - In GaudiObjDesc v10r2
   . Apply (Gaudi) Savannah patch 1230 to improve namespace handling:
@@ -63,7 +63,12 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     Track/Part to Calo. CaloElectron tool updated accordingly
 
 - In DaVinciKernel v6r5
-  . Add interface IFilterParticles and base class FilterParticlesBase.
+  . Add interfaces IFilterParticles and IParticleArrayFilter, and base class
+    FilterParticlesBase.
+
+- In DaVinciMCKernel v2r2
+  . Add interfaces IFilterMCParticles and IMCParticleArrayFilter.
+  . Add skeleton implementation FilterMCParticlesBase
 
 - In OTDet v7r5, CaloDet v8r3
   . Fix doxygen warnings
