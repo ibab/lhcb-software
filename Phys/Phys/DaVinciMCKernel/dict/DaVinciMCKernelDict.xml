@@ -6,7 +6,7 @@
   <class name = "IDebugTool"/>
   <class name = "IFilterMCParticles"/>
   <class name = "IHepMC2MC"/>
-  <class name = "IParticleArrayFilter"/>
+  <class name = "IMCParticleArrayFilter"/>
   <class name = "IMC2Collision"/>
   <class name = "IPV2MC"/>
 
