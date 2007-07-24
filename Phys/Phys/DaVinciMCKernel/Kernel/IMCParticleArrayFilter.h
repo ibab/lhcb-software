@@ -1,4 +1,4 @@
-// $Id: IMCParticleArrayFilter.h,v 1.1 2007-07-24 12:10:00 jpalac Exp $
+// $Id: IMCParticleArrayFilter.h,v 1.2 2007-07-24 12:38:25 jpalac Exp $
 #ifndef KERNEL_IMCPARTICLEARRAYFILTER_H 
 #define KERNEL_IMCPARTICLEARRAYFILTER_H 1
 
@@ -30,7 +30,7 @@ public:
   virtual StatusCode filter( const LHCb::MCParticle::ConstVector&, 
                              LHCb::MCParticle::ConstVector& ) const = 0;
   /// Filter and remove elements that do not pass filter from array
-  virtual StatusCode filter( LHCb::MCParticle::ConstVector&,) const = 0;
+  virtual StatusCode filter( LHCb::MCParticle::ConstVector& ) const = 0;
 
 
 
