@@ -11,6 +11,7 @@
 //
 #include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
 HltExclusiveCorrs.Algorithms += { "PreselHeavyDimuon" };
+PtintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // Hlt test
 //

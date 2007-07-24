@@ -9,13 +9,16 @@
 //
 // Truth filter for Bd -> MuMuK*
 //
+//SeqHltTruthFilter.Members += { "PrintMCTree"}; 
+PrintMCTree.ParticleNames = { "B+", "B-" } ;
 SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBu2LLK"};
 SelectTrueBu2LLK.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltMuons", "Phys/HltElectrons" } ;
 SelectTrueBu2LLK.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bu2LLK",
                                         "e+ : TrueMCFilterCriterion/Bu2LLK",
                                         "mu+ : TrueMCFilterCriterion/Bu2LLK"} ;
 
-SelectTrueBu2LLK.Filter.Bu2LLK.MCDecayFinder.Decay = "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}]cc}" ;
+SelectTrueBu2LLK.Filter.Bu2LLK.MCDecayFinder.Decay = "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}" ;
+SelectTrueBu2LLK.Filter.Bu2LLK.ExpectSignal = true ;
 //
 // Overwrite Shared electron input
 //
