@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.172 2007-07-24 19:49:12 pkoppenb Exp $
+! $Id: release.notes,v 1.173 2007-07-25 14:37:12 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-07-25 - Juan Palacios
+ - Add FilterMCParticleArrayByDecay
+   . An implementation of IMCParticleArrayFilter that uses a 
+     decay descriptor to select MCParticles coming from a decay 
+     from within an array of MCParticles.
+   . First implementation, incomplete, untested, and lacking in 
+     doxygen documentation.
+
 
 ! 2007-07-24 - Patrick Koppenburg
  - TrueMCFilterCiterion: Call MCDecayFinder only once per event and not
