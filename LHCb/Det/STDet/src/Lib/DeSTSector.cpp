@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.29 2007-07-23 09:34:18 wouter Exp $
+// $Id: DeSTSector.cpp,v 1.30 2007-07-25 11:18:19 wouter Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -311,10 +311,18 @@ StatusCode DeSTSector::cacheInfo()
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_thickness));
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_thickness));
 
-  // For creating the 'fast' trajectories
-  m_vectorLayer   = (g4-g3).unit() * m_pitch ;
-  m_vectorStrip   = m_direction * m_stripLength ;
-  m_positionLayer = g3-0.5*m_vectorStrip ;
+  // For creating the 'fast' trajectories  
+  Gaudi::XYZVector vectorlayer = (g4-g3).unit() * m_pitch ;
+  Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*m_direction ;
+  m_dxdy = m_direction.x()/m_direction.y() ;
+  m_dzdy = m_direction.z()/m_direction.y() ;
+  m_dy   = m_stripLength * m_direction.y() ;
+  m_dp0di.SetX( vectorlayer.x() - vectorlayer.y() * m_dxdy ) ;
+  m_dp0di.SetY( vectorlayer.y()  ) ;
+  m_dp0di.SetZ( vectorlayer.z() - vectorlayer.y() * m_dzdy ) ;
+  m_p0.SetX( p0.x() - p0.y() * m_dxdy ) ;
+  m_p0.SetY( p0.y() ) ;
+  m_p0.SetZ( p0.z() - p0.y() * m_dzdy ) ;
   
   // Update the stereo angle. We correct by 'pi' if necessary.
   Gaudi::XYZVector dir = m_direction ;

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.18 2007-07-23 09:34:18 wouter Exp $
+// $Id: DeSTSector.h,v 1.19 2007-07-25 11:18:19 wouter Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -104,9 +104,10 @@ public:
   */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
-  /** create an xyzline for a strip*/
-  Gaudi::XYZLineF lineTrajectory(unsigned int strip, float offset) const ;
-
+  /** Trajectory parameterized along y-axis */
+  void trajectory(unsigned int strip, float offset, float& dxdy, float& dzdy, 
+		  float& xAtYEq0, float& zAtYEq0, float& ybegin, float& yend) const ;
+  
   /** plane corresponding to the sector 
   * @return the plane 
   */
@@ -251,9 +252,11 @@ private:
   std::vector<double> m_deadRegions;
   std::string m_type;
 
-  Gaudi::XYZVectorF m_vectorLayer ;
-  Gaudi::XYZPointF  m_positionLayer ;
-  Gaudi::XYZVectorF m_vectorStrip ; 
+  float m_dxdy ;
+  float m_dzdy ;
+  float m_dy ;
+  Gaudi::XYZVectorF m_dp0di ;
+  Gaudi::XYZPointF  m_p0 ;
   double m_angle ;
   double m_cosAngle ;
   double m_sinAngle ;
@@ -324,9 +327,19 @@ inline double DeSTSector::cosAngle() const {
   return m_cosAngle;
 }
 
-inline Gaudi::XYZLineF DeSTSector::lineTrajectory(unsigned int strip,float offset ) const {
+inline void DeSTSector::trajectory(unsigned int strip,
+				   float offset,
+				   float& dxdy, float& dzdy, 
+				   float& xAtYEq0, float& zAtYEq0, 
+				   float& ybegin, float& yend) const
+{
   float numstrips = offset + strip - m_firstStrip ;
-  return Gaudi::XYZLineF( m_positionLayer + numstrips * m_vectorLayer, m_vectorStrip ) ;
+  dxdy    = m_dxdy ;
+  dzdy    = m_dzdy ;
+  xAtYEq0 = m_p0.x() + numstrips * m_dp0di.x() ;
+  zAtYEq0 = m_p0.z() + numstrips * m_dp0di.z() ;
+  ybegin  = m_p0.y() + numstrips * m_dp0di.y() ;
+  yend    = ybegin + m_dy ;
 }
 
 /** ouput operator for class DeSTSector
