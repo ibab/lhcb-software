@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.9 2007-07-23 17:07:44 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.10 2007-07-25 15:14:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -8,7 +8,7 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IalgContextSvc.h"
+#include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================

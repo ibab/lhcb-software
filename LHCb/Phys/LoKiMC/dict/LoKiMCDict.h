@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.4 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.5 2007-07-25 15:16:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -17,6 +17,9 @@
 #include "LoKi/MCAlgsDicts.h"
 #include "LoKi/MCMoniDicts.h"
 #include "LoKi/MCFinderDicts.h"
+// ============================================================================
+#include "LoKi/IMCHybridTool.h"
+#include "LoKi/MCHybridEngine.h"
 // ============================================================================
 namespace
 {

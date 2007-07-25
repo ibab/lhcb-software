@@ -1,4 +1,4 @@
-// $Id: Info.h,v 1.1 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Info.h,v 1.2 2007-07-25 15:14:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INFO_H 
 #define LOKI_INFO_H 1
@@ -291,7 +291,7 @@ namespace LoKi
     inline void 
     addInfo ( const TYPE& object , const int key , const double value  ) 
     {
-      addInfo ( vmap.extraInfo() , key , val ) ;  
+      addInfo ( object.extraInfo() , key , value ) ;  
     }
     // ========================================================================
     /** set/update the info of "extraInfo" object:
@@ -316,7 +316,7 @@ namespace LoKi
     addInfo ( const TYPE* object , const int key , const double value  ) 
     {
       assert( 0 != object && "LoKi::Info::addInfo: invalid pointer " ) ;
-      if ( 0 != object ) { addInfo ( *object , key , val ) ; }
+      if ( 0 != object ) { addInfo ( *object , key , value ) ; }
     }
   } // end of namespace LoKi::Info
 } // end of namespace LoKi

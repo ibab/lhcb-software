@@ -1,4 +1,4 @@
-// $Id: LoKiMC.cpp,v 1.6 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: LoKiMC.cpp,v 1.7 2007-07-25 15:16:07 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +15,11 @@
 // LoKiMC
 // ============================================================================
 #include "LoKi/LoKiMC.h"
+#include "LoKi/IMCHybridTool.h"
+#include "LoKi/IMCHybridFactory.h"
+#include "LoKi/MCHybridLock.h"
+#include "LoKi/MCHybridEngine.h"
+#include "LoKi/MCHybridEngineActor.h"
 // ============================================================================
 /** @file
  *

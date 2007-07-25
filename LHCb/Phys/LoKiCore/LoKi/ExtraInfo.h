@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.1 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.2 2007-07-25 15:14:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -44,7 +44,8 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  GetInfo* clone() const { return new GetInfo(*this); }
       /// MANDATORY: the only one essential method
-      virtual result_type operator() ( argument a )  const
+      virtual typename LoKi::Function<TYPE>::result_type operator() 
+      ( typename LoKi::Function<TYPE>::argument a )  const
       { return LoKi::ExtraInfo::info ( a , m_index , m_default ) ; }
       /** OPTIONAL: the nice printout 
        *  @attention: it is worth to redefine it for each type
@@ -91,7 +92,8 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  CheckInfo* clone() const { return new CheckInfo (*this); }
       /// MANDATORY: the only one essential method
-      virtual result_type operator() ( argument a )  const
+      virtual typename LoKi::Predicate<TYPE>::result_type operator() 
+      ( typename LoKi::Predicate<TYPE>::argument a )  const
       { return LoKi::ExtraInfo::hasInfo ( a , m_index ) ; }
       /** OPTIONAL: the nice printout 
        *  @attention: it is worth to redefine for each type
@@ -99,7 +101,7 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s <<  this->objType() << "(" << m_index << ")" ; }
     private:
-      // the default contructot is disabled 
+      // the default contructor is disabled 
       CheckInfo() ; ///< the default contructor is disabled
     public:
       /// get the index 

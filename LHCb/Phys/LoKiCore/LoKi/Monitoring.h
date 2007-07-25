@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.1 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Monitoring.h,v 1.2 2007-07-25 15:14:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1
@@ -77,9 +77,10 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Counter* clone() const { return new Counter(*this); }
       /// MANDATORY: the only one essential method:
-      virtual result_type operator() ( argument a ) const 
+      virtual typename LoKi::Predicate<TYPE>::result_type operator() 
+      ( typename LoKi::Predicate<TYPE>::argument a ) const 
       {
-        const result_type result = m_cut ( a ) ;
+        const typename LoKi::Predicate<TYPE>::result_type result = m_cut ( a ) ;
         // perform monitoring
         if ( 0 != m_stat ){ (*m_stat) += result ; } ///< perform monitoring
         return result ;                                           // RETURN 
@@ -144,9 +145,10 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Stat* clone() const { return new Stat(*this); }
       /// MANDATORY: the only one essential method:
-      virtual result_type operator() ( argument a ) const 
+      virtual typename LoKi::Function<TYPE>::result_type operator() 
+      ( typename LoKi::Function<TYPE>::argument a ) const 
       {
-        const result_type result = m_fun ( a ) ;
+        const typename LoKi::Function<TYPE>::result_type result = m_fun ( a ) ;
         // perform monitoring
         if ( 0 != m_stat ){ (*m_stat) += result ; } ///< perform monitoring
         return result ;
@@ -212,9 +214,10 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Plot* clone() const { return new Plot(*this); }
       /// MANDATORY: the only one essential method:
-      virtual result_type operator() ( argument a ) const 
+      virtual typename LoKi::Function<TYPE>::result_type operator() 
+      ( typename LoKi::Function<TYPE>::argument a ) const 
       {
-        const result_type result = m_fun ( a ) ;
+        const typename LoKi::Function<TYPE>::result_type result = m_fun ( a ) ;
         // perform monitoring
         if ( 0 != m_histo ) { m_histo->fill ( result ) ;  } ///< perform monitoring
         return result ;

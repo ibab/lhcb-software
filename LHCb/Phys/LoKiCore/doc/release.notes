@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2007-07-23 17:07:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.54 2007-07-25 15:14:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-25 - Vanya BELYAEV
+ - few minor fixes due to Liniux ocmpiler 
+ - move the "hybrid" stuff from LoKiHybridBase 
+
 
 ! 2007-07-23 - Vanya BELYAEV 
   - many fixes and reshufling of the code 
@@ -362,6 +367,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.53  2007/07/23 17:07:42  ibelyaev
+!  v3r1: minor update + fixes fro Doxygen
+!
 ! Revision 1.52  2007/06/27 14:09:40  ibelyaev
 !  minor changes to allow compilation of Reflex dictionaries at Win32
 !
