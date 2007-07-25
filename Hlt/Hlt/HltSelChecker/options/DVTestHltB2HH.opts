@@ -43,28 +43,9 @@ HltSelChecker.Context = "HLT" ;
 HltSelChecker.DoPrint = false ;
 OfflineChecker.OutputLevel = 3 ;
 OfflineChecker.DoPrint = false ;
-
 /*
-ApplicationMgr.TopAlg += { "HltRecChecker" };
-HltRecChecker.InputTracksName = "Hlt/Track/Forward" ;
-//HltRecChecker.OutputLevel = 2 ;
-
-ApplicationMgr.TopAlg += { "HltRecChecker/HltRecCheckerVelo" };
-HltRecCheckerVelo.InputTracksName = "Hlt/Track/Velo" ;
-//HltRecCheckerVelo.OutputLevel = 2 ;
-*/
-
-ApplicationMgr.EvtMax = -1 ;
-EventSelector.FirstEvent = 1 ;
-/*
-HltRecoVelo.OutputLevel = 1 ;
-PatHltRecoVelo.OutputLevel = 1 ;
-ToolSvc.PatVeloTrackTool.OutputLevel = 1 ;
-PatHadSingleTRVelo.OutputLevel = 1 ;
-*/
-// 0.00381935 <- 0.0030553 
-// 0.000173233
-
+ *  Something about all pi
+ */
 ApplicationMgr.TopAlg += { "HltSelChecker/PionsChecker" };
 PionsChecker.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
 PionsChecker.GeomTools = { "" : "TrgDispCalculator" };
@@ -72,6 +53,7 @@ PionsChecker.GeomTools = { "" : "TrgDispCalculator" };
 ApplicationMgr.TopAlg += { "HltSelChecker/PionsOffChecker" };
 PionsOffChecker.PhysDesktop.InputLocations = { "Phys/StdLoosePions" } ;
 
-// SeqHltCharged.Members -= { "HltInsertTrackErrParam"} ;
-//HltInsertTrackErrParam.OutputLevel = 1 ;
-//PionsChecker.OutputLevel = 1 ;
+
+ApplicationMgr.EvtMax = -1 ;
+EventSelector.FirstEvent = 1 ;
+

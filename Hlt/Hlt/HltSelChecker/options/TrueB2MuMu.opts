@@ -13,7 +13,8 @@ SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueB2MuMu"};
 SelectTrueB2MuMu.PhysDesktop.InputLocations = { "Phys/HltMuons" } ;
 SelectTrueB2MuMu.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/B2MuMu"} ;
 
-SelectTrueB2MuMu.Filter.B2MuMu.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> ^mu+ ^mu- {,gamma} {,gamma}" ;
+SelectTrueB2MuMu.Filter.B2MuMu.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}" ;
+SelectTrueB2MuMu.Filter.B2MuMu.ExpectSignal = true ;
 //
 // Overwrite Shared dimuon input
 //

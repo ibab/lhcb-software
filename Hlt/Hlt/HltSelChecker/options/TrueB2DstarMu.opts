@@ -18,7 +18,8 @@ SelectTrueB2DstarMu.Filter.Selections =  { "K+ : TrueMCFilterCriterion/B2DstarMu
                                           "pi+ : TrueMCFilterCriterion/B2DstarMu",
                                            "mu+ : TrueMCFilterCriterion/B2DstarMu"} ;
 // this one see,s to work
-SelectTrueB2DstarMu.Filter.B2DstarMu.MCDecayFinder.Decay = "{[[B0]nos -> nu_mu ^mu+ {,gamma} (D*(2010)- -> ^pi- {,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma} (D*(2010)- -> ^pi- {,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau (tau+ -> ^mu+ nu_mu nu_tau~ {, gamma}) {,gamma} (D*(2010)- -> ^pi- {,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}) {,gamma} (D*(2010)- -> ^pi- {,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma})) ...]cc}" ;
+SelectTrueB2DstarMu.Filter.B2DstarMu.MCDecayFinder.Decay = "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
+SelectTrueB2DstarMu.Filter.B2DstarMu.ExpectSignal = true ;
 
 //SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
 //

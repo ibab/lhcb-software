@@ -16,7 +16,9 @@ SelectTrueBd2D0Kstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys
 SelectTrueBd2D0Kstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2D0Kstar",
                                             "pi+ : TrueMCFilterCriterion/Bd2D0Kstar"} ;
 
-SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.MCDecayFinder.Decay = "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi-) {,gamma}{,gamma}]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
+SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.MCDecayFinder.Decay = "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
+SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.ExpectSignal = true ;
+
 // SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
 //
 // Overwrite Shared K* input

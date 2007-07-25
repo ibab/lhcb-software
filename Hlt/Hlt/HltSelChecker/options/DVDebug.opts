@@ -1,0 +1,19 @@
+/** @file DVDebug.opts
+ *  
+ *  Generic options for debugging
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-25
+ */
+//--------------------------------------------------------------
+
+SeqHltTruthFilter.Members += { "PrintMCTree"};
+PrintMCTree.ParticleNames = { "B0", "B~0" } ;   // edit for other types
+/*
+ * type - change here
+ */
+#include "$HLTSELCHECKERROOT/options/DVTestHltB2HH.opts"
+// events to debug
+ApplicationMgr.EvtMax = 10 ;
+EventSelector.FirstEvent = 100 ;
+

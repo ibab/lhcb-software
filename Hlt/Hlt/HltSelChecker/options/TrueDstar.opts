@@ -7,7 +7,7 @@
  */
 //--------------------------------------------------------------
 //
-// Truth filter for Bd -> D0K*
+// Truth filter for D* -> D0(hh)pi
 //
 //SeqHltTruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "D*(2010)+", "D*(2010)-" } ;
@@ -16,7 +16,8 @@ SelectTrueDstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltN
 SelectTrueDstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Dstar",
                                        "pi+ : TrueMCFilterCriterion/Dstar"} ;
 
-SelectTrueDstar.Filter.Dstar.MCDecayFinder.Decay = "{[D*(2010)+ -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^pi- {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^pi+ ^pi- {,gamma}{,gamma}) ^pi+  {,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^K- {,gamma}{,gamma}) ^pi+  {,gamma}]cc}" ;
+SelectTrueDstar.Filter.Dstar.MCDecayFinder.Decay = "{[D*(2010)+ -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^K- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc}" ;
+SelectTrueDstar.Filter.Dstar.ExpectSignal = true ;
 
 //SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
 //
