@@ -2,14 +2,14 @@
 {
 
   // load the macros needed
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/Utilities.C+");
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/RichCKResolution.C+");
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/RichTrackResolutions.C+");
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/RichPIDPerformance.C+");
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/RichNCKPhotons.C+");
-  gROOT->ProcessLine(".L $HOME/richRoot/macros/RichMakeAllPlots.C+");
+  gROOT->ProcessLine(".L Utilities.C+");
+  //gROOT->ProcessLine(".L RichCKResolution.C+");
+  //gROOT->ProcessLine(".L RichTrackResolutions.C+");
+  //gROOT->ProcessLine(".L RichPIDPerformance.C+");
+  //gROOT->ProcessLine(".L RichNCKPhotons.C+");
+  //gROOT->ProcessLine(".L RichMakeAllPlots.C+");
 
   // make the plots
-  RICH::performance( "rootFiles/lhcc-NewQE.root", "NewQE", " : 1.15 * DC06 HPD QE" );
+  //RICH::performance( "/usera/jonesc/RICH/fastreco/Offline-AllRads.histos.root", "OffAllRads", "Full Offline : All Radiators" );
 
 }
