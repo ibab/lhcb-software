@@ -14,6 +14,7 @@
 #include "HltBase/ITrackMatch.h"
 #include "HltBase/HltTypes.h"
 #include "HltBase/IHltFunctionFactory.h"
+#include "HltBase/HltFunctions.h"
 
 // struct __Instantiations
 // {

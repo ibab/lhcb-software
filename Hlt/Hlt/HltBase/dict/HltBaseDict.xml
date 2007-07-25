@@ -15,4 +15,6 @@
   <class name = "Hlt::TrackFilter" />
   <class name = "Hlt::VertexFunction" />
   <class name = "Hlt::VertexFilter" />
+  <class name = "Hlt::TrackBiFunction" />
+  <class name = "Hlt::VertexBiFunction" />
 </lcgdict>
