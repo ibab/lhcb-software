@@ -1,0 +1,30 @@
+CaloPhotonChecker.HypoToolType   = "CaloPhotonEstimatorTool"  ;
+CaloPhotonChecker.HypoToolName   = "PhotonPID"                ;
+CaloPhotonChecker.Pdf            = true                       ;
+ 
+ 
+// Ebin Edges :
+CaloPhotonChecker.EBin =
+  {
+    1000.0 ,   2000.0 ,   4000.0 ,   6000.0 ,
+    10000.0 ,  20000.0 ,  40000.0 ,  70000.0 ,
+    100000.0
+  };
+ 
+// Histogram Binning :
+CaloPhotonChecker.EPrsBin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    50.,     0.,   200. // EPrs
+  };
+CaloPhotonChecker.Chi2Bin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    26.,     0.,   104. // Chi2(Tr)
+  };
+CaloPhotonChecker.ShapBin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    50.,     0., 30000.  // Shower Shape
+  };
+ 

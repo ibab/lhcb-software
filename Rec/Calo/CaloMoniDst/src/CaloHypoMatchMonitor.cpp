@@ -1,8 +1,11 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.4 2005-11-07 12:16:38 odescham Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.5 2007-07-25 19:49:12 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:16:38  odescham
+// v2r0 - adapt to the new Track Event Model
+//
 // Revision 1.3  2005/05/13 12:58:35  cattanem
 // fixes for windows
 //
@@ -12,44 +15,31 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// Relations 
+// Relations
 // ============================================================================
-#include   "Relations/IRelationWeighted.h"
+#include "Relations/IRelationWeighted2D.h"
 // ============================================================================
-// from Gaudi
+// Event
 // ============================================================================
-#include   "GaudiKernel/AlgFactory.h"
-#include   "GaudiKernel/MsgStream.h" 
-#include   "GaudiKernel/IHistogramSvc.h"
+#include "Event/CaloHypo.h"
+#include "Event/Track.h"
 // ============================================================================
-// AIDA 
+// CaloUtils
 // ============================================================================
-#include   "AIDA/IHistogram1D.h"
-// ============================================================================
-// CaloDet 
-// ============================================================================
-#include   "CaloDet/DeCalorimeter.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include   "Event/CaloHypo.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include   "Event/Track.h"
+#include "CaloUtils/Calo2Track.h"
 // ============================================================================
 // local
 // ============================================================================
-#include   "CaloMoniAlg.h"
+#include "CaloMoniAlg.h"
 // ============================================================================
 
 /** @class CaloHypoMatchMonitor CaloHypoMatchMonitor.cpp
- *  
- *  The algorithm for trivial monitoring of matching of 
+ *
+ *  The algorithm for trivial monitoring of matching of
  *  "CaloClusters" with Tracks.
  *  It produces 5 histograms:
  *
- *  <ol> 
+ *  <ol>
  *  <li> @p log10(#Relations+1)  distribution               </li>
  *  <li> Link multiplicity       distribution               </li>
  *  <li> Minimal Weight          distribution               </li>
@@ -57,12 +47,14 @@
  *  <li>         Weight          distribution               </li>
  *  </ol>
  *
- *  Histograms reside in the directory @p /stat/"Name" , where 
+ *  Histograms reside in the directory @p /stat/"Name" , where
  *  @ "Name" is the name of the algorithm
  *
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
+ *  @see   CaloMoniAlg
+ *  @see GaudiHistoAlg
+ *  @see GaudiAlgorithm
+ *  @see      Algorithm
+ *  @see     IAlgorithm
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   02/11/2001
@@ -73,127 +65,79 @@ class CaloHypoMatchMonitor : public CaloMoniAlg
   /// friend factory for instantiation
   friend class AlgFactory<CaloHypoMatchMonitor>;
 public:
-  /// standard algorithm initialization 
+  /// standard algorithm initialization
   virtual StatusCode initialize()
-  {
-    StatusCode sc = CaloMoniAlg::initialize();
-    if ( sc.isFailure() ) { return sc ; }
-    // book the histograms
-    book ( 1 , "log10(#Links+1)  : '" + inputData() + "' " + name() , 
-           0 ,  4 , 100 ) ;
-    // number of relations per hypo
-    book ( 2 , "Rels per Hypo    : '" + inputData() + "' " + name() , 
-           0 ,   25. ,  50 ) ;
-    // minimal weight 
-    book ( 3 , "Min weight       : '" + inputData() + "' " + name() , 
-           0 ,  100. , 200 ) ;
-    // maximal weight 
-    book ( 4 , "Max weight       : '" + inputData() + "' " + name() , 
-           0 , 1000. , 200 ) ;
-    // weights 
-    book ( 5 , "Weights          : '" + inputData() + "' " + name() , 
-           0 , 1000. , 500 ) ;
+  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+    if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
+    std::string common = "'" + inputData() + "' " + name();
+    hBook1( "1", "log10(#Links+1) " + common, 0,    4, 100 );
+    hBook1( "2", "Rels per Hypo   " + common, 0,   25,  50 );
+    hBook1( "3", "Min weight      " + common, 0,  100, 200 );
+    hBook1( "4", "Max weight      " + common, 0, 1000, 200 );
+    hBook1( "5", "Weights         " + common, 0, 1000, 500 );
     return StatusCode::SUCCESS;
-  };
-  /// standard algorithm execution 
-  virtual StatusCode execute   ();
+  }
+  /// standard algorithm execution
+  virtual StatusCode execute();
 protected:
   /** Standard constructor
-   *  @param   name   algorithm name 
-   *  @param   svcloc pointer to service locator 
+   *  @param   name        algorithm name
+   *  @param   pSvcLocator pointer to service locator
    */
-  CaloHypoMatchMonitor
-  ( const std::string& name   , 
-    ISvcLocator*       svcloc )
-    : CaloMoniAlg( name , svcloc ) {} ;
+  CaloHypoMatchMonitor( const std::string &name, ISvcLocator *pSvcLocator )
+    : CaloMoniAlg( name, pSvcLocator ) {}
   /// destructor (virtual and protected)
-  virtual ~CaloHypoMatchMonitor() {};
+  virtual ~CaloHypoMatchMonitor() {}
 private:
-  /// default  construstor  is  private 
-  CaloHypoMatchMonitor(); 
-  /// copy     construstor  is  private 
-  CaloHypoMatchMonitor
-  ( const CaloHypoMatchMonitor& );
-  /// assignement operator  is  private 
-  CaloHypoMatchMonitor& operator=
-  ( const CaloHypoMatchMonitor& );
+  /// default  construstor  is  private
+  CaloHypoMatchMonitor();
+  /// copy     construstor  is  private
+  CaloHypoMatchMonitor( const CaloHypoMatchMonitor& );
+  /// assignement operator  is  private
+  CaloHypoMatchMonitor &operator=( const CaloHypoMatchMonitor& );
 };
-// ============================================================================
+
+DECLARE_ALGORITHM_FACTORY( CaloHypoMatchMonitor );
 
 // ============================================================================
-/** @var CaloHypoMatchMonitorFactory
- *  Declaration of the Algorithm Factory
- */
+// standard execution method
 // ============================================================================
-static const  AlgFactory<CaloHypoMatchMonitor>         s_Factory ;
-const        IAlgFactory&CaloHypoMatchMonitorFactory = s_Factory ;
+StatusCode CaloHypoMatchMonitor::execute()
+{ typedef LHCb::CaloHypo::Container                            Hypos;
+  typedef LHCb::Calo2Track::ITrHypoTable2D                     Table;
 
-// ============================================================================
-/** standard algorithm execution 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloHypoMatchMonitor::execute() 
-{
-  // avoid long names 
-  typedef const CaloHypos                                       Hypos ;
-  typedef const IRelationWeighted<CaloHypo,Track,float> Table ;
-  typedef Table::Range              Range    ;
-  typedef Table::iterator           iterator ;
-  
-  if ( !produceHistos() ) { return StatusCode::SUCCESS ; }
-  
-  // check relations 
-  const Table* table = get<Table>( inputData() ) ;
-  if( 0 == table ) { return StatusCode::FAILURE ; }
+  if ( !produceHistos() ) return StatusCode::SUCCESS;
 
-  AIDA::IHistogram1D* h1 = histo ( 1 ) ;
-  AIDA::IHistogram1D* h2 = histo ( 2 ) ;
-  AIDA::IHistogram1D* h3 = histo ( 3 ) ;
-  AIDA::IHistogram1D* h4 = histo ( 4 ) ;
-  AIDA::IHistogram1D* h5 = histo ( 5 ) ;
-  
-  // logarithm of ( total number of links + 1 ) 
-  hFill ( h1 , log10( table->relations().size() + 1. ) ) ;
-  
-  if ( inputs().empty() ) 
-  { return Error ( "No input data are specified" ) ; }
-  
-  // loop over all containers 
-  for ( Inputs::const_iterator input = inputs().begin() ; 
-        inputs().end() != input ; ++input ) 
-  {
-    // get hypos 
-    const Hypos* hypos = get<Hypos>( *input );
-    if ( 0 == hypos ) { return StatusCode::FAILURE ; }
-    // loop over all hypos 
-    for ( Hypos::const_iterator hypo = hypos -> begin() ; 
-          hypos -> end() != hypo ; ++hypo ) 
-    {
-      const Range range = table->relations( *hypo );
-      // number of related tracks 
-      hFill(  h2 , range.size() ) ;
-      if( range.empty() ) { continue ; }
-      // minimal weight 
-      hFill ( h3 , range.front ().weight() ) ;
-      // maximal weight 
-      hFill ( h4 , range.back  ().weight() ) ;
-      // all weights  
-      for( iterator relation = range.begin() ; 
-           range.end() != relation ; ++relation )
-      { hFill ( h5 , relation->weight() ) ; }    
-      
-    } ; // end of loop over hypos 
-  }; // end of loop over containers 
-  
-  
-  return StatusCode::SUCCESS ;
-};
-// ============================================================================
+// check relations
+  Table *table = get<Table>( inputData() );
+  if ( 0 == table ) return StatusCode::FAILURE;
 
-// ============================================================================
-// The End 
-// ============================================================================
+// logarithm of ( total number of links + 1 )
+  hFill1( "1", log10( table-> inverse()->relations().size() + 1. ) );
+
+  if ( inputs().empty() ) return Error( "No input data are specified" );
+
+// loop over all containers
+  for( std::vector<std::string>::const_iterator input = inputs().begin();
+       inputs().end() != input; ++input )
+  { Hypos* hypos = get<Hypos>( *input );
+    if ( 0 == hypos ) return StatusCode::FAILURE;
+// loop over all hypos
+    for( Hypos::const_iterator hypo = hypos->begin();
+         hypos->end() != hypo; ++hypo )
+    { const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = table-> inverse()->relations( *hypo );
+// number of related tracks
+      hFill1( "2", range.size() );
+      if ( range.empty() ) continue;
+// minimal weight
+      hFill1( "3", range.front().weight() );
+// maximal weight
+      hFill1( "4", range.back().weight() );
+// all weights
+      for( LHCb::Calo2Track::ITrHypoTable2D::InverseType::iterator relation=range.begin(); range.end()!=relation; ++relation )
+      { hFill1( "5", relation->weight() );
+      }
+    } // end of loop over hypos 
+  } // end of loop over containers 
+  return StatusCode::SUCCESS;
+}

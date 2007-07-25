@@ -1,11 +1,25 @@
-! $Id: release.notes,v 1.9 2005-12-08 13:14:40 odescham Exp $ 
+! $Id: release.notes,v 1.10 2007-07-25 19:49:12 odescham Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-25 - Konstantin Beloous & Olivier Deschamps
+ - Major release 
+    -  package updated for DC06
+    -  First step toward an online usage of the Monitoring part 
+    -  histograms production reviewed and improved
+    -  some algorithm names have changed
+    -  2 types of algorithms : Monitor's (relying on data only) and Checker's (relying on MC)
+    - Monitors : CaloDigit, CaloCluster, CaloHypo, ResolvedPi0 & PID's (CaloClusterMatch, CaloHypoMatch)
+          - driven by option/CaloMonitor.opts
+    - Checkers : CaloCluster, Photon, ResolvedPi0, CaloPIDs
+          - driven by option/CaloChecker.opts
+
+
 !========================== CaloMoniDst v2r1 2005-12-08 ===================
 ! 2005-12-08 - Olivier Deschamps
  - CaloPIDsMonitor.cpp use Track::History == 'Cnv' Tracks only 

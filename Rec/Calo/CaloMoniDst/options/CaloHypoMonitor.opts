@@ -1,0 +1,4 @@
+// Monitoring of different Hypotheses
+ElectronMonitor.Input    = "Rec/Calo/Electrons";
+PhotonMonitor.Input      = "Rec/Calo/Photons";
+MergedPi0Monitor.Input   = "Rec/Calo/MergedPi0s";

@@ -1,0 +1,19 @@
+// Ecal digits
+EcalDigitMonitor.Input    = "Raw/Ecal/Digits";
+EcalDigitMonitor.Detector = "Ecal";
+EcalDigitMonitor.EtCuts   = { 0.1*GeV, 0.5*GeV };
+
+// Hcal digits
+HcalDigitMonitor.Input    = "Raw/Hcal/Digits";
+HcalDigitMonitor.Detector = "Hcal";
+HcalDigitMonitor.EtCuts   = { 0.1*GeV, 0.5*GeV };
+
+// Prs digits
+PrsDigitMonitor.Input    = "Raw/Prs/Digits";
+PrsDigitMonitor.Detector = "Prs";
+PrsDigitMonitor.ECuts   = { 0.01*GeV, 0.05*GeV };
+
+// Spd digits
+SpdDigitMonitor.Input    = "Raw/Spd/Digits";
+SpdDigitMonitor.Detector = "Spd";
+SpdDigitMonitor.ECuts   = { 0.5 };

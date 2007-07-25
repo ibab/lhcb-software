@@ -1,0 +1,23 @@
+
+
+CheckCALOSeq.Members +=  {   "GaudiSequencer/CaloRecoChecker"
+                             ,"GaudiSequencer/CaloPIDsChecker"
+};
+
+CaloRecoChecker.Members += { "CaloClusterChecker"
+                             ,"CaloPi0Checker"
+};
+
+
+CaloPIDsChecker.Members += { "CaloPIDsChecker/PIDeEcalChecker",
+                             "CaloPIDsChecker/PIDePrsChecker" ,
+                             "CaloPIDsChecker/PIDeHcalChecker",
+                             "CaloPIDsChecker/PIDeBremChecker", 
+                             "CaloPIDsChecker/PIDmEcalChecker", 
+                             "CaloPIDsChecker/PIDmHcalChecker",
+                             "CaloPhotonChecker"};
+
+
+#include "$CALOMONIDSTOPTS/CaloPhotonChecker.opts"
+#include "$CALOMONIDSTOPTS/CaloPIDsChecker.opts"
+

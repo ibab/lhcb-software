@@ -1,0 +1,39 @@
+
+MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMonitor"
+                         ,"GaudiSequencer/CaloClusterMonitor"
+                         ,"GaudiSequencer/CaloHypoMonitor"
+                         ,"GaudiSequencer/CaloPIDsMonitor"
+};
+
+MoniCaloSeq.OutputLevel=1;
+
+CaloDigitMonitor.Members   += { "CaloDigitMonitor/EcalDigitMonitor",
+                                "CaloDigitMonitor/HcalDigitMonitor",
+                                "CaloDigitMonitor/PrsDigitMonitor",
+                                "CaloDigitMonitor/SpdDigitMonitor"};
+#include "$CALOMONIDSTOPTS/CaloDigitMonitor.opts"
+
+
+
+CaloClusterMonitor.Members += { "CaloClusterMonitor/EcalClusterMonitor",
+                                "CaloClusterMonitor/SplitClusterMonitor"
+};
+#include "$CALOMONIDSTOPTS/CaloClusterMonitor.opts"
+
+
+
+CaloHypoMonitor.Members    += { "CaloHypoMonitor/ElectronMonitor"               
+                                ,"CaloHypoMonitor/PhotonMonitor"               
+                                ,"CaloHypoMonitor/MergedPi0Monitor"
+                                ,"CaloPi0Monitor/ResolvedPi0Monitor" 
+};             
+#include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"
+
+
+
+CaloPIDsMonitor.Members  += { "CaloClusterMatchMonitor/PhotonMatchMonitor",
+                              "CaloHypoMatchMonitor/ElectronMatchMonitor",     
+                              "CaloHypoMatchMonitor/BremMatchMonitor"}; 
+#include "$CALOMONIDSTOPTS/CaloPIDsMonitor.opts"
+
+

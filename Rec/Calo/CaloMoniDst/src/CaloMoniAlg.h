@@ -1,45 +1,102 @@
-// $Id: CaloMoniAlg.h,v 1.3 2005-11-07 12:16:38 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/05/08 09:58:25  ibelyaev
-//  remove associators, update options
-//
-// Revision 1.1.1.1  2004/10/25 09:00:25  ibelyaev
-// // The new pckage: code is imported from Calo/CaloMonitor
-//
-// Revision 1.1  2004/03/17 16:35:20  ibelyaev
-//  regular update: MCCaloMonitor and CaloPIDsMonitor
-// 
-// ============================================================================
-#ifndef CALOMONITOR_CALOMONIALG_H 
-#define CALOMONITOR_CALOMONIALG_H 1
+#ifndef CALOMONIDST_CALOMONIALG_H 
+#define CALOMONIDST_CALOMONIALG_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Calo/CaloKernel
+// from Gaudi
 // ============================================================================
-#include "CaloKernel/CaloHistoAlg.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 // ============================================================================
+// AIDA 
+// ============================================================================
+#include "AIDA/IHistogram1D.h"
 
-typedef CaloHistoAlg CaloMoniAlg ;
+// @class CaloMoniAlg CaloMoniAlg.h
+//
+//   @see GaudiHistoAlg
+//   @see GaudiAlgorithm
+//   @see      Algorithm
+//   @see     IAlgorithm
 
-
-namespace 
+class CaloMoniAlg : public GaudiHistoAlg
 {
-  template <class HISTO> 
-  inline StatusCode hFill ( HISTO* histo ,
-                            double value ) 
-  {
-    if ( 0 == histo ) { return StatusCode::FAILURE ; }
-    histo -> fill( value ) ;
-    return StatusCode::SUCCESS ;
-  };  
-};
+public:
+// Standard constructor
+//   @param   name        algorithm name
+//   @param   pSvcLocator pointer to service locator
+  CaloMoniAlg( const std::string &name, ISvcLocator *pSvcLocator )
+    : GaudiHistoAlg( name, pSvcLocator )
+    , m_inputData( "" ) // no default value
+    , m_inputs()        // no default value
+    , m_detData( "" )   // no default value
+  { declareProperty( "Input",    m_inputData );
+    declareProperty( "Inputs",   m_inputs );
+    declareProperty( "Detector", m_detData );
+    setProperty( "HistoTopDir", "CaloMoniDst/" );
+  }
+// destructor
+  virtual ~CaloMoniAlg() {}
+// address/location/name in Transient Store of input data container
+  const std::string              &inputData() const { return m_inputData; }
+// vector of input data containers
+  const std::vector<std::string> &inputs()    const { return m_inputs; }
+// address/location/name in Transient Store of detector data
+  const std::string              &detData()   const { return m_detData; }
+// set address/location/name in Transient Store of input data container
+  void setInputData( const std::string &addr ) { m_inputData = addr; }
+// add address/location/name in Transient Store of input data container
+  void addToInputs(  const std::string &addr ) { m_inputs.push_back( addr ); }
+// set address/location/name in Transient Store of detector data
+  void setDetData(   const std::string &addr ) { m_detData = addr; }
+// booking histogram
+  inline AIDA::IHistogram1D *hBook1( const std::string hid,
+                                    const std::string titl,
+                                    const double low=0,
+                                    const double high=100,
+                                    const unsigned long bins=100 ){ 
+    h1[hid] = book1D( hid, titl, low, high, bins );
+    if ( 0 != h1[hid] ) declareInfo( hid, h1[hid], titl );
+    return h1[hid];
+  }
+  inline AIDA::IHistogram2D *hBook2( const std::string hid,
+                                     const std::string titl,
+                                     const double lowx=0,
+                                     const double highx=100,
+                                     const unsigned long binsx=100,
+                                     const double lowy=0,
+                                     const double highy=100,
+                                     const unsigned long binsy=100 ){ 
+    h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
+      if ( 0 != h2[hid] ) declareInfo( hid, h2[hid], titl );
+    return h2[hid];
+  }
 
+// fill histogram
+  inline StatusCode hFill1( std::string hid, double value, double w=1. )
+  { if ( 0 == fill(h1[hid],value,w) ) return StatusCode::FAILURE;
+    else                             return StatusCode::SUCCESS;
+  }
+//
+  inline StatusCode hFill2( std::string hid, double x, double y, double w=1. )
+  { if ( 0 == fill(h2[hid],x,y,w) ) return StatusCode::FAILURE;
+    else                           return StatusCode::SUCCESS;
+  }
+protected:
+//
+// Histogram Map
+  std::map< std::string, AIDA::IHistogram1D * > h1;
+  std::map< std::string, AIDA::IHistogram2D * > h2;
+//
+private:
+// address/location/name in Transient Store of input data container
+  std::string              m_inputData;
+// vector of addresses in the case of 'few' inputs
+  std::vector<std::string> m_inputs;
+// address/location/name in Transient Store of detector data
+  std::string              m_detData;
+};
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // CALOMONITOR_CALOMONIALG_H
-// ============================================================================
+#endif // CALOMONIDST_CALOMONIALG_H

@@ -1,0 +1,2 @@
+EcalClusterMonitor.Input  = "Rec/Calo/EcalClusters";
+SplitClusterMonitor.Input = "Rec/Calo/EcalSplitClusters";
