@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.34 2007-07-23 17:23:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2007-07-25 15:07:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,24 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2007-07-25 - Vanya BELYAEV
+ - add all "hybrid"-functionality for the 
+   interplay between C++ and Python, in particular for hybriod factory.
+
+New Files: 
+  LoKi/GenHybridEngine.h
+  LoKi/GenHybridEngineActor.h
+  LoKi/GenHybridLock.h
+  LoKi/IGenHybridFactory.h
+  LoKi/IGenHybridTool.h
+  src/GenHybridEngine.cpp
+  src/GenHybridEngineActor.cpp
+  src/GenHybridLock.cpp
+  src/IGenHybridFactory.cpp
+  src/IGenHybridTool.cpp
+  src/Components/GenHybridTool.cpp
+  src/Components/LoKiGen_dll.cpp
 
 ! 2007-07-23 - Vanya BELYAEV
 

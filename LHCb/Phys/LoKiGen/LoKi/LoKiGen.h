@@ -1,4 +1,4 @@
-// $Id: LoKiGen.h,v 1.9 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.10 2007-07-25 15:07:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
 #define LOKI_LOKIGEN_H 1
@@ -19,6 +19,7 @@
 #include "LoKi/BuildGenTrees.h"
 #include "LoKi/GenChild.h"
 #include "LoKi/GetHepMC.h"
+#include "LoKi/IGenHybridFactory.h"
 // ============================================================================
 /** @file
  *

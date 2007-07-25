@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.3 2007-07-23 17:23:37 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.4 2007-07-25 15:07:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -21,6 +21,9 @@
 #include "LoKi/GenExtractDicts.h"
 #include "LoKi/GenAlgsDicts.h"
 #include "LoKi/GenMoniDicts.h"
+// ============================================================================
+#include "LoKi/IGenHybridTool.h"
+#include "LoKi/GenHybridEngine.h"
 // ============================================================================
 namespace LoKi
 {

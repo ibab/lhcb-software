@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.4 2007-07-23 17:23:37 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.5 2007-07-25 15:07:57 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -91,6 +91,10 @@
   <class pattern   = "LoKi::Dicts::FunCalls<HepMC::Gen*>" />
   <class pattern   = "LoKi::Dicts::CutCalls<HepMC::Gen*>" />
   
+
+  <class name    = "LoKi::IGenHybridFactory"  />
+  <class name    = "LoKi::IGenHybridTool"     />
+  <class pattern = "LoKi::Hybrid::*"    />
   
   <class name = "std::vector<const HepMC::GenParticle*>"  />
   <class name = "std::vector<const HepMC::GenVertex*>"    />
