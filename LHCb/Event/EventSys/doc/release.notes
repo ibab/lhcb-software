@@ -2,6 +2,11 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+! 2007-07-25 - Pere Mato
+ - requirements: added actions to copy rootmap files from RELAX into the LHCB install area rootmap file to enable 
+                 auto-loading for RELAX dictionaries.
+   NOTE that the actual copy/merge pattern will need to be changed (simplified) to accomodate to new versions of RELAX. 
+
 !======================== EventSys v23r7 2007-07-11 ======================
 ! 2007-07-11 - Marco Cattaneo
  - Use TrackEvent v4r5, RecEvent v2r5, HltEvent v8r3, L0Event v16r4, 

@@ -19,3 +19,33 @@ use TrackEvent  v4r5    Event
 use PackedEvent v3r2    Event
 use VeloEvent   v15r1   Event
 use HltEvent    v8r3    Event
+
+
+private
+use RELAX       v*      LCG_Interfaces
+
+#----This is only for RELAX 1_1_9 that had an inconsistent library names in rootmap files 
+pattern copy_relax_rootmap \
+  macro fixup_rootmap<dict> "i=open('$(RELAX_home)/lib/lib<dict>Rflx.rootmap');\
+                             lines=[line.replace('lib<dict>Dict.so','lib<dict>Rflx.so') for line in i.readlines()];\
+                             open('lib<dict>Rflx.rootmap','w').writelines(lines)" \
+        WIN32                "i=open('$(RELAX_home)/lib/<dict>Rflx.rootmap');\
+                             lines=[line.replace('<dict>Dict.dll','<dict>Rflx.dll') for line in i.readlines()];\
+                             open('<dict>Rflx.rootmap','w').writelines(lines)" ;\
+  action copy_relax_rootmap<dict> 'python -c "$(fixup_rootmap<dict>)";\
+                                   $(merge_rootmap_cmd) --do-merge -i lib<dict>Rflx.rootmap -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' \
+         WIN32                     'python -c "$(fixup_rootmap<dict>)" &\
+                                   python $(merge_rootmap_cmd) --do-merge -i <dict>Rflx.rootmap -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' ;\
+  macro_append constituents  " copy_relax_rootmap<dict> "
+
+#----for later RELAX versions it should be like this
+#pattern copy_relax_rootmap \
+#  action copy_relax_rootmap<dict> '$(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/lib<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' \
+#         WIN32                    'python $(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' ;\
+#  macro_append constituents  " copy_relax_rootmap<dict> "
+
+
+copy_relax_rootmap dict=CLHEP
+copy_relax_rootmap dict=HepMC
+copy_relax_rootmap dict=STL
+copy_relax_rootmap dict=Math
