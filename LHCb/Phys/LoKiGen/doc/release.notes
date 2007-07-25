@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.35 2007-07-25 15:07:57 ibelyaev Exp $ 
+! $Id: release.notes,v 1.36 2007-07-25 15:10:24 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -15,6 +15,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2007-07-25 - Vanya BELYAEV
+
  - add all "hybrid"-functionality for the 
    interplay between C++ and Python, in particular for hybriod factory.
 
