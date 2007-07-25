@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.92 2007-07-25 10:53:47 wouter Exp $
+! $Id: release.notes,v 1.93 2007-07-25 11:17:20 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
-! 2007-07-23 - Wouter Hulsbergen (more a-team changes)
+! 2007-07-25 - Wouter Hulsbergen (more a-team changes)
  - changed parameterization for fast geometry access
 
 !========================== OTDet v7r5 2007-07-23 =========================
