@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.59 2007-06-25 21:31:49 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.60 2007-07-26 11:28:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -790,106 +790,121 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           {
 
             // get HPD RichSmartID
-            const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? s_fakeHPDID :
-                                              m_richSys->richSmartID( hpdBank->level0ID() ) );
-            if ( msgLevel(MSG::DEBUG) )
-              debug() << "   Decoding HPD " << hpdID << endreq;
-
-            // Try to add a new HPDInfo to map
-            std::pair<HPDMap::iterator,bool> p
-              = ingressInfo.hpdData().insert( HPDMap::value_type(hpdID,
-                                                                 HPDInfo(Level1Input(ingressWord.ingressID(),*iHPD),
-                                                                         HPDInfo::Header(hpdBank->headerWords()),
-                                                                         HPDInfo::Footer(hpdBank->footerWords()) ) ) );
-            if ( !p.second && !m_useFakeHPDID )
+            // do in a try block incase HPDID is unknown
+            LHCb::RichSmartID hpdID;
+            try
             {
-              std::ostringstream mess;
-              mess << "Found multiple data blocks for HPD " << hpdID;
-              Warning( mess.str() );
+              hpdID = ( m_useFakeHPDID ? s_fakeHPDID :
+                        m_richSys->richSmartID( hpdBank->level0ID() ) );
             }
-            HPDInfo & hpdInfo = p.first->second;
-
-            // local hit count
-            unsigned int hpdHitCount(0);
-
-            // smartIDs
-            LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
-
-            // Compare Event IDs for errors
-            bool OK = ( hpdIsSuppressed ? true :
-                        !m_checkEventsIDs || compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
-            if ( !OK )
+            catch ( const GaudiException & expt )
             {
-              std::ostringstream mess;
-              mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = " << ingressWord.eventID()
-                   << " HPDHeader = " << hpdBank->eventID();
-              Error( mess.str() );
+              Error( expt.message() );
             }
-            else
+            // If the HPD smartID was successfully found, continue with decoding
+            if ( hpdID.isValid() )
             {
 
-              // decode to smartIDs
-              hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
+              if ( msgLevel(MSG::DEBUG) )
+                debug() << "   Decoding HPD " << hpdID << endreq;
 
-              // Do data integrity checks
-              OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
-              if ( !OK ) Warning( "HPD data block failed integrity check" );
-
-              if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
+              // Try to add a new HPDInfo to map
+              std::pair<HPDMap::iterator,bool> p
+                = ingressInfo.hpdData().insert( HPDMap::value_type(hpdID,
+                                                                   HPDInfo(Level1Input(ingressWord.ingressID(),*iHPD),
+                                                                           HPDInfo::Header(hpdBank->headerWords()),
+                                                                           HPDInfo::Footer(hpdBank->footerWords()) ) ) );
+              if ( !p.second && !m_useFakeHPDID )
               {
-                // printout decoded RichSmartIDs
-                verbose() << " Decoded RichSmartIDs :-" << endreq;
-                for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
-                      iID != newids.end(); ++iID )
-                {
-                  verbose() << "   " << *iID << endreq;
-                }
+                std::ostringstream mess;
+                mess << "Found multiple data blocks for HPD " << hpdID;
+                Warning( mess.str() );
               }
+              HPDInfo & hpdInfo = p.first->second;
 
-            } // event IDs OK
+              // local hit count
+              unsigned int hpdHitCount(0);
 
-            // is data OK
-            if ( OK )
-            {
+              // smartIDs
+              LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
 
-              // apply suppression of high occupancy HPDs
-              if ( hpdHitCount < m_maxHPDOc )
+              // Compare Event IDs for errors
+              bool OK = ( hpdIsSuppressed ? true :
+                          !m_checkEventsIDs || compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
+              if ( !OK )
               {
-                ++nHPDbanks;
-                decodedHits += hpdHitCount;
+                std::ostringstream mess;
+                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = " << ingressWord.eventID()
+                     << " HPDHeader = " << hpdBank->eventID();
+                Error( mess.str() );
               }
               else
               {
-                std::ostringstream hpd;
-                hpd << hpdID.panelID();
-                Warning( "Forced suppression of HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
-                newids.clear();
-              }
 
-            }
-            else
-            {
-              // decoding error ....
-              error() << "Error in decoding -> Data is rejected for HPD " << hpdID << endreq;
+                // decode to smartIDs
+                hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
-              if ( l1BankErrorDump )
+                // Do data integrity checks
+                OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
+                if ( !OK ) Warning( "HPD data block failed integrity check" );
+
+                if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
+                {
+                  // printout decoded RichSmartIDs
+                  verbose() << " Decoded RichSmartIDs :-" << endreq;
+                  for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
+                        iID != newids.end(); ++iID )
+                  {
+                    verbose() << "   " << *iID << endreq;
+                  }
+                }
+
+              } // event IDs OK
+
+              // is data OK
+              if ( OK )
               {
-                error() << " -> Dump of raw L1 data :-" << endreq;
-                dumpRawBank( bank, error() );
-                l1BankErrorDump = false;
+
+                // apply suppression of high occupancy HPDs
+                if ( hpdHitCount < m_maxHPDOc )
+                {
+                  ++nHPDbanks;
+                  decodedHits += hpdHitCount;
+                }
+                else
+                {
+                  std::ostringstream hpd;
+                  hpd << hpdID.panelID();
+                  Warning( "Forced suppression of HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
+                  newids.clear();
+                }
+
+              }
+              else
+              {
+                // decoding error ....
+                error() << "Error in decoding -> Data is rejected for HPD " << hpdID << endreq;
+
+                if ( l1BankErrorDump )
+                {
+                  error() << " -> Dump of raw L1 data :-" << endreq;
+                  dumpRawBank( bank, error() );
+                  l1BankErrorDump = false;
+                }
+
+                error() << " -> Ingress header : " << ingressWord << endreq;
+                error() << "  -> ";
+                rawDump(error(),ingressWord.data());
+                error() << endreq;
+                error() << " -> HPD data block : " << endreq;
+                error() << "  -> HPD Event ID = " << hpdBank->eventID() << " ";
+                rawDump(error(),hpdBank->eventID().data(),hpdBank->eventID().activeBits());
+                error() << endreq;
+                error() << *hpdBank << endreq;
+
               }
 
-              error() << " -> Ingress header : " << ingressWord << endreq;
-              error() << "  -> ";
-              rawDump(error(),ingressWord.data()); 
-              error() << endreq;
-              error() << " -> HPD data block : " << endreq;
-              error() << "  -> HPD Event ID = " << hpdBank->eventID() << " "; 
-              rawDump(error(),hpdBank->eventID().data(),hpdBank->eventID().activeBits());
-              error() << endreq;
-              error() << *hpdBank << endreq;
-
-            }
+            } // HPD ID OK
 
           } // ODIN OK and not suppressed
 
@@ -1331,7 +1346,7 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
 }
 
 // Print the given data word as Hex and as bits, to the given precision
-void RawDataFormatTool::rawDump( MsgStream & os, 
+void RawDataFormatTool::rawDump( MsgStream & os,
                                  const LongType word,
                                  const ShortType nBits ) const
 {
