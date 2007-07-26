@@ -1,4 +1,4 @@
-// $Id: FilterMCParticleArrayByDecay.cpp,v 1.1 2007-07-25 14:36:34 jpalac Exp $
+// $Id: FilterMCParticleArrayByDecay.cpp,v 1.2 2007-07-26 14:22:36 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,22 +28,18 @@ FilterMCParticleArrayByDecay::FilterMCParticleArrayByDecay( const std::string& t
                                                             const IInterface* parent )
   : 
   GaudiTool ( type, name , parent ),
-  m_decayFinderName("DecayFinder"),
-  m_decayDescriptorName("DecayDescriptor"),
-  m_mcParticleLocation(LHCb::MCParticleLocation::Default),
+  m_decayFinderName("MCDecayFinder"),
   m_decayFinder(0)
 {
   declareInterface<IMCParticleArrayFilter>(this);
 
   declareProperty("DecayFinderName", m_decayFinderName);
-  declareProperty("DecayDescriptorName", m_decayDescriptorName);
-  declareProperty("MCParticleLocation", m_mcParticleLocation); 
+
 }
 //=============================================================================
 StatusCode FilterMCParticleArrayByDecay::initialize() 
 {
-  m_decayFinder = tool<IMCDecayFinder>("MCDecayFinder", 
-                                       m_decayFinderName, this);
+  m_decayFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
 
   return (0!=m_decayFinder) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 

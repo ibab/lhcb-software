@@ -1,4 +1,4 @@
-// $Id: FilterMCParticleArrayByDecay.h,v 1.1 2007-07-25 14:36:34 jpalac Exp $
+// $Id: FilterMCParticleArrayByDecay.h,v 1.2 2007-07-26 14:22:36 jpalac Exp $
 #ifndef FILTERMCPARTICLEARRAYBYDECAY_H 
 #define FILTERMCPARTICLEARRAYBYDECAY_H 1
 
@@ -10,7 +10,8 @@
 
 /** @class FilterMCParticleArrayByDecay FilterMCParticleArrayByDecay.h
  *  
- *
+ *  
+ *  
  *  @author Juan Palacios
  *  @date   2007-07-25
  */
@@ -49,8 +50,6 @@ private:
 
 private:
   std::string m_decayFinderName;
-  std::string m_decayDescriptorName;
-  std::string m_mcParticleLocation;
   IMCDecayFinder* m_decayFinder;
 
 };
