@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
+// $Id: AParticleCuts.h,v 1.3 2007-07-26 13:25:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -1542,6 +1542,68 @@ namespace LoKi
      */
     const   LoKi::Valid<LoKi::ATypes::Combination>                     AVALID ;
     // ========================================================================
+    /** @typedef AWM 
+     *  Simple evaluator of the invariant mass of combination 
+     *  using some prescribed ("wrong") masses for daughter particles.
+     *  It could be used e.g. for study of varisu mass-refelction
+     *  of for geenric topologicla selection using various mass-windows
+     *  for different mass hypothesis
+     *  
+     *  @code
+     * 
+     *  const LHCb::Particle::ConstVector& comobination = ... ;
+     * 
+     *  // consider the mass hypothersies of 3 kaons:
+     *  AFun m3K = AWM ( "K+" , "K+" , "K-" ) ;
+     *
+     *  const double mass3kaon = m3k ( combination ) ;
+     *
+     *  // consider the another mass hypotheses:
+     *  AFun m2Kpi = AWM ( "K+" , "K+" , "pi+" ) ;
+     *
+     *  const double mass2kaonandPion = m2Kpi ( combination ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Cuts::AWRONGMASS
+     *  @see LoKi::Kinematics::wrongMass
+     *  @see LoKi::Particles::massFromPID 
+     *  @see LoKi::Particles::massFromName
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-07-26
+     */
+    typedef LoKi::AParticles::WrongMass                                   AWM ;
+    // ========================================================================
+    /** @typedef AWM 
+     *  Simple evaluator of the invariant mass of combination 
+     *  using some prescribed ("wrong") masses for daughter particles.
+     *  It could be used e.g. for study of varisu mass-refelction
+     *  of for geenric topologicla selection using various mass-windows
+     *  for different mass hypothesis
+     *  
+     *  @code
+     * 
+     *  const LHCb::Particle::ConstVector& comobination = ... ;
+     * 
+     *  // consider the mass hypothersies of 3 kaons:
+     *  AFun m3K = AWM ( "K+" , "K+" , "K-" ) ;
+     *
+     *  const double mass3kaon = m3k ( combination ) ;
+     *
+     *  // consider the another mass hypotheses:
+     *  AFun m2Kpi = AWM ( "K+" , "K+" , "pi+" ) ;
+     *
+     *  const double mass2kaonandPion = m2Kpi ( combination ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Cuts::AWRONGMASS
+     *  @see LoKi::Kinematics::wrongMass
+     *  @see LoKi::Particles::massFromPID 
+     *  @see LoKi::Particles::massFromName
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-07-26
+     */
+    typedef LoKi::AParticles::WrongMass                            AWRONGMASS ;
+    // ========================================================================    
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi
 // ============================================================================

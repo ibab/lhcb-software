@@ -1,9 +1,13 @@
-// $Id: AParticles.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
+// $Id: AParticles.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <algorithm>
 // ============================================================================
 // Event 
 // ============================================================================
@@ -828,6 +832,120 @@ namespace LoKi
       std::size_t m_child ;
     };
     // ========================================================================
+    /** @class WrongMass
+     *  Simple function which evaluates the invarinat mass of the 
+     *  combinations using wrong mass-assignements
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WRONGMASS
+     *  @see LoKi::Kinematics::wrongMass 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-07-26
+     */
+    class WrongMass : public LoKi::Function<LoKi::ATypes::Combination>
+    {
+    public:
+      /// constructor from two masses 
+      WrongMass  ( const double m1 , const double m2 ) ;
+      /// constructor from three masses 
+      WrongMass  ( const double m1 , const double m2 , const double m3 ) ;
+      /// constructor from four masses 
+      WrongMass  ( const double m1 , const double m2 , 
+                   const double m3 , const double m4 ) ;
+      /// constructor from the vector of masses 
+      WrongMass ( const std::vector<double>& masses ) ;
+      /// constructor from two pids 
+      WrongMass  ( const LHCb::ParticleID& pid1 , 
+                   const LHCb::ParticleID& pid2 ) ;
+      /// constructor from three pids 
+      WrongMass  ( const LHCb::ParticleID& pid1 , 
+                   const LHCb::ParticleID& pid2 ,
+                   const LHCb::ParticleID& pid3 ) ;
+      /// constructor from four pids 
+      WrongMass  ( const LHCb::ParticleID& pid1 , 
+                   const LHCb::ParticleID& pid2 ,
+                   const LHCb::ParticleID& pid3 ,
+                   const LHCb::ParticleID& pid4 ) ;
+      /// constructor from the vector of pids  
+      WrongMass ( const std::vector<LHCb::ParticleID>& pids ) ;
+      /// constructor from two names  
+      WrongMass  ( const std::string& name1 , 
+                   const std::string& name2 ) ;
+      /// constructor from three names  
+      WrongMass  ( const std::string& name1 , 
+                   const std::string& name2 ,
+                   const std::string& name3 ) ;
+      /// constructor from four  names  
+      WrongMass  ( const std::string& name1 , 
+                   const std::string& name2 ,
+                   const std::string& name3 ,
+                   const std::string& name4 ) ;
+      /// constructor from the vector of names 
+      WrongMass ( const std::vector<std::string>& names ) ;
+      /** templated constructor from the sequence and functor 
+       * 
+       *  e.g. to "clone" the mass -assigements form other sequnce 
+       *  of particles:
+       *  @code
+       *
+       *  const LHCb::Particle::ConstVector& sample = ... ; 
+       *  
+       *  AFun wm = WrongMass ( sample.begin ()                  , 
+       *                        sample.end   ()                  ,
+       *                        std::mem_fun(&LHCb::Particle::m) ) ;
+       *
+       *  @endcode 
+       *
+       *  Or to close the mass-assigements from MC-truth:
+       *
+       *  @code
+       *
+       *  const LHCb::MCParticle::Vector& sample = ... ; 
+       *  
+       *  AFun wm = WrongMass ( sample.begin ()                    , 
+       *                        sample.end   ()                    ,
+       *                        std::mem_fun(&LHCb::MCParticle::m) ) ;
+       *
+       *  @endcode 
+       *
+       *  Or get the masses from ParticleProperty:
+       *
+       *  @code
+       *
+       *  const std::vector<ParticleProperty*>& sample = ... ; 
+       *  
+       *  AFun wm = WrongMass ( sample.begin ()                       , 
+       *                        sample.end   ()                       ,
+       *                        std::mem_fun(&ParticleProperty::mass) ) ;
+       *
+       *  @endcode 
+       */
+      template <class OBJECT, class FUNCTOR>
+      WrongMass ( OBJECT  begin , 
+                  OBJECT  end   , 
+                  FUNCTOR func  ) 
+        : LoKi::Function<LoKi::ATypes::Combination> ()
+        , m_masses ( end - begin ) 
+      {
+        std::transform ( begin , end , m_masses.begin() , func ) ;
+      }
+      /// copy constructor 
+      WrongMass ( const WrongMass& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~WrongMass() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  WrongMass* clone() const { return new WrongMass(*this) ; }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ; 
+      /// OPTIONAL: specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;      
+   public:
+      /// get all masses:
+      const std::vector<double>& masses() const { return m_masses ; }
+    private:
+      // the list of masses to be used 
+      std::vector<double> m_masses ; ///< the list of masses to be used 
+    };
+    // ========================================================================    
   } // end of namespace LoKi::AParticles
 } // end of namespace LoKi 
 // ============================================================================

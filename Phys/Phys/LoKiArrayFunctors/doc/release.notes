@@ -1,9 +1,16 @@
-$Id: release.notes,v 1.3 2007-07-04 10:27:01 ibelyaev Exp $ 
+$Id: release.notes,v 1.4 2007-07-26 13:25:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2007-07-26 - Vanya BELYAEV
+ - new functor LoKi::AParticles::WrongMass, whcih allows to get the 
+   invarinat mass of the combination using the specified 
+   mass-hypotheses for daughter particles.
+ - add all "hybrid"-stuff from LoKiHybrid package 
+
 
 ! 2007-07-04 - Vanya BELYAEV
  - python/LoKiArrayFunctors/functions.py

@@ -1,22 +1,21 @@
-// $Id: LoKiArrayFunctors.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
-// ============================================================================
-#ifndef LOKI_LOKIEXHLT_H 
-#define LOKI_LOKIEXHLT_H 1
+// $Id: LoKiArrayFunctors_dll.cpp,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-// LoKi
+#include "GaudiKernel/LoadFactoryEntries.h"
 // ============================================================================
-#include "LoKi/MoreFunctions.h"
-#include "LoKi/ATypes.h"
-#include "LoKi/AChild.h"
-#include "LoKi/AKinematics.h"
-#include "LoKi/AParticles.h"
-#include "LoKi/AParticleCuts.h"
+/** @file 
+ *  The mandatory file for dymamic loading of component libraries 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-06-29
+ */
 // ============================================================================
-#include "LoKi/IHybridFactory.h"
+LOAD_FACTORY_ENTRIES(LoKiArrayFunctors);
+// ============================================================================
+
+
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_LOKIEXHLT_H
-// ============================================================================
+
+

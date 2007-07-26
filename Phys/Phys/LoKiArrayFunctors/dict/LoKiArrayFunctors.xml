@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -76,6 +76,9 @@
   <class pattern   = "LoKi::Dicts::CutCalls<*std::vector*LHCb::Particle*>"   />
   
   <function pattern = "LoKi::Dicts::monitor*"            />
+
+  <class pattern   = "LoKi::IHybrid*>"    />
+  <class pattern   = "LoKi::Hybrid::*>"   />
   
   <exclusion>
     <class name = "std::unary_function<char,bool>"        />

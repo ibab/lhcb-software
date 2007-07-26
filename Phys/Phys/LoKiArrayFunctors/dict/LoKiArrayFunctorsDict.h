@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.2 2007-07-24 05:20:09 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -17,6 +17,9 @@
 #include "LoKi/ATypes.h"
 #include "LoKi/LoKiArrayFunctors.h"
 #include "LoKi/AMoniDicts.h"
+// ============================================================================
+#include "LoKi/IHybridTool.h"
+#include "LoKi/HybridEngine.h"
 // ============================================================================
 namespace LoKi
 {
