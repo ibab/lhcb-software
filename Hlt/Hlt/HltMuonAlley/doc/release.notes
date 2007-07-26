@@ -3,6 +3,10 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2007-07-26 - Alessia Satta
+ - uncomment a parameter initialization in HltMuonTrigger2MuonsNoIP.cpp 
+   (thanks to Sandra)
+
 ! 2007-07-12 - Alessia Satta
  - add code for improved L0 dimuon confirmation
  

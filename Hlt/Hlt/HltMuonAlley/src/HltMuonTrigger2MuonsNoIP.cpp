@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.1 2007-07-12 18:03:14 asatta Exp $
+// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.2 2007-07-26 07:19:12 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ HltMuonTrigger2MuonsNoIP::HltMuonTrigger2MuonsNoIP( const std::string& name,
   //  declareProperty("PtMin", m_ptMin = 0.);
   // declareProperty("Selection2Name", m_selection2SummaryName="");
  declareProperty("MassWithIP", m_minMassWithIP = 500.);
- //declareProperty("MassNoIP", m_minMassNoIP = 2500.);
+ declareProperty("MassNoIP", m_minMassNoIP = 2500.);
  //declareProperty("IP", m_minIP = 0.075);
  declareProperty("L0Confirm", m_L0confirm=1);
  declareProperty("DOCA", m_maxDOCA = 0.5);
@@ -276,7 +276,7 @@ StatusCode HltMuonTrigger2MuonsNoIP::execute() {
     float m=(*(m_testedvertices.begin()))->info(m_massKey,0);
     float d=(*(m_testedvertices.begin()))->info(m_DOCAKey,0);
     //    float p=(*(m_selevertices.begin()))->info(m_IPKey,0);
-    
+    //info()<<" massa qui "<<(*(m_outputVertices->begin()))->info(m_massKey,0)<<endreq;    
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0); 
     //setDecisionType(HltEnums::JPsi);
@@ -346,6 +346,8 @@ void HltMuonTrigger2MuonsNoIP::makeDiMuonPair(const Hlt::TrackContainer& tcon1,
           ver->addInfo(m_IPKey,ip1);
         }else  ver->addInfo(m_IPKey,ip2);
         ver->addInfo(m_MuonKey,L0track);
+        verbose()<<"vertex mass "<<ver->info(m_massKey,0)<<endreq;
+        verbose()<<" vertex position "<< ver->position()<<endreq;   
         //m_patVertexBank->newEntry();        
         vcon.push_back( ver);
         verbose() << " make vertices with mass " << mass << endreq;
