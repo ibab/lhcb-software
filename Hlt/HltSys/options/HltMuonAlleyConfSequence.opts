@@ -342,7 +342,7 @@ HltMuonTConfL0DimuonTriggerDiMuonsNoIP.OutputVerticesName="Hlt/Vertex/MuonTrigge
 //HltMuonTConfL0DimuonTriggerDiMuonsNoIP.InputVerticesName = "Hlt/Vertex/PreTriggerL0DimuonsPairNoIP";
 HltMuonTConfL0DimuonTriggerDiMuonsNoIP.InputVerticesName = "Hlt/Vertex/MuonPreTriggerPureDiMuon";
 HltMuonTConfL0DimuonTriggerDiMuonsNoIP.OutputDimuonVerticesName="Rec/Vertex/L0DimuonsPairNoIP";
-HltMuonTConfL0DimuonTriggerDiMuonsNoIP.PreTrigger=true;
+HltMuonTConfL0DimuonTriggerDiMuonsNoIP.PreTrigger=false;
 HltMuonTConfL0DimuonTriggerDiMuonsNoIP.OutputLevel=3;
 
 HltMuonTConfL0DimuonTriggerDiMuonsWithIP.InputTracksName = "Hlt/Track/DiMuonsForward";
@@ -352,7 +352,7 @@ HltMuonTConfL0DimuonTriggerDiMuonsWithIP.OutputVerticesName="Hlt/Vertex/MuonTrig
 HltMuonTConfL0DimuonTriggerDiMuonsWithIP.InputVerticesName = "Hlt/Vertex/MuonPreTriggerPureIPDiMuon";
 HltMuonTConfL0DimuonTriggerDiMuonsWithIP.OutputDimuonVerticesName="Rec/Vertex/L0DimuonsPairWithIP";
 HltMuonTConfL0DimuonTriggerDiMuonsWithIP.PrimaryVerticesName = "Hlt/Vertex/PV2D";
-HltMuonTConfL0DimuonTriggerDiMuonsWithIP.PreTrigger=true;
+HltMuonTConfL0DimuonTriggerDiMuonsWithIP.PreTrigger=false;
 
 
 

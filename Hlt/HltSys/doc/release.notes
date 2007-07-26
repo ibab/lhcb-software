@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-26 - Alessia Satta
+ - Correct trigger condition initialization in muon alley 
+   ( thanks to sandra)
+
 ! 2007-07-23 - Patrick Koppenburg
  - Moved inclusion of explicit selections to HltSelections package
 
