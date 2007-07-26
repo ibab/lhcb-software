@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2007-07-23 17:27:31 ibelyaev Exp $ 
+! $Id: release.notes,v 1.27 2007-07-26 14:28:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-07-26 - Vanya BELYAEV
+
+ - src/Components/HybridMCParticleArrayFilter.cpp
+  add LoKi::Hybrid::MCParticleArrayFilter 
+   the first "hybrid" implementation of new interface 
+   IMCParticleArrayFilter 
+
+
 
 ! 2007-07-23 - Vanya BELYAEV
  - many minor fixes to speedup compilation, reduce dictionaries
@@ -340,6 +349,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.26  2007/07/23 17:27:31  ibelyaev
+!  speed-up compilation, reduce dictionaries and improve doxygen
+!
 ! Revision 1.25  2007/06/11 09:17:01  cattanem
 ! move tag
 !
