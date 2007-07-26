@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-07-26 - Marco Cattaneo
+ - Add bank types L0CaloFull and L0CaloError
+
 !================ DAQEvent v7r4 2007-06-08 ============================
 ! 2007-06-08 - Pere Mato
  - Adapted to use new GaudiObjDesc patterns. Since this package was very
