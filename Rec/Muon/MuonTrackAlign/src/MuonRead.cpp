@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.2 2007-07-23 09:37:23 cattanem Exp $
+// $Id: MuonRead.cpp,v 1.3 2007-07-26 16:02:14 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -229,14 +229,15 @@ StatusCode MuonRead::execute() {
           z_hit[iMS] /=counter[iMS]; 
         }
       }
-    }
+    
 
     Simone->array("x_hit",x_hit,5);
     Simone->array("y_hit",y_hit,5);
     Simone->array("z_hit",z_hit,5);
     Simone->array("tx_hit",tx_hit,5);
     Simone->array("ty_hit",ty_hit,5);
-    
+    }
+
     Simone->write();
 
   }
