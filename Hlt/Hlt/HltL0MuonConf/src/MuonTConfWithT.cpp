@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.cpp,v 1.4 2007-07-12 17:52:36 asatta Exp $
+// $Id: MuonTConfWithT.cpp,v 1.5 2007-07-26 07:17:39 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -76,8 +76,8 @@ StatusCode MuonTConfWithT::execute() {
 //info()<<" sono qui "<<endreq;
    std::vector<LHCb::Track*>* foundTracksTmp = new std::vector<LHCb::Track*>;
   foundTracksTmp->reserve(50);
-  LHCb::Tracks* output = new LHCb::Tracks();
-  output->reserve(50);
+  //LHCb::Tracks* output = new LHCb::Tracks();
+  //output->reserve(50);
 
 
 //info()<<" e ora qui"<<endreq;
@@ -152,7 +152,7 @@ int nummu=0;
       outTr->setFlag(Track::L0Candidate,false);
 
       m_outputTracks->push_back(outTr);
-      output->insert(outTr);
+ //     output->insert(outTr);
      // info()<<" hlt container"<<endreq;
 //      setFilterPassed(true);
       delete  (*iterTrack);
@@ -167,7 +167,7 @@ int nummu=0;
     
   }//end loop muons
 
-put(output, "Hlt/Track/MuonTrackConf");
+//put(output, "Hlt/Track/MuonTrackConf");
 
   delete foundTracksTmp;
 //  setFilterPassed(true);
