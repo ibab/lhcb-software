@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.22 2006-06-15 11:50:50 cattanem Exp $
+// $Id: LinkedFrom.h,v 1.23 2007-07-26 13:17:14 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -18,7 +18,7 @@
  *  @author Olivier Callot
  *  @date   2004-01-06
  */
-template <class SOURCE, class TARGET=ContainedObject>
+template <class SOURCE, class TARGET=ContainedObject, class KEY=int>
 class LinkedFrom {
 public: 
   //== Typedefs to please Matt
@@ -104,7 +104,7 @@ public:
   }
 
   /** returns a vector of keys, for int linked to TARGET. */
-  std::vector<int>& intRange( const TARGET* target ) {
+  std::vector<KEY>& keyRange( const TARGET* target ) {
     m_int.clear();
     if ( NULL == m_links ) return m_int;
     m_curReference.setLinkID( -1 );
@@ -155,6 +155,6 @@ private:
   std::vector<std::pair<int,int> >::const_iterator m_srcIterator;
   int                                m_wantedKey;
   LRange                             m_vect;
-  std::vector<int>                   m_int;
+  std::vector<KEY>                   m_int;
 };
 #endif // LINKER_LINKEDFROM_H
