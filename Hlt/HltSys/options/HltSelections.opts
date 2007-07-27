@@ -15,11 +15,25 @@
 Hlt.Members += { "GaudiSequencer/HltSelections" };
 HltSelections.MeasureTime = true ;
 HltSelections.Context = "HLT" ;
+
 //---------------------------------------------------------------------
-// Full reconstruction of all tracks
+// Full reconstruction of all tracks 
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/HltFullReco.opts"
-HltEnd.OnTES = true; // store all on TES
+
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+HltSelections.Members += {"HltSelectionEntry/HltAlleys",
+                          "GaudiSequencer/HltRecoSequence"
+};
+
+HltAlleys.Selections = {"MuonTriggerSingle",
+                        "MuonTriggerDiMuon",
+                        "MuonTriggerIPDiMuon",
+                        "MuonTriggerPureDiMuon",
+                        "MuonTriggerPureIPDiMuon",
+                        "HadTrigger"
+}
+HltAlleys.SelectionName = "HltAlleys"
+
 //---------------------------------------------------------------------
 // ProtoParticles and Particles
 //---------------------------------------------------------------------

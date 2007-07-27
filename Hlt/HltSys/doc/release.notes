@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-07-27 - Jose A. Hernando
+ - Merging HltReco.opts and HltFulReco.opts in HltRecoSequence.opts
+ - Making HltReco.opts to run the online reconstruction in any gaudi appl
+ - Adding HltAlleysExit algorithm to merge the decision of the different alleys
+(In Hlt.opts)
+
 ! 2007-07-26 - Alessia Satta
  - Correct trigger condition initialization in muon alley 
    ( thanks to sandra)

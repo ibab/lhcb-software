@@ -1,103 +1,17 @@
 //------------------------------
-// Definition of the reconstruction
+// Opts to run the online reconstruction
 //-----------------------------
+
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/HltReco"};
 
 HltReco.Members = {
-  "GaudiSequencer/HltRecoVeloRZSeq",
-  "HltTracking/HltRecoVelo",
-  "GaudiSequencer/HltDecodeTT",
-  "HltTracking/HltRecoVeloTT",
-  "GaudiSequencer/HltDecodeT",
-  "HltTracking/HltRecoForward"
+  "PatInitEvent",
+  "GaudiSequencer/HltRecoSequence"
 };
 
-HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
-HltRecoVelo.RecoName = "Velo";
-HltRecoVelo.HistogramUpdatePeriod = 0;
-HltRecoVelo.OutputLevel = 3;
 
-//HltRecoVeloTT.InputTracksName = "Hlt/Track/Velo";
-HltRecoVeloTT.OutputTracksName = "Hlt/Track/VeloTT";
-HltRecoVeloTT.RecoName = "VeloTT";
-HltRecoVeloTT.HistogramUpdatePeriod = 0;
-HltRecoVeloTT.OutputLevel = 3;
-
-PatHltRecoVeloTT.removeUsedTracks = false;
-PatHltRecoVeloTT.fitTracks = false;
-PatHltRecoVeloTT.maxChi2 = 256.;
-PatHltRecoVeloTT.PatVeloTTTool.minMomentum = 2000.;
-PatHltRecoVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
-PatHltRecoVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
-PatHltRecoVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
-PatHltRecoVeloTT.OutputLevel = 3;
-
-// HltRecoForward.InputTracksName = "Hlt/Track/Velo";
-HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
-HltRecoForward.RecoName = "Forward";
-HltRecoForward.HistogramUpdatePeriod = 0;
-HltRecoForward.OutputLevel = 3;
-
-
-//-----------------------------
-// HLT Common reconstruction
-//-----------------------------
-
-HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
-                              "PatVeloLoadClusters",
-                              "PatVeloRTracking",
-                              "PatPV2D",
-                              "HltPrepareTracks/HltPrepareRZVelo",
-                              "HltPrepareVertices/HltPreparePrimaryVertices"
-};
-
-PatVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
-PatVeloRTracking.OutputLevel = 3;
-PatPV2D.InputTracksName = "Hlt/Track/RZVelo";
-PatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
-PatPV2D.OutputLevel = 3;
-
-HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
-HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
-HltPrepareRZVelo.OutputLevel = 3;
-
-HltPreparePrimaryVertices.SelectionName = "PV2D";
-HltPreparePrimaryVertices.PatInputVerticesName = "Hlt/Vertex/PV2D";
-HltPreparePrimaryVertices.OutputVerticesName   = "Hlt/Vertex/PV2D";
-HltPrepareRZVelo.OutputLevel = 3;
-
-// 3D Velo tracking and PV
-//------------------------
-HltRecoVeloSeq.Members += { "HltTracking/HltRecoVelo",
-                            "PatPV3D"
-};
-PatPV3D.InputTracksName = "Hlt/Track/Velo";
-//PatPV3D.OutputVerticesName = "Hlt/Vertex/PV3D";
-
-// Decode TT
-//-------------
-HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters",
-                         "PatTTCoordFromRaw"
-};
-
-// Decode T
-//--------------
-HltDecodeT.Members += { "RawBankToSTLiteClusterAlg/createITLiteClusters",
-                        "PatTCoordFromRaw"
-};
-createITLiteClusters.detType = "IT";
-
-// VeloTT
-//----------------
-
-//TODO: should be this be here or in the sequencer?
-
-// Forward
-//----------------
-#include "$PATFORWARDROOT/options/PatFwdTool.opts"
-ToolSvc.PatForwardTool.OutputLevel = 3;
-ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
-ToolSvc.PatForwardTool.MinPt       = 80. ;   
-ToolSvc.PatAddTTCoord.OutputLevel = 3;
-//ToolSvc.PatForwardTool.AddTTClusterName = "";
 
 

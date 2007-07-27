@@ -2,14 +2,11 @@
 // HLT Reconstruction
 //--------------------------
 
-#include "$HLTSYSROOT/options/HltReco.opts"
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
 
 //---------------------------
 // HLT Alleys
 //--------------------------
-
-
-
 
 
 //----------------------------

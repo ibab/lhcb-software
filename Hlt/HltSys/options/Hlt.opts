@@ -1,5 +1,8 @@
-#include "$HLTSYSROOT/options/HltReco.opts"
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
 
+//
+// main HLT sequencer
+//
 ApplicationMgr.TopAlg += {"HltSequencer/Hlt"};
 
 Hlt.Members += {"HltSequencer/HltInitSeq",
@@ -8,27 +11,54 @@ Hlt.Members += {"HltSequencer/HltInitSeq",
 };
 Hlt.ModeOr = true;
 
+//
+// init the HLT sequencer
+//
 HltInitSeq.Members = {"PatInitEvent",
                       "HltInit"  
 };
 
-HltEndSeq.Members = {"HltSelectionDataToTes",
-                     "HltSummaryWriter"};
 
-HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
-//HltSelectionDataToTes.OutputLevel=3;
+//
+// the Alleys sequencer
+//
 
-// HltSelectionDataToTes.CopyAll = true;
-// HltSummaryWriter.SaveAll = true;
-HltSummaryWriter.OutputLevel=3;
-HltAllAlleys.Members ={
-  "HltSequencer/HltMuonAlley"
-  ,"HltSequencer/HltHadAlley"
-  // ,"HltSequencer/HltCaloAlley"
+HltAllAlleys.Members ={"HltSequencer/HltMuonAlley",
+                       "HltSequencer/HltHadAlley",
+                         // ,"HltSequencer/HltCaloAlley"
+                       "HltSelectionEntry/HltAlleysExit"
+
 };
 HltAllAlleys.ModeOr=true;
 
-// different configurations
-// #include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
+
+
+HltAlleysExit.Selections = {"MuonTriggerSingle",
+                            "MuonTriggerDiMuon",
+                            "MuonTriggerIPDiMuon",
+                            "MuonTriggerPureDiMuon",
+                            "MuonTriggerPureIPDiMuon",
+                            "HadTrigger"
+};
+HltAlleysExit.SelectionName = "HltAlleysExit";
+
+//
+// end the Hlt sequencer: write in summary and copy to TES
+//
+
+HltEndSeq.Members = {"HltSelectionDataToTes",
+                     "HltSummaryWriter"};
+
+
+
+HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
+// HltSelectionDataToTes.CopyAll = true;
+
+// HltSummaryWriter.SaveAll = true;
+HltSummaryWriter.Save += {"HltAlleys"};
+HltSummaryWriter.OutputLevel=3;
+
+
+

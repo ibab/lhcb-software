@@ -182,7 +182,7 @@ HadTrigger.InputVerticesName   = "HadDiHadronVMaker";
 HadTrigger.PrimaryVerticesName = "PV2D";
 HadTrigger.OutputVerticesName  = "HadTrigger";
 HadTrigger.OutputLevel = 3;
-HadTrigger.FilterDescriptor = {"VertexMaxPT,>,2000.",
+HadTrigger.FilterDescriptor = {"VertexMaxPT,>,2500.",
                                "VertexMinPT,>,1000.",
                                "VertexPointing,<,0.5",
                                "VertexDz,>,0."
