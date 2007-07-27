@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 !====================== Magnet v3r5 2007-07-27 ===============================
-! 2007-06-14 - Adlene Hicheur
+! 2007-07-27 - Adlene Hicheur
  - AnalyticFieldSvc: modified GetParam and Bcalculation to read new param.
  - Added Bdl testing method in MagFieldReader
  - Added some commented lines for new MagFieldReader use in job.opts
