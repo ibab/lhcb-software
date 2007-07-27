@@ -1,4 +1,4 @@
-// $Id: ReadFile.cpp,v 1.1 2007-07-06 08:10:22 ibelyaev Exp $
+// $Id: ReadFile.cpp,v 1.2 2007-07-27 15:12:53 gcorti Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,7 +32,9 @@ LbPythia::ReadFile::ReadFile
     // the name of LHE input file  (no DEFAULT value!)
   , m_file () ///< no default value!
 {
-  declareProperty ( "InputFile" , m_file , "The name of input file with partonic events") ;
+  // Do not use TEMPORARLY the third argument to allow to use it in Gauss v25rX
+  //  declareProperty ( "InputFile" , m_file , "The name of input file with partonic events") ;
+  declareProperty ( "InputFile" , m_file ) ;
   ///
   PythiaProduction::m_frame  = "USER" ;
   PythiaProduction::m_beam   = " " ;

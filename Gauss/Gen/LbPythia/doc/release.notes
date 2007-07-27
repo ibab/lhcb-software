@@ -4,8 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2007-06-29 - Vanya BELYAEV
+! 2007-07-27 - Gloria Corti
+ - Temporarly use setting of properties without explanation third argument
+   to keep compatibility for Gauss v25rX series
+	 . src/component/ReadFile.cpp
+   . src/component/ReadAlpGen.cpp
 
+! 2007-06-29 - Vanya BELYAEV
  - Put few modificationto be able to read ALPGEN partonic events 
    and process them through Pythia for showering
 

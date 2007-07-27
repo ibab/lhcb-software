@@ -1,4 +1,4 @@
-// $Id: ReadAlpGen.cpp,v 1.1 2007-07-06 08:10:04 ibelyaev Exp $
+// $Id: ReadAlpGen.cpp,v 1.2 2007-07-27 15:12:53 gcorti Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -58,9 +58,12 @@ namespace LbPythia
     {
       // see ALPGENREADPROCESS
       PythiaProduction::m_userProcess    = 5 ; ///< see ALPGENREADPROCESS
-      // 
-      declareProperty ( "ParamFile" , m_paramfile , "The name of file with ALPGEN parameters") ;
-      declareProperty ( "LogFile"   , m_logfile   , "The name of ALPGEN's log-file") ;      
+      // Do not use TEMPORARLY the third argument to allow to use it in
+      // Gauss v25rX
+      // declareProperty ( "ParamFile" , m_paramfile , "The name of file with ALPGEN parameters") ;
+      // declareProperty ( "LogFile"   , m_logfile   , "The name of ALPGEN's log-file") ;      
+      declareProperty ( "ParamFile" , m_paramfile ) ;
+      declareProperty ( "LogFile"   , m_logfile ) ;      
     } ;                      
     virtual ~ReadAlpGen() {}
   private:
