@@ -1,4 +1,4 @@
-// $Id: HltSelectionEntry.cpp,v 1.1 2007-07-27 21:41:00 hernando Exp $
+// $Id: HltSelectionEntry.cpp,v 1.2 2007-07-27 22:33:17 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -64,8 +64,9 @@ StatusCode HltSelectionEntry::initialize() {
       info() << " \t selection " << sel << " id " << id << endreq;
       ids.push_back(id);
     }
-    m_selectionNames.push_back(sels);
+    m_selectionNames.push_back(value);
     m_selectionIDs.push_back(ids);
+    m_scounters.push_back(0);
   }
 
   return StatusCode::SUCCESS;
@@ -77,8 +78,10 @@ StatusCode HltSelectionEntry::initialize() {
 StatusCode HltSelectionEntry::execute() {
   
   bool ok = false;
+  int isel = -1;
   for (std::vector< std::vector<int> >::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
+    isel += 1;
     std::vector<int> ids = *it;
     bool ok2 = true;
     for (std::vector<int>::iterator it2 = ids.begin(); 
@@ -87,6 +90,7 @@ StatusCode HltSelectionEntry::execute() {
       else ok2 = ok2 && (m_datasummary->selectionSummary(*it2).decision());
       debug() << " selection " << *it << ok2 << endreq;
     } 
+    if (ok2) m_scounters[isel]+= 1;
     ok = ok || ok2;
   }
   
@@ -101,6 +105,11 @@ StatusCode HltSelectionEntry::execute() {
 //=============================================================================
 StatusCode HltSelectionEntry::finalize() {
 
+  for (size_t i = 0; i < m_scounters.size(); ++i){
+    std::string title = m_selectionNames[i];
+    infoSubsetEvents(m_scounters[i],m_counterEntries,title);
+  }
+  
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 

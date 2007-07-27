@@ -1,4 +1,4 @@
-// $Id: HltSelectionEntry.h,v 1.1 2007-07-27 21:41:00 hernando Exp $
+// $Id: HltSelectionEntry.h,v 1.2 2007-07-27 22:33:17 hernando Exp $
 #ifndef HLTSELECTIONENTRY_H 
 #define HLTSELECTIONENTRY_H 1
 
@@ -33,9 +33,11 @@ public:
 
 protected:
 
-  std::vector<std::vector<std::string> > m_selectionNames;
+  std::vector< std::string > m_selectionNames;
  
   std::vector<std::vector<int> > m_selectionIDs;
+
+  std::vector<int> m_scounters;
 
   StringArrayProperty m_selections;
 
