@@ -1,0 +1,39 @@
+# $Id: requirements,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $ 
+# ============================================================================
+# Created    : 2007-06-08
+# Maintainer : Vanya BELYAEV
+# ============================================================================
+package           LoKiTrigger
+version           v1r0
+
+# =============================================================================
+branches          cmt doc src dict python LoKi 
+
+# =============== dependencies ================================================
+use               TrackEvent      v*    Event 
+use               TrackInterfaces v*    Tr
+use               LoKiCore        v*    Phys 
+
+# ================ own includes ===============================================
+apply_pattern install_more_includes more=LoKi
+
+# =============== constituents ================================================
+library           LoKiTriggerLib ../src/*.cpp 
+library           LoKiTrigger    ../src/Components/*.cpp 
+
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                         \
+                 dictionary=LoKiTrigger                                    \
+                 headerfiles=$(LOKITRIGGERROOT)/dict/LoKiTriggerDict.h     \
+                 selectionfile=$(LOKITRIGGERROOT)/dict/LoKiTrigger.xml     \  
+                 options=" -U__MINGW32__ "
+
+# ============== patterns =====================================================
+apply_pattern    linker_library    library=LoKiTriggerLib
+apply_pattern    component_library library=LoKiTrigger
+
+macro LoKiTriggerDict_use_linkopts $(use_linkopts)
+
+# =============================================================================
+# The END 
+# =============================================================================
