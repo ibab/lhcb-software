@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.cpp,v 1.6 2007-06-14 08:47:43 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.7 2007-07-27 16:40:00 ahicheur Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,10 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/RndmGenerators.h"
+
+// from LHCbKernel
+#include "Kernel/IBIntegrator.h"
 
 // Math Definitions
 #include "GaudiKernel/Vector3DTypes.h"
@@ -21,6 +25,7 @@
 // 08/05/2002 : Edgar De Oliveira
 // 16/03/2004 : Gloria Corti, modified to fill ntuple
 // 05/2007: Adlene Hicheur, modified to enable tests of different mappings
+// 07/2007: Adlene Hicheur, added B field integral testing Ntuple
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( MagFieldReader );
@@ -41,6 +46,8 @@ MagFieldReader::MagFieldReader( const std::string& name,
   declareProperty("Xmin", m_yMin =     0.0*Gaudi::Units::mm);  
   declareProperty("Ymax", m_yMax =  4000.0*Gaudi::Units::mm);
   declareProperty("FieldSvcName",m_FieldServiceName="MagneticFieldSvc");
+  declareProperty("TestFieldInt",m_testbdl=false);
+  declareProperty("NInt",m_nInt=1000);
   
 }
 
@@ -65,6 +72,7 @@ StatusCode MagFieldReader::initialize() {
 //=============================================================================
 StatusCode MagFieldReader::execute() {
 
+  if (m_testbdl) TestBdl();
   
   // Print out info messages with the field value at different locations.
 
@@ -73,7 +81,7 @@ StatusCode MagFieldReader::execute() {
   Tuple nt1 = nTuple( 10, "Field", CLID_ColumnWiseTuple );
 
   Gaudi::XYZVector B(0.0,0.0,0.0);
- 
+
 
         
   for ( double z = m_zMin; z <= m_zMax; z += m_step ) {
@@ -83,7 +91,7 @@ StatusCode MagFieldReader::execute() {
         
         // get field at point P
         m_pIMF->fieldVector( P, B );
-        
+     
         // fill ntuple
         nt1->column( "x", P.x()/Gaudi::Units::cm );
         nt1->column( "y", P.y()/Gaudi::Units::cm );
@@ -91,6 +99,7 @@ StatusCode MagFieldReader::execute() {
         nt1->column( "Bx", B.x()/Gaudi::Units::tesla );
         nt1->column( "By", B.y()/Gaudi::Units::tesla );
         nt1->column( "Bz", B.z()/Gaudi::Units::tesla );
+ 
         nt1->write();
       }
     }
@@ -124,3 +133,45 @@ if ( sc.isSuccess() )
     info() << "Service finalized successfully" << endmsg;
   return StatusCode::SUCCESS;
 };
+
+
+void MagFieldReader::TestBdl() 
+{
+  
+Tuple nt2 = nTuple( 20, "Field Integral", CLID_ColumnWiseTuple );
+
+  IBIntegrator* bIntegrator = tool<IBIntegrator>("BIntegrator");
+
+  Gaudi::XYZPoint start(0,0,0);
+  Gaudi::XYZPoint stop(0,0,9000/Gaudi::Units::mm); // start and end points
+  double sigtx(0.3);
+  double sigty(0.25); // slopes at start
+  double zC; // z centre of field returned by tool
+  Gaudi::XYZVector bdl;
+
+  // random number generation
+  Rndm::Numbers gausstx(randSvc(),Rndm::Gauss(0.,sigtx/2));
+  Rndm::Numbers gaussty(randSvc(),Rndm::Gauss(0.,sigty/2));
+  
+  for (int i=0;i<m_nInt;i++) {
+    double tx = gausstx();
+    double ty = gaussty();
+    if (fabs(tx) < sigtx && fabs(ty) < sigty) {
+      
+      bIntegrator->calculateBdlAndCenter(start, stop, tx, ty, zC, bdl);
+  
+      nt2->column( "tx", tx);
+      nt2->column( "ty", ty);
+      nt2->column( "Bdlx", bdl.x());
+      nt2->column( "Bdly", bdl.y());
+      nt2->column( "Bdlz", bdl.z());
+      nt2->column( "zCenter", zC);
+      nt2->write();
+    }
+  }
+  
+  bIntegrator->release(); 
+                          
+
+  
+}

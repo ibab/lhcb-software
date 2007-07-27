@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.h,v 1.3 2007-06-14 08:47:43 ahicheur Exp $
+// $Id: MagFieldReader.h,v 1.4 2007-07-27 16:40:00 ahicheur Exp $
 #ifndef MAGFIELDREADER_H 
 #define MAGFIELDREADER_H 1
 
@@ -32,12 +32,13 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize   ();    ///< Algorithm finalization
+  void TestBdl();
 
 protected:
 
 private:
   
-  // Pointer to the magnetic field services
+  // Pointer to the magnetic field service
   IMagneticFieldSvc* m_pIMF;  
 
 
@@ -49,6 +50,9 @@ private:
   // range in x and y
   double m_xMin, m_xMax, m_yMin, m_yMax;
   std::string m_FieldServiceName; ///< Indicate the name of the service to be tested (default is MagneticFieldSvc)
+  bool m_testbdl; ///< Test field integral for random "track" slopes
+  int m_nInt; ///< number of field integrals to generate
+   
   
 
 };

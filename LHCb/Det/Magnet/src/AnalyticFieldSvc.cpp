@@ -49,9 +49,9 @@ AnalyticFieldSvc::AnalyticFieldSvc( const std::string& name,
   m_constFieldVector.push_back( 0. );
   
 
-  declareProperty( "BxMapFile",m_filename[0] = "Bx_parameterization.cdf");
-  declareProperty( "ByMapFile",m_filename[1] = "By_parameterization.cdf");
-  declareProperty( "BzMapFile",m_filename[2] = "Bz_parameterization.cdf");
+  declareProperty( "BxMapFile",m_filename[0] = "BxMapFileNotSet");
+  declareProperty( "ByMapFile",m_filename[1] = "ByMapFileNotSet");
+  declareProperty( "BzMapFile",m_filename[2] = "BzMapFileNotSet");
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
   declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
@@ -233,6 +233,211 @@ StatusCode AnalyticFieldSvc::GetParam() {
 
 
     // Get the number of parameterization terms
+    std::string sTerms[4];
+    char* token = strtok( line, " " );
+    int ip = 0;
+    do{
+      if ( token ) { sTerms[ip] = token; token = strtok( NULL, " " );} 
+      else continue;
+      ip++;
+    } while ( token != NULL );
+
+    int nterms = atoi( sTerms[1].c_str() );
+    int nterms2 = 0;
+    if (k>4 && k<12) nterms2 = atoi( sTerms[3].c_str() );
+
+    log << MSG::INFO <<" REGION NUMBER: "<<k<<endreq;
+    
+    log << MSG::INFO << "NTERMS " << nterms << endreq;
+    if (k>4 && k<12) log << MSG::INFO << "NTERMS FOR Y>YMAX-30 REGION: " << nterms2 << endreq;;
+    MagMat* temp = new MagMat(nterms+2,4);
+
+    
+    for(int l=0;l<nterms+3;l++) {
+     
+       infile.getline( line, 255 );
+	    if ( line[0] == '#' ) continue;
+	    std::string sPowx, sPowy, sPowz, sCoef; 
+	    char* token = strtok( line, " " );
+	    if ( token ) { sPowx = token; token = strtok( NULL, " " );} else continue;
+	    if ( token ) { sPowy = token; token = strtok( NULL, " " );} else continue;
+	    if ( token ) { sPowz = token; token = strtok( NULL, " " );} else continue;
+	    if ( token ) { sCoef = token; token = strtok( NULL, " " );} else continue;
+	    if ( token != NULL ) continue;
+      
+      double Powx = atof( sPowx.c_str() );
+      double Powy = atof( sPowy.c_str() );
+      double Powz = atof( sPowz.c_str() );
+      double Coef = atof( sCoef.c_str() );
+      
+      // Add the powers and coefficients parameters of each region to 
+      // sequentialy in a matrice 
+
+      if (l>0) {       
+      (*temp)[l-1][0]= Powx ;
+      (*temp)[l-1][1]= Powy ;
+      (*temp)[l-1][2]= Powz ;
+      (*temp)[l-1][3]= Coef ;
+      }
+      
+ 
+    }
+
+    if (ifile ==0) Bxmap.push_back(temp);
+    if (ifile ==1) Bymap.push_back(temp);
+    if (ifile ==2) Bzmap.push_back(temp);
+
+    //In case one has a second parametrization for ymax - 30cm < y < ymax
+    if (k>4 && k<12) {
+      
+      MagMat* temp2 = new MagMat(nterms2+2,4);
+
+      infile.getline( line, 255 );
+
+      for(int l=0;l<nterms2+2;l++) {
+        
+        infile.getline( line, 255 );
+        if ( line[0] == '#' ) continue;
+        std::string sPowx, sPowy, sPowz, sCoef; 
+        char* token = strtok( line, " " );
+        if ( token ) { sPowx = token; token = strtok( NULL, " " );} else continue;
+        if ( token ) { sPowy = token; token = strtok( NULL, " " );} else continue;
+        if ( token ) { sPowz = token; token = strtok( NULL, " " );} else continue;
+        if ( token ) { sCoef = token; token = strtok( NULL, " " );} else continue;
+        if ( token != NULL ) continue;
+      
+        double Powx = atof( sPowx.c_str() );
+        double Powy = atof( sPowy.c_str() );
+        double Powz = atof( sPowz.c_str() );
+        double Coef = atof( sCoef.c_str() );
+      
+        // Add the powers and coefficients parameters of each region to 
+        // sequentialy in a matrice 
+
+   
+        (*temp2)[l][0]= Powx ;
+        (*temp2)[l][1]= Powy ;
+        (*temp2)[l][2]= Powz ;
+        (*temp2)[l][3]= Coef ;
+   
+      
+ 
+      }
+
+    if (ifile ==0) Bxmap.push_back(temp2);
+    if (ifile ==1) Bymap.push_back(temp2);
+    if (ifile ==2) Bzmap.push_back(temp2);
+    
+    }
+    
+      
+
+
+} 
+ infile.close(); 
+  }
+  
+  }
+ 
+  return sc;
+}
+
+
+// Old version of GetParam - keep it temporarily
+/*StatusCode AnalyticFieldSvc::GetParam() {
+  StatusCode sc = StatusCode::FAILURE;
+  
+  MsgStream log( msgSvc(), name() );
+
+  for(int ifile=0;ifile<3;ifile++) {
+    
+  char line[ 255 ];
+ 
+
+  std::ifstream infile( m_filename[ifile].c_str() );
+
+
+
+  
+  if (!infile) {
+      log << MSG::ERROR << "Unable to open BMap : " 
+           << m_filename[ifile] << endreq;
+  
+  }
+
+ 
+  if (infile) {
+    sc = StatusCode::SUCCESS;
+      log << MSG::INFO << "BMap opened successfully : " << m_filename[ifile]
+    	<< endreq;
+ 
+
+       // Skip the header till ZMINS
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != 'M' && line[1] !='I');
+
+      // Get the ZMINS in a vector
+
+ 
+    std::string sZmin[NREG];
+    char* token = strtok( line, " " );
+    int izmin = 0;
+ 
+  
+    do{
+ 
+      if ( token ) {
+        if (izmin>0) sZmin[izmin-1] = token; 
+        token = strtok( NULL, " ");
+      }
+      else continue;
+      izmin++;
+    } while (token != NULL);
+
+    for(int w=0;w<NREG;w++) {
+     
+      zmin[w] = atof( sZmin[w].c_str() ) ; 
+    }
+
+
+       // Skip the header till ZMAXS
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != 'M' && line[1] !='A');
+
+      // Get the ZMAXS in a vector
+
+    std::string sZmax[NREG];
+    token = strtok( line, " " );
+    int izmax = 0;
+    do{
+      if ( token ) {
+
+        if (izmax>0) sZmax[izmax-1] = token; 
+        token = strtok( NULL, " ");
+      }
+      else continue;
+      izmax++;
+    } while (token != NULL);
+
+
+
+    for(int x=0;x<NREG;x++) {
+     
+      zmax[x] = atof( sZmax[x].c_str() ) ; 
+    }
+       
+
+ for(int k=0;k<NREG;k++) {
+
+       // Skip the header till next REGION
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != 'R' );
+
+
+    // Get the number of parameterization terms
     std::string sTerms[2];
     char* token = strtok( line, " " );
     int ip = 0;
@@ -294,7 +499,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
   
   
   return sc;
-}
+  }*/
 
 //=============================================================================
 // FieldVector: find the magnetic field value at a given point in space
@@ -328,6 +533,60 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
   coord[0]=point.x()/Gaudi::Units::m;  
   coord[1]=point.y()/Gaudi::Units::m;
   coord[2]=point.z()/Gaudi::Units::m;
+
+  int iReg = 0;
+  //For Regions (z slices) 6 to 12, division between y < ymax - 30 cm and y>ymax - 30 cm  
+  
+  for (int iz=0;iz <NREG;iz++) {
+
+    iReg=iz;
+    
+    bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && point.z()/Gaudi::Units::cm<zmax[iz];
+    
+ 
+    if (iz>4 && iz<12) {
+      iReg = 2*iz-5;
+      if (fabs(coord[1]) > (*(Bxmap[iReg]))[1][1]) iReg++;
+    }
+  
+    if(iz>=12) iReg = iz+7;
+    
+
+    if (condZ) {      
+
+
+      bf.SetXYZ(EvaluateField(coord,*(Bxmap[iReg])),EvaluateField(coord,*(Bymap[iReg])),EvaluateField(coord,*(Bzmap[iReg])));
+
+    }
+
+  }
+
+  bf*=Gaudi::Units::tesla;
+  
+
+  return ;
+}
+
+
+//Old version of Bcalculation - keep it temporarily
+/*void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point, 
+				  Gaudi::XYZVector& bf ) const {
+
+  //initialize B field value
+  bf.SetXYZ(0,0,0);
+  // Use constant field?
+  if( m_useConstField ) {
+    bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
+               m_constFieldVector[1]*Gaudi::Units::tesla,
+               m_constFieldVector[2]*Gaudi::Units::tesla );
+    return;
+  }
+  
+  MagVec coord(3);
+
+  coord[0]=point.x()/Gaudi::Units::m;  
+  coord[1]=point.y()/Gaudi::Units::m;
+  coord[2]=point.z()/Gaudi::Units::m;
   
   for (int iz=0;iz < NREG;iz++) {
 
@@ -344,7 +603,7 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
   
 
   return ;
-}
+  }*/
 
 
 //=============================================================================

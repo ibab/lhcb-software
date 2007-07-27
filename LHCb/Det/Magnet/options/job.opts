@@ -1,8 +1,10 @@
 //##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-//ApplicationMgr.SvcOptMapping += { "AnalyticFieldSvc/MagneticFieldSvc" };
 //Uncomment for AnalyticFieldSvc testing
+//ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "AnalyticFieldSvc/MagneticFieldSvc" };
+// Old way to call AnalyticFieldSvc
 //ApplicationMgr.ExtSvc += { "AnalyticFieldSvc" };
 //ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
 //#pragma print on
@@ -37,11 +39,19 @@ ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 // Algorithms Private Options
 //--------------------------------------------------------------
 MagFieldReader.OutputLevel = 2;
-//Uncomment to test AnalyticFieldSvc:
+//MagFieldReader.TestFieldInt= true;
+//MagFieldReader.NInt = 10000;
+//Obsolete ===> Uncomment to test AnalyticFieldSvc:
 //MagFieldReader.FieldSvcName="AnalyticFieldSvc";
 // Pick up default field map as defined in FieldMap package
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 //Uncomment for AnalyticFieldSvc testing
+//ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "AnalyticFieldSvc/MagneticFieldSvc" };
+//MagneticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
+//MagneticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
+//MagneticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
+// Old way to call AnalyticFieldSvc
 //AnalyticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
 //AnalyticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
 //AnalyticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
