@@ -4,8 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2007-07-12 Jose A. 
-  - removing obsolete HltSummaryFunctor
+! 2007-07-27 Jose A. Hernando 
+  - adding method has<> in HltSummaryHelper header for Tomasz 
 
 ! 2007-07-12 A. Satta
   - add a variable in match velo T ( for Sandra Amato)

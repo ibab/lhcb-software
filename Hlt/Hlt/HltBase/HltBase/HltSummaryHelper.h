@@ -43,16 +43,28 @@ namespace HltSummaryHelper {
   }
 
   size_t ncandidates(const LHCb::HltSummary& sum, int id);
-  
 
- //  template <class CONT>
-//   bool register(LHCb::HltSummary& sum, int id, CONT& con) {
-//     Hlt::DataHolder<CONT>* holder = new Hlt::DataHolder<CONT>(*con);
-//     if (!sum.hasSelectionSummary(id)) return false;
-//     LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);    
-//     sel.addData(*holder); 
-//     return true;
-//   }
+  template <class CONT>
+  bool has(const LHCb::HltSummary& sum,int id) {
+    if (!sum.hasSelectionSummary(id)) return false;
+    const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
+    if (sel.data().size()<=0) return false;
+    ContainedObject* obj = sel.data().front();
+    Hlt::DataSizeHolder< CONT >* holder = 
+      dynamic_cast< Hlt::DataSizeHolder<CONT>*>(obj);
+    if (!holder) return false;
+    return true;    
+  }
+  
+  
+  //  template <class CONT>
+  //   bool register(LHCb::HltSummary& sum, int id, CONT& con) {
+  //     Hlt::DataHolder<CONT>* holder = new Hlt::DataHolder<CONT>(*con);
+  //     if (!sum.hasSelectionSummary(id)) return false;
+  //     LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);    
+  //     sel.addData(*holder); 
+  //     return true;
+  //   }
   
 };
 
