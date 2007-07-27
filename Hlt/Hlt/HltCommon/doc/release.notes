@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-07-27 - Jose A. Hernando
+  - HltSelectionEntry: make a selection from previous selections
+     to be used to define the exit of the alleys as the OR of the alleys 
+
 ! 2007-07-12 - Jose A. Hernando
   - HltSummaryTool adding NCandidates method
 
