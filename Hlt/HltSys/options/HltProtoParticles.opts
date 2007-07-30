@@ -77,7 +77,7 @@ HltRichPIDsKaons.DecayDescriptor = "Kaon" ;
 //---------------------------------------------------------------------
 // Special case for muons
 //---------------------------------------------------------------------
-HltFullReco.Members += { "GaudiSequencer/SeqHltMuons" } ;
+HltSelections.Members += { "GaudiSequencer/SeqHltMuons" } ;
 SeqHltMuons.Members += {"HltMuonForTES"   } ;
 HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonsForwardSingle";
 HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonsForward";
@@ -99,7 +99,7 @@ HltMuonPAlg.CaloEcalPID = false ;
 HltMuonPAlg.CaloHcalPID = false ;
 HltMuonPAlg.CaloBremPID = false ;
 
-HltFullReco.Members += { "PreLoadParticles/HltMuons" };
+HltSelections.Members += { "PreLoadParticles/HltMuons" };
 HltMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltMuons.PhysDesktop.NoPIDsParticleMaker.Inputs =  { "Hlt/ProtoP/Muons"} ;
 HltMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
