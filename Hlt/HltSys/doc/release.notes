@@ -7,6 +7,7 @@ Purpose: LHCb High Level Trigger packages.
 
 ! 2007-07-30 - Patrick Koppenburg
  - Missing semicolon added to HltSelections.opts
+ - Small changes in sequencing
 
 ! 2007-07-27 - Jose A. Hernando
  - Merging HltReco.opts and HltFulReco.opts in HltRecoSequence.opts

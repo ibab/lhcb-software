@@ -5,7 +5,7 @@
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
 
 
-ApplicationMgr.TopAlg += {"GaudiSequencer/HltReco"};
+// PK // ApplicationMgr.TopAlg += {"GaudiSequencer/HltReco"};
 
 HltReco.Members = {
   "PatInitEvent",

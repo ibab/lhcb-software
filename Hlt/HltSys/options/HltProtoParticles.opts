@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------
 // Charged ProtoParticles
 //---------------------------------------------------------------------
-HltFullReco.Members += { "GaudiSequencer/SeqHltCharged" } ;
+HltSelections.Members += { "GaudiSequencer/SeqHltCharged" } ;
 SeqHltCharged.MeasureTime = true ;
 SeqHltCharged.IgnoreFilterPassed = true ;
 
