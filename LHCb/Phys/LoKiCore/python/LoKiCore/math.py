@@ -63,13 +63,13 @@ def cbrt  ( o ) :
     return pow( o , 1.0/3.0 ) 
 def pow2  ( o ) :
     if hasattr ( o , "__pow2__"  ) : return o.__pow2__  ()
-    return math.pow(o,2)
+    return pow(o,2)
 def pow3  ( o ) :
     if hasattr ( o , "__pow3__"  ) : return o.__pow3__  ()
-    return math.pow(o,3)
+    return pow(o,3)
 def pow4  ( o ) :
     if hasattr ( o , "__pow4__"  ) : return o.__pow4__  ()
-    return math.pow(o,4)
+    return pow(o,4)
 
 _std_min_ = min 
 def min  ( o , *a ) :
@@ -78,7 +78,16 @@ def min  ( o , *a ) :
         return o.__min__( *a )
     elif 2 == len(a) and hasattr ( a[0] , "__min__"  ) :
         return a[0].__min__( o )
-    return _std_min_( o , *a ) 
+    return _std_min_( o , *a )
+
+_std_max_ = max 
+def max  ( o , *a ) :
+    if not a : return _std_max_ ( o )  
+    elif                 hasattr ( o    , "__max__"  ) :
+        return o.__max__( *a )
+    elif 1 == len(a) and hasattr ( a[0] , "__max__"  ) :
+        return a[0].__max__( o )
+    return _std_max_( o , *a ) 
 
 
 
