@@ -32,7 +32,7 @@ HltAlleys.Selections = {"MuonTriggerSingle",
                         "MuonTriggerPureIPDiMuon",
                         "HadTrigger"
 } ;
-HltAlleys.SelectionName = "HltAlleys"
+HltAlleys.SelectionName = "HltAlleys" ;
 
 //---------------------------------------------------------------------
 // ProtoParticles and Particles
