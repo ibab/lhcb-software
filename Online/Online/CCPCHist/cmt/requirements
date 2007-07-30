@@ -9,7 +9,7 @@ library       CCPCHist *.cpp
 include_dirs  ../CCPCHist
 macro_append CCPCHist_cflags "" \
           Linux " -m486 "
-macro_append CCPCHist_cflags "" \
+macro_append cflags "" \
           Linux " -m486 "
 
 application   CCPCtest ../tests/mainprog.cpp
