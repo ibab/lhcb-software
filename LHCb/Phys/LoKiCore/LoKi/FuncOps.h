@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.3 2007-07-30 09:54:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -119,6 +119,7 @@ namespace LoKi
       static Fun __log__    ( const Func&  f    ) { return LoKi:: log   ( f )  ; }
       static Fun __log10__  ( const Func&  f    ) { return LoKi:: log10 ( f )  ; }
       static Fun __sqrt__   ( const Func&  f    ) { return LoKi:: sqrt  ( f )  ; }
+      static Fun __cbrt__   ( const Func&  f    ) { return LoKi:: cbrt  ( f )  ; }
       static Fun __pow2__   ( const Func&  f    ) { return LoKi:: pow2  ( f )  ; }
       static Fun __pow3__   ( const Func&  f    ) { return LoKi:: pow3  ( f )  ; }
       static Fun __pow4__   ( const Func&  f    ) { return LoKi:: pow4  ( f )  ; }

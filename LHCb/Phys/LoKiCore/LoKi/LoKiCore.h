@@ -1,4 +1,4 @@
-// $Id: LoKiCore.h,v 1.18 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.19 2007-07-30 09:54:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,7 +11,6 @@
 #include "LoKi/Report.h"
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/Power.h"
-#include "LoKi/cpower.h"
 #include "LoKi/Functions.h"
 #include "LoKi/Math.h"
 #include "LoKi/Operators.h"

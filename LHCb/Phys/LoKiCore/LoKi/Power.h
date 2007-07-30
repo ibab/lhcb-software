@@ -1,12 +1,17 @@
-// $Id: Power.h,v 1.8 2007-07-23 17:07:39 ibelyaev Exp $
+// $Id: Power.h,v 1.9 2007-07-30 09:54:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/Power.h"
+// ============================================================================
+// LOKi
+// ============================================================================
 #include "LoKi/Math.h"
-#include "LoKi/cpower.h"
 // ============================================================================
 /** @file
  *
@@ -73,11 +78,11 @@ namespace LoKi
       // evaluate the function
       result_type value = m_fun( p ) ;
       // evaluate the result
-      if ( 0 <  m_val ) { return LoKi::cpower ( value ,  m_val ) ; }
+      if ( 0 <  m_val ) { return Gaudi::Math::pow ( value ,  m_val ) ; }
       if ( 0 == value ) 
-      { this->Error( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
+      { this->Error ( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
       //
-      return LoKi::cpower ( 1.0/value , -m_val ) ; 
+      return Gaudi::Math::pow ( 1.0/value , -m_val ) ; 
     };
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 

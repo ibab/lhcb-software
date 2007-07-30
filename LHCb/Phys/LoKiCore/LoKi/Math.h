@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.6 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Math.h,v 1.7 2007-07-30 09:54:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -105,6 +105,15 @@ namespace LoKi
   inline LoKi::ComposeFunction<TYPE>
   sqrt ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::sqrt , fun , "sqrt" ) ; }
+  // ==========================================================================
+  /*  cbrt for LoKi function
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-24
+   */      
+  template <class TYPE> 
+  inline LoKi::ComposeFunction<TYPE>
+  cbrt ( const LoKi::Function<TYPE>& fun ) 
+  { return LoKi::ComposeFunction<TYPE>( Gaudi::Math::cbrt , fun , "cbrt" ) ; }
   // ==========================================================================
   /*  asine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru

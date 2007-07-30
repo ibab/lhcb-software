@@ -58,6 +58,9 @@ def log10 ( o ) :
 def sqrt  ( o ) :
     if hasattr ( o , "__sqrt__"  ) : return o.__sqrt__  ()
     return math.sqrt(o)
+def cbrt  ( o ) :
+    if hasattr ( o , "__cbrt__"  ) : return o.__cbrt__  ()
+    return pow( o , 1.0/3.0 ) 
 def pow2  ( o ) :
     if hasattr ( o , "__pow2__"  ) : return o.__pow2__  ()
     return math.pow(o,2)

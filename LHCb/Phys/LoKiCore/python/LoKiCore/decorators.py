@@ -420,6 +420,15 @@ def decorateFunctions ( funcs , calls , opers ) :
             Uses:\n
             """
             return opers.__sqrt__ (s)
+        def _cbrt_(s) :
+            """
+            Construct the cbrt-function: cbrt(fun)
+            
+            >>> cbrt(fun)
+            
+            Uses:\n
+            """
+            return opers.__cbrt__ (s)
         def _pow2_(s) :
             """
             Construct the pow2-function: pow2(fun)
@@ -507,6 +516,7 @@ def decorateFunctions ( funcs , calls , opers ) :
         _log_  . __doc__  += opers.__log__  . __doc__
         _log10_. __doc__  += opers.__log10__. __doc__
         _sqrt_ . __doc__  += opers.__sqrt__ . __doc__
+        _cbrt_ . __doc__  += opers.__cbrt__ . __doc__
         _pow2_ . __doc__  += opers.__pow2__ . __doc__
         _pow3_ . __doc__  += opers.__pow3__ . __doc__
         _pow4_ . __doc__  += opers.__pow4__ . __doc__
@@ -552,6 +562,7 @@ def decorateFunctions ( funcs , calls , opers ) :
         fun . __log__    = _log_   #
         fun . __log10__  = _log10_ #
         fun . __sqrt__   = _sqrt_  #
+        fun . __cbrt__   = _cbrt_  #
         fun . __pow2__   = _pow2_  #
         fun . __pow3__   = _pow3_  #
         fun . __pow4__   = _pow4_  #
