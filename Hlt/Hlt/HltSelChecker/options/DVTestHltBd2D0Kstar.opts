@@ -32,7 +32,7 @@ PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2D0Kst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bd2D0Kst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
