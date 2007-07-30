@@ -11,44 +11,21 @@
 //
 //SeqHltTruthFilter.Members += { "PrintMCTree"}; 
 PrintMCTree.ParticleNames = { "B+", "B-" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBu2LLK"};
-SelectTrueBu2LLK.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltMuons", "Phys/HltElectrons" } ;
-SelectTrueBu2LLK.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bu2LLK",
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltMuons", "Phys/HltElectrons" } ;
+SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bu2LLK",
                                         "e+ : TrueMCFilterCriterion/Bu2LLK",
                                         "mu+ : TrueMCFilterCriterion/Bu2LLK"} ;
 
-SelectTrueBu2LLK.Filter.Bu2LLK.MCDecayFinder.Decay = "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}" ;
-SelectTrueBu2LLK.Filter.Bu2LLK.ExpectSignal = true ;
-//
-// Overwrite Shared electron input
-//
-HltSharedDiElectron.PhysDesktop.InputLocations =  { "Phys/SelectTrueBu2LLK" } ;    
-//
-// Overwrite Shared dimuon input
-//
-HltSharedDiMuon.PhysDesktop.InputLocations  = { "Phys/SelectTrueBu2LLK" } ;
-//
-// Overwrite B->llK
-//
-HltSelBu2LLK.PhysDesktop.InputLocations  = { "Phys/SelectTrueBu2LLK", 
-                                             "Phys/HltSharedDiMuon", 
-                                             "Phys/HltSharedDiElectron"  } ;
+SelectTrueDecay.Filter.Bu2LLK.MCDecayFinder.Decay = "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}" ;
+SelectTrueDecay.Filter.Bu2LLK.ExpectSignal = true ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBu2LLK"};
-AllTrueBu2LLK.PhysDesktop.InputLocations = {"Phys/SelectTrueBu2LLK"};
+AllTrueBu2LLK.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBu2LLK.DecayDescriptors = { "[B+ -> K+ mu- mu+]cc", "[B+ -> K+ e- e+]cc" } ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueBu2LLK" };
-/* 
- * Check also for muon-L0's. 
- * This is a little complicated...
- */
-L0.Members += { "GaudiSequencer/L0Check" };                // add sequencer
-L0Check.IgnoreFilterPassed = true ;                        // which doesn't filter
-L0Check.Members += { "GaudiSequencer/L0Check2" };          // add another filtering sequencer
-L0Check2.Members += { "L0Filter/L0MuFilter"};              // check for L0-mu
-L0MuFilter.OrChannels = { "L0muon_High", "L0dimuon_High" };// check l0-mu
-L0Check2.Members += {"CheckSelResult/L0MuFilterCheck" };   // write selresult
-L0MuFilterCheck.AvoidSelResult = false ;                   // write SelResult
-HltExclusiveCorrs.Algorithms += { "L0MuFilterCheck" };     // add to correlations
+
+#include "$HLTSELCHECKERROOT/options/L0MuCheck.opts"
+

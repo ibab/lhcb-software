@@ -1,0 +1,33 @@
+/** @file Overwrite with Truth
+ *  
+ *  Overwrites PhysDesktop Locations with Particles associated to truth
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-30
+ */
+//--------------------------------------------------------------
+
+// grep HltNoPIDsPions $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+
+HltSelB2HH.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"} ;
+HltSharedD02KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02PiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02KsPiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", 
+HltSharedDs2KKPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", "Phys/SelectTrueDecay" };
+HltSharedDstarWithD02KPi.PhysDesktop.InputLocations = { "Phys/HltSharedD02KPi", "Phys/SelectTrueDecay" };
+HltSharedDstarWithD02PiPi.PhysDesktop.InputLocations = { "Phys/HltSharedD02PiPi", "Phys/SelectTrueDecay"};
+HltSharedDstarWithD02KK.PhysDesktop.InputLocations = { "Phys/HltSharedD02KK", "Phys/SelectTrueDecay" };
+HltSharedKsLL.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+
+// grep HltNoPIDsKaons $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+
+HltSelBu2LLK.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay",
+HltSharedD02KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02KsKK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", 
+HltSharedDs2KKPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedPhi2KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+
+// grep HltMuons $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+
+HltSharedDiMuon.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"} ;

@@ -11,34 +11,21 @@
 //
 //SeqHltTruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = {"B0", "B~0" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueB2DstarMu"};
-SelectTrueB2DstarMu.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions", 
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions", 
                                                    "Phys/HltMuons" } ;
-SelectTrueB2DstarMu.Filter.Selections =  { "K+ : TrueMCFilterCriterion/B2DstarMu",
+SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/B2DstarMu",
                                           "pi+ : TrueMCFilterCriterion/B2DstarMu",
                                            "mu+ : TrueMCFilterCriterion/B2DstarMu"} ;
 // this one see,s to work
-SelectTrueB2DstarMu.Filter.B2DstarMu.MCDecayFinder.Decay = "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
-SelectTrueB2DstarMu.Filter.B2DstarMu.ExpectSignal = true ;
+SelectTrueDecay.Filter.B2DstarMu.MCDecayFinder.Decay = "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
+SelectTrueDecay.Filter.B2DstarMu.ExpectSignal = true ;
 
-//SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
-//
-// Overwrite B
-//
-HltSelB2DstarMu.PhysDesktop.InputLocations  = {"Phys/HltSharedDstarWithD02KPi",
-                                                "Phys/SelectTrueB2DstarMu"} ;//
-// Overwrite Shared D* input
-//
-HltSharedB2DstarMuWithD02KPi.PhysDesktop.InputLocations =  { "Phys/HltSharedD02KPi", "Phys/SelectTrueB2DstarMu" } ;  
-//
-// Overwrite Shared D0
-//
-HltSharedD02PiPi.PhysDesktop.InputLocations  = { "Phys/SelectTrueB2DstarMu" } ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2DstarMu"};
-AllTrueB2DstarMu.PhysDesktop.InputLocations = {"Phys/SelectTrueB2DstarMu"};
+AllTrueB2DstarMu.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2DstarMu.DecayDescriptor = "[B0 -> mu+ pi- pi- K+]cc" ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueB2DstarMu" };
 

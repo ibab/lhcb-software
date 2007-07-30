@@ -11,22 +11,17 @@
 //
 //SeqHltTruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B0", "B~0" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueB2HH"};
-SelectTrueB2HH.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
-SelectTrueB2HH.Filter.Selections =  { "pi+ : TrueMCFilterCriterion/B2HH" } ;
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
+SelectTrueDecay.Filter.Selections =  { "pi+ : TrueMCFilterCriterion/B2HH" } ;
 
-SelectTrueB2HH.Filter.B2HH.MCDecayFinder.Decay = "{[B0 -> ^pi- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]nos -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]os -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [B_s0 -> ^K- ^K+ {,gamma}{,gamma}{,gamma}]cc}" ;
-SelectTrueB2HH.Filter.B2HH.ExpectSignal = true ;
-
-//
-// Overwrite B->HH input
-//
-HltSelB2HH.PhysDesktop.InputLocations =  { "Phys/SelectTrueB2HH" } ;    //GP: (14,1)
+SelectTrueDecay.Filter.B2HH.MCDecayFinder.Decay = "{[B0 -> ^pi- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]nos -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]os -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [B_s0 -> ^K- ^K+ {,gamma}{,gamma}{,gamma}]cc}" ;
+SelectTrueDecay.Filter.B2HH.ExpectSignal = true ;
 //
 // Dummy MakeResonances to check that both tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2HH"};
-AllTrueB2HH.PhysDesktop.InputLocations = {"Phys/SelectTrueB2HH"};
+AllTrueB2HH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2HH.DecayDescriptor = "B0 -> pi+ pi-" ; // always for B -> hh with pions
 HltExclusiveCorrs.Algorithms += { "AllTrueB2HH" };
 

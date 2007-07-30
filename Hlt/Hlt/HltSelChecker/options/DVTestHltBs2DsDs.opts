@@ -21,9 +21,13 @@ PrintPreselBs2DsDs.OutputLevel = 3 ;
 //
 #include "$HLTSELCHECKERROOT/options/Plots.opts"
 //
-// True filter criterion - will only run HLT on true signal
+// True filter criterion
 //
 #include "$HLTSELCHECKERROOT/options/TrueBs2DsDs.opts"
+//
+// Overwrite input - uncomment to run HLT on true signal only
+//
+// #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
 //
 // Options
 //

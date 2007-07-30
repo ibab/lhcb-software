@@ -9,26 +9,18 @@
 //
 // Truth filter for Bs -> DsH
 //
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBs2DsH"};
-SelectTrueBs2DsH.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
                                                 "Phys/HltNoPIDsPions" } ;
-SelectTrueBs2DsH.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsH",
+SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsH",
                                         "pi+ : TrueMCFilterCriterion/Bs2DsH"} ;
 
-SelectTrueBs2DsH.Filter.Bs2DsH.MCDecayFinder.Decay = "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^K- {,gamma}{,gamma}]cc, [[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^pi- {,gamma}{,gamma}]cc}" ;
-//
-// Overwrite Shared Ds input
-//
-HltSharedDs2KKPi.PhysDesktop.InputLocations =  { "Phys/SelectTrueBs2DsH" } ;   
-//
-// Overwrite Bs->DsPi
-//
-HltSelBs2DsH.PhysDesktop.InputLocations  = {"Phys/HltSharedDs2KKPi",
-                                            "Phys/SelectTrueBs2DsH"} ;
+SelectTrueDecay.Filter.Bs2DsH.MCDecayFinder.Decay = "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^K- {,gamma}{,gamma}]cc, [[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^pi- {,gamma}{,gamma}]cc}" ;
+                                            "Phys/SelectTrueDecay"} ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2DsH"};
-AllTrueBs2DsH.PhysDesktop.InputLocations = {"Phys/SelectTrueBs2DsH"};
+AllTrueBs2DsH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2DsH.DecayDescriptor = "[B_s0 -> K+ K- pi+ pi-]cc" ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueBs2DsH" };

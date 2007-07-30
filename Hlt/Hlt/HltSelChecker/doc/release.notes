@@ -6,10 +6,21 @@
 !
 ! Plan is to add all channels stripped by Hans:
 !   Done:  B2DiMuon B2HH B2JpsiX_MuMu Bd2D0Kstar Bd2MuMuKstar Bs2DsH Bs2PhiPhi 
-!          Bs2MuMu Dst-PiD-HH Bd2DstMu Bu2llK Bs2DsDs
+!          Bs2MuMu Dst-PiD-HH Bd2DstMu Bu2llK Bs2DsDs Bu2KD 
 !   To do: Bd2DstPi (not stripped by Hans)
-!   Not yet in HLT : Bu2KD Bd2PiPiPi 
+!   Not yet in HLT : Bd2PiPiPi 
 !   Not in HLT : Bd2KstD2KSPiPi Bs2phigamma
+
+! 2007-07-30 - Patrick Koppenburg
+ - options/DVTestHltBu2D0K_KsHH.opts and True
+   . New channel
+ - options/L0MuCheck.opts
+   . Make correlations with L0mu
+ - options/OverwriteWithTruth.opts
+   . Overwrite all inputs with true only Particles
+ - options/*.opts
+   . Overwrite all Hlt exclusive streams with true particles
+   . But not by default.
 
 ! 2007-07-25 - Patrick Koppenburg
  - Added a lot of photons in the decay desciptors

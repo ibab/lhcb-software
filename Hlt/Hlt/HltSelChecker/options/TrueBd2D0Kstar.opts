@@ -11,29 +11,17 @@
 //
 //SeqHltTruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B0", "B~0" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueBd2D0Kstar"};
-SelectTrueBd2D0Kstar.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
-SelectTrueBd2D0Kstar.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2D0Kstar",
+SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
+SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2D0Kstar",
                                             "pi+ : TrueMCFilterCriterion/Bd2D0Kstar"} ;
 
-SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.MCDecayFinder.Decay = "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
-SelectTrueBd2D0Kstar.Filter.Bd2D0Kstar.ExpectSignal = true ;
-
-// SeqHltTruthFilter.Members += { "PrintHeader/GotIt"};
-//
-// Overwrite Shared K* input
-//
-HltSharedKstar2KPi.PhysDesktop.InputLocations =  { "Phys/SelectTrueBd2D0Kstar" } ;   
-//
-// Overwrite Shared D0
-//
-HltSharedD02PiPi.PhysDesktop.InputLocations  = { "Phys/SelectTrueBd2D0Kstar" } ;
-HltSharedD02KPi.PhysDesktop.InputLocations  = { "Phys/SelectTrueBd2D0Kstar" } ;
-HltSharedD02KK.PhysDesktop.InputLocations  = { "Phys/SelectTrueBd2D0Kstar" } ;
+SelectTrueDecay.Filter.Bd2D0Kstar.MCDecayFinder.Decay = "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
+SelectTrueDecay.Filter.Bd2D0Kstar.ExpectSignal = true ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBd2D0Kstar"};
-AllTrueBd2D0Kstar.PhysDesktop.InputLocations = {"Phys/SelectTrueBd2D0Kstar"};
+AllTrueBd2D0Kstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBd2D0Kstar.DecayDescriptor = "[B0 -> K+ pi- pi+ pi-]cc" ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueBd2D0Kstar" };
