@@ -12,6 +12,11 @@ macro_append CCPCHist_cflags "" \
 macro_append cflags "" \
           Linux " -m486 "
 
+macro_append CCPCHist_cppflags "" \
+          Linux " -m486 "
+macro_append cppflags "" \
+          Linux " -m486 "
+
 application   CCPCtest ../tests/mainprog.cpp
 application   Ctest ../ctests/ctest.cpp
 
