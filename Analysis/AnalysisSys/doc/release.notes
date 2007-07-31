@@ -3,12 +3,146 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v1r4>2007-07-?? Analysis v1r5 - Potential DC06 Stripping version</A></H1><PRE>
- - Uses LHCB_v22r7
+</PRE><H1><A NAME=v1r5>2007-07-31 Analysis v1r5 - Potential DC06 Stripping version</A></H1><PRE>
+ - Uses LHCB_v22r8
 
 #######################################MM#######################################
 #                                  ANALYSIS v1r5                               #
 ################################################################################
+
+##################################### PHYS #####################################
+
+!======================== FlavourTagging v7r3 2007-07-31 =====================
+
+! 2007-06-21 - Marco Musy
+- make use of Kernel/IParticleDescendants class 
+  instead of private method FindDaughters
+- fix in secondary vertex
+- fix in summary/summaryof 
+
+! 2007-06-07 - Marco Musy, Stephane Poss, O. Leroy
+- Modified units (GeV and MeV) in options files and in code.
+- Substituted outgoingParticles() with daughtersVector() in FindDaughters
+- Several Modifications affecting the vertex charge, as presented by S. Poss
+  at: http://indico.cern.ch/conferenceDisplay.py?confId=9599 and by M. Calvi
+  at: http://indico.cern.ch/conferenceDisplay.py?confId=16399
+- SVertexTool.cpp
+   - Put polynomial parameters in DeclareProperty
+   - Restore "TDR" polynomials functions from M. Musy and M. Calvi used in
+     the opposite inclusive vertex reconstruction (likelihood)
+   - All taggers are kept in the vertex reconstruction, including muons which
+     where previously removed
+   - The upstream tracks are included
+   - The Lambda0 mass window is tighten from 1.01-1.2 to 1.112-1.12
+   - Apply track quality Chi2 cut on all tracks :
+     - chi2(long tracks)<2.5
+     - chi2(upstream tracks)<5
+           Cuts identical to Opposite Kaon ones, not re-optimized
+- TaggerVertexChargeTool.cpp
+   - Re-optimization done on DC06 Bs2DsPi phys-lumi2 data
+   - The value of m_PowerK and m_AverageOmega cuts have been re-optimized
+   - Update the polynomial fonction giving mistag = f(Qvtx) m_P0, m_P1
+   - Add in declareProperty: m_wSameSign2 and m_wSameSignMoreThan2. They are
+     the mistag fraction of Qvtx tagger in case of 2 (>2) tracks with
+     same sign.
+   - If estimated omega > 0.5, decision is reversed and omega = 1-omega
+- All Taggers:
+   - If NNet output is < 0.5, reverse omega and decision.
+- BTaggingTool.cpp
+   - TaggerVertexChargeTool is called only when no OS (e,m,k) are present. 
+     Veto can be overwritten if property UseVtxChargeWithOS is set to true. 
+     In this case TaggerVertexChargeTool is called with a vector of particles 
+     which excludes the taggers. 
+   - call to SVertexTool moved inside TaggerVertexChargeTool.
+
+!========================== DaVinciMCTools v9r4 2007-07-31 ===================
+
+! 2007-07-25 - Juan Palacios
+ - Add FilterMCParticleArrayByDecay
+   . An implementation of IMCParticleArrayFilter that uses a 
+     decay descriptor to select MCParticles coming from a decay 
+     from within an array of MCParticles.
+   . First implementation, incomplete, untested, and lacking in 
+     doxygen documentation.
+
+
+! 2007-07-24 - Patrick Koppenburg
+ - TrueMCFilterCiterion: Call MCDecayFinder only once per event and not
+   once per Particle. Store temporary information. Gains a factor O(10) in timing
+   for simple decay descriptors. More for complex ones.
+   Also added the possibility no give non-standard MCParticle location as input
+	 and an optional warning if the decay is not found in the event.
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file
+
+! 2007-07-11 - vladimir gligorov
+ - new options added for background category: SemileptonicDecay and Numneutrinos, see
+   BackgroundCategory.h for documentation.
+
+! 2007-07-06 - Laurence Carson
+ - MCPVPosition bug fix: Code now uses PV instead of OriVtx.
+
+! 2007-07-05 - Patrick Koppenburg
+ - TrueMCFilterCriterion bug fix: Make it active all the time.
+ - Print key
+
+! 2007-07-04 - Patrick Spradlin
+  - DecayChainNtuple: Fixed an off-by-one indexing bug in vertex variances
+
+!========================== DaVinciAssociators v9r2p1 2007-07-31 ==============
+
+! 2007-06-27 - Patrick Koppenburg
+ - Particle2MCWithChi2: Check all pointers before following them!
+
+!===================== FlavourTaggingChecker v2r4 2007-07-31 =================
+! 2007-06-21 - Marco Musy
+- make use of Kernel/IParticleDescendants
+  class instead of private method FindDaughters
+
+#################################### PHYSSEL ###################################
+
+!========================== B2Dilepton v1r4 2007-07-31 ===================
+! 2007-07-31 - Juan Palacios
+ - cmt/requirements
+   . Increase version to v1r4
+
+! 2007-07-31 - Patrick Koppenburg
+ - options/DVPreselBs2MuMuGamma.opts
+   . New options for Bs->mumu gamma by N. Serra.
+ - Added it to Dilepton stripping options
+
+!========================== B2Dilepton v1r3p1 2007-07-30 =================
+
+! 2007-07-26 - Patrick Koppenburg
+ - New file to run the following presels on bb->mumu events:
+   B2Dilepton, Bd2KstarMuMu, Bs2MuMu, Bu2LLK, B2hh, HeavyDimuon
+ - Increment to v1r3p1
+
+!========================== B2D0X v1r10 2007-07-30 ==================
+
+! 2007-07-30 - Juan Palacios
+ - cmt/requirements
+   . Increase version to v1r10
+
+
+! 2007-07-25 - Patrick Koppenburg
+ - B->D0(KsHH)X : Use D~0 consistently
+
+##################################### TOOLS ####################################
+
+!======================== Stripping v6r1p3 2007-07-30 ===================
+
+! 2007-07-31 - Patrick Koppenburg
+ - New presel Bs2MuMuGamma
+
+! 2007-07-26 - Patrick Koppenburg
+ - Put outputlevel to 4 for PrintGlobal.
+
+! 2007-07-05 - Patrick Koppenburg
+ - put outputlevel to 3 print PrintHeader (needs LhcbAlgs v2r10)
+ - Increment to v6r1p3
+
 #################################### EXTERNAL ##################################
 
 
