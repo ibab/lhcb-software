@@ -4,13 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
-<<<<<<< release.notes
+!========================== HltCommon v1r5 2007-07-31 ===================
 ! 2007-07-31 - Jose A. Hernando
   - HltPrepareL0Calos: put the ID of the L0CaloCandidate in the calo track
 
-=======
-!========================== HltCommon v1r5 2007-07-31 ===================
->>>>>>> 1.34
 ! 2007-07-27 - Jose A. Hernando
   - HltSelectionEntry: make a selection from previous selections
      to be used to define the exit of the alleys as the OR of the alleys 
