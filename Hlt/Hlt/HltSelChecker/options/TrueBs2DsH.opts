@@ -16,7 +16,6 @@ SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsH",
                                         "pi+ : TrueMCFilterCriterion/Bs2DsH"} ;
 
 SelectTrueDecay.Filter.Bs2DsH.MCDecayFinder.Decay = "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^K- {,gamma}{,gamma}]cc, [[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^pi- {,gamma}{,gamma}]cc}" ;
-                                            "Phys/SelectTrueDecay"} ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //

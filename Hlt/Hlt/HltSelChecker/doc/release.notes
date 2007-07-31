@@ -11,6 +11,9 @@
 !   Not yet in HLT : Bd2PiPiPi 
 !   Not in HLT : Bd2KstD2KSPiPi Bs2phigamma
 
+! 2007-07-31 - Patrick Koppenburg
+ - Few typos corrected
+
 ! 2007-07-30 - Patrick Koppenburg
  - options/DVTestHltBu2D0K_KsHH.opts and True
    . New channel
