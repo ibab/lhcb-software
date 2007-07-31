@@ -5,6 +5,7 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+!========================== HltSys v1r8 2007-07-31 ===================
 ! 2007-07-30 - Patrick Koppenburg
  - Missing semicolon added to HltSelections.opts
  - Small changes in sequencing
