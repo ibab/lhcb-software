@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.cpp,v 1.3 2007-05-29 13:19:27 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.cpp,v 1.4 2007-07-31 17:36:52 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -28,7 +28,7 @@ UpdateManagerSvc::Item::~Item() {
   // I'm the owner of the list of user's pointer setters: delete them!
   for (UserPtrList::iterator pi = user_dest_ptrs.begin();
        pi != user_dest_ptrs.end(); ++pi){
-    delete *pi;
+    delete pi->first;
   }
 }
 //=============================================================================
@@ -207,4 +207,23 @@ BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunc
   return mfIt->mf;
 }
   
+//=============================================================================
+// Clean up the tree
+//=============================================================================
+void UpdateManagerSvc::Item::purge(MsgStream *log) {
+  if ( ! path.empty() ) {
+    if (log) (*log) << MSG::DEBUG << "Purging " << path << endmsg;
+    // Clean up pointers
+    const bool force = true;
+    setPointers(NULL,force).ignore();
+  } else {
+    if (log) (*log) << MSG::DEBUG << "Purging object at " << ptr << endmsg;
+  }
+  
+  // I'm not sure I need this
+  // invalidate();
+  // or just this
+  since = 1;
+  until = 0;
+}
 //=============================================================================

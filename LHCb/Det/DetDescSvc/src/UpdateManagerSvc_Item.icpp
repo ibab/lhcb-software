@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.6 2007-05-29 13:19:27 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.7 2007-07-31 17:36:52 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -7,6 +7,8 @@
 /// @author Marco Clemencic
 /// @date   2005-04-26
 struct Item {
+  /// Type for the list of user's pointers for the condition.
+  typedef std::pair<BasePtrSetter*,void*> UserPtrType;
   
   // ------ Item Cons & Dest
   
@@ -17,12 +19,12 @@ struct Item {
     updateLock(false),user_dest_ptrs() {}
 
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath, BasePtrSetter *dest, ValidDataObject *overrideObj = NULL):
+  Item(const std::string &objPath, UserPtrType dest, ValidDataObject *overrideObj = NULL):
     since(1),until(0),path(objPath),db_path(),
     vdo(NULL),ptr(NULL),override(overrideObj),
     updateLock(false),user_dest_ptrs()
   {
-    if (dest) user_dest_ptrs.push_back(dest);
+    if (dest.first) user_dest_ptrs.push_back(dest);
   }
 
   /// Constructor for an item representing a generic object.
@@ -47,7 +49,7 @@ struct Item {
   /// Type for the list of \e parents.
   typedef std::vector<ParentItem> ParentList;
   /// Type for the list of user's pointers for the condition.
-  typedef std::list<BasePtrSetter*> UserPtrList;
+  typedef std::list<UserPtrType> UserPtrList;
   /// Used inside Item to identify a registered member function.
   struct MembFunc {
     /// Simple constructor.
@@ -113,6 +115,8 @@ struct Item {
     }
   }
 
+  void purge(MsgStream *log = NULL);
+  
   // ------ Item data members
 
   /// Time points delimiting the interval of validity of the item
@@ -144,23 +148,27 @@ struct Item {
   /// List op setters for user's pointers.
   UserPtrList user_dest_ptrs;
 
-  inline StatusCode setUserPointers(DataObject  *pObj)
+  inline StatusCode setUserPointers(DataObject  *pObj, bool force = false)
   {
     for (UserPtrList::iterator pi = user_dest_ptrs.begin(); pi != user_dest_ptrs.end(); ++pi){
-      if ( (*pi)->isNull() ){
-        (*pi)->set(pObj);
-        if ( (*pi)->isNull() ) return StatusCode::FAILURE; // cannot dynamic_cast
+      if (!force){
+        if ( pi->first->isNull() ){
+          pi->first->set(pObj);
+          if ( pi->first->isNull() ) return StatusCode::FAILURE; // cannot dynamic_cast
+        }
+      } else {
+        pi->first->set(pObj);
       }
     }
     return StatusCode::SUCCESS;
   }
   
-  inline StatusCode setPointers(DataObject  *pObj)
+  inline StatusCode setPointers(DataObject  *pObj, bool force = false)
   {
     vdo = dynamic_cast<ValidDataObject*>(pObj);
     ptr = dynamic_cast<void*>(pObj);
     // This is the first time I get the DataObject, so I set the pointer the user asked me to set
-    return setUserPointers(pObj);
+    return setUserPointers(pObj,force);
   }
 
   /// Main method. Used to update the object and all the used ones.

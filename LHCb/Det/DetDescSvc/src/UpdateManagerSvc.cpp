@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.12 2007-02-28 18:32:42 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.13 2007-07-31 17:36:52 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -12,6 +12,8 @@
 
 #include "DetDesc/ValidDataObject.h"
 #include "DetDesc/Condition.h"
+
+#include <set>
 
 // local
 #include "UpdateManagerSvc.h"
@@ -61,6 +63,10 @@ StatusCode UpdateManagerSvc::queryInterface(const InterfaceID& riid, void** ppvU
     return StatusCode::SUCCESS;
   } else if ( IID_IIncidentListener.versionMatch(riid) ) {
     *ppvUnknown = (IIncidentListener*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  } else if ( IID_IUMSPurge.versionMatch(riid) ) {
+    *ppvUnknown = (IUMSPurge*)this;
     addRef();
     return StatusCode::SUCCESS;
   }
@@ -252,12 +258,13 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       GaudiUtils::Map<std::string,Condition*>::iterator cond_ov = m_conditionsOverides.find(cond_copy);
       if ( cond_ov != m_conditionsOverides.end() ) {
         // yes, it is!
-        cond_item = new Item(cond_copy,ptr_dest,cond_ov->second);
+        cond_item = new Item(cond_copy,Item::UserPtrType(ptr_dest,mf_item->ptr),
+                             cond_ov->second);
         // I do not need it anymore in the list
         m_conditionsOverides.erase(cond_ov);
       } else {
         // no override
-        cond_item = new Item(cond_copy,ptr_dest);
+        cond_item = new Item(cond_copy,Item::UserPtrType(ptr_dest,mf_item->ptr));
       }
 
       m_all_items.push_back(cond_item);
@@ -265,9 +272,15 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     } else {
       if (ptr_dest){
         // I already have this condition registered, but a new user wants to set the pointer to it.
-        cond_item->user_dest_ptrs.push_back(ptr_dest);
+        cond_item->user_dest_ptrs.push_back(Item::UserPtrType(ptr_dest,mf_item->ptr));
         // Let's check if the object is already loaded (the pointers are set by Item only when it loads them)
-        if (cond_item->vdo) { ptr_dest->set(cond_item->vdo); }
+        if (cond_item->vdo) {
+          ptr_dest->set(cond_item->vdo);
+          if ( ptr_dest->isNull() ) { // the dynamic cast failed
+            throw GaudiException("A condition in memory cannot be casted to the requested type", 
+                "UpdateManagerSvc::i_registerCondition", StatusCode::FAILURE );
+          }
+        }
       }
       if (cond_item->isHead()) removeFromHead(cond_item);
     }
@@ -440,38 +453,109 @@ void UpdateManagerSvc::i_invalidate(void *instance){
   }
 }
 
+void UpdateManagerSvc::unlink(Item *parent, Item *child){
+  
+  // check if the parent knows about the child
+  Item::ItemList::iterator childIt = std::find(parent->children.begin(),
+                                               parent->children.end(),child);
+  if ( parent->children.end() == childIt )
+    return; // parent does not know about child
+  
+  // remove from child all the user pointers belonging to the parent 
+  Item::UserPtrList::iterator pi = child->user_dest_ptrs.begin();
+  while ( pi != child->user_dest_ptrs.end() ) {
+    if (pi->second != parent) {
+      pi = child->user_dest_ptrs.erase(pi);
+    } else {
+      ++pi;
+    }
+  }
+  
+  // If the child is used by a MF that uses other Items, we need to disconnect
+  // them too.
+  std::set<Item*> siblings; // list of Items used together with "child"
+  
+  // loop over child parent's pairs (mf,parent) to disconnect from them
+  Item::MembFuncList::iterator p_mf;
+  Item::ParentList::iterator p = child->parents.begin();
+  while ( p != child->parents.end() ) {
+    if (p->first != parent) {
+      ++p;
+      continue; // skip to next one
+    }
+    
+    // find the MF inside the parent
+    p_mf = parent->find(p->second);
+    
+    // find iterator to child in MF list ...
+    Item::ItemList *mfInternalList = p_mf->items;
+    Item::ItemList::iterator entry = std::find(mfInternalList->begin(),
+                                               mfInternalList->end(),child);
+    // ... and remove it (if found)
+    if ( mfInternalList->end() != entry )
+      mfInternalList->erase(entry);
+    
+    // append then other Items in the MF (to unlink them too) 
+    siblings.insert(mfInternalList->begin(),mfInternalList->end());
+    
+    // remove the parent pair from child
+    p = child->parents.erase(p);
+  }
+  
+  // unlink the siblings
+  std::set<Item*>::iterator s;
+  for ( s = siblings.begin(); s != siblings.end(); ++s ) {
+    unlink(parent,*s);
+  }
+  
+  // Check in the parent if there are MF without children: they have to be
+  // removed.
+  p_mf = parent->memFuncs.begin();
+  while ( p_mf != parent->memFuncs.end() ) {
+    if ( p_mf->items->empty() ) p_mf = parent->memFuncs.erase(p_mf);
+    else ++p_mf;
+  }
+  
+  // remove child from parent's list of all childs
+  parent->children.erase(childIt);
+  
+  // check if the child should be part of the head now
+  if ( child->isHead() ) {
+    m_head_items.push_back(child);
+  }
+
+  // Note: I do not need to touch the validity because the it can only increase
+  
+}
+
 void UpdateManagerSvc::i_unregister(void *instance){
   if ( m_outputLevel <= MSG::DEBUG ) {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
   }
-  Item *item = findItem(instance);
+  
+  Item *item = findItem(instance);  
   if (item){
-    // remove from parents
-    for ( Item::ParentList::iterator p = item->parents.begin(); p != item->parents.end(); ++p ){
-      Item::MembFuncList::iterator p_mf = p->first->find(p->second);
-      Item::ItemList *mfInternalList = p_mf->items;
-      Item::ItemList::iterator entry = std::find(mfInternalList->begin(),mfInternalList->end(),item);
-      mfInternalList->erase(entry);
-      p->first->children.erase(std::find(p->first->children.begin(),p->first->children.end(),item));
+    
+    // unlink from parents
+    Item::ParentList::iterator p = item->parents.begin();
+    while ( p != item->parents.end() ) {
+      unlink(p->first,item);
+      p = item->parents.begin();
     }
 
-    //  loop over unique children
-    for (Item::ItemList::iterator c = item->children.begin(); c != item->children.end(); ++c){
-      bool was_head = (*c)->isHead();
-      for (Item::ParentList::iterator c_p = (*c)->parents.begin(); c_p != (*c)->parents.end(); ){
-        if (c_p->first == item) { // removing connections to "item"
-          c_p = (*c)->parents.erase(c_p);
-        } else {
-          ++c_p;
-        }
-      }
-      if ((*c)->isHead() && !was_head){
-        m_head_items.push_back(*c);
-      }
+    // unlink from children
+    Item::ItemList::iterator c = item->children.begin();
+    while ( c != item->children.end() ) {
+      unlink(item,(*c));
+      c = item->children.begin();
     }
-    if (item->isHead()) removeFromHead(item);
+    
+    // update the lists of Items 
+    if ( item->isHead() ) removeFromHead(item);
     m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
+    
+    // finally we can delete the Item
     delete item;
   }
 }
@@ -514,6 +598,39 @@ void UpdateManagerSvc::dump(){
     log << "MISMATCH!!!!!";
   }
   log << endmsg;
+}
+
+
+void UpdateManagerSvc::purge() {
+  MsgStream log(msgSvc(),name());
+  
+  log << MSG::INFO << "Purging dependencies network" << endmsg;
+  
+  // first I make a copy of the list of objects
+  //Item::ItemList items_copy(m_all_items);
+  //Item::ItemList items_copy(m_head_items);
+  // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
+  //Gaudi::Time head_copy_since(Gaudi::Time::epoch());
+  //Gaudi::Time head_copy_until(Gaudi::Time::max());
+  
+  Item::ItemList::iterator it = m_all_items.begin();
+  for (it = m_all_items.begin(); it != m_all_items.end() ; ++it){
+    (*it)->purge(&log);
+
+    if ( ! (*it)->path.empty() ) {
+      Item::ItemList &children = (*it)->children;
+      // remove connections to children if the object is going to be reloaded
+      Item::ItemList::iterator c = children.begin();
+      while ( children.end() != c ) {
+        unlink(*it,*c);
+        c = children.begin();
+      }
+    }
+  }
+  
+  m_head_since = 1;
+  m_head_until = 0;
+  
 }
 
 //=========================================================================

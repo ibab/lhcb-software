@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.7 2006-10-25 13:46:06 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.8 2007-07-31 17:36:52 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -36,7 +36,9 @@ class Condition;
  *  @author Marco Clemencic
  *  @date   2005-03-30
  */
-class UpdateManagerSvc: public virtual Service, public virtual IUpdateManagerSvc, public virtual IIncidentListener {
+class UpdateManagerSvc: public virtual Service,
+                        public virtual IUpdateManagerSvc,
+                        public virtual IIncidentListener {
 public: 
   /// Standard constructor
   UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc); 
@@ -80,6 +82,11 @@ public:
   /// Let the update manager service enter the newEvent loop.
   virtual void releaseLock();
 
+  /// Remove all the items referring to objects present in the transient store.
+  /// This is needed when the Detector Transient Store is purged, otherwise we
+  /// will keep pointers to not existing objects.
+  virtual void purge();
+  
   // ---- Implement IIncidentListener interface ----
   /// Handle BeginEvent incident.
   virtual void handle(const Incident &inc);
@@ -113,6 +120,9 @@ private:
   /// Connects two items in a parent-child relationship through the give member function.
   inline void link(Item* parent, BaseObjectMemberFunction *mf, Item *child);
 
+  // Disconnect a parent from the child.
+  void unlink(Item *parent, Item *child);
+  
   /// Finds the item matching the given path.
   inline Item *findItem(const std::string &path, bool is_path_to_db = false) const;
    

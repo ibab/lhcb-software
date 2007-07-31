@@ -1,10 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.30 2007-05-31 12:35:19 cattanem Exp $ 
+! $Id: release.notes,v 1.31 2007-07-31 17:36:52 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-07-31 - Marco Clemencic
+ - Added to the UpdateManagerSvc the possibility to "purge" the dependencies,
+   i.e. reset all the pointers of objects that can be reloaded, so that one can
+   clean the detector transient store.
+   The added method is not yet in the abstract interface, so cannot be used yet.
+   Note: to make the feature work, the objects registered to the U.M.S. that
+         cannot be "reloaded" must be unregistered on deletion.
+ - Improvements in the unregister method of UpdateManagerSvc to make it more
+   robust.
 
 !========================= DetDescSvc v1r12 2007-05-31 ========================
 ! 2007-05-29 - Marco Clemencic
