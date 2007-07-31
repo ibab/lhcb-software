@@ -3,6 +3,9 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+! 2007-07-31 - Jose A. Hernando
+ - adding linkedTo and linedFrom for ContainedObject to be use to link with LHCbIDs
+
 !==================== LinkerInstances v3r2p3 2007-03-16 ====================
 ! 2007-03-16 - Marco Cattaneo
  - Temporarily add dictionary for std::vector<std::pair<int,unsigned int> >, to
