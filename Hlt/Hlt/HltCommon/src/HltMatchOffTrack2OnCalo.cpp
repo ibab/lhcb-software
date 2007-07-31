@@ -1,4 +1,4 @@
-// $Id: HltMatchOffTrack2OnCalo.cpp,v 1.1 2007-07-31 15:59:35 gguerrer Exp $
+// $Id: HltMatchOffTrack2OnCalo.cpp,v 1.2 2007-07-31 17:18:14 gguerrer Exp $
 // Include files 
 
 // from Gaudi
@@ -95,12 +95,12 @@ StatusCode HltMatchOffTrack2OnCalo::match(const LHCb::Track& track0, //calo trac
 		std::vector<CaloCellID>	hpton2x2cells = HltUtils::get2x2CellIDs( caloid );
 
 		if ( HltUtils::matchCellIDs( hpton2x2cells, hptoff3x3cells ) )	{						
-			quality = 1;
+			quality = double( track1.key() );
 			return StatusCode::SUCCESS;
 			}	
 	}	
 		
-	quality = 0;	
+	quality = -1. ;	
 	return StatusCode::SUCCESS;
 }
 //=============================================================================
