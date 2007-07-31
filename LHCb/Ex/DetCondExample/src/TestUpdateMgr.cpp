@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.cpp,v 1.6 2007-02-05 19:05:13 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.7 2007-07-31 17:39:10 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,12 @@
 #include "GaudiKernel/DataObject.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+
 #include "DetDesc/ValidDataObject.h"
+//#include "DetDesc/IUMSPurge.h"
+#include "DetDesc/Condition.h"
 
 // local
 #include "TestUpdateMgr.h"
@@ -76,13 +81,26 @@ StatusCode TestUpdateMgr::initialize() {
 // Main execution
 //=============================================================================
 StatusCode TestUpdateMgr::execute() {
-
-  debug() << "==> Execute" << endmsg;
-  if ( ++m_evtCount == 3 ) {
+  
+  ++m_evtCount;
+  debug() << "==> Execute (" << m_evtCount << ")" << endmsg;
+  
+  if ( m_evtCount == 3 ) {
     debug() << " invalidating m_intermediate" << endmsg;
     updMgrSvc()->invalidate(&m_intermediate);
+    updMgrSvc()->invalidate(getDet<Condition>("Conditions/Environment/Hcal/Temperature"));
   }
-
+  /*
+  if ( m_evtCount == 3 ) {
+    SmartIF<IDataManagerSvc> dm(detSvc());
+    dm->clearStore();
+    //updMgrSvc()->purge();
+    SmartIF<IUMSPurge> p(updMgrSvc());
+    p->purge();
+    updMgrSvc()->dump();
+  }
+  */
+  
   return StatusCode::SUCCESS;
 };
 
