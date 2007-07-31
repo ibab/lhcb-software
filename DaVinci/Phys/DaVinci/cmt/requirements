@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.356 2007-07-18 12:08:49 pkoppenb Exp $
+# $Id: requirements,v 1.357 2007-07-31 12:43:19 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -6,10 +6,6 @@
 #============================================================================
 package           DaVinci
 version           v19r4
-
-use Bu2LLK v* PhysSel
-use HltSelChecker v* Hlt
-use LHCbMath v2r2 Kernel 
 
 # Structure, i.e. directories to process. 
 #============================================================================
