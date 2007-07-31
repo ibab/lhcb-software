@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.107 2007-07-05 13:35:11 cattanem Exp $
+# $Id: release.notes,v 1.108 2007-07-31 10:41:52 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2007-07-31 - Marco Clemencic
+ - Fixed a bug with the "lazy connection" feature. The thread to disconnect from
+   the database was started even if we never connect.
+   Now it is started only at the first connection.
 
 !===================== Det/DetCond v11r5 2007-07-05 ==========================
 ! 2007-07-05 - Marco Clemencic
