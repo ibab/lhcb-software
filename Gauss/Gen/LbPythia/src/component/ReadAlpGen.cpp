@@ -1,4 +1,4 @@
-// $Id: ReadAlpGen.cpp,v 1.2 2007-07-27 15:12:53 gcorti Exp $
+// $Id: ReadAlpGen.cpp,v 1.3 2007-07-31 12:49:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -97,27 +97,28 @@ StatusCode LbPythia::ReadAlpGen::initialize ()
   if ( m_logfile.empty()   ) { return Error ( "Input log-file name is not specified!") ; }
   { // open input parameter file:
     // get free fortran Unit 
-    m_LUN161 = F77Utils::getUnit() ;
+    m_LUN161 = F77Utils::getUnit ( msgLevel ( MSG::DEBUG ) ) ;
     if ( 0 >= m_LUN161 ) { return Error("No free FORTRAN unit available ") ; }
-    StatusCode sc = F77Utils::openOld ( m_LUN161 , m_paramfile ) ;
+    StatusCode sc = F77Utils::openOld ( m_LUN161 , m_paramfile , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Could not open the file '" + m_paramfile + "'" ) ; }
     Pythia::pypars().mstp ( 161 ) = m_LUN161 ;                            // ATTENTION!
   }
   { // open input events file:
     // get free fortran Unit 
-    m_LUN162 = F77Utils::getUnit() ;
+    m_LUN162 = F77Utils::getUnit ( msgLevel ( MSG::DEBUG ) ) ;
     if ( 0 >= m_LUN162 ) { return Error("No free FORTRAN unit available ") ; }
-    StatusCode sc = F77Utils::openOld ( m_LUN162 , file() ) ;
+    StatusCode sc = F77Utils::openOld ( m_LUN162 , file() , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Could not open the file '" + file() + "'" ) ; }
-    Pythia::pypars().mstp ( 162 ) = m_LUN161 ;                            // ATTENTION!
+    Pythia::pypars().mstp ( 162 ) = m_LUN162 ;                            // ATTENTION!
   }
   { // open log file:
     // get free fortran Unit 
-    m_LUN163 = F77Utils::getUnit() ;
+    m_LUN163 = F77Utils::getUnit ( msgLevel ( MSG::DEBUG ) ) ;
     if ( 0 >= m_LUN163 ) { return Error("No free FORTRAN unit available ") ; }
-    StatusCode sc = F77Utils::openUnknown ( m_LUN163 , m_logfile ) ;
+    StatusCode sc = F77Utils::openUnknown 
+      ( m_LUN163 , m_logfile , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Could not open the file '" + m_logfile + "'" ) ; }
     Pythia::pypars().mstp ( 163 ) = m_LUN163 ;                            // ATTENTION!
@@ -131,21 +132,21 @@ StatusCode LbPythia::ReadAlpGen::initialize ()
 StatusCode LbPythia::ReadAlpGen::finalize   () 
 {
   { // close input param file 
-    StatusCode sc = F77Utils::close ( m_LUN161 ) ;
+    StatusCode sc = F77Utils::close ( m_LUN161 , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { Error ( "Error in closing '" + m_paramfile + "'" , sc ) ; } // NO RETURN !
     m_LUN161 = 0 ;
     Pythia::pypars().mstp ( 161 ) = 0 ;                      // ATTENTION!
   }
   { // close input events file 
-    StatusCode sc = F77Utils::close ( m_LUN162 ) ;
+    StatusCode sc = F77Utils::close ( m_LUN162 , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { Error ( "Error in closing '" + file() + "'" , sc ) ; } // NO RETURN !
     m_LUN162 = 0 ;
     Pythia::pypars().mstp ( 162 ) = 0 ;                      // ATTENTION!
   }
   { // close log-file 
-    StatusCode sc = F77Utils::close ( m_LUN163 ) ;
+    StatusCode sc = F77Utils::close ( m_LUN163 , msgLevel ( MSG::INFO ) ) ;
     if ( sc.isFailure() ) 
     { Error ( "Error in closing '" + m_logfile + "'" , sc ) ; } // NO RETURN !
     m_LUN163 = 0 ;

@@ -1,4 +1,4 @@
-// $Id: ReadFile.cpp,v 1.2 2007-07-27 15:12:53 gcorti Exp $
+// $Id: ReadFile.cpp,v 1.3 2007-07-31 12:49:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -76,6 +76,7 @@ StatusCode LbPythia::ReadFile::generateEvent
 ( HepMC::GenEvent*    event     , 
   LHCb::GenCollision* collision ) 
 {
+  info() << "LbPythia::ReadFile::generateEvent" << endreq ;
   StatusCode sc = PythiaProduction::generateEvent ( event , collision ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from PythiaProduction::generateEvent" , sc ) ; }

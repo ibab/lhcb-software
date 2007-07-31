@@ -4,6 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-07-31 - Vanya BELYAEV 
+
+ - Couple of tiny fixes to allow to read ALPGEN partonic events:
+ 
+   src/component/ReadAlpGen.cpp
+   src/component/ReadFile.cpp
+   src/component/ReadLHE.cpp
+   src/component/ReadLHE.h
+
+
+
 ! 2007-07-27 - Gloria Corti
  - Temporarly use setting of properties without explanation third argument
    to keep compatibility for Gauss v25rX series

@@ -1,4 +1,4 @@
-// $Id: ReadLHE.cpp,v 1.1 2007-07-06 08:10:57 ibelyaev Exp $
+// $Id: ReadLHE.cpp,v 1.2 2007-07-31 12:49:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,10 +55,10 @@ StatusCode LbPythia::ReadLHE::initialize ()
   // check input file name 
   if ( file().empty() ) { return Error("Input fiel name is not specified!") ; }
   // get free fortran Unit 
-  m_LUN = F77Utils::getUnit() ;
+  m_LUN = F77Utils::getUnit ( msgLevel ( MSG::DEBUG ) ) ;
   if ( 0 >= m_LUN ) { return Error("No free FORTRAN unit available ") ; }    
   // open input LHE file 
-  StatusCode sc = F77Utils::openOld ( m_LUN , file() ) ;
+  StatusCode sc = F77Utils::openOld ( m_LUN , file() , msgLevel ( MSG::INFO ) ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Could not open the file '" + file() + "'" ) ; }
   //
@@ -73,7 +73,7 @@ StatusCode LbPythia::ReadLHE::initialize ()
 StatusCode LbPythia::ReadLHE::finalize   () 
 {
   // close input LHE file 
-  StatusCode sc = F77Utils::close ( m_LUN ) ;
+  StatusCode sc = F77Utils::close ( m_LUN , msgLevel ( MSG::INFO ) ) ;
   if ( sc.isFailure() ) 
   { Error ( "Error in closing '" + file() + "'" , sc ) ; } // NO RETURN !
   m_LUN = 0 ;

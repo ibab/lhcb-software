@@ -1,4 +1,4 @@
-// $Id: ReadLHE.h,v 1.1 2007-07-06 08:12:20 ibelyaev Exp $
+// $Id: ReadLHE.h,v 1.2 2007-07-31 12:49:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LBPYTHIA_READLHE_H
 #define LBPYTHIA_READLHE_H 1 
@@ -26,7 +26,7 @@
 // ============================================================================
 namespace LbPythia 
 {
-  /** @class ReadLHE ReadLHE.cpp
+  /** @class ReadLHE RadLHE.h ReadLHE.cpp
    *
    *  Simple production tool which reads parton level 
    *  LHE file (Les Houches Events). The LHE standard 
