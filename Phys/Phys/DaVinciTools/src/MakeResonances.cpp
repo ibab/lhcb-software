@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.30 2007-07-11 19:38:37 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.31 2007-07-31 14:12:16 jpalac Exp $
 
 #include <algorithm>
 
@@ -233,8 +233,10 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   const double maxmass = mass + std::min(m_massWindow,m_upperMassWindow);
   if (msgLevel(MSG::VERBOSE)) verbose() << "Mass cuts are " << minmass << " " << maxmass << endmsg ;
 
+  // for slc3, need to build a const ParticleID explicitely.
+  const LHCb::ParticleID _pid(pid);
   // decay container
-  Decay decay(LHCb::ParticleID(pid),daughterPIDs,
+  Decay decay(_pid,daughterPIDs,
               minmass,maxmass,m_minMomentum,m_minPt,
               m_checkOverlap, m_particleDescendants);
   
