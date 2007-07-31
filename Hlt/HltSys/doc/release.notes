@@ -5,6 +5,14 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r8>2007-07-31 HltSys v1r8</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r8
+
+  - Many developments in alleys. See individual packages. Not yet complete.
+  - Most benchmark channels are in selections. No e and gamma yet. Muons still partial.
+  - Host all LoKi packages needed in Hlt. But cuts not yet based on LoKi.
+
+HltSys options:
 !========================== HltSys v1r8 2007-07-31 ===================
 ! 2007-07-30 - Patrick Koppenburg
  - Missing semicolon added to HltSelections.opts
