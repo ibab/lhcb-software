@@ -1,0 +1,8 @@
+! $Id: release.notes,v 1.1.1.1 2007-07-31 17:02:19 robbep Exp $
+! Package     : LbPythia8
+! Responsible : 
+
+! 2007-07-31 - Patrick Robbe
+  - new package: interface package between Gauss and Pythia8
+    Initial version by Arthur de Gromard
+! ====================================================================

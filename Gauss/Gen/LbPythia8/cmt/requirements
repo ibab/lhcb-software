@@ -1,0 +1,23 @@
+# $Id: requirements,v 1.1.1.1 2007-07-31 17:02:19 robbep Exp $ 
+# =============================================================================
+package       LbPythia8
+version       v1r0
+
+# =========== structure =======================================================
+branches      LbPythia8 doc cmt src
+
+# =========== own includes ====================================================
+include_dirs  $(LBPYTHIA8ROOT)
+
+# =========== dependencies ====================================================
+use           Generators       v*    Gen
+
+# =========== constituents =====================================================
+library       LbPythia8Lib        Lib/*.cpp
+library       LbPythia8           component/*.cpp
+
+# =========== standard patterns (the order is essential!) ====================== 
+apply_pattern component_library library=LbPythia8 
+apply_pattern linker_library    library=LbPythia8Lib 
+apply_pattern library_stamps    library=LbPythia8Lib
+ 
