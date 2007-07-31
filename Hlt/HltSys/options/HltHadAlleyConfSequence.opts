@@ -9,6 +9,7 @@
 //--------------------------
 HltSummaryWriter.Save += {"PV2D",
                           "HadL0Entry",
+                          "HadL0Calos",
                           "HadPreTriggerSingle",
                           "HadTrigger"};
 
