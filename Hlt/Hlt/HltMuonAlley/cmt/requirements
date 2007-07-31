@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2006-02-23
-# Maintainer : Sandra Amato 
+# Maintainer : Sandra Amato, Alessia Satta
 #============================================================================
 package           HltMuonAlley
-version           v1r3
+version           v1r4
 
 # Structure, i.e. directories to process. 
 #============================================================================

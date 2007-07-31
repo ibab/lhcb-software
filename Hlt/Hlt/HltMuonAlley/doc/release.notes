@@ -3,6 +3,8 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+
+!========================== HltMuonAlley v1r4 2007-07-31 ===================
 ! 2007-07-26 - Alessia Satta
  - uncomment a parameter initialization in HltMuonTrigger2MuonsNoIP.cpp 
    (thanks to Sandra)

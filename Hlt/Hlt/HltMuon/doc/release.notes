@@ -4,6 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+!========================== HltMuon v1r4 2007-07-31 ===================
 ! 2007-07-17 - Patrick Koppenburg
  - Removed _load file
 
