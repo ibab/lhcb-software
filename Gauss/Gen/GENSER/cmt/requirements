@@ -12,14 +12,17 @@ macro pythia6_native_version "411.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
 
+macro pythia8_native_version "080"
+use pythia8 v* LCG_GeneratorsInterfaces
+macro_append pythia8_linkopts " -lhepmcinterface "
 
 macro photos_native_version "215.2"
 use photos v* LCG_GeneratorsInterfaces
 
-
-macro lhapdf_native_version "5.2.3"
+macro lhapdf_native_version "5.3.0"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(lhapdf_home)/../share/PDFsets
+macro_remove lhapdf_linkopts " -llhapdf_dummy "
 
 macro herwig_native_version "6.510.2"
 macro jimmy_native_version "4.31.2"
@@ -37,3 +40,4 @@ macro alpsho_linkopts "-L$(alpgen_home)/lib \
 macro alpgen_name "alpgen"
 
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c"
+
