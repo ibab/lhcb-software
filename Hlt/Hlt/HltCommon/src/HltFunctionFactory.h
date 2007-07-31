@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.3 2007-06-27 06:01:49 hernando Exp $
+// $Id: HltFunctionFactory.h,v 1.4 2007-07-31 15:59:35 gguerrer Exp $
 #ifndef HLTFUNCTIONFACTORY_H 
 #define HLTFUNCTIONFACTORY_H 1
 
@@ -50,6 +50,7 @@ protected:
                               float x0, float xf) {
     if (mode == "<") return (fun < x0).clone();
     else if (mode == ">") return (fun > x0).clone();
+	else if (mode == "=") return (fun == x0).clone();
     else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
     else if (mode == "||>") {
       Hlt::AbsFun<T> afun(fun);
@@ -60,7 +61,7 @@ protected:
     } else if (mode == "||[]") {
       Hlt::AbsFun<T> afun(fun);
       return ((afun > x0) && (afun < xf)).clone();
-    }
+    } 
     fatal() << " not mode " << mode << endreq;
     return NULL;
   }
