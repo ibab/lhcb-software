@@ -4,6 +4,7 @@
 ! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+!========================== HltL0MuonConf v1r1 2007-07-31 ===================
 ! 2007-07-26 - Alessia Satta 
  - remove a TES container for MuonTConfWithT.cpp ( thanks to Sandra)
 
