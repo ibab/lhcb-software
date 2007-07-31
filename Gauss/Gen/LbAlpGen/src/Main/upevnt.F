@@ -1,4 +1,4 @@
-C $Id: upevnt.F,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $
+C $Id: upevnt.F,v 1.2 2007-07-31 12:55:24 ibelyaev Exp $
       SUBROUTINE upevnt
 C-----------------------------------------------------------------------
 C  Purpose   : 
@@ -11,7 +11,6 @@ C-----------------------------------------------------------------------
 C- Include Files
 C- Local Variables
 C-----------------------------------------------------------------------
-      print *,'i am upEVNT (MAIN) '
       CALL ALPGEN_UPEVNT
   999 RETURN
       END

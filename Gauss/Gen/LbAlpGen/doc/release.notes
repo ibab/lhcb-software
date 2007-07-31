@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2007-07-31 12:56:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbAlpGen
 ! Responsible : Vanya Belyaev ibelyaev@physics.syr.edu
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
+
+! 2007-07-31 - Vanya BELYAEV
+
+ - Couple of minor fixes for ALPGEN generator
+ - add the configuration file to read ALPGEN events 
+
 
 ! 2007-07-02 - Vanya BELYAEV 
  - New package
