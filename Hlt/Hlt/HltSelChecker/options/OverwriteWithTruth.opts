@@ -7,27 +7,37 @@
  */
 //--------------------------------------------------------------
 
-// grep HltNoPIDsPions $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+HltSharedKsLL.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 
-HltSelB2HH.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"} ;
+HltSharedKstar2KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+
+HltSharedPhi2KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+
 HltSharedD02KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 HltSharedD02PiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 HltSharedD02KsPiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay"}; 
+HltSharedD02KsKK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+
 HltSharedDs2KKPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", "Phys/SelectTrueDecay" };
+
 HltSharedDstarWithD02KPi.PhysDesktop.InputLocations = { "Phys/HltSharedD02KPi", "Phys/SelectTrueDecay" };
 HltSharedDstarWithD02PiPi.PhysDesktop.InputLocations = { "Phys/HltSharedD02PiPi", "Phys/SelectTrueDecay"};
 HltSharedDstarWithD02KK.PhysDesktop.InputLocations = { "Phys/HltSharedD02KK", "Phys/SelectTrueDecay" };
-HltSharedKsLL.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 
-// grep HltNoPIDsKaons $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+HltSharedDiMuon.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedDiElectron.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 
-HltSelBu2LLK.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"};
-HltSharedD02KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
-HltSharedD02KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
-HltSharedD02KsKK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
-HltSharedDs2KKPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
-HltSharedPhi2KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSelB2HH.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"} ;
 
-// grep HltMuons $HLTSELECTIONSROOT/options/*.* | grep InputLocations | awk -F: '{print $2}'
+HltSelBd2DstarPi.PhysDesktop.InputLocations  = {"Phys/HltSharedDstarWithD02KPi", "Phys/HltSharedDstarWithD02PiPi", "Phys/HltSharedDstarWithD02KK",
+                                                 "Phys/SelectTrueDecay"} ;
 
-HltSharedDiMuon.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay"} ;
+HltSelBs2DsH.PhysDesktop.InputLocations  = {"Phys/HltSharedDs2KKPi", "Phys/SelectTrueDecay"} ;
+
+HltSelBu2D0K_KsHH.PhysDesktop.InputLocations = {"Phys/HltSharedD02KsPiPi", "Phys/HltSharedD02KsKK", "Phys/SelectTrueDecay" };
+
+HltSelBu2LLK.PhysDesktop.InputLocations  = {"Phys/SelectTrueDecay", "Phys/HltSharedDiMuon", "Phys/HltSharedDiElectron" };
+
+HltSelB2DstarMu.PhysDesktop.InputLocations  = {"Phys/HltSharedDstarWithD02KPi", "Phys/SelectTrueDecay"} ;
+
