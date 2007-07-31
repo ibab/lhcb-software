@@ -13,7 +13,7 @@ SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltMuons" } ;
 SelectTrueDecay.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/B2DiMuon"} ;
 
-SelectTrueDecay.Filter.B2DiMuon.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ..." ;
+SelectTrueDecay.Filter.B2DiMuon.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ... " ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
