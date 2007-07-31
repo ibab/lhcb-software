@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.109 2007-06-21 10:03:17 musy Exp $
+! $Id: release.notes,v 1.110 2007-07-31 09:24:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!======================== FlavourTagging v7r3 2007-07-31 =====================
 
 ! 2007-06-21 - Marco Musy
 - make use of Kernel/IParticleDescendants class 
