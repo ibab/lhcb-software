@@ -4,6 +4,7 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v1r3 2007-07-31 ===================
 ! 2007-07-17 - Johannes Albrecht
 	- src/HadronSeedTool
 			- first implementation of new tool to prepare L0Hadron cand to a track
