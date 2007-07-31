@@ -4,6 +4,13 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r4 2007-07-31 ===================
+! 2007-07-31 - Juan Palacios
+ - cmt/requirements
+   . Increase version to v19r4
+ - job/DaVinci_Ganga.py
+   . Increase version to v19r4
+
 ! 2007-07-18 - Patrick Koppenburg
  - options/DVExampleStrippingETC.opts
  - options/DVExampleStripping.opts
