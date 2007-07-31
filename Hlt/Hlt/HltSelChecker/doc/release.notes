@@ -13,6 +13,8 @@
 !========================== HltSelChecker v5r0 2007-07-31 ===================
 ! 2007-07-31 - Patrick Koppenburg
  - Few typos corrected
+ - DVTestHltBu2LLK split into eeK and MuMuK. Only differ by dataset.
+ - OverWrite updated.
 
 ! 2007-07-30 - Patrick Koppenburg
  - options/DVTestHltBu2D0K_KsHH.opts and True

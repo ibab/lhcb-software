@@ -1,6 +1,6 @@
-/** @file DVTestHltBu2LLK.opts
+/** @file DVTestHltBu2MuMuK.opts
  *
- *  Test file for HLT Bu->LLK* selection
+ *  Test file for HLT Bu->MuMuK* selection
  *
  *  @author P. Koppenburg
  *  @date 2007-07-23
@@ -33,8 +33,8 @@ PrintPreselBu2LLK.OutputLevel = 3 ;
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kmumu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kmumu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
@@ -43,7 +43,7 @@ HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBu2LLK" } ;
 OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBu2LLK" } ;
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2LLK.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2MuMuK.root' TYP='ROOT' OPT='NEW'" ] ;
 
 HltSelChecker.OutputLevel = 3 ;
 HltSelChecker.Context = "HLT" ;

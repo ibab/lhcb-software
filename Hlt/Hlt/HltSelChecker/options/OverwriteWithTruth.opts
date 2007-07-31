@@ -16,8 +16,10 @@ HltSharedPhi2KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 HltSharedD02KPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 HltSharedD02PiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
 HltSharedD02KK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
-HltSharedD02KsPiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay"}; 
-HltSharedD02KsKK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay" };
+HltSharedD02KsPiPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", 
+                                                  "Phys/HltSharedKsLL", "Phys/HltSharedKsDD"}; 
+HltSharedD02KsKK.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", 
+                                                  "Phys/HltSharedKsLL", "Phys/HltSharedKsDD" };
 
 HltSharedDs2KKPi.PhysDesktop.InputLocations = { "Phys/SelectTrueDecay", "Phys/SelectTrueDecay" };
 
