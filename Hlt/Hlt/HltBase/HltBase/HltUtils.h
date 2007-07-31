@@ -6,6 +6,7 @@
 
 //#include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/L0CaloCandidate.h"
 
 #include <algorithm>
 #include <functional>
@@ -104,6 +105,19 @@ namespace HltUtils
 
   //! old parameterization of Pt error
   double impactParameterError(double pt);
+  
+  
+  //------------------------------------------------------------
+  // calocellid tools
+	
+  
+	std::vector<LHCb::CaloCellID> get3x3CellIDs( const LHCb::CaloCellID& centercell );	
+	
+	std::vector<LHCb::CaloCellID> get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell );
+	
+	bool matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
+					   const std::vector<LHCb::CaloCellID>& offcells );
+	
 
 };
 

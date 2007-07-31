@@ -419,3 +419,121 @@ double HltUtils::maxPT(const LHCb::RecVertex& vertex) {
     if ((*it)->pt() > pt) pt = (*it)->pt();
   return pt;
 }
+
+//=============================================================================
+// get3x3CellIDs
+//=============================================================================
+std::vector<LHCb::CaloCellID> HltUtils::get3x3CellIDs( const LHCb::CaloCellID& centercell )
+{
+
+	unsigned int calo = centercell.calo(),
+  			     area = centercell.area(),
+	 			 row = centercell.row(),
+				 col = centercell.col();
+	
+	unsigned int rowminus = 0,
+  				 rowplus = 0,
+	  			 colminus = 0,
+		  		 colplus = 0;							
+
+	if (row == 0) 
+		rowminus = 0;
+	else 
+		rowminus = row - 1;
+
+	if (col == 0)
+		colminus = 0;
+	else 
+		colminus = col - 1;
+
+	rowplus = row + 1;
+	colplus = col + 1;
+
+	CaloCellID cell1( calo, area, rowplus, colminus ),
+			   cell2( calo, area, rowplus, col ),
+			   cell3( calo, area, rowplus, colplus ),
+			   cell4( calo, area, row, colplus ), 
+			   cell5( calo, area, rowminus, colplus ),
+			   cell6( calo, area, rowminus, col ),
+			   cell7( calo, area, rowminus, colminus ),
+			   cell8( calo, area, row, colminus );
+
+	std::vector<LHCb::CaloCellID> cells;
+	
+	cells.push_back( cell1 );
+	cells.push_back( cell2 );
+	cells.push_back( cell3 );
+	cells.push_back( cell4 );
+	cells.push_back( cell5 );
+	cells.push_back( cell6 );
+	cells.push_back( cell7 );
+	cells.push_back( cell8 );
+
+	return cells;
+
+}
+//=============================================================================
+// get2x2CellIDs
+//=============================================================================
+std::vector<LHCb::CaloCellID> HltUtils::get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell )
+{
+
+	unsigned int calo = bottomleftcell.calo(),
+			     area = bottomleftcell.area(),
+				 row = bottomleftcell.row(),
+				 col = bottomleftcell.col();
+	
+	unsigned int rowminus = 0,
+  				 rowplus = 0,
+	  			 colminus = 0,
+		  		 colplus = 0;			
+	
+	if (row == 0) 
+		rowminus = 0;
+	else 
+		rowminus = row - 1;
+	
+	if (col == 0)
+		colminus = 0;
+	else
+		colminus = col - 1;
+	
+	rowplus = row + 1;
+	colplus = col + 1;
+	
+	CaloCellID cell1( calo, area, rowplus, col ),
+			   cell2( calo, area, rowplus, colplus ),
+			   cell3( calo, area, row, colplus );	
+						 
+	std::vector<LHCb::CaloCellID> cells;
+	
+	cells.push_back( cell1 );
+	cells.push_back( cell2 );
+	cells.push_back( cell3 );
+
+	return cells;
+
+
+}
+//=============================================================================
+// matchCellIDs
+//=============================================================================
+bool HltUtils::matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
+						 	 const std::vector<LHCb::CaloCellID>& offcells )
+{
+
+	for (std::vector<LHCb::CaloCellID>::const_iterator it = oncells.begin(); it != oncells.end(); ++it) {
+		for (std::vector<LHCb::CaloCellID>::const_iterator it2 = offcells.begin(); it2 != offcells.end(); ++it2) {
+
+			CaloCellID oncell = (*it);
+			CaloCellID offcell = (*it2);
+
+			if (oncell == offcell)
+				return true;
+			}
+		}
+
+	return false;				
+
+}																			 
+
