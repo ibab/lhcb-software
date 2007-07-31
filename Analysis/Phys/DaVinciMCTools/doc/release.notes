@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.173 2007-07-25 14:37:12 jpalac Exp $
+! $Id: release.notes,v 1.174 2007-07-31 09:26:47 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r4 2007-07-31 ===================
 
 ! 2007-07-25 - Juan Palacios
  - Add FilterMCParticleArrayByDecay
