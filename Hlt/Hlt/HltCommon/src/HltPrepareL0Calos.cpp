@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.4 2007-07-31 09:00:04 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.5 2007-07-31 10:09:32 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -151,8 +151,15 @@ Track* HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo) {
   Track* track = new Track();
   track->addToStates(state);
 
-  CaloCellID cid = calo.id();
-  track->addToLhcbIDs( LHCbID(cid) );
+  CaloCellID id = calo.id();
+  LHCb::CaloCellID id1(id.calo(), id.area(), id.row()+1, id.col()   );
+  LHCb::CaloCellID id2(id.calo(), id.area(), id.row()+1, id.col()+1 );
+  LHCb::CaloCellID id3(id.calo(), id.area(), id.row()  , id.col()+1 );
+
+  track->addToLhcbIDs( LHCbID(id) );
+  track->addToLhcbIDs( LHCbID(id1) );
+  track->addToLhcbIDs( LHCbID(id2) );
+  track->addToLhcbIDs( LHCbID(id3) );
   
   return track;
 }
