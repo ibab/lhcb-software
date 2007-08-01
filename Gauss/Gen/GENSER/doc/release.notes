@@ -4,12 +4,15 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v3r2 2007-08-01 ===========================
+! 2007-08-01 - Gloria Corti
+ - Modify LHAPATH to be set without using relative path in the name
+
 ! 2007-07-31 - Patrick Robbe
  - Add macros for Pythia8 usage
  - Use latest LHAPDF 5.3.0 (needed for Pythia8)
  - Remove lhapdf_dummy from link
 
-!========================== GENSER v3r2 2007-07-11 ===========================
 ! 2007-07-11 - Gloria Corti
  - Add macros for alpgen. To be removed when the interface package will be
    available in LCGCMT/LCG_GeneratorsInterfaces.

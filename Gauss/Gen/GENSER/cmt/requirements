@@ -8,36 +8,43 @@ use GaudiPolicy  v*
 
 include_path none
 
+#-- Pythia 6
 macro pythia6_native_version "411.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
 
+#-- Pythia 8
 macro pythia8_native_version "080"
 use pythia8 v* LCG_GeneratorsInterfaces
 macro_append pythia8_linkopts " -lhepmcinterface "
 
+#-- Photos
 macro photos_native_version "215.2"
 use photos v* LCG_GeneratorsInterfaces
 
+#-- LHAPDF
 macro lhapdf_native_version "5.3.0"
 use lhapdf v* LCG_GeneratorsInterfaces
-set LHAPATH $(lhapdf_home)/../share/PDFsets
+set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/PDFsets
 macro_remove lhapdf_linkopts " -llhapdf_dummy "
 
+#-- Herwig and Jimmy
 macro herwig_native_version "6.510.2"
 macro jimmy_native_version "4.31.2"
 
+#-- Hijing
 macro hijing_native_version "1.383bs.2"
 
+#-- AlpGen (until interface package exist in LCG)
 macro alpgen_native_version "2.1.2"
 macro alpgen_path  $(LCG_external)/MCGenerators/alpgen/$(alpgen_native_version)
 macro alpgen_home  $(alpgen_path)/$(LCG_system)
 macro alpgen_linkopts "-L$(alpgen_home)/lib/archive \
                         -lalpgen "
 macro alpsho_linkopts "-L$(alpgen_home)/lib \
-                        -lalpsho "
- 
+                        -lalpsho " 
 macro alpgen_name "alpgen"
 
+#-- linkopts
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c"
 
