@@ -4,12 +4,12 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v1r5 2007-07-31 ===================
 ! 2007-07-31 Gabriel Guerrer
   - HltMatchOffTrack2OnCalo: tool for matching offline Track to L0CaloCandidate
   - HltFunctionFactory: added '=' operator for filters, added 'MatchOffTrack2OnCalo' option for trackFunction 
   	(related to HltMatchOffTrack2OnCalo)
 
-!========================== HltCommon v1r5 2007-07-31 ===================
 ! 2007-07-31 - Jose A. Hernando
   - HltPrepareL0Calos: put the ID of the L0CaloCandidate in the calo track
 
