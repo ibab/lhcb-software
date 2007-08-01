@@ -4,10 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== HltBase v2r5 2007-07-31 ===================
 ! 2007-07-31 Gabriel Guerrer
   - HltUtils: added get3x3CellIDs, get2x2CellIDs and matchCellIDs
 
-!========================== HltBase v2r5 2007-07-31 ===================
 ! 2007-07-27 Jose A. Hernando 
   - adding method has<> in HltSummaryHelper header for Tomasz 
 
