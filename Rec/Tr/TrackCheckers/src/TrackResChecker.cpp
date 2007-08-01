@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackResChecker.cpp,v 1.2 2007-08-01 07:58:06 mneedham Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -145,7 +145,7 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
 
   // pulls at first measurement
   if (fullDetail() == true && track->nMeasurements() > 0u){
-    const double zFirst = track->measurements().back()->z();
+    const double zFirst = track->measurements().front()->z();
     LHCb::State trueStateAt1stMeas;
     idealStateCreator()->createState(mcPart,zFirst,trueStateAt1stMeas).ignore();
     LHCb::State firstState;
