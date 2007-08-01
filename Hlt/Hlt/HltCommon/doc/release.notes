@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-08-01 - Jose A. Hernando
+ - HltFunctionFactory: adding binder key functions
+
 !========================== HltCommon v1r5 2007-08-01 ===================
 ! 2007-08-01 - Patrick Koppenburg
  - Typo fix.
