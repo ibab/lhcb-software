@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.23 2007-08-01 07:58:21 marcocle Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.24 2007-08-01 17:55:58 marcocle Exp $
 // Include files 
 
 // GaudiKernel
@@ -1115,6 +1115,9 @@ GeometryInfoPlus::~GeometryInfoPlus()
     m_log = 0; 
   }
 
+  m_ums->unregister(this);
+  
+  m_ums->release();
   m_services->release();
 }
 //=============================================================================

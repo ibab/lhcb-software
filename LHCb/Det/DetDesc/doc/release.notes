@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.322 2007-07-17 11:57:46 jpalac Exp $ 
+! $Id: release.notes,v 1.323 2007-08-01 17:56:32 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-08-01 - Marco Clemencic
+ - Made GeometryInfoPlus objects unregister from the UpdateManagerSvc on deletion
+   and added the missing release of UMS.
 
 ! 2007-07-17 - Juan Palacios
  - DetDesc/GlobalToLocalDelta.h
