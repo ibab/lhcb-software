@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.26 2007-06-14 16:23:58 pkoppenb Exp $ 
+# $Id: requirements,v 1.27 2007-08-01 12:30:39 hmdegaud Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.26 $
+# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.27 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
@@ -35,14 +35,19 @@ macro_append     cppflags " -DMCCheck " \
 # ============================================================================
 library     Analysis     ../src/*.cpp -import=AIDA
 
-# ============================================================================
-# Testing Component library building rule
-# This is only to check that the code compiles in the release
-# ============================================================================
-library     AnalysisTest -suffix=Test ../solutions/DaVinci3/*.cpp ../solutions/DaVinci6/*.cpp -import=AIDA
 
 # ============================================================================
 # define component library link options
 # ============================================================================
 apply_pattern component_library library=Analysis
+
+# ============================================================================
+# Testing Component library building rule
+# This is only to check that the code compiles in the release
+# ============================================================================
+private
+library     AnalysisTest -suffix=Test ../solutions/DaVinci3/*.cpp ../solutions/DaVinci6/*.cpp -import=AIDA
+apply_pattern linker_library library=AnalysisTest
+end_private
+
 
