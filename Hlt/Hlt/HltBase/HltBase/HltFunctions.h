@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.7 2007-06-28 22:06:28 hernando Exp $
+// $Id: HltFunctions.h,v 1.8 2007-08-01 21:30:45 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -107,6 +107,29 @@ namespace Hlt {
     {return new MemberFunction<T>(m_pmf);}
   public:
     ptr_menfun m_pmf;
+  };
+
+  /* Return the key of the best match
+   *
+   */
+  template <class T1, class T2>
+  class BinderKey : public Estd::function<T1> 
+  {
+  public:
+    typedef Estd::function<T1> Function;
+    typedef Estd::binder_function<T1,T2> Binder;
+    typedef typename std::vector<T2*>::iterator Iterator;
+    explicit BinderKey(const Binder& bin)
+    {m_binder = dynamic_cast<Binder*>(bin.clone());}
+    virtual ~BinderKey() {delete m_binder;}
+    double operator() (const T1& t1) const {
+      std::pair<double,Iterator> pair = m_binder->pair(t1);
+      return (double) (*(pair.second))->key();
+    }
+    Function* clone() const 
+    {return new BinderKey<T1,T2>(*m_binder);}
+  public:
+    Binder* m_binder;
   };
 
   /* AbsInfo:    

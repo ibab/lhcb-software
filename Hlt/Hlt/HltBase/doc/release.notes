@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-08-01 Jose A. Hernando 
+  - HltFunctions: adding function to get key of best match in binder function
+    EFunctions: repare bug in binder function
+
 !========================== HltBase v2r5 2007-07-31 ===================
 ! 2007-07-31 Gabriel Guerrer
   - HltUtils: added get3x3CellIDs, get2x2CellIDs and matchCellIDs

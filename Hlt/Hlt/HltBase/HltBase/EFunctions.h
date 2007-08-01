@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.7 2007-06-28 22:06:28 hernando Exp $
+// $Id: EFunctions.h,v 1.8 2007-08-01 21:30:45 hernando Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -16,7 +16,7 @@
  */
 
 namespace Estd
-{
+{// Include file
 
   /** Template base class to define functions and filters and operations
    *  between them
@@ -110,7 +110,7 @@ namespace Estd
       return d0;
     }
     Pair pair(const T1& t) const {
-      if (container->size() == 0) return NULL; 
+      // TODO trought exceptio if empty container
       Iterator it = container->begin(); Iterator it0 = it;
       double d0 = (*bifunction)(t, **it); ++it;
       for (; it != container->end(); ++it) {
