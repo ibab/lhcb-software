@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.6 2007-07-31 17:18:14 gguerrer Exp $
+// $Id: HltFunctionFactory.cpp,v 1.7 2007-08-01 06:42:18 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -96,7 +96,6 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
   } else if (name == "MatchOffTrack2OnCaloKey") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltMatchOffTrack2OnCalo");
-	key
     fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
                                                   *m_tracks, Estd::abs_max());
   }
