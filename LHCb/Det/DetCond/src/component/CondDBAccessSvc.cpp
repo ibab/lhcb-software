@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.41 2007-07-31 10:41:52 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.42 2007-08-01 16:18:18 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -457,7 +457,7 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
   if (m_rootFolderSet) {
     // HEAD tags are always good
     //if ( (tag.empty()) || (tag == "HEAD") ) return StatusCode::SUCCESS;
-    if ( m_rootFolderSet->isHeadTag(tag) ) {
+    if ( cool::IHvsNode::isHeadTag(tag) ) {
       log << MSG::VERBOSE << "\"" << tag << "\" is a HEAD tag: OK" << endmsg;
       return StatusCode::SUCCESS;
     }
@@ -1033,7 +1033,7 @@ void CondDBAccessSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags )
   }
   // If the tag is a "HEAD" tag, I want to show "HEAD"
   std::string tagName = tag();
-  if (m_rootFolderSet->isHeadTag(tagName)) {
+  if (cool::IHvsNode::isHeadTag(tagName)) {
     tagName = "HEAD";
   }
 

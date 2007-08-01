@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.108 2007-07-31 10:41:52 marcocle Exp $
+# $Id: release.notes,v 1.109 2007-08-01 16:18:18 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2007-08-01 - Marco Clemencic
+ - Fixed a bug connected to "lazy connection" feature. I was using an instance
+   of a cool object to call a static member function. 
 
 ! 2007-07-31 - Marco Clemencic
  - Fixed a bug with the "lazy connection" feature. The thread to disconnect from
