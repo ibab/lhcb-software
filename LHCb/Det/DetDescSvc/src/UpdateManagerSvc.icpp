@@ -23,8 +23,14 @@ inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFuncti
   Item *item = NULL;
   ValidDataObject *vdo = mf->castToValidDataObject();
   if (vdo && vdo->registry()){
-    item = findItem(vdo->registry()->identifier());
+    std::string name = vdo->registry()->identifier();
+    // remove the root name if present
+    if ( name[0] == '/'
+         && name.compare(0,m_dataProviderRootName.size(),m_dataProviderRootName) == 0 ){
+      name.erase(0,m_dataProviderRootName.size());
     }
+    item = findItem(name);
+  }
   if (!item) {
     item = findItem(mf->castToVoid());
   }

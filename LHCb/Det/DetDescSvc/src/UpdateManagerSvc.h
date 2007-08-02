@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.8 2007-07-31 17:36:52 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.9 2007-08-02 17:04:39 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -178,6 +178,10 @@ private:
   /// Map containing the list of parsed condition definitions
   GaudiUtils::Map<std::string,Condition*> m_conditionsOverides;
 
+  /// Name of the DIA file into which write the dump (http://live.gnome.org/Dia)
+  /// (property DiaDumpFile).
+  std::string m_diaDumpFile;
+  
 #ifndef WIN32
   /// mutex lock used to avoid dependencies corruptions in a multi-thread environment.
   pthread_mutex_t m_busy;

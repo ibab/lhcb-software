@@ -1,10 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.31 2007-07-31 17:36:52 marcocle Exp $ 
+! $Id: release.notes,v 1.32 2007-08-02 17:04:42 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-08-02 - Marco Clemencic
+ - Added an option to dump the network of dependencies as a DIA file (see
+   http://live.gnome.org/Dia). The format is very preliminary (e.g. the boxes
+   are all collapsed in one point), but it can be useful.
+ - Fixed a couple of flows for the "purge" feature. The reload was not working
+   correctly. 
 
 ! 2007-07-31 - Marco Clemencic
  - Added to the UpdateManagerSvc the possibility to "purge" the dependencies,

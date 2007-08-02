@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.7 2007-07-31 17:36:52 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.8 2007-08-02 17:04:37 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -28,12 +28,19 @@ struct Item {
   }
 
   /// Constructor for an item representing a generic object.
-  Item(BaseObjectMemberFunction *mf):
+  Item(BaseObjectMemberFunction *mf, const std::string tsRoot):
     since(1),until(0),vdo(mf->castToValidDataObject()),
     ptr(mf->castToVoid()),override(NULL),
     updateLock(false),user_dest_ptrs()
   {
-    if (vdo && vdo->registry()) path = vdo->registry()->identifier();
+    if (vdo && vdo->registry()){
+      path = vdo->registry()->identifier();
+      // remove the root name if present
+      if ( path[0] == '/'
+           && path.compare(0,tsRoot.size(),tsRoot) == 0 ){
+        path.erase(0,tsRoot.size());
+      }
+    }
     memFuncs.push_back(MembFunc(mf));
   }
     

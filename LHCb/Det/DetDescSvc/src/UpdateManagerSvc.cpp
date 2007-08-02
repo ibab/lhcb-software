@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.14 2007-08-01 18:11:58 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.15 2007-08-02 17:04:38 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -14,6 +14,8 @@
 #include "DetDesc/Condition.h"
 
 #include <set>
+#include <sstream>
+#include <fstream>
 
 // local
 #include "UpdateManagerSvc.h"
@@ -39,9 +41,10 @@ UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc)
   pthread_mutex_t tmp_lock = PTHREAD_MUTEX_INITIALIZER;
   m_busy = tmp_lock;
 #endif
-  declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
-  declareProperty("DetDataSvc",      m_detDataSvcName);
+  declareProperty("DataProviderSvc",    m_dataProviderName = "DetectorDataSvc");
+  declareProperty("DetDataSvc",         m_detDataSvcName);
   declareProperty("ConditionsOverride", m_conditionsOveridesDesc);
+  declareProperty("DiaDumpFile",        m_diaDumpFile = "");
 }
 //=============================================================================
 // Destructor
@@ -184,7 +187,7 @@ StatusCode UpdateManagerSvc::finalize(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
-  if ( m_outputLevel <= MSG::DEBUG ) dump();
+  if ( m_outputLevel <= MSG::DEBUG || ! m_diaDumpFile.empty() ) dump();
 
   // release the interfaces used
   if (m_dataProvider != NULL) m_dataProvider->release();
@@ -231,7 +234,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       cond_copy.erase(0,m_dataProviderRootName.size());
     }
     log << MSG::DEBUG << "registering condition \"" << cond_copy
-        << "\" for object of type " << mf->type().name() << endmsg;
+        << "\" for object of type " << mf->type().name() << " at " << std::hex << mf->castToVoid() << endmsg;
   }
   else {
     log << MSG::DEBUG << "registering object of type " << mf->type().name()
@@ -241,10 +244,16 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
   // find the object
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
-    mf_item = new Item(mf);
+    mf_item = new Item(mf, m_dataProviderRootName);
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
+  } else {
+    if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
+      mf_item->vdo = mf->castToValidDataObject();
+      mf_item->ptr = mf->castToVoid();
+    }
   }
+  
   if (!cond_copy.empty()) {
     // find the condition
     Item *cond_item = findItem(cond_copy);
@@ -302,7 +311,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
 void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
-      << " for object of type " << mf->type().name() << endmsg;
+      << " for object of type " << mf->type().name() << " at " << std::hex << mf->castToVoid() << endmsg;
   // find the "condition"
   Item *cond_item = findItem(obj);
   if (!cond_item){ // Error!!!
@@ -313,9 +322,13 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   // find the OMF (Object Member Function)
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
-    mf_item = new Item(mf);
+    mf_item = new Item(mf, m_dataProviderRootName);
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
+  }
+  if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
+    mf_item->vdo = mf->castToValidDataObject();
+    mf_item->ptr = mf->castToVoid();
   }
   link(mf_item,mf,cond_item);
   // a new item means that we need an update
@@ -559,6 +572,20 @@ void UpdateManagerSvc::i_unregister(void *instance){
 void UpdateManagerSvc::dump(){
   MsgStream log(msgSvc(),name());
 
+  std::auto_ptr<std::ofstream> dia_file;
+  int dia_lines_ctr = 0;
+  if ( ! m_diaDumpFile.empty() ){
+    dia_file.reset(new std::ofstream(m_diaDumpFile.c_str()));
+  }
+  
+  if (dia_file.get() != NULL) {
+    // DIA header
+    (*dia_file)
+      << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+      << "<dia:diagram xmlns:dia=\"http://www.lysator.liu.se/~alla/dia/\">"
+      << "<dia:layer name=\"Background\" visible=\"true\">";
+  }
+  
   log << MSG::DEBUG << "--- Dump" << endmsg;
   log << MSG::DEBUG << "    " << m_all_items.size() << " items registered" << endmsg;
   log << MSG::DEBUG << "     of which " << m_head_items.size() << " in the head" << endmsg;
@@ -572,9 +599,33 @@ void UpdateManagerSvc::dump(){
       ++head_cnt;
     }
     log << endmsg;
+
+    if (dia_file.get() != NULL) {
+      // DIA Object for registered item (first part)
+      (*dia_file)
+        << "<dia:object type=\"Flowchart - Box\" version=\"0\""
+        << " id=\"i" << std::hex << *i << "\">"
+        << "<dia:attribute name=\"text\"><dia:composite type=\"text\">"
+        << "<dia:attribute name=\"string\"><dia:string>#"
+        << "(" << std::dec << cnt-1 << ") " << std::hex << *i << "\n"
+        << "(" << (*i)->ptr << ")";
+    }
+    
     log << MSG::DEBUG << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
-    if ( !(*i)->path.empty() )
+    if ( !(*i)->path.empty() ) {
       log << MSG::DEBUG << "       path = " << (*i)->path << endmsg;
+      if (dia_file.get() != NULL) {
+        // If we have the path, we can put it in the DIA Object
+        (*dia_file) << "\n" << (*i)->path;
+      }
+    }
+
+    if (dia_file.get() != NULL) {
+      // DIA Object for registered item (closure)
+      (*dia_file) << "#</dia:string></dia:attribute></dia:composite>"
+                  << "</dia:attribute></dia:object>";
+    }
+
     log << MSG::DEBUG << "        IOV = " << (*i)->since << " - " << (*i)->until << endmsg;
     if ((*i)->memFuncs.size()){
       log << MSG::DEBUG << "       depend on :" << endmsg;
@@ -582,11 +633,30 @@ void UpdateManagerSvc::dump(){
         log << MSG::DEBUG << std::hex << "                  ";
         for (Item::ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
           log << " " << *itemIt;
+          if (dia_file.get() != NULL) {
+            // Add an arrow to the diagram connecting the user Item to the
+            // used Item
+            (*dia_file)
+              << "<dia:object type=\"Standard - Line\" version=\"0\" id=\"l" << std::dec << dia_lines_ctr++ << "\">"
+              << "<dia:attribute name=\"end_arrow\"><dia:enum val=\"22\"/>"
+              << "</dia:attribute>"
+              << "<dia:connections>"
+              << "<dia:connection handle=\"0\" to=\"i" << std::hex << *i << "\" connection=\"13\"/>"
+              << "<dia:connection handle=\"1\" to=\"i" << std::hex << *itemIt << "\" connection=\"2\"/>"
+              << "</dia:connections></dia:object>";
+          }
         }
         log << std::dec << endmsg;
       }
     }
   }
+
+  if (dia_file.get() != NULL) {
+    // DIA header
+    (*dia_file) << "</dia:layer></dia:diagram>\n";
+    log << MSG::ALWAYS << "DIA file '" << m_diaDumpFile << "' written" << endmsg;
+  }
+
   log << MSG::DEBUG << "Found " << head_cnt << " head items: ";
   if (m_head_items.size() == head_cnt){
     log << "OK";
