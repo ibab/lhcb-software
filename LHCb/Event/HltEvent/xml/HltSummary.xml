@@ -84,9 +84,13 @@
                   HltSelBs2DsH=1011,
                   HltSelBs2PhiGamma=1012,
                   HltSelBs2PhiPhi=1013,
-                  HltSelLastSelection=1014'
+	          HltSelBs2DsDs=1014,
+	          HltSelB2DstarMu=1015,
+                  HltSelBd2PiPiPi=1016,
+	          HltSelBu2D0K_KsHH=1017,
+                  HltSelBd2D0Kstar_KsHH=1018,
+                  HltSelLastSelection=1019'
         access = 'PUBLIC' />
-      
 
       <enum
         name   = 'HltParticleInfo'
