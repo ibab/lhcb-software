@@ -1,11 +1,11 @@
-C $Id: alpupevnt.F,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $
+C $Id: alpupevnt.F,v 1.2 2007-08-02 11:23:04 ibelyaev Exp $
 C----------------------------------------------------------------------
       SUBROUTINE ALPGEN_UPEVNT
 C----------------------------------------------------------------------
 c     Puts Alpgen event into GUPI common block HEPEU
 c----------------------------------------------------------------------
       implicit none
-      INCLUDE 'alpsho.inc'
+      INCLUDE 'alplib/alpsho.inc'
 C--   GUP Event common block
       INTEGER MAXNUP
       PARAMETER (MAXNUP=500)

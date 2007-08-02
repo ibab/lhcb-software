@@ -3,7 +3,7 @@ c-------------------------------------------------------------------
 c     set list of parameters types and assign default values
 c-------------------------------------------------------------------
       implicit none
-      INCLUDE 'alpsho.inc'
+      INCLUDE 'alplib/alpsho.inc'
 c
       ih2=parval(2)
       ebeam=parval(3)

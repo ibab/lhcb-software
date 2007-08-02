@@ -1,4 +1,4 @@
-C $Id: alpupveto.F,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $
+C $Id: alpupveto.F,v 1.2 2007-08-02 11:23:04 ibelyaev Exp $
 *-- AUTHOR :    MICHELANGELO MANGANO
 C----------------------------------------------------------------------
       SUBROUTINE ALPGEN_UPVETO(IPVETO)
@@ -22,7 +22,7 @@ C...HEPEVT COMMONBLOCK.
      &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
       DOUBLE PRECISION PHEP,VHEP
       SAVE /HEPEVT/
-      INCLUDE 'alpsho.inc'
+      INCLUDE 'alplib/alpsho.inc'
       INTEGER IPVETO
 C     CALSIM AND JET VARIABLES                             
       INTEGER NCY,NCPHI,NJMAX,JETNO,NCJET

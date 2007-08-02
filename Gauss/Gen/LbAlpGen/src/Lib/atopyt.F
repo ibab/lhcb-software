@@ -17,7 +17,7 @@ C----------------------------------------------------------------------
 C     subroutine to initialise the events
 C----------------------------------------------------------------------
       IMPLICIT NONE
-      INCLUDE 'alpsho.inc'
+      INCLUDE 'alplib/alpsho.inc'
       INTEGER I
 C--LOCAL VARIABLES
 C     EASY-TEXT

@@ -1,6 +1,9 @@
-C $Id: upinit.F,v 1.2 2007-07-31 12:55:25 ibelyaev Exp $
-      SUBROUTINE upinit
+C $Id: upevnt.F,v 1.1 2007-08-02 11:23:05 ibelyaev Exp $
+      SUBROUTINE upevnt
 C-----------------------------------------------------------------------
+C  Purpose   : 
+C  Arguments : 
+C
 C  Author    : Vanya BELYAEV ibelyaev@physics.syr.edu
 C  Created   : 2007-06-26
 C-----------------------------------------------------------------------
@@ -8,6 +11,6 @@ C-----------------------------------------------------------------------
 C- Include Files
 C- Local Variables
 C-----------------------------------------------------------------------
-      CALL ALPGEN_UPINIT
+      CALL ALPGEN_UPEVNT
   999 RETURN
       END

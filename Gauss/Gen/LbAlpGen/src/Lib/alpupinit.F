@@ -1,4 +1,4 @@
-C $Id: alpupinit.F,v 1.1.1.1 2007-07-02 09:25:04 ibelyaev Exp $
+C $Id: alpupinit.F,v 1.2 2007-08-02 11:23:04 ibelyaev Exp $
 C----------------------------------------------------------------------
 *--   Author :    Michelangelo Mangano
 C----------------------------------------------------------------------
@@ -7,7 +7,7 @@ C----------------------------------------------------------------------
 C     HERWIG/PYTHIA UNIVERSAL EVENT INITIALITION ROUTINE
 C----------------------------------------------------------------------
       IMPLICIT NONE
-      INCLUDE 'alpsho.inc'
+      INCLUDE 'alplib/alpsho.inc'
       CHARACTER *3 CSHO
 C--   GUP Event common block
       INTEGER MAXNUP

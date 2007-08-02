@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2007-07-31 12:55:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2007-08-02 11:23:04 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,7 +7,7 @@ package           LbAlpGen
 version           v2r0
 
 # =============== structure ===================================================
-branches          cmt doc src options 
+branches          cmt doc src options scripts 
 
 # =============== exported includes ===========================================
 include_dirs      $(LBALPGENROOT) 
@@ -19,9 +19,19 @@ set               LBALPGENOPTS $(LBALPGENROOT)/options
 use               LbPythia     v* Gen 
 use               Boost        v* LCG_Interfaces 
 
+macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
+
 # =============== constituents ================================================
-library           LbAlpGen    Lib/*.cpp  Lib/*.F  
-application       AlpGen      Main/*.cpp Main/*.F 
+library           LbAlpGen    Lib/*.cpp Lib/*.F  
+application       AlpGenFragm Read/AlpGenFragm.cpp \
+                              Read/upevnt.F        \
+                              Read/upinit.F        \
+                              Main/pyr.F 
+application       AlpGen4Q    Main/AlpGen.cpp      \
+                              Main/alpgen_main.F   \
+                              Main/pyr.F           \
+                              4Q/*.F               \
+                              $(alpgen_author_dir)/4Qlib/4Q.f
 
 # =============== standard patterns ===========================================
 apply_pattern     linker_library    library=LbAlpGen
@@ -31,13 +41,16 @@ apply_pattern     application_path
 macro_prepend GENSER_linkopts " $(alpgen_linkopts) "
 
 
+path_remove PATH "LbAlpGen"
+path_append PATH ${LBALPGENROOT}/${BINDIR}
+path_append PATH ${LBALPGENROOT}/scripts
+
 # =============================================================================
 private           
-macro_append      AlpGenlinkopts  $(Boost_linkopts_program_options)
+macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
 
 private 
-macro_prepend fincludes $(ppcmd)"$(alpgen_path)/share/alpgen-author/alplib"
-
+macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)"
 
 # =============================================================================
 # The END 
