@@ -1,24 +1,14 @@
-// $Id: IGiGaGeomCnvSvc.h,v 1.7 2004-02-20 19:27:26 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2003/04/06 18:55:31  ibelyaev
-//  remove unnesessary dependencies and adapt for newer GiGa
-//
-// Revision 1.5  2002/05/04 20:39:35  ibelyaev
-//  see $GIGACNVROOT/release.notes (4 May 2002)
-//
-// ============================================================================
+// $Id: IGiGaGeomCnvSvc.h,v 1.8 2007-08-02 15:03:23 gcorti Exp $ 
 #ifndef  GIGACNV_IGIGAGEOMCNVSVC_H 
 #define  GIGACNV_IGIGAGEOMCNVSVC_H 1
 
-/// GiGa 
+// Include files
+// from GiGa 
 #include "GiGa/IGiGaGeoSrc.h" 
-/// GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaVolume.h"
 
+// forward declarations
 class ISolid;
 class IMagneticFieldSvc;
 
@@ -35,12 +25,12 @@ class IGiGaFieldMgr ;
  *  definition of abstract and non-minimal interface 
  *  to Geant4 geometry conversion service 
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Vanya Belyaev
+ *  @author Sajan Easo, Gloria Corti - Add methods for alignment
  */
 
-class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
-                       virtual public IGiGaGeoSrc 
-{
+class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc,
+                       virtual public IGiGaGeoSrc {
  public:  
   
   /// Retrieve unique interface identifier  
@@ -51,16 +41,14 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
    *  @param  name    name/address/location of Material object 
    *  @return pointer to converted G4Material object 
    */
-  virtual G4Material*  material 
-  ( const std::string& name ) = 0 ;
+  virtual G4Material* material( const std::string& name ) = 0;
   
   /** Retrive the pointer to converter volumes/assemblies 
    *  (could trigger the conversion of the (DetDesc) LVolume/LAssembly)    
    *  @param  name    name/address/location of Volume/Assembly object 
    *  @return converted GiGaVolume  object 
    */
-  virtual GiGaVolume   volume          
-  ( const std::string& name ) = 0 ;
+  virtual GiGaVolume volume( const std::string& name ) = 0;
   
   /** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
    *  @param  Solid pointer to Solid object 
@@ -158,16 +146,23 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
   ( const std::string& Name   , 
     IGiGaMagField*&    Mag    ) = 0 ;
 
+  /// Use or not information from detector elements geometry info
+  /// (i.e. alignment)
+  virtual bool useAlignment() = 0;
+ 
+  /// Use or not information from detector elements for all volumes
+  /// (i.e. alignment)
+  virtual bool alignAll() = 0;
+ 
+  /// List of paths in TDS to which to apply misalignemt
+  virtual const std::vector<std::string>& alignDets() = 0;
+
 protected: 
 
-  /// virtual destructor 
   virtual ~IGiGaGeomCnvSvc() ;
-  ///
 
 };
 
-// ============================================================================
-#endif    ///<  GIGACNV_IGIGAGEOMCNVSVC_H 
-// ============================================================================
 
+#endif    ///<  GIGACNV_IGIGAGEOMCNVSVC_H 
 

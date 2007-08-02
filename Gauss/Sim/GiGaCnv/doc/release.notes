@@ -4,6 +4,65 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GiGaCnv v18r2 2007-08-02 ==========================
+! 2007-08-02 - Gloria Corti, Sajan Easo, Vanya Belyaev, Marco Clemencic
+ - Introduce (with some modification) what provided by Sajan Easo
+   to apply some detector misalignments on parents and childrens as long as
+   the children belong to a unique parent logical volume. It is no longer
+   necessary to specify the full list of all detector elements in 
+   GiGaGeo.InputStreams to apply misalignment. See below on options to
+   use to activate it.
+   It includes code from V.Belyaev and M.Clemencic.
+   Modification with respect to what provided are simplification of names
+   of methods and following coding conventions, replacing long list of 
+   options to switch on misalignment for subdetectors with list of detector
+   elements to which to apply misalignment.
+   Details of functionality and modifications are:
+   . Activated the capability to simulate some detector misalignments.
+     This is done through the updateRep method of the LogicalVolume converters.
+     It searches for the list of det elem for each phys vol, using the
+     logical volume names. When multiple det elem are found, a second
+     search is launched from the result of the first search. In the second
+     search, the physical volume  name is compared with the npath string of
+     the detector elements in the list and the matching one is taken.
+     If it still finds multiple matches, a warning is printed and 
+     the default ideal geometry is used. 
+     This means that misalignemnt CANNOT be applied to both parent and children
+     if the parent is a multiple copy of a single detector element.
+     When a proper match is found, the misalignment is accessed from
+     IGeometryInfo class and applied by using the resulting matrix to 
+     create the G4Physical volume.
+   . The activation of the use of the CondDB values for alignment is 
+     controllable from options of the GiGaGeo service. 
+     By default the options are set to false as to reproduce the 
+     "old behaviour" of Gauss, i.e. passing full list in GiGaGeo.InputStream.
+     It is possible to activate the use of CondDB values for all subdetectors
+     or for some selectively.
+     To activate it for all detector set the options:
+       GiGaGeo.UseAlignment = true;
+       GiGaGeo.AlignAllDetectors = true;
+     while for example only for the VELO set the options: 
+       GiGaGeo.UseAlignment = true;
+       GiGaGeo.AlignDetectors = 
+          {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight"};
+   . Code modified:
+     - src/component/GiGaLVolumeCnv.{h,cpp}
+       New methods added (look at doxygen for details): 
+       . transformWithAlignment
+       . detElementByLVNameWithAlignment
+       . findBestDetElemFromPVName
+       . detector_element_support_path
+     - GiGaCnv/IGiGaGeomCnvSvc.h
+       src/component/GiGaGeo.{h,cpp}
+       New methods added (look at doxygen for details):
+       . useAlignment
+       . alignAll
+       . alignDets
+       New properties (default values listed)
+       . GiGaGeo.UseAlignment = false;
+       . GiGaGeo.AlignAllDetectors = false;
+       . GiGaGeo.AlignDetectors = { };
+
 !========================= GiGaCnv v18r1 2007-07-02 ==========================
 ! 2007-07-02 - Gloria Corti
  - Adapt to change introduced from LHCb v22r2 with removal of LHCbDefinitions:
