@@ -1,4 +1,5 @@
 package confDB
+branches cmt doc src
 use GaudiPolicy v*
 use oracle      v* LCG_Interfaces
 

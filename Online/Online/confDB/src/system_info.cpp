@@ -1,13 +1,13 @@
 
 #if defined( _WIN32) ||defined(WIN32)
-	#include <winsock2.h>	
-	#include <stdio.h>
+#include <winsock2.h>	
+#include <stdio.h>
 #else
-	#include <pwd.h>
+#include <pwd.h>
 #include <unistd.h>
 #include <sys/types.h>
-	#include <stdio.h>
-	#include <string.h>
+#include <stdio.h>
+#include <string.h>
 #endif
 
 
@@ -24,23 +24,23 @@ void ErrorExit(const char* FctName,char* ErrMess, int errnum)
 	}
 	else
 	{
-    LPVOID lpMsgBuf;
-    DWORD dw = GetLastError(); 
+		LPVOID lpMsgBuf;
+		DWORD dw = GetLastError(); 
 
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL,
-        dw,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPTSTR) &lpMsgBuf,
-        0, NULL );
+		FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+			FORMAT_MESSAGE_FROM_SYSTEM,
+			NULL,
+			dw,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR) &lpMsgBuf,
+			0, NULL );
 
-    wsprintf(ErrMess, 
-        "ERROR in %s failed with error %d: %s", 
-        FctName, dw, lpMsgBuf); 
-    LocalFree(lpMsgBuf);
-    ExitProcess(dw); 
+		wsprintf(ErrMess, 
+			"ERROR in %s failed with error %d: %s", 
+			FctName, dw, lpMsgBuf); 
+		LocalFree(lpMsgBuf);
+		ExitProcess(dw); 
 	}
 }
 
@@ -48,16 +48,16 @@ int getTerminalName(char* hostname,int len_host,char* errMess)
 {
 	int res=0;
 	DWORD  bufCharCount = len_host;
-	  if( !GetComputerName( hostname, &bufCharCount ) )
-	  {
-		  ErrorExit("getTerminalName",errMess,1);
-		  strcpy(hostname,"ERROR_IN_GETTING_HOST_NAME");
-		  res=-1;
-	  }
-	  else
-	  {
+	if( !GetComputerName( hostname, &bufCharCount ) )
+	{
+		ErrorExit("getTerminalName",errMess,1);
+		strcpy(hostname,"ERROR_IN_GETTING_HOST_NAME");
+		res=-1;
+	}
+	else
+	{
 		ErrorExit("getTerminalName",errMess,0);
-	  }
+	}
 	return res;
 }
 
@@ -66,19 +66,19 @@ int getLoginUser(char* username,int len_host,char* errMess)
 	int res=0;
 	DWORD  bufCharCount = len_host;
 
-		if( !GetUserName( username, &bufCharCount ) )
-		{
-			ErrorExit("getLoginUser",errMess,1);
-			strcpy(username,"ERROR_IN_GETTING_LOGIN_NAME");
-			res=-1;
-		}
-		else
-		{
-			ErrorExit("getLoginUser",errMess,0);
-		}
+	if( !GetUserName( username, &bufCharCount ) )
+	{
+		ErrorExit("getLoginUser",errMess,1);
+		strcpy(username,"ERROR_IN_GETTING_LOGIN_NAME");
+		res=-1;
+	}
+	else
+	{
+		ErrorExit("getLoginUser",errMess,0);
+	}
 	return res;
 }
-  
+
 
 
 #else
@@ -100,14 +100,14 @@ int getTerminalName(char* hostname,int len_host,char* ErrorMess)
 	int res=0;
 	int  bufCharCount =len_host;
 	if( gethostname( hostname, bufCharCount )!=0)
-	  {
-		  ErrorExit("getTerminalName", "Not successful",ErrorMess,1);
-		  strcpy(hostname,"ERROR_IN_GETTING_HOST_NAME");
+	{
+		ErrorExit("getTerminalName", "Not successful",ErrorMess,1);
+		strcpy(hostname,"ERROR_IN_GETTING_HOST_NAME");
 		res=-1;
-	  }
+	}
 	else
-		  ErrorExit("getTerminalName", "Not successful",ErrorMess,0);
-		
+		ErrorExit("getTerminalName", "Not successful",ErrorMess,0);
+
 	return res;
 }
 
