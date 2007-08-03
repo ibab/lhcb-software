@@ -122,7 +122,8 @@ HltMuonTConfL0SingleTriggerDimuon.ModeOr = true;
 HltMuonTConfL0DimuonAlley.MeasureTime=true;
 HltMuonTConfL0DimuonAlley.Members += {   "L0Entry/L0DimuonEntry",
                                          //"L0MuonCandidatesFromRaw",
-                                         "L0Muon2Tracks/L0MuonDimuon",  
+                                         "L0Muon2Tracks/L0MuonDimuon", 
+                                         "L0Vertex2Tracks", 
                                          "GaudiSequencer/DecodeForTConf",                                           
                                          "L0MuonConfWithT/L0MuonConfL0DimuonWithT",
                                          "GaudiSequencer/MuonRecon", 
@@ -286,10 +287,12 @@ L0MuonDimuon.L0MuonType="dimuon";
 L0MuonDimuon.L0MuonThresold="1500";
 L0MuonDimuon.OutputL0MuonTracksName="Rec/Track/L0MuonDimuon";
 L0MuonDimuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
-L0MuonDimuon.OutputTracksName="Hlt/Track/L0MuonDimuon";
+//L0MuonDimuon.OutputTracksName="Hlt/Track/L0MuonDimuon";
 L0MuonDimuon.OutputVerticesName="Hlt/Vertex/L0Dimuon";
 L0MuonDimuon.OutputLevel=3;
 
+L0Vertex2Tracks.InputVerticesName="Hlt/Vertex/L0Dimuon";
+L0Vertex2Tracks.OutputTracksName="Hlt/Track/L0MuonDimuon";
 L0MuonConfL0DimuonWithT.InputTracksName = "Hlt/Track/L0MuonDimuon";
 L0MuonConfL0DimuonWithT.OutputTracksName = "Hlt/Track/DiMuonConfirmedWithT";
 L0MuonAndTConfL0Dimuon.InputTracksName = "Hlt/Track/DiMuonConfirmedWithT";

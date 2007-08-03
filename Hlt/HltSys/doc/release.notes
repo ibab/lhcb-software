@@ -12,6 +12,9 @@ This version uses Gaudi v19r4 and LHCb v22r8
   - Most benchmark channels are in selections. No e and gamma yet. Muons still partial.
   - Host all LoKi packages needed in Hlt. But cuts not yet based on LoKi.
 
+! 2007-07-30 - Alessia Satta
+ - add option to HltMuonConfAlley (see HltMuonAlley modification)
+
 HltSys options:
 !========================== HltSys v1r8 2007-07-31 ===================
 ! 2007-07-30 - Patrick Koppenburg
