@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.34 2007-07-04 08:06:37 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.35 2007-08-03 09:37:26 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -163,6 +163,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
                                                   TGNumberFormat::kNESInteger,
                                                   TGNumberFormat::kNEAPositive, 
                                                   TGNumberFormat::kNELLimitMinMax, 1, 100);  
+  m_EntryRefreshTimeHisto    -> SetNumber(5);
   m_GroupFrameHPDControl     -> AddFrame(m_EntryRefreshTimeHisto  , m_LayoutTopLeft);
   
   // entry field for refresh time -- affects HPD hit counter
@@ -173,6 +174,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
                                                   TGNumberFormat::kNESInteger,
                                                   TGNumberFormat::kNEAPositive, 
                                                   TGNumberFormat::kNELLimitMinMax, 1, 100);  
+  m_EntryRefreshTimeCounter  -> SetNumber(5);
   m_GroupFrameHPDControl     -> AddFrame(m_EntryRefreshTimeCounter  , m_LayoutTopLeft);
 
   // entry field for counter min. value
@@ -210,7 +212,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_string2DDrawOption       =  new TGHotString("2D draw option");
   m_label2DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_label2DDrawOption, m_LayoutTopLeftExpandX);
-  m_Entry2DDrawOption        =  new TGComboBox(m_GroupFrameHPDControl, "option", id2DDrawOption);
+  m_Entry2DDrawOption        =  new TGComboBox(m_GroupFrameHPDControl, "colz", id2DDrawOption);
   m_Entry2DDrawOption        -> Resize(80,20);
   m_Entry2DDrawOption        -> AddEntry("default", id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("box"    , id2DDrawOption);
@@ -237,7 +239,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_string1DDrawOption       =  new TGHotString("1D draw option");
   m_label1DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string1DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_label1DDrawOption, m_LayoutTopLeftExpandX);
-  m_Entry1DDrawOption        =  new TGComboBox(m_GroupFrameHPDControl, "option", id1DDrawOption);
+  m_Entry1DDrawOption        =  new TGComboBox(m_GroupFrameHPDControl, "HIST", id1DDrawOption);
   m_Entry1DDrawOption        -> Resize(80,20);
   m_Entry1DDrawOption        -> AddEntry("HIST", id1DDrawOption);
   m_Entry1DDrawOption        -> AddEntry("P"   , id1DDrawOption);
@@ -1204,16 +1206,19 @@ bool HPDGui::Connect2DIM() {
 // I don't know how to handle 'counters'...
 // Modification by Beat Jost.
 //
-        if (stringService.find("H1D",0) == std::string::npos)
-        {
-          if (stringService.find("H2D",0) == std::string::npos)
-          {
-            if (stringService.find("HPD",0) == std::string::npos)
-            {
-              continue;
-            }
-          }
-        }
+        if (m_verbose > 1)
+          std::cout << "test sub-string for service " << stringService.substr(0,4) << std::endl;
+        if (!(stringService.substr(0,4) == "H1D/" || 
+              stringService.substr(0,4) == "H2D/" ||
+              stringService.substr(0,4) == "HPD/")) {
+          if (m_verbose > 1)
+            std::cout << "not a histogram, ignore" << std::endl;
+          continue;
+        } else {
+          if (m_verbose > 1)
+            std::cout << "found a histogram" << std::endl;
+        }//if
+
         // determine name of algorithm publishing
         if (stringService.find("VERSION_NUMBER",0) == std::string::npos)  {
           

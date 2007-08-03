@@ -4,6 +4,12 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-08-03 - Ulrich Kerzel
+ - connect2DIM: change comparison for service (Histo) to use
+   first 4 characters and compare to "H1D/", "H2D/", "HPD/"
+ - change defaults in setting: histo/counter update each 5 sec,
+   2D plots in colz
+
 ! 2007-07-04 - Ulrich Kerzel
  - increase start-index for color palette to 1000, new ROOT versions
    seem to define more colours...
