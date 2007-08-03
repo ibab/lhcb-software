@@ -1,4 +1,4 @@
-// $Id: L0Muon2Tracks.cpp,v 1.1 2007-07-12 18:03:15 asatta Exp $
+// $Id: L0Muon2Tracks.cpp,v 1.2 2007-08-03 09:29:06 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -166,11 +166,11 @@ StatusCode L0Muon2Tracks::fillDiMuon() {
       if(fabs(ptTwo)<0.1)continue;
       if(fabs(ptOne)+fabs(ptTwo)>m_L0MuonThreshold){
         fillVertex(*pItrOne,*pItrTwo);      
-        bool already=isIn(*pItrOne);
+/*        bool already=isIn(*pItrOne);
         if(!already) m_outputTracks->push_back(*pItrOne);
         already=false;
         already=isIn(*pItrTwo);  
-        if(!already) m_outputTracks->push_back(*pItrTwo);
+        if(!already) m_outputTracks->push_back(*pItrTwo);*/
       }        
     }
   }

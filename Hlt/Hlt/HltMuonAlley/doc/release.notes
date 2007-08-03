@@ -3,6 +3,10 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2007-08-03 - Alessia Satta
+ - modify L0Muon2Tracks and add L0Vertex2Tracks to be compliant with the new rule:
+   no possible to have both output and vertex output from a HltAlgo. Use the HltSys
+   committed today
 
 !========================== HltMuonAlley v1r4 2007-07-31 ===================
 ! 2007-07-26 - Alessia Satta
