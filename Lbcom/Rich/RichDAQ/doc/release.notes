@@ -5,9 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-08-03 - Chris Jones
- - use EventID and BXID operators
-
-use EventID and BXID operators
+ - use EventID and BXID == and != operators
 
 ! 2007-07-26 - Chris Jones
  - Minor fix to prevent the abortion of an entire L1 bank when one HPD fails
