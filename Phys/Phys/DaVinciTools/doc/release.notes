@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.276 2007-07-31 14:12:41 jpalac Exp $
+! $Id: release.notes,v 1.277 2007-08-03 11:41:56 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-
+! 2007-08-03 - Patrick Koppenburg
+ - CheckSelResult.*
+   . Create SelResult container if needed (AvoidSelResult=false)
+   . Restructure code.
+ - Increment to v15r5
 
 !========================== DaVinciTools v15r4p2 2007-07-30 =================
 ! 2007-07-31 - Juan Palacios

@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.h,v 1.1 2007-03-05 09:05:35 pkoppenb Exp $
+// $Id: CheckSelResult.h,v 1.2 2007-08-03 11:41:56 pkoppenb Exp $
 #ifndef CHECKSELRESULT_H 
 #define CHECKSELRESULT_H 1
 
@@ -29,16 +29,18 @@ protected:
 
 private:
 
-  StatusCode writeSelResult(LHCb::SelResults* ) ;
+  LHCb::SelResults* readSelResult() ;              ///< Read in SelResults, create if needed.
+  StatusCode writeSelResult(LHCb::SelResults*& ) ;  ///< Write out SelResult if required
+  StatusCode algoLoop(LHCb::SelResults*&);         ///< loop on algos
 
-  std::string m_selResults;  ///< Location of selresult
-  std::vector<std::string> m_algorithms ; ///< Algorithms to check
+  std::string m_selResults;                        ///< Location of selresult container
+  std::vector<std::string> m_algorithms ;          ///< Algorithms to check
   bool m_ANDmode ;
-  bool m_avoidSelResult ;  ///< avoid selresult writing?
+  bool m_avoidSelResult ;                          ///< avoid selresult writing? default: yes.
   
-  long        m_nEvents;             ///< Counter of events accepted
-  long        m_totEvents;            ///< Counter of events processed
-  std::string m_headerPath;          ///< TES of EventHeader
+  long        m_nEvents;                           ///< Counter of events accepted
+  long        m_totEvents;                         ///< Counter of events processed
+  std::string m_headerPath;                        ///< TES of RecHeader
 
 };
 #endif // CHECKSELRESULT_H
