@@ -2,6 +2,15 @@
 #define CDB_INTERNAL
 #include "oci.h"
 int ShowErrors (sword status, OCIError *errhp, const char* log) ;
+class eConnectivityCache;
+class iConnectivityCache;
+class HopTyp
+{
+public:
+  int typ;
+  int h;
+};
+
 class DBContainer
 {
 private:
@@ -76,6 +85,7 @@ public:
 	* @return 0 if the disconnection is successful
 	*/
 	int LoadSubsystemTable(char sysnameList[50][10],int* sysIDlist, int &len_array,char* ErrorMessage);
+	int followPath(eConnectivityCache *ecache, iConnectivityCache *icache, int elnkidx, HopTyp *hop, int *i, int dep);
 	//int DBConnexion(char* server,char* usr,char* pwd,char* ErrorMessage);
 	//int DBDeconnexion(char* ErrorMessage);
 };
@@ -127,13 +137,6 @@ public:
   int allocate(OCIStmt *statement, int pos, int numrow);
 
 };
-class HopTyp
-{
-public:
-  int typ;
-  int h;
-};
-
 class ConnectivityCache
 {
 public:

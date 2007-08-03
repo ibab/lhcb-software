@@ -100,6 +100,45 @@ if(c!=0)
 delete [] ErrorMess;
 return c;
 }
+int DBContainer::followPath(eConnectivityCache *ecache, iConnectivityCache *icache, int elnkidx, HopTyp *hop, int *i, int dep)
+{
+		HopTyp ehops[100];
+		HopTyp ihops[100];
+		HopTyp hopar[100];
+		char prefix[1000];
+    int j,k, inres, enres;
+		for (j=0;j<dep;j++)
+		{
+			prefix[j]	= 32;
+			prefix[j+1]	= 0;
+		}
+		printf("%s ", prefix); ecache->print_row(elnkidx);
+    inres  = icache->FindinCol(&icache->portidfrom,ecache->portidto.bufferp[elnkidx], 1, ihops);
+    if (inres <= 0) return 0;
+		for (k=0;k<inres;k++)
+		{
+			if (inres > 1) printf("\n");
+			enres  = ecache->FindinCol(&ecache->portidfrom,icache->portidto.bufferp[ihops[k].h], 2,ehops);
+			if (enres <= 0)
+			{
+				return 0;
+			}
+			if (enres > 1)
+			{
+				printf("multiple external connections from one source (FANOUT) not allowed\n");
+				return 0;
+			}
+			for (j  = 0;j<enres;j++)
+			{
+//				ecache->print_row(ehops[j].h);
+				printf("%s ", prefix); icache->print_row(ihops[k].h);
+				dep++;
+				followPath(ecache,icache,ehops[j].h,hopar,i, dep);
+			}
+		}
+    return 0;
+}
+
 	ColDesc::ColDesc()
 {
 	colwid	= 0;
@@ -408,35 +447,6 @@ end:;
 
 	eConnectivityCache::eConnectivityCache (DBContainer *dbase) : ConnectivityCache (dbase)
   {
-  //  selectstring  = &"select t.linkid,\
-  //g.deviceid,\
-  //f.deviceid,\
-  //g.port_nbr||'|'||nvl(g.port_type,'none')||'?',\
-  //f.port_nbr||'|'||nvl(f.port_type,'none')||'?',\
-  //t.link_type,\
-  //t.bidirectional_link_used,\
-  //t.lkused,\
-  //t.link_weight,\
-  //m.devicename||'?',\
-  //n.devicename||'?',\
-  //nvl(t.link_info,'none')||'?',\
-  //t.system_name,\
-  //t.portidfrom,\
-  //t.portidto, \
-  //l.deviceid \
-  //from lhcb_macroscopic_connectivity t,\
-  //lhcb_port_properties g,\
-  //lhcb_port_properties f,\
-  //lhcb_lg_devices l,\
-  //lhcb_lg_devices m,\
-  //lhcb_lg_devices n \
-  //where t.lkused=1 and \
-  //g.deviceid=m.deviceid and \
-  //f.deviceid=n.deviceid and \
-  //t.portidfrom=g.portid and \
-  //t.portidto=f.portid and \
-  //mod(l.system_name,t.system_name)*mod(t.system_name,l.system_name)=0 and \
-  //(l.devicename = :devname)";
 		selectstring  = &"select\
 											lnk.linkid,\
 											lnk.system_name,\
@@ -542,31 +552,6 @@ mod(lnk.system_name,:system)=0 ";
 
 iConnectivityCache::iConnectivityCache (DBContainer *dbase) : ConnectivityCache (dbase)
   {
-//    selectstring  = &"select distinct lnk.linkid, \
-//  fromdev.deviceid, \
-//  fromdev.devicename||'?', \
-//  fromport.portid, \
-//  fromport.port_nbr||'|'||nvl(fromport.port_type,'none')||'?', \
-//  todev.deviceid, \
-//  todev.devicename||'?', \
-//  toport.portid, \
-//  toport.port_nbr||'|'||nvl(toport.port_type,'none')||'?' \
-//from LHCB_MICROSCOPIC_CONNECTIVITY lnk, \
-//  lhcb_port_properties fromport, \
-//  lhcb_lg_devices fromdev, \
-//  lhcb_port_properties toport, \
-//  lhcb_lg_devices todev, \
-//  lhcb_lg_devices n, \
-//  lhcb_subsystemList l \
-//where fromport.portid=lnk.portidfrom  and \
-//  fromdev.deviceid=fromport.deviceid and \
-//  toport.portid=lnk.portidto and \
-//  todev.deviceid=toport.deviceid and \
-//  mod(n.system_name,l.systemid)=0 and \
-//  mod(fromdev.system_name,l.systemid)=0 and \
-//  mod(todev.system_name,l.systemid)=0 and \
-//  n.devicename=:devname"; 
-//
 
 selectstring  = &"select distinct lnk.linkid,\
   fromdev.deviceid,\
