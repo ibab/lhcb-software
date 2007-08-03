@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.154 2007-07-20 09:24:51 jonrob Exp $
+! $Id: release.notes,v 1.155 2007-08-03 14:03:31 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-08-03 - Chris Jones
+ - Add == and != operators for EventID and BXID that check the correct 
+   number of bits
 
 ! 2007-07-20 - Chris Jones
  - Add two new methods, anodeGlobalPosition, which return the position 

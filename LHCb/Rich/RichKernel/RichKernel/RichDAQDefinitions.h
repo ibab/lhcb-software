@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.17 2007-06-25 21:28:53 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.18 2007-08-03 14:02:52 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -247,9 +247,25 @@ namespace Rich
       /// Set the number of active bits
       inline void setActiveBits(const ShortType bits) { m_nActiveBits = bits; }
     public:
-      /// Overloaded output to MsgStream
+      /// Overloaded output to ostream
       friend inline std::ostream & operator << ( std::ostream & os, const EventID & id )
       { return os << "[ EvtID=" << id.data() << " bits=" << id.activeBits() << " ]"; }
+    public:
+      /// Operator == that takes into account the correct number of bits
+      inline bool operator== ( const EventID& id ) const
+      { 
+        // Compute which how many bits the words should in common, so we only compare these
+        const ShortType lowBits = ( this->activeBits() < id.activeBits() ?
+                                    this->activeBits() : id.activeBits() );
+        const LongType mask = ((1 << lowBits)-1);
+        // compare the bits and return
+        return ( (this->data() & mask) == (id.data() & mask) );
+      }
+      /// Operator != that takes into account the correct number of bits
+      inline bool operator!= ( const EventID& id ) const
+      { 
+        return ! this->operator==(id);
+      }
     private:
       /// Number of sensitive bits in this EventID
       ShortType m_nActiveBits;
@@ -277,6 +293,22 @@ namespace Rich
       inline ShortType activeBits() const { return m_nActiveBits; }
       /// Set the number of active bits
       inline void setActiveBits(const ShortType bits) { m_nActiveBits = bits; }
+    public:
+      /// Operator == that takes into account the correct number of bits
+      inline bool operator== ( const BXID& id ) const
+      { 
+        // Compute which how many bits the words should in common, so we only compare these
+        const ShortType lowBits = ( this->activeBits() < id.activeBits() ?
+                                    this->activeBits() : id.activeBits() );
+        const LongType mask = ((1 << lowBits)-1);
+        // compare the bits and return
+        return ( (this->data() & mask) == (id.data() & mask) );
+      }
+      /// Operator != that takes into account the correct number of bits
+      inline bool operator!= ( const BXID& id ) const
+      { 
+        return ! this->operator==(id);
+      }
     private:
       /// Number of sensitive bits in this BXID
       ShortType m_nActiveBits;
