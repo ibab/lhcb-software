@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.26 2007-06-25 21:31:49 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.27 2007-08-03 14:06:38 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -196,18 +196,6 @@ namespace Rich
       /// Version compatible with first 2007 "final" L1 firmware
       void decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                                   Rich::DAQ::L1Map & decodedData ) const;
-
-      /// Compare Event/BX IDs, to within a given number of bits
-      template<class ID>
-      inline bool compareIDs( const ID& id1, const ID& id2 ) const
-      {
-        // Compute which how many bits the words should in common, so we only compare these
-        const ShortType lowBits = ( id1.activeBits() < id2.activeBits() ?
-                                    id1.activeBits() : id2.activeBits() );
-        const LongType Mask = ((1 << lowBits)-1);
-        // compare the bits and return
-        return ( (id1.data() & Mask) == (id2.data() & Mask) );
-      }
 
       /// Print the given data word as Hex and as bits, to the given precision
       void rawDump( MsgStream & os, 

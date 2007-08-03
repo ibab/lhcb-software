@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.60 2007-07-26 11:28:55 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.61 2007-08-03 14:06:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -734,8 +734,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       // Compare Ingress header to the ODIN
       const bool odinOK
         = ( !m_decodeUseOdin ? true :
-            ( !m_checkEventsIDs || compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) ) &&
-            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->bunchId()) ) ) );
+            ( !m_checkEventsIDs || ingressWord.eventID() == EventID(odin()->eventNumber()) ) &&
+            ( !m_checkBxIDs     || ingressWord.bxID()    == BXID   (odin()->bunchId())     ) );
       if ( !odinOK )
       {
         std::ostringstream mess;
@@ -830,7 +830,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
               // Compare Event IDs for errors
               bool OK = ( hpdIsSuppressed ? true :
-                          !m_checkEventsIDs || compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
+                          !m_checkEventsIDs || ingressWord.eventID() == hpdBank->eventID() );
               if ( !OK )
               {
                 std::ostringstream mess;
