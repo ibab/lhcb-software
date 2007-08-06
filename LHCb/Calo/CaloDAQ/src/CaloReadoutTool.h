@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.10 2007-06-11 15:45:48 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.1 2007-08-06 21:31:48 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -6,10 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 // from LHCb
-#include "Event/RawEvent.h"
+#include "CaloDAQ/ICaloReadoutTool.h"
 #include "CaloDet/DeCalorimeter.h"
 
-static const InterfaceID IID_CaloReadoutTool ( "CaloReadoutTool", 1, 0 );
 
 /** @class CaloReadoutTool CaloReadoutTool.h CaloDAQ/CaloReadoutTool.h
  *  
@@ -19,11 +18,9 @@ static const InterfaceID IID_CaloReadoutTool ( "CaloReadoutTool", 1, 0 );
  *  @author Olivier Deschamps
  *  @date   2007-02-01
  */
-class CaloReadoutTool : public GaudiTool {
+class CaloReadoutTool : public GaudiTool , virtual public ICaloReadoutTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_CaloReadoutTool; }
 
   /// Standard constructor
   CaloReadoutTool( const std::string& type, 
@@ -33,9 +30,25 @@ public:
   virtual ~CaloReadoutTool( ); ///< Destructor
 
 
-  StatusCode getCaloBanksFromRaw();
+  virtual std::string _rootInTES(){ return rootInTES(); };
+  virtual StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
+  
+  // Useful methods  to set/get m_banks externally 
+  // e.g. : avoid the call to getCaloBanksFromRaw() at each call of adc(bank)
+  virtual bool getBanks(){
+    m_getRaw = false;
+    clear();
+    return getCaloBanksFromRaw();    
+  };
+  virtual void setBanks(const std::vector<LHCb::RawBank*>* bank ){
+    m_getRaw = false;
+    clear();
+    m_banks = bank;
+  };
+  virtual void clear(){return;}; // to be implemented in the parent tool
 
 protected:
+  bool getCaloBanksFromRaw();
   int findCardbyCode(std::vector<int> feCards, int code );
   void checkCards(int nCards, std::vector<int> feCards );
   std::string  m_detectorName;

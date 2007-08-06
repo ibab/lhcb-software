@@ -87,14 +87,6 @@ StatusCode CaloDataProviderPatched::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
-std::string CaloDataProviderPatched::rawRoot(){return rootInTES();}
-//-------------------------------------
-StatusCode CaloDataProviderPatched::setBank( ) {
-  if ( msgLevel( MSG::DEBUG) )debug() << "==> Reset " << name() << endmsg;
-  // Reset all containers and get CaloBanks
-  clear();
-  return getCaloBanksFromRaw();
-}
 
 //-------------------------------------
 void CaloDataProviderPatched::clear( ) {
@@ -140,45 +132,53 @@ double CaloDataProviderPatched::digit (LHCb::CaloCellID id){
 }
 //-------------------------------------------------------
 int CaloDataProviderPatched::adc (LHCb::CaloCellID id){
-  if( 0 >  m_adcs.index(id) )decodeCell( id );
-  if( 0 >  m_adcs.index(id) )return 0;
+  bool ok=true;
+  if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
+  if( 0 >  m_adcs.index(id) || !ok )return 0;
   return m_adcs[id].adc();
 }
 //-------------------------------------------------------
-StatusCode CaloDataProviderPatched::decodeCell(LHCb::CaloCellID id ){
+bool CaloDataProviderPatched::decodeCell(LHCb::CaloCellID id ){
   int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
-  if(card<0)return StatusCode::FAILURE;
+  if(card<0)return false;
   int tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
-  if(tell1<0)return StatusCode::FAILURE;
+  if(tell1<0)return false;
   return decodeTell1( tell1 );
 }
 //-------------------------------------------------------
-StatusCode  CaloDataProviderPatched::decodeTell1 (int source) {
-  StatusCode sc = StatusCode::FAILURE;
+bool CaloDataProviderPatched::decodeTell1 (int source) {
+  bool decoded = false;
+  bool found  = false;
+  if(NULL == m_banks) return false;
   int sourceID  ;
+  if( !m_packed)source = -1 ; // Decode the whole 0-suppressed bank by default (single bank)
+
   for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
        itB != m_banks->end() ; ++itB ) {
     sourceID       = (*itB)->sourceID();
     if( source >= 0 && source != sourceID )continue;
+    found = true;
     if( "Spd" == m_detectorName ){
-      sc = decodePrsTriggerBank( *itB);
+      decoded  = decodePrsTriggerBank( *itB);
     }
     else{
-      sc = decodeBank ( *itB );
+      decoded = decodeBank ( *itB );
     }
-    if( !sc.isSuccess() ) break;
+    if( !decoded ) break;
     m_tell1s++; // count the number of decoded TELL1
   } 
-  if( !sc.isSuccess() ){
-    error() << " Error when decoding bank " << sourceID  << endreq;
+  if( !found )warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
+  else if( !decoded ){
+    error() << " Error when decoding bank " << sourceID  << " -> clear ALL data" <<endreq;
     clear();
   }
-  return sc;
+  return decoded;
 }
 //==================================
 // Main method to decode the rawBank 
 //==================================
-StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
+bool CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
+  if(NULL == bank) return false;
   // Get bank info
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // Bank size is in bytes
@@ -221,9 +221,10 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
                 << " |  valid ? " << m_calo->valid(cellId)
                 << " |  ADC value = " << adc << endreq;
       
-      LHCb::CaloAdc temp(cellId,adc);
-      m_adcs.addEntry(temp  ,cellId );
-
+      if ( 0 != cellId.index() ){
+        LHCb::CaloAdc temp(cellId,adc);
+        m_adcs.addEntry(temp  ,cellId );
+      }      
       ++data;
       --size;
     }
@@ -295,7 +296,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         error() << " FE-Card w/ [code : " << code 
                 << " ] is not associated with TELL1 bank sourceID : " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
       }
       
       
@@ -383,7 +384,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         error() << " FE-Card w/ [code : " << code 
                 << " ] is not associated with TELL1 bank sourceID : " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
       }
 
       // Read the FE-Board
@@ -416,8 +417,11 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
                 << " |  ADC value = " << adc << endreq;
 
 
-        LHCb::CaloAdc temp(id,adc);
-        m_adcs.addEntry( temp ,id );
+        if ( 0 != id.index() ){
+          LHCb::CaloAdc temp(id,adc);
+          m_adcs.addEntry( temp ,id );
+        }
+        
         lenAdc--;
         offset += 16;
       }
@@ -426,13 +430,13 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
     checkCards(nCards,feCards);    
   } //== versions
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 
 
 //==================================
-StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) {
+bool CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) {
   unsigned int* data = bank->data();  
 
   int size           = bank->size()/4;  // size in byte
@@ -466,10 +470,11 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
           LHCb::CaloCellID id( lastID+kk );
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
 
-
           if ( spdData & 1 ){
-            LHCb::CaloAdc temp(spdId,1);
-            m_adcs.addEntry( temp ,spdId) ;
+            if ( 0 != spdId.index() ){
+              LHCb::CaloAdc temp(spdId,1);
+              m_adcs.addEntry( temp ,spdId) ;
+            }
           }
           
 
@@ -505,8 +510,10 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
         
         if ( 0 != (item & 2) ) {
           LHCb::CaloCellID id ( spdId );   // SPD
-          LHCb::CaloAdc temp(id,1);
-          m_adcs.addEntry( temp ,id);
+          if ( 0 != id.index() ){
+            LHCb::CaloAdc temp(id,1);
+            m_adcs.addEntry( temp ,id);
+          } 
         }
       }
       ++data;
@@ -547,7 +554,7 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
         error() << " FE-Card w/ [code : " << code 
                 << " ] is not associated with TELL1 bank sourceID : " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
       }
 
       // Process FE-data decoding
@@ -578,8 +585,10 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
 
         if ( 0 != isSpd ) {
           LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-          LHCb::CaloAdc temp(spdId,1);
-          m_adcs.addEntry( temp ,spdId);
+          if ( 0 != spdId.index() ){
+            LHCb::CaloAdc temp(spdId,1);
+            m_adcs.addEntry( temp ,spdId);
+          } 
         }
       }
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
@@ -591,5 +600,5 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
   } //== versions
   
   
-  return StatusCode::SUCCESS;
+  return true;
 }

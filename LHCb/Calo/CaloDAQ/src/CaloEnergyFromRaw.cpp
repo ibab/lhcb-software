@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.17 2007-05-01 22:24:27 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.18 2007-08-06 21:31:48 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,9 +29,7 @@ CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
   
   m_detectorName = name.substr( index, 4 );
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";  
-  m_data.clear();
-  m_pinData.clear();
-  m_digits.clear();  
+  clear();
 }
 //=============================================================================
 // Destructor
@@ -75,6 +73,15 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
+
+//-------------------------------------
+void CaloEnergyFromRaw::clear( ) {
+  m_data.clear();
+  m_digits.clear();
+  m_pinData.clear();0;
+}
+
+
 //=========================================================================
 //  Return the specific ADCs for PIN diode
 //  Warning : it requires a decoding adcs(...) method to be executed before
@@ -93,44 +100,37 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs () {
 //  Decode ALL banks if source < 0
 //=========================================================================
 std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
-  m_data.clear();
-  m_pinData.clear();
-  StatusCode sc = StatusCode::SUCCESS;
-  if(m_getRaw)sc = getCaloBanksFromRaw();
-  if( 0 == m_banks ){
+  clear();
+  int sourceID   ;
+  bool decoded = false;
+  bool found   = false;
+  if(m_getRaw)getCaloBanksFromRaw();
+  if( NULL == m_banks ){
     error() << "banks container is not defined" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-  bool ok = false;
-  if( sc.isSuccess() ){
+  }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
-      int sourceID       = (*itB)->sourceID();
+      sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
-      ok = true;
-      sc = getData ( *itB );
-      if( !sc.isSuccess() ) break;
+      found = true;
+      decoded = getData ( *itB );
+      if( !decoded ) break;
     } 
   }
-  if( !ok ){
-    error() << " Expected bank source " << source << " has not been found " << endreq;
-    sc = StatusCode::FAILURE;
+  if( !found ){
+    warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
+  }else  if( !decoded ){
+    error() << " Error when decoding bank " << sourceID  << " -> return empty data" <<endreq;
+    clear();
   }
-  if( !sc.isSuccess() ){
-    error() << " Error when decoding data -> return empty container " << endreq;
-    m_data.clear();
-  }
-  
   return m_data ;
 } 
 //=========================================================================
 //  Decode the adcs of a single bank (given by bank pointer)
 //=========================================================================
 std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( LHCb::RawBank* bank ){
-  m_data.clear();
-  m_pinData.clear();
-  StatusCode sc = getData( bank );
-  if( !sc.isSuccess() )m_data.clear();
+  clear();
+  if( !getData( bank ) )clear();
   return m_data ;
 }
 
@@ -140,8 +140,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( LHCb::RawBank* bank ){
 //=========================================================================
 std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( int source ) {
   adcs( source );
-  StatusCode sc = getDigits();
-  if( !sc.isSuccess() ) m_digits.clear();
+  if( !getDigits() ) m_digits.clear();
   return m_digits ;
 }
 
@@ -150,9 +149,8 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( int source ) {
 //=========================================================================
 std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( LHCb::RawBank* bank ) {
   adcs( bank );
-  StatusCode sc = getDigits();
-  if( !sc.isSuccess() ) m_digits.clear();
-    return m_digits ;
+  if( !getDigits() ) m_digits.clear();
+  return m_digits ;
 }
 
 //=========================================================================
@@ -160,8 +158,7 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( LHCb::RawBank* bank )
 //=========================================================================
 std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
   adcs();
-  StatusCode sc = getDigits();
-  if( !sc.isSuccess() ) m_digits.clear();
+  if( !getDigits() ) m_digits.clear();
   return m_digits;
 }
 
@@ -170,15 +167,15 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
 //=============================================================================
 // Main method to decode the rawBank - fill m_data vector
 //=============================================================================
-StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
+bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
   // Get bank info
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // Bank size is in bytes
   int version        = bank->version();
   int sourceID       = bank->sourceID();
-  debug() << "Decode bank " << bank << " source " << sourceID 
-          << " version " << version << " size " << size << endreq;  
+  if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
+                                      << " version " << version << " size " << size << endreq;  
 
 
 
@@ -216,11 +213,14 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
                 << " |  ADC value = " << adc << endreq;
       }
 
-      if( m_pinArea != cellId.area() ){
-        m_data.push_back( temp );
-      }else{
-        m_pinData.push_back( temp );
+      if ( 0 != cellId.index() ) {
+        if( m_pinArea != cellId.area() ){
+          m_data.push_back( temp );
+        }else{
+          m_pinData.push_back( temp );
+        }
       }
+      
       ++data;
       --size;
     }
@@ -252,7 +252,8 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       }else{
         error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
+        
       }
       // Start readout of the FE-board
       // First skip trigger bank ...
@@ -322,8 +323,8 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    debug() << nCards << " FE-Cards are expected to be readout : " 
-            << feCards << " in Tell1 bank " << sourceID << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
+                                        << feCards << " in Tell1 bank " << sourceID << endreq;
     
     while( 0 != size ) {
       // Skip
@@ -343,7 +344,7 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       }else{
         error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
       }
 
       // Read the FE-Board
@@ -379,12 +380,15 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         }
 
 
-        if( m_pinArea != id.area() ){
-          m_data.push_back( temp );
-        }else{
-          m_pinData.push_back( temp );
-        }
 
+        if ( 0 != id.index() ) {
+          if( m_pinArea != id.area() ){
+            m_data.push_back( temp );
+          }else{
+            m_pinData.push_back( temp );
+          }
+        }
+        
         lenAdc--;
         offset += 16;
       }
@@ -393,16 +397,16 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     checkCards(nCards,feCards);    
   } //== versions
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=========================================================================
 //  Main method to convert ADCs to CaloDigits 
 //  This is just a gain calibration (+ped shift) of the adc values.
 //=========================================================================
-StatusCode CaloEnergyFromRaw::getDigits ( ) {
+bool CaloEnergyFromRaw::getDigits ( ) {
   m_digits.clear();
-  if( 0 == m_data.size() )return StatusCode::SUCCESS;
+  if( 0 == m_data.size() )return true;
   for ( std::vector<LHCb::CaloAdc>::const_iterator itAdc = m_data.begin();
         m_data.end() != itAdc; ++itAdc ) {
     LHCb::CaloCellID id = (*itAdc).cellID();
@@ -411,5 +415,5 @@ StatusCode CaloEnergyFromRaw::getDigits ( ) {
     LHCb::CaloDigit dig( id, e );
     m_digits.push_back( dig );
   }
-  return StatusCode::SUCCESS;
+  return true;
 }

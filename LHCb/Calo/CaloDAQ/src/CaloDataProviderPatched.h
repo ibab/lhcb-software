@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloDAQ/ICaloDataProvider.h"            // Interface
-#include "CaloDAQ/CaloReadoutTool.h"
+#include "CaloReadoutTool.h"
 
 /** @class CaloDataProviderPatched CaloDataProviderPatched.h
  *  Fast access to calorimeter data from raw
@@ -16,7 +16,7 @@
  *  @author Olivier Deschamps
  *  @date   2007-02-27
  */
-class CaloDataProviderPatched : public CaloReadoutTool, virtual public ICaloDataProvider {
+class CaloDataProviderPatched : public CaloReadoutTool, public virtual ICaloDataProvider {
 public: 
   /// Standard constructor
   CaloDataProviderPatched( const std::string& type, 
@@ -26,20 +26,18 @@ public:
   virtual ~CaloDataProviderPatched( ); ///< Destructor
 
   virtual StatusCode initialize();
-  virtual StatusCode setBank();
-  virtual void clear();
   virtual int    adc(LHCb::CaloCellID id);
   virtual double digit(LHCb::CaloCellID id);
   virtual unsigned int nTell1s(){return m_tell1s;};
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
-  virtual std::string rawRoot();
+  virtual void clear();
   
 protected:
-  StatusCode decodeCell(LHCb::CaloCellID id);
-  StatusCode decodeTell1(int tell1);
-  StatusCode decodeBank(LHCb::RawBank* bank);
-  StatusCode decodePrsTriggerBank(LHCb::RawBank* bank);
+  bool decodeCell(LHCb::CaloCellID id);
+  bool decodeTell1(int tell1);
+  bool decodeBank(LHCb::RawBank* bank);
+  bool decodePrsTriggerBank(LHCb::RawBank* bank);
 private:
   double   m_pedShift;
   CaloVector<LHCb::CaloAdc>    m_adcs;

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.12 2007-05-01 22:24:27 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.13 2007-08-06 21:31:48 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -26,9 +26,7 @@ CaloTriggerAdcsFromRaw::CaloTriggerAdcsFromRaw( const std::string& type,
   int index = name.find_first_of(".",0) +1 ; // return -1+1=0 if '.' not found --> OK !!
   m_detectorName = name.substr( index, 4 );
   // clear data
-  m_data.clear();
-  m_pinData.clear();
-  m_pinData.clear();
+  clear();  
 }
 //=============================================================================
 // Destructor
@@ -63,10 +61,15 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
   long nPins = m_calo->numberOfPins();
   m_data.reserve( nCells );
   m_pinData.reserve( nPins );
-  
+  clear();
   return StatusCode::SUCCESS;
 }
 
+//-------------------------------------
+void CaloTriggerAdcsFromRaw::clear( ) {
+  m_data.clear();
+  m_pinData.clear();
+}
 //=========================================================================
 //  Return the specific ADCs for PIN diode
 //  Warning : it requires a decoding adcs(...) method to be executed before
@@ -85,32 +88,27 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs () {
 //  Decode ALL banks if source < 0
 //=========================================================================
 std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) { 
-  m_data.clear();
-  m_pinData.clear();
-  StatusCode sc = StatusCode::SUCCESS;
-  if(m_getRaw)sc = getCaloBanksFromRaw();
-  if( 0 == m_banks ){
+  clear();
+  bool decoded = false;
+  bool found   = false;
+  int sourceID  ;
+  if(m_getRaw)getCaloBanksFromRaw();
+  if( NULL == m_banks ){
     error() << "banks containter is not defined" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-  bool ok=false;
-  if( sc.isSuccess() ){
+  }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
-      int sourceID       = (*itB)->sourceID();
+      sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
-      ok = true;
-      sc = getData ( *itB );
-      if( !sc.isSuccess() ) break;
+      found = true;
+      decoded = getData ( *itB );
+      if( !decoded ) break;
     } 
   }
-  if( !ok ){
-    error() << " Expected bank source " << source << " has not been found " << endreq;
-    sc = StatusCode::FAILURE;
-  }
-  if( !sc.isSuccess() ){
-    error() << " Error when decoding data -> return empty container " << endreq;
-    m_data.clear();
+  if( !found )warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
+  else if( !decoded ){
+    error() << " Error when decoding bank " << sourceID  << " -> return empty data" <<endreq;
+    clear();
   }
   return m_data ;
 }
@@ -119,10 +117,8 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
 //  Decode the adcs of a single bank (given by bank pointer)
 //=========================================================================
 std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( LHCb::RawBank* bank ){
-  m_data.clear();
-  m_pinData.clear();
-  StatusCode sc = getData( bank );
-  if( !sc.isSuccess() )m_data.clear();
+  clear();
+  if( !getData( bank ))clear();
   return m_data ;
 }
 
@@ -130,15 +126,15 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( LHCb::RawBank* bank
 // Main method to decode the rawBank - fill m_data vector
 //=============================================================================
 
-StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
+bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
 
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // in bytes in the header
   int version        = bank->version();
   int sourceID       = bank->sourceID();
   int lastData = 0;
-  debug() << "Decode bank " << bank << " source " << sourceID 
-          << "version " << version << " size " << size << endreq;
+  if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
+                                      << "version " << version << " size " << size << endreq;
   
   // -----------------------------------------------
   // skip detector specific header line 
@@ -201,8 +197,8 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
+                                        << feCards << " in Tell1 bank " << sourceID << endreq;
     int lenAdc   = 0;
     int lenTrig  = 0;
     while ( 0 < size ) {
@@ -220,14 +216,14 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       }else{
         error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
-        return StatusCode::FAILURE;
+        return false;
       }
 
       // Start readout of the FE-board (trigger data)
       if ( 0 < lenTrig ) {
         int pattern  = *data++;
         int offset   = 0;
-        debug() << format( " pattern %8x lenTrig %2d", pattern, lenTrig ) << endreq;
+        if ( msgLevel( MSG::DEBUG) )debug() << format( " pattern %8x lenTrig %2d", pattern, lenTrig ) << endreq;
         lastData  = *data++;
         size -= 2;
         for ( int bitNum = 0 ; 32 > bitNum ; bitNum++ ) {
@@ -270,6 +266,6 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
     // Check All cards have been read
     checkCards(nCards,feCards);
   } // version 
-  return StatusCode::SUCCESS;
+  return true;
 }
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.4 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.h,v 1.5 2007-08-06 21:31:48 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"            // Interface
-#include "CaloDAQ/CaloReadoutTool.h"
+#include "CaloReadoutTool.h"
 
 /** @class CaloTriggerAdcsFromRaw CaloTriggerAdcsFromRaw.h
  *  
@@ -29,20 +29,10 @@ public:
   virtual std::vector<LHCb::L0CaloAdc>& adcs( int source );
   virtual std::vector<LHCb::L0CaloAdc>& adcs( LHCb::RawBank* bank);
   virtual std::vector<LHCb::L0CaloAdc>& pinAdcs( );
-
-  // Useful method  to setup m_banks externally only once
-  // Avoid call to getCaloBanksFromRaw() at each call of adc(bank)
-  virtual StatusCode getCaloBanks(){
-    m_getRaw = false;
-    return getCaloBanksFromRaw();
-  };
-  virtual void setBanks(const std::vector<LHCb::RawBank*>* bank ){
-    m_getRaw = false;
-    m_banks = bank;
-  };
+  virtual void clear();
 
 protected:
-  StatusCode getData ( LHCb::RawBank* bank );
+  bool getData ( LHCb::RawBank* bank );
 private:
   std::vector<LHCb::L0CaloAdc> m_data;
   std::vector<LHCb::L0CaloAdc> m_pinData;

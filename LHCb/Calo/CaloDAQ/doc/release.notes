@@ -4,6 +4,16 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2007-08-06 - Olivier Deschamps
+ - Global review :
+   - make the decoding interfaces and tools more uniform
+   - new base interface CaloDaq/ICaloReadoutTool
+   - new version number for all interfaces in CaloDAQ
+   - CaloReadout.h moved from CaloDaq/ to src/
+   - cleaning (printout, remove unecessary StatusCodes, ...)
+   - check the decoding stuff was fully robust against corrupted/missing data
+
 !========================== CaloDAQ v3r3 2007-06-13 ==========================
 ! 2007-06-11 - Olivier Deschamps
  - msglevel checks + improve printout

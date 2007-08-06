@@ -1,11 +1,11 @@
-// $Id: CaloReadoutTool.cpp,v 1.15 2007-06-12 20:24:32 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.16 2007-08-06 21:31:48 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "CaloDAQ/CaloReadoutTool.h"
+#include "CaloReadoutTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloReadoutTool
@@ -28,7 +28,7 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<CaloReadoutTool>(this);
+  declareInterface<ICaloReadoutTool>(this);
 
   declareProperty( "DetectorName"   , m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
@@ -43,8 +43,9 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //=========================================================================
 //  Get required CaloBanks (short or packed format) - Fill m_banks
 //=========================================================================
-StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
+bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 
+  m_banks = NULL;
   LHCb::RawEvent* rawEvt = NULL ;
   m_raw = LHCb::RawEventLocation::Default;
   if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + m_raw << endmsg;  
@@ -53,11 +54,10 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
   }else  {
     warning() << "rawEvent not found at location '" << rootInTES() + m_raw 
               << "'" << endmsg;
-    return StatusCode::FAILURE;
+    return false;
   }
       
   m_packed =false;
-  m_banks = 0;
   if( !m_packedIsDefault){
     if ( msgLevel( MSG::DEBUG) )debug() << "Banks of short type are requested as default" << endreq;
     m_banks= &rawEvt->banks(  m_shortType );
@@ -78,7 +78,7 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
 
     if ( 0 == m_banks || 0 == m_banks->size() ){
       error() << "None of short and packed banks has been found " << endreq;
-    return StatusCode::FAILURE;
+      return false;
     }else{
       if( !m_packedIsDefault){      
         if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has been found" << endreq;
@@ -95,7 +95,7 @@ StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
       m_packed =true;
     }
   }
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 
