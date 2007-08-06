@@ -1,8 +1,11 @@
-// $Id: CaloVector.h,v 1.5 2005-12-16 17:02:42 odescham Exp $ 
+// $Id: CaloVector.h,v 1.6 2007-08-06 21:08:29 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/12/16 17:02:42  odescham
+// v4r0 - migration LHCb v20 + cleaning
+//
 // Revision 1.4  2004/09/05 20:21:40  ibelyaev
 //  tiny modifications
 //
@@ -127,7 +130,7 @@ public:
    *  @param id        index 
    *  @return          status code 
    */
-  StatusCode  addEntry ( const Content& content , INDEX id ) 
+  void addEntry ( const Content& content , INDEX id ) 
   {
     const unsigned int indx = id.index() ;
     if ( m_index.size() <= indx  ) 
@@ -138,7 +141,6 @@ public:
     }
     m_index[indx] =  size();
     push_back( content );
-    return StatusCode::SUCCESS;
   };
   
   /// set size for intermediate container

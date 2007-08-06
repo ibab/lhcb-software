@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2007-01-12 11:06:41 cattanem Exp $
+! $Id: release.notes,v 1.40 2007-08-06 21:08:29 odescham Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,10 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+
+! 2007-08-06 - Olivier Deschamps
+ - make CaloVector::addEntry a void method instead of an always successful StatusCode
 
 !======================= CaloKernel v5r0 2007-01-12 ===========================
 ! 2006-12-06 - Florence RANJARD
