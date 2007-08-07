@@ -10,6 +10,10 @@
 !   To do: Bd2DstPi (not stripped by Hans)
 !   Not yet in HLT : Bd2PiPiPi Bd2KstD2KSPiPi Bs2phigamma
 
+! 2007-08-07 - Patrick Koppenburg
+ - Bu2MuMuK: data moved.
+ - Increment to v5r1
+
 !========================== HltSelChecker v5r0 2007-07-31 ===================
 ! 2007-07-31 - Patrick Koppenburg
  - Few typos corrected
