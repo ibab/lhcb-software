@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.6 2007-03-05 10:09:19 pkoppenb Exp $
+// $Id: ParticleTransporter.h,v 1.7 2007-08-07 15:55:56 pkoppenb Exp $
 #ifndef PARTICLETRANSPORTER_H 
 #define PARTICLETRANSPORTER_H 1
 
@@ -40,21 +40,11 @@ protected:
 
 private:
 
-  ITrackExtrapolator* extrapolator(const LHCb::Particle* P) const ;  ///< Get type of extrapolator
-
   StatusCode state(const LHCb::Particle* P,  const double znew, LHCb::State&) const ;   ///< Get or make a state from a Particle
 
   ITrackExtrapolator* m_tracks;        ///< Track extrapolator for particles from tracks
-  ITrackExtrapolator* m_neutrals;      ///< Track extrapolator for neutrals
-  ITrackExtrapolator* m_chargedComp;   ///< Track extrapolator for charged composite particles
-  /// Track extrapolator for neutral composite particles, by default equal to the neutral extrapolator
-  ITrackExtrapolator* m_neutralComp;   
 
   std::string m_tracksName;            ///< Type of Track extrapolator for particles from tracks
-  std::string m_neutralsName ;         ///< Type of Track extrapolator for neutrals
-  std::string m_chargedCompName;       ///< Type of Track extrapolator for charged composite particles
-   /// Type of Track extrapolator for neutral composite particles, by default equal to the neutral extrapolator   
-  std::string m_neutralCompName;
   
   /// Accessor for ParticlePropertySvc
   IParticlePropertySvc* m_ppSvc ;

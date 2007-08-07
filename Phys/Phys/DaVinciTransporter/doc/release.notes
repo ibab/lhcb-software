@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.48 2007-05-26 11:57:49 jpalac Exp $
+! $Id: release.notes,v 1.49 2007-08-07 15:55:55 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-08-07 - Patrick Koppenburg
+ - Remove extrapolators for neutrals and composites which are not used 
+	 anymore after Juan's changes of 2006-09-29.
+ - Change extrapolator to TrackParabolicExtrapolator
+ - Increment to v3r7
 
 !====================== DaVinciTransporter v3r6p1 2007-05-26 =================
 ! 2007-05-26 - Juan PALACIOS

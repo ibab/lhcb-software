@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.17 2007-05-10 12:28:08 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.18 2007-08-07 15:55:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,21 +28,13 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_tracks()
-  , m_neutrals()
-  , m_chargedComp()
-  , m_neutralComp()
   , m_ppSvc(0)
   , m_p2s()
   , m_eID(0)
 {
   declareInterface<IParticleTransporter>(this);
 
-  declareProperty("TrackExtrapolator", m_tracksName = "TrackFastParabolicExtrapolator");
-  declareProperty("NeutralExtrapolator", m_neutralsName = "TrackLinearExtrapolator");
-  declareProperty("ChargedCompositeExtrapolator", m_chargedCompName = 
-                  "TrackParabolicExtrapolator");
-  declareProperty("NeutralCompositeExtrapolator", m_neutralCompName = 
-                  "<NeutralExtrapolator>");
+  declareProperty("TrackExtrapolator", m_tracksName = "TrackParabolicExtrapolator");
 }
 //=============================================================================
 // Destructor
@@ -61,29 +53,6 @@ StatusCode ParticleTransporter::initialize(){
             << " tool to extrapolate particles from tracks" << endmsg;
     m_tracks = tool<ITrackExtrapolator>(m_tracksName,this);
   } else warning() << "No TrackExtrapolator given for tracks" << endmsg ;
-
-  if ( m_neutralsName != "" ){
-    debug() << "Using the " << m_neutralsName 
-            << " tool to extrapolate neutral particles" << endmsg;
-    m_neutrals = tool<ITrackExtrapolator>(m_neutralsName,this);
-  } else warning() << "No TrackExtrapolator given for neutrals" << endmsg ;
-
-  if ( m_chargedCompName != "" ){
-    debug() << "Using the " << m_chargedCompName 
-            << " tool to extrapolate charged composite particles" << endmsg;
-    m_chargedComp = tool<ITrackExtrapolator>(m_chargedCompName,this);
-  } else warning() << "No TrackExtrapolator given for charged composites" << endmsg ;
-  
-  if ( m_neutralCompName == "<NeutralExtrapolator>" ){
-    debug() << "Using the " << m_neutralsName  
-            << " tool to extrapolate charged composite particles with" <<
-      "instance name NeutralCompExtrapolator" << endmsg;
-    m_neutralComp = tool<ITrackExtrapolator>(m_neutralsName+"/NeutralCompExtrapolator",this);    
-  } else if ( m_neutralCompName != "" ){
-    debug() << "Using the " << m_neutralCompName 
-            << " tool to extrapolate charged composite particles" << endmsg;
-    m_neutralComp = tool<ITrackExtrapolator>(m_neutralCompName,this);
-  } else warning() << "No TrackExtrapolator given for charged composites" << endmsg ;
 
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
 
@@ -125,9 +94,11 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
     LHCb::State s ; // state to extrapolate
     sc = state(P,znew,s);
     if (!sc) return sc;
-    ITrackExtrapolator* extra = extrapolator(P);
-    if (NULL!=extra) sc = extra->propagate(s,znew,P->particleID());
-    else Warning("No extrapolator defined").ignore();
+    if (NULL==m_tracks){
+      err() << "No extrapolator defined" << endmsg ;
+      return StatusCode::FAILURE ;      
+    }
+    sc = m_tracks->propagate(s,znew,P->particleID());
     if (!sc) return sc;
 
     verbose() << "Extrapolated state is" << endmsg;
@@ -181,15 +152,3 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
 
   return sc ;
 }  
-//=============================================================================
-// type of extrapolator
-//=============================================================================
-ITrackExtrapolator* ParticleTransporter::extrapolator(const LHCb::Particle* P) const {  
-  if ( P->isBasicParticle() ){
-    if (P->charge()==0) return m_neutrals;
-    else return m_tracks;
-  } else {
-    if (P->charge()==0) return m_neutralComp;
-    else return m_chargedComp;
-  }
-}
