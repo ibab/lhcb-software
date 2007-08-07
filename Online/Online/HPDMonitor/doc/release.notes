@@ -4,6 +4,10 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-08-07- Ulrich Kerzel
+ - connect2DIM: print a warning if the DIM server name is not found in the 
+   DIM service string, then ignore this service (via 'continue')
+
 ! 2007-08-03 - Ulrich Kerzel
  - connect2DIM: change comparison for service (Histo) to use
    first 4 characters and compare to "H1D/", "H2D/", "HPD/"

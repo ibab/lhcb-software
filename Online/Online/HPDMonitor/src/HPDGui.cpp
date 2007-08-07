@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.35 2007-08-03 09:37:26 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.36 2007-08-07 11:53:28 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1247,8 +1247,28 @@ bool HPDGui::Connect2DIM() {
           } // if mapIter
 
           // remove the server name from the service ID string
-          stringService.replace(stringService.find(stringServer,0),stringServer.length(),"");
+	  const int serverLength = stringServer.length();
+	  if (m_verbose > 1) {
+	    std::cout << " replace server name " << stringServer 
+		      << " length "              << serverLength
+	              << " from service name "   << stringService
+		      << " length "              << stringService.length()
+		      << std::endl;
+	  }//if verbose
+	  if (stringService.find(stringServer,0) == std::string::npos) {
+	    std::cout << "==> could not find DIM server name " << stringServer
+		      << " in DIM service name "           << stringService
+		      << std::endl;
+	    std::cout << "==> ignore this service " << std::endl;
+	    continue;
+	  } //if find
+          stringService.replace(stringService.find(stringServer,0),serverLength,"");
+	  if (m_verbose > 1) {
+	    std::cout << "stringService is now " << stringService << std::endl;
+	  }// if verbose
           stringService.replace(stringService.find_first_of("/",0),1,"");
+	  if (m_verbose > 1)
+	    std::cout << "stringService is now " << stringService << std::endl;
           
           // add the services to the list
           // 2D histograms
