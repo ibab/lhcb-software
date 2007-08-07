@@ -4,6 +4,13 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+ - connect2DIM: follow DIM convention and use  
+     (stringService.substr(0,4) == "H1D/") {
+            stringService.replace(0,4,"");
+     }
+   rather than "find" when operating on string, in case the string "H{1,2,P}D/"
+   occours somewhere else in the DIM service string other than at the beginning
+
 ! 2007-08-07- Ulrich Kerzel
  - connect2DIM: print a warning if the DIM server name is not found in the 
    DIM service string, then ignore this service (via 'continue')

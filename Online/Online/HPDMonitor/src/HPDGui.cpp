@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.36 2007-08-07 11:53:28 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.37 2007-08-07 12:07:04 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1270,21 +1270,30 @@ bool HPDGui::Connect2DIM() {
 	  if (m_verbose > 1)
 	    std::cout << "stringService is now " << stringService << std::endl;
           
-          // add the services to the list
+          // add the services to the list, the histograms all start with "HxD/", x=1,2,P
+
           // 2D histograms
-          if (stringService.find("H2D/",0) != std::string::npos) {          
+          if (stringService.substr(0,4) == "H2D/") {          
             // remove "H2D"/ from string
-            stringService.replace(stringService.find("H2D/",0),4,"");          
+            stringService.replace(0,4,"");          
+	    if (m_verbose > 1)
+	      std::cout << "DIM service string after removing H2D/ " << stringService << std::endl;
             serviceH2DNameVector.push_back(stringService);            
-          } else  if (stringService.find("H1D/",0) != std::string::npos) {          
-            stringService.replace(stringService.find("H1D/",0),4,"");          
+          } else  if (stringService.substr(0,4) == "H1D/") {          
+            stringService.replace(0,4,"");          
+	    if (m_verbose > 1)
+	      std::cout << "DIM service string after removing H1D/ " << stringService << std::endl;
             serviceH1DNameVector.push_back(stringService);
-          } else if (stringService.find("HPD/",0) != std::string::npos) {
-            stringService.replace(stringService.find("HPD/",0),4,"");            
+          } else if (stringService.substr(0,4) == "HPD/") {
+            stringService.replace(0,4,"");            
+	    if (m_verbose > 1)
+	      std::cout << "DIM service string after removing HPD/ " << stringService << std::endl;
             serviceHProfileNameVector.push_back(stringService);            
           } else {
             serviceOtherNameVector.push_back(stringService);
           } // if H2D, H1D
+	    if (m_verbose > 1)
+	      std::cout << "DIM service " << stringService << " added to list " << std::endl;
 
         } else { // if "version_number" not found (DIM specific?)
           // if this item is "VERSION_NUMBER"
