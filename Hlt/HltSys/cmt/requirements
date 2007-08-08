@@ -29,12 +29,16 @@ use HltSelChecker       v5r0    Hlt   # Patrick Koppenburg
 
 use HltBase             v2r5   Hlt    # Jose Angel Hernando-Morata
 
-use LoKiHybridBase      v1r0   Phys   # Vanya Belyaev
-use LoKiHybrid          v3r0   Phys   # Vanya Belyaev
-use LoKiTrack           v1r0   Phys   # Vanya Belyaev
-use LoKiMCHybrid        v1r0   Phys   # Vanya Belyaev
-use LoKiTrHybrid        v1r1   Phys   # Vanya Belyaev
-use LoKiArrayFunctors   v1r0   Phys   # Vanya Belyaev
+use LoKiCore            v*     Phys   # Vanya Belyaev
+use LoKiGen             v*     Phys   # Vanya Belyaev
+use LoKiMC              v*     Phys   # Vanya Belyaev
+use LoKiGenMC           v*     Phys   # Vanya Belyaev
+use LoKiPhys            v*     Phys   # Vanya Belyaev
+use LoKiPhysMC          v*     Phys   # Vanya Belyaev
+use LoKiAlgo            v*     Phys   # Vanya Belyaev
+use LoKiAlgoMC          v*     Phys   # Vanya Belyaev
+use LoKiArrayFunctors   v*     Phys   # Vanya Belyaev
+use LoKiTrigger         v*     Phys   # Vanya Belyaev
 
 
 
