@@ -1,0 +1,12 @@
+package CRESHRT
+
+branches  cmt doc src
+use GaudiPolicy v*
+
+apply_pattern install_more_includes more=creshrt
+#include_dirs  ../creshrt
+macro_append CreShrt_use_linkopts "ole32.lib"
+macro_append use_linkopts "ole32.lib"
+macro_append use_libraries "ole32.lib"
+application   CreShrt ../src/CreShrt.cpp
+
