@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.16 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.17 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -178,6 +178,9 @@ namespace Rich
       const IParticleProperties * m_richPartProp;  ///< General particle properties
       const IRayleighScatter * m_rayScat;          ///< Rayleigh scattering function
       const IGasQuartzWindowAbs * m_gasQuartzWin;  ///< Absorption at the quartz window
+
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
     };
 

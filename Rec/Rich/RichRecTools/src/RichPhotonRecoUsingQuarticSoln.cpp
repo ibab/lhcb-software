@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.19 2007-06-22 14:35:57 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.20 2007-08-09 16:38:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -114,43 +114,43 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
   // loop over radiators
-  for ( int iRad = Rich::Aerogel; iRad<=Rich::Rich2Gas; ++iRad )
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin(); 
+        rad != Rich::radiators().end(); ++rad )
   {
-    const Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
 
     // If rejection of ambiguous photons is turned on
     // make sure test is turned on
-    if ( m_rejectAmbigPhots[rad] ) m_testForUnambigPhots[rad]  = true;
+    if ( m_rejectAmbigPhots[*rad] ) m_testForUnambigPhots[*rad]  = true;
 
     // If we are testing for photons that hit the beam pipe, turn on ambig photon test
-    if ( m_checkBeamPipe[rad] )    m_testForUnambigPhots[rad]  = true;
+    if ( m_checkBeamPipe[*rad] )    m_testForUnambigPhots[*rad]  = true;
 
     // information printout about configuration
-    if ( m_testForUnambigPhots[rad] )
-    {      info() << "Will test for unambiguous     " << rad << " photons" << endreq; }
-    else { info() << "Will not test for unambiguous " << rad << " photons" << endreq; }
-    if ( m_rejectAmbigPhots[rad] )
-    {      info() << "Will reject ambiguous " << rad << " photons" << endreq; }
-    else { info() << "Will accept ambiguous " << rad << " photons" << endreq; }
-    if ( m_useAlignedMirrSegs[rad] )
-    {      info() << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endreq;  }
-    else { info() << "Will use nominal mirrors for " << rad << " reconstruction" << endreq; }
-    if ( m_checkPhotCrossSides[rad] )
-    {      info() << "Will reject photons that cross sides in " << rad << endreq; }
-    if ( m_checkBeamPipe[rad] )
-    {      info() << "Will check for " << rad << " photons that hit the beam pipe" << endreq; }
-    if ( m_checkPrimMirrSegs[rad] )
-    {      info() << "Will check for full intersecton with mirror segments for " << rad << endreq; }
+    if ( m_testForUnambigPhots[*rad] )
+    {      info() << "Will test for unambiguous     " << *rad << " photons" << endreq; }
+    else { info() << "Will not test for unambiguous " << *rad << " photons" << endreq; }
+    if ( m_rejectAmbigPhots[*rad] )
+    {      info() << "Will reject ambiguous " << *rad << " photons" << endreq; }
+    else { info() << "Will accept ambiguous " << *rad << " photons" << endreq; }
+    if ( m_useAlignedMirrSegs[*rad] )
+    {      info() << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endreq;  }
+    else { info() << "Will use nominal mirrors for " << *rad << " reconstruction" << endreq; }
+    if ( m_checkPhotCrossSides[*rad] )
+    {      info() << "Will reject photons that cross sides in " << *rad << endreq; }
+    if ( m_checkBeamPipe[*rad] )
+    {      info() << "Will check for " << *rad << " photons that hit the beam pipe" << endreq; }
+    if ( m_checkPrimMirrSegs[*rad] )
+    {      info() << "Will check for full intersecton with mirror segments for " << *rad << endreq; }
 
     // fudge factor warning
-    if ( fabs(m_ckFudge[rad]) > 1e-7 )
+    if ( fabs(m_ckFudge[*rad]) > 1e-7 )
     {
       std::ostringstream mess;
-      mess << "Applying " << rad << " CK theta correction factor : " << m_ckFudge[rad];
+      mess << "Applying " << *rad << " CK theta correction factor : " << m_ckFudge[*rad];
       Warning( mess.str(), StatusCode::SUCCESS );
     }
 
-    info() << "Minimum active " << rad << " segment fraction = " << m_minActiveFrac[rad] << endreq;
+    info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endreq;
 
   }
 
@@ -181,6 +181,21 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 }
 
 //=========================================================================
+//  reconstruct a photon from track segment and pixel
+//=========================================================================
+StatusCode 
+PhotonRecoUsingQuarticSoln::
+reconstructPhoton ( const LHCb::RichRecSegment * segment,
+                    const LHCb::RichRecPixel * pixel,
+                    LHCb::RichGeomPhoton& gPhoton ) const
+{
+  return reconstructPhoton( segment->trackSegment(),
+                            pixel->globalPosition(),
+                            gPhoton,
+                            pixel->hpdPixelCluster() );
+}
+
+//=========================================================================
 //  reconstruct a photon from track segment and smartID
 //=========================================================================
 StatusCode
@@ -191,8 +206,7 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
 {
   Gaudi::XYZPoint tmpP;
   StatusCode sc = m_idTool->globalPosition(smartIDs,tmpP);
-  sc = sc && reconstructPhoton( trSeg, tmpP, gPhoton, smartIDs );
-  return sc;
+  return sc && reconstructPhoton( trSeg, tmpP, gPhoton, smartIDs );
 }
 
 //-------------------------------------------------------------------------
@@ -223,7 +237,7 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   Gaudi::XYZPoint & secReflPoint = gPhoton.flatMirReflectionPoint();
 
   // fraction of segment path length accessible to the photon
-  double fraction(1);
+  float fraction(1);
 
   // Pointers to best sec and spherical mirror segments
   const DeRichSphMirror * sphSegment = NULL;
@@ -565,7 +579,7 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   gPhoton.setCherenkovTheta         ( static_cast<float>(thetaCerenkov) );
   gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
-  gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)      );
+  gPhoton.setActiveSegmentFraction  ( fraction       );
   gPhoton.setDetectionPoint         ( detectionPoint );
   gPhoton.setPixelCluster           ( smartIDs       );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
@@ -631,7 +645,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
                          const Gaudi::XYZPoint& detectionPoint,
                          const LHCb::RichTrackSegment& trSeg,
                          Gaudi::XYZPoint & emissionPoint,
-                         double & fraction ) const
+                         float & fraction ) const
 {
 
   double alongTkFrac = 0.5;

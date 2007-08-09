@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.16 2007-06-22 14:35:57 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.17 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -105,18 +105,24 @@ namespace Rich
     public: // methods (and doxygen comments) inherited from interface
 
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
+      // and RichSmartID channel identifier
+      StatusCode reconstructPhoton ( const LHCb::RichRecSegment * segment,
+                                     const LHCb::RichRecPixel * pixel,
+                                     LHCb::RichGeomPhoton& gPhoton ) const;
+
+      // Reconstructs the geometrical photon candidate for a given RichTrackSegment
       // and RichSmartID channel identifier.
-      virtual StatusCode reconstructPhoton( const LHCb::RichTrackSegment& trSeg,
-                                            const Rich::HPDPixelCluster& smartIDs,
-                                            LHCb::RichGeomPhoton& gPhoton ) const;
+      StatusCode reconstructPhoton( const LHCb::RichTrackSegment& trSeg,
+                                    const Rich::HPDPixelCluster& smartIDs,
+                                    LHCb::RichGeomPhoton& gPhoton ) const;
+
 
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
       // and hit position in global LHCb coordinates.
-      virtual StatusCode 
-      reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
-                          const Gaudi::XYZPoint& detectionPoint,
-                          LHCb::RichGeomPhoton& gPhoton,
-                          const Rich::HPDPixelCluster& smartIDs = Rich::HPDPixelCluster() ) const;
+      StatusCode reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
+                                     const Gaudi::XYZPoint& detectionPoint,
+                                     LHCb::RichGeomPhoton& gPhoton,
+                                     const Rich::HPDPixelCluster& smartIDs ) const;
 
     private: // methods
 
@@ -168,7 +174,7 @@ namespace Rich
                                     const Gaudi::XYZPoint & detectionPoint,
                                     const LHCb::RichTrackSegment& trSeg,
                                     Gaudi::XYZPoint & emissionPoint,
-                                    double & fraction ) const;
+                                    float & fraction ) const;
 
       /// Access the DeRich beam pipe objects, creating as needed on demand
       inline const DeRichBeamPipe* deBeam( const Rich::DetectorType rich ) const

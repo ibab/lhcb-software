@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.8 2007-02-06 16:18:34 cattanem Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.9 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -97,17 +97,17 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   if (!track) { Warning("Null Track pointer"); return false; }
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( msgLevel(MSG::VERBOSE) )
   {
-    debug() << "Trying Track " << track->key() << " " << track->type()
+    verbose() << "Trying Track " << track->key() << " " << track->type()
             << endreq;
   }
 
   // clones
   if ( !m_acceptClones && track->checkFlag(LHCb::Track::Clone) )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track failed clone rejection" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track failed clone rejection" << endreq;
     return false;
   }
 
@@ -115,8 +115,8 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   const double p = track->p() / Gaudi::Units::GeV;
   if ( p < m_minPCut || p > m_maxPCut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> P " << p << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> P " << p << " failed cut" << endreq;
     return false;
   }
 
@@ -124,8 +124,8 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   const double pt = track->pt() / Gaudi::Units::GeV;
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Pt " << pt << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Pt " << pt << " failed cut" << endreq;
     return false;
   }
 
@@ -133,20 +133,20 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   const double chi2 = track->chi2PerDoF();
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
   }
 
   // track charge
   if ( m_chargeSel != 0 && m_chargeSel*track->charge() < 0 )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track charge " << track->charge() << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track charge " << track->charge() << " failed cut" << endreq;
     return false;
   }
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
   return true;
 }
 
@@ -156,27 +156,27 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 
   if (!track) { Warning("Null RichRecTrack pointer"); return false; }
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( msgLevel(MSG::VERBOSE) )
   {
-    debug() << "Trying RichRecTrack " << track->key() << " " << track->trackID().trackType()
+    verbose() << "Trying RichRecTrack " << track->key() << " " << track->trackID().trackType()
             << endreq;
   }
 
   // clones
   if ( !m_acceptClones && !track->trackID().unique() )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track failed clone rejection" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track failed clone rejection" << endreq;
     return false;
   }
 
   // cut p
   const double p = track->vertexMomentum() / Gaudi::Units::GeV;
-  //debug() << " -> RichRecTrack has p = " << p << " cuts " << m_minPCut << " " << m_maxPCut << endreq;
+  //verbose() << " -> RichRecTrack has p = " << p << " cuts " << m_minPCut << " " << m_maxPCut << endreq;
   if ( p < m_minPCut || p > m_maxPCut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> P " << p << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> P " << p << " failed cut" << endreq;
     return false;
   }
 
@@ -184,8 +184,8 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const double pt = track->vertexPt() / Gaudi::Units::GeV;
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Pt " << pt << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Pt " << pt << " failed cut" << endreq;
     return false;
   }
 
@@ -193,20 +193,20 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const double chi2 = track->chi2PerDoF();
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
   }
 
   // track charge
   if ( m_chargeSel != 0 && m_chargeSel*track->charge() < 0 )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track charge " << track->charge() << " failed cut" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track charge " << track->charge() << " failed cut" << endreq;
     return false;
   }
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
   return true;
 }
 

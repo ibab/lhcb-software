@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.27 2007-03-20 11:45:15 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.28 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,10 +76,7 @@ StatusCode GeomEffPhotonTracing::initialize()
     m_phiValues.push_back(ckPhi);
   }
 
-  if ( m_checkBeamPipe )
-  {
-    m_traceMode.setBeamPipeIntersects(true);
-  }
+  if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
 
   // the ray-tracing mode
   info() << "Sampling Mode : " << m_traceMode << endreq;
@@ -120,29 +117,36 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
         // Photon direction around loop
         const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
 
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> fake photon " << photDir
-                    << " testAng "
-                    << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir )
-                    << endreq;
-        }
+        //if ( msgLevel(MSG::VERBOSE) )
+        //{
+        //  verbose() << " -> fake photon " << photDir
+        //            << " testAng "
+        //            << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir )
+        //            << endreq;
+        //}
 
         // Ray trace through detector, using fast circle modelling of HPDs
         LHCb::RichGeomPhoton photon;
-        if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
-                                               emissionPt,
-                                               photDir,
-                                               photon,
-                                               m_traceMode ) )
+        LHCb::RichTraceMode mode( m_traceMode );
+        mode.setAeroRefraction ( segment->trackSegment().radiator() == Rich::Aerogel ); 
+        const LHCb::RichTraceMode::RayTraceResult result = 
+          m_rayTrace->traceToDetector( segment->trackSegment().rich(),
+                                       emissionPt,
+                                       photDir,
+                                       photon,
+                                       mode );
+        if ( m_traceMode.traceWasOK(result) )
         {
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << " -> photon was traced to detector" << endreq;
-          }
-
           // Check HPD status
           if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.pixelCluster().hpd()) ) continue;
+
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << " -> photon was traced to detector at " 
+                      << photon.pixelCluster().hpd() << " "
+                      << photon.detectionPoint()
+                      << endreq;
+          }
 
           // count detected photons
           ++nDetect;
@@ -184,9 +188,11 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
     // store result
     segment->setGeomEfficiency( id, eff );
-    if ( msgLevel(MSG::VERBOSE) )
+    if ( msgLevel(MSG::DEBUG) )
     {
-      verbose() << "Segment " << segment->key() << " has " << id << " geom. eff. " << eff << endreq;
+      debug() << "Segment " 
+        //<< segment->key() 
+              << " has " << id << " geom. eff. " << eff << endreq;
     }
 
   }

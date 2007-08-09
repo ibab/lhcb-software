@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.12 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,6 +23,7 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 
 // Event
 #include "Event/RichRecRing.h"
@@ -106,14 +107,59 @@ namespace Rich
                             const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                             const bool forceTracing = false ) const;
 
+    private: // methods
+
+      // Trace a single photon
+      LHCb::RichTraceMode::RayTraceResult traceAphoton ( const Rich::DetectorType rich,
+                                                         LHCb::RichRecRing * ring,
+                                                         const Gaudi::XYZPoint & emissionPoint,
+                                                         const Gaudi::XYZVector & photDir,
+                                                         const LHCb::RichTraceMode mode ) const;
+
     private: // data
 
       // Pointers to tool instances
       const IRayTracing * m_rayTrace;     ///< Optical ray tracing tool
       const ICherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
       const ISmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
+      const IGeomTool * m_geomTool;       ///< Geometry tool
+
+      /// Bailout number. If no ray tracing have worked after this number then give up
+      std::vector<unsigned int> m_nBailout;
+
+      // Temporary working photon object
+      mutable LHCb::RichGeomPhoton m_photon;
 
     };
+
+    // Trace a single photon
+    inline LHCb::RichTraceMode::RayTraceResult 
+    RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
+                                          LHCb::RichRecRing * ring,
+                                          const Gaudi::XYZPoint & emissionPoint,
+                                          const Gaudi::XYZVector & photDir,
+                                          const LHCb::RichTraceMode mode ) const
+    {
+      // do the ray tracing
+      const LHCb::RichTraceMode::RayTraceResult result =
+        m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, mode, Rich::top,  
+                                     ring->richRecSegment()->trackSegment().avPhotonEnergy() );
+      // Add hit if tracing was OK
+      //if ( result != LHCb::RichTraceMode::RayTraceFailed )
+      {
+        // Add a new point
+        const Gaudi::XYZPoint & gP = m_photon.detectionPoint();
+        ring->ringPoints().push_back
+          ( LHCb::RichRecPointOnRing(gP,
+                                     //m_smartIDTool->globalToPDPanel(gP),
+                                     m_geomTool->radCorrLocalPos(m_smartIDTool->globalToPDPanel(gP),
+                                                                 ring->richRecSegment()->trackSegment().radiator()),
+                                     m_photon.pixelCluster().primaryID(),
+                                     (LHCb::RichRecPointOnRing::Acceptance)(result) ) 
+            );
+      }
+      return result;
+    }
 
   }
 }

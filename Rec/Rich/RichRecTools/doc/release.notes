@@ -4,6 +4,25 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Downgrade some debug messages to verbose in track selector
+ - Upgrade various tools to use the active mass hypotheses list, as obtained
+   from the particle properties tool, as oppossed to hard-coded consideration
+   of all five hypotheses.
+ - Apply aerogel refraction correction during ray tracing where appropriate.
+ - Add new photon predictor that uses the n sigma (in CK resolution) bands 
+   around the expected CK theta, as opposed to a fixed roadwidth.
+ - Add new geom. eff. tool that uses the mass CK RichRecRings associated to 
+   the RichRecSegment.
+ - Tidy update Mass hypotheses ring creator.
+ - Add a new fast photon reconstruction tool that uses the ray traced CK rings
+   as a calibration device to compute the CK theta from the pixel/segment
+   hit points on the detector plane.
+ - Rework CK cone ray tacing tool to use new interfaces etc.
+ - Tidy up geometry tool (better speed).
+ - set average photon energy in track creator eariler during its creation 
+   (need by ray tracing methods).
+
 !===================== RichRecTools v3r12 2007-07-12 ==========================
 ! 2007-07-12 - Chris Jones
  - Replace native erf ( not available on windows :( ) with gsl version

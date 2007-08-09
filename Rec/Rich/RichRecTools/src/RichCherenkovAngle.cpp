@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.22 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.23 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -53,17 +53,20 @@ StatusCode CherenkovAngle::initialize()
 
   // Get the nominal refractive index for the given radiator
 
-  const double refAero   = m_refIndex->refractiveIndex( Rich::Aerogel );
-  if ( !(refAero>0) )  return Error( "Aerogel nominal refractive index < 0" );
-  m_nomCK[Rich::Aerogel] = acos(1.0/refAero);
+  const double refAero      = m_refIndex->refractiveIndex( Rich::Aerogel );
+  if ( !(refAero>0) )       return Error( "Aerogel nominal refractive index < 0"  );
+  m_nomCK[Rich::Aerogel]    = acos(1.0/refAero);
 
   const double refRich1Gas  = m_refIndex->refractiveIndex( Rich::Rich1Gas   );
-  if ( !(refRich1Gas>0) ) return Error( "Rich1Gas nominal refractive index < 0"   );
+  if ( !(refRich1Gas>0) )   return Error( "Rich1Gas nominal refractive index < 0" );
   m_nomCK[Rich::Rich1Gas]   = acos(1.0/refRich1Gas);
 
-  const double refRich2Gas    = m_refIndex->refractiveIndex( Rich::Rich2Gas     );
-  if ( !(refRich2Gas>0) )   return Error( "Rich2Gas nominal refractive index < 0"     );
-  m_nomCK[Rich::Rich2Gas]     = acos(1.0/refRich2Gas);
+  const double refRich2Gas  = m_refIndex->refractiveIndex( Rich::Rich2Gas     );
+  if ( !(refRich2Gas>0) )   return Error( "Rich2Gas nominal refractive index < 0" );
+  m_nomCK[Rich::Rich2Gas]   = acos(1.0/refRich2Gas);
+
+  m_pidTypes = m_richPartProp->particleTypes();
+  info() << "Particle types considered = " << m_pidTypes << endreq;
 
   return sc;
 }
@@ -152,15 +155,15 @@ void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
   const double rMax = satCKRingRadiusLocal( segment, nSamples );
 
   // Loop over all particle codes
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+        hypo != m_pidTypes.end(); ++hypo )
   {
-    const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(iHypo);
 
     // Get CK theta
-    const double ckTheta = avgCherenkovTheta(segment,id);
+    const double ckTheta = avgCherenkovTheta(segment,*hypo);
 
     // Set the value
-    segment->setAverageCKRadiusLocal( id,
+    segment->setAverageCKRadiusLocal( *hypo,
                                       rMax * (ckTheta/m_nomCK[segment->trackSegment().radiator()]) );
 
   }
@@ -195,12 +198,15 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     Gaudi::XYZPoint hitPointGlobal;
-    const LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
-    if ( m_rayTrace->traceToDetector( segment->trackSegment().rich(),
-                                      emissionPt,
-                                      photDir,
-                                      hitPointGlobal,
-                                      mode ) )
+    LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
+    mode.setAeroRefraction ( iRad == Rich::Aerogel ); 
+    const LHCb::RichTraceMode::RayTraceResult result = 
+      m_rayTrace->traceToDetector( segment->trackSegment().rich(),
+                                   emissionPt,
+                                   photDir,
+                                   hitPointGlobal,
+                                   mode );
+    if ( mode.traceWasOK(result) )
     {
 
       // Hit in local coordinates

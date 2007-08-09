@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.5 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.6 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -83,6 +83,9 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle",      m_ckAngle      );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
+
+  m_pidTypes = m_richPartProp->particleTypes();
+  info() << "Particle types considered = " << m_pidTypes << endreq;
 
   // cache values
 
@@ -196,14 +199,14 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
     //-------------------------------------------------------------------------------
 
     // Fill all mass hypos in one go, to save cpu (transport service slow)
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+          hypo != m_pidTypes.end(); ++hypo )
     {
-      const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       double hypo_res2 = 0;
 
       // Expected Cherenkov theta angle
-      const double ckExp = m_ckAngle->avgCherenkovTheta( segment, hypo );
+      const double ckExp = m_ckAngle->avgCherenkovTheta( segment, *hypo );
       if ( ckExp > 1e-6 )
       {
         hypo_res2 = res2;
@@ -219,7 +222,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
 
         // momentum error
         //-------------------------------------------------------------------------------
-        const double mass2      = m_richPartProp->massSq(hypo)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
+        const double mass2      = m_richPartProp->massSq(*hypo)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
         const double massFactor = mass2 / ( mass2 + ptot*ptot );
         const double momErr     = ( tkSeg.entryErrors().errP2()/(Gaudi::Units::GeV*Gaudi::Units::GeV) *
                                     gsl_pow_2( massFactor / ptot / tanCkExp ) );
@@ -234,54 +237,54 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           MAX_CKTHETA_RAD;
           MIN_CKTHETA_RAD;
           // Versus CK theta
-          profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,hypo,"asymErrVc"),
+          profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"asymErrVc"),
                      "Asymptotic CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,hypo,"chroErrVc"),
+          profile1D( ckExp, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"chroErrVc"),
                      "Chromatic CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,hypo,"scatErrVc"),
+          profile1D( ckExp, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"scatErrVc"),
                      "Scattering CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,hypo,"curvErrVc"),
+          profile1D( ckExp, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"curvErrVc"),
                      "Curvature CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,hypo,"dirErrVc"),
+          profile1D( ckExp, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"dirErrVc"),
                      "Track direction CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,hypo,"momErrVc"),
+          profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"momErrVc"),
                      "Track momentum CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,hypo,"overallErrVc"),
+          profile1D( ckExp, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,*hypo,"overallErrVc"),
                      "Overall CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
           // Versus momentum
-          profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,hypo,"asymErrVp"),
+          profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"asymErrVp"),
                      "Asymptotic CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,hypo,"chroErrVp"),
+          profile1D( ptot, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"chroErrVp"),
                      "Chromatic CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,hypo,"scatErrVp"),
+          profile1D( ptot, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"scatErrVp"),
                      "Scattering CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,hypo,"curvErrVp"),
+          profile1D( ptot, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"curvErrVp"),
                      "Curvature CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,hypo,"dirErrVp"),
+          profile1D( ptot, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"dirErrVp"),
                      "Track direction CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,hypo,"momErrVp"),
+          profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"momErrVp"),
                      "Track momentum CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,hypo,"overallErrVp"),
+          profile1D( ptot, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,*hypo,"overallErrVp"),
                      "Overall CK theta error V momentum",
                      0, 100 );
         } // do histos
 
         if ( msgLevel(MSG::DEBUG) )
         {
-          debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << hypo
+          debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << *hypo
                   << " : ptot " << ptot << " ckExp " << ckExp << endreq;
           debug() << "  Rad length " << effectiveLength << endreq;
           debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
@@ -292,10 +295,10 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       } // ckexp > 0
 
       // Save final resolution value
-      segment->setCKThetaResolution( hypo, sqrt(hypo_res2) );
+      segment->setCKThetaResolution( *hypo, sqrt(hypo_res2) );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Segment " << segment->key() << " : " << hypo << " ckRes " << sqrt(hypo_res2) << endreq;
+        verbose() << "Segment " << segment->key() << " : " << *hypo << " ckRes " << sqrt(hypo_res2) << endreq;
       }
 
     } // loop over mass hypos

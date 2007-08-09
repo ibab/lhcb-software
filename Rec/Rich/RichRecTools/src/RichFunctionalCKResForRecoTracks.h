@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.4 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.5 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -45,7 +45,7 @@ namespace Rich
     //----------------------------------------------------------------------------------------
     /** @class FunctionalCKResForRecoTracks RichFunctionalCKResForRecoTracks.h
      *
-     *  Provides an analytical calculation of the expected Cherenkoc angle resolution.
+     *  Provides an analytical calculation of the expected Cherenkov angle resolution.
      *
      *  Based on results discussed in LHCb-2004-057
      *  see http://cdsweb.cern.ch/search.py?recid=815494&ln=en
@@ -132,6 +132,9 @@ namespace Rich
 
       /// Flag to turn on the use of the full TransportService in calculating the effective length of a track
       bool m_useTS;
+
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
     };
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.17 2007-05-08 12:17:44 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.18 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,8 +31,13 @@ MassHypothesisRingCreator( const std::string& type,
     m_ckAngle       ( NULL ),
     m_rings         ( NULL ),
     m_coneTrace     ( NULL ),
+    m_richPartProp  ( NULL ),
     m_traceMode     ( LHCb::RichTraceMode::RespectHPDTubes,
-                      LHCb::RichTraceMode::SimpleHPDs )
+                      LHCb::RichTraceMode::SimpleHPDs ),
+    m_traceModeRad  ( Rich::NRadiatorTypes ),
+    m_nPointScale   ( Rich::NRadiatorTypes ),
+    m_maxPoint      ( Rich::NRadiatorTypes, 100 ),
+    m_minPoint      ( Rich::NRadiatorTypes, 10  )
 {
 
   // tool interface
@@ -41,6 +46,9 @@ MassHypothesisRingCreator( const std::string& type,
   // Define job option parameters
   declareProperty( "RingsLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::SegmentHypoRings );
+  declareProperty( "MaxRingPoints", m_maxPoint  );
+  declareProperty( "MinRingPoints", m_minPoint  );
+  declareProperty( "CheckBeamPipe", m_checkBeamPipe = false );
 
 }
 
@@ -53,23 +61,39 @@ StatusCode MassHypothesisRingCreator::initialize()
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle   );
   acquireTool( "RichRayTraceCKCone", m_coneTrace );
+  acquireTool( "RichParticleProperties",  m_richPartProp );
+
+  m_pidTypes = m_richPartProp->particleTypes();
+  info() << "Particle types considered = " << m_pidTypes << endreq;
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
+  if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
+
   // the ray-tracing mode
-  info() << "Track " << m_traceMode  << endreq;
+  m_traceModeRad[Rich::Aerogel]  = m_traceMode;
+  m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
+  m_traceModeRad[Rich::Rich1Gas] = m_traceMode;
+  m_traceModeRad[Rich::Rich2Gas] = m_traceMode;
+  info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
+  info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
+  info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
+
+  // only need to be rough
+  m_nPointScale[Rich::Aerogel]  = m_maxPoint[Rich::Aerogel]  / 0.240;
+  m_nPointScale[Rich::Rich1Gas] = m_maxPoint[Rich::Rich1Gas] / 0.050;
+  m_nPointScale[Rich::Rich2Gas] = m_maxPoint[Rich::Rich2Gas] / 0.028;
+
+  // ring info
+  //info() << "NPoint scale factors       = " << m_nPointScale << endreq;
+  info() << "Maximum # ray trace points = " << m_maxPoint << endreq;
+  info() << "Minimum # ray trace points = " << m_minPoint << endreq;
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
   return sc;
-}
-
-StatusCode MassHypothesisRingCreator::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
@@ -78,23 +102,23 @@ void MassHypothesisRingCreator::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
-void MassHypothesisRingCreator::newMassHypoRings( LHCb::RichRecSegment * segment ) const
+void MassHypothesisRingCreator::massHypoRings( LHCb::RichRecSegment * segment ) const
 {
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-    newMassHypoRing( segment, static_cast<const Rich::ParticleIDType>(iHypo) );
+  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+        hypo != m_pidTypes.end(); ++hypo )
+  {
+    massHypoRing( segment, *hypo );
   }
 }
 
 // Forms a new RichRecRing object from a RichRecSegment
 LHCb::RichRecRing *
-MassHypothesisRingCreator::newMassHypoRing( LHCb::RichRecSegment * segment,
+MassHypothesisRingCreator::massHypoRing( LHCb::RichRecSegment * segment,
                                             const Rich::ParticleIDType id ) const
 {
-  if ( !segment ) return NULL;
-
   // does the ring already exist ?
-  return ( segment->hypothesisRings().dataIsValid(id) ?
-           segment->hypothesisRings()[id] : buildRing(segment, id) );
+  return ( segment ? ( segment->hypothesisRings().dataIsValid(id) ?
+                       segment->hypothesisRings()[id] : buildRing(segment, id) ) : NULL );
 }
 
 LHCb::RichRecRing *
@@ -102,7 +126,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const
 {
 
-  LHCb::RichRecRing * newRing = 0;
+  LHCb::RichRecRing * newRing = NULL;
 
   // Cherenkov theta for this segment/hypothesis combination
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
@@ -116,34 +140,21 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     }
 
     // Get a new ring and save it
-    newRing = newMassHypoRing();
+    newRing = new LHCb::RichRecRing( segment, ckTheta, id );
 
     // set ring type info
     newRing->setType ( LHCb::RichRecRing::RayTracedCK );
 
-    // set the segment information
-    newRing->setRichRecSegment( segment );
-
-    // set centre point information
-    newRing->setCentrePointGlobal( segment->pdPanelHitPoint()      );
-    newRing->setCentrePointLocal ( segment->pdPanelHitPointLocal() );
-
-    // Set cherenkov information
-    newRing->setRadius( ckTheta );
-
-    // set the PID for this segment
-    newRing->setMassHypo( id );
-
-    // detector information
-    newRing->setRich( segment->trackSegment().rich() );
-
     // ray tracing
-    int nPoints = static_cast<int>( 1500 * ckTheta );
-    if ( nPoints<30 ) nPoints = 30;
-    m_coneTrace->rayTrace( newRing, nPoints, m_traceMode );
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    unsigned int nPoints = static_cast<unsigned int>( m_nPointScale[rad] * ckTheta );
+    if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
+    else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
+    //debug() << id << " " << ckTheta << " using " << nPoints << " points" << endreq;
+    m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
 
     // save to container
-    saveMassHypoRing(newRing);
+    massHypoRings()->insert( newRing );
 
   }
 
@@ -152,18 +163,6 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
 
   // return final pointer
   return newRing;
-}
-
-LHCb::RichRecRing * MassHypothesisRingCreator::newMassHypoRing() const
-{
-  // Make a new ring
-  LHCb::RichRecRing * newRing = new LHCb::RichRecRing();
-  return newRing;
-}
-
-void MassHypothesisRingCreator::saveMassHypoRing( LHCb::RichRecRing * ring ) const
-{
-  massHypoRings()->insert( ring );
 }
 
 LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
@@ -194,4 +193,16 @@ LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
   }
 
   return m_rings;
+}
+
+// CRJ : should look to getting rid of the need for these
+
+LHCb::RichRecRing * MassHypothesisRingCreator::newMassHypoRing() const
+{
+  return new LHCb::RichRecRing();
+}
+
+void MassHypothesisRingCreator::saveMassHypoRing( LHCb::RichRecRing * ring ) const
+{
+  massHypoRings()->insert( ring );
 }

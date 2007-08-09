@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichGeomEffPhotonTracing.h
+/** @file RichGeomEffCKMassRing.h
  *
- *  Header file for tool : Rich::Rec::GeomEffPhotonTracing
+ *  Header file for tool : Rich::Rec::GeomEffCKMassRing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.24 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichGeomEffCKMassRing.h,v 1.1 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichGeomEffPhotonTracing_H
-#define RICHRECTOOLS_RichGeomEffPhotonTracing_H 1
+#ifndef RICHRECTOOLS_RichGeomEffCKMassRing_H
+#define RICHRECTOOLS_RichGeomEffCKMassRing_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -29,6 +29,8 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichRayTracing.h"
+#include "RichRecBase/IRichMassHypothesisRingCreator.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
@@ -45,10 +47,12 @@ namespace Rich
   {
 
     //-----------------------------------------------------------------------------
-    /** @class GeomEffPhotonTracing RichGeomEffPhotonTracing.h
+    /** @class GeomEffCKMassRing RichGeomEffCKMassRing.h
      *
      *  Tool to perform a full detailed calculation of the geometrical
      *  efficiency for a given RichRecSegment and mass hypothesis.
+     *
+     *  Uses the mass CK ring objects.
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
@@ -57,19 +61,19 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class GeomEffPhotonTracing : public Rich::Rec::ToolBase,
-                                 virtual public IGeomEff
+    class GeomEffCKMassRing : public Rich::Rec::ToolBase,
+                              virtual public IGeomEff
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      GeomEffPhotonTracing( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent );
+      GeomEffCKMassRing( const std::string& type,
+                         const std::string& name,
+                         const IInterface* parent );
 
       /// Destructor
-      virtual ~GeomEffPhotonTracing() {};
+      virtual ~GeomEffCKMassRing() {};
 
       // Initialize method
       StatusCode initialize();
@@ -87,37 +91,25 @@ namespace Rich
     private: // Private data
 
       // Pointers to tool instances
-      const IRayTracing * m_rayTrace;    ///< Ray tracking tool
       const ICherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+
+      /// Pointer to ring creator
+      const IMassHypothesisRingCreator * m_massHypoRings;
+
+      /// Pointer to RichParticleProperties interface
+      const IParticleProperties * m_richPartProp;
 
       const DeRichSystem * m_richSys;    ///< RICH detector system object
 
-      /// Number of photons to use in geometrical efficiency calculation
-      int m_nGeomEff;
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
-      /** Number of photons to quit after in geometrical efficiency calculation
-       *  if all so far have failed */
-      int m_nGeomEffBailout;
-
-      /// Increment parameter for PD efficiencies
-      double m_pdInc;
-
-      /// Ray-tracing configuration object
-      LHCb::RichTraceMode m_traceMode;
-
-      /// Vector of sampling phi values around the Cherekov ring
-      typedef std::list<double> PhiList;
-      PhiList m_phiValues;
-
-      /// Flag to turn on or off the explicit checking of the HPD status
-      bool m_hpdCheck;
-
-      /// Flag to turn on or off checking of intersections with beampipe
-      bool m_checkBeamPipe;
+      /// Use first ring to set all mas hypos
+      bool m_useFirstRingForAll;
 
     };
 
   }
 }
 
-#endif // RICHRECTOOLS_RichGeomEffPhotonTracing_H
+#endif // RICHRECTOOLS_RichGeomEffCKMassRing_H

@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichSepVCKthetaPhotonPredictor.cpp
+/** @file RichCKthetaBandsPhotonPredictor.cpp
  *
- *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
+ *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.11 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.1 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   01/06/2005
+ *  @date   26/07/2007
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichSepVCKthetaPhotonPredictor.h"
+#include "RichCKthetaBandsPhotonPredictor.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -23,25 +23,26 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SepVCKthetaPhotonPredictor );
+DECLARE_TOOL_FACTORY( CKthetaBandsPhotonPredictor );
 
 // Standard constructor
-SepVCKthetaPhotonPredictor::
-SepVCKthetaPhotonPredictor( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent )
+CKthetaBandsPhotonPredictor::
+CKthetaBandsPhotonPredictor( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent )
   : Rich::Rec::ToolBase( type, name, parent ),
     m_geomTool      ( NULL ),
     m_ckAngle       ( NULL ),
+    m_ckRes         ( NULL ),
     m_richPartProp  ( NULL ),
     m_minROI        ( Rich::NRadiatorTypes, 0 ),
     m_maxROI        ( Rich::NRadiatorTypes, 0 ),
     m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
     m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
-    m_tolF          ( Rich::NRadiatorTypes, 0 ),
-    m_scale         ( Rich::NRadiatorTypes, 0 ),
-    m_Nselected     ( Rich::NRadiatorTypes, 0 ),
-    m_Nreject       ( Rich::NRadiatorTypes, 0 )
+    m_nSigma        ( Rich::NRadiatorTypes, 0 ),
+    m_scale         ( Rich::NRadiatorTypes, 0 )
+    //m_Nselected     ( Rich::NRadiatorTypes, 0 ),
+    //m_Nreject       ( Rich::NRadiatorTypes, 0 )
 {
 
   // interface
@@ -69,14 +70,14 @@ SepVCKthetaPhotonPredictor( const std::string& type,
   m_sepGMax[Rich::Rich2Gas]  = 130;
   declareProperty( "SepGMax", m_sepGMax );
 
-  m_tolF[Rich::Aerogel]   = 25;
-  m_tolF[Rich::Rich1Gas]  = 15;
-  m_tolF[Rich::Rich2Gas]  = 40;
-  declareProperty( "TolerenceFactor", m_tolF );
+  m_nSigma[Rich::Aerogel]   = 6.5;
+  m_nSigma[Rich::Rich1Gas]  = 6.5;
+  m_nSigma[Rich::Rich2Gas]  = 12;
+  declareProperty( "NSigma", m_nSigma );
 
 }
 
-StatusCode SepVCKthetaPhotonPredictor::initialize()
+StatusCode CKthetaBandsPhotonPredictor::initialize()
 {
   // Initialise base class
   const StatusCode sc = RichRecToolBase::initialize();
@@ -85,6 +86,7 @@ StatusCode SepVCKthetaPhotonPredictor::initialize()
   // get tools
   acquireTool( "RichCherenkovAngle",        m_ckAngle  );
   acquireTool( "RichRecGeometry",           m_geomTool );
+  acquireTool( "RichCherenkovResolution",   m_ckRes    );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   // loop over radiators
@@ -93,25 +95,26 @@ StatusCode SepVCKthetaPhotonPredictor::initialize()
     // cache some numbers
     m_minROI2.push_back( m_minROI[rad]*m_minROI[rad] );
     m_maxROI2.push_back( m_maxROI[rad]*m_maxROI[rad] );
-    m_scale[rad] = (m_sepGMax[rad]/m_ckThetaMax[rad]);
+    m_scale[rad] = (m_ckThetaMax[rad]/m_sepGMax[rad]);
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    info() << trad << " : Sep. range     " 
+    info() << trad << " : Sep. range     "
            << boost::format("%5.1f") % m_minROI[rad] << " -> "
            << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
-           << boost::format("%5.1f") % m_tolF[rad] << " mm" << endreq;
+           << boost::format("%5.1f") % m_nSigma[rad] << " # sigma" << endreq;
   }
-  
+
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
   return sc;
 }
 
-StatusCode SepVCKthetaPhotonPredictor::finalize()
+StatusCode CKthetaBandsPhotonPredictor::finalize()
 {
 
+  /*
   if ( m_Nselected[Rich::Aerogel]  > 0 ||
        m_Nselected[Rich::Rich1Gas] > 0 ||
        m_Nselected[Rich::Rich2Gas] > 0 )
@@ -134,6 +137,7 @@ StatusCode SepVCKthetaPhotonPredictor::finalize()
            << " % of possible candidates" << endreq
            << "=================================================================" << endreq;
   }
+  */
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -141,15 +145,12 @@ StatusCode SepVCKthetaPhotonPredictor::finalize()
 
 // fast decision on whether a photon is possible
 bool
-SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
-                                            LHCb::RichRecPixel * pixel ) const
+CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
+                                             LHCb::RichRecPixel * pixel ) const
 {
 
   // Default to not selected
   bool OK = false;
-
-  // which radiator
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() == pixel->detector() )
@@ -158,57 +159,41 @@ SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
     // segment / hit separation squared
     const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
 
+    // which radiator
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
     // Check overall boundaries
     if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
     {
 
-      // Cache separation
-      const double sep = sqrt(sep2);
+      // estimated CK theta
+      const double ckThetaEsti = sqrt(sep2)*m_scale[rad];
 
       // Loop over mass hypos and check finer grained boundaries
-      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
+      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
             hypo != m_pidTypes.end(); ++hypo )
       {
 
-        // expected separation, scales linearly with expected CK angle
-        const double expSep = m_ckAngle->avgCherenkovTheta(segment,*hypo) * m_scale[rad];
+        // expected CK theta
+        const double expCKtheta = m_ckAngle->avgCherenkovTheta(segment,*hypo);
+        // expected CK theta resolution
+        const double expCKres   = m_ckRes->ckThetaResolution(segment,*hypo);
 
         // is this pixel/segment pair in the accepted range
-        const double dsep = fabs(sep-expSep);
-        if ( dsep < m_tolF[rad] )
+        if ( fabs(expCKtheta-ckThetaEsti) < m_nSigma[rad]*expCKres )
         {
           OK = true;
-          //if ( msgLevel(MSG::VERBOSE) )
-          //{
-          //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-          //            << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
-          //}
           break;
         }
-        //if ( msgLevel(MSG::VERBOSE) && !OK )
-        //{
-        //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-        //            << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
-        //}
 
       } // loop over hypos
 
-    } // overall boundary check
-    //else if ( msgLevel(MSG::VERBOSE) )
-    //{
-    //  verbose() << "  -> sep2=" << sep2
-    //            << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
-    //            << " -> reject" << endreq;
-    //}
+    } // boundary check
 
-  } // same detector
-  //else if ( msgLevel(MSG::VERBOSE) )
-  //{
-  //  verbose() << "  -> " << " FAILED RICH detector check -> reject" << endreq;
-  //}
+  } // detector check
 
-  if ( OK ) { ++m_Nselected[rad]; }
-  else      { ++m_Nreject[rad];   }
+  //if ( OK ) { ++m_Nselected[rad]; }
+  //else      { ++m_Nreject[rad];   }
 
   return OK;
 }

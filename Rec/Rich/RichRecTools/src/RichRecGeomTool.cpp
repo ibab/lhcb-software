@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.16 2007-04-23 13:32:51 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.17 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -78,31 +78,24 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
 {
   double sep2 = 99999999;
 
-  // Which radiator
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
+  // Same RICH ? (should not be needed since photon creator should do check)
+  //if ( segment->trackSegment().rich() == pixel->detector() )
+  //{
 
-  // Pixel position, in local HPD coords corrected for average radiator distortion
-  const Gaudi::XYZPoint & pixP = radCorrLocalPos(pixel,rad);
+    // Pixel position, in local HPD coords corrected for average radiator distortion
+    const Gaudi::XYZPoint & pixP
+      = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
 
-  // Which detector side is the hit on
-  const Rich::Side side = pixel->hpdPixelCluster().panel().panel();
+    // segment position ray traced to HPD panel, in local HPD coords
+    const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
 
-  // segment position ray traced to HPD panel, in local HPD coords
-  const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
-
-  // segment position ray traced to same HPD panel as hit, in local HPD coords
-  const Gaudi::XYZPoint & segPForce = segment->pdPanelHitPointLocal(side);
-
-  // Same RICH ?
-  if ( segment->trackSegment().rich() == pixel->detector() )
-  {
     if ( Rich::Rich1 == pixel->detector() )
     {
       if ( pixP.y()*segP.y() > 0 ||
            ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
              ( pixP.y() < 0 && segment->photonsInYMinus() ) ) )
       {
-        sep2 = (pixP-segPForce).Mag2();
+        sep2 = (pixP-segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel())).Mag2();
       }
     }
     else // RICH2
@@ -111,15 +104,11 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
            ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
              ( pixP.x() < 0 && segment->photonsInXMinus() ) ) )
       {
-        sep2 = (pixP-segPForce).Mag2();
+        sep2 = (pixP-segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel())).Mag2();
       }
     }
-  }
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "  -> segment at " << segP << " pixel at " << pixP << " : sep2=" << sep2 << endreq;
-  }
+    //} 
 
   return sep2;
 }
@@ -225,25 +214,27 @@ double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
   return acc;
 }
 
-const Gaudi::XYZPoint& GeomTool::radCorrLocalPos( const LHCb::RichRecPixel * pixel,
-                                                  const Rich::RadiatorType rad ) const
+void GeomTool::setCorrLocalPos( const LHCb::RichRecPixel * pixel,
+                                const Rich::DetectorType rich ) const
 {
-  if ( !pixel->radCorrLocalPositionsOK() )
+  LHCb::RichRecPixel * pix = const_cast<LHCb::RichRecPixel*>(pixel);
+  RadCorrLocalPositions & pos = pix->radCorrLocalPositions();
+  if ( Rich::Rich1 == rich )
   {
-    LHCb::RichRecPixel * pix = const_cast<LHCb::RichRecPixel*>(pixel);
-    RadCorrLocalPositions & pos = pix->radCorrLocalPositions();
-    if ( Rich::Rich1 == pixel->detector() )
-    {
-      pos.setPosition(Rich::Aerogel, getCorrPos(pixel->localPosition(),Rich::Aerogel));
-      pos.setPosition(Rich::Rich1Gas,getCorrPos(pixel->localPosition(),Rich::Rich1Gas));
-      pos.setPosition(Rich::Rich2Gas,pixel->localPosition());
-    }
-    else
-    {
-      pos.setPosition(Rich::Aerogel,pixel->localPosition());
-      pos.setPosition(Rich::Rich1Gas,pixel->localPosition());
-      pos.setPosition(Rich::Rich2Gas,getCorrPos(pixel->localPosition(),Rich::Rich2Gas));
-    }
+    pos.setPosition(Rich::Aerogel, getCorrPos(pixel->localPosition(),Rich::Aerogel));
+    pos.setPosition(Rich::Rich1Gas,getCorrPos(pixel->localPosition(),Rich::Rich1Gas));
+    //pos.setPosition(Rich::Rich2Gas,pixel->localPosition());
   }
-  return pixel->radCorrLocalPositions().position(rad);
+  else
+  {
+    //pos.setPosition(Rich::Aerogel,pixel->localPosition());
+    //pos.setPosition(Rich::Rich1Gas,pixel->localPosition());
+    pos.setPosition(Rich::Rich2Gas,getCorrPos(pixel->localPosition(),Rich::Rich2Gas));
+  }
+}
+
+Gaudi::XYZPoint GeomTool::radCorrLocalPos ( const Gaudi::XYZPoint & lpos,
+                                            const Rich::RadiatorType rad ) const
+{
+  return getCorrPos( lpos, rad );
 }

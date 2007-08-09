@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.10 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.11 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,6 +27,7 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 // Event
 #include "Event/RichRecRing.h"
@@ -45,6 +46,9 @@ namespace Rich
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
+     *
+     *  @todo See if newMassHypoRing and saveMassHypoRing methods can be removed
+     *        from public interface ...
      */
     //-----------------------------------------------------------------------------
 
@@ -66,9 +70,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Implement the handle method for the Incident service.
@@ -76,8 +77,14 @@ namespace Rich
       void handle( const Incident& incident );
 
       // Returns the mas hypothesis ring for a given segment and mass hypothesis
-      LHCb::RichRecRing * newMassHypoRing( LHCb::RichRecSegment * segment,
-                                           const Rich::ParticleIDType id ) const;
+      LHCb::RichRecRing * massHypoRing( LHCb::RichRecSegment * segment,
+                                        const Rich::ParticleIDType id ) const;
+
+      // Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
+      void massHypoRings( LHCb::RichRecSegment * segment ) const;
+
+      // Returns a pointer to all mass hypothesis rings
+      LHCb::RichRecRings * massHypoRings() const;
 
       // Returns a new default RichRecRing object
       // It is the reponsibility of the user to save or delete the ring
@@ -85,12 +92,6 @@ namespace Rich
 
       // Save the RichRecRing in the container
       void saveMassHypoRing( LHCb::RichRecRing * ring ) const;
-
-      // Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
-      void newMassHypoRings( LHCb::RichRecSegment * segment ) const;
-
-      // Returns a pointer to all mass hypothesis rings
-      LHCb::RichRecRings * massHypoRings() const;
 
     private: // methods
 
@@ -112,18 +113,39 @@ namespace Rich
       /// Cherenkov cone ray tracing tool
       const IRayTraceCherenkovCone * m_coneTrace;
 
+      /// Pointer to RichParticleProperties interface
+      const IParticleProperties * m_richPartProp;
+
       /// Location of Rings in TES
       std::string m_ringLocation;
 
-      /// Ray-tracing configuration object
+      /// Ray-tracing configuration object (JO)
       LHCb::RichTraceMode m_traceMode;
+
+      /// Cached trace modes for each radiator
+      std::vector<LHCb::RichTraceMode> m_traceModeRad;
+
+      /// Flag to turn on or off checking of intersections with beampipe
+      bool m_checkBeamPipe;
+
+      /// Scale number for number of points on ring
+      std::vector<double> m_nPointScale;
+
+      /// Max number of points on a ring
+      std::vector<unsigned int> m_maxPoint;
+
+      /// Min number of points on a ring
+      std::vector<unsigned int> m_minPoint;
+
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
     };
 
     inline void MassHypothesisRingCreator::InitNewEvent()
     {
       // Initialise navigation data
-      m_rings = 0;
+      m_rings = NULL;
     }
 
   }

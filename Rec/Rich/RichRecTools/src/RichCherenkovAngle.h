@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.12 2007-03-10 13:19:19 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -130,6 +130,9 @@ namespace Rich
 
       /// Storage for nominal saturated Cherenkov angles
       boost::array< double, Rich::NRadiatorTypes > m_nomCK;
+
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
     };
 

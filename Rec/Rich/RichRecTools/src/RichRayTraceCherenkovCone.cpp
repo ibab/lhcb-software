@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.20 2007-05-08 12:17:44 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.21 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,10 +33,14 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   : RichRecToolBase ( type, name, parent ),
     m_rayTrace      ( NULL ),
     m_ckAngle       ( NULL ),
-    m_smartIDTool   ( NULL )
+    m_smartIDTool   ( NULL ),
+    m_geomTool      ( NULL ),
+    m_nBailout      ( Rich::NRadiatorTypes, 50 )
 {
   // Define interface for this tool
   declareInterface<IRayTraceCherenkovCone>(this);
+  // JOs
+  declareProperty( "BailoutTries", m_nBailout );
 }
 
 StatusCode RayTraceCherenkovCone::initialize()
@@ -49,6 +53,9 @@ StatusCode RayTraceCherenkovCone::initialize()
   acquireTool( "RichRayTracing",     m_rayTrace );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichRecGeometry",     m_geomTool        );
+
+  info() << "# ray tracing attempts before bailout = " << m_nBailout << endreq;
 
   return sc;
 }
@@ -88,17 +95,69 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
                                   const LHCb::RichTraceMode mode,
                                   const bool forceTracing ) const
 {
-  if ( !ring )
-    return Error( "Null RichRecRing pointer!" );
-  debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
+  if ( !ring ) return Error( "Null RichRecRing pointer!" );
+  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
   if ( !ring->richRecSegment() )
+  {
     return Warning( "RingRecRing has no associated segment. Cannot perform ray tracing" );
-  return rayTrace( ring->richRecSegment()->trackSegment().rich(),
-                   ring->richRecSegment()->trackSegment().bestPoint(),
-                   ring->richRecSegment()->trackSegment().bestMomentum(),
-                   ring->radius(),
-                   ring, nPoints, mode, forceTracing );
+  }
+  ring->ringPoints().clear();
+
+  if ( ring->radius() > 0 )
+  {
+    ring->ringPoints().reserve(nPoints);
+
+    // emission point
+    const Gaudi::XYZPoint & emissionPoint = ring->richRecSegment()->trackSegment().bestPoint();
+
+    // which rich and radiator
+    const Rich::DetectorType rich = ring->richRecSegment()->trackSegment().rich();
+    const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
+
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Ray tracing " << rich << " CK cone :-" << endreq;
+      debug() << " -> emissionPoint = " << emissionPoint << endreq;
+      debug() << " -> direction     = " << ring->richRecSegment()->trackSegment().bestMomentum() << endreq;
+      debug() << " -> CK theta      = " << ring->radius() << endreq;
+      debug() << " -> " << mode << endreq;
+    }
+
+    // Set up cached parameters for photon tracing
+    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
+
+    // loop around the ring
+    double ckPhi = 0.0;
+    unsigned int nOK(0);
+    ring->setNTotalPointSamples(nPoints);
+    for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
+    {
+
+      // Photon direction around loop
+      const Gaudi::XYZVector photDir =
+        ring->richRecSegment()->trackSegment().vectorAtThetaPhi( ring->radius(), ckPhi );
+
+      // do the tracing for this photon
+      const LHCb::RichTraceMode::RayTraceResult result =
+        traceAphoton ( rich, ring, emissionPoint, photDir, mode );
+      // count raytraces that are in HPD panel
+      if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
+
+      // bailout check
+      if ( 0 == nOK && iPhot >= m_nBailout[rad] ) break;
+    }
+
+    // All was OK
+    return StatusCode::SUCCESS;
+
+  }
+  else
+  {
+    // cannot perform ray-tracing
+    return StatusCode::FAILURE;
+  }
+
 }
 
 StatusCode
@@ -112,21 +171,21 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                   const bool forceTracing ) const
 {
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
-
-  debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
+  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
-
   ring->ringPoints().clear();
 
   if ( ckTheta > 0 )
   {
+    ring->ringPoints().reserve(nPoints);
 
     // Define rotation matrix
+    // to to allow the one from the track segment to be used.
     const Gaudi::XYZVector z = direction.unit();
     Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
     y /= sqrt(y.Mag2());
     const Gaudi::XYZVector x = y.Cross(z);
-    Gaudi::Rotation3D rotation = Gaudi::Rotation3D(x,y,z);
+    Gaudi::Rotation3D rotation(x,y,z);
 
     if ( msgLevel(MSG::DEBUG) )
     {
@@ -137,13 +196,18 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       debug() << " -> " << mode << endreq;
     }
 
+    // which rich and radiator
+    const Rich::DetectorType rich = ring->richRecSegment()->trackSegment().rich();
+    const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
+
     // Set up cached parameters for photon tracing
     const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
 
     // loop around the ring
-    const double sinCkTheta = sin(ckTheta);
-    const double cosCkTheta = cos(ckTheta);
+    const double sinCkTheta(sin(ckTheta)), cosCkTheta(cos(ckTheta));
     double ckPhi = 0.0;
+    unsigned int nOK(0);
+    ring->setNTotalPointSamples(nPoints);
     for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
     {
 
@@ -153,61 +217,14 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                      sinCkTheta*sin(ckPhi),
                                      cosCkTheta );
 
-      // temp photon
-      LHCb::RichGeomPhoton photon;
+      // do the tracing for this photon
+      const LHCb::RichTraceMode::RayTraceResult result =
+        traceAphoton ( rich, ring, emissionPoint, photDir, mode );
+      // count raytraces that are in HPD panel
+      if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
 
-      LHCb::RichRecPointOnRing * point = NULL;
-
-      // first ray trace to infinite plane to get point
-      LHCb::RichTraceMode tmpMode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
-      if ( m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, tmpMode ) )
-      {
-        ring->ringPoints().push_back( LHCb::RichRecPointOnRing() );
-        point = &(ring->ringPoints().back());
-        point->setAcceptance( LHCb::RichRecPointOnRing::UndefinedAcceptance );
-      }
-
-      // if point found, set final data
-      if ( point )
-      {
-
-        // set position and SmartID data in the ring point
-        const Gaudi::XYZPoint & gP = photon.detectionPoint();
-        point->setGlobalPosition(gP);
-        point->setLocalPosition(m_smartIDTool->globalToPDPanel(gP));
-        point->setSmartID( photon.pixelCluster().primaryID() );
-
-        // next, if configured to do so test acceptance of this point
-        if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDPanel ||
-             mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
-        {
-          // try again to see if in HPD panel
-          tmpMode.setDetPlaneBound( LHCb::RichTraceMode::RespectHPDPanel );
-          tmpMode.setDetPrecision( mode.detPrecision() );
-          if ( !m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, tmpMode ) )
-          {
-            point->setAcceptance( LHCb::RichRecPointOnRing::OutsideHPDPanel );
-          }
-          else
-          {
-            point->setAcceptance( LHCb::RichRecPointOnRing::InHPDPanel );
-            if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
-            {
-              // try yet again to see if in an HPD tube
-              if ( m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, mode ) )
-              {
-                point->setAcceptance( LHCb::RichRecPointOnRing::InHPDTube );
-              }
-            }
-          }
-        }
-    
-      }
-      else
-      {
-        Warning( "Failed to ray trace to the 'infinite' HPD panel" );
-      }
-
+      // bailout check
+      if ( 0 == nOK && iPhot >= m_nBailout[rad] ) break;
     }
 
     // All was OK
@@ -240,7 +257,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
     y /= sqrt(y.Mag2());
     const Gaudi::XYZVector x = y.Cross(z);
-    Gaudi::Rotation3D rotation = Gaudi::Rotation3D(x,y,z);
+    Gaudi::Rotation3D rotation(x,y,z);
 
     if ( msgLevel(MSG::DEBUG) )
     {
@@ -269,11 +286,13 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
       // Ray trace to detector plane
       Gaudi::XYZPoint hitPoint;
-      if ( m_rayTrace->traceToDetector( rich,
-                                        emissionPoint,
-                                        photDir,
-                                        hitPoint,
-                                        mode ) )
+      const LHCb::RichTraceMode::RayTraceResult result =
+        m_rayTrace->traceToDetector( rich,
+                                     emissionPoint,
+                                     photDir,
+                                     hitPoint,
+                                     mode );
+      if ( mode.traceWasOK(result) )
       {
         points.push_back( hitPoint );
       }

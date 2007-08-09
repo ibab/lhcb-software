@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalJeffreysErf
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalJeffreysErf.cpp,v 1.2 2007-07-12 14:51:58 jonrob Exp $
+ *  $Id: RichPhotonSignalJeffreysErf.cpp,v 1.3 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -42,7 +42,3 @@ double PhotonSignalJeffreysErf::signalProbFunc( const double thetaDiff,
   const double b = gsl_sf_erf( thetaDiff/(m_errScale * thetaExpRes*sqrt(2.0)) );
   return 0.5*(a-b)/(thetaDiff*log(m_errScale));
 }
-
-
-
-

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.37 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.38 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,10 +64,9 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
 
   // Reconstruct the geometrical photon
   LHCb::RichGeomPhoton * geomPhoton = new LHCb::RichGeomPhoton();
-  if ( ( m_photonReco->reconstructPhoton( segment->trackSegment(),
-                                          pixel->globalPosition(),
-                                          *geomPhoton,
-                                          pixel->hpdPixelCluster() ).isSuccess() ) &&
+  if ( ( m_photonReco->reconstructPhoton( segment,
+                                          pixel,
+                                          *geomPhoton ).isSuccess() ) &&
        // Check photon is OK
        ( ( geomPhoton->CherenkovTheta() > 0. ||
            geomPhoton->CherenkovPhi()   > 0. ) &&

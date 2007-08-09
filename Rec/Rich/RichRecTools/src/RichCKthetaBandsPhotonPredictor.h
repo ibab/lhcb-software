@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichSepVCKthetaPhotonPredictor.h
+/** @file RichCKthetaBandsPhotonPredictor.h
  *
- *  Header file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
+ *  Header file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.8 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.1 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   01/06/2005
+ *  @date   26/07/2007
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichSepVCKthetaPhotonPredictor_H
-#define RICHRECTOOLS_RichSepVCKthetaPhotonPredictor_H 1
+#ifndef RICHRECTOOLS_RichCKthetaBandsPhotonPredictor_H
+#define RICHRECTOOLS_RichCKthetaBandsPhotonPredictor_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -26,6 +26,7 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichKernel/IRichParticleProperties.h"
 
 // RichKernel
@@ -43,34 +44,34 @@ namespace Rich
   {
 
     //-----------------------------------------------------------------------------
-    /** @class SepVCKthetaPhotonPredictor RichSepVCKthetaPhotonPredictor.h
+    /** @class CKthetaBandsPhotonPredictor RichCKthetaBandsPhotonPredictor.h
      *
      *  Tool which performs the association between RichRecTracks and
      *  RichRecPixels to form RichRecPhotons.
      *
-     *  This particular implementation uses a cut range per radiator,
-     *  on the seperation between the pixel and ray-traced track impact point,
-     *  that scales with the expected Cherenkov angle. The hit is required to be
-     *  in range for at least one possible meass hypothesis.
+     *  This particular implementation defines bans around the expected CK theta
+     *  values for the allows mass hyothesis types, that are defined as n sigma times
+     *  the expected CK resolution. 
+     *  The hit is required to be in range for at least one possible meass hypothesis.
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   01/06/2005
+     *  @date   26/07/2007
      */
     //-----------------------------------------------------------------------------
 
-    class SepVCKthetaPhotonPredictor : public RichRecToolBase,
-                                       virtual public IPhotonPredictor
+    class CKthetaBandsPhotonPredictor : public RichRecToolBase,
+                                        virtual public IPhotonPredictor
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      SepVCKthetaPhotonPredictor( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent );
+      CKthetaBandsPhotonPredictor( const std::string& type,
+                                   const std::string& name,
+                                   const IInterface* parent );
 
       /// Destructor
-      virtual ~SepVCKthetaPhotonPredictor(){}
+      virtual ~CKthetaBandsPhotonPredictor(){}
 
       // Initialize method
       StatusCode initialize();
@@ -92,6 +93,9 @@ namespace Rich
       /// Pointer to Cherenkov angle tool
       const ICherenkovAngle * m_ckAngle;
 
+      /// Pointer to Cherenkov angle resolution tool
+      const ICherenkovResolution * m_ckRes;
+
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
 
@@ -101,19 +105,19 @@ namespace Rich
       std::vector<double> m_minROI2; ///< Square of m_minROI
       std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point
       std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
-      std::vector<double> m_tolF;       ///< Region of tolerance in seperation
+      std::vector<double> m_nSigma;     ///< N sigma for acceptance bands
       std::vector<double> m_scale;      ///< Internal cached parameter for speed
-      
+
       /// Particle ID types to consider in the likelihood minimisation
       Rich::Particles m_pidTypes;
-      
+
       // debug counting numbers
-      mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
-      mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
+      //mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
+      //mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
 
     };
 
   }
 }
 
-#endif // RICHRECTOOLS_RichSepVCKthetaPhotonPredictor_H
+#endif // RICHRECTOOLS_RichCKthetaBandsPhotonPredictor_H

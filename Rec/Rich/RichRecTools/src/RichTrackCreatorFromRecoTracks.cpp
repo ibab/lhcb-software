@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.17 2007-04-23 13:32:52 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.18 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,10 +28,10 @@ TrackCreatorFromRecoTracks( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : TrackCreatorBase       ( type, name, parent ),
-    m_trTracks             ( 0 ),
-    m_massHypoRings        ( 0 ),
-    m_segMaker             ( 0 ),
-    m_signal               ( 0 ),
+    m_trTracks             ( NULL ),
+    m_massHypoRings        ( NULL ),
+    m_segMaker             ( NULL ),
+    m_signal               ( NULL ),
     m_trTracksLocation     ( LHCb::TrackLocation::Default   ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
@@ -211,6 +211,11 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
         LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
+        // Set the average photon energy (for default hypothesis)
+        newSegment->trackSegment()
+          .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
+                                                            newTrack->currentHypothesis()) );
+
         // Get PD panel impact point
         if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
         {
@@ -233,13 +238,8 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             // set radiator info
             setDetInfo( newTrack, (*iSeg)->radiator() );
 
-            // Set the average photon energy (for default hypothesis)
-            newSegment->trackSegment()
-              .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
-                                                                newTrack->currentHypothesis()) );
-
             // make RichRecRings for the mass hypotheses if requested
-            if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
+            if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );
 
             // Count radiator segments
             tkCount.countRadiator( (*iSeg)->radiator() );

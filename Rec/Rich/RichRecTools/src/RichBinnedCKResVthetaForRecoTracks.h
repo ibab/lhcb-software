@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.5 2007-03-10 13:19:19 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.6 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,6 +29,7 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 namespace Rich
 {
@@ -85,6 +86,9 @@ namespace Rich
       /// Pointer to RichCherenkovAngle interface
       const ICherenkovAngle * m_ckAngle;
 
+      /// Pointer to RichParticleProperties interface
+      const IParticleProperties * m_richPartProp;
+
       typedef std::vector<double> BinData;
       /// The averged resolutions in each bin, for each track type
       BinData m_theerr[Rich::NRadiatorTypes][Rich::Rec::Track::NTrTypes];
@@ -95,6 +99,9 @@ namespace Rich
 
       /// make sure all hypo resolutions are the same
       bool m_normalise;
+
+      /// Particle ID types to consider in the photon creation checks
+      Rich::Particles m_pidTypes;
 
     };
 

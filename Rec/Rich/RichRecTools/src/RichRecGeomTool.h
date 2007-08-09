@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.12 2007-04-23 13:32:52 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -81,11 +81,16 @@ namespace Rich
       double hpdPanelAcceptance( LHCb::RichRecSegment * segment,
                                  const Rich::ParticleIDType id ) const;
 
-      // Returns the corrected pixel position for the average
-      const Gaudi::XYZPoint&
-      radCorrLocalPos( const LHCb::RichRecPixel * pixel,
+      // Returns the corrected pixel position for the average distortions in the given radiator
+      Gaudi::XYZPoint
+      radCorrLocalPos( const Gaudi::XYZPoint & lpos,
                        const Rich::RadiatorType rad ) const;
 
+      // Set the corrected pixel position for the average
+      // optical distortion for the given RICH detector
+      void setCorrLocalPos( const LHCb::RichRecPixel * pixel,
+                            const Rich::DetectorType rich ) const;
+      
     private: // methods
 
       /// Get the corrected position for given point in given radiator

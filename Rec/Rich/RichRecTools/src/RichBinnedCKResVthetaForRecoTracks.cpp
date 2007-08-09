@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.8 2007-04-23 13:32:51 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.9 2007-08-09 16:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,7 +28,8 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_ckAngle       ( NULL )
+    m_ckAngle       ( NULL ),
+    m_richPartProp  ( NULL )
 {
 
   declareInterface<ICherenkovResolution>(this);
@@ -69,8 +70,12 @@ StatusCode BinnedCKResVthetaForRecoTracks::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
+  acquireTool( "RichParticleProperties",  m_richPartProp );
 
   info() << "Using binned Cherenkov theta resolution" << endreq;
+
+  m_pidTypes = m_richPartProp->particleTypes();
+  info() << "Particle types considered = " << m_pidTypes << endreq;
 
   return sc;
 }
@@ -98,31 +103,27 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
 
       // find the smallest, successfully calculated resolution
       double res(999999), tmp_res(0);
-      const bool el_ok = ckThetaResolution_Imp(segment,Rich::Electron,tmp_res);
-      if ( el_ok && tmp_res < res ) { res = tmp_res; }
-      const bool mu_ok = ckThetaResolution_Imp(segment,Rich::Muon,tmp_res);
-      if ( mu_ok && tmp_res < res ) { res = tmp_res; }
-      const bool pi_ok = ckThetaResolution_Imp(segment,Rich::Pion,tmp_res);
-      if ( pi_ok && tmp_res < res ) { res = tmp_res; }
-      const bool ka_ok = ckThetaResolution_Imp(segment,Rich::Kaon,tmp_res);
-      if ( ka_ok && tmp_res < res ) { res = tmp_res; }
-      const bool pr_ok = ckThetaResolution_Imp(segment,Rich::Proton,tmp_res);
-      if ( pr_ok && tmp_res < res ) { res = tmp_res; }
+      bool OK[Rich::NParticleTypes];
+      Rich::Particles::const_iterator hypo;
+      for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
+      {
+        OK[*hypo] = ckThetaResolution_Imp(segment,*hypo,tmp_res);
+        if ( OK[*hypo] && tmp_res < res ) { res = tmp_res; }
+      }
 
       // give each hypo that was OK, the smallest resolution
-      segment->setCKThetaResolution( Rich::Electron, el_ok ? res : 0 );
-      segment->setCKThetaResolution( Rich::Muon,     mu_ok ? res : 0 );
-      segment->setCKThetaResolution( Rich::Pion,     pi_ok ? res : 0 );
-      segment->setCKThetaResolution( Rich::Kaon,     ka_ok ? res : 0 );
-      segment->setCKThetaResolution( Rich::Proton,   pr_ok ? res : 0 );
+      for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
+      {
+        segment->setCKThetaResolution( *hypo, OK[*hypo] ? res : 0 );
+      }
 
       if ( msgLevel(MSG::VERBOSE) )
       {
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
         {
-          const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-          verbose() << "Segment " << segment->key() << " : " << hypo
-                    << " ckRes=" << segment->ckThetaResolution( hypo ) << endreq;
+          verbose() << "Segment " << segment->key() << " : " << *hypo
+                    << " ckRes=" << segment->ckThetaResolution( *hypo ) << endreq;
         }
       }
 
