@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Update RichTraceMode to include new result enum, which contains 
+   information on the acceptance of the ray trace (in HPD, in panel etc.)
+ - Add option to perform correction for refraction at Aerogel/Rich1Gas 
+   boundary during ray tracing
+
 ! 2007-07-20 - Chris Jones
  - Minor fix to logic in OTChannelID fillStream printout
 
