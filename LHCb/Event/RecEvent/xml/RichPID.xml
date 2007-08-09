@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.7 2006-06-14 17:38:31 jonrob Exp $
+  * $Id: RichPID.xml,v 1.8 2007-08-09 15:25:37 jonrob Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -28,7 +28,8 @@
         <import name = "Event/Track"                    />
         <import name = "gsl/gsl_sf_erf.h"               />
 
-        <location name="Trigger"   place="Rec/Rich/TrigPIDs"/>
+        <location name="Offline"   place="Rec/Rich/PIDs"/>
+        <location name="HLT"       place="Rec/Rich/HltPIDs"/>
 
 	<constructor 
 		desc     = "Constructor from data fields"
@@ -109,6 +110,15 @@
                 type  = "bool"
                 desc  = "Verify if a given hypothesis was above threshold and the associated track present in any radiator">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+        </method>
+
+        <method
+                name  = "setAboveThreshold"
+                const = "FALSE"
+                type  = "void"
+                desc  = "Set a given hypothesis above threshold and the associated track present in any radiator">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="flag" type="bool"/>
         </method>
 
         <method 
