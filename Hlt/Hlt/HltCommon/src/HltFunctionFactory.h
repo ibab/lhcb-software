@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.4 2007-07-31 15:59:35 gguerrer Exp $
+// $Id: HltFunctionFactory.h,v 1.5 2007-08-09 14:00:24 hernando Exp $
 #ifndef HLTFUNCTIONFACTORY_H 
 #define HLTFUNCTIONFACTORY_H 1
 
@@ -25,6 +25,9 @@ public:
   virtual ~HltFunctionFactory( ); ///< Destructor
 
   StatusCode initialize();
+
+  virtual void setSmart(bool smart) 
+  { m_smart = smart;}
 
   void setVertices(std::vector<LHCb::RecVertex*>& vertices) 
   {m_vertices = &vertices;}

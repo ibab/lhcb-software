@@ -1,4 +1,4 @@
-// $Id: HltVertexFilter.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
+// $Id: HltVertexFilter.cpp,v 1.5 2007-08-09 14:00:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,8 @@ StatusCode HltVertexFilter::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  IHltFunctionFactory* factory = tool<IHltFunctionFactory>("HltFunctionFactory");
+  IHltFunctionFactory* factory = 
+    tool<IHltFunctionFactory>("HltFunctionFactory",this);
   if (m_primaryVertices) factory->setVertices(*m_primaryVertices);
 
   const std::vector<std::string>& hdes = m_filterDescriptor.value();

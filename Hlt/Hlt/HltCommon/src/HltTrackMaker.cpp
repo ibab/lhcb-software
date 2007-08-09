@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.5 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltTrackMaker.cpp,v 1.1 2007-08-09 14:00:25 hernando Exp $
 // Include files 
 
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "HltVertexMaker.h"
+#include "HltTrackMaker.h"
 #include "Event/HltNames.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/HltFunctions.h"
@@ -16,25 +16,29 @@
 #include "HltBase/HltConfigurationHelper.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltVertexMaker
+// Implementation file for class : HltTrackMaker
 //
 // 2006-02-21 : Hugo Ruiz
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltVertexMaker );
+DECLARE_ALGORITHM_FACTORY( HltTrackMaker );
+
+using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltVertexMaker::HltVertexMaker( const std::string& name,
+HltTrackMaker::HltTrackMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  m_consider2 = true;
-  declareProperty( "CheckForOverlaps",       m_checkForOverlaps = false );  
-  declareProperty( "PatOutputVerticesName",  
-                   m_patOutputVerticesName = "Hlt/Vertex/VertexMakerBank");
+
+  declareProperty( "PatOutputTracksName",  
+                   m_patOutputTracksName = "Hlt/Track/TrackMakerBank");
+
+  declareProperty( "TrackMakerTool",  
+                   m_trackMakerName = "empty");
 
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
@@ -44,7 +48,7 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltVertexMaker::~HltVertexMaker() {
+HltTrackMaker::~HltTrackMaker() {
   for (std::vector<Hlt::TrackBiFunction*>::iterator it = m_functions.begin();
        it != m_functions.end(); ++it) delete *it;
   for (std::vector<Hlt::Filter*>::iterator it = m_filters.begin();
@@ -55,30 +59,24 @@ HltVertexMaker::~HltVertexMaker() {
 // Initialization
 //=============================================================================
 
-StatusCode HltVertexMaker::initialize() {
-
-  m_twoContainers = true;
-  if (m_inputTracks2Name == "" )  {
-    info() << "only one input container requested " 
-           << m_inputTracksName << endreq;
-    m_twoContainers = false;
-    m_inputTracks2Name = m_inputTracksName;
-    m_inputTracks2 = m_inputTracks;
-  }
+StatusCode HltTrackMaker::initialize() {
 
   // NOTE: input tracks2 needs to be defined to book histos
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by HltAlgorithm
-
-  
-  // Prepare output vertex container
-  m_patOutputVertices = 
-    m_patDataStore->createVertexContainer(m_patOutputVerticesName,200);
   
   checkInput(m_inputTracks," input tracks ");
   checkInput(m_inputTracks2," input tracks2 ");
-  checkInput(m_outputVertices," output vertices ");
+  checkInput(m_outputTracks," output tracks ");
 
+  // get track maker
+  m_trackMaker = NULL;
+  if (m_trackMakerName == "empty")
+    fatal() << " No declared track Maker tool " << endreq;
+  m_trackMaker = tool<ITrackMatchUpgrade>(m_trackMakerName);    
+  if (!m_trackMaker)
+    fatal() << " No ITrackMatchUpdate tool" << endreq;
+  
   // create filters
   IHltFunctionFactory* factory = 
     tool<IHltFunctionFactory>("HltFunctionFactory",this);
@@ -131,26 +129,19 @@ StatusCode HltVertexMaker::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltVertexMaker::execute() {
+StatusCode HltTrackMaker::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
-  m_outputVertices->clear();
+  if ( m_debug ) debug() << "HltTrackMaker: Execute" << endmsg;
+  m_outputTracks->clear();
 
-  if (!m_twoContainers && m_inputTracks->size() <2) {
-    debug() << " no enought tracks in container to make vertices " << endreq;
-    return sc;
-  }
-
-  m_input2.clear();
-  // copy(*m_inputTracks,m_input2);
-  if (m_twoContainers) copy(*m_inputTracks2,m_input2);
-  else copy(*m_inputTracks,m_input2);
+  Tracks* otracks = new Tracks();
+  put(otracks,m_patOutputTracksName);
 
   if (m_debug) {
     printInfo( "tracks [1]", *m_inputTracks);
-    printInfo( "tracks [2]",  m_input2);
+    printInfo( "tracks [2]", *m_inputTracks2);
   }
   
   for (Hlt::TrackContainer::const_iterator itM = m_inputTracks->begin(); 
@@ -159,28 +150,13 @@ StatusCode HltVertexMaker::execute() {
 
     verbose() << " track 0 " << track1.key() << track1.slopes() << endreq;
 
-    // 1st check which mode are we running on...
-    Hlt::TrackContainer::const_iterator itHStart;
-    if (m_twoContainers) itHStart = m_input2.begin();
-    else itHStart = itM + 1;    
-
-    // And then start the loop itself!
-    for (Hlt::TrackContainer::const_iterator itH = itHStart; 
-         itH != m_input2.end(); itH++) {
+    for (Hlt::TrackContainer::const_iterator itH = m_inputTracks2->begin(); 
+         itH != m_inputTracks2->end(); itH++) {
       const LHCb::Track& track2 = *(*itH);
       verbose() << " track 1 " << track2.key() << track2.slopes() << endreq;
       
-      // can not be the same track
-      if ((*itH) == (*itM)) continue;
-      
-      // Check for segment overlaps
-      bool accepted = true;
-      if (m_checkForOverlaps)
-        accepted = !(haveOverlaps(track1,track2));
-      
-      verbose() << " accepted due to overlaps?" << accepted << endreq;
-
       m_vals.clear();
+      bool accepted = true;
       for (size_t i = 0; i < m_functions.size(); ++i) {
         verbose() << " filter " << m_filterNames[i] << endreq;
         Hlt::TrackBiFunction& fun = *(m_functions[i]);
@@ -196,40 +172,47 @@ StatusCode HltVertexMaker::execute() {
       
       if (!accepted) continue;
 
-      verbose()<<" pair found [0] "<<track1.key() <<track1.slopes() << endreq;
-      verbose()<<" pair found [1] "<<track2.key() <<track2.slopes() << endreq;
-      // Write vertex
-      //if ( m_outputByVertex ) {
-      LHCb::RecVertex* sv = m_patOutputVertices->newEntry();
-      _makeVertex(track1,track2,*sv);
-      m_outputVertices->push_back(sv);
-      for (size_t i = 0; i < m_filterIDs.size(); ++i) {
-        verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
-        sv->addInfo(m_filterIDs[i],m_vals[i]);
-      }
-      if (m_debug)
-        printInfo(" make vertex ",*sv);
+      verbose()<<" match found [0] "<<track1.key() <<track1.slopes() << endreq;
+      verbose()<<" match found [1] "<<track2.key() <<track2.slopes() << endreq;
+
+      Track* otrack = new Track();
+      double quality = 0.;
+      sc = m_trackMaker->match(track1,track2,*otrack,quality);
+      if (sc.isSuccess()) {
+        otracks->insert(otrack);
+        m_outputTracks->push_back(otrack);
+        for (size_t i = 0; i < m_filterIDs.size(); ++i) {
+          verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
+          otrack->addInfo(m_filterIDs[i],m_vals[i]);
+        }
+        if (m_debug)
+          printInfo(" make track ",*otrack);
+      } // track donde
+      
+      
     } // loop on tracks2
   } // loop on tracks1
   
   return StatusCode::SUCCESS;  
 }
 
-void HltVertexMaker::saveConfiguration() {
+void HltTrackMaker::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
 
-  std::string type = "HltVertexMaker";
+  std::string type = "HltTrackMaker";
   confregister("Type",type);
 
   const std::vector<std::string>& filters = m_filterDescriptor.value();
   confregister("Filters",filters);
+
+  confregister("TrackMaker",m_trackMakerName);
 }
 
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode HltVertexMaker::finalize() {
+StatusCode HltTrackMaker::finalize() {
 
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
     std::string title =  " event accepted " + m_filterNames[i] + " / input ";
@@ -243,11 +226,5 @@ StatusCode HltVertexMaker::finalize() {
   
 }
 
-//=============================================================================
-
-bool HltVertexMaker::haveOverlaps( const LHCb::Track& track1, 
-                                    const LHCb::Track& track2) {
-  return HltUtils::matchIDs(track1,track2);
-}
 
 

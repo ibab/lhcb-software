@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.h,v 1.2 2007-06-25 20:50:26 hernando Exp $
+// $Id: HltTrackFilter.h,v 1.3 2007-08-09 14:00:25 hernando Exp $
 #ifndef HLTTRACKFILTER_H 
 #define HLTTRACKFILTER_H 1
 
@@ -35,7 +35,7 @@ protected:
 protected:
 
   StringArrayProperty m_filterDescriptor;
-  bool m_computeInfo;
+  bool m_addInfo;
 
   std::vector<LHCb::Track*> m_otracks;
 

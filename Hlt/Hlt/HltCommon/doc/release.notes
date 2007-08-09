@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-08-07 - Jose A. Hernando
+ - HltFunctionFactory: adding smart flag
+ - HltTrackFilter, HltVertexFilter, HltTrackMaker, HltVertexMaker: private factory
+ - HltTrackMaker: create a track from 2 tracks
+
 ! 2007-08-01 - Jose A. Hernando
  - HltFunctionFactory: adding binder key functions
 

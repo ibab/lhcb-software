@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.5 2007-07-31 10:09:32 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.6 2007-08-09 14:00:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -148,6 +148,7 @@ Track* HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo) {
 
   State state;
   state.setState(x,y,z,ex,ey,1./e);
+  state.setLocation(State::MidHCal);
   Track* track = new Track();
   track->addToStates(state);
 

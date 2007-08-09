@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.8 2007-08-01 21:52:20 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.9 2007-08-09 14:00:24 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -128,6 +128,8 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     ITrackMatch* imatch = tool<ITrackMatch>("HltMatchOffTrack2OnCalo");
     fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
                                                   *m_tracks, Estd::abs_max());
+  } else if (name == "DeltaE"){
+    fun = new Hlt::DeltaE();
   }
 
   if (m_smart && fun) {
@@ -178,6 +180,12 @@ Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& fn)
   std::string name = cromos[0];
   if (name == "DOCA")
     bfun = new Hlt::DOCA();
+  else if (name == "Calo3DChi2") {
+    ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
+    bfun =  new Hlt::TrackMatch(*imatch);
+  } else if (name == "DeltaP")
+    bfun = new Hlt::DeltaP();
+  
   if (!bfun) fatal() << " requested track bifunction " << name
                      << " not in factory " << endreq;
   return bfun;

@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.4 2007-06-28 22:07:39 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.5 2007-08-09 14:00:25 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -31,7 +31,7 @@ HltTrackFilter::HltTrackFilter( const std::string& name,
 {
 
   declareProperty("FilterDescriptor", m_filterDescriptor);
-  declareProperty("ComputeInfo", m_computeInfo = true);
+  declareProperty("AddInfo", m_addInfo = true);
 }
 //=============================================================================
 // Destructor
@@ -52,7 +52,9 @@ StatusCode HltTrackFilter::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  IHltFunctionFactory* factory = tool<IHltFunctionFactory>("HltFunctionFactory");
+  IHltFunctionFactory* factory = 
+    tool<IHltFunctionFactory>("HltFunctionFactory",this);
+  factory->setSmart(m_addInfo);
 
   if (m_inputTracks2) factory->setTracks(*m_inputTracks2);
   if (m_primaryVertices) factory->setVertices(*m_primaryVertices);
@@ -68,12 +70,11 @@ StatusCode HltTrackFilter::initialize() {
     if (!EParser::parseFilter(filtername,funname,mode,x0,xf))continue;
     
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
-    if (m_computeInfo) {
-      Hlt::TrackFunction* fun = factory->trackFunction(funname);
-      if (!fun) error() << " error crearing function " << filtername
-                        << " " << id << endreq;
-      m_functions.push_back(fun);
-    }
+    Hlt::TrackFunction* fun = factory->trackFunction(funname);
+    if (!fun) error() << " error crearing function " << filtername
+                      << " " << id << endreq;
+    m_functions.push_back(fun);
+    
     Hlt::TrackFilter* fil = factory->trackFilter(filtername);
     if (!fil) error() << " error crearing filter " << filtername
                       << " " << id << endreq;
@@ -135,13 +136,12 @@ StatusCode HltTrackFilter::execute() {
     else copy(*m_outputTracks,m_otracks);
 
     // compute information
-    if (m_computeInfo) {
-      Hlt::TrackFunction* fun = m_functions[i];
+    Hlt::TrackFunction* fun = m_functions[i];
+    if (m_addInfo)
       Hlt::map(m_otracks,*fun,key);
-    }
 
     // debug and monitor
-    if (m_debug || m_monitor) {
+    if ((m_debug || m_monitor) && m_addInfo) {
       std::vector<double> vals = infos(m_otracks,key,1e6);
       std::sort(vals.begin(),vals.end());
       double val = 0.;

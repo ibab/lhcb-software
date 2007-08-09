@@ -1,4 +1,4 @@
-// $Id: HltTrackMerge.cpp,v 1.2 2007-07-02 21:04:26 hernando Exp $
+// $Id: HltTrackMerge.cpp,v 1.3 2007-08-09 14:00:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ HltTrackMerge::HltTrackMerge( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
+  m_consider2 = true;
 }
 //=============================================================================
 // Destructor

@@ -1,13 +1,14 @@
-// $Id: HltVertexMaker.h,v 1.3 2007-08-09 14:00:25 hernando Exp $
-#ifndef HLTVERTEXMAKER_H 
-#define HLTVERTEXMAKER_H 1
+// $Id: HltTrackMaker.h,v 1.1 2007-08-09 14:00:25 hernando Exp $
+#ifndef HLTTRACKMAKER_H 
+#define HLTTRACKMAKER_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltFunctions.h"
+#include "HltBase/ITrackMatchUpgrade.h"
 
-/** @class HltVertexMaker HltVertexMaker.h
+/** @class HltTrackMaker HltTrackMaker.h
  *  
  *
  *  @author Hugo Ruiz
@@ -15,13 +16,13 @@
  */
 
 
-class HltVertexMaker : public HltAlgorithm {
+class HltTrackMaker : public HltAlgorithm {
  public: 
 
   /// Standard constructor
-  HltVertexMaker( const std::string& name, ISvcLocator* pSvcLocator );
+  HltTrackMaker( const std::string& name, ISvcLocator* pSvcLocator );
   
-  virtual ~HltVertexMaker( ); ///< Destructor
+  virtual ~HltTrackMaker( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
@@ -29,17 +30,14 @@ class HltVertexMaker : public HltAlgorithm {
  protected:
 
   void saveConfiguration();
-  
-  bool haveOverlaps(const LHCb::Track& track1, const LHCb::Track& track2 );
 
  private:
 
   // PatOutputVertices
-  std::string m_patOutputVerticesName;
-  PatVertexContainer* m_patOutputVertices;
+  std::string m_patOutputTracksName;
 
-  bool m_checkForOverlaps;
-  bool m_twoContainers;
+  std::string m_trackMakerName;
+
 
 protected:
 
@@ -54,13 +52,7 @@ protected:
 
   std::vector<double> m_vals;
 
-  std::vector<LHCb::Track*> m_input2;
-
-  Hlt::VertexCreator _makeVertex;
-
-  template <class CONT>
-  void copy(const CONT& c1, CONT& c2)
-  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
+  ITrackMatchUpgrade* m_trackMaker;
 
 };
 #endif // HLTMAKEVERTICES_H 
