@@ -6,6 +6,13 @@ RiPIDMonLong2To100.MCHistoPath = "RICH/PIDQC/LONG/2TO100/MC/";
 RiPIDMonLong2To100.HistoPath = "RICH/PIDQC/LONG/2TO100/";
 RiPIDMonLong2To100.TrackSelector.TrackAlgs = { "Forward","Match" };
 
+// Default PID monitor : 3-100 GeV/c
+RiPIDMonLong3To100.TrackSelector.MinPCut = 3;
+RiPIDMonLong3To100.TrackSelector.MaxPCut = 100;
+RiPIDMonLong3To100.MCHistoPath = "RICH/PIDQC/LONG/3TO100/MC/";
+RiPIDMonLong3To100.HistoPath = "RICH/PIDQC/LONG/3TO100/";
+RiPIDMonLong3To100.TrackSelector.TrackAlgs = { "Forward","Match" };
+
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonLong0To2.TrackSelector.MinPCut = 0;
 RiPIDMonLong0To2.TrackSelector.MaxPCut = 2;
@@ -50,6 +57,14 @@ RiPIDMonLong2To100Pt05.TrackSelector.MinPtCut = 0.5;
 RiPIDMonLong2To100Pt05.MCHistoPath = "RICH/PIDQC/LONGPT05/2TO100/MC/";
 RiPIDMonLong2To100Pt05.HistoPath = "RICH/PIDQC/LONGPT05/2TO100/";
 RiPIDMonLong2To100Pt05.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Default PID monitor : 3-100 GeV/c
+RiPIDMonLong3To100Pt05.TrackSelector.MinPCut = 3;
+RiPIDMonLong3To100Pt05.TrackSelector.MaxPCut = 100;
+RiPIDMonLong3To100Pt05.TrackSelector.MinPtCut = 0.5;
+RiPIDMonLong3To100Pt05.MCHistoPath = "RICH/PIDQC/LONGPT05/3TO100/MC/";
+RiPIDMonLong3To100Pt05.HistoPath = "RICH/PIDQC/LONGPT05/3TO100/";
+RiPIDMonLong3To100Pt05.TrackSelector.TrackAlgs = { "Forward","Match" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonLong0To2Pt05.TrackSelector.MinPCut = 0;

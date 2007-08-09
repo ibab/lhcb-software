@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.17 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.18 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -273,11 +273,13 @@ StatusCode TrackGeomMoni::execute()
     // Project track direction to active detector plane and histogram hits
     traceMode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs      );
     traceMode.setDetPlaneBound     ( LHCb::RichTraceMode::RespectHPDTubes );
-    if ( m_rayTrace->traceToDetector( trackSeg.rich(),
-                                      trackSeg.bestPoint(),
-                                      trackDir,
-                                      photon,
-                                      traceMode ) != 0 )
+    const LHCb::RichTraceMode::RayTraceResult result = 
+      m_rayTrace->traceToDetector( trackSeg.rich(),
+                                   trackSeg.bestPoint(),
+                                   trackDir,
+                                   photon,
+                                   traceMode );
+    if ( traceMode.traceWasOK(result) )
     {
 
       // Ray traced hit point on PDs, global

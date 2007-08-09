@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.6 2007-02-02 10:08:36 jonrob Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.7 2007-08-09 16:20:32 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -76,8 +76,12 @@ StatusCode SummaryQC::execute()
   debug() << "Execute" << endreq;
 
   // Try and load the Summary data
+  if ( !exist<LHCb::RichSummaryTracks>(m_summaryLoc) )
+  {
+    return Warning( "No RichSummaryTracks at '"+m_summaryLoc+"'", StatusCode::SUCCESS );
+  }
   const LHCb::RichSummaryTracks * sumTracks = get<LHCb::RichSummaryTracks>(m_summaryLoc);
-
+  
   // temporary tallies
   unsigned int nTracks(0);
   std::vector<unsigned> nSegments(Rich::NRadiatorTypes,0), nPhotons(Rich::NRadiatorTypes,0);

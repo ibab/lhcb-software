@@ -5,15 +5,15 @@
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.7 2007-06-01 09:03:05 cattanem Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.8 2007-08-09 16:17:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //---------------------------------------------------------------------------
 
-#ifndef RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H
-#define RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H 1
+#ifndef RICHRECMONITOR_CherenkovAngleMonitor_H
+#define RICHRECMONITOR_CherenkovAngleMonitor_H 1
 
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"
@@ -82,4 +82,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H
+#endif // RICHRECMONITOR_CherenkovAngleMonitor_H

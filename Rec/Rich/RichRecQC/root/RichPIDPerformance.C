@@ -173,7 +173,7 @@ namespace RICH
                        const std::string & location,
                        const std::string & titleEx,
                        const std::string & imageName,
-                       const std::string & imageType )
+                       const std::vector<std::string> & imageType )
     {
       if (!file) { cout << "Invalid file pointer" << endl; return; }
 
@@ -204,11 +204,10 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Light ID : "+titleEx).c_str() );
+      top->SetTitle( ("Light ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->DrawCopy();
-
 
       delete top;
       delete bot;
@@ -242,8 +241,11 @@ namespace RICH
       idLabel->DrawLatex( 0.35, 0.47, ("K #rightarrow e, #mu, #pi : "+miseff+" %").c_str() );
 
       // save image file
-      //canvas->SaveAs( (prodTag+"/lightID-"+imageName+"."+imageType).c_str() );
-      RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_lightID-"+imageName+"."+imageType);
+      for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+            iType != imageType.end(); ++iType )
+      {
+        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_lightID-"+imageName+"."+(*iType));
+      }
 
       delete top;
       delete bot;
@@ -255,7 +257,7 @@ namespace RICH
                        const std::string & location,
                        const std::string & titleEx,
                        const std::string & imageName,
-                       const std::string & imageType,
+                       const std::vector<std::string> & imageType,
                        const bool superImpose = false,
                        const bool plotLabels  = true,
                        const bool saveImage = true,
@@ -293,7 +295,7 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Heavy ID : "+titleEx).c_str() );
+      top->SetTitle( ("Heavy ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->SetMarkerStyle(markType);
@@ -341,9 +343,11 @@ namespace RICH
       // save to file
       if ( saveImage )
       {
-        // save image file
-        //canvas->SaveAs( (prodTag+"/heavyID-"+imageName+"."+imageType).c_str() );
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_heavyID-"+imageName+"."+imageType );
+        for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+              iType != imageType.end(); ++iType )
+        {
+          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_heavyID-"+imageName+"."+(*iType) );
+        }
       }
 
       delete top;
@@ -356,7 +360,7 @@ namespace RICH
                           const std::string & location,
                           const std::string & titleEx,
                           const std::string & imageName,
-                          const std::string & imageType,
+                          const std::vector<std::string> & imageType,
                           const bool superImpose = false,
                           const bool plotLabels  = true,
                           const bool saveImage = true,
@@ -395,7 +399,7 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Kaon ID : "+titleEx).c_str() );
+      top->SetTitle( ("Kaon ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->SetMarkerStyle(markType);
@@ -443,9 +447,11 @@ namespace RICH
       // save to file
       if ( saveImage )
       {
-        // save image file
-        //canvas->SaveAs( (prodTag+"/kaonID-"+imageName+"."+imageType).c_str() );
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+imageType );
+        for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+              iType != imageType.end(); ++iType )
+        {
+          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
+        }
       }
 
       delete top;
@@ -458,7 +464,7 @@ namespace RICH
                       const std::string & location,
                       const std::string & titleEx,
                       const std::string & imageName,
-                      const std::string & imageType,
+                      const std::vector<std::string> & imageType,
                       const bool superImpose = false,
                       const bool plotLabels  = true,
                       const bool saveImage = true,
@@ -497,7 +503,7 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Kaon ID : "+titleEx).c_str() );
+      top->SetTitle( ("Kaon ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->SetMarkerStyle(markType);
@@ -545,9 +551,11 @@ namespace RICH
       // save to file
       if ( saveImage )
       {
-        // save image file
-        //canvas->SaveAs( (prodTag+"/kaonID-"+imageName+"."+imageType).c_str() );
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+imageType );
+        for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+              iType != imageType.end(); ++iType )
+        {
+          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
+        }
       }
 
       delete top;
@@ -560,7 +568,7 @@ namespace RICH
                       const std::string & location,
                       const std::string & titleEx,
                       const std::string & imageName,
-                      const std::string & imageType )
+                      const std::vector<std::string> & imageType )
     {
       if (!file) { cout << "Invalid file pointer" << endl; return; }
 
@@ -589,7 +597,7 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Pion ID : "+titleEx).c_str() );
+      top->SetTitle( ("Pion ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->DrawCopy();
@@ -624,8 +632,11 @@ namespace RICH
       idLabel->DrawLatex( 0.35, 0.47, ("K #rightarrow #pi : "+miseff+" %").c_str() );
 
       // save image file
-      //canvas->SaveAs( (prodTag+"/pionID-"+imageName+"."+imageType).c_str() );
-      RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_pionID-"+imageName+"."+imageType );
+      for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+            iType != imageType.end(); ++iType )
+      {
+        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_pionID-"+imageName+"."+(*iType) );
+      }
 
       delete top;
       delete bot;
@@ -637,7 +648,7 @@ namespace RICH
                         const std::string & location,
                         const std::string & titleEx,
                         const std::string & imageName,
-                        const std::string & imageType )
+                        const std::vector<std::string> & imageType )
     {
       if (!file) { cout << "Invalid file pointer" << endl; return; }
 
@@ -666,7 +677,7 @@ namespace RICH
       top->SetMinimum(0);
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
-      top->SetTitle( ("Proton ID : "+titleEx).c_str() );
+      top->SetTitle( ("Proton ID | "+titleEx).c_str() );
       top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->DrawCopy();
@@ -701,8 +712,11 @@ namespace RICH
       idLabel->DrawLatex( 0.35, 0.47, ("K #rightarrow Pr : "+miseff+" %").c_str() );
 
       // save image file
-      //canvas->SaveAs( (prodTag+"/protonID-"+imageName+"."+imageType).c_str() );
-      RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_protonID-"+imageName+"."+imageType );
+      for ( std::vector<std::string>::const_iterator iType = imageType.begin();
+            iType != imageType.end(); ++iType )
+      {
+        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_protonID-"+imageName+"."+(*iType) );
+      }
 
       delete top;
       delete bot;
@@ -714,7 +728,7 @@ namespace RICH
                          const std::string & location,
                          const std::string & titleEx,
                          const std::string & imageName,
-                         const std::string & imageType )
+                         const std::vector<std::string> & imageType )
     {
       heavyIDPerf  ( file, prodTag, location, titleEx, imageName, imageType );
       lightIDPerf  ( file, prodTag, location, titleEx, imageName, imageType );
@@ -727,7 +741,7 @@ namespace RICH
                                const std::string & prodTag,
                                const std::string & titleEx,
                                const std::string & imageName,
-                               const std::string & imageType )
+                               const std::vector<std::string> & imageType )
     {
       heavyIDPerf ( file, prodTag, "RICH/PIDQC/ALL/POSITIVE/2TO100", titleEx, imageName, imageType, false, true, true, 20, 0.3, 0.57, 0.47, "#bullet +ve " );
       heavyIDPerf ( file, prodTag, "RICH/PIDQC/ALL/NEGATIVE/2TO100", titleEx, imageName, imageType, true,  true, true, 24, 0.3, 0.52, 0.42, "#circ -ve " );
@@ -737,213 +751,187 @@ namespace RICH
 
     void allTracks( TFile * pFile,
                     const std::string & prodTag,
-                    const std::string & titletag )
+                    const std::string & titletag,
+                    const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO100", "All Tracks"+titletag, "all_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO100", "All Tracks"+titletag, "all_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO100", "All Tracks"+titletag, "all_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO10", "All Tracks"+titletag,  "all_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO10", "All Tracks"+titletag,  "all_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO10", "All Tracks"+titletag,  "all_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/10TO70", "All Tracks"+titletag, "all_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/10TO70", "All Tracks"+titletag, "all_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/10TO70", "All Tracks"+titletag, "all_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/70TO100", "All Tracks"+titletag, "all_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/70TO100", "All Tracks"+titletag, "all_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/70TO100", "All Tracks"+titletag, "all_70to100GeV", imageType );
       // pos/neg
-      posNegHeavyIDCompare( pFile, prodTag, "All Tracks", "all_2to100GeV_posneg", "png" );
-      posNegHeavyIDCompare( pFile, prodTag, "All Tracks", "all_2to100GeV_posneg", "eps" );
+      posNegHeavyIDCompare( pFile, prodTag, "All Tracks", "all_2to100GeV_posneg", imageType );
     }
 
     void forwardTracks( TFile * pFile,
                         const std::string & prodTag,
-                        const std::string & titletag )
+                        const std::string & titletag,
+                        const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO100", "Forward Tracks"+titletag, "frwd_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO100", "Forward Tracks"+titletag, "frwd_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO100", "Forward Tracks"+titletag, "frwd_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO10", "Forward Tracks"+titletag,  "frwd_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO10", "Forward Tracks"+titletag,  "frwd_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/2TO10", "Forward Tracks"+titletag,  "frwd_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/10TO70", "Forward Tracks"+titletag, "frwd_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/10TO70", "Forward Tracks"+titletag, "frwd_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/10TO70", "Forward Tracks"+titletag, "frwd_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/70TO100", "Forward Tracks"+titletag, "frwd_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/70TO100", "Forward Tracks"+titletag, "frwd_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/FRWD/70TO100", "Forward Tracks"+titletag, "frwd_70to100GeV", imageType );
     }
 
     void matchTracks( TFile * pFile,
                       const std::string & prodTag,
-                      const std::string & titletag )
+                      const std::string & titletag,
+                      const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO100", "Match Tracks"+titletag, "match_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO100", "Match Tracks"+titletag, "match_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO100", "Match Tracks"+titletag, "match_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO10", "Match Tracks"+titletag,  "match_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO10", "Match Tracks"+titletag,  "match_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/2TO10", "Match Tracks"+titletag,  "match_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/10TO70", "Match Tracks"+titletag, "match_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/10TO70", "Match Tracks"+titletag, "match_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/10TO70", "Match Tracks"+titletag, "match_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/70TO100", "Match Tracks"+titletag, "match_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/70TO100", "Match Tracks"+titletag, "match_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/MATCH/70TO100", "Match Tracks"+titletag, "match_70to100GeV", imageType );
     }
 
     void longTracks( TFile * pFile,
                      const std::string & prodTag,
-                     const std::string & titletag )
+                     const std::string & titletag,
+                     const std::vector<std::string> & imageType )
     {
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO100", "Long Tracks"+titletag, "long_dll1_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO100", "Long Tracks"+titletag, "long_dll1_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO100", "Long Tracks"+titletag, "long_dll1_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO10", "Long Tracks"+titletag,  "long_dll1_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO10", "Long Tracks"+titletag,  "long_dll1_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO10", "Long Tracks"+titletag,  "long_dll1_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/10TO70", "Long Tracks"+titletag, "long_dll1_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/10TO70", "Long Tracks"+titletag, "long_dll1_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/10TO70", "Long Tracks"+titletag, "long_dll1_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/70TO100", "Long Tracks"+titletag, "long_dll1_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/70TO100", "Long Tracks"+titletag, "long_dll1_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/70TO100", "Long Tracks"+titletag, "long_dll1_70to100GeV", imageType );
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO100", "Long Tracks"+titletag, "long_dll1pt05_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO100", "Long Tracks"+titletag, "long_dll1pt05_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO100", "Long Tracks"+titletag, "long_dll1pt05_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO10", "Long Tracks"+titletag,  "long_dll1pt05_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO10", "Long Tracks"+titletag,  "long_dll1pt05_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO10", "Long Tracks"+titletag,  "long_dll1pt05_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/10TO70", "Long Tracks"+titletag, "long_dll1pt05_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/10TO70", "Long Tracks"+titletag, "long_dll1pt05_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/10TO70", "Long Tracks"+titletag, "long_dll1pt05_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/70TO100", "Long Tracks"+titletag, "long_dll1pt05_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/70TO100", "Long Tracks"+titletag, "long_dll1pt05_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/70TO100", "Long Tracks"+titletag, "long_dll1pt05_70to100GeV", imageType );
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO100", "Long Tracks"+titletag, "long_dll2_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO100", "Long Tracks"+titletag, "long_dll2_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO100", "Long Tracks"+titletag, "long_dll2_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO10", "Long Tracks"+titletag,  "long_dll2_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO10", "Long Tracks"+titletag,  "long_dll2_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO10", "Long Tracks"+titletag,  "long_dll2_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/10TO70", "Long Tracks"+titletag, "long_dll2_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/10TO70", "Long Tracks"+titletag, "long_dll2_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/10TO70", "Long Tracks"+titletag, "long_dll2_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/70TO100", "Long Tracks"+titletag, "long_dll2_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/70TO100", "Long Tracks"+titletag, "long_dll2_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/70TO100", "Long Tracks"+titletag, "long_dll2_70to100GeV", imageType );
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO100", "Long Tracks"+titletag, "long_dll2pt05_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO100", "Long Tracks"+titletag, "long_dll2pt05_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO100", "Long Tracks"+titletag, "long_dll2pt05_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO10", "Long Tracks"+titletag,  "long_dll2pt05_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO10", "Long Tracks"+titletag,  "long_dll2pt05_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO10", "Long Tracks"+titletag,  "long_dll2pt05_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/10TO70", "Long Tracks"+titletag, "long_dll2pt05_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/10TO70", "Long Tracks"+titletag, "long_dll2pt05_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/10TO70", "Long Tracks"+titletag, "long_dll2pt05_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/70TO100", "Long Tracks"+titletag, "long_dll2pt05_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/70TO100", "Long Tracks"+titletag, "long_dll2pt05_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/70TO100", "Long Tracks"+titletag, "long_dll2pt05_70to100GeV", imageType );
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO100", "Long Tracks"+titletag, "long_dll5_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO100", "Long Tracks"+titletag, "long_dll5_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO100", "Long Tracks"+titletag, "long_dll5_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO10", "Long Tracks"+titletag,  "long_dll5_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO10", "Long Tracks"+titletag,  "long_dll5_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO10", "Long Tracks"+titletag,  "long_dll5_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/10TO70", "Long Tracks"+titletag, "long_dll5_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/10TO70", "Long Tracks"+titletag, "long_dll5_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/10TO70", "Long Tracks"+titletag, "long_dll5_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/70TO100", "Long Tracks"+titletag, "long_dll5_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/70TO100", "Long Tracks"+titletag, "long_dll5_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/70TO100", "Long Tracks"+titletag, "long_dll5_70to100GeV", imageType );
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO100", "Long Tracks"+titletag, "long_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO100", "Long Tracks"+titletag, "long_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO100", "Long Tracks"+titletag, "long_2to100GeV", imageType );
+      // 3 - 100 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/3TO100", "Long Tracks"+titletag, "long_3to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO10", "Long Tracks"+titletag,  "long_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO10", "Long Tracks"+titletag,  "long_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO10", "Long Tracks"+titletag,  "long_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/10TO70", "Long Tracks"+titletag, "long_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/10TO70", "Long Tracks"+titletag, "long_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/10TO70", "Long Tracks"+titletag, "long_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/70TO100", "Long Tracks"+titletag, "long_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/70TO100", "Long Tracks"+titletag, "long_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/70TO100", "Long Tracks"+titletag, "long_70to100GeV", imageType );
+   
+
+      // 2 - 100 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/2TO100", "Long Tracks"+titletag, "long_pt05_2to100GeV", imageType );
+      // 3 - 100 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/3TO100", "Long Tracks"+titletag, "long_pt05_3to100GeV", imageType );
+      // 2 - 10 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/2TO10", "Long Tracks"+titletag,  "long_pt05_2to10GeV",  imageType );
+      // 10 - 70 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/10TO70", "Long Tracks"+titletag, "long_pt05_10to70GeV", imageType );
+      // 70 - 100 GeV
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/70TO100", "Long Tracks"+titletag, "long_pt05_70to100GeV", imageType );
+ 
 
     }
 
     void seedTracks( TFile * pFile,
                      const std::string & prodTag,
-                     const std::string & titletag )
+                     const std::string & titletag,
+                     const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO100", "Seed Tracks"+titletag, "seed_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO100", "Seed Tracks"+titletag, "seed_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO100", "Seed Tracks"+titletag, "seed_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO10", "Seed Tracks"+titletag,  "seed_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO10", "Seed Tracks"+titletag,  "seed_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/2TO10", "Seed Tracks"+titletag,  "seed_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/10TO70", "Seed Tracks"+titletag, "seed_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/10TO70", "Seed Tracks"+titletag, "seed_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/10TO70", "Seed Tracks"+titletag, "seed_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/70TO100", "Seed Tracks"+titletag, "seed_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/70TO100", "Seed Tracks"+titletag, "seed_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/SEED/70TO100", "Seed Tracks"+titletag, "seed_70to100GeV", imageType );
     }
 
     void ksTracks( TFile * pFile,
                    const std::string & prodTag,
-                   const std::string & titletag )
+                   const std::string & titletag,
+                   const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO100", "Ks Tracks"+titletag, "kstracks_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO100", "Ks Tracks"+titletag, "kstracks_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO100", "Ks Tracks"+titletag, "kstracks_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO10", "Ks Tracks"+titletag,  "kstracks_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO10", "Ks Tracks"+titletag,  "kstracks_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/2TO10", "Ks Tracks"+titletag,  "kstracks_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/10TO70", "Ks Tracks"+titletag, "kstracks_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/10TO70", "Ks Tracks"+titletag, "kstracks_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/10TO70", "Ks Tracks"+titletag, "kstracks_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/70TO100", "Ks Tracks"+titletag, "kstracks_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/70TO100", "Ks Tracks"+titletag, "kstracks_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/KSTRACKS/70TO100", "Ks Tracks"+titletag, "kstracks_70to100GeV", imageType );
     }
 
     void vttTracks( TFile * pFile,
                     const std::string & prodTag,
-                    const std::string & titletag )
+                    const std::string & titletag,
+                    const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO100", "VTT Tracks"+titletag, "vtt_2to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO100", "VTT Tracks"+titletag, "vtt_2to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO100", "VTT Tracks"+titletag, "vtt_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO10", "VTT Tracks"+titletag,  "vtt_2to10GeV",  "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO10", "VTT Tracks"+titletag,  "vtt_2to10GeV",  "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/2TO10", "VTT Tracks"+titletag,  "vtt_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/10TO70", "VTT Tracks"+titletag, "vtt_10to70GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/10TO70", "VTT Tracks"+titletag, "vtt_10to70GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/10TO70", "VTT Tracks"+titletag, "vtt_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/70TO100", "VTT Tracks"+titletag, "vtt_70to100GeV", "png" );
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/70TO100", "VTT Tracks"+titletag, "vtt_70to100GeV", "eps" );
+      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/VTT/70TO100", "VTT Tracks"+titletag, "vtt_70to100GeV", imageType );
     }
 
     void allPlots( TFile * pFile,
                    const std::string & filetag,
-                   const std::string & titletag )
+                   const std::string & titletag,
+                   const std::vector<std::string> & imageType )
     {
       gSystem->Exec( ("mkdir -p "+filetag).c_str() );
       // make the plots
-      //allTracks     ( pFile, filetag, titletag );
-      longTracks    ( pFile, filetag, titletag );
-      //forwardTracks ( pFile, filetag, titletag );
-      //matchTracks   ( pFile, filetag, titletag );
-      //seedTracks    ( pFile, filetag, titletag );
-      //vttTracks     ( pFile, filetag, titletag );
-      //ksTracks      ( pFile, filetag, titletag );
+      allTracks     ( pFile, filetag, titletag, imageType );
+      longTracks    ( pFile, filetag, titletag, imageType );
+      forwardTracks ( pFile, filetag, titletag, imageType );
+      matchTracks   ( pFile, filetag, titletag, imageType );
+      seedTracks    ( pFile, filetag, titletag, imageType );
+      vttTracks     ( pFile, filetag, titletag, imageType );
+      ksTracks      ( pFile, filetag, titletag, imageType );
     }
 
     // shortcut methods
@@ -953,7 +941,8 @@ namespace RICH
                       const std::string & aerofile,
                       const std::string & c4f10file,
                       const std::string & cf4file,
-                      const std::string & allfile )
+                      const std::string & allfile,
+                      const std::vector<std::string> & imageType )
     {
       // load files
       TFile * pFile1 = TFile::Open(allfile.c_str());
@@ -961,16 +950,11 @@ namespace RICH
       TFile * pFile3 = TFile::Open(c4f10file.c_str());
       TFile * pFile4 = TFile::Open(cf4file.c_str());
 
-      // make the eps figure
-      heavyIDPerf ( pFile2, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "eps", false, false, false, 28 );
-      heavyIDPerf ( pFile3, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "eps", true,  false, false, 25 );
-      heavyIDPerf ( pFile4, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "eps", true,  false, false, 26 );
-      heavyIDPerf ( pFile1, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "eps", true,  false, true,  20 );
       // make the png figure
-      heavyIDPerf ( pFile2, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "png", false, false, false, 28 );
-      heavyIDPerf ( pFile3, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "png", true,  false, false, 25 );
-      heavyIDPerf ( pFile4, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "png", true,  false, false, 26 );
-      heavyIDPerf ( pFile1, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", "png", true,  false, true,  20 );
+      heavyIDPerf ( pFile2, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", imageType, false, false, false, 28 );
+      heavyIDPerf ( pFile3, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", imageType, true,  false, false, 25 );
+      heavyIDPerf ( pFile4, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", imageType, true,  false, false, 26 );
+      heavyIDPerf ( pFile1, tag, "RICH/PIDQC/FRWD/2TO100", "Radiator Contributions"+filetag, "frwd_radCompare", imageType, true,  false, true,  20 );
 
       // close files
       pFile1->Close();

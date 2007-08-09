@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.11 2007-04-23 13:25:15 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.12 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,8 +33,7 @@ PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
     m_idTool         ( NULL ),
-    m_richSys        ( NULL ),
-    m_geomTool       ( NULL ) { }
+    m_richSys        ( NULL ) { }
 
 // Destructor
 PixelPositionMonitor::~PixelPositionMonitor() { }
@@ -50,7 +49,6 @@ StatusCode PixelPositionMonitor::initialize()
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
   acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
   acquireTool( "RichSmartIDTool", m_idTool,   0, true );
-  acquireTool( "RichRecGeometry",       m_geomTool    );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
@@ -116,12 +114,12 @@ StatusCode PixelPositionMonitor::execute()
                 << "     local            " << lPos << endreq;
       if ( rich == Rich::Rich1)
       {
-        verbose() << "     local Aerogel    " << m_geomTool->radCorrLocalPos(pixel,Rich::Aerogel) << endreq
-                  << "     local Rich1Gas   " << m_geomTool->radCorrLocalPos(pixel,Rich::Rich1Gas) << endreq;
+        verbose() << "     local Aerogel    " << pixel->radCorrLocalPositions().position(Rich::Aerogel) << endreq
+                  << "     local Rich1Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich1Gas) << endreq;
       }
       else
       {
-        verbose() << "     local Rich2Gas   " << m_geomTool->radCorrLocalPos(pixel,Rich::Rich2Gas) << endreq;
+        verbose() << "     local Rich2Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich2Gas) << endreq;
       }
       verbose() << "     HPD centre       " << hpdGlo << endreq
                 << "     local HPD centre " << hpdLoc << endreq;

@@ -69,17 +69,23 @@ namespace RICH
     // load data file
     TFile * file = TFile::Open(hfile.c_str());
     if ( !file ) return;
+    std::cout << "Opened file : " << hfile << std::endl;
+
+    // file picture types
+    std::vector<std::string> imageTypes;
+    imageTypes.push_back( "png" );
+    //imageTypes.push_back( "eps" );
 
     // create figures from resolution plots
     //createAllFigures( file, tag, title );
 
     // PID curves
-    RICH::PIDPerformance::allPlots( file, tag, title );
+    RICH::PIDPerformance::allPlots( file, tag, title, imageTypes );
 
     // Number photons
     //RICH::NCKPhotons::createAllFigures( file, tag, title );
 
-    pFile->Close();
+    file->Close();
   }
 
 }

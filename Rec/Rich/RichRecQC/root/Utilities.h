@@ -12,7 +12,7 @@
 namespace RichUtils
 {
   void systemSaveImage ( TCanvas * canvas,
-                         const std::string name );
+                         const std::string & name );
 }
 
 #endif 

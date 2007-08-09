@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPhotonRecoTestAlg
  *
- *  $Id: RichPhotonRecoTestAlg.cpp,v 1.5 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.cpp,v 1.6 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -173,7 +173,8 @@ StatusCode PhotonRecoTestAlg::execute()
         LHCb::RichGeomPhoton photon;
         debug() << "Data Point " << *iD << endreq;
         debug() << "Track Segment " << *iS << endreq;
-        const StatusCode sc = m_photonReco->reconstructPhoton( *iS, *iD, photon );
+        const StatusCode sc = m_photonReco->reconstructPhoton( *iS, *iD, 
+                                                               photon, Rich::HPDPixelCluster() );
         debug() << "Status " << sc << " Photon " << photon << endreq;
       }
     }

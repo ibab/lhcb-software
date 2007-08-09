@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.62 2007-07-09 17:11:49 cattanem Exp $
+ *  $Id: RichPIDQC.cpp,v 1.63 2007-08-09 16:20:32 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -27,12 +27,22 @@ DECLARE_ALGORITHM_FACTORY( PIDQC );
 // Standard constructor, initializes variables
 PIDQC::PIDQC( const std::string& name,
               ISvcLocator* pSvcLocator )
-  : Rich::Rec::AlgBase    ( name, pSvcLocator ),
-    m_requiredRads ( Rich::NRadiatorTypes )
+  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+    m_pidTDS           ( LHCb::RichPIDLocation::Default ),
+    m_requiredRads     ( Rich::NRadiatorTypes )
 {
 
+  if      ( context() == "Offline" )
+  {
+    m_pidTDS = LHCb::RichPIDLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_pidTDS = LHCb::RichPIDLocation::HLT;
+  }
+
   // Declare job options
-  declareProperty( "InputPIDs",   m_pidTDS   = LHCb::RichPIDLocation::Default );
+  declareProperty( "InputPIDs",   m_pidTDS );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
   declareProperty( "HistoPath",   m_hstPth   = "RICH/PIDQC/" );
   declareProperty( "MCTruth",     m_truth    = true );
@@ -596,7 +606,7 @@ StatusCode PIDQC::finalize()
     info() << " % ID rate   |  Events    : "
            << boost::format( "%6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
       evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
-    
+
     for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
     {
       const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );

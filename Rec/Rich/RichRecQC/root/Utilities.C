@@ -4,10 +4,18 @@
 namespace RichUtils
 {
 
+  // just use canvas method
+  void systemSaveImage ( TCanvas * canvas,
+                         const std::string & name )
+  {
+    canvas->SaveAs( name.c_str() );
+  }
+
+  /*
   // method to save image files from a canvas
   // uses linux "convert" command as built in image creation isn't very good
   void systemSaveImage ( TCanvas * canvas,
-                         const std::string name )
+                         const std::string & name )
   {
 
     // Find "." in file name
@@ -20,10 +28,11 @@ namespace RichUtils
     {
       // create eps file
       canvas->SaveAs( name.c_str() );
-      return;
     }
     else
     {
+
+      //Use convert as it seems better than built in root image files
       // create basename
       const std::string baseName = name.substr(0,dot);
       // crate temp eps file
@@ -36,8 +45,10 @@ namespace RichUtils
       gSystem->Exec( command.c_str() );
       // delete temp eps file
       gSystem->Exec( ("rm "+tmpEps).c_str() );
+
     }
 
   }
+  */
 
 }

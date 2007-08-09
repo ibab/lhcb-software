@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.10 2007-06-01 09:03:05 cattanem Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.11 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,7 +35,6 @@
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "MCInterfaces/IRichMCTruthTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichRecBase/IRichRecGeomTool.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
@@ -94,9 +93,6 @@ namespace Rich
 
         /// Pointer to RICH system detector element
         const DeRichSystem * m_richSys;
-
-        /// Simple geometrical questions
-        const IGeomTool * m_geomTool;   
 
       };
 

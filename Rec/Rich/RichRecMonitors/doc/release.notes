@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichRecMonitor
 ! Responsible : Chris Jones
-! Purpose     : 
+! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+
+! 2007-08-09 - Chris Jones
+ - Add new monitor algorithm that produces an ntuple containing information 
+   that allows correlations between RichPID results to be studied.
+ - Update algorithm that produces MC CK rings to correctly apply refraction
+   correction for aerogel rings.
+ - adapt to changes in radiator correction location position method.
 
 !====================== RichRecMonitors v2r11 2007-06-01 =====================
 ! 2007-06-01 - Marco Cattaneo

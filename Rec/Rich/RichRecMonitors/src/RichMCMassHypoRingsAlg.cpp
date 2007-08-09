@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.13 2007-05-08 12:12:57 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.14 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -81,6 +81,7 @@ StatusCode MCMassHypoRingsAlg::initialize()
   acquireTool( "RichRayTraceCKCone",  m_rayTrace );
 
   /// Ray-tracing configuration object
+  m_traceMode.setAeroRefraction ( true );
   info() << "MCTrack " << m_traceMode << endreq;
 
   return sc;

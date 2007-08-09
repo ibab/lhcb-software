@@ -1,8 +1,9 @@
-// $Id: RichNCKPhotons.h,v 1.1 2007-07-25 14:44:22 jonrob Exp $
+// $Id: RichNCKPhotons.h,v 1.2 2007-08-09 16:20:32 jonrob Exp $
 #ifndef MACROS_RICHNCKPHOTONS_H
 #define MACROS_RICHNCKPHOTONS_H 1
 
 #include <iostream>
+#include <map>
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TStyle.h"

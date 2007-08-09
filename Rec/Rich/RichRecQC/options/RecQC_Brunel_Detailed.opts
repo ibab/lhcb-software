@@ -1,12 +1,9 @@
 // Extensions to standard monitoring for experts
 
-// MC tools
-//ToolSvc.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
-//ToolSvc.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
-
 // Monitors for different track types
 #include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks.opts"
 #include "$RICHRECQCOPTS/pid/LongTracks_Para.opts"
+
 #include "$RICHRECQCOPTS/pid/BrunelMoni_ForwardTracks.opts"
 #include "$RICHRECQCOPTS/pid/ForwardTracks_Para.opts"
 #include "$RICHRECQCOPTS/pid/BrunelMoni_SeedTracks.opts"
@@ -37,8 +34,6 @@
 #include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
 #include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks_dllcut.opts"
 #include "$RICHRECQCOPTS/pid/LongTracks_Para_dllcut.opts"
-
-// Long tracks with Pt cuts
 
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",

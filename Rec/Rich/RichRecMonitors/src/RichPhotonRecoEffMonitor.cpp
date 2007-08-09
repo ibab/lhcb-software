@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.11 2007-04-23 13:25:15 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.12 2007-08-09 16:17:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -116,7 +116,7 @@ StatusCode PhotonRecoEffMonitor::execute()
           iPix != pixelCreator()->end(rich); ++iPix )
     {
       LHCb::RichRecPixel * pixel = *iPix;
-      const Gaudi::XYZPoint & locPos = m_geomTool->radCorrLocalPos(pixel,rad);
+      const Gaudi::XYZPoint & locPos = pixel->radCorrLocalPositions().position(rad);
 
       // Is this a true Cherenkov Photon
       const LHCb::MCParticle * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
