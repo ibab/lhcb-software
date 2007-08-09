@@ -11,7 +11,7 @@
 
 GlobalPID::PIDType GlobalPID::getMcType() const
 {
-  if      ( 0    == MCParticleType     ) { return NoMCInfo; }
+  if      ( 0    == MCParticleType ) { return NoMCInfo; }
   else if ( 11   == MCParticleType || 11    == MCParticleType ) { return Electron; }
   else if ( 13   == MCParticleType || -13   == MCParticleType ) { return Muon; }
   else if ( 211  == MCParticleType || -211  == MCParticleType ) { return Pion; }
@@ -395,7 +395,8 @@ double GlobalPID::variable( const Variable var ) const
 
 void GlobalPID::fillLabelBox() const
 {
-  ostringstream line1,line2,line3,line4,line5;
+  ostringstream line0,line1,line2,line3,line4,line5;
+  line0 << config.subtitle;
   line1 << name(config.var1);
   if ( config.var2 != NoVar ) line1 << "-" << name(config.var2);
   line1 << " " << config.cutType << " cut";
@@ -428,6 +429,8 @@ void GlobalPID::fillLabelBox() const
   const double xOffset(0.12), yInc(config.textSize);
   static double yOffset(0);
   if ( !config.superImpose ) yOffset = 0.88;
+  if ( !config.subtitle.empty() )
+  { text->DrawText( xOffset, yOffset-=yInc, line0.str().c_str() ); }
   text->DrawText( xOffset, yOffset-=yInc, line1.str().c_str() );
   if ( config.secvar1 != NoVar )
   { text->DrawText( xOffset, yOffset-=yInc, line2.str().c_str() ); }

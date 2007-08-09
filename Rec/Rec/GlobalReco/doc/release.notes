@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Update charged protoparticle maker to use context() to determine the
+   RichPID location in the TES.
+
 !========================== GlobalReco v6r11 2007-07-16 ======================
 ! 2007-07-13 - Chris Jones
  - Set the new MuonTrack SmartRef in MuonPID data objects when recreating them 

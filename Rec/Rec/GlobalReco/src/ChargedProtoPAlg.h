@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.26 2007-05-23 13:38:20 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.27 2007-08-09 16:46:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -90,9 +90,9 @@ private: // methods
   bool getHcalData();
 
   // Add extra info from CaloDigits (Spd+Prs)
-  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Spd value
-  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Prs value
-  double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Ecal value
+  double CaloSpd  ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Spd value
+  double CaloPrs  ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Prs value
+  double CaloEcal ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Ecal value
 
   /// Add Rich information to the given ProtoParticle
   bool addRich( LHCb::ProtoParticle * proto ) const;

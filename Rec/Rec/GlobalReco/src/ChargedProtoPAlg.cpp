@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.57 2007-05-25 16:26:03 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.58 2007-08-09 16:46:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -31,18 +31,28 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoPAlg );
 ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_tracksPath   ( TrackLocation::Default ),
+    m_richPath     ( RichPIDLocation::Default ),
+    m_muonPath     ( MuonPIDLocation::Default ),
     m_protos       ( NULL ),
     m_trSel        ( NULL ),
     m_velodEdx     ( NULL ),
     m_nEvts        ( 0    )
 {
+  // context specific locations
+  if      ( context() == "Offline" )
+  {
+    m_richPath = LHCb::RichPIDLocation::Offline;
+  }
+  else if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_richPath = LHCb::RichPIDLocation::HLT;
+  }
+
   // Input data
-  declareProperty( "InputTrackLocation",
-                   m_tracksPath = TrackLocation::Default );
-  declareProperty( "InputRichPIDLocation",
-                   m_richPath = RichPIDLocation::Default );
-  declareProperty( "InputMuonPIDLocation",
-                   m_muonPath = MuonPIDLocation::Default );
+  declareProperty( "InputTrackLocation", m_tracksPath );
+  declareProperty( "InputRichPIDLocation", m_richPath );
+  declareProperty( "InputMuonPIDLocation", m_muonPath );
 
   // Calo PID : activate sub-det PID
   declareProperty("CaloPrsPID",  m_PrsPID    =   true  );
@@ -124,7 +134,7 @@ StatusCode ChargedProtoPAlg::execute()
   // ProtoParticle container
   if ( exist<ProtoParticles>(m_protoPath) )
   {
-    // get existing contianer, clear, and reuse
+    // get existing container, clear, and reuse
     Warning( "Existing ProtoParticle container at " + m_protoPath + 
              " found -> Will replace", StatusCode::SUCCESS );
     m_protos = get<ProtoParticles>(m_protoPath);

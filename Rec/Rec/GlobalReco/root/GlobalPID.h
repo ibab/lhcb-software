@@ -103,6 +103,7 @@ public: // classes
         logX(false),logY(true),
         maxLabels(4),
         title("UnDefined Title"),
+        subtitle(""),
         recreateCombinedDLLs(false),
         superImpose(false),writeCutValues(true),
         color(kBlack),textSize(0.024),
@@ -122,7 +123,7 @@ public: // classes
     double secondaryCut;
     bool logX,logY;
     int maxLabels;
-    std::string title;
+    std::string title, subtitle;
     bool recreateCombinedDLLs;
     bool superImpose;
     bool writeCutValues;
