@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.29 2007-04-23 12:44:03 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.30 2007-08-09 15:43:48 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -70,18 +70,19 @@ namespace Rich
      *  @param[out] photon     The result of the raytracing, encapsulated as a RichGeomPhoton
      *  @param[in]  mode       The ray tracing mode configuration
      *  @param[in]  forcedSide If configured to do so, the forced side to use
+     *  @param[in]  photonEnergy If needed (for instance for refraction corrections) the photon
+     *                           energy to assume.
      *
      *  @return Status of the ray tracing
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
      */
-    virtual StatusCode
+    virtual LHCb::RichTraceMode::RayTraceResult
     traceToDetector ( const Rich::DetectorType rich,
                       const Gaudi::XYZPoint& startPoint,
                       const Gaudi::XYZVector& startDir,
                       LHCb::RichGeomPhoton& photon,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide = Rich::top ) const = 0;
+                      const Rich::Side forcedSide    = Rich::top,
+                      const double photonEnergy      = 0 ) const = 0;
 
     /** For a given detector, raytraces a given direction from a given point to
      *  the photo detectors. Returns the result in the form of a RichGeomPhoton
@@ -92,18 +93,19 @@ namespace Rich
      *  @param[out] hitPosition The result of the tracing, the hit point on the HPD panel
      *  @param[in]  mode        The ray tracing mode configuration
      *  @param[in]  forcedSide  If configured to do so, the forced side to use
+     *  @param[in]  photonEnergy If needed (for instance for refraction corrections) the photon
+     *                           energy to assume.
      *
      *  @return Status of the ray tracing
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
      */
-    virtual StatusCode
+    virtual LHCb::RichTraceMode::RayTraceResult
     traceToDetector ( const Rich::DetectorType rich,
                       const Gaudi::XYZPoint& startPoint,
                       const Gaudi::XYZVector& startDir,
                       Gaudi::XYZPoint& hitPosition,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide = Rich::top ) const = 0;
+                      const Rich::Side forcedSide    = Rich::top,
+                      const double photonEnergy      = 0 ) const = 0;
 
     /** Raytraces from a point in the detector panel back to the spherical mirror
      *  returning the mirror intersection point and the direction a track would have

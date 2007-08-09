@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::IParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.5 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichParticleProperties.h,v 1.6 2007-08-09 15:43:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -92,6 +92,9 @@ namespace Rich
      */
     virtual double thresholdMomentumSq( const Rich::ParticleIDType id,
                                         const Rich::RadiatorType rad ) const = 0;
+
+    /// Vector of the mass hypotheses to be considered
+    virtual const Rich::Particles & particleTypes() const = 0;
 
   };
 
