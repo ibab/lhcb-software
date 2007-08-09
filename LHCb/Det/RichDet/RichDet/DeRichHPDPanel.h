@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.46 2007-05-25 14:04:31 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.47 2007-08-09 15:23:28 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -46,6 +46,10 @@ class DeRichSystem;
  * RichSmartIDs to space points and finds intersections with the HPDs
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *
+ * @todo See if the HPD planes in DeRichHPDPanel::detPlanePoint and 
+ *       DeRichHPDPanel::PDWindowPoint could be made the same. At the moment the
+ *       hits obtained from these methods are on slightly different planes.
  */
 class DeRichHPDPanel: public DetectorElement {
 
@@ -155,14 +159,13 @@ public:
    *  @param[in]  mode              The ray-tracing configuration mode
    *
    *  @return Status of intersection
-   *  @retval StatusCode::SUCCESS Intersection was successfully calculated
-   *  @retval StatusCode::FAILURE Intersection was not found
    */
-  StatusCode PDWindowPoint( const Gaudi::XYZVector& vGlobal,
-                            const Gaudi::XYZPoint& pGlobal,
-                            Gaudi::XYZPoint& windowPointGlobal,
-                            LHCb::RichSmartID& smartID, 
-                            const LHCb::RichTraceMode mode ) const;
+  LHCb::RichTraceMode::RayTraceResult
+  PDWindowPoint( const Gaudi::XYZVector& vGlobal,
+                 const Gaudi::XYZPoint& pGlobal,
+                 Gaudi::XYZPoint& windowPointGlobal,
+                 LHCb::RichSmartID& smartID, 
+                 const LHCb::RichTraceMode mode ) const;
 
   /** @brief Returns the intersection point with the detector plane given a vector
    * and a point. 
@@ -176,14 +179,13 @@ public:
    * @param[in]  mode        The ray-tracing configuration mode
    *
    * @return Intersection status
-   * @retval true  Intersection was inside the acceptance as defined by mode
-   * @retval false Intersection fell outside acceptance as defined by mode
    */
-  bool detPlanePoint( const Gaudi::XYZPoint& pGlobal,
-                      const Gaudi::XYZVector& vGlobal,
-                      Gaudi::XYZPoint& hitPosition,
-                      const LHCb::RichTraceMode mode ) const;
-
+  LHCb::RichTraceMode::RayTraceResult 
+  detPlanePoint( const Gaudi::XYZPoint& pGlobal,
+                 const Gaudi::XYZVector& vGlobal,
+                 Gaudi::XYZPoint& hitPosition,
+                 const LHCb::RichTraceMode mode ) const;
+  
   /** @brief Converts a global position to the coordinate system of the
    *  photodetector panel. 
    *
@@ -270,6 +272,17 @@ private:
       throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
     }
     return pvHPDMaster;
+  }
+
+  /// Check HPD panel acceptance
+  inline LHCb::RichTraceMode::RayTraceResult 
+  checkPanelAcc( const Gaudi::XYZPoint & point ) const
+  {
+    const double u = ( m_rich == Rich::Rich1 ? point.y() : point.x() );
+    const double v = ( m_rich == Rich::Rich1 ? point.x() : point.y() );
+    return ( ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
+               fabs(v) >= m_panelStartColPos ) ? 
+             LHCb::RichTraceMode::OutsideHPDPanel : LHCb::RichTraceMode::InHPDPanel );
   }
 
 private: // data

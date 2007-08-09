@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.9 2007-06-06 15:34:48 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.10 2007-08-09 15:23:28 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -246,13 +246,13 @@ private: // data
 
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
 
+  /// Cache the local matrix for the sensor, for speed reasons
+  Gaudi::Transform3D m_localMatrixInv;
+
   //int    rgiState[2+55];
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
-  //bool   m_UseRandomBField  ;
   double m_LongitudinalBField ;
-  //double m_RandomBFieldMinimum ;
-  //double m_RandomBFieldMaximum ;
 
 };
 
@@ -264,7 +264,8 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
 {
   // convert pixel number to silicon coordinates
   // and transform the point to get the misalignment of the Si sensor
-  detectPoint = m_deSiSensor->geometry()->localMatrix().Inverse()*pointOnSilicon(smartID);
+  //detectPoint = m_deSiSensor->geometry()->localMatrix().Inverse()*pointOnSilicon(smartID);
+  detectPoint = m_localMatrixInv * pointOnSilicon(smartID);
   detectPoint.SetZ(0.0);
   return ( m_UseHpdMagDistortions ?
            magnifyToGlobal_new( detectPoint ) :  // M.Musy 07/09/2006
