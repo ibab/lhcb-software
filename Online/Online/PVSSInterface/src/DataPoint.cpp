@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.26 2007-06-21 12:20:15 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.27 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.26 2007-06-21 12:20:15 frankm Exp $
+// $Id: DataPoint.cpp,v 1.27 2007-08-09 20:03:58 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -236,9 +236,18 @@ DataPoint::~DataPoint()   {
 
 /// load datapoint identifier
 const DpID& DataPoint::load() const  {
+  std::string nam = m_name;
   DataPoint* p = const_cast<DataPoint*>(this);
-  if ( !pvss_lookup_dpid(m_name.c_str(),p->m_id) )    {
-    throw std::invalid_argument("The datapoint:"+m_name+" does not exist!");
+  std::string::size_type idx1 = m_name.find(":");
+  if ( idx1 == std::string::npos )
+    nam = m_mgr->name()+":"+m_name;
+  else {
+    std::string::size_type idx2 = m_name.find(".");
+    if ( idx2 != std::string::npos && idx1 > idx2 )
+      nam = m_mgr->name()+":"+m_name;
+  }
+  if ( !pvss_lookup_dpid(nam.c_str(),p->m_id) )    {
+    throw std::invalid_argument("DataPoint> The datapoint:"+nam+" does not exist!");
   }
   p->m_valid = true;
   return m_id;
@@ -363,6 +372,19 @@ std::string DataPoint::elementName(const DpID& dp)   {
 /// Extract name of datapoint from online/original name
 std::string DataPoint::elementName()  const {
   return elementName(name());
+}
+
+std::string DataPoint::typeName() const {
+  if ( !m_valid ) load();
+  const DevType* typ = manager()->typeMgr()->type(m_id.type());
+  const DevType::Elements& elts = typ->elements();
+  for(DevType::Elements::const_iterator i=elts.begin(); i!= elts.end(); ++i) {
+    const DevTypeElement* e = *i;
+    if ( e->id() == m_id.element() )  {
+      return e->name();
+    }
+  }
+  return "Unknown";
 }
 
 /// Check datapoint existencs
@@ -560,11 +582,11 @@ template <typename T> void DataPoint::set(const T& val)  {
     const char* val_typ = pvss_type_name(m_val->type());
     const char* true_typ = pvss_type_name(DataValue<T>::type_id());
     if ( dbg > 0 )  {
-      std::cout << "DataPoint::set> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
+      std::cout << "DataPoint::set> " << dpname() << " Typ:" << val_typ << " - " << true_typ << std::endl;
     }
     if ( m_val->type() != DataValue<T>::type_id() )  {
       if ( dbg > 0 )  {
-        std::cout << "                " << name() << " Typ:" << typeid(T).name() << std::endl;
+        std::cout << "                " << dpname() << " Typ:" << typeid(T).name() << std::endl;
       }
       invalidConversion(typeid(T));
     }
@@ -573,8 +595,9 @@ template <typename T> void DataPoint::set(const T& val)  {
   }
   catch(const char* msg)  {
     if ( dbg > 0 )  {
-      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): "
-        << (const char*)(msg ? msg : "(Unknwon message)") << std::endl;
+      std::cout << dpname() << "> Exception in DataPoint::set(" << typeid(T).name() << "): "
+		<< (const char*)(msg ? msg : "(Unknwon message)")  << " " << typeName()
+		<< std::endl;
     }
     if ( m_val ) delete m_val;
     m_val = 0;
@@ -582,8 +605,8 @@ template <typename T> void DataPoint::set(const T& val)  {
   }
   catch(const std::exception& e)  {
     if ( dbg > 0 )  {
-      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): " 
-                << e.what() << std::endl;
+      std::cout << dpname() << "> Exception in DataPoint::set(" << typeid(T).name() << "): " 
+                << e.what() << " " << typeName() << std::endl;
     }
     if ( m_val ) delete m_val;
     m_val = 0;
@@ -591,8 +614,8 @@ template <typename T> void DataPoint::set(const T& val)  {
   }
   catch(...)  {
     if ( dbg > 0 )  {
-      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): "
-                << "[Unknown exception]" << std::endl;
+      std::cout << dpname() << "> Exception in DataPoint::set(" << typeid(T).name() << "): "
+                << "[Unknown exception] " << typeName() << std::endl;
     }
     if ( m_val ) delete m_val;
     m_val = 0;
@@ -616,10 +639,13 @@ DPListActor::DPListActor(ControlsManager* m) : m_manager(m)  {
 DPListActor::~DPListActor() {
 }
 
-bool DPListActor::lookup(const std::string& typ_nam, const DevType* typ)  {
-  if ( pvss_lookup_dpidset(typ_nam.c_str(),m_dpids,m_count,typ->id()) )  {
+bool DPListActor::lookup(const std::string& nam, const DevType* typ)  {
+  int id = (typ) ? typ->id() : 0;
+  const std::string& mn = m_manager->name();
+  std::string t = ::strncmp(nam.c_str(),mn.c_str(),mn.length())  ? mn+":"+nam : nam;
+  if ( pvss_lookup_dpidset(t.c_str(),m_dpids,m_count,id) )  {
     std::for_each(&m_dpids[0],&m_dpids[m_count],ListHandler(this));
     return true;
   }
-  throw std::runtime_error("Cannot load datapoint identifiers for type:"+typ_nam);
+  throw std::runtime_error("Cannot load datapoint identifiers for type:"+t);
 }

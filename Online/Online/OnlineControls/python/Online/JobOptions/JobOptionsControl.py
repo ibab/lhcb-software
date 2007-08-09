@@ -1,6 +1,8 @@
 import socket
-import Online.PVSS as PVSS
 import Online.Utils
+import Online.PVSS as PVSS
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 import Online.JobOptions.JobOptions as JobOptions
 
 log             = Online.Utils.log
@@ -35,6 +37,7 @@ class OptionsWriter(CommandListener):
     self.infoCreator = info
     CommandListener.__init__(self,manager,name,name,4)
     devMgr = self.manager.deviceMgr()
+    self.optionsMgr = Systems.controlsMgr(Params.jobopts_system_name)
     if not devMgr.exists(name):
       typ = self.manager.typeMgr().type('JobOptionsControl')
       if not devMgr.createDevice(name,typ,1).release():
@@ -48,15 +51,18 @@ class OptionsWriter(CommandListener):
     return self.hostType+'_'+run.runType()
 
   # ===========================================================================
-  def getParams(self, partition):
-    run = self.infoCreator.create(partition).load()
+  def getParams(self, rundp_name, partition):
+    run = self.infoCreator.create(rundp_name,partition).load()
+    # print 'getParams',rundp_name,partition,str(run)
     if run:
       tasks = []
-      activity = JobOptions.Activity(self.manager,self.activityName(run))
+      activity_name = self.activityName(run)
+      # print 'getParams',rundp_name,partition,activity_name
+      activity = JobOptions.Activity(self.optionsMgr,activity_name)
       if activity.exists():
         task_names = activity.taskNames()
         for name in task_names:
-          task = JobOptions.TaskType(self.manager,name)
+          task = JobOptions.TaskType(self.optionsMgr,name)
           if task.exists():
             tasks.append(task)
           else:
@@ -64,21 +70,28 @@ class OptionsWriter(CommandListener):
             return None
         return (run,activity,tasks)
       else:
-        error('The activity '+self.activityName(run)+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+        error('The activity '+activity_name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
         return None
     error('Information for partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
-    return self.writeOptionsFile(opts, task.name)
+    return self.writeOptionsFile(run.name, task.name, opts)
 
   # ===========================================================================
-  def writeOptionsFile(self, name, opts):
+  def writeOptionsFile(self, partition, name, opts):
+    import os
     log('###   Writing options for task: '+self.optionsDir+'/'+name,timestamp=1)
     if self.optionsDir is not None:
       try:
-        desc = open(self.optionsDir+'/'+name+'.opts','w')
+        fd = self.optionsDir+'/'+partition
+        fn = fd+'/'+name+'.opts'
+        try:
+          os.stat(fd)
+        except:
+          os.mkdir(fd)
+        desc = open(fn, 'w')
         print >>desc, opts
         desc.close()
       except Exception,X:
@@ -95,8 +108,8 @@ class OptionsWriter(CommandListener):
     return None
 
   # ===========================================================================
-  def write(self, partition):
-    res = self.getParams(partition)
+  def write(self, rundp_name, partition):
+    res = self.getParams(rundp_name,partition)
     if res:
       run, activity, tasks = res
       run_type = run.runType()
@@ -144,10 +157,11 @@ class OptionsWriter(CommandListener):
     sysName   = items[1]
     partition = items[2]
     partID    = items[3]
+    rundp_name = "ECS"+partition+":"+partition+"_RunInfo"
     result = None
     print command, sysName, partition, partID
     if command == "CONFIGURE" or command == "ALLOCATE":
-      result = self.write(partition)
+      result = self.write(rundp_name,partition)
       if result is not None:
         return self.makeAnswer('READY',answer)
     elif command == "RESET" or command == "DEALLOCATE":
@@ -229,10 +243,6 @@ class StorageOptionsWriter(OptionsWriter):
               if q > 0: s = s+','+prefix
               elif len(prefix): s = prefix
               if len(val)==2:
-                # if val[0] == "storestrm01-d1": val = ("192.167.10.11",val[1])
-                # if val[0] == "storestrm02-d1": val = ("192.167.10.12",val[1])
-                # if val[0] == "storerecv01-d1": val = ("192.167.10.1",val[1])
-                # if val[0] == "storerecv02-d1": val = ("192.167.10.2",val[1])
                 if q > 0:
                   s0 = s0 + ','+prefix
                   s1 = s1 + ','+prefix
@@ -262,7 +272,7 @@ class StorageOptionsWriter(OptionsWriter):
         qq = str(items).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
         if qq.find(',')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace(',',',\n   ')
         options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
-        if self.writeOptionsFile(items[1], options) is None:
+        if self.writeOptionsFile(run.name, items[1], options) is None:
           return None
     if done: return self
     return None
@@ -291,11 +301,11 @@ class StorageOptionsWriter(OptionsWriter):
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
   # ===========================================================================
-  def write(self, partition):
+  def write(self, rundp_name, partition):
     self.hostType = 'RECV'
-    res1 = OptionsWriter.write(self,partition)
+    res1 = OptionsWriter.write(self, rundp_name, partition)
     self.hostType = 'STREAM'
-    res2 = OptionsWriter.write(self,partition)
+    res2 = OptionsWriter.write(self, rundp_name, partition)
     if res1 is None or res2 is None: return None
     return self
 
@@ -346,10 +356,6 @@ class MonitoringOptionsWriter(OptionsWriter):
               if q > 0: s = s+','+prefix
               elif len(prefix): s = prefix
               if len(val)==2:
-                # if val[0] == "storestrm01-d1": val = ("192.167.10.11",val[1])
-                # if val[0] == "storestrm02-d1": val = ("192.167.10.12",val[1])
-                # if val[0] == "storerecv01-d1": val = ("192.167.10.1",val[1])
-                # if val[0] == "storerecv02-d1": val = ("192.167.10.2",val[1])
                 if q > 0:
                   s0 = s0 + ','+prefix
                   s1 = s1 + ','+prefix
@@ -379,7 +385,7 @@ class MonitoringOptionsWriter(OptionsWriter):
         qq = str(items).replace("'",'"').replace('[','{').replace(']','}').replace(')','}').replace('(','{').replace(',}','}')
         if qq.find(',')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace(',',',\n   ')
         options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
-        if self.writeOptionsFile(items[1], options) is None:
+        if self.writeOptionsFile(run.name, items[1], options) is None:
           return None
     if done: return self
     return None
@@ -412,11 +418,11 @@ class MonitoringOptionsWriter(OptionsWriter):
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
   # ===========================================================================
-  def write(self, partition):
+  def write(self, rundp_name, partition):
     self.hostType = 'MONRELAY'
-    res1 = OptionsWriter.write(self,partition)
+    res1 = OptionsWriter.write(self, rundp_name, partition)
     self.hostType = 'MONI'
-    res2 = OptionsWriter.write(self,partition)
+    res2 = OptionsWriter.write(self, rundp_name, partition)
     if res1 is None or res2 is None: return None
     return self
 

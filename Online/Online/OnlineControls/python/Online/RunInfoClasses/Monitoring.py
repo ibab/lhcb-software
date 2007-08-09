@@ -1,6 +1,8 @@
 import time
 import Online.PVSS as PVSS
 import Online.Utils as Utils
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 from   Online.RunInfoClasses.General import General as General
 from   Online.Streaming.PartitionInfo import PartitionInfo as PartitionInfo
 from   Online.Streaming.StreamingDescriptor import StreamingDescriptor as StreamDescriptor
@@ -90,6 +92,7 @@ class Monitoring:
     """
     self.storage = storage
     type = 'MonFarm'
+    self.streamManager  = Systems.controlsMgr(Params.storage_system_name)
     self.flag            = self.dp(type+'.monFlag')
     self.monTypes        = self.dp(type+'.monTypes')
     self.monMult         = self.dp(type+'.monMultiplicity')
@@ -203,14 +206,14 @@ class Monitoring:
         self.monTasks.data.push_back(task)
         slot = slot + 1
 
-    res = StreamDescriptor(self.manager,self.storage).getPartition(self.name)
+    res = StreamDescriptor(self.streamManager,self.storage).getPartition(self.name)
     if not res:
-      error('Failed to access storage information for partition '+self.name+' ['+str(self.storage)+']')
+      error('Failed to access stream information for partition '+self.name+' ['+str(self.storage)+']')
       return None
 
     dp, part_name, slot = res
-    part = PartitionInfo(self.manager,part_name)
-    part.load(self.manager.devReader())
+    part = PartitionInfo(self.streamManager,part_name)
+    part.load()
     recv_nodes = part.recvNodes()
     strm_nodes = part.streamNodes()
     feeders = []
@@ -353,10 +356,11 @@ class MonitoringInfo(Monitoring,General):
     Monitoring.__init__(self,storage)
 
 class MonitoringInfoCreator:
-  def __init__(self,manager,storage):
-    self.manager = manager
+  def __init__(self,storage):
     self.storage = storage
-  def create(self,partition):
-    return MonitoringInfo(self.manager,partition,self.storage)
+  def create(self,rundp_name,partition):
+    items = rundp_name.split(':')
+    mgr = Systems.controlsMgr(items[0])
+    return MonitoringInfo(mgr,partition,self.storage)
   def showPartition(self,info,partition):
     showPartition(info,partition)

@@ -1,6 +1,26 @@
+"""
+import Online.PVSSSystems as Systems
+import Online.RunInfo as RI
+import Online.RunInfoClasses.General as GEN
+import Online.RunInfoClasses.Storage as STO
+import Online.RunInfoClasses.HLTFarm as HLT
+
+m=Systems.controlsMgr('LBECS')
+g=GEN.General(m,"LHCb")
+g.show()
+s=STO.StorageInfo(m,"LHCb")
+s.show()
+f=HLT.HLTFarmInfo(m,"LHCb")
+f.show()
+r=RI.RunInfo(m,"LHCb")
+r.show()
+
+"""
+
 import time
 import Online.PVSS as PVSS
 import Online.Utils as Utils
+import Online.PVSSSystems as Systems
 from Online.RunInfoClasses.General import General as General
 from Online.RunInfoClasses.Storage import Storage as Storage
 from Online.RunInfoClasses.HLTFarm import HLTFarm as HLTFarm
@@ -38,11 +58,10 @@ class RunInfo(General,Storage,HLTFarm):
 
         @return reference to initialized object
     """
-    self.reader      = manager.devReader()
     General.__init__(self,manager,name)
     Storage.__init__(self)
     HLTFarm.__init__(self)
-    self.tell1Boards   = self.dp('SubDeterctors.tell1List')
+    self.tell1Boards = self.dp('SubDeterctors.tell1List')
     self.reader.add(self.tell1Boards)    
     
   # ===========================================================================
@@ -57,7 +76,7 @@ class RunInfo(General,Storage,HLTFarm):
     # import traceback
     wr = deviceIO
     if wr is None or wr.get() is None: wr = self.manager.devWriter()
-    # log('Adddevices:RunInfo wr='+str(wr.get())+'  '+str(deviceIO.get()))
+    #log('Adddevices:RunInfo wr='+str(wr.get())+'  '+str(deviceIO.get()))
     Storage.addDevices(self,wr)
     HLTFarm.addDevices(self,wr)
     if deviceIO is None or deviceIO.get() is None:
@@ -114,27 +133,12 @@ class RunInfo(General,Storage,HLTFarm):
     return (class0_tasks,class1_tasks)
 
 class RunInfoCreator:
-  def __init__(self,manager):             self.manager = manager
-  def create(self,partition):             return RunInfo(self.manager,partition)
+  def __init__(self):
+    pass
+  def create(self,rundp_name,partition):
+    items = rundp_name.split(':')
+    mgr = Systems.controlsMgr(items[0])
+    return RunInfo(mgr,partition)
   def showPartition(self,info,partition):
     import Online.RunInfoClasses.Storage as S
     S.showPartition(info,partition)
-"""
-import Online.PVSS as PVSS
-import Online.RunInfo as RI
-import Online.RunInfoClasses.General as GEN
-import Online.RunInfoClasses.Storage as STO
-import Online.RunInfoClasses.HLTFarm as HLT
-
-m=PVSS.controlsMgr()
-g=GEN.General(m,"LHCb")
-g.show()
-s=STO.StorageInfo(m,"LHCb")
-s.show()
-f=HLT.HLTFarmInfo(m,"LHCb")
-f.show()
-r=RI.RunInfo(PVSS.controlsMgr(),"LHCb")
-r.show()
-
-
-"""

@@ -1,6 +1,8 @@
 
 // Names to datapoints
 string jo_dpPartitionName;
+string JobOptionsVersion     = "1.0";
+string JobOptionsSystem      = "LBECS";
 string JobOptionsPartition_t = "JobOptionsPartition";
 string JobOptionsActivity_t  = "JobOptionsActivity";
 string JobOptionsTaskType_t  = "JobOptionsTaskType";
@@ -117,8 +119,9 @@ int JobOptions_execute()  {
 //    jo_tell1Boards+".Name", boards, 
 //    jo_tell1Boards+".IP", addrs);
   if ( 0 == rc )  {
-    activities = dpNames(JobOptionsActivity_t+"_"+activity+"_*");
-    DebugN("Search for:"+JobOptionsActivity_t+"_"+activity+"_*");
+    string dps = JobOptionsSystem+":"+JobOptionsActivity_t+"_"+activity+"_*";
+    activities = dpNames(dps);
+    DebugN("Search for:"+dps);
     //DebugN(rc+" PartitionID:"+pid);
     DebugN(rc+" Activity   :"+activity);
     //DebugN(rc+" Boards     :"+boards);
@@ -235,7 +238,7 @@ int JobOptions_listen()  {
 dyn_string JobOptions_items(string match)  {
   string typ = match + "_*";
   int    typ_len = strlen(typ)-1;
-  dyn_string items = dpNames(typ);
+  dyn_string items = dpNames(JobOptionsSystem+":"+typ);
   for(int i=1, n=dynlen(items); i<=n; ++i)
     items[i] = substr(dpSubStr(items[i],DPSUB_DP),typ_len);
   return items;
@@ -283,6 +286,10 @@ void JobOptions_typeDelete(string typ)  {
 }
 /// Install types
 void JobOptions_install() {
+  JobOptions_installOptions();
+  JobOptions_installControl();
+}
+void JobOptions_installControl() {
   dyn_dyn_string names;
   dyn_dyn_int types;
   // Create Partition type
@@ -294,6 +301,8 @@ void JobOptions_install() {
   types[2] = makeDynInt (0,DPEL_STRING);
   types[3] = makeDynInt (0,DPEL_STRING);
   JobOptions_typeCreate(names,types);
+}
+void JobOptions_installOptions() {
   // Create Partition type
   names[1] = makeDynString (JobOptionsPartition_t,"","","");
   names[2] = makeDynString ("","State","","");
@@ -378,37 +387,40 @@ void JobOptionsEditor_setToolTips()  {
 int JobOptionsEditor_createObject(string name,string typ) {
   if ( strlen(name) > 0 )  {
     string n = typ+"_"+name;
+    int id = getSystemId(JobOptionsSystem+":");
+    dyn_string names;
+    dyn_uint ids;
+    getSystemNames(names,ids);
+    DebugN(names,ids);
     if ( 0 == nameCheck(n) )  {
       if ( !dpExists(n) )  {
-        int rc = dpCreate(n,typ);
+        int rc = dpCreate(n,typ,id);
         if ( 0 == rc )  {
           return 0;
         }
-        return JobOptions_error(rc,"Cannot create new "+typ+" object:"+name);
+        return JobOptions_error(rc,"Cannot create new "+typ+" object:"+n+" system:"+JobOptionsSystem+" id:"+id);
       }
-      return JobOptions_error(0,"Datapoint "+name+" of type "+typ+" exists already");
+      return JobOptions_error(0,"Datapoint "+n+" of type "+typ+" exists already");
     }
-    return JobOptions_error(0,"Datapoint name '"+typ+"_"+name+"' is not allowed.");
+    return JobOptions_error(0,"Datapoint name "+n+" is not allowed."+
+                            "Are you sure you are on the correct system?");
   }
   return JobOptions_error(rc,"Invalid name for a new "+typ+" object '"+name+"'");
 }
 /// Delete a Partition object
 int JobOptionsEditor_deleteObject(string name,string typ) {
   if ( strlen(name) > 0 )  {
-    string n = typ+"_"+name;
-    if ( 0 == nameCheck(n) )  {
-      if ( dpExists(n) )  {
-        int rc = dpDelete(typ+"_"+name);
-        if ( 0 == rc )  {
-          return 0;
-        }
-        return JobOptions_error(rc,"Cannot delete "+typ+" object:"+name);
+    string n = JobOptionsSystem+":"+typ+"_"+name;
+    if ( dpExists(n) )  {
+      int rc = dpDelete(n);
+      if ( 0 == rc )  {
+        return 0;
       }
-      return JobOptions_error(0,"Datapoint "+name+" of type "+typ+" does not exist");
+      return JobOptions_error(rc,"Cannot delete "+typ+" object:"+n);
     }
-    return JobOptions_error(0,"Datapoint name '"+typ+"_"+name+"' is not allowed.");
+    return JobOptions_error(0,"Datapoint "+n+" of type "+typ+" does not exist");
   }
-  JobOptions_error(rc,"Invalid name forto delete "+typ+" object '"+name+"'");
+  JobOptions_error(rc,"Invalid name to delete "+typ+" object '"+name+"'");
 }
 void JobOptionsEditor_showCreator(int panel_type)  {
   if ( jo_debug > 0 ) { DebugN("JobOptionsEditor_showCreator> Panel type:"+panel_type); }
@@ -438,7 +450,7 @@ void JobOptionsEditor_showCreator(int panel_type)  {
 }
 /// Show/hide text editor object
 void JobOptionsEditor_showTextEditor(int val)	  {
-  DebugN("JobOptionsEditor_showTextEditor> Text editor mode:"+val);
+  DebugN("JobOptionsEditor_showTextEditor["+JobOptionsVersion+"]> Text editor mode:"+val);
   if ( val ) LayerOn(2);
   else       LayerOff(2);
   if ( val ) setInputFocus(myModuleName(), myPanelName(), "m_textEditor");
@@ -538,7 +550,7 @@ int JobOptionsEditor_showTaskTypes()  {
 /// Editor: Show all tasks executing in a node type
 int JobOptionsEditor_showNodeTasks(string text)  {
   dyn_string tasks;
-  int rc = dpGet(JobOptionsActivity_t+"_"+text+".",tasks);
+  int rc = dpGet(JobOptionsSystem+":"+JobOptionsActivity_t+"_"+text+".",tasks);
   if ( 0 == rc )  {
     DebugN("JobOptionsEditor_showNodeTasks> "+JobOptionsActivity_t+"_"+text+" has "+dynlen(tasks)+" tasks.");
     int typ_len = strlen(JobOptionsActivity_t)+1;
@@ -556,7 +568,7 @@ int JobOptionsEditor_showNodeTasks(string text)  {
 int JobOptionsEditor_showNodeTypes()  {
   string activity, pid, state;
   string partName = m_list.selectedText;
-  string typ = JobOptionsPartition_t+"_"+partName;
+  string typ = JobOptionsSystem+":"+JobOptionsPartition_t+"_"+partName;
   DebugN("JobOptionsEditor_showNodeTypes> "+typ);
   int rc = dpGet(typ+".Activity",activity,
     typ+".PartitionID",pid,
@@ -604,10 +616,9 @@ int JobOptionsEditor_showNodeTypes()  {
 /// Editor: Show options for one task type in edit control
 int JobOptionsEditor_showTaskType(string text)  {
   string nam = JobOptionsTaskType_t+"_"+text, opts;
+  string dp = JobOptionsSystem+":"+nam+".";
   bool   tell1, defs;
-  int rc = dpGet(nam+".Options",opts,
-    nam+".NeedTell1s",tell1,
-    nam+".NeedDefaults",defs);
+  int rc = dpGet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
   if ( 0 == rc )  {
     m_textEditor.Text	= opts;
     m_needDefaults.state(0) = defs;
@@ -615,7 +626,7 @@ int JobOptionsEditor_showTaskType(string text)  {
     JobOptionsEditor_openTextEditor();
     return jo_TASK_EDIT;
   }
-  return JobOptions_error(rc,"Cannot access TaskType:"+text);
+  return JobOptions_error(rc,"Cannot access TaskType:"+text+" DP:"+dp);
 }
 /// Create a new object depending on editing mode
 int JobOptionsEditor_create(int panel_type,string name)  {
@@ -650,7 +661,7 @@ int JobOptionsEditor_delete(int panel_type,string name)  {
 /// Edit an object depending on editing mode
 int JobOptionsEditor_edit(int panel_type,string name)  {
   switch(panel_type) {
-    case jo_PARTITION_EDIT:  	  return JobOptionsEditor_edit2(panel_type,name,"State");
+    case jo_PARTITION_EDIT:  	return JobOptionsEditor_edit2(panel_type,name,"State");
     case jo_NODE_EDIT:
     case jo_TASK_EDIT:          return JobOptionsEditor_edit2(panel_type,name,"");
   }
@@ -739,19 +750,18 @@ int JobOptionsEditor_save(int panel_type)  {
 /// Editor: Save job options for a given task.
 void JobOptionsEditor_saveOptions(string text)  {
   string opts  = m_textEditor.Text;
+  string dp    = JobOptionsSystem+":"+JobOptionsTaskType_t+"_"+text+".";
   bool   tell1 = m_needTell1Setup.state(0);
   bool   defs  = m_needDefaults.state(0);
-  int rc = dpSet(JobOptionsTaskType_t+"_"+text+".Options",opts,
-    JobOptionsTaskType_t+"_"+text+".NeedTell1s",tell1,
-    JobOptionsTaskType_t+"_"+text+".NeedDefaults",defs);
+  int rc = dpSet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
   if ( 0 == rc )  {
     JobOptionsEditor_showTextEditor(0);
     return;
   }
-  JobOptions_error(rc,"Cannot access data point:"+JobOptionsTaskType_t+"_"+text);
+  JobOptions_error(rc,"Cannot access data point:"+dp);
 }
 int JobOptionsEditor_listPopup(int panel_type) {
-  if ( jo_debug > 0 ) { DebugN("JobOptionsEditor_listPopup> Panel type:"+panel_type); }
+  if ( jo_debug > 0 )  { DebugN("JobOptionsEditor_listPopup> Panel type:"+panel_type); }
   if ( panel_type != 0 )  {
     string name = m_list.selectedText;
     int answer; 

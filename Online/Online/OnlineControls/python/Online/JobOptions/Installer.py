@@ -1,11 +1,23 @@
+"""
+Online Joboptions installation
+
+import Online.JobOptions.Installer as JOI
+JOI.install()
+
+JOI.uninstall()
+
+"""
+
 import Online.JobOptions.JobOptions as JobOptions
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 import Online.RunInfo as RunInfo
 import Online.Utils as Utils
 import Online.PVSS as PVSS
 
 DataPoint = PVSS.DataPoint
 log = Utils.log
-mgr = PVSS.controlsMgr()
+mgr = Systems.controlsMgr(Params.jobopts_system_name)
 JobOptions.debug = 1
 
 # =============================================================================
@@ -17,7 +29,6 @@ class Task(JobOptions.TaskType):
     self.options.data = opts
     self.defaults.data = defs
     self.tell1s.data = tell1
-    print name,self.defaults.data,self.tell1s.data
     self.save()
 
 # =============================================================================
@@ -197,8 +208,3 @@ def uninstall():
   deleteDevices(JobOptions.Activity_t,'')
   deleteDevices(JobOptions.TaskType_t,'')
 
-CMDS = """
-import Online.JobOptions.Installer as JOI
-JOI.install()
-JOI.uninstall()
-"""

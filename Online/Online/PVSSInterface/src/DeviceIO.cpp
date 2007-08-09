@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.7 2007-06-21 12:20:15 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.8 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,9 +6,10 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.7 2007-06-21 12:20:15 frankm Exp $
+// $Id: DeviceIO.cpp,v 1.8 2007-08-09 20:03:58 frankm Exp $
 
 // Framework include files
+#include "PVSS/ControlsManager.h"
 #include "PVSS/DevTypeElement.h"
 #include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
@@ -18,10 +19,20 @@
 
 using namespace PVSS;
 
-static DpID lookup(const std::string& nam)  {
+static DpID lookup(ControlsManager* manager,const std::string& name)  {
   DpID onl(0);
-  if ( !pvss_lookup_dpid(DataPoint::online(nam).c_str(),onl) )    {
-    throw std::invalid_argument("The datapoint:"+nam+" does not exist!");
+  std::string nam = DataPoint::online(name);
+  std::string::size_type idx1 = nam.find(":");
+  if ( idx1 == std::string::npos ) {
+    nam = std::string(manager->name()+":"+nam);
+  }
+  else {
+    std::string::size_type idx2 = nam.find(".");
+    if ( idx2 != std::string::npos && idx1 > idx2 )
+      nam = manager->name()+":"+nam;
+  }
+  if ( !pvss_lookup_dpid(nam.c_str(),onl) )    {
+    throw std::invalid_argument("DeviceIO> The datapoint:"+nam+" does not exist!");
   }
   return onl;
 }
@@ -192,11 +203,11 @@ void DeviceIO::add(DataPoint& dp)
 
 /// add datapoint value by name
 void DeviceIO::addOnline(DataPoint& dp) 
-{  i_add(lookup(DataPoint::online(dp.name())),dp);          }
+{  i_add(lookup(m_manager,DataPoint::online(dp.name())),dp);          }
 
 /// add datapoint value by name
 void DeviceIO::addOriginal(DataPoint& dp) 
-{  i_add(lookup(DataPoint::original(dp.name())),dp);        }
+{  i_add(lookup(m_manager,DataPoint::original(dp.name())),dp);        }
 
 /// add datapoint values
 void DeviceIO::add(std::vector<DataPoint>& dp)  

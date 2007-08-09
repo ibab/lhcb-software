@@ -64,48 +64,68 @@ def DataPoint_get(self):
 def DataPoint_set(self,value):
   import traceback
   #print 'DataPoint_set:',value.__class__
-  if isinstance(value,list) or isinstance(value,tuple):
-    if len(value) > 0:
-      traceback.print_stack()
-      print 'DataPoint_set_item:',value.__class__,value[0].__class__
-      if isinstance(value[0],int):
-        v = gbl.std.vector('int')()
-        for i in value: v.push_back(i)
-        self.set(v)
-        return self
-      elif isinstance(value[0],float):
-        v = gbl.std.vector('float')()
-        for i in value: v.push_back(i)
-        self.set(v)
-        return self
-      elif isinstance(value[0],str):
-        v = gbl.std.vector('std::string')()
-        for i in value: v.push_back(i)
-        self.set(v)
-        return self
-      elif isinstance(value[0],DataPoint):
-        v = gbl.std.vector('PVSS::DataPoint')()
-        for i in value: v.push_back(i)
-        self.set(v)
-        return self
-      elif isinstance(value[0],DpID):
-        v = gbl.std.vector('PVSS::DpID')()
-        for i in value: v.push_back(i)
-        self.set(v)
-        return self
-    else:
-      try:
-        self.value().data().clear()
-      except:
-        pass
-  self.set(value)
-  return self
+  try:
+    if isinstance(value,list) or isinstance(value,tuple):
+      if len(value) > 0:
+        traceback.print_stack()
+        print 'DataPoint_set_item:',value.__class__,value[0].__class__
+        if isinstance(value[0],int):
+          v = gbl.std.vector('int')()
+          for i in value: v.push_back(i)
+          self.set(v)
+          return self
+        elif isinstance(value[0],float):
+          v = gbl.std.vector('float')()
+          for i in value: v.push_back(i)
+          self.set(v)
+          return self
+        elif isinstance(value[0],str):
+          v = gbl.std.vector('std::string')()
+          for i in value: v.push_back(i)
+          self.set(v)
+          return self
+        elif isinstance(value[0],DataPoint):
+          v = gbl.std.vector('PVSS::DataPoint')()
+          for i in value: v.push_back(i)
+          self.set(v)
+          return self
+        elif isinstance(value[0],DpID):
+          v = gbl.std.vector('PVSS::DpID')()
+          for i in value: v.push_back(i)
+          self.set(v)
+          return self
+      else:
+        try:
+          self.value().data().clear()
+        except:
+          pass
+    self.set(value)
+    return self
+  except Exception, X:
+    print 'Failed to set datapoint:',self.name(),' value:',str(value)
+    raise X
+    return None
+  except:
+    print 'Failed to set datapoint:',self.name(),' value:',str(value)
+    return None
 DataPoint.data = property(DataPoint_get,DataPoint_set)
 
+# =============================================================================
 def debug():
   return PVSS.pvss_debug()
+
+# =============================================================================
 def setDebug(val):
   PVSS.pvss_set_debug(val)
+
+# =============================================================================
+def system(name=None):
+  if name is not None:
+    id = PVSS.systemID(name)
+    if id != 0:
+      return (id,name)
+    raise Exception,'Exception: Unknown system:'+str(name)
+  return (PVSS.defaultSystemID(),PVSS.defaultSystemName())
 
 # =============================================================================
 def defaultSystem():

@@ -46,16 +46,16 @@ LANG:1 6 Layer1
 16 "fill" 0 0 0
 0
 1 19 0 "" 7
-16 "fill" 0 0 0
 2 "bordered" 0 0 0
+16 "fill" 0 0 0
 0
 1 20 0 "" 13
-16 "fill" 0 0 1
 2 "bordered" 0 0 0
+16 "fill" 0 0 1
 0
 1 21 0 "" 14
-16 "fill" 0 0 0
 2 "bordered" 0 0 0
+16 "fill" 0 0 0
 0
 1 22 0 "" 16
 0
@@ -103,7 +103,7 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()		{  PanelOff(); }" 0
- 0 3 1 0 1 E U  0 E 12 12 112 64
+ 0 3 1 0 1 E U  0 E 12 12 92 57
 0 2 0 "0s" 0 0 0 192 0 0  12 12 1
 1
 LANG:1 96 -*-Arial Black-*-i-normal-*-37-*-100-100-*-*-iso8859-1|-37,0,0,0,404,1,0,0,0,0,0,0,0,Arial Black
@@ -124,7 +124,7 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main() {  PanelOff();  }" 0
- 0 3 1 0 1 E U  1 E 14 62 62 81
+ 0 3 1 0 1 E U  1 E 14 62 63 83
 0 2 0 "0s" 0 0 0 192 0 0  14 62 1
 1
 LANG:1 103 -*-MS Sans Serif-bold-i-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,697,1,0,0,0,0,0,0,0,MS Sans Serif

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.6 2007-06-21 12:20:15 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.7 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -70,9 +70,9 @@ namespace PVSS {
         return this->AddData::operator()(o);
       }
     };
-    AddItem addItem(const std::string& itm){return AddItem(this,&DeviceIO::add, itm);}
-    AddItem addOnlineItem(const std::string& itm){return AddItem(this,&DeviceIO::addOnline, itm);}
-    AddItem addOriginalItem(const std::string& itm){return AddItem(this,&DeviceIO::addOriginal, itm);}
+    AddItem addItem(const std::string& itm){return AddItem(this,&DeviceIO::add,itm);}
+    AddItem addOnlineItem(const std::string& itm){return AddItem(this,&DeviceIO::addOnline,itm);}
+    AddItem addOriginalItem(const std::string& itm){return AddItem(this,&DeviceIO::addOriginal,itm);}
     AddData addData()         { return AddData(this,&DeviceIO::add);     }
     AddData addOnlineData()   { return AddData(this,&DeviceIO::addOnline);    }
     AddData addOriginalData() { return AddData(this,&DeviceIO::addOriginal);  }

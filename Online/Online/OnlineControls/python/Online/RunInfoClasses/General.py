@@ -24,11 +24,11 @@ class General:
 
         @return reference to initialized object
     """
-    self.manager       = manager
-    self.name          = name
-    self.reader        = self.manager.devReader()
-    self.runTyp        = self.dp('general.runType')
-    self.partID        = self.dp('general.partId')
+    self.manager = manager
+    self.name    = name
+    self.reader  = self.manager.devReader()
+    self.runTyp  = self.dp('general.runType')
+    self.partID  = self.dp('general.partId')
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
 

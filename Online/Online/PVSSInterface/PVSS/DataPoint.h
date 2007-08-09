@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.7 2007-04-20 09:34:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.8 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -244,6 +244,8 @@ namespace PVSS {
     template <class T> const T& reference() const;
     /// Extract element name of datapoint from online/original name
     std::string elementName() const;
+    /// Extract element name of datapoint from online/original name
+    std::string typeName() const;
     /// Extract system name of datapoint from online/original name
     std::string sysname() const;
     /// Extract name of datapoint from online/original name

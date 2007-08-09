@@ -25,10 +25,10 @@ class HLTFarm:
 
         @return reference to initialized object
     """
-    self.nodes         = self.dp('HLTFarm.nodeList')
-    self.subFarms      = self.dp('HLTFarm.subFarms')
-    self.nSubFarm      = self.dp('HLTFarm.nSubFarms')
-    self.receivers     = self.dp('HLTFarm.receiverTasks')
+    self.nodes     = self.dp('HLTFarm.nodeList')
+    self.subFarms  = self.dp('HLTFarm.subFarms')
+    self.nSubFarm  = self.dp('HLTFarm.nSubFarms')
+    self.receivers = self.dp('HLTFarm.receiverTasks')
     self.reader.add(self.nodes)
     self.reader.add(self.subFarms)
     self.reader.add(self.nSubFarm)

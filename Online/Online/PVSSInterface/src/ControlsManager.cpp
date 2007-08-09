@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.4 2007-04-26 18:22:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.5 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  ControlsManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ControlsManager.cpp,v 1.4 2007-04-26 18:22:26 frankb Exp $
+// $Id: ControlsManager.cpp,v 1.5 2007-08-09 20:03:58 frankm Exp $
 //#define _UseSpecializedManip
 
 // Framework include files
@@ -95,6 +95,7 @@ ControlsManager::ControlsManager(int i, const std::string nam)
   m_devTypeMgr = DevManip<DevTypeManager>::create(this,m_devMgr,i,nam);
   pvss_load_device_types(m_devTypeMgr,i,DevManip<DevType>::add,DevManip<DevTypeElement>::add);
   m_logger = std::auto_ptr<Printer>(createLogger());
+  m_logger->print(*this);
 }
 
 /// Standard destructor

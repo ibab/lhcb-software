@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/Kernel.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/Kernel.h,v 1.3 2007-08-09 20:03:58 frankm Exp $
 //  ====================================================================
 //  Kernel.h
 //  --------------------------------------------------------------------
@@ -20,6 +20,7 @@ using std::iostream;
 using std::streamoff;
 
 namespace PVSS  {
+
   enum PVSS_Status_Code { ERROR, SUCCESS };
   struct PVSSStatus {
     int m_code;

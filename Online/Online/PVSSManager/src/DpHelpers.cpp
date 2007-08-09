@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.5 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.6 2007-08-09 20:03:47 frankm Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.5 2007-04-11 17:45:47 frankb Exp $
+// $Id: DpHelpers.cpp,v 1.6 2007-08-09 20:03:47 frankm Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -32,12 +32,17 @@ static void (*s_addDevTypeElem)(PVSS::DevType* m,int id, int typ, const char* n)
 
 static void visitDpElement(PVSS::DevTypeManager* m, PVSS::DevType* t, const DpType& p, const DpTypeNode* n, const std::string& par)  {
   if ( n )  {
+    // char txt[512];
     DpIdentification *dpIdent = Manager::getDpIdentificationPtr();
     char* elname = "Unknown";
     DpElementId eid = n->getId();
     DpElement elt(eid);
     DpElementType elTyp = elt.getType(&p);
-    dpIdent->getElementName(p.getName(), eid, elname);
+    DpElementType eTyp  = n->getElementType();
+    dpIdent->getElementName(p.getName(), eid, elname,s_system);
+    //sprintf(txt,"  %d got elem: par:[%s] elname:\"%s\" pid:%d eid:%d typ=%d %d",
+    //	    (int)s_system,par.c_str(),elname ? elname : "None",p.getName(),eid, elTyp,eTyp);
+    //pvss_print(PVSS::PRIO_SEVERE,36,txt);
     std::string nam;
     if ( !par.empty() ) nam = par + ".";
     nam += elname;
@@ -47,7 +52,7 @@ static void visitDpElement(PVSS::DevTypeManager* m, PVSS::DevType* t, const DpTy
     }
     else  {
       for(size_t is = 0; is<nson; ++is )    {
-        visitDpElement(m,t,p,DpElement(n->getSon(is)).getDpTypeNode(&p),nam);
+	visitDpElement(m,t,p,p.getTypeNodePtr(n->getSon(is)),nam);
       }
     }
   }
@@ -57,7 +62,7 @@ static int visitDpType(const DpType& p)  {
   DpIdentification *dpIdent = Manager::getDpIdentificationPtr();
   const DpTypeNode* n = p.getRootTypeNodePtr();
   char* name = "Unknown";
-  dpIdent->getTypeName(p.getName(),name);
+  dpIdent->getTypeName(p.getName(),name,s_system);
   PVSS::DevType* t = s_addDevType(s_devTypeMgr,p.getName(),name);
   delete [] name;
   visitDpElement(s_devTypeMgr,t,p,n,"");
@@ -109,7 +114,16 @@ int PVSS::pvss_load_device_types(PVSS::DevTypeManager* mgr, int id,
   s_devTypeMgr = mgr;
   s_addDevType = addDev;
   s_addDevTypeElem = addElem;
-  Manager::getTypeContainerPtr()->visitEveryType(visitDpType);
+  DpTypeContainer* cont = 0;
+  if ( DpIdentification::getDefaultSystem() == s_system )  {
+    printf("Using default system....\n");
+    cont = Manager::getTypeContainerPtr();
+  }
+  else {
+    printf("Using other system:%d....\n",id);
+    cont = Manager::getTypeContainerPtr(s_system);
+  }
+  cont->visitEveryType(visitDpType);
   return 1;
 }
 

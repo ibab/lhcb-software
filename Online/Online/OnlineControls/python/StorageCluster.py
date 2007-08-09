@@ -1,4 +1,6 @@
-import os, sys, time, platform
+import os, sys, time
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 
 def run():
   import Online.PVSS as PVSS
@@ -7,15 +9,15 @@ def run():
   import Online.Streaming.StreamingControl as StreamingControl
   import Online.Streaming.Simulator as StreamingSimulator
   name = 'Storage'
-  mgr = PVSS.controlsMgr()
-  info = RunInfo.RunInfoCreator(mgr)
-  ctrl = StreamingControl.Control(mgr,name,info)
-  sensor=PVSS.DeviceSensor(mgr,ctrl.control)
+  stream_mgr = Systems.controlsMgr(Params.storage_system_name)
+  ctrl = StreamingControl.Control(stream_mgr,name,RunInfo.RunInfoCreator())
+  sensor=PVSS.DeviceSensor(stream_mgr,ctrl.control)
   sensor.addListener(ctrl)
   sensor.run(1)
-  wr = WR.StorageOptionsWriter(mgr,'StorageJobOptions',info)
-  if platform.system() == 'Linux':  wr.optionsDir = "/home/frankm/options"
-  else:                             wr.optionsDir = "J:/options"
+
+  jobopts_mgr = Systems.controlsMgr(Params.jobopts_system_name)
+  wr = WR.StorageOptionsWriter(mgr,'StorageJobOptions',RunInfo.RunInfoCreator())
+  wr.optionsDir = Params.jobopts_optsdir
   
   wr.run()
   
@@ -23,7 +25,7 @@ def run():
   sim = []
   sim = ['Slice00']
   for slice in sim:
-    s = StreamingSimulator.Simulator(mgr,name+'_'+slice)
+    s = StreamingSimulator.Simulator(stream_mgr,name+'_'+slice)
     s.run()
     sims.append(s)
 

@@ -1,7 +1,22 @@
+"""
+
+import Online.PVSS as PVSS
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
+import Online.JobOptions.JobOptions as JobOptions
+mgr = Systems.controlsMgr(Params.jobopts_system_name)
+a = JobOptions.Activity(mgr,'LHCb_PHYSICS')
+a.show()
+
+reload(JobOptions)
+JobOptions.UI(mgr).run()
+"""
+
 import Online.PVSS
 import Online.Utils
+import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 
-controlsMgr    = Online.PVSS.controlsMgr
 DpIDVector     = Online.PVSS.DpIDVector
 DataPoint      = Online.PVSS.DataPoint
 DPVector       = Online.PVSS.DataPointVector
@@ -10,32 +25,31 @@ log            = Online.Utils.log
 error          = Online.Utils.error
 warning        = Online.Utils.warning
 
-Partition_t = 'JobOptionsPartition'
-Activity_t  = 'JobOptionsActivity'
-TaskType_t  = 'JobOptionsTaskType'
+Partition_t    = 'JobOptionsPartition'
+Activity_t     = 'JobOptionsActivity'
+TaskType_t     = 'JobOptionsTaskType'
 debug = 0
-controlsManager = None
 
 # =============================================================================
 class JobOptionsObject:
   # ===========================================================================
   def __init__(self, manager, name, type):
     self.manager    = manager
-    if self.manager is None: self.manager = controlsManager
     self.name       = name
     self.writer     = self.manager.devWriter()
     self.reader     = self.manager.devReader()
     self.type       = self.manager.typeMgr().type(type)
+    self.typeName   = type
   # ===========================================================================
   def fullname(self):
-    return self.type.name()+'_'+self.name
+    return self.manager.name()+':'+self.typeName+'_'+self.name
   # ===========================================================================
   def datapoint(self):
     return DataPoint(self.manager,self.fullname())
   # ===========================================================================
   def create(self):
     name = self.fullname()
-    mgr = self.manager.deviceMgr()
+    mgr  = self.manager.deviceMgr()
     if not mgr.exists(name):
       dp = mgr.createDevice(name,self.type).release()
       if dp is None:
@@ -66,7 +80,7 @@ class JobOptionsObject:
       log('The datapoint:'+name+' does not exist.',timestamp=1)
   # ===========================================================================
   def _dp(self, nam):
-    return DataPoint(self.manager,DataPoint.original(self.type.name()+'_'+self.name+'.'+nam))
+    return DataPoint(self.manager,DataPoint.original(self.fullname()+'.'+nam))
   # ===========================================================================
   def _getItem(self, dp):
     if dp.data is None: self.load()
@@ -98,7 +112,7 @@ class TaskType(JobOptionsObject):
     self.writer.add(self.defaults)
     self.writer.add(self.tell1s)
     self.writer.add(self.options)
-    if debug: log('TaskType> Saving '+self.name,timestamp=1)
+    if debug: log('TaskType> Saving '+self.name+' Defaults:'+str(self.defaults.data)+' Tell1s:'+str(self.tell1s.data),timestamp=1)
     return self.writer.execute(0,1)
 
   # ===========================================================================
@@ -154,7 +168,7 @@ class Activity(JobOptionsObject):
   def removeTask(self,task):
     dp = DataPoint(self.manager,TaskType_t+'_'+task)
     id = dp.id()
-    tasks = DataPoint(self.manager,DataPoint.original(self.type.name()+'_'+self.name()+'.'+nam))
+    tasks = DataPoint(self.manager,DataPoint.original(self.typeName+'_'+self.name()+'.'+nam))
     tasks.data = DpIDVector()
     found = 0
     for i in xrange(self.tasks.size()):
@@ -289,7 +303,8 @@ class UI:
   #============================================================================
   def __init__(self, manager=None):
     self.manager = manager
-    if manager is None: self.manager = controlsMgr()
+    if manager is None:
+      raise Exception,'Invalid PVSS controls manager passed to job options component.'
     self.activity = None
     self.partition = None
   #============================================================================
@@ -433,7 +448,7 @@ def _getDevices(device_type, match, manager, load):
   _match = match
   if _match.find('*')<0:
     _match = _match+'*'
-  if not mgr: mgr = controlsMgr()
+  if not mgr: mgr = Systems.controlsMgr(Params.jobopts_system_name)
   actor = DpVectorActor(mgr)
   typ   = mgr.typeMgr().type(device_type)
   actor.lookup(device_type+'_'+_match,typ)
@@ -483,15 +498,3 @@ def partitions(match='',manager=None,load=0):
 # =============================================================================
 def partitionItems(match='*.*',manager=None,load=0):
   return _getDevices(Partition_t,DataPoint.original(match),manager,load)
-
-"""
-import Online.PVSS as PVSS
-from Online.RunInfo import RunInfo as RunInfo
-import Online.JobOptions.JobOptions as JobOptions
-mgr = PVSS.controlsMgr()
-a = JobOptions.Activity(mgr,'LHCb_PHYSICS')
-a.show()
-
-reload(JobOptions)
-JobOptions.UI(mgr).run()
-"""

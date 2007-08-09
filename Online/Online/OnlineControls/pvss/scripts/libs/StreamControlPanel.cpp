@@ -770,9 +770,9 @@ void StreamControlPanel_install()  {
     int result = dpTypeCreate(names,types);
     StreamTaskMgr_checkErrors(result);
   }   
-  else
+  else {
     DebugN("Data type StreamControl are already defined....Nothing to do.");
-
+  }
   if ( dynlen(dpTypes("StreamPartition")) ==0 ) {
     dyn_dyn_string names;
     dyn_dyn_int types;
