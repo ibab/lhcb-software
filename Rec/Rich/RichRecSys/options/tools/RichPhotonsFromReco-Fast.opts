@@ -3,13 +3,13 @@
 
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
-#include "$RICHRECSYSOPTS/tools/RichPhotonPredictor.opts"
+#include "$RICHRECSYSOPTS/tools/RichPhotonPredictor-Fast.opts"
 
 // RichRecPhoton Creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhotonCreator" };
 
 
-// Default cuts
+// Default (Offline) cuts
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
 ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
@@ -17,11 +17,10 @@ ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-//ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.015,   0.007,   0.0035  };
+ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.015,   0.007,   0.0035  };
 // N sigma on expected CK theta resolution
 //ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  999,     999,     999     };
-ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
-
+ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.0,     3.0,     3.5    };
 
 /*
 // Course cuts
@@ -51,15 +50,5 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999999,   9999
 // geometrical photon reconstruction
 ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
 
-// use Quartic solving tool
-
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
-//                                                                                 Aero   C4F10  CF4
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+// use fast photon reconstruction
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingCKEstiFromRadius/PhotonParams" };

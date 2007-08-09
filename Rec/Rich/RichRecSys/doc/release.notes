@@ -4,6 +4,13 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Add options to run new 'Fast' configuration of the RICH reconstruction
+ - Update standard options to use new geom. eff. tool.
+ - comment out local algorithm from default running 
+   (no longer used, needs some attention)
+ - Rename algorithm instances a little
+
 !====================== RichRecSys v3r5 2007-07-09 =====================
 ! 2007-06-22 - Chris Jones
  - Relax completely the max number of raw input track cut. Max cut of 400 on

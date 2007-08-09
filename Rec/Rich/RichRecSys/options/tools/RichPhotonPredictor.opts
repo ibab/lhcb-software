@@ -1,0 +1,44 @@
+
+//----------------------------------------------------------------------------------------------------------
+// Simple predictor
+//----------------------------------------------------------------------------------------------------------
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SimplePhotonPredictor/RichPhotonPredictor" };
+//                                                                   Aero        C4F10      CF4
+// select all
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = {   0.0,      0.0,      0.0  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = {   9999999,  9999999,  9999999  };
+// Course cut
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = { 110.0,      0.0,       0.0  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = { 390.0,     86.0,     165.0  };
+//----------------------------------------------------------------------------------------------------------
+
+/*
+//----------------------------------------------------------------------------------------------------------
+// clever predictor, that uses expected CK angles to define bands
+//----------------------------------------------------------------------------------------------------------
+// 'Course' Settings, that accept all signal
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+//                                                                 Aero      C4F10     CF4
+ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,    0.0,      0.0    };
+ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0,      165.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0520,    0.030  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.SepGMax           = {  342.0,   75.0,      130.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,      15,        40     };
+//----------------------------------------------------------------------------------------------------------
+*/
+
+
+//----------------------------------------------------------------------------------------------------------
+// clever predictor, that uses expected CK angles to define bands
+//----------------------------------------------------------------------------------------------------------
+// 'Course' Settings, that accept all signal
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::CKthetaBandsPhotonPredictor/RichPhotonPredictor" };
+//                                                                 Aero      C4F10     CF4
+ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,    0.0,      0.0    };
+ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0,      165.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0520,    0.030  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.SepGMax           = {  342.0,   75.0,      130.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.NSigma            = {  5.5,     5.5,       11.5     };
+//ToolSvc.HLT.RichPhotonCreator.Predictor.NSigma            = {  4.5,     4.5,       10.5   };
+//----------------------------------------------------------------------------------------------------------
+

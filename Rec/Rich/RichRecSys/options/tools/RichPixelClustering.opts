@@ -7,7 +7,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/P
 ToolSvc.Offline.RichPixelCreator.SuppressClusterFinding = false;
 
 // Use these options to disable hit clustering. In this mode each RichSmartID is made into a
-// single RichRecPixel object. Not that clustering is still performed, and the RichRecPixel
+// single RichRecPixel object. Note that clustering is still performed, and the RichRecPixel
 // has its associated cluster assigned
 //                                                        RICH1   RICH2
 ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { false,  false };

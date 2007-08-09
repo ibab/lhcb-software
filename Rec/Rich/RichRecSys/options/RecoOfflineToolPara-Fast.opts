@@ -6,10 +6,10 @@
 // ================================== Track Creators ==========================================
 
 // RichTrackCreator using full reconstructed information : Use full detailed information
-#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
 
 // RichTrackCreator using full reconstructed information : Fast treatment
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks-Fast.opts"
+#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks-Fast.opts"
 
 // RichTrackCreator using TrStoredTracks but cheating the tracking information by
 // using the associated MCRichTrack. In the include file below the cheating can be tuned
@@ -60,16 +60,17 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 #include "$RICHRECSYSOPTS/tools/RichPixelSuppress.opts"
 
 // clustering
-#include "$RICHRECSYSOPTS/tools/RichPixelClustering.opts"
+//#include "$RICHRECSYSOPTS/tools/RichPixelClustering.opts"
+ToolSvc.Offline.RichPixelCreator.SuppressClusterFinding = true;
 
 // ================================== Photon Creators ==========================================
 
 // Photon reconstruction using full reconstructed information (Default)
-#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
 
 // Photon reconstruction using reconstructed but estimates CK angles using
 // track and hit positions on the local HPD plane - Fast approach
-//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco-Fast.opts"
+#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco-Fast.opts"
 
 // Photon reconstruction using full reconstructed information, but selecting only true cherenkov
 // photons using MC information
@@ -97,16 +98,21 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 ToolSvc.Offline.RichToolRegistry.Context = "Offline";
 
 // Segment creator
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SegmentCreator/RichSegmentCreator" };
 //                                                Aerogel  C4F10   CF4
-ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   }; // Best but slow treatment
-//ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 1,       1,      1   }; // Fast treatment
+//ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   }; // Best but slower treatment
+ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 2,       2,      2   }; // Fast treatment
 
 // raytracing
-ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 50,  50,  50  };
+//ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 10,   10,  10  };
+ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 25,  25,  25  };
+//ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 50,  50,  50  };
 
 // CK ring creator
-ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 100,  100,  100  }; 
-ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 100,  100,  100  }; 
+ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 50,   50,   50  }; 
+ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 25,   25,   25  }; 
+//ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 100,   100,   100  }; 
+//ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 100,   100,   100  }; 
 ToolSvc.Offline.RichMassHypoRings.CheckBeamPipe = true;
 
 // Geometrical efficiency from CK mass Ring
@@ -114,9 +120,9 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffCKMassRing/RichGe
 
 // Geometrical efficiency from full ray tracing
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffPhotonTracing/RichGeomEff" };
-//ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 100;
-//ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 50;
-//ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
+//ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 25;
+//ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 10;
+//ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = false;
 
 // Fixed value
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffFixedValue/RichGeomEff" };

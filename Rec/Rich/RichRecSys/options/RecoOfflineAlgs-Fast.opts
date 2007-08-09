@@ -11,13 +11,13 @@ RecoRICHSeq.Context = "Offline";
 // Uncomment these to make sure data (tracks and raw event) are in memory
 // Useful for timing studies
 //-----------------------------------------------------------------------------
-//RecoRICHSeq.Members += { "Rich::DAQ::LoadRawEvent/LoadRawRichEvent",
-//                         "Rich::Rec::Initialise/LoadRawTracks" };
-//LoadRawTracks.CheckProcStatus = false;
-//LoadRawTracks.CreatePixels    = false;
-//LoadRawTracks.CreateTracks    = false;
-//LoadRawTracks.CreatePhotons   = false;
-//LoadRawTracks.LoadRawTracks   = true;
+RecoRICHSeq.Members += { "Rich::DAQ::LoadRawEvent",
+                         "Rich::Rec::Initialise/LoadRawTracks" };
+LoadRawTracks.CheckProcStatus = false;
+LoadRawTracks.CreatePixels    = false;
+LoadRawTracks.CreateTracks    = false;
+LoadRawTracks.CreatePhotons   = false;
+LoadRawTracks.LoadRawTracks   = true;
 
 //-----------------------------------------------------------------------------
 // Initialisation (Technically not needed, but nuseful for timing studies)
@@ -26,7 +26,7 @@ RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitSeq" };
 RichRecInitSeq.MeasureTime       = true;
 RichRecInitSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
 DecodeRawRich.DecodeBufferOnly = true;
-RichRecInitSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
+//RichRecInitSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
 RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreatePixels" };
 CreatePixels.CheckProcStatus  = false;
 CreatePixels.CreatePixels     = true;
@@ -49,7 +49,6 @@ CreatePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
 // Global PID algorithm
 //-----------------------------------------------------------------------------
-
 // Initialise Global PID algorithm for each event
 RecoRICHSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
 RichGlobalPIDSeq.MeasureTime   = true;
@@ -65,13 +64,8 @@ RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt"
 RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstFinalIt" };
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" };
 
-// Ring refit - uses working PIDs to identify good photons and refit angles
-// Results as yet not used in formation of final PID
-//RichGlobalPIDSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
-
 // Finalise Global PID algorithm each event
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
-
 //-----------------------------------------------------------------------------
 
 // Make final output PID results
@@ -79,15 +73,29 @@ RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
 // otherwise local if that exists
 RecoRICHSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
 
+/*
+//-----------------------------------------------------------------------------
+// Trg Global PID algorithm
+//-----------------------------------------------------------------------------
+RecoRICHSeq.Members += { "GaudiSequencer/RichTrgGlobalPIDSeq" };
+RichTrgGlobalPIDSeq.Members += { "Rich::Rec::TrgGlobalPID::Likelihood/RichHltGlobalPID" };
+RichHltGlobalPID.TrackSelector.TrackAlgs = { "Forward" };
+RichHltGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
+// Monitoring options
+RichHltGlobalPID.NTupleProduce = false;
+RichHltGlobalPID.HistoProduce  = false;
+//-----------------------------------------------------------------------------
+*/
+
 // Reconstruction summary
-RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
+//RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
 
 // Reconstruction algorithm parameters
 // ========================================================================================
 
 // Particle types to consider
-//ToolSvc.Offline.RichPhotonCreator.Predictor.ParticleTypes = { "pion", "kaon" };
-//ToolSvc.RichParticleProperties.ParticleTypes         = { "pion", "kaon" };
+ToolSvc.Offline.RichParticleProperties.ParticleTypes = { "pion", "kaon" };
+ToolSvc.RichParticleProperties.ParticleTypes         = { "pion", "kaon" };
 
 // Local Algorithm parameters
 RichLocPID.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
@@ -105,6 +113,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+//RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Forward" };
 RichGloPIDTrSel.MaxUsedTracks             = 400;
 RichGloPIDTrSel.MaxInputTracks            = 99999;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
