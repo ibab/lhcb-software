@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: IRichMassHypothesisRingCreator.h,v 1.7 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichMassHypothesisRingCreator.h,v 1.8 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2004
@@ -61,8 +61,8 @@ namespace Rich
        *
        *  @return Pointer to the mass hypothesis ring
        */
-      virtual LHCb::RichRecRing * newMassHypoRing( LHCb::RichRecSegment * segment,
-                                                   const Rich::ParticleIDType id ) const = 0;
+      virtual LHCb::RichRecRing * massHypoRing( LHCb::RichRecSegment * segment,
+                                                const Rich::ParticleIDType id ) const = 0;
 
       /** Creates and returns a new default RichRecRing object.
        *
@@ -72,7 +72,7 @@ namespace Rich
        *  @return Pointer to the new RichrecRing
        */
       virtual LHCb::RichRecRing * newMassHypoRing() const = 0;
-
+      
       /** Save the RichRecRing in the tool internal container
        *
        *  @attention Once this method is called on a ring, the user should
@@ -86,7 +86,7 @@ namespace Rich
        *
        *  @param segment Pointer to a RichRecSegment
        */
-      virtual void newMassHypoRings( LHCb::RichRecSegment * segment ) const = 0;
+      virtual void massHypoRings( LHCb::RichRecSegment * segment ) const = 0;
 
       /** Access to all mass hypothesis rings currently created
        *

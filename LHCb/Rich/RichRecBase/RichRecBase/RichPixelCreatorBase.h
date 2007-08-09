@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.18 2007-04-23 12:56:12 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.19 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -31,6 +31,7 @@
 #include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -226,6 +227,9 @@ namespace Rich
 
       /// Raw Buffer Decoding tool
       mutable const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+
+      /// Geometry tool
+      const IGeomTool * m_geomTool;
 
       /// Pointer to RichRecPixels
       mutable LHCb::RichRecPixels * m_pixels;

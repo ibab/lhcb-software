@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.9 2007-03-09 18:04:34 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.10 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -210,8 +210,11 @@ namespace Rich
       /// Track statistics for last event. used for debug printout
       mutable TrackTypeCount m_nTracksLast;
 
-      /// Ray-tracing configuration object
+      /// Ray-tracing configuration object (for JO)
       LHCb::RichTraceMode m_traceMode;
+
+      /// Cached trace modes for each radiator
+      std::vector<LHCb::RichTraceMode> m_traceModeRad;
 
     };
 

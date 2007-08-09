@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.23 2007-06-22 13:41:02 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.24 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -34,6 +34,7 @@ namespace Rich
         m_hpdClus       ( Rich::NRiches ),
         m_idTool        ( NULL  ),
         m_decoder       ( NULL  ),
+        m_geomTool      ( NULL  ),
         m_pixels        ( NULL  ),
         m_bookKeep      ( false ),
         m_hpdCheck      ( false ),
@@ -86,6 +87,8 @@ namespace Rich
       {
         debug() << "RichRecPixel location : " << m_richRecPixelLocation << endreq;
       }
+
+      acquireTool( "RichRecGeometry", m_geomTool );
 
       // get tools
       if ( m_hpdCheck )
@@ -184,6 +187,9 @@ namespace Rich
                                           NULL                             // pointer to parent (not available)
                                           );
 
+          // set the corrected local positions
+          m_geomTool->setCorrLocalPos(pixel,id.rich());
+
           // save to TES container in tool
           savePixel( pixel );
 
@@ -245,6 +251,9 @@ namespace Rich
                                           Rich::Rec::PixelParent::RawBuffer,    // parent type
                                           NULL                             // pointer to parent (not available)
                                           );
+
+          // set the corrected local positions
+          m_geomTool->setCorrLocalPos(pixel,id.rich());
 
           // save to TES container in tool
           savePixel( pixel );

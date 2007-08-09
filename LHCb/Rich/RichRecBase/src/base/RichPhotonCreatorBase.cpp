@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.18 2007-03-19 15:03:53 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.19 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -36,6 +36,7 @@ namespace Rich
         m_photonSignal          ( NULL ),
         m_ckAngle               ( NULL ),
         m_ckRes                 ( NULL ),
+        m_richPartProp          ( NULL ),
         m_Nevts                 ( 0 ),
         m_bookKeep              ( false ),
         m_photons               ( NULL ),
@@ -54,10 +55,10 @@ namespace Rich
 
       declareProperty( "PhotonPredictor", m_photPredName );
 
-      m_CKTol.push_back( 0.005 );   // aerogel
-      m_CKTol.push_back( 0.004 );   // rich1Gas
-      m_CKTol.push_back( 0.003 );   // rich2Gas
-      declareProperty( "CherenkovThetaTolerence", m_CKTol );
+      //m_CKTol.push_back( 0.005 );   // aerogel
+      //m_CKTol.push_back( 0.004 );   // rich1Gas
+      //m_CKTol.push_back( 0.003 );   // rich2Gas
+      //declareProperty( "CherenkovThetaTolerence", m_CKTol );
 
       m_minCKtheta.push_back( 0 );  // aerogel
       m_minCKtheta.push_back( 0 );  // rich1Gas
@@ -73,6 +74,11 @@ namespace Rich
       m_minPhotonProb.push_back( 1e-15 ); // rich1Gas
       m_minPhotonProb.push_back( 1e-15 ); // rich2Gas
       declareProperty( "MinPhotonProbability", m_minPhotonProb );
+
+      m_nSigma.push_back( 6.5 ); // aerogel
+      m_nSigma.push_back( 6.5 ); // rich1Gas
+      m_nSigma.push_back( 12  ); // rich2Gas
+      declareProperty( "NSigma", m_nSigma );
 
       if      ( context() == "Offline" )
       {
@@ -101,6 +107,7 @@ namespace Rich
       acquireTool( "RichPhotonSignal", m_photonSignal );
       acquireTool( "RichCherenkovAngle",  m_ckAngle   );
       acquireTool( "RichCherenkovResolution", m_ckRes );
+      acquireTool( "RichParticleProperties",  m_richPartProp );
 
       // Setup incident services
       incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -111,14 +118,19 @@ namespace Rich
       {
         std::string trad = Rich::text((Rich::RadiatorType)rad);
         trad.resize(8,' ');
-        info() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad] << endreq;
-        info() << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad] << endreq;
-        info() << " rad : Tol. " << boost::format("%5.3f") % m_CKTol[rad] << " mrad" << endreq;
+        info() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
+               << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
+               << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma " 
+               << endreq;
+        //<< " rad : Tol. " << boost::format("%5.3f") % m_CKTol[rad] << " mrad" << endreq;
       }
-
+      
+      m_pidTypes = m_richPartProp->particleTypes();
+      info() << "Particle types considered = " << m_pidTypes << endreq;
+      
       return sc;
     }
-
+    
     StatusCode PhotonCreatorBase::finalize()
     {
       // print stats
@@ -477,46 +489,46 @@ namespace Rich
       bool ok = false;
 
       // Just check overall absolute min - max range
-      if ( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) )
-      {
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> Photon CK theta " << ckTheta << " outside absolute range "
-                    << absMinCKTheta(segment) << "->" << absMaxCKTheta(segment) << endreq;
-        }
-      }
-      else
+      if ( !( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) ) )
+        //{
+        //if ( msgLevel(MSG::VERBOSE) )
+        //{
+        //  verbose() << " -> Photon CK theta " << ckTheta << " outside absolute range "
+        //            << absMinCKTheta(segment) << "->" << absMaxCKTheta(segment) << endreq;
+        //}
+        //}
+        //else
       {
         // Do detailed checks
 
         // Finer grained check, to be within tolerence of any mass hypothesis
-        for ( int ihypo = 0; ihypo < Rich::NParticleTypes; ++ihypo )
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
         {
-          const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(ihypo);
-          const double tmpT = m_ckAngle->avgCherenkovTheta( segment, id );
-          ok = ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) );
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << " -> " << id << " fabs(delta_theta) = " << fabs(tmpT-ckTheta)
-                      << " CK tolerance " << ckSearchRange(segment,id) << " status = " << ok
-                      << endreq;
-          }
+          const double tmpT = m_ckAngle->avgCherenkovTheta( segment, *hypo );
+          ok = ( fabs(tmpT-ckTheta) < ckSearchRange(segment,*hypo) );
+          //if ( msgLevel(MSG::VERBOSE) )
+          //{
+          //  verbose() << " -> " << *hypo << " fabs(delta_theta) = " << fabs(tmpT-ckTheta)
+          //            << " CK tolerance " << ckSearchRange(segment,id) << " status = " << ok
+          //            << endreq;
+          //}
           if ( ok ) break;
         }
 
       }
 
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        if ( ok )
-        {
-          verbose() << "  -> Photon PASSED CK theta angle checks" << endreq;
-        }
-        else
-        {
-          verbose() << "  -> Photon FAILED CK theta angle checks" << endreq;
-        }
-      }
+      //if ( msgLevel(MSG::VERBOSE) )
+      //{
+      //  if ( ok )
+      // {
+      //    verbose() << "  -> Photon PASSED CK theta angle checks" << endreq;
+      //  }
+      //  else
+      //  {
+      //    verbose() << "  -> Photon FAILED CK theta angle checks" << endreq;
+      //  }
+      //}
       return ok;
     }
 
@@ -525,21 +537,21 @@ namespace Rich
       // check photon has significant probability to be signal for any
       // hypothesis. If not then reject
       bool keepPhoton = false;
-      for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
-      {
-        const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(iHypo);
-        const double predPixSig = m_photonSignal->predictedPixelSignal( photon, id );
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
+        {
+        const double predPixSig = m_photonSignal->predictedPixelSignal( photon, *hypo );
         const double minPixSig  = m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ];
         if ( predPixSig > minPixSig )
         {
           keepPhoton = true;
         }
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> " << id << " predicted pixel signal = " << predPixSig
-                    << " min acepted = " << minPixSig << " status = " << keepPhoton
-                    << endreq;
-        }
+        //if ( msgLevel(MSG::VERBOSE) )
+        //{
+        //  verbose() << " -> " << *hypo << " predicted pixel signal = " << predPixSig
+        //            << " min acepted = " << minPixSig << " status = " << keepPhoton
+        //            << endreq;
+        //}
         if ( keepPhoton ) break;
       }
 

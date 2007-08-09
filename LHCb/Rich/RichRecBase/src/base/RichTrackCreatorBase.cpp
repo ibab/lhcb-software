@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.11 2007-02-01 17:26:23 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.12 2007-08-09 15:51:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -39,7 +39,8 @@ namespace Rich
         m_richRecTrackLocation ( LHCb::RichRecTrackLocation::Default  ),
         m_Nevts                ( 0                  ),
         m_bookKeep             ( false              ),
-        m_traceMode            ( LHCb::RichTraceMode::IgnoreHPDAcceptance )
+        m_traceMode            ( LHCb::RichTraceMode::IgnoreHPDAcceptance ),
+        m_traceModeRad         ( Rich::NRadiatorTypes )
     {
 
       // Define the interface
@@ -80,7 +81,13 @@ namespace Rich
       incSvc()->addListener( this, IncidentType::EndEvent   );
 
       // track ray tracing
-      info() << "Track " << m_traceMode  << endreq;
+      m_traceModeRad[Rich::Aerogel]  = m_traceMode;
+      m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
+      m_traceModeRad[Rich::Rich1Gas] = m_traceMode;
+      m_traceModeRad[Rich::Rich2Gas] = m_traceMode;
+      info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
+      info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
+      info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
 
       return sc;
     }
@@ -152,7 +159,7 @@ namespace Rich
     {
       m_hasBeenCalled = false;
       if ( bookKeep() ) m_trackDone.clear();
-      m_tracks   = 0;
+      m_tracks   = NULL;
       if ( msgLevel(MSG::DEBUG) )
       {
         m_nTracksLast = m_nTracksAll;
@@ -161,27 +168,30 @@ namespace Rich
 
     void TrackCreatorBase::FinishEvent()
     {
-      if ( m_hasBeenCalled ) ++m_Nevts;
-      if ( msgLevel(MSG::DEBUG) )
+      if ( m_hasBeenCalled ) 
       {
-        // Print out of track count for this event
-        unsigned int nTotTried(0), nTotSel(0);
-        for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
+        ++m_Nevts;
+        if ( msgLevel(MSG::DEBUG) )
         {
-          nTotTried += (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks;
-          nTotSel   += (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks;
-        }
-        debug() << "Selected " << nTotSel << "/" << nTotTried << " Tracks :";
-        for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
-        {
-          const std::string name =
-            ( (*i).first.second ? "Unique:" : "NonUnique:" ) + Rich::text( (*i).first.first );
-          debug() << " " << name << "=("
-                  << (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks << "/"
-                  << (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks << ")";
-        }
-        debug() << endreq;
-      }
+          // Print out of track count for this event
+          unsigned int nTotTried(0), nTotSel(0);
+          for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
+          {
+            nTotTried += (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks;
+            nTotSel   += (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks;
+          }
+          debug() << "Selected " << nTotSel << "/" << nTotTried << " Tracks :";
+          for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
+          {
+            const std::string name =
+              ( (*i).first.second ? "Unique:" : "NonUnique:" ) + Rich::text( (*i).first.first );
+            debug() << " " << name << "=("
+                    << (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks << "/"
+                    << (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks << ")";
+          }
+          debug() << endreq;
+        } // debug
+      } // has been called
     }
 
     LHCb::RichRecTracks * TrackCreatorBase::richTracks() const
@@ -237,12 +247,16 @@ namespace Rich
 
       // Get primary PD panel impact point
       Gaudi::XYZPoint hitPoint;
-      const StatusCode sc = rayTraceTool()->traceToDetector( trSeg.rich(),
-                                                             trackPtn,
-                                                             trackDir,
-                                                             hitPoint,
-                                                             m_traceMode );
-      if ( sc.isSuccess() )
+      LHCb::RichTraceMode::RayTraceResult result 
+        = rayTraceTool()->traceToDetector( trSeg.rich(),
+                                           trackPtn,
+                                           trackDir,
+                                           hitPoint,
+                                           m_traceModeRad[trSeg.radiator()],
+                                           Rich::top, 
+                                           trSeg.avPhotonEnergy() );
+      const bool OK = m_traceModeRad[trSeg.radiator()].traceWasOK(result);
+      if ( OK )
       {
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endreq;
@@ -254,16 +268,18 @@ namespace Rich
         newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
 
         // Set the forced side ray traced points
-        LHCb::RichTraceMode tmpTraceMode(m_traceMode);
+        LHCb::RichTraceMode tmpTraceMode(m_traceModeRad[trSeg.radiator()]);
         tmpTraceMode.setForcedSide(true);
 
         // left/top
-        if ( rayTraceTool()->traceToDetector( trSeg.rich(),
-                                              trackPtn,
-                                              trackDir,
-                                              hitPoint,
-                                              tmpTraceMode,
-                                              Rich::left ).isSuccess() )
+        result = rayTraceTool()->traceToDetector( trSeg.rich(),
+                                                  trackPtn,
+                                                  trackDir,
+                                                  hitPoint,
+                                                  tmpTraceMode,
+                                                  Rich::left,
+                                                  trSeg.avPhotonEnergy() );
+        if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
           newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::left );
@@ -272,12 +288,14 @@ namespace Rich
         }
 
         // right/bottom
-        if ( rayTraceTool()->traceToDetector( trSeg.rich(),
-                                              trackPtn,
-                                              trackDir,
-                                              hitPoint,
-                                              tmpTraceMode,
-                                              Rich::right ).isSuccess() )
+        result = rayTraceTool()->traceToDetector( trSeg.rich(),
+                                                  trackPtn,
+                                                  trackDir,
+                                                  hitPoint,
+                                                  tmpTraceMode,
+                                                  Rich::right,
+                                                  trSeg.avPhotonEnergy() );
+        if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
           newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::right );
@@ -287,7 +305,7 @@ namespace Rich
 
       }
 
-      return sc;
+      return ( OK ? StatusCode::SUCCESS : StatusCode::FAILURE );
     }
 
   }
