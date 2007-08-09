@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::Initialise
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.5 2007-03-27 12:44:30 jonrob Exp $
+ *  $Id: RichRecInit.h,v 1.6 2007-08-09 16:11:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -67,6 +67,9 @@ namespace Rich
 
       /// Flag to turn on creation of RichRecPhotons
       bool m_makePhotons;
+
+      /// Flag to turn on the loading of the raw LHCb::Tracks
+      bool m_loadRawTracks;
 
     };
 

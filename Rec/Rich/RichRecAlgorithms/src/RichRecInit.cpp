@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.4 2007-03-27 12:44:30 jonrob Exp $
+ *  $Id: RichRecInit.cpp,v 1.5 2007-08-09 16:11:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -32,6 +32,7 @@ Initialise::Initialise( const std::string& name,
   declareProperty( "CreatePixels",    m_makePixels      = false );
   declareProperty( "CreateTracks",    m_makeTracks      = false );
   declareProperty( "CreatePhotons",   m_makePhotons     = false );
+  declareProperty( "LoadRawTracks",   m_loadRawTracks   = false );
 }
 
 // Destructor
@@ -53,6 +54,12 @@ StatusCode Initialise::execute()
       LHCb::ProcStatus * procS = new LHCb::ProcStatus();
       put( procS, LHCb::ProcStatusLocation::Default );
     }
+  }
+
+  // raw tracks
+  if ( m_loadRawTracks )
+  {
+    trackCreator()->nInputTracks();
   }
 
   // Pixels
