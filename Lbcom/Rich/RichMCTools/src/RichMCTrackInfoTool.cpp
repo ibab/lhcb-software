@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.12 2007-02-01 17:50:13 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.13 2007-08-09 15:57:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -45,6 +45,7 @@ StatusCode MCTrackInfoTool::initialize()
   acquireTool( "RichSmartIDTool",  m_smartIDTool, 0, true );
 
   // Configure the ray-tracing mode
+  m_traceMode.setAeroRefraction ( true );
   info() << "Track " << m_traceMode << endreq;
 
   return sc;
@@ -60,12 +61,14 @@ const bool
 MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
                                        Gaudi::XYZPoint & hitPoint ) const
 {
-  return ( 0 != segment &&
-           m_rayTrace->traceToDetector( segment->rich(),
-                                        segment->bestPoint(0.5),
-                                        segment->bestMomentum(0.5),
-                                        hitPoint,
-                                        m_traceMode ) );
+  if ( NULL == segment ) return false;
+  const LHCb::RichTraceMode::RayTraceResult result
+    = m_rayTrace->traceToDetector( segment->rich(),
+                                   segment->bestPoint(0.5),
+                                   segment->bestMomentum(0.5),
+                                   hitPoint,
+                                   m_traceMode );
+  return m_traceMode.traceWasOK(result);
 }
 
 const bool
