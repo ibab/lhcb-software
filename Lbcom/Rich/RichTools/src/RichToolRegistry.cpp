@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.16 2007-06-22 13:38:46 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.17 2007-08-09 16:00:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -45,6 +45,7 @@ StatusCode Rich::ToolRegistry::initialize()
   // MC
   defaultTools.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
   defaultTools.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
+  defaultTools.push_back ( "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" );
   // Common RICH tools
   defaultTools.push_back ( "Rich::MirrorSegFinder/RichMirrorSegFinder"     );
   defaultTools.push_back ( "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" );
@@ -61,7 +62,7 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::SegmentCreator/RichSegmentCreator" );
   defaultTools.push_back ( "Rich::Rec::StatusCreator/RichStatusCreator" );
   defaultTools.push_back ( "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" );
-  defaultTools.push_back ( "Rich::Rec::GeomEffPhotonTracing/RichGeomEff" );
+  defaultTools.push_back ( "Rich::Rec::GeomEffCKMassRing/RichGeomEff" );
   defaultTools.push_back ( "Rich::Rec::PhotonSignalGaussProb/RichPhotonSignal" );
   //defaultTools.push_back ( "Rich::Rec::PhotonSignalJeffreysErf/RichPhotonSignal" );
   defaultTools.push_back ( "Rich::Rec::CherenkovAngle/RichCherenkovAngle" );
@@ -70,13 +71,14 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::SellmeirFunc/RichSellmeirFunc" );
   defaultTools.push_back ( "Rich::Rec::TabulatedSignalDetectionEff/RichSignalDetectionEff" );
   defaultTools.push_back ( "Rich::Rec::TabulatedGasQuartzWindowAbs/RichGasQuartzWindow" );
+  defaultTools.push_back ( "Rich::Rec::TrackSelector/TrackSelector" );
   // other tools
   defaultTools.push_back ( "OdinTimeDecoder/OdinTimeDecoder" );
 
   // configure the default tools first
   setUpTools( defaultTools );
   // then the ones from the job options
-  // any settings here for default nicknames will override 
+  // any settings here will override default nicknames 
   setUpTools( m_names );
 
   return sc;
@@ -131,7 +133,7 @@ void Rich::ToolRegistry::addEntry( const std::string & nickname,
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
     Warning( "Nickname '" + nickname + "' mapping changed : '"
-             + m_myTools[nickname] + "' to '" + type + "'", 0, StatusCode::SUCCESS );
+             + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS );
   }
   if ( msgLevel(MSG::DEBUG) )
   {

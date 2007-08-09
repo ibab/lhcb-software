@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.32 2007-04-23 13:08:01 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.33 2007-08-09 16:00:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -24,6 +24,8 @@
 
 // RichKernel
 #include "RichKernel/IRichMirrorSegFinder.h"
+#include "RichKernel/IRichRefractiveIndex.h"
+#include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/RichGeomPhoton.h"
 
@@ -88,21 +90,25 @@ namespace Rich
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors. Returns the result in the form of a RichGeomPhoton
-    StatusCode traceToDetector( const Rich::DetectorType rich,
-                                const Gaudi::XYZPoint& startPoint,
-                                const Gaudi::XYZVector& startDir,
-                                LHCb::RichGeomPhoton& photon,
-                                const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                                const Rich::Side forcedSide = Rich::top ) const;
+    LHCb::RichTraceMode::RayTraceResult
+    traceToDetector( const Rich::DetectorType rich,
+                     const Gaudi::XYZPoint& startPoint,
+                     const Gaudi::XYZVector& startDir,
+                     LHCb::RichGeomPhoton& photon,
+                     const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                     const Rich::Side forcedSide    = Rich::top,
+                     const double photonEnergy      = 0 ) const;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors.
-    StatusCode traceToDetector( const Rich::DetectorType rich,
-                                const Gaudi::XYZPoint& startPoint,
-                                const Gaudi::XYZVector& startDir,
-                                Gaudi::XYZPoint& hitPosition,
-                                const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                                const Rich::Side forcedSide = Rich::top ) const;
+    LHCb::RichTraceMode::RayTraceResult
+    traceToDetector( const Rich::DetectorType rich,
+                     const Gaudi::XYZPoint& startPoint,
+                     const Gaudi::XYZVector& startDir,
+                     Gaudi::XYZPoint& hitPosition,
+                     const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                     const Rich::Side forcedSide    = Rich::top,
+                     const double photonEnergy      = 0 ) const;
 
     /// Raytraces from a point in the detector panel back to the spherical mirror
     /// returning the mirror intersection point and the direction a track would
@@ -132,12 +138,12 @@ namespace Rich
   private: // methods
 
     /// Ray trace from given position in given direction off both mirrors
-    StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
-                                    Gaudi::XYZPoint& position,
-                                    Gaudi::XYZVector& direction,
-                                    LHCb::RichGeomPhoton& photon,
-                                    const LHCb::RichTraceMode mode,
-                                    const Rich::Side fSide ) const;
+    bool reflectBothMirrors ( const Rich::DetectorType rich,
+                              Gaudi::XYZPoint& position,
+                              Gaudi::XYZVector& direction,
+                              LHCb::RichGeomPhoton& photon,
+                              const LHCb::RichTraceMode mode,
+                              const Rich::Side fSide ) const;
 
     /// Access the DeRich beam pipe objects, creating as needed on demand
     inline const DeRichBeamPipe* deBeam( const Rich::DetectorType rich ) const
@@ -152,6 +158,9 @@ namespace Rich
     }
 
   private: // data
+
+    /// Refractive index tool
+    const IRefractiveIndex * m_refIndex;
 
     /// Rich1 and Rich2 pointers
     std::vector< const DeRich* > m_rich;
@@ -174,6 +183,15 @@ namespace Rich
 
     /// RICH beampipe object for each RICH detector
     mutable std::vector<const DeRichBeamPipe*> m_deBeam;
+
+    /// aerogel exit plane (for refraction correction)
+    Gaudi::Plane3D m_aeroExitPlane;
+
+    /// Vector normal to aerogel exit plane (for refraction correction)
+    Gaudi::XYZVector m_aeroNormVect;
+
+    /// z point for plane
+    double m_minZaero;
 
   };
 

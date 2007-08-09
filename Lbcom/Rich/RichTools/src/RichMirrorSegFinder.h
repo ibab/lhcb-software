@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.15 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.16 2007-08-09 16:00:25 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -14,6 +14,12 @@
 
 #ifndef RICHTOOLS_RICHMIRRORSEGFINDER_H
 #define RICHTOOLS_RICHMIRRORSEGFINDER_H 1
+
+// STL
+#include <sstream>
+#include <cmath>
+#include <vector>
+#include <functional>
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -80,14 +86,36 @@ namespace Rich
   private: // methods
 
     /// performs a full search for the spherical mirror
-    unsigned int fullSphSearch( const Rich::DetectorType rich,
-                                const Rich::Side side,
-                                const Gaudi::XYZPoint& reflPoint ) const;
+    const DeRichSphMirror* fullSphSearch( const Rich::DetectorType rich,
+                                          const Rich::Side side,
+                                          const Gaudi::XYZPoint& reflPoint ) const;
 
     /// performs a full search for the secondary mirror
-    unsigned int fullSecSearch( const Rich::DetectorType rich,
-                                const Rich::Side side,
-                                const Gaudi::XYZPoint& reflPoint ) const;
+    const DeRichSphMirror* fullSecSearch( const Rich::DetectorType rich,
+                                          const Rich::Side side,
+                                          const Gaudi::XYZPoint& reflPoint ) const;
+
+  private: // classes
+
+    /// Functor to sort RichSmartIDs by Rich then panel numbers
+    class SortByDistFromBeam : std::binary_function< const DeRichSphMirror*, const DeRichSphMirror*, bool >
+    {
+    public:
+      /** Sort operator for the Spherical mirrors
+       *
+       *  Sorts into order of distance from beam line (x,y) = (0,0)
+       *
+       *  @param m1 First mirror
+       *  @param m2 Second mirror
+       *
+       *  @return bool indicating if p1 should be listed before p2
+       */
+      inline bool operator() ( const DeRichSphMirror* m1, const DeRichSphMirror* m2 ) const
+        {
+          return ( pow(m1->mirrorCentre().x(),2) + pow(m1->mirrorCentre().y(),2) <
+                   pow(m2->mirrorCentre().x(),2) + pow(m2->mirrorCentre().y(),2) );
+        }
+    };
 
   private: // data
 
@@ -95,16 +123,13 @@ namespace Rich
     enum mirrorType { sph = 0, sec = 1 };
 
     /// Pointers to the spherical mirror detector elements
-    const DeRichSphMirror* m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
+    std::vector<const DeRichSphMirror*> m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH];
 
     /// Pointers to the secondary (spherical) mirror detector elements
-    const DeRichSphMirror* m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
-
-    /// The max mirror number for each RICH and HPD panel
-    unsigned int m_maxMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+    std::vector<const DeRichSphMirror*> m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH];
 
     /// The last found mirror number for each RICH and HPD panel
-    mutable unsigned int m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+    mutable const DeRichSphMirror* m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
 
     /// Max distance to accept mirror
     mutable double m_maxDist[Rich::NRiches][2];

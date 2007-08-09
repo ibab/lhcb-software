@@ -4,10 +4,20 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Update the mirror segment finding tool to sort mirrors in order to distance 
+   from beamline. This is roughly equivialent to the order of 'most used' and
+   thus will speed up a little the full search.
+ - Add to the particle properties tool the method to return the active
+   hypothesis list.
+ - Add correction for refraction at aerogel to Rich1Gas boundary during 
+   ray tracing
+ - Update default tool mappings in tool registry.
+
 ! 2007-07-20 - Chris Jones
- - Add implementations for two new methods, anodeGlobalPosition, which return 
-   the position for a given RichSmartID or Rich::HPDPixelCluster on the anode
-   pixel chip.
+ - Add implementations for two new methods to the RichSmartID tool, 
+   anodeGlobalPosition, which return the position for a given RichSmartID 
+   or Rich::HPDPixelCluster on the anode pixel chip.
 
 !=========================== RichTools v2r14 2007-07-09 ======================
 ! 2007-06-22 - Chris Jones

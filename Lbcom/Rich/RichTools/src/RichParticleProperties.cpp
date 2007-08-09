@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.5 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.6 2007-08-09 16:00:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,11 +27,15 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ParticleProperties );
 Rich::ParticleProperties::ParticleProperties ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
-  : RichToolBase( type, name, parent )
+  : RichToolBase ( type, name, parent ),
+    m_pidTypes   ( Rich::particles()  )
 {
 
   // declare interface
   declareInterface<IParticleProperties>(this);
+
+  // PID types
+  declareProperty( "ParticleTypes", m_pidTypesJO );
 
 }
 
@@ -78,7 +82,7 @@ StatusCode Rich::ParticleProperties::initialize()
       m_momThres2[iRad][iHypo] = m_momThres[iRad][iHypo]*m_momThres[iRad][iHypo];
       debug() << m_momThres[iRad][iHypo] << " ";
     }
-    debug () << endreq;
+    debug() << endreq;
   }
 
   // release tool
@@ -86,6 +90,30 @@ StatusCode Rich::ParticleProperties::initialize()
 
   // release service
   sc = release(ppSvc);
+
+  // PID Types
+  bool hasPion(true);
+  if ( !m_pidTypesJO.empty() )
+  {
+    hasPion = false;
+    m_pidTypes.clear();
+    for ( std::vector<std::string>::const_iterator iS = m_pidTypesJO.begin();
+          iS != m_pidTypesJO.end(); ++iS )
+    {
+      if      ( "electron" == *iS ) { m_pidTypes.push_back(Rich::Electron); }
+      else if ( "muon" == *iS     ) { m_pidTypes.push_back(Rich::Muon); }
+      else if ( "pion" == *iS     ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
+      else if ( "kaon" == *iS     ) { m_pidTypes.push_back(Rich::Kaon); }
+      else if ( "proton" == *iS   ) { m_pidTypes.push_back(Rich::Proton); }
+      else
+      {
+        return Error( "Unknown particle type from options " + *iS );
+      }
+    }
+  }
+  info() << "Particle types considered = " << m_pidTypes << endreq;
+  if ( m_pidTypes.empty() ) return Error( "No particle types specified" );
+  if ( !hasPion )           return Error( "Pion hypothesis must be included in list" );
 
   return sc;
 }
@@ -123,4 +151,9 @@ double Rich::ParticleProperties::thresholdMomentumSq( const Rich::ParticleIDType
                                                       const Rich::RadiatorType rad ) const
 {
   return m_momThres2[rad][id];
+}
+
+const Rich::Particles & Rich::ParticleProperties::particleTypes() const
+{
+  return m_pidTypes;
 }

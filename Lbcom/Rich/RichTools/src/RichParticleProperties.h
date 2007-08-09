@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.h,v 1.5 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichParticleProperties.h,v 1.6 2007-08-09 16:00:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -85,6 +85,9 @@ namespace Rich
     double thresholdMomentumSq( const Rich::ParticleIDType id,
                                 const Rich::RadiatorType rad ) const;
 
+    // Vector of the mass hypotheses to be considered
+    const Rich::Particles & particleTypes() const;
+
   private:  // Private data
 
     /// Array containing particle masses
@@ -98,6 +101,12 @@ namespace Rich
 
     /// Momentum thresholds squared (cached for speed)
     double m_momThres2[Rich::NRadiatorTypes][Rich::NParticleTypes];
+
+    /// Particle ID types to consider in the likelihood minimisation (JO)
+    std::vector<std::string> m_pidTypesJO;
+    
+    /// Particle ID types to consider in the likelihood minimisation
+    Rich::Particles m_pidTypes;
 
   };
 
