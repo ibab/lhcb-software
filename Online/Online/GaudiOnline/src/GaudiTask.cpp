@@ -12,18 +12,19 @@
 #include "CPP/IocSensor.h"
 #include "WT/wt_facilities.h"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
-
 static    lib_rtl_lock_t  s_lock = 0;
 
+
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
+
 int gauditask_task_lock() {
-  return lib_rtl_lock(s_lock);
+  return ::lib_rtl_lock(s_lock);
 }
 int gauditask_task_trylock() {
-  return lib_rtl_trylock(s_lock);
+  return ::lib_rtl_trylock(s_lock);
 }
 int gauditask_task_unlock() {
-  return lib_rtl_unlock(s_lock);
+  return ::lib_rtl_unlock(s_lock);
 }
 
 // Static thread routine to execute a Gaudi runable
@@ -49,6 +50,14 @@ LHCb::GaudiTask::~GaudiTask()  {
   if ( m_appMgr ) m_appMgr->release();
   m_appMgr= 0;
   ::lib_rtl_delete_lock(s_lock);
+}
+
+void LHCb::GaudiTask::lock() {
+  gauditask_task_lock();
+}
+
+void LHCb::GaudiTask::unlock() {
+  gauditask_task_unlock();
 }
 
 /// Run the complete job (from intialize to terminate)
@@ -143,7 +152,17 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::GaudiTask::configure()  {
+StatusCode LHCb::GaudiTask::startRunable(IRunable* runable)   {
+  MsgStream log(msgSvc(), name());
+  int sc = lib_rtl_start_thread(execRunable, runable, &m_handle);
+  if ( lib_rtl_is_success(sc) )  {
+    return StatusCode::SUCCESS;
+  }
+  log << MSG::ERROR << "Failed to spawn off execution thread." << endmsg;
+  return StatusCode::FAILURE;
+}
+
+int LHCb::GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
   if ( 0 == m_subMgr )  {
@@ -159,43 +178,29 @@ StatusCode LHCb::GaudiTask::configure()  {
       sc = m_subMgr->configure();
       if ( sc.isSuccess() )  {
         log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
-        return DimTaskFSM::configure();
+        return 1;
       }
       m_subMgr->terminate();
       m_subMgr->release();
       m_subMgr = 0;
       // This means job options were not found - this is an error
-      declareState(ST_ERROR);
       log << MSG::ERROR << "Failed to configure 2nd. level. Bad options ?" << endmsg;
-      return sc;
+      return 0;
     }
-    declareState(ST_ERROR);
     log << MSG::ERROR << "Failed to configure 2nd. level." << endmsg;
     return sc;
   }
-  declareState(ST_NOT_READY);
   return sc;
 }
 
-StatusCode LHCb::GaudiTask::startRunable(IRunable* runable)   {
+int LHCb::GaudiTask::initApplication()  {
   MsgStream log(msgSvc(), name());
-  int sc = lib_rtl_start_thread(execRunable, runable, &m_handle);
-  if ( lib_rtl_is_success(sc) )  {
-    return StatusCode::SUCCESS;
-  }
-  log << MSG::ERROR << "Failed to spawn off execution thread." << endmsg;
-  return StatusCode::FAILURE;
-}
-
-StatusCode LHCb::GaudiTask::initialize()  {
-  MsgStream log(msgSvc(), name());
-  StatusCode sc = StatusCode::SUCCESS;
   if ( 0 != m_subMgr )  {
     std::string nam, runable_name, evtloop_name;
     SmartIF<IProperty>   ip(m_subMgr);
     SmartIF<ISvcLocator> loc(m_subMgr);
     if ( 0 == m_handle )  {
-      sc = m_subMgr->initialize();
+      StatusCode sc = m_subMgr->initialize();
       if ( sc.isSuccess() )   {
         if ( loc )  {
           if ( ip->getProperty("Runable",nam).isSuccess() )  {
@@ -214,37 +219,79 @@ StatusCode LHCb::GaudiTask::initialize()  {
                 DimTaskFSM::initialize();
                 sc = startRunable(runable);
                 if ( sc.isSuccess() )  {
-                  return sc;
+                  return 1;
                 }
                 log << MSG::ERROR << "Failed to start runable." << endmsg;
-                goto Failed;
+                return 0;
               }
               log << MSG::ERROR << "Failed to access incident service." << endmsg;
-              goto Failed;
+              return 0;
             }
           }
           log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
-          goto Failed;
+          return 0;
         }
         log << MSG::ERROR << "Failed to service locator object" << endmsg;
-        goto Failed;
+        return 0;
       }
       log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
-      goto Failed;
+      return 0;
     }
     else  {
       log << MSG::INFO << "2nd. layer is already executing" << endmsg;
-      declareState(ST_READY);
-      return StatusCode::SUCCESS;
+      return 3;
     }
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you call configure?" << endmsg;
-    goto Failed;
+    return 0;
   }
-Failed:
-  declareState(ST_ERROR);
-  return sc;
+  return 0;
+}
+
+int LHCb::GaudiTask::finalizeApplication()  {
+#if 0
+  std::string nam, evtloop_name;
+  IEventProcessor *evtProc = 0;
+  SmartIF<ISvcLocator> loc(m_subMgr);
+  SmartIF<IProperty>   ip(m_subMgr);
+  ip->getProperty("EventLoop",nam);
+  size_t id1 = nam.find_first_of("\"");
+  size_t id2 = nam.find_last_of("\"");
+  evtloop_name = nam.substr(id1+1,id2-id1-1);
+  ListItem itm(evtloop_name);
+  if ( loc->service(itm.name(), evtProc).isSuccess() )  {
+    evtProc->stopRun();
+  }
+#endif
+  if ( m_handle )  {
+    ::lib_rtl_join_thread(m_handle);
+    m_handle = 0;
+  }
+  gauditask_task_lock();
+  if ( m_incidentSvc ) m_incidentSvc->release();
+  m_incidentSvc= 0;
+  StatusCode sc = m_subMgr->finalize();
+  if ( !sc.isSuccess() )   {
+    gauditask_task_unlock();
+    return 0;
+  }
+  gauditask_task_unlock();
+  return 1;
+}
+
+int LHCb::GaudiTask::terminateApplication()  {
+  if ( m_subMgr )  {
+    StatusCode sc = m_subMgr->terminate();
+    if ( sc.isSuccess() )   {
+      m_subMgr->release();
+      m_subMgr = 0;
+      Gaudi::setInstance(m_appMgr);
+      return 1;
+    }
+    return 0;
+  }
+  return 1;
 }
 
 StatusCode LHCb::GaudiTask::enable()  {
@@ -278,51 +325,4 @@ StatusCode LHCb::GaudiTask::nextEvent(int /* num_event */)  {
     m_nerr++;
   }
   return DimTaskFSM::nextEvent(1);
-}
-
-StatusCode LHCb::GaudiTask::finalize()  {
-#if 0
-  std::string nam, evtloop_name;
-  IEventProcessor *evtProc = 0;
-  SmartIF<ISvcLocator> loc(m_subMgr);
-  SmartIF<IProperty>   ip(m_subMgr);
-  ip->getProperty("EventLoop",nam);
-  size_t id1 = nam.find_first_of("\"");
-  size_t id2 = nam.find_last_of("\"");
-  evtloop_name = nam.substr(id1+1,id2-id1-1);
-  ListItem itm(evtloop_name);
-  if ( loc->service(itm.name(), evtProc).isSuccess() )  {
-    evtProc->stopRun();
-  }
-#endif
-  if ( m_handle )  {
-    ::lib_rtl_join_thread(m_handle);
-    m_handle = 0;
-  }
-  gauditask_task_lock();
-  if ( m_incidentSvc ) m_incidentSvc->release();
-  m_incidentSvc= 0;
-  StatusCode sc = m_subMgr->finalize();
-  if ( !sc.isSuccess() )   {
-    declareState(ST_RUNNING);
-    gauditask_task_unlock();
-    return sc;
-  }
-  gauditask_task_unlock();
-  return DimTaskFSM::finalize();
-}
-
-StatusCode LHCb::GaudiTask::terminate()  {
-  if ( m_subMgr )  {
-    StatusCode sc = m_subMgr->terminate();
-    if ( sc.isSuccess() )   {
-      m_subMgr->release();
-      m_subMgr = 0;
-      Gaudi::setInstance(m_appMgr);
-      return DimTaskFSM::terminate();
-    }
-    declareState(ST_READY);
-    return sc;
-  }
-  return DimTaskFSM::terminate();
 }

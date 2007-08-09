@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2007-08-08 Markus Frank
+ - Add new task classes: Class0, Class1, Class2 based on standard GaudiTask 
+   implementation
+
 ! 2007-07-09 Sai Suman
  - Added an additional socket for sending MEP Requests.
  - Added a socket descriptor as an argument to recv_msg(), send_msg(),

@@ -17,6 +17,8 @@ class IAppMgrUI;
 namespace LHCb  {
   /** @class GaudiTask GaudiTask.h GaudiOnline/GaudiTask.h
     *
+    * Basic object implementing the functionality of a task executing
+    * the gaudi data processing environment.
     * 
     * @author  M.Frank
     * @version 1.0
@@ -53,6 +55,16 @@ namespace LHCb  {
     StatusCode setInstanceProperties(IAppMgrUI* inst);
     /// Start 2nd layer runable
     StatusCode startRunable(IRunable* runable);
+
+    /// Internal helper: configure  application manager
+    virtual int configApplication();
+    /// Internal helper: initialize application manager
+    virtual int initApplication();
+    /// Internal helper: finalize   application manager
+    virtual int finalizeApplication();
+    /// Internal helper: terminate  application manager
+    virtual int terminateApplication();
+
   public:
     /// Standard constructor
     GaudiTask(IInterface* svc);
@@ -66,18 +78,14 @@ namespace LHCb  {
     virtual StatusCode unload();
     /// Callback on I/O cancel
     virtual StatusCode cancel();
-    /// Callback on configure transition
-    virtual StatusCode configure();
-    /// Callback on start transition
-    virtual StatusCode initialize();
-    /// Callback on stop transition
-    virtual StatusCode finalize();
-    /// Callback on reset transition
-    virtual StatusCode terminate();
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
     /// Callback to process event
     virtual StatusCode nextEvent(int num_event);
+    /// Lock task object
+    static void lock();
+    /// Unlock task object
+    static void unlock();
   };
 }
 #endif // ONLINEKERNEL_GAUDITASK_H

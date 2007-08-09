@@ -208,7 +208,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
 extern "C" int OnlineTask(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
   std::string dll     = "";
-  std::string type    = "LHCb::GaudiTask";
+  std::string type    = "LHCb::Class1Task";
   std::string runable = "LHCb::OnlineRunable/Runable";
   std::string evtloop = "LHCb::OnlineRunable/EmptyEventLoop";
   std::string msgsvc  = "MessageSvc";
