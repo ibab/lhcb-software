@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.12 2007-02-02 10:06:28 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.13 2007-08-09 16:13:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -300,7 +300,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
                                                                 newTrack->currentHypothesis()) );
 
             // make RichRecRings for the mass hypotheses if requested
-            if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
+            if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );
 
             // Count radiator segments
             tkCount.countRadiator( (*iSeg)->radiator() );

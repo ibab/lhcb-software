@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.25 2007-06-01 09:47:08 cattanem Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.26 2007-08-09 16:13:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -48,6 +48,9 @@
 // Interfaces
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "MCInterfaces/IRichMCTruthTool.h"
+
+// kernel
+#include "RichKernel/RichHashMap.h"
 
 namespace Rich
 {
@@ -226,14 +229,19 @@ namespace Rich
         // track linker stuff
         typedef LinkerTool<LHCb::Track,LHCb::MCParticle> TrackToMCP;
         typedef TrackToMCP::DirectType                   TrToMCTable;
+        typedef Rich::HashMap<std::string,TrackToMCP*>   TrackLocToMCPs;
         // ring linker stuff
         typedef LinkerTool<LHCb::MCRichSegment,LHCb::RichRecRing> MCRichSegToMCCKRing;
         typedef MCRichSegToMCCKRing::DirectType                   MCRichSegToMCCKRTable;
 
+
       private: // methods
 
         /// Returns the linker object for Tracks to MCParticles
-        TrackToMCP * trackToMCPLinks() const;
+        TrackToMCP * trackToMCPLinks( const LHCb::Track * track = NULL ) const;
+
+        /// Returns the linker for the given Track location
+        TrackToMCP * trackToMCPLinks( const std::string & loc ) const;
 
         /// Returns the linker object for MCRichTracks to MCCK rings
         MCRichSegToMCCKRing * mcSegToRingLinks() const;
@@ -250,7 +258,7 @@ namespace Rich
         const Rich::MC::IMCTruthTool * m_truth;
 
         /// Linker for Tracks to MCParticles
-        mutable TrackToMCP * m_trToMCPLinks;
+        mutable TrackLocToMCPs m_trToMCPLinks;
 
         /// Linker for MCRichTracks to MCCK rings
         mutable MCRichSegToMCCKRing * m_mcSegToRingLinks;
@@ -258,13 +266,10 @@ namespace Rich
         /// Location of Tracks in TES
         std::string m_trLoc;
 
-      };
+        /// other track location to try if all else fails
+        std::string m_otherTrLoc;
 
-      inline void MCTruthTool::cleanUpLinkers()
-      {
-        if ( m_trToMCPLinks     ) { delete m_trToMCPLinks;     m_trToMCPLinks     = NULL; }
-        if ( m_mcSegToRingLinks ) { delete m_mcSegToRingLinks; m_mcSegToRingLinks = NULL; }
-      }
+      };
 
       inline void MCTruthTool::InitNewEvent()
       {

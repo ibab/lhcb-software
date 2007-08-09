@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Update Track -> MCParticle association method to determine on the fly
+  from the Track container location which linker to use.
+
 !====================== RichRecMCTools v2r12 2007-06-01 =======================
 ! 2007-06-01 - Marco Cattaneo
  - Adapt to move of some interfaces to MCInterfaces package
