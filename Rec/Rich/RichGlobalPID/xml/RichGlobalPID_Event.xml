@@ -10,6 +10,8 @@
             </method>
             <!--aComment-->
             <attribute nonconstaccessor = "TRUE" desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;double&gt;"/>
+            <location name="Offline" place="Rec/Rich/GlobalPID/OfflineSummary"/>
+            <location name="HLT"     place="Rec/Rich/GlobalPID/HltSummary"/>
         </class>
         <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/Tracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
             <import name="Event/RichRecTrack"/>
@@ -22,6 +24,8 @@
             <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::Rec::GlobalPID::TkQuality"/>
             <relation nonconstaccessor = "TRUE" desc="SmartRef to RichRecTrack" name="richRecTrack" type="LHCb::RichRecTrack"/>
             <relation nonconstaccessor = "TRUE" desc="Associated GlobalPID object" name="globalPID" type="LHCb::RichGlobalPID"/>
+            <location name="Offline" place="Rec/Rich/GlobalPID/OfflineTracks"/>
+            <location name="HLT"     place="Rec/Rich/GlobalPID/HltTracks"/>
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich particle identification object for the global track based algorithm" id="12434" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/PIDs" name="RichGlobalPID" stdVectorTypeDef="TRUE">
             <base name="RichPID"/>
@@ -29,6 +33,8 @@
             <constructor desc="Default constructor">
                 <code>this-&gt;setGlobal(true);</code>
             </constructor>
+            <location name="Offline" place="Rec/Rich/GlobalPID/OfflinePIDs"/>
+            <location name="HLT"     place="Rec/Rich/GlobalPID/HltPIDs"/>
         </class>
     </package>
 </gdd>

@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.h,v 1.4 2007-06-22 13:45:31 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.h,v 1.5 2007-08-09 16:06:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -30,6 +30,7 @@
 // interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 // boost
 #include "boost/format.hpp"
@@ -150,6 +151,9 @@ namespace Rich
         const IExpectedTrackSignal * m_tkSignal; ///< Track signal tool
         const IPhotonSignal * m_photonSig;       ///< Photon signal tool
 
+        /// Pointer to RichParticleProperties interface
+        const IParticleProperties * m_richPartProp;
+
         /// Track DLL value to freeze track out from future iterations
         double m_freezeOutDll;
 
@@ -183,7 +187,8 @@ namespace Rich
         /// Maximum number of tracks to change in a single event iteration
         unsigned int m_maxTkChanges;
 
-      private:
+        /// Particle ID types to consider in the likelihood minimisation
+        Rich::Particles m_pidTypes;
 
         // working flags and variables
         bool m_inR1, m_inR2;

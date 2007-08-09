@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.4 2007-06-22 13:45:31 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.5 2007-08-09 16:06:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -27,11 +27,12 @@ DECLARE_ALGORITHM_FACTORY( Likelihood );
 // Standard constructor, initializes variables
 Likelihood::Likelihood( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : AlgBase     ( name, pSvcLocator ),
-    m_tkSignal  ( NULL ),
-    m_photonSig ( NULL ),
-    m_inR1      ( true ),
-    m_inR2      ( true )
+  : AlgBase        ( name, pSvcLocator ),
+    m_tkSignal     ( NULL ),
+    m_photonSig    ( NULL ),
+    m_richPartProp ( NULL ),
+    m_inR1         ( true ),
+    m_inR2         ( true )
 {
 
   // Threshold for likelihood maximisation
@@ -73,6 +74,7 @@ StatusCode Likelihood::initialize()
   // Acquire tools
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
+  acquireTool( "RichParticleProperties",  m_richPartProp );
 
   // trick to force pre-loading of various tools. Avoids loading
   // during first processed event and thus biasing any timing numbers
@@ -81,7 +83,15 @@ StatusCode Likelihood::initialize()
   // Initialise parameters
   m_logMinSig = log( exp(m_minSig) - 1.0 );
 
+  // PID types
+  m_pidTypes = m_richPartProp->particleTypes();
+
+  // trick to force pre-loading of various tools. Avoids loading
+  // during first processed event and thus biased any timing numbers
+  statusCreator();   // pre-load the status creator
+
   // Printout some initialisation info
+  info() << "Particle types considered                 = " << m_pidTypes << endreq;
   info() << "Maximum event iterations                  = " << m_maxEventIterations << endreq;
   info() << "Minimum signal for LL calculation         = " << m_minSig << endreq;
   info() << "Track freeze-out DLL value                = " << freezeOutDll() << endreq;
@@ -270,42 +280,41 @@ unsigned int Likelihood::initBestLogLikelihood()
     Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
     // Loop over all particle codes
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
+          hypo != m_pidTypes.end(); ++hypo )
     {
-      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Skip analysing starting hypothesis
-      if ( hypo == rRTrack->currentHypothesis() ) continue;
+      if ( *hypo == rRTrack->currentHypothesis() ) continue;
 
       // calculate delta logLikelihood for event with new track hypothesis
-      const double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
+      const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
 
       // Set the value for deltaLL for this hypothesis
-      (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
+      (*track)->globalPID()->setParticleDeltaLL( *hypo, deltaLogL );
 
       // Set new minimum if lower logLikelihood is achieved
       if ( deltaLogL < mindeltaLL )
       {
         if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
-        if ( deltaLogL < m_epsilon ) minHypo = hypo;
+        if ( deltaLogL < m_epsilon ) minHypo = *hypo;
       }
 
       // In case the threshold is reached, skip other hypotheses
       bool threshold = true;
-      for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
+      for ( Rich::Particles::const_iterator hypo2 = hypo; hypo2 != m_pidTypes.end(); ++hypo2 )
       {
-        if ( m_tkSignal->nDetectablePhotons( rRTrack,
-                                             static_cast<Rich::ParticleIDType>(ihypo) ) > 0 )
+        if ( m_tkSignal->nDetectablePhotons( rRTrack, *hypo2 ) > 0 )
         {
           threshold = false; break;
         }
       }
       if ( threshold )
       {
-        for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
+        for ( Rich::Particles::const_iterator hypo3 = hypo; 
+              hypo3 != m_pidTypes.end(); ++hypo3 )
         {
-          (*track)->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(ihypo),
-                                                     deltaLogL );
+          (*track)->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
         }
         break;
       }
@@ -394,22 +403,22 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
     bool addto(false), minFound(false);
     double minTrackDll = 99999999;
     Rich::ParticleIDType minHypo = Rich::Unknown;
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
+          hypo != m_pidTypes.end(); ++hypo )
     {
-      const Rich::ParticleIDType hypothesis = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Skip analysing starting hpyothesis
-      if ( hypothesis == rRTrack->currentHypothesis() ) continue;
+      if ( *hypo == rRTrack->currentHypothesis() ) continue;
 
       // calculate delta logLikelihood for event with new track hypothesis
-      const double deltaLogL = deltaLogLikelihood( rRTrack, hypothesis );
+      const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> Trying " << hypothesis << " : DLL = " << deltaLogL << endreq;
+        verbose() << "  -> Trying " << *hypo << " : DLL = " << deltaLogL << endreq;
       }
 
       // Set the value for deltaLL for this hypothesis
-      gTrack->globalPID()->setParticleDeltaLL( hypothesis, deltaLogL );
+      gTrack->globalPID()->setParticleDeltaLL( *hypo, deltaLogL );
 
       // is DLL change significant ?
       if ( deltaLogL < m_epsilon )
@@ -422,14 +431,14 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
           {
             debug() << "    -> Track "
                     << boost::format("%4i") % gTrack->key() << " prefers hypothesis "
-                    << hypothesis << " to " << rRTrack->currentHypothesis()
+                    << *hypo << " to " << rRTrack->currentHypothesis()
                     << ". DLL = " << deltaLogL << endreq ;
           }
 
           // set that a new best is found and update best dll and type
           minFound    = true;
           (*iP).first = deltaLogL;
-          minHypo     = hypothesis;
+          minHypo     = *hypo;
           minTrackDll = deltaLogL;
 
           // Is dll change enough to add to force change list
@@ -446,7 +455,7 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
           if ( deltaLogL < minEventDll )
           {
             overallMinTrack = gTrack;
-            overallMinHypo  = hypothesis;
+            overallMinHypo  = *hypo;
             minEventDll     = deltaLogL;
           }
 
@@ -462,20 +471,19 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
 
       // If threshold is reached, set the deltaLL for all other hypotheses
       bool threshold = true;
-      for ( int hypo = iHypo; hypo < Rich::NParticleTypes; ++hypo )
+      for ( Rich::Particles::const_iterator hypo2 = hypo; hypo2 != m_pidTypes.end(); ++hypo2 )
       {
-        if ( m_tkSignal->nDetectablePhotons( gTrack->richRecTrack(),
-                                             static_cast<Rich::ParticleIDType>(hypo) ) > 0 )
+        if ( m_tkSignal->nDetectablePhotons( gTrack->richRecTrack(), *hypo2 ) > 0 )
         {
           threshold = false; break;
         }
       }
       if ( threshold )
       {
-        for ( int hypo = iHypo; hypo < Rich::NParticleTypes; ++hypo )
+        for ( Rich::Particles::const_iterator hypo3 = hypo; 
+              hypo3 != m_pidTypes.end(); ++hypo3 )
         {
-          gTrack->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(hypo),
-                                                   deltaLogL );
+          gTrack->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
         }
         break;
       }

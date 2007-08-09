@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.cpp,v 1.9 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.cpp,v 1.10 2007-08-09 16:06:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -26,24 +26,34 @@ AlgBase::AlgBase( const std::string& name,
   : Rich::Rec::AlgBase ( name , pSvcLocator ),
     m_GPIDtracks       ( NULL ),
     m_GPIDSummary      ( NULL ),
-    m_GPIDs            ( NULL )
+    m_GPIDs            ( NULL ),
+    m_richGPIDTrackLocation   ( LHCb::RichGlobalPIDTrackLocation::Default ),
+    m_richGPIDSummaryLocation ( LHCb::RichGlobalPIDSummaryLocation::Default ),
+    m_richGPIDLocation        ( LHCb::RichGlobalPIDLocation::Default ),
+    m_richGPIDName            ( "RichGloPID" )
 {
 
-  declareProperty( "RichGlobalPIDTrackLocation",
-                   m_richGPIDTrackLocation =
-                   LHCb::RichGlobalPIDTrackLocation::Default );
+  if      ( context() == "Offline" )
+  {
+    m_richGPIDName = "RichGloPID";
+    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::Offline;
+    m_richGPIDSummaryLocation = LHCb::RichGlobalPIDSummaryLocation::Offline;
+    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richGPIDName = "RichGloHltPID";
+    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::HLT;
+    m_richGPIDSummaryLocation = LHCb::RichGlobalPIDSummaryLocation::HLT;
+    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::HLT;
+  }
 
-  declareProperty( "RichGlobalPIDLocation",
-                   m_richGPIDLocation = LHCb::RichGlobalPIDLocation::Default );
-
-  declareProperty( "RichGlobalPIDSummaryLocation",
-                   m_richGPIDSummaryLocation =
-                   LHCb::RichGlobalPIDSummaryLocation::Default );
-
-  declareProperty( "GlobalName", m_richGPIDName = "RichGloPID" );
-
+  declareProperty( "RichGlobalPIDTrackLocation", m_richGPIDTrackLocation );
+  declareProperty( "RichGlobalPIDLocation", m_richGPIDLocation );
+  declareProperty( "RichGlobalPIDSummaryLocation", m_richGPIDSummaryLocation );
+  declareProperty( "GlobalName", m_richGPIDName );
   declareProperty( "ProcStatusLocation",
-                   m_procStatLocation =LHCb:: ProcStatusLocation::Default );
+                   m_procStatLocation = LHCb::ProcStatusLocation::Default );
 
 }
 

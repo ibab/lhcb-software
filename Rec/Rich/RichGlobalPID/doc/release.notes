@@ -4,6 +4,12 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-08-09 - Chris Jones
+ - Update base class to use context() to switch between HLT and Offline mode.
+ - Update likelihood algorithm so it is able to only consider a limited number
+   of mass hypotheses. It uses the particle properties tool to determine at
+   run time which are to be considered.
+
 !======================= RichGlobalPID v3r4 2007-07-09 =======================
 ! 2007-06-22 - Chris Jones
  - Update the default minimum pixel dll signal cut from 1e-25 to 1e-3
