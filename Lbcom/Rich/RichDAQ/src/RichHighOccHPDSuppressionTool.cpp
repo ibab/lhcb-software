@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.16 2007-03-01 19:39:07 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.17 2007-08-09 15:54:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -46,7 +46,7 @@ HighOccHPDSuppressionTool( const std::string& type,
   declareProperty( "MemoryFactor",      m_memory       = 20     );
   declareProperty( "PrintXML",          m_printXML     = false  );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
-  declareProperty( "WhichRich",         m_whichRICH    = "UNDEFINED" );
+  declareProperty( "WhichRich",         m_whichRICH    = "RICH1andRICH2" );
   declareProperty( "UseRunningOccupancies", m_useRunAv = false  );
 
 }
@@ -57,12 +57,13 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Make sure RICH type is correctly setup
-  if ( m_whichRICH != "RICH1" && m_whichRICH != "RICH2" )
+  // check config is OK
+  if ( m_whichRICH != "RICH1andRICH2" && 
+       m_whichRICH != "RICH1"         && 
+       m_whichRICH != "RICH2"           )
   {
     return Error( "Badly formed RICH type : "+m_whichRICH );
   }
-  m_rich = ( m_whichRICH == "RICH1" ? Rich::Rich1 : Rich::Rich2 );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
@@ -71,7 +72,7 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   sc = initOccMap();
 
   // summary printout of options
-  debug() << rich() << " pixel suppression options :-" << endreq
+  debug() << m_whichRICH << " pixel suppression options :-" << endreq
           << "  Occupancy memory                      = " << m_memory << endreq
           << "  Occupancy scale factor                = " << m_scale << endreq
           << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
@@ -103,12 +104,12 @@ StatusCode HighOccHPDSuppressionTool::initOccMap()
   if ( m_readFromCondDB )
   {
     // Register RICH1
-    if ( rich() == Rich::Rich1 )
+    if ( m_whichRICH == "RICH1" || m_whichRICH == "RICH1andRICH2" )
     {
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
                                       &HighOccHPDSuppressionTool::umsUpdateRICH1 );
     }
-    else
+    if ( m_whichRICH == "RICH2" || m_whichRICH == "RICH1andRICH2" )
     {
       // Register RICH2
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
@@ -208,8 +209,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     else
     {
       // update running average occ for this HPD
-      data.avOcc() =
-        ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
+      data.avOcc() = ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
     }
     incrementCount = true;
   }
@@ -232,6 +232,8 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
   // increment count for this HPD
   if ( incrementCount ) { ++(data.fillCount()); }
+
+  // verbose() << hpdID << " Occ = " << data.avOcc() << " Fills = " << data.fillCount() << endreq;
 
   // return status
   return suppress;

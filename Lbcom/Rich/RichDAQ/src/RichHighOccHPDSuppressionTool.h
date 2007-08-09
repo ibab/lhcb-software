@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.12 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.13 2007-08-09 15:54:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -104,11 +104,6 @@ namespace Rich
       /// Find HPD data for given HPD RichSmartID
       void findHpdData( const LHCb::RichSmartID hpdID ) const;
 
-    protected: // methods
-
-      /// Which Rich ?
-      inline Rich::DetectorType rich() const { return m_rich; }
-
     protected: // protected data
 
       /// Rich System detector element
@@ -173,8 +168,6 @@ namespace Rich
 
       /// The RICH detector to work on (job option)
       std::string m_whichRICH;
-      /// The RICH detector to work on
-      Rich::DetectorType m_rich;
 
       mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
       mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed

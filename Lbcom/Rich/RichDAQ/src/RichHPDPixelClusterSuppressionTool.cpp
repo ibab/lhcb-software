@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.18 2007-03-01 19:39:07 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.19 2007-08-09 15:54:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -97,4 +97,3 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // return status
   return suppress;
 }
-
