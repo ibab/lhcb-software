@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.7 2007-02-02 10:05:17 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.8 2007-08-09 16:09:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -27,18 +27,32 @@ DECLARE_ALGORITHM_FACTORY( HierarchicalPIDMerge );
 // Standard constructor, initializes variables
 HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-  : Rich::AlgBase ( name , pSvcLocator )
+  : Rich::AlgBase ( name , pSvcLocator ),
+    m_richPIDLocation       ( LHCb::RichPIDLocation::Default ),
+    m_richGlobalPIDLocation ( LHCb::RichGlobalPIDLocation::Default ),
+    m_richLocalPIDLocation  ( LHCb::RichLocalPIDLocation::Default ),
+    m_fillProcStat          ( true )
 {
 
+  if      ( context() == "Offline" )
+  {
+    m_richPIDLocation = LHCb::RichPIDLocation::Offline;
+    m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::Offline;
+    m_fillProcStat = true;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richPIDLocation = LHCb::RichPIDLocation::HLT;
+    m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::HLT;
+    m_fillProcStat = false;
+  }
+
   // Output location in TDS for RichPIDs
-  declareProperty( "OutputPIDLocation",
-                   m_richPIDLocation = LHCb::RichPIDLocation::Default );
+  declareProperty( "OutputPIDLocation", m_richPIDLocation );
   // Input location in TDS for RichGlobalPIDs
-  declareProperty( "InputGlobalPIDLocation",
-                   m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::Default );
+  declareProperty( "InputGlobalPIDLocation", m_richGlobalPIDLocation );
   // Input location in TDS for RichLocalPIDs
-  declareProperty( "InputLocalPIDLocation",
-                   m_richLocalPIDLocation = LHCb::RichLocalPIDLocation::Default );
+  declareProperty( "InputLocalPIDLocation", m_richLocalPIDLocation );
   // Location of processing status object in TES
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
@@ -47,10 +61,13 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
   declareProperty( "UseLocalPIDs",     m_useLocalPIDs  = true  );
   declareProperty( "UseGlobalPIDs",    m_useGlobalPIDs = true  );
 
+  // fill procstat
+  declareProperty( "FillProcStat", m_fillProcStat );
+
 }
 
 // Destructor
-HierarchicalPIDMerge::~HierarchicalPIDMerge() {};
+HierarchicalPIDMerge::~HierarchicalPIDMerge() { }
 
 // Initialisation.
 StatusCode HierarchicalPIDMerge::initialize()
@@ -61,14 +78,12 @@ StatusCode HierarchicalPIDMerge::initialize()
 
   // Add any customisations here
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
 // Main execution
 StatusCode HierarchicalPIDMerge::execute()
 {
-  debug() << "Execute" << endreq;
-
   // See if PIDs already exist at requested output location
   LHCb::RichPIDs * newPIDs = NULL;
   bool pidsExist = false;
@@ -88,8 +103,9 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   // Locate the processing status object
-  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() )
+  
+  LHCb::ProcStatus * procStat = ( m_fillProcStat ? get<LHCb::ProcStatus>(m_procStatLocation) : NULL );
+  if ( procStat && procStat->aborted() )
   {
     return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
   }
@@ -156,8 +172,11 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   // Update Rich status words
-  procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs",    nUsedglobalPIDs );
-  procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",     nUsedlocalPIDs  );
+  if ( procStat )
+  {
+    procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs",    nUsedglobalPIDs );
+    procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",     nUsedlocalPIDs  );
+  }
 
   // Final debug information
   if ( msgLevel(MSG::DEBUG) )
@@ -182,11 +201,4 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode HierarchicalPIDMerge::finalize()
-{
-  // base class finalise
-  return Rich::AlgBase::finalize();
 }

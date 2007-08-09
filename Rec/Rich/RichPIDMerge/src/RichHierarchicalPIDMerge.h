@@ -4,7 +4,7 @@
  *  Header file for RICH algorithm : Rich::Rec::HierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.h,v 1.4 2007-03-09 22:40:52 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.h,v 1.5 2007-08-09 16:09:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -59,7 +59,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private:
 
@@ -80,6 +79,9 @@ namespace Rich
 
       /// Flag to turn on/off use of Global PID results
       bool m_useGlobalPIDs;
+
+      /// Flag to turn on/off the fulling of summary information into the ProcStat object
+      bool m_fillProcStat;
 
     };
 
