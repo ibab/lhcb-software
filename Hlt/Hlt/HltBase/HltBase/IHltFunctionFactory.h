@@ -1,4 +1,4 @@
-// $Id: IHltFunctionFactory.h,v 1.3 2007-06-27 05:58:43 hernando Exp $
+// $Id: IHltFunctionFactory.h,v 1.4 2007-08-09 13:58:07 hernando Exp $
 #ifndef HLTBASE_IHLTFUNCTIONFACTORY_H 
 #define HLTBASE_IHLTFUNCTIONFACTORY_H 1
 
@@ -24,6 +24,8 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IHltFunctionFactory; }
+
+  virtual void setSmart(bool smart) = 0;
 
   virtual void setTracks(std::vector<LHCb::Track*>& tracks) = 0;
 

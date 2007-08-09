@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-08-01 Jose A. Hernando 
+  - IHltFunctionFactory: add setSmart() 
+  - HltAlgorithm : special flag m_consider2, to consider or not inputs from tracks2
+  - HltTrackMatchUpgrade: interface tool to match 2 tracks and make a new one
+
+! 2007-08-01 Jose A. Hernando 
   - HltFunctions: adding function to get key of best match in binder function
     EFunctions: repare bug in binder function
 

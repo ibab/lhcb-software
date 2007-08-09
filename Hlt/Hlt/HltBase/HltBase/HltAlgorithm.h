@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.13 2007-07-13 09:45:51 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.14 2007-08-09 13:58:06 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -316,6 +316,8 @@ protected:
   //------------------------
 
 protected:
+
+  bool m_consider2;
 
   // Counter of Input and Accepted Events
   HltCounter m_counterInput;

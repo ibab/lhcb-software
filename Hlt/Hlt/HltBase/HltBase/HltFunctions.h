@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.8 2007-08-01 21:30:45 hernando Exp $
+// $Id: HltFunctions.h,v 1.9 2007-08-09 13:58:06 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -169,6 +169,22 @@ namespace Hlt {
     Estd::function<LHCb::Track>* clone() const {return new P();}
   };
   
+  class DeltaE : public Hlt::TrackFunction
+  {
+  public:
+    explicit DeltaE() {}
+    double operator() (const LHCb::Track& t) const;    
+    Estd::function<LHCb::Track>* clone() const {return new DeltaE();}
+  };
+
+  class DeltaP : public Hlt::TrackBiFunction
+  {
+  public:
+    explicit DeltaP() {}
+    double operator() (const LHCb::Track& t1, const LHCb::Track& t2) const;    
+    Hlt::TrackBiFunction* clone() const {return new DeltaP();}
+  };
+
   class minPT : public Hlt::VertexFunction {
   public:
     explicit minPT() {}

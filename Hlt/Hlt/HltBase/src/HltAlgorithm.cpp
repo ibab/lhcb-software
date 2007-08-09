@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.14 2007-07-06 16:53:39 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.15 2007-08-09 13:58:07 hernando Exp $
 // Include files 
 
 // from boost
@@ -57,6 +57,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
+  m_consider2 = false;
   m_selectionID = 0;
   m_outputHolder = NULL;
   m_inputSelections.clear();
@@ -260,11 +261,11 @@ bool HltAlgorithm::beginExecute() {
 
   ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
             " input tracks ");
-  // if (!ok) return ok;
+  if (!ok) return ok;
 
   ok = size(m_inputTracks2,m_nInputTracks2,m_histoInputTracks2,
             " input tracks 2 ");
-  // if (!ok) return ok;
+  if (!(ok || m_consider2)) return ok;
 
   ok = size(m_patInputTracks,m_nPatInputTracks,m_histoPatInputTracks,
             " pat input tracks ");
@@ -350,7 +351,9 @@ StatusCode HltAlgorithm::finalize() {
 void HltAlgorithm::printInfo(const std::string& title,
                              const Track& track) {
   info() << title << " track  " << track.key() << " slopes " 
-         << track.slopes()  << " pt " << track.pt() << endreq;
+         << track.slopes()  << " pt " << track.pt() 
+         << " qop " << track.firstState().qOverP() << endreq
+         << endreq;
 }
 
 void HltAlgorithm::printInfo(const std::string& title,
