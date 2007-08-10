@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.1 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.2 2007-08-10 18:15:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -41,8 +41,6 @@ CKthetaBandsPhotonPredictor( const std::string& type,
     m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
     m_nSigma        ( Rich::NRadiatorTypes, 0 ),
     m_scale         ( Rich::NRadiatorTypes, 0 )
-    //m_Nselected     ( Rich::NRadiatorTypes, 0 ),
-    //m_Nreject       ( Rich::NRadiatorTypes, 0 )
 {
 
   // interface
@@ -111,38 +109,6 @@ StatusCode CKthetaBandsPhotonPredictor::initialize()
   return sc;
 }
 
-StatusCode CKthetaBandsPhotonPredictor::finalize()
-{
-
-  /*
-  if ( m_Nselected[Rich::Aerogel]  > 0 ||
-       m_Nselected[Rich::Rich1Gas] > 0 ||
-       m_Nselected[Rich::Rich2Gas] > 0 )
-  {
-
-    // statistical tool
-    const PoissonEffFunctor occ("%10.2f +-%7.2f");
-
-    // printout stats
-    info() << "=================================================================" << endreq
-           << "  Pixel/Segment combination selection summary :-" << endreq
-           << "    Aerogel   : "
-           << occ(m_Nselected[Rich::Aerogel],m_Nselected[Rich::Aerogel]+m_Nreject[Rich::Aerogel])
-           << " % of possible candidates" << endreq
-           << "    Rich1Gas  : "
-           << occ(m_Nselected[Rich::Rich1Gas],m_Nselected[Rich::Rich1Gas]+m_Nreject[Rich::Rich1Gas])
-           << " % of possible candidates" << endreq
-           << "    Rich2Gas  : "
-           << occ(m_Nselected[Rich::Rich2Gas],m_Nselected[Rich::Rich2Gas]+m_Nreject[Rich::Rich2Gas])
-           << " % of possible candidates" << endreq
-           << "=================================================================" << endreq;
-  }
-  */
-
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
 // fast decision on whether a photon is possible
 bool
 CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
@@ -191,9 +157,6 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
     } // boundary check
 
   } // detector check
-
-  //if ( OK ) { ++m_Nselected[rad]; }
-  //else      { ++m_Nreject[rad];   }
 
   return OK;
 }

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.1 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.2 2007-08-10 18:15:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -76,9 +76,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Is it possible to make a photon candidate using this segment and pixel.
@@ -110,10 +107,6 @@ namespace Rich
 
       /// Particle ID types to consider in the likelihood minimisation
       Rich::Particles m_pidTypes;
-
-      // debug counting numbers
-      //mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
-      //mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
 
     };
 
