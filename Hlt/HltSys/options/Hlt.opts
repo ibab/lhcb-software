@@ -26,7 +26,7 @@ HltInitSeq.Members = {"PatInitEvent",
 HltAllAlleys.Members ={"HltSequencer/HltMuonAlley",
                        "HltSequencer/HltHadAlley",
                          // ,"HltSequencer/HltCaloAlley"
-                       "HltSelectionEntry/HltAlleysExit"
+                       "HltSelectionEntry/HltAlleys"
 
 };
 HltAllAlleys.ModeOr=true;
@@ -35,14 +35,14 @@ HltAllAlleys.ModeOr=true;
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
 
 
-HltAlleysExit.Selections = {"MuonTriggerSingle",
+HltAlleys.Selections = {"MuonTriggerSingle",
                             "MuonTriggerDiMuon",
                             "MuonTriggerIPDiMuon",
                             "MuonTriggerPureDiMuon",
                             "MuonTriggerPureIPDiMuon",
                             "HadTrigger"
 };
-HltAlleysExit.SelectionName = "HltAlleysExit";
+HltAlleys.SelectionName = "HltAlleys";
 
 //
 // end the Hlt sequencer: write in summary and copy to TES
