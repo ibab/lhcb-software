@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-08-10 - Patrick Koppenburg
+ - HltProtoParticles.opts: make MuonID for forward tracks
+
+
 </PRE><H1><A NAME=v1r8>2007-07-31 HltSys v1r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r8
 
