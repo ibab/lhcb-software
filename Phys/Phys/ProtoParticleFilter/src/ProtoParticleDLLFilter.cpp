@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.cpp,v 1.3 2007-08-10 13:48:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -113,7 +113,7 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   return dllcut;
 }
 
-bool 
+bool
 ProtoParticleDLLFilter::tryDllTypes( const std::string & tag,
                                      ProtoParticleSelection::DLLCut * dllcut ) const
 {
@@ -210,10 +210,6 @@ const ProtoParticleSelection::DetectorRequirements *
 ProtoParticleDLLFilter::createDetReq( const std::string & tag,
                                       const std::string & value ) const
 {
-
-  bool requiresDetOption ( false );
-  int nOnlyDets ( 0 );
-
   ProtoParticleSelection::DetectorRequirements * detreq(NULL);
 
   if ( "DET" == tag )
@@ -222,41 +218,30 @@ ProtoParticleDLLFilter::createDetReq( const std::string & tag,
   }
   else if ( "REQUIRESDET" == tag )
   {
-    if ( nOnlyDets > 0 )
-    {
-      Warning( "Option 'OnlyUseDet=XXX' cannot be used with 'RequiresDet=XXX' in the same selection" );
-    }
-    else
-    {
-      requiresDetOption = true;
-      detreq =
-        new ProtoParticleSelection::
-        DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
-                              ProtoParticleSelection::DetectorRequirements::MustHave,
-                              tag+"="+value
-                              );
-    }
+    detreq =
+      new ProtoParticleSelection::
+      DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
+                            ProtoParticleSelection::DetectorRequirements::MustHave,
+                            tag+"="+value
+                            );
   }
-  else if ( "ONLYUSEDET"  == tag )
+  else if ( "ONLYUSEDET" == tag )
   {
-    if ( requiresDetOption )
-    {
-      Warning( "Option 'OnlyUseDet=XXX' cannot be used with 'RequiresDet=XXX' in the same selection" );
-    }
-    else if ( nOnlyDets > 0 )
-    {
-      Warning( "Can only specify one 'OnlyUseDet=XXX' option per selection" );
-    }
-    else
-    {
-      detreq = 
-        new ProtoParticleSelection::
-        DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
-                              ProtoParticleSelection::DetectorRequirements::OnlyHave,
-                              tag+"="+value
-                              );
-      ++nOnlyDets;
-    }
+    detreq =
+      new ProtoParticleSelection::
+      DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
+                            ProtoParticleSelection::DetectorRequirements::OnlyHave,
+                            tag+"="+value
+                            );
+  }
+  else if ( "MUSTNOTHAVEDET" == tag )
+  {
+    detreq =
+      new ProtoParticleSelection::
+      DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
+                            ProtoParticleSelection::DetectorRequirements::MustNotHave,
+                            tag+"="+value
+                            );
   }
 
   return detreq;

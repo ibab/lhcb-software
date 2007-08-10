@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-08-10 - Chris Jones
- - Update ProtoParticleDLLFilter::createDetReq to support 'MustNotHave' 
+ - Update ProtoParticleDLLFilter::createDetReq to support 'MustNotHaveDet' 
    detector requirement
  - Remove flawed logic that tried to check for consisency (need to think how 
    to do this properly).
