@@ -6,12 +6,12 @@
   // make a new pid object
   GlobalPID * pid = new GlobalPID();
 
-  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-AllRads-AllTracks.tuples.root");
-  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-GasRads-AllTracks.tuples.root");
+  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-AllRads-AllTracks.tuples.root");
+  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-GasRads-AllTracks.tuples.root");
 
   // K-pi RICH
   pid->configReset();
-  pid->config.title     = "RICH Kaon ID : All Radiators";
+  pid->config.title     = "RICH Kaon ID : Gas Radiators";
   pid->config.subtitle  = "Full Offline";
   pid->config.minP      = 3   * GeV;
   pid->config.maxP      = 100 * GeV;
@@ -51,8 +51,8 @@
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.tuples.root");
-  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-GasRads-LongTracks.tuples.root");
+  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.tuples.root");
+  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-GasRads-LongTracks.tuples.root");
 
   // K-pi RICH
   pid->configReset();

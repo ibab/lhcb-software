@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.58 2007-08-09 16:46:38 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.59 2007-08-10 16:22:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -42,11 +42,12 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   // context specific locations
   if      ( context() == "Offline" )
   {
-    m_richPath = LHCb::RichPIDLocation::Offline;
+    m_richPath   = LHCb::RichPIDLocation::Offline; 
   }
   else if ( context() == "HLT" || context() == "Hlt" )
   {
-    m_richPath = LHCb::RichPIDLocation::HLT;
+    m_richPath   = LHCb::RichPIDLocation::HLT;
+    m_tracksPath = LHCb::TrackLocation::HltForward;
   }
 
   // Input data
@@ -157,11 +158,15 @@ StatusCode ChargedProtoPAlg::execute()
     ++tally.totTracks;
 
     // Select tracks
-    verbose() << "Trying Track " << (*iTrack)->key() << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Trying Track " << (*iTrack)->key() << endreq;
     if ( !m_trSel->accept(**iTrack) ) continue;
-    verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
-    verbose() << " -> Track type " << (*iTrack)->type() << endreq;
-    verbose() << " -> Track flag " << (*iTrack)->flag() << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
+      verbose() << " -> Track type " << (*iTrack)->type() << endreq;
+      verbose() << " -> Track flag " << (*iTrack)->flag() << endreq;
+    }
 
     // Count selectedtracks
     ++tally.selTracks;
@@ -275,7 +280,7 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto ) const
   // RichPID for this track is found, so save data
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << " -> Found RichPID data : DLls = " << richPID->particleLLValues() << endreq;
+    verbose() << " -> Found RichPID data : DLLs = " << richPID->particleLLValues() << endreq;
   }
 
   // reference to RichPID object

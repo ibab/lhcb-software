@@ -497,6 +497,7 @@ void GlobalPID::saveFigures( const std::string & type )
 
 void GlobalPID::loadTTree( const std::string & filename )
 {
+  if (fChain) delete fChain->GetCurrentFile();
   TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename.c_str());
   if (!f)
   {
@@ -525,8 +526,7 @@ GlobalPID::GlobalPID(TTree *tree)
 
 GlobalPID::~GlobalPID()
 {
-  if (!fChain) return;
-  delete fChain->GetCurrentFile();
+  if (fChain) delete fChain->GetCurrentFile();
 }
 
 Int_t GlobalPID::GetEntry(Long64_t entry)
