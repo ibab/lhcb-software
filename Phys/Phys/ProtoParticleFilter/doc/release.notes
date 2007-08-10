@@ -4,6 +4,12 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2007-08-10 - Chris Jones
+ - Update ProtoParticleDLLFilter::createDetReq to support 'MustNotHave' 
+   detector requirement
+ - Remove flawed logic that tried to check for consisency (need to think how 
+   to do this properly).
+
 !===================== ProtoParticleFilter v1r2p1 2006-06-18 =================
 
 ! 2006-12-05 - Juan PALACIOS
