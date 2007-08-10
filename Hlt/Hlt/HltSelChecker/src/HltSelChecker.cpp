@@ -1,4 +1,4 @@
-// $Id: HltSelChecker.cpp,v 1.3 2007-07-16 17:21:09 pkoppenb Exp $
+// $Id: HltSelChecker.cpp,v 1.4 2007-08-10 16:00:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -101,6 +101,12 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
   tuple->column( part+"VXe2", P->posCovMatrix()(0,0));    
   tuple->column( part+"VYe2", P->posCovMatrix()(1,1));    
   tuple->column( part+"VZe2", P->posCovMatrix()(2,2));
+  // track chi2
+  if ( NULL!=P->proto() && NULL!=P->proto()->track()){
+    tuple->column( part+"TChi2", P->proto()->track()->chi2());
+    tuple->column( part+"TnDof", P->proto()->track()->nDoF());
+  }
+  
   // vertex
   if ( NULL!=P->endVertex()){
     const Vertex* V = P->endVertex() ;

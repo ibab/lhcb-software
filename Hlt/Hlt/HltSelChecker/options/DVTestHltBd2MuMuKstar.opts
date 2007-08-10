@@ -11,6 +11,7 @@
 //
 #include "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts"
 HltExclusiveCorrs.Algorithms += { "PreselBd2KstarMuMu" };
+
 //
 // Hlt test
 //
@@ -30,6 +31,7 @@ HltExclusiveCorrs.Algorithms += { "PreselBd2KstarMuMu" };
 //
 // Options
 //
+
 EventSelector.Input   = {
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
@@ -50,3 +52,10 @@ OfflineChecker.OutputLevel = 3 ;
 
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq = 1 ;
+
+// ApplicationMgr.TopAlg += { "PrintTree", "PrintMCTree" };
+PrintTree.PhysDesktop.InputLocations = { "Phys/HltSharedDiMuon" };
+PrintMCTree.ParticleNames = { "B0", "B~0" };
+// HltAlleyMuons.OutputLevel = 1 ;
+// HltForwardMuons.OutputLevel = 1 ;
