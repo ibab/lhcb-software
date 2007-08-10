@@ -1,0 +1,1413 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_FSM_Class0	_FwFsmObjectType	52817
+fwOT_FSM_Class1	_FwFsmObjectType	52818
+fwOT_FSM_Control	_FwFsmObjectType	52819
+fwOT_FSM_DimTask	_FwFsmObjectType	52820
+fwOT_FSM_Node	_FwFsmObjectType	52821
+fwOT_FSM_RecvNode	_FwFsmObjectType	52822
+fwOT_FSM_Slice	_FwFsmObjectType	52823
+fwOT_FSM_StrmNode	_FwFsmObjectType	52824
+fwOT_JobOptionsControl	_FwFsmObjectType	52825
+fwOT_StorageCluster	_FwFsmObjectType	52826
+fwOT_StreamControl	_FwFsmObjectType	52828
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_FSM_Class0.panel	_FwFsmObjectType	"FSM_Class0.pnl"	0x101	09.08.2007 20:42:19.071
+fwOT_FSM_Class0.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state NOT_READY ) )  move_to NOT_READY
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {READY,STOPPED} )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state {READY,STOPPED,RUNNING} )  move_to UNKNOWN
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ANY$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
+|when ( $ANY$FwCHILDREN not_in_state RUNNING )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|", "", "", "STOPPED", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ANY$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|", "", ""	0x101	09.08.2007 20:42:19.074
+fwOT_FSM_Class0.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "UNKNOWN/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state STOPPED )  then
+   move_to STOPPED
+endif
+", "0", "UNKNOWN/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0", "UNKNOWN/CONFIGURE", "", "1", "do CONFIGURE $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+   move_to READY
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "do CONFIGURE $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "RUNNING/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state STOPPED )  then
+   move_to STOPPED
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ANY$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "ERROR/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "ERROR/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state {UNKNOWN,STOPPED} )  then
+   move_to STOPPED
+endif
+", "0", "STOPPED/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "STOPPED/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "STOPPED/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0"	0x101	09.08.2007 20:42:19.079
+fwOT_FSM_Class0.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.082
+fwOT_FSM_Class1.panel	_FwFsmObjectType	"FSM_Class1.pnl"	0x101	09.08.2007 20:42:19.086
+fwOT_FSM_Class1.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state NOT_READY ) )  move_to NOT_READY
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {READY,STOPPED} )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state {READY,STOPPED,RUNNING} )  move_to UNKNOWN
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ANY$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
+|when ( $ANY$FwCHILDREN not_in_state RUNNING )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|", "", "", "STOPPED", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ANY$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|", "", ""	0x101	09.08.2007 20:42:19.089
+fwOT_FSM_Class1.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "UNKNOWN/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state STOPPED )  then
+   move_to STOPPED
+endif
+", "0", "UNKNOWN/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0", "UNKNOWN/CONFIGURE", "", "1", "do CONFIGURE $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+   move_to READY
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "do CONFIGURE $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "RUNNING/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state STOPPED )  then
+   move_to STOPPED
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ANY$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "ERROR/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "ERROR/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state {UNKNOWN,STOPPED} )  then
+   move_to STOPPED
+endif
+", "0", "STOPPED/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "STOPPED/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "STOPPED/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+   move_to RUNNING  
+endif
+", "0"	0x101	09.08.2007 20:42:19.094
+fwOT_FSM_Class1.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.097
+fwOT_FSM_Control.panel	_FwFsmObjectType	"FSM_Control.pnl"	0x101	09.08.2007 20:42:19.100
+fwOT_FSM_Control.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state NOT_READY ) )  move_to NOT_READY
+|when ( ( $ALL$FwCHILDREN not_in_state UNKNOWN ) and
+( $ANY$FwCHILDREN in_state READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ANY$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to ERROR
+|when ( $ANY$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( $ALL$FwCHILDREN in_state READY ) move_to READY
+|", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state UNKNOWN ) and
+( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state READY )  move_to READY
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|", "", ""	0x101	09.08.2007 20:42:19.103
+fwOT_FSM_Control.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+	move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+    move_to UNKNOWN
+endif
+", "0", "UNKNOWN/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+	move_to NOT_READY 
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state UNKNOWN )  then
+move_to NOT_READY
+endif
+move_to UNKNOWN 
+", "0", "NOT_READY/CONFIGURE", "", "1", "do CONFIGURE $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state READY )  then
+move_to NOT_READY
+endif
+move_to READY
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state UNKNOWN )  then
+move_to NOT_READY
+endif
+move_to UNKNOWN 
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+    move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "do START $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+  move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "do RESET $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+move_to READY
+endif
+move_to NOT_READY 
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+	move_to UNKNOWN
+endif
+", "0", "RUNNING/STOP", "", "1", "do STOP $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state READY )  then
+move_to RUNNING
+endif
+move_to READY
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+	move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do RECOVER $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+move_to ERROR
+endif
+move_to NOT_READY
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+	move_to UNKNOWN
+endif
+", "0"	0x101	09.08.2007 20:42:19.108
+fwOT_FSM_Control.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.111
+fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	09.08.2007 20:42:19.114
+fwOT_FSM_DimTask.components	_FwFsmObjectType	"string State
+", "", "dyn_string m_lastCommand;
+dyn_string m_lastState;
+dyn_string m_targetState;
+dyn_string m_tasks;
+int getTaskIndex(string domain, string device)  {
+  int index;
+  if ( !(index=dynContains(m_tasks,domain+device)) )  {
+    index = dynAppend(m_tasks,domain+device);
+  }
+  return index;
+}
+
+int startFSM_DimTask(string domain, string device)  {
+  string cmd, node, type, name;
+  int prio, inuse;
+  int res = dpGet(device+\".FMC_Start\",cmd, 
+                  device+\".Name\", name,
+                  device+\".Node\", node,
+                  device+\".Type\", type,
+                  device+\".InUse\", inuse,
+                  device+\".Priority\", prio
+                  );
+  if ( res == 0 )  {
+    DebugN(\"Starting task:\"+device+\" on \"+node+\" : \"+cmd);
+    string name=\"fwFMC_\"+node+\".StTaskManager.settings.start\";
+    res = dpSetWait(name,cmd);
+    if ( res == 0 )  {
+      return 0;
+    }
+  }
+  string err = \"Failed to start task:\"+node+\"::\"+name+\" Cmd:'\"+cmd+\"'\";
+  if ( dynlen(getLastError()) > 0 )  {
+    err = err + \" Error:\" + getLastError();
+  }
+  DebugN(err);
+  return -1;
+}
+
+int killFSM_DimTask(string domain, string device)  {
+  string node, name;
+  int res = dpGet(device+\".Name\", name, device+\".Node\", node);
+  if ( res == 0 )  {
+    node = \"storectl01\";
+    DebugN(\"Stop task:\"+device+\" on \"+node+\" : \"+cmd);
+    string name  = \"fwFMC_\"+node+\".StTaskManager.settings.stop\";
+    string value = \"-s 9 -d 2 \"+name;
+    res = dpSetWait(name,value);
+    if ( res == 0 )  {
+      return 0;
+    }
+  }
+  string err = \"Failed to stop task:\"+node+\"::\"+name;
+  if ( dynlen(getLastError()) > 0 )  {
+    err = err + \" Error:\" + getLastError();
+  }
+  DebugN(err);
+  return -1;
+}
+
+int stopFSM_DimTask(string domain, string device)  {
+  string node, name;
+  int res = dpGet(device+\".Name\", name, device+\".Node\", node);
+  if ( res == 0 )  {
+    node = \"storectl01\";
+    DebugN(\"Stop task:\"+device+\" on \"+node+\" : \"+cmd);
+    string name  = \"fwFMC_\"+node+\".StTaskManager.settings.stop\";
+    string value = name;
+    res = dpSetWait(name,value);
+    if ( res == 0 )  {
+      return 0;
+    }
+  }
+  string err = \"Failed to stop task:\"+node+\"::\"+name;
+  if ( dynlen(getLastError()) > 0 )  {
+    err = err + \" Error:\" + getLastError();
+  }
+  DebugN(err);
+  return -1;
+}
+
+FSM_DimTask_initialize(string domain, string device)
+{
+  int index = getTaskIndex(domain,device);
+  m_lastCommand[index] = \"\";
+  m_lastState[index] = \"\";
+  m_targetState[index] = \"\";
+}
+
+", "FSM_DimTask_valueChanged( string domain, string device,
+                          string State, string &fwState )
+{
+  int index = getTaskIndex(domain,device);
+  m_lastState[index] = State;
+  //DebugN(device+\"> Last state:\"+m_lastState[index]+\" Target:\"+m_targetState[index]+\" Command:\"+m_lastCommand[index]);
+  if (State == \"UNKNOWN\")
+  {
+    fwState = \"UNKNOWN\";
+    return;
+  }
+  if (State == \"NOT_READY\")
+  {
+    fwState = \"NOT_READY\";
+    return;
+  }
+  if (State == \"READY\")
+  {
+    if ( m_targetState[index] == \"STOPPED\" )  
+      fwState = \"STOPPED\";
+    else 
+      fwState = \"READY\";
+    DebugN(device+\"> State:\"+fwState+\" Last state:\"+m_lastState[index]+\" Target:\"+m_targetState[index]+\" Command:\"+m_lastCommand[index]);
+    return;
+  }
+  if (State == \"RUNNING\")
+  {
+    fwState = \"RUNNING\";
+    return;
+  }
+  if (State == \"STOPPED\")
+  {
+    fwState = \"STOPPED\";
+    return;
+  }
+  else 
+  {
+    fwState = \"ERROR\";
+  }
+}
+
+
+", "FSM_DimTask_doCommand(string domain, string device, string command)
+{ 
+  int index = getTaskIndex(domain,device);
+  m_lastCommand[index] = command;
+  DebugN(device+\"> Executing command:\"+command);
+  if (command == \"LOAD\")
+  {
+    m_lastState[index]   = \"UNKNOWN\";
+    m_targetState[index] = \"NOT_READY\";
+    startFSM_DimTask(domain,device);   
+    dpSetWait(device+\".Command\",\"load\"); 
+    fwDU_startTimeout(20,domain,device,\"UNKNOWN\");
+    return;
+  }
+  if (command == \"STOP\")
+  {
+    m_lastState[index]   = \"RUNNING\";
+    m_targetState[index] = \"STOPPED\";
+    fwDU_startTimeout(20,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"stop\"); 
+    return;
+  }
+  if (command == \"RESET\")
+  {
+    m_lastState[index]   = \"STOPPED\";
+    m_targetState[index] = \"NOT_READY\";
+    fwDU_startTimeout(15,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"reset\");  
+    return;
+  }
+  if (command == \"START\")  {
+    m_lastState[index]   = \"READY\";
+    m_targetState[index] = \"RUNNING\";
+    fwDU_startTimeout(20,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"start\");  
+    return;
+  }
+  if (command == \"CONFIGURE\")  {
+    m_lastState[index]   = \"NOT_READY\";
+    m_targetState[index] = \"READY\";
+    fwDU_startTimeout(30,domain,device,\"NOT_READY\");
+    dpSetWait(device+\".Command\",\"configure\");   
+    return;
+  }
+  if (command == \"UNLOAD\")  {
+    bool isUnknown = m_targetState[index] != \"UNKNOWN\";
+    m_lastState[index]   = \"NOT_READY\";
+    m_targetState[index] = \"UNKNOWN\";
+    if ( isUnknown )  {
+      fwDU_startTimeout(10,domain,device,\"UNKNOWN\");
+    }
+    dpSetWait(device+\".Command\",\"unload\");
+    if ( isUnknown )  {
+      dpSetWait(device+\".State\",\"UNKNOWN\");
+    }
+    return;
+  }
+  if (command == \"KILL\")
+  {
+    m_targetState[index] = \"UNKNOWN\";
+    stopFSM_DimTask(domain,device);   
+    dpSetWait(device+\".Command\",\"unload\");
+    fwDU_startTimeout(10,domain,device,\"UNKNOWN\");
+    return;
+  }
+  DebugN(device+\"> Received unknown command:\"+command);
+} 
+"	0x101	09.08.2007 20:42:19.118
+fwOT_FSM_DimTask.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "", "", "", "NOT_READY", "FwStateAttention2", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateOKNotPhysics", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.121
+fwOT_FSM_DimTask.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "", "0", "UNKNOWN/KILL", "", "1", "", "0", "UNKNOWN/UNLOAD", "", "1", "", "0", "NOT_READY/CONFIGURE", "", "1", "", "0", "NOT_READY/UNLOAD", "", "1", "", "0", "NOT_READY/KILL", "", "1", "", "0", "READY/START", "", "1", "", "0", "READY/RESET", "", "1", "", "0", "READY/KILL", "", "1", "", "0", "STOPPED/RESET", "", "1", "", "0", "STOPPED/KILL", "", "1", "", "0", "STOPPED/START", "", "1", "", "0", "RUNNING/STOP", "", "1", "", "0", "RUNNING/KILL", "", "1", "", "0", "ERROR/UNLOAD", "", "1", "", "0", "ERROR/KILL", "", "1", "", "0", "ERROR/RESET", "", "1", "", "0", "ERROR/START", "", "1", "", "0"	0x101	09.08.2007 20:42:19.125
+fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.129
+fwOT_FSM_Node.panel	_FwFsmObjectType	"FSM_Node.pnl"	0x101	09.08.2007 20:42:19.132
+fwOT_FSM_Node.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 not_in_state RUNNING ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ANY$FSM_Class1 in_state {NOT_READY,READY} ) )  move_to READY
+|when ( $ANY$FSM_Class0 not_in_state RUNNING )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state UNKNOWN ) and
+( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state READY ) )  move_to READY
+|", "", ""	0x101	09.08.2007 20:42:19.135
+fwOT_FSM_Node.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "if ( $ANY$FSM_Class0 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state READY ) then
+  do START $ALL$FSM_Class0
+endif
+if ( $ALL$FSM_Class0 in_state RUNNING ) then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "RUNNING/STOP", "", "1", "if ( $ANY$FSM_Class1 in_state READY ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state STOPPED ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ALL$FSM_Class1 in_state NOT_READY )  then
+   move_to READY
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do RECOVER $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+	move_to ERROR
+endif
+move_to NOT_READY
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0"	0x101	09.08.2007 20:42:19.139
+fwOT_FSM_Node.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.143
+fwOT_FSM_RecvNode.panel	_FwFsmObjectType	"FSM_RecvNode.pnl"	0x101	09.08.2007 20:42:19.146
+fwOT_FSM_RecvNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 not_in_state RUNNING ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "STOPPED", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to ERROR
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ANY$FSM_Class1 in_state {NOT_READY,READY} ) )  move_to READY
+|when ( $ANY$FSM_Class0 not_in_state RUNNING )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state UNKNOWN ) and
+( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state READY ) )  move_to READY
+|", "", ""	0x101	09.08.2007 20:42:19.149
+fwOT_FSM_RecvNode.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "UNKNOWN/STOP", "", "1", "if ( $ANY$FSM_Class1 in_state READY ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state STOPPED ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ALL$FSM_Class1 in_state NOT_READY )  then
+   move_to READY
+endif
+", "0", "UNKNOWN/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "UNKNOWN/CONFIGURE", "", "1", "if ( $ANY$FSM_Class0 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state READY ) then
+  do START $ALL$FSM_Class0
+endif
+if ( $ALL$FSM_Class0 in_state RUNNING ) then
+   move_to READY
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "if ( $ANY$FSM_Class0 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state READY ) then
+  do START $ALL$FSM_Class0
+endif
+if ( $ALL$FSM_Class0 in_state RUNNING ) then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif", "0", "STOPPED/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "STOPPED/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "STOPPED/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "RUNNING/STOP", "", "1", "if ( $ANY$FSM_Class1 in_state READY ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state STOPPED ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ALL$FSM_Class1 in_state NOT_READY )  then
+   move_to STOPPED
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do RECOVER $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+	move_to ERROR
+endif
+move_to NOT_READY
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0"	0x101	09.08.2007 20:42:19.154
+fwOT_FSM_RecvNode.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.157
+fwOT_FSM_Slice.panel	_FwFsmObjectType	"FSM_Slice.pnl"	0x101	09.08.2007 20:42:19.160
+fwOT_FSM_Slice.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode in_state {READY,RUNNING} ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode not_in_state RUNNING ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to ERROR
+|when ( $ANY$FSM_StrmNode not_in_state RUNNING )  move_to ERROR
+|when ( $ALL$FSM_RecvNode in_state NOT_READY )  move_to READY
+|", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state UNKNOWN ) and
+( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode in_state NOT_READY ) )  move_to READY
+|when ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode in_state READY ) )  move_to READY
+|", "", ""	0x101	09.08.2007 20:42:19.163
+fwOT_FSM_Slice.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/RESET", "", "1", "if ( $ANY$FSM_RecvNode in_state RUNNING ) then
+  do STOP $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_StrmNode in_state RUNNING ) then
+  do STOP $ALL$FSM_StrmNode
+endif
+if ( $ANY$FSM_StrmNode in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_StrmNode
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "UNKNOWN/START", "", "1", "if ( $ANY$FSM_RecvNode in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state READY ) then
+  do START $ALL$FSM_RecvNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+       ( $ALL$FSM_RecvNode in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "UNKNOWN/CONFIGURE", "", "1", "if ( $ANY$FSM_StrmNode in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_StrmNode
+endif
+if ( $ANY$FSM_StrmNode in_state READY ) then
+  do START $ALL$FSM_StrmNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ANY$FSM_RecvNode in_state NOT_READY ) ) then
+  do CONFIGURE $ALL$FSM_RecvNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode in_state READY ) ) then
+   move_to READY
+endif
+", "0", "UNKNOWN/STOP", "", "1", "if ( $ANY$FSM_RecvNode in_state READY ) then
+  do RESET $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state RUNNING ) then
+  do STOP $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state STOPPED ) then
+  do RESET $ALL$FSM_RecvNode
+endif
+if ( $ALL$FSM_RecvNode in_state NOT_READY )  then
+   move_to READY
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "if ( $ANY$FSM_StrmNode in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_StrmNode
+endif
+if ( $ANY$FSM_StrmNode in_state READY ) then
+  do START $ALL$FSM_StrmNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ANY$FSM_RecvNode in_state NOT_READY ) ) then
+  do CONFIGURE $ALL$FSM_RecvNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+( $ALL$FSM_RecvNode in_state READY ) ) then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "if ( $ANY$FSM_RecvNode in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state READY ) then
+  do START $ALL$FSM_RecvNode
+endif
+if ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
+       ( $ALL$FSM_RecvNode in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "if ( $ANY$FSM_RecvNode in_state RUNNING ) then
+  do STOP $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_StrmNode in_state RUNNING ) then
+  do STOP $ALL$FSM_StrmNode
+endif
+if ( $ANY$FSM_StrmNode in_state {STOPPED,READY} ) then
+  do RESET $ALL$FSM_StrmNode
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "RUNNING/STOP", "", "1", "if ( $ANY$FSM_RecvNode in_state RUNNING ) then
+  do STOP $ALL$FSM_RecvNode
+endif
+if ( $ANY$FSM_RecvNode in_state {READY,STOPPED} ) then
+  do RESET $ALL$FSM_RecvNode
+endif
+if ( $ALL$FSM_RecvNode in_state NOT_READY )  then
+   move_to READY
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do RECOVER $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+    move_to ERROR
+endif
+move_to NOT_READY
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0"	0x101	09.08.2007 20:42:19.168
+fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.171
+fwOT_FSM_StrmNode.panel	_FwFsmObjectType	"FSM_StrmNode.pnl"	0x101	09.08.2007 20:42:19.174
+fwOT_FSM_StrmNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "NOT_READY", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 not_in_state RUNNING ) )  move_to READY
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|", "", "", "STOPPED", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
+|", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to ERROR
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ANY$FSM_Class1 in_state {NOT_READY,READY} ) )  move_to READY
+|when ( $ANY$FSM_Class0 not_in_state RUNNING )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state UNKNOWN ) and
+( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to UNKNOWN
+|when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
+|when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+( $ALL$FSM_Class1 in_state READY ) )  move_to READY
+|", "", ""	0x101	09.08.2007 20:42:19.177
+fwOT_FSM_StrmNode.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY
+endif
+", "0", "UNKNOWN/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "UNKNOWN/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "UNKNOWN/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "UNKNOWN/STOP", "", "1", "if ( $ANY$FSM_Class1 in_state READY ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state STOPPED ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ALL$FSM_Class1 in_state NOT_READY )  then
+   move_to READY
+endif
+", "0", "UNKNOWN/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "UNKNOWN/CONFIGURE", "", "1", "if ( $ANY$FSM_Class0 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state READY ) then
+  do START $ALL$FSM_Class0
+endif
+if ( $ALL$FSM_Class0 in_state RUNNING ) then
+   move_to READY
+endif
+", "0", "NOT_READY/CONFIGURE", "", "1", "if ( $ANY$FSM_Class0 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state READY ) then
+  do START $ALL$FSM_Class0
+endif
+if ( $ALL$FSM_Class0 in_state RUNNING ) then
+   move_to READY
+endif
+", "0", "NOT_READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "NOT_READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "READY/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "READY/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "READY/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif", "0", "STOPPED/RESET", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class0 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class0
+endif
+if ( $ANY$FSM_Class0 in_state {STOPPED,READY,UNKNOWN} ) then
+  do RESET $ALL$FSM_Class0
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
+", "0", "STOPPED/UNLOAD", "", "1", "do UNLOAD $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN 
+endif
+", "0", "STOPPED/START", "", "1", "if ( $ANY$FSM_Class1 in_state NOT_READY ) then
+  do CONFIGURE $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do START $ALL$FSM_Class1
+endif
+if ( ( $ALL$FSM_Class0 in_state RUNNING ) and
+       ( $ALL$FSM_Class1 in_state RUNNING ) )  then
+   move_to RUNNING  
+endif
+", "0", "RUNNING/STOP", "", "1", "if ( $ANY$FSM_Class1 in_state RUNNING ) then
+  do STOP $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state READY ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ANY$FSM_Class1 in_state STOPPED ) then
+  do RESET $ALL$FSM_Class1
+endif
+if ( $ALL$FSM_Class1 in_state NOT_READY )  then
+   move_to STOPPED
+endif
+", "0", "RUNNING/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0", "ERROR/RECOVER", "", "1", "do RECOVER $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+	move_to ERROR
+endif
+move_to NOT_READY
+", "0", "ERROR/KILL", "", "1", "do KILL $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
+   move_to UNKNOWN
+endif
+", "0"	0x101	09.08.2007 20:42:19.182
+fwOT_FSM_StrmNode.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.185
+fwOT_JobOptionsControl.panel	_FwFsmObjectType	"JobOptions/JobOptions.pnl"	0x101	09.08.2007 20:42:19.188
+fwOT_JobOptionsControl.components	_FwFsmObjectType	"string State
+", "", "JobOptionsControl_initialize(string domain, string device)
+{
+}
+
+", "JobOptionsControl_valueChanged(string domain, string device, string State, string &fwState )  {
+  // Receiving string of type:  \"READY/StorageSystem/LHCb/203\"
+  DebugN(\"Acting on interrupt> Domain:\"+domain+\" Device:\"+device+\" State:\"+State);
+  dyn_string items = strsplit(State,\"/\");        
+  if ( dynlen(items) == 4 )  {
+    int partID       = items[4]; 
+    string partName  = items[3];
+    string stateName = items[1];
+    fwDU_setParameter(domain,device,\"currentPartitionID\",partID);
+    fwDU_setParameter(domain,device,\"currentPartitionName\",partName);
+    if (stateName == \"READY\")  {
+      fwState = \"READY\";
+      return;
+    }
+  }
+  fwState = \"ERROR\";
+}
+
+
+", "JobOptionsControl_doCommand(string domain, string device, string command)  {
+  int partID;
+  string partName;
+  DebugN(\"Acting on Storage instance:\"+device);
+  fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+  fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+  // Set timeout in case the allocation task is dead ...
+  fwDU_startTimeout(10,domain,device,\"ERROR\");
+  dpSet(device+\".Command\",command+\"/\"+device+\"/\"+partName+\"/\"+partID);
+}
+
+"	0x101	09.08.2007 20:42:19.192
+fwOT_JobOptionsControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.196
+fwOT_JobOptionsControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0", "ERROR/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0"	0x101	09.08.2007 20:42:19.199
+fwOT_JobOptionsControl.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\""	0x101	09.08.2007 20:42:19.203
+fwOT_StorageCluster.panel	_FwFsmObjectType	"StorageCluster.pnl"	0x101	09.08.2007 20:42:19.206
+fwOT_StorageCluster.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to READY
+|", "", ""	0x101	09.08.2007 20:42:19.209
+fwOT_StorageCluster.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "do ALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME)  $ALL$StreamControl
+if ( $ANY$StreamControl not_in_state READY )  then
+  move_to ERROR
+endif
+do ALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME) $ALL$JobOptionsControl
+if ( $ANY$JobOptionsControl not_in_state READY )  then
+    move_to ERROR
+endif
+", "0", "READY/DEALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "do DEALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME)  $ALL$StreamControl
+if ( $ANY$StreamControl not_in_state READY )  then
+  move_to ERROR
+endif
+do DEALLOCATE(PART_ID=PART_ID, PART_NAME=PART_NAME)  $ALL$JobOptionsControl
+if ( $ANY$JobOptionsControl not_in_state READY )  then
+    move_to ERROR
+endif
+move_to READY
+", "0", "ERROR/RECOVER", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "do RECOVER(PART_ID=PART_ID,PART_NAME=PART_NAME) $ALL$FwCHILDREN
+if ( $ANY$FwCHILDREN not_in_state READY )  then
+  move_to ERROR
+endif
+move_to READY
+", "0"	0x101	09.08.2007 20:42:19.213
+fwOT_StorageCluster.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\""	0x101	09.08.2007 20:42:19.217
+fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl.pnl"	0x101	09.08.2007 20:42:19.221
+fwOT_StreamControl.components	_FwFsmObjectType	"string State
+", "", "StreamControl_initialize(string domain, string device)
+{
+}
+
+", "StreamControl_valueChanged(string domain, string device, string State, string &fwState )  {
+  // Receiving string of type:  \"READY/StorageSystem/LHCb/203\"
+  DebugN(\"Acting on interrupt> Domain:\"+domain+\" Device:\"+device+\" State:\"+State);
+  dyn_string items = strsplit(State,\"/\");
+  if ( dynlen(items) == 5 )  {
+    string stateName = items[1];
+    string systemName= items[2];
+    string partName  = items[3];
+    int    partID    = items[4];
+    string slice     = \"NONE\";
+    if ( dynlen(items)>4 ) slice = items[5]; 
+    fwDU_setParameter(domain,device,\"currentSlice\",slice);
+    fwDU_setParameter(domain,device,\"currentPartitionID\",partID);
+    fwDU_setParameter(domain,device,\"currentPartitionName\",partName);
+    
+    if (stateName == \"ALLOCATE\")  {
+      fwState = \"READY\";
+      dyn_int    dim_immed, dim_tmo, dim_flg;
+      dyn_string val_tasks, dps_cmds, dim_cmds, dps_svcs, dim_svcs, dim_defaults;
+      dyn_string names = dpNames(slice+\"_*\",\"FSM_DimTask\");
+      dyn_string tasks = dpNames(slice+\"_*.Name\",\"FSM_DimTask\");
+      int res = dpGet(tasks,val_tasks);
+      DebugN(\"Allocating..... got \"+dynlen(names)+\" \"+dynlen(tasks)+\" datapoints. dpGet result:\"+res);
+      for(int j=1, m=dynlen(val_tasks);j<=m; ++j)  {
+        if (val_tasks[j] != \"NONE\")  {
+          // DebugN(\"Tsk:\"+tasks[j]+\" \"+val_tasks[j]);
+          dynAppend(dim_cmds,val_tasks[j]);
+          dynAppend(dps_cmds,names[j]+\".Command\");
+          
+          dynAppend(dim_svcs,val_tasks[j]+\"/status\");
+          dynAppend(dps_svcs,names[j]+\".State\");
+          dynAppend(dim_defaults,\"UNKNOWN\");
+          dynAppend(dim_tmo,0);
+          dynAppend(dim_flg,0);
+          dynAppend(dim_immed,1);
+
+          dynAppend(dim_svcs,val_tasks[j]+\"/output\");
+          dynAppend(dps_svcs,names[j]+\".Messages.msg\");
+          dynAppend(dim_defaults,\"\");
+          dynAppend(dim_tmo,0);
+          dynAppend(dim_flg,0);
+          dynAppend(dim_immed,0);
+        }
+      }
+      fwDim_unSubscribeCommandsByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeServicesByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      fwDim_subscribeCommands(\"DimStorage\",dim_cmds,dps_cmds);
+      fwDim_subscribeServices(\"DimStorage\",dim_svcs,dps_svcs,dim_defaults,dim_tmo,dim_flg,dim_immed);
+      return;
+    }
+    else if (stateName == \"DEALLOCATE\")  {
+      fwState = \"READY\";
+      fwDim_unSubscribeCommandsByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeServicesByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      return;
+    }
+    else if (stateName == \"READY\")  {
+      fwState = \"READY\";
+      return;
+    }
+  }
+  fwState = \"ERROR\";
+}
+
+
+", "StreamControl_doCommand(string domain, string device, string command)  {
+  int partID;
+  string partName;
+  DebugN(\"Acting on Storage instance:\"+device);
+  fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+  fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+  // Set timeout in case the allocation task is dead ...
+  fwDU_startTimeout(20,domain,device,\"ERROR\");
+  dpSet(device+\".Command\",command+\"/\"+device+\"/\"+partName+\"/\"+partID);
+}
+
+"	0x101	09.08.2007 20:42:19.226
+fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.229
+fwOT_StreamControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+", "1", "", "0"	0x101	09.08.2007 20:42:19.233
+fwOT_StreamControl.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\"", "string currentSlice = \"\""	0x101	09.08.2007 20:42:19.237

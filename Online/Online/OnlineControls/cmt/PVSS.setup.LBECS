@@ -1,0 +1,3 @@
+#/bin/bash
+. ./PVSS.setup.sh
+PVSS_II="/localdisk/pvss/LBECS/config/config"; export PVSS_II
