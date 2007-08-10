@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.38 2007-08-09 16:00:25 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.39 2007-08-10 09:23:12 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -237,10 +237,10 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
     tmpDir = tmpDir.Unit();
     // the dot product between the plane normal and the direction
     const double cosT1 = tmpDir.Dot(m_aeroNormVect);
-    // update the point
+    // update the point extrapolating the photon dir inside the aerogel to exit plane
     const double distance = -(m_aeroExitPlane.Distance(tmpPos))/cosT1;
     tmpPos += distance*tmpDir;
-    // Update the direction
+    // Update the direction due to refraction on exit
     const double cosT2 = sqrt( 1.0 - Rratio*Rratio*( 1.0 - cosT1*cosT1 ) );
     if ( cosT1<0 ) { tmpDir = tmpDir*Rratio - m_aeroNormVect*(cosT2+(Rratio*cosT1)); }
     else           { tmpDir = tmpDir*Rratio + m_aeroNormVect*(cosT2-(Rratio*cosT1)); }
