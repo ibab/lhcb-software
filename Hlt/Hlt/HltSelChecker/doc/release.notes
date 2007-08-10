@@ -9,6 +9,11 @@
 !          Bs2MuMu Dst-PiD-HH Bd2DstMu Bu2llK Bs2DsDs Bu2KD 
 !   To do: Bd2DstPi (not stripped by Hans)
 !   Not yet in HLT : Bd2PiPiPi Bd2KstD2KSPiPi Bs2phigamma
+!
+!-----------------------------------------------------------------------------
+
+! 2007-08-10 - Patrick Koppenburg
+ - 
 
 ! 2007-08-07 - Patrick Koppenburg
  - Bu2MuMuK: data moved.
