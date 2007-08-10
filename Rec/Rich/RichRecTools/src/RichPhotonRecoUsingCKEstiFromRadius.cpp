@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.1 2007-08-09 16:38:31 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.2 2007-08-10 18:08:01 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -58,7 +58,7 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   m_ckFudge[Rich::C4F10]   =  0.0003628;
   m_ckFudge[Rich::CF4]     =  0.0001462;
   declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
-  
+
 }
 
 //=============================================================================
@@ -84,7 +84,7 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
   // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin(); 
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
   {
     // scale factor
@@ -172,56 +172,20 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // seg - pixel separation
   const double sep2 = (segPSide-pixPRad).Mag2();
 
-  // Use CK ring to estimate CK theta better
-  float thetaCerenkov( 0 );
-  //if ( radiator != Rich::Aerogel )
-  //{
+  // Start with CK fudge factor
+  float thetaCerenkov( m_ckFudge[radiator] );
 
-    // find best hypo
-    /*
-    // First theta estimate
-    thetaCerenkov = sep * m_scale[radiator];
-    double bestDiff(999999);
-    const LHCb::RichRecRing * ring = NULL;
-    for ( Rich::Particles::const_reverse_iterator hypo = m_pidTypes.rbegin();
-          hypo != m_pidTypes.rend(); ++hypo )
-    {
-      const double ckTheta = m_ckAngle->avgCherenkovTheta( seg, *hypo );
-      const double diff = fabs(ckTheta-thetaCerenkov);
-      if ( ckTheta > 0 && diff < bestDiff )
-      {
-        ring = m_massHypoRings->massHypoRing( seg, *hypo );
-        if ( NULL != ring ) { bestDiff = diff );
-      } else if ( ring != NULL ) { break; }
-    }
-    */
-
-    // just use lowest mass ring as reference
-    const LHCb::RichRecRing * ring = m_massHypoRings->massHypoRing( seg, m_pidTypes.front() );
-    // just use electron mass ring as reference
-    //const LHCb::RichRecRing * ring = m_massHypoRings->massHypoRing( seg, Rich::Electron );
-
-    if ( ring )
-    {
-      const LHCb::RichRecPointOnRing* point = ring->getPointClosestInAzimuth(phiCerenkov);
-      if ( point )
-      {
-        thetaCerenkov = ring->radius() * sqrt( sep2 / (segPSide-point->localPosition()).Mag2() );
-      }
-    }
-    else
-    {
-      thetaCerenkov = sqrt(sep2) * m_scale[radiator];
-    }
-
-    //}
-    //else
-    //{
-    //thetaCerenkov = sqrt(sep2) * m_scale[radiator];
-    //}
-
-  // apply fudge factor
-  thetaCerenkov += m_ckFudge[radiator];
+  // use ring info to determine CK theta
+  const LHCb::RichRecRing        * ring  = m_massHypoRings->massHypoRing( seg, m_pidTypes.front() );
+  const LHCb::RichRecPointOnRing * point = ( ring ? ring->getPointClosestInAzimuth(phiCerenkov) : NULL );
+  if ( point )
+  {
+    thetaCerenkov += ring->radius() * sqrt( sep2 / (segPSide-point->localPosition()).Mag2() );
+  }
+  else
+  {
+    thetaCerenkov += sqrt(sep2) * m_scale[radiator];
+  }
 
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
