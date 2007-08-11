@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.9 2007-07-23 17:35:41 ibelyaev Exp $
+// $Id: Child.h,v 1.10 2007-08-11 20:20:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -139,13 +139,6 @@ namespace LoKi
     LHCb::Particle::ConstVector 
     descendants
     ( const LHCb::Particle* particle ) ;
-    // ========================================================================
-    ///    helper structure to force the loading of functions 
-    struct PhysChild     
-    {
-      /// fictive contructor
-      PhysChild() ; ///< fictive  constructor
-    } ;
     // ========================================================================
   } // end of the namespace LoKi:Child 
 } // end of the namespace LoKi
