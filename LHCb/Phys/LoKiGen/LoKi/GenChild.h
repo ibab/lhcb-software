@@ -1,4 +1,4 @@
-// $Id: GenChild.h,v 1.2 2007-06-10 19:56:03 ibelyaev Exp $
+// $Id: GenChild.h,v 1.3 2007-08-11 20:18:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENCHILD_H 
 #define LOKI_GENCHILD_H 1
@@ -51,7 +51,7 @@ namespace LoKi
      *  @param  index1   index   index of the child particle 
      *  @param  index2   index   index of the child particle 
      *  @return daughter particle with given index 
-     *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */    
     inline 
@@ -154,7 +154,7 @@ namespace LoKi
     ( const HepMC::GenVertex*    vertex , 
       const HepMC::IteratorRange range  ) ;
     // ========================================================================
-    /** get all "parents" particles form the given vertex
+    /** get all "parents" particles form the given vertxex
      *  @see LoKi::Child::particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
@@ -229,13 +229,6 @@ namespace LoKi
     std::vector<const HepMC::GenParticle*> 
     relatives  ( const HepMC::GenVertex*    vertex ) 
     { return particles ( vertex , HepMC::relatives ) ; }    
-    // ========================================================================
-    /// helper structure to force the loading of functions 
-    struct GenChild     
-    {
-      /// ficvtive contructor
-      GenChild() ; ///< fictive  constructor
-    } ;
     // ========================================================================
   } // end of namespace LoKi::GenChild 
   namespace Child 

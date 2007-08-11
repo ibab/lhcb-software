@@ -1,4 +1,4 @@
-// $Id: GenExtractDicts.h,v 1.2 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenExtractDicts.h,v 1.3 2007-08-11 20:18:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENEXTRACTDICTS_H 
 #define LOKI_GENEXTRACTDICTS_H 1
@@ -40,6 +40,12 @@ namespace LoKi
       genParticles 
       ( const HepMC::GenVertex*      veretx ,
         const LoKi::GenTypes::GCuts& cuts   , 
+        HepMC::IteratorRange         range = HepMC::descendants ) ;
+      // ======================================================================
+      /// extract the particles from the vertex 
+      std::vector<const HepMC::GenParticle*>
+      genParticles 
+      ( const HepMC::GenVertex*      veretx ,
         HepMC::IteratorRange         range = HepMC::descendants ) ;
       // ======================================================================
       /// extract the particles from the particle 

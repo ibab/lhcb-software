@@ -1,8 +1,4 @@
-// $Id: GenExtractDicts.cpp,v 1.1 2007-06-03 20:39:38 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: GenExtractDicts.cpp,v 1.2 2007-08-11 20:18:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,6 +14,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Objects.h"
 #include "LoKi/GenExtractDicts.h"
 // ============================================================================
 /** @file 
@@ -73,6 +70,19 @@ LoKi::Dicts::Extract::genParticles
   std::vector<const HepMC::GenParticle*> result ;
   LoKi::Extract::genParticles 
     ( vertex , range , std::back_inserter( result ) , cuts ) ;
+  return result ;
+}
+// ============================================================================
+// extract the particles from the vertex 
+// ============================================================================
+std::vector<const HepMC::GenParticle*>
+LoKi::Dicts::Extract::genParticles 
+( const HepMC::GenVertex*      vertex , 
+  HepMC::IteratorRange         range  ) 
+{
+  std::vector<const HepMC::GenParticle*> result ;
+  LoKi::Extract::genParticles 
+    ( vertex , range , std::back_inserter( result ) , LoKi::Objects::_VALID_  ) ;
   return result ;
 }
 // ============================================================================

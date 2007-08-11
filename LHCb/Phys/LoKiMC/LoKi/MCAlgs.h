@@ -1,4 +1,4 @@
-// $Id: MCAlgs.h,v 1.8 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id: MCAlgs.h,v 1.9 2007-08-11 20:19:58 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCALGS_H 
 #define LOKI_MCALGS_H 1
@@ -181,8 +181,8 @@ namespace LoKi
       const bool            decayOnly = false )
     {
       // 
-      if ( decayOnly && !LoKi::MCVertices::IsDecay( vertex ) ) { return 0 ; }
       if ( 0 == vertex ) { return 0 ; }                       // RETURN 
+      if ( decayOnly && !LoKi::MCVertices::IsDecay( vertex ) ) { return 0 ; }
       //
       typedef SmartRefVector<LHCb::MCParticle> Products ;
       const Products& products = vertex->products() ;

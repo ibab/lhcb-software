@@ -1,4 +1,4 @@
-// $Id: MCExtract.h,v 1.6 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.7 2007-08-11 20:19:58 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -13,6 +13,7 @@
 // ============================================================================
 #include  "LoKi/Objects.h"
 #include  "LoKi/MCTypes.h"
+#include  "LoKi/MCDEcayVertex.h"
 // ============================================================================
 /** @file
  *
@@ -40,13 +41,14 @@ namespace LoKi
     // ========================================================================
     template <class MCPARTICLE , class OUTPUT, class PREDICATE>
     inline OUTPUT getMCParticles 
-    ( MCPARTICLE        begin  , 
-      MCPARTICLE        end    , 
-      OUTPUT            output , 
-      const PREDICATE&  cut    )
+    ( MCPARTICLE        begin             , 
+      MCPARTICLE        end               , 
+      OUTPUT            output            , 
+      const PREDICATE&  cut               ,
+      const bool        decayOnly = false )
     {
       for ( ; begin != end ; ++begin ) 
-      { output = getMCParticles ( *begin , output , cut ) ; }
+      { output = getMCParticles ( *begin , output , cut , decayOnly ) ; }
       return output ;
     }
     // ========================================================================
@@ -84,9 +86,10 @@ namespace LoKi
      */
     template <class OUTPUT, class PREDICATE> 
     inline OUTPUT  getMCParticles 
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT                  output   , 
-      const PREDICATE&        cut      )
+    ( const LHCb::MCParticle* particle          , 
+      OUTPUT                  output            , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly = false )
     {
       if ( 0 == particle ) { return output ; } // RETURN 
       // fill and advance the output iterator 
@@ -97,32 +100,36 @@ namespace LoKi
         ++output ;                                              // ADVANCE 
       }
       const SmartRefVector<LHCb::MCVertex>& vs = particle->endVertices();
-      return getMCParticles ( vs.begin() , vs.end() , output , cut ) ;
+      return getMCParticles ( vs.begin() , vs.end() , output , cut , decayOnly ) ;
     }
     // ========================================================================
     template <class OUTPUT, class PREDICATE> 
     inline OUTPUT  getMCParticles 
-    ( const LHCb::MCVertex*   vertex , 
-      OUTPUT                  output , 
-      const PREDICATE&        cut    )
-    {
+    ( const LHCb::MCVertex*   vertex            , 
+      OUTPUT                  output            , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly = false )
+    {      
       if ( 0 == vertex ) { return output ; } // RETURN 
+      if ( decayOnly && !LoKi::MCVertices::IsDecay ( vertex ) ) { return output ; }
       const SmartRefVector<LHCb::MCParticle>& ps = vertex->products() ;
-      return getMCParticles ( ps.begin() , ps.end() , output , cut ) ;
+      return getMCParticles ( ps.begin() , ps.end() , output , cut , decayOnly ) ;
     }
     // ========================================================================
     template <class OUTPUT> 
     inline OUTPUT  getMCParticles 
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT                  output   )
-    { return getMCParticles ( particle , output , LoKi::Objects::_ALL_ ) ; }
+    ( const LHCb::MCParticle* particle          , 
+      OUTPUT                  output            , 
+      const bool              decayOnly = false )
+    { return getMCParticles ( particle , output , LoKi::Objects::_ALL_ , decayOnly ) ; }
     // ========================================================================   
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT getMCParticles 
-    ( MCPARTICLE        begin  , 
-      MCPARTICLE        end    , 
-      OUTPUT            output )
-    { return getMCParticles ( begin , end , output , LoKi::Objects::_ALL_ ) ; }
+    ( MCPARTICLE        begin             , 
+      MCPARTICLE        end               , 
+      OUTPUT            output            ,
+      const bool        decayOnly = false )
+    { return getMCParticles ( begin , end , output , LoKi::Objects::_ALL_ , decayOnly ) ; }
     // ======================================================================== 
     /** Simple function to extract all Monte Carlo particles that 
      *  make contribution to the given particle. 
@@ -156,31 +163,35 @@ namespace LoKi
      */
     template <class OUTPUT, class PREDICATE> 
     inline OUTPUT mcParticles 
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT            output   , 
-      const PREDICATE&  cut      )
-    { return getMCParticles ( particle , output , cut ) ; } 
+    ( const LHCb::MCParticle* particle          , 
+      OUTPUT                  output            , 
+      const PREDICATE&        cut               ,
+      const bool              decayOnly = false )
+    { return getMCParticles ( particle , output , cut , decayOnly ) ; } 
     // ========================================================================    
     template <class MCPARTICLE , class OUTPUT, class PREDICATE>
     inline OUTPUT mcParticles 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  , 
-      const PREDICATE&  cut     )
-    { return getMCParticles ( begin , end , output , cut ) ; } 
+    ( MCPARTICLE        begin             , 
+      MCPARTICLE        end               , 
+      OUTPUT            output            , 
+      const PREDICATE&  cut               ,     
+      const bool        decayOnly = false )
+    { return getMCParticles ( begin , end , output , cut , decayOnly ) ; } 
     // ========================================================================    
     template <class OUTPUT> 
     inline OUTPUT mcParticles 
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT            output   )
-    { return getMCParticles ( particle , output ) ; } ;
+    ( const LHCb::MCParticle* particle          , 
+      OUTPUT                  output            ,
+      const bool              decayOnly = false )
+    { return getMCParticles ( particle , output , decayOnly ) ; } ;
     // ========================================================================    
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT mcParticles 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  )
-    { return getMCparticles ( begin , end , output ) ; } ;
+    ( MCPARTICLE        begin             , 
+      MCPARTICLE        end               , 
+      OUTPUT            output            ,
+      const bool        decayOnly = false )
+    { return getMCparticles ( begin , end , output , decayOnly ) ; } ;
     // ========================================================================    
     /** Extract all children particle form the given MC-particle 
      *  in a form of the flat list 
@@ -204,8 +215,9 @@ namespace LoKi
      */
     template <class OUTPUT>
     inline OUTPUT getMCChildren 
-    ( const LHCb::MCParticle* particle ,
-      OUTPUT                  output   )
+    ( const LHCb::MCParticle* particle          ,
+      OUTPUT                  output            , 
+      const bool              decayOnly = false )
     {
       if ( 0 == particle ) { return output ; }             // RETURN 
       typedef SmartRefVector<LHCb::MCVertex>   MCVS ;
@@ -215,6 +227,7 @@ namespace LoKi
       {
         const LHCb::MCVertex* v = *iv ;
         if ( 0 == v ) { continue ; }                       // CONTINUE 
+        if ( decayOnly && !LoKi::MCVertices::IsDecay ( v ) ) { continue ; }
         const MCPS& ps = v->products() ;
         for ( MCPS::const_iterator ip = ps.begin() ; ps.end() != ip ; ++ip ) 
         {
@@ -250,9 +263,10 @@ namespace LoKi
      */
     template <class OUTPUT>
     inline OUTPUT mcChildren 
-    ( const LHCb::MCParticle* particle ,  
-      OUTPUT                  output   )
-    { return getMCChildren ( particle , output ) ; }
+    ( const LHCb::MCParticle* particle          ,  
+      OUTPUT                  output            ,
+      const bool              decayOnly = false )
+    { return getMCChildren ( particle , output , decayOnly ) ; }
     // ========================================================================
   } // end of namespace Extract
 } // end of namespace LoKi

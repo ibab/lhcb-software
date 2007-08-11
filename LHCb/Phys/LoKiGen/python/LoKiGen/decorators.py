@@ -10,6 +10,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiGen.functions   import *
+from   LoKiGen.HepMC       import *
 
 _name = __name__ 
 # =============================================================================

@@ -1,4 +1,4 @@
-// $Id: GenAlgsDicts.cpp,v 1.2 2007-07-23 17:23:37 ibelyaev Exp $
+// $Id: GenAlgsDicts.cpp,v 1.3 2007-08-11 20:18:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -247,6 +247,7 @@ double LoKi::Dicts::GenAlgs::max_value
   HepMC::IteratorRange         range    , 
   double                       res      ) 
 { return LoKi::GenAlgs::max_value ( vertex , fun , cut , range , res ) ; }
+
 // ============================================================================
 // find the minimum element through the event 
 // ============================================================================
@@ -293,6 +294,54 @@ LoKi::Dicts::GenAlgs::min_element
   const LoKi::GenTypes::GCuts& cut    ,
   HepMC::IteratorRange         range  ) 
 { return LoKi::GenAlgs::min_element ( vertex  , fun , cut , range ) ; }
+
+
+// ============================================================================
+// find the minimum element through the event 
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::Dicts::GenAlgs::max_element 
+( const HepMC::GenEvent*       event ,
+  const LoKi::GenTypes::GFunc& fun   , 
+  const LoKi::GenTypes::GCuts& cut   )
+{ return LoKi::GenAlgs::max_element ( event , fun , cut ) ; }
+// ============================================================================
+// find the minimum element through the event 
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::Dicts::GenAlgs::max_element 
+( const LHCb::HepMCEvent*      event ,
+  const LoKi::GenTypes::GFunc& fun   , 
+  const LoKi::GenTypes::GCuts& cut   ) 
+{ return LoKi::GenAlgs::max_element ( event , fun , cut ) ; }
+// ============================================================================
+//  find the minimum element through the event 
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::Dicts::GenAlgs::max_element 
+( const LHCb::HepMCEvent::Container* event ,
+  const LoKi::GenTypes::GFunc& fun   , 
+  const LoKi::GenTypes::GCuts& cut   ) 
+{ return LoKi::GenAlgs::max_element ( event , fun , cut ) ; }
+// ============================================================================
+//  find the minimum element through the tree
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::Dicts::GenAlgs::max_element 
+( const HepMC::GenParticle*    particle ,
+  const LoKi::GenTypes::GFunc& fun      , 
+  const LoKi::GenTypes::GCuts& cut      ) 
+{ return LoKi::GenAlgs::max_element ( particle , fun , cut ) ; }
+// ============================================================================
+//  find the minimum element through the treec
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::Dicts::GenAlgs::max_element 
+( const HepMC::GenVertex*      vertex ,
+  const LoKi::GenTypes::GFunc& fun    ,
+  const LoKi::GenTypes::GCuts& cut    ,
+  HepMC::IteratorRange         range  ) 
+{ return LoKi::GenAlgs::max_element ( vertex  , fun , cut , range ) ; }
 
 // ============================================================================
 // The END 

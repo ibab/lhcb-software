@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file decorators.py LoKiCore/decorators.py
+## @file LoKiMC/decorators.py
 #  The set of basic decorator for objects from LoKiMC library
 #  The file is a part of LoKi and Bender projects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -10,6 +10,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiMC.functions   import *
+import LoKiMC.MC
 
 if not 'Bender' in dir() : Bender =  LoKi.Dicts
 
