@@ -1,4 +1,4 @@
-// $Id: BiFunctions.h,v 1.2 2007-07-23 17:07:35 ibelyaev Exp $
+// $Id: BiFunctions.h,v 1.3 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BIFUNCTIONS_H 
 #define LOKI_BIFUNCTIONS_H 1
@@ -18,7 +18,6 @@ namespace LoKi
   template <class TYPE1,class TYPE2>
   class Function<LoKi::Holder<TYPE1,TYPE2> >
     : public    std::unary_function<const LoKi::Holder<TYPE1,TYPE2>,double> 
-  //, public    std::binary_function<const TYPE1,const TYPE2,double> 
     , virtual   public LoKi::AuxFunBase
   {
   public:
@@ -28,7 +27,6 @@ namespace LoKi
     /// the actual type of base 
     typedef typename std::unary_function<const TYPE,double>  Base_F ;
     typedef typename std::unary_function<const TYPE,double>  Base_1 ;
-    typedef typename std::binary_function<const TYPE1,const TYPE2,double>  Base_2 ;
     /// the result value 
     typedef typename Base_F::result_type   result_type   ;
     /// the basic argument type 
@@ -36,7 +34,7 @@ namespace LoKi
     /// vector or results 
     typedef std::vector<result_type>       vector_result ;
     /// type for the argument 
-    typedef typename boost::call_traits<const TYPE>::param_type argument;
+    typedef typename boost::call_traits<const TYPE>::param_type  argument;
     /// type for the first argument 
     typedef typename boost::call_traits<const TYPE1>::param_type first_argument      ;
     /// type for the first argument 

@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.19 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Functions.h,v 1.20 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -47,9 +47,9 @@ namespace LoKi
    *  @date   2002-07-15
    */
   template <class TYPE>
-  class Function : 
-    public    std::unary_function<const TYPE,double> , 
-    virtual   public LoKi::AuxFunBase
+  class Function 
+    : public    std::unary_function<const TYPE,double> 
+    , public virtual LoKi::AuxFunBase
   {
   public:
     /// the type of the argument

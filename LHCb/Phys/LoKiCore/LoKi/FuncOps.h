@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.3 2007-07-30 09:54:35 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.4 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -10,6 +10,7 @@
 #include  "LoKi/Functions.h"
 #include  "LoKi/Operators.h"
 #include  "LoKi/Funcs.h"
+#include  "LoKi/Monitoring.h"
 // ============================================================================
 namespace LoKi
 {
@@ -172,6 +173,19 @@ namespace LoKi
                               const Func&  f4   ) 
       { return LoKi::max ( f1 , f2 , f3 , f4 ) ; }
       // ======================================================================
+      // monitoring 
+      // ======================================================================
+      static Cut __monitor__ ( const Cuts&         c , 
+                               StatEntity*         e )
+      { return LoKi::monitor ( c , e ) ; }
+      // ======================================================================
+      static Fun __monitor__ ( const Func&         c , 
+                               StatEntity*         e )
+      { return LoKi::monitor ( c , e ) ; }
+      // ======================================================================
+      static Fun __monitor__ ( const Func&         c , 
+                               AIDA::IHistogram1D* h )
+      { return LoKi::monitor ( c , h ) ; }
     } ;
     // ========================================================================
   } // end of namespace LoKi::Dicts

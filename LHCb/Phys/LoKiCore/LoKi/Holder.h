@@ -1,4 +1,4 @@
-// $Id: Holder.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Holder.h,v 1.3 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HOLDER_H 
 #define LOKI_HOLDER_H 1
@@ -17,26 +17,24 @@ namespace LoKi
    *  @date   2007-06-08
    */
   template <class TYPE1,class TYPE2>
-  struct Holder : public std::pair <typename LoKi::Field<const TYPE1>::Type,
-                                    typename LoKi::Field<const TYPE2>::Type>
+  struct Holder 
+    : public std::pair <typename LoKi::Field<const TYPE1>::Type,
+                        typename LoKi::Field<const TYPE2>::Type>
   {
   protected:
     typedef typename  LoKi::Field<const TYPE1>::Type         First  ;
     typedef typename  LoKi::Field<const TYPE2>::Type         Second ;
-    typedef std::pair<First,Second>                    Pair   ;
+    typedef std::pair<First,Second>                          Pair   ;
   public:
     /// constructor from data fields (including the default) 
-    Holder ( First f = First() , Second s = Second() ) 
-      : Pair ( f , s ) 
-    {}
-    /// constructor form the base 
-    Holder ( const Pair & base )
-      : Pair ( base ) 
-    {}
+    Holder ( const TYPE1& f , const TYPE2& s  ) 
+      : Pair ( First ( f ) , Second ( s ) ) {}
+    /// constructor from the base 
+    Holder ( const Pair & base   ) : Pair ( base ) {}
+    /// default constructor 
+    Holder ( )                     : Pair ( )      {}
     /// copy constuctor 
-    Holder ( const Holder& copy  )
-      : Pair ( copy ) 
-    {}
+    Holder ( const Holder& copy  ) : Pair ( copy ) {}
   };
   // ==========================================================================
 } // end of namespace LoKi

@@ -1,4 +1,4 @@
-// $Id: KeeperBase.h,v 1.1 2007-06-01 11:35:26 ibelyaev Exp $
+// $Id: KeeperBase.h,v 1.2 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KEEPERBASE_H 
 #define LOKI_KEEPERBASE_H 1
@@ -12,7 +12,11 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-05-27
    */
-  struct KeeperBase {} ;
+  struct KeeperBase 
+  {
+  protected:
+    ~KeeperBase() {}    
+  } ;
 } // end of namespace LoKi
 // ============================================================================
 // The END 

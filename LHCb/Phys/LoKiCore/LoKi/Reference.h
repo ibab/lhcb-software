@@ -1,4 +1,4 @@
-// $Id: Reference.h,v 1.3 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: Reference.h,v 1.4 2007-08-11 20:17:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_REFERENCE_H 
 #define LOKI_REFERENCE_H 1 
@@ -7,7 +7,7 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/Exception.h"
+#include "LoKi/Assert.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -31,7 +31,7 @@ namespace LoKi
     inline          TYPE& get () const 
     {
       // check the validity of the data:
-      if ( 0 == m_data ) { throw LoKi::Exception ( "LoKi::Reference::get(): Invalid pointer!" ) ; }
+      LoKi::Assert ( 0 != m_data , "LoKi::Reference::get(): Invalid pointer!" ) ; 
       return *m_data ; 
     } ;
     /// THE MAIN METHOD: conversion to reference  
@@ -40,8 +40,8 @@ namespace LoKi
     inline TYPE& operator*    () const { return   get() ; }
   public:
     /// assignement from the value 
-    inline Reference& operator=( const TYPE& value ) 
-    { m_data = const_cast<TYPE*>( &value ) ; return *this ; } ;
+    inline Reference& operator=( TYPE& value ) 
+    { m_data = &value ; return *this ; } ;
   public:
     /// comparison
     bool operator==( const Reference& right ) const 

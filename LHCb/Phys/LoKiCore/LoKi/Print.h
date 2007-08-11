@@ -1,4 +1,4 @@
-// $Id: Print.h,v 1.9 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: Print.h,v 1.10 2007-08-11 20:17:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRINT_H 
 #define LOKI_PRINT_H 1
@@ -56,7 +56,7 @@ namespace LoKi
     ( std::ostream&   stream , 
       const TYPE&     object ) 
     { 
-      return Gaudi::Utils::toStream ( stream , object ) ; 
+      return Gaudi::Utils::toStream ( object , stream ) ; 
     }
     // ============================================================================
     template <class TYPE>
@@ -65,7 +65,7 @@ namespace LoKi
       const TYPE&  object ) 
     { 
       if ( stream.isActive() )
-      { Gaudi::Utils::toStream ( stream.stream() , object ) ; }
+      { Gaudi::Utils::toStream ( object , stream ) ; }
       return stream ;      
     }
     // ============================================================================
