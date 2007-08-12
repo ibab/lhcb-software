@@ -1,4 +1,4 @@
-// $Id: AChild.cpp,v 1.1 2007-07-24 05:20:09 ibelyaev Exp $
+// $Id: AChild.cpp,v 1.2 2007-08-12 18:57:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,7 +25,7 @@
  *  @date   2006-02-11
  */
 // ============================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::AChild::child
 ( const LHCb::Particle::ConstVector& vct   , 
   const size_t                       index ) 
 {
@@ -47,11 +47,11 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2006-02-11
  */
 // ========================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::AChild::child
 ( const LHCb::Particle::ConstVector& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ) 
-{ return child ( child ( vct , index1 ) , index2 ) ; }
+{ return LoKi::Child::child ( child ( vct , index1 ) , index2 ) ; }
 // ========================================================================
 /* Trivial accessor to the daughter particles for the given particle.
  *
@@ -67,12 +67,12 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2006-02-11
  */
 // ========================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::AChild::child
 ( const LHCb::Particle::ConstVector& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ,
   const size_t                       index3 ) 
-{ return child ( child ( vct , index1 ) , index2 , index3 ) ; }
+{ return LoKi::Child::child ( child ( vct , index1 ) , index2 , index3 ) ; }
 // ========================================================================
 /* Trivial accessor to the daughter particles for the given particle.
  *
@@ -89,13 +89,13 @@ LHCb::Particle* LoKi::Child::child
  *  @date   2006-02-11
  */
 // ========================================================================
-LHCb::Particle* LoKi::Child::child
+LHCb::Particle* LoKi::AChild::child
 ( const LHCb::Particle::ConstVector& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ,
   const size_t                       index3 ,
   const size_t                       index4 ) 
-{ return child ( child ( vct , index1 ) , index2 , index3 , index4 ) ; }
+{ return LoKi::Child::child ( child ( vct , index1 ) , index2 , index3 , index4 ) ; }
 // ========================================================================
 /*  trivial function to access all descendants particles 
  *  @param vct  "pseudo-particle"
@@ -105,7 +105,7 @@ LHCb::Particle* LoKi::Child::child
  */
 // ========================================================================
 LHCb::Particle::ConstVector 
-LoKi::Child::descendants
+LoKi::AChild::descendants
 ( const LHCb::Particle::ConstVector& vct ) 
 {
   typedef LHCb::Particle::ConstVector VCT ;
@@ -113,7 +113,7 @@ LoKi::Child::descendants
   result.reserve ( 4 * vct.size() ) ;
   for ( VCT::const_iterator i = vct.begin() ; vct.end() != i ; ++i )
   {
-    const VCT& _r = descendants ( *i ) ;
+    const VCT& _r = LoKi::Child::descendants ( *i ) ;
     result.insert ( result.end() , _r.begin() , _r.end() ) ;
   } 
   return result ;

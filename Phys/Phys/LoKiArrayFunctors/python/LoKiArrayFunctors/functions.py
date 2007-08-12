@@ -14,8 +14,8 @@ import LoKiCore.decorators as _LoKiCore
 
 # Namespaces:
 _global  = _LoKiCore._global 
-std      = _LoKiCore.std
-LoKi     = _LoKiCore.LoKi
+std      = _global.std
+LoKi     = _global.LoKi
 LHCb     = _global.LHCb
 
 _T = 'std::vector<const LHCb::Particle*>' 
@@ -51,8 +51,6 @@ ACHILD        = LoKi.AParticles.ChildFun
 ACHILDCUT     = LoKi.AParticles.ChildCut
 ## @see LoKi::Cuts::ACHILDFUN
 ACHILDFUN     = LoKi.AParticles.ChildFun
-## @see LoKi::Cuts::ACOUNTER
-ACOUNTER      = LoKi.Monitoring.Counter( _T ) 
 ## @see LoKi::Cuts::ACUTCHILD
 ACUTCHILD     = LoKi.AParticles.ChildCut
 ## @see LoKi::Cuts::ACUTDOCA
@@ -137,8 +135,7 @@ AP2           = LoKi.AParticles.Momentum ( 2 )
 AP3           = LoKi.AParticles.Momentum ( 3 )  
 ## @see LoKi::Cuts::AP4
 AP4           = LoKi.AParticles.Momentum ( 4 )  
-## @see LoKi::Cuts::APLOT
-APLOT         = LoKi.Monitoring.Plot ( _T )
+
 ## @see LoKi::Cuts::APT
 APT           = LoKi.AParticles.TransverseMomentum ( 0 )
 ## @see LoKi::Cuts::APT0
@@ -153,12 +150,7 @@ APT3          = LoKi.AParticles.TransverseMomentum ( 3 )
 APT4          = LoKi.AParticles.TransverseMomentum ( 4 )
 ## @see LoKi::Cuts::ASIZE
 ASIZE         = LoKi.AParticles.Size   ()
-## @see LoKi::Cuts::ASSWITCH
-ASSWITCH      = LoKi.SimpleSwitch    ( _T )  
-## @see LoKi::Cuts::ASTAT
-ASTAT         = LoKi.Monitoring.Stat ( _T ) 
-## @see LoKi::Cuts::ASWITCH
-ASWITCH       = LoKi.Switch(_T)        
+
 ## @see LoKi::Cuts::AUNIQUE
 AUNIQUE       = LoKi.AParticles.Unique 
 ## @see LoKi::Cuts::AVCHI2
@@ -170,6 +162,10 @@ AWM           = LoKi.AParticles.WrongMass
 ## @see LoKi::Cuts::AWRONGMASS
 AWRONGMASS    = LoKi.AParticles.WrongMass 
 
+
+# =============================================================================
+if '__main__' == __name__ :
+    for o in dir() : print o        
 
 
 # =============================================================================

@@ -11,6 +11,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiArrayFunctors.functions   import *
+import LoKiArrayFunctors.Array
 
 _name = __name__ 
 # =============================================================================

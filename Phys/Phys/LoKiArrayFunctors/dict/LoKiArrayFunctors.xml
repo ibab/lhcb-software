@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.4 2007-08-12 18:57:09 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -22,12 +22,12 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*std::vector*LHCb::Particle*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*std::vector*LHCb::Particle*>"          />
 
-  <class pattern   = "LoKi::SimpleSwitch<*vector*>"     />
-  <class pattern   = "LoKi::Switch<*vector*>"           />
   <class pattern   = "LoKi::Valid<*vector*>"            />
   
   <!-- 
        <class pattern   = "LoKi::EqualToValue<*vector*>"     />
+       <class pattern   = "LoKi::SimpleSwitch<*vector*>"     />
+       <class pattern   = "LoKi::Switch<*vector*>"           />
        
        <class pattern   = "LoKi::PredicateFromTwoPredicates<*std::vector*LHCb::Particle*>"    />
        <class pattern   = "LoKi::PredicateFromTwoFunctions<*std::vector*LHCb::Particle*>"     />
@@ -59,17 +59,16 @@
        
        <class pattern   = "LoKi::TheSame<*std::vector*LHCb::Particle*>"          />
        
--->
-
-  <class pattern = "LoKi::Monitoring::Counter<*std::vector*>" />
-  <class pattern = "LoKi::Monitoring::Stat<*std::vector*>"    />
-  <class pattern = "LoKi::Monitoring::Plot<*std::vector*>"    />
+       <class pattern = "LoKi::Monitoring::Counter<*std::vector*>" />
+       <class pattern = "LoKi::Monitoring::Stat<*std::vector*>"    />
+       <class pattern = "LoKi::Monitoring::Plot<*std::vector*>"    />
+  -->
+  
   
   <class    pattern   = "LoKi::AParticles::*"             />
   <function pattern   = "LoKi::AKinematics::*"             />
   
-  <function pattern = "LoKi::Child::*"                   />
-  <function pattern = "LoKi::Dicts::moni*"               />
+  <function pattern = "LoKi::AChild::*"                   />
   
   <class pattern   = "LoKi::Dicts::FuncOps<*std::vector*LHCb::Particle*>"    />
   <class pattern   = "LoKi::Dicts::FunCalls<*std::vector*LHCb::Particle*>"   />

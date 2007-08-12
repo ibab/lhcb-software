@@ -1,4 +1,4 @@
-// $Id: AChild.h,v 1.1 2007-07-24 05:20:08 ibelyaev Exp $
+// $Id: AChild.h,v 1.2 2007-08-12 18:57:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ACHILD_H 
 #define LOKI_ACHILD_H 1
@@ -11,7 +11,7 @@
 // ============================================================================
 namespace LoKi
 {
-  namespace Child
+  namespace AChild
   {
     // ========================================================================
     /** get the number of children 
@@ -112,10 +112,11 @@ namespace LoKi
     descendants
     (  const LHCb::Particle::ConstVector& vct ) ;
     // ========================================================================
-    ///    helper structure to force the loading of functions 
-    struct AChild {} ;
-    // ========================================================================
-  } // end of the namespace LoKi:Child 
+  } // end of the namespace LoKi:AChild 
+  namespace Child
+  {
+    using namespace LoKi::AChild ;
+  }
 } // end of the namespace LoKi
 // ============================================================================
 // The END

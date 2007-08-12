@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.5 2007-07-23 17:35:51 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.6 2007-08-12 18:55:53 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -37,12 +37,13 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::*>" />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::*>"   />
   
-  <class pattern   = "LoKi::SimpleSwitch<*LHCb::*>"       />
-  <class pattern   = "LoKi::Switch<*LHCb::*>"             />
   <class pattern   = "LoKi::Valid<*LHCb::*>"              />
-  <class pattern   = "LoKi::EqualToValue<*LHCb::*>"       />
   
   <!-- 
+       
+       <class pattern   = "LoKi::EqualToValue<*LHCb::*>"       />
+       <class pattern   = "LoKi::SimpleSwitch<*LHCb::*>"       />
+       <class pattern   = "LoKi::Switch<*LHCb::*>"             />
        <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::*>"    />
        <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::*>"     />
        <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::*>"      />
@@ -72,11 +73,12 @@
        
        <class pattern   = "LoKi::TheSame<*LHCb::*>"          />
        
+       <class pattern = "LoKi::Monitoring::Counter<*LHCb::*>"   />
+       <class pattern = "LoKi::Monitoring::Stat<*LHCb::*>"      />
+       <class pattern = "LoKi::Monitoring::Plot<*LHCb::*>"      />
+       
   -->
   
-  <class pattern = "LoKi::Monitoring::Counter<*LHCb::*>"   />
-  <class pattern = "LoKi::Monitoring::Stat<*LHCb::*>"      />
-  <class pattern = "LoKi::Monitoring::Plot<*LHCb::*>"      />
   <class pattern = "LoKi::ExtraInfo::GetInfo<*LHCb::*>"    />
   <class pattern = "LoKi::ExtraInfo::CheckInfo<*LHCb::*>"  />
   

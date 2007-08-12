@@ -1,4 +1,4 @@
-// $Id: PhysMoniDicts.h,v 1.1 2007-07-23 17:35:48 ibelyaev Exp $
+// $Id: PhysMoniDicts.h,v 1.2 2007-08-12 18:55:52 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMONIDICTS_H 
 #define LOKI_PHYSMONIDICTS_H 1
@@ -18,37 +18,6 @@ namespace LoKi
 {
   namespace Dicts 
   {
-    // ========================================================================
-    LoKi::PredicateFromPredicate<const LHCb::Particle*>
-    monitor 
-    ( const LoKi::Predicate<const LHCb::Particle*>&   cut  ,
-      StatEntity*                                     stat ) ;
-    // ========================================================================    
-    LoKi::FunctionFromFunction<const LHCb::Particle*>
-    monitor 
-    ( const LoKi::Function<const LHCb::Particle*>&    fun  ,
-      StatEntity*                                     stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::Particle*>
-    monitor 
-    ( const LoKi::Function<const LHCb::Particle*>&    fun  ,
-      AIDA::IHistogram1D*                             stat ) ;
-    // ========================================================================
-    LoKi::PredicateFromPredicate<const LHCb::VertexBase*>
-    monitor 
-    ( const LoKi::Predicate<const LHCb::VertexBase*>& cut  ,
-      StatEntity*                                     stat ) ;
-    // ========================================================================    
-    LoKi::FunctionFromFunction<const LHCb::VertexBase*>
-    monitor 
-    ( const LoKi::Function<const LHCb::VertexBase*>&  fun  ,
-      StatEntity*                                     stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::VertexBase*>
-    monitor 
-    ( const LoKi::Function<const LHCb::VertexBase*>&  fun  ,
-      AIDA::IHistogram1D*                             stat ) ;
-    // ========================================================================
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi
 // ============================================================================

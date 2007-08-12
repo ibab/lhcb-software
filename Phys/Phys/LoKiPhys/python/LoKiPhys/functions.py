@@ -1,15 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2007/06/10 20:07:17  ibelyaev
-#  prepare for v4r0
-#
-# Revision 1.1  2007/06/01 12:07:03  ibelyaev
-#  prepare for version v4r0
-#
-# =============================================================================
 ## @file functions.py LoKiPhys/functions.py
 #  The set of basic decorator for objects from LoKiPhys library
 #  The file is a part of LoKi and Bender projects
@@ -19,7 +9,8 @@
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-import LoKiCore.decorators as _LoKiCore
+import LoKiCore.decorators as      _LoKiCore
+from   LoKiCore.functions  import equal_to 
 
 # Namespaces:
 _global  = _LoKiCore._global 
@@ -78,22 +69,10 @@ NONE     = FALSE
 ONE      = LoKi.Constant     ( _RCP )(1.0)
 ## @see LoKi::Cuts::ZERO
 ZERO     = LoKi.Constant     ( _RCP )(0.0)
-## @see LoKi::Cuts::MIN
-MIN      = LoKi.Min          ( _RCP )
-## @see LoKi::Cuts::MIN
-MAX      = LoKi.Max          ( _RCP )
-## @see LoKi::Cuts::SWITCH
-SWITCH   = LoKi.Switch       ( _RCP )
-## @see LoKi::Cuts::SSWITCH
-SSWITCH  = LoKi.SimpleSwitch ( _RCP )
 ## @see LoKi::Cuts::VALID
 VALID    = LoKi.Valid        ( _RCP )()
 ## @see LoKi::Cuts::SAME
 SAME     = LoKi.TheSame      ( _RCP )
-## @see LoKi::Cuts::EQUALTO
-## EQUALTO  = LoKi.EqualToValue ( _RCP )
-## @see LoKi::Cuts::EQ
-## EQ       = EQUALTO
 ## @see LoKi::Cuts::HASKEY
 HASKEY   = LoKi.Particles.HasKey   () 
 ## @see LoKi::Cuts::KEY
@@ -329,13 +308,13 @@ HASSTATE = LoKi.Particles.TrackHasState
 ## @see LoKi::Cuts::TRTYPE 
 TRTYPE   = LoKi.Particles.TrackType           () 
 ## @see LoKi::Cuts::ISLONG
-##ISLONG   = EQUALTO( TRTYPE , float(LHCb.Track.Long)       )
+ISLONG   =  equal_to ( TRTYPE , LHCb.Track.Long       )
 ## @see LoKi::Cuts::ISUP   
-##ISUP     = EQUALTO( TRTYPE , float(LHCb.Track.Upstream)   ) 
+ISUP     =  equal_to ( TRTYPE , LHCb.Track.Upstream   ) 
 ## @see LoKi::Cuts::ISDOWN
-##ISDOWN   = EQUALTO( TRTYPE , float(LHCb.Track.Downstream) ) 
+ISDOWN   =  equal_to ( TRTYPE , float(LHCb.Track.Downstream) ) 
 ## @see LoKi::Cuts::ISTTRACK
-##ISTTRACK = EQUALTO( TRTYPE , float(LHCb.Track.Ttrack)     ) 
+ISTTRACK =  equal_to ( TRTYPE , float(LHCb.Track.Ttrack)     ) 
 ## @see LoKi::Cuts::TRHISTORY
 TRHISTORY= LoKi.Particles.TrackHistory            () 
 ## @see LoKi::Cuts::TRHISTFIT 
@@ -361,14 +340,6 @@ VNONE     = VFALSE
 VONE      = LoKi.Constant     ( _RCV )(1.0)
 ## @see LoKi::Cuts::VZERO
 VZERO     = LoKi.Constant     ( _RCV )(0.0)
-## @see LoKi::Cuts::VMIN
-VMIN      = LoKi.Min          ( _RCV )
-## @see LoKi::Cuts::VMIN
-VMAX      = LoKi.Max          ( _RCV )
-## @see LoKi::Cuts::VSWITCH
-VSWITCH   = LoKi.Switch       ( _RCV )
-## @see LoKi::Cuts::VSSWITCH
-VSSWITCH  = LoKi.SimpleSwitch ( _RCV )
 ## @see LoKi::Cuts::VVALID
 VVALID    = LoKi.Valid        ( _RCV )()
 ## @see LoKi::Cuts::VSAME
@@ -417,14 +388,7 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
-## @see LoKi::Monitoring::Counter
-COUNTER    = LoKi.Monitoring.Counter (_RCP)
-## @see LoKi::Monitoring::Stat 
-STAT       = LoKi.Monitoring.Stat    (_RCP)
-## @see LoKi::Monitoring::Counter
-PLOT       = LoKi.Monitoring.Plot    (_RCP)
 
-_PhysChild = LoKi.Child.PhysChild 
 
 # =============================================================================
 if '__main__' == __name__ :

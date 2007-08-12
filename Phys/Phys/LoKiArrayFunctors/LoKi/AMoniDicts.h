@@ -1,4 +1,4 @@
-// $Id: AMoniDicts.h,v 1.1 2007-07-24 05:20:09 ibelyaev Exp $
+// $Id: AMoniDicts.h,v 1.2 2007-08-12 18:57:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AMONIDICTS_H 
 #define LOKI_AMONIDICTS_H 1
@@ -18,23 +18,7 @@ namespace LoKi
 {
   namespace Dicts
   {
-    // ========================================================================
-    LoKi::PredicateFromPredicate<LoKi::ATypes::Combination>
-    monitor
-    ( const LoKi::Predicate<LoKi::ATypes::Combination>& cut  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<LoKi::ATypes::Combination>
-    monitor
-    ( const LoKi::Function<LoKi::ATypes::Combination>&  fun  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<LoKi::ATypes::Combination>
-    monitor
-    ( const LoKi::Function<LoKi::ATypes::Combination>&  fun   , 
-      AIDA::IHistogram1D*                               histo ) ;
-    // ========================================================================    
-  } 
+  }
 }
 // ============================================================================
 // The END
