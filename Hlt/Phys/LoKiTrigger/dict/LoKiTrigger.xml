@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.2 2007-08-12 19:21:16 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -30,12 +30,13 @@
   <class pattern   = "LoKi::BooleanConstant<*LHCb::T*>"  />
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::T*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::T*>"          />
-  <class pattern   = "LoKi::SimpleSwitch<*LHCb::T*>"     />
-  <class pattern   = "LoKi::Switch<*LHCb::T*>"           />
-  <class pattern   = "LoKi::EqualToValue<*LHCb::T*>"     />
   
   <!-- 
        
+       <class pattern   = "LoKi::EqualToValue<*LHCb::T*>"     />
+       <class pattern   = "LoKi::EqualToValue<*LHCb::T*>"     />
+       <class pattern   = "LoKi::SimpleSwitch<*LHCb::T*>"     />
+       <class pattern   = "LoKi::Switch<*LHCb::T*>"           />
        <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::T*>"    />
        <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::T*>"     />
        <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::T*>"      />
@@ -77,10 +78,11 @@
   <class pattern   = "LoKi::BooleanConstant<*LHCb::R*>"  />  
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::R*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::R*>"          />
-  <class pattern   = "LoKi::SimpleSwitch<*LHCb::R*>"     />
-  <class pattern   = "LoKi::Switch<*LHCb::R*>"           />
-  
+    
   <!-- 
+
+       <class pattern   = "LoKi::SimpleSwitch<*LHCb::R*>"     />
+       <class pattern   = "LoKi::Switch<*LHCb::R*>"           />
        <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::R*>"    />
        <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::R*>"     />
        <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::R*>"      />
@@ -111,15 +113,15 @@
        <class pattern   = "LoKi::Valid<*LHCb::R*>"            />
        <class pattern   = "LoKi::TheSame<*LHCb::R*>"          />
        
+       <class pattern   = "LoKi::Monitoring::Counter<*>"        />
+       <class pattern   = "LoKi::Monitoring::Plot<*>"           />
+       <class pattern   = "LoKi::Monitoring::Stat<*>"           />
+       
   -->
   
   <class pattern   = "LoKi::ExtraInfo::GetInfo<*> "           />
   <class pattern   = "LoKi::ExtraInfo::CheckInfo<*> "         />
 
-  <class pattern   = "LoKi::Monitoring::Counter<*>"        />
-  <class pattern   = "LoKi::Monitoring::Plot<*>"           />
-  <class pattern   = "LoKi::Monitoring::Stat<*>"           />
-  
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::Trigger::*"                       />
   

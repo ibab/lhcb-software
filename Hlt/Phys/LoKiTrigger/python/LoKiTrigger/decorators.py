@@ -10,7 +10,7 @@
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-from   LoKiTrack.functions   import *
+from   LoKiTrigger.functions   import *
 
 _name = __name__ 
 # =============================================================================
@@ -41,7 +41,7 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.CutCalls(LHCb.RecVertex)             , ## call-traits 
         LoKi.Dicts.FuncOps(LHCb.RecVertex)              ) ## the operators
     ## regular functors which accept two tracks
-    from LoKiTrack.functions import _HTT
+    from LoKiTrigger.functions import _HTT
     _decorated |= _LoKiCore.getAndDecorateFunctions  (
         name                                            , ## module name
         TTrFunc                                         , ## the base 

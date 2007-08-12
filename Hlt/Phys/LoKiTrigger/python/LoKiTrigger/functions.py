@@ -11,13 +11,14 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
+from   LoKiCore.functions import equal_to 
 
 ## needed since there is no autoloading of HepMC dictionaries:
 
 # Namespaces:
 _global  = _LoKiCore._global 
-std      = _LoKiCore.std
-LoKi     = _LoKiCore.LoKi
+std      = _global.std
+LoKi     = _global.LoKi
 LHCb     = _global.LHCb
 
 _T = 'LHCb::Track'
@@ -97,8 +98,6 @@ RVVCut   = LoKi.PredicateFromPredicate ( _HVV )
 ## concrete functions:
 # =============================================================================
 
-## @see LoKi::Cuts::TrEQUALTO
-TrEQUALTO     = LoKi.EqualToValue ( _T ) 
 ## @see LoKi::Cuts::TrTYPE
 TrTYPE        = LoKi.Tracks.Type  () 
 
@@ -111,12 +110,10 @@ TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward )
 TrCHI2        = LoKi.Tracks.Chi2 () 
 ## @see LoKi::Cuts::TrCLONE
 TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone ) 
-## @see LoKi::Cuts::TrCOUNTER
-TrCOUNTER     = LoKi.Monitoring.Counter ( _T ) 
 ## @see LoKi::Cuts::TrDOCA
 TrDOCA        = LoKi.Tracks.DistanceOfClosestApproach ()
 ## @see LoKi::Cuts::TrDOWNSTREAM
-TrDOWNSTREAM  = TrEQUALTO ( TrTYPE , LHCb.Track.Downstream ) 
+TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream ) 
 ## @see LoKi::Cuts::TrFALSE
 TrFALSE       = LoKi.BooleanConstant( _T ) ( False )
 ## @see LoKi::Cuts::TrFILTER
@@ -140,9 +137,9 @@ TrKEY         = LoKi.Tracks.Key    ()
 ## @see LoKi::Cuts::TrL0CANDIDATE
 TrL0CANDIDATE = LoKi.Tracks.CheckFlag ( LHCb.Track.L0Candidate ) 
 ## @see LoKi::Cuts::TrLONG
-TrLONG        = TrEQUALTO ( TrTYPE , LHCb.Track.Long ) 
+TrLONG        = equal_to ( TrTYPE , LHCb.Track.Long ) 
 ## @see LoKi::Cuts::TrMUON
-TrMUON        = TrEQUALTO ( TrTYPE , LHCb.Track.Muon ) 
+TrMUON        = equal_to ( TrTYPE , LHCb.Track.Muon ) 
 ## @see LoKi::Cuts::TrNONE
 TrNONE        = LoKi.BooleanConstant( _T ) ( False )
 ## @see LoKi::Cuts::TrONE
@@ -151,8 +148,6 @@ TrONE         = LoKi.Constant( _T ) ( 1.0 )
 TrP           = LoKi.Tracks.Momentum          () 
 ## @see LoKi::Cuts::TrPIDSELECTED
 TrPIDSELECTED = LoKi.Tracks.CheckFlag ( LHCb.Track.PIDSelected ) 
-## @see LoKi::Cuts::TrPLOT
-TrPLOT        = LoKi.Monitoring.Plot ( _T ) 
 ## @see LoKi::Cuts::TrPROBCHI2 
 TrPROBCHI2    = LoKi.Tracks.ProbChi2 () 
 ## @see LoKi::Cuts::TrPT
@@ -163,30 +158,22 @@ TrQ           = LoKi.Tracks.Charge ()
 TrSELECTED    = LoKi.Tracks.CheckFlag ( LHCb.Track.Selected ) 
 ## @see LoKi::Cuts::TrSELECTOR
 TrSELECTOR   = LoKi.Tracks.Selector 
-## @see LoKi::Cuts::TrSSWITCH
-TrSSWITCH     = LoKi.SimpleSwitch( _T )
-## @see LoKi::Cuts::TrSTAT
-TrSTAT        = LoKi.Monitoring.Stat ( _T ) 
-## @see LoKi::Cuts::TrSWITCH
-TrSWITCH      = LoKi.Switch( _T )
 ## @see LoKi::Cuts::TrTRUE
 TrTRUE        = LoKi.BooleanConstant( _T ) ( True  )
 ## @see LoKi::Cuts::TrTTRACK
-TrTTRACK      = TrEQUALTO ( TrTYPE , LHCb.Track.Ttrack ) 
+TrTTRACK      = equal_to ( TrTYPE , LHCb.Track.Ttrack ) 
 ## @see LoKi::Cuts::TrUNKNOWN
-TrUNKNOWN     = TrEQUALTO ( TrTYPE , LHCb.Track.TypeUnknown ) 
+TrUNKNOWN     = equal_to ( TrTYPE , LHCb.Track.TypeUnknown ) 
 ## @see LoKi::Cuts::TrUPSTREAM
-TrUPSTREAM    = TrEQUALTO ( TrTYPE , LHCb.Track.Upstream ) 
+TrUPSTREAM    = equal_to ( TrTYPE , LHCb.Track.Upstream ) 
 ## @see LoKi::Cuts::TrUSED
 TrUSED        = LoKi.Tracks.CheckFlag ( LHCb.Track.Used )
 ## @see LoKi::Cuts::TrVELO
-TrVELO        = TrEQUALTO ( TrTYPE , LHCb.Track.Velo ) 
+TrVELO        = equal_to ( TrTYPE , LHCb.Track.Velo ) 
 ## @see LoKi::Cuts::TrVELOR
-TrVELOR       = TrEQUALTO ( TrTYPE , LHCb.Track.VeloR ) 
+TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR ) 
 ## @see LoKi::Cuts::TrZERO
 TrZERO        = LoKi.Constant( _T ) ( 0.0 )
-
-
 
 
 
