@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.1 2007-08-11 20:19:58 ibelyaev Exp $ 
+# $Id: MC.py,v 1.2 2007-08-12 18:55:30 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -315,6 +315,8 @@ _LCF.daughter      . __doc__ += "\n" + LoKi.MCChild.child             . __doc__
 _LCF.parents       . __doc__ += "\n" + LoKi.MCChild.parents           . __doc__
 _LCF.children      . __doc__ += "\n" + LoKi.MCChild.children          . __doc__
 _LCF.daughters     . __doc__ += "\n" + LoKi.MCChild.children          . __doc__ 
+_LCF.descendants   . __doc__ += "\n" + LoKi.MCChild.descendants       . __doc__ 
+_LCF.ancestors     . __doc__ += "\n" + LoKi.MCChild.ancestors         . __doc__ 
 
 _LCF.extract       . __doc__ += "\n" + LoKi.Dicts.Extract.mcParticles . __doc__ 
 _LCF.particles     . __doc__ += "\n" + LoKi.Dicts.Extract.mcParticles . __doc__ 

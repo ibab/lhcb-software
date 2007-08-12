@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.4 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.5 2007-08-12 18:53:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -11,6 +11,7 @@
 #include  "LoKi/Operators.h"
 #include  "LoKi/Funcs.h"
 #include  "LoKi/Monitoring.h"
+#include  "LoKi/MoreFunctions.h"
 // ============================================================================
 namespace LoKi
 {
@@ -186,6 +187,37 @@ namespace LoKi
       static Fun __monitor__ ( const Func&         c , 
                                AIDA::IHistogram1D* h )
       { return LoKi::monitor ( c , h ) ; }
+      // ======================================================================
+      // Switch
+      // ======================================================================
+      static Fun __switch__   ( const Cuts&  cut  , 
+                                const Func&  fun1 ,
+                                const Func&  fun2 )
+      { return LoKi::Switch<TYPE>       ( cut , fun1 , fun2 ) ; }
+      // ======================================================================
+      static Fun __switch__   ( const Cuts&  cut  , 
+                                const Func&  fun1 ,
+                                const double fun2 )
+      { return LoKi::Switch<TYPE>       ( cut , fun1 , fun2 ) ; }
+      // ======================================================================
+      static Fun __switch__   ( const Cuts&  cut  , 
+                                const double fun1 ,
+                                const Func&  fun2 )
+      { return Switch<TYPE>             ( cut , fun1 , fun2 ) ; }
+      // ======================================================================
+      static Fun __switch__   ( const Cuts&  cut  , 
+                                const double fun1 ,
+                                const double fun2 )
+      { return LoKi::SimpleSwitch<TYPE> ( cut , fun1 , fun2 ) ; }
+      // ======================================================================
+      // EqualTo
+      // ======================================================================
+      static Cut __equal_to__ ( const Func&   fun  , 
+                                const double  val  )
+      { return LoKi::EqualToValue<TYPE> ( fun , val ) ; }
+      // ======================================================================
+      static Cut __equal_to__ ( const Func&   fun  , 
+                                const Func&   fun1 ) { return fun == fun1 ; }
     } ;
     // ========================================================================
   } // end of namespace LoKi::Dicts

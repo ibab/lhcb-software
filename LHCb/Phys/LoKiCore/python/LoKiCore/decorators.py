@@ -484,7 +484,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             return opers.__max__ (s,a,*b)
         def _monitor_ (s,m) :
             """
-            Contruct the monitored function or predicate:
+            Contruct the monitored function:
 
             Make monitored function ( see LoKi::Monitoring::Stat )
             >>>  counter = ...
@@ -497,6 +497,17 @@ def decorateFunctions ( funcs , calls , opers ) :
             Uses:\n
             """
             return opers.__monitor__(s,m)
+        def _equal_to_ (f,v) :
+            """
+            Create the predicate which efficiently checks the equality of the
+            function to some predefined value. Logically it is just 'operator==',
+            b ut it should be more efficient 
+            
+            >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
+            
+            Uses:\n
+            """
+            return opers.__equal_to__(f,v)
         # documentation:
         _call_ . __doc__  += calls.__call__ . __doc__
         _lt_   . __doc__  += opers.__lt__   . __doc__
@@ -538,7 +549,8 @@ def decorateFunctions ( funcs , calls , opers ) :
         _atan2_. __doc__  += opers.__atan2__. __doc__
         _min_  . __doc__  += opers.__min__  . __doc__
         _max_  . __doc__  += opers.__max__  . __doc__
-        _monitor_ . __doc__  += opers.__monitor__  . __doc__
+        _monitor_  . __doc__  += opers.__monitor__  . __doc__
+        _equal_to_ . __doc__  += opers.__equal_to__ . __doc__
         # use also other docs: 
         _call_ . __doc__  += '\n\t' + fun.__call__   . __doc__ 
         _call_ . __doc__  += '\n\t' + fun.eval       . __doc__ 
@@ -584,7 +596,8 @@ def decorateFunctions ( funcs , calls , opers ) :
         fun . __pow4__   = _pow4_  #
         fun . __min__    = _min_   #
         fun . __max__    = _max_   #
-        fun . __monitor__ = _monitor_   #
+        fun . __monitor__  = _monitor_    #
+        fun . __equal_to__ = _equal_to_   #
     return funcs                                          ## RETURN 
 # =============================================================================        
 ## Decorate the predicates using the proper adapters 
@@ -656,7 +669,7 @@ def decoratePredicates ( cuts , calls , opers ) :
             return opers.__invert__  (s)
         def _monitor_ (s,m) :
             """
-            Contruct the monitored function or predicate:
+            Contruct the monitored predicate:
 
             Make monitored predicate ( see LoKi::Monitoring::Counter)
             >>>  counter = ...
@@ -665,18 +678,28 @@ def decoratePredicates ( cuts , calls , opers ) :
             Uses:\n
             """
             return opers.__monitor__(s,m)            
+        def _switch_ (s,v1,v2) :
+            """
+            Contruct the function which acts according to the rule  ' s ? v1 : v2 '  
+
+            >>>  fun = switch ( Q > 0 , P , PT ) 
+
+            Uses:\n
+            """
+            return opers.__switch__(s,v1,v2)            
         # documentation: 
-        _call_   . __doc__ += calls.__call__   . __doc__
-        _or_     . __doc__ += opers.__or__     . __doc__
-        _and_    . __doc__ += opers.__and__    . __doc__
-        _ror_    . __doc__ += opers.__ror__    . __doc__
-        _rand_   . __doc__ += opers.__rand__   . __doc__
-        _invert_ . __doc__ += opers.__invert__ . __doc__
+        _call_    . __doc__  += calls.__call__     . __doc__
+        _or_      . __doc__  += opers.__or__       . __doc__
+        _and_     . __doc__  += opers.__and__      . __doc__
+        _ror_     . __doc__  += opers.__ror__      . __doc__
+        _rand_    . __doc__  += opers.__rand__     . __doc__
+        _invert_  . __doc__  += opers.__invert__   . __doc__
         _monitor_ . __doc__  += opers.__monitor__  . __doc__
+        _switch_  . __doc__  += opers.__switch__   . __doc__
         # use also other docs: 
-        _call_ . __doc__  += '\n\t' + cut.__call__   . __doc__ 
-        _call_ . __doc__  += '\n\t' + cut.evaluate   . __doc__ 
-        _call_ . __doc__  += '\n\t' + cut.evaluate   . __doc__ 
+        _call_ . __doc__  += '\n\t' + cut.__call__  . __doc__ 
+        _call_ . __doc__  += '\n\t' + cut.evaluate  . __doc__ 
+        _call_ . __doc__  += '\n\t' + cut.evaluate  . __doc__ 
         # finally redefine the functions:
         cut .__call__   = _call_   # operator() 
         cut .__or__     = _or_     # operator||
@@ -685,6 +708,7 @@ def decoratePredicates ( cuts , calls , opers ) :
         cut .__rand__   = _rand_   #
         cut .__invert__ = _invert_ # operator!
         cut . __monitor__ = _monitor_   # monitoring 
+        cut . __switch__  = _switch_    # switch 
         for attr in ( '__eq__' , '__ne__' ,
                       '__lt__' , '__lt__' ,
                       '__gt__' , '__ge__' ) :

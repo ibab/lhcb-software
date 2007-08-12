@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.7 2007-08-11 20:19:58 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.8 2007-08-12 18:55:30 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -33,11 +33,12 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::MC*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::MC*>"          />
 
-  <class pattern   = "LoKi::SimpleSwitch<*LHCb::MC*>"     />
-  <class pattern   = "LoKi::Switch<*LHCb::MC*>"           />
   <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
 
 <!-- 
+     
+     <class pattern   = "LoKi::SimpleSwitch<*LHCb::MC*>"     />
+     <class pattern   = "LoKi::Switch<*LHCb::MC*>"           />
      
      <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::MC*>"    />
      <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::MC*>"     />
@@ -69,11 +70,7 @@
      <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
      
 -->
-  
-
-
-
-
+ 
   <class pattern   = "LoKi::MCParticles::*"                />
   <class pattern   = "LoKi::MCVertices::*"                 />
   
@@ -82,7 +79,6 @@
   <function pattern = "LoKi::MCChild::*"                   />
   <function pattern = "LoKi::Dicts::MCAlgs::*"             />
   <function pattern = "LoKi::Dicts::MCFinderDicts::*"      />
-  <function pattern = "LoKi::Dicts::moni*"                 />
   <function name    = "LoKi::Dicts::Extract::mcParticles"  />
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"     />

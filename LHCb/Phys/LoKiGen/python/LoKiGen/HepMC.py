@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.1 2007-08-11 20:18:13 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.2 2007-08-12 18:55:03 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -460,6 +460,8 @@ _LCF.particles_out . __doc__ += "\n" + LoKi.GenChild.particles_out     . __doc__
 _LCF.parents       . __doc__ += "\n" + LoKi.GenChild.parents           . __doc__
 _LCF.children      . __doc__ += "\n" + LoKi.GenChild.children          . __doc__
 _LCF.daughters     . __doc__ += "\n" + LoKi.GenChild.children          . __doc__ 
+_LCF.descendants   . __doc__ += "\n" + LoKi.GenChild.descendants       . __doc__ 
+_LCF.ancestors     . __doc__ += "\n" + LoKi.GenChild.ancestors         . __doc__ 
 
 _LCF.extract       . __doc__ += "\n" + LoKi.Dicts.Extract.genParticles . __doc__ 
 _LCF.particles     . __doc__ += "\n" + LoKi.Dicts.Extract.genParticles . __doc__ 

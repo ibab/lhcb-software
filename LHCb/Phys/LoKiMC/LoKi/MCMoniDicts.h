@@ -1,4 +1,4 @@
-// $Id: MCMoniDicts.h,v 1.1 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: MCMoniDicts.h,v 1.2 2007-08-12 18:55:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCMONIDICTS_H 
 #define LOKI_MCMONIDICTS_H 1
@@ -18,38 +18,10 @@ namespace LoKi
 {
   namespace Dicts 
   {
-    // ========================================================================
-    LoKi::PredicateFromPredicate<const LHCb::MCParticle*>
-    monitor
-    ( const LoKi::Predicate<const LHCb::MCParticle*>&   cut  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::MCParticle*>
-    monitor
-    ( const LoKi::Function<const LHCb::MCParticle*>&    fun  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::MCParticle*>
-    monitor
-    ( const LoKi::Function<const LHCb::MCParticle*>&    fun  , 
-      AIDA::IHistogram1D*                               hist ) ;
-    // ========================================================================
-    LoKi::PredicateFromPredicate<const LHCb::MCVertex*>
-    monitor
-    ( const LoKi::Predicate<const LHCb::MCVertex*>&     cut  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::MCVertex*>
-    monitor
-    ( const LoKi::Function<const LHCb::MCVertex*>&      fun  , 
-      StatEntity*                                       stat ) ;
-    // ========================================================================
-    LoKi::FunctionFromFunction<const LHCb::MCVertex*>
-    monitor
-    ( const LoKi::Function<const LHCb::MCVertex*>&      fun  , 
-      AIDA::IHistogram1D*                               hist ) ;
-    // ========================================================================    
   } // end of namespace LoKi::Dicts
 } // end of namespace LoKi
 // ============================================================================
+// The END
+// ============================================================================
 #endif // LOKI_MCMONIDICTS_H
+// ============================================================================

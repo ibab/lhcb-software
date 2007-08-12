@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.5 2007-07-25 15:07:57 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.6 2007-08-12 18:55:03 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -32,13 +32,13 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*HepMC::*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*HepMC::*>"          />
 
-  <class pattern   = "LoKi::SimpleSwitch<*HepMC::*>"     />
-  <class pattern   = "LoKi::Switch<*HepMC::*>"           />
-  
   <class pattern   = "LoKi::Valid<*HepMC::*>"            />
-  <class pattern   = "LoKi::EqualToValue<*HepMC::*>"     />
   
   <!-- 
+       
+       <class pattern   = "LoKi::EqualToValue<*HepMC::*>"     />
+       <class pattern   = "LoKi::SimpleSwitch<*HepMC::*>"     />
+       <class pattern   = "LoKi::Switch<*HepMC::*>"           />
        
        <class pattern   = "LoKi::PredicateFromTwoPredicates<*HepMC::*>"    />
        <class pattern   = "LoKi::PredicateFromTwoFunctions<*HepMC::*>"     />
@@ -69,11 +69,12 @@
        
        <class pattern   = "LoKi::TheSame<*HepMC::*>"         />
        
+       <class pattern = "LoKi::Monitoring::Counter<*HepMC::*>"   />
+       <class pattern = "LoKi::Monitoring::Stat<*HepMC::*>"      />
+       <class pattern = "LoKi::Monitoring::Plot<*HepMC::*>"      />
+
   -->
   
-  <class pattern = "LoKi::Monitoring::Counter<*HepMC::*>"   />
-  <class pattern = "LoKi::Monitoring::Stat<*HepMC::*>"      />
-  <class pattern = "LoKi::Monitoring::Plot<*HepMC::*>"      />
   
   <class pattern   = "LoKi::GenParticles::*"             />
   <class pattern   = "LoKi::GenVertices::*"              />
@@ -83,7 +84,6 @@
   <function pattern = "LoKi::GenChild::*"                />
   <function pattern = "LoKi::Dicts::Extract::*"          />
   <function pattern = "LoKi::Dicts::GenAlgs::*"          />
-  <function pattern = "LoKi::Dicts::monit*"              />
   
   <class pattern   = "LoKi::Dicts::FuncOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Gen*>"    />

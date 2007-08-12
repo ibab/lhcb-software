@@ -84,8 +84,6 @@ GCHARGED  = LoKi.GenParticles.IsCharged ()
 ## @see LoKi::Cuts::GCHARM
 ##GCHARM  = GQUARK( LHCb.ParticleID.charm  )
 GCHARM    = LoKi.GenParticles.HasQuark ( 4 )
-## @see LoKi::Cuts::GCOUNTER
-GCOUNTER  = LoKi.Monitoring.Counter ( _GP )
 ## @see LoKi::Cuts::GCTAU
 GCTAU     = LoKi.GenParticles.ProperLifeTime ()
 ## @see LoKi::Cuts::GDELTAR2
@@ -142,8 +140,6 @@ GONE      = LoKi.Constant ( _GP )( 1.0 )
 GP       = LoKi.GenParticles.Momentum () 
 ## @see LoKi::Cuts::GPHI
 GPHI      = LoKi.GenParticles.Phi     ()
-## @see LoKi::Cuts::GPLOT
-GPLOT     = LoKi.Monitoring.Plot ( _GP )
 ## @see LoKi::Cuts::GPT
 GPT      = LoKi.GenParticles.TransverseMomentum     () 
 ## @see LoKi::Cuts::GPT0
@@ -160,17 +156,11 @@ GPY      = LoKi.GenParticles.MomentumY ()
 GPZ      = LoKi.GenParticles.MomentumZ () 
 ## @see LoKi::Cuts::GQUARK
 GQUARK    = LoKi.GenParticles.HasQuark
-## @see LoKi::Cuts::GSSWITCH
-GSSWITCH  = LoKi.SimpleSwitch    ( _GP )
-## @see LoKi::Cuts::GSTAT
-GSTAT     = LoKi.Monitoring.Stat ( _GP )
 ## @see LoKi::Cuts::GSTATUS
 GSTATUS   = LoKi.GenParticles.Status ( )
 ## @see LoKi::Cuts::GSTRANGE
 ## GSTRANGE  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.strange )
 GSTRANGE  = LoKi.GenParticles.HasQuark ( 3 )
-## @see LoKi::Cuts::GSWITCH
-GSWITCH   = LoKi.Switch          ( _GP )
 ## @see LoKi::Cuts::GTHETA
 GTHETA    = LoKi.GenParticles.Theta ()
 ## @see LoKi::Cuts::GTIME
@@ -205,10 +195,6 @@ GVZERO     = LoKi.Constant ( _GV )(0.0)
 GVMIN      = LoKi.Min          ( _GV )
 ## @see LoKi::Cuts::GVMAX
 GVMAX      = LoKi.Max          ( _GV )
-## @see LoKi::Cuts::GVSWITCH
-GVSWITCH   = LoKi.Switch       ( _GV )
-## @see LoKi::Cuts::GVSSWITCH
-GVSSWITCH  = LoKi.SimpleSwitch ( _GV )
 ## @see LoKi::Cuts::GVVALID
 GVVALID    = LoKi.Valid        ( _GV )()
 ## @see LoKi::Cuts::GVSAME

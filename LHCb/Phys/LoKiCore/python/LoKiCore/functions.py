@@ -34,6 +34,37 @@ def monitor ( o  , m ) :
     return o.__monitor__ ( m )
 
 # =============================================================================
+def switch ( c  , v1 , v2  ) :
+    """
+    Create the function which acts according to the rule:
+
+            result  = c ? v1 : v2 
+
+    Make monitored function ( see LoKi::Monitoring::Stat )
+    >>>  fun1 = switch ( 0 < Q , 1 , -1 ) 
+    >>>  fun2 = sqitch ( 0 < Q ,  PT , 1/PT )
+    >>>  fun3 = sqitch ( 0 < Q ,  P  , -100 )
+    
+    """
+    return c.__switch__ ( v1 , v2  )
+
+
+# =============================================================================
+def equal_to  ( f  , v ) :
+    """
+    Create the predicate which efficiently checks the equality of the
+    function to some predefined value. Logically it is just 'operator==',
+    b ut it should be more efficient 
+
+    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
+    
+    """
+    if hasattr ( f , '__equal_to__' ) : return f.__equal_to__ ( v ) 
+    if hasattr ( v , '__equal_to__' ) : return v.__equal_to__ ( f )
+    # use the generic version:
+    return f == v 
+
+# =============================================================================
 ## Get the number of children for the object.
 def nChildren ( o )  :
     """
@@ -96,6 +127,28 @@ def parents ( o ) :
     >>> ps = parents ( o ) 
     """
     return o.__parents__ ()
+
+# =============================================================================
+## Get all descendants
+def descendants ( o ) :
+    """
+    Get the descendants :
+
+    >>> o = ...
+    >>> ps = descendants ( o ) 
+    """
+    return o.__descendats__ ()
+
+# =============================================================================
+## Get all ancestors
+def ancestors ( o ) :
+    """
+    Get the ancestors :
+
+    >>> o = ...
+    >>> ps = ancestors ( o ) 
+    """
+    return o.__ancestors__ ()
 
 # =============================================================================
 ## Get children:
@@ -196,7 +249,7 @@ def found  ( s , *a ) :
 # =============================================================================
 ## Accumulate the value of th efunction through decay tree or container
 def accumulate ( s , *a ) :
-    """
+    """x
     Accumulate the value of th efunction through decay tree or container
     """
     return s.__accumulate__ ( *a )
