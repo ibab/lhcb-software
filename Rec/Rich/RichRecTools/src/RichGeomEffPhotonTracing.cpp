@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.28 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.29 2007-08-13 12:44:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -138,12 +138,12 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
         if ( m_traceMode.traceWasOK(result) )
         {
           // Check HPD status
-          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.pixelCluster().hpd()) ) continue;
+          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID().hpdID()) ) continue;
 
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << " -> photon was traced to detector at " 
-                      << photon.pixelCluster().hpd() << " "
+                      << photon.smartID().hpdID() << " "
                       << photon.detectionPoint()
                       << endreq;
           }
@@ -153,7 +153,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
-                                             photon.pixelCluster().hpd(),
+                                             photon.smartID().hpdID(),
                                              m_pdInc );
 
           // flag regions where we expect hits for this segment

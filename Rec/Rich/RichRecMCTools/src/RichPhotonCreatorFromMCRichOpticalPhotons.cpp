@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.15 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.16 2007-08-13 12:37:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -72,7 +72,7 @@ PhotonCreatorFromMCRichOpticalPhotons::buildPhoton( LHCb::RichRecSegment * segme
                                   mcPhoton->pdIncidencePoint(),
                                   mcPhoton->sphericalMirrorReflectPoint(),
                                   mcPhoton->flatMirrorReflectPoint(),
-                                  pixel->hpdPixelCluster(),
+                                  pixel->hpdPixelCluster().primaryID(),
                                   1 );
 
       // make new RichRecPhoton from the MC information

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.14 2007-08-13 12:44:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -154,7 +154,7 @@ namespace Rich
                                      //m_smartIDTool->globalToPDPanel(gP),
                                      m_geomTool->radCorrLocalPos(m_smartIDTool->globalToPDPanel(gP),
                                                                  ring->richRecSegment()->trackSegment().radiator()),
-                                     m_photon.pixelCluster().primaryID(),
+                                     m_photon.smartID(),
                                      (LHCb::RichRecPointOnRing::Acceptance)(result) ) 
             );
       }

@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.20 2007-08-09 16:38:31 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.21 2007-08-13 12:44:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -581,7 +581,7 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
   gPhoton.setActiveSegmentFraction  ( fraction       );
   gPhoton.setDetectionPoint         ( detectionPoint );
-  gPhoton.setPixelCluster           ( smartIDs       );
+  gPhoton.setSmartID                ( smartIDs.primaryID() );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );

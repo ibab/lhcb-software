@@ -4,10 +4,14 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Adapt to changes in RichKernel
+ - Set 'closest HPD' smartID in RichRecSegment
+
 ! 2007-08-09 - Chris Jones
  - Downgrade some debug messages to verbose in track selector
  - Upgrade various tools to use the active mass hypotheses list, as obtained
-   from the particle properties tool, as oppossed to hard-coded consideration
+   from the particle properties tool, as opposed to hard-coded consideration
    of all five hypotheses.
  - Apply aerogel refraction correction during ray tracing where appropriate.
  - Add new photon predictor that uses the n sigma (in CK resolution) bands 

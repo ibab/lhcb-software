@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Adapt to changes in RichKernel
+
 ! 2007-08-09 - Chris Jones
  - Update PID monitor to use context to switch between HLT and Offline mode
  - Other minor improvements.

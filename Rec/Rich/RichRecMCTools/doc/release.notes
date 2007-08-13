@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Adapt to changes in RichKernel
+
 ! 2007-08-09 - Chris Jones
  - Update Track -> MCParticle association method to determine on the fly
   from the Track container location which linker to use.

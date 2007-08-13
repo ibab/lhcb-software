@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.1 2007-05-24 07:08:07 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.2 2007-08-13 12:39:23 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -297,9 +297,8 @@ StatusCode AlignmentMonitor::execute() {
       plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
               -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
-      LHCb::RichSmartID smartID( gPhoton.pixelCluster().primaryID() );
-      const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( smartID ).number() 
-                        : makePlotForHPD(smartID) );
+      const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number() 
+                        : makePlotForHPD(gPhoton.smartID()) );
 
       if ( hpd != 0 )
       {

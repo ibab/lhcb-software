@@ -30,11 +30,14 @@
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Offline-AllRads-NoKsTracks.histos.root", "Offline-AllRads-NoKsTracks", " | Offline | All Rads | No Ks Tracks" );
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Offline-AllRads-NoVeloTTTracks.histos.root", "Offline-AllRads-NoVeloTTTracks", " | Offline | All Rads | No VeloTT Tracks" );
 
-  RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.histos.root", "Fast-AllRads-LongTracks-2its", " | Fast Offline | All Rads" );
-  RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-GasRads-LongTracks.histos.root", "Fast-GasRads-LongTracks-2its", " | Fast Offline | Gas Rads" );
+  //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.histos.root", "Fast-AllRads-LongTracks-2its", " | Fast Offline | All Rads" );
+  //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-GasRads-LongTracks.histos.root", "Fast-GasRads-LongTracks-2its", " | Fast Offline | Gas Rads" );
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-AerogelOnly-LongTracks.histos.root", "Fast-AerogelOnly-LongTracks-2its", " | Fast Offline | Aerogel Only" );
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-Rich1GasOnly-LongTracks.histos.root", "Fast-Rich1GasOnly-LongTracks-2its", " | Fast Offline | Rich1Gas Only" );
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-Rich2GasOnly-LongTracks.histos.root", "Fast-Rich2GasOnly-LongTracks-2its", " | Fast Offline | Rich2Gas Only" );
   //RICH::performance( "/var/work/pcgs/jonesc/fastreco/Fast-Rich1Only-LongTracks.histos.root", "Fast-Rich1Only-LongTracks-2its", " | Fast Offline | Rich1 Only" );
+
+  //RICH::performance( "/var/work/pcgs/jonesc/fastreco/RichHLT-AllRads.histos.root", "HLT-AllRads-2its", " | HLT | All Rads" );
+  RICH::performance( "/var/work/pcgs/jonesc/fastreco/RichHLT-GasRads.histos.root", "HLT-GasRads-2its", " | HLT | Gas Rads" );
 
 }

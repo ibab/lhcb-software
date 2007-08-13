@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.2 2007-08-10 18:08:01 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.3 2007-08-13 12:44:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -84,16 +84,18 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
   // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( Rich::Radiators::const_iterator irad = Rich::radiators().begin();
+        irad != Rich::radiators().end(); ++irad )
   {
+    const Rich::RadiatorType rad = *irad;
     // scale factor
-    m_scale[*rad] = m_ckThetaMax[*rad] / m_sepGMax[*rad];
+    m_scale[rad] = m_ckThetaMax[rad] / m_sepGMax[rad];
     // fudge factor warning
-    if ( fabs(m_ckFudge[*rad]) > 1e-7 )
+    if ( fabs(m_ckFudge[rad]) > 1e-7 )
     {
       std::ostringstream mess;
-      mess << "Applying " << *rad << " CK theta correction factor : " << m_ckFudge[*rad];
+     mess << "Applying " << Rich::text(rad) 
+           << " CK theta correction factor : " << m_ckFudge[rad];
       Warning( mess.str(), StatusCode::SUCCESS );
     }
   }
@@ -194,7 +196,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setCherenkovPhi           ( phiCerenkov    );
   gPhoton.setActiveSegmentFraction  ( fraction       );
   gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
-  gPhoton.setPixelCluster           ( pixel->hpdPixelCluster() );
+  gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( 0 );
   gPhoton.setFlatMirrorNum          ( 0 );

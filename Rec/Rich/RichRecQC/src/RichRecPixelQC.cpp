@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.14 2007-04-23 13:26:04 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.15 2007-08-13 12:39:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -128,11 +128,11 @@ StatusCode PixelQC::execute()
         } // raw channel ids
 
         // Get the reconstructed pixels for this HPD
-        LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-        LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
+        IPixelCreator::PixelRange range = pixelCreator()->range(hpd);
         unsigned int nHPDHits(0), nHPDSignalHits(0);
         // loop over reconstructed pixels
-        for ( ; iPixel != endPix; ++iPixel )
+        for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+              iPixel != range.end(); ++iPixel )
         {
           // for each pixel loop over the smartIDs
           for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPixel)->hpdPixelCluster().smartIDs().begin();

@@ -8,6 +8,7 @@ namespace RichUtils
   void systemSaveImage ( TCanvas * canvas,
                          const std::string & name )
   {
+    std::cout << "Creating image : " << name << std::endl;
     canvas->SaveAs( name.c_str() );
   }
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.18 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.19 2007-08-13 12:44:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -273,6 +273,10 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
         // give to container
         richTracks()->insert( newTrack, trTrack->key() );
+
+        // reserve size in vectors
+        newTrack->richRecPhotons().reserve(30);
+        newTrack->richRecPixels().reserve(30);
 
         // Set vertex momentum
         newTrack->setVertexMomentum ( trTrack->p()  );
