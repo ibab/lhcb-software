@@ -1,4 +1,4 @@
-// $Id: TrackCuts.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrackCuts.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKCUTS_H
 #define LOKI_TRACKCUTS_H 1
@@ -163,25 +163,6 @@ namespace LoKi
      *  @date 2007-03-03 
      */        
     typedef LoKi::Monitoring::Counter<LHCb::Track>                  TrCOUNTER ;
-    // ========================================================================
-    /** @var TrDOCA
-     *
-     *  Evaluator of the distance of the closest approach between 2 tracks:
-     *
-     *  @code
-     *
-     *    const LHCb::Track& track1 = ... ;
-     *    const LHCb::Track& track2 = ... ;
-     *
-     *    double doca = TrDOCA ( track1 , track2 ) ;
-     *
-     *  @endcode
-     *
-     *  @see LoKi::Tracks::DistanceOfClosestApproach
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */
-    const LoKi::Tracks::DistanceOfClosestApproach                      TrDOCA ;
     // ========================================================================
     /** @var TrDOWNSTREAM
      *  simple predicate to check if the track has a type LHCb::Track::Downstream

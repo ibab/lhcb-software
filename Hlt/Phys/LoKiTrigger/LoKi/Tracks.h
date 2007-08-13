@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: Tracks.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -168,26 +168,6 @@ namespace LoKi
       // the flag to be checked:
       LHCb::Track::Flags m_flag ; ///< the flag to be checked:
     } ;    
-    // ========================================================================
-    /** @class DistanceOfClosestApproach 
-     *  @see LoKi::Cuts::TrDOCA
-     *  @author Vanya BELYYEV ibelyaev@physics.syr.edu
-     */
-    class DistanceOfClosestApproach 
-      : public LoKi::Function<LoKi::TrackTypes::TrackPair>
-    {
-    public:
-      /// MANDATORY: virtual destrcutor  
-      virtual ~DistanceOfClosestApproach () {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  DistanceOfClosestApproach* clone() const 
-      { return new DistanceOfClosestApproach(*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrDOCA" ; }
-    } ;
     // ========================================================================
     /** @class Selector
      *  Simple class to use 

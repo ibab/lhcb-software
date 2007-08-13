@@ -1,4 +1,4 @@
-// $Id: Tracks.cpp,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: Tracks.cpp,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,19 +63,6 @@ std::ostream& LoKi::Tracks::CheckFlag::fillStream( std::ostream& s ) const
     return s << "TrISFLAG("  << (int) m_flag << ")" ;  // RETURN 
   }
   return   s << "TrISFLAG("  << (int) m_flag << ")" ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::DistanceOfClosestApproach::result_type 
-LoKi::Tracks::DistanceOfClosestApproach::operator() 
-  ( LoKi::Tracks::DistanceOfClosestApproach::argument a ) const 
-{ 
-  const LHCb::Track& t1 = a.first  ;
-  const LHCb::Track& t2 = a.second ;
-  // try to calculate DOCA...
-  Error("(): NOT IMPLEMENTED YET just for tests") ;
-  return -10 ;
 }
 // ============================================================================
 // constructor form the tool 
