@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: Tracks.h,v 1.3 2007-08-13 14:46:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -397,7 +397,6 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrTYPE" ; }
     } ;
-   // ========================================================================
   } // end of namespace LoKi::Tracks
 } // end of namespace LoKi 
 // ============================================================================

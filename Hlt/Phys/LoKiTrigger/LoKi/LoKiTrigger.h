@@ -1,4 +1,4 @@
-// $Id: LoKiTrigger.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: LoKiTrigger.h,v 1.3 2007-08-13 14:46:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKITRACK_H 
 #define LOKI_LOKITRACK_H 1
@@ -12,6 +12,8 @@
 #include "LoKi/TrackCuts.h"
 #include "LoKi/HltFunctions.h"
 #include "LoKi/HltCuts.h"
+#include "LoKi/RecVertices.h"
+#include "LoKi/RecVertexCuts.h"
 // ============================================================================
 #include "LoKi/ITrHybridFactory.h"
 // ============================================================================

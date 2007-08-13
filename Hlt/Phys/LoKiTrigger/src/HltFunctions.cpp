@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.1 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: HltFunctions.cpp,v 1.2 2007-08-13 14:46:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -79,26 +79,6 @@ LoKi::Tracks::DeltaE::operator()
   return (e-p)/de ;                                            // REUTRN   
 }
 // ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::MinPt::result_type 
-LoKi::Tracks::MinPt::operator() 
-  ( LoKi::Tracks::MinPt::argument a ) const 
-{
-  const LHCb::RecVertex& rv = a ;
-  return HltUtils::minPT ( rv ) ;                              // RETURN
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::MaxPt::result_type 
-LoKi::Tracks::MaxPt::operator() 
-  ( LoKi::Tracks::MaxPt::argument a ) const 
-{
-  const LHCb::RecVertex& rv = a ;
-  return HltUtils::maxPT ( rv ) ;                              // RETURN
-}
-// ============================================================================
 // constructor from the tool 
 // ============================================================================
 LoKi::Tracks::TrackMatch::TrackMatch
@@ -160,45 +140,6 @@ LoKi::Tracks::ImpactParameter::operator()
   const LHCb::RecVertex& v = a.second ;
   // 
   return HltUtils::impactParameter ( v , t ) ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::DeltaZ::result_type 
-LoKi::Tracks::DeltaZ::operator() 
-  ( LoKi::Tracks::DeltaZ::argument a ) const 
-{ 
-  // unpack argument:
-  const LHCb::RecVertex& v1 = a.first  ;
-  const LHCb::RecVertex& v2 = a.second ;
-  //
-  return v1.position().z() - v2.position().z() ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::FC::result_type 
-LoKi::Tracks::FC::operator() 
-  ( LoKi::Tracks::FC::argument a ) const 
-{ 
-  // unpack argument:
-  const LHCb::RecVertex& v1 = a.first  ;
-  const LHCb::RecVertex& v2 = a.second ;
-  //
-  return HltUtils::FC( v1 , v2 ) ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Tracks::FC2::result_type 
-LoKi::Tracks::FC2::operator() 
-  ( LoKi::Tracks::FC2::argument a ) const 
-{ 
-  // unpack argument:
-  const LHCb::RecVertex& v1 = a.first  ;
-  const LHCb::RecVertex& v2 = a.second ;
-  //
-  return HltUtils::FC2( v1 , v2 ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method 

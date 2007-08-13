@@ -1,4 +1,4 @@
-// $Id: HltCuts.h,v 1.1 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: HltCuts.h,v 1.2 2007-08-13 14:46:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTCUTS_H 
 #define LOKI_HLTCUTS_H 1
@@ -26,6 +26,37 @@ namespace LoKi
      *  @date   2007-06-08
      */
     const LoKi::Tracks::DeltaE                                           TrDE ;
+    // ========================================================================
+    /** @var TrVIP 
+     *  Evaluator of the impact parameter of the track with respect to the vertex 
+     *
+     *  The actual lines are copied from the package Hlt/HltBase 
+     *   written by Jose Angel Hernando Morata
+     *
+     *  @see HltUtils::impactParam
+     *  @see LoKi::Tracks::TrMATCH
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-08
+     */
+    const LoKi::Tracks::ImpactParameter                                 TrVIP ;
+    // ========================================================================
+    /** @var TrVRIP
+     *  Evaluator of "radial" impact parameter of the track 
+     *  with respect to the vertex 
+     *  @attention track needs to be of Velo RZ type
+     *
+     *  The actual lines are copied from the package Hlt/HltBase 
+     *   written by Jose Angel Hernando Morata
+     *
+     *  @see HltUtils::rImpactParam
+     *  @see LoKi::Tracks::TrMATCH
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-08
+     */
+    const LoKi::Tracks::RadialIP                                       TrVRIP ;
+    // ========================================================================
+
+
     // ========================================================================
     /** @var TTrDA
      *  The evaluator of "delta angle" between two tracks 
@@ -94,99 +125,8 @@ namespace LoKi
      */     
     typedef LoKi::Tracks::MatchIDsFraction                        TTrMATCHIDS ;
     // ========================================================================
-    /** @var TrVIP 
-     *  Evaluator of the impact parameter of the track with respect to the vertex 
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::impactParam
-     *  @see LoKi::Tracks::TrMATCH
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */
-    const LoKi::Tracks::ImpactParameter                                 TrVIP ;
-    // ========================================================================
-    /** @var TrVRIP
-     *  Evaluator of "radial" impact parameter of the track 
-     *  with respect to the vertex 
-     *  @attention track needs to be of Velo RZ type
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::rImpactParam
-     *  @see LoKi::Tracks::TrMATCH
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */
-    const LoKi::Tracks::RadialIP                                       TrVRIP ;
-    // ========================================================================
 
 
-    // ========================================================================
-    /** @var RVMAXPT
-     *  The evaluator of "maxPt" for the recontructed vertex
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::maxPT
-     *  @see LoKi::Tracks::MaxPt
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */     
-    const LoKi::Tracks::MaxPt                                         RVMAXPT ;
-    // ========================================================================
-    /** @var RVMINPT
-     *  The evaluator of "minPt" for the recontructed vertex
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::minPT
-     *  @see LoKi::Tracks::MinPt
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */     
-    const LoKi::Tracks::MinPt                                         RVMINPT ;
-    // ========================================================================
-    /** @var RVVDZ
-     *  Evaluator of "delta-Z" distance between two vertices 
-     *  
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see LoKi::Tracks::DeltaZ
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */     
-    const LoKi::Tracks::DeltaZ                                          RVVDZ ;
-    // ========================================================================
-    /** @var RVVFC 
-     *  
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::FC
-     *  @see LoKi::Tracks::FC
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */        
-    const LoKi::Tracks::FC                                              RVVFC ;
-    // ========================================================================
-    /** @var RVVFC2
-     *  
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::FC2
-     *  @see LoKi::Tracks::FC2
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */        
-    const LoKi::Tracks::FC2                                            RVVFC2 ;
-    // ========================================================================
 
   } // end of namespace LoKi::Cuts 
 } // end of namepspace LoKi

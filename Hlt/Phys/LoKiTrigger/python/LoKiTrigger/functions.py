@@ -98,6 +98,28 @@ RVVCut   = LoKi.PredicateFromPredicate ( _HVV )
 ## concrete functions:
 # =============================================================================
 
+# =============================================================================
+
+## @see LoKi::Cuts::RVHASINFO
+RVHASINFO     = LoKi.RecVertices.HasInfo  
+## @see LoKi::Cuts::RVINFO
+RVINFO        = LoKi.RecVertices.Info  
+## @see LoKi::Cuts::RVMAXPT
+RVMAXPT       = LoKi.RecVertices.MaxPt () 
+## @see LoKi::Cuts::RVMAXPT
+RVMINPT       = LoKi.RecVertices.MinPt () 
+
+# =============================================================================
+
+## @see LoKi::Cuts::RVVDZ
+RVVDZ         = LoKi.RecVertices.DeltaZ () 
+## @see LoKi::Cuts::RVVFC
+RVVFC         = LoKi.RecVertices.FC     () 
+## @see LoKi::Cuts::RVVFC2
+RVVFC2        = LoKi.RecVertices.FC2    () 
+
+# =============================================================================
+
 ## @see LoKi::Cuts::TrTYPE
 TrTYPE        = LoKi.Tracks.Type  () 
 
@@ -110,10 +132,10 @@ TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward )
 TrCHI2        = LoKi.Tracks.Chi2 () 
 ## @see LoKi::Cuts::TrCLONE
 TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone ) 
-## @see LoKi::Cuts::TrDOCA
-TrDOCA        = LoKi.Tracks.DistanceOfClosestApproach ()
 ## @see LoKi::Cuts::TrDOWNSTREAM
-TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream ) 
+TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream )
+## @see LoKi::Cuts::TrDE
+TrDE          = LoKi.Tracks.DeltaE     () 
 ## @see LoKi::Cuts::TrFALSE
 TrFALSE       = LoKi.BooleanConstant( _T ) ( False )
 ## @see LoKi::Cuts::TrFILTER
@@ -175,8 +197,31 @@ TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR )
 ## @see LoKi::Cuts::TrZERO
 TrZERO        = LoKi.Constant( _T ) ( 0.0 )
 
+# =============================================================================
+
+## @see LoKi::Cuts::TTrDA
+TTrDA         = LoKi.Tracks.DeltaAngle () 
+## @see LoKi::Cuts::TTrDOCA
+TTrDOCA       = LoKi.Tracks.DistanceOfClosestApproach ()
+## @see LoKi::Cuts::TTrDP
+TTrDP         = LoKi.Tracks.DeltaP     ()
+## @see LoKi::Cuts::TTrMATCH
+TTrMATCH      = LoKi.Tracks.TrackMatch 
+## @see LoKi::Cuts::TTrMATCHIDS
+TTrMATCHIDS   = LoKi.Tracks.MatchIDsFraction () 
+
+# =============================================================================
+
+## @see LoKi::Cuts::TrVIP 
+TrVIP         = LoKi.Tracks.ImpactParameter () 
+## @see LoKi::Cuts::TrVRIP 
+TrVRIP        = LoKi.Tracks.RadialIP        () 
 
 
+# =============================================================================
+
+if '__main__' == __name__ :
+    for i in dir() : print i 
 
 # =============================================================================
 # The END 
