@@ -4,6 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Update DeRichHPDPanel TDS locations
+ - Update methods that return a RichSmartID to always set the HPD properties
+   for the closest HPD, even if the hit is outside the HPD tube acceptance
+   and for the method that only traces to the HPD plane.
+
 ! 2007-08-09 - Chris Jones
  - Update DeRichHPD to cache the transformation matrix for the silicon 
    sensor to speed up the detectionPoint method

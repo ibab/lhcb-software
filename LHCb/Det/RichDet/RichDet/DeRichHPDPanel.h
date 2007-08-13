@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.47 2007-08-09 15:23:28 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.48 2007-08-13 12:29:07 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -184,6 +184,7 @@ public:
   detPlanePoint( const Gaudi::XYZPoint& pGlobal,
                  const Gaudi::XYZVector& vGlobal,
                  Gaudi::XYZPoint& hitPosition,
+                 LHCb::RichSmartID& smartID, 
                  const LHCb::RichTraceMode mode ) const;
   
   /** @brief Converts a global position to the coordinate system of the
@@ -229,6 +230,17 @@ public:
 
   /// sensitive volume identifier
   virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+
+public:
+
+  /// The number of HPD columns in this panel
+  inline unsigned int nHPDColumns() const { return m_HPDColumns; }
+
+  /// The number of HPDs in each columns
+  inline unsigned int nHPDsPerCol() const { return m_HPDNumInCol; }
+
+  /// The total number of HPDs in this panel
+  inline unsigned int nHPDs() const { return m_HPDMax; }
 
 private:
 
@@ -288,6 +300,7 @@ private:
 private: // data
 
   std::string m_name;           ///< The name of this HPD panel
+
   unsigned int m_HPDColumns;    ///< Number of HPD columns in the panel
   unsigned int m_HPDNumInCol;   ///< Number of HPDs in each column
   unsigned int m_HPDMax;        ///< Total number of HPDs in this panel
