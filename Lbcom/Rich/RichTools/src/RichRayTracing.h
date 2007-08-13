@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.33 2007-08-09 16:00:25 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.34 2007-08-13 12:35:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -82,9 +82,6 @@ namespace Rich
 
     // Initialization of the tool after creation
     virtual StatusCode initialize();
-
-    // Finalization of the tool before deletion
-    virtual StatusCode finalize  ();
 
   public: // methods (and doxygen comments) inherited from interface
 

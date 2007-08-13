@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.39 2007-08-10 09:23:12 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.40 2007-08-13 12:35:11 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -31,14 +31,14 @@ namespace Rich
 Rich::RayTracing::RayTracing( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : RichHistoToolBase         ( type, name, parent  ),
-    m_refIndex                ( NULL                ),
-    m_rich                    ( Rich::NRiches       ),
-    m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_secMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_deBeam                  ( Rich::NRiches       )
+  : RichHistoToolBase         ( type, name, parent ),
+    m_refIndex                ( NULL               ),
+    m_rich                    ( Rich::NRiches      ),
+    m_sphMirrorSegRows        ( Rich::NRiches, 0   ),
+    m_sphMirrorSegCols        ( Rich::NRiches, 0   ),
+    m_secMirrorSegRows        ( Rich::NRiches, 0   ),
+    m_secMirrorSegCols        ( Rich::NRiches, 0   ),
+    m_deBeam                  ( Rich::NRiches      )
 {
   // interface
   declareInterface<IRayTracing>(this);
@@ -121,7 +121,7 @@ StatusCode Rich::RayTracing::initialize()
   // Rich2 mirrors
   if ( rich2->exists("SphMirrorSegRows") )
   {
-    m_sphMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SphMirrorSegRows" );
+    m_sphMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SphMirrorSegRows"    );
     m_sphMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SphMirrorSegColumns" );
   }
   else
@@ -130,7 +130,7 @@ StatusCode Rich::RayTracing::initialize()
   }
   if ( rich2->exists("SecMirrorSegRows") )
   {
-    m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows" );
+    m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
   }
   else
@@ -175,15 +175,6 @@ StatusCode Rich::RayTracing::initialize()
   }
 
   return sc;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Rich::RayTracing::finalize()
-{
-  // finalize base class
-  return RichHistoToolBase::finalize();
 }
 
 //=============================================================================
@@ -278,12 +269,12 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
       // ... no, so just trace to HPD panel
       // NOTE : smartID is not updated any more so will only contain RICH and panel data
       result = m_photoDetPanels[rich][side]->detPlanePoint( tmpPos, tmpDir,
-                                                            hitPosition, mode );
+                                                            hitPosition, smartID, mode );
     }
 
     // Set remaining RichGeomPhoton data
-    photon.setPixelCluster   ( Rich::HPDPixelCluster(smartID) );
-    photon.setEmissionPoint  ( startPoint                     );
+    photon.setSmartID       ( smartID    );
+    photon.setEmissionPoint ( startPoint );
 
     // test for beam pipe intersections ?
     if ( mode.traceWasOK(result) && mode.beamPipeIntersects() )

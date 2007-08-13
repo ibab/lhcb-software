@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Adapt to changes in RichGeomPhoton in RichKernel
+
 ! 2007-08-09 - Chris Jones
  - Update the mirror segment finding tool to sort mirrors in order to distance 
    from beamline. This is roughly equivialent to the order of 'most used' and
