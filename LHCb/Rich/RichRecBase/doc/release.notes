@@ -8,6 +8,8 @@
  - Speed improvements to pixel and photon creators and various event classes
  - fix ordering problem in pixel creator, that came in when the RichDAQ data
    structure changed
+ - Streamline and inline the one method in RichRecRing.cpp, and then remove 
+   this file
 
 ! 2007-08-09 - Chris Jones
  - Extend IPhotonReconstruction interface with a method that passes a

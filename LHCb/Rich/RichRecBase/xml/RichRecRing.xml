@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.12 2007-08-09 15:51:12 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.13 2007-08-13 13:21:26 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -26,6 +26,7 @@
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichParticleIDType"/>
         <import name="Kernel/RichSide"/>
+        <import name="GaudiKernel/PhysicalConstants"/>
         <import name="Event/RichRecPointOnRing" soft="FALSE" />
         <import name="Event/RichRecPixelOnRing" soft="FALSE" />
         <import name="Event/RichRecSegment" soft="TRUE" />
@@ -134,10 +135,20 @@
         <method 
                 const = "TRUE" 
                 type  = "const LHCb::RichRecPointOnRing*"
-                desc  = "Return the point on the ring clostest to the given azimuth" 
+                desc  = "Return the point on the ring closest to the given azimuth" 
                 name  = "getPointClosestInAzimuth" >
                 <arg const="TRUE" inout="BYVALUE" name="angle" type="double"/>
-    
+                <code>
+  const LHCb::RichRecPointOnRing* point =  NULL;
+  const unsigned int nPoints = ringPoints().size();
+  if ( nPoints&gt;0 )
+  {
+    const unsigned int iPoint 
+      = static_cast&lt;unsigned int&gt;( (angle*static_cast&lt;double&gt;(nPoints)/Gaudi::Units::twopi) - 0.5 );
+    point = &amp;ringPoints()[ iPoint &lt; nPoints ? iPoint : nPoints-1 ];
+  }
+  return point;
+                </code>
         </method>
 
 </class>
