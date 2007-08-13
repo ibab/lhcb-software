@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::DataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.h,v 1.4 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.h,v 1.5 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,7 +19,7 @@
 #include "GaudiKernel/IProperty.h"
 
 // Rich Rec base class
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 namespace Rich
 {
@@ -37,7 +37,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class DataObjVerifier : public Rich::Rec::AlgBase
+    class DataObjVerifier : public Rich::Rec::HistoAlgBase
     {
 
     public:
@@ -48,9 +48,7 @@ namespace Rich
 
       virtual ~DataObjVerifier(); ///< Destructor
 
-      virtual StatusCode initialize();    // Algorithm initialization
-      virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
+      virtual StatusCode execute();    // Algorithm execution
 
     private:
 

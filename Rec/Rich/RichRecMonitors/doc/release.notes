@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Adapt to changes in RichKernel + monitoring improvements
+
 ! 2007-08-09 - Chris Jones
  - Add new monitor algorithm that produces an ntuple containing information 
    that allows correlations between RichPID results to be studied.

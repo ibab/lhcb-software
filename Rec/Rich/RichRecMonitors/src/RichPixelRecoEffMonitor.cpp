@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.4 2007-04-23 13:25:15 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.5 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -130,14 +130,8 @@ StatusCode PixelRecoEffMonitor::execute()
         }
 
         // Get the reconstructed pixels for this HPD
-        LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-        LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
-        // loop over reconstructed pixels
-        unsigned int nHPDs(0);
-        for ( ; iPixel != endPix; ++iPixel )
-        {
-          ++nHPDs;
-        }
+        IPixelCreator::PixelRange range = pixelCreator()->range(hpd);
+        const unsigned int nHPDs = range.size();
 
         // pixel reco efficiency
         const double pixEff = ( rawIDs.size()>0 ? 100 * nHPDs/rawIDs.size() : 0 );

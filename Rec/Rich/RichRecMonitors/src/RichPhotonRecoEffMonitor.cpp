@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.12 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.13 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -112,8 +112,9 @@ StatusCode PhotonRecoEffMonitor::execute()
     unsigned int nRecoPhotsTrue(0), notRecoPhotsTrue(0);
 
     // loop over pixels in same RICH as segment
-    for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(rich);
-          iPix != pixelCreator()->end(rich); ++iPix )
+    IPixelCreator::PixelRange range = pixelCreator()->range(rich);
+    for ( IPixelCreator::PixelRange::const_iterator iPix = range.begin();
+          iPix != range.end(); ++iPix )
     {
       LHCb::RichRecPixel * pixel = *iPix;
       const Gaudi::XYZPoint & locPos = pixel->radCorrLocalPositions().position(rad);

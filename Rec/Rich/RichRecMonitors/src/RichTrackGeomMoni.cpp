@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.18 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.19 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -348,10 +348,10 @@ StatusCode TrackGeomMoni::execute()
               zMinFlatGlo[rich],zMaxFlatGlo[rich],yMinFlatGlo[rich],yMaxFlatGlo[rich] );
 
       // find out pd positions
-      m_xHits[photon.pixelCluster().hpd()] += photPoint.x();
-      m_yHits[photon.pixelCluster().hpd()] += photPoint.y();
-      m_zHits[photon.pixelCluster().hpd()] += photPoint.z();
-      m_hitCount[photon.pixelCluster().hpd()] += 1;
+      m_xHits[photon.smartID().hpdID()] += photPoint.x();
+      m_yHits[photon.smartID().hpdID()] += photPoint.y();
+      m_zHits[photon.smartID().hpdID()] += photPoint.z();
+      m_hitCount[photon.smartID().hpdID()] += 1;
 
     }
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.4 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.cpp,v 1.5 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
 // Standard constructor, initializes variables
 DataObjVerifier::DataObjVerifier( const std::string& name,
                                   ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator )
+  : RichRecHistoAlgBase ( name, pSvcLocator )
 {
   declareProperty( "PrintPixels",   m_bdPixels   = false );
   declareProperty( "PrintTracks",   m_bdTracks   = false );
@@ -38,124 +38,144 @@ DataObjVerifier::DataObjVerifier( const std::string& name,
 // Destructor
 DataObjVerifier::~DataObjVerifier() {};
 
-//  Initialize
-StatusCode DataObjVerifier::initialize()
-{
-  // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  // do stuff here...
-
-  return sc;
-}
-
 // Main execution
 StatusCode DataObjVerifier::execute()
 {
   debug() << "Execute" << endreq;
-  
+
   using namespace LHCb;
 
+  const RichHistoID hid;
+
   // If not rerunning at DEBUG or VERBOSE level, return
-  if ( !msgLevel(MSG::DEBUG) ) return StatusCode::SUCCESS;
+  //if ( !msgLevel(MSG::DEBUG) ) return StatusCode::SUCCESS;
 
   // Debug printout of pixels
-  if ( m_bdPixels && !richPixels()->empty() ) {
+  if ( m_bdPixels && !richPixels()->empty() )
+  {
     debug() << "Located " << richPixels()->size() << " RichRecPixels" << endreq;
     for ( RichRecPixels::const_iterator pixel = richPixels()->begin();
           pixel != richPixels()->end();
-          pixel++ ) {
-
-      debug() << "RichRecPixel key= " << (*pixel)->key() << endreq;
-      debug() << "  richRecPhotons(" << (*pixel)->richRecPhotons().size() << ") keys= ";
-      for ( RichRecPixel::Photons::const_iterator iphot
-              = (*pixel)->richRecPhotons().begin();
-            iphot != (*pixel)->richRecPhotons().end();
-            iphot++ ) { debug() << (*iphot)->key() << " "; }
-      debug() << endreq;
-      debug() << "  richRecTracks(" << (*pixel)->richRecTracks().size() << ") keys= ";
-      for ( RichRecPixel::Tracks::const_iterator itk
-              = (*pixel)->richRecTracks().begin();
-            itk != (*pixel)->richRecTracks().end();
-            itk++ ) { debug() << (*itk)->key() << " "; }
-      debug() << endreq;
-      std::cout << "Data members " << **pixel << std::endl;
-
+          pixel++ )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "RichRecPixel key= " << (*pixel)->key() << endreq;
+        debug() << "  richRecPhotons(" << (*pixel)->richRecPhotons().size() << ") keys= ";
+        for ( RichRecPixel::Photons::const_iterator iphot
+                = (*pixel)->richRecPhotons().begin();
+              iphot != (*pixel)->richRecPhotons().end();
+              iphot++ ) { debug() << (*iphot)->key() << " "; }
+        debug() << endreq;
+        debug() << "  richRecTracks(" << (*pixel)->richRecTracks().size() << ") keys= ";
+        for ( RichRecPixel::Tracks::const_iterator itk
+                = (*pixel)->richRecTracks().begin();
+              itk != (*pixel)->richRecTracks().end();
+              itk++ ) { debug() << (*itk)->key() << " "; }
+        debug() << endreq;
+        std::cout << "Data members " << **pixel << std::endl;
+      }
+      // plot reference sizes
+      plot1D( (*pixel)->richRecTracks().size(), hid((*pixel)->detector(),"pixTracks"),
+              "Tracks per pixel", -0.5, 100.5, 101 );
+      plot1D( (*pixel)->richRecPhotons().size(), hid((*pixel)->detector(),"pixPhots"),
+              "Photons per pixel", -0.5, 100.5, 101 );
+      plot1D( (*pixel)->richRecRings().size(), hid((*pixel)->detector(),"pixRings"),
+              "Rings per pixel", -0.5, 100.5, 101 );
     }
   }
 
   // Debug printout of tracks
-  if ( m_bdTracks && !richTracks()->empty() ) {
+  if ( m_bdTracks && !richTracks()->empty() )
+  {
     debug() << "Located " << richTracks()->size() << " RichRecTracks" << endreq;
     for ( RichRecTracks::const_iterator track = richTracks()->begin();
           track != richTracks()->end();
-          track++ ) {
-
-      debug() << "RichRecTrack key= " << (*track)->key() << endreq;
-      debug() << "  richRecSegments(" << (*track)->richRecSegments().size() << ") keys= ";
-      for ( RichRecTrack::Segments::const_iterator iseg
-              = (*track)->richRecSegments().begin();
-            iseg != (*track)->richRecSegments().end();
-            iseg++ ) { debug() << (*iseg)->key() << " "; }
-      debug() << endreq;
-      /*
-        debug() << "  richRecPixels(" << (*track)->richRecPixels().size() << ") keys= ";
-        for ( RichRecTrack::Pixels::const_iterator ipix
-        = (*track)->richRecPixels().begin();
-        ipix != (*track)->richRecPixels().end();
-        ipix++ ) { debug() << (*ipix)->key() << " "; }
+          track++ )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "RichRecTrack key= " << (*track)->key() << endreq;
+        debug() << "  richRecSegments(" << (*track)->richRecSegments().size() << ") keys= ";
+        for ( RichRecTrack::Segments::const_iterator iseg
+                = (*track)->richRecSegments().begin();
+              iseg != (*track)->richRecSegments().end();
+              iseg++ ) { debug() << (*iseg)->key() << " "; }
         debug() << endreq;
-      */
-      debug() << "  richRecPhotons(" << (*track)->richRecPhotons().size() << ") keys= ";
-      for ( RichRecTrack::Photons::const_iterator iphot
-              = (*track)->richRecPhotons().begin();
-            iphot != (*track)->richRecPhotons().end();
-            iphot++ ) { debug() << (*iphot)->key() << " "; }
-      debug() << endreq;
-      std::cout << "Data members " << **track << std::endl;
-
+        /*
+          debug() << "  richRecPixels(" << (*track)->richRecPixels().size() << ") keys= ";
+          for ( RichRecTrack::Pixels::const_iterator ipix
+          = (*track)->richRecPixels().begin();
+          ipix != (*track)->richRecPixels().end();
+          ipix++ ) { debug() << (*ipix)->key() << " "; }
+          debug() << endreq;
+        */
+        debug() << "  richRecPhotons(" << (*track)->richRecPhotons().size() << ") keys= ";
+        for ( RichRecTrack::Photons::const_iterator iphot
+                = (*track)->richRecPhotons().begin();
+              iphot != (*track)->richRecPhotons().end();
+              iphot++ ) { debug() << (*iphot)->key() << " "; }
+        debug() << endreq;
+        std::cout << "Data members " << **track << std::endl;
+      }
+      // plot reference sizes
+      plot1D( (*track)->richRecPhotons().size(), "trackPhots",
+              "Photons per track", -0.5, 100.5, 101 );
+      plot1D( (*track)->richRecPixels().size(), "trackPixels",
+              "Pixels per track", -0.5, 100.5, 101 );
     }
   }
 
   // Debug printout of segments
-  if ( m_bdSegments && !richSegments()->empty() ) {
+  if ( m_bdSegments && !richSegments()->empty() )
+  {
     debug() << "Located " << richSegments()->size() << " RichRecSegments" << endreq;
     for ( RichRecSegments::const_iterator segment = richSegments()->begin();
           segment != richSegments()->end();
-          segment++ ) {
-
-      debug() << "RichRecSegment key= " << (*segment)->key() << endreq;
-      debug() << "  richRecTrack key= " << (*segment)->richRecTrack()->key() << endreq;
-      debug() << "  richRecPixels(" << (*segment)->richRecPixels().size() << ") keys= ";
-      for ( RichRecSegment::Pixels::const_iterator ipix
-              = (*segment)->richRecPixels().begin();
-            ipix != (*segment)->richRecPixels().end();
-            ipix++ ) { debug() << (*ipix)->key() << " "; }
-      debug() << endreq;
-      debug() << "  richRecPhotons(" << (*segment)->richRecPhotons().size() << ") keys= ";
-      for ( RichRecSegment::Photons::const_iterator iphot
-              = (*segment)->richRecPhotons().begin();
-            iphot != (*segment)->richRecPhotons().end();
-            iphot++ ) { debug() << (*iphot)->key() << " "; }
-      debug() << endreq;
-      std::cout << "Data members " << **segment << std::endl;
+          segment++ )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "RichRecSegment key= " << (*segment)->key() << endreq;
+        debug() << "  richRecTrack key= " << (*segment)->richRecTrack()->key() << endreq;
+        debug() << "  richRecPixels(" << (*segment)->richRecPixels().size() << ") keys= ";
+        for ( RichRecSegment::Pixels::const_iterator ipix
+                = (*segment)->richRecPixels().begin();
+              ipix != (*segment)->richRecPixels().end();
+              ipix++ ) { debug() << (*ipix)->key() << " "; }
+        debug() << endreq;
+        debug() << "  richRecPhotons(" << (*segment)->richRecPhotons().size() << ") keys= ";
+        for ( RichRecSegment::Photons::const_iterator iphot
+                = (*segment)->richRecPhotons().begin();
+              iphot != (*segment)->richRecPhotons().end();
+              iphot++ ) { debug() << (*iphot)->key() << " "; }
+        debug() << endreq;
+        std::cout << "Data members " << **segment << std::endl;
+      }
+      // plot reference sizes
+      plot1D( (*segment)->richRecPhotons().size(), hid((*segment)->trackSegment().radiator(),"segPhots"),
+              "Photons per segment", -0.5, 100.5, 101 );
+      plot1D( (*segment)->richRecPixels().size(), hid((*segment)->trackSegment().radiator(),"segPixels"),
+              "Pixels per segment", -0.5, 100.5, 101 );
 
     }
   }
 
   // Debug printout of photons
-  if ( m_bdPhotons && !richPhotons()->empty() ) {
-    debug() << "Located " << richPhotons()->size() << " RichRecPhotons" << endreq;
-    for ( RichRecPhotons::const_iterator photon = richPhotons()->begin();
-          photon != richPhotons()->end();
-          photon++ ) {
-
-      debug() << "RichRecPhoton    key= " << (*photon)->key() << endreq;
-      debug() << "  richRecSegment key= " << (*photon)->richRecSegment()->key() << endreq;
-      debug() << "  richRecPixel   key= " << (*photon)->richRecPixel()->key() << endreq;
-      std::cout << "Data members " << **photon << std::endl;
-
+  if ( m_bdPhotons && !richPhotons()->empty() )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Located " << richPhotons()->size() << " RichRecPhotons" << endreq;
+      for ( RichRecPhotons::const_iterator photon = richPhotons()->begin();
+            photon != richPhotons()->end();
+            photon++ )
+      {
+        debug() << "RichRecPhoton    key= " << (*photon)->key() << endreq;
+        debug() << "  richRecSegment key= " << (*photon)->richRecSegment()->key() << endreq;
+        debug() << "  richRecPixel   key= " << (*photon)->richRecPixel()->key() << endreq;
+        std::cout << "Data members " << **photon << std::endl;
+      }
     }
   }
 
@@ -190,12 +210,4 @@ StatusCode DataObjVerifier::execute()
   */
 
   return StatusCode::SUCCESS;
-};
-
-//  Finalize
-StatusCode DataObjVerifier::finalize()
-{
-  // Execute base class method
-  return RichRecAlgBase::finalize();
 }
-

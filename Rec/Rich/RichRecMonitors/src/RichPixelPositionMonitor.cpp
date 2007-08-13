@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.12 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.13 2007-08-13 12:38:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -262,8 +262,9 @@ StatusCode PixelPositionMonitor::execute()
 
   debug() << "RICH1 Pixels :-" << endreq;
   unsigned int nR1(0);
-  for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich1);
-        iPix != pixelCreator()->end(Rich::Rich1); ++iPix )
+  IPixelCreator::PixelRange range1 = pixelCreator()->range(Rich::Rich1);
+  for ( IPixelCreator::PixelRange::const_iterator iPix = range1.begin();
+        iPix != range1.end(); ++iPix )
   {
     ++nR1;
     if ( msgLevel(MSG::DEBUG) )
@@ -276,8 +277,9 @@ StatusCode PixelPositionMonitor::execute()
 
   debug() << "RICH2 Pixels :-" << endreq;
   unsigned int nR2(0);
-  for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich2);
-        iPix != pixelCreator()->end(Rich::Rich2); ++iPix )
+  IPixelCreator::PixelRange range2 = pixelCreator()->range(Rich::Rich2);
+  for ( IPixelCreator::PixelRange::const_iterator iPix = range2.begin();
+        iPix != range2.end(); ++iPix )
   {
     ++nR2;
     if ( msgLevel(MSG::DEBUG) )
