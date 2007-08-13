@@ -4,6 +4,17 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+
+! 2007-08-13 Eduardo Rodrigues
+- Added Fitting.opts: file with all fitting options
+- Added DSTRefitting.opts: file to be able to refit tracks from DST
+- Removed obsolete TrackSeeding.opts file
+- Reoved obsolete TsaSeeding.opts file
+- Modified and cleaned up RecoTracking.opts accordingly:
+  - cleaned up options for obsolete TrackSeeding.opts file
+  - included necessary options from TsaSeeding
+  - all fitting options now taken from Fitting.opts
+
 !============================ TrackSys v4r8 2007-07-20 ======================
 ! 2007-07-20 - Marco Cattaneo
  - Fix TrackMatch options in NoFieldTracking.opts, change on 30/5 had wrong names

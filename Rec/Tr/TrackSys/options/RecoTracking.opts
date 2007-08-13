@@ -26,17 +26,17 @@ DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters     = true;
 
 // TT clusters for pattern recognition and track fit
-RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
-                       ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+RecoTTSeq.Members += { "RawBankToSTClusterAlg/CreateTTClusters"
+                       ,"RawBankToSTLiteClusterAlg/CreateTTLiteClusters"
                        ,"PatTTCoordFromRaw"
 };
 
 // IT clusters for pattern recognition and track fit
-RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
-                       ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+RecoITSeq.Members += { "RawBankToSTClusterAlg/CreateITClusters"
+                       ,"RawBankToSTLiteClusterAlg/CreateITLiteClusters"
 };
-createITClusters.detType     = "IT";
-createITLiteClusters.detType = "IT";
+CreateITClusters.detType     = "IT";
+CreateITLiteClusters.detType = "IT";
 #include "$STTOOLSROOT/options/Brunel.opts"
 
 // OTTimes for pattern recognition and track fit
@@ -58,38 +58,37 @@ TrackForwardPatSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 
 // Forward fit
 TrackForwardFitSeq.Members += { "TrackEventFitter/FitForward" };
-FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 
-// Seed pattern and fit
-// NOTE:
-// 1. run one or the other
-// 2. do not forget to make the necessary change in the TrackMatching options
-// 3. do not forget to make the necessary change in the clone killer options
-// Seeding algorithm from Roger Forty
-#include "$TRACKSYSROOT/options/TsaSeeding.opts"
-// Seeding algorithm from Henk Jan Bulten
-//#include "$TRACKSYSROOT/options/TrackSeeding.opts"
+// Seed pattern
+TrackSeedPatSeq.Members += { "TsaOTClusterCreator", "TsaSTClusterCreator", 
+                             "TsaInitialization" , "TsaSeed",
+                             "TsaSeedTrackCnv" };
+TsaSeed.xSearchS0.sector = 0;
+TsaSeed.xSearchS1.sector = 1;
+TsaSeed.xSearchS2.sector = 2;
+TsaSeed.xSearchS3.sector = 3;
+TsaSeed.xSearchS4.sector = 4;
+
+TsaSeed.stereoS0.sector = 0;
+TsaSeed.stereoS1.sector = 1;
+TsaSeed.stereoS2.sector = 2;
+TsaSeed.stereoS3.sector = 3;
+TsaSeed.stereoS4.sector = 4;
+
+// Seed fit
+TrackSeedFitSeq.Members += { "TrackEventFitter/FitTsa" };
 
 // Match pattern
-TrackMatchPatSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
-// use this when running the seeding algorithm from Henk Jan Bulten
-// (the default "InputSeedTracks" as defined in the cpp file
-//  uses the output o Roger Forty's seeding)
-//TrackMatch.InputSeedTracks = "Rec/Track/Seed";
+TrackMatchPatSeq.Members +={ "TrackMatchVeloSeed/TrackMatch" };
 
 // Match fit
 TrackMatchFitSeq.Members += { "TrackEventFitter/FitMatch" };
-FitMatch.TracksInContainer  = "Rec/Track/Match"; 
 
 // KShort pattern
 TrackKShortPatSeq.Members += { "PatKShort" };
 
 // KShort fit
-TrackKShortFitSeq.Members += { "TrackEventFitter/FitKShort" };
-FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
-FitKShort.Fitter.ZPositions          = { 990., 2165., 9450. };
-FitKShort.Fitter.StateAtBeamLine     = false;
-FitKShort.Fitter.SetRefInfo          = false;
+TrackKShortFitSeq.Members += { "TrackEventFitter/FitKsTrack" };
 
 // Velo-TT pattern
 TrackVeloTTPatSeq.Members += { "PatVeloTT" };
@@ -97,45 +96,17 @@ TrackVeloTTPatSeq.Members += { "PatVeloTT" };
 
 // Velo-TT fit
 TrackVeloTTFitSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
-FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
-FitVeloTT.Fitter.ZPositions          = { 990., 2165. };
-FitVeloTT.Fitter.SetRefInfo          = false;
-FitVeloTT.Fitter.ErrorP              = 1.2;
-FitVeloTT.Fitter.NumberFitIterations = 1;
-FitVeloTT.Fitter.MaxNumberOutliers   = 1;
-FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
-// Clone tracks killer: output is "best" container 
-// -----------------------------------------------
+// Clone tracks killer: output is "best" container
 TrackPostFitSeq.Members += { "TrackEventCloneKiller" };
-// use this when running the seeding algorithm from Henk Jan Bulten
-// (the default "TracksInContainers" as defined in the cpp file
-//  uses the output of Roger Forty's seeding)
-/*TrackEventCloneKiller.TracksInContainers  = { 
-                                             "Rec/Track/VeloTT"
-                                           , "Rec/Track/Forward"
-                                           , "Rec/Track/Match"
-                                           , "Rec/Track/Seed"
-                                           , "Rec/Track/KsTrack" };
-*/
 
 // Prepare and fit velo tracks
 TrackVeloPreFitSeq.Members += { "TrackPrepareVelo" };
 TrackVeloFitSeq.Members    += { "TrackEventFitter/FitVelo" };
 
-FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
-FitVelo.Fitter.ZPositions          = {};
-FitVelo.Fitter.SetRefInfo          = false;
-FitVelo.Fitter.ErrorP              = 0.01;
-FitVelo.Fitter.NumberFitIterations = 1;
-FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVelo.Fitter.TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
-FitVelo.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
-  
-
-
 // Copy fitted velo tracks to Track/Best container
 TrackVeloFitSeq.Members += { "TrackContainerCopy/CopyVelo" };
 CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
+
+// Set of standard fitting options
+#include "$TRACKSYSROOT/options/Fitting.opts"
