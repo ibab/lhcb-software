@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.156 2007-08-09 15:43:48 jonrob Exp $
+! $Id: release.notes,v 1.157 2007-08-13 12:32:19 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-08-13 - Chris Jones
+ - Remove the use of boost::format in RichDAQDefinitions.h
+ - Downgrade, for speed reasons, the HPDPixelCluster in RichGeomPhoton
+   to a single RichSmartID. In practise the ability to store a cluster
+   here was never used. Removing it speeds things up a little.
 
 ! 2007-08-09 - Chris Jones
  - Add to IRichParticleProperties a method to return the list of all 

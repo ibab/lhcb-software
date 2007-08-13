@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.2 2007-04-23 15:07:58 cattanem Exp $
+ *  $Id: RichGeomPhoton.h,v 1.3 2007-08-13 12:32:19 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -114,7 +114,7 @@ namespace LHCb
                     const Gaudi::XYZPoint & detectionPoint,
                     const Gaudi::XYZPoint & sphMirrReflPoint,
                     const Gaudi::XYZPoint & flatMirrReflPoint,
-                    const Rich::HPDPixelCluster & cluster = Rich::HPDPixelCluster(),
+                    const LHCb::RichSmartID smartID = LHCb::RichSmartID(),
                     const float activeFrac = 0 )
       : m_CherenkovTheta         ( theta             ),
         m_CherenkovPhi           ( phi               ),
@@ -122,7 +122,7 @@ namespace LHCb
         m_detectionPoint         ( detectionPoint    ),
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
-        m_cluster                ( cluster           ),
+        m_smartID                ( smartID           ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
     ~RichGeomPhoton( ) {} ///< Destructor
@@ -306,18 +306,18 @@ namespace LHCb
      * Set accessor for the HPD pixel cluster
      * @param cluster The new cluster
      */
-    inline void setPixelCluster ( const Rich::HPDPixelCluster& cluster )
+    inline void setSmartID ( const LHCb::RichSmartID id )
     {
-      m_cluster = cluster;
+      m_smartID = id;
     }
 
     /**
      * Const Get accessor to RichSmartID
      * @return the current value of RichSmartID
      */
-    inline const Rich::HPDPixelCluster & pixelCluster() const
+    inline LHCb::RichSmartID smartID() const
     {
-      return m_cluster;
+      return m_smartID;
     }
 
     /**
@@ -460,7 +460,7 @@ namespace LHCb
     Gaudi::XYZPoint m_sphMirReflectionPoint;   ///< The spherical mirror reflection point
     Gaudi::XYZPoint m_flatMirReflectionPoint;  ///< The flat mirror relfection point
     RichGeomPhotonCode::ShortType m_dataWord;  ///< Bit-pack data word
-    Rich::HPDPixelCluster m_cluster;           ///< HPD pixel cluster used to reconstruct this photon
+    LHCb::RichSmartID m_smartID;               ///< The channel ID for the photon detection point
 
     /** The fraction of the RichTrackSegment trajectory this photon is associated
      *  with for which it is geometrically possible this photon was produced

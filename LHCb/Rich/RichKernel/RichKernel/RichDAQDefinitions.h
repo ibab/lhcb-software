@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.18 2007-08-03 14:02:52 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.19 2007-08-13 12:32:19 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -29,7 +29,7 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
-#include "boost/format.hpp"
+//#include "boost/format.hpp"
 
 namespace Rich
 {
@@ -39,10 +39,10 @@ namespace Rich
     //---------------------------------------------------------------------------------
 
     /// DAQ long type definition
-    typedef unsigned int                      LongType;
+    typedef unsigned int   LongType;
 
     /// DAQ short type definition
-    typedef unsigned int                      ShortType;
+    typedef unsigned int   ShortType;
 
     //---------------------------------------------------------------------------------
 
@@ -108,7 +108,8 @@ namespace Rich
       { return boost::lexical_cast<std::string>(data()); }
       /// Overload output to ostream
       friend inline std::ostream& operator << ( std::ostream& os, const NumericType<TYPE> & id )
-      { return os << boost::format("%6i") % id.data() ; }
+      { return os << id.data() ; }
+      //{ return os << boost::format("%6i") % id.data() ; }
       /// Operator ++   (prefix)
       inline NumericType<TYPE>& operator++()    { ++m_id; return *this; }
       /// Operator ++(int)  (postfix)
@@ -147,7 +148,7 @@ namespace Rich
 
     /** @class Level0ID RichKernel/RichDAQDefinitions.h
      *
-     *  Contains the Level 0 board number plus one bit identifying on of the two HPDs
+     *  Contains the Level 0 board number plus one bit identifying one of the two HPDs
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   11/11/2005
