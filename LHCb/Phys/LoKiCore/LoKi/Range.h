@@ -1,4 +1,4 @@
-// $Id: Range.h,v 1.12 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: Range.h,v 1.13 2007-08-13 09:59:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -46,8 +46,8 @@ namespace LoKi
    */
   struct RangeBase_ 
   {
-  protected :
-    ~RangeBase_ (){}  ;
+    // protected :
+    //  ~RangeBase_ (){}  ;
   } ;
   // ==========================================================================  
   /** @class Range_ Range.h LoKi/Range.h

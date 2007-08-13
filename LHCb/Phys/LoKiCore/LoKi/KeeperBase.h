@@ -1,4 +1,4 @@
-// $Id: KeeperBase.h,v 1.2 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: KeeperBase.h,v 1.3 2007-08-13 09:59:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KEEPERBASE_H 
 #define LOKI_KEEPERBASE_H 1
@@ -14,8 +14,9 @@ namespace LoKi
    */
   struct KeeperBase 
   {
-  protected:
-    ~KeeperBase() {}    
+    
+    // protected:
+    //  ~KeeperBase() {}    
   } ;
 } // end of namespace LoKi
 // ============================================================================
