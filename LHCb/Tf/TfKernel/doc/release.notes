@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/TfKernel
+! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
+! Purpose     : Core classes for the Tf framework
+!-----------------------------------------------------------------------------
+
+! 2007-08-13 - Chris Jones
+ - First import from ATEAM CVS of TfData and TfTools packages. 
+   Currently imported into a single package, TfKernel, that creates both
+   linker and component libraries. Could be split later if deemed appropriate.
