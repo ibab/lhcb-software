@@ -1,4 +1,4 @@
-// $Id: MCExtract.h,v 1.7 2007-08-11 20:19:58 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.8 2007-08-13 10:49:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -13,7 +13,7 @@
 // ============================================================================
 #include  "LoKi/Objects.h"
 #include  "LoKi/MCTypes.h"
-#include  "LoKi/MCDEcayVertex.h"
+#include  "LoKi/MCDecayVertex.h"
 // ============================================================================
 /** @file
  *
@@ -32,7 +32,7 @@
 namespace LoKi 
 {
   /** @namespace LoKi::Extract 
-   *  namespace with various "extarction" utilities 
+   *  namespace with various "extraction" utilities 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-11-25 
    */
