@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecSegment.xml,v 1.12 2007-04-23 12:56:12 jonrob Exp $
+  * $Id: RichRecSegment.xml,v 1.13 2007-08-13 12:41:32 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -69,7 +69,10 @@
                 <arg const="TRUE"  inout="BYVALUE" name="enBins"  type="unsigned int"      />
                 <arg const="TRUE"  inout="BYVALUE" name="minEn"   type="LHCb::RichRecSegment::FloatType"  />
                 <arg const="TRUE"  inout="BYVALUE" name="maxEn"   type="LHCb::RichRecSegment::FloatType"  />
-                <code/>
+                <code>
+                  m_richRecPixels.reserve(30);
+                  m_richRecPhotons.reserve(30);
+                </code>
         </constructor>
             
         <method 
@@ -716,6 +719,26 @@
                 name        = "hypothesisRings" 
                 type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecRing*&gt; &gt;"
         />
+
+        <attribute 
+                desc        = "The RichSmartID identifier for the HPD closest to the ray traced impact point on the HPD panel" 
+                name        = "closestHPD" 
+                type        = "LHCb::RichSmartID"
+        />  
+
+        <method 
+                desc         = "Does the segment have the possibility of photons in the given panel" 
+                inline       = "TRUE"
+                type         = "bool"
+                const        = "TRUE"
+                name         = "hasPhotonsIn" >
+                <arg const="TRUE" inout="BYVALUE" name="panel" type="Rich::Side"/>
+                <code>
+                    return ( Rich::Rich1 == trackSegment().rich() ?
+                             ( Rich::top  == panel ? photonsInYPlus() : photonsInYMinus() ) :
+                             ( Rich::left == panel ? photonsInXPlus() : photonsInXMinus() ) );
+                </code>
+        </method>
 
 </class>
 

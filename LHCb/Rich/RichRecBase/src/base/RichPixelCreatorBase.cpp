@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.24 2007-08-09 15:51:12 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.25 2007-08-13 12:41:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -199,12 +199,6 @@ namespace Rich
           }
 
         }
-        //else
-        // {
-        //  std::ostringstream mess;
-        //  mess << "Error get global coordinate for " << id;
-        //  Warning( mess.str() );
-        //}
 
       }
 
@@ -264,12 +258,6 @@ namespace Rich
           }
 
         }
-        //else
-        // {
-        //  std::ostringstream mess;
-        //  mess << "Error get global coordinate for " << cluster;
-        //  Warning( mess.str() );
-        // }
 
       }
 
@@ -375,9 +363,10 @@ namespace Rich
           } // Ingresses
         } // L1 boards
 
+        // sort the final pixels
+        sortPixels();
+
         // find iterators
-        // note : we are relying on the sorting of the input RichSmartIDs here, so we don't
-        // manually sort the RichRecPixels for speed unlike in other tool implementations
         fillIterators();
 
       }
@@ -405,12 +394,16 @@ namespace Rich
         Rich::DetectorType lastrich  = rich;
         Rich::Side        lastpanel  = panel;
         LHCb::RichSmartID lasthpd    = hpd;
+
+        // set first HPD pixel iterator
+        m_hpdIts[hpd].first = iPix;
+
         ++iPix; // skip first pixel
 
         // loop over remaining pixels
         for ( ; iPix != richPixels()->end(); ++iPix )
         {
-          if ( panel != (*iPix)->panel().panel() )
+          if ( panel != (*iPix)->panel().panel() || rich != (*iPix)->detector() )
           {
             panel = (*iPix)->panel().panel();
             m_begins[(*iPix)->detector()][panel] = iPix;
@@ -427,16 +420,16 @@ namespace Rich
           if ( hpd != (*iPix)->hpd().hpdID() )
           {
             hpd                 = (*iPix)->hpd().hpdID();
-            m_hpdBegin[hpd]     = iPix;
-            m_hpdEnd[lasthpd]   = iPix;
+            m_hpdIts[hpd].first = iPix;
+            m_hpdIts[lasthpd].second = iPix;
             lasthpd             = hpd;
           }
         }
 
         // Set final iterators
-        m_richEnd[rich]     = iPix;
-        m_ends[rich][panel] = iPix;
-        m_hpdEnd[hpd]       = iPix;
+        m_richEnd[rich]      = iPix;
+        m_ends[rich][panel]  = iPix;
+        m_hpdIts[hpd].second = iPix;
 
       }
 
@@ -491,46 +484,26 @@ namespace Rich
       return m_pixels;
     }
 
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::begin( const Rich::DetectorType rich ) const
+    IPixelCreator::PixelRange
+    PixelCreatorBase::range( const Rich::DetectorType rich ) const
     {
-      return m_richBegin[rich];
+      return IPixelCreator::PixelRange(m_richBegin[rich],m_richEnd[rich]);
     }
 
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::end( const Rich::DetectorType rich ) const
-    {
-      return m_richEnd[rich];
-    }
-
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::begin( const Rich::DetectorType rich,
+    IPixelCreator::PixelRange
+    PixelCreatorBase::range( const Rich::DetectorType rich,
                              const Rich::Side         panel ) const
     {
-      return m_begins[rich][panel];
+      return IPixelCreator::PixelRange(m_begins[rich][panel],m_ends[rich][panel]);
     }
 
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::end( const Rich::DetectorType rich,
-                           const Rich::Side         panel ) const
+    IPixelCreator::PixelRange
+    PixelCreatorBase::range( const LHCb::RichSmartID hpdID ) const
     {
-      return m_ends[rich][panel];
-    }
-
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::begin( const LHCb::RichSmartID hpdID ) const
-    {
-      HPDItMap::iterator i = m_hpdBegin.find(hpdID);
-      // If not found, default to first pixel
-      return ( i == m_hpdBegin.end() ? richPixels()->begin() : (*i).second );
-    }
-
-    LHCb::RichRecPixels::iterator
-    PixelCreatorBase::end( const LHCb::RichSmartID hpdID ) const
-    {
-      HPDItMap::iterator i = m_hpdEnd.find(hpdID);
-      // If not found, default to first pixel
-      return ( i == m_hpdEnd.end() ? richPixels()->begin() : (*i).second );
+      HPDItMap::iterator i = m_hpdIts.find(hpdID);
+      return ( i == m_hpdIts.end() ?
+               IPixelCreator::PixelRange(richPixels()->begin()) :
+               IPixelCreator::PixelRange(i->second.first,i->second.second) );
     }
 
     void PixelCreatorBase::handle ( const Incident& incident )

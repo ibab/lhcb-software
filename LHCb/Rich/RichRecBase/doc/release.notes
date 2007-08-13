@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-08-13 - Chris Jones
+ - Speed improvements to pixel and photon creators and various event classes
+ - fix ordering problem in pixel creator, that came in when the RichDAQ data
+   structure changed
+
 ! 2007-08-09 - Chris Jones
  - Extend IPhotonReconstruction interface with a method that passes a
    RichRecSegment pointer.

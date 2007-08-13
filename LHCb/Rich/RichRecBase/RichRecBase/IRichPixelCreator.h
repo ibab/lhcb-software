@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.12 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichPixelCreator.h,v 1.13 2007-08-13 12:41:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,9 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+
+// LoKi
+#include "LoKi/Range.h"
 
 // Event
 #include "Event/RichRecPixel.h"
@@ -48,6 +51,13 @@ namespace Rich
 
     public:
 
+      /// Range for RichRecPixels
+      typedef LoKi::Range_<LHCb::RichRecPixels> PixelRange;
+      /// List of RichRecPixel Ranges
+      typedef std::vector<PixelRange>           PixelRanges;
+
+    public:
+
       /** static interface identification
        *  @return unique interface identifier
        */
@@ -70,7 +80,7 @@ namespace Rich
        */
       virtual LHCb::RichRecPixels * richPixels() const = 0;
 
-      /** Access the begin iterator for the pixels in the given RICH detector
+      /** Access the range for the pixels in the given RICH detector
        *
        *  @param rich The Rich detector
        *
@@ -78,19 +88,9 @@ namespace Rich
        *
        *  @attention Only valid if newPixels() has been called for the current event
        */
-      virtual LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich ) const = 0;
+      virtual IPixelCreator::PixelRange range( const Rich::DetectorType rich ) const = 0;
 
-      /** Access the end iterator for the pixels in the given RICH detector
-       *
-       *  @param rich The Rich detector
-       *
-       *  @return The end iterator for the given RICH detector
-       *
-       *  @attention Only valid if newPixels() has been called for the current event
-       */
-      virtual LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich ) const = 0;
-
-      /** Access the begin iterator for the pixels in the given RICH detector
+      /** Access the range for the pixels in the given RICH detector and HPD panel
        *
        *  @param rich  The Rich detector
        *  @param panel The HPD panel
@@ -99,20 +99,8 @@ namespace Rich
        *
        *  @attention Only valid if newPixels() has been called for the current event
        */
-      virtual LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich,
-                                                   const Rich::Side         panel ) const = 0;
-
-      /** Access the end iterator for the pixels in the given RICH detector
-       *
-       *  @param rich  The Rich detector
-       *  @param panel The HPD panel
-       *
-       *  @return The end iterator for the given RICH detector
-       *
-       *  @attention Only valid if newPixels() has been called for the current event
-       */
-      virtual LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
-                                                 const Rich::Side         panel ) const = 0;
+      virtual IPixelCreator::PixelRange range( const Rich::DetectorType rich,
+                                               const Rich::Side         panel ) const = 0;
 
       /** Access the begin iterator for the pixels in the given RICH HPD
        *
@@ -122,17 +110,7 @@ namespace Rich
        *
        *  @attention Only valid if newPixels() has been called for the current event
        */
-      virtual LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const = 0;
-
-      /** Access the end iterator for the pixels in the given RICH HPD
-       *
-       *  @param hpdID The HPD identifier
-       *
-       *  @return The end iterator for the given RICH HPD
-       *
-       *  @attention Only valid if newPixels() has been called for the current event
-       */
-      virtual LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const = 0;
+      virtual IPixelCreator::PixelRange range( const LHCb::RichSmartID hpdID ) const = 0;
 
     };
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.12 2007-08-09 15:51:12 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.13 2007-08-13 12:41:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -246,12 +246,14 @@ namespace Rich
       const Gaudi::XYZPoint  & trackPtn = trSeg.bestPoint();
 
       // Get primary PD panel impact point
-      Gaudi::XYZPoint hitPoint;
+      //Gaudi::XYZPoint hitPoint;
+      LHCb::RichGeomPhoton photon;
+      const Gaudi::XYZPoint & hitPoint = photon.detectionPoint();
       LHCb::RichTraceMode::RayTraceResult result 
         = rayTraceTool()->traceToDetector( trSeg.rich(),
                                            trackPtn,
                                            trackDir,
-                                           hitPoint,
+                                           photon,
                                            m_traceModeRad[trSeg.radiator()],
                                            Rich::top, 
                                            trSeg.avPhotonEnergy() );
@@ -264,6 +266,9 @@ namespace Rich
         // set global hit point
         newSegment->setPdPanelHitPoint( hitPoint );
 
+        // set closest HPD
+        newSegment->setClosestHPD(photon.smartID().hpdID());
+
         // Get PD panel hit point in local coordinates
         newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
 
@@ -275,7 +280,7 @@ namespace Rich
         result = rayTraceTool()->traceToDetector( trSeg.rich(),
                                                   trackPtn,
                                                   trackDir,
-                                                  hitPoint,
+                                                  photon,
                                                   tmpTraceMode,
                                                   Rich::left,
                                                   trSeg.avPhotonEnergy() );
@@ -291,7 +296,7 @@ namespace Rich
         result = rayTraceTool()->traceToDetector( trSeg.rich(),
                                                   trackPtn,
                                                   trackDir,
-                                                  hitPoint,
+                                                  photon,
                                                   tmpTraceMode,
                                                   Rich::right,
                                                   trSeg.avPhotonEnergy() );

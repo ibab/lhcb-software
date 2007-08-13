@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.10 2007-08-09 15:51:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.11 2007-08-13 12:41:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECBASE_RICHPHOTONCREATORBASE_H
 #define RICHRECBASE_RICHPHOTONCREATORBASE_H 1
+
+// STD
+#include <set>
 
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -33,6 +36,9 @@
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichHashMap.h"
+
+// RichDet
+#include "RichDet/DeRichHPDPanel.h"
 
 namespace Rich
 {
@@ -257,6 +263,9 @@ namespace Rich
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
 
+      /// Photon detector panels
+      const DeRichHPDPanel* m_hpdPanels[Rich::NRiches][Rich::NHPDPanelsPerRICH];
+
       /// Number of events processed tally
       unsigned int m_Nevts;
 
@@ -293,6 +302,9 @@ namespace Rich
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
+
+      /// Flag to turn on use of nearest-HPD hit selection
+      //std::vector<bool> m_useNearHPD;
 
     private: // methods
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.19 2007-08-09 15:51:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.20 2007-08-13 12:41:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -44,21 +44,26 @@ namespace Rich
         m_photPredName          ( "RichPhotonPredictor" ),
         m_photCount             ( Rich::NRadiatorTypes, 0 ),
         m_photCountLast         ( Rich::NRadiatorTypes, 0 )
+        //m_useNearHPD            ( Rich::NRadiatorTypes )
     {
 
       // Define the interface
       declareInterface<IPhotonCreator>(this);
+
+      if      ( context() == "Offline" )
+      {
+        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::Offline;
+      }
+      else if ( context() == "HLT" )
+      {
+        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::HLT;
+      }
 
       // job options
 
       declareProperty( "DoBookKeeping", m_bookKeep );
 
       declareProperty( "PhotonPredictor", m_photPredName );
-
-      //m_CKTol.push_back( 0.005 );   // aerogel
-      //m_CKTol.push_back( 0.004 );   // rich1Gas
-      //m_CKTol.push_back( 0.003 );   // rich2Gas
-      //declareProperty( "CherenkovThetaTolerence", m_CKTol );
 
       m_minCKtheta.push_back( 0 );  // aerogel
       m_minCKtheta.push_back( 0 );  // rich1Gas
@@ -80,14 +85,10 @@ namespace Rich
       m_nSigma.push_back( 12  ); // rich2Gas
       declareProperty( "NSigma", m_nSigma );
 
-      if      ( context() == "Offline" )
-      {
-        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::Offline;
-      }
-      else if ( context() == "HLT" )
-      {
-        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::HLT;
-      }
+      //m_useNearHPD[Rich::Aerogel]  = false;
+      //m_useNearHPD[Rich::Rich1Gas] = false;
+      //m_useNearHPD[Rich::Rich2Gas] = false;
+      //declareProperty( "UseNearestHPD", m_useNearHPD );
 
     }
 
@@ -109,6 +110,12 @@ namespace Rich
       acquireTool( "RichCherenkovResolution", m_ckRes );
       acquireTool( "RichParticleProperties",  m_richPartProp );
 
+      // Get the HPD panels
+      m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(DeRichLocations::Rich1TopPanel);
+      m_hpdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichHPDPanel>(DeRichLocations::Rich1BottomPanel);
+      m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(DeRichLocations::Rich2LeftPanel);
+      m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(DeRichLocations::Rich2RightPanel);
+
       // Setup incident services
       incSvc()->addListener( this, IncidentType::BeginEvent );
       incSvc()->addListener( this, IncidentType::EndEvent   );
@@ -120,17 +127,16 @@ namespace Rich
         trad.resize(8,' ');
         info() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
                << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
-               << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma " 
+               << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
                << endreq;
-        //<< " rad : Tol. " << boost::format("%5.3f") % m_CKTol[rad] << " mrad" << endreq;
       }
-      
+
       m_pidTypes = m_richPartProp->particleTypes();
       info() << "Particle types considered = " << m_pidTypes << endreq;
-      
+
       return sc;
     }
-    
+
     StatusCode PhotonCreatorBase::finalize()
     {
       // print stats
@@ -231,26 +237,76 @@ namespace Rich
             {
               LHCb::RichRecSegment * segment = *iSegment;
 
-              if ( msgLevel(MSG::VERBOSE) )
-              {
-                verbose() << " -> Trying segment " << segment->key() << " "
-                          << segment->trackSegment().radiator() << endreq;
-              }
+              //if ( msgLevel(MSG::VERBOSE) )
+              //{
+              // verbose() << " -> Trying segment " << segment->key() << " "
+              //           << segment->trackSegment().radiator() << endreq;
+              //}
 
               if ( !segment->allPhotonsDone() )
               {
-                // Iterate over pixels in same RICH as this segment
-                const Rich::DetectorType rich = segment->trackSegment().rich();
-                LHCb::RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
-                LHCb::RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
-                for ( ; iPixel != endPix; ++iPixel )
+
+                // useNearHPD option not yet available - Under development
+                /*
+                if ( m_useNearHPD[segment->trackSegment().radiator()] )
                 {
-                  if ( msgLevel(MSG::VERBOSE) )
+                  // iterator over HPDs pixels near to the one associated to this segment
+
+                  // loop over active mass hypos
+                  typedef std::set<LHCb::RichSmartID> SelectedHPDs;
+                  SelectedHPDs hpdIDs;
+                  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+                        hypo != m_pidTypes.end(); ++hypo )
                   {
-                    verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
+                    const LHCb::RichRecSegment::PDGeomEffs & hypoMap 
+                      = segment->geomEfficiencyPerPD( *hypo );
+                    for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
+                          iPD != hypoMap.end(); ++iPD )
+                    {
+                      hpdIDs.insert(LHCb::RichSmartID(iPD->first));
+                    }
                   }
-                  reconstructPhoton( segment, *iPixel );
-                } // pixel loop
+                  
+                  // create photons for selected HPDs
+                  for ( SelectedHPDs::const_iterator iHPD = hpdIDs.begin();
+                        iHPD != hpdIDs.end(); ++iHPD )
+                  {
+                    IPixelCreator::PixelRange range = pixelCreator()->range(*iHPD);
+                    for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+                          iPixel != range.end(); ++iPixel )
+                    { 
+                      reconstructPhoton( segment, *iPixel );
+                    }
+                  }
+
+                }
+                else
+                {
+                */
+                  // search all hits in associated RICH/panel
+
+                  // Which Rich
+                  const Rich::DetectorType rich = segment->trackSegment().rich();
+
+                  // get appropriate pixel range
+                  //IPixelCreator::PixelRange range = pixelCreator()->range(rich);
+                  const bool has1 = segment->hasPhotonsIn(Rich::top);
+                  const bool has2 = segment->hasPhotonsIn(Rich::bottom);
+                  IPixelCreator::PixelRange range = ( has1 && has2 ?
+                                                      pixelCreator()->range(rich) :
+                                                      has1 ? pixelCreator()->range(rich,Rich::top) :
+                                                      pixelCreator()->range(rich,Rich::bottom) );
+                  for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+                        iPixel != range.end(); ++iPixel )
+                  {
+                    //if ( msgLevel(MSG::VERBOSE) )
+                    //{
+                    //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
+                    //}
+                    reconstructPhoton( segment, *iPixel );
+                  } // pixel loop
+
+                  //}
 
                 segment->setAllPhotonsDone(true);
               }
@@ -489,46 +545,19 @@ namespace Rich
       bool ok = false;
 
       // Just check overall absolute min - max range
-      if ( !( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) ) )
-        //{
-        //if ( msgLevel(MSG::VERBOSE) )
-        //{
-        //  verbose() << " -> Photon CK theta " << ckTheta << " outside absolute range "
-        //            << absMinCKTheta(segment) << "->" << absMaxCKTheta(segment) << endreq;
-        //}
-        //}
-        //else
+      if ( ckTheta > absMinCKTheta(segment) && ckTheta < absMaxCKTheta(segment) )
       {
-        // Do detailed checks
-
         // Finer grained check, to be within tolerence of any mass hypothesis
         for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
               hypo != m_pidTypes.end(); ++hypo )
         {
           const double tmpT = m_ckAngle->avgCherenkovTheta( segment, *hypo );
           ok = ( fabs(tmpT-ckTheta) < ckSearchRange(segment,*hypo) );
-          //if ( msgLevel(MSG::VERBOSE) )
-          //{
-          //  verbose() << " -> " << *hypo << " fabs(delta_theta) = " << fabs(tmpT-ckTheta)
-          //            << " CK tolerance " << ckSearchRange(segment,id) << " status = " << ok
-          //            << endreq;
-          //}
           if ( ok ) break;
         }
 
       }
 
-      //if ( msgLevel(MSG::VERBOSE) )
-      //{
-      //  if ( ok )
-      // {
-      //    verbose() << "  -> Photon PASSED CK theta angle checks" << endreq;
-      //  }
-      //  else
-      //  {
-      //    verbose() << "  -> Photon FAILED CK theta angle checks" << endreq;
-      //  }
-      //}
       return ok;
     }
 
@@ -537,21 +566,15 @@ namespace Rich
       // check photon has significant probability to be signal for any
       // hypothesis. If not then reject
       bool keepPhoton = false;
-        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-              hypo != m_pidTypes.end(); ++hypo )
-        {
+      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+            hypo != m_pidTypes.end(); ++hypo )
+      {
         const double predPixSig = m_photonSignal->predictedPixelSignal( photon, *hypo );
         const double minPixSig  = m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ];
         if ( predPixSig > minPixSig )
         {
           keepPhoton = true;
         }
-        //if ( msgLevel(MSG::VERBOSE) )
-        //{
-        //  verbose() << " -> " << *hypo << " predicted pixel signal = " << predPixSig
-        //            << " min acepted = " << minPixSig << " status = " << keepPhoton
-        //            << endreq;
-        //}
         if ( keepPhoton ) break;
       }
 
@@ -578,5 +601,5 @@ namespace Rich
       }
     }
 
-  }
-} // RICH
+  } // Rec namespace
+} // RICH namespace
