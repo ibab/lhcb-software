@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.4 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: Services.cpp,v 1.5 2007-08-14 12:35:32 ibelyaev Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -104,7 +104,7 @@ LoKi::ILoKiSvc* LoKi::Services::setLoKi( LoKi::ILoKiSvc* svc )
   // add reference to the new algo 
   if ( 0 != svc ) { svc -> addRef() ; }
   // release all  previously allocated  services  
-  releaseAll() ;
+  releaseAll().ignore() ;
   // set new algorithm
   m_lokiSvc = svc ;
   // get particle properties service from the algorithm 

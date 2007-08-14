@@ -1,4 +1,4 @@
-// $Id: Reporter.cpp,v 1.8 2007-07-23 17:07:44 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.9 2007-08-14 12:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -101,7 +101,7 @@ namespace LoKi
       if ( sc.isFailure() ) { return sc ; }
       //
       LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
-      if ( 0 == rep.reporter() ) { rep.setReporter ( this ); }
+      if ( 0 == rep.reporter() ) { rep.setReporter ( this ).ignore() ; }
       // locate LoKi service 
       return StatusCode::SUCCESS ;
     } ;

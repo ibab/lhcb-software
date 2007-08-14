@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.10 2007-07-25 15:14:13 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.11 2007-08-14 12:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -190,11 +190,11 @@ public:
     //
     { // static services 
       LoKi::Services& svc = LoKi::Services::instance() ;
-      svc.releaseAll() ;
+      svc.releaseAll().ignore()  ;
     }
     //
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
-    { m_toolSvc -> releaseTool ( m_reporter ) ; }
+    { m_toolSvc -> releaseTool ( m_reporter ).ignore() ; }
     //
     m_reporter = 0 ;
     //
@@ -203,7 +203,7 @@ public:
     if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; }    
     //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
-    if ( 0 != rep.reporter() ) { rep.setReporter( 0 ) ; }
+    if ( 0 != rep.reporter() ) { rep.setReporter( 0 ).ignore() ; }
     //
     { // goodbye message 
       MsgStream log ( msgSvc() , name() ) ;
