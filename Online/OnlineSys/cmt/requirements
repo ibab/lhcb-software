@@ -37,7 +37,7 @@ use Writer            v1r2     Online
 #=======================================================
 # Rich Online packages
 #=======================================================
-use RichOnlineMonitors     v1r0     Rich
-use RichMonitoringTools    v1r0     Rich
-use RichMonitoringSys      v1r0     Rich
+use RichOnlineMonitors     v1r1     Rich
+use RichMonitoringTools    v1r1     Rich
+use RichMonitoringSys      v1r1     Rich
 
