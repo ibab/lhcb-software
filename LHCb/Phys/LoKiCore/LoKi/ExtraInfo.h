@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.3 2007-08-14 20:32:59 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.4 2007-08-14 20:50:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -183,6 +183,12 @@ namespace LoKi
         s <<  this->objType() << "(" << m_fun << "," << m_index << "," ;
         return s <<  ( m_update ? "True" : "False"  ) << ")" ;
       }
+      /** unique function ID (hash); see LoKi::genericID 
+       *  @attention the key is used and funtion-ID
+       *  @see LoKi::AuxFunBase
+       *  @return the function-ID
+       */
+      virtual std::size_t         id     () const { return m_index ; }
     public:
       /// get the index 
       int                         index  () const { return m_index  ; }
