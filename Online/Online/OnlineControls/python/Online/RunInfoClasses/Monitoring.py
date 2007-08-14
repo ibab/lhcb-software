@@ -24,8 +24,9 @@ def printTasks(msg,tasks):
   for i in tasks:
     node,name,short,type,vals = i.split('/')
     v = eval(vals)
-    fmt = ' %-32s %-16s %%s'%(name,msg)
-    m0  = ' %-32s %-16s %%s'%('','')
+    fm = ' %-35s %-16s %%s'
+    fmt = fm%(name,msg)
+    m0  = fm%('','')
     # print '----',i
     if len(v)>0:
       for j in v:
@@ -241,13 +242,13 @@ class Monitoring:
     relayTargets = {}
     for i,nodes in relayReceiverTypes.items():
       relayTargets[i] = []
-      for j in nodes: relayTargets[i].append((j[0],j[1]))
+      for j in nodes: relayTargets[i].append((j[0]+'-d1',j[1]))
 
     # Define the sources of the receiver tasks for the senders on the storage layer
     storageSources = {}
     for i in storageSenderTypes.keys():
       storageSources[i] = []
-      for j in storageSenderTypes[i]: storageSources[i].append((j[0],j[1]))
+      for j in storageSenderTypes[i]: storageSources[i].append((j[0]+'-d1',j[1]))
 
     # Update task information for the senders on the storage layer
     for i in storageSenders: i.append(relayTargets[i[2]])
@@ -270,16 +271,15 @@ class Monitoring:
     monSources = {}
     print 'Relay Nodes',relayNodes 
     for i,nodes in monStreamsByType.items():
-      rcv = []
+      rcv = 0
       print 'MonNodes:',nodes 
       for k in nodes:
         if monStreamsByNode.has_key(k) and monStreamsByNode[k].issuperset([i]):
-          rcv.append((monTargets[k][0],monTargets[k][1]))
           if not monSources.has_key(k): monSources[k]=[]
-        if len(rcv)>0:
           for j in relayNodes:
-            task = [j,self.name+'_'+j+'_SND'+i,'SND'+i,'SND'+i,rcv]
-            monSources[k].append((task[0],task[1]))
+            nick = 'SND'+i+'_'+k
+            task = [j,self.name+'_'+j+'_'+nick,nick,'SND'+i,[(monTargets[k][0]+'-d1',monTargets[k][1])]]
+            monSources[k].append((task[0]+'-d1',task[1]))
             relaySenders.append(task)
 
     # Update task information for the receivers on the monitoring farm
@@ -306,7 +306,7 @@ class Monitoring:
     # save information to datapoints
     wr = self.manager.devWriter()
     self.addDevices(wr)
-    res = wr.execute(0,1)
+    res = wr.execute()
     showPartition(self,part)
     return res
   

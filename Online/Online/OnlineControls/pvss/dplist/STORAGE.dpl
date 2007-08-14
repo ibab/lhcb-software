@@ -46,7 +46,7 @@ fwOT_FSM_Class0.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( 
 |when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
 |when ( $ANY$FwCHILDREN in_state RUNNING )  move_to RUNNING
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
-|", "", ""	0x101	09.08.2007 20:42:19.074
+|", "", ""	0x101	10.08.2007 09:04:23.324
 fwOT_FSM_Class0.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -139,7 +139,7 @@ endif
 if ( $ALL$FwCHILDREN in_state RUNNING )  then
    move_to RUNNING  
 endif
-", "0"	0x101	09.08.2007 20:42:19.079
+", "0"	0x101	10.08.2007 09:04:23.322
 fwOT_FSM_Class0.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.082
 fwOT_FSM_Class1.panel	_FwFsmObjectType	"FSM_Class1.pnl"	0x101	09.08.2007 20:42:19.086
 fwOT_FSM_Class1.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -171,7 +171,7 @@ fwOT_FSM_Class1.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( 
 |when ( $ANY$FwCHILDREN in_state UNKNOWN )  move_to UNKNOWN
 |when ( $ANY$FwCHILDREN in_state RUNNING )  move_to RUNNING
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
-|", "", ""	0x101	09.08.2007 20:42:19.089
+|", "", ""	0x101	10.08.2007 09:04:23.765
 fwOT_FSM_Class1.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -264,7 +264,7 @@ endif
 if ( $ALL$FwCHILDREN in_state RUNNING )  then
    move_to RUNNING  
 endif
-", "0"	0x101	09.08.2007 20:42:19.094
+", "0"	0x101	10.08.2007 09:04:23.764
 fwOT_FSM_Class1.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.097
 fwOT_FSM_Control.panel	_FwFsmObjectType	"FSM_Control.pnl"	0x101	09.08.2007 20:42:19.100
 fwOT_FSM_Control.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -290,7 +290,7 @@ fwOT_FSM_Control.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
 |when ( $ALL$FwCHILDREN in_state READY )  move_to READY
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
-|", "", ""	0x101	09.08.2007 20:42:19.103
+|", "", ""	0x101	10.08.2007 09:04:24.100
 fwOT_FSM_Control.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 	move_to NOT_READY
@@ -353,7 +353,7 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
 	move_to UNKNOWN
 endif
-", "0"	0x101	09.08.2007 20:42:19.108
+", "0"	0x101	10.08.2007 09:04:24.099
 fwOT_FSM_Control.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.111
 fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	09.08.2007 20:42:19.114
 fwOT_FSM_DimTask.components	_FwFsmObjectType	"string State
@@ -554,9 +554,9 @@ FSM_DimTask_initialize(string domain, string device)
   }
   DebugN(device+\"> Received unknown command:\"+command);
 } 
-"	0x101	09.08.2007 20:42:19.118
-fwOT_FSM_DimTask.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "", "", "", "NOT_READY", "FwStateAttention2", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateOKNotPhysics", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.121
-fwOT_FSM_DimTask.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "", "0", "UNKNOWN/KILL", "", "1", "", "0", "UNKNOWN/UNLOAD", "", "1", "", "0", "NOT_READY/CONFIGURE", "", "1", "", "0", "NOT_READY/UNLOAD", "", "1", "", "0", "NOT_READY/KILL", "", "1", "", "0", "READY/START", "", "1", "", "0", "READY/RESET", "", "1", "", "0", "READY/KILL", "", "1", "", "0", "STOPPED/RESET", "", "1", "", "0", "STOPPED/KILL", "", "1", "", "0", "STOPPED/START", "", "1", "", "0", "RUNNING/STOP", "", "1", "", "0", "RUNNING/KILL", "", "1", "", "0", "ERROR/UNLOAD", "", "1", "", "0", "ERROR/KILL", "", "1", "", "0", "ERROR/RESET", "", "1", "", "0", "ERROR/START", "", "1", "", "0"	0x101	09.08.2007 20:42:19.125
+"	0x101	10.08.2007 09:04:16.623
+fwOT_FSM_DimTask.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "", "", "", "NOT_READY", "FwStateAttention2", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateOKNotPhysics", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	10.08.2007 09:04:16.618
+fwOT_FSM_DimTask.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "", "0", "UNKNOWN/KILL", "", "1", "", "0", "UNKNOWN/UNLOAD", "", "1", "", "0", "NOT_READY/CONFIGURE", "", "1", "", "0", "NOT_READY/UNLOAD", "", "1", "", "0", "NOT_READY/KILL", "", "1", "", "0", "READY/START", "", "1", "", "0", "READY/RESET", "", "1", "", "0", "READY/KILL", "", "1", "", "0", "STOPPED/RESET", "", "1", "", "0", "STOPPED/KILL", "", "1", "", "0", "STOPPED/START", "", "1", "", "0", "RUNNING/STOP", "", "1", "", "0", "RUNNING/KILL", "", "1", "", "0", "ERROR/UNLOAD", "", "1", "", "0", "ERROR/KILL", "", "1", "", "0", "ERROR/RESET", "", "1", "", "0", "ERROR/START", "", "1", "", "0"	0x101	10.08.2007 09:04:16.617
 fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.129
 fwOT_FSM_Node.panel	_FwFsmObjectType	"FSM_Node.pnl"	0x101	09.08.2007 20:42:19.132
 fwOT_FSM_Node.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -585,7 +585,7 @@ fwOT_FSM_Node.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $A
 ( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
 |when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
 ( $ALL$FSM_Class1 in_state READY ) )  move_to READY
-|", "", ""	0x101	09.08.2007 20:42:19.135
+|", "", ""	0x101	10.08.2007 09:04:24.437
 fwOT_FSM_Node.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -684,7 +684,7 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
    move_to UNKNOWN
 endif
-", "0"	0x101	09.08.2007 20:42:19.139
+", "0"	0x101	10.08.2007 09:04:24.435
 fwOT_FSM_Node.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.143
 fwOT_FSM_RecvNode.panel	_FwFsmObjectType	"FSM_RecvNode.pnl"	0x101	09.08.2007 20:42:19.146
 fwOT_FSM_RecvNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -715,7 +715,7 @@ fwOT_FSM_RecvNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when 
 ( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
 |when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
 ( $ALL$FSM_Class1 in_state READY ) )  move_to READY
-|", "", ""	0x101	09.08.2007 20:42:19.149
+|", "", ""	0x101	10.08.2007 09:04:24.880
 fwOT_FSM_RecvNode.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -877,7 +877,7 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
    move_to UNKNOWN
 endif
-", "0"	0x101	09.08.2007 20:42:19.154
+", "0"	0x101	10.08.2007 09:04:24.878
 fwOT_FSM_RecvNode.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.157
 fwOT_FSM_Slice.panel	_FwFsmObjectType	"FSM_Slice.pnl"	0x101	09.08.2007 20:42:19.160
 fwOT_FSM_Slice.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -905,7 +905,7 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $
 ( $ALL$FSM_RecvNode in_state NOT_READY ) )  move_to READY
 |when ( ( $ALL$FSM_StrmNode in_state RUNNING ) and
 ( $ALL$FSM_RecvNode in_state READY ) )  move_to READY
-|", "", ""	0x101	09.08.2007 20:42:19.163
+|", "", ""	0x101	10.08.2007 09:04:25.259
 fwOT_FSM_Slice.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -1042,7 +1042,7 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
    move_to UNKNOWN
 endif
-", "0"	0x101	09.08.2007 20:42:19.168
+", "0"	0x101	10.08.2007 09:04:25.257
 fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.171
 fwOT_FSM_StrmNode.panel	_FwFsmObjectType	"FSM_StrmNode.pnl"	0x101	09.08.2007 20:42:19.174
 fwOT_FSM_StrmNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
@@ -1073,7 +1073,7 @@ fwOT_FSM_StrmNode.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention1", "when 
 ( $ALL$FSM_Class1 in_state NOT_READY ) )  move_to READY
 |when ( ( $ALL$FSM_Class0 in_state RUNNING ) and
 ( $ALL$FSM_Class1 in_state READY ) )  move_to READY
-|", "", ""	0x101	09.08.2007 20:42:19.177
+|", "", ""	0x101	10.08.2007 09:04:25.682
 fwOT_FSM_StrmNode.actions	_FwFsmObjectType	"UNKNOWN/LOAD", "", "1", "do LOAD $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
@@ -1235,7 +1235,7 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state UNKNOWN )  then
    move_to UNKNOWN
 endif
-", "0"	0x101	09.08.2007 20:42:19.182
+", "0"	0x101	10.08.2007 09:04:25.680
 fwOT_FSM_StrmNode.parameters	_FwFsmObjectType		0x101	09.08.2007 20:42:19.185
 fwOT_JobOptionsControl.panel	_FwFsmObjectType	"JobOptions/JobOptions.pnl"	0x101	09.08.2007 20:42:19.188
 fwOT_JobOptionsControl.components	_FwFsmObjectType	"string State
@@ -1273,8 +1273,8 @@ fwOT_JobOptionsControl.components	_FwFsmObjectType	"string State
   dpSet(device+\".Command\",command+\"/\"+device+\"/\"+partName+\"/\"+partID);
 }
 
-"	0x101	09.08.2007 20:42:19.192
-fwOT_JobOptionsControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.196
+"	0x101	10.08.2007 09:04:17.866
+fwOT_JobOptionsControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	10.08.2007 09:04:17.862
 fwOT_JobOptionsControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 ", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
@@ -1283,12 +1283,12 @@ string PART_NAME = \"LHCb\"
 string PART_NAME = \"LHCb\"
 ", "1", "", "0", "ERROR/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
-", "1", "", "0"	0x101	09.08.2007 20:42:19.199
+", "1", "", "0"	0x101	10.08.2007 09:04:17.861
 fwOT_JobOptionsControl.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\""	0x101	09.08.2007 20:42:19.203
 fwOT_StorageCluster.panel	_FwFsmObjectType	"StorageCluster.pnl"	0x101	09.08.2007 20:42:19.206
 fwOT_StorageCluster.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to READY
-|", "", ""	0x101	09.08.2007 20:42:19.209
+|", "", ""	0x101	10.08.2007 09:04:31.128
 fwOT_StorageCluster.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 ", "1", "do ALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME)  $ALL$StreamControl
@@ -1317,7 +1317,7 @@ if ( $ANY$FwCHILDREN not_in_state READY )  then
   move_to ERROR
 endif
 move_to READY
-", "0"	0x101	09.08.2007 20:42:19.213
+", "0"	0x101	10.08.2007 09:04:31.128
 fwOT_StorageCluster.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\""	0x101	09.08.2007 20:42:19.217
 fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl.pnl"	0x101	09.08.2007 20:42:19.221
 fwOT_StreamControl.components	_FwFsmObjectType	"string State
@@ -1401,13 +1401,13 @@ fwOT_StreamControl.components	_FwFsmObjectType	"string State
   dpSet(device+\".Command\",command+\"/\"+device+\"/\"+partName+\"/\"+partID);
 }
 
-"	0x101	09.08.2007 20:42:19.226
-fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	09.08.2007 20:42:19.229
+"	0x101	10.08.2007 09:04:20.661
+fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	10.08.2007 09:04:20.656
 fwOT_StreamControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 ", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 ", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
-", "1", "", "0"	0x101	09.08.2007 20:42:19.233
+", "1", "", "0"	0x101	10.08.2007 09:04:20.656
 fwOT_StreamControl.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\"", "string currentSlice = \"\""	0x101	09.08.2007 20:42:19.237

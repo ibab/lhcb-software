@@ -66,6 +66,8 @@ class TaskMap(dict):
 
 tasks = TaskMap()
 moni_streams = ['Stream1', 'Stream2', 'Stream3']
+moni_types   = ['MonBBinc','MonVELO','MonECAL','MonHCAL','MonHCAL','MonRICH','MonTT','MonIT','MonOT','MonIT','MonMUON']
+
 lhcb_streams = ['Higgs',   'B2JPsi',  'B2Dstar', 'B2Charm', 'BBinc']
 sd_streams   = ['Events']
 
@@ -122,6 +124,10 @@ def installMonTasks():
   tasks.add(Task('RCVMon',opts,1,0))
   opts = '#include "$ONLINETASKS/options/MBMMon.opts"'
   tasks.add(Task('MBMMon',opts,1,0))
+  streams = moni_types
+  for s in streams:
+    opts = '#include "$ONLINETASKS/options/'+s+'.opts"'
+    tasks.add(Task(s,opts,1,0))
 
 # =============================================================================
 def installPartitions():
@@ -190,7 +196,15 @@ def installMonPhysics():
     task_set.append(tasks['SND'+s])
   rt = RunType('MONRELAY_PHYSICS',task_set)
   
-  task_set = [tasks['ErrSrv'],tasks['MBMMon'],tasks['RCVMon']]
+  task_set = [tasks['ErrSrv'],
+              tasks['MBMMon'],
+              tasks['RCVMon'],
+              tasks['MonBBinc'],
+              tasks['MonVELO'],
+              tasks['MonECAL'],
+              tasks['MonHCAL'],
+              tasks['MonRICH'],
+              tasks['MonMUON']]
   rt = RunType('MONI_PHYSICS',task_set)
 
 # =============================================================================

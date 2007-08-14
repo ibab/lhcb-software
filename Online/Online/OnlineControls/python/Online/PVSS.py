@@ -153,7 +153,8 @@ class APIManager:
       fd_stdout = os.open(name_stdout,os.O_WRONLY)
       fd_stderr = os.open(name_stderr,os.O_WRONLY)
       os.dup2(fd_stdout,sys.stdout.fileno())
-      os.dup2(sys.stderr.fileno(),fd_stderr)
+      #os.dup2(sys.stderr.fileno(),fd_stderr)
+      os.dup2(fd_stderr,sys.stderr.fileno())
     elif platform.system()=='Linux':
       print 'Online.PVSS> Running in batch mode....'
     return result

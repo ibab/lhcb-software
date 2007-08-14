@@ -10,7 +10,7 @@ fi;
 export PVSS_PROJECT_NAME=$1
 shift 1;
 . ../cmt/setup.sh
-export 
+#
 export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
 export PVSS_II=${PVSS_PROJECT_BASE}/config/config
 cp --recursive --force --symbolic-link ${ONLINECONTROLSROOT}/pvss/* ${PVSS_PROJECT_BASE}

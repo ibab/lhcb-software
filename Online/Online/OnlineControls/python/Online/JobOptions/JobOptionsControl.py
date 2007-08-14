@@ -82,11 +82,11 @@ class OptionsWriter(CommandListener):
   # ===========================================================================
   def writeOptionsFile(self, partition, name, opts):
     import os
-    log('###   Writing options for task: '+self.optionsDir+'/'+name,timestamp=1)
     if self.optionsDir is not None:
       try:
         fd = self.optionsDir+'/'+partition
         fn = fd+'/'+name+'.opts'
+        log('###   Writing options for task: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
@@ -97,7 +97,9 @@ class OptionsWriter(CommandListener):
       except Exception,X:
         error('Failed to write options for task:'+name+' '+str(X),timestamp=1,type=PVSS.FILEOPEN)
         return None
-    return self
+      return self
+    error('Failed to write options for task:'+name+' [No Directory]',timestamp=1,type=PVSS.FILEOPEN)
+    return None
   
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
@@ -335,9 +337,8 @@ class MonitoringOptionsWriter(OptionsWriter):
       it = i.split('/')
       items = it[:-1]
       eval_item = eval(it[-1])
-      # print '++++++++++++++++++++++>',task.name,items
+      # print '++++++++++++++++++++++>',task.name,items[3],items
       if task.name == items[3]:
-        done = 1
         options = opts.value
         options = options.replace('@HostName@',items[0])
         options = options.replace('@ProcessName@',items[1])
@@ -387,33 +388,32 @@ class MonitoringOptionsWriter(OptionsWriter):
         options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
         if self.writeOptionsFile(run.name, items[1], options) is None:
           return None
-    if done: return self
-    return None
+        done = done + 1
+    return done
+
   def printTasks(self,data):
     for i in data:
       print 'Task:',i
   # ===========================================================================
   def writeOptions(self, opts, info, activity, task):
+    done = 0
     if self.hostType == 'MONRELAY':
-      if self.checkTasks(opts,info,activity,task,info.senders.data,5,4):
-        return self
-      if self.checkTasks(opts,info,activity,task,info.relayTasks.data,5,4):
-        return self
-      if self.checkTasks(opts,info,activity,task,info.relayInfraTasks.data,-1):
-        return self
+      done = done + self.checkTasks(opts,info,activity,task,info.senders.data,5,4)
+      done = done + self.checkTasks(opts,info,activity,task,info.relayTasks.data,5,4)
+      done = done + self.checkTasks(opts,info,activity,task,info.relayInfraTasks.data,-1)
+      if done > 0: return self
       self.printTasks(info.senders.data)
       self.printTasks(info.relayTasks.data)
       self.printTasks(info.relayInfraTasks.data)
     elif self.hostType == 'MONI':
-      if self.checkTasks(opts,info,activity,task,info.monReceivers.data,3):
-        return self
-      if self.checkTasks(opts,info,activity,task,info.monTasks.data,2,3):
-        return self
-      if self.checkTasks(opts,info,activity,task,info.monInfraTasks.data,3):
-        return self
+      done = done + self.checkTasks(opts,info,activity,task,info.monReceivers.data,3)
+      done = done + self.checkTasks(opts,info,activity,task,info.monTasks.data,2,3)
+      done = done + self.checkTasks(opts,info,activity,task,info.monInfraTasks.data,3)
+      if done > 0: return self
       self.printTasks(info.monReceivers.data)
       self.printTasks(info.monTasks.data)
       self.printTasks(info.monInfraTasks.data)
+      return self
     error('### UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
