@@ -1,0 +1,163 @@
+-----------------------------------------------------------------------------
+! Package     : Tr/TsaAlgorithms
+! Responsible : M Needham
+! Purpose     : Tsa algorithms
+!----------------------------------------------------------------------------
+
+! 2007-07-19 - Chris Jones
+ - First version to given decent performance in ATeam world
+
+! 2007-07-10 - Chris Jones
+ - First version which actually initialises correctly...
+
+! 2007-07-09 - Chris Jones
+ - Adapt to changes in extension hit class
+
+! 2007-07-06 - Christopher Rob JONES
+ - Ateam updates begin ...
+
+! 2007-05-31 - Marco Cattaneo
+ - Follow change in ITrackManipulator interface
+
+!======================= TsaAlgorithms v2r3 2007-05-21 ======================
+! 2007-05-21 - Marco Cattaneo
+ - Fix a few more doxygen warnings
+
+! 2007-03-27 - Johannes Albrecht
+ - TsaCollector: adapt x-search window
+ - TsaXSearchBase: include job option for nSigma of tx, fix small sign bug	 
+ - TsaOTClusterCreator: put OTTimeLocation as job option 
+
+!======================= TsaAlgorithms v2r2 2007-03-21 ======================
+! 2007-03-21 - Marco Cattaneo
+ - Fix doxygen warnings
+
+! 2007-03-20 M. Needham
+ - Make sure StatusCodes are tested
+ - Remove TsaAlgorithms_load.cpp
+ - Use findModule method from detector element 
+    * in (TsaOTClusterCreator,OTExpectedHits tool)
+
+!======================= TsaAlgorithms v2r1 2007-02-02 ======================
+! 2007-02-02 - Marco Cattaneo
+ - Remove references to LHCbDefinitions includes
+
+! 2007-02-02 - Jan Amoraal
+ - Minor update due to changes in OTDet
+
+!======================= TsaAlgorithms v2r0 2006-01-17 ======================
+! 2007-01-17 - Marco Cattaneo
+ - Fix some untested StatusCodes
+
+! 2007-01-16 M. Needham
+ - Clean up of TsaStubExtender
+ - Retuning of stub finding
+ - Retuning of IT xSearch
+ - Retuning TsaOTClusterCreator/TsaSTClusterCreator 
+ - Calculate Likelihood for all types of tracks
+
+! 2006-12-19 - Marco Cattaneo
+ - Add a missing DECLARE_TOOL_FACTORY
+
+! 2006-12-15 M Needham
+ - Better stub extension (less ghosts)
+ - Relax hot event rejection
+
+! 2006-12-04
+ - A major release !
+    * Faster, more flexible, more efficient, less ghosts, 
+      less outliers, .....
+    * Move Rogers data classes (SeedXXX) to TsaKernel
+    * Add cleaning functionality to ST tool (not turned on)
+    * Support the arrow idea of Callot (small gain in time)
+        --> jobOptions allow to go back to the old way
+    * Split top algorithm into a set of tools corresponding to 
+      steps in the algorithm (X search, stereo, selection, likelihood, ...)
+    * Integrate bug fixes and comments reported by Herve
+    * Change data service ---> allow initialization 
+      from a container passed to it directly
+    * Clean up of Rogers part of the code (more to come)
+    * ............
+    
+!======================= TsaAlgorithms v1r6 2006-11-30 ======================
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
+! 2006-18-10 M Needham
+ - Really Fix memory leak in TsaCollector, report by H. Terrier
+
+! 2006-18-10 M Needham
+ - Fix memory leak in TsaCollector, report by H. Terrier
+
+!======================= TsaAlgorithms v1r5 2006-10-16 ======================
+! 2006-10-15 M Needham
+ - correct TTDataSvc
+
+! 2006-10-13 M Needham
+ - Add cuts on drift radius in TsaCollector
+ 
+! 2006-10-12 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macro everywhere
+ - Remove unneccessary includes of Kernel/PhysicalUnits.h
+
+! 2006-10-11 M Needham
+ - Add duplicate removal in TsaCollector
+ - Allow possibility to sort input data to data services
+
+! 2006-10-10
+ - add hits in the other boxes to allow for IT overlaps
+ - Bug fix in IT/TTDataSvc
+ - Add possibility to use 'l0 seed' y in TsaCollector
+ - Tidy up TsaSeed some more and gain alittle speed
+ - Changes in OTExpectedHits to gain speed 
+
+!======================= TsaAlgorithms v1r4 2006-09-26 ======================
+! 2006-09-25 M Needham
+ - Fix warnings on windows
+ - new tuning as reported in T-REC
+ - hot events rejected/ hot OT modules cuts relaxed 
+
+! 2006-09-17 M Needham
+  - Tidy up the code
+
+! 2006-09-08 M. Needham
+  - Bug fix in TTDataSvc 
+
+! 2006-09-05 M. Needham
+  - Add functionality to make Tsa::Clusters from TT hits (requested by R.Forty)
+  - Add hit collection tool as used by trigger in L0 confirmation studies
+  - Changes to allow seeding to be run with selected hits as in L0 confirmation
+  - Speed up by a few ms  
+
+!======================= TsaAlgorithms v1r3 2006-08-31 ======================
+! 2006-08-26 M Needham
+ - New version, including IT seeding and second pass stub finding
+ - The changes from the previous version are numerous...
+
+!======================= TsaAlgorithms v1r2 2006-08-21 ======================
+! 2006-08-17 M Needham
+ - Clean up TsaOTClusterCreator: factor 10 faster WOW !
+ - Changes to TsaSeedTrackCnv - only use selected hits on tracks (removes outliers)
+ - Update ReferenceCreator to follow above changes
+ - Many optimizations in TsaSeed: speed down from 380 to 175 ms WOW !
+ - Updates in the data classes: speedier, tidier etc
+ - Change ExpectedHits inteface to add a sector
+
+!======================= TsaAlgorithms v1r1 2006-08-03 ======================
+! 2006-08-02 M Needham
+ - Take p from pt kick method
+
+! 2006-08-01 - Marco Cattaneo
+ - DECLARE_TOOL_FACTORY, DECLARE_ALGORITHM_FACTORY everywhere
+ - GaudiKernel/SystemOfUnits.h everywhere
+
+! 2006-08-01
+ - Add reference creator tool
+ - tune jobOptions in convertor
+
+!======================= TsaAlgorithms v1r0 2006-07-25 ======================
+! 2006-07-25 - Marco Cattaneo
+ - Add fixes for Windows
+
+! 2006-07-24 - M Needham
+ - first official release !

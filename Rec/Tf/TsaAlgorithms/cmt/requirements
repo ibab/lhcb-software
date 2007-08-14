@@ -1,0 +1,35 @@
+#============================================================================
+# Created    : 2007-08-13
+# Maintainer : Matt Needham
+#============================================================================
+package           TsaAlgorithms
+version           v3r0
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use TsaKernel       v* Tf
+use TrackInterfaces v* Tr
+use TrackFitEvent   v* Tr
+
+# Note : we are appending _Tf to the library name simply to 
+#        prevent conflicts with the original in Tr/ - When these are no
+#        longer these can be removed
+#        Remember to change the library name in TsaAlgorithms_dll.cpp
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TsaAlgorithms_Tf    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TsaAlgorithms_Tf
