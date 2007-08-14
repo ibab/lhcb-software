@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.2 2007-08-14 16:56:15 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -215,37 +215,3 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
 
   return StatusCode::SUCCESS;
 }
-
-/*
-  Tsa::STRange SeedAddHits::range(const int hint, const int station,
-  const int layer, const int box) const{
-
-  // get the data for this partition
-  Tsa::STRange iRange =  m_dataSvc->partition(station,layer,box);
-
-  // if its empty or we we have no hint return it
-  if (iRange.empty() || hint == -1) return iRange;
-
-  // if we have a hint use it
-  Tsa::STRange::iterator clusIter;
-  Tsa::STRange::iterator cachedIter = iRange.begin();
-
-  unsigned int firstMod =  GSL_MAX(hint-1,1);
-  LHCb::STChannelID firstChan(LHCb::STChannelID::typeIT,station, layer, box, firstMod, 0);
-  clusIter = std::lower_bound(cachedIter,iRange.end(),firstChan,
-  STDataFunctor::compBySector_LB<const Tsa::STCluster*>());
-
-  if (clusIter != iRange.end()){
-  cachedIter = clusIter;
-  LHCb::STChannelID lastChan(LHCb::STChannelID::typeIT, firstChan.station(),
-  firstChan.layer(), firstChan.detRegion(),
-  firstChan.sector() + 2 , 0u);
-
-  clusIter = std::lower_bound(cachedIter, iRange.end(),lastChan,
-  STDataFunctor::compBySector_LB<const Tsa::STCluster*>());
-  return Tsa::STRange(cachedIter,clusIter);
-  }
-
-  return Tsa::STRange(iRange.begin());
-  }
-*/

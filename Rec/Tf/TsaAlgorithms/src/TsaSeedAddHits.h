@@ -11,13 +11,11 @@
 
 #include "GaudiAlg/GaudiTool.h"
 
-#include "TsaKernel/Types.h"
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaSeedingHit.h"
-#include "TsaKernel/SeedFunctor.h"
+//#include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaConstants.h"
-//#include "TsaKernel/Types.h"
 
 #include "TfKernel/ITStationHitManager.h"
 #include "TfKernel/RecoFuncs.h"
@@ -26,7 +24,7 @@
 #include "SeedParabolaFit.h"
 #include "TfTsHitNumMap.h"
 
-#include "Kernel/STDataFunctor.h"
+//#include "Kernel/STDataFunctor.h"
 #include "Kernel/STChannelID.h"
 
 #include "STDet/DeSTDetector.h"
