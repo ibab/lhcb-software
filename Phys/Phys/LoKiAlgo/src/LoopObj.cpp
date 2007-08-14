@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.7 2007-07-23 17:41:55 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.8 2007-08-14 12:53:08 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -162,6 +162,8 @@ LoKi::LoopObj::LoopObj
 // ============================================================================
 LoKi::LoopObj::~LoopObj()
 {
+  // check status code 
+  m_status.ignore() ;
   // delete particle 
   if ( m_pOwner && 0 != m_particle ) { delete m_particle ; m_particle = 0 ; }
   // delete vertex

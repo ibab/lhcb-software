@@ -1,4 +1,4 @@
-// $Id: AlgoMC.cpp,v 1.6 2007-07-23 17:44:14 ibelyaev Exp $
+// $Id: AlgoMC.cpp,v 1.7 2007-08-14 12:53:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -229,15 +229,15 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
   if ( !m_disableMCMatch ) 
   {
     // Particle      -> MC
-    _feedIt<LoKi::Types::TableP2MC>   ( object , m_P2MC   ) ;
+    _feedIt<LoKi::Types::TableP2MC>   ( object , m_P2MC   ) . ignore () ;
     // Particle      -> MC with weight 
-    _feedIt<LoKi::Types::TableP2MCW>  ( object , m_P2MCW  ) ;
+    _feedIt<LoKi::Types::TableP2MCW>  ( object , m_P2MCW  ) . ignore ()  ;
     // ProtoParticle -> MC with weight 
-    _feedIt<LoKi::Types::TablePP2MC>  ( object , m_PP2MC  ) ;
+    _feedIt<LoKi::Types::TablePP2MC>  ( object , m_PP2MC  ) . ignore () ;
     // Track         -> MC 
-    _feedIt<LoKi::Types::TableT2MC>   ( object , m_T2MC   ) ;
+    _feedIt<LoKi::Types::TableT2MC>   ( object , m_T2MC   ) . ignore () ;
     // Track         -> MC with double  weight 
-    _feedIt<LoKi::Types::TableT2MCW>  ( object , m_T2MCW  ) ;
+    _feedIt<LoKi::Types::TableT2MCW>  ( object , m_T2MCW  ) . ignore () ;
   }
   //
   return LoKi::MCMatch( object ) ;
@@ -294,7 +294,7 @@ StatusCode LoKi::AlgoMC::analyse    () { return LoKi::Algo::analyse    () ; }
 StatusCode LoKi::AlgoMC::finalize   () 
 {
   // clear all the storages 
-  clear() ;  
+  clear().ignore() ;  
   { // finders
     for ( MCfinders::iterator entry = m_mcfinders.begin() ; 
           m_mcfinders.end() != entry ; ++entry ) 
