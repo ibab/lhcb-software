@@ -1,4 +1,4 @@
-// $Id: TrackCuts.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: TrackCuts.h,v 1.3 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKCUTS_H
 #define LOKI_TRACKCUTS_H 1
@@ -669,6 +669,40 @@ namespace LoKi
      *  @date   2007-06-08
      */
     typedef LoKi::Tracks::Selector                                 TrSELECTOR ;
+    // ========================================================================
+    /** @typedef TrSINFO 
+     *  "Smart-Extra-Info" function, 
+     *  it checks the information with the given key in "Extra Info",
+     *  for the missing information the supplied function will 
+     *  be evaluated and (optinaly) the informatin will be added   
+     *  to "extra info"
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Track& t = ... ;
+     *
+     *  const int index = ... ;
+     *
+     *  const TrFrun& fun = ... ;                   
+     *
+     *  TrFun sinfo = TrSINFO( index , fun , true ) ;
+     * 
+     *  const double result = sinfo( t ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Track
+     *  @see LHCb::Track::info
+     *  @see LoKi::ExtraInfo::GetSmartInfo
+     *  @see LoKi::ExtraInfo::info
+     *  @see LoKi::ExtraInfo::hasInfo
+     *  @see LoKi::ExtraInfo::addInfo
+     *  @see LoKi::Tracks::SmartInfo
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-14
+     */
+    typedef LoKi::Tracks::SmartInfo                                   TrSINFO ;
     // ========================================================================
     /** @typedef TrSSWITCH
      *  Simple "switch"

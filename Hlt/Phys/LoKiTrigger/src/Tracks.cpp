@@ -1,4 +1,4 @@
-// $Id: Tracks.cpp,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: Tracks.cpp,v 1.3 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -155,7 +155,28 @@ LoKi::Tracks::Info::Info
 std::ostream& LoKi::Tracks::Info::fillStream( std::ostream& s ) const 
 { return s << "TrINFO(" << index() << "," << value() << ")" ; }
 // ============================================================================
-
+/*  constructor from the function, key and update-flag
+ *  @param index the key in LHCb::Track::extraInfo table 
+ *  @param fun functionto be evaluated for missing keys 
+ *  @param update the flag to allow the insert of mnissing information
+ */
+// ============================================================================
+LoKi::Tracks::SmartInfo::SmartInfo
+( const int                          index  , 
+  const LoKi::Function<LHCb::Track>& fun    , 
+  const bool                         update ) 
+  : LoKi::ExtraInfo::GetSmartInfo<LHCb::Track> ( index , fun , update )
+{}
+// ============================================================================
+// the specific printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::SmartInfo::fillStream( std::ostream& s ) const 
+{ 
+  s << "TrSINFO(" << fun() << "," << index() << "," ;
+  s << update() ? "True" : "False" ;
+  return s << ")" ;  
+}
+// ============================================================================
 
 // ============================================================================
 // The END 

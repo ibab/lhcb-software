@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.1 2007-08-13 14:46:37 ibelyaev Exp $
+// $Id: RecVertices.cpp,v 1.2 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -126,6 +126,28 @@ LoKi::RecVertices::FC2::operator()
   return HltUtils::FC2( v1 , v2 ) ;
 }
 // ============================================================================
+/*  constructor from the function, key and update-flag
+ *  @param index the key in LHCb::Track::extraInfo table 
+ *  @param fun functionto be evaluated for missing keys 
+ *  @param update the flag to allow the insert of mnissing information
+ */
+// ============================================================================
+LoKi::RecVertices::SmartInfo::SmartInfo
+( const int                              index  , 
+  const LoKi::Function<LHCb::RecVertex>& fun    , 
+  const bool                             update ) 
+  : LoKi::ExtraInfo::GetSmartInfo<LHCb::RecVertex> ( index , fun , update )
+{}
+// ============================================================================
+// the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::RecVertices::SmartInfo::fillStream( std::ostream& s ) const 
+{ 
+  s << "RVSINFO(" << fun() << "," << index() << "," ;
+  s << update() ? "True" : "False" ;
+  return s << ")" ;  
+}
 
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: RecVertices.h,v 1.1 2007-08-13 14:46:37 ibelyaev Exp $
+// $Id: RecVertices.h,v 1.2 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTICES_H 
 #define LOKI_RECVERTICES_H 1
@@ -93,6 +93,45 @@ namespace LoKi
       Info();
     };
     // ========================================================================
+    /** @class SmartInfo
+     *  Trivial function which:
+     *    - checks the presence of informnation in LHCb::RecVertex::extraInfo
+     *    - if the information present, it returns it 
+     *    - for missing infomation, use function to evaluate it 
+     *    - (optionally) fill th emissing field
+     *  
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Cuts::RVSINFO 
+     *  @see LoKi::ExtraInfo::GetSmartInfo
+     *  @see LoKi::ExtraInfo::info
+     *  @see LoKi::ExtraInfo::hasInfo
+     *  @see LoKi::ExtraInfo::setInfo
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    class SmartInfo : public LoKi::ExtraInfo::GetSmartInfo<LHCb::RecVertex>
+    {
+    public:
+      /** constructor from fuction, key and update-flag
+       *  @param index the key in LHCb::Track::extraInfo table 
+       *  @param fun functionto be evaluated for missing keys 
+       *  @param update the flag to allow the insert of mnissing information
+       */
+      SmartInfo
+      ( const int                              index          , 
+        const LoKi::Function<LHCb::RecVertex>& fun            , 
+        const bool                             update = false ) ;
+      /// destructor 
+      virtual ~SmartInfo(){};
+      /// clone method (mandatory!)
+      virtual  SmartInfo* clone() const { return new SmartInfo(*this); }
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      SmartInfo();
+    };
     // ========================================================================
     /** @class MinPT
      *  Evaluator of "minPT" for the vertex 

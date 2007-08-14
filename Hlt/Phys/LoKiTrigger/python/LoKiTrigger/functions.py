@@ -108,6 +108,8 @@ RVINFO        = LoKi.RecVertices.Info
 RVMAXPT       = LoKi.RecVertices.MaxPt () 
 ## @see LoKi::Cuts::RVMAXPT
 RVMINPT       = LoKi.RecVertices.MinPt () 
+## @see LoKi::Cuts::RVSINFO
+RVSINFO       = LoKi.RecVertices.SmartInfo
 
 # =============================================================================
 
@@ -180,6 +182,8 @@ TrQ           = LoKi.Tracks.Charge ()
 TrSELECTED    = LoKi.Tracks.CheckFlag ( LHCb.Track.Selected ) 
 ## @see LoKi::Cuts::TrSELECTOR
 TrSELECTOR   = LoKi.Tracks.Selector 
+## @see LoKi::Cuts::TrSINFO
+TrSINFO       = LoKi.Tracks.SmartInfo
 ## @see LoKi::Cuts::TrTRUE
 TrTRUE        = LoKi.BooleanConstant( _T ) ( True  )
 ## @see LoKi::Cuts::TrTTRACK
@@ -217,6 +221,28 @@ TrVIP         = LoKi.Tracks.ImpactParameter ()
 ## @see LoKi::Cuts::TrVRIP 
 TrVRIP        = LoKi.Tracks.RadialIP        () 
 
+
+
+
+
+# =============================================================================
+## Simple way to create the 'smart' function from the regular function.
+def info ( key , fun , update = False ) :
+    """
+    Simple way to create the 'smart' function from the regular function.
+    Smart function first checks the presence of the information with
+    the given key in 'extra-info' data member, and int he case of missing
+    information it used the supplied function to evaluate the information.
+    optionally the evaluated information is added into  'extra-info'
+
+    >>> fun =  ...
+    >>> key =  ...
+    >>> smartFun = info ( key , fun , true ) 
+    
+    """
+    return LoKi.Dicts.Info.info ( key , fun , update )
+
+info. __doc__ += "\n\n" + LoKi.Dicts.Info.info . __doc__ 
 
 # =============================================================================
 

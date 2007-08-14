@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.2 2007-08-13 13:36:54 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.3 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -16,6 +16,7 @@
 // ============================================================================
 #include "LoKi/ITrHybridTool.h"
 #include "LoKi/TrHybridEngine.h"
+#include "LoKi/InfoDicts.h"
 // ============================================================================
 namespace LoKi
 {

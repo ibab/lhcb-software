@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.3 2007-08-13 14:46:37 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.4 2007-08-14 20:32:32 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -121,8 +121,10 @@
   
   <class name = "LoKi::ExtraInfo::GetInfo<LHCb::Track> "       />
   <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::Track> "     />
+  <class name = "LoKi::ExtraInfo::SmartInfo<LHCb::Track> "     />
   <class name = "LoKi::ExtraInfo::GetInfo<LHCb::RecVertex> "   />
   <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::RecVertex> " />
+  <class name = "LoKi::ExtraInfo::SmartInfo<LHCb::RecVertex> " />
 
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::RecVertices::*"                   />
@@ -139,6 +141,9 @@
   <class pattern   = "LoKi::Holder<*>"    />
   <class pattern   = "std::pair<*LHCb::Track*>"     />
   <class pattern   = "std::pair<*LHCb::RecVertex*>" />
+
+
+  <function pattern = "LoKi::Dicts::Info::info*" />
   
   <enum name= "LHCb::Track::Flags"     />
 

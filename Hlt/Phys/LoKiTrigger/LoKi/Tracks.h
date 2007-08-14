@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.3 2007-08-13 14:46:37 ibelyaev Exp $
+// $Id: Tracks.h,v 1.4 2007-08-14 20:32:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -272,6 +272,46 @@ namespace LoKi
     private:
       // the default constructor is disabled 
       Info();
+    };
+    // ========================================================================    
+    /** @class SmartInfo
+     *  Trivial function which:
+     *    - checks the presence of informnation in LHCb::Track::extraInfo
+     *    - if the information present, it returns it 
+     *    - for missing infomation, use function to evaluate it 
+     *    - (optionally) fill th emissing field
+     *  
+     *  @see LHCb::Track
+     *  @see LoKi::Cuts::TrSINFO 
+     *  @see LoKi::ExtraInfo::GetSmartInfo
+     *  @see LoKi::ExtraInfo::info
+     *  @see LoKi::ExtraInfo::hasInfo
+     *  @see LoKi::ExtraInfo::setInfo
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    class SmartInfo : public LoKi::ExtraInfo::GetSmartInfo<LHCb::Track>
+    {
+    public:
+      /** constructor from fuction, key and update-flag
+       *  @param index the key in LHCb::Track::extraInfo table 
+       *  @param fun functionto be evaluated for missing keys 
+       *  @param update the flag to allow the insert of mnissing information
+       */
+      SmartInfo
+      ( const int                          index          , 
+        const LoKi::Function<LHCb::Track>& fun            , 
+        const bool                         update = false ) ;
+      /// destructor 
+      virtual ~SmartInfo(){};
+      /// clone method (mandatory!)
+      virtual  SmartInfo* clone() const { return new SmartInfo(*this); }
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      SmartInfo();
     };
     // ========================================================================
     /** @class Chi2
