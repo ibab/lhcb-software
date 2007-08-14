@@ -53,30 +53,32 @@ extern void init_sock();
 		ENABLE_AST
 		return(1);
 	}
-	gethostname(node_name, MAX_NODE_NAME);
+	if((gethostname(node_name, MAX_NODE_NAME)) == -1)
+	{
+		ENABLE_AST
+		return(0);
+	}
 #ifndef VxWorks
 #ifndef RAID
 	if(!strchr(node_name,'.'))
 	{
-		if ((host = gethostbyname(node_name)) == (struct hostent *)0) 
-		{
-			ENABLE_AST
-			return(0);
-		}
-		strcpy(node_name,host->h_name);
-		if(!strchr(node_name,'.'))
-		{
-		    if(host->h_aliases)
-		    {
-				if(host->h_aliases[0])
+		if ((host = gethostbyname(node_name)) != (struct hostent *)0) 
+		{		
+			strcpy(node_name,host->h_name);
+			if(!strchr(node_name,'.'))
+			{
+				if(host->h_aliases)
 				{
-					for(i = 0; host->h_aliases[i]; i++)
+					if(host->h_aliases[0])
 					{
-						p = host->h_aliases[i];
-						if(strchr(p,'.'))
+						for(i = 0; host->h_aliases[i]; i++)
 						{
-							strcpy(node_name,p);
-							break;
+							p = host->h_aliases[i];
+							if(strchr(p,'.'))
+							{
+								strcpy(node_name,p);
+								break;
+							}
 						}
 					}
 				}
@@ -109,21 +111,26 @@ unsigned char *ptr;
 #endif
 	gethostname(node_name, MAX_NODE_NAME);
 #ifndef VxWorks
-	if ((host = (struct hostent *)gethostbyname(node_name)) == 
-			(struct hostent *)0) 
+	if ((host = (struct hostent *)gethostbyname(node_name)) == (struct hostent *)0)
+	{
+		node_addr[0] = 0;
+		node_addr[1] = 0;
+		node_addr[2] = 0;
+		node_addr[3] = 0;
 		return(0);
-    	ptr = (unsigned char *)host->h_addr;
-    	node_addr[0] = *ptr++;
-    	node_addr[1] = *ptr++;
-    	node_addr[2] = *ptr++;
-    	node_addr[3] = *ptr++;
-    	return(1);
+	}
+    ptr = (unsigned char *)host->h_addr;
+    node_addr[0] = *ptr++;
+    node_addr[1] = *ptr++;
+    node_addr[2] = *ptr++;
+    node_addr[3] = *ptr++;
+    return(1);
 #else
-    	node_addr[0] = 0;
-    	node_addr[1] = 0;
-    	node_addr[2] = 0;
-    	node_addr[3] = 0;
-		return(0);
+    node_addr[0] = 0;
+    node_addr[1] = 0;
+    node_addr[2] = 0;
+    node_addr[3] = 0;
+	return(0);
 #endif
 }
 

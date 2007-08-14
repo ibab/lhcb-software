@@ -129,6 +129,17 @@ jobject		ourNativeDimExit;
 
 jobject   ourNativeMemoryObject;
 
+#ifdef WIN32
+	DWORD MainThreadId = 0;
+#else
+#ifdef __linux__
+	pthread_t MainThreadId = 0;
+#else
+	int MainThreadId = 0;
+#endif
+#endif
+JNIEnv* TheEnv;
+
 #define NOT_STAMPED 0
 
 // TODO need to get a hook into dim release services so that I can release global references
@@ -155,18 +166,46 @@ void server_exit_callback(int *code);
 
 // DLL load, unload and init ==============================================================
 
+int dim_jni_attachThread(JNIEnv **env)
+{
+#ifdef WIN32
+	DWORD tid;
+	tid = GetCurrentThreadId();
+#else
+#ifdef __linux__
+	pthread_t tid;
+	tid = pthread_self();
+#else
+	int tid = 0;
+#endif
+#endif
+
+	if(tid == MainThreadId)
+	{
+		*env = TheEnv;
+		return 0;
+	}
+	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)env, NULL);
+	if(MainThreadId == 0)
+	{
+		MainThreadId = tid;
+	}
+	return 1;
+}
+
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM* jvm, void* reserved)
 {
-  static JNIEnv* env;
   int    bugs =0;
+  JNIEnv *env;
 
   DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
 
   theJavaVM = jvm;
 
-  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
-
+  dim_jni_attachThread(&env);
+  TheEnv = env;
+//  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
 
 #ifdef develop_a_better_understanding_of_java
   {
@@ -267,13 +306,13 @@ JNI_OnLoad(JavaVM* jvm, void* reserved)
 }
 
 JNIEXPORT jint JNICALL
-JNI_OnUnLoad(JavaVM* jvm, void* reserved)
+JNI_OnUnLoad(JNIEnv* env, void* reserved)
 {
-  static JNIEnv* env;
+//  static JNIEnv* env;
 
   DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
 
-  (*jvm)->AttachCurrentThread(jvm, (void *)&env, NULL);
+//  (*jvm)->AttachCurrentThread(jvm, (void *)&env, NULL);
   (*env)->DeleteGlobalRef(env, NativeDataMemory);
   (*env)->DeleteGlobalRef(env, SendSynchronizer);
   (*env)->DeleteGlobalRef(env, ReceiveSynchronizer);
@@ -281,6 +320,14 @@ JNI_OnUnLoad(JavaVM* jvm, void* reserved)
   (*env)->DeleteGlobalRef(env, NativeDataDecoder);
   (*env)->DeleteGlobalRef(env, NativeDataEncoder);
   (*env)->DeleteGlobalRef(env, ourNativeMemoryObject);
+
+  (*env)->DeleteGlobalRef(env, NativeDimTimer);
+  (*env)->DeleteGlobalRef(env, NativeDimSrvError);
+  (*env)->DeleteGlobalRef(env, ourNativeDimSrvError);
+  (*env)->DeleteGlobalRef(env, NativeDimCltError);
+  (*env)->DeleteGlobalRef(env, ourNativeDimCltError);
+  (*env)->DeleteGlobalRef(env, NativeDimExit);
+  (*env)->DeleteGlobalRef(env, ourNativeDimExit);
 
   DBGx(dim_Dbg_MODULE) printf("DimJNI: DLL unloaded\n");
   return(0);
@@ -306,7 +353,17 @@ JNIEXPORT jint JNICALL Java_dim_Native_init
   return JNI_OnLoad(jvm, 0);
 }
 
+/*
+ * Class:     dim_Native
+ * Method:    stop
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_dim_Native_stop
+  (JNIEnv* env, jclass dimNativeClass)
+{
 
+  return JNI_OnUnLoad(env, 0);
+}
 
 
 /* implementation of dim_dbg.h ================================================================== */
@@ -347,12 +404,18 @@ void send_callback(jobject* _theCompletionHandler, int* _status)
 {
   jobject theCompletionHandler = *_theCompletionHandler;
   JNIEnv* env;
+  int doit;
 
   DBGe(dim_Dbg_SEND_CALLBACK) printf("DimJNI: client SEND_CALLBACK status %08x:%d\n", (unsigned)_status, *_status);
 
-  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+  doit = dim_jni_attachThread(&env);
+//  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+
   (*env)->CallIntMethod(env, theCompletionHandler, CompletionHandler_setCompletionCode, *_status);
   (*env)->DeleteGlobalRef(env, theCompletionHandler);
+
+  if(doit)
+	  (*theJavaVM)->DetachCurrentThread(theJavaVM);
   return;
 }
 
@@ -368,6 +431,7 @@ jint send_data
   void    (*callback_funct)();
   jobject callback_param;
   jobject theSendSynchronizer;
+  
   extern int request_command(char *, void *, int , void (*)(), long, int);
 
   const char* cmnd = (*env)->GetStringUTFChars(env, name, 0);
@@ -747,8 +811,10 @@ void decodeData(jobject* _theDataDecoder, void* dataAddress, int* _dataSize, int
 	jobject theDataDecoder = *_theDataDecoder;
 	int		  dataSize		   = *_dataSize;
 	JNIEnv* env;
+	int doit;
 
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+  doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
   if(dataAddress == NULL)
   {
   	(*env)->CallVoidMethod(env, theDataDecoder, NativeDataDecoder_decodeNativeData, NULL);
@@ -761,6 +827,8 @@ void decodeData(jobject* _theDataDecoder, void* dataAddress, int* _dataSize, int
 
   /* and cleanup */
   if(cleanup) (*env)->DeleteGlobalRef(env, theDataDecoder);
+  if(doit)
+	(*theJavaVM)->DetachCurrentThread(theJavaVM);
 
   return;
 }
@@ -790,9 +858,13 @@ void callTimerHandler(jobject* _aDimTimer)
 {
 //	jobject aDimTimer = *_aDimTimer;
 	JNIEnv* env;
+	int doit;
 
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+	doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
   	(*env)->CallVoidMethod(env, (jobject)_aDimTimer, NativeDimTimer_timerHandler, NULL);
+	if(doit)
+		(*theJavaVM)->DetachCurrentThread(theJavaVM);
  
   return;
 }
@@ -807,10 +879,14 @@ void timer_callback(jobject* _aDimTimer)
 void callServerErrorHandler(int severity, int code, char *msg)
 {
 	JNIEnv* env;
+	int doit;
 
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+	doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
   	(*env)->CallVoidMethod(env, ourNativeDimSrvError, NativeDimSrvError_errorHandler,
 		(jint)severity, (jint)code, (jstring)(*env)->NewStringUTF(env, msg));
+	if(doit)
+		(*theJavaVM)->DetachCurrentThread(theJavaVM);
 	return;
 }
 
@@ -824,10 +900,14 @@ void server_error_callback(int severity, int code, char *msg)
 void callClientErrorHandler(int severity, int code, char *msg)
 {
 	JNIEnv* env;
+	int doit;
 
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+	doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
   	(*env)->CallVoidMethod(env, ourNativeDimCltError, NativeDimCltError_errorHandler,
 		(jint)severity, (jint)code, (jstring)(*env)->NewStringUTF(env, msg));
+	if(doit)
+		(*theJavaVM)->DetachCurrentThread(theJavaVM);
 	return;
 }
 
@@ -841,10 +921,14 @@ void callServerExitHandler(int code)
 {
 //	jobject aDimTimer = *_aDimTimer;
 	JNIEnv* env;
+	int doit;
 
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+	doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
   	(*env)->CallVoidMethod(env, ourNativeDimExit, NativeDimExit_exitHandler,
 		(jint)code);
+	if(doit)
+		(*theJavaVM)->DetachCurrentThread(theJavaVM);
 	return;
 }
 
@@ -887,8 +971,10 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
     callback_param = (*env)->NewGlobalRef(env, theNativeDataDecoder);
   }
 
-  if(service_type == dim_Native_ONCE_ONLY) callback_function = &info_service_callback_with_cleanup;
-  else                                     callback_function = &info_service_callback; //TODO who should do the cleanup?
+  if(service_type == dim_Native_ONCE_ONLY) 
+	  callback_function = &info_service_callback_with_cleanup;
+  else                                     
+	  callback_function = &info_service_callback; //TODO who should do the cleanup?
 
 
   ret = request_service((char *)info, service_type, timeout, 0, 0, callback_function, (long)callback_param, &no_link, 0, stamped);
@@ -996,6 +1082,20 @@ JNIEXPORT jstring JNICALL Java_dim_Client_getFormat
 }
 
 /*
+ * Class:     dim_Client
+ * Method:    stop
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_dim_Client_stop
+  (JNIEnv* env, jclass This)
+{
+	extern void dim_stop();
+
+	dim_stop();
+	return;
+}
+
+/*
  * Class:     dim_DimInfo
  * Method:    getQuality
  * Signature: (I)I;
@@ -1069,8 +1169,6 @@ JNIEXPORT void JNICALL Java_dim_Server_stopServing
 	return;
 }
 
-
-
 void server_getInfo_callback(jobject* _dataEncoder, void* *address, int *size)
 {
   /* server_getInfo_callback is invoked when dim needs the data for a service.
@@ -1085,25 +1183,30 @@ void server_getInfo_callback(jobject* _dataEncoder, void* *address, int *size)
 	jobject dataEncoder = *_dataEncoder;
 	jobject theMemory;
 	JNIEnv* env;
+	int doit;
 
 	DBGe(dim_Dbg_SERVICE_CALLBACK) ; /* no report, only trap */
-	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+
+	doit = dim_jni_attachThread(&env);
+//	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
 
 	theMemory = (*env)->CallObjectMethod(env, dataEncoder, NativeDataEncoder_encodeNativeData);
-  if(theMemory == NULL)
-  {
-    *address  = 0;
-    *size     = 0;
-  }
-  else
-  {
-    *address  = (void*) (*env)->GetIntField(env, theMemory, NativeDataMemory_dataAddress);
-    *size     = (*env)->GetIntField(env, theMemory, NativeDataMemory_dataSize);
-//	printf("data address = %x, data size = %d\n",*address, *size);
-  }
+	if(theMemory == NULL)
+	{
+		*address  = 0;
+		*size     = 0;
+	}
+	else
+	{
+		*address  = (void*) (*env)->GetIntField(env, theMemory, NativeDataMemory_dataAddress);
+		*size     = (*env)->GetIntField(env, theMemory, NativeDataMemory_dataSize);
+//		printf("data address = %x, data size = %d\n",*address, *size);
+	}
 	DBGx(dim_Dbg_SERVICE_CALLBACK) printf("DimJNI: server_SERVICE_CALLBACK(dataEncoder=%08x)\n        ==>    data: %08x size %08x\n", (unsigned)dataEncoder, (unsigned)*address, *size);
 
-  if ((*env)->ExceptionOccurred(env)) (*env)->ExceptionDescribe(env); // clear any possible exception, if we do not do this, all further methods will fail!!
+	if ((*env)->ExceptionOccurred(env)) (*env)->ExceptionDescribe(env); // clear any possible exception, if we do not do this, all further methods will fail!!
+	if(doit)
+		(*theJavaVM)->DetachCurrentThread(theJavaVM);
 
 	return;
 }
@@ -1802,6 +1905,7 @@ JNIEXPORT jint JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
   jint address;
 	DBGe(dim_Dbg_MEMORY_ALLOCATE) ; /* report only */
   address = (jint) malloc(size);
+//printf("malloc %d, %08X\n", size, address);
 	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%08x\n", size, address);
   return address;
 }
@@ -1815,7 +1919,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
   (JNIEnv* env, jclass nativeClass, jint desc)
 {
 	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%08x\n", desc);
-  free((void*)desc);
+//printf("free %08X\n", desc);
+	free((void*)desc);
 	return;
 }
 
@@ -2094,6 +2199,7 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
 
   DBGe(dim_Dbg_DESCRIPTORS) ; /* trap only, report on exit */
   // todo put object descriptor and entry array in the same malloc (for dump purposes)
+//printf("malloc descriptor\n");
 	if(maxEntries==0) maxEntries = 10;
 	descriptor = (objectDescriptor_type*) malloc(sizeof(objectDescriptor_type));
 	descriptor->entry = (objectDescriptorEntry_type*) malloc(maxEntries * sizeof(objectDescriptorEntry_type));
@@ -2110,6 +2216,7 @@ objectDescriptorEntry_type* getNextDescriptorEntry(objectDescriptor_type* descri
 	if(descriptor->entries == descriptor->maxEntries)
 	{
 		objectDescriptorEntry_type* entry = realloc(descriptor->entry, descriptor->maxEntries+10);
+//printf("realloc descriptor\n");
 		if(entry==NULL) return NULL;
 
 		descriptor->entry = entry;
@@ -2234,6 +2341,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_deleteObjectDescriptor
 
 	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %08x\n", (int)desc);
 	(*env)->DeleteGlobalRef(env, descriptor->objectClass);
+//printf("free descriptor\n");
 	free(descriptor->entry);
 	free(descriptor);
 	return;

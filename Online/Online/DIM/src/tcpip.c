@@ -25,6 +25,8 @@
 #define EADDRNOTAVAIL WSAEADDRNOTAVAIL
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define ECONNREFUSED WSAECONNREFUSED
+#define HOST_NOT_FOUND	WSAHOST_NOT_FOUND
+#define NO_DATA	WSANO_DATA
 
 #else
 /*
@@ -394,6 +396,8 @@ int *conn_id;
 	return 0;
 }
 
+#ifndef __linux__
+
 static void tcpip_test_write( conn_id )
 int conn_id;
 {
@@ -413,13 +417,40 @@ int conn_id;
 	}
 }
 
+#else
+
+void tcpip_set_keepalive( channel, tmout )
+int channel, tmout;
+{
+   int val;
+
+   /* Enable keepalive for the given channel */
+   val = 1;
+   setsockopt(channel, SOL_SOCKET, SO_KEEPALIVE, (char*)&val, sizeof(val));
+
+   /* Set the keepalive poll interval to something small.
+      Warning: this section may not be portable! */
+   val = tmout;
+   setsockopt(channel, IPPROTO_TCP, TCP_KEEPIDLE, (char*)&val, sizeof(val));
+   val = 3;
+   setsockopt(channel, IPPROTO_TCP, TCP_KEEPCNT, (char*)&val, sizeof(val));
+   val = 2;
+   setsockopt(channel, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&val, sizeof(val));
+}
+
+#endif
+
 void tcpip_set_test_write(conn_id, timeout)
 int conn_id, timeout;
 {
+#ifndef __linux__
 	Net_conns[conn_id].timr_ent = dtq_add_entry( queue_id, timeout, 
 		tcpip_test_write, conn_id );
 	Net_conns[conn_id].timeout = timeout;
 	Net_conns[conn_id].last_used = time(NULL);
+#else
+	tcpip_set_keepalive(Net_conns[conn_id].channel, timeout);
+#endif
 }
 
 void tcpip_rem_test_write(conn_id)
@@ -689,6 +720,49 @@ void (*ast_routine)();
 	return(1);
 }
 
+int check_node_addr( node, ipaddr)
+char *node;
+unsigned char *ipaddr;
+{
+unsigned char *ptr;
+int ret;
+
+	ptr = (unsigned char *)node+strlen(node)+1;
+    ipaddr[0] = *ptr++;
+    ipaddr[1] = *ptr++;
+    ipaddr[2] = *ptr++;
+    ipaddr[3] = *ptr++;
+	if( (ipaddr[0] == 0xff) &&
+		(ipaddr[1] == 0xff) &&
+		(ipaddr[2] == 0xff) &&
+		(ipaddr[3] == 0xff) )
+	{
+		errno = ECONNREFUSED;	/* fake an error code */
+#ifdef WIN32
+		WSASetLastError(errno);
+#endif
+		return(0);
+	}
+	if( gethostbyaddr(ipaddr, sizeof(ipaddr), AF_INET) == (struct hostent *)0 )
+	{
+#ifndef WIN32
+		ret = h_errno;
+#else
+		ret = WSAGetLastError();
+#endif
+		if((ret == HOST_NOT_FOUND) || (ret == NO_DATA))
+				return(0);
+/*		
+		errno = ECONNREFUSED;
+#ifdef WIN32
+		WSASetLastError(errno);
+#endif
+		return(0);
+*/
+	}
+	return(1);
+}
+
 int tcpip_open_client( conn_id, node, task, port )
 int conn_id;
 char *node, *task;
@@ -705,7 +779,7 @@ int port;
 #endif
 	int path, val, ret_code, ret;
 	int a,b,c,d;
-	unsigned char ipaddr[4], *ptr;
+	unsigned char ipaddr[4];
 	int host_number = 0;
 
     dim_tcpip_init(0);
@@ -717,10 +791,29 @@ int port;
 	    ipaddr[2] = c;
 	    ipaddr[3] = d;
 	    host_number = 1;
+#ifndef VxWorks
+		if( gethostbyaddr(ipaddr, sizeof(ipaddr), AF_INET) == (struct hostent *)0 )
+		{
+#ifndef WIN32
+			ret = h_errno;
+#else
+			ret = WSAGetLastError();
+#endif
+			if((ret == HOST_NOT_FOUND) || (ret == NO_DATA))
+			{
+				if(!check_node_addr(node, ipaddr))
+					return(0);
+			}
+		}
+#endif
 	}
 #ifndef VxWorks
 	else if( (host = gethostbyname(node)) == (struct hostent *)0 ) 
 	{
+		if(!check_node_addr(node, ipaddr, &host_number))
+			return(0);
+		host_number = 1;
+/*
           ptr = (unsigned char *)node+strlen(node)+1;
           ipaddr[0] = *ptr++;
           ipaddr[1] = *ptr++;
@@ -732,7 +825,7 @@ int port;
 			  (ipaddr[2] == 0xff) &&
 			  (ipaddr[3] == 0xff) )
 		  {
-			  errno = ECONNREFUSED;	/* fake an error code */
+			  errno = ECONNREFUSED;
 #ifdef WIN32
 			  WSASetLastError(errno);
 #endif
@@ -740,12 +833,13 @@ int port;
 		  }
 		  if( gethostbyaddr(ipaddr, sizeof(ipaddr), AF_INET) == (struct hostent *)0 )
 		  {
-			  errno = ECONNREFUSED;	/* fake an error code */
+			  errno = ECONNREFUSED;
 #ifdef WIN32
 			  WSASetLastError(errno);
 #endif
 			  return(0);
 		  }
+*/
 	}
 #else
 	*(strchr(node,'.')) = '\0';
@@ -793,6 +887,17 @@ int port;
 		return(0);
 	}
 
+#ifdef __linux__
+	val = 2;
+	if ((ret_code = setsockopt(path, IPPROTO_TCP, TCP_SYNCNT, 
+			(char*)&val, sizeof(val))) == -1 ) 
+	{
+#ifdef DEBUG
+		printf("Couln't set TCP_SYNCNT\n");
+#endif
+	}
+#endif
+
 	sockname.sin_family = PF_INET;
 #ifndef VxWorks
     if(host_number)
@@ -823,7 +928,6 @@ int port;
 	Net_conns[conn_id].timr_ent = NULL;
 	return(1);
 }
-
 
 int tcpip_open_server( conn_id, task, port )
 int conn_id, *port;

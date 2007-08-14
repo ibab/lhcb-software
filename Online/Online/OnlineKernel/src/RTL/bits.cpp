@@ -248,7 +248,7 @@ void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
     printf("\n");
     for(j=0, n=0; j < 4; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%ld",(n+1)%10);
+        printf("%d",int((n+1)%10));
       }
       if ( j < (ncols-1) ) printf (" ");
     }

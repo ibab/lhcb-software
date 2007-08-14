@@ -4,6 +4,9 @@
 !Purpose: Dump MEP events in MEP buffer
 !----------------------------------------------------------------------
 
+! 2007-08-10 - Markus Frank
+   Fix print format statements causing warnings
+
 ! 2006-10-15 - Markus Frank
  - New Package.
    Uses C.Arnault's famous UPI packags for display

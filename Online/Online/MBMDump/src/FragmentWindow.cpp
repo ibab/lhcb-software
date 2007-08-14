@@ -13,7 +13,7 @@ FragmentWindow::FragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPF
   openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
   addCommand(C_DISMISS,"Dismiss");
   ::sprintf(txt," MEP Fragment:Size:%7ld EID:%5d Start:0x%8p End:0x%8p",
-    f->size(),f->eventID(),f->start(),f->end());
+    long(f->size()),f->eventID(),f->start(),f->end());
   addComment(C_COM1,txt);
   addComment(C_COM2,"");
   addComment(C_COM3," Hit return on bank to see data");

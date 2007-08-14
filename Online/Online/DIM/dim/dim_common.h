@@ -44,8 +44,8 @@ typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 #ifdef WIN32
 typedef __int64		longlong;
 #else
-/* #include <sys/types.h>  */
-typedef long long int longlong;
+/* #include <sys/types.h> */
+typedef long long int	longlong;
 #endif
 
 #endif
@@ -185,6 +185,8 @@ _DIM_PROTOE( int dis_set_dns_node,		(char *node) );
 _DIM_PROTOE( int dis_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dis_set_dns_port,		(int port) );
 _DIM_PROTOE( int dis_get_dns_port,		() );
+_DIM_PROTOE( void dim_stop,				() );
+
 
 #ifdef WIN32
 #define getpid _getpid

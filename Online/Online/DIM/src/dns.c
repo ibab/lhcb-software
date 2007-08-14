@@ -272,7 +272,9 @@ int tmout_flag;
 			Dns_conns[conn_id].timr_ent = dtq_add_entry( Timer_q,
 				(int)(WATCHDOG_TMOUT_MAX * 1.3), check_validity, conn_id);
 		if(strcmp(Dns_conns[conn_id].task_name,"DIS_DNS"))
+		{
 			dna_set_test_write(conn_id, 10);
+		}
 		Dns_conns[conn_id].old_n_services = 0;
 		Dns_conns[conn_id].n_services = 1;
 		do_update_did(conn_id);

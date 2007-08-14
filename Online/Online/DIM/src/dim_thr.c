@@ -439,6 +439,10 @@ void dim_stop_threads()
 {
 }
 
+void dim_stop()
+{
+}
+
 int dim_wait()
 {
   pause();
@@ -594,6 +598,11 @@ void dim_stop_threads()
 	Global_DIM_event = 0;
 	dim_tcpip_stop();
 	dim_dtq_stop();
+}
+
+void dim_stop()
+{
+	dim_stop_threads();
 }
 
 int dim_set_scheduler_class(int pclass)

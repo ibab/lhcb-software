@@ -99,7 +99,7 @@ Gaudi::PropertyMenu::PropertyMenu(const std::string& nam, IInterface* iface, Int
     }
     int cmd = CMD_SHOW+1;
     if ( vlen > 32 ) vlen = 32;
-    sprintf(fmt,"%%-%lds%%-%lds%%-%lds %%-3s %%-3s",nlen+2,tlen+2,vlen+2);
+    sprintf(fmt,"%%-%lds%%-%lds%%-%lds %%-3s %%-3s",long(nlen+2),long(tlen+2),long(vlen+2));
     m_window->addCOM(cmd,fmt,"Property Name","Type","Value","CBR","CBU");
     for(std::vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
       const Property* p = (*i);

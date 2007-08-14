@@ -22,7 +22,7 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   addComment(C_COM1,txt);
   addComment(C_COM2,"    Size Packing  EidH Start      End");
   ::sprintf(txt," %7ld %7ld %5d 0x%8p 0x%8p",
-    mf->size(),mf->packing(),mf->eventID(),mf->start(),mf->end());
+    long(mf->size()),long(mf->packing()),mf->eventID(),mf->start(),mf->end());
   addComment(C_COM2,txt);
   RTL::IPHeader* ip = (RTL::IPHeader*)mf->ipHeader();
   ::sprintf(txt,"    IP header: HLV:%02X TOS:%02X Len:%04X ID:%04X FragOff:%04X TTL:%02X",
@@ -39,7 +39,8 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   addComment(C_COM10,"+-----------------------------------------+");
   int cnt = 0;
   for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f), ++cnt) {
-    ::sprintf(txt,"%3d:%7ld %5d 0x%8p 0x%8p",cnt,f->size(),f->eventID(),f->start(),f->end());
+    ::sprintf(txt,"%3d:%7ld %5d 0x%8p 0x%8p",
+	      cnt,long(f->size()),f->eventID(),f->start(),f->end());
     addCommand(C_FRAGS+cnt,txt);
   }
   closeMenu();

@@ -18,7 +18,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
   MEPEVENT* e  = (MEPEVENT*)d.start;
   MEPEvent* me = (MEPEvent*)e->data;
   ::sprintf(txt,"MEP Event: size %ld Bytes  [MBM size:%ld Bytes]",
-    me->size(), d.length*sizeof(int));
+    long(me->size()), long(d.length*sizeof(int)));
   addComment(C_COM1,txt);
   unsigned int eid_h = 0, pid = 0, cnt = 0;
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
@@ -35,7 +35,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
       addComment(C_COM8,"+--------------------------------------------------+");
     }
     sprintf(txt,"%3d:%7ld %7ld %5d 0x%8p 0x%8p",
-      cnt,mf->size(),mf->packing(),eid_h,mf->start(),mf->end());
+      cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
     addCommand(C_MULTIFRAGS+cnt,txt);
   }
   closeMenu();

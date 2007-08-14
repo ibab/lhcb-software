@@ -150,8 +150,8 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
         std::string text = buff.str();
         sprintf(reply, "HTTP/1.0 200 OK\n"
           "Content-Type: text/html\n"
-          "Content-Length: %ld\n"
-          "\n",text.length());
+          "Content-Length: %d\n"
+          "\n",int(text.length()));
         std::string result = reply;
         result += text;
         num_byte = chan.send(result.c_str(),result.length());

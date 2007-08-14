@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2007-08-10 Markus Frank
+  - Fix print formatting warnings
+
 ! 2007-06-10 Markus Frank
   - Fix bug in TAN, since linux does not preserve the data of the pointer of
     gethostbyname when called again.
