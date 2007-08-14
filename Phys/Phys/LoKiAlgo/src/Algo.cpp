@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.15 2007-07-23 17:41:55 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.16 2007-08-14 12:35:51 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -96,7 +96,7 @@ LoKi::Algo::Algo
   //
   declareProperty ( "Cuts"            , m_cutValues ) ;
   // 
-  setProperty     ( "PropertiesPrint" , "true" ) ;
+  setProperty     ( "PropertiesPrint" , "true" ).ignore() ;
 } 
 // ============================================================================
 // virtual and protected destructor 
@@ -675,7 +675,7 @@ StatusCode LoKi::Algo::execute ()
   // DONE in DVAlgorithm::sysExecute:
   // desktop ()->getEventInput();
   // clear all LoKi storages 
-  clear() ;
+  clear().ignore() ;
   // call for actual analysis 
   StatusCode sc = analyse() ;
   if ( sc.isFailure() ) 
@@ -685,7 +685,7 @@ StatusCode LoKi::Algo::execute ()
   if ( sc.isFailure() ) 
   { return Error ( "DeskTop is not saved"          , sc ) ;}
   // clear all LoKi storages at the end 
-  clear() ;
+  clear().ignore () ;
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -701,7 +701,7 @@ StatusCode LoKi::Algo::analyse()
 // ============================================================================
 StatusCode LoKi::Algo::finalize () 
 { 
-  clear() ;
+  clear().ignore() ;
   //
   if ( !m_cutValues.empty() && msgLevel ( MSG::DEBUG ) ) 
   {
