@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.1 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.2 2007-08-14 15:10:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -37,6 +37,9 @@
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 namespace Rich
 {

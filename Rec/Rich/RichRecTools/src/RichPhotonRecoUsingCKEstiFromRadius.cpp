@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.3 2007-08-13 12:44:22 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.4 2007-08-14 15:10:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -94,7 +94,7 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
     if ( fabs(m_ckFudge[rad]) > 1e-7 )
     {
       std::ostringstream mess;
-     mess << "Applying " << Rich::text(rad) 
+      mess << "Applying " << Rich::text(rad)
            << " CK theta correction factor : " << m_ckFudge[rad];
       Warning( mess.str(), StatusCode::SUCCESS );
     }
@@ -137,8 +137,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  LHCb::RichRecSegment * seg = const_cast<LHCb::RichRecSegment*>(segment);
-
   // track segment
   const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
 
@@ -167,22 +165,30 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & segPSide = segment->pdPanelHitPointLocal(side);
   const Gaudi::XYZPoint & pixPRad  = pixel->radCorrLocalPositions().position(radiator);
 
+  // x,y differences
+  const float diff_x = segPSide.x() - pixPRad.x();
+  const float diff_y = segPSide.y() - pixPRad.y();
+
   // estimate phi from these hits
-  const float phiCerenkov = Gaudi::Units::pi + atan2( segPSide.y() - pixPRad.y(),
-                                                      segPSide.x() - pixPRad.x() );
+  // CRJ : The atan2 here is a significant fraction of the time taken by this method
+  //       Only need it approximately, so scope for use of some sort of 'fast' version here ?
+  const float phiCerenkov = Gaudi::Units::pi + atan2( diff_y, diff_x );
 
   // seg - pixel separation
-  const double sep2 = (segPSide-pixPRad).Mag2();
+  const double sep2 = gsl_pow_2(diff_x) + gsl_pow_2(diff_y);
 
   // Start with CK fudge factor
   float thetaCerenkov( m_ckFudge[radiator] );
 
   // use ring info to determine CK theta
+  LHCb::RichRecSegment * seg             = const_cast<LHCb::RichRecSegment*>(segment); // need to remove this
   const LHCb::RichRecRing        * ring  = m_massHypoRings->massHypoRing( seg, m_pidTypes.front() );
   const LHCb::RichRecPointOnRing * point = ( ring ? ring->getPointClosestInAzimuth(phiCerenkov) : NULL );
   if ( point )
   {
-    thetaCerenkov += ring->radius() * sqrt( sep2 / (segPSide-point->localPosition()).Mag2() );
+    const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
+                              gsl_pow_2(segPSide.y()-point->localPosition().y()) );
+    thetaCerenkov += ring->radius() * sqrt( sep2 / sep2_tmp );
   }
   else
   {
@@ -200,10 +206,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( 0 );
   gPhoton.setFlatMirrorNum          ( 0 );
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Created photon " << gPhoton << endreq;
-  }
+  //if ( msgLevel(MSG::VERBOSE) )
+  //{
+  // verbose() << "Created photon " << gPhoton << endreq;
+  //}
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;
