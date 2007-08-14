@@ -1,7 +1,7 @@
-// $Id: HybridEngine.h,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: HybridEngine.h,v 1.2 2007-08-14 18:18:43 ibelyaev Exp $
 // ===========================================================================
-#ifndef LOKI_CUTSHOLDERHELPER_H 
-#define LOKI_CUTSHOLDERHELPER_H 1
+#ifndef LOKI_HYBRID_ENGINE_H 
+#define LOKI_HYBRID_ENGINE_H 1
 // ===========================================================================
 // Include files
 // ===========================================================================

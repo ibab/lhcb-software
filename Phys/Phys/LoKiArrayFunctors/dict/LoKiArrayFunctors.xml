@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.4 2007-08-12 18:57:09 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.5 2007-08-14 18:18:44 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -10,6 +10,7 @@
 
 <lcgdict>
   
+   
   <class pattern   = "std::unary_function<*LHCb::Particle*,double>"          />
   <class pattern   = "std::unary_function<*LHCb::Particle*,bool>"            />
   <class pattern   = "std::binary_function<*LHCb::Particle*,*LHCb::Particle*,bool>" />
@@ -63,8 +64,7 @@
        <class pattern = "LoKi::Monitoring::Stat<*std::vector*>"    />
        <class pattern = "LoKi::Monitoring::Plot<*std::vector*>"    />
   -->
-  
-  
+   
   <class    pattern   = "LoKi::AParticles::*"             />
   <function pattern   = "LoKi::AKinematics::*"             />
   
@@ -76,8 +76,8 @@
   
   <function pattern = "LoKi::Dicts::monitor*"            />
 
-  <class pattern   = "LoKi::IHybrid*>"    />
-  <class pattern   = "LoKi::Hybrid::*>"   />
+  <class pattern   = "LoKi::IHybrid*"    />
+  <class pattern   = "LoKi::Hybrid::*"   />
   
   <exclusion>
     <class name = "std::unary_function<char,bool>"        />
@@ -85,5 +85,6 @@
     <class name = "std::unary_function<const LHCb::Particle * const,bool>" /> 
     <class name = "LoKi::AParticles::FourMomentum::Indices" />
   </exclusion>
+
   
 </lcgdict>

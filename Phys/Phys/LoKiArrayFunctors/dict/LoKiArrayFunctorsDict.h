@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.4 2007-08-14 18:18:44 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -45,14 +45,14 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
     } ;
-  } 
+  } // end of namespace Dicts 
 }
 // ============================================================================
 namespace
 {
   struct _Instantiations 
   {
-     /// fictive constructor 
+    /// fictive constructor 
     _Instantiations () ;
     // the basic functions 
     LoKi::Dicts::Funcs<LoKi::ATypes::Combination>          m_f1 ;
@@ -69,7 +69,7 @@ namespace
     LoKi::Switch<LoKi::ATypes::Combination>                m_s1 ;
     LoKi::SimpleSwitch<LoKi::ATypes::Combination>          m_s2 ;
   } ;  
-}
+} // end of anonymous namespace 
 // ============================================================================
 // The END 
 // ============================================================================
