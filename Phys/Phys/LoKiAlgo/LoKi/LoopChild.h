@@ -1,4 +1,4 @@
-// $Id: LoopChild.h,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
+// $Id: LoopChild.h,v 1.4 2007-08-14 17:12:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPCHILD_H 
 #define LOKI_LOOPCHILD_H 1
@@ -94,6 +94,20 @@ namespace LoKi
       const size_t       index2   ,
       const size_t       index3   ,
       const size_t       index4   ) ;
+    // ========================================================================
+    /** get the whole vector of daughters (for completeness)
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-02
+     */    
+    LHCb::Particle::ConstVector
+    children ( const LoKi::Loop& particle ) ;
+    // ========================================================================
+    /** get all descendants (for completeness)
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-02
+     */    
+    LHCb::Particle::ConstVector
+    descendants ( const LoKi::Loop& particle ) ;
     // ========================================================================
   } // end of namespace LoKi::LoopChild 
   // ========================================================================

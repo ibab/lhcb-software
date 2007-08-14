@@ -1,4 +1,4 @@
-// $Id: LoopChild.cpp,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
+// $Id: LoopChild.cpp,v 1.4 2007-08-14 17:12:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 // ============================================================================
 #include "LoKi/Child.h"
 #include "LoKi/Loop.h"
+#include "LoKi/LoopObj.h"
 #include "LoKi/LoopChild.h"
 #include "LoKi/Algo.h"
 // ============================================================================
@@ -111,7 +112,53 @@ LHCb::Particle* LoKi::LoopChild::child
 { return LoKi::Child::child ( child ( particle , index1 ) , 
                               index2 , index3 , index4 ) ; }
 // ============================================================================
-
+/* get the whole vector of daughters (for completeness)
+ * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ * @date   2007-06-02
+ */    
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::LoopChild::children 
+( const LoKi::Loop& particle ) 
+{
+  if ( !particle) { return LHCb::Particle::ConstVector() ; }    // RETURN
+  LHCb::Particle::ConstVector result ;
+  result.reserve ( particle->dim() ) ;
+  const LoKi::LoopObj::Select& current = particle->current() ;
+  for ( LoKi::LoopObj::Select::const_iterator ip = current.begin() ; 
+        current.end() != ip ; ++ip ) 
+  {
+    const LHCb::Particle* p = **ip ;
+    if ( 0 == p ) { continue ; }
+    result.push_back ( p ) ;
+  }
+  return result ;
+} 
+// ============================================================================
+/*  get all descendants (for completeness)
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-06-02
+ */    
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::LoopChild::descendants 
+( const LoKi::Loop& particle ) 
+{
+  if ( !particle ) { return LHCb::Particle::ConstVector() ; }     // RETURN 
+  LHCb::Particle::ConstVector result ;
+  result.reserve ( particle->dim() ) ;
+  const LoKi::LoopObj::Select& current = particle->current() ;
+  for ( LoKi::LoopObj::Select::const_iterator ip = current.begin() ; 
+        current.end() != ip ; ++ip ) 
+  {
+    const LHCb::Particle* p = **ip ;
+    if ( 0 == p ) { continue ; }
+    const LHCb::Particle::ConstVector& tmp = LoKi::Child::descendants ( p ) ;
+    result.insert ( result.end() , tmp.begin() , tmp.end() ) ;
+  }
+  return result ;
+}
+// ============================================================================
 
 
 // ============================================================================

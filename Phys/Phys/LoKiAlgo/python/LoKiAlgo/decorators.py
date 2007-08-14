@@ -10,9 +10,9 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 import LoKiPhys.decorators   as     _LoKiPhys
-import LoKiPhysMC.decorators as     _LoKiPhysMC 
+##import LoKiPhysMC.decorators as     _LoKiPhysMC 
 from   LoKiAlgo.functions    import * 
-
+import LoKiAlgo.Loop
 
 # =============================================================================
 ##get the effective formula of the loop, @see LoKi::LoopObj::formula
@@ -267,29 +267,28 @@ def _iter_ ( s ) :
 
 # =============================================================================
 ## update the docuemntation
-_formula_   . __doc__  +=  LoKi.Dicts.DictsLoop.formula     . __doc__ 
-_dim_       . __doc__  +=  LoKi.Dicts.DictsLoop.dim         . __doc__ 
-_size_      . __doc__  +=  LoKi.Dicts.DictsLoop.size        . __doc__ 
-_status_    . __doc__  +=  LoKi.Dicts.DictsLoop.status      . __doc__ 
-_next_      . __doc__  +=  LoKi.Dicts.DictsLoop.next        . __doc__ 
-_vertex_    . __doc__  +=  LoKi.Dicts.DictsLoop.vertex      . __doc__ 
-_particle_  . __doc__  +=  LoKi.Dicts.DictsLoop.particle    . __doc__ 
-_momentum_  . __doc__  +=  LoKi.Dicts.DictsLoop.momentum    . __doc__ 
-_mass_      . __doc__  +=  LoKi.Dicts.DictsLoop.mass        . __doc__ 
-_pid_       . __doc__  +=  LoKi.Dicts.DictsLoop.pid         . __doc__ 
-_pp_        . __doc__  +=  LoKi.Dicts.DictsLoop.pp          . __doc__ 
-_pidName_   . __doc__  +=  LoKi.Dicts.DictsLoop.pidName     . __doc__ 
-_setPID_    . __doc__  +=  LoKi.Dicts.DictsLoop.setPID      . __doc__ 
-_setFit_    . __doc__  +=  LoKi.Dicts.DictsLoop.setReFitter . __doc__ 
-_pv_        . __doc__  +=  LoKi.Dicts.DictsLoop.pv          . __doc__ 
-_setPV_     . __doc__  +=  LoKi.Dicts.DictsLoop.setPV       . __doc__ 
-_make_      . __doc__  +=  LoKi.Dicts.DictsLoop.make        . __doc__ 
-_reFit_     . __doc__  +=  LoKi.Dicts.DictsLoop.reFit       . __doc__ 
-_save_      . __doc__  +=  LoKi.Dicts.DictsLoop.save        . __doc__ 
-_backup_    . __doc__  +=  LoKi.Dicts.DictsLoop.backup      . __doc__ 
-_restore_   . __doc__  +=  LoKi.Dicts.DictsLoop.restore     . __doc__ 
+_formula_   . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.formula     . __doc__ 
+_dim_       . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.dim         . __doc__ 
+_size_      . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.size        . __doc__ 
+_status_    . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.status      . __doc__ 
+_next_      . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.next        . __doc__ 
+_vertex_    . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.vertex      . __doc__ 
+_particle_  . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.particle    . __doc__ 
+_momentum_  . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.momentum    . __doc__ 
+_mass_      . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.mass        . __doc__ 
+_pid_       . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.pid         . __doc__ 
+_pp_        . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.pp          . __doc__ 
+_pidName_   . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.pidName     . __doc__ 
+_setPID_    . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.setPID      . __doc__ 
+_setFit_    . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.setReFitter . __doc__ 
+_pv_        . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.pv          . __doc__ 
+_setPV_     . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.setPV       . __doc__ 
+_make_      . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.make        . __doc__ 
+_reFit_     . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.reFit       . __doc__ 
+_save_      . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.save        . __doc__ 
+_backup_    . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.backup      . __doc__ 
+_restore_   . __doc__  +=  "\n\n" + LoKi.Dicts.DictsLoop.restore     . __doc__ 
 # =============================================================================
-
 
 LoKi.Loop.formula     = _formula_
 LoKi.Loop.dim         = _dim_
@@ -321,7 +320,6 @@ LoKi.Loop.daughter    = _particle_
 LoKi.Loop.son         = _particle_
 LoKi.Loop.m           = _mass_ 
 LoKi.Loop.p           = _momentum_
-
 
 
 ## ============================================================================
@@ -401,7 +399,7 @@ def _decorate( name = _name ) :
 # =============================================================================
 ## make a decoration of the module 
 _decorated  = _decorate ( _LoKiPhys   . __name__ ) 
-_decorated |= _decorate ( _LoKiPhysMC . __name__ ) 
+##_decorated |= _decorate ( _LoKiPhysMC . __name__ ) 
 # =============================================================================
 if '__main__' == __name__ :
     print 'Number of properly decorated types: %s'%len(_decorated)
