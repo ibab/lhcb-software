@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.4 2007-08-14 18:18:44 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.5 2007-08-14 18:27:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -16,7 +16,6 @@
 // ============================================================================
 #include "LoKi/ATypes.h"
 #include "LoKi/LoKiArrayFunctors.h"
-#include "LoKi/AMoniDicts.h"
 // ============================================================================
 #include "LoKi/IHybridTool.h"
 #include "LoKi/HybridEngine.h"
@@ -62,12 +61,6 @@ namespace
     LoKi::Dicts::FunCalls<LoKi::ATypes::Combination>       m_c1 ;
     LoKi::Dicts::CutCalls<LoKi::ATypes::Combination>       m_c2 ;
     //
-    LoKi::Monitoring::Counter<LoKi::ATypes::Combination>   m_m1 ;
-    LoKi::Monitoring::Stat<LoKi::ATypes::Combination>      m_m2 ;
-    LoKi::Monitoring::Plot<LoKi::ATypes::Combination>      m_m3 ;
-    //
-    LoKi::Switch<LoKi::ATypes::Combination>                m_s1 ;
-    LoKi::SimpleSwitch<LoKi::ATypes::Combination>          m_s2 ;
   } ;  
 } // end of anonymous namespace 
 // ============================================================================
