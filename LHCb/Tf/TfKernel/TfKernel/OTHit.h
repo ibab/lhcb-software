@@ -1,5 +1,19 @@
-#ifndef OTHIT_H 
-#define OTHIT_H 1
+
+//-----------------------------------------------------------------------------
+/** @file OTHit.h
+ *
+ *  Header file for track find class Tf::OTHit
+ *
+ *  CVS Log :-
+ *  $Id: OTHit.h,v 1.2 2007-08-15 20:21:51 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-05-30
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_OTHIT_H 
+#define TFKERNEL_OTHIT_H 1
 
 // Include files
 #include "TfKernel/LineHit.h"
@@ -11,7 +25,7 @@ namespace Tf
 
   /** @class OTHit
    *
-   *  Store an OT coordinate
+   *  Representation of an OT hit
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
@@ -19,53 +33,95 @@ namespace Tf
 
   class OTHit : public LineHit
   {
+
   public:
-    typedef DeOTModule DetectorElementType ;
 
-    typedef ot_hit_tag hit_tag; ///< the hit type tag
+    typedef DeOTModule DetectorElementType ; ///< Detector element type for OT
+    typedef ot_hit_tag             hit_tag ; ///< the hit type tag
 
-    // This is the 'official' constructor. It is still too slow.
-    OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) ;
+  public:
 
-    //== Simple accessors to internal data members
-    /** calibrated time is drift time + propagation time - default tof */
-    float calibratedTime() const { return m_calibratedTime ; }
-    const DeOTModule& module() const { return *m_module ; }
-    const LHCb::OTLiteTime& rawhit() const { return m_rawhit ; }
-    /** default drift distance. defined halfway the wire */
-    float driftDistance()  const { return m_driftDistance; }
-    
-    /** y-coordinate of the readout side of the wire (defines t0) */
-    float  yReadout()   const { return yEnd() ; }
-    
-    /** propagation time relative to the default, which is halfway the
-	wire. The velocity has been corrected for sign and direction */
-    float propagationTime( double globaly ) const {
-      return ( yReadout() -  globaly )/module().propagationVelocityY()  ; }
-    /** drift time after correction for propagation time */
-    float driftTime( double globaly ) const { return calibratedTime() - propagationTime( globaly ) ; }
-    /** drift distance after correction for propagation time */
-    float driftDistance( double globaly ) const { return module().driftDistance( driftTime( globaly) ) ; }
-    bool outOfTime( double globaly, double numsigma ) const ;
-    // obsolete. please, don't use. to select valid drifttimes, cut directly on the drifttime.
-    float untruncatedDriftDistance( double globaly ) const { return module().untruncatedDriftDistance( driftTime( globaly) ) ; }
-    float untruncatedDriftDistance()  const { return module().untruncatedDriftDistance( driftTime(yMid()) ) ; }
-    
-    unsigned int straw() const { return m_rawhit.channel().straw() ; }
-    unsigned int monolayer() const { return module().monoLayerB(straw()) ; }
-    float wireLength()    const { return module().wireLength(m_rawhit.channel()); }
-  private:
-    // These are the data members
-    const DeOTModule*        m_module ;
-    LHCb::OTLiteTime         m_rawhit ;
-    float                    m_calibratedTime ;
-    float                    m_driftDistance ;
+    /** Constructor from a DeOTModule and an OTLiteTime
+     *  @param[in] aModule Reference to the associated DeOTModule
+     *  @param[in] rawhit  The raw OT hit (OTLiteTime)
+     */
+    OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit );
+
+  public: // Simple accessors to internal data members
+
+    /** Returns the calibrated time is drift time + propagation time - default tof */
+    inline float calibratedTime() const { return m_calibratedTime; }
+
+    /** Access the associated DeOTModule for this hit
+     *  @return Reference to the associated DeOTModule */
+    inline const DeOTModule& module() const { return *m_module; }
+
+    /** Access the raw hit information (OTLiteTime)
+     *  @return The OTLiteTime for this hit */
+    inline const LHCb::OTLiteTime& rawhit() const { return m_rawhit ; }
+
+    /** Access the default drift distance. 
+     *  Defined at the point halfway along the length the wire.
+     *  @return The drift distrance */
+    inline float driftDistance()  const { return m_driftDistance; }
+
+    /** Access the y-coordinate of the readout side of the wire (defines t0) */
+    inline float  yReadout()   const { return yEnd() ; }
+
+    /** Access the propagation time relative to the default, which is halfway along the
+        wire. The velocity has been corrected for sign and direction */
+    inline float propagationTime( const double globaly ) const 
+    {
+      return ( yReadout() -  globaly )/module().propagationVelocityY(); 
+    }
+
+    /** The drift time after correction for propagation time */
+    inline float driftTime( const double globaly ) const { return calibratedTime() - propagationTime( globaly ) ; }
+
+    /** The drift distance after correction for propagation time */
+    inline float driftDistance( const double globaly ) const { return module().driftDistance( driftTime( globaly) ) ; }
+
+    /** XXX???XXX No idea what this returns */
+    bool outOfTime( const double globaly, const double numsigma ) const ;
+
+    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
+     *  XXX???XXX If obsolete, should we not remove this method entirely */
+    inline float untruncatedDriftDistance( const double globaly ) const 
+    { 
+      return module().untruncatedDriftDistance( driftTime( globaly) ) ; 
+    }
+
+    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
+     *  XXX???XXX If obsolete, should we not remove this method entirely */
+    inline float untruncatedDriftDistance() const 
+    { 
+      return module().untruncatedDriftDistance( driftTime(yMid()) ) ; 
+    }
+
+    /** Access the stram number for this hit */
+    inline unsigned int straw() const { return m_rawhit.channel().straw() ; }
+
+    /** Access the monolayer number for this hit (XXX???XXX what exactly is this) */
+    inline unsigned int monolayer() const { return module().monoLayerB(straw()) ; }
+
+    /** The length of the wire */
+    inline float wireLength() const { return module().wireLength(m_rawhit.channel()); }
+
+  private: // data
+
+    const DeOTModule* m_module ;         ///< Pointer to the associated DeOTModule
+    LHCb::OTLiteTime  m_rawhit ;         ///< The raw OTLiteTime for this hit
+    float             m_calibratedTime ; ///< The calibrated time = drift time + propagation time - default tof
+    float             m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
+
   };
 
   /// Type for container for OTHit
   typedef std::vector<const OTHit*> OTHits;
-  /// Type for range of OTHits within a container 
-  typedef LoKi::Range_<OTHits> OTHitRange ;
+
+  /// Type for range of OTHits within a container
+  typedef LoKi::Range_<OTHits> OTHitRange;
+
   /// Type for a container for OTHitRange
   typedef std::vector<OTHitRange> OTHitRanges;
 
@@ -73,8 +129,7 @@ namespace Tf
   // Inline function definitions
   ////////////////////////////////////////////////////////////////////////////////////
 
-  inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit)
-    : 
+  inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) :
     LineHit(aModule,rawhit),
     m_module(&aModule),
     m_rawhit(rawhit),
@@ -82,20 +137,25 @@ namespace Tf
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
-    float time = driftTime(yMid()) ;
+    const float time = driftTime(yMid()) ;
     m_driftDistance  = aModule.driftDistance(time) ;
-    float res = aModule.resolution(time) ;
+    const float res = aModule.resolution(time) ;
     setVariance(res*res) ;
   }
 
-  inline bool OTHit::outOfTime( double globaly, double numsigma ) const {
-    float tres = module().driftTimeResolution(m_driftDistance) ;
-    float tmax = module().maxDriftTime() ;
-    float t    = driftTime( globaly) ;
+  inline bool OTHit::outOfTime( double globaly, double numsigma ) const 
+  {
+    const float tres = module().driftTimeResolution(m_driftDistance) ;
+    const float tmax = module().maxDriftTime() ;
+    const float t    = driftTime( globaly) ;
     return t<-numsigma*tres || t>tmax + numsigma*tres ;
   }
 
   // our dynamic casts
-  inline const OTHit* HitBase::othit() const { return type()==RegionID::OT ? static_cast<const OTHit*>(this) : 0 ; }
+  inline const OTHit* HitBase::othit() const 
+  { 
+    return type()==RegionID::OT ? static_cast<const OTHit*>(this) : NULL ; 
+  }
+
 }
-#endif // OTHit_H
+#endif // TFKERNEL_OTHIT_H 
