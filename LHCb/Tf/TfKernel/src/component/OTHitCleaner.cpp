@@ -1,4 +1,4 @@
-// $Id: OTHitCleaner.cpp,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: OTHitCleaner.cpp,v 1.2 2007-08-15 12:12:15 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -172,14 +172,14 @@ void OTHitCleaner::removeHotModules( const OTHits::const_iterator begin,
     else if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "DeOTModule " << iM->first->uniqueModule() 
-              << " suppressed due to high occupancy = " << occ << endreq;
+              << " suppressed due to high occupancy = " << occ 
+              << " > " << m_maxModuleOcc << " maximum" << endreq;
     }
   }
 
 }
 
 //=============================================================================
-
 
 // CRJ : Don't think this is used
 /*

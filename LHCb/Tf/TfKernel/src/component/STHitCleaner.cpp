@@ -1,4 +1,4 @@
-// $Id: STHitCleaner.cpp,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: STHitCleaner.cpp,v 1.2 2007-08-15 12:12:15 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -98,7 +98,9 @@ void STHitCleaner::removeHotBeetles( const STHits::const_iterator begin,
     else if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "DeSTSector " << iB->first->id()
-              << " suppressed due to high occupancy = " << occ << endreq;
+              << " suppressed due to high occupancy = " << occ 
+              << " > " << m_maxBeetleOcc << " maximum"
+              << endreq;
     }
   }
 
