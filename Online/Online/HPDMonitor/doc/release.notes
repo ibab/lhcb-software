@@ -4,6 +4,13 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-08-15 - Ulrich Kerzel
+ - add new "write" and "read" buttons which
+   -> create in the current directory the file SelectedDimServices.txt
+      and writes the fully qualified DIM service name of the selected
+      histograms
+   -> reads the file back and select the histograms
+
  - connect2DIM: follow DIM convention and use  
      (stringService.substr(0,4) == "H1D/") {
             stringService.replace(0,4,"");

@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.13 2007-05-31 14:47:15 ukerzel Exp $
+// $Id: HPDGui.h,v 1.14 2007-08-15 17:09:21 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -59,7 +59,10 @@ class HPDGui : public TGMainFrame {
                 id2DDrawOption,
                 id1DDrawOption,
                 idStats,
-                idZoom};
+                idZoom,
+                idWrite,
+                idRead};
+
   enum histStatOption { none,
                         stat1D,
                         stat2D,
@@ -142,7 +145,9 @@ private:
 
   void ActionButtonSelect(); // code executed when "select" button is pressed
   void ActionButtonPrint();  //                    "print"
-  
+  void ActionButtonWrite();  //                    "write"  button is pressed
+  void ActionButtonRead();   //                    "read"   button is pressed
+   
 
   histStatOption DetermineStatOption();
 
@@ -181,6 +186,8 @@ private:
   std::vector<TGListTreeItem *> m_SelectedCounterVector;    // vector of counters selected to display
   std::vector<TColor*>          m_RootColourVector;         // vector of colours defined for own colour palette -
                                                             // not really used but needed to clean up
+  std::vector<std::string>      m_HistosFromFileVector;     // vector of names of DIM addesses for histograms to select
+
   
   TGTextButton                 *m_ButtonConnect;  
   TGTextButton                 *m_ButtonExit; 
@@ -188,6 +195,8 @@ private:
   TGTextButton                 *m_ButtonPause;
   TGTextButton                 *m_ButtonSelect;
   TGTextButton                 *m_ButtonZoom;
+  TGTextButton                 *m_ButtonWrite;
+  TGTextButton                 *m_ButtonRead;
   
   TGNumberEntry                *m_EntryRefreshTimeHisto;
   TGNumberEntry                *m_EntryRefreshTimeCounter;

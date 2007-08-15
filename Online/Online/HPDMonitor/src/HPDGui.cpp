@@ -1,7 +1,8 @@
-// $Id: HPDGui.cpp,v 1.37 2007-08-07 12:07:04 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.38 2007-08-15 17:09:21 ukerzel Exp $
 // Include files 
 
 #include <iostream>
+#include <fstream.h>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
@@ -117,7 +118,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   //
   // define canvas
   //
-
+  if (m_verbose > 1)
+    std::cout << "define canvas" << std::endl;
   m_EmbeddedCanvas          =  new TRootEmbeddedCanvas("EmbeddedCanvas",m_CompositeFrameMain,canvasWidth,canvasHeight);
   m_Canvas                  =  m_EmbeddedCanvas->GetCanvas();
   m_Canvas                  -> SetFillColor(10); // white background
@@ -126,6 +128,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   //
   // status bar
   //
+  if (m_verbose > 1)
+    std::cout << "define status bar" << std::endl;
   int statusWidth        =  canvasWidth;  
   int statusHeight       =  2;  
   m_StatusBar            =  new TGStatusBar(m_CompositeFrameMaster, statusWidth, statusHeight);
@@ -135,6 +139,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   //
   // Define the tree-structure like selection box for the various DIM services
   //
+  if (m_verbose > 1)
+    std::cout << "define tree structure" << std::endl;
   m_CanvasListTree           =  new TGCanvas(m_CompositeFrameButtons, 
                                              listTreeWidth, listTreeHeight, 
                                              kSunkenFrame | kDoubleBorder);
@@ -150,12 +156,17 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   //
   // Frame holding "Connect" button and HPD row/column entry fields
   //
+  if (m_verbose > 1)
+    std::cout << "define control buttons" << std::endl;
+
   m_GroupFrameHPDControl     =  new TGGroupFrame(m_CompositeFrameButtons, "setup", kHorizontalFrame);
   //                                                                    frame  ,          #rows #colums separator
   m_GroupFrameHPDControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameHPDControl,  0,     2,      5));
   m_CompositeFrameButtons    -> AddFrame(m_GroupFrameHPDControl, m_LayoutTopLeft);
   
   // entry field for refresh time -- affects 2D "ring" histogram
+  if (m_verbose > 1)
+    std::cout << "define refresh histo" << std::endl;
   m_stringRefreshTimeHisto      =  new TGHotString("refresh histo (s)");
   m_labelRefreshTimeHisto       =  new TGLabel(m_GroupFrameHPDControl, m_stringRefreshTimeHisto);
   m_GroupFrameHPDControl     -> AddFrame(m_labelRefreshTimeHisto, m_LayoutTopLeftExpandX);
@@ -167,6 +178,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_GroupFrameHPDControl     -> AddFrame(m_EntryRefreshTimeHisto  , m_LayoutTopLeft);
   
   // entry field for refresh time -- affects HPD hit counter
+  if (m_verbose > 1)
+    std::cout << "define refresh counter" << std::endl;
   m_stringRefreshTimeCounter =  new TGHotString("refresh hit counter (s)");
   m_labelRefreshTimeCounter  =  new TGLabel(m_GroupFrameHPDControl, m_stringRefreshTimeCounter);
   m_GroupFrameHPDControl     -> AddFrame(m_labelRefreshTimeCounter, m_LayoutTopLeftExpandX);
@@ -178,6 +191,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_GroupFrameHPDControl     -> AddFrame(m_EntryRefreshTimeCounter  , m_LayoutTopLeft);
 
   // entry field for counter min. value
+  if (m_verbose > 1)
+    std::cout << "define counter min" << std::endl;
   m_stringCounterMin         =  new TGHotString("counter min.");
   m_labelCounterMin          =  new TGLabel(m_GroupFrameHPDControl, m_stringCounterMin);
   m_GroupFrameHPDControl     -> AddFrame(m_labelCounterMin, m_LayoutTopLeftExpandX);
@@ -188,6 +203,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_GroupFrameHPDControl     -> AddFrame(m_EntryCounterMin  , m_LayoutTopLeft);
 
   // entry field for counter max. value
+  if (m_verbose > 1)
+    std::cout << "define counter max" << std::endl;
   m_stringCounterMax         =  new TGHotString("counter max.");
   m_labelCounterMax          =  new TGLabel(m_GroupFrameHPDControl, m_stringCounterMax);
   m_GroupFrameHPDControl     -> AddFrame(m_labelCounterMax, m_LayoutTopLeftExpandX);
@@ -198,6 +215,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_GroupFrameHPDControl     -> AddFrame(m_EntryCounterMax  , m_LayoutTopLeft);
 
   // entry field for max digits displayed on axis (before swithching to 10^n)
+  if (m_verbose > 1)
+    std::cout << "define max digig" << std::endl;
   m_stringAxisMaxDigits      =  new TGHotString("axis digit max.");  
   m_labelAxisMaxDigits       =  new TGLabel(m_GroupFrameHPDControl, m_stringAxisMaxDigits);
   m_GroupFrameHPDControl     -> AddFrame(m_labelAxisMaxDigits, m_LayoutTopLeftExpandX);  
@@ -209,6 +228,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   
 
   // entry for draw option used for 2D histogram
+  if (m_verbose > 1)
+    std::cout << "define 2D draw option" << std::endl;
   m_string2DDrawOption       =  new TGHotString("2D draw option");
   m_label2DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_label2DDrawOption, m_LayoutTopLeftExpandX);
@@ -235,7 +256,9 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_Entry2DDrawOption        -> AddEntry("PSR"    , id2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_Entry2DDrawOption,  m_LayoutTopLeft);
 
-  // entry for draw option used for 2D histogram
+  // entry for draw option used for 1D histogram
+  if (m_verbose > 1)
+    std::cout << "define 1D draw option" << std::endl;
   m_string1DDrawOption       =  new TGHotString("1D draw option");
   m_label1DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string1DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_label1DDrawOption, m_LayoutTopLeftExpandX);
@@ -257,6 +280,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   
 
   // entry field used to determine whether the stat box should be shown or not
+  if (m_verbose > 1)
+    std::cout << "define stats option" << std::endl;
   m_stringStats              =  new TGHotString("show stats");
   m_labelStats               =  new TGLabel(m_GroupFrameHPDControl,m_stringStats);
   m_GroupFrameHPDControl     -> AddFrame(m_labelStats,m_LayoutTopLeftExpandX);
@@ -268,11 +293,15 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_EntryStats               -> AddEntry("1D + 2D" , idStats);
   m_GroupFrameHPDControl     -> AddFrame(m_EntryStats,  m_LayoutTopLeft);
 
-  // define "Connect" buttton
+  // define "Connect" button
+  if (m_verbose > 1)
+    std::cout << "define connect" << std::endl;
   m_ButtonConnect            =  new TGTextButton(m_GroupFrameHPDControl, "&connect",idConnect);
   m_ButtonConnect            -> Associate(this);  
   m_GroupFrameHPDControl     -> AddFrame(m_ButtonConnect , m_LayoutTopLeft);
 
+  if (m_verbose > 1)
+    std::cout << "define select" << std::endl;
   m_ButtonSelect             =  new TGTextButton(m_GroupFrameHPDControl, "&select",idSelect);
   m_ButtonSelect             -> Associate(this);  
   m_GroupFrameHPDControl     -> AddFrame(m_ButtonSelect , m_LayoutTopLeft);
@@ -280,34 +309,57 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   //
   // Frame holding other control buttons
   //
+  if (m_verbose > 1)
+    std::cout << "setup control frame" << std::endl;
   m_GroupFrameGuiControl     =  new TGGroupFrame(m_CompositeFrameButtons, "Control buttons", kHorizontalFrame);
   //                                                                    frame  ,          #rows #colums separator
-  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  1,   4,      2));
+  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  1,   6,      2));
   m_CompositeFrameButtons    -> AddFrame(m_GroupFrameGuiControl, m_LayoutTopLeft);
 
   // define Play/Pause button
+  if (m_verbose > 1)
+    std::cout << "define play/pause" << std::endl;
   m_ButtonPause              =  new TGTextButton(m_GroupFrameGuiControl, "&start  ", idPause);
   m_ButtonPause              -> Associate(this);
   m_ButtonPause              -> ChangeBackground(m_ROOTGreen);
   m_GroupFrameGuiControl     -> AddFrame(m_ButtonPause, m_LayoutBottomRight);
   
   // define "Print" button
+  if (m_verbose > 1)
+    std::cout << "define print" << std::endl;
   m_ButtonPrint   =  new TGTextButton(m_GroupFrameGuiControl, "&print", idPrint);
   m_ButtonPrint   -> Associate(this);
   m_GroupFrameGuiControl->AddFrame(m_ButtonPrint, m_LayoutBottomRight);
   
   // define "zoom" button opening extra canvas displaying 
   // the histogram the mouse is currently hovering over
+  if (m_verbose > 1)
+    std::cout << "define detail" << std::endl;
   m_ButtonZoom              =  new TGTextButton(m_GroupFrameGuiControl, "&detail", idZoom);
   m_ButtonZoom              -> Associate(this);
   m_GroupFrameGuiControl    -> AddFrame(m_ButtonZoom,  m_LayoutBottomRight);
 
   // define "exit" button
+  if (m_verbose > 1)
+    std::cout << "define exit" << std::endl;
   m_ButtonExit              =  new TGTextButton(m_GroupFrameGuiControl, "&exit ",idExit);
   m_ButtonExit              -> Associate(this);  
   m_ButtonExit              -> ChangeBackground(m_ROOTRed);  
   m_GroupFrameGuiControl    -> AddFrame(m_ButtonExit , m_LayoutBottomRight);
 
+  // define "write" button to write list of selected histograms to file
+  if (m_verbose > 1)
+    std::cout << "define write" << std::endl;
+  m_ButtonWrite             = new TGTextButton(m_GroupFrameGuiControl, "&write ",idWrite);
+  m_ButtonWrite             -> Associate(this); 
+  m_GroupFrameGuiControl    -> AddFrame(m_ButtonWrite, m_LayoutBottomRight);
+
+  // define "read" button to read list and select histograms from file
+  if (m_verbose > 1)
+    std::cout << "define read " << std::endl;
+  m_ButtonRead              = new TGTextButton(m_GroupFrameGuiControl, "&read ",idRead);
+  m_ButtonRead              -> Associate(this); 
+  m_GroupFrameGuiControl    -> AddFrame(m_ButtonRead, m_LayoutBottomRight);
   
   //
   // now buid up GUI using methods of the base class
@@ -561,6 +613,14 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
                                  // address in place          
           m_CanvasZoom = NULL;
         }
+        break;
+
+      case idWrite:
+        HPDGui::ActionButtonWrite();
+        break;
+
+      case idRead:
+        HPDGui::ActionButtonRead();
         break;
 
       default:
@@ -1883,6 +1943,14 @@ void HPDGui::ActionButtonSelect() {
   } // if string find
   m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
   
+
+  //
+  // iterators for loop over DimServices read back from File
+  //
+  std::vector<std::string>::const_iterator dimServiceFileIter;
+  std::vector<std::string>::const_iterator dimServiceFileIterBegin = m_HistosFromFileVector.begin();
+  std::vector<std::string>::const_iterator dimServiceFileIterEnd   = m_HistosFromFileVector.end();
+
   std::string tmpString;
   std::vector<TGListTreeItem *>::const_iterator serviceIter;
   std::vector<TGListTreeItem *>::const_iterator serviceIterBegin = m_ListTreeItemVector.begin();
@@ -1910,6 +1978,25 @@ void HPDGui::ActionButtonSelect() {
           (*serviceIter)->CheckItem(true); // set check-box for this item to select it
         } //found service        
       } // if != ""
+
+      // try to determine if services have been specified in a file
+      for (dimServiceFileIter = dimServiceFileIterBegin; 
+           dimServiceFileIter != dimServiceFileIterEnd;
+           dimServiceFileIter++) {
+        std::string thisService = (*dimServiceFileIter);
+        if (m_verbose > 1)
+          std::cout << "try to find service in list read from file " << thisService << std::endl;
+
+        if (thisService.find(serviceName)      != std::string::npos &&
+            thisService.find(serviceType)      != std::string::npos &&
+            thisService.find(GaudiAlgName)     != std::string::npos &&
+            thisService.find(GaudiOnlineName)  != std::string::npos) {
+          if (m_verbose >0)
+            std::cout << "found requested service " << thisService << std::endl;
+          
+          (*serviceIter)->CheckItem(true); // set check-box for this item to select it
+        } //found service        
+      } //for dimServiceFileIter
 
     if ((*serviceIter)->IsChecked()) {
       // selected for display
@@ -2023,3 +2110,108 @@ void HPDGui::ActionButtonPrint() {
   
 } // void ActionButtonPrint
 
+// ==============================================================================================
+void HPDGui::ActionButtonWrite() {
+  if (m_verbose > 0)
+    std::cout << "action button <write> pressed" << std::endl;
+
+  m_StatusBar -> SetText("write list of selected histograms to file");
+
+  //
+  // open output file
+  //
+  ofstream outFile;
+	
+	outFile.open("SelectedDimServices.txt");		//open a file
+
+
+  if (m_SelectedHistogramVector.size() > 0) {    
+    // 
+    // loop over selected histograms
+    //
+    std::vector<TGListTreeItem *>::const_iterator histoIter;
+    std::vector<TGListTreeItem *>::const_iterator histoIterBegin = m_SelectedHistogramVector.begin();
+    std::vector<TGListTreeItem *>::const_iterator histoIterEnd   = m_SelectedHistogramVector.end();
+    
+    for (histoIter = histoIterBegin; histoIter != histoIterEnd; histoIter++){
+      std::string serviceName     = (*histoIter)->GetText();      
+      std::string serviceType     = (*histoIter)->GetParent()->GetText();
+      std::string GaudiAlgName    = (*histoIter)->GetParent()->GetParent()->GetText();
+      std::string GaudiOnlineName = (*histoIter)->GetParent()->GetParent()->GetParent()->GetText();
+      if (m_verbose > 2)
+        std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+                  << " GaudiAlgName " << GaudiAlgName
+                  << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
+
+      
+      // sanity check: really histogram?
+      if (!((serviceType.substr(0,3) == "H1D") || 
+            (serviceType.substr(0,3) == "H2D") || 
+            (serviceType.substr(0,3) == "HPD") )){
+      std::cout << "HPDGui::SetupCanvas: not histogram - though should have been" << std::endl;
+      continue;
+      } //if not histgram
+      
+      // build up again ID string recognised by DIM
+      std::string serviceNameFQ = serviceType+"/"+GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
+      if (m_verbose > 1)
+        std::cout << "service selected: " << serviceNameFQ << std::endl;
+      outFile << serviceNameFQ << std::endl;
+
+    } //for histoIter
+  }//if m_SelectedHistogramVector  > 0
+
+  //
+  // close output file
+  //
+  outFile.close();	
+
+  if (m_verbose > 1)
+    std::cout << "end of void <write> " << std::endl;  
+} // void ActionButtonWrite
+
+// ==============================================================================================
+void HPDGui::ActionButtonRead() {
+  if (m_verbose > 0)
+    std::cout << "action button <read> pressed" << std::endl;
+
+  m_StatusBar -> SetText("read list of selected histograms from file SelectedDimServices.txt");
+
+  m_SelectedHistogramVector.clear();
+
+  if (!m_connectOK) {
+    if (m_verbose > 1)
+      std::cout << "need to connect to DIM DNS" << std::endl;
+    m_StatusBar -> SetText("Connect to DIM");
+    m_connectOK = HPDGui::Connect2DIM();
+  } // if connectOK
+
+   if (m_connectOK) {
+     if (m_verbose > 1)
+       std::cout << "read file content" << std::endl;
+     ifstream inFile;
+     inFile.open("SelectedDimServices.txt");
+     if (inFile.is_open()) {
+       std::string serviceFQ;
+       while(!std::getline(inFile, serviceFQ, '\n').eof()) {
+         if (m_verbose > 0)
+           std::cout << "got service: " << serviceFQ << std::endl;
+         m_HistosFromFileVector.push_back(serviceFQ);
+       }//while  
+       inFile.close();
+       HPDGui::Update();
+       HPDGui::ActionButtonSelect();
+     } else {
+       m_StatusBar -> SetText("file with DIM addresses not found");
+       if (m_verbose > 0)
+         std::cout << "could not open file with DIM addresses for histograms" << std::endl;
+     }
+  } else {
+    m_StatusBar -> SetText("Could not connect to DIM DNS - cannot aut-select histos");
+  }// if connectOK
+
+
+  if (m_verbose > 1)
+    std::cout << "end of void <read> " << std::endl;  
+} // void ActionButtonRead
+// ==============================================================================================
