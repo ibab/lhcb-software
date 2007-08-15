@@ -1,17 +1,36 @@
-#ifndef TF_LINEHIT_H 
-#define TF_LINEHIT_H 1
 
-// Include files
+//-----------------------------------------------------------------------------
+/** @file LineHit.h
+ *
+ *  Header file for track find class Tf::LineHit
+ *
+ *  CVS Log :-
+ *  $Id: LineHit.h,v 1.2 2007-08-15 19:56:48 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-05-30
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_LINEHIT_H
+#define TFKERNEL_LINEHIT_H 1
+
 #include "TfKernel/HitBase.h"
-#include "STDet/DeSTSector.h"
-#include "OTDet/DeOTModule.h"
-#include "Event/STLiteCluster.h"
 #include "TfKernel/OTLiteTime.h"
 
+// DetElems
+#include "STDet/DeSTSector.h"
+#include "OTDet/DeOTModule.h"
 
-namespace Tf {
+// Eventmodel
+#include "Event/STLiteCluster.h"
 
-  /** @class LineHit Store a coordinate from tracking systems which
+namespace Tf
+{
+
+  /** @class LineHit
+   *
+   *  Store a coordinate from tracking systems which
    *  can be represented by a line segment. The line is parameterized
    *  along its y-coordinate.
    *
@@ -21,96 +40,120 @@ namespace Tf {
 
   class LineHit : public HitBase
   {
-  public:
-    typedef Gaudi::XYZPointF Point ;
-    typedef Gaudi::XYZVectorF Vector ;
 
+  public: // typedefs
+
+    typedef Gaudi::XYZPointF Point;    ///< Type for point-like class
+    typedef Gaudi::XYZVectorF Vector;  ///< Type for vector-like class
     typedef line_hit_tag hit_type_tag; ///< the hit type tag
 
-    //== Simple accessors to internal data members 
-    float yBegin()  const { return m_ybegin ; }
-    float yEnd()    const { return m_yend ; }
-    float xAtYEq0() const { return m_xAtYEq0 ; }
-    float zAtYEq0() const { return m_zAtYEq0 ; }
-    float dxDy()    const { return m_dxdy ; }
-    float dzDy()    const { return m_dzdy ; }
+  public:
 
-    /** x-coordinate in rotated system */
-    float xT()   const { return coord() ; }
+    // Simple accessors to internal data members
 
-    /** x coordinate as function of y */
-    float x(float globalY = 0) const { return m_xAtYEq0 + globalY*m_dxdy ; }
+    /** Access the start point y coordinate for this LineHit */
+    inline float yBegin()  const { return m_ybegin ; }
 
-    /** z coordinate as function of y */
-    float z(float globalY = 0) const { return m_zAtYEq0 + globalY*m_dzdy ; }
+    /** Access the end point y coordinate for this LineHit */
+    inline float yEnd()    const { return m_yend ; }
 
-    /** y coordinate in middle of strip */
-    float y() const { return 0.5*(yBegin()+yEnd()); }
+    /** Access the value of global x coordinate at the point y=0 for this LineHit */
+    inline float xAtYEq0() const { return m_xAtYEq0 ; }
+
+    /** Access the value of global z coordinate at the point y=0 for this LineHit */
+    inline float zAtYEq0() const { return m_zAtYEq0 ; }
+
+    /** Access the value of dx/dy  for this LineHit */
+    inline float dxDy()    const { return m_dxdy ; }
+
+    /** Access the value of dz/dy  for this LineHit */
+    inline float dzDy()    const { return m_dzdy ; }
+
+    /** x-coordinate in the rotated system (XXX???XXX what does rotated mean ???) */
+    inline float xT()   const { return coord() ; }
+
+    /** x coordinate of the line as function of y */
+    inline float x(const float globalY = 0) const { return m_xAtYEq0 + globalY*m_dxdy ; }
+
+    /** z coordinate of the line as function of y */
+    inline float z(const float globalY = 0) const { return m_zAtYEq0 + globalY*m_dzdy ; }
+
+    /** y coordinate in middle of the line */
+    inline float y() const { return 0.5*(yBegin()+yEnd()); }
 
     /** tan of stereo angle */
-    float tanT() const { return -m_dxdy ; }
+    inline float tanT() const { return -m_dxdy ; }
 
     /** sin of stereo angle */
-    float sinT() const { return tanT()*cosT()  ; }
-    
+    inline float sinT() const { return tanT()*cosT() ; }
+
     /** cos of stereo angle */
-    float cosT() const { return coord()/m_xAtYEq0 ; }
-    
-    /** is X layer */
-    bool  isX () const { return (layer() == 0 || layer() == 3) ; }
+    inline float cosT() const { return coord()/m_xAtYEq0 ; }
 
-    /**  minimum y coordinate of segment endpoints */
-    float yMin() const { return std::min(yBegin(),yEnd()) ; }
+    /** is this hit in an X layer */
+    inline bool  isX () const { return (layer() == 0 || layer() == 3) ; }
 
-    /**  maximum y coordinate of segment endpoints */
-    float yMax() const { return std::max(yBegin(),yEnd()) ; }
+    /** Minimum y coordinate of line endpoints */
+    inline float yMin() const { return std::min(yBegin(),yEnd()) ; }
 
-    /**  minimum x coordinate of segment endpoints */
-    float xMin() const { return std::min(x(yBegin()),x(yEnd())) ; }
+    /** Maximum y coordinate of line endpoints */
+    inline float yMax() const { return std::max(yBegin(),yEnd()) ; }
 
-    /**  maximum x coordinate of segment endpoints */
-    float xMax() const { return std::max(x(yBegin()),x(yEnd())) ; }
+    /** Minimum x coordinate of line endpoints */
+    inline float xMin() const { return std::min(x(yBegin()),x(yEnd())) ; }
 
-    /** y coordinate of segment mid point */
-    float yMid() const { return 0.5*(yBegin()+yEnd()) ; }
+    /** Maximum x coordinate of line endpoints */
+    inline float xMax() const { return std::max(x(yBegin()),x(yEnd())) ; }
 
-    /** x coordinate of segment mid point */
-    float xMid() const { return x(yMid()) ; }
+    /** y coordinate of line mid point */
+    inline float yMid() const { return 0.5*(yBegin()+yEnd()) ; }
 
-    /** z coordinate of segment mid point */
-    float zMid() const { return z(yMid()) ; }
+    /** x coordinate of line mid point */
+    inline float xMid() const { return x(yMid()) ; }
 
-    /** check of y is compatible with segment */
-    bool isYCompatible ( float y, float tol ) const {
+    /** z coordinate of line mid point */
+    inline float zMid() const { return z(yMid()) ; }
+
+    /** Check if the y value is compatible with line */
+    inline bool isYCompatible ( const float y, const float tol ) const 
+    {
       // which one is faster?
       return fabs( y - 0.5*(yBegin() + yEnd()) ) < 0.5*fabs(yBegin() - yEnd()) + tol ;
       //return yMin() - tol <= y && y <= yMax() + tol ;
     }
-     
-    /** position for y=0. Note: This is not the begin point of the
-	segment. However, it is what is needed to make the
-	intersection calls efficient */
-    Point beginPoint() const { return Point(m_xAtYEq0,0,m_zAtYEq0) ; }
+
+    /** Position for y=0. Note: This is not the begin point of the
+        line. However, it is what is needed to make the
+        intersection calls efficient 
+    */
+    inline Point beginPoint() const { return Point(m_xAtYEq0,0,m_zAtYEq0) ; }
 
     /** direction, normalized to its y coordinate */
-    Vector direction() const { return Vector(m_dxdy,1,m_dzdy) ; }
+    inline Vector direction() const { return Vector(m_dxdy,1,m_dzdy) ; }
 
     /** position for any value of y */
-    Point position(float globalY) const { return Point(x(globalY),globalY,z(globalY)) ; }
+    inline Point position(const float globalY) const { return Point(x(globalY),globalY,z(globalY)) ; }
 
-    /** length of segment */
-    float length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
-    
+    /** length of the line */
+    inline float length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
+
   protected:
+
+    /** Constructor from an OT module and a raw OT hit (OTLiteTime) */
     LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) ;
+
+    /** Constructor from an ST sector and a raw ST cluster (STLiteCluster) */
     LineHit(const DeSTSector& aSector, const LHCb::STLiteCluster& clus ) ;
+
   private:
-    float m_dxdy ;
-    float m_dzdy ;
-    float m_ybegin ;
-    float m_yend ;
-    float m_xAtYEq0 ;
-    float m_zAtYEq0 ;
+
+    float m_dxdy ;     ///< The dx/dy value
+    float m_dzdy ;     ///< The dz/dy value
+    float m_ybegin ;   ///< The y value at the start point of the line
+    float m_yend ;     ///< The y value at the end point of the line
+    float m_xAtYEq0 ;  ///< The value of x at the point y=0
+    float m_zAtYEq0 ;  ///< The value of z at the point y=0
+
   };
 
 
@@ -119,19 +162,26 @@ namespace Tf {
   ////////////////////////////////////////////////////////////////////////////////////
 
   inline LineHit::LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit)
-    : HitBase(LHCb::LHCbID(rawhit.channel()),RegionID(rawhit.channel()))
+    : HitBase ( LHCb::LHCbID ( rawhit.channel() ),
+                RegionID     ( rawhit.channel() ) )
   {
     aModule.trajectory( rawhit.channel().straw(), m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend) ;
     setCoord( m_xAtYEq0 * aModule.cosAngle() ) ;
   }
-  
-  inline LineHit::LineHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus )
-    : HitBase(LHCb::LHCbID(clus.channelID()),RegionID(clus.channelID()),0,aSector.pitch()*aSector.pitch()/12)
+
+  inline LineHit::LineHit( const DeSTSector& aSector, 
+                           const LHCb::STLiteCluster& clus )
+    : HitBase ( LHCb::LHCbID ( clus.channelID() ),
+                RegionID     ( clus.channelID() ),
+                0,
+                aSector.pitch()*aSector.pitch()/12 ) // XXX???XXX magic number ...
   {
-    aSector.trajectory( clus.channelID().strip(), clus.interStripFraction(), m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend) ;
+    aSector.trajectory( clus.channelID().strip(), 
+                        clus.interStripFraction(), 
+                        m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend );
     setCoord( m_xAtYEq0 * aSector.cosAngle() ) ;
   }
 
 }
 
-#endif // TF_LINEHIT_H
+#endif // TFKERNEL_LINEHIT_H

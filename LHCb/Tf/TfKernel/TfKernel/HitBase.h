@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.2 2007-08-15 17:01:05 jonrob Exp $
+ *  $Id: HitBase.h,v 1.3 2007-08-15 19:57:13 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -21,7 +21,7 @@
 // LHCbKernel
 #include "Kernel/LHCbID.h"
 
-// local
+// TfKernel
 #include "TfKernel/RegionID.h"
 
 namespace Tf
