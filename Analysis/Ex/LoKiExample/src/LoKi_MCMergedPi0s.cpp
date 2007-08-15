@@ -1,18 +1,4 @@
-// $Id: LoKi_MCMergedPi0s.cpp,v 1.4 2007-04-20 11:20:33 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/04/16 16:16:53  pkoppenb
-// removed polemic comment
-//
-// Revision 1.2  2007/04/04 12:16:39  ibelyaev
-//  v5r2: update
-//
-// Revision 1.1  2007/04/01 15:28:56  ibelyaev
-//  add LoKi_MCMergedPi0s.cpp
-// 
-//
+// $Id: LoKi_MCMergedPi0s.cpp,v 1.5 2007-08-15 11:03:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,7 +49,7 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
   MCRange mcpi0 = finder->findDecays("pi0 -> gamma gamma") ;
   if ( mcpi0.empty() )  { return Warning("No MC-pi0 are found!", SUCCESS ) ; }
   
-  // get only pi0s, which satisfy teh criteria:
+  // get only pi0s, which satisfy the criteria:
   // 1) large Pt
   MCCut mc1 = MCPT > 500 * Gaudi::Units::MeV  ;
   // 2) valid origin vertex 
@@ -74,7 +60,7 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
   MCCut mccut = mc1 && mc2 && mc3 ;
   MCRange mcpi = mcselect ( "mcpi" , mcpi0 , mccut ) ;
   
-  if ( mcpi.empty() )  { return Warning("No MC-pi0 are found!", SUCCESS ) ; }
+  if ( mcpi.empty() )  { return Warning ( "No MC-pi0 are found!", SUCCESS ) ; }
   
   // get the relation table form TES 
   const LHCb::Calo2MC::IClusterTable* table = 
@@ -86,6 +72,10 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
   
   MCFun mcpt = MCPT / Gaudi::Units::GeV ;
   
+  MCCut outer = ( abs(MCPY/MCPZ) < 3.00/12.5 ) && ( abs(MCPX/MCPZ) < 4.00/12.5 ) ;
+  MCCut inner = ( abs(MCPY/MCPZ) > 0.32/12.5 ) || ( abs(MCPX/MCPZ) > 0.32/12.5 ) ; 
+  MCCut acceptance = outer && inner ;
+
   // loop over mcpi0:
   for ( MCRange::iterator imcpi = mcpi.begin() ; mcpi.end() != imcpi ; ++imcpi ) 
   {
@@ -104,10 +94,13 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
     const LHCb::MCParticle* gamma2 = products[1] ;
     if ( 0 == gamma1 || 0 == gamma2 )               { continue ; }  // CONTINUE
     
+    if ( ! acceptance ( gamma1 ) )                  { continue ; }  // CONTINUE 
+    if ( ! acceptance ( gamma2 ) )                  { continue ; }  // CONTINUE 
+    
     const double pt   = mcpt ( pi0 ) ;
     const double mnpt = std::min( mcpt ( gamma1 ) , mcpt ( gamma2 ) ) ;
     
-    plot (   pt , "ALL pi0->gamma gamma                    " , 0 , 10 ) ;
+    plot (   pt , "ALL pi0->gamma gamma                    " , 0 ,  5 ) ;
     plot ( mnpt , "ALL pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     
     iTable::Range clus1 = itable.i_relations ( gamma1 ) ;
@@ -115,7 +108,7 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
     // each photon have some associated clusters in ECAL 
     if ( clus1.empty() && clus2.empty() )         { continue ; }  // CONTINUE
     
-    plot (   pt , "ECAL pi0->gamma gamma                    " , 0 , 10 ) ;
+    plot (   pt , "ECAL pi0->gamma gamma                    " , 0 ,  5 ) ;
     plot ( mnpt , "ECAL pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     
     // select only 1 or 2-cluster pi0s 
@@ -123,8 +116,8 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
     if ( 1 != clus0.size() && 2 != clus0.size() ) { continue ; }  // CONTINUE 
     //
     
-    plot (   pt , "1||2 pi0->gamma gamma                    " , 0 , 10 ) ;
-    plot ( mnpt , "1||2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+    plot (   pt , " 1||2 pi0->gamma gamma                    " , 0 ,  5 ) ;
+    plot ( mnpt , " 1||2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     
     // select only true 2 cluster pi0 
     if      ( 2 == clus0.size() && 
@@ -132,16 +125,16 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
               1 == clus2.size() &&
               clus1.front().to() != clus2.front().to() )
     {
-      plot (   pt , "2 pi0->gamma gamma                    " , 0 , 10 ) ;
-      plot ( mnpt , "2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+      plot (   pt , " 2 pi0->gamma gamma                    " , 0 ,  5 ) ;
+      plot ( mnpt , " 2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     }
     else if ( 1 == clus0.size() && 
               1 == clus1.size() && 
               1 == clus2.size() && 
               clus1.front().to() == clus2.front().to() )              
     {
-      plot (   pt , "1 pi0->gamma gamma                    " , 0 , 10 ) ;
-      plot ( mnpt , "1 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+      plot (   pt , " 1 pi0->gamma gamma                    " , 0 ,  5 ) ;
+      plot ( mnpt , " 1 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     }          
     
   }

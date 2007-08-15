@@ -1,18 +1,4 @@
-// $Id: LoKi_Bs2PsiPhi.cpp,v 1.4 2007-04-20 11:20:33 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/04/16 16:16:53  pkoppenb
-// removed polemic comment
-//
-// Revision 1.2  2007/04/04 12:16:39  ibelyaev
-//  v5r2: update
-//
-// Revision 1.1  2007/03/22 18:33:38  ibelyaev
-//  v5r2
-// 
-//
+// $Id: LoKi_Bs2PsiPhi.cpp,v 1.5 2007-08-15 11:03:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,11 +41,16 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
   
   MCFinder finder  = mcFinder("My local MC-decay finder");
   
-  MCRange mcbs  = finder->findDecays ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
-  MCRange mcpsi = finder->findDecays ( "[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
-  MCRange mcphi = finder->findDecays ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) ( ^phi(1020) ->  K+  K- ) ]cc" ) ;
-  MCRange mcmu  = finder->findDecays ( "[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
-  MCRange mck   = finder->findDecays ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) -> ^K+ ^K- ) ]cc" ) ;
+  MCRange mcbs  = finder->findDecays 
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
+  MCRange mcpsi = finder->findDecays 
+    ( "[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
+  MCRange mcphi = finder->findDecays
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) ( ^phi(1020) ->  K+  K- ) ]cc" ) ;
+  MCRange mcmu  = finder->findDecays
+    ( "[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
+  MCRange mck   = finder->findDecays
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) -> ^K+ ^K- ) ]cc" ) ;
   
   if ( mcbs  .empty() ) { return Warning ( "No MC-Bs  is found!" , SUCCESS ) ; } 
   if ( mcpsi .empty() ) { return Warning ( "No MC-psi is found!" , SUCCESS ) ; } 

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.32 2007-04-19 13:43:31 pkoppenb Exp $ 
+# $Id: requirements,v 1.33 2007-08-15 11:03:14 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.32 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.33 $
 # =============================================================================
 package         LoKiExample
-version         v5r2p1
+version         v6r0
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -23,12 +23,6 @@ library         LoKiExample  *.cpp
 # ============= patterns ======================================================
 apply_pattern component_library library=LoKiExample 
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.31  2007/03/22 18:33:35  ibelyaev
-#  v5r2
-#
-#
 # =============================================================================
 # The END 
 # =============================================================================
