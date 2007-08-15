@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.27 2007-08-09 16:46:38 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.28 2007-08-15 11:04:51 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -17,6 +17,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/HashMap.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
@@ -142,7 +143,8 @@ private: // data
   std::string m_richPath;     ///< Location in TES of input RichPIDs
   std::string m_muonPath;     ///< Location in TES of input MuonPIDs
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
-  bool m_PrsPID,m_SpdPID,m_EcalPID,m_HcalPID,m_BremPID; // Calo PIDs
+  bool m_PrsPID,m_SpdPID,m_EcalPID,m_HcalPID,m_BremPID; ///< Calo PIDs
+  bool m_richPID, m_muonPID, m_veloPID;///< PIDs
 
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
 
@@ -222,7 +224,9 @@ private:
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;
 
-
+  ISequencerTimerTool* m_timer ;
+  int m_timerIndex ; ///< index for timer
+  
 };
 
 #endif // GLOBALRECO_CHARGEDPROTOPALG_H

@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-08-15 - Patrick Koppenburg
+ - ChargedProtoPAlg: changes needed for HLT
+   . Allow to switch off Rich Muon and Velo PID.
+   . All switch options are now called UseXxxPID, like UseRichPID. This
+     is backward-incompatible with the Calo options.
+
 ! 2007-08-09 - Chris Jones
  - Update charged protoparticle maker to use context() to determine the
    RichPID and Track locations in the TES.
