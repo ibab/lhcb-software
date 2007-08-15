@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.23 2007-04-25 16:18:58 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.24 2007-08-15 17:21:30 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -205,6 +205,13 @@ StatusCode CombinedParticleMaker::finalize()
 StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
 {
 
+  debug() << "Will get ProtoParticles from " << m_input << endmsg ;
+
+  if (!exist<ProtoParticles>(m_input)){
+    Warning("No ProtoParticles at "+m_input);
+    return StatusCode::SUCCESS ;
+  }
+  
   // Load the ProtoParticles
   ProtoParticles * protos = get<ProtoParticles>( m_input );
   if ( protos->empty() )
