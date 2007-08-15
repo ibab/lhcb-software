@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.3 2007-03-22 09:05:51 cattanem Exp $
+// $Id: MuonPIDChecker.h,v 1.4 2007-08-15 16:13:41 miriamg Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -26,10 +26,10 @@
 /** @class MuonPIDChecker MuonPIDChecker.h
  *  Test MuonID efficiency/Mis-ID rates
  *
- *  new version Feb/2004 jtmn
- *
  *  @author M. Gandelman, S. Amato, J. de Mello Neto
  *  @date   25-10-2002
+ *
+ *  new version Feb/2004 jtmn
  *
  *  new version Aug/2006 miriam
  *
@@ -72,6 +72,8 @@ private:
   std::string m_TracksPath;
   /// TES path of the hits to analyse
   std::string m_HitsPath;
+  /// TES path to MuonPIDs
+  std::string m_MuonPIDsPath;
 
   double m_zOriginCut; ///< cut on origin of the muon used to define decays 
   double m_DLLCut; ///< cut on DLL value used to define efficiency      

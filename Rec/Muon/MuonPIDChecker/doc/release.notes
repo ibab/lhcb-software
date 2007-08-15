@@ -2,6 +2,10 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v2r1 2007-08-15 ====================
+! 2007-08-15 - Miriam Gandelman
+ - Made it possible to change the MuonPIDs Path in the options file
+
 !====================== MuonPIDChecker v2r0 2007-03-22 ====================
 ! 2007-03-22 - Marco Cattaneo
  - Changed name of FillTrHistos and CheckMCAss to start with lower case

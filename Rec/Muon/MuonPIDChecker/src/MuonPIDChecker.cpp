@@ -17,6 +17,7 @@
 // 25-10-2002 : M. Gandelman, S. Amato, J. de Mello Neto and A. Massafferri
 // 08-08-2006 : M. Gandelman, E. Polycarpo
 // 12-01-2007 : M. Gandelman, E. Polycarpo
+// 15-08-2007 : M. Gandelman
 //--------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -37,6 +38,9 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   // TES path for hits    
   declareProperty("HitsLocation",
                   m_HitsPath = LHCb::MuonCoordLocation::MuonCoords);
+  // Source of MuonPID
+  declareProperty("MuonIDLocation",
+                  m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
 
   // Z threshold to define decay (in cm) 
   declareProperty( "DecayVxCut", m_zOriginCut = 100.);
@@ -114,10 +118,10 @@ StatusCode MuonPIDChecker::execute() {
   debug()  << "==> Number of events: " << m_neventsTest << endreq;
 
   // get  MuonPID objects 
-  LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(LHCb::MuonPIDLocation::Default);
+  LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
   if (!pMuids){
     error() << " Failed to get MuonPID objects in "
-        <<  LHCb::MuonPIDLocation::Default << endreq;
+        <<  m_MuonPIDsPath << endreq;
     return StatusCode::FAILURE;
   }
 
