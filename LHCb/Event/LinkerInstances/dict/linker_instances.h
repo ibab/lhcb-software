@@ -10,7 +10,7 @@
 #include "Event/MuonDigit.h"
 #include "Event/CaloDigit.h"
 #include "Event/Track.h"
-
+#include "Event/Particle.h"
 namespace {
   LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> i1 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::STCluster>   i2 (0,0,"");
@@ -20,6 +20,7 @@ namespace {
   LinkedTo<LHCb::MCParticle,LHCb::CaloDigit>   i8 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::Track>       i5 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::MCHit>       i6 (0,0,"");
+  LinkedTo<LHCb::MCParticle,LHCb::Particle>    i7 (0,0,"");
   LinkedTo<LHCb::MCParticle>      i9 (0,0,"");
 
   LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> i11 (0,0,"");
@@ -30,6 +31,7 @@ namespace {
   LinkedFrom<LHCb::CaloDigit,LHCb::MCParticle>   i18 (0,0,"");
   LinkedFrom<LHCb::Track,LHCb::MCParticle>       i15 (0,0,"");
   LinkedFrom<LHCb::MCHit,LHCb::MCParticle>       i16 (0,0,"");
+  LinkedFrom<LHCb::Particle,LHCb::MCParticle>       i17 (0,0,"");
   LinkedFrom<LHCb::MCParticle>                   i19 (0,0,"");
 }
 
