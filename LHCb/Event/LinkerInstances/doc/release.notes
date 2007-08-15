@@ -4,6 +4,8 @@
 !------------------------------------------------------------------------------
 
 ! 2007-08-15 - Juan Palacios
+  - cmt/requirements
+    . use Event/PhysEvent
   - dict/linker_instances.h
     . Add LinkedTo<LHCb::MCParticle, LHCb::Particle> and LinkedFrom<LHCb::Particle, LHCb::MCParticle>
 
