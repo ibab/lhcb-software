@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
 # Revision 1.2  2007/06/10 20:13:35  ibelyaev
@@ -19,12 +19,12 @@
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-import LoKiPhys.decorators as _LoKiPhys
+import LoKiCore.decorators as _LoKiCore 
+import LoKiPhys.decorators as _LoKiPhys 
 
 LoKi  = _LoKiPhys.LoKi
 LHCb  = _LoKiPhys.LHCb
 
-LoKi.Loop
 
 # =============================================================================
 if '__main__' == __name__ :
