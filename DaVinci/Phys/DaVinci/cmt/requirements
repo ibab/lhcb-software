@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.358 2007-08-02 12:10:33 pkoppenb Exp $
+# $Id: requirements,v 1.359 2007-08-15 13:04:42 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -33,6 +33,7 @@ use GaudiPython        v*                   -no_auto_imports
 
 # From LHCB project
 use CaloDAQ            v*    Calo           -no_auto_imports
+use LinkerInstances    v*    Event
 
 #-- Lbcom
 use LbcomSys    v*
