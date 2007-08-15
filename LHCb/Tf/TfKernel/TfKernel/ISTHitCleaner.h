@@ -1,4 +1,4 @@
-// $Id: ISTHitCleaner.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: ISTHitCleaner.h,v 1.2 2007-08-15 11:29:18 jonrob Exp $
 #ifndef TFTOOLS_ISTHITCLEANER_H
 #define TFTOOLS_ISTHITCLEANER_H 1
 
@@ -35,8 +35,8 @@ namespace Tf
 
   public:
 
-    /** Clean the given range of hits
-     *  @param[in] begin   Iterator to the start of a range of hits
+    /** Clean the given range of ST hits
+     *  @param[in]  input The range of ST hits to clean
      *  @param[out] output The selected hits
      *  @return The number of removed hits
      */
@@ -48,8 +48,8 @@ namespace Tf
     }
 
     /** Clean the given range of hits
-     *  @param[in] begin   Iterator to the start of a range of hits
-     *  @param[in] end   Iterator to the start of a range of hits
+     *  @param[in] begin Iterator to the start of a range of ST hits
+     *  @param[in] end   Iterator to the start of a range of ST hits
      *  @param[out] output The selected hits   
      *  @return The number of removed hits
      */

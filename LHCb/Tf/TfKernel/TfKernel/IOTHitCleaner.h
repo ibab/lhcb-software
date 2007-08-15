@@ -1,4 +1,4 @@
-// $Id: IOTHitCleaner.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: IOTHitCleaner.h,v 1.2 2007-08-15 11:29:18 jonrob Exp $
 #ifndef TFTOOLS_IOTHITCLEANER_H
 #define TFTOOLS_IOTHITCLEANER_H 1
 
@@ -36,8 +36,8 @@ namespace Tf
 
   public:
 
-    /** Clean the given range of hits
-     *  @param[in] begin   Iterator to the start of a range of hits
+    /** Clean the given range of OT hits
+     *  @param[in]  input The range of OT hits to clean
      *  @param[out] output The selected hits
      *  @return The number of removed hits
      */
@@ -49,8 +49,8 @@ namespace Tf
     }
 
     /** Clean the given range of hits
-     *  @param[in] begin   Iterator to the start of a range of hits
-     *  @param[in] end   Iterator to the start of a range of hits
+     *  @param[in] begin Iterator to the start of a range of OT hits
+     *  @param[in] end   Iterator to the start of a range of OT hits
      *  @param[out] output The selected hits
      *  @return The number of removed hits
      */
@@ -59,6 +59,7 @@ namespace Tf
                                     OTHits& output ) const = 0;
 
   public:
+    // CRJ : Why are these here ?
 
     /// This will only select neighbouring straws in the same module
     class AdjacentByStrawNumber
