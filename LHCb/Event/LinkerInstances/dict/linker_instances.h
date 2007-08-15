@@ -20,18 +20,18 @@ namespace {
   LinkedTo<LHCb::MCParticle,LHCb::CaloDigit>   i8 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::Track>       i5 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::MCHit>       i6 (0,0,"");
-  LinkedTo<LHCb::MCParticle,LHCb::Particle>    i7 (0,0,"");
-  LinkedTo<LHCb::MCParticle>      i9 (0,0,"");
+  LinkedTo<LHCb::MCParticle,LHCb::Particle>    i10 (0,0,"");
+  LinkedTo<LHCb::MCParticle>                   i9 (0,0,"");
 
-  LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> i11 (0,0,"");
-  LinkedFrom<LHCb::STCluster,LHCb::MCParticle>   i12 (0,0,"");
-  LinkedFrom<LHCb::OTTime,LHCb::MCParticle>      i13 (0,0,"");
-  LinkedFrom<LHCb::MuonCoord,LHCb::MCParticle>   i14 (0,0,"");
-  LinkedFrom<LHCb::MuonDigit,LHCb::MCParticle>   i17 (0,0,"");
-  LinkedFrom<LHCb::CaloDigit,LHCb::MCParticle>   i18 (0,0,"");
-  LinkedFrom<LHCb::Track,LHCb::MCParticle>       i15 (0,0,"");
-  LinkedFrom<LHCb::MCHit,LHCb::MCParticle>       i16 (0,0,"");
-  LinkedFrom<LHCb::Particle,LHCb::MCParticle>       i17 (0,0,"");
-  LinkedFrom<LHCb::MCParticle>                   i19 (0,0,"");
+  LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> i101 (0,0,"");
+  LinkedFrom<LHCb::STCluster,LHCb::MCParticle>   i102 (0,0,"");
+  LinkedFrom<LHCb::OTTime,LHCb::MCParticle>      i103 (0,0,"");
+  LinkedFrom<LHCb::MuonCoord,LHCb::MCParticle>   i104 (0,0,"");
+  LinkedFrom<LHCb::MuonDigit,LHCb::MCParticle>   i107 (0,0,"");
+  LinkedFrom<LHCb::CaloDigit,LHCb::MCParticle>   i108 (0,0,"");
+  LinkedFrom<LHCb::Track,LHCb::MCParticle>       i105 (0,0,"");
+  LinkedFrom<LHCb::MCHit,LHCb::MCParticle>       i106 (0,0,"");
+  LinkedFrom<LHCb::Particle,LHCb::MCParticle>    i110 (0,0,"");
+  LinkedFrom<LHCb::MCParticle>                   i109 (0,0,"");
 }
 
