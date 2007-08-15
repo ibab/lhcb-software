@@ -1,43 +1,77 @@
-#ifndef STHIT_H 
-#define STHIT_H 1
 
-// Include files
+//-----------------------------------------------------------------------------
+/** @file STHit.h
+ *
+ *  Header file for track finding class Tf::STHit
+ *
+ *  CVS Log :-
+ *  $Id: STHit.h,v 1.2 2007-08-15 21:01:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-05-30
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_STHIT_H 
+#define TFKERNEL_STHIT_H 1
+
+// TfKernel
 #include "TfKernel/LineHit.h"
+
+// LoKi
 #include "LoKi/Range.h"
 
-namespace Tf {
+namespace Tf
+{
 
   /** @class STHit
-   *  Store a IT & TT  coordinate
+   *
+   *  Representation of an IT or TT hit
    *
    *  @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
 
-  class STHit : public LineHit {
-  public:
-    typedef DeSTSector DetectorElementType ;
-    
-    typedef st_hit_tag hit_type_tag; ///< the hit type tag
+  class STHit : public LineHit
+  {
 
-    // Constructor
+  public:
+
+    typedef DeSTSector DetectorElementType; ///< Detector element type for ST
+    typedef st_hit_tag        hit_type_tag; ///< The hit type tag
+
+  public:
+
+    /** Constructor from a DeSTSector and a STLiteCluster
+     *  @param[in] aSector Reference to the associated DeSTSector
+     *  @param[in] clus    The raw ST hit (STLiteCluster)
+     */
     STHit::STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus ) ;
 
+  public: // Simple accessors to internal data members
+   
+    /** Accesws the cluster size */
+    inline int                  size() const { return m_cluster.pseudoSize() ; }
 
-    //== Simple accessors to internal data members
-    int                  size() const { return m_cluster.pseudoSize() ; }
-    double               frac() const { return m_cluster.interStripFraction() ; }
-    const LHCb::STLiteCluster& cluster() const { return m_cluster; }
-    const DeSTSector&    sector() const { return *m_sector; }
+    /** XXX???XXX Not sure what this is ?? */
+    inline double               frac() const { return m_cluster.interStripFraction() ; }
+
+    /** Access the raw STLiteCluster cluster for this hit */
+    inline const LHCb::STLiteCluster& cluster() const { return m_cluster; }
+
+    /** Access the associated DeSTSector for this hit */
+    inline const DeSTSector&    sector() const { return *m_sector; }
 
   private:
-    const DeSTSector*          m_sector;
-    LHCb::STLiteCluster        m_cluster;
+
+    const DeSTSector*     m_sector;   ///< Pointer to the associated DeSTSector
+    LHCb::STLiteCluster   m_cluster;  ///< The raw STLiteCluster for this hit
+
   };
 
   /// Type for container for OTHit
   typedef std::vector<const STHit* > STHits;
-  /// Type for range of STHits within a container 
+  /// Type for range of STHits within a container
   typedef LoKi::Range_<STHits> STHitRange ;
   /// Type for a container for STHitRange
   typedef std::vector<STHitRange> STHitRanges;
@@ -47,14 +81,16 @@ namespace Tf {
   ////////////////////////////////////////////////////////////////////////////////////
 
   inline STHit::STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus )
-    :  LineHit( aSector, clus),
-       m_sector(&aSector),m_cluster(clus)
-  { 
-  }
+    :  LineHit   ( aSector, clus ),
+       m_sector  ( &aSector      ),
+       m_cluster ( clus          ) { }
 
   // our dynamic casts
-  inline const STHit* HitBase::sthit() const { return type()==RegionID::IT || type()==RegionID::TT ? static_cast<const STHit*>(this) : 0 ; }
+  inline const STHit* HitBase::sthit() const
+  {
+    return ( type()==RegionID::IT || type()==RegionID::TT ? static_cast<const STHit*>(this) : NULL ) ;
+  }
 
-}
+} // Tf namespace
 
-#endif // STHit_H
+#endif // TFKERNEL_STHIT_H

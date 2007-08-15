@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file OTHit.h
  *
- *  Header file for track find class Tf::OTHit
+ *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.2 2007-08-15 20:21:51 jonrob Exp $
+ *  $Id: OTHit.h,v 1.3 2007-08-15 21:02:49 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -37,7 +37,7 @@ namespace Tf
   public:
 
     typedef DeOTModule DetectorElementType ; ///< Detector element type for OT
-    typedef ot_hit_tag             hit_tag ; ///< the hit type tag
+    typedef ot_hit_tag             hit_tag ; ///< The hit type tag
 
   public:
 
@@ -76,10 +76,16 @@ namespace Tf
     }
 
     /** The drift time after correction for propagation time */
-    inline float driftTime( const double globaly ) const { return calibratedTime() - propagationTime( globaly ) ; }
+    inline float driftTime( const double globaly ) const 
+    { 
+      return calibratedTime() - propagationTime( globaly ) ;
+    }
 
     /** The drift distance after correction for propagation time */
-    inline float driftDistance( const double globaly ) const { return module().driftDistance( driftTime( globaly) ) ; }
+    inline float driftDistance( const double globaly ) const
+    { 
+      return module().driftDistance( driftTime( globaly) ) ; 
+    }
 
     /** XXX???XXX No idea what this returns */
     bool outOfTime( const double globaly, const double numsigma ) const ;
@@ -154,7 +160,7 @@ namespace Tf
   // our dynamic casts
   inline const OTHit* HitBase::othit() const 
   { 
-    return type()==RegionID::OT ? static_cast<const OTHit*>(this) : NULL ; 
+    return ( type() == RegionID::OT ? static_cast<const OTHit*>(this) : NULL ); 
   }
 
 }
