@@ -102,12 +102,12 @@ HltForwardMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 HltForwardMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
 HltForwardMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON'" } ;
 HltForwardMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+HltForwardMuons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
 HltForwardMuons.DecayDescriptor = "Muon" ;
-
 //---------------------------------------------------------------------
 // Special case for muons from L0
 //---------------------------------------------------------------------
-SeqHltMuons.Members += {"HltMuonForTES"   } ;
+SeqHltMuons.Members += { "HltMuonForTES"} ;
 HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonsForwardSingle";
 HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonsForward";
 HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
@@ -154,5 +154,3 @@ HltElectrons.DecayDescriptor = "Electron" ;
 //---------------------------------------------------------------------
 // Special case for photons - NO PHOTONS YET
 //---------------------------------------------------------------------
-
-// HltMuons.OutputLevel = 1 ;
