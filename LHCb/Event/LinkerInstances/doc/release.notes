@@ -3,6 +3,10 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+! 2007-08-15 - Juan Palacios
+  - dict/linker_instances.h
+    . Add LinkedTo<LHCb::MCParticle, LHCb::Particle> and LinkedFrom<LHCb::Particle, LHCb::MCParticle>
+
 ! 2007-07-31 - Jose A. Hernando
  - adding linkedTo and linedFrom for ContainedObject to be use to link with LHCbIDs
 
