@@ -10,9 +10,6 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 from LoKiCore.decorators import LoKi
 
-## use the namespace!
-Bender = LoKi.Dicts 
-
 # =============================================================================
 def monitor ( o  , m ) :
     """
