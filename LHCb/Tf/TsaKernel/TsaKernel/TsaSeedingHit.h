@@ -61,6 +61,9 @@ namespace Tf
       /// Is this hit OT or not
       inline bool isOT() const { return m_isOT; }
 
+      /// Is this hit ST or not
+      inline bool isST() const { return !m_isOT; }
+
       /// Access the OTChannelID for this head (default ID if not OT)
       LHCb::OTChannelID otChannelID() const
       {
@@ -70,7 +73,7 @@ namespace Tf
       /// Access the STChannelID for this head (default ID if not ST)
       LHCb::STChannelID stChannelID() const
       {
-        return ( isOT() ? LHCb::STChannelID() : hit()->lhcbID().stID() );
+        return ( isST() ? hit()->lhcbID().stID() : LHCb::STChannelID() );
       }
 
       /// The drift distance
