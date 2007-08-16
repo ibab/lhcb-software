@@ -1,4 +1,4 @@
-// $Id: AlignOTDetector.h,v 1.2 2007-07-20 17:24:33 janos Exp $
+// $Id: AlignOTDetector.h,v 1.3 2007-08-16 13:48:33 graven Exp $
 #ifndef TALIGNMENT_ALIGNOTDETECTOR_H 
 #define TALIGNMENT_ALIGNOTDETECTOR_H 1
 
@@ -8,6 +8,7 @@
 #include "GaudiKernel/VectorMap.h"
 #include "AlignmentInterfaces/IAlignDetectorSelector.h"            // Interface
 
+#include "AlignmentFunctions.h"
 
 /** @class AlignOTDetector AlignOTDetector.h AlignOTDetector.h
  *  
@@ -19,10 +20,6 @@
 class AlignOTDetector : public GaudiTool, virtual public IAlignDetectorSelector {
 public: 
   
-  typedef std::vector<DetectorElement*> Elements;
-  typedef GaudiUtils::VectorMap<unsigned int, unsigned int> MapID;
-  typedef std::pair<bool, unsigned int> BoolIndex;
-
   /// Standard constructor
   AlignOTDetector( const std::string& type, 
                    const std::string& name,
@@ -43,32 +40,24 @@ public:
   */
   unsigned int nElements() const;
 
+  const std::vector<std::vector<double> >& constraints() const;
+  
+
   /** Virtual method to return an index associated to a detector element and whether it's
   * valid, i.e. a pair of a bool and int std::pair<bool, unsigned int>
   * @return a pair of a bool, (in)valid, and unsigned int, index.
   */ 
   BoolIndex index(const LHCb::LHCbID& anLHCbID) const;
 
-protected:
-
 private:
-  /// Templated method to create indices 
-  template <typename ID, typename ITER, typename FUNC>
-  void createIndices(ITER i, ITER end, FUNC functor); 
-
-  /// Templated method to return a bool, i.e. whether it belongs to 
-  /// a to-be-aligned detector element, and the index for a given lchb id
-  template <typename ID, typename MAP, typename FUNCCHECKDET, typename FUNCLHCB, typename FUNCSUBDET>
-  BoolIndex getAssociatedIndex(const LHCb::LHCbID& anLHCbID, MAP map, FUNCCHECKDET funckCheckDet, 
-                               FUNCLHCB funcLHCb, FUNCSUBDET funcSubDet) const;
-   
   std::string       m_align;              ///< align what?
   Elements          m_elements;           ///< flat vector of pointers to detector elements
-  std::vector<bool> m_elementFixed;       ///< Which elements are fixed 
-  MapID             m_mapUniqueIDToIndex; ///< map id to index of element
+  std::vector<bool> m_fixed;              ///< Which elements are fixed 
+  IndexMap          m_indexMap;           ///< map id to index of element
+  std::vector<std::vector<double> > m_constraints;      ///< Vector of constraints f + f0
 };
 
-inline const AlignOTDetector::Elements& AlignOTDetector::getDetectorElements() const {
+inline const Elements& AlignOTDetector::getDetectorElements() const {
   return m_elements;
 }
 
@@ -76,4 +65,7 @@ inline unsigned int AlignOTDetector::nElements() const {
   return m_elements.size();
 }
 
+inline const std::vector<std::vector<double> >& AlignOTDetector::constraints() const {
+  return m_constraints;
+}
 #endif // TALIGNMENT_ALIGNOTDETECTOR_H

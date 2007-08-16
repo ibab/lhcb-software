@@ -1,4 +1,4 @@
-// $Id: AlignOTDetector.cpp,v 1.2 2007-07-20 17:24:33 janos Exp $
+// $Id: AlignOTDetector.cpp,v 1.3 2007-08-16 13:48:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -42,41 +42,20 @@ DECLARE_TOOL_FACTORY( AlignOTDetector );
 AlignOTDetector::AlignOTDetector( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_constraints(0)
 {
   declareInterface<IAlignDetectorSelector>(this);
   declareProperty("Align", m_align="Stations");
-  m_elementFixed = boost::assign::list_of(false)(false)(false);
-  declareProperty("Fixed", m_elementFixed);
+  m_fixed = boost::assign::list_of(false)(false)(false);
+  declareProperty("Fixed", m_fixed);
+  declareProperty("Constraints", m_constraints);
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 AlignOTDetector::~AlignOTDetector() {} 
-
-template <typename ID, typename ITER, typename FUNC>
-void AlignOTDetector::createIndices(ITER i, ITER end, FUNC functor) {
-  for (unsigned(index) = 0u, fixed = 0u; i != end; ++i) {
-    /// Note: ++not++ does not apply here. I really do want to post-increment. 
-    if (m_elementFixed[fixed++]) continue;
-    m_elements.push_back((*i));
-    const ID aChannel = (*i)->elementID();
-    /// Note: ++not++ does not apply here. I really do want to post-increment.
-    /// functor(x) == x->functor()
-    m_mapUniqueIDToIndex.insert(functor(aChannel), index++);
-  }
-}
-
-template <typename ID, typename MAP, typename FUNCCHECKDET, typename FUNCLHCB, typename FUNCSUBDET>
-AlignOTDetector::BoolIndex AlignOTDetector::getAssociatedIndex(const LHCbID& anLHCbID, MAP map, FUNCCHECKDET funcCheckDet, 
-                                                               FUNCLHCB funcLHCb, FUNCSUBDET funcSubDet) const {
-  /// functor(x) == x->functor()
-  if (!funcCheckDet(anLHCbID)) return std::make_pair(false, 0u);
-  const ID aChannel           = funcLHCb(anLHCbID);
-  typename MAP::iterator iter = map.find(funcSubDet(aChannel));
-  return iter != map.end() ? std::make_pair(true, iter->second) : std::make_pair(false, 0u); 
-}
 
 StatusCode AlignOTDetector::initialize() 
 {
@@ -88,37 +67,55 @@ StatusCode AlignOTDetector::initialize()
   
   if (m_align == "Stations") {
     const DeOTDetector::Stations& stations = tracker->stations();
-    createIndices<OTChannelID>(stations.begin(), stations.end(), bind<unsigned>(&OTChannelID::station, _1));
+    m_indexMap = createIndices(stations.begin()                               , 
+                                              stations.end()                                 , 
+                                              m_fixed                                        ,
+                                              bind<OTChannelID>(&DeOTStation::elementID, _1) , 
+                                              bind<unsigned>(&OTChannelID::station, _1)      , 
+                                              m_elements                                     );
   } else if (m_align == "Layers") {
     const DeOTDetector::Layers& layers = tracker->layers();
-    createIndices<OTChannelID>(layers.begin(), layers.end(), bind<unsigned>(&OTChannelID::uniqueLayer, _1));
+    m_indexMap = createIndices(layers.begin()                                , 
+                                              layers.end()                                  , 
+                                              m_fixed                                       ,
+                                              bind<OTChannelID>(&DeOTLayer::elementID, _1)  , 
+                                              bind<unsigned>(&OTChannelID::uniqueLayer, _1) , 
+                                              m_elements                                    );
   } else if (m_align == "Modules") {
     const DeOTDetector::Modules& modules = tracker->modules();
-    createIndices<OTChannelID>(modules.begin(), modules.end(), bind<unsigned>(&OTChannelID::uniqueModule, _1));
+    m_indexMap = createIndices(modules.begin()                                , 
+                                              modules.end()                                  , 
+                                              m_fixed                                       ,
+                                              bind<OTChannelID>(&DeOTModule::elementID, _1)  , 
+                                              bind<unsigned>(&OTChannelID::uniqueModule, _1) , 
+                                              m_elements                                    );
   } else return Error("Unknown elements " + m_align + ". You can only align Stations, Layers or Modules", StatusCode::FAILURE);
  
   return StatusCode::SUCCESS;
 }
 
 // return index for a given channel id
-AlignOTDetector::BoolIndex AlignOTDetector::index(const LHCbID& anLHCbID) const
+BoolIndex AlignOTDetector::index(const LHCbID& anLHCbID) const
 {
   
   BoolIndex boolIndex;
   if (m_align == "Stations") {
-    boolIndex = getAssociatedIndex<OTChannelID>(anLHCbID, m_mapUniqueIDToIndex, 
-                                                bind<bool>(&LHCbID::isOT, _1), 
-                                                bind<OTChannelID>(&LHCbID::otID,_1), 
+    boolIndex = getAssociatedIndex(anLHCbID                                , 
+                                                m_indexMap                              , 
+                                                bind<bool>(&LHCbID::isOT, _1)           , 
+                                                bind<OTChannelID>(&LHCbID::otID,_1)     , 
                                                 bind<unsigned>(&OTChannelID::station,_1)); 
   } else if (m_align == "Layers") {
-    boolIndex = getAssociatedIndex<OTChannelID>(anLHCbID, m_mapUniqueIDToIndex, 
-                                                bind<bool>(&LHCbID::isOT, _1), 
-                                                bind<OTChannelID>(&LHCbID::otID,_1), 
+    boolIndex = getAssociatedIndex(anLHCbID                                    , 
+                                                m_indexMap                                  , 
+                                                bind<bool>(&LHCbID::isOT, _1)               , 
+                                                bind<OTChannelID>(&LHCbID::otID,_1)         , 
                                                 bind<unsigned>(&OTChannelID::uniqueLayer,_1));
   } else if (m_align == "Modules") {
-    boolIndex = getAssociatedIndex<OTChannelID>(anLHCbID, m_mapUniqueIDToIndex, 
-                                                bind<bool>(&LHCbID::isOT, _1), 
-                                                bind<OTChannelID>(&LHCbID::otID,_1), 
+    boolIndex = getAssociatedIndex(anLHCbID                                     , 
+                                                m_indexMap                                   ,
+                                                bind<bool>(&LHCbID::isOT, _1)                , 
+                                                bind<OTChannelID>(&LHCbID::otID,_1)          , 
                                                 bind<unsigned>(&OTChannelID::uniqueModule,_1));
   }
   

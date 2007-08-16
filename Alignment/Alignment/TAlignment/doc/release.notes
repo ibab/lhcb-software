@@ -5,6 +5,8 @@ Purpose	: collection of alignment algorithms
 
 ! 2007-08-16 - Jan Amoraal
  - Add the option to strip hits from a track before re-fitting it.
+ - Move common code from AlignOTDetector to AlignmentFunctions
+ - Add support for (linear) Lagrange multipliers
 
 ! 2007-07-20 - Jan Amoraal
  - Added a small treack filter algorithm which filters tracks by type
