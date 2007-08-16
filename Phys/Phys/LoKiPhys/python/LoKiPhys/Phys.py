@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phys.py,v 1.1 2007-08-11 20:20:38 ibelyaev Exp $ 
+# $Id: Phys.py,v 1.2 2007-08-16 11:55:38 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
@@ -271,6 +271,24 @@ if not hasattr ( LHCb.Particle ,   'accumulate'    ) :
 if not hasattr ( LHCb.Particle , '__accumulate__'  ) :
     LHCb.Particle . __accumulate__  = accumulate 
 
+# =============================================================================
+## print the decay  
+def printDecay ( s , *a ) :
+    """
+    Print the decay of LHCb::Particle
+
+    >>> p = ...
+    >>> printDecay ( p )
+    
+    """
+    return LoKi.Print.printPhysDecay ( s , *a )
+
+printDecay. __doc__ += "\n\n" + LoKi.Print.printPhysDecay . __doc__  
+
+if not hasattr ( LHCb.Particle ,     'printDecay'   ) :
+    LHCb.Particle .  printDecay   =   printDecay
+if not hasattr ( LHCb.Particle ,   '__printDecay__' ) :
+    LHCb.Particle. __printDecay__ =   printDecay
 
 
 import LoKiCore.functions  as _LCF 
@@ -292,6 +310,8 @@ _LCF.min_value     . __doc__ += "\n" + LoKi.Dicts.Algs.min_value    . __doc__
 _LCF.max_value     . __doc__ += "\n" + LoKi.Dicts.Algs.max_value    . __doc__ 
 _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.Algs.min_element  . __doc__ 
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.Algs.max_element  . __doc__ 
+
+_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printPhysDecay    . __doc__ 
 
 
 # =============================================================================

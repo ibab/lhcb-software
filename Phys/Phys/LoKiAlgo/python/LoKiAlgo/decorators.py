@@ -323,6 +323,31 @@ LoKi.Loop.m           = _mass_
 LoKi.Loop.p           = _momentum_
 
 
+# =============================================================================
+## Print the decay tree for LoKi::Loop object:
+def printDecay ( s , *a ) :
+    """
+    Print the decay tree for LoKi::Loop object:
+
+    >>> l = ...
+    >>> printDecay ( l )
+
+    """
+    return LoKi.Print.printLoopDecay ( s , *a )
+
+printDecay . __doc__ += "\n\n" + LoKi.Print.printLoopDecay . __doc__
+
+
+if not hasattr ( LoKi.Loop ,   "printDecay"   ) :
+    LoKi.Loop.   printDecay   = printDecay
+if not hasattr ( LoKi.Loop , "__printDecay__" ) :
+    LoKi.Loop. __printDecay__ = printDecay
+    
+import LoKiCore.functions  as _LCF 
+_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printLoopDecay    . __doc__ 
+
+
+
 
 ## ============================================================================
 ## decorate LoKi::Algo class

@@ -1,4 +1,4 @@
-// $Id: PrintDecay.cpp,v 1.4 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: PrintDecay.cpp,v 1.5 2007-08-16 11:55:38 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -48,7 +48,7 @@
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-MsgStream& LoKi::Print::printDecay 
+MsgStream& LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle , 
   MsgStream&                   stream   , 
   const LoKi::Types::Cuts&     cut      ,
@@ -56,27 +56,27 @@ MsgStream& LoKi::Print::printDecay
   const std::string&           blank    ) 
 {
   if ( stream.isActive() ) 
-  { LoKi::Print::printDecay 
+  { LoKi::Print::printPhysDecay 
       ( particle , stream.stream() , cut , level , blank ) ; }
   return stream ;
 } 
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::string LoKi::Print::printDecay 
+std::string LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle , 
   const LoKi::Types::Cuts&     cut      ,
   const int                    level    ,
   const std::string&           blank    ) 
 {
   std::ostringstream stream ;
-  LoKi::Print::printDecay ( particle , stream, cut , level , blank ) ;
+  LoKi::Print::printPhysDecay ( particle , stream, cut , level , blank ) ;
   return stream.str() ;
 } 
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::ostream& LoKi::Print::printDecay 
+std::ostream& LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle , 
   std::ostream&                stream   , 
   const LoKi::Types::Cuts&     cut      ,
@@ -102,7 +102,7 @@ std::ostream& LoKi::Print::printDecay
   // print the decay 
   stream << " ( " << name << " -> " ;
   for ( DAUGS::const_iterator id = daugs.begin() ; daugs.end() != id ; ++id ) 
-  { LoKi::Print::printDecay 
+  { LoKi::Print::printPhysDecay 
       ( *id , stream , cut , level - 1 , blank ) ; }            // RECURSION
   //  
   return stream << " ) " ;                                      // RETURN 
@@ -124,11 +124,11 @@ std::ostream& LoKi::Print::printDecay
  *  @date   2006-01-18
  */
 // ========================================================================    
-std::ostream& LoKi::Print::printDecay 
+std::ostream& LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle  , 
   std::ostream&                stream    ) 
 {
-  return printDecay 
+  return printPhysDecay 
     ( particle , stream , 
       LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
 }
@@ -149,11 +149,11 @@ std::ostream& LoKi::Print::printDecay
  *  @date   2006-01-18
  */
 // ========================================================================
-MsgStream& LoKi::Print::printDecay 
+MsgStream& LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle  , 
   MsgStream&                   stream    ) 
 {
-  return printDecay 
+  return printPhysDecay 
     ( particle , stream , 
       LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
 }
@@ -173,10 +173,10 @@ MsgStream& LoKi::Print::printDecay
  *  @date   2006-01-18
  */
 // ========================================================================
-std::string LoKi::Print::printDecay 
+std::string LoKi::Print::printPhysDecay 
 ( const LHCb::Particle*        particle ) 
 {
-  return printDecay 
+  return printPhysDecay 
     ( particle , LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
 }
 // ========================================================================

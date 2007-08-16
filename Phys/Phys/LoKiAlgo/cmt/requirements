@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.17 2007-07-23 17:41:55 ibelyaev Exp $ 
+# $Id: requirements,v 1.18 2007-08-16 11:55:20 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -38,15 +38,6 @@ apply_pattern     linker_library library=LoKiAlgo
 
 macro LoKiAlgoDict_use_linkopts $(use_linkopts)
 
-# ============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.16  2007/06/04 07:05:59  ibelyaev
-#  play with public/private in requirements
-#
-# Revision 1.15  2007/06/03 20:43:42  ibelyaev
-#  update LoKi::Child &
-#
-#
 # ============================================================================
 # The END 
 # ============================================================================

@@ -1,4 +1,4 @@
-// $Id: LoKiAlgo.h,v 1.3 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: LoKiAlgo.h,v 1.4 2007-08-16 11:55:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIALGO_H 
 #define LOKI_LOKIALGO_H 1
@@ -11,6 +11,7 @@
 #include "LoKi/AlgoTypes.h"
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
+#include "LoKi/PrintLoopDecay.h"
 // ============================================================================
 /** @file
  *
