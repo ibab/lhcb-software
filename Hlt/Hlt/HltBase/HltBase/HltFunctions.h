@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.10 2007-08-16 09:39:21 hernando Exp $
+// $Id: HltFunctions.h,v 1.11 2007-08-16 17:40:17 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -132,6 +132,31 @@ namespace Hlt {
     Binder* m_binder;
   };
 
+  /* Return some value from the best match
+   *
+   */
+  template <class T1, class T2>
+  class BinderValue : public Estd::function<T1> 
+  {
+  public:
+    typedef Estd::function<T1> Function;
+    typedef Estd::binder_function<T1,T2> Binder;
+    typedef typename std::vector<T2*>::iterator Iterator;
+    typedef double (T2::* ptr_menfun) () const;
+    explicit BinderValue(const Binder& bin, ptr_menfun pmf):m_pmf(pmf)
+    {m_binder = dynamic_cast<Binder*>(bin.clone());}
+    virtual ~BinderValue() {delete m_binder;}
+    double operator() (const T1& t1) const {
+      std::pair<double,Iterator> pair = m_binder->pair(t1);
+      return (double) ((*(pair.second))->*m_pmf)();
+    }
+    Function* clone() const 
+    {return new BinderValue<T1,T2>(*m_binder,m_pmf);}
+  public:
+    ptr_menfun m_pmf;
+    Binder* m_binder;
+  };
+
   /* AbsInfo:    
    *   returns the Pt of a track
    */
@@ -182,6 +207,15 @@ namespace Hlt {
     Estd::function<LHCb::Track>* clone() const {return new P();}
   };
   
+
+  class ETCalo : public Hlt::TrackFunction
+  {
+  public:
+    explicit ETCalo() {}
+    double operator() (const LHCb::Track& t) const;    
+    Estd::function<LHCb::Track>* clone() const {return new ETCalo();}
+  };
+
   class DeltaE : public Hlt::TrackFunction
   {
   public:
