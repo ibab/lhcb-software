@@ -4,6 +4,9 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-08-17 - J. Hernando
+	- src/HadronSeedTool adding location in the HCalo to the state
+
 !========================== HltL0Conf v1r3 2007-07-31 ===================
 ! 2007-07-17 - Johannes Albrecht
 	- src/HadronSeedTool
