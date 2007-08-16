@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+2007-08-16 M Needham 
+ - Change to untruncated drift distance in TsaSeedingHit
+ - Move onTrack method to TsaSeedingHit from SeedHit
+
 ! 2007-08-13 - Chris Jones
  - Move package from TR to Tf namespace + weed out anthing no longer needed
    (Matt, you may need to add things back later on I missed out)

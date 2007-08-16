@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.1.1.1 2007-08-14 13:42:02 jonrob Exp $
+// $Id: SeedHit.h,v 1.2 2007-08-16 12:44:40 mneedham Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
@@ -53,9 +53,6 @@ namespace Tf
       double m_y;               ///< y coordinate of wire
       double m_z;               ///< z coordinate of wire
 
-      /// Ultimately should get rid of this and use the isUsed flag from the base Tf hit
-      mutable bool m_onTrack;
-
     private:
 
       /// No default constructor
@@ -70,8 +67,7 @@ namespace Tf
           m_use2(false),
           m_x(hit->hit()->xMid()),
           m_y(0),
-          m_z(hit->hit()->zMid()),
-          m_onTrack(false)
+          m_z(hit->hit()->zMid())
       {
         m_skip.reserve(10);
       }
@@ -83,8 +79,7 @@ namespace Tf
           m_use2(hit.use2()),
           m_x(hit.x()),
           m_y(hit.y()),
-          m_z(hit.z()),
-          m_onTrack(hit.onTrack())
+          m_z(hit.z())
       { m_skip.reserve(10); }
 
       Tf::Tsa::SeedingHit * tfHit() const { return m_hit; }
@@ -191,7 +186,7 @@ namespace Tf
       inline bool use1() const { return m_use1; }
       inline bool use2() const { return m_use2; }
 
-      inline bool onTrack() const { return m_onTrack; }
+      inline bool onTrack() const { return tfHit()->onTrack(); }
 
       inline float length() const { return tfHit()->hit()->length(); }
 
@@ -209,7 +204,7 @@ namespace Tf
       inline void setUse2( const bool value ) { m_use2 = value; }
       inline void setUse ( const bool value ) { setUse1(value); setUse2(value); }
 
-      inline void setOnTrack(bool used) const { m_onTrack = used; }
+      inline void setOnTrack(bool used) const { tfHit()->setOnTrack(used); }
 
     public:
 
