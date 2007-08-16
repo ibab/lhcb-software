@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.2 2007-08-15 21:01:08 jonrob Exp $
+ *  $Id: STHit.h,v 1.3 2007-08-16 14:03:00 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -50,7 +50,7 @@ namespace Tf
 
   public: // Simple accessors to internal data members
    
-    /** Accesws the cluster size */
+    /** Access the cluster size */
     inline int                  size() const { return m_cluster.pseudoSize() ; }
 
     /** XXX???XXX Not sure what this is ?? */
@@ -81,11 +81,12 @@ namespace Tf
   ////////////////////////////////////////////////////////////////////////////////////
 
   inline STHit::STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus )
-    :  LineHit   ( aSector, clus ),
-       m_sector  ( &aSector      ),
-       m_cluster ( clus          ) { }
+    : LineHit   ( aSector, clus ),
+      m_sector  ( &aSector      ),
+      m_cluster ( clus          ) { }
 
   // our dynamic casts
+  // Definition is in the HitBase class
   inline const STHit* HitBase::sthit() const
   {
     return ( type()==RegionID::IT || type()==RegionID::TT ? static_cast<const STHit*>(this) : NULL ) ;

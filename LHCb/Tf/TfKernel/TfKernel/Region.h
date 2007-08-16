@@ -1,5 +1,19 @@
-#ifndef TF_TFDATA_REGION_H
-#define TF_TFDATA_REGION_H
+
+//-----------------------------------------------------------------------------
+/** @file Region.h
+ *
+ *  Header file for track finding 'Region' objects
+ *
+ *  CVS Log :-
+ *  $Id: Region.h,v 1.2 2007-08-16 14:02:40 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-05-30
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_REGION_H
+#define TFKERNEL_REGION_H 1
 
 #include "TfKernel/RegionID.h"
 #include "LoKi/Range.h"
@@ -8,45 +22,83 @@
 namespace Tf
 {
 
-  /** @class EnvelopeBase
+  /** @class EnvelopeBase TfKernel/Region.h
+   *
    *  Base class for all templated Envelope types.
+   *  Defines a 'box' region around a DetectorElement in the global frame.
    *
    *  Useful to be able to answer some basic questions in a type neutral way.
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
-
   class EnvelopeBase
   {
   public:
+    /// Default Constructor
     EnvelopeBase() : m_numelements(0), m_xmin(1), m_xmax(0), m_cosT(1), m_sinT(0) {}
-    double xmin() const { return m_xmin ; }
-    double ymin() const { return m_ymin ; }
-    double zmin() const { return m_zmin ; }
-    double xmax() const { return m_xmax ; }
-    double ymax() const { return m_ymax ; }
-    double zmax() const { return m_zmax ; }
-    double xminT() const { return m_xminT ; }
-    double xmaxT() const { return m_xmaxT ; }
-    double x() const { return 0.5*(xmin()+xmax()) ; }
-    double y() const { return 0.5*(ymin()+ymax()) ; }
-    double z() const { return 0.5*(zmin()+zmax()) ; }
-    double cosT() const { return m_cosT ; }
-    double sinT() const { return m_sinT ; }
-    bool isYCompatible( double y, double tol ) const { return ymin() - tol <= y && y <= ymax() + tol ; }
-    bool isXCompatible( double x, double tol ) const { return xmin() - tol <= x && x <= xmax() + tol ; }
-    bool isZCompatible( double z, double tol ) const { return zmin() - tol <= z && z <= zmax() + tol ; }
-    double xLocal(double globalX, double globalY) const { return globalX*m_cosT + globalY*m_sinT ; }
-    double yLocal(double globalX, double globalY) const { return globalX*m_cosT - globalY*m_sinT ; }
+    /// The minimum value of x (in global coordinates) for the region
+    inline double xmin() const { return m_xmin ; }
+    /// The minimum value of y (in global coordinates) for the region
+    inline double ymin() const { return m_ymin ; }
+    /// The minimum value of z (in global coordinates) for the region
+    inline double zmin() const { return m_zmin ; }
+    /// The maximum value of x (in global coordinates) for the region
+    inline double xmax() const { return m_xmax ; }
+    /// The maximum value of y (in global coordinates) for the region
+    inline double ymax() const { return m_ymax ; }
+    /// The maximum value of z (in global coordinates) for the region
+    inline double zmax() const { return m_zmax ; }
+    /// The minimum value of XXX???XXX (in global coordinates) for the region
+    inline double xminT() const { return m_xminT ; }
+    /// The maximum value of XXX???XXX (in global coordinates) for the region
+    inline double xmaxT() const { return m_xmaxT ; }
+    /// The average value of x (in global coordinates) for the region (half way between xmin() and xmax())
+    inline double x() const { return 0.5*(xmin()+xmax()) ; }
+    /// The average value of y (in global coordinates) for the region (half way between ymin() and ymax())
+    inline double y() const { return 0.5*(ymin()+ymax()) ; }
+    /// The average value of z (in global coordinates) for the region (half way between zmin() and zmax())
+    inline double z() const { return 0.5*(zmin()+zmax()) ; }
+    /// The value of XXX???XXX (in global coordinates) for the region
+    inline double cosT() const { return m_cosT ; }
+    /// The value of XXX???XXX (in global coordinates) for the region
+    inline double sinT() const { return m_sinT ; }
+    /** Check if a given y value is compatible (inside) the region, to within a given tolerance
+     *  @param[in] y   The y value to check
+     *  @param[in] tol The allowable tolerance on y
+     *  @return boolean indicating if the given value of y is inside the region, to within the given tolerance
+     *  @retval TRUE  y value is INSIDE
+     *  @retval FALSE y value is OUTSIDE
+     */
+    inline bool isYCompatible( const double y, const double tol ) const { return ymin() - tol <= y && y <= ymax() + tol ; }
+    /** Check if a given x value is compatible (inside) the region, to within a given tolerance
+     *  @param[in] x   The x value to check
+     *  @param[in] tol The allowable tolerance on x
+     *  @return boolean indicating if the given value of x is inside the region, to within the given tolerance
+     *  @retval TRUE  x value is INSIDE
+     *  @retval FALSE x value is OUTSIDE
+     */
+    inline bool isXCompatible( const double x, const double tol ) const { return xmin() - tol <= x && x <= xmax() + tol ; }
+    /** Check if a given z value is compatible (inside) the region, to within a given tolerance
+     *  @param[in] z   The y value to check
+     *  @param[in] tol The allowable tolerance on z
+     *  @return boolean indicating if the given value of z is inside the region, to within the given tolerance
+     *  @retval TRUE  z value is INSIDE
+     *  @retval FALSE z value is OUTSIDE
+     */
+    inline bool isZCompatible( const double z, const double tol ) const { return zmin() - tol <= z && z <= zmax() + tol ; }
+    /// XXX???XXX Not sure at all what this is
+    inline double xLocal(const double globalX, const double globalY) const { return globalX*m_cosT + globalY*m_sinT ; }
+    /// XXX???XXX Not sure at all what this is
+    inline double yLocal(const double globalX, const double globalY) const { return globalX*m_cosT - globalY*m_sinT ; }
   protected:
-    unsigned int m_numelements ;
-    double m_xmin ;
-    double m_xmax ;
-    double m_ymin ;
-    double m_ymax ;
-    double m_zmin ;
-    double m_zmax ;
+    unsigned int m_numelements ; ///< The number of elements
+    double m_xmin ; ///< The min x value
+    double m_xmax ; ///< The max x value
+    double m_ymin ; ///< The min y value
+    double m_ymax ; ///< The max y value
+    double m_zmin ; ///< The min z value
+    double m_zmax ; ///< The max z value
     double m_xminT ;
     double m_xmaxT ;
     double m_yminT ;
@@ -55,7 +107,7 @@ namespace Tf
     double m_sinT ;
   } ;
 
-  /** @class Envelope
+  /** @class Envelope TfKernel/Region.h
    *  Defines a box around a DetectorElement in the global frame.
    *  Thisll needs to be made aware of alignment changes.
    *
@@ -66,8 +118,13 @@ namespace Tf
   class Envelope : public EnvelopeBase
   {
   public:
+    /// Default Constructor
     Envelope() : EnvelopeBase() {}
+    /** Constructor from a DetectorElementType */
     Envelope(const DetectorElementType& element) ;
+    /** Add a envelope to the region
+     *  @param[in] daughter Envelope to add
+     */
     void add(const Envelope& daughter) ;
   } ;
 
@@ -138,37 +195,52 @@ namespace Tf
     }
   }
 
-  /** @class Region
+  /** @class Region TfKernel/Region.h
    *  Collection of DetectorElements useful for pattern recognition
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
-  
+
   template<class HitTypeT>
   class Region : public Envelope<typename HitTypeT::DetectorElementType>
   {
   public:
     virtual ~Region() {}
     typedef HitTypeT HitType ;
-    typedef std::vector<const HitTypeT*> HitContainer ;
-    typedef LoKi::Range_<HitContainer> HitRangeType ;
+    typedef std::vector<const HitTypeT*> HitContainer ; ///< Type for container of pointers to hits
+    typedef LoKi::Range_<HitContainer> HitRangeType ;   ///< Type for a range of elements from a HitContainer
     //const HitRangeType& hits() const { return m_hitrange ; }
+    /// Access the all hits for this region
     virtual HitRangeType hits() const = 0 ;
+    /** Access all the hits within a given region of x
+     *  @param xmin the minimum x value
+     *  @param xmax the maximum x value
+     *  @return Range object covering the hits in the given x range
+     */
     virtual HitRangeType hits(float xmin, float xmax) const = 0 ;
+    /** Access all the hits within a given region of x and y
+     *  @param xmin the minimum x value
+     *  @param xmax the maximum x value
+     *  @param ymin the minimum y value
+     *  @param ymax the maximum y value
+     *  @return Range object covering the hits in the given x and y range
+     */
     virtual HitRangeType hits(float xmin, float xmax, float ymin, float ymax) const = 0 ;
 
+    /// Returns the RegionID object for this region
     RegionID id() const { return m_id ; }
 
   protected:
+    /// Constructor from a RegionID object
     Region( const RegionID& id ) : m_id(id) {}
     //void setHitRange( const HitRangeType& r ) { m_hitrange = r ; }
 
   private:
-    RegionID m_id ;
+    RegionID m_id ; ///< The regionID object for this region
     //HitRangeType m_hitrange ;
   } ;
 
 }
 
-#endif
+#endif // TFKERNEL_REGION_H
