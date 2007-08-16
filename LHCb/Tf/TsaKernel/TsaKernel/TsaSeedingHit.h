@@ -33,8 +33,8 @@ namespace Tf
       SeedingHit()
         : HitExtension<Tf::LineHit>(NULL),
           m_isOT        ( false ),
-	  m_driftRadius ( 0     ),
-	  m_onTrack(false)
+          m_driftRadius ( 0     ),
+          m_onTrack(false)
       { }
 
       /// Constructor from an Tf::OTHit
@@ -46,16 +46,16 @@ namespace Tf
           // use the the '77cm' value
           m_driftRadius(otHit.untruncatedDriftDistance( otHit.yMid() > 0 ?
                                                         otHit.yMid() - 77*Gaudi::Units::cm :
-							otHit.yMid() + 77*Gaudi::Units::cm ) ),
- 	 m_onTrack(false)
+                                                        otHit.yMid() + 77*Gaudi::Units::cm ) ),
+          m_onTrack(false)
       { }
 
       /// Constructor from an Tf::STHit
       SeedingHit( const Tf::STHit & stHit )
         : HitExtension<Tf::LineHit>(&stHit),
           m_isOT        ( false ),
-    	  m_driftRadius ( 0     ),
-	  m_onTrack(false)
+          m_driftRadius ( 0     ),
+          m_onTrack(false)
       { }
 
       /// Destructor
@@ -90,9 +90,9 @@ namespace Tf
 
     private:
 
-      bool m_isOT;         ///< Flag to indicate if the hit is OT or not (thus ST)     
+      bool m_isOT;         ///< Flag to indicate if the hit is OT or not (thus ST)
       float m_driftRadius; ///< The drift distance
-      mutable bool m_onTrack;  
+      mutable bool m_onTrack;
 
     };
 
