@@ -60,7 +60,7 @@ HadSingleTFRZVelo.OutputTracksName    = "HadSingleTFRZVelo";
 HadSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
                                       "Calo2DChi2,<,4."
 };
-HadSingleTFRZVelo.HistogramUpdatePeriod = 0;
+HadSingleTFRZVelo.HistogramUpdatePeriod = 1;
 HadSingleTFRZVelo.HistoDescriptor = {"rIP,400,-1.,3.",
                                      "rIPBest,400,-1.,3.",
                                      "Calo2DChi2,100.,0.,20.",
@@ -148,7 +148,7 @@ HadCompanionTRForward.InputTracksName  = "HadCompanionTFVelo";
 HadCompanionTRForward.OutputTracksName = "HadCompanionTRForward";
 HadCompanionTRForward.RecoName = "Forward";
 HadCompanionTRForward.OutputLevel = 3;
-
+PatHadCompanionTRForward.DoCleanUp = false;
 
 //
 // Select companion tracks if they have a fiven Pt
@@ -185,8 +185,8 @@ HadTrigger.OutputVerticesName  = "HadTrigger";
 HadTrigger.OutputLevel = 3;
 HadTrigger.FilterDescriptor = {"VertexMaxPT,>,2500.",
                                "VertexMinPT,>,1000.",
-                               "VertexPointing,<,0.5",
-                               "VertexDz,>,0."
+                               "VertexPointing,<,0.4",
+                               "VertexDz,>,0.2"
 };
 HadTrigger.HistogramUpdatePeriod = 0;
 HadTrigger.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
