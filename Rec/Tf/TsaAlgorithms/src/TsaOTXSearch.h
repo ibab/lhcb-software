@@ -2,18 +2,17 @@
 #ifndef _TsaOTXSearch_H
 #define _TsaOTXSearch_H
 
-#include "TsaXSearchBase.h"
-
 #include <string>
 #include <algorithm>
 #include <utility>
 
-#include "TfKernel/OTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
-#include "SeedParabolaFit.h"
 #include "TsaKernel/SeedTrack.h"
-
 #include "TsaKernel/TsaConstants.h"
+
+#include "TsaXSearchBase.h"
+#include "SeedParabolaFit.h"
+#include "TsaOTStationHitManager.h"
 
 #include "TfTsHitNumMap.h"
 
@@ -57,7 +56,7 @@ namespace Tf
 
       double m_maxDriftRadius;
 
-      typedef Tf::OTStationHitManager<Tf::Tsa::SeedingHit> OTHitMan;
+      typedef Tf::Tsa::OTStationHitManager OTHitMan;
 
       /// Pointer to the data manager
       OTHitMan * m_hitMan;

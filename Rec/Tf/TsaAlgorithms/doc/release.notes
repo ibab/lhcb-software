@@ -4,7 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-! 2007-08-16 
+! 2007-08-16 - Chris Jones
+ - Remove TsaInitialisation - No longer needed now prepareHits is called
+   on-demand instead of explicitly by the user.
+ - Add custom Tsa OT hit manager
+
+! 2007-08-16 - M.Needham
  - Merge features from head of TsaAlgorithms into the A-Team world
 
 ! 2007-07-19 - Chris Jones

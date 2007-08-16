@@ -8,7 +8,7 @@
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
 
-#include "TfKernel/OTStationHitManager.h"
+#include "TsaOTStationHitManager.h"
 
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedFun.h"
@@ -55,7 +55,7 @@ namespace Tf
       std::string m_dataSvcType;
       std::string m_dataSvcName;
 
-      typedef Tf::OTStationHitManager<Tf::Tsa::SeedingHit> OTHitMan;
+      typedef Tf::Tsa::OTStationHitManager OTHitMan;
 
       /// Pointer to the data manager
       OTHitMan * m_hitMan;

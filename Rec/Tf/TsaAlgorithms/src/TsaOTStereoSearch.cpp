@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.2 2007-08-16 12:55:55 jonrob Exp $
 
 #include <algorithm>
 
@@ -22,7 +22,7 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
                                const IInterface* parent):
   StereoBase(type, name, parent)
 {
-  declareProperty("otDataSvcType", m_dataSvcType = "Tf::OTStationHitManager<Tf::Tsa::SeedingHit>");
+  declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::OTStationHitManager");
   declareProperty("otDataSvcName", m_dataSvcName = "TsaOTDataManager");
 
   declareProperty( "syCut" , m_syCut = 0.10);
@@ -45,16 +45,17 @@ OTStereoSearch::~OTStereoSearch(){
 }
 
 
-StatusCode OTStereoSearch::initialize(){
+StatusCode OTStereoSearch::initialize()
+{
 
-  StatusCode sc = StereoBase::initialize();
+  const StatusCode sc = StereoBase::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize",sc);
   }
 
   m_hitMan = tool<OTHitMan>(m_dataSvcType,m_dataSvcName);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode OTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6]){

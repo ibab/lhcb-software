@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.2 2007-08-16 12:55:55 jonrob Exp $
 
 #include <algorithm>
 
@@ -48,9 +48,8 @@ ITStereoSearch::~ITStereoSearch(){
   // destructer
 }
 
-
-StatusCode ITStereoSearch::initialize(){
-
+StatusCode ITStereoSearch::initialize()
+{
   const StatusCode sc = StereoBase::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize",sc);
