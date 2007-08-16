@@ -4,6 +4,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-08-16 - Eduardo Rodrigues
+ - fillStream method of Track:
+   - corrected the latest modifications: it was assuming a track always has
+     a state (problem if printing a default-constructed track e.g. in Python)
+   - added more info to the printout
+
 !======================= TrackEvent v4r5 2007-07-10 ==========================
 ! 2007-07-10 M. Needham
  - Remove VeloMissed from track enum

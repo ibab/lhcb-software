@@ -392,7 +392,7 @@
         <code>
   // check at least the &quot;first state&quot; exists
   if ( m_states.empty() )
-    throw GaudiException( &quot;first (first) state not defined!&quot;,
+    throw GaudiException( &quot;first state not defined!&quot;,
                           &quot;Track.h&quot;,
                           StatusCode::FAILURE );
   return *m_states[0];
@@ -790,13 +790,17 @@
 	<arg name = "os" type = "std::ostream" inout = "BOTH"/>
 	<code>
   os &lt;&lt; "{ "
-     &lt;&lt; "# ids : " &lt;&lt; nLHCbIDs() &lt;&lt; std::endl
-     &lt;&lt; "type : " &lt;&lt; type() &lt;&lt; std::endl
-     &lt;&lt;"history " &lt;&lt; history() &lt;&lt; std::endl
-     &lt;&lt; "p : " &lt;&lt; (float) firstState().p() &lt;&lt;std::endl
-     &lt;&lt; "pt : " &lt;&lt; (float) firstState().pt() &lt;&lt;std::endl
-     &lt;&lt; "chi2PerDoF : " &lt;&lt; (float)m_chi2PerDoF &lt;&lt; std::endl
-     &lt;&lt; "nDoF : " &lt;&lt; m_nDoF &lt;&lt; std::endl
+     &lt;&lt; "type    : " &lt;&lt; type() &lt;&lt; std::endl
+     &lt;&lt; "history : " &lt;&lt; history() &lt;&lt; std::endl
+     &lt;&lt; "# states : " &lt;&lt; nStates() &lt;&lt; std::endl
+     &lt;&lt; "# ids    : " &lt;&lt; nLHCbIDs() &lt;&lt; std::endl
+     &lt;&lt; "# meas   : " &lt;&lt; nMeasurements() &lt;&lt; std::endl;
+  if ( !m_states.empty() ) {
+    os &lt;&lt; "p  : " &lt;&lt; (float) firstState().p() &lt;&lt;std::endl
+       &lt;&lt; "pt : " &lt;&lt; (float) firstState().pt() &lt;&lt;std::endl;
+  }
+  os &lt;&lt; "chi2PerDoF : " &lt;&lt; (float)m_chi2PerDoF &lt;&lt; std::endl
+     &lt;&lt; "nDoF       : " &lt;&lt; m_nDoF &lt;&lt; std::endl
      &lt;&lt; " }";
   return os;
 	</code>
