@@ -1,5 +1,19 @@
-#ifndef HITEXTENSION_H 
-#define HITEXTENSION_H 1
+
+//-----------------------------------------------------------------------------
+/** @file HitExtension.h
+ *
+ *  Header file for track find class Tf::HitExtension
+ *
+ *  CVS Log :-
+ *  $Id: HitExtension.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-05-30
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_HITEXTENSION_H 
+#define TFKERNEL_HITEXTENSION_H 1
 
 #include <stddef.h>
 
@@ -18,23 +32,27 @@ namespace Tf
 
   public:
 
-    /// Constructor from pointer
-    HitExtension( const Hit* hit = 0 ) : m_hit(hit) { }
+    /// Constructor from pointer to a Hit
+    HitExtension( const Hit* hit = 0 ) : m_hit(hit)  { }
 
-    /// Constructor from reference
-    HitExtension( const Hit& hit ) : m_hit(&hit) { }
+    /// Constructor from reference to a Hit
+    HitExtension( const Hit& hit     ) : m_hit(&hit) { }
 
+    /// Destructor
     ~HitExtension() { }
 
-    const Hit* hit()        { return m_hit; }
-    const Hit* hit() const  { return m_hit; }
+    /// Access to the underlying common Hit object
+    inline const Hit* hit()        { return m_hit; }
+
+    /// Access to the underlying common Hit object
+    inline const Hit* hit() const  { return m_hit; }
 
   protected:
 
-    const Hit* m_hit;
+    const Hit* m_hit; ///< Pointer to the underlying hit object
 
   };
 
 }
 
-#endif // HITEXTENSION_H
+#endif // TFKERNEL_HITEXTENSION_H

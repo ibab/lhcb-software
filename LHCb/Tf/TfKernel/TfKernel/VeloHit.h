@@ -1,4 +1,4 @@
-// $Id: VeloHit.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: VeloHit.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
 #ifndef INCLUDE_TF_VELOHIT_H
 #define INCLUDE_TF_VELOHIT_H 1
 
@@ -19,144 +19,144 @@ namespace Tf {
 
   class VeloHit : public HitBase {
 
-    public:
+  public:
 
-      typedef velo_hit_tag hit_type_tag; ///< the hit type tag
+    typedef velo_hit_tag hit_type_tag; ///< the hit type tag
 
 
-      //== simple accessors
-      double coordHalfBox()                  const { return m_coordHalfBox; }
-      double coordIdeal()                    const { return m_coordIdeal; }
-      double signal()                        const { return m_signal; }
-      const LHCb::VeloLiteCluster& cluster() const { return m_clu; } 
-      const LHCb::VeloChannelID channelID()  const { return m_clu.channelID(); }
-      bool highThreshold()                   const { return m_clu.highThreshold(); }
-      unsigned int strip()                   const { return m_clu.channelID().strip(); }
-      double interStripFraction()            const { return m_clu.interStripFraction(); }
-      unsigned int size()                    const { return m_clu.pseudoSize(); }
-      bool isPileUp()                        const { return m_clu.isPileUp(); }
-      unsigned char zone()                   const { return m_zone; }
+    //== simple accessors
+    double coordHalfBox()                  const { return m_coordHalfBox; }
+    double coordIdeal()                    const { return m_coordIdeal; }
+    double signal()                        const { return m_signal; }
+    const LHCb::VeloLiteCluster& cluster() const { return m_clu; }
+    const LHCb::VeloChannelID channelID()  const { return m_clu.channelID(); }
+    bool highThreshold()                   const { return m_clu.highThreshold(); }
+    unsigned int strip()                   const { return m_clu.channelID().strip(); }
+    double interStripFraction()            const { return m_clu.interStripFraction(); }
+    unsigned int size()                    const { return m_clu.pseudoSize(); }
+    bool isPileUp()                        const { return m_clu.isPileUp(); }
+    unsigned char zone()                   const { return m_zone; }
 
-      //----------------------------------------------------------------------
-      // functors 
-      //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    // functors
+    //----------------------------------------------------------------------
 
-      /** @struct Compare
-       *  Functor to compare hits by global r
-       *
-       * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
-       * @date   2007-07-04
-       */
-      struct Compare  {
-        template<typename HIT>
-          bool operator() (const HIT* lhs, const HIT* rhs) const
-          {
-            return lhs->coord() < rhs->coord();
-          }
-      };
+    /** @struct Compare
+     *  Functor to compare hits by global r
+     *
+     * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+     * @date   2007-07-04
+     */
+    struct Compare  {
+      template<typename HIT>
+      bool operator() (const HIT* lhs, const HIT* rhs) const
+      {
+        return lhs->coord() < rhs->coord();
+      }
+    };
 
-      /** @struct CompareHalfBox
-       *  Functor to compare hits by r in half box frame
-       *
-       * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
-       * @date   2007-07-18
-       */
-      struct CompareHalfBox  {
-        template<typename HIT>
-          bool operator() (const HIT* lhs, const HIT* rhs) const
-          {
-            return lhs->coordHalfBox() < rhs->coordHalfBox();
-          }
-      };
+    /** @struct CompareHalfBox
+     *  Functor to compare hits by r in half box frame
+     *
+     * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+     * @date   2007-07-18
+     */
+    struct CompareHalfBox  {
+      template<typename HIT>
+      bool operator() (const HIT* lhs, const HIT* rhs) const
+      {
+        return lhs->coordHalfBox() < rhs->coordHalfBox();
+      }
+    };
 
-      /** @struct CompareIdeal
-       *  Functor to compare hits by r for ideal sensor positions
-       *
-       * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
-       * @date   2007-07-18
-       */
-      struct CompareIdeal  {
-        template<typename HIT>
-          bool operator() (const HIT* lhs, const HIT* rhs) const
-          {
-            return lhs->coordIdeal() < rhs->coordIdeal();
-          }
-      };
+    /** @struct CompareIdeal
+     *  Functor to compare hits by r for ideal sensor positions
+     *
+     * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+     * @date   2007-07-18
+     */
+    struct CompareIdeal  {
+      template<typename HIT>
+      bool operator() (const HIT* lhs, const HIT* rhs) const
+      {
+        return lhs->coordIdeal() < rhs->coordIdeal();
+      }
+    };
 
-      /** @struct IncreasingByZ
-       *  Functor to compare hits by global z
-       *
-       * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
-       * @date   2007-07-10
-       */
-      struct IncreasingByZ  {
-        template<typename HIT>
-          bool operator() (const HIT* lhs, const HIT* rhs) const
-          {
-            return lhs->z() < rhs->z();
-          }
-      };
+    /** @struct IncreasingByZ
+     *  Functor to compare hits by global z
+     *
+     * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+     * @date   2007-07-10
+     */
+    struct IncreasingByZ  {
+      template<typename HIT>
+      bool operator() (const HIT* lhs, const HIT* rhs) const
+      {
+        return lhs->z() < rhs->z();
+      }
+    };
 
-      /** @struct DecreasingByZ
-       *  Functor to compare hits by global z
-       *
-       * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
-       * @date   2007-07-10
-       */
-      struct DecreasingByZ  {
-        template<typename HIT>
-          bool operator() (const HIT* lhs, const HIT* rhs) const
-          {
-            return lhs->z() > rhs->z();
-          }
-      };
+    /** @struct DecreasingByZ
+     *  Functor to compare hits by global z
+     *
+     * @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+     * @date   2007-07-10
+     */
+    struct DecreasingByZ  {
+      template<typename HIT>
+      bool operator() (const HIT* lhs, const HIT* rhs) const
+      {
+        return lhs->z() > rhs->z();
+      }
+    };
 
-    protected:
+  protected:
 
-      /// Standard Constructor, only derived types can construct this
-      inline VeloHit(const LHCb::VeloLiteCluster& c
-          , RegionID rid
-          , float coord
-          , float coordHalfBox
-          , float coordIdeal
-          , float variance
-          , float signal
-          , unsigned char zone);
+    /// Standard Constructor, only derived types can construct this
+    inline VeloHit(const LHCb::VeloLiteCluster& c
+                   , RegionID rid
+                   , float coord
+                   , float coordHalfBox
+                   , float coordIdeal
+                   , float variance
+                   , float signal
+                   , unsigned char zone);
 
-    protected:
+  protected:
 
-      LHCb::VeloLiteCluster m_clu; ///< link to cluster
-      float m_coordHalfBox;
-      float m_coordIdeal;
-      float m_signal;
-      unsigned char m_zone;
+    LHCb::VeloLiteCluster m_clu; ///< link to cluster
+    float m_coordHalfBox;
+    float m_coordIdeal;
+    float m_signal;
+    unsigned char m_zone;
 
   };
 
 
   //----------------------------------------------------------------------
-  // inline implementations  
+  // inline implementations
   //----------------------------------------------------------------------
 
   // constructor
   inline VeloHit::VeloHit(const LHCb::VeloLiteCluster& c
-      , RegionID rid
-      , float coord
-      , float coordHalfBox
-      , float coordIdeal
-      , float variance
-      , float signal
-      , unsigned char zone)
+                          , RegionID rid
+                          , float coord
+                          , float coordHalfBox
+                          , float coordIdeal
+                          , float variance
+                          , float signal
+                          , unsigned char zone)
     : HitBase(LHCb::LHCbID(c.channelID())
-        , rid  
-        , coord
-        , variance)
+              , rid
+              , coord
+              , variance)
     , m_clu(c)
-    , m_coordHalfBox(coordHalfBox) 
+    , m_coordHalfBox(coordHalfBox)
     , m_coordIdeal(coordIdeal)
     , m_signal(signal)
     , m_zone(zone)
-    { ; }
+  { ; }
 
 }
 
