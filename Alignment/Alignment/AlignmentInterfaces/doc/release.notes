@@ -3,6 +3,10 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+- 2007-08-16 - Gerhard Raven
+   - add methods to specify Lagrange constraints in IAlignDetectorSelector.h
+     and bump the interface version number accordingly
+
 </PRE><H1><A NAME=v2r1>2007-05-14 AlignmentInterfaces v2r1 </A></H1><PRE>
 - 2007-05-14 - Johan Blouw
    - small change to requirments file. 

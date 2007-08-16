@@ -1,4 +1,4 @@
-// $Id: IAlignDetectorSelector.h,v 1.1 2007-04-20 09:46:50 jblouw Exp $
+// $Id: IAlignDetectorSelector.h,v 1.2 2007-08-16 13:43:56 graven Exp $
 #ifndef OPTIONS_IALIGNDETECTORSELECTOR_H 
 #define OPTIONS_IALIGNDETECTORSELECTOR_H 1
 
@@ -15,7 +15,7 @@
 /// DetDesc
 #include "DetDesc/DetectorElement.h"
 
-static const InterfaceID IID_IAlignDetectorSelector ( "IAlignDetectorSelector", 1, 0 );
+static const InterfaceID IID_IAlignDetectorSelector ( "IAlignDetectorSelector", 2, 0 );
 
 /** @class IAlignDetectorSelector IAlignDetectorSelector.h options/IAlignDetectorSelector.h
  *  
@@ -42,6 +42,9 @@ public:
   * @return number of elements of type unsigned int
   */
   virtual unsigned int nElements() const = 0;
+  
+  virtual const std::vector<std::vector<double> >& constraints() const = 0;
+  
   
   /** Virtual method to return an index associated to a detector element and whether it's
   * valid, i.e. a pair of a bool and int std::pair<bool, unsigned int>
