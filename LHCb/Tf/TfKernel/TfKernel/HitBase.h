@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.3 2007-08-15 19:57:13 jonrob Exp $
+ *  $Id: HitBase.h,v 1.4 2007-08-16 14:43:19 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -76,7 +76,7 @@ namespace Tf
     /// Nested type that describes 'use' status of this hit
     typedef std::bitset<NUMSTATUSBITS> StatusFlag ;
 
-    /// The hit type tag (XXX???XXX Wouter, could you maybe expand a bit on what these tag structs are for an how they are used ?)
+    /// The hit type tag (XXX???XXX Wouter, could you maybe expand a bit on what these tag structs are for and how they are used ?)
     typedef hit_base_tag hit_type_tag;
 
     //== Simple accessors to internal data members
