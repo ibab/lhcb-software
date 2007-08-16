@@ -186,7 +186,7 @@ HadTrigger.OutputLevel = 3;
 HadTrigger.FilterDescriptor = {"VertexMaxPT,>,2500.",
                                "VertexMinPT,>,1000.",
                                "VertexPointing,<,0.4",
-                               "VertexDz,>,0.2"
+                               "VertexDz,>,2."
 };
 HadTrigger.HistogramUpdatePeriod = 0;
 HadTrigger.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
