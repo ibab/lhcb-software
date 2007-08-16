@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.2 2007-08-12 18:55:30 ibelyaev Exp $ 
+# $Id: MC.py,v 1.3 2007-08-16 11:54:20 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -307,6 +307,26 @@ for t in ( LHCb.MCParticle , LHCb.MCVertex   ) :
     if not hasattr ( t , '__extract__'      ) : t. __extract__      = mcParticles 
 
 
+# =============================================================================
+## print the decay  
+def printDecay ( s , *a ) :
+    """
+    Print the decay of LHCb::MCParticle
+
+    >>> p = ...
+    >>> printDecay ( p )
+    
+    """
+    return LoKi.Print.printMCDecay ( s , *a )
+
+printDecay. __doc__ += "\n\n" + LoKi.Print.printDecay . __doc__  
+
+if not hasattr ( LHCb.MCParticle ,     'printDecay'   ) :
+    LHCb.MCParticle .  printDecay   =   printDecay
+if not hasattr ( LHCb.MCParticle ,   '__printDecay__' ) :
+    LHCb.MCParticle. __printDecay__ =   printDecay
+
+
 import LoKiCore.functions  as _LCF 
 
 _LCF.nChildren     . __doc__ += "\n" + LoKi.MCChild.nChildren         . __doc__ 
@@ -331,6 +351,7 @@ _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.MCAlgs.min_element  . __doc__
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.MCAlgs.max_element  . __doc__ 
 
 
+_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printMCDecay        . __doc__ 
 
 
 # =============================================================================

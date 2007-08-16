@@ -285,6 +285,18 @@ def max_element ( s , *a ) :
     """
     return s.__min_element__ ( *a )
 
+# =============================================================================
+# Print the decay tree for the (XXX)Particle:
+def printDecay ( s , *a ) :
+    """
+    Print the decay tree for the (XXX)Particle:
+
+    >>> p = ...
+    >>> printDecay ( p )
+
+    """
+    return s.__printDecay__ ( *a )
+
 
 # =============================================================================
 # The END

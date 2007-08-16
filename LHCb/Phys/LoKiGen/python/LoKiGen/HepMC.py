@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.2 2007-08-12 18:55:03 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.3 2007-08-16 11:54:07 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -450,7 +450,28 @@ for t in ( HepMC.GenParticle ,
     if not hasattr ( t ,   'max_element'    ) : t.   max_element   = max_element
     if not hasattr ( t , '__max_element__'  ) : t. __max_element__ = max_element
 
-   
+
+
+# =============================================================================
+## print the decay  
+def printDecay ( s , *a ) :
+    """
+    Print the decay of HepMC::GenParticle
+
+    >>> p = ...
+    >>> printDecay ( p )
+    
+    """
+    return LoKi.Print.printHepMCDecay ( s , *a )
+
+printDecay. __doc__ += "\n\n" + LoKi.Print.printHepMCDecay . __doc__  
+
+if not hasattr ( HepMC.GenParticle ,     'printDecay'   ) :
+    HepMC.GenParticle .  printDecay   =   printDecay
+if not hasattr ( HepMC.GenParticle ,   '__printDecay__' ) :
+    HepMC.GenParticle. __printDecay__ =   printDecay
+
+
 import LoKiCore.functions  as _LCF 
 
 _LCF.nChildren     . __doc__ += "\n" + LoKi.GenChild.nChildren         . __doc__ 
@@ -474,6 +495,8 @@ _LCF.min_value     . __doc__ += "\n" + LoKi.Dicts.GenAlgs.min_value    . __doc__
 _LCF.max_value     . __doc__ += "\n" + LoKi.Dicts.GenAlgs.max_value    . __doc__ 
 _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.GenAlgs.min_element  . __doc__ 
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.GenAlgs.max_element  . __doc__ 
+
+_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printHepMCDecay      . __doc__ 
 
 
 # =============================================================================
