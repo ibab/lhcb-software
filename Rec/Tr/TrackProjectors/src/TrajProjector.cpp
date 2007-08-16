@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.7 2007-07-17 09:26:20 wouter Exp $
+// $Id: TrajProjector.cpp,v 1.8 2007-08-16 13:24:06 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -136,9 +136,7 @@ TrajProjector<T>::alignmentDerivatives( const Measurement& meas,
   DualVector unit = dual( (measTraj.direction(s2).Cross( refTraj.direction(s1) ) ).Unit() ) ;
 
   // compute the projection matrix from parameter space onto the (signed!) unit
-  // NOTE: we need an extra minus sign as this is the derivative to the 2nd
-  //  traj in poca, not the 1st as in project, hence 'dist' points towards us.
-  return -unit*AlignTraj( measTraj, pivot ).derivative( s2 );
+  return unit*AlignTraj( measTraj, pivot ).derivative( s2 );
 }
 
 //-----------------------------------------------------------------------------

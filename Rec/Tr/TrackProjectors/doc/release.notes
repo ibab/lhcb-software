@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2007-08-16 - Gerhard Raven
+ - Fix misunderstanding on the sign in the alignmentDerivative methods of the
+   (two) Traj Projectors. Only affects alignment code.
+
 !====================== TrackProjectors v2r14 2007-07-23 ======================
 ! 2007-07-23 - Wouter Hulsbergen
  - Add TrajMuonProjector
