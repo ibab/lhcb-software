@@ -381,21 +381,24 @@ double HltUtils::matchIDsFraction(const LHCb::Track& track1,
   return (1.*n)/(1.*n0);
 }
 
-double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2) {
+double HltUtils::deltaEta(const LHCb::Track& track1, 
+                          const LHCb::Track& track2) {
   double eta1 = track1.slopes().Eta();
   double eta2 = track2.slopes().Eta();
   return eta2-eta1;
 }
 
 
-double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2) {
+double HltUtils::deltaPhi(const LHCb::Track& track1, 
+                          const LHCb::Track& track2) {
   
   double phi1 = track1.slopes().Phi();
   double phi2 = track2.slopes().Phi();
   return phi2-phi1;
 }
 
-double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2) {
+double HltUtils::deltaAngle(const LHCb::Track& track1, 
+                            const LHCb::Track& track2) {
   double deta = deltaEta(track1,track2);
   double dphi = deltaPhi(track1,track2);
   double angle = sqrt ( deta*deta + dphi*dphi );

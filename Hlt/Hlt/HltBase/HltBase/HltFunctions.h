@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.9 2007-08-09 13:58:06 hernando Exp $
+// $Id: HltFunctions.h,v 1.10 2007-08-16 09:39:21 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -140,8 +140,21 @@ namespace Hlt {
     explicit PT() {}
     double operator() (const LHCb::Track& t) const {return t.pt();}
     Estd::function<LHCb::Track>* clone() const {return new PT();}
-  };  
-  
+  };
+
+  /* CheckFlag:    
+   *   returns 1. is the track has this flag
+   */
+  class TrackFlag  : public Hlt::TrackFunction {
+  public:
+    explicit TrackFlag(LHCb::Track::Flags f = LHCb::Track::Backward)
+    {flag = f;}
+    double operator()(const LHCb::Track& t) const 
+    {return (double) t.checkFlag(flag);}
+    Hlt::TrackFunction* clone() const {return new TrackFlag(flag);}
+    LHCb::Track::Flags flag;      
+  };
+
   /* CheckFlag:    
    *   returns true if a a given flag it set on the track
    */

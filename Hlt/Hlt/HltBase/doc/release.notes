@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-08-17 Jose A. Hernando 
+  - HltFunctions: adding function to check for L0Candidate flag
+  - IHltConfSummaryTool: extra functionality (filters, type, and particles)	
+  - HltUtils missing namespace for some functions
+          
 ! 2007-08-01 Jose A. Hernando 
   - IHltFunctionFactory: add setSmart() 
   - HltAlgorithm : special flag m_consider2, to consider or not inputs from tracks2

@@ -1,4 +1,4 @@
-// $Id: IHltConfSummaryTool.h,v 1.3 2007-07-06 16:53:39 hernando Exp $
+// $Id: IHltConfSummaryTool.h,v 1.4 2007-08-16 09:39:21 hernando Exp $
 #ifndef HLTBASE_IHLTCONFSUMMARYTOOL_H 
 #define HLTBASE_IHLTCONFSUMMARYTOOL_H 1
 
@@ -15,6 +15,7 @@ namespace LHCb {
   class HltSummary;
   class Track;
   class RecVertex;
+  class Particle;
 };
 
 static const InterfaceID IID_IHltConfSummaryTool ( "IHltConfSummaryTool", 1, 0 );
@@ -50,9 +51,15 @@ public:
 
   virtual std::vector<std::string> selectionFilters(const std::string& name) = 0;
 
+  virtual std::string selectionType(const std::string& name) = 0;
+
+  virtual std::vector<std::string> selectionInputSelections(const std::string& name) = 0;
+  
   virtual std::vector<LHCb::Track*> selectionTracks(const std::string& name)= 0;
 
   virtual std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name)= 0;
+
+  virtual std::vector<LHCb::Particle*> selectionParticles(const std::string& name)= 0;
 
   virtual bool isInSelection(const std::string& name,
                              const LHCb::Track& track ) = 0;
