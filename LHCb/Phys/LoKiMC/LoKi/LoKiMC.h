@@ -1,4 +1,4 @@
-// $Id: LoKiMC.h,v 1.8 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id: LoKiMC.h,v 1.9 2007-08-16 13:51:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIMC_H 
 #define LOKI_LOKIMC_H 1
@@ -22,6 +22,7 @@
 #include "LoKi/MCFinderObj.h"
 #include "LoKi/MCChild.h"
 #include "LoKi/MCDecayVertex.h"
+#include "LoKi/PrintMCDecay.h"
 // ============================================================================
 #include "LoKi/IMCHybridFactory.h"
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: PrintHepMCDecay.cpp,v 1.5 2007-07-23 17:23:37 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.6 2007-08-16 13:51:04 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -53,7 +53,7 @@
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-MsgStream& LoKi::Print::printHepMCDecay 
+MsgStream& LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*    particle , 
   MsgStream&                   stream   , 
   const LoKi::GenTypes::GCuts& cut      ,
@@ -61,27 +61,27 @@ MsgStream& LoKi::Print::printHepMCDecay
   const std::string&           blank    ) 
 {
   if ( stream.isActive() ) 
-  { LoKi::Print::printHepMCDecay 
+  { LoKi::PrintHepMC::printDecay 
       ( particle , stream.stream() , cut , level , blank ) ; }
   return stream ;
 } 
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::string LoKi::Print::printHepMCDecay 
+std::string LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*    particle , 
   const LoKi::GenTypes::GCuts& cut      ,
   const int                    level    , 
   const std::string&           blank    ) 
 {
   std::ostringstream stream ;
-  LoKi::Print::printHepMCDecay ( particle , stream, cut , level , blank ) ;
+  LoKi::PrintHepMC::printDecay ( particle , stream, cut , level , blank ) ;
   return stream.str() ;
 } 
 // ============================================================================
 // Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::ostream& LoKi::Print::printHepMCDecay 
+std::ostream& LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*    particle , 
   std::ostream&                stream   , 
   const LoKi::GenTypes::GCuts& cut      ,
@@ -110,81 +110,40 @@ std::ostream& LoKi::Print::printHepMCDecay
   // print the decay 
   stream << " ( " << name << " ->  " ;
   for ( ; begin != end ; ++begin ) 
-  { LoKi::Print::printHepMCDecay 
+  { LoKi::PrintHepMC::printDecay 
       ( *begin , stream , cut , level - 1 , blank ) ; }          // RECURSION
   //
   return stream << " ) " ;                                       // RETURN  
 }
 // ============================================================================
-/*  Simple function to print HepMC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const HepMC::GenParticle* p = ... ;
- * 
- *  printHepMCDecay( p , std::cout ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to HepMC::GenParticle to be printed 
- *  @param stream   stream to be used 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print HepMC decay in more or less "readable" format 
 // ============================================================================
-std::ostream& LoKi::Print::printHepMCDecay 
+std::ostream& LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*      particle , 
   std::ostream&                  stream   ) 
 {
-  return printHepMCDecay 
+  return LoKi::PrintHepMC::printDecay 
     ( particle , stream , 
       LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
 }
 // ============================================================================
-/*  Simple function to print HepMC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const HepMC::GenParticle* p = ... ;
- * 
- *  printHepMCDecay( p , always() ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to HepMC::GenParticle to be printed 
- *  @param stream   stream to be used 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print HepMC decay in more or less "readable" format 
 // ============================================================================ 
-MsgStream& LoKi::Print::printHepMCDecay 
+MsgStream& LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*    particle , 
   MsgStream&                   stream   ) 
 {
-  return printHepMCDecay 
+  return LoKi::PrintHepMC::printDecay 
     ( particle , stream , 
       LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
 }
 // ============================================================================
-/*  Simple function to print HepMC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const HepMC::GenParticle* p = ... ;
- * 
- *  info() << printHepMCDecay( p ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to HepMC::GenParticle to be printed 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print HepMC decay in more or less "readable" format 
 // ============================================================================
-std::string LoKi::Print::printHepMCDecay 
+std::string LoKi::PrintHepMC::printDecay 
 ( const HepMC::GenParticle*    particle ) 
 {
-  return printHepMCDecay 
+  return LoKi::PrintHepMC::printDecay 
     ( particle , LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
 }
 // ============================================================================

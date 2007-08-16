@@ -1,4 +1,4 @@
-// $Id: PrintMCDecay.cpp,v 1.9 2007-08-16 11:54:21 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.10 2007-08-16 13:51:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,25 +41,9 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-/* Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  printMCDecay( p , always() ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @param stream   stream to be used 
- *  @param cut      condition 
- *  @param blank    to be printed instead of cutted particles 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+// Simple function to print MC decay in more or less "readable" format 
 // ============================================================================
-MsgStream& LoKi::Print::printMCDecay 
+MsgStream& LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle*      particle  , 
   MsgStream&                   stream    , 
   const LoKi::MCTypes::MCCuts& cut       , 
@@ -68,29 +52,14 @@ MsgStream& LoKi::Print::printMCDecay
   const std::string&           blank     ) 
 {
   if ( stream.isActive() ) 
-  { LoKi::Print::printMCDecay 
+  { LoKi::PrintMC::printDecay 
       ( particle , stream.stream() , cut , decayOnly ,level , blank ) ; }
   return stream ;
 }
 // ============================================================================
-/* Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  info() << printMCDecay( p ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @param cut      condition 
- *  @param blank    to be printed instead of cutted particles 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+// Simple function to print MC decay in more or less "readable" format 
 // ============================================================================
-std::string LoKi::Print::printMCDecay 
+std::string LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle*      particle  , 
   const LoKi::MCTypes::MCCuts& cut       , 
   const bool                   decayOnly ,
@@ -98,30 +67,14 @@ std::string LoKi::Print::printMCDecay
   const std::string&           blank     ) 
 {
   std::ostringstream stream ;
-  LoKi::Print::printMCDecay 
+  LoKi::PrintMC::printDecay 
     ( particle , stream , cut , decayOnly , level , blank ) ;
   return stream.str() ;
 } 
 // ============================================================================
-/*  Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  printMCDecay( p , std::cout ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @param stream   stream to be used 
- *  @param cut      condition 
- *  @param blank    to be printed instead of cutted particles 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print MC decay in more or less "readable" format 
 // ============================================================================
-std::ostream& LoKi::Print::printMCDecay 
+std::ostream& LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle*      particle  , 
   std::ostream&                stream    , 
   const LoKi::MCTypes::MCCuts& cut       ,
@@ -152,97 +105,53 @@ std::ostream& LoKi::Print::printMCDecay
   stream << " ( " << name << " ->" ;
   for ( MCPs::const_iterator id = daugs.begin() ; 
         daugs.end() != id ; ++id ) 
-  { LoKi::Print::printMCDecay 
+  { LoKi::PrintMC::printDecay 
       ( *id , stream , cut , decayOnly , level - 1 , blank ) ; }   // RECURSION
   //
   return stream << " ) " ;
 } 
 // ============================================================================
-/*  Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  printMCDecay( p , std::cout ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @param stream   stream to be used 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print MC decay in more or less "readable" format 
 // ========================================================================
 std::ostream&
-LoKi::Print::printMCDecay 
+LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle* particle  , 
   std::ostream&           stream    ,
   const bool              decayOnly ) 
 {
-  return printMCDecay 
+  return LoKi::PrintMC::printDecay 
     ( particle , 
       stream   ,
       LoKi::BooleanConstant<const  LHCb::MCParticle*> ( true ) , 
       decayOnly ) ;
 }
 // ========================================================================
-/** Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  printMCDecay( p , always() ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @param stream   stream to be used 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+// Simple function to print MC decay in more or less "readable" format 
 // ============================================================================
 MsgStream& 
-LoKi::Print::printMCDecay 
+LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle* particle  , 
   MsgStream&              stream    ,
   const bool              decayOnly ) 
 {
-  return printMCDecay 
+  return LoKi::PrintMC::printDecay 
     ( particle , 
       stream   ,
       LoKi::BooleanConstant<const  LHCb::MCParticle*> ( true ) , 
       decayOnly ) ;
 }
 // ========================================================================
-/*  Simple function to print MC decay in more or less "readable" format 
- *
- *  @code
- *
- *  const LHCb::MCParticle* p = ... ;
- * 
- *  info() << printMCDecay( p ) ;
- *
- *  @endcode 
- *
- *  @param particle pointer to MCParticle to be printed 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-01-18
- */
+//  Simple function to print MC decay in more or less "readable" format 
 // ============================================================================
 std::string 
-LoKi::Print::printMCDecay 
+LoKi::PrintMC::printDecay 
 ( const LHCb::MCParticle* particle  ,
   const bool              decayOnly ) 
 {
-  return printMCDecay 
+  return LoKi::PrintMC::printDecay 
     ( particle , 
       LoKi::BooleanConstant<const  LHCb::MCParticle*> ( true ) , decayOnly ) ;
 }
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

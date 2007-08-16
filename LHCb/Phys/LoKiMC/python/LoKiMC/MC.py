@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.3 2007-08-16 11:54:20 ibelyaev Exp $ 
+# $Id: MC.py,v 1.4 2007-08-16 13:51:41 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -317,9 +317,9 @@ def printDecay ( s , *a ) :
     >>> printDecay ( p )
     
     """
-    return LoKi.Print.printMCDecay ( s , *a )
+    return LoKi.PrintMC.printDecay ( s , *a )
 
-printDecay. __doc__ += "\n\n" + LoKi.Print.printDecay . __doc__  
+printDecay. __doc__ += "\n\n" + LoKi.PrintMC.printDecay . __doc__  
 
 if not hasattr ( LHCb.MCParticle ,     'printDecay'   ) :
     LHCb.MCParticle .  printDecay   =   printDecay

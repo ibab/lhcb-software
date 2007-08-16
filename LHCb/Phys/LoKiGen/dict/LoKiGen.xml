@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.7 2007-08-16 11:54:06 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.8 2007-08-16 13:51:04 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -80,7 +80,7 @@
   <class pattern   = "LoKi::GenVertices::*"              />
   
   <function pattern = "LoKi::Kinematics::*"              />
-  <function pattern = "LoKi::Print::printHepMC*"         />
+  <function pattern = "LoKi::PrintHepMC::*"              />
   <function pattern = "LoKi::GenChild::*"                />
   <function pattern = "LoKi::Dicts::Extract::*"          />
   <function pattern = "LoKi::Dicts::GenAlgs::*"          />
