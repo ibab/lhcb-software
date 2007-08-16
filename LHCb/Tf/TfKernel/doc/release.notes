@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-16 - Chris Jones
+ - Update the data managers so "prepareHits" is called on demand. No longer
+   neccessary for the users to call it themselves.
+
 ! 2007-08-13 - Chris Jones
  - First import from ATEAM CVS of TfData and TfTools packages. 
    Currently imported into a single package, TfKernel, that creates both

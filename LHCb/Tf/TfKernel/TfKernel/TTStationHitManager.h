@@ -1,6 +1,18 @@
 
-#ifndef TTSTATIONHITMANAGER_H
-#define TTSTATIONHITMANAGER_H 1
+//-----------------------------------------------------------------------------
+/** @file TTStationHitManager.h
+ *
+ *  Header file for class : Tf::TTStationHitManager
+ *
+ *  $Id: TTStationHitManager.h,v 1.2 2007-08-16 12:54:00 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_TTSTATIONHITMANAGER_H
+#define TFKERNEL_TTSTATIONHITMANAGER_H 1
 
 // Include files
 // from Gaudi
@@ -14,11 +26,6 @@
 
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-
-// From STDet
-#include "STDet/DeSTDetector.h"
-#include "STDet/DeSTSector.h"
-#include "STDet/DeSTLayer.h"
 
 // boost
 //#include <boost/lambda/lambda.hpp>
@@ -76,9 +83,6 @@ namespace Tf
 
   public:
 
-    /// Initialise the hits for the current event
-    virtual void prepareHits();
-
     /** Load the hits for a given region of interest
      *
      *  @param[in] sta    Station ID
@@ -91,6 +95,7 @@ namespace Tf
                           const unsigned int lay,
                           const unsigned int region ) const
     {
+      if (!allHitsPrepared()) prepareHits();
       return HitRange( m_hits[sta][lay][region].begin(),
                        m_hits[sta][lay][region].end() );
     }
@@ -105,6 +110,7 @@ namespace Tf
     inline HitRange hits( const unsigned int sta,
                           const unsigned int lay ) const
     {
+      if (!allHitsPrepared()) prepareHits();
       return HitRange( m_hits_layers[sta][lay].begin(),
                        m_hits_layers[sta][lay].end() );
     }
@@ -117,6 +123,7 @@ namespace Tf
      */
     inline HitRange hits( const unsigned int sta ) const
     {
+      if (!allHitsPrepared()) prepareHits();
       return HitRange( m_hits_stations[sta].begin(),
                        m_hits_stations[sta].end() );
     }
@@ -126,6 +133,7 @@ namespace Tf
      */
     inline HitRange hits( ) const
     {
+      if (!allHitsPrepared()) prepareHits();
       return HitRange( m_hits_all.begin(),
                        m_hits_all.end() );
     }
@@ -145,6 +153,7 @@ namespace Tf
                                   const unsigned int lay,
                                   const unsigned int region ) const
     {
+      if (!allHitsPrepared()) prepareHits();
       return HitRange( std::lower_bound( m_hits[sta][lay][region].begin(),
                                          m_hits[sta][lay][region].end(),
                                          xMin,
@@ -234,7 +243,7 @@ namespace Tf
     inline void addHit( Hit * hit,
                         const unsigned int sta,
                         const unsigned int lay,
-                        const unsigned int region )
+                        const unsigned int region ) const
     {
       m_hits[sta][lay][region].push_back(hit);
       // temporary hack, to get things working. Needs to be done better
@@ -243,15 +252,21 @@ namespace Tf
       m_hits_all.push_back(hit);
     }
 
-    
+  protected:
+
+    /** Initialise all the hits for the current event
+     *  @attention No need for users to directly call this themselves.
+     *             It is called on demand when needed 
+     */
+    virtual void prepareHits() const;
 
   protected:
 
     /// Clear the hit containers for a new event
-    void clearHits ();
+    void clearHits () const;
 
     /// Set the hits ready flag
-    inline void setAllHitsPrepared( const bool ok ) { m_allHitsPrepared = ok; }
+    inline void setAllHitsPrepared( const bool ok ) const { m_allHitsPrepared = ok; }
 
     /// Are all the hits ready
     inline bool allHitsPrepared() const { return m_allHitsPrepared; }
@@ -268,15 +283,15 @@ namespace Tf
     /// The underlying TT hit creator
     ToolHandle<Tf::ISTHitCreator> m_tthitcreator ;
 
-    Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
+    mutable Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
     // CRJ : This is ugly but just a first bash to provide *something* that works
     //       Need to try and find a neater way to handle these different pointer containers
-    Hits m_hits_layers[m_nSta][m_nLay]; ///< Hits in individual layers
-    Hits m_hits_stations[m_nSta];       ///< Hits in individual stations
-    Hits m_hits_all;                    ///< All hits
+    mutable Hits m_hits_layers[m_nSta][m_nLay]; ///< Hits in individual layers
+    mutable Hits m_hits_stations[m_nSta];       ///< Hits in individual stations
+    mutable Hits m_hits_all;                    ///< All hits
 
     /// Flag to indicate if all hits are ready
-    bool m_allHitsPrepared;
+    mutable bool m_allHitsPrepared;
 
   };
 
@@ -312,7 +327,7 @@ namespace Tf
   }
 
   template<class Hit>
-  void TTStationHitManager<Hit>::clearHits()
+  void TTStationHitManager<Hit>::clearHits() const
   {
     m_hits_all.clear();
     for(unsigned int s=0; s<maxStations(); s++)
@@ -336,33 +351,27 @@ namespace Tf
   }
 
   template<class Hit>
-  void TTStationHitManager<Hit>::prepareHits()
+  void TTStationHitManager<Hit>::prepareHits() const
   {
-    if (!allHitsPrepared())
+    clearHits();
+    for (unsigned int sta=0; sta<maxStations(); sta++)
     {
-
-      clearHits();
-
-      for (unsigned int sta=0; sta<maxStations(); sta++)
+      for (unsigned int lay=0; lay<maxLayers(); lay++)
       {
-        for (unsigned int lay=0; lay<maxLayers(); lay++)
+        for (unsigned int reg=0; reg<maxRegions(); reg++)
         {
-          for (unsigned int reg=0; reg<maxRegions(); reg++)
+          Tf::STHitRange tthits = ttHitCreator()->hits(sta,lay,reg) ;
+          for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
+               itTTH < tthits.end(); itTTH++)
           {
-            Tf::STHitRange tthits = ttHitCreator()->hits(sta,lay,reg) ;
-            for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
-                 itTTH < tthits.end(); itTTH++)
-            {
-              this -> addHit(new Hit(**itTTH),sta,lay,reg);
-            }
+            this -> addHit(new Hit(**itTTH),sta,lay,reg);
           }
         }
       }
-      setAllHitsPrepared(true);
-
     }
+    setAllHitsPrepared(true);
   }
 
-};
+} // Tf namespace
 
-#endif // TTSTATIONHITMANAGER_H
+#endif // TFKERNEL_TTSTATIONHITMANAGER_H

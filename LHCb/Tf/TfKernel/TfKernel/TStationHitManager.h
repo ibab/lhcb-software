@@ -4,10 +4,10 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.2 2007-08-16 12:54:00 jonrob Exp $
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2005-01-10
+ *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
  */
 //-----------------------------------------------------------------------------
 
@@ -33,15 +33,6 @@
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
-
-// From STDet
-#include "STDet/DeSTDetector.h"
-#include "STDet/DeSTSector.h"
-#include "STDet/DeSTLayer.h"
-
-// From OTDet
-#include "OTDet/DeOTDetector.h"
-#include "OTDet/DeOTModule.h"
 
 // Boost
 //#include <boost/lambda/lambda.hpp>
@@ -104,10 +95,8 @@ namespace Tf
   public:
 
     /// Initialise the hits for the current event
-    virtual void prepareHits();
-
-    /// Initialise the hits for the current event
-    virtual void prepareHits(const LHCb::State & aState, const double nSigma);
+    // CRJ : Temporarily removed awaiting improved implementation
+    //virtual void prepareHits(const LHCb::State & aState, const double nSigma);
 
     /** Load the hits for a given region of interest
      *
@@ -121,6 +110,7 @@ namespace Tf
                           const unsigned int lay,
                           const unsigned int region ) const
     {
+      if ( !allHitsPrepared() ) { prepareHits(); }
       return HitRange( m_hits[sta][lay][region].begin(),
                        m_hits[sta][lay][region].end() );
     }
@@ -135,6 +125,7 @@ namespace Tf
     inline HitRange hits( const unsigned int sta,
                           const unsigned int lay ) const
     {
+      if ( !allHitsPrepared() ) { prepareHits(); }
       return HitRange( m_hits_layers[sta][lay].begin(),
                        m_hits_layers[sta][lay].end() );
     }
@@ -147,6 +138,7 @@ namespace Tf
      */
     inline HitRange hits( const unsigned int sta ) const
     {
+      if ( !allHitsPrepared() ) { prepareHits(); }
       return HitRange( m_hits_stations[sta].begin(),
                        m_hits_stations[sta].end() );
     }
@@ -156,6 +148,7 @@ namespace Tf
      */
     inline HitRange hits( ) const
     {
+      if ( !allHitsPrepared() ) { prepareHits(); }
       return HitRange( m_hits_all.begin(),
                        m_hits_all.end() );
     }
@@ -178,6 +171,7 @@ namespace Tf
                                   const unsigned int lay,
                                   const unsigned int region ) const
     {
+      if ( !allHitsPrepared() ) { prepareHits(); }
       return HitRange( std::lower_bound( m_hits[sta][lay][region].begin(),
                                          m_hits[sta][lay][region].end(),
                                          xMin,
@@ -257,10 +251,10 @@ namespace Tf
   protected:
 
     /// Clear the hit containers for a new event
-    void clearHits ();
+    void clearHits () const;
 
     /// Set the hits ready flag
-    inline void setAllHitsPrepared( const bool ok ) { m_allHitsPrepared = ok; }
+    inline void setAllHitsPrepared( const bool ok ) const { m_allHitsPrepared = ok; }
     /// Are all the hits ready
     inline bool allHitsPrepared() const { return m_allHitsPrepared; }
 
@@ -279,7 +273,7 @@ namespace Tf
     inline void addHit( Hit * hit,
                         const unsigned int sta,
                         const unsigned int lay,
-                        const unsigned int region )
+                        const unsigned int region ) const
     {
       m_hits[sta][lay][region].push_back(hit);
       // temporary hack, to get things working. Needs to be done better
@@ -295,16 +289,18 @@ namespace Tf
     inline unsigned int maxRegions()   const { return m_nReg;    }
 
     /// Prepare all hits in IT
-    void prepareITHits();
+    void prepareITHits() const;
 
     /// Prepare all hits in OT
-    void prepareOTHits();
+    void prepareOTHits() const;
 
     /// Prepare all hits in IT around the given state within the given tolerance
-    void prepareITHits(const LHCb::State & aState, const double nSigma);
+    // CRJ : Temporarily removed awaiting improved implementation
+    //void prepareITHits(const LHCb::State & aState, const double nSigma);
 
     /// Prepare all hits in OT around the given state within the given tolerance
-    void prepareOTHits(const LHCb::State & aState, const double nSigma);
+    // CRJ : Temporarily removed awaiting improved implementation
+    //void prepareOTHits(const LHCb::State & aState, const double nSigma);
 
     /// Is OT hit cleaning activated
     inline bool cleanOTHits() const { return m_cleanOTHits; }
@@ -316,13 +312,31 @@ namespace Tf
     void processRange( const Tf::OTHitRange & othits,
                        const unsigned int sta,
                        const unsigned int lay,
-                       const unsigned int region );
+                       const unsigned int region ) const;
 
     /// Process an ST hit range
     void processRange( const Tf::STHitRange & sthits,
                        const unsigned int sta,
                        const unsigned int lay,
-                       const unsigned int region );
+                       const unsigned int region ) const;
+
+  protected:
+
+    /** Initialise all the hits for the current event
+     *  @attention No need for users to directly call this themselves.
+     *             It is called on demand when needed
+     */
+    virtual void prepareHits() const;
+
+    /** Method that controls what happens when an extended hit is made from an OTHit.
+     *  virtual, to allow users to reimplement the method as they see fit
+     */
+    virtual Hit * createHit( const Tf::OTHit & othit ) const;
+
+    /** Method that controls what happens when an extended hit is made from an STHit.
+     *  virtual, to allow users to reimplement the method as they see fit
+     */
+    virtual Hit * createHit( const Tf::STHit & sthit ) const;
 
   private:
 
@@ -350,15 +364,15 @@ namespace Tf
     /// The ST hit cleaner
     Tf::ISTHitCleaner * m_itCleaner;
 
-    Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
+    mutable Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
     // CRJ : This is ugly but just a first bash to provide *something* that works
     //       Need to try and find a neater way to handle these different pointer containers
-    Hits m_hits_layers[m_nSta][m_nLay]; ///< Hits in individual layers
-    Hits m_hits_stations[m_nSta];       ///< Hits in individual stations
-    Hits m_hits_all;                    ///< All hits
+    mutable Hits m_hits_layers[m_nSta][m_nLay]; ///< Hits in individual layers
+    mutable Hits m_hits_stations[m_nSta];       ///< Hits in individual stations
+    mutable Hits m_hits_all;                    ///< All hits
 
     /// Flag to indicate if all hits are ready
-    bool m_allHitsPrepared;
+    mutable bool m_allHitsPrepared;
 
     /// Should OT hit cleaning be performed ?
     bool m_cleanOTHits;
@@ -411,7 +425,7 @@ namespace Tf
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::clearHits()
+  inline void TStationHitManager<Hit>::clearHits() const
   {
     m_hits_all.clear();
     for(unsigned int s=0; s<maxStations(); s++)
@@ -431,14 +445,26 @@ namespace Tf
         }
       }
     }
-    setAllHitsPrepared(false);
+    this->setAllHitsPrepared(false);
+  }
+
+  template<class Hit>
+  Hit * TStationHitManager<Hit>::createHit( const Tf::OTHit & othit ) const
+  {
+    return new Hit(othit);
+  }
+
+  template<class Hit>
+  Hit * TStationHitManager<Hit>::createHit( const Tf::STHit & sthit ) const
+  {
+    return new Hit(sthit);
   }
 
   template<class Hit>
   inline void TStationHitManager<Hit>::processRange( const Tf::OTHitRange & othits,
                                                      const unsigned int sta,
                                                      const unsigned int lay,
-                                                     const unsigned int region )
+                                                     const unsigned int region ) const
   {
     if ( cleanOTHits() )
     {
@@ -449,18 +475,19 @@ namespace Tf
       // CRJ : Can't seem to get this boost stuff to work...
       //std::for_each( selectedhits.begin(), selectedhits.end(),
       //               bind( **_1, sta, lay, region )(this->addHit) );
-      for ( OTHits::const_iterator iH = selectedhits.begin(); iH != selectedhits.end(); ++iH )
+      for ( OTHits::const_iterator itOTH = selectedhits.begin();
+            itOTH != selectedhits.end(); ++itOTH )
       {
-        this -> addHit ( new Hit(**iH), sta, lay, region );
+        this -> addHit ( this->createHit(**itOTH), sta, lay, region );
       }
     }
     else
     {
       // no cleaning, so just convert everything
-      for ( Tf::OTHitRange::const_iterator itOTH = othits.begin();
+      for ( OTHitRange::const_iterator itOTH = othits.begin();
             itOTH < othits.end(); ++itOTH )
       {
-        this -> addHit ( new Hit(**itOTH), sta, lay, region );
+        this -> addHit ( this->createHit(**itOTH), sta, lay, region );
       }
     }
   }
@@ -469,7 +496,7 @@ namespace Tf
   inline void TStationHitManager<Hit>::processRange( const Tf::STHitRange & sthits,
                                                      const unsigned int sta,
                                                      const unsigned int lay,
-                                                     const unsigned int region )
+                                                     const unsigned int region ) const
   {
     if ( cleanITHits() )
     {
@@ -477,113 +504,29 @@ namespace Tf
       Tf::STHits selectedhits;
       m_itCleaner->cleanHits( sthits, selectedhits );
       // convert only those selected
-      for ( STHits::const_iterator iH = selectedhits.begin(); iH != selectedhits.end(); ++iH )
+      for ( STHits::const_iterator itSTH = selectedhits.begin();
+            itSTH != selectedhits.end(); ++itSTH )
       {
-        this -> addHit ( new Hit(**iH), sta, lay, region );
+        this -> addHit ( this->createHit(**itSTH), sta, lay, region );
       }
     }
     else
     {
-      for ( Tf::STHitRange::const_iterator itSTH = sthits.begin();
+      for ( STHitRange::const_iterator itSTH = sthits.begin();
             itSTH < sthits.end(); ++itSTH )
       {
-        this -> addHit ( new Hit(**itSTH), sta, lay, region );
+        this -> addHit ( this->createHit(**itSTH), sta, lay, region );
       }
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const LHCb::State & aState, const double nSigma)
+  inline void TStationHitManager<Hit>::prepareITHits() const
   {
-
-    // WARNING : This is temporary solution. A better method that allows an arbitary hit window
-    //           (using trajectories ??) should be implemented instead
-
-    double m_y = aState.ty();
-    double c_y = aState.y() - m_y*aState.z();
-
-    double a_x = aState.qOverP()/42.;
-    double b_x = aState.tx() -2*aState.z()*a_x;
-    double c_x = aState.x() - aState.z()*(b_x + a_x*aState.z());
-
-    double dy = nSigma*sqrt(aState.errY2());
-    double dx = nSigma*sqrt(aState.errX2());
-
-    double x, y, z;
-
     for (unsigned int sta=0; sta < this->maxStations(); ++sta)
     {
       for (unsigned int lay=0; lay < this->maxLayers(); ++lay)
       {
-        // IT hits
-        for (unsigned int it=0; it < this->maxITRegions(); ++it)
-        {
-          z = this->itHitCreator()->region(sta,lay,it)->z();
-          y = z*((a_x*z)+b_x)+c_x;
-          x = m_y*z+c_y;
-
-          Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it,x-dx,x+dx,y-dy,y+dy) ;
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << sthits.size() << " ITHits for station=" << sta
-                    << " layer=" << lay << " region=" << it << endreq;
-          }
-          processRange ( sthits, sta, lay, it + this->maxOTRegions() );
-        }
-
-      }// layer
-    } // station
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const LHCb::State & aState, const double nSigma)
-  {
-    double m_y = aState.ty();
-    double c_y = aState.y() - m_y*aState.z();
-
-    double a_x = aState.qOverP()/42.;
-    double b_x = aState.tx() -2*aState.z()*a_x;
-    double c_x = aState.x() - aState.z()*(b_x + a_x*aState.z());
-
-    double dy = nSigma*sqrt(aState.errY2());
-    double dx = nSigma*sqrt(aState.errX2());
-
-    double x, y, z;
-
-    for (unsigned int sta=0; sta<this->maxStations(); ++sta)
-    {
-      for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
-      {
-        // OT hits
-        for (unsigned int ot=0; ot<this->maxOTRegions(); ++ot)
-        {
-          z = this->itHitCreator()->region(sta,lay,ot)->z();
-          y = z*((a_x*z)+b_x)+c_x;
-          x = m_y*z+c_y;
-
-          Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot,x-dx,x+dx,y-dy,y+dy) ;
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << othits.size() << " OTHits for station=" << sta
-                    << " layer=" << lay << " region=" << ot << endreq;
-          }
-          processRange ( othits, sta, lay, ot );
-        }
-
-      }// layer
-    } // station
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits()
-  {
-
-    for (unsigned int sta=0; sta < this->maxStations(); ++sta)
-    {
-      for (unsigned int lay=0; lay < this->maxLayers(); ++lay)
-      {
-
-        // IT hits
         for (unsigned int it=0; it < this->maxITRegions(); ++it)
         {
           Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it) ;
@@ -592,22 +535,20 @@ namespace Tf
             debug() << "Found " << sthits.size() << " ITHits for station=" << sta
                     << " layer=" << lay << " region=" << it << endreq;
           }
-          processRange ( sthits,  sta, lay, it + this->maxOTRegions() );
+          this -> processRange ( sthits,  sta, lay, it + this->maxOTRegions() );
         }
 
       }// layer
     } // station
-
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits()
+  inline void TStationHitManager<Hit>::prepareOTHits() const
   {
     for (unsigned int sta=0; sta<this->maxStations(); ++sta)
     {
       for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
       {
-        // OT hits
         for (unsigned int ot=0; ot<this->maxOTRegions(); ++ot)
         {
           Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot) ;
@@ -616,33 +557,34 @@ namespace Tf
             debug() << "Found " << othits.size() << " OTHits for station=" << sta
                     << " layer=" << lay << " region=" << ot << endreq;
           }
-          processRange ( othits, sta, lay, ot );
+          this -> processRange ( othits, sta, lay, ot );
         }
-
       }// layer
     } // station
   }
 
   template<class Hit>
-  void TStationHitManager<Hit>::prepareHits()
+  void TStationHitManager<Hit>::prepareHits() const
   {
-    if ( !allHitsPrepared() )
-    {
-      this->clearHits();
-      this->prepareOTHits();
-      this->prepareITHits();
-      setAllHitsPrepared(true);
-    }
+    this->clearHits();
+    this->prepareOTHits();
+    this->prepareITHits();
+    setAllHitsPrepared(true);
   }
 
-  template<class Hit>
-  void TStationHitManager<Hit>::prepareHits(const LHCb::State & aState, const double nSigma)
-  {
+  // CRJ : Comment out until prepareOTHits(aState,nSigma) and prepareITHits(aState,nSigma)
+  //       (or equivalents) are available.
+  /*
+    template<class Hit>
+    void TStationHitManager<Hit>::prepareHits(const LHCb::State & aState, const double nSigma)
+    {
     setAllHitsPrepared(false);
     this->clearHits();
     this->prepareOTHits(aState, nSigma);
     this->prepareITHits(aState, nSigma);
-  }
-}
+    }
+  */
+
+} // end Tf namespace
 
 #endif // TFTOOLS_TSTATIONHITMANAGER_H
