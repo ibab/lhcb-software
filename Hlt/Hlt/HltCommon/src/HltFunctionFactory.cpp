@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.10 2007-08-16 09:40:49 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.11 2007-08-16 17:40:29 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -117,6 +117,13 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
     fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
                                                   *m_tracks, Estd::abs_min());
+
+  } else if (name == "Calo3DChi2ETCalo") {
+    if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
+    ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
+    Estd::binder_function<Track,Track> bfun(Hlt::TrackMatch(*imatch), 
+                                            *m_tracks, Estd::abs_min());
+    fun = new Hlt::BinderValue<Track,Track>(bfun, &Track::p);
   } else if (name == "Calo3DChi2Key") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
@@ -128,6 +135,8 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     ITrackMatch* imatch = tool<ITrackMatch>("HltMatchOffTrack2OnCalo");
     fun =  new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
                                                   *m_tracks, Estd::abs_max());
+  } else if (name == "ETCalo"){
+    fun = new Hlt::ETCalo();
   } else if (name == "DeltaE"){
     fun = new Hlt::DeltaE();
   } else if (name == "FlagL0Candidate"){

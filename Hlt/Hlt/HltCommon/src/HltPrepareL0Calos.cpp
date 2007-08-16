@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.6 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.7 2007-08-16 17:40:29 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,8 @@ HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
 
   declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
                   L0CaloCandidateLocation::Full);
+
+  declareProperty("CaloMakerTool", m_caloMakerName = "");
   
   //  declareProperty("OutputL0CaloCandidates", m_outputL0CaloCandidatesName = 
   //                "Hlt/L0CaloCandidate/HadL0Calos");
@@ -66,6 +68,10 @@ StatusCode HltPrepareL0Calos::initialize() {
 
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
+
+  m_caloMaker = NULL;
+  if (m_caloMakerName != "")
+    m_caloMaker = tool<ICaloSeedTool>("HadronSeedTool");
   
   // sumregister(m_calos,m_outputL0CaloCandidatesName);
 
@@ -111,14 +117,20 @@ StatusCode HltPrepareL0Calos::execute() {
   Tracks* output = new Tracks();
   for (std::vector<L0CaloCandidate*>::iterator it = m_calos.begin();
        it != m_calos.end(); ++it) {
-    Track* tcalo = makeTrack(*(*it));
+    L0CaloCandidate& calo = *(*it);
+    Track* tcalo = new Track();
+    if (m_caloMaker) m_caloMaker->makeTrack(calo,*tcalo);
+    else makeTrack(calo,*tcalo);
+    addExtras(calo,*tcalo);
     output->insert(tcalo);
     m_outputTracks->push_back(tcalo);
   }
-  put(output,m_caloCandidatesLocation+"/TCalo");
+  put(output,"Hlt/Track/"+m_outputTracksName);
   
   int ncan = m_calos.size();
   debug() << " number of calos above et " << ncan << endreq;
+  printInfo("calos ",*m_outputTracks);
+
 
   return sc;
 }
@@ -133,7 +145,8 @@ StatusCode HltPrepareL0Calos::finalize() {
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
-Track* HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo) {
+void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,
+                                  LHCb::Track& track) {
   
   // Get energy and position of L0 calo candidate:
   double x      = calo.position().x();
@@ -142,27 +155,47 @@ Track* HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo) {
   double ex     = calo.posTol()*(4./sqrt(12.0));
   double ey     = calo.posTol()*(4./sqrt(12.0));
   double et     = calo.et();
+
+  double sintheta = sqrt(x*x + y*y)/(sqrt(x*x + y*y + z*z));
+  double e = fabs(et)/sintheta;
+
+  debug() << " position " << calo.position() << " et " << et
+          << " sintheta " << sintheta << " e " << e << endreq;
   
-  double e      = fabs(et) *( sqrt(x*x + y*y + z*z)/
-                              sqrt(x*x + y*y));
 
   State state;
-  state.setState(x,y,z,ex,ey,1./e);
   state.setLocation(State::MidHCal);
-  Track* track = new Track();
-  track->addToStates(state);
+  state.setState(x,y,z,ex,ey,1./e);
+  track.addToStates(state);
+  
+}
+
+void HltPrepareL0Calos::addExtras(const L0CaloCandidate& calo,
+                                  LHCb::Track& track) {
+
+  double ex     = calo.posTol()*(4./sqrt(12.0));
+  double ey     = calo.posTol()*(4./sqrt(12.0));
+
+  const std::vector<State*>& states = track.states();
+  for (std::vector<State*>::const_iterator it = states.begin();
+       it != states.end(); ++it) {
+    State& state = *(*it);
+    if (state.location() == State::MidHCal){
+      state.setTx(ex);
+      state.setTy(ey);
+      debug() << " changed slopes! " << state.slopes() << endreq;
+    }
+  }
 
   CaloCellID id = calo.id();
   LHCb::CaloCellID id1(id.calo(), id.area(), id.row()+1, id.col()   );
   LHCb::CaloCellID id2(id.calo(), id.area(), id.row()+1, id.col()+1 );
   LHCb::CaloCellID id3(id.calo(), id.area(), id.row()  , id.col()+1 );
 
-  track->addToLhcbIDs( LHCbID(id) );
-  track->addToLhcbIDs( LHCbID(id1) );
-  track->addToLhcbIDs( LHCbID(id2) );
-  track->addToLhcbIDs( LHCbID(id3) );
-  
-  return track;
+  track.addToLhcbIDs( LHCbID(id) );
+  track.addToLhcbIDs( LHCbID(id1) );
+  track.addToLhcbIDs( LHCbID(id2) );
+  track.addToLhcbIDs( LHCbID(id3) );
 }
 
 

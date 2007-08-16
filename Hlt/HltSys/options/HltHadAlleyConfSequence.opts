@@ -46,8 +46,10 @@ HadL0Entry.OutputLevel = 3;
 
 //
 // select the L0Calo candidates above
+// to get refined L0Calos please use CaloMakerTool = "HadronSeedTool"
 //
 HadL0Prepare.OutputTracksName = "HadL0Calos";
+// HadL0Prepare.CaloMakerTool = "HadronSeedTool";
 HadL0Prepare.OutputLevel = 3;
 
 //
@@ -85,7 +87,9 @@ HadSingleTFVelo.OutputTracksName = "HadSingleTFVelo";
 HadSingleTFVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFVelo.HistogramUpdatePeriod = 0;
 HadSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
-                                    "Calo3DChi2,<,4."
+                                    "Calo3DChi2,<,4.",
+                                    "Calo3DChi2Key,>,-1.",
+                                    "Calo3DChi2ETCalo,>,1000."
 };
 HadSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
                                    "IPBest,400,-1.,3.",

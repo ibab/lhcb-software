@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.h,v 1.2 2007-06-28 22:07:39 hernando Exp $
+// $Id: HltPrepareL0Calos.h,v 1.3 2007-08-16 17:40:29 hernando Exp $
 #ifndef HLTPREPAREL0CALOS_H 
 #define HLTPREPAREL0CALOS_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltFunctions.h"
+#include "HltBase/ICaloSeedTool.h"
 #include "Event/L0CaloCandidate.h"
 
 /** @class HltHadAlleyPreTrigger HltHadAlleyPreTrigger.h
@@ -36,7 +37,11 @@ public:
     int m_type;
   };
 
-  LHCb::Track* makeTrack(const LHCb::L0CaloCandidate& calo);
+  void makeTrack(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
+
+  void addExtras(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
+
+
 
 protected:
 
@@ -49,6 +54,14 @@ protected:
   HltHisto m_histoEt;
   HltHisto m_histoEt1;
 
+protected:
+
+  std::string m_caloMakerName;
+  
+  ICaloSeedTool* m_caloMaker;
+
+  void extras(const LHCb::L0CaloCandidate& calo,
+              LHCb::Track& track);
 protected:
 
   std::vector<LHCb::L0CaloCandidate*> m_calos;
