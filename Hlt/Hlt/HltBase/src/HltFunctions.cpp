@@ -20,8 +20,8 @@ double Hlt::ETCalo::operator() (const Track& track)  const
   double z = state.z();
   double sintheta = sqrt(x*x+y*y)/sqrt(x*x+y*y+z*z);
   double et = p*sintheta;
-  std::cout << " et " << et << " sintheta " << sintheta << " p " << p
-            << std::endl;
+  // std::cout << " et " << et << " sintheta " << sintheta << " p " << p
+  //          << std::endl;
   return et;
 }
 
