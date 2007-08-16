@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.3 2007-08-15 21:02:49 jonrob Exp $
+ *  $Id: OTHit.h,v 1.4 2007-08-16 14:54:16 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -104,7 +104,7 @@ namespace Tf
       return module().untruncatedDriftDistance( driftTime(yMid()) ) ; 
     }
 
-    /** Access the stram number for this hit */
+    /** Access the straw number for this hit */
     inline unsigned int straw() const { return m_rawhit.channel().straw() ; }
 
     /** Access the monolayer number for this hit (XXX???XXX what exactly is this) */
