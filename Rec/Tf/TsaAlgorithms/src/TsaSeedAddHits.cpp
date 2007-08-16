@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.2 2007-08-14 16:56:15 jonrob Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.3 2007-08-16 12:45:57 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -149,6 +149,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
               //Tsa::STCluster* clus = *itIter;
               // CRJ : Hit cleaning not yet available
               //if ( clus->isHot() || clus->onTrack()) continue;  //  Ignore clusters from hot regions
+              if ((*itIter)->onTrack()) continue;
 
               //  Find seed candidate's coordinate at the cluster (midpoint)
               //const double z = clus->zMid();

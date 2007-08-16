@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-08-16 
+ - Merge features from head of TsaAlgorithms into the A-Team world
+
 ! 2007-07-19 - Chris Jones
  - First version to given decent performance in ATeam world
 

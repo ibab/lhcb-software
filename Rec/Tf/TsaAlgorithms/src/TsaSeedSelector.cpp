@@ -1,4 +1,4 @@
-// $Id: TsaSeedSelector.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaSeedSelector.cpp,v 1.2 2007-08-16 12:45:58 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -37,8 +37,11 @@ StatusCode SeedSelector::execute( std::vector<SeedTrack*>& seeds,
   //  Select tracks in 3-D
   //-------------------------------------------------------------------------
 
-  // Sort seeds according to their likelihood
-  std::sort( seeds.begin(), seeds.end(), SeedFunctor::decreasingLikelihood<const SeedTrack*>() );
+  // Sort seeds according to their likelihood + # hits
+  std::stable_sort(seeds.begin(), seeds.end(), 
+                   SeedFunctor::decreasingLikelihood<const SeedTrack*>() );
+  std::stable_sort(seeds.begin(), seeds.end(), 
+                   SeedFunctor::increasingByHits<const SeedTrack*>() );
   const StatusCode sc = select(seeds);
   if ( msgLevel(MSG::VERBOSE) )
   {

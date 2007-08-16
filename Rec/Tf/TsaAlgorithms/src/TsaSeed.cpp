@@ -7,8 +7,11 @@
 
 // boost
 #include "boost/lexical_cast.hpp"
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 using namespace Tf::Tsa;
+using namespace boost::lambda;
 
 // factory defs
 DECLARE_ALGORITHM_FACTORY( Seed );
@@ -82,6 +85,8 @@ StatusCode Seed::execute(){
 
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
+  std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
+
 
   std::vector<SeedStub*> stubs[3];            //  IT stubs per station
   for (unsigned iS = 0; iS < 3; ++iS) stubs[iS].reserve(100);
@@ -238,12 +243,18 @@ StatusCode Seed::execute(){
     if (sc.isFailure()) {
       return Error("failed to add hits", StatusCode::FAILURE,1);
     }
-  }
-  //stopTimer();
 
-  //plot(timer().lasttime()/1000 , "timer", 0., 10., 200  );
-  //plot2D(nHit, timer().lasttime()/1000 , "timer", 0., 20000., 0., 10., 200, 400 );
-  //plot(nHit,"hits", 0., 20000., 500);
+    SeedTracks::iterator iterT = seedSel->begin();
+    for (; iterT != seedSel->end(); ++iterT){
+      std::vector<SeedPnt> clusVector = (*iterT)->usedPnts();
+      std::for_each(clusVector.begin(),clusVector.end(), 
+                  bind(&SeedPnt::setOnTrack,_1, false));
+      if ((*iterT)->select() == false) (*iterT)->setLive(false) ;
+      tempSel.push_back(*iterT);
+    } // iterT
+
+    sc = m_finalSelection->execute(tempSel);
+  }
 
   debug() << "Created " << seedSel->size() << " SeedTracks at " << m_seedTrackLocation << endreq;
 
