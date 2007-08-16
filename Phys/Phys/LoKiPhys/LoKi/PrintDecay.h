@@ -1,4 +1,4 @@
-// $Id: PrintDecay.h,v 1.5 2007-08-16 11:55:38 ibelyaev Exp $
+// $Id: PrintDecay.h,v 1.6 2007-08-16 13:52:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRINTDECAY_H 
 #define LOKI_PRINTDECAY_H 1
@@ -39,7 +39,7 @@ class MsgStream ;
 // ============================================================================
 namespace LoKi
 {
-  namespace Print 
+  namespace PrintPhys
   {
     // ========================================================================
     /// the maximal recursion level 
@@ -51,7 +51,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  printPhysDecay( p , std::cout ) ;
+     *  printDecay( p , std::cout ) ;
      *
      *  @endcode 
      *
@@ -62,7 +62,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    std::ostream& printPhysDecay 
+    std::ostream& printDecay 
     ( const LHCb::Particle*        particle            , 
       std::ostream&                stream              , 
       const LoKi::Types::Cuts&     cut                 ,
@@ -75,7 +75,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  printPhysDecay( p , std::cout ) ;
+     *  printDecay( p , std::cout ) ;
      *
      *  @endcode 
      *
@@ -85,7 +85,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::ostream& 
-    printPhysDecay 
+    printDecay 
     ( const LHCb::Particle*        particle  , 
       std::ostream&                stream    ) ;
     // ========================================================================    
@@ -95,7 +95,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  printPhysDecay( p , always() ) ;
+     *  printDecay( p , always() ) ;
      *
      *  @endcode 
      *
@@ -107,7 +107,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     MsgStream& 
-    printPhysDecay 
+    printDecay 
     ( const LHCb::Particle*        particle            , 
       MsgStream&                   stream              , 
       const LoKi::Types::Cuts&     cut                 ,
@@ -120,7 +120,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  printPhysDecay( p , always() ) ;
+     *  printDecay( p , always() ) ;
      *
      *  @endcode 
      *
@@ -130,7 +130,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     MsgStream& 
-    printPhysDecay 
+    printDecay 
     ( const LHCb::Particle* particle  , 
       MsgStream&            stream    ) ;
     // ========================================================================
@@ -140,7 +140,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  info() << printPhysDecay( p ) ;
+     *  info() << printDecay( p ) ;
      *
      *  @endcode 
      *
@@ -151,7 +151,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::string 
-    printPhysDecay 
+    printDecay 
     ( const LHCb::Particle*        particle            , 
       const LoKi::Types::Cuts&     cut                 ,
       const int                    level = s_maxLevel3 ,
@@ -163,7 +163,7 @@ namespace LoKi
      *
      *  const LHCb::Particle* p = ... ;
      * 
-     *  info() << printPhysDecay( p ) ;
+     *  info() << printDecay( p ) ;
      *
      *  @endcode 
      *
@@ -172,146 +172,17 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::string 
-    printPhysDecay 
+    printDecay 
     ( const LHCb::Particle*        particle ) ;
     // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  printDecay( p , std::cout ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to particle to be printed 
-     *  @param stream   stream to be used 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::ostream& printDecay 
-    ( const LHCb::Particle*        particle            , 
-      std::ostream&                stream              , 
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel3 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printPhysDecay ( particle , stream , cut , level , blank ) ; }
+  } // end of namespace LoKi::PrintPhys 
+  namespace Print 
+  {
     // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  printDecay( p , std::cout ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to particle to be printed 
-     *  @param stream   stream to be used 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::ostream& 
-    printDecay 
-    ( const LHCb::Particle*        particle  , 
-      std::ostream&                stream    )
-    { return printPhysDecay ( particle , stream ) ; }
-    // ========================================================================    
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  printDecay( p , always() ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param stream   stream to be used 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline MsgStream& 
-    printDecay 
-    ( const LHCb::Particle*        particle            , 
-      MsgStream&                   stream              , 
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel3 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printPhysDecay ( particle , stream , cut , level , blank ) ; }
-    // ========================================================================    
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  printDecay( p , always() ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param stream   stream to be used 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline MsgStream& 
-    printDecay 
-    ( const LHCb::Particle* particle  , 
-      MsgStream&            stream    ) 
-    { return printPhysDecay ( particle , stream ) ; }
+    using namespace LoKi::PrintPhys ;
     // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  info() << printDecay( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::string 
-    printDecay 
-    ( const LHCb::Particle*        particle            , 
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel3 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printPhysDecay ( particle , cut , level , blank ) ; }
-    // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle* p = ... ;
-     * 
-     *  info() << printDecay( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::string 
-    printDecay 
-    ( const LHCb::Particle*        particle ) 
-    { return printPhysDecay ( particle ) ; }
-    // ========================================================================
-  } // end of namepspace LoKi
+  } // end of namespace LoKi::Print
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

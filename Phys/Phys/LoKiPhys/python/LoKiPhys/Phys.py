@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phys.py,v 1.2 2007-08-16 11:55:38 ibelyaev Exp $ 
+# $Id: Phys.py,v 1.3 2007-08-16 13:52:08 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
@@ -281,9 +281,9 @@ def printDecay ( s , *a ) :
     >>> printDecay ( p )
     
     """
-    return LoKi.Print.printPhysDecay ( s , *a )
+    return LoKi.PrintPhys.printDecay ( s , *a )
 
-printDecay. __doc__ += "\n\n" + LoKi.Print.printPhysDecay . __doc__  
+printDecay. __doc__ += "\n\n" + LoKi.PrintPhys.printDecay . __doc__  
 
 if not hasattr ( LHCb.Particle ,     'printDecay'   ) :
     LHCb.Particle .  printDecay   =   printDecay
@@ -311,7 +311,7 @@ _LCF.max_value     . __doc__ += "\n" + LoKi.Dicts.Algs.max_value    . __doc__
 _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.Algs.min_element  . __doc__ 
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.Algs.max_element  . __doc__ 
 
-_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printPhysDecay    . __doc__ 
+_LCF.printDecay    . __doc__ += "\n" + LoKi.PrintPhys.printDecay    . __doc__ 
 
 
 # =============================================================================

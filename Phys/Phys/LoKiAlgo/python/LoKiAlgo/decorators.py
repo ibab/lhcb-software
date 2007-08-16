@@ -333,9 +333,9 @@ def printDecay ( s , *a ) :
     >>> printDecay ( l )
 
     """
-    return LoKi.Print.printLoopDecay ( s , *a )
+    return LoKi.PrintLoop.printDecay ( s , *a )
 
-printDecay . __doc__ += "\n\n" + LoKi.Print.printLoopDecay . __doc__
+printDecay . __doc__ += "\n\n" + LoKi.PrintLoop.printDecay . __doc__
 
 
 if not hasattr ( LoKi.Loop ,   "printDecay"   ) :
@@ -344,7 +344,7 @@ if not hasattr ( LoKi.Loop , "__printDecay__" ) :
     LoKi.Loop. __printDecay__ = printDecay
     
 import LoKiCore.functions  as _LCF 
-_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printLoopDecay    . __doc__ 
+_LCF.printDecay    . __doc__ += "\n" + LoKi.PrintLoop.printDecay    . __doc__ 
 
 
 

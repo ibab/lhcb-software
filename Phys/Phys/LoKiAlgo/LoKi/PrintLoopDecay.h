@@ -1,4 +1,4 @@
-// $Id: PrintLoopDecay.h,v 1.1 2007-08-16 11:55:20 ibelyaev Exp $
+// $Id: PrintLoopDecay.h,v 1.2 2007-08-16 13:49:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRINTLOOPDECAY_H 
 #define LOKI_PRINTLOOPDECAY_H 1
@@ -44,7 +44,7 @@ namespace LoKi
   // ==========================================================================
   class Loop ;
   // ==========================================================================
-  namespace Print 
+  namespace PrintLoop 
   {
     // ========================================================================
     /// the maximal recursion level 
@@ -56,7 +56,7 @@ namespace LoKi
      *
      *  Loop B = ... ; 
      * 
-     *  printLoopDecay( B , std::cout ) ;
+     *  printDecay( B , std::cout ) ;
      *
      *  @endcode 
      *
@@ -67,7 +67,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    std::ostream& printLoopDecay 
+    std::ostream& printDecay 
     ( const LoKi::Loop&            particle            , 
       std::ostream&                stream              , 
       const LoKi::Types::Cuts&     cut                 ,
@@ -80,7 +80,7 @@ namespace LoKi
      *
      *  Loop B = ... ;
      * 
-     *  printLoopDecay ( B , std::cout ) ;
+     *  printDecay ( B , std::cout ) ;
      *
      *  @endcode 
      *
@@ -90,7 +90,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::ostream& 
-    printLoopDecay 
+    printDecay 
     ( const LoKi::Loop&            particle  , 
       std::ostream&                stream    ) ;
     // ========================================================================    
@@ -100,7 +100,7 @@ namespace LoKi
      *
      *  Loop B = ... ;
      * 
-     *  printLoopDecay ( B , always() ) ;
+     *  printDecay ( B , always() ) ;
      *
      *  @endcode 
      *
@@ -112,7 +112,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     MsgStream& 
-    printLoopDecay 
+    printDecay 
     ( const LoKi::Loop&            particle            , 
       MsgStream&                   stream              , 
       const LoKi::Types::Cuts&     cut                 ,
@@ -125,7 +125,7 @@ namespace LoKi
      *
      *  Loop B = ... ;
      * 
-     *  printLoopDecay( B , always() ) ;
+     *  printDecay( B , always() ) ;
      *
      *  @endcode 
      *
@@ -135,17 +135,17 @@ namespace LoKi
      *  @date   2006-01-18
      */
     MsgStream& 
-    printLoopDecay 
+    printDecay 
     ( const LoKi::Loop&     particle  , 
       MsgStream&            stream    ) ;
     // ========================================================================
-     /** Simple function to print decay in more or less "readable" format 
+    /** Simple function to print decay in more or less "readable" format 
      *
      *  @code
      *
      *  Loop B = ... ;
      * 
-     *  info() << printLoopDecay( p ) ;
+     *  info() << printDecay( p ) ;
      *
      *  @endcode 
      *
@@ -156,7 +156,7 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::string 
-    printLoopDecay 
+    printDecay 
     ( const LoKi::Loop&            particle            , 
       const LoKi::Types::Cuts&     cut                 ,
       const int                    level = s_maxLevel4 ,
@@ -168,7 +168,7 @@ namespace LoKi
      *
      *  Loop B = ... ;
      * 
-     *  info() << printLoopDecay( B ) ;
+     *  info() << printDecay( B ) ;
      *
      *  @endcode 
      *
@@ -177,144 +177,15 @@ namespace LoKi
      *  @date   2006-01-18
      */
     std::string 
-    printLoopDecay 
+    printDecay 
     ( const LoKi::Loop&            particle ) ;
     // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  printDecay( B , std::cout ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to particle to be printed 
-     *  @param stream   stream to be used 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::ostream& printDecay 
-    ( const LoKi::Loop&            particle            ,
-      std::ostream&                stream              , 
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel4 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printLoopDecay ( particle , stream , cut , level , blank ) ; }
+  } // end of namespace LoKi::PrintLoop 
+  // ==========================================================================
+  namespace Print
+  {
     // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  printDecay( B , std::cout ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to particle to be printed 
-     *  @param stream   stream to be used 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::ostream& 
-    printDecay 
-    ( const LoKi::Loop&            particle  ,
-      std::ostream&                stream    )
-    { return printLoopDecay ( particle , stream ) ; }   
-    // ========================================================================    
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  printDecay ( B , always() ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param stream   stream to be used 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline MsgStream& 
-    printDecay 
-    ( const LoKi::Loop&            particle            ,
-      MsgStream&                   stream              , 
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel4 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printLoopDecay ( particle , stream , cut , level , blank ) ; }
-    // ========================================================================    
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  printDecay ( B , always() ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param stream   stream to be used 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline MsgStream& 
-    printDecay 
-    ( const LoKi::Loop&     particle  ,
-      MsgStream&            stream    ) 
-    { return printLoopDecay ( particle , stream ) ; }   
-    // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  info() << printDecay( B ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @param cut      condition 
-     *  @param blank    to be printed instead of cutted particles 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::string 
-    printDecay 
-    ( const LoKi::Loop&            particle            ,
-      const LoKi::Types::Cuts&     cut                 ,
-      const int                    level = s_maxLevel4 ,
-      const std::string&           blank = "<cut>"     ) 
-    { return printLoopDecay ( particle , cut , level , blank ) ; }
-    // ========================================================================
-    /** Simple function to print decay in more or less "readable" format 
-     *
-     *  @code
-     *
-     *  Loop B = ... ;
-     * 
-     *  info() << printDecay( B ) ;
-     *
-     *  @endcode 
-     *
-     *  @param particle pointer to Particle to be printed 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2006-01-18
-     */
-    inline std::string 
-    printDecay 
-    ( const LoKi::Loop& particle ) 
-    { return printLoopDecay ( particle ) ; }
+    using namespace LoKi::PrintLoop ;
     // ========================================================================
   } // end of namespace LoKi::Print 
 } // end of namespace LoKi
