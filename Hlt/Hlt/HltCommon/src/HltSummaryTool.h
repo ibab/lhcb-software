@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.6 2007-07-13 09:25:40 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.7 2007-08-16 09:40:49 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -59,9 +59,15 @@ public:
   
   std::vector<std::string> selectionFilters(const std::string& name);
 
+  std::string selectionType(const std::string& name);
+
+  std::vector<std::string> selectionInputSelections(const std::string& name);
+
   std::vector<LHCb::Track*> selectionTracks(const std::string& name);
   
   std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name);
+
+  std::vector<LHCb::Particle*> selectionParticles(const std::string& name);
   
   bool isInSelection(const std::string& name,
                      const LHCb::Track& track );

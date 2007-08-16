@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.9 2007-08-09 14:00:24 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.10 2007-08-16 09:40:49 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -130,6 +130,8 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
                                                   *m_tracks, Estd::abs_max());
   } else if (name == "DeltaE"){
     fun = new Hlt::DeltaE();
+  } else if (name == "FlagL0Candidate"){
+    fun = new Hlt::TrackFlag(Track::L0Candidate);
   }
 
   if (m_smart && fun) {

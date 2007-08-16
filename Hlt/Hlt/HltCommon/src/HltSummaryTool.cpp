@@ -145,22 +145,54 @@ HltSummaryTool::selectionFilters(const std::string& name) {
   return filters;
 }
 
+std::vector<std::string> 
+HltSummaryTool::selectionInputSelections(const std::string& name) {
+  getSummary();
+  std::vector<std::string> inputs;
+  std::string key = name+"/InputSelections";
+  if (m_conf->has_key(key))
+    inputs = m_conf->retrieve<std::vector<std::string> >(key);
+  return inputs;
+}
+
+std::string 
+HltSummaryTool::selectionType(const std::string& name) {
+  getSummary();
+  std::string type = "unknown";
+  std::string key = name+"/SelectionType";
+  if (m_conf->has_key(key)) type = m_conf->retrieve<std::string >(key);
+  return type;
+}
+
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
+  std::vector<Track*> tracks;
   getSummary();
   int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  std::vector<Track*> tracks = 
-    HltSummaryHelper::retrieve<std::vector<Track*> >(*m_summary,id);
+  if (!HltSummaryHelper::has<std::vector<Track*> >(*m_summary,id)) 
+    return tracks;
+  tracks = HltSummaryHelper::retrieve<std::vector<Track*> >(*m_summary,id);
   return tracks;
 }
 
 std::vector<RecVertex*> 
 HltSummaryTool::selectionVertices(const std::string& name) {
+  std::vector<RecVertex*> vertices;
   getSummary();
   int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  std::vector<RecVertex*> vertices = 
+  if (!HltSummaryHelper::has< std::vector<RecVertex*> >(*m_summary,id)) 
+    return vertices;
+  vertices = 
     HltSummaryHelper::retrieve<std::vector<RecVertex*> >(*m_summary,id);
   return vertices;
+}
+
+std::vector<Particle*> 
+HltSummaryTool::selectionParticles(const std::string& name) {
+  std::vector<Particle*> pars;
+  getSummary();
+  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
+  return pars;
 }
 
 bool HltSummaryTool::isInSelection(const std::string& name,

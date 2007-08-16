@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-08-17 - Jose A. Hernando
+	- HltFunctionFactory: check for L0Candidate flag
+  - HltSumamryTool: functionality to check for the type of selection, return empty vector, preparing to return particles
+
 ! 2007-08-07 - Jose A. Hernando
  - HltFunctionFactory: adding smart flag
  - HltTrackFilter, HltVertexFilter, HltTrackMaker, HltVertexMaker: private factory
