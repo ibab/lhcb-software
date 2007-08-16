@@ -1,4 +1,4 @@
-// $Id: TrajProjector.h,v 1.2 2007-03-02 17:31:27 cattanem Exp $
+// $Id: TrajProjector.h,v 1.3 2007-08-16 13:38:17 graven Exp $
 #ifndef TRAJPROJECTOR_H 
 #define TRAJPROJECTOR_H 1
 
@@ -27,8 +27,6 @@ class TrajProjector : public TrackProjector {
 
 public: 
     /// FIXME/TODO: project given a traj instead of a state
-    /// FIXME/TODO: project and return derivative to alignment constants of measurement...
-    ///             assuming measurement is a DifTraj instead of Traj...
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
