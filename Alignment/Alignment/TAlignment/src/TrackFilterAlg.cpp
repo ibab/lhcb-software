@@ -1,6 +1,5 @@
-// $Id: TrackFilterAlg.cpp,v 1.1 2007-07-20 17:26:53 janos Exp $
+// $Id: TrackFilterAlg.cpp,v 1.2 2007-08-16 13:46:37 graven Exp $
 // Include files 
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartIF.h"
@@ -37,21 +36,36 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
     m_tracksOutputContainer(""),
     m_trackType(""),
     m_trackSelectorName(""),
-    m_trackSelector(NULL)
+    m_trackSelector(0)
 {
   /// Map strings to track types
-  m_stringToTrackTypeMap = 
-    map_list_of("Velo", Track::Velo)("VeloR", Track::VeloR)("Long", Track::Long)
-    ("Upstream", Track::Upstream)("Downstream", Track::Downstream)("Ttrack", Track::Ttrack)("Muon", Track::Muon);
+  m_stringToTrackTypeMap = map_list_of("Velo"      , Track::Velo      )
+                                      ("VeloR"     , Track::VeloR     )
+                                      ("Long"      , Track::Long      )
+                                      ("Upstream"  , Track::Upstream  )
+                                      ("Downstream", Track::Downstream)
+                                      ("Ttrack"    , Track::Ttrack    )
+                                      ("Muon"      , Track::Muon      );
   /// And vice versa. I whish we had Boost::BiMap
-  m_trackTypeToStringMap = 
-    map_list_of(Track::Velo, "Velo")(Track::VeloR, "VeloR")(Track::Long, "Long")
-    (Track::Upstream, "Upstream")(Track::Downstream, "Downstream")(Track::Ttrack, "Ttrack")(Track::Muon, "Muon");
+  m_trackTypeToStringMap = map_list_of(Track::Velo      , "Velo"      )
+                                      (Track::VeloR     , "VeloR"     )
+                                      (Track::Long      , "Long"      )
+                                      (Track::Upstream  , "Upstream"  )
+                                      (Track::Downstream, "Downstream")
+                                      (Track::Ttrack    , "Ttrack"    )
+                                      (Track::Muon      , "Muon"      );
+  
+  m_lhcbDetChecks = map_list_of("Velo", bind(&LHCbID::isVelo, _1))
+                               ("OT"  , bind(&LHCbID::isOT  , _1));
 
   declareProperty("TracksInputContainer" , m_tracksInputContainer  = TrackLocation::Default    );
-  declareProperty("TracksOutputContainer", m_tracksOutputContainer = "Alignment/FilteredTracks");
+  declareProperty("TracksOutputContainer"        , m_tracksOutputContainer = "Alignment/FilteredTracks");
   declareProperty("TrackType"            , m_trackType             = "Long"                    );
   declareProperty("TrackSelector"        , m_trackSelectorName     = "AlignSelTool"            );
+  declareProperty("StripUnwantedDetectorHits"    , m_strip                 = false                     );
+  declareProperty("KeepDetectorHits"             , m_detector              = "OT"                      );
+  declareProperty("MinNHits"                     , m_nMinHits              = 5u                        );
+  
 }
 
 //=============================================================================
@@ -94,9 +108,25 @@ StatusCode TrackFilterAlg::execute() {
 
 void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
   if ((track->checkType(m_stringToTrackTypeMap[m_trackType])) && (m_trackSelector->selectTrack(track))) { 
-    /// Clone track
-    Track& clonedTrack = *(track->cloneWithKey());
-    outputContainer->add(&clonedTrack);
+    /// Clone track. It's mine
+    std::auto_ptr<Track> clonedTrack( track->cloneWithKey() );
+    /// let's strip unwanted nodes. This should be a seperate algorithm
+    /// Get my own copy of nodes
+    LHCBIDS ids = clonedTrack->lhcbIDs();
+    if (printDebug()) {
+      debug() << "==> Got " << ids.size() << " ids " <<endmsg;
+      debug() << "==> Stripping unwanted ids" << endmsg;
+    }
+    if (m_strip) for_each(ids.begin(), ids.end(), bind(&TrackFilterAlg::strip, this, _1, clonedTrack.get()));
+    if (printDebug()) {
+      const LHCBIDS& wantedIds = clonedTrack->lhcbIDs();
+      debug() << wantedIds.size() << " ids left after stripping" << endmsg;
+      int nID = 0;
+      for (LHCBIDS::const_iterator i = wantedIds.begin(), iEnd = wantedIds.end(); i != iEnd; ++nID, ++i) { 
+        debug() << "==> " << nID << ": ID is " << (*i) << endmsg;
+      }
+    }                                                                              /// It's yours     
+    if ((clonedTrack->lhcbIDs()).size() > m_nMinHits || !m_strip) outputContainer->add(clonedTrack.release());
   }
 }
 
