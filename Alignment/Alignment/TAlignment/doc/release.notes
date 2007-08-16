@@ -3,10 +3,15 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-08-16 - Gerhard Raven
+ - make sure the same pivot points are used consistently  in AlignAlgorithm
+ - add some more monitoring
+
 ! 2007-08-16 - Jan Amoraal
  - Add the option to strip hits from a track before re-fitting it.
  - Move common code from AlignOTDetector to AlignmentFunctions
  - Add support for (linear) Lagrange multipliers
+ - If no pivot points defined, use the 'local' (0,0,0) in global coordinates as default
 
 ! 2007-07-20 - Jan Amoraal
  - Added a small treack filter algorithm which filters tracks by type

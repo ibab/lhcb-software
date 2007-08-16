@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.7 2007-07-20 17:24:33 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.8 2007-08-16 13:52:41 graven Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H 
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -24,7 +24,6 @@
 
 // forward declarations
 class DetectorElement;
-//class IAlignSelTool;
 class ITrackProjectorSelector;
 class IAlignDetectorSelector;
 class IAlignSolvTool;
@@ -38,6 +37,7 @@ namespace LHCb
 namespace AIDA 
 {
   class IHistogram2D;
+  class IHistogram1D;
 };
 
 /** @class AlignAlgorithm AlignAlgorithm.h
@@ -66,12 +66,13 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  //virtual StatusCode finalize   ();    
 
   /// Virtuals incident
   void handle(const Incident& incident);
   StatusCode queryInterface(const InterfaceID& id, void** ppI);
     
-  /// Method to call when an update is triggered
+  /// Methods to call when an update is triggered
   void update();
   void reset();
 
@@ -121,12 +122,15 @@ private:
   std::string              m_matrixSolverToolName; ///< Name of linear algebra solver tool
   IAlignSolvTool*          m_matrixSolverTool;     ///< Pointer to linear algebra solver tool
   Equations                m_equations;            ///< Equations to solve 
-  AlVec                    m_derivatives;          ///< Alignment vector of derivatives
-  AlSymMat                 m_hMatrix;              ///< Alignment H matrix
+  std::vector<std::vector<double> > m_constraints;
+  
+/*   AlVec                    m_derivatives;          ///< Alignment vector of derivatives */
+/*   AlSymMat                 m_hMatrix;              ///< Alignment H matrix */
 
   /// Monitoring
-  /// Residules (id =1000 + n)
-  std::map<unsigned int, IHistogram2D*> resHistos;
+  std::map<unsigned int, IHistogram2D*> m_resHistos;
+  std::map<unsigned int, IHistogram2D*> m_pullHistos;
+  std::map<unsigned int, IHistogram1D*> m_nhitHistos;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H

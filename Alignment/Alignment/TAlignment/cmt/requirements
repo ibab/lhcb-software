@@ -15,7 +15,6 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use 	GSL               	v*	LCG_Interfaces
 use   	GaudiAlg          	v*
 use     AlignSolvTools          v*      Alignment
 use 	AlignmentInterfaces	v*	Alignment
@@ -38,3 +37,4 @@ library		TAlignment	../src/*.cpp -import=AIDA
 #============================================================================
 apply_pattern    component_library		library=TAlignment
 
+macro TAlignment_linkopts $(Boost_linkopts_regex)
