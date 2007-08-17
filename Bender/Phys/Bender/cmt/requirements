@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2007-08-17 15:16:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.47 2007-08-17 15:16:57 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2002-11-02
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,7 +7,7 @@ package           Bender
 version           v8r0
 
 # ============================================================================
-branches          cmt doc src python
+branches          cmt doc python
 
 # =============== environemnt =================================================
 set               BENDERPYTHON $(BENDERROOT)/python
