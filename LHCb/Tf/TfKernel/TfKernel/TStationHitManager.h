@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.2 2007-08-16 12:54:00 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.3 2007-08-17 10:58:10 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -427,25 +427,28 @@ namespace Tf
   template<class Hit>
   inline void TStationHitManager<Hit>::clearHits() const
   {
-    m_hits_all.clear();
-    for(unsigned int s=0; s<maxStations(); s++)
+    if ( this->allHitsPrepared() )
     {
-      m_hits_stations[s].clear();
-      for (unsigned int l=0; l<maxLayers(); l++)
+      m_hits_all.clear();
+      for(unsigned int s=0; s<maxStations(); s++)
       {
-        m_hits_layers[s][l].clear();
-        for (unsigned int t=0; t<maxRegions(); t++)
+        m_hits_stations[s].clear();
+        for (unsigned int l=0; l<maxLayers(); l++)
         {
-          for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
-                iHit != m_hits[s][l][t].end(); ++iHit )
+          m_hits_layers[s][l].clear();
+          for (unsigned int t=0; t<maxRegions(); t++)
           {
-            delete *iHit;
+            for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
+                  iHit != m_hits[s][l][t].end(); ++iHit )
+            {
+              delete *iHit;
+            }
+            m_hits[s][l][t].clear();
           }
-          m_hits[s][l][t].clear();
         }
       }
+      this->setAllHitsPrepared(false);
     }
-    this->setAllHitsPrepared(false);
   }
 
   template<class Hit>
