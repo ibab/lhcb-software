@@ -1,9 +1,5 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.6 2007-03-22 18:53:00 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
-# =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
 #  This file is a part of 
@@ -31,7 +27,7 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
 # =============================================================================
 ## import everything form bender 
-from bendermodule import * 
+from Bender.All import * 
 # =============================================================================
 
 # =============================================================================
@@ -39,7 +35,9 @@ from bendermodule import *
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class Bs2PsiPhi(AlgoMC) :
-    """ simple class for Bs -> Psi Phi """
+    """
+    Simple class for Bs -> Psi Phi
+    """
     
     ## standard constructor
     def __init__ ( self , name = 'Bs2PsiPhi' ) :
@@ -158,7 +156,8 @@ class Bs2PsiPhi(AlgoMC) :
             bp = b.particle()
             bv = b.vertex()
             if not bv or not bp : continue                       # CONTINUE 
-            pv = selectVertexMin( primaries , VIPCHI2 ( bp , self.geo() ) , VALL )
+            pv = LoKi.SelectVertex.selectMin (
+                primaries , VIPCHI2 ( bp , self.geo() ) , VALL )
             if not pv :
                 self.Warning('No proper primary vertex found!')
                 continue                                         # CONTINUE 
@@ -178,12 +177,18 @@ class Bs2PsiPhi(AlgoMC) :
 def configure ( **args ) :
     """ Configure the job """
     
+    ## get the input data
+    import data_Bs2Jpsiphi_mm as input 
+
     ## read external configruation files
-    gaudi.config ( files = [
+    gaudi.config (
+        files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts'
-        ] )
+        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] ,
+        options = [
+        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
+        )
     
     ## I am old-fashioned person - I like HBOOK 
     if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
@@ -220,12 +225,10 @@ def configure ( **args ) :
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
 
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
     
     ## get input data 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.PFNs ) 
+    evtSel.open ( input.FILEs ) 
     evtSel.PrintFreq = 100
     
     return SUCCESS 
@@ -241,12 +244,9 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(1000)
-    
+    gaudi.run(5000)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
+
 # =============================================================================
 # The END 
 # =============================================================================

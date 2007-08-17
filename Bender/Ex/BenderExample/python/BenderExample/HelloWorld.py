@@ -1,8 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.4 2007-03-22 18:53:00 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
+# $Id: HelloWorld.py,v 1.1 2007-08-17 15:19:59 ibelyaev Exp $
 # =============================================================================
 ## The most trivial Bender-based : HelloWorld example
 #
@@ -30,14 +28,16 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 # =============================================================================
-## import everything form bender 
-from bendermodule import * 
+## import everything from bender 
+from Bender.Main import * 
 # =============================================================================
 
 # =============================================================================
 ## the most primitive algorithm 
 class HelloWorld(Algo) :
-    """ The most primirive algorithm """
+    """
+    The most primitive Bender-based algorithm
+    """
     def analyse( self ) :
         print 'PYTHON: Hello world!'
         self.Print('Hello, World!')
@@ -48,13 +48,21 @@ class HelloWorld(Algo) :
 # =============================================================================
 ## configure the job
 def configure ( **args ) :
-    """ Configure the job """
+    """
+    Configure the job
+    """
+    
+    ## get the input data
+    import data_Bs2Jpsiphi_mm as input 
 
     ## read external configruation files
-    gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts',
-        '$DAVINCIROOT/options/DaVinciTestData.opts'
-        ] )
+    gaudi.config (
+        files = [
+        '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
+        '$DAVINCIROOT/options/DaVinciTestData.opts' ] ,
+        options = [
+        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
+        )
     
     ## create local algorithm:
     hello = HelloWorld('Hello')
@@ -62,8 +70,6 @@ def configure ( **args ) :
     ## set it as main algorithm toebexecuted 
     gaudi.setAlgorithms ( hello )
 
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
     
     ## get input data 
     evtSel = gaudi.evtSel()    
@@ -87,9 +93,6 @@ if __name__ == '__main__' :
     gaudi.run(50)
     
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

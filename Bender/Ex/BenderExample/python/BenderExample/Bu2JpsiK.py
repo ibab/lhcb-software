@@ -1,9 +1,5 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Bu2JpsiK.py,v 1.1 2007-05-07 13:58:09 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-# =============================================================================
 ## The simple Bender-based example from Diego Martinez Santos
 #
 #  @date 2007-05-07
@@ -15,7 +11,7 @@
 
 import sys
 
-from bendermodule import *
+from Bender.theMain import *
 
 DECAY  = "[B+ -> J/psi(1S) K+]cc"
 ONLY_MC = 0  ### ONLY combinations from DECAY will be computed if option ONLY_MC = 1
@@ -186,15 +182,19 @@ class Bu2JpsiK(AlgoMC):
 ##SCRIPT CONFIGURATION:
 def configure():
     import os 
+    import data_Bs2Jpsiphi_mm as input 
     JOBOPTS = os.environ['BENDEREXAMPLEOPTS']+"/DVPreselBu2JPsiK_DC06.opts"
-    gaudi.config(files = [JOBOPTS,])
+    gaudi.config(
+        files   = [ JOBOPTS ],
+        options = [ "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
+        )
+    
     alg = Bu2JpsiK('Bu2JPsiK')
     
     gaudi.addAlgorithm(alg)
     gaudi.ntupleSvc().Output = [ "FILE1 DATAFILE='Bu2JpsiK.root' OPT='NEW' TYP='ROOT'" ]
     
-    import data_Bs2Jpsiphi_mm
-    gaudi.evtSel().open( data_Bs2Jpsiphi_mm.PFNs )
+    gaudi.evtSel().open( input.FILEs )
     alg.NTupleLUN = 'T'
 
     desktop = gaudi.tool('Bu2JPsiK.PhysDesktop')
@@ -208,15 +208,12 @@ if __name__ == '__main__' :
     print __doc__
 
     configure()
-    N = 1000
+    N = 100
     gaudi.run(N)
     gaudi.finalize()
     
     print COUNTER
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

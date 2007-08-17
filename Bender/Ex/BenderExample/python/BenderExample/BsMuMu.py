@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: BsMuMu.py,v 1.1 2007-05-07 13:58:09 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-# =============================================================================
 ## The simple Bender-based example from Diego Martinez Santos
 #
 #  @date 2007-05-07
@@ -15,7 +11,7 @@
 
 import sys
 
-from bendermodule import *
+from Bender.theMain import *
 from math import sqrt as s_q_r_t
 
 ################################### Some General Options
@@ -451,14 +447,18 @@ class Bs2MuMu_Run(AlgoMC):                                       ##### STARTING 
 
 def configure():
     import os 
+    import data_Bs2Jpsiphi_mm as input
     JOBOPTS = os.environ['BENDEREXAMPLEOPTS']+"/DaVinciBs2MuMurun.opts"
-    gaudi.config(files = [JOBOPTS,])
+    gaudi.config(
+        files   = [ JOBOPTS ],
+        options = [ "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
+        )
+    
     alg = Bs2MuMu_Run('Bs2MuMu_Run')
     
     gaudi.addAlgorithm(alg)
     gaudi.ntupleSvc().Output = [ "FILE1 DATAFILE='BsMuMu.root' OPT='NEW' TYP='ROOT'" ]
-    import data_Bs2Jpsiphi_mm
-    gaudi.evtSel().open( data_Bs2Jpsiphi_mm.PFNs )
+    gaudi.evtSel().open( input.FILEs )
     alg.NTupleLUN = 'T'    
     desktop = gaudi.tool('Bs2MuMu_Run.PhysDesktop')
     desktop.InputLocations = ['/Event/Phys/StdLooseKaons','/Event/Phys/StdLooseMuons' ] #Loading Pions and Kaons
@@ -471,15 +471,12 @@ if __name__ == '__main__' :
     print __doc__
 
     configure()
-    N = -1
+    N = 1000
     gaudi.run(N)
     gaudi.finalize()
     
     print COUNTER
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================
