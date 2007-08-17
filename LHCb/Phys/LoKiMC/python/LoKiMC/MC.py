@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.4 2007-08-16 13:51:41 ibelyaev Exp $ 
+# $Id: MC.py,v 1.5 2007-08-17 15:21:30 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -14,7 +14,7 @@ Collection of utilities for useful 'decoration' of MC-objects
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-from   LoKiMC.functions import LoKi,LHCb
+from   LoKiMC.functions    import LoKi,LHCb,cpp
 
 # =============================================================================
 ## Get number of child particles :
@@ -351,7 +351,15 @@ _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.MCAlgs.min_element  . __doc__
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.MCAlgs.max_element  . __doc__ 
 
 
-_LCF.printDecay    . __doc__ += "\n" + LoKi.Print.printMCDecay        . __doc__ 
+_LCF.printDecay    . __doc__ += "\n" + LoKi.PrintMC.printDecay        . __doc__ 
+
+
+# decorate SmartRefVectors:
+for _t in ( LHCb.MCParticle ,
+            LHCb.MCVertex   ) :
+    _tt = cpp.SmartRefVector ( _t )
+    # redefine the iterator 
+    _tt.__iter__ = _LCF._iter_SRV_
 
 
 # =============================================================================

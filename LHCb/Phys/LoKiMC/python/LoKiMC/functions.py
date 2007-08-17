@@ -12,7 +12,8 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators as _LoKiCore
 
 # Namespaces:
-_global  = _LoKiCore._global 
+_global  = _LoKiCore._global
+cpp      = _global 
 std      = _LoKiCore.std
 LoKi     = _LoKiCore.LoKi
 LHCb     = _LoKiCore.LHCb

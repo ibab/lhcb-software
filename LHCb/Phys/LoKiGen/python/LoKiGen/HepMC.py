@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.4 2007-08-16 13:51:04 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.5 2007-08-17 15:21:16 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -464,7 +464,7 @@ def printDecay ( s , *a ) :
     """
     return LoKi.PrintHepMC.printDecay ( s , *a )
 
-printDecay. __doc__ += "\n\n" + LoKi.Print.HepMC.printDecay . __doc__  
+printDecay. __doc__ += "\n\n" + LoKi.PrintHepMC.printDecay . __doc__  
 
 if not hasattr ( HepMC.GenParticle ,     'printDecay'   ) :
     HepMC.GenParticle .  printDecay   =   printDecay
