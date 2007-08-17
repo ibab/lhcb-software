@@ -250,6 +250,7 @@ StatusCode Seed::execute(){
       std::for_each(clusVector.begin(),clusVector.end(), 
                   bind(&SeedPnt::setOnTrack,_1, false));
       if ((*iterT)->select() == false) (*iterT)->setLive(false) ;
+      (*iterT)->setSelect(false);
       tempSel.push_back(*iterT);
     } // iterT
 
