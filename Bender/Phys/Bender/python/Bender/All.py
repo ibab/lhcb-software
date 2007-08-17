@@ -1,10 +1,9 @@
+#!/usr/bin/env python 
 # =============================================================================
-# $Id: bendermatch.py,v 1.6 2006-11-28 18:24:17 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
-# =============================================================================
-## Auxillary module  to decorate class LoKi::MCMatch
+## The major Python module for Bender application in MC-mode 
 #
+#  The module name comes from Karol Hennesy 
+# 
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
 #  <b>"Python-based Interactive Environment for Smart and Friendly 
@@ -20,38 +19,23 @@
 #  with the campain of Dr.O.Callot et al.: 
 #  "No Vanya's lines are allowed in LHCb/Gaudi software."
 #
-#  @see Bender::MCMatch
-#  @see LoKi::MCMatch
-#  @see LoKi::MCMatchObj
-#
 #  @date   2004-07-11
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" Auxillary module  to decorate class LoKi::MCMatch """
+""" This is a major Python Module for Bender application in MC-mode """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-import os
-import gaudimodule
+from Bender.Main import *
 
-_gbl    = gaudimodule.gbl
-_LoKi   = _gbl.LoKi
-_Bender = _gbl.Bender
+## MC :
+from LoKiGen.decorators           import *
+from LoKiGenMC.decorators         import *
+from LoKiMC.decorators            import *
+from LoKiPhysMC.decorators        import *
+from LoKiAlgoMC.decorators        import *
 
-## get the object itsels 
-MCMatch = _LoKi.MCMatch
-
-## get the Bender decorator 
-_BM = _Bender.MCMatch
-
-def _valid_(s)    : return _BM.valid(s)
-def _match_(s,*a) : return _BM.match(s,*a)
-
-MCMatch.valid = _valid_
-MCMatch.match = _match_ 
-
-if __name__ == '__main__' :
-    print __doc__
-    print "dir(%s) : %s" % ( __name__ , dir() ) 
-
+# =============================================================================
+# The END 
+# =============================================================================

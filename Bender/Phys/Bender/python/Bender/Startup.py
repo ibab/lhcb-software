@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstartup.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
+# $Id: Startup.py,v 1.1 2007-08-17 15:16:27 ibelyaev Exp $ 
 # =============================================================================
 ## The trivial startup sctript frp python Bender session
 #
