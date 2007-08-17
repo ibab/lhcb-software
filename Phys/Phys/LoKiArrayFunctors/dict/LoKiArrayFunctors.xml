@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.5 2007-08-14 18:18:44 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.6 2007-08-17 15:21:58 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -83,6 +83,7 @@
     <class name = "std::unary_function<char,bool>"        />
     <class name = "std::unary_function<const char*,bool>" /> 
     <class name = "std::unary_function<const LHCb::Particle * const,bool>" /> 
+    <class name = "std::unary_function<const LHCb::Particle * const,double>" /> 
     <class name = "LoKi::AParticles::FourMomentum::Indices" />
   </exclusion>
 
