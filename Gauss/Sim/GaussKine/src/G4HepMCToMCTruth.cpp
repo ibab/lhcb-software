@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.5 2007-01-12 15:25:28 ranjard Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.6 2007-08-17 09:07:16 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -111,7 +111,13 @@ StatusCode G4HepMCToMCTruth::execute() {
   // retrieve primary 
   const G4Event* g4Event = 0 ;
   m_gigaSvc->retrieveEvent(g4Event);
-  
+
+  // Check if event is empty
+  if( g4Event->GetNumberOfPrimaryVertex() == 0 ) {
+    Print("The g4Event has zero primary vertices!");
+    return StatusCode::SUCCESS;
+  }
+
   const G4PrimaryVertex* g4Vertex = g4Event->GetPrimaryVertex();
   std::vector<LHCb::MCVertex*> primariesVtx;
   while( 0 != g4Vertex ) {
@@ -128,7 +134,8 @@ StatusCode G4HepMCToMCTruth::execute() {
     g4Vertex = g4Vertex->GetNext();
   }
   info() << "Number of primaries vtx " << vtxcont->size() << "/ "
-         << primariesVtx.size() << endmsg;
+         << primariesVtx.size() << "/ " << g4Event->GetNumberOfPrimaryVertex()
+         << endmsg;
 
   // Update the MCHeader info
   LHCb::MCHeader* mcHead = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);

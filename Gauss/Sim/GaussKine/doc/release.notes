@@ -4,6 +4,16 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v1r6 2007-08-17 ========================= 
+! 2007-08-17 - Gloria Corti
+ - Introduce protection as to pass an empty event to G4 when the 
+   LHCb::HepMCEvents container is empty. This will reset the internal
+   G4Event. 
+   . GeneratorToG4.cpp
+ - Introduce protection as not to retrieve MCTruth info for empty events
+   since it cannot be cleared if G4 does not call User Event Action 
+   . G4HepMCToMCTruth.cpp
+
 !========================== GaussKine v1r5 2007-02-08 ========================
 ! 2007-01-12 - Gloria Corti
  - Use Gaudi macro for factories so to be comaptible with both Gaudi v18

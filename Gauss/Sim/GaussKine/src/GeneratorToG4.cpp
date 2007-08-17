@@ -1,4 +1,4 @@
-// $Id: GeneratorToG4.cpp,v 1.5 2007-01-12 15:25:29 ranjard Exp $
+// $Id: GeneratorToG4.cpp,v 1.6 2007-08-17 09:07:16 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -82,6 +82,11 @@ StatusCode GeneratorToG4::execute() {
   // Temporary container of particles to store
   std::vector<HepMC::GenParticle*> outParts;
   outParts.clear();
+
+  
+  if( hepEvts->size() == 0 ) {
+    *gigaSvc() << NULL;
+  }
   
   // Loop over the events (one for each pile-up)
   for( LHCb::HepMCEvents::const_iterator iEvt = hepEvts->begin(); 
