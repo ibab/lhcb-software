@@ -5,6 +5,78 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v2r0 2007-08-17 ===========================
+! 2007-08-17 - Gloria Corti
+ - Modify code as not to process empty events, i.e. the generation of an
+   "event" (or bunch) is repeated until at least one track from any MIB source
+   is found. This allows to increase the significant sample that can be
+   generated and processed in the simulation. 
+   In orded to do that the original algorithm has been split in a steering
+   algorithm and a tool where the actual generation of the "event" is done.
+   The algorithm, MIBackground, handles the communication with the TES and
+   filling of information in the GenHeader (i.e. luminosity and even type
+   when the events are generated in stand-alone) and of the creation of the
+   various tools for the different sources (TCTH, TCTV, hadrons, muons).
+   The list of tools to use must be specified in job options,
+   MIBackground.MIBSource = {"CollimatorSource/TCTVShieldMuons"}, for example.
+   At least one instance of the CollimatorSource tool has to be passed in 
+   the MIBSource list. 
+   The tool, CollimatorSource, handles the actual generation of one "event"
+   based on its configuration, via the method generateEvent(). In fact this 
+   method is almost identical to the execute() of the original 
+   CollimatorSourceAlg.
+   Since we want to be able to produce files with only one given source or
+   with many source mixed togheter to account for the possibility of having
+   two particles from differnt sources in the same event, the MIBackground 
+   algortihm calls sequencially the generateEvent() method of all its instances
+   of the source tool and check the presence of at least one particle only 
+   at the end. The procedure is repeated until one non-empty "event" is 
+   generated at which point MIBackground::execute() returns succesfully. 
+   Counters are kept in both the tool and the algorithm to account for the
+   amount of empty/non-empty events that have been generated. This counters
+   are essential to a posteriori normalize the rates.
+   As for the previous version of the code this generation can be stand-alone
+   or merged with other type of events, i.e. pp collisions.
+ - Code changes:
+   . CollimatorSourceAlg.{h,cpp} - REMOVED and split into
+   . MIBackground.{h,cpp}        - NEW steering algorithm
+   . CollimatorSource.{h,cpp}    - NEW generation tools
+   . IMIBSource.h                - NEW interface for the MIB tools
+   . LbMIB_load.cpp              - replace declaration of old algorithm with
+                                   that of new one and declare new tool. This
+                                   is done to keep the package compatible with
+                                   Gauss v25rX series
+ - All steering options listed in the previous release notes exist and have
+   the same effect, but they belong to either the MIBackground algorithm or
+   the CollimatorSource tool.
+   . Options for MIBackground originally in CollimatorSourceAlg:
+      HepMCEvents, GenHeader, GenCollisions, EventType, Luminosity
+   . Options for CollimatorSource originally in CollimatorSourceAlg
+      ParticleSourceFile, FileIsBinary, SaveTempBinFile, TempBinFileName,
+      ScalingFactor, BunchFrequency, GenerationHist, ForcePartPerEvt,
+      ReadFileFromOffset, EnvelopeSize, ZParticleOrigin, ZDirection
+   See in previous version of release notes for explanation.
+ - A new option has introduced in MIBackground to pass the mandatory list of
+   source tool instances:
+   . MIBSource : def = {""}, must be provided in options
+ - The options have been modified to reflect the change in name of
+   the algorithm and tool and their instanciations.
+   . MIB-Example.opts      - modified, example and explanation of options
+   . MIB-Shield.opts       - modified, default options to generate event with
+                             all sources added to pp collisions for the case
+                             of full shield in tunnel
+   . MIB-StagedShield.opts - modified, default options to generate event with
+                             all sources added to pp collisions for the case
+                             of staged shield in tunnel (initial configuration)
+   NOTE that events types have been defined in DecFiles v13r1 (see explanation 
+   in its release notes and should be used for the stand-alone generation of
+   the MIB events.
+   For merging all sources with pp collisions in your main Gauss options 
+   include after those of the chosen EventType either
+    "$include $LBMIBROOT/options/MIB-Shield.opts"
+   or 
+    "$include $LBMIBROOT/options/MIB-StagedShield.opts"
+
 !=========================== LbMIB v1r0 2007-05-16 ===========================
 ! 2007-05-16 - Gloria CORTI
  - Fix problem with temporary file name in method instead of reset source

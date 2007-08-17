@@ -1,4 +1,4 @@
-// $Id: MIB-Example.opts,v 1.1.1.1 2007-05-16 17:14:28 gcorti Exp $
+// $Id: MIB-Example.opts,v 1.2 2007-08-17 12:54:14 gcorti Exp $
 
 /** @file
  *
@@ -13,37 +13,9 @@
 ApplicationMgr.DLLs += { "LbMIB" };
 
 Generator.Members -= { "GaudiSequencer/GenMonitor" };
-Generator.Members += { "CollimatorSourceAlg" };
+Generator.Members += { "MIBackground" };
 Generator.Members += { "GaudiSequencer/GenMonitor" };
 Generator.Members -= { "Generation" };  // Comment to merge with other events
-
-// Input File Options:
-//--------------------------------------------------------------------------
-// Name of source file (Default: "" - MUST be set in options)
-// For names of available files look at pre-defined options
-// MIB-StagedShield.opts & MIB-Shield.opts
-CollimatorSourceAlg.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.staged_shield.mu.data";
-// True for binary file, false for ascii. (Default: false)
-//CollimatorSourceAlg.FileIsBinary = true;
-// Keep or discard generated binary file. (Default: false)
-//CollimatorSourceAlg.SaveTempBinFile = false;
-// Name of file to save to (Default: BinPartFile.tmp) 
-//CollimatorSourceAlg.TempBinFileName = "BinPartFile.tmp";
-
-// Mode Modifiers:
-//---------------------------------------------------------------------------
-//  -1 : Choose random particles using weight based envelope method.
-// >=0 : Pick particles sequentually from file starting at this particle number
-// (Default: -1)
-//CollimatorSourceAlg.ReadFileFromOffset = -1;
-//  -1 : Use weight to find number of particles in event.
-// >=0 : Force the generation of this many particles in event.
-// (Default: -1)
-//CollimatorSourceAlg.ForcePartPerEvt = -1;
-// Size of envelopes used for particle selection.
-// Low number: faster, but uses more memory.
-// (Default: 1000)
-CollimatorSourceAlg.EnvelopeSize = 10;
 
 // Event Information:
 //---------------------------------------------------------------------------
@@ -64,14 +36,51 @@ CollimatorSourceAlg.EnvelopeSize = 10;
 //     8: no shield - Loss on TCTH.L8.B1
 // T=0: both beams, T=1: beam1, T=2: beam2
 // N=Num. of bunches traveling (beam1), X=Num. of bunches traveling (beam2)
-CollimatorSourceAlg.EventType = 62151000;
+MIBackground.EventType = 62151000;
 // Luminosity to be set in header. It is NOT used by CollimatorSourceAlg! 
-//CollimatorSourceAlg.Luminosity = 2.e32/cm2/s;
+//MIBackground.Luminosity = 2.e32/cm2/s;
+// Use only one source and configure it accordingly
+//--------------------------------------------------------------------------
+MIBackground.MIBSource = { "CollimatorSource" };
+
+// Input File Options:
+//--------------------------------------------------------------------------
+// Name of source file (Default: "" - MUST be set in options)
+// For names of available files look at pre-defined options
+// MIB-StagedShield.opts & MIB-Shield.opts
+MIBackground.CollimatorSource.ParticleSourceFile = 
+  "$MIBDATAROOT/data/TCTV.staged_shield.mu.data";
+// True for binary file, false for ascii. (Default: false)
+//MIBackground.CollimatorSource.FileIsBinary = true;
+// Keep or discard generated binary file. (Default: false)
+//MIBackground.CollimatorSource.SaveTempBinFile = false;
+// Name of file to save to (Default: BinPartFile.tmp) 
+//MIBackground.CollimatorSource.TempBinFileName = "BinPartFile.tmp";
+
+// Mode Modifiers:
+//---------------------------------------------------------------------------
+//  -1 : Choose random particles using weight based envelope method.
+// >=0 : Pick particles sequentually from file starting at this particle number
+// (Default: -1)
+//MIBackground.CollimatorSource.ReadFileFromOffset = -1;
+//  -1 : Use weight to find number of particles in event.
+// >=0 : Force the generation of this many particles in event.
+// (Default: -1)
+//MIBackground.CollimatorSource.ForcePartPerEvt = -1;
+// Size of envelopes used for particle selection.
+// Low number: faster, but uses more memory.
+// (Default: 1000)
+MIBackground.CollimatorSource.EnvelopeSize = 10;
+
+// Source external information:
+//---------------------------------------------------------------------------
 // Z origin (Default: -1.*m) and 
 // direction (+/-1, Default: 1) for generated particles
-//CollimatorSourceAlg.ZParticleOrigin = -1.0*m;
-//CollimatorSourceAlg.ZDirection = 1;			     
+//MIBackground.CollimatorSource.ZParticleOrigin = -1.0*m;
+//MIBackground.CollimatorSource.ZDirection = 1;			     
 
+// Normalization of source:
+//---------------------------------------------------------------------------
 // Scaling (arbitrary and bunch frequency to find particle/bunch since
 //          weights in file are given for 1 sec of running at full current).
 // (Default = 1)
@@ -80,8 +89,31 @@ CollimatorSourceAlg.EventType = 62151000;
 // It correspond to what was used to produce the original input file.
 // The number of protons per bunch to produce the source was 1.15 x 10^11
 // (Default = 31600000)
-//CollimatorSourceAlg.ScalingFactor = 1.0;      
-//CollimatorSourceAlg.BunchFrequency = 31600000;
+//MIBackground.CollimatorSource.ScalingFactor = 1.0;      
+//MIBackground.CollimatorSource.BunchFrequency = 31600000;
 
-// Histogrammin (Defalt = false)
-//CollimatorSourceAlg.GenerationHist = false;  
+// Histogramming (Defalt = false)
+//MIBackground.CollimatorSource.GenerationHist = false;  
+
+// Event Information:
+//---------------------------------------------------------------------------
+// EventType = GSDCTNXU, G=6 & C=5 halo on collimators
+// S = particle types generated (similar as for G=5) 
+//     0: all
+//     2: mu
+//     9: other (i.e. hadrons)
+// D = special meaning of source configuration (shield and collimator)
+//     0: staged shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     1: staged shield - Loss on TCTV.4L8.B1
+//     2: staged shield - Loss on TCTH.L8.B1
+//     3: design shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     4: design shield - Loss on TCTV.4L8.B1
+//     5: design shield - Loss on TCTH.L8.B1
+//     6: no shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     7: no shield - Loss on TCTH.L8.B1
+//     8: no shield - Loss on TCTH.L8.B1
+// T=0: both beams, T=1: beam1, T=2: beam2
+// N=Num. of bunches traveling (beam1), X=Num. of bunches traveling (beam2)
+MIBackground.EventType = 62151000;
+// Luminosity to be set in header. It is NOT used by CollimatorSourceAlg! 
+//MIBackground.Luminosity = 2.e32/cm2/s;

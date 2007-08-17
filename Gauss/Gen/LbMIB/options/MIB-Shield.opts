@@ -1,4 +1,4 @@
-// $Id: MIB-Shield.opts,v 1.1.1.1 2007-05-16 17:14:28 gcorti Exp $
+// $Id: MIB-Shield.opts,v 1.2 2007-08-17 12:54:14 gcorti Exp $
 
 /** @file
  *
@@ -13,17 +13,17 @@
 ApplicationMgr.DLLs += { "LbMIB" };
 
 Generator.Members -= { "GaudiSequencer/GenMonitor" };
-Generator.Members += { "GaudiSequencer/MIBCollimators" };
-Generator.Members += { "GaudiSequencer/GenMonitor"  };
+Generator.Members += { "MIBackground" };
+Generator.Members += { "GaudiSequencer/GenMonitor" };
 
-MIBCollimators.Members += { "CollimatorSourceAlg/TCTVShieldMuons" };
-MIBCollimators.Members += { "CollimatorSourceAlg/TCTVShieldHadrons" };
-MIBCollimators.Members += { "CollimatorSourceAlg/TCTHShieldMuons" };
-MIBCollimators.Members += { "CollimatorSourceAlg/TCTHShieldHadrons" };
+MIBackground.MIBSources  = { "CollimatorSource/TCTVShieldMuons" };
+MIBackground.TCTVShieldMuons.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.shield.mu.data";
+MIBackground.MIBSources += { "CollimatorSource/TCTVShieldHadrons" };
+MIBackground.TCTVShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.shield.h.data";
+MIBackground.MIBSources += { "CollimatorSource/TCTHShieldMuons" };
+MIBackground.TCTHShieldMuons.ParticleSourceFile = "$MIBDATAROOT/data/TCTH.shield.mu.data";
+MIBackground.MIBSources += { "CollimatorSource/TCTHShieldHadrons" };
+MIBackground.TCTHShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTH.shield.h.data";
 
-TCTVShieldMuons.ParticleSourceFile   = "$MIBDATAROOT/data/TCTV.shield.mu.data";
-TCTVShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.shield.h.data";
-TCTHShieldMuons.ParticleSourceFile   = "$MIBDATAROOT/data/TCTH.shield.mu.data";
-TCTHShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTH.shield.h.data";
+MIBackground.EventType = 60351000;
 
-TCTVShieldMuons.EventType = 60351000;  // For case when all are executed!

@@ -1,4 +1,4 @@
-// $Id: LbMIB_load.cpp,v 1.1.1.1 2007-05-16 17:14:28 gcorti Exp $
+// $Id: LbMIB_load.cpp,v 1.2 2007-08-17 12:54:14 gcorti Exp $
 // Include files 
 
 
@@ -15,6 +15,7 @@
 
 DECLARE_FACTORY_ENTRIES(LbMIB) {
 
-  DECLARE_ALGORITHM( CollimatorSourceAlg );
-
+  DECLARE_ALGORITHM( MIBackground );
+  DECLARE_TOOL( CollimatorSource );
+  
 }
