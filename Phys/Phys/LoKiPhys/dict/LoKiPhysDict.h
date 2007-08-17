@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.4 2007-07-23 17:35:51 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.5 2007-08-17 15:22:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -26,6 +26,7 @@
 #include "LoKi/PhysAlgsDicts.h"
 #include "LoKi/PhysExtractDicts.h"
 #include "LoKi/PhysMoniDicts.h"
+#include "LoKi/SelectVertex.h"
 // ============================================================================
 namespace LoKi 
 {

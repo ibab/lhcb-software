@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phys.py,v 1.3 2007-08-16 13:52:08 ibelyaev Exp $ 
-# =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,8 +12,7 @@ Collection of utilities for useful 'decoration' of Phys-objects
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-from   LoKiPhys.functions import LoKi,LHCb
-
+from   LoKiPhys.functions   import LoKi,LHCb,cpp
 
 # =============================================================================
 ## Get number of child particles :
@@ -312,6 +309,14 @@ _LCF.min_element   . __doc__ += "\n" + LoKi.Dicts.Algs.min_element  . __doc__
 _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.Algs.max_element  . __doc__ 
 
 _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintPhys.printDecay    . __doc__ 
+
+
+# decorate SmartRefVectors:
+for _t in ( LHCb.Particle    ,
+            LHCb.VertexBase  ) :
+    _tt = cpp.SmartRefVector ( _t )
+    # redefine the iterator 
+    _tt.__iter__ = _LCF._iter_SRV_
 
 
 # =============================================================================

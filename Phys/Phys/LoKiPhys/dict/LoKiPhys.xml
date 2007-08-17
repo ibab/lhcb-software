@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.8 2007-08-16 13:52:08 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.9 2007-08-17 15:22:30 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -10,6 +10,7 @@
 
 <lcgdict>
   
+
   <class pattern   = "LoKi::Range_<*LHCb::Particle*>"       />
   <class pattern   = "LoKi::NamedRange_<*LHCb::Particle*>"  />
   <class pattern   = "LoKi::RangeList_<*LHCb::Particle*>"   />
@@ -91,7 +92,6 @@
   <function pattern = "LoKi::Dicts::Extract::*"          />
   <function pattern = "LoKi::Dicts::Algs::*"             />
   <function pattern = "LoKi::Dicts::monitor*"            />
-  <class    name    = "LoKi::Child::PhysChild"           />
   
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::*>"    />
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Pa*>"    />
@@ -102,7 +102,20 @@
   
   <class name = "std::vector<const LHCb::Particle*>"    />
   <class name = "std::vector<const LHCb::VertexBase*>"  />
+
+  <class name = "LoKi::SelectVertex"  />
   
+  <class pattern   = "std::*function<*LHCb::Particle*,bool>"   />
+  <class pattern   = "std::*function<*LHCb::Particle*,double>" />
+  <class pattern   = "std::*function<*LHCb::Vertex*,bool>"     />
+  <class pattern   = "std::*function<*LHCb::Vertex*,double>"   />
+
+  <class pattern   = "LoKi::*Keeper<*LHCb::Vertex*>"        />
+  <class pattern   = "LoKi::*Keeper<*LHCb::RecVertex*>"     />
+  <class pattern   = "LoKi::*Keeper<*LHCb::Particle*>"      />
+  <class pattern   = "LoKi::*Keeper<*LHCb::ProtoParticle*>" />
+  <class pattern   = "LoKi::*Keeper<*LHCb::Track*>"         />
+
   <exclusion>
     <class name="std::unary_function<char,bool>"          />
     <class name="std::unary_function<const char*,bool>"   /> 
