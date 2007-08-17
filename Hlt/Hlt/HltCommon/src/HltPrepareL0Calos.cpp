@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.7 2007-08-16 17:40:29 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.8 2007-08-17 16:30:15 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -129,7 +129,8 @@ StatusCode HltPrepareL0Calos::execute() {
   
   int ncan = m_calos.size();
   debug() << " number of calos above et " << ncan << endreq;
-  printInfo("calos ",*m_outputTracks);
+  if (m_debug)
+    printInfo("calos ",*m_outputTracks);
 
 
   return sc;

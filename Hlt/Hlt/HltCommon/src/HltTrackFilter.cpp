@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.5 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.6 2007-08-17 16:30:15 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -68,13 +68,14 @@ StatusCode HltTrackFilter::initialize() {
     float x0 = -1.e6;
     float xf =  1.e6;
     if (!EParser::parseFilter(filtername,funname,mode,x0,xf))continue;
-    
-    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
+
     Hlt::TrackFunction* fun = factory->trackFunction(funname);
     if (!fun) error() << " error crearing function " << filtername
-                      << " " << id << endreq;
+                      << endreq;
     m_functions.push_back(fun);
-    
+
+    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
+
     Hlt::TrackFilter* fil = factory->trackFilter(filtername);
     if (!fil) error() << " error crearing filter " << filtername
                       << " " << id << endreq;
