@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.5 2007-08-18 15:02:05 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.6 2007-08-18 19:01:30 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -711,13 +711,13 @@ namespace Tf
   {
     if ( region < this->maxITRegions() )
     {
-      Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region) ;
+      Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region-this->maxOTRegions()) ;
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Found " << sthits.size() << " ITHits for station=" << sta
                 << " layer=" << lay << " region=" << region << endreq;
       }
-      this -> processRange ( sthits, sta, lay, region + this->maxOTRegions() );
+      this -> processRange ( sthits, sta, lay, region );
     }
   }
 
@@ -771,7 +771,7 @@ namespace Tf
   {
     if ( !this->allHitsPrepared() )
     {
-      for (unsigned int sta=0; sta < this->maxStations(); ++sta)
+      for ( unsigned int sta = 0; sta < this->maxStations(); ++sta )
       {
         this->prepareHits(sta);
       }
@@ -784,7 +784,7 @@ namespace Tf
   {
     if ( !this->allHitsPrepared(sta) )
     {
-      for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
+      for ( unsigned int lay = 0; lay<this->maxLayers(); ++lay )
       {
         this->prepareHits(sta,lay);
       }
@@ -798,15 +798,9 @@ namespace Tf
   {
     if ( !this->allHitsPrepared(sta,lay) )
     {
-      for (unsigned int it=0; it < this->maxITRegions(); ++it)
+      for ( unsigned int ir = 0; ir < maxRegions(); ++ir )
       {
-        this->prepareITHits(sta,lay,it);
-        this->setAllHitsPrepared(sta,lay,it,true);
-      }
-      for (unsigned int ot=0; ot < this->maxOTRegions(); ++ot)
-      {
-        this->prepareOTHits(sta,lay,ot);
-        this->setAllHitsPrepared(sta,lay,ot,true);
+        this->prepareHits(sta,lay,ir);
       }
       this -> setAllHitsPrepared(sta,lay,true);
     }
@@ -819,8 +813,14 @@ namespace Tf
   {
     if ( !this->allHitsPrepared(sta,lay,region) )
     {
-      this->prepareOTHits(sta,lay,region);
-      this->prepareITHits(sta,lay,region);
+      if ( region >= this->maxOTRegions() )
+      {
+        this->prepareITHits(sta,lay,region);
+      }
+      else
+      {
+        this->prepareOTHits(sta,lay,region);
+      }
       this->setAllHitsPrepared(sta,lay,region,true);
     }
   }
