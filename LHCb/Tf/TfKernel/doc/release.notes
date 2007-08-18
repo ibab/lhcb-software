@@ -6,7 +6,9 @@
 
 ! 2007-08-18 - Chris Jones
  - Update data managers so on-demand hit creation is now done, region by
-   region, instead of simply doing the all hits at once
+   region, instead of simply doing the all hits at once.
+ - Remove the OTStationHitManager and ITStationHitManager classes, as they are
+   no longer needed with the above on-demand decoding.
 
 ! 2007-08-16 - Chris Jones
  - Update the data managers so "prepareHits" is called on demand. No longer
