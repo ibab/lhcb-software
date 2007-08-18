@@ -1,4 +1,4 @@
-// $Id: Holder.h,v 1.3 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: Holder.h,v 1.4 2007-08-18 14:10:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HOLDER_H 
 #define LOKI_HOLDER_H 1
@@ -21,7 +21,7 @@ namespace LoKi
     : public std::pair <typename LoKi::Field<const TYPE1>::Type,
                         typename LoKi::Field<const TYPE2>::Type>
   {
-  protected:
+  public:
     typedef typename  LoKi::Field<const TYPE1>::Type         First  ;
     typedef typename  LoKi::Field<const TYPE2>::Type         Second ;
     typedef std::pair<First,Second>                          Pair   ;
