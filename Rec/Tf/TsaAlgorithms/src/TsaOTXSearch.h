@@ -12,7 +12,7 @@
 
 #include "TsaXSearchBase.h"
 #include "SeedParabolaFit.h"
-#include "TsaOTStationHitManager.h"
+#include "TsaTStationHitManager.h"
 
 #include "TfTsHitNumMap.h"
 
@@ -56,7 +56,7 @@ namespace Tf
 
       double m_maxDriftRadius;
 
-      typedef Tf::Tsa::OTStationHitManager OTHitMan;
+      typedef Tf::Tsa::TStationHitManager OTHitMan;
 
       /// Pointer to the data manager
       OTHitMan * m_hitMan;

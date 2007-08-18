@@ -2,13 +2,11 @@
 #ifndef _TsaITStereoSearch_H
 #define _TsaITStereoSearch_H
 
-#include "TsaStereoBase.h"
-
 #include <string>
 
-#include "TfKernel/ITStationHitManager.h"
+#include "TsaStereoBase.h"
+#include "TsaTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
-
 #include "TfTsHitNumMap.h"
 
 namespace Tf
@@ -51,7 +49,7 @@ namespace Tf
       std::string m_dataSvcType;
       std::string m_dataSvcName;
 
-      typedef Tf::ITStationHitManager<Tf::Tsa::SeedingHit> ITHitMan;
+      typedef Tf::Tsa::TStationHitManager ITHitMan;
 
       /// Pointer to the data manager
       ITHitMan * m_hitMan;

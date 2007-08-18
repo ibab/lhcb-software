@@ -1,5 +1,5 @@
 
-// $Id: TsaITXSearch.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaITXSearch.cpp,v 1.2 2007-08-18 16:51:59 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -33,8 +33,8 @@ ITXSearch::ITXSearch(const std::string& type,
   XSearchBase(type, name, parent),
   m_parabolaFit(0)
 {
-  declareProperty("itDataSvcType", m_dataSvcType = "Tf::ITStationHitManager<Tf::Tsa::SeedingHit>");
-  declareProperty("itDataSvcName", m_dataSvcName = "TsaITDataManager");
+  declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
+  declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
 
   declareProperty("sxCut", m_sxCut = 0.3); // was 0.3
   declareProperty("xsCut", m_xsCut = 0.3);

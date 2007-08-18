@@ -1,20 +1,20 @@
 
 //-----------------------------------------------------------------------------
-/** @file TsaOTStationHitManager.h
+/** @file TsaTStationHitManager.h
  *
- *  Header file for class : Tf::Tsa::OTStationHitManager
+ *  Header file for class : Tf::Tsa::TStationHitManager
  *
- *  $Id: TsaOTStationHitManager.h,v 1.1 2007-08-16 12:55:55 jonrob Exp $
+ *  $Id: TsaTStationHitManager.h,v 1.1 2007-08-18 16:51:59 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
  */
 //-----------------------------------------------------------------------------
 
-#ifndef TSAALGORITHMS_TSAOTSTATIONHITMANAGER_H
-#define TSAALGORITHMS_TSAOTSTATIONHITMANAGER_H 1
+#ifndef TSAALGORITHMS_TSATSTATIONHITMANAGER_H
+#define TSAALGORITHMS_TSATSTATIONHITMANAGER_H 1
 
-#include "TfKernel/OTStationHitManager.h"
+#include "TfKernel/TStationHitManager.h"
 
 #include "TsaKernel/TsaSeedingHit.h"
 
@@ -23,24 +23,24 @@ namespace Tf
   namespace Tsa
   {
 
-    /** @class OTStationHitManager TsaOTStationHitManager.h
+    /** @class TStationHitManager TsaTStationHitManager.h
      *
      *  Derived implementation of an OT hit manager for Tsa.
      *
      *  @author Chris Jones
      *  @date   2007-08-16
      */
-    class OTStationHitManager : public Tf::OTStationHitManager<Tf::Tsa::SeedingHit>
+    class TStationHitManager : public Tf::TStationHitManager<Tf::Tsa::SeedingHit>
     {
 
     public:
 
       /// Standard constructor
-      OTStationHitManager( const std::string& type,
-                           const std::string& name,
-                           const IInterface* parent);
+      TStationHitManager( const std::string& type,
+                          const std::string& name,
+                          const IInterface* parent);
 
-      virtual ~OTStationHitManager( ); ///< Destructor
+      virtual ~TStationHitManager( ); ///< Destructor
 
     protected:
 
@@ -54,4 +54,4 @@ namespace Tf
   }
 }
 
-#endif // TSAALGORITHMS_TSAOTSTATIONHITMANAGER_H
+#endif // TSAALGORITHMS_TSATSTATIONHITMANAGER_H

@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.2 2007-08-16 12:55:55 jonrob Exp $
+// $Id: TsaOTXSearch.cpp,v 1.3 2007-08-18 16:51:59 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -26,8 +26,8 @@ OTXSearch::OTXSearch(const std::string& type,
   XSearchBase(type, name, parent),
   m_parabolaFit(0)
 {
-  declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::OTStationHitManager");
-  declareProperty("otDataSvcName", m_dataSvcName = "TsaOTDataManager");
+  declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
+  declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");
 
   declareProperty("sxCut", m_sxCut = 0.8);
   declareProperty("xsCut", m_xsCut = 0.7);

@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.2 2007-08-16 12:55:55 jonrob Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.3 2007-08-18 16:51:59 jonrob Exp $
 
 #include <algorithm>
 
@@ -10,10 +10,6 @@
 #include "SeedLineFit.h"
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedFun.h"
-
-//#include "TsaKernel/ClusFun.h"
-//#include "TsaKernel/TsaConstants.h"
-//#include "TsaKernel/STCluster.h"
 
 // BOOST !
 #include <boost/assign/std/vector.hpp>
@@ -30,8 +26,8 @@ ITStereoSearch::ITStereoSearch(const std::string& type,
                                const IInterface* parent):
   StereoBase(type, name, parent)
 {
-  declareProperty("itDataSvcType", m_dataSvcType = "Tf::ITStationHitManager<Tf::Tsa::SeedingHit>");
-  declareProperty("itDataSvcName", m_dataSvcName = "TsaITDataManager");
+  declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
+  declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
 
   declareProperty( "syCut" , m_syCut = 0.01);
   declareProperty( "win" , m_win = 4.0);

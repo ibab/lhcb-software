@@ -1,14 +1,12 @@
-// $Id: TsaITXSearch.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaITXSearch.h,v 1.2 2007-08-18 16:51:59 jonrob Exp $
 #ifndef _TsaITXSearch_H
 #define _TsaITXSearch_H
 
 #include <string>
 
 #include "TsaXSearchBase.h"
-
-#include "TfKernel/ITStationHitManager.h"
+#include "TsaTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
-
 #include "TfTsHitNumMap.h"
 
 namespace Tf
@@ -49,7 +47,7 @@ namespace Tf
       std::string m_dataSvcType;
       std::string m_dataSvcName;
 
-      typedef Tf::ITStationHitManager<Tf::Tsa::SeedingHit> ITHitMan;
+      typedef Tf::Tsa::TStationHitManager ITHitMan;
 
       /// Pointer to the data manager
       ITHitMan * m_hitMan;

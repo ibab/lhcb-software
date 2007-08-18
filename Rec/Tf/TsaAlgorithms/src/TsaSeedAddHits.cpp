@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.3 2007-08-16 12:45:57 mneedham Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.4 2007-08-18 16:51:59 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -21,8 +21,8 @@ SeedAddHits::SeedAddHits(const std::string& type,
   m_fitLine(0)
 {
 
-  declareProperty("itDataSvcType", m_dataSvcType = "Tf::ITStationHitManager<Tf::Tsa::SeedingHit>");
-  declareProperty("itDataSvcName", m_dataSvcName = "TsaITDataManager");
+  declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
+  declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
   declareProperty("tol", m_tol =  1.0*Gaudi::Units::mm);
   declareProperty("dCut", m_dCut = 0.18*Gaudi::Units::mm);
 

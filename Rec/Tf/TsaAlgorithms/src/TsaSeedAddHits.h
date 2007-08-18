@@ -17,7 +17,7 @@
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaConstants.h"
 
-#include "TfKernel/ITStationHitManager.h"
+#include "TsaTStationHitManager.h"
 #include "TfKernel/RecoFuncs.h"
 
 #include "SeedLineFit.h"
@@ -71,7 +71,7 @@ namespace Tf
       std::string m_dataSvcType;
       std::string m_dataSvcName;
 
-      typedef Tf::ITStationHitManager<Tf::Tsa::SeedingHit> ITHitMan;
+      typedef Tf::Tsa::TStationHitManager ITHitMan;
       typedef ITHitMan::HitRange Range;
       typedef ITHitMan::Hits     Hits;
 

@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.2 2007-08-16 12:55:55 jonrob Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.3 2007-08-18 16:51:59 jonrob Exp $
 
 #include <algorithm>
 
@@ -22,8 +22,8 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
                                const IInterface* parent):
   StereoBase(type, name, parent)
 {
-  declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::OTStationHitManager");
-  declareProperty("otDataSvcName", m_dataSvcName = "TsaOTDataManager");
+  declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
+  declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");
 
   declareProperty( "syCut" , m_syCut = 0.10);
   declareProperty( "win" , m_win = 100.0);
