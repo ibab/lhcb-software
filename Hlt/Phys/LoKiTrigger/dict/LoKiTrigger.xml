@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.4 2007-08-14 20:32:32 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.5 2007-08-18 14:36:50 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -119,12 +119,15 @@
        
   -->
   
-  <class name = "LoKi::ExtraInfo::GetInfo<LHCb::Track> "       />
-  <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::Track> "     />
-  <class name = "LoKi::ExtraInfo::SmartInfo<LHCb::Track> "     />
-  <class name = "LoKi::ExtraInfo::GetInfo<LHCb::RecVertex> "   />
-  <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::RecVertex> " />
-  <class name = "LoKi::ExtraInfo::SmartInfo<LHCb::RecVertex> " />
+  <class name = "LoKi::ExtraInfo::GetInfo<LHCb::Track>"          />
+  <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::Track>"        />
+  <class name = "LoKi::ExtraInfo::GetSmartInfo<LHCb::Track>"     />
+  <class name = "LoKi::ExtraInfo::GetInfo<LHCb::RecVertex>"      />
+  <class name = "LoKi::ExtraInfo::CheckInfo<LHCb::RecVertex>"    />
+  <class name = "LoKi::ExtraInfo::GetSmartInfo<LHCb::RecVertex>" />
+
+  <class pattern = "LoKi::HltBinders::HltBin*" />
+
 
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::RecVertices::*"                   />
@@ -151,6 +154,8 @@
   <class pattern   = "LoKi::Hybrid::*"   />
   
   <exclusion>
+    <class pattern="LoKi::HltBinders::HltBinder*::Container" />
+    <class pattern="LoKi::HltBinders::HltBinder*::Pair"      />
     <class name = "std::unary_function<char,bool>"                />
     <class name = "std::unary_function<const char*,bool>"         /> 
     <class name = "std::unary_function<const void*,bool>"         /> 

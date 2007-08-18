@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.2 2007-08-13 14:46:37 ibelyaev Exp $
+// $Id: HltFunctions.cpp,v 1.3 2007-08-18 14:36:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -9,6 +9,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/HltFunctions.h"
+#include "LoKi/HltBinders.h"
 #include "LoKi/Constants.h"
 // ============================================================================
 // HltBase 
@@ -167,6 +168,43 @@ LoKi::Tracks::DeltaAngle::operator()
   //
   return HltUtils::deltaAngle ( t1 , t2 ) ;
 }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::TrackTrackMin::result_type 
+LoKi::Tracks::TrackTrackMin::operator() 
+  ( LoKi::Tracks::TrackTrackMin::argument a ) const 
+{
+  Binder::Pair r = m_binder.minimum ( a ) ;
+  Assert ( m_binder.vct()-> end() != r.first ,"No valid tracks are found" ) ;
+  return r.second ;
+}      
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Tracks::TrackTrackMin::fillStream ( std::ostream& s ) const
+{ return s << "TrTTMIN(" << m_binder.fun() << ",_HLT_tracks)" ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::TrackTrackAbsMin::result_type 
+LoKi::Tracks::TrackTrackAbsMin::operator() 
+  ( LoKi::Tracks::TrackTrackAbsMin::argument a ) const 
+{
+  Binder::Pair r = m_binder.minimum_abs ( a ) ;
+  Assert ( m_binder.vct()-> end() != r.first , "No valid tracks are found" ) ;
+  return r.second ;
+}      
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Tracks::TrackTrackAbsMin::fillStream ( std::ostream& s ) const
+{ return s << "TrTTAMIN(" << m_binder.fun() << ",_HLT_tracks)" ; }
+
+
+ 
 
 
 // ============================================================================
