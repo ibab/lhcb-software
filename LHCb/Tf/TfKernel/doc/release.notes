@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-18 - Chris Jones
+ - Update data managers so on-demand hit creation is now done, region by
+   region, instead of simply doing the all hits at once
+
 ! 2007-08-16 - Chris Jones
  - Update the data managers so "prepareHits" is called on demand. No longer
    neccessary for the users to call it themselves.

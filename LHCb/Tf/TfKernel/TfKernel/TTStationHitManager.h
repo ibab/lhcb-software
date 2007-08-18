@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.2 2007-08-16 12:54:00 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.3 2007-08-18 13:57:23 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -95,7 +95,7 @@ namespace Tf
                           const unsigned int lay,
                           const unsigned int region ) const
     {
-      if (!allHitsPrepared()) prepareHits();
+      if (!allHitsPrepared(sta,lay,region)) prepareHits(sta,lay,region);
       return HitRange( m_hits[sta][lay][region].begin(),
                        m_hits[sta][lay][region].end() );
     }
@@ -110,7 +110,7 @@ namespace Tf
     inline HitRange hits( const unsigned int sta,
                           const unsigned int lay ) const
     {
-      if (!allHitsPrepared()) prepareHits();
+      if (!allHitsPrepared(sta,lay)) prepareHits(sta,lay);
       return HitRange( m_hits_layers[sta][lay].begin(),
                        m_hits_layers[sta][lay].end() );
     }
@@ -123,7 +123,7 @@ namespace Tf
      */
     inline HitRange hits( const unsigned int sta ) const
     {
-      if (!allHitsPrepared()) prepareHits();
+      if (!allHitsPrepared(sta)) prepareHits(sta);
       return HitRange( m_hits_stations[sta].begin(),
                        m_hits_stations[sta].end() );
     }
@@ -153,7 +153,7 @@ namespace Tf
                                   const unsigned int lay,
                                   const unsigned int region ) const
     {
-      if (!allHitsPrepared()) prepareHits();
+      if (!allHitsPrepared(sta,lay,region)) prepareHits(sta,lay,region);
       return HitRange( std::lower_bound( m_hits[sta][lay][region].begin(),
                                          m_hits[sta][lay][region].end(),
                                          xMin,
@@ -252,11 +252,30 @@ namespace Tf
       m_hits_all.push_back(hit);
     }
 
-  protected:
+  public:
+
+    /** Initialise all the hits for the current event in the given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
+    void prepareHits(const unsigned int sta,
+                     const unsigned int lay,
+                     const unsigned int region) const;
+
+    /** Initialise all the hits for the current event in the given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     */
+    void prepareHits(const unsigned int sta,
+                     const unsigned int lay) const;
+
+    /** Initialise all the hits for the current event in the given region
+     *  @param[in] sta    Station ID
+     */
+    void prepareHits(const unsigned int sta) const;
 
     /** Initialise all the hits for the current event
-     *  @attention No need for users to directly call this themselves.
-     *             It is called on demand when needed 
      */
     virtual void prepareHits() const;
 
@@ -266,10 +285,40 @@ namespace Tf
     void clearHits () const;
 
     /// Set the hits ready flag
-    inline void setAllHitsPrepared( const bool ok ) const { m_allHitsPrepared = ok; }
+    inline void setAllHitsPrepared( const unsigned int sta,
+                                    const unsigned int lay,
+                                    const unsigned int region,
+                                    const bool ok ) const { m_hits_ready[sta][lay][region] = ok; }
+
+    /// Set the hits ready flag
+    inline void setAllHitsPrepared( const unsigned int sta,
+                                    const unsigned int lay,
+                                    const bool ok ) const { m_hits_layers_ready[sta][lay] = ok; }
+
+    /// Set the hits ready flag
+    inline void setAllHitsPrepared( const unsigned int sta,
+                                    const bool ok ) const { m_hits_stations_ready[sta] = ok; }
+
+    /// Set the hits ready flag
+    inline void setAllHitsPrepared( const bool ok ) const { m_hits_all_ready = ok; }
 
     /// Are all the hits ready
-    inline bool allHitsPrepared() const { return m_allHitsPrepared; }
+    inline bool allHitsPrepared() const { return m_hits_all_ready; }
+
+    /// Are all the hits ready in the given region
+    inline bool allHitsPrepared(const unsigned int sta,
+                                const unsigned int lay,
+                                const unsigned int region) const
+    { return allHitsPrepared() || m_hits_ready[sta][lay][region]; }
+
+    /// Are all the hits ready in the given layer
+    inline bool allHitsPrepared(const unsigned int sta,
+                                const unsigned int lay) const
+    { return allHitsPrepared() || m_hits_layers_ready[sta][lay]; }
+
+    /// Are all the hits ready in the given station
+    inline bool allHitsPrepared(const unsigned int sta) const
+    { return allHitsPrepared() || m_hits_stations_ready[sta]; }
 
   private:
 
@@ -290,8 +339,11 @@ namespace Tf
     mutable Hits m_hits_stations[m_nSta];       ///< Hits in individual stations
     mutable Hits m_hits_all;                    ///< All hits
 
-    /// Flag to indicate if all hits are ready
-    mutable bool m_allHitsPrepared;
+    // Flags to indicate which hits are ready
+    mutable bool m_hits_ready[m_nSta][m_nLay][m_nReg]; ///< Flags to indicate which regions have hits ready
+    mutable bool m_hits_layers_ready[m_nSta][m_nLay];  ///< Flag to indicate which layers are ready
+    mutable bool m_hits_stations_ready[m_nSta];        ///< Flag to indicate which stations are ready
+    mutable bool m_hits_all_ready;                     ///< Flag to indicate all hits are ready
 
   };
 
@@ -300,8 +352,7 @@ namespace Tf
                                                  const std::string& name,
                                                  const IInterface* parent) :
     GaudiTool (type, name, parent),
-    m_tthitcreator("Tf::STHitCreator/TTHitCreator"),
-    m_allHitsPrepared(false)
+    m_tthitcreator("Tf::STHitCreator/TTHitCreator")
   {
     declareInterface<TTStationHitManager<Hit> >(this);
   }
@@ -309,12 +360,17 @@ namespace Tf
   template<class Hit>
   StatusCode TTStationHitManager<Hit>::initialize ( )
   {
-    const StatusCode sc = GaudiTool::initialize();
+    StatusCode sc = GaudiTool::initialize();
     if ( sc.isFailure() ) return sc;
 
-    m_tthitcreator.retrieve().ignore();
+    sc = m_tthitcreator.retrieve();
+    if ( sc.isFailure() ) return sc;
 
+    // set up to be told about each new event
     incSvc()->addListener(this, IncidentType::EndEvent);
+
+    // make sure we are ready for first event
+    this->clearHits();
 
     return sc;
   }
@@ -330,14 +386,18 @@ namespace Tf
   void TTStationHitManager<Hit>::clearHits() const
   {
     m_hits_all.clear();
+    this->setAllHitsPrepared(false);
     for(unsigned int s=0; s<maxStations(); s++)
     {
+      this->setAllHitsPrepared(s,false);
       m_hits_stations[s].clear();
       for (unsigned int l=0; l<maxLayers(); l++)
       {
+        this->setAllHitsPrepared(s,l,false);
         m_hits_layers[s][l].clear();
         for (unsigned int t=0; t<maxRegions(); t++)
         {
+          this->setAllHitsPrepared(s,l,t,false);
           for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
                 iHit != m_hits[s][l][t].end(); ++iHit )
           {
@@ -347,29 +407,63 @@ namespace Tf
         }
       }
     }
-    setAllHitsPrepared(false);
   }
 
   template<class Hit>
   void TTStationHitManager<Hit>::prepareHits() const
   {
-    clearHits();
-    for (unsigned int sta=0; sta<maxStations(); sta++)
+    if ( !this->allHitsPrepared() )
     {
-      for (unsigned int lay=0; lay<maxLayers(); lay++)
+      for (unsigned int sta=0; sta<maxStations(); ++sta )
       {
-        for (unsigned int reg=0; reg<maxRegions(); reg++)
-        {
-          Tf::STHitRange tthits = ttHitCreator()->hits(sta,lay,reg) ;
-          for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
-               itTTH < tthits.end(); itTTH++)
-          {
-            this -> addHit(new Hit(**itTTH),sta,lay,reg);
-          }
-        }
+        this->prepareHits(sta);
       }
+      setAllHitsPrepared(true);
     }
-    setAllHitsPrepared(true);
+  }
+
+  template<class Hit>
+  void TTStationHitManager<Hit>::prepareHits(const unsigned int sta) const
+  {
+    if ( !this->allHitsPrepared(sta) )
+    {
+      for (unsigned int lay=0; lay<maxLayers(); ++lay )
+      {
+        this->prepareHits(sta,lay);
+      }
+      setAllHitsPrepared(sta,true);
+    }
+  }
+
+  template<class Hit>
+  void TTStationHitManager<Hit>::prepareHits(const unsigned int sta,
+                                             const unsigned int lay) const
+  {
+    if ( !this->allHitsPrepared(sta,lay) )
+    {
+      for (unsigned int reg=0; reg<maxRegions(); ++reg )
+      {
+        this->prepareHits(sta,lay,reg);
+      }
+      setAllHitsPrepared(sta,lay,true);
+    }
+  }
+
+  template<class Hit>
+  void TTStationHitManager<Hit>::prepareHits(const unsigned int sta,
+                                             const unsigned int lay,
+                                             const unsigned int region) const
+  {
+    if ( !this->allHitsPrepared(sta,lay,region) )
+    {
+      Tf::STHitRange tthits = ttHitCreator()->hits(sta,lay,region) ;
+      for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
+           itTTH < tthits.end(); itTTH++)
+      {
+        this -> addHit(new Hit(**itTTH),sta,lay,region);
+      }
+      setAllHitsPrepared(sta,lay,region,true);
+    }
   }
 
 } // Tf namespace
