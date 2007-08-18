@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.3 2007-08-18 13:57:23 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.4 2007-08-18 15:02:05 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -284,41 +284,77 @@ namespace Tf
     /// Clear the hit containers for a new event
     void clearHits () const;
 
-    /// Set the hits ready flag
+    /** Set the hits ready flag for given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const unsigned int lay,
                                     const unsigned int region,
                                     const bool ok ) const { m_hits_ready[sta][lay][region] = ok; }
 
-    /// Set the hits ready flag
+    /** Set the hits ready flag for given layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const unsigned int lay,
                                     const bool ok ) const { m_hits_layers_ready[sta][lay] = ok; }
 
-    /// Set the hits ready flag
+    /** Set the hits ready flag for given station
+     *  @param[in] sta    Station ID
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const bool ok ) const { m_hits_stations_ready[sta] = ok; }
 
-    /// Set the hits ready flag
+    /** Set the hits ready flag for all hits
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const bool ok ) const { m_hits_all_ready = ok; }
 
-    /// Are all the hits ready
+    /** Are all the hits ready
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared() const { return m_hits_all_ready; }
 
-    /// Are all the hits ready in the given region
+    /** Are all the hits ready in the given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta,
                                 const unsigned int lay,
                                 const unsigned int region) const
-    { return allHitsPrepared() || m_hits_ready[sta][lay][region]; }
+    { return m_hits_ready[sta][lay][region]; }
 
-    /// Are all the hits ready in the given layer
+    /** Are all the hits ready in the given layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta,
                                 const unsigned int lay) const
-    { return allHitsPrepared() || m_hits_layers_ready[sta][lay]; }
+    { return m_hits_layers_ready[sta][lay]; }
 
-    /// Are all the hits ready in the given station
+    /** Are all the hits ready in the given station
+     *  @param[in] sta    Station ID
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta) const
-    { return allHitsPrepared() || m_hits_stations_ready[sta]; }
+    { return m_hits_stations_ready[sta]; }
 
   private:
 

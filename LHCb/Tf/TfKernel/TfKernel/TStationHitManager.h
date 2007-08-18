@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.4 2007-08-18 13:57:23 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.5 2007-08-18 15:02:05 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -252,41 +252,77 @@ namespace Tf
     /// Clear the hit containers for a new event
     void clearHits () const;
 
-    /// Set the hits ready flag for all hits
+    /** Set the hits ready flag for all hits
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const bool ok ) const { m_hits_all_ready = ok; }
 
-    /// Set the hits ready flag for given region
+    /** Set the hits ready flag for given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const unsigned int lay,
                                     const unsigned int region,
                                     const bool ok ) const { m_hits_ready[sta][lay][region] = ok; }
 
-    /// Set the hits ready flag for given layer
+    /** Set the hits ready flag for given layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const unsigned int lay,
                                     const bool ok ) const { m_hits_layers_ready[sta][lay] = ok; }
 
-    /// Set the hits ready flag for given station
+    /** Set the hits ready flag for given station
+     *  @param[in] sta    Station ID
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
     inline void setAllHitsPrepared( const unsigned int sta,
                                     const bool ok ) const { m_hits_stations_ready[sta] = ok; }
 
-    /// Are all the hits ready
+    /** Are all the hits ready
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared() const { return m_hits_all_ready; }
 
-    /// Are all the hits ready in the given region
+    /** Are all the hits ready in the given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta,
                                 const unsigned int lay,
                                 const unsigned int region) const
-    { return allHitsPrepared() || m_hits_ready[sta][lay][region]; }
+    { return m_hits_ready[sta][lay][region]; }
 
-    /// Are all the hits ready in the given layer
+    /** Are all the hits ready in the given layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta,
                                 const unsigned int lay) const
-    { return allHitsPrepared() || m_hits_layers_ready[sta][lay]; }
+    { return m_hits_layers_ready[sta][lay]; }
 
-    /// Are all the hits ready in the given station
+    /** Are all the hits ready in the given station
+     *  @param[in] sta    Station ID
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
     inline bool allHitsPrepared(const unsigned int sta) const
-    { return allHitsPrepared() || m_hits_stations_ready[sta]; }
+    { return m_hits_stations_ready[sta]; }
 
   protected:
 
@@ -325,27 +361,51 @@ namespace Tf
     /// Access the maximum number of regions
     inline unsigned int maxRegions()   const { return m_nReg;    }
 
-    /// Prepare all hits in the given IT region
+    /** Prepare all hits in the given IT region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
     void prepareITHits(const unsigned int sta,
                        const unsigned int lay,
                        const unsigned int region) const;
-    /// Prepare all hits in the given IT layer
+
+    /** Prepare all hits in the given IT layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     */
     void prepareITHits(const unsigned int sta,
                        const unsigned int lay) const;
-    /// Prepare all hits in the given IT station
+
+    /** Prepare all hits in the given IT station
+     *  @param[in] sta    Station ID
+     */
     void prepareITHits(const unsigned int sta) const;
+
     /// Prepare all hits in IT
     void prepareITHits() const;
 
-    /// Prepare all hits in the given OT region
+    /** Prepare all hits in the given OT region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
     void prepareOTHits(const unsigned int sta,
                        const unsigned int lay,
                        const unsigned int region) const;
-    /// Prepare all hits in the given OT layer
+
+    /** Prepare all hits in the given OT layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     */
     void prepareOTHits(const unsigned int sta,
                        const unsigned int lay) const;
-    /// Prepare all hits in the given OT station
+
+    /** Prepare all hits in the given OT station
+     *  @param[in] sta    Station ID
+     */
     void prepareOTHits(const unsigned int sta) const;
+
     /// Prepare all hits in OT
     void prepareOTHits() const;
 
@@ -361,13 +421,23 @@ namespace Tf
     /// Is IT hit cleaning activated
     inline bool cleanITHits() const { return m_cleanITHits; }
 
-    /// Process an OT hit range
+    /** Process an OT hit range (create extended hits)
+     *  @param[in] othits The OTHit range to process
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
     void processRange( const Tf::OTHitRange & othits,
                        const unsigned int sta,
                        const unsigned int lay,
                        const unsigned int region ) const;
 
-    /// Process an ST hit range
+    /** Process an ST hit range (create extended hits)
+     *  @param[in] sthits The STHit range to process
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
     void processRange( const Tf::STHitRange & sthits,
                        const unsigned int sta,
                        const unsigned int lay,
