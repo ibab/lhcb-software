@@ -1,4 +1,4 @@
-// $Id: TfIDTypes.h,v 1.1 2007-08-19 16:54:41 jonrob Exp $
+// $Id: TfIDTypes.h,v 1.2 2007-08-19 17:06:50 jonrob Exp $
 #ifndef TFKERNEL_TFIDTYPES_H
 #define TFKERNEL_TFIDTYPES_H 1
 
@@ -67,7 +67,7 @@ namespace Tf
    *  Valid T Station IDs are in the range 0 - 2, 0 being the most upstream
    *  station (nearest the magent) 2 being the most downstream (nearest RICH2).
    *
-   *  See Tf::OTIndex and Tf::ITIndex for more details
+   *  See Tf::RegionID for more details
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
@@ -86,7 +86,7 @@ namespace Tf
    *  Valid TT Station IDs are in the range 0 - 1, 0 being the most upstream
    *  station (nearest RICH1) 1 being the most downstream (nearest the magnet).
    *
-   *  See Tf::TTIndex for more details
+   *  See Tf::RegionID for more details
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
@@ -105,7 +105,7 @@ namespace Tf
    *  Valid T station layer IDs are in the range 0 to 3, 0 being the most upstream
    *  station (nearest the magent) 3 being the most downstream (nearest RICH2).
    *
-   *  See Tf::OTIndex and Tf::ITIndex for more details
+   *  See Tf::RegionID for more details
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
@@ -123,6 +123,8 @@ namespace Tf
    *
    *  Valid TT station layer IDs are in the range 0 - 1, 0 being the most upstream
    *  station (nearest RICH1) 1 being the most downstream (nearest the magnet).
+   *
+   *  See Tf::RegionID for more details
    * 
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
@@ -139,6 +141,8 @@ namespace Tf
    *  Identifier for the various regions within an individual IT station layer.
    *
    *  Valid IT layer region IDs are in the range 0 to 3.
+   *
+   *  See Tf::RegionID for more details
    * 
    *  @todo A little ascii diagram of the IT regions ??
    *
@@ -157,6 +161,8 @@ namespace Tf
    *  Identifier for the various regions within an individual TT station layer.
    *
    *  Valid TT layer region IDs are in the range 0 to 11.
+   *
+   *  See Tf::RegionID for more details
    * 
    *  @todo A little ascii diagram of the TT regions ??
    *
@@ -176,6 +182,8 @@ namespace Tf
    *
    *  valid OT region IDs are in the range 0 to 1.
    *
+   *  See Tf::RegionID for more details
+   *
    *  @todo A little ascii diagram of the OT regions ??
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
@@ -194,6 +202,8 @@ namespace Tf
    *
    *  Valid T Region IDs are in the range 0 to 5. The IDs 0 and 1 are for OT regions
    *  whilst 2-5 are for IT. TRegionIDs 2-5 map to ITRegionIDs 0-3.
+   *
+   *  See Tf::RegionID for more details
    *
    *  @todo A little ascii diagram of the T regions ??
    *
@@ -227,7 +237,9 @@ namespace Tf
    *
    *  Identifier for Velo sensors.
    *
-   *  Valid velo station IDs are in the range 0 to 20
+   *  Valid velo station IDs are in the range 0 to 20.
+   *  
+   *  See Tf::RegionID for more details
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
@@ -244,6 +256,8 @@ namespace Tf
    *  Identifier for a Velo half
    *
    *  Valid Velo hald IDs are in the range 0 to 1.
+   *
+   *  See Tf::RegionID for more details
    *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005

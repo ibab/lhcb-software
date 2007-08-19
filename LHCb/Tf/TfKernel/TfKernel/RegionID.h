@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.2 2007-08-15 19:28:59 jonrob Exp $
+ *  $Id: RegionID.h,v 1.3 2007-08-19 17:06:50 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -22,7 +22,10 @@ namespace Tf
 {
 
   /** @class RegionID TfKernel/RegionID.h
-   *  Simple class to store detector region information (station, layer, region etc.)
+   *
+   *  Simple class to store detector region information and definitions 
+   *  (station, layer, region etc.)
+   *
    *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
