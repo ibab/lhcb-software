@@ -14,8 +14,6 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 #============================================================================
 use   GaudiAlg         v*
 use   RecEvent         v*    Event
-use   MCEvent          v*    Event
-use   MCInterfaces     v*    Kernel
 use   TrackInterfaces  v*    Tr
 use   CaloInterfaces   v*    Calo
 use   CaloUtils        v*    Calo
