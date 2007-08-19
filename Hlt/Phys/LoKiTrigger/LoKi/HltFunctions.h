@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.3 2007-08-18 14:36:50 ibelyaev Exp $
+// $Id: HltFunctions.h,v 1.4 2007-08-19 13:42:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
@@ -222,7 +222,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class DeltaAngle
+    class DeltaAngle 
       : public LoKi::Function<LoKi::TrackTypes::TrackPair>
     {
     public:
@@ -235,101 +235,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "TTrDA" ; }
-    } ;  
-    // ========================================================================
-    /** @class TrackTrackMin 
-     *  simple meta-function which evaluates the minumum of the 
-     *  LoKi::Function<LoKi::Holder<LHCb::Track,LHCb::Track> > for the 
-     *  fixed track (the argument) againts all tracks from the reference container
-     *  @see LoKi::Cuts::TrTTMIN 
-     *  @see LoKi::HltBinders::HltBinder 
-     *  @auttor Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 20007-08-17
-     */
-    class TrackTrackMin : public LoKi::Function<LHCb::Track>
-    {
-    protected:
-      typedef  LoKi::HltBinders::HltBinder<LHCb::Track,LHCb::Track> Binder ;
-    public:
-      /// constructor from container and function:
-      TrackTrackMin 
-      ( const Binder::Function_& fun , 
-        const Binder::Container* vct ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( fun , vct ) 
-      {}  
-      /// constructor from container and function:
-      TrackTrackMin 
-      ( const Binder::Container* vct ,
-        const Binder::Function_& fun ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( fun , vct ) 
-      {}
-      /// constructor from the binder:
-      TrackTrackMin ( const Binder& binder ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( binder ) 
-      {}
-      /// MANDATORY: virtual destructor 
-      virtual ~TrackTrackMin () {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  TrackTrackMin* clone () const { return new TrackTrackMin(*this); }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;      
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const  ;
-    private:
-      // the binder itself:
-      Binder m_binder ; ///< the binder itself:
-    };
-    // ========================================================================
-    /** @class TrackTrackAbsMin 
-     *  simple meta-function which evaluates the minumum of the 
-     *  absolyet value for LoKi::Function<LoKi::Holder<LHCb::Track,LHCb::Track> > 
-     *  for the fixed track (the argument) againts all tracks from 
-     *  the reference container
-     *  @see LoKi::Cuts::TrTTAMIN 
-     *  @see LoKi::HltBinders::HltBinder 
-     *  @auttor Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 20007-08-17
-     */
-    class TrackTrackAbsMin : public LoKi::Function<LHCb::Track>
-    {
-    protected:
-      typedef  LoKi::HltBinders::HltBinder<LHCb::Track,LHCb::Track> Binder ;
-    public:
-      /// constructor from container and function:
-      TrackTrackAbsMin 
-      ( const Binder::Function_& fun , 
-        const Binder::Container* vct ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( fun , vct ) 
-      {}  
-      /// constructor from container and function:
-      TrackTrackAbsMin 
-      ( const Binder::Container* vct ,
-        const Binder::Function_& fun ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( fun , vct ) 
-      {}
-      /// constructor from the binder:
-      TrackTrackAbsMin ( const Binder& binder ) 
-        : LoKi::Function<LHCb::Track> () 
-        , m_binder ( binder ) 
-      {}
-      /// MANDATORY: virtual destructor 
-      virtual ~TrackTrackAbsMin () {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  TrackTrackAbsMin* clone () const { return new TrackTrackAbsMin(*this); }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;      
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const  ;
-    private:
-      // the binder itself:
-      Binder m_binder ; ///< the binder itself:
-    };
-    // ========================================================================    
+    } ;    
   } // end of namespace LoKi::Tracks
 } // end of namespace LoKi 
 // ============================================================================

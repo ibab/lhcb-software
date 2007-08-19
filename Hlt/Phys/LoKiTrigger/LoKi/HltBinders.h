@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.1 2007-08-18 14:36:50 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.2 2007-08-19 13:42:58 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -165,7 +165,7 @@ namespace LoKi
       { 
         Assert ( 0 != m_vct , "Invalid container!" ) ; 
       }
-      // copy contructor
+      // copy constructor
       HltBinder ( const HltBinder& right ) 
         : LoKi::AuxFunBase () 
         , m_fun ( right.m_fun ) 
@@ -174,24 +174,7 @@ namespace LoKi
       // destructor 
       virtual ~HltBinder() {}
     public:
-      // minimize the function:
-      inline Pair minimum 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
-      { return this -> extremum ( a , std::less                  <double> () ) ; }
-      // maximize the function:
-      inline Pair maximum 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
-      { return this -> extremum ( a , std::greater               <double> () ) ; }
-      // minimize the absoluet value of the function:
-      inline Pair minimum_abs 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
-      { return this -> extremum ( a , LoKi::StdMath::abs_less    <double> () ) ; }
-      // maximize the absoluet value of the function:
-      inline Pair maximum_abs 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
-      { return this -> extremum ( a , LoKi::StdMath::abs_greater <double> () ) ; }
-    public:
-      // find the extremal value:
+      // find the extremal value with respect to the specified operation
       template <class BINOP>
       inline Pair extremum 
       ( typename LoKi::Function<TYPE>::argument a     , 
@@ -202,7 +185,7 @@ namespace LoKi
             m_vct -> end   () , 
             LoKi::HltBinders::LightBinder1st<TYPE,TYPE2> ( m_fun , a )  , 
             LoKi::Objects::_VALID<TYPE2*> () , // only valid pointers!
-            binop             ) ;
+            binop            ) ;
       }
     public:
       /// get access to function 
@@ -218,6 +201,520 @@ namespace LoKi
       const Container*                              m_vct;
     } ;
     // ========================================================================
+    /** @class BinderValue
+     *  Auxillary class to represent various "binders"
+     *  For the given argment, it funcd the exttream of "bi"-function
+     *  with against all elements from the reference container and 
+     *  returns the extremal value 
+     *
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2, class BINOP = std::less<double> >
+    class BinderValue : public LoKi::Function<TYPE1>
+    {
+    protected:
+      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2> Binder ;
+    public:
+      /// constructor from the container and the function 
+      BinderValue 
+      ( const typename Binder::Function_& fun  , 
+        const typename Binder::Container* vct  , 
+        const std::string&                nam1 ,
+        const std::string&                nam2 ) 
+        : LoKi::Function<TYPE1> () 
+        , m_binder ( fun , vct ) 
+        , m_binop  ( BINOP ()  ) 
+        , m_nam1   ( nam1     ) 
+        , m_nam2   ( nam2     ) 
+      {}
+      /// constructor from the binder:
+      BinderValue 
+      ( const Binder&      binder , 
+        const std::string& nam1   ,
+        const std::string& nam2   ) 
+        : LoKi::Function<TYPE1> () 
+        , m_binder ( binder   ) 
+        , m_binop  ( BINOP () ) 
+        , m_nam1   ( nam1     ) 
+        , m_nam2   ( nam2     ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~BinderValue () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  BinderValue* clone () const { return new BinderValue(*this); }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Function<TYPE1>::result_type operator() 
+      ( typename LoKi::Function<TYPE1>::argument a ) const 
+      {
+        Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
+        Assert ( m_binder.vct()-> end() != r.first ,"No valid tracks are found" ) ;
+        return r.second ;
+      }
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << m_nam1 << fun() << m_nam2 ; }
+    public:
+      /// get access to the binder 
+      const Binder& binder() const { return m_binder ; }
+      /// cast to  the binder
+      operator const Binder& () const { return binder() ; }
+      // get access to binder function 
+      const typename Binder::Function_& fun () const { return m_binder.fun() ; }   
+    private:
+      // the binder itself 
+      Binder      m_binder ; /// the binder itself 
+      // binary operation
+      BINOP       m_binop  ; ///< binary operation
+      // function name 
+      std::string m_nam1   ;
+      // function name 
+      std::string m_nam2   ;
+    };
+    // ========================================================================
+    /** @class BinderFun
+     *  Auxillary class to represent various "binders"
+     *  For the given argment, it funcd the exttream of "bi"-function
+     *  with against all elements from the reference container, 
+     *  and evaluates the second function for the found element,,
+     *
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2, class BINOP>
+    class BinderFun : public LoKi::Function<TYPE1>
+    {
+    protected:
+      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2> Binder ;
+      typedef  LoKi::Function<TYPE2>                    Fun2   ;
+    public:
+      /// constructor from the container and the functions 
+      BinderFun
+      ( const typename Binder::Function_& fun  ,
+        const Fun2&                       fun2 ,
+        const typename Binder::Container* vct  , 
+        const std::string&                nam1 ,
+        const std::string&                nam2 ) 
+        : LoKi::Function<TYPE1> () 
+        , m_binder ( fun , vct ) 
+        , m_binop  ( BINOP ()  ) 
+        , m_fun2   ( fun2      ) 
+        , m_nam1   ( nam1     ) 
+        , m_nam2   ( nam2     ) 
+      {}
+      /// constructor from the binder and function 
+      BinderFun
+      ( const Binder&      binder ,
+        const Fun2&        fun2   ,
+        const std::string& nam1   ,
+        const std::string& nam2   ) 
+        : LoKi::Function<TYPE1> () 
+        , m_binder ( binder    ) 
+        , m_binop  ( BINOP ()  ) 
+        , m_fun2   ( fun2      ) 
+        , m_nam1   ( nam1     ) 
+        , m_nam2   ( nam2     ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~BinderFun () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  BinderFun* clone () const { return new BinderFun(*this); }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Function<TYPE1>::result_type operator() 
+      ( typename LoKi::Function<TYPE1>::argument a ) const 
+      {
+        Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
+        Assert ( m_binder.vct()-> end() != r.first , "No valid elements are found" ) ;
+        return m_fun2 ( **(r.first) ) ;
+      }
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << m_nam1 << fun() << "," << fun2() << m_nam2 ; }
+    public:
+      /// cast to  the binder
+      operator const Binder&          () const { return binder()       ; }
+      /// get access to the binder 
+      const Binder&            binder () const { return m_binder       ; }
+      // get access to binder function 
+      const typename Binder::Function_& fun () const { return m_binder.fun() ; }   
+      // get access to own function 
+      const Fun2&              fun2   () const { return m_fun2         ; }   
+    private:
+      // the binder itself 
+      Binder m_binder ; /// the binder itself 
+      // binary operation
+      BINOP  m_binop  ; ///< binary operation
+      // the function to be evaluated 
+      LoKi::FunctionFromFunction<TYPE2>  m_fun2 ; /// the function to be evaluated 
+      // function name 
+      std::string m_nam1   ;
+      // function name 
+      std::string m_nam2   ;
+    };
+    // ========================================================================
+    /** helper function to create the the metatunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun docaMin = bind 
+     *            ( TTrDOCA ,                ///< 2-argument function 
+     *              tracks  ,                ///< the container
+     *              std::less<double>() ,    ///< binary operation 
+     *              "bindMin("          ,    ///< needef for ptintout/ID 
+     *              "_HLT_tracks)"      )    ///< needef for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2,class BINOP>
+    inline 
+    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP>
+    bind 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const std::vector<TYPE2*>*                        vct   , 
+      BINOP                                             binop ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP> 
+        ( fun , vct , nam1 , nam2 ) ;  
+    }
+    // ========================================================================
+    /** helper function to create the the metafunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun key = bind 
+     *            ( TTrDOCA ,                ///< 2-argument function 
+     *              TrKEY   ,                ///< the function
+     *              tracks  ,                ///< the container
+     *              std::less<double>() ,    ///< binary operation 
+     *              "bindMin("          ,    ///< needef for ptintout/ID 
+     *              "_HLT_tracks)"      )    ///< needef for ptintout/ID 
+     *
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2,class BINOP>
+    inline 
+    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
+    bind 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const LoKi::Function<TYPE2>&                      fun2  , 
+      const std::vector<TYPE2*>*                        vct   ,
+      BINOP                                             binop ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
+        ( fun , fun2 , vct , nam1 , nam2 ) ;
+    }  
+    // ========================================================================
+    /** helper function to create the the metatunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun docaMin = bindMin 
+     *            ( TTrDOCA             ,    ///< 2-argument function 
+     *              tracks              ,    ///< the container
+     *              "bindMin("          ,    ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      )    ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,std::less<double> >
+    bindMin 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const std::vector<TYPE2*>*                        vct   , 
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , vct , std::less<double>() , nam1 , nam2 ) ;
+    }
+    // ========================================================================
+    /** helper function to create the the metafunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun key = bindMin
+     *            ( TTrDOCA             , ///< 2-argument function 
+     *              TrKEY               , ///< the function
+     *              tracks              , ///< the container
+     *              "bindMin("          , ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      ) ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,std::less<double> >
+    bindMin 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const LoKi::Function<TYPE2>&                      fun2  , 
+      const std::vector<TYPE2*>*                        vct   ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , fun2 , vct , std::less<double>() , nam1 , nam2 ) ;
+    }      
+    // ========================================================================
+    /** helper function to create the the metatunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun docaMin = bindAbsMin 
+     *            ( TTrDOCA             ,    ///< 2-argument function 
+     *              tracks              ,    ///< the container
+     *              "bindAbsMin("       ,    ///< needed for printout/ID 
+     *              "_HLT_tracks)"      )    ///< needed for printout/ID 
+     * 
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderValue
+    <TYPE1,TYPE2,LoKi::StdMath::abs_less<double> >
+    bindAbsMin 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const std::vector<TYPE2*>*                        vct   , 
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , vct , LoKi::StdMath::abs_less<double>() , nam1 , nam2 ) ;
+    }
+    // ========================================================================
+    /** helper function to create the the metafunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun key = bindAbsMin
+     *            ( TTrDOCA             , ///< 2-argument function 
+     *              TrKEY               , ///< the function
+     *              tracks              , ///< the container
+     *              "bindAbsMin("       , ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      ) ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderFun
+    <TYPE1,TYPE2,LoKi::StdMath::abs_less<double> >
+    bindAbsMin 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const LoKi::Function<TYPE2>&                      fun2  , 
+      const std::vector<TYPE2*>*                        vct   ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , fun2 , vct , LoKi::StdMath::abs_less<double>() , nam1 , nam2 ) ;
+    }      
+    // ========================================================================
+    /** helper function to create the the metatunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun docaMin = bindMax 
+     *            ( TTrDOCA             ,    ///< 2-argument function 
+     *              tracks              ,    ///< the container
+     *              "bindMax("          ,    ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      )    ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderValue
+    <TYPE1,TYPE2,std::greater<double> >
+    bindMax 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const std::vector<TYPE2*>*                        vct   , 
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , vct , std::greater<double>() , nam1 , nam2 ) ;
+    }
+    // ========================================================================
+    /** helper function to create the the metafunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun key = bindMax
+     *            ( TTrDOCA             , ///< 2-argument function 
+     *              TrKEY               , ///< the function
+     *              tracks              , ///< the container
+     *              "bindMax("          , ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      ) ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderFun
+    <TYPE1,TYPE2,std::greater<double> >
+    bindMax 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const LoKi::Function<TYPE2>&                      fun2  , 
+      const std::vector<TYPE2*>*                        vct   ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , fun2 , vct , std::greater<double>() , nam1 , nam2 ) ;
+    }      
+    // ========================================================================
+    /** helper function to create the the metatunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun docaMin = bindAbsMax 
+     *            ( TTrDOCA             ,    ///< 2-argument function 
+     *              tracks              ,    ///< the container
+     *              "bindAbsMax("       ,    ///< needed for printout/ID 
+     *              "_HLT_tracks)"      )    ///< needed for printout/ID 
+     * 
+     *  @endcode 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderValue
+    <TYPE1,TYPE2,LoKi::StdMath::abs_greater<double> >
+    bindAbsMax 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const std::vector<TYPE2*>*                        vct   , 
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , vct , LoKi::StdMath::abs_greater<double>() , nam1 , nam2 ) ;
+    }
+    // ========================================================================
+    /** helper function to create the the metafunction:
+     *
+     *  @code
+     *
+     *    const std::vector<LHcb::Track*>* tracks = ... ;
+     *
+     *    TrFun key = bindAbsMax
+     *            ( TTrDOCA             , ///< 2-argument function 
+     *              TrKEY               , ///< the function
+     *              tracks              , ///< the container
+     *              "bindAbsMax("       , ///< needed for ptintout/ID 
+     *              "_HLT_tracks)"      ) ///< needed for ptintout/ID 
+     * 
+     *  @endcode 
+     * 
+     * 
+     *  The code is inspired by Estd/EFunctions package 
+     *  by Jose Angel Hernado Morata
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-08-17
+     */    
+    template <class TYPE1,class TYPE2>
+    inline 
+    LoKi::HltBinders::BinderFun
+    <TYPE1,TYPE2,LoKi::StdMath::abs_greater<double> >
+    bindAbsMax 
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
+      const LoKi::Function<TYPE2>&                      fun2  , 
+      const std::vector<TYPE2*>*                        vct   ,
+      const std::string&                                nam1  ,
+      const std::string&                                nam2  )
+    {
+      return LoKi::HltBinders::bind 
+        ( fun , fun2 , vct , LoKi::StdMath::abs_greater<double>() , nam1 , nam2 ) ;
+    }      
+    // ========================================================================
+    
+    
+    
   } // end of namespace LoKi::HltBinders 
 } // end of namespace LoKi
 // ============================================================================

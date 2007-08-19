@@ -246,6 +246,177 @@ info. __doc__ += "\n\n" + LoKi.Dicts.Info.info . __doc__
 
 # =============================================================================
 
+
+# =============================================================================
+## Simple function to 'bind' the 2-argument function 
+def bindMin ( a , b , *c ) :
+    """
+    Simple function to 'bind' the 2-argument function to some container
+    
+    The function comes in two flavours:
+
+    1) for the given argument, return the minimal value of 2D-function against all
+    objects frio the reference container:
+
+    Find the minimal distance of the closest approach:
+    
+    >>> tracks = ...
+    >>> doca = bindMin ( TTrDOCA , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = doca ( track )                ## use it !
+
+
+    2) for the given argument, seek for the element from the reference container
+    which minimizes 2D-function and return the value of the secodn function with
+    this minimal element:
+    
+    Evaluate of the transverse momentum of th etarck, which
+    has the the minimal dictance of the closest approach to the given track:
+    
+    >>> tracks = ...
+    >>> pt = bindMin ( TTrDOCA , TrPT , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = pt ( track )                ## use it !
+    
+    """
+    return LoKi.Dicts.HltBind.bindMin ( a , b , *c  ) 
+
+
+# =============================================================================
+## Simple function to 'bind' the 2-argument function 
+def bindAbsMin ( a , b , *c ) :
+    """
+    Simple function to 'bind' the 2-argument function to some container
+
+    The function comes in two flavours:
+    
+    1) for the given argument, return the minimal (absolute) value
+    of 2D-function against all objects for the reference container:
+    
+    Find the minimal (absolute) distance of the closest approach:
+    
+    >>> tracks = ...
+    >>> doca = bindAbsMin ( TTrDOCA , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = doca ( track )                ## use it !
+
+    
+    2) for the given argument, seek for the element from the reference container
+    which minimizes th eabsoluet value for 2D-function and return the value
+    of the second function with this minimal element:
+    
+    Evaluate of the transverse momentum of th etarck, which
+    has the the minimal dictance of the closest approach to the given track:
+    
+    >>> tracks = ...
+    >>> pt = bindAbsMin ( TTrDOCA , TrPT , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = pt ( track )                ## use it !
+
+    
+    Essenntially the following expression are equivalent :
+
+    >>> fun = binAbsMin (       f   , a , ... )
+    >>> fun = bindMin   ( abs ( f ) , a , ... )
+
+    However the first one a little bit more efficient (less virtual calls) 
+    
+    """
+    return LoKi.Dicts.HltBind.bindAbsMin ( a , b , *c  ) 
+
+# =============================================================================
+## Simple function to 'bind' the 2-argument function 
+def bindMax ( a , b , *c ) :
+    """
+    Simple function to 'bind' the 2-argument function to some containers
+    
+    The function comes in two flavours:
+
+    1) for the given argument, return the maximal value of 2D-function against all
+    objects frio the reference container:
+
+    find the maximal distance of the closest approach:
+    
+    >>> tracks = ...
+    >>> doca = bindMax ( TTrDOCA , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = doca ( track )                ## use it !
+
+
+    2) for the given argument, seek for the element from the reference container
+    which maximizes 2D-function and return the value of the secodn function with
+    this maximal element:
+    
+    Evaluate of the transverse momentum of th etarck, which
+    has the the maximal distance of the closest approach to the given track:
+    
+    >>> tracks = ...
+    >>> pt = bindMax ( TTrDOCA , TrPT , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = pt ( track )                ## use it !
+    
+    """
+    return LoKi.Dicts.HltBind.bindMin ( a , b , *c  ) 
+
+
+# =============================================================================
+## Simple function to 'bind' the 2-argument function 
+def bindAbsMin ( a , b , *c ) :
+    """
+    Simple function to 'bind' the 2-argument function to some container
+
+    The function comes in two flavours:
+
+    1) for the given argument, return the maximal (absolute) value
+    of 2D-function against all objects from the reference container:
+    
+    Find the maximal (absoluet) distance of the closest approach:
+    
+    >>> tracks = ...
+    >>> doca = bindAbsMax ( TTrDOCA , tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = doca ( track )                ## use it !
+
+
+    2) for the given argument, seek for the element from the reference container
+    which maximizes the absoluet value for 2D-function and return the value of
+    the second function with this maximal element:
+    
+    Evaluate of the transverse momentum of the tarck, which
+    has the the maximal (absoluet) distance of the closest approach to the given track:
+    
+    >>> tracks = ...
+    >>> pt = bindAbsMax ( TTrDOCA , TrPT tracks )   ## create the function
+    
+    >>> track = ...
+    >>> value = pt ( track )                ## use it !
+
+    
+    Essenntially the following expression are equivalent :
+
+    >>> fun = binAbsMax (       f   , a , ... )
+    >>> fun = bindMax   ( abs ( f ) , a , ... )
+
+    However the first one a little bit more efficient (less virtual calls) 
+    
+    """
+    return LoKi.Dicts.HltBind.bindAbsMax ( a , b , *c  ) 
+
+
+
+bindMin    . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindMin    . __doc__ 
+bindMax    . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindMax    . __doc__ 
+bindAbsMin . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMin . __doc__ 
+bindAbsMax . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMax . __doc__ 
+
+
 if '__main__' == __name__ :
     for i in dir() : print i 
 
