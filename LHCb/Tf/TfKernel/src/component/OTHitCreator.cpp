@@ -260,13 +260,16 @@ namespace Tf
     if ( IncidentType::EndEvent == incident.type() ) m_detectordata->clearEvent() ;
   }
 
-  Tf::OTHitRange OTHitCreator::hits(int iStation, int iLayer) const
+  Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,
+                                    const TLayerID iLayer ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     return m_detectordata->stations()[iStation]->layers[iLayer]->hits() ;
   }
 
-  Tf::OTHitRange OTHitCreator::hits( int iStation, int iLayer, int iRegion) const
+  Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,
+                                    const TLayerID iLayer,
+                                    const OTRegionID iRegion ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     return m_detectordata->stations()[iStation]->layers[iLayer]->regions[iRegion]->hits() ;
@@ -278,14 +281,23 @@ namespace Tf
     return m_detectordata->hits() ;
   }
 
-  Tf::OTHitRange OTHitCreator::hits( int iStation, int iLayer, int iRegion,
-                                     float xmin, float xmax) const
+  Tf::OTHitRange OTHitCreator::hits( const TStationID iStation,
+                                     const TLayerID iLayer,
+                                     const OTRegionID iRegion,
+                                     const float xmin,
+                                     const float xmax ) const
   {
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax) ;
   }
 
-  Tf::OTHitRange OTHitCreator::hits( int iStation, int iLayer, int iRegion, float xmin, float xmax, float ymin, float ymax) const
+  Tf::OTHitRange OTHitCreator::hits( const TStationID iStation,
+                                     const TLayerID iLayer,
+                                     const OTRegionID iRegion,
+                                     const float xmin,
+                                     const float xmax,
+                                     const float ymin,
+                                     const float ymax ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
@@ -293,7 +305,9 @@ namespace Tf
   }
 
   const Tf::IOTHitCreator::OTRegion*
-  OTHitCreator::region( int iStation, int iLayer, int iRegion ) const
+  OTHitCreator::region( const TStationID iStation,
+                        const TLayerID iLayer,
+                        const OTRegionID iRegion ) const
   {
     return m_detectordata->region(iStation,iLayer,iRegion) ;
   }

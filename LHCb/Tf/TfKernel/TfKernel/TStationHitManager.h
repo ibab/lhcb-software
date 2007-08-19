@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.6 2007-08-18 19:01:30 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.7 2007-08-19 16:54:41 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -33,6 +33,7 @@
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
+#include "TfKernel/TfIDTypes.h"
 
 // Boost
 //#include <boost/lambda/lambda.hpp>
@@ -105,9 +106,9 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    inline HitRange hits( const unsigned int sta,
-                          const unsigned int lay,
-                          const unsigned int region ) const
+    inline HitRange hits( const TStationID sta,
+                          const TLayerID   lay,
+                          const TRegionID  region ) const
     {
       if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
       return HitRange( m_hits[sta][lay][region].begin(),
@@ -121,8 +122,8 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    inline HitRange hits( const unsigned int sta,
-                          const unsigned int lay ) const
+    inline HitRange hits( const TStationID sta,
+                          const TLayerID   lay ) const
     {
       if ( !allHitsPrepared(sta,lay) ) { prepareHits(sta,lay); }
       return HitRange( m_hits_layers[sta][lay].begin(),
@@ -135,7 +136,7 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    inline HitRange hits( const unsigned int sta ) const
+    inline HitRange hits( const TStationID sta ) const
     {
       if ( !allHitsPrepared(sta) ) { prepareHits(sta); }
       return HitRange( m_hits_stations[sta].begin(),
@@ -166,9 +167,9 @@ namespace Tf
      *  @return Range object for the hits in the selected region of interest
      */
     inline HitRange hitsWithMinX( const double xMin,
-                                  const unsigned int sta,
-                                  const unsigned int lay,
-                                  const unsigned int region ) const
+                                  const TStationID sta,
+                                  const TLayerID   lay,
+                                  const TRegionID  region ) const
     {
       if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
       return HitRange( std::lower_bound( m_hits[sta][lay][region].begin(),
@@ -191,9 +192,9 @@ namespace Tf
      *
      *  @return Pointer to the Tf::EnvelopeBase object
      */
-    inline const Tf::EnvelopeBase* region( const unsigned int iStation,
-                                           const unsigned int iLayer,
-                                           const unsigned int iRegion ) const
+    inline const Tf::EnvelopeBase* region( const TStationID iStation,
+                                           const TLayerID   iLayer,
+                                           const TRegionID  iRegion ) const
     {
       return ( iRegion > maxOTRegions()-1 ?
                static_cast<const Tf::EnvelopeBase*>(this->itHitCreator()->region(iStation,
@@ -212,9 +213,9 @@ namespace Tf
      *  @param[in] region Region within the layer
      */
     template < typename SORTER >
-    inline void sortHits( const unsigned int sta,
-                          const unsigned int lay,
-                          const unsigned int region )
+    inline void sortHits( const TStationID sta,
+                          const TLayerID   lay,
+                          const TRegionID  region )
     {
       std::sort ( m_hits[sta][lay][region].begin(), m_hits[sta][lay][region].end(), SORTER() );
     }
@@ -224,8 +225,8 @@ namespace Tf
      *  @param[in] lay    Station layer ID
      */
     template < typename SORTER >
-    inline void sortHits( const unsigned int sta,
-                          const unsigned int lay )
+    inline void sortHits( const TStationID sta,
+                          const TLayerID   lay )
     {
       std::sort ( m_hits_layers[sta][lay].begin(), m_hits_layers[sta][lay].end(), SORTER() );
     }
@@ -234,7 +235,7 @@ namespace Tf
      *  @param[in] sta    Station ID
      */
     template < typename SORTER >
-    inline void sortHits( const unsigned int sta )
+    inline void sortHits( const TStationID sta )
     {
       std::sort ( m_hits_stations[sta].begin(), m_hits_stations[sta].end(), SORTER() );
     }
@@ -263,9 +264,9 @@ namespace Tf
      *  @param[in] region Region within the layer
      *  @param[in] ok     The status flag (true means hits ready, false means not ready)
      */
-    inline void setAllHitsPrepared( const unsigned int sta,
-                                    const unsigned int lay,
-                                    const unsigned int region,
+    inline void setAllHitsPrepared( const TStationID sta,
+                                    const TLayerID   lay,
+                                    const TRegionID  region,
                                     const bool ok ) const { m_hits_ready[sta][lay][region] = ok; }
 
     /** Set the hits ready flag for given layer
@@ -273,15 +274,15 @@ namespace Tf
      *  @param[in] lay    Station layer ID
      *  @param[in] ok     The status flag (true means hits ready, false means not ready)
      */
-    inline void setAllHitsPrepared( const unsigned int sta,
-                                    const unsigned int lay,
+    inline void setAllHitsPrepared( const TStationID sta,
+                                    const TLayerID   lay,
                                     const bool ok ) const { m_hits_layers_ready[sta][lay] = ok; }
 
     /** Set the hits ready flag for given station
      *  @param[in] sta    Station ID
      *  @param[in] ok     The status flag (true means hits ready, false means not ready)
      */
-    inline void setAllHitsPrepared( const unsigned int sta,
+    inline void setAllHitsPrepared( const TStationID sta,
                                     const bool ok ) const { m_hits_stations_ready[sta] = ok; }
 
     /** Are all the hits ready
@@ -299,9 +300,9 @@ namespace Tf
      *  @retval TRUE  Hits are ready
      *  @retval FALSE Hits are not ready
      */
-    inline bool allHitsPrepared(const unsigned int sta,
-                                const unsigned int lay,
-                                const unsigned int region) const
+    inline bool allHitsPrepared(const TStationID sta,
+                                const TLayerID   lay,
+                                const TRegionID  region) const
     { return m_hits_ready[sta][lay][region]; }
 
     /** Are all the hits ready in the given layer
@@ -311,8 +312,8 @@ namespace Tf
      *  @retval TRUE  Hits are ready
      *  @retval FALSE Hits are not ready
      */
-    inline bool allHitsPrepared(const unsigned int sta,
-                                const unsigned int lay) const
+    inline bool allHitsPrepared(const TStationID sta,
+                                const TLayerID   lay) const
     { return m_hits_layers_ready[sta][lay]; }
 
     /** Are all the hits ready in the given station
@@ -321,7 +322,7 @@ namespace Tf
      *  @retval TRUE  Hits are ready
      *  @retval FALSE Hits are not ready
      */
-    inline bool allHitsPrepared(const unsigned int sta) const
+    inline bool allHitsPrepared(const TStationID sta) const
     { return m_hits_stations_ready[sta]; }
 
   protected:
@@ -339,9 +340,9 @@ namespace Tf
      *  @param[in] region The region number
      */
     inline void addHit( Hit * hit,
-                        const unsigned int sta,
-                        const unsigned int lay,
-                        const unsigned int region ) const
+                        const TStationID sta,
+                        const TLayerID   lay,
+                        const TRegionID  region ) const
     {
       m_hits[sta][lay][region].push_back(hit);
       // temporary hack, to get things working. Needs to be done better
@@ -351,36 +352,36 @@ namespace Tf
     }
 
     /// Access the maximum number of stations
-    inline unsigned int maxStations()  const { return m_nSta;    }
+    inline TStationID maxStations()   const { return TStationID(m_nSta);   }
     /// Access the maximum number of layers
-    inline unsigned int maxLayers()    const { return m_nLay;    }
+    inline TLayerID maxLayers()       const { return TLayerID(m_nLay);     }
     /// Access the maximum number of OT regions
-    inline unsigned int maxOTRegions() const { return m_nOTReg;  }
+    inline OTRegionID maxOTRegions()  const { return OTRegionID(m_nOTReg); }
     /// Access the maximum number of IT regions
-    inline unsigned int maxITRegions() const { return m_nITReg;  }
+    inline ITRegionID maxITRegions()  const { return ITRegionID(m_nITReg); }
     /// Access the maximum number of regions
-    inline unsigned int maxRegions()   const { return m_nReg;    }
+    inline TRegionID maxRegions()     const { return TRegionID(m_nReg);    }
 
     /** Prepare all hits in the given IT region
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
      *  @param[in] region Region within the layer
      */
-    void prepareITHits(const unsigned int sta,
-                       const unsigned int lay,
-                       const unsigned int region) const;
+    void prepareITHits(const TStationID sta,
+                       const TLayerID   lay,
+                       const ITRegionID region) const;
 
     /** Prepare all hits in the given IT layer
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
      */
-    void prepareITHits(const unsigned int sta,
-                       const unsigned int lay) const;
+    void prepareITHits(const TStationID sta,
+                       const TLayerID   lay) const;
 
     /** Prepare all hits in the given IT station
      *  @param[in] sta    Station ID
      */
-    void prepareITHits(const unsigned int sta) const;
+    void prepareITHits(const TStationID sta) const;
 
     /// Prepare all hits in IT
     void prepareITHits() const;
@@ -390,21 +391,21 @@ namespace Tf
      *  @param[in] lay    Station layer ID
      *  @param[in] region Region within the layer
      */
-    void prepareOTHits(const unsigned int sta,
-                       const unsigned int lay,
-                       const unsigned int region) const;
+    void prepareOTHits(const TStationID sta,
+                       const TLayerID   lay,
+                       const OTRegionID region) const;
 
     /** Prepare all hits in the given OT layer
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
      */
-    void prepareOTHits(const unsigned int sta,
-                       const unsigned int lay) const;
+    void prepareOTHits(const TStationID sta,
+                       const TLayerID   lay) const;
 
     /** Prepare all hits in the given OT station
      *  @param[in] sta    Station ID
      */
-    void prepareOTHits(const unsigned int sta) const;
+    void prepareOTHits(const TStationID sta) const;
 
     /// Prepare all hits in OT
     void prepareOTHits() const;
@@ -428,9 +429,9 @@ namespace Tf
      *  @param[in] region Region within the layer
      */
     void processRange( const Tf::OTHitRange & othits,
-                       const unsigned int sta,
-                       const unsigned int lay,
-                       const unsigned int region ) const;
+                       const TStationID sta,
+                       const TLayerID   lay,
+                       const TRegionID  region ) const;
 
     /** Process an ST hit range (create extended hits)
      *  @param[in] sthits The STHit range to process
@@ -439,9 +440,9 @@ namespace Tf
      *  @param[in] region Region within the layer
      */
     void processRange( const Tf::STHitRange & sthits,
-                       const unsigned int sta,
-                       const unsigned int lay,
-                       const unsigned int region ) const;
+                       const TStationID sta,
+                       const TLayerID   lay,
+                       const TRegionID  region ) const;
 
   public:
 
@@ -450,21 +451,21 @@ namespace Tf
      *  @param[in] lay    Station layer ID
      *  @param[in] region Region within the layer
      */
-    void prepareHits(const unsigned int sta,
-                     const unsigned int lay,
-                     const unsigned int region) const;
+    void prepareHits(const TStationID sta,
+                     const TLayerID   lay,
+                     const TRegionID  region) const;
 
     /** Initialise all the hits for the current event in the given region
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
      */
-    void prepareHits(const unsigned int sta,
-                     const unsigned int lay) const;
+    void prepareHits(const TStationID sta,
+                     const TLayerID   lay) const;
 
     /** Initialise all the hits for the current event in the given region
      *  @param[in] sta    Station ID
      */
-    void prepareHits(const unsigned int sta) const;
+    void prepareHits(const TStationID sta) const;
 
     /** Initialise all the hits for the current event
      */
@@ -582,15 +583,15 @@ namespace Tf
   {
     m_hits_all.clear();
     this->setAllHitsPrepared(false);
-    for(unsigned int s=0; s<maxStations(); s++)
+    for(TStationID s=0; s<maxStations(); ++s)
     {
       this->setAllHitsPrepared(s,false);
       m_hits_stations[s].clear();
-      for (unsigned int l=0; l<maxLayers(); l++)
+      for (TLayerID l=0; l<maxLayers(); ++l)
       {
         this->setAllHitsPrepared(s,l,false);
         m_hits_layers[s][l].clear();
-        for (unsigned int t=0; t<maxRegions(); t++)
+        for (TRegionID t=0; t<maxRegions(); ++t)
         {
           this->setAllHitsPrepared(s,l,t,false);
           for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
@@ -618,9 +619,9 @@ namespace Tf
 
   template<class Hit>
   inline void TStationHitManager<Hit>::processRange( const Tf::OTHitRange & othits,
-                                                     const unsigned int sta,
-                                                     const unsigned int lay,
-                                                     const unsigned int region ) const
+                                                     const TStationID sta,
+                                                     const TLayerID   lay,
+                                                     const TRegionID  region ) const
   {
     if ( cleanOTHits() )
     {
@@ -650,9 +651,9 @@ namespace Tf
 
   template<class Hit>
   inline void TStationHitManager<Hit>::processRange( const Tf::STHitRange & sthits,
-                                                     const unsigned int sta,
-                                                     const unsigned int lay,
-                                                     const unsigned int region ) const
+                                                     const TStationID sta,
+                                                     const TLayerID   lay,
+                                                     const TRegionID  region ) const
   {
     if ( cleanITHits() )
     {
@@ -679,91 +680,85 @@ namespace Tf
   template<class Hit>
   inline void TStationHitManager<Hit>::prepareITHits() const
   {
-    for (unsigned int sta=0; sta < this->maxStations(); ++sta)
+    for (TStationID sta=0; sta < this->maxStations(); ++sta)
     {
       prepareITHits(sta);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const unsigned int sta) const
+  inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta) const
   {
-    for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
+    for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
     {
       prepareITHits(sta,lay);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const unsigned int sta,
-                                                     const unsigned int lay) const
+  inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta,
+                                                     const TLayerID   lay) const
   {
-    for (unsigned int it=0; it < this->maxITRegions(); ++it)
+    for (OTRegionID it=0; it < this->maxITRegions(); ++it)
     {
       prepareITHits(sta,lay,it);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const unsigned int sta,
-                                                     const unsigned int lay,
-                                                     const unsigned int region) const
+  inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta,
+                                                     const TLayerID   lay,
+                                                     const ITRegionID region) const
   {
-    if ( region < this->maxITRegions() )
+    Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region) ;
+    if ( msgLevel(MSG::DEBUG) )
     {
-      Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region-this->maxOTRegions()) ;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Found " << sthits.size() << " ITHits for station=" << sta
-                << " layer=" << lay << " region=" << region << endreq;
-      }
-      this -> processRange ( sthits, sta, lay, region );
+      debug() << "Found " << sthits.size() << " ITHits for station=" << sta
+              << " layer=" << lay << " region=" << region << endreq;
     }
+    this -> processRange ( sthits, sta, lay, TRegionID(region) );
   }
 
   template<class Hit>
   inline void TStationHitManager<Hit>::prepareOTHits() const
   {
-    for (unsigned int sta=0; sta<this->maxStations(); ++sta)
+    for (TStationID sta=0; sta<this->maxStations(); ++sta)
     {
       this -> prepareOTHits(sta);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const unsigned int sta) const
+  inline void TStationHitManager<Hit>::prepareOTHits(const TStationID sta) const
   {
-    for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
+    for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
     {
       this -> prepareOTHits(sta,lay);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const unsigned int sta,
-                                                     const unsigned int lay) const
+  inline void TStationHitManager<Hit>::prepareOTHits(const TStationID sta,
+                                                     const TLayerID   lay) const
   {
-    for (unsigned int ot=0; ot<this->maxOTRegions(); ++ot)
+    for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
     {
       this -> prepareOTHits(sta,lay,ot);
     }
   }
 
   template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const unsigned int sta,
-                                                     const unsigned int lay,
-                                                     const unsigned int region) const
+  inline void TStationHitManager<Hit>::prepareOTHits(const TStationID sta,
+                                                     const TLayerID   lay,
+                                                     const OTRegionID region) const
   {
-    if ( region < this->maxOTRegions() )
+    Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,region) ;
+    if ( msgLevel(MSG::DEBUG) )
     {
-      Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,region) ;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Found " << othits.size() << " OTHits for station=" << sta
-                << " layer=" << lay << " region=" << region << endreq;
-      }
-      this -> processRange ( othits, sta, lay, region );
+      debug() << "Found " << othits.size() << " OTHits for station=" << sta
+              << " layer=" << lay << " region=" << region << endreq;
     }
+    this -> processRange ( othits, sta, lay, TRegionID(region) );
   }
 
   template<class Hit>
@@ -771,7 +766,7 @@ namespace Tf
   {
     if ( !this->allHitsPrepared() )
     {
-      for ( unsigned int sta = 0; sta < this->maxStations(); ++sta )
+      for ( TStationID sta = 0; sta < this->maxStations(); ++sta )
       {
         this->prepareHits(sta);
       }
@@ -780,11 +775,11 @@ namespace Tf
   }
 
   template<class Hit>
-  void TStationHitManager<Hit>::prepareHits(const unsigned int sta) const
+  void TStationHitManager<Hit>::prepareHits(const TStationID sta) const
   {
     if ( !this->allHitsPrepared(sta) )
     {
-      for ( unsigned int lay = 0; lay<this->maxLayers(); ++lay )
+      for ( TLayerID lay = 0; lay<this->maxLayers(); ++lay )
       {
         this->prepareHits(sta,lay);
       }
@@ -793,12 +788,12 @@ namespace Tf
   }
 
   template<class Hit>
-  void TStationHitManager<Hit>::prepareHits(const unsigned int sta,
-                                            const unsigned int lay) const
+  void TStationHitManager<Hit>::prepareHits(const TStationID sta,
+                                            const TLayerID   lay) const
   {
     if ( !this->allHitsPrepared(sta,lay) )
     {
-      for ( unsigned int ir = 0; ir < maxRegions(); ++ir )
+      for ( TRegionID ir = 0; ir < maxRegions(); ++ir )
       {
         this->prepareHits(sta,lay,ir);
       }
@@ -807,19 +802,19 @@ namespace Tf
   }
 
   template<class Hit>
-  void TStationHitManager<Hit>::prepareHits(const unsigned int sta,
-                                            const unsigned int lay,
-                                            const unsigned int region) const
+  void TStationHitManager<Hit>::prepareHits(const TStationID sta,
+                                            const TLayerID lay,
+                                            const TRegionID region) const
   {
     if ( !this->allHitsPrepared(sta,lay,region) )
     {
       if ( region >= this->maxOTRegions() )
       {
-        this->prepareITHits(sta,lay,region);
+        this->prepareITHits(sta,lay,region.itRegionID());
       }
       else
       {
-        this->prepareOTHits(sta,lay,region);
+        this->prepareOTHits(sta,lay,region.otRegionID());
       }
       this->setAllHitsPrepared(sta,lay,region,true);
     }
@@ -857,15 +852,15 @@ namespace Tf
 
     double x, y, z;
 
-    for (unsigned int sta=0; sta < this->maxStations(); ++sta)
+    for (TStationID sta=0; sta < this->maxStations(); ++sta)
     {
       this->setAllHitsPrepared(sta,true);
-      for (unsigned int lay=0; lay < this->maxLayers(); ++lay)
+      for (TLayerID lay=0; lay < this->maxLayers(); ++lay)
       {
         this->setAllHitsPrepared(sta,lay,true);
 
         // IT hits
-        for (unsigned int it=0; it < this->maxITRegions(); ++it)
+        for (ITRegionID it=0; it < this->maxITRegions(); ++it)
         {
           this->setAllHitsPrepared(sta,lay,it,true);
           z = this->itHitCreator()->region(sta,lay,it)->z();
@@ -904,17 +899,17 @@ namespace Tf
 
     double x, y, z;
 
-    for (unsigned int sta=0; sta<this->maxStations(); ++sta)
+    for (TStationID sta=0; sta<this->maxStations(); ++sta)
     {
       this->setAllHitsPrepared(sta,true);
-      for (unsigned int lay=0; lay<this->maxLayers(); ++lay)
+      for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
       {
         this->setAllHitsPrepared(sta,lay,true);
         // OT hits
-        for (unsigned int ot=0; ot<this->maxOTRegions(); ++ot)
+        for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
         {
           this->setAllHitsPrepared(sta,lay,ot,true);
-          z = this->itHitCreator()->region(sta,lay,ot)->z();
+          z = this->otHitCreator()->region(sta,lay,ot)->z();
           y = z*((a_x*z)+b_x)+c_x;
           x = m_y*z+c_y;
 

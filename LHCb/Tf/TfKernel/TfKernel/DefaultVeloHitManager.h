@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: DefaultVeloHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -12,11 +12,11 @@
 
 
 namespace Tf {
-  
+
   static const InterfaceID IID_DefaultVeloHitManager( "Tf::DefaultVeloHitManager", 1, 0 );
 
   /** @class DefaultVeloHitManager DefaultVeloHitManager.h
-   *  
+   *
    *
    * @author Kurt Rinnert <kurt.rinnert@cern.ch>
    * @date   2007-08-07
@@ -24,47 +24,47 @@ namespace Tf {
   template <typename SENSORTYPE, typename HIT, int NZONES>
   class DefaultVeloHitManager : public VeloHitManager<SENSORTYPE,HIT,NZONES> {
 
-    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data;   
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_dataValid;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_velo;
 
-    public:
+  public:
 
-        typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::Station                Station;
-        typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationIterator        StationIterator;
-        typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationReverseIterator StationReverseIterator;
+    typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::Station                Station;
+    typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationIterator        StationIterator;
+    typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationReverseIterator StationReverseIterator;
 
-    public:
+  public:
 
-        /// Retrieve interface ID
-        static const InterfaceID& interfaceID() { return IID_DefaultVeloHitManager; }
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_DefaultVeloHitManager; }
 
-        /// Standard Constructor
-        DefaultVeloHitManager(const std::string& type,
-            const std::string& name,
-            const IInterface* parent);
+    /// Standard Constructor
+    DefaultVeloHitManager(const std::string& type,
+                          const std::string& name,
+                          const IInterface* parent);
 
-        virtual ~DefaultVeloHitManager() {;} ///< Destructor
+    virtual ~DefaultVeloHitManager() {;} ///< Destructor
 
-        StatusCode initialize(); ///< Tool initialization
-        StatusCode   finalize(); ///< Tool finalize
+    StatusCode initialize(); ///< Tool initialization
+    StatusCode   finalize(); ///< Tool finalize
 
-        virtual void prepareHits();
+    virtual void prepareHits();
 
-    private:
+  private:
 
-        void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag);
-        void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag);
-        void createPointerListsAndSort();
+    void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag);
+    void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag);
+    void createPointerListsAndSort();
 
-    private:
+  private:
 
-        //== configuration
-        bool m_fromClusters;
-        bool m_ignoreLowClusters;
-        double m_lowThreshold;
-        std::string m_clusterLocation;
-        std::string m_liteClusterLocation;
+    //== configuration
+    bool m_fromClusters;
+    bool m_ignoreLowClusters;
+    double m_lowThreshold;
+    std::string m_clusterLocation;
+    std::string m_liteClusterLocation;
 
   };
 
@@ -73,18 +73,18 @@ namespace Tf {
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
   DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::DefaultVeloHitManager(const std::string& type,
-      const std::string& name,
-      const IInterface* parent)
+                                                                      const std::string& name,
+                                                                      const IInterface* parent)
     : VeloHitManager<SENSORTYPE,HIT,NZONES>(type, name, parent)
-    {
-      GaudiTool::declareInterface<DefaultVeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
+  {
+    GaudiTool::declareInterface<DefaultVeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
 
-      declareProperty("FromClusters",m_fromClusters=false); 
-      declareProperty("IgnoreLowClusters",m_ignoreLowClusters=false); 
-      declareProperty("LowThreshold",m_lowThreshold=22.0); 
-      declareProperty("ClusterLocation",m_clusterLocation=LHCb::VeloClusterLocation::Default);
-      declareProperty("LiteClusterLocation",m_liteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
-    }
+    declareProperty("FromClusters",m_fromClusters=false);
+    declareProperty("IgnoreLowClusters",m_ignoreLowClusters=false);
+    declareProperty("LowThreshold",m_lowThreshold=22.0);
+    declareProperty("ClusterLocation",m_clusterLocation=LHCb::VeloClusterLocation::Default);
+    declareProperty("LiteClusterLocation",m_liteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
+  }
 
   //=============================================================================
   // Initialization
@@ -116,7 +116,7 @@ namespace Tf {
   // Prepare the hits from Velo(Lite)Clusters
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareHits() 
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareHits()
   {
     if ( m_fromClusters ) { // use full velo clusters as input
       LHCb::VeloClusters* clusters = GaudiTool::get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
@@ -131,9 +131,9 @@ namespace Tf {
         if ( m_ignoreLowClusters && (signal < m_lowThreshold) ) continue;
 
         LHCb::VeloLiteCluster tmpClu( (*iClus)->channelID(),
-            (*iClus)->interStripFraction(),
-            (*iClus)->pseudoSize(),
-            (*iClus)->highThreshold() );
+                                      (*iClus)->interStripFraction(),
+                                      (*iClus)->pseudoSize(),
+                                      (*iClus)->highThreshold() );
 
         addHit(tmpClu, signal, typename HIT::hit_type_tag());
 
@@ -150,7 +150,7 @@ namespace Tf {
         float signal = 100.0;
         // in ignore low charge cluster mode skip this cluster if high threshold bit unset
         if( !iClus->highThreshold() ) {
-          if( m_ignoreLowClusters ) continue; 
+          if( m_ignoreLowClusters ) continue;
           signal = 1.0;
         }
 
@@ -165,7 +165,7 @@ namespace Tf {
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag) 
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag)
   {
     // only import r clusters
     if ( !clu.isRType() ) return;
@@ -173,14 +173,14 @@ namespace Tf {
     const DeVeloRType* rs = m_velo->rSensor(clu.channelID().sensor());
     const unsigned int stationNumber = rs->station();
     const unsigned int half          = static_cast<unsigned int>(rs->isRight());
-    const unsigned int zone          = (rs->isDownstream() 
-        ? 3-rs->zoneOfStrip(clu.channelID().strip()) 
-        : rs->zoneOfStrip(clu.channelID().strip()));
-    m_data[half][stationNumber][zone].push_back(VeloRHit(rs,clu,signal));  
+    const unsigned int zone          = (rs->isDownstream()
+                                        ? 3-rs->zoneOfStrip(clu.channelID().strip())
+                                        : rs->zoneOfStrip(clu.channelID().strip()));
+    m_data[half][stationNumber][zone].push_back(VeloRHit(rs,clu,signal));
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag) 
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag)
   {
     // only import r clusters
     if ( !clu.isPhiType() ) return;
@@ -188,18 +188,18 @@ namespace Tf {
     const DeVeloPhiType* ps = m_velo->phiSensor(clu.channelID().sensor());
     const unsigned int stationNumber = ps->station();
     const unsigned int half          = static_cast<unsigned int>(ps->isRight());
-    const unsigned int zone          = ps->zoneOfStrip(clu.channelID().strip()); 
-    m_data[half][stationNumber][zone].push_back(VeloPhiHit(ps,clu,signal));  
+    const unsigned int zone          = ps->zoneOfStrip(clu.channelID().strip());
+    m_data[half][stationNumber][zone].push_back(VeloPhiHit(ps,clu,signal));
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::createPointerListsAndSort() 
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::createPointerListsAndSort()
   {
     for (unsigned int half=0; half<VeloHitManager<SENSORTYPE,HIT,NZONES>::NHALFS; ++ half) {
 
       for (StationIterator iS = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].begin();
-          iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].end();
-          ++iS ) {
+           iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].end();
+           ++iS ) {
         Station* station = *iS;
         station->clear();
         unsigned int stationNumber = station->stationNumber();
@@ -212,7 +212,7 @@ namespace Tf {
           }
         }
         station->sort();
-      }  
+      }
 
     }
   }

@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: VeloHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -14,14 +14,15 @@
 
 #include "TfKernel/RegionID.h"
 #include "TfKernel/VeloSensorHits.h"
+#include "TfKernel/TfIDTypes.h"
 
 class DeVelo;
 
-namespace Tf 
+namespace Tf
 {
   /** @class VeloHitManager VeloHitManager.h
    *  Base class for structured access to VELO measurements.
-   *  
+   *
    *
    * @see DeVelo
    * @see DeVeloSensor
@@ -34,209 +35,209 @@ namespace Tf
   static const InterfaceID IID_VeloHitManager( "Tf::VeloHitManager", 1, 0 );
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  class VeloHitManager 
+  class VeloHitManager
     : public GaudiTool
-    , public IIncidentListener 
-    {
-      public:
-  
-        typedef VeloSensorHits<SENSORTYPE,HIT,NZONES> Station;                ///< how we call a specific station
-        typedef std::vector<Station*>                 Stations;               ///< how we call list of specific stations
-        typedef typename Stations::iterator           StationIterator;        ///< shortcut for station iterator      
-        typedef typename Stations::reverse_iterator   StationReverseIterator; ///< shortcut for station reverse iterator      
-        
-      public:
+    , public IIncidentListener
+  {
+  public:
 
-        /// Retrieve interface ID
-        static const InterfaceID& interfaceID() { return IID_VeloHitManager; }
+    typedef VeloSensorHits<SENSORTYPE,HIT,NZONES> Station;                ///< how we call a specific station
+    typedef std::vector<Station*>                 Stations;               ///< how we call list of specific stations
+    typedef typename Stations::iterator           StationIterator;        ///< shortcut for station iterator
+    typedef typename Stations::reverse_iterator   StationReverseIterator; ///< shortcut for station reverse iterator
 
-        /// Standard Constructor
-        VeloHitManager(const std::string& type,
-            const std::string& name,
-            const IInterface* parent);
+  public:
 
-        ~VeloHitManager();  ///< Destructor
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_VeloHitManager; }
 
-        StatusCode initialize(); ///< Tool initialization
-        StatusCode   finalize(); ///< Tool finalize
+    /// Standard Constructor
+    VeloHitManager(const std::string& type,
+                   const std::string& name,
+                   const IInterface* parent);
 
-        /// Retrieve station iterator based on sensor number
-        StationIterator station(unsigned int sensorNumber) 
-        {  if (!m_dataValid) { this->prepareHits(); } ; return m_stationBySensorNumber[sensorNumber]; }
-        
-        /// Retrieve iterator to first station in a VELO half
-        StationIterator stationsBegin(unsigned int half) 
-        { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].begin(); }
-        
-        /// Retrieve iterator to the end of stations in a VELO half
-        StationIterator stationsEnd(unsigned int half) 
-        { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].end(); }
-        
-        /// Retrieve reverse iterator to last station in a VELO half
-        StationReverseIterator stationsReverseBegin(unsigned int half) 
-        { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rbegin(); }
-        
-        /// Retrieve reverse iterator to the reverse end of stations in a VELO half
-        StationReverseIterator stationsReverseEnd(unsigned int half) 
-        { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rend(); }
-        
-        /// The preparation of hits, implemented by derived classes
-        virtual void prepareHits() = 0;
-        
-        /// update of geometry related information
-        StatusCode updateStationStructure();
-        
-        /// incident service handle
-        void handle( const Incident& incident );
-  
-      protected:
-  
-        /// Clear the hits.
-        virtual void clearHits();
-        
-      protected:
+    ~VeloHitManager();  ///< Destructor
+
+    StatusCode initialize(); ///< Tool initialization
+    StatusCode   finalize(); ///< Tool finalize
+
+    /// Retrieve station iterator based on sensor number
+    StationIterator station(const VeloSensorID sensorNumber)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationBySensorNumber[sensorNumber]; }
+
+    /// Retrieve iterator to first station in a VELO half
+    StationIterator stationsBegin(const VeloHalfID half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].begin(); }
+
+    /// Retrieve iterator to the end of stations in a VELO half
+    StationIterator stationsEnd(const VeloHalfID half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].end(); }
+
+    /// Retrieve reverse iterator to last station in a VELO half
+    StationReverseIterator stationsReverseBegin(const VeloHalfID  half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rbegin(); }
+
+    /// Retrieve reverse iterator to the reverse end of stations in a VELO half
+    StationReverseIterator stationsReverseEnd(const VeloHalfID  half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rend(); }
+
+    /// The preparation of hits, implemented by derived classes
+    virtual void prepareHits() = 0;
+
+    /// update of geometry related information
+    StatusCode updateStationStructure();
+
+    /// incident service handle
+    void handle( const Incident& incident );
+
+  protected:
+
+    /// Clear the hits.
+    virtual void clearHits();
+
+  protected:
 
 
-        static const unsigned int NHALFS    = RegionID::VeloRIndex::kNHalfs;
-        static const unsigned int NSTATIONS = RegionID::VeloRIndex::kNStations;
+    static const unsigned int NHALFS    = RegionID::VeloRIndex::kNHalfs;
+    static const unsigned int NSTATIONS = RegionID::VeloRIndex::kNStations;
 
-        /// The list of stations
-        mutable Stations m_stations[NHALFS];
-        
-        /// mapping from sensor numbers to station iterators
-        mutable std::vector<StationIterator> m_stationBySensorNumber;
-        
-        /// The data
-        mutable std::vector<HIT> m_data[NHALFS][NSTATIONS][NZONES];
-        
-        /// Cache validity flag
-        mutable bool m_dataValid;
-        
-        /// access to VELO detector element
-        DeVelo* m_velo;
+    /// The list of stations
+    mutable Stations m_stations[NHALFS];
 
-        //== configuration
-        std::string m_detectorLocation;
-    };
+    /// mapping from sensor numbers to station iterators
+    mutable std::vector<StationIterator> m_stationBySensorNumber;
+
+    /// The data
+    mutable std::vector<HIT> m_data[NHALFS][NSTATIONS][NZONES];
+
+    /// Cache validity flag
+    mutable bool m_dataValid;
+
+    /// access to VELO detector element
+    DeVelo* m_velo;
+
+    //== configuration
+    std::string m_detectorLocation;
+  };
 
 
   //=============================================================================
   // Standard constructor
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-    VeloHitManager<SENSORTYPE,HIT,NZONES>::VeloHitManager(const std::string& type,
-        const std::string& name,
-        const IInterface* parent)
+  VeloHitManager<SENSORTYPE,HIT,NZONES>::VeloHitManager(const std::string& type,
+                                                        const std::string& name,
+                                                        const IInterface* parent)
     : GaudiTool(type, name, parent)
     , m_dataValid(false)
-    {
-      declareInterface<VeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
+  {
+    declareInterface<VeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
 
-      declareProperty("DetectorLocation",m_detectorLocation=DeVeloLocation::Default);
-    }
+    declareProperty("DetectorLocation",m_detectorLocation=DeVeloLocation::Default);
+  }
 
   //=============================================================================
   // Destructor
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-    VeloHitManager<SENSORTYPE,HIT,NZONES>::~VeloHitManager() 
-    {
-      for (unsigned int half=0; half<NHALFS; ++ half) {
-        for (StationIterator iS = m_stations[half].begin();
-            iS !=  m_stations[half].end();
-            ++iS) {
-          delete *iS;
-        } 
+  VeloHitManager<SENSORTYPE,HIT,NZONES>::~VeloHitManager()
+  {
+    for (unsigned int half=0; half<NHALFS; ++ half) {
+      for (StationIterator iS = m_stations[half].begin();
+           iS !=  m_stations[half].end();
+           ++iS) {
+        delete *iS;
       }
     }
+  }
 
   //=============================================================================
   // Initialization
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-    StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::initialize()
-    {
-      StatusCode sc = GaudiTool::initialize(); // must be executed first
-      if (sc.isFailure()) return sc;  // error printed already by GaudiTool
+  StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::initialize()
+  {
+    StatusCode sc = GaudiTool::initialize(); // must be executed first
+    if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-      debug() << "==> Initialize" << endmsg;
+    debug() << "==> Initialize" << endmsg;
 
-      m_velo = getDet<DeVelo>( m_detectorLocation );
+    m_velo = getDet<DeVelo>( m_detectorLocation );
 
-      sc = updateStationStructure();
-      if(!sc.isSuccess()) {
-        error() << "Failed to update geometry cache." << endreq;
-        return sc;
-      }
-
-      // make sure we are up-to-date on populated VELO stations
-      registerCondition(m_velo->geometry(), &Tf::VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure);
-
-      // invalidate measurement cache at the end of each event
-      incSvc()->addListener(this, IncidentType::EndEvent);
-
+    sc = updateStationStructure();
+    if(!sc.isSuccess()) {
+      error() << "Failed to update geometry cache." << endreq;
       return sc;
     }
+
+    // make sure we are up-to-date on populated VELO stations
+    registerCondition(m_velo->geometry(), &Tf::VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure);
+
+    // invalidate measurement cache at the end of each event
+    incSvc()->addListener(this, IncidentType::EndEvent);
+
+    return sc;
+  }
 
   //=============================================================================
   // Finalize
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-    StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::finalize()
-    {
-      debug() << "==> Finalize" << endmsg;
+  StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::finalize()
+  {
+    debug() << "==> Finalize" << endmsg;
 
 
-      return GaudiTool::finalize();  // must be called after all other actions
-    }
-  
+    return GaudiTool::finalize();  // must be called after all other actions
+  }
+
   //=============================================================================
   // Update the station structure
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-    StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure()
-    {
-      // clean up
-      for (unsigned int half=0; half<NHALFS; ++half) { 
-        for (unsigned int s=0; s<m_stations[half].size(); ++s) {
-          delete m_stations[half][s];
-        }
-        m_stations[half].clear();
-
+  StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure()
+  {
+    // clean up
+    for (unsigned int half=0; half<NHALFS; ++half) {
+      for (unsigned int s=0; s<m_stations[half].size(); ++s) {
+        delete m_stations[half][s];
       }
-      
-      // the maximum sensor number, determines size of sparse vector used for mapping
-      unsigned int maxSensorNumber=0;  
+      m_stations[half].clear();
 
-      typename std::vector<DeVeloSensor*>::const_iterator sensorIter = m_velo->sensorsBegin();
-      typename std::vector<DeVeloSensor*>::const_iterator sensorsEnd = m_velo->sensorsEnd();  
-      
-      for ( ; sensorIter != sensorsEnd; ++sensorIter ) {
-        if ( (*sensorIter)->isPileUp() ) continue; // ignore pile up sensors
-        SENSORTYPE* s = dynamic_cast<SENSORTYPE*>(*sensorIter);
-        if ( !s ) continue; // only create stations for the correct type
-        if (s->sensorNumber() > maxSensorNumber) maxSensorNumber = s->sensorNumber();
-        m_stations[static_cast<unsigned int>(s->isRight())].push_back(new VeloSensorHits<SENSORTYPE,HIT,NZONES>(s));
-      }
-      
-      // sort by station z position
-      for (unsigned int half=0; half<NHALFS; ++half) { 
-        std::sort(m_stations[half].begin(),m_stations[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
-      }
-
-      // create mapping from sensor numbers to station iterators
-      m_stationBySensorNumber.resize(maxSensorNumber+1);
-
-      for (unsigned int half=0; half<NHALFS; ++half) { 
-        for (StationIterator si = m_stations[half].begin();
-            si != m_stations[half].end();
-            ++si) {
-          m_stationBySensorNumber[(*si)->sensor()->sensorNumber()] = si;
-        }
-      }
-
-      return StatusCode::SUCCESS;
     }
+
+    // the maximum sensor number, determines size of sparse vector used for mapping
+    unsigned int maxSensorNumber=0;
+
+    typename std::vector<DeVeloSensor*>::const_iterator sensorIter = m_velo->sensorsBegin();
+    typename std::vector<DeVeloSensor*>::const_iterator sensorsEnd = m_velo->sensorsEnd();
+
+    for ( ; sensorIter != sensorsEnd; ++sensorIter ) {
+      if ( (*sensorIter)->isPileUp() ) continue; // ignore pile up sensors
+      SENSORTYPE* s = dynamic_cast<SENSORTYPE*>(*sensorIter);
+      if ( !s ) continue; // only create stations for the correct type
+      if (s->sensorNumber() > maxSensorNumber) maxSensorNumber = s->sensorNumber();
+      m_stations[static_cast<unsigned int>(s->isRight())].push_back(new VeloSensorHits<SENSORTYPE,HIT,NZONES>(s));
+    }
+
+    // sort by station z position
+    for (unsigned int half=0; half<NHALFS; ++half) {
+      std::sort(m_stations[half].begin(),m_stations[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
+    }
+
+    // create mapping from sensor numbers to station iterators
+    m_stationBySensorNumber.resize(maxSensorNumber+1);
+
+    for (unsigned int half=0; half<NHALFS; ++half) {
+      for (StationIterator si = m_stations[half].begin();
+           si != m_stations[half].end();
+           ++si) {
+        m_stationBySensorNumber[(*si)->sensor()->sensorNumber()] = si;
+      }
+    }
+
+    return StatusCode::SUCCESS;
+  }
 
   //=============================================================================
   // Incident handle
@@ -256,7 +257,7 @@ namespace Tf
   //=============================================================================
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void VeloHitManager<SENSORTYPE,HIT,NZONES>::clearHits() 
+  void VeloHitManager<SENSORTYPE,HIT,NZONES>::clearHits()
   {
     for (unsigned int half=0; half<NHALFS; ++ half) {
       for (unsigned int station=0; station<NSTATIONS; ++station) {

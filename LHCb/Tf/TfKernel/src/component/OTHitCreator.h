@@ -1,4 +1,4 @@
-// $Id: OTHitCreator.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: OTHitCreator.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef _OTHitCreator_H
 #define _OTHitCreator_H
 
@@ -64,12 +64,38 @@ namespace Tf
     /// incident service handle
     virtual void handle( const Incident& incident ) ;
 
+    // Load all the OT hits
     virtual OTHitRange hits() const ;
-    virtual OTHitRange hits(int iStation, int iLayer) const ;
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion) const ;
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion, float xmin, float xmax ) const ;
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion, float xmin, float xmax, float ymin, float ymax ) const ;
-    virtual const OTRegion* region( int iStation, int iLayer, int iRegion ) const ;
+   
+    // Load the hits for a given region of interest
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer) const ;
+
+    // Load the hits for a given region of interest
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion) const ;
+
+    // Load the hits for a given region of interest
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion, 
+                            const float xmin, 
+                            const float xmax) const ;
+
+    // Load the hits for a given region of interest
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion,
+                            const float xmin, 
+                            const float xmax, 
+                            const float ymin,
+                            const float ymax) const ;
+
+    // Retrieve the OTRegion for a certain region ID. The region
+    virtual const OTRegion* region(const TStationID iStation, 
+                                   const TLayerID iLayer, 
+                                   const OTRegionID iRegion) const ;
 
   public:
     double tmin() const { return m_tmin ; }

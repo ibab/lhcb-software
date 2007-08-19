@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-19 - Chris Jones
+ - Add new 'ID' objects for use in the various hit creator/manager 
+   interfaces. Help to clarify the inter-relationships between the various
+   interfaces and also introduces a little type safety.
+
 ! 2007-08-18 - Chris Jones
  - Update data managers so on-demand hit creation is now done, region by
    region, instead of simply doing the all hits at once.

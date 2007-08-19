@@ -1,4 +1,4 @@
-// $Id: DefaultVeloPhiHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: DefaultVeloPhiHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOPHIHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOPHIHITMANAGER_H 1
 
@@ -9,39 +9,39 @@
 
 
 namespace Tf {
-  
+
   static const InterfaceID IID_DefaultVeloPhiHitManager( "Tf::DefaultVeloPhiHitManager", 1, 0 );
 
   /** @class DefaultVeloPhiHitManager DefaultVeloPhiHitManager.h
-   *  
+   *
    *
    * @author Kurt Rinnert <kurt.rinnert@cern.ch>
    * @date   2007-08-07
    */
   class DefaultVeloPhiHitManager : public DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2> {
 
-    public:
+  public:
 
-        typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::Station                Station;
-        typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::StationIterator        StationIterator;
-        typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::StationReverseIterator StationReverseIterator;
+    typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::Station                Station;
+    typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::StationIterator        StationIterator;
+    typedef DefaultVeloHitManager<DeVeloPhiType,VeloPhiHit,2>::StationReverseIterator StationReverseIterator;
 
-    public:
+  public:
 
-        /// Retrieve interface ID
-        static const InterfaceID& interfaceID() { return IID_DefaultVeloPhiHitManager; }
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_DefaultVeloPhiHitManager; }
 
-        /// Standard Constructor
-        DefaultVeloPhiHitManager(const std::string& type,
-            const std::string& name,
-            const IInterface* parent);
+    /// Standard Constructor
+    DefaultVeloPhiHitManager(const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent);
 
-        virtual ~DefaultVeloPhiHitManager() {;} ///< Destructor
+    virtual ~DefaultVeloPhiHitManager() {;} ///< Destructor
 
-        StatusCode initialize(); ///< Tool initialization
-        StatusCode   finalize(); ///< Tool finalize
+    StatusCode initialize(); ///< Tool initialization
+    StatusCode   finalize(); ///< Tool finalize
   };
-  
+
 }
 #endif // INCLUDE_TF_DEFAULTVELOPHIHITMANAGER_H
 

@@ -1,15 +1,15 @@
-// $Id: ExtendedVeloPhiHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: ExtendedVeloPhiHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef INCLUDE_EXTENDENDVELOPHIHITMANAGER_H
 #define INCLUDE_EXTENDENDVELOPHIHITMANAGER_H 1
 
 #include "TfKernel/DefaultVeloPhiHitManager.h"
 
 namespace Tf {
-  
+
   static const InterfaceID IID_ExtendedVeloPhiHitManager( "Tf::ExtendedVeloPhiHitManager", 1, 0 );
 
   /** @class ExtendedVeloPhiHitManager ExtendedVeloPhiHitManager.h
-   * Base class for user dereived HitManagers. 
+   * Base class for user dereived HitManagers.
    *
    * @author Kurt Rinnert <kurt.rinnert@cern.ch>
    * @date   2007-08-07
@@ -17,37 +17,37 @@ namespace Tf {
   template<typename HITEXTENSION>
   class ExtendedVeloPhiHitManager : public VeloHitManager<DeVeloPhiType,HITEXTENSION,2> {
 
-    public:
+  public:
 
-      typedef VeloHitManager<DeVeloPhiType,HITEXTENSION,2>    HitManagerBase;         ///< shortcut to base class type
-      typedef typename HitManagerBase::Station                Station;                ///< shortcut for station
-      typedef typename HitManagerBase::StationIterator        StationIterator;        ///< shortcut for station iterator
-      typedef typename HitManagerBase::StationReverseIterator StationReverseIterator; ///< shortcut for station reverse iterator
-      
-      typedef typename DefaultVeloPhiHitManager::Station                DefaultStation;                ///< shortcut for default manager access
-      typedef typename DefaultVeloPhiHitManager::StationIterator        DefaultStationIterator;        ///< shortcut for default manager access
-      typedef typename DefaultVeloPhiHitManager::StationReverseIterator DefaultStationReverseIterator; ///< shortcut for default manager access
-        
-    public:
+    typedef VeloHitManager<DeVeloPhiType,HITEXTENSION,2>    HitManagerBase;         ///< shortcut to base class type
+    typedef typename HitManagerBase::Station                Station;                ///< shortcut for station
+    typedef typename HitManagerBase::StationIterator        StationIterator;        ///< shortcut for station iterator
+    typedef typename HitManagerBase::StationReverseIterator StationReverseIterator; ///< shortcut for station reverse iterator
 
-      /// Retrieve interface ID
-      static const InterfaceID& interfaceID() { return IID_ExtendedVeloPhiHitManager; }
+    typedef typename DefaultVeloPhiHitManager::Station                DefaultStation;                ///< shortcut for default manager access
+    typedef typename DefaultVeloPhiHitManager::StationIterator        DefaultStationIterator;        ///< shortcut for default manager access
+    typedef typename DefaultVeloPhiHitManager::StationReverseIterator DefaultStationReverseIterator; ///< shortcut for default manager access
 
-      /// Standard Constructor
-      ExtendedVeloPhiHitManager(const std::string& type,
-          const std::string& name,
-          const IInterface* parent);
+  public:
 
-      virtual ~ExtendedVeloPhiHitManager() {;} ///< Destructor
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_ExtendedVeloPhiHitManager; }
 
-      StatusCode initialize(); ///< Tool initialization
-      StatusCode   finalize(); ///< Tool finalize
+    /// Standard Constructor
+    ExtendedVeloPhiHitManager(const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent);
 
-    protected:
+    virtual ~ExtendedVeloPhiHitManager() {;} ///< Destructor
 
-      DefaultVeloPhiHitManager*   m_defaultHitManager;
+    StatusCode initialize(); ///< Tool initialization
+    StatusCode   finalize(); ///< Tool finalize
 
-    private:
+  protected:
+
+    DefaultVeloPhiHitManager*   m_defaultHitManager;
+
+  private:
   };
 
   //=============================================================================
@@ -55,12 +55,12 @@ namespace Tf {
   //=============================================================================
   template<typename HITEXTENSION>
   ExtendedVeloPhiHitManager<HITEXTENSION>::ExtendedVeloPhiHitManager(const std::string& type,
-      const std::string& name,
-      const IInterface* parent)
+                                                                     const std::string& name,
+                                                                     const IInterface* parent)
     : VeloHitManager<DeVeloPhiType,HITEXTENSION,2>(type, name, parent)
-    {
-      GaudiTool::declareInterface<ExtendedVeloPhiHitManager<HITEXTENSION> >(this);
-    }
+  {
+    GaudiTool::declareInterface<ExtendedVeloPhiHitManager<HITEXTENSION> >(this);
+  }
 
   //=============================================================================
   // Initialization

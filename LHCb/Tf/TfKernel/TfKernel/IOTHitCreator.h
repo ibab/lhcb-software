@@ -1,10 +1,11 @@
-// $Id: IOTHitCreator.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: IOTHitCreator.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
 #ifndef _TF_IOTDataSvc_H
 #define _TF_IOTDataSvc_H
 
 #include "GaudiKernel/IAlgTool.h"
 #include "TfKernel/OTHit.h"
 #include "TfKernel/Region.h"
+#include "TfKernel/TfIDTypes.h"
 
 namespace Tf
 {
@@ -45,7 +46,8 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    virtual OTHitRange hits(int iStation, int iLayer) const = 0 ;
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer) const = 0 ;
 
     /** Load the hits for a given region of interest
      *
@@ -58,7 +60,9 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion) const = 0 ;
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion) const = 0 ;
 
     /** Load the hits for a given region of interest
      *
@@ -73,7 +77,11 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion, float xmin, float xmax) const = 0 ;
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion, 
+                            const float xmin, 
+                            const float xmax) const = 0 ;
 
     /** Load the hits for a given region of interest
      *
@@ -90,8 +98,13 @@ namespace Tf
      *
      *  @return Range object for the hits in the selected region of interest
      */
-    virtual OTHitRange hits(int iStation, int iLayer, int iRegion,
-                            float xmin, float xmax, float ymin, float ymax) const = 0 ;
+    virtual OTHitRange hits(const TStationID iStation, 
+                            const TLayerID iLayer, 
+                            const OTRegionID iRegion,
+                            const float xmin, 
+                            const float xmax, 
+                            const float ymin,
+                            const float ymax) const = 0 ;
 
     /** Retrieve the OTRegion for a certain region ID. The region
      *  knows its 'size' and gives access to its hits.
@@ -102,7 +115,9 @@ namespace Tf
      *
      *  @return OTRegion object
      */
-    virtual const OTRegion* region(int iStation, int iLayer, int iRegion) const = 0 ;
+    virtual const OTRegion* region(const TStationID iStation, 
+                                   const TLayerID iLayer, 
+                                   const OTRegionID iRegion) const = 0 ;
 
   };
 }
