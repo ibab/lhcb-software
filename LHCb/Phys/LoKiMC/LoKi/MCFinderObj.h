@@ -1,4 +1,4 @@
-// $Id: MCFinderObj.h,v 1.10 2007-08-20 09:21:27 pkoppenb Exp $
+// $Id: MCFinderObj.h,v 1.11 2007-08-20 10:13:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -217,14 +217,7 @@ namespace LoKi
     { 
       /// the most trivial case 
       if ( first == last ) { return LoKi::Types::MCRange() ; }
-      LoKi::MCTypes::MCContainer vct ;
-      vct.reserve( std::distance ( first , last ) ) ;
-      for ( ; first != last ; ++first ) 
-      {
-        const LHCb::MCParticle* mc = *first ;
-        vct.push_back( const_cast<LHCb::MCParticle*>( mc ) ) ;
-      } ;
-      return _findDecays ( decay , vct ) ; 
+      return _findDecays ( decay , LoKi::MCTypes::MCContainer ( first , last ) ) ; 
     } ;    
     /// clear the internal storage of decays
     void clear() ;
