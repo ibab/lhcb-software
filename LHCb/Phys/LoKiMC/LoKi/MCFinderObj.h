@@ -1,4 +1,4 @@
-// $Id: MCFinderObj.h,v 1.9 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.10 2007-08-20 09:21:27 pkoppenb Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -282,7 +282,7 @@ LoKi::MCFinderObj::_findDecays
   decays.clear() ;                                              // CLEAR!!
   // prepare for member extraction 
   const bool members =  extractMembers( decay ) ;
-  LHCb::MCParticle::Vector mcVct ;
+  LHCb::MCParticle::ConstVector mcVct ;
   /// @see IMCDecayFinder 
   const LHCb::MCParticle* init   = 0 ;
   for ( bool  found = true ; found ; ) 
