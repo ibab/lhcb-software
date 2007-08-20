@@ -1,8 +1,7 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 
-ApplicationMgr.ExtSvc = { "EventSelector" };
-ApplicationMgr.ExtSvc += { "MonitorSvc" };
+ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
 ApplicationMgr.DLLs += {"Adder"};
@@ -19,7 +18,7 @@ ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 Adder.nodename="node00101";
 Adder.servername="node00101";
-Adder.histogramname={"Mass","xyPositionPlot","eventtype","xyProfile"};
+Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
 Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
 Adder.taskname={"Test","Test","Test","Test"};
 Adder.refreshtime=5;

@@ -63,12 +63,12 @@ void DimInfoHistos::infoHandler()
 //declareInfo creates a DimService to publish the 'summed' histogram
 void DimInfoHistos::declareInfo(std::string SumSvcname) 
 { 
-  std::cout << "DimInfoHistos making new dimservice " << SumSvcname << " size "
-  << m_size << " dimension " << m_dimension << std::endl;
+// std::cout << "DimInfoHistos making new dimservice " << SumSvcname << " size "
+//  << m_size << " dimension " << m_dimension << std::endl;
   m_dimSvc = new DimInfoHistoService(SumSvcname,m_data,m_size,m_dimension);
   
 //  if (0 !=m_data_sum) {
-     std::cout << "DimInfoHistos making new m_data_sum" <<  std::endl;
+//     std::cout << "DimInfoHistos making new m_data_sum" <<  std::endl;
      m_data_sum = new float[m_size]; 
  // }   
 }
@@ -78,7 +78,7 @@ void DimInfoHistos::declareInfo(std::string SumSvcname)
 //this will disappear later
 void DimInfoHistos::declareTitleInfo(std::string CommentSvcname, char* Title) 
 { 
-   std::cout << "DimInfoHistos declareTitleInfo "  <<  CommentSvcname << std::endl;
+//   std::cout << "DimInfoHistos declareTitleInfo "  <<  CommentSvcname << std::endl;
  
   m_dimTitleSvc = new DimService(CommentSvcname.c_str(),Title);
 }

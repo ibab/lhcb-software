@@ -11,17 +11,18 @@ setenv LHCBHOME /afs/cern.ch/lhcb
 source $LHCBHOME/scripts/CMT.csh
 #setenv CMTOPT slc4_ia32_gcc34_dbg
 #setenv CMTCONFIG slc4_ia32_gcc34_dbg
+setenv CMTCONFIG slc4_ia32_gcc34
 
 #source $LHCBSCRIPTS/lhcbsetup.csh 
 #source $LHCBSCRIPTS/CMT.csh
 setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
 
 
-setenvOnline v3r1
-source /afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r1/Online/Adder/v4r1/cmt/setup.csh
+setenvOnline v3r4
+source /afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/Online/Adder/v4r3/cmt/setup.csh
 
 	
-/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r1/InstallArea/slc4_ia32_gcc34/bin/Gaudi.exe \
-/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r1/InstallArea/slc4_ia32_gcc34/lib/libGaudiOnline.so GaudiOnline \
+/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/InstallArea/slc4_ia32_gcc34_dbg/bin/Gaudi.exe \
+/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/InstallArea/slc4_ia32_gcc34_dbg/lib/libGaudiOnline.so GaudiOnline \
 -runable=LHCb::OnlineRunable \
--options=/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r1/Online/Adder/v4r1/options/Adder.opts
+-options=/afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/Online/Adder/v4r3/options/Adder.opts

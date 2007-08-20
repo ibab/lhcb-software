@@ -45,11 +45,11 @@ void DimInfoTitle::infoHandler()
 char* DimInfoTitle::getTitle() {
 
   while (1) {
-        if(m_hasData == true ) {
-	//   std::cerr << "DimInfoTitle sending data. " << m_data << std::endl;
+     if(m_hasData == true ) {
+	 //  std::cerr << "DimInfoTitle sending data. " << m_data << std::endl;
 	   return m_data;
 	}
-	else lib_rtl_sleep(1000);
+	else dim_wait();
 //	std::cerr << "DimInfoTitle waiting for data. " << std::endl;
   }	
   return 0;
