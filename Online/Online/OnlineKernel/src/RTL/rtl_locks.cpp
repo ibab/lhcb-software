@@ -194,7 +194,7 @@ int lib_rtl_trylock(lib_rtl_lock_t h) {
     else if ( errno == EAGAIN ) return 2;
     else
 #elif defined(_WIN32)
-    DWORD sc = ::WaitForSingleObject(h->handle,0,TRUE);
+    DWORD sc = ::WaitForSingleObjectEx(h->handle,0,TRUE);
     if ( sc == WAIT_OBJECT_0 ) return 1;
     else if ( sc == WAIT_ABANDONED || sc == WAIT_TIMEOUT ) return 2;
     else
