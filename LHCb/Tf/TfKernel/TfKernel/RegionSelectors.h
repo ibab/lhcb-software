@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.2 2007-08-20 12:56:33 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.3 2007-08-20 12:57:04 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -40,7 +40,7 @@ namespace Tf
    *  Can be used to select hits with a given #signma region around a given
    *  track State.
    *
-   *  Use a second order polynomial in z to compute the y value  and a first
+   *  Uses a second order polynomial in z to compute the y value and a first
    *  or polynominal in z for x.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
