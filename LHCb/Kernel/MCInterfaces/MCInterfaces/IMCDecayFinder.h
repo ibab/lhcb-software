@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+// $Id: IMCDecayFinder.h,v 1.2 2007-08-20 09:08:46 pkoppenb Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/MCParticle.h"
 
 // Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 4, 0);
+static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 4, 1);
 
 /** @class IMCDecayFinder IMCDecayFinder.h DaVinciTools/IMCDecayFinder.h
  *
@@ -46,13 +46,13 @@ public:
   virtual bool findDecay( const LHCb::MCParticle*& previous_result ) = 0;
 
   virtual void descendants( const LHCb::MCParticle *head,
-                            LHCb::MCParticle::Vector& result,
+                            LHCb::MCParticle::ConstVector& result,
                             bool leaf=false ) = 0;
   virtual void decayMembers( const LHCb::MCParticle* head,
-                             LHCb::MCParticle::Vector& members ) = 0;
+                             LHCb::MCParticle::ConstVector& members ) = 0;
   virtual void decaySubTrees( const LHCb::MCParticle* head,
                               std::vector<std::pair<const LHCb::MCParticle*,
-                                                    LHCb::MCParticle::Vector >
+                                                    LHCb::MCParticle::ConstVector >
                                          > & subtrees ) = 0;
 
 };
