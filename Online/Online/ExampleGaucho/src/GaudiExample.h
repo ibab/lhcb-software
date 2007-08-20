@@ -9,7 +9,8 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
-
+// boost
+#include "boost/lexical_cast.hpp"
 #include<time.h>
 
 /** @class GaudiExample

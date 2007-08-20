@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.4 2007-01-25 18:35:51 frankb Exp $
+// $Id: GaudiExample.cpp,v 1.5 2007-08-20 09:36:19 evh Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -51,12 +51,37 @@ StatusCode GaudiExample::initialize() {
   position.second = 0;
 
   oldStatus=new char[20];
+  
+  std::string Histo1Da_ID;
+  std::string Histo1Da_Title;
+  std::string Histo1Db_ID;
+  std::string Histo1Db_Title;
+  std::string Histo2D_ID;
+  std::string Histo2D_Title;
+  std::string HistoProf_ID;
+  std::string HistoProf_Title;
 
   //  msg << MSG::INFO << "Booking histograms" << endreq;
-  my1Dhisto1 = m_histosvc->book("1", "eventtype", 5, 0.5, 5.5 );
-  my1Dhisto2 = m_histosvc->book("2", "mass", 30, 2900., 3200. );
-  my2Dhisto  = m_histosvc->book("3", "Plot of position in XY plane",10,0.,400.,10,0.,300.); 
-  my1Dhprof  = m_histosvc->bookProf("4", "Profile  histo of y(x)",10,0.,400.);
+  Histo1Da_Title = "Event type";
+  Histo1Db_Title = "Mass plot";
+  Histo2D_Title = "Plot of position in XY plane";
+  HistoProf_Title = "Profile  histo of y(x)"; \
+  // rearrange this to make it easy to change the nb of histograms
+  for (int i=0;i<=250;i++) {
+     Histo1Da_ID = "1Da"+boost::lexical_cast<std::string>(i);
+     Histo1Db_ID = "1Db"+boost::lexical_cast<std::string>(i);
+     Histo2D_ID = "2D"+boost::lexical_cast<std::string>(i);
+     HistoProf_ID= "Prof"+boost::lexical_cast<std::string>(i);
+     
+     my1Dhisto1 = m_histosvc->book(Histo1Da_ID, Histo1Da_Title, 5, 0.5, 5.5 );
+     my1Dhisto2 = m_histosvc->book(Histo1Db_ID, Histo1Db_Title, 30, 2900., 3200. );
+     my2Dhisto  = m_histosvc->book(Histo2D_ID, Histo2D_Title,10,0.,400.,10,0.,300.); 
+     my1Dhprof  = m_histosvc->bookProf(HistoProf_ID, HistoProf_Title,10,0.,400.);
+     declareInfo(Histo1Da_ID,my1Dhisto1,Histo1Da_Title);
+     declareInfo(Histo1Db_ID,my1Dhisto2,Histo1Db_Title);
+     declareInfo(Histo2D_ID,my2Dhisto,Histo2D_Title);
+     declareInfo(HistoProf_ID, my1Dhprof, HistoProf_Title);
+  }
   nbinEntries=0;
   sumOfWeights=0;
   sumOfSquaredWeights=0;
@@ -78,13 +103,9 @@ StatusCode GaudiExample::initialize() {
   
   declareInfo("status",status,"Trigger status");
   
-  declareInfo("eventtype",my1Dhisto1,"Event type");
-  declareInfo("Mass",my1Dhisto2,"mass plot");
-  declareInfo("xyPosition",position,"Position in XY plane");
-  declareInfo("xyPositionPlot", my2Dhisto, "Plot of position in XY plane");
+
   declareInfo("efficiency2",efficiency2,"Time rate 1-2");
   
-  declareInfo("xyProfile", my1Dhprof,"Profile y(x)");
   
   myEvent = new event;
   if( 0 == myEvent) {
@@ -133,7 +154,7 @@ StatusCode GaudiExample::execute() {
   else if(dice1 > 0.25) eventtype=3;
   else if(dice1 > 0.2)  eventtype=4;
   else 		        eventtype=5;
-  my1Dhisto1->fill(eventtype);
+//  my1Dhisto1->fill(eventtype);
   
   efficiency1= float(counter2)/counter1;
   
@@ -148,14 +169,33 @@ StatusCode GaudiExample::execute() {
   double mass;
   if(eventtype== 1)mass = random2();
   else             mass = 2800+random1()*500;
-  my1Dhisto2->fill(mass);
+ // my1Dhisto2->fill(mass);
   
   position.first = random1()*400;
   position.second = random1()*300;
   //log << MSG::DEBUG <<  "position: " << position.first << " " << position.second << endreq;
-  my2Dhisto->fill(position.first,position.second);
-  my1Dhprof->fill(position.first,position.second);
-  
+  for (int i=0;i<=250;i++) {
+     std::string Histo1Da = "1Da"+boost::lexical_cast<std::string>(i);
+     std::string Histo1Db = "1Db"+boost::lexical_cast<std::string>(i);
+     std::string Histo2D = "2D"+boost::lexical_cast<std::string>(i);
+     std::string ProfHisto = "Prof"+boost::lexical_cast<std::string>(i);
+     StatusCode sc = m_histosvc->retrieveObject(Histo1Da,my1Dhisto1);
+     if ( my1Dhisto1 != 0) {
+       my1Dhisto1->fill(eventtype);
+     } 
+     sc = m_histosvc->retrieveObject(Histo1Db,my1Dhisto2);
+     if ( my1Dhisto2 != 0) { 
+        my1Dhisto2->fill(mass);
+     }
+     sc = m_histosvc->retrieveObject(Histo2D,my2Dhisto);
+     if ( my2Dhisto != 0) { 
+        my2Dhisto->fill(position.first,position.second);
+     }
+     sc = m_histosvc->retrieveObject(ProfHisto,my1Dhprof);
+     if ( my1Dhprof != 0) { 
+        my1Dhprof->fill(position.first,position.second);
+     }	
+  }
   // Track calculations for bin 3 in my1Dhprof:
   int ixBin=3;
   if (int(position.first/400*10) == ixBin ){
@@ -216,6 +256,5 @@ StatusCode GaudiExample::finalize() {
       << " mean " << my1Dhprof->binHeight(AIDA::IAxis::OVERFLOW_BIN) 
       << " rms " << my1Dhprof->binRms(AIDA::IAxis::OVERFLOW_BIN)
       << " error " << my1Dhprof->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
-  
   return StatusCode::SUCCESS;
 }

@@ -1,6 +1,9 @@
 package ExampleGaucho
 ! Example code to run and test Gaucho  online publishing services
 
+! 20070820 = ExampleGaucho v2r4 - Eric van Herwijnen
+  - added some code to easily generate arbitrary # of histograms
+
 ! 20070424 = ExampleGaucho v2r3 - Eric van Herwijnen
   - corrected requirements file
 
