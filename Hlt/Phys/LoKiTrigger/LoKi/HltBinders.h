@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.2 2007-08-19 13:42:58 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.3 2007-08-20 09:39:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -250,7 +250,7 @@ namespace LoKi
       virtual typename LoKi::Function<TYPE1>::result_type operator() 
       ( typename LoKi::Function<TYPE1>::argument a ) const 
       {
-        Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
+        typename Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
         Assert ( m_binder.vct()-> end() != r.first ,"No valid tracks are found" ) ;
         return r.second ;
       }
@@ -329,7 +329,7 @@ namespace LoKi
       virtual typename LoKi::Function<TYPE1>::result_type operator() 
       ( typename LoKi::Function<TYPE1>::argument a ) const 
       {
-        Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
+        typename Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
         Assert ( m_binder.vct()-> end() != r.first , "No valid elements are found" ) ;
         return m_fun2 ( **(r.first) ) ;
       }

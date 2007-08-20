@@ -367,7 +367,7 @@ def bindMax ( a , b , *c ) :
 
 # =============================================================================
 ## Simple function to 'bind' the 2-argument function 
-def bindAbsMin ( a , b , *c ) :
+def bindAbsMax ( a , b , *c ) :
     """
     Simple function to 'bind' the 2-argument function to some container
 
