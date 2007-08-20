@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-20 - Chris Jones
+ - Add new methods to TStationHitManager that select hits using a generic
+   selector object.
+
 ! 2007-08-19 - Chris Jones
  - Add new 'ID' objects for use in the various hit creator/manager 
    interfaces. Help to clarify the inter-relationships between the various

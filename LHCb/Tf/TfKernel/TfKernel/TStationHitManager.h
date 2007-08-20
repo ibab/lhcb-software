@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.8 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.9 2007-08-20 12:30:34 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -34,6 +34,7 @@
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
 #include "TfKernel/TfIDTypes.h"
+#include "TfKernel/RegionSelectors.h"
 
 // Boost
 //#include <boost/lambda/lambda.hpp>
@@ -96,7 +97,21 @@ namespace Tf
   public:
 
     /// Initialise the hits for the current event for the given Track State
-    virtual void prepareHits(const LHCb::State & aState, const double nSigma);
+    void prepareHits(const LHCb::State & aState, const double nSigma);
+
+    /** Initialise the hits for the current event using the given selector object
+     *
+     *  Any selector object can be used, the only requirement is it must implement the
+     *  method :-
+     *  @code
+     *    inline XYSearchWindow searchWindow( const double z ) const
+     *  @endcode
+     *  Which returns the search window for a given z position.
+     *
+     *  @param selector The selector object.
+     */
+    template < typename SELECTOR >
+    void prepareHits( const SELECTOR & selector );
 
     /** Load the hits for a given region of interest
      *
@@ -415,6 +430,14 @@ namespace Tf
 
     /// Prepare all hits in OT around the given state within the given tolerance
     void prepareOTHits(const LHCb::State & aState, const double nSigma);
+
+    /// Initialise the IT hits for the current event using the given selector object
+    template < typename SELECTOR >
+    void prepareITHits( const SELECTOR & selector );
+
+    /// Initialise the OT hits for the current event using the given selector object
+    template < typename SELECTOR >
+    void prepareOTHits( const SELECTOR & selector );
 
     /// Is OT hit cleaning activated
     inline bool cleanOTHits() const { return m_cleanOTHits; }
@@ -820,8 +843,89 @@ namespace Tf
     }
   }
 
+  //--------------------------------------------------------------------------------------------
+
+  template < class Hit         >
+  template < typename SELECTOR >
+  void TStationHitManager<Hit>::prepareHits( const SELECTOR & selector )
+  {
+    this->clearHits();
+    this->prepareOTHits(selector);
+    this->prepareITHits(selector);
+    // Signifiy all hits for this event are ready - I.e. no decoding on demand
+    setAllHitsPrepared(true);
+  }
+
+  template < class Hit         >
+  template < typename SELECTOR >
+  void TStationHitManager<Hit>::prepareITHits( const SELECTOR & selector )
+  {
+    for (TStationID sta=0; sta < this->maxStations(); ++sta)
+    {
+      this->setAllHitsPrepared(sta,true);
+      for (TLayerID lay=0; lay < this->maxLayers(); ++lay)
+      {
+        this->setAllHitsPrepared(sta,lay,true);
+        for (ITRegionID it=0; it < this->maxITRegions(); ++it)
+        {
+          this->setAllHitsPrepared(sta,lay,it,true);
+
+          // The z value for this region
+          const double z = this->itHitCreator()->region(sta,lay,it)->z();
+          // get the search window
+          XYSearchWindow win = selector.searchWindow(z);
+          // get the hits in the search window
+          Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it,
+                                                             win.minX(),win.maxX(),
+                                                             win.minY(),win.maxY() );
+          if ( msgLevel(MSG::DEBUG) )
+          {
+            debug() << "Found " << sthits.size() << " ITHits for station=" << sta
+                    << " layer=" << lay << " region=" << it << endreq;
+          }
+          processRange ( sthits, sta, lay, it + this->maxOTRegions() );
+        }
+      }// layer
+    } // station
+  }
+
+  template < class Hit         >
+  template < typename SELECTOR >
+  void TStationHitManager<Hit>::prepareOTHits( const SELECTOR & selector )
+  {
+    for (TStationID sta=0; sta<this->maxStations(); ++sta)
+    {
+      this->setAllHitsPrepared(sta,true);
+      for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
+      {
+        this->setAllHitsPrepared(sta,lay,true);
+        for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
+        {
+          this->setAllHitsPrepared(sta,lay,ot,true);
+          
+          // The z value for this region
+          const double z = this->otHitCreator()->region(sta,lay,ot)->z();
+          // get the search window
+          XYSearchWindow win = selector.searchWindow(z);
+          // get the hits in the search window
+          Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot,
+                                                             win.minX(),win.maxX(),
+                                                             win.minY(),win.maxY() );
+          if ( msgLevel(MSG::DEBUG) )
+          {
+            debug() << "Found " << othits.size() << " OTHits for station=" << sta
+                    << " layer=" << lay << " region=" << ot << endreq;
+          }
+          processRange ( othits, sta, lay, ot );
+        }
+      }// layer
+    } // station
+  }
+
+  //--------------------------------------------------------------------------------------------
   // These methods need addressing, to remove the hard-coded stuff
   // put back to allow testing with HLT etc.
+  // should eventually be removed
 
   template<class Hit>
   void TStationHitManager<Hit>::prepareHits(const LHCb::State & aState, const double nSigma)
