@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.3 2007-08-20 09:39:45 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.4 2007-08-20 10:43:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -14,6 +14,9 @@
 // ============================================================================
 namespace LoKi 
 {
+
+
+
   namespace HltBinders
   {    
     // ========================================================================
@@ -383,11 +386,11 @@ namespace LoKi
     inline 
     LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP>
     bind 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const std::vector<TYPE2*>*                        vct   , 
-      BINOP                                             binop ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun      ,
+      const std::vector<TYPE2*>*                        vct      , 
+      BINOP                                          /* binop */ ,
+      const std::string&                                nam1     ,
+      const std::string&                                nam2     )
     {
       return LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP> 
         ( fun , vct , nam1 , nam2 ) ;  
@@ -419,12 +422,12 @@ namespace LoKi
     inline 
     LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
     bind 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const LoKi::Function<TYPE2>&                      fun2  , 
-      const std::vector<TYPE2*>*                        vct   ,
-      BINOP                                             binop ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun      ,
+      const LoKi::Function<TYPE2>&                      fun2     , 
+      const std::vector<TYPE2*>*                        vct      ,
+      BINOP                                          /* binop */ ,
+      const std::string&                                nam1     ,
+      const std::string&                                nam2     )
     {
       return LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
         ( fun , fun2 , vct , nam1 , nam2 ) ;
