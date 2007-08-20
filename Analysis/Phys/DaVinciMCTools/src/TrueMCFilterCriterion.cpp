@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.21 2007-07-24 19:58:59 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.22 2007-08-20 09:17:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -166,7 +166,7 @@ bool TrueMCFilterCriterion::findMCParticle( const LHCb::MCParticle* MC ) {
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for " << MC->key() 
                                         << " " << MC->particleID().pid() << " " << MC->momentum() << endmsg ;  
-  LHCb::MCParticle::Vector::iterator mcp ; // LF
+  LHCb::MCParticle::ConstVector::iterator mcp ; // LF
   for ( mcp = m_decayMembers.begin() ; mcp != m_decayMembers.end() ; ++mcp ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on  " << (*mcp)->key() 
                                           << " " << (*mcp)->particleID().pid() << " " 

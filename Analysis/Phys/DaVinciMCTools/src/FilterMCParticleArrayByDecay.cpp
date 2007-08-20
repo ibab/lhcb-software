@@ -1,4 +1,4 @@
-// $Id: FilterMCParticleArrayByDecay.cpp,v 1.2 2007-07-26 14:22:36 jpalac Exp $
+// $Id: FilterMCParticleArrayByDecay.cpp,v 1.3 2007-08-20 09:17:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ void FilterMCParticleArrayByDecay::findAllDecay(const LHCb::MCParticle::ConstVec
                                                 LHCb::MCParticle::ConstVector& decay) const
 {
   if (!decay.empty()) decay.clear();
-  LHCb::MCParticle::Vector tmpDecay;
+  LHCb::MCParticle::ConstVector tmpDecay;
   LHCb::MCParticle::ConstVector::const_iterator iHead = heads.begin();
   for ( ; iHead!= heads.end(); ++iHead) {
     LHCb::MCParticle*  tmp= (*iHead)->clone();

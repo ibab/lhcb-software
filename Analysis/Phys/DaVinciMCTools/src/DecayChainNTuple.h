@@ -1,4 +1,4 @@
-// $Id: DecayChainNTuple.h,v 1.15 2007-07-04 13:15:38 spradlin Exp $
+// $Id: DecayChainNTuple.h,v 1.16 2007-08-20 09:17:00 pkoppenb Exp $
 // ============================================================================
 #ifndef DECAYCHAINNTUPLE_H
 #define DECAYCHAINNTUPLE_H 1
@@ -180,7 +180,9 @@ private:
 
 #ifdef MCCheck
   bool isSignal(const LHCb::MCParticle*, LHCb::MCParticle::ConstVector);//const std::vector<LHCb::MCParticle*>& );
-  bool updateMCMomentum(LHCb::MCParticle*);
+#ifdef MCCheckWRONG  // PK: I hope this is not needed
+  bool updateMCMomentum(LHCb::MCParticle*);  /// what for?
+#endif
   
   // Write the true part of the decay
   StatusCode WriteMCNTuple(LHCb::MCParticle::Vector);
@@ -277,7 +279,7 @@ private:
     void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, bool& isSig, 
                     const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs,
                     IPhysDesktop* desktop,bool doPropTime);
-    void FillMCNTuple(LHCb::MCParticle& mcpart, const Gaudi::XYZPoint& MCPVPosition, bool& isReco);
+    void FillMCNTuple(const LHCb::MCParticle& mcpart, const Gaudi::XYZPoint& MCPVPosition, bool& isReco);
 #endif
 
     void clean(){m_n=0;}
