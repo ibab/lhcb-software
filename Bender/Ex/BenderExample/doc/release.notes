@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.16 2007-05-07 13:58:08 ibelyaev Exp $
+! $Id: release.notes,v 1.17 2007-08-20 13:08:13 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -8,9 +8,15 @@
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
 
+! 2007-08-20 - Vanya Belyaev
+
+ - update for the new version v8r0 
+     only python 
+     new LoKi
+
 ! ====================== Ex/BenderExample v7r0 2007-05-07 ====================
 
-! 2007-05-07 - VanyaBELYAEV
+! 2007-05-07 - Vanya BELYAEV
 
  - add 2 exampels from Diego Martinez Santos:
      python/Bu2JpsiK.py
