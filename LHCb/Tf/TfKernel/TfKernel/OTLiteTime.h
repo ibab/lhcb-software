@@ -5,9 +5,9 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
+ *  $Id: OTLiteTime.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace LHCb
 
   /** @class OTLiteTime TfKernel/OTLiteTime.h
    *  Simple class to extend the OTChannelID with calibrated raw time information
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   class OTLiteTime

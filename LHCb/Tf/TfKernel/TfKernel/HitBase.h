@@ -5,9 +5,9 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.4 2007-08-16 14:43:19 jonrob Exp $
+ *  $Id: HitBase.h,v 1.5 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace Tf
 
   /** @class HitBase TfKernel/HitBase.h
    *  Base class for storage of hits in all tracking systems
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   class HitBase
@@ -58,7 +58,7 @@ namespace Tf
      *
      *  Enumerated type for bits in status flag.
      *
-     *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30
      */
     enum EStatus

@@ -1,4 +1,4 @@
-// $Id: TfIDTypes.h,v 1.2 2007-08-19 17:06:50 jonrob Exp $
+// $Id: TfIDTypes.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
 #ifndef TFKERNEL_TFIDTYPES_H
 #define TFKERNEL_TFIDTYPES_H 1
 
@@ -15,7 +15,7 @@ namespace Tf
    *
    *  Simple class with numeric characteristics but some additional type safety
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   //---------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace Tf
    *
    *  See Tf::RegionID for more details
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TStationID : public NumericType<InternalIntType>
@@ -88,7 +88,7 @@ namespace Tf
    *
    *  See Tf::RegionID for more details
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TTStationID : public NumericType<InternalIntType>
@@ -107,7 +107,7 @@ namespace Tf
    *
    *  See Tf::RegionID for more details
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TLayerID : public NumericType<InternalIntType>
@@ -126,7 +126,7 @@ namespace Tf
    *
    *  See Tf::RegionID for more details
    * 
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TTLayerID : public NumericType<InternalIntType>
@@ -146,7 +146,7 @@ namespace Tf
    * 
    *  @todo A little ascii diagram of the IT regions ??
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class ITRegionID : public NumericType<InternalIntType>
@@ -166,7 +166,7 @@ namespace Tf
    * 
    *  @todo A little ascii diagram of the TT regions ??
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TTRegionID : public NumericType<InternalIntType>
@@ -186,7 +186,7 @@ namespace Tf
    *
    *  @todo A little ascii diagram of the OT regions ??
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class OTRegionID : public NumericType<InternalIntType>
@@ -207,7 +207,7 @@ namespace Tf
    *
    *  @todo A little ascii diagram of the T regions ??
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class TRegionID : public NumericType<InternalIntType>
@@ -241,7 +241,7 @@ namespace Tf
    *  
    *  See Tf::RegionID for more details
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class VeloSensorID : public NumericType<unsigned int>
@@ -259,7 +259,7 @@ namespace Tf
    *
    *  See Tf::RegionID for more details
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   11/11/2005
    */
   class VeloHalfID : public NumericType<unsigned int>

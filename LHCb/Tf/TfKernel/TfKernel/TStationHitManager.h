@@ -4,9 +4,9 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.7 2007-08-19 16:54:41 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.8 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
  */
 //-----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ namespace Tf
 
   /** @class TStationHitManager TStationHitManager.h
    *  T station hit manager
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
 

@@ -1,4 +1,4 @@
-// $Id: OTHitCleaner.cpp,v 1.2 2007-08-15 12:12:15 jonrob Exp $
+// $Id: OTHitCleaner.cpp,v 1.3 2007-08-20 11:07:07 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -58,14 +58,18 @@ unsigned int OTHitCleaner::cleanHits( const OTHits::const_iterator begin,
 {
   // reserve some space
   const unsigned int startSize = std::distance(begin,end);
-  //OTHits tmpHits; // nice if this could be avoided...
-  //tmpHits.reserve(startSize) ;
+  OTHits tmpHits; // nice if this could be avoided...
+  tmpHits.reserve(startSize) ;
   // clean out large clusters
-  //removeClusters( begin, end, tmpHits ); // CRJ disabled due to possible bug
+  removeClusters( begin, end, tmpHits ); // CRJ disabled due to possible bug
   // clean hot modules
-  output.reserve(startSize) ;
-  //removeHotModules( tmpHits.begin(), tmpHits.end(), output );
-  removeHotModules( begin, end, output );
+  //output.reserve(startSize) ;
+  //removeHotModules( begin, end, output );
+  if ( !tmpHits.empty() )
+  {
+    output.reserve(tmpHits.size()) ;
+    removeHotModules( tmpHits.begin(), tmpHits.end(), output );
+  }
   // how many hits where cleaned
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Selected " << output.size() << " out of " 

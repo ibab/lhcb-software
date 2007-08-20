@@ -5,9 +5,9 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.3 2007-08-19 17:06:50 jonrob Exp $
+ *  $Id: RegionID.h,v 1.4 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace Tf
    *  Simple class to store detector region information and definitions 
    *  (station, layer, region etc.)
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   class RegionID
@@ -38,7 +38,7 @@ namespace Tf
      *
      *  Enumerated type for detector type
      *
-     *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30
      */
     enum DetType
@@ -95,7 +95,7 @@ namespace Tf
 
     /** @struct OTIndex TkKernel/RegionID.h
      *  Collection of detector information for OT
-     *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30
      */
     struct OTIndex 
@@ -117,7 +117,7 @@ namespace Tf
 
    /** @struct ITIndex TkKernel/RegionID.h
      * Collection of detector information for IT
-     * @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
      */
     struct ITIndex 
@@ -139,7 +139,7 @@ namespace Tf
 
    /** @struct TTIndex TkKernel/RegionID.h
      * Collection of detector information for TT
-     * @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
      */
     struct TTIndex 
@@ -160,7 +160,7 @@ namespace Tf
 
     /** @struct VeloRIndex TkKernel/RegionID.h
      * Collection of detector information for Velo R sensors
-     * @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
      */
     struct VeloRIndex 
@@ -181,7 +181,7 @@ namespace Tf
 
     /** @struct VeloPhiIndex TkKernel/RegionID.h
      *  Collection of detector information for Velo Phi sensors
-     *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+     *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30
      */
     struct VeloPhiIndex 

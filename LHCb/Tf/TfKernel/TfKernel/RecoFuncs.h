@@ -8,9 +8,9 @@
  *  pattern reco algorithms
  *
  *  CVS Log :-
- *  $Id: RecoFuncs.h,v 1.2 2007-08-16 14:23:52 jonrob Exp $
+ *  $Id: RecoFuncs.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @authors S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-03
  **/
 //-----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace Tf
 
   /** @class compByX_LB TfKernel/RecoFuncs.h
    *  Binary function to compare a hit to a given x value and return true if hit is upstream of that point.
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template <class Hit>
@@ -50,7 +50,7 @@ namespace Tf
 
   /** @class increasingByProjection TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by projection
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template<class Hit>
@@ -71,7 +71,7 @@ namespace Tf
 
   /** @class increasingByZ TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by z
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template<class Hit>
@@ -92,7 +92,7 @@ namespace Tf
 
   /** @class increasingByX TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by x
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template<class Hit>
@@ -113,7 +113,7 @@ namespace Tf
 
   /** @class increasingByXAtYEq0 TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by x at the point y=0
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template<class Hit>

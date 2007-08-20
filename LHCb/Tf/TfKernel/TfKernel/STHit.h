@@ -5,9 +5,9 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.3 2007-08-16 14:03:00 jonrob Exp $
+ *  $Id: STHit.h,v 1.4 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------

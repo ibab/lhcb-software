@@ -5,9 +5,9 @@
  *  Header file for track find class Tf::HitExtension
  *
  *  CVS Log :-
- *  $Id: HitExtension.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
+ *  $Id: HitExtension.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace Tf
 
   /** @class HitExtension
    *  Base class from which which algorithm specific hit classes can be derived.
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
 

@@ -1,4 +1,4 @@
-// $Id: VeloHitExtension.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
+// $Id: VeloHitExtension.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
 #ifndef INCLUDE_TF_VELOHITEXTENSION_H
 #define INCLUDE_TF_VELOHITEXTENSION_H 1
 
@@ -12,7 +12,7 @@ namespace Tf {
    * This is an extension of the HitExtension class which provides the minimal interface
    * necessary to make it a possible type parameter of the VeloSensorHits template.
    *
-   * @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    * @date   2007-07-30
    * @see Tf::HitExtension
    * @see Tf::VeloStationData

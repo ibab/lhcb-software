@@ -5,9 +5,9 @@
  *  Header file for track finding 'Region' objects
  *
  *  CVS Log :-
- *  $Id: Region.h,v 1.2 2007-08-16 14:02:40 jonrob Exp $
+ *  $Id: Region.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace Tf
    *
    *  Useful to be able to answer some basic questions in a type neutral way.
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
   class EnvelopeBase
@@ -111,7 +111,7 @@ namespace Tf
    *  Defines a box around a DetectorElement in the global frame.
    *  Thisll needs to be made aware of alignment changes.
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
   template < class DetectorElementType >
@@ -198,7 +198,7 @@ namespace Tf
   /** @class Region TfKernel/Region.h
    *  Collection of DetectorElements useful for pattern recognition
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
 

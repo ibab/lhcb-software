@@ -1,4 +1,4 @@
-// $Id: IOTHitCleaner.h,v 1.2 2007-08-15 11:29:18 jonrob Exp $
+// $Id: IOTHitCleaner.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
 #ifndef TFTOOLS_IOTHITCLEANER_H
 #define TFTOOLS_IOTHITCLEANER_H 1
 
@@ -23,7 +23,7 @@ namespace Tf
    *
    *  Interface to tool that 'cleans' ranges of OTHits
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-07-20
    */
   class IOTHitCleaner : virtual public IAlgTool

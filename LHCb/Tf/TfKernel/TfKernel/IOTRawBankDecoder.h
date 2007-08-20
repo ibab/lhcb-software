@@ -14,7 +14,7 @@ namespace Tf
    *
    *  Interface to the OT Raw Bank decoding tool
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   class IOTRawBankDecoder: virtual public IAlgTool

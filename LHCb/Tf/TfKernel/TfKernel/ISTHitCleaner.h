@@ -1,4 +1,4 @@
-// $Id: ISTHitCleaner.h,v 1.2 2007-08-15 11:29:18 jonrob Exp $
+// $Id: ISTHitCleaner.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
 #ifndef TFTOOLS_ISTHITCLEANER_H
 #define TFTOOLS_ISTHITCLEANER_H 1
 
@@ -22,7 +22,7 @@ namespace Tf
    *
    *  Interface to tool that 'cleans' ranges of STHits
    *
-   *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-07-20
    */
   class ISTHitCleaner : virtual public IAlgTool

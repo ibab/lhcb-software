@@ -5,9 +5,9 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.2 2007-08-15 19:56:48 jonrob Exp $
+ *  $Id: LineHit.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
  *
- *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
 //-----------------------------------------------------------------------------
