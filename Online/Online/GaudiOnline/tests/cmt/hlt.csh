@@ -47,9 +47,10 @@ $MINITERM Moore_0@${HOST}   -e "setenv UTGID Moore_0  ; $gaudi_exe -opt=$OPTS/Re
 $MINITERM Moore_1@${HOST}   -e "setenv UTGID Moore_1  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 $MINITERM Moore_2@${HOST}   -e "setenv UTGID Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 # $MINITERM Moore_3@${HOST}   -e "setenv UTGID Moore_3  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
-$MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 #
 $MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
+sleep 2
+$MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 $MINITERM DiskWR@${HOST}    -e "setenv UTGID DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&
 #
 #
