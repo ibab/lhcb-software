@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.3 2007-08-20 12:57:04 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.4 2007-08-20 13:27:28 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -51,7 +51,10 @@ namespace Tf
 
   public:
 
-    /// Constructor from an LHCb::State
+    /** Constructor from an LHCb::State
+     *  @param aState Reference to the LHCb::State object to search for hits around
+     *  @param nSigma Size of the search window, in #sigma * error.
+     */
     StateRegionSelector( const LHCb::State & aState, const double nSigma )
       : m_nSigma ( nSigma  )
     {
