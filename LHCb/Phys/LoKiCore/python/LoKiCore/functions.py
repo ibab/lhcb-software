@@ -299,5 +299,26 @@ def printDecay ( s , *a ) :
 
 
 # =============================================================================
+## Iterator (with derefernecing) througth SmartRefVector:
+def _iter_SRV_ ( self ) :
+    """
+    Iterator (with derefernecing) througth SmartRefVector:
+
+    >>> srf = ...
+    >>> for o in srv :
+    ...   print o
+
+    """
+    vct   = self
+    size  = svct.size() 
+    index = 0
+    while index < size :
+        o = vct[index]
+        if hassattr ( o , '__deref__' ) : o = o.__deref__()
+        yield o
+        index += 1
+
+        
+# =============================================================================
 # The END
 # =============================================================================

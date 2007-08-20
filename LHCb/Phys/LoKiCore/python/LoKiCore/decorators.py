@@ -26,7 +26,14 @@ LoKi.KeeperBase
 # =============================================================================
 ## simple function to provide the iteration over LoKi's range objects
 def _iter_1_ ( self ) :
-    """ Iteration over the range """
+    """
+    Iteration over the range:
+
+    >>> r = ...
+    >>> for o in r :
+    ...   print o
+    
+    """
     _range = self
     _size  = _range.size()
     _curr  = 0 
@@ -36,7 +43,15 @@ def _iter_1_ ( self ) :
 # =============================================================================
 ## simple function to provide the iteration over LoKi's keepers objects   
 def _iter_2_ ( self ) :
-    """ Iteration over Keeper/UniqueKeeper """
+    """
+    Iteration over Keeper/UniqueKeeper
+
+    >>> k = ...
+    >>> for o in k :
+    ...   print o
+
+    
+    """
     _range = self.toVector()
     _size  = _range.size()
     _curr  = 0 
@@ -46,7 +61,13 @@ def _iter_2_ ( self ) :
 # =============================================================================
 ## get the possibility to build the slices 
 def _slice_ ( self , i , j ) :
-    """ slicing abilities for range and keepers """    
+    """
+    Slicing abilities for range and keepers:
+    
+    >>> o =
+    >>> n = o[13:28]
+    
+    """    
     return self.slice( i , j )                                   ## RETURN 
 # =============================================================================
 
