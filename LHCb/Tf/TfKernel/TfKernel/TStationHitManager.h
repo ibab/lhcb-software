@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.10 2007-08-20 13:27:28 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.11 2007-08-20 14:24:31 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -50,8 +50,56 @@ static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );
 namespace Tf
 {
 
-  /** @class TStationHitManager TStationHitManager.h
-   *  T station hit manager
+  /** @class TStationHitManager TStationHitManager.h TfKernel/TStationHitManager.h 
+   *
+   *  T station hit manager. Used to manage extended hit objects for the T
+   *  Stations (OT and IT). 
+   *
+   *  Methods are provided to return the hits in a selected part of the detectors.
+   *  E.g.
+   *  @code
+   *  // Get all the hits in the T stations
+   *  TStationHitManager::HitRange range = hitMan->hits();
+   *
+   *  // Get all the hits in one specific T station
+   *  TStationID sta = ...;
+   *  TStationHitManager::HitRange range = hitMan->hits(sta);
+   *
+   *  // Get all the hits in one specific layer of one T station
+   *  TStationID sta = ...;
+   *  TLayerID   lay = ...;
+   *  TStationHitManager::HitRange range = hitMan->hits(sta,lay);
+   *
+   *  // Get all the hits in a specific 'region' of one layer of one T station
+   *  TStationID sta = ...;
+   *  TLayerID   lay = ...;
+   *  TRegionID  reg = ...;
+   *  TStationHitManager::HitRange range = hitMan->hits(sta,lay,reg);
+   *  @endcode
+   *
+   *  In addition, it is possible to perform a custom selection of hits based on
+   *  a user defined selection object :-
+   *  @code
+   *  // Get all the hits selected by a specfic selector object
+   *  LHCb::State * test_state = ....;
+   *  const double nsigma = 3.0;
+   *  StateRegionSelector selector( *test_state, nsigma );
+   *  hitMan->prepareHits(selector);
+   *  // Can now use any of the hits(..) methods to access hit ranges, e.g.
+   *  TStationHitManager::HitRange range = hitMan->hits();
+   *  // To the selected hits in all stations, layers and regions 
+   *  @endcode
+   *
+   *  In all cases the returned Range object acts like a standard vector or container
+   *  @code
+   *   // Iterate over the returned range
+   *  for ( TStationHitManager::HitRange::const_iterator iR = range.begin();
+   *        iR != range.end(); ++iR )
+   *  {
+   *    // do something with the hit
+   *  }
+   *  @endcode
+   *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
@@ -114,10 +162,10 @@ namespace Tf
      *   LHCb::State * test_state = ....;
      *   const double nsigma = 3.0;
      *   StateRegionSelector selector( *test_state, nsigma );
-     *   hitManager->prepareHits(selector);
+     *   hitMan->prepareHits(selector);
      *  @endcode 
      *
-     *  @param selector The selector object.
+     *  @param[in] selector The selector object.
      */
     template < typename SELECTOR >
     void prepareHits( const SELECTOR & selector );

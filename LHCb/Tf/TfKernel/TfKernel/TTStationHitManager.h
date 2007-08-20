@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.6 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.7 2007-08-20 14:24:31 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -24,6 +24,7 @@
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
 #include "TfKernel/TfIDTypes.h"
+#include "TfKernel/RegionSelectors.h"
 
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -38,8 +39,56 @@ static const InterfaceID IID_TTStationHitManager ( "TTStationHitManager", 1, 0 )
 namespace Tf
 {
 
-  /** @class TTStationHitManager
-   *  Base class for all TT-station extended hit data managers
+  /** @class TTStationHitManager TTStationHitManager.h TfKernel/TTStationHitManager.h 
+   *
+   *  TT station hit manager. Used to manage extended hit objects for the TT
+   *  Stations. 
+   *
+   *  Methods are provided to return the hits in a selected part of the detectors.
+   *  E.g.
+   *  @code
+   *  // Get all the hits in the TT stations
+   *  TTStationHitManager::HitRange range = hitMan->hits();
+   *
+   *  // Get all the hits in one specific TT station
+   *  TTStationID sta = ...;
+   *  TTStationHitManager::HitRange range = hitMan->hits(sta);
+   *
+   *  // Get all the hits in one specific layer of one TT station
+   *  TTStationID sta = ...;
+   *  TTLayerID   lay = ...;
+   *  TTStationHitManager::HitRange range = hitMan->hits(sta,lay);
+   *
+   *  // Get all the hits in a specific 'region' of one layer of one TT station
+   *  TTStationID sta = ...;
+   *  TTLayerID   lay = ...;
+   *  TTRegionID  reg = ...;
+   *  TTStationHitManager::HitRange range = hitMan->hits(sta,lay,reg);
+   *  @endcode
+   *
+   *  In addition, it is possible to perform a custom selection of hits based on
+   *  a user defined selection object :-
+   *  @code
+   *  // Get all the hits selected by a specfic selector object
+   *  LHCb::State * test_state = ....;
+   *  const double nsigma = 3.0;
+   *  StateRegionSelector selector( *test_state, nsigma );
+   *  hitMan->prepareHits(selector);
+   *  // Can now use any of the hits(..) methods to access hit ranges, e.g.
+   *  TTStationHitManager::HitRange range = hitMan->hits();
+   *  // To the selected hits in all stations, layers and regions 
+   *  @endcode
+   *
+   *  In all cases the returned Range object acts like a standard vector or container
+   *  @code
+   *   // Iterate over the returned range
+   *  for ( TTStationHitManager::HitRange::const_iterator iR = range.begin();
+   *        iR != range.end(); ++iR )
+   *  {
+   *    // do something with the hit
+   *  }
+   *  @endcode
+   *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    **/
@@ -83,6 +132,29 @@ namespace Tf
     }
 
   public:
+
+    /** Initialise the hits for the current event using the given selector object
+     *
+     *  Any selector object can be used, the only requirement is it must implement the
+     *  method :-
+     *  @code
+     *    inline XYSearchWindow searchWindow( const double z ) const
+     *  @endcode
+     *  Which returns the search window for a given z position.
+     *
+     *  Example usage, using the StateRegionSelector class which creates an N sigma
+     *  search window around a track state, using a 2nd order parameterisation :-
+     *  @code
+     *   LHCb::State * test_state = ....;
+     *   const double nsigma = 3.0;
+     *   StateRegionSelector selector( *test_state, nsigma );
+     *   hitMan->prepareHits(selector);
+     *  @endcode 
+     *
+     *  @param[in] selector The selector object.
+     */
+    template < typename SELECTOR >
+    void prepareHits( const SELECTOR & selector );
 
     /** Load the hits for a given region of interest
      *
@@ -501,6 +573,43 @@ namespace Tf
       }
       setAllHitsPrepared(sta,lay,region,true);
     }
+  }
+
+  template < class Hit         >
+  template < typename SELECTOR >
+  void TTStationHitManager<Hit>::prepareHits( const SELECTOR & selector )
+  {
+    for (TTStationID sta=0; sta<maxStations(); ++sta )
+    {
+      this->setAllHitsPrepared(sta,true);
+      for (TTLayerID lay=0; lay<maxLayers(); ++lay )
+      {
+        this->setAllHitsPrepared(sta,lay,true);
+        for (TTRegionID reg=0; reg<maxRegions(); ++reg )
+        {
+          this->setAllHitsPrepared(sta,lay,reg,true);
+
+          // The z value for this region
+          const double z = this->ttHitCreator()->region(sta,lay,reg)->z();
+          // get the search window
+          XYSearchWindow win = selector.searchWindow(z);
+          // get the hits in the search window
+          Tf::STHitRange tthits = this->ttHitCreator()->hits(sta,lay,reg,
+                                                             win.minX(),win.maxX(),
+                                                             win.minY(),win.maxY() );
+          if ( msgLevel(MSG::DEBUG) )
+          {
+            debug() << "Found " << tthits.size() << " TTHits for station=" << sta
+                    << " layer=" << lay << " region=" << reg << endreq;
+          }
+          for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
+               itTTH < tthits.end(); itTTH++)
+          {
+            this -> addHit(new Hit(**itTTH),sta,lay,reg);
+          }
+        }
+      }// layer
+    } // station
   }
 
 } // Tf namespace
