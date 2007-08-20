@@ -29,7 +29,7 @@ typedef struct _MEPID {
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {
-  long begin;
+  int  begin;
   int  evID;
 };
 
