@@ -21,3 +21,4 @@ macro_append ROOT_linkopts " -lHist"
 macro_append OnlineHistDB_shlibflags " -locci " \
   WIN32                              " oci.lib ociw32.lib oraocci10.lib "
 
+macro_append OnlineHistDB_shlibflags " -lHist  " WIN32 " libHist.lib "
