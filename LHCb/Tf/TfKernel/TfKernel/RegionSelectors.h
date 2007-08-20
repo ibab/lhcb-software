@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.1 2007-08-20 12:30:34 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.2 2007-08-20 12:56:33 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -10,7 +10,7 @@ namespace Tf
 
   /** @class XYSearchWindow RegionSelectors.h TfKernel/RegionSelectors.h
    *
-   *  Simple class to store the in and max X and Y values for a search window
+   *  Simple class to store the min and max X and Y values for a search window
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-08-20
