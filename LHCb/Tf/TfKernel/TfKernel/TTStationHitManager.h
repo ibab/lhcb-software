@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.7 2007-08-20 14:24:31 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.8 2007-08-20 16:02:28 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -78,6 +78,8 @@ namespace Tf
    *  TTStationHitManager::HitRange range = hitMan->hits();
    *  // To the selected hits in all stations, layers and regions 
    *  @endcode
+   *  The only requirement on the selector object used is it must implement one specific method.
+   *  See Tf::StateRegionSelector for an example of such an object.
    *
    *  In all cases the returned Range object acts like a standard vector or container
    *  @code

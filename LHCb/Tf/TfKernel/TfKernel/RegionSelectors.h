@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.6 2007-08-20 14:24:31 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.7 2007-08-20 16:02:28 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -36,10 +36,13 @@ namespace Tf
 
   /** @class StateRegionSelector RegionSelectors.h TfKernel/RegionSelectors.h
    *
-   *  Selector object for use in conjunction with the TStationHitManager class.
-   *  Can be used to select hits with a given #signma region around a given
-   *  track State.
+   *  Selector object for use in conjunction with the TStationHitManager and
+   *  TTStationHitManager classes. In order to be used be these clases, the selector
+   *  must implement one specific method, 'searchWindow', which returns the search window
+   *  parameters (min and max x and y) for a given z value.
    *
+   *  Can be used to select hits with a given #sigma region around a given
+   *  track State.
    *  Uses a second order polynomial in z to compute the y value and a first
    *  or polynominal in z for x.
    *
@@ -71,7 +74,10 @@ namespace Tf
 
   public:
 
-    /** Returns the (x,y) search window for the given z position
+    /** Returns the (x,y) search window for the given z position.
+     *  @attention This is the one method all selectors must implement, if
+     *  they are to be used in conjugtion with the TStationHitManager and
+     *  TTStationHitManager classes.
      *  @param z The z position to use
      *  @return The Search window
      */
