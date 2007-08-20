@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.8 2007-08-20 16:02:28 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.9 2007-08-20 19:03:32 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -46,6 +46,7 @@ namespace Tf
    *
    *  Methods are provided to return the hits in a selected part of the detectors.
    *  E.g.
+   *
    *  @code
    *  // Get all the hits in the TT stations
    *  TTStationHitManager::HitRange range = hitMan->hits();
@@ -68,6 +69,7 @@ namespace Tf
    *
    *  In addition, it is possible to perform a custom selection of hits based on
    *  a user defined selection object :-
+   *
    *  @code
    *  // Get all the hits selected by a specfic selector object
    *  LHCb::State * test_state = ....;
@@ -78,10 +80,12 @@ namespace Tf
    *  TTStationHitManager::HitRange range = hitMan->hits();
    *  // To the selected hits in all stations, layers and regions 
    *  @endcode
+   *
    *  The only requirement on the selector object used is it must implement one specific method.
    *  See Tf::StateRegionSelector for an example of such an object.
    *
-   *  In all cases the returned Range object acts like a standard vector or container
+   *  In all cases the returned Range object acts like a standard vector or container :-
+   *
    *  @code
    *   // Iterate over the returned range
    *  for ( TTStationHitManager::HitRange::const_iterator iR = range.begin();

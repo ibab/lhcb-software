@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.7 2007-08-20 16:02:28 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.8 2007-08-20 19:03:31 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -78,7 +78,7 @@ namespace Tf
      *  @attention This is the one method all selectors must implement, if
      *  they are to be used in conjugtion with the TStationHitManager and
      *  TTStationHitManager classes.
-     *  @param z The z position to use
+     *  @param z The z position for which a search window should be created
      *  @return The Search window
      */
     inline XYSearchWindow searchWindow( const double z ) const
