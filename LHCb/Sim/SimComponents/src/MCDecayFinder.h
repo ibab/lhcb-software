@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.4 2007-05-29 08:48:16 cattanem Exp $
+// $Id: MCDecayFinder.h,v 1.5 2007-08-20 09:12:12 pkoppenb Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -135,7 +135,7 @@ public:
    *         the one at the ends of the branches. (Default: all)
    */
   void descendants( const LHCb::MCParticle *head, 
-                    std::vector<LHCb::MCParticle *>&result,
+                    LHCb::MCParticle::ConstVector& result,
                     bool leaf=false );
 
   /** Get a list of all the requested members that are present in a decay.
@@ -147,12 +147,12 @@ public:
    *  any particle in the decay.
    */
   void decayMembers( const LHCb::MCParticle *head, 
-                     std::vector<LHCb::MCParticle*>&members );
+                     LHCb::MCParticle::ConstVector& members );
 
   /// Get a vector of pairs <mother, products> for all sub-trees.
   void decaySubTrees( const LHCb::MCParticle *head,
                       std::vector<std::pair<const LHCb::MCParticle*,
-                                            std::vector<LHCb::MCParticle*> >
+                                            LHCb::MCParticle::ConstVector  >
                                  > & subtrees );
 
   /// Enumaration types used internally.
@@ -177,7 +177,7 @@ private:
     ParticleMatcher( Quantums quantum, Relations relation, double value,
                      IParticlePropertySvc *ppSvc );
     bool test( const LHCb::MCParticle *part, 
-               std::vector<LHCb::MCParticle*> *collect=NULL );
+              LHCb::MCParticle::ConstVector *collect=NULL );
     void setLift( void ) { lift = true; }
     bool getLift( void ) { return lift; }
     void setEmpty( void ) { empty_f = true; }
@@ -271,8 +271,9 @@ private:
       return false;
     }
     bool test(const LHCb::MCParticle *mother, 
-              std::vector<LHCb::MCParticle*> *collect=NULL,
-              std::vector<std::pair<const LHCb::MCParticle*,std::vector<LHCb::MCParticle*> >
+              LHCb::MCParticle::ConstVector *collect=NULL,
+              std::vector<std::pair<const LHCb::MCParticle*,
+              LHCb::MCParticle::ConstVector >
                          > *subTree=NULL);
     
     void setAlternate( Descriptor *a ) { alternate = a; }
@@ -290,8 +291,8 @@ private:
     std::string describe( void );
   private:
     bool testDaughters( std::list<const LHCb::MCParticle*> &parts,
-                        std::vector<LHCb::MCParticle*> *collect=NULL,
-              std::vector<std::pair<const LHCb::MCParticle*,std::vector<LHCb::MCParticle*> >
+                        LHCb::MCParticle::ConstVector *collect=NULL,
+              std::vector<std::pair<const LHCb::MCParticle*,LHCb::MCParticle::ConstVector >
                          > *subTree=NULL );
     void addNonResonnantDaughters( std::list<const LHCb::MCParticle*> &parts,
                                    const LHCb::MCParticle *part );

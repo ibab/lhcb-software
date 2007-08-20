@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.3 2006-05-10 14:55:00 cattanem Exp $
+// $Id: MCDecayFinder.cpp,v 1.4 2007-08-20 09:12:12 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -247,7 +247,7 @@ bool MCDecayFinder::findDecay( const LHCb::MCParticle *&previous_result )
 }
 
 void MCDecayFinder::descendants( const LHCb::MCParticle *head,
-                                 std::vector<LHCb::MCParticle *>&result,
+                                 LHCb::MCParticle::ConstVector& result,
                                  bool leaf )
 {
   bool term = true;
@@ -267,12 +267,12 @@ void MCDecayFinder::descendants( const LHCb::MCParticle *head,
 }
 
 void MCDecayFinder::decayMembers( const LHCb::MCParticle *head,
-                                  std::vector<LHCb::MCParticle *>&members )
+                                  LHCb::MCParticle::ConstVector&members )
 {
   if( m_members ) {
-    std::vector<LHCb::MCParticle *> flat;
+    LHCb::MCParticle::ConstVector flat;
     descendants( head, flat, false );
-    std::vector<LHCb::MCParticle *>::const_iterator pi;
+    LHCb::MCParticle::ConstVector::const_iterator pi;
     for( pi = flat.begin(); pi != flat.end(); pi++ ) {
       std::vector<ParticleMatcher *>::const_iterator mi;
       for( mi = m_members->begin(); mi != m_members->end(); mi++ )
@@ -289,7 +289,7 @@ void MCDecayFinder::decayMembers( const LHCb::MCParticle *head,
 void MCDecayFinder::decaySubTrees(
                                   const LHCb::MCParticle *head,
                                   std::vector<std::pair<const LHCb::MCParticle*,
-                                  std::vector<LHCb::MCParticle*> >
+                                  LHCb::MCParticle::ConstVector >
                                   > & subtrees )
 {
   m_decay->test(head, NULL, &subtrees);
@@ -364,13 +364,13 @@ std::string MCDecayFinder::Descriptor::describe( void )
 }
 
 bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
-                                      std::vector<LHCb::MCParticle*> *collect,
+                                      LHCb::MCParticle::ConstVector *collect,
                                       std::vector<std::pair<const LHCb::MCParticle*,
-                                      std::vector<LHCb::MCParticle*> >
+                                      LHCb::MCParticle::ConstVector >
                                       > *subtrees )
 {
-  std::vector<LHCb::MCParticle*> local_collect(0);
-  std::vector<LHCb::MCParticle*> *local = NULL;
+  LHCb::MCParticle::ConstVector local_collect(0);
+  LHCb::MCParticle::ConstVector *local = NULL;
   if( collect || subtrees )
     local = &local_collect;
   bool result = false;
@@ -396,7 +396,7 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
 
       if( subtrees ) {
         std::vector<std::pair<const LHCb::MCParticle*,
-          std::vector<LHCb::MCParticle*> > > local_subtrees;
+          LHCb::MCParticle::ConstVector > > local_subtrees;
         result = testDaughters(parts,local,&local_subtrees);
         if( result )
           subtrees->insert(subtrees->end(),
@@ -412,7 +412,7 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
       collect->insert( collect->end(),
                        local_collect.begin(), local_collect.end() );
     if( subtrees && !daughters.empty() )
-      subtrees->push_back(std::pair<const LHCb::MCParticle*,std::vector<LHCb::MCParticle*> >
+      subtrees->push_back(std::pair<const LHCb::MCParticle*,LHCb::MCParticle::ConstVector >
                           (part,local_collect) );
     return true;
   }
@@ -423,9 +423,9 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
 
 bool
 MCDecayFinder::Descriptor::testDaughters(std::list<const LHCb::MCParticle*> &parts,
-                                         std::vector<LHCb::MCParticle*> *collect,
+                                         LHCb::MCParticle::ConstVector *collect,
                                          std::vector<std::pair<const LHCb::MCParticle*,
-                                         std::vector<LHCb::MCParticle*> >
+                                         LHCb::MCParticle::ConstVector >
                                          > *subtrees)
 {
   std::vector<Descriptor *>::iterator di;
@@ -770,7 +770,7 @@ static int thirdQuark( int id )
 
 bool
 MCDecayFinder::ParticleMatcher::test( const LHCb::MCParticle *part,
-                                      std::vector<LHCb::MCParticle*> *collect )
+                                      LHCb::MCParticle::ConstVector *collect )
 {
   bool result = false;
   switch( type ) {
