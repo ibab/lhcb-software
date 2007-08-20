@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.5 2007-07-26 14:48:51 ibelyaev Exp $ 
+$Id: release.notes,v 1.6 2007-08-20 13:26:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2007-08-20 - Vanya BELYAEV
+ - increment the major version to v6r0 
+
 
 ! 2007-07-26 - Vanya BELYAEV
  - src/Component/HybridFilterParticles.cpp

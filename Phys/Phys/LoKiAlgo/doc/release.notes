@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2007-07-23 17:41:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.21 2007-08-20 13:30:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2007-08-20 - Vanya BELYAEV
+ - increment the major version to v6r0 
+
 
 ! 2007-07-23 - Vanya BELYAEV
  - many tiny fixes to speedup compilation, decrease dictionaries 
@@ -17,6 +21,7 @@
 ! 2007-06-10 - Vanya BELYAEV
  - many small fixes to please Reflex, make functions vizible in python
    and to achive a coherent interface
+
 
 ! 2007-06-04 - Vanya BELYAEV
  - Solve the compilation problem on Win32 platform
