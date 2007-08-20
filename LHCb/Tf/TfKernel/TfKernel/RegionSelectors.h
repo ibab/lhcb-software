@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.4 2007-08-20 13:27:28 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.5 2007-08-20 13:28:23 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -56,7 +56,6 @@ namespace Tf
      *  @param nSigma Size of the search window, in #sigma * error.
      */
     StateRegionSelector( const LHCb::State & aState, const double nSigma )
-      : m_nSigma ( nSigma  )
     {
       m_y = aState.ty();
       c_y = aState.y() - m_y*aState.z();
@@ -89,9 +88,6 @@ namespace Tf
     StateRegionSelector( ) { }
 
   private:
-
-    /// #sigma selection window around the State
-    double m_nSigma;
 
     // temporary cached parameters
     double m_y, c_y, a_x, b_x, c_x, dy, dx;

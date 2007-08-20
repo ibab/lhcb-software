@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.9 2007-08-20 12:30:34 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.10 2007-08-20 13:27:28 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -107,6 +107,15 @@ namespace Tf
      *    inline XYSearchWindow searchWindow( const double z ) const
      *  @endcode
      *  Which returns the search window for a given z position.
+     *
+     *  Example usage, using the StateRegionSelector class which creates an N sigma
+     *  search window around a track state, using a 2nd order parameterisation :-
+     *  @code
+     *   LHCb::State * test_state = ....;
+     *   const double nsigma = 3.0;
+     *   StateRegionSelector selector( *test_state, nsigma );
+     *   hitManager->prepareHits(selector);
+     *  @endcode 
      *
      *  @param selector The selector object.
      */
@@ -849,9 +858,9 @@ namespace Tf
   template < typename SELECTOR >
   void TStationHitManager<Hit>::prepareHits( const SELECTOR & selector )
   {
-    this->clearHits();
-    this->prepareOTHits(selector);
-    this->prepareITHits(selector);
+    this->clearHits();             // Clear any previous hits
+    this->prepareOTHits(selector); // select the OT hits
+    this->prepareITHits(selector); // select the IT hits
     // Signifiy all hits for this event are ready - I.e. no decoding on demand
     setAllHitsPrepared(true);
   }
