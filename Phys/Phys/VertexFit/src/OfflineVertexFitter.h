@@ -94,8 +94,8 @@ protected:
                       LHCb::Particle::ConstVector & ) const;
 
   StatusCode seeding(LHCb::Particle&,
-                     LHCb::Particle::ConstVector &,
-                     LHCb::Particle::ConstVector & ) const;
+                     LHCb::Particle::ConstVector&,
+                     LHCb::Particle::ConstVector& ) const;
 
   StatusCode addVertexed(LHCb::Particle&, 
                          const LHCb::Particle *) const;
@@ -110,10 +110,10 @@ protected:
                            const LHCb::Particle *) const;
 
   StatusCode updateParticle(LHCb::Particle& part,  
-                    Gaudi::Vector7& V7,
-                    Gaudi::SymMatrix7x7& C7,
-                    double& chi2,
-                    int& NDoF) const;
+                            const Gaudi::Vector7& V7,
+                            const Gaudi::SymMatrix7x7& C7,
+                            const double chi2,
+                            const int NDoF) const;
 
   void getParticleInfo(const LHCb::Particle& part,
                        Gaudi::Vector7& V7,
