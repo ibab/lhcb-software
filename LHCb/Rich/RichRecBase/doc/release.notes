@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-08-21 - Chris Jones
+ - Fix problems with some classes during dictionary generation
+
 ! 2007-08-13 - Chris Jones
  - Speed improvements to pixel and photon creators and various event classes
  - fix ordering problem in pixel creator, that came in when the RichDAQ data

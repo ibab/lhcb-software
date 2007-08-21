@@ -24,7 +24,6 @@
   <class name = "Rich::HypoData&lt;LHCb::RichRecRing*&gt;" />
   <class name = "Rich::ObjPtn&lt;Rich::HypoData&lt;LHCb::RichRecRing*&gt; &gt;" />
 
-  <class name = "Rich::HypoData&lt;LHCb::RichRecTrack::FloatType&gt;" />
   <class name = "LHCb::RichRecTrack::Segments" />
   <class name = "LHCb::RichRecTrack::Pixels" />
   <class name = "LHCb::RichRecTrack::Photons" />

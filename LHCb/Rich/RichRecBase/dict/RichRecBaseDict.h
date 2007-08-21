@@ -34,8 +34,18 @@
 #include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
 
-
-
+// instantiate some templated classes, to get them into the dictionary
+namespace 
+{
+  struct _Instantiations 
+  {
+    Rich::ObjPtn<Rich::Rec::RadCorrLocalPositions>   obj_1;
+    Rich::ObjPtn<std::vector<LHCb::RichRecTrack*> >  obj_2;
+    Rich::ObjPtn<std::vector<LHCb::RichRecPhoton*> > obj_3;
+    Rich::HypoData<LHCb::RichRecRing*>               obj_4;
+    Rich::HypoData<float>                            obj_5;
+  };
+}
 
 #endif // DICT_RICHRECBASEDICT_H
 
