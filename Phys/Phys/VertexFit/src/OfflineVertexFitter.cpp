@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.22 2007-05-10 13:30:24 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.23 2007-08-21 13:19:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -223,7 +223,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
-                                 LHCb::Vertex& V) const{  
+                                     LHCb::Vertex& V) const{  
   LHCb::Particle tPart;
   return fit(parts, tPart, V);
 }
@@ -233,12 +233,11 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 //==================================================================
 
 bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const {
-  bool isRes=false;
-  int id=part->particleID().pid();  
-  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
-  if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)) isRes=true;
-  return isRes;
 
+  const int id( part->particleID().pid() );  
+  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
+  return partProp->lifetime() < 1.e-6*nanosecond ? true : false;
+      
 }
 
 //==================================================================
@@ -246,10 +245,8 @@ bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const {
 //==================================================================
 
 bool OfflineVertexFitter::isVertexed(const LHCb::Particle* part) const{
-  bool hasVertex=false;
-  int nflying=countTraj(part);
-  if(nflying>=2) hasVertex=true;
-  return hasVertex;
+  const int nflying=countTraj(part);
+  return (nflying>=2) ? true: false;
 }
 
 //==================================================================
@@ -298,7 +295,7 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  int id=part->particleID().pid();
+  const int id=part->particleID().pid();
 
   if(part->isBasicParticle()) {
     if(id==m_photonID) Photons.push_back(part);
@@ -432,7 +429,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   Gaudi::Vector7 daumpara;
   Gaudi::SymMatrix7x7 daumcov;
   convertE2M(daupara,daucov, daumpara, daumcov);
-  int id1=abs(dau->particleID().pid());
+  const int id1=abs(dau->particleID().pid());
   if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
     for(int k=0; k<=6; k++) daumcov(6,k)=0.0;
   }
@@ -912,25 +909,25 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   Gaudi::Vector8 Vnew;
   Gaudi::SymMatrix8x8 Cnew;
 
-  double dx1= gamma1para[0] - V7[0];
-  double dy1= gamma1para[1] - V7[1];
-  double dz1= zg1 - V7[2];
-  double r1= sqrt(dx1*dx1+dy1*dy1+dz1*dz1);
-  double eg1= gamma1para[2];
-  double pxg1= eg1*dx1/r1;
-  double pyg1= eg1*dy1/r1;
-  double pzg1= eg1*dz1/r1;
+  const double dx1= gamma1para[0] - V7[0];
+  const double dy1= gamma1para[1] - V7[1];
+  const double dz1= zg1 - V7[2];
+  const double r1= sqrt(dx1*dx1+dy1*dy1+dz1*dz1);
+  const double eg1= gamma1para[2];
+  const double pxg1= eg1*dx1/r1;
+  const double pyg1= eg1*dy1/r1;
+  const double pzg1= eg1*dz1/r1;
 
-  double dx2= gamma2para[0] - V7[0];
-  double dy2= gamma2para[1] - V7[1];
-  double dz2= zg2 - V7[2];
-  double r2= sqrt(dx2*dx2+dy2*dy2+dz2*dz2);
-  double eg2= gamma2para[2];
-  double pxg2= eg2*dx2/r2;
-  double pyg2= eg2*dy2/r2;
-  double pzg2= eg2*dz2/r2;
+  const double dx2= gamma2para[0] - V7[0];
+  const double dy2= gamma2para[1] - V7[1];
+  const double dz2= zg2 - V7[2];
+  const double r2= sqrt(dx2*dx2+dy2*dy2+dz2*dz2);
+  const double eg2= gamma2para[2];
+  const double pxg2= eg2*dx2/r2;
+  const double pyg2= eg2*dy2/r2;
+  const double pzg2= eg2*dz2/r2;
 
-  double mpair= sqrt((eg1+eg2)*(eg1+eg2)-(pxg1+pxg2)*(pxg1+pxg2)-(pyg1+pyg2)*(pyg1+pyg2)-(pzg1+pzg2)*(pzg1+pzg2));
+  const double mpair= sqrt((eg1+eg2)*(eg1+eg2)-(pxg1+pxg2)*(pxg1+pxg2)-(pyg1+pyg2)*(pyg1+pyg2)-(pzg1+pzg2)*(pzg1+pzg2));
 
   Vnew[0]= V7[0];
   Vnew[1]= V7[1];
@@ -961,54 +958,54 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   ROOT::Math::SMatrix<double, 8, 13> JA;
   for(int i=0;i<7;i++) JA(i,i)=1.;
   
-  double dinvr1_dx1=-1./(r1*r1)*(-dx1/r1);
-  double dinvr1_dy1=-1./(r1*r1)*(-dy1/r1);
-  double dinvr1_dz1=-1./(r1*r1)*(-dz1/r1);
-  double dinvr1_dxg1=-1./(r1*r1)*(dx1/r1);
-  double dinvr1_dyg1=-1./(r1*r1)*(dy1/r1);
+  const double dinvr1_dx1=-1./(r1*r1)*(-dx1/r1);
+  const double dinvr1_dy1=-1./(r1*r1)*(-dy1/r1);
+  const double dinvr1_dz1=-1./(r1*r1)*(-dz1/r1);
+  const double dinvr1_dxg1=-1./(r1*r1)*(dx1/r1);
+  const double dinvr1_dyg1=-1./(r1*r1)*(dy1/r1);
 
-  double dinvr2_dx1=-1./(r2*r2)*(-dx2/r2);
-  double dinvr2_dy1=-1./(r2*r2)*(-dy2/r2);
-  double dinvr2_dz1=-1./(r2*r2)*(-dz2/r2);
-  double dinvr2_dxg2=-1./(r2*r2)*(dx2/r2);
-  double dinvr2_dyg2=-1./(r2*r2)*(dy2/r2);
+  const double dinvr2_dx1=-1./(r2*r2)*(-dx2/r2);
+  const double dinvr2_dy1=-1./(r2*r2)*(-dy2/r2);
+  const double dinvr2_dz1=-1./(r2*r2)*(-dz2/r2);
+  const double dinvr2_dxg2=-1./(r2*r2)*(dx2/r2);
+  const double dinvr2_dyg2=-1./(r2*r2)*(dy2/r2);
 
-  double dpxg1_dx1=eg1*(-1./r1+dx1*dinvr1_dx1);
-  double dpyg1_dx1=eg1*dy1*dinvr1_dx1;
-  double dpzg1_dx1=eg1*dz1*dinvr1_dx1;
-  double dpxg2_dx1=eg2*(-1./r2+dx2*dinvr2_dx1);
-  double dpyg2_dx1=eg2*dy2*dinvr2_dx1;
-  double dpzg2_dx1=eg2*dz2*dinvr2_dx1;
+  const double dpxg1_dx1=eg1*(-1./r1+dx1*dinvr1_dx1);
+  const double dpyg1_dx1=eg1*dy1*dinvr1_dx1;
+  const double dpzg1_dx1=eg1*dz1*dinvr1_dx1;
+  const double dpxg2_dx1=eg2*(-1./r2+dx2*dinvr2_dx1);
+  const double dpyg2_dx1=eg2*dy2*dinvr2_dx1;
+  const double dpzg2_dx1=eg2*dz2*dinvr2_dx1;
 
-  double dpxg1_dy1=eg1*dx1*dinvr1_dy1;
-  double dpyg1_dy1=eg1*(-1./r1+dy1*dinvr1_dy1);
-  double dpzg1_dy1=eg1*dz1*dinvr1_dy1;
-  double dpxg2_dy1=eg2*dx2*dinvr2_dy1;
-  double dpyg2_dy1=eg2*(-1./r2+dy2*dinvr2_dy1);
-  double dpzg2_dy1=eg2*dz2*dinvr2_dy1;
+  const double dpxg1_dy1=eg1*dx1*dinvr1_dy1;
+  const double dpyg1_dy1=eg1*(-1./r1+dy1*dinvr1_dy1);
+  const double dpzg1_dy1=eg1*dz1*dinvr1_dy1;
+  const double dpxg2_dy1=eg2*dx2*dinvr2_dy1;
+  const double dpyg2_dy1=eg2*(-1./r2+dy2*dinvr2_dy1);
+  const double dpzg2_dy1=eg2*dz2*dinvr2_dy1;
 
-  double dpxg1_dz1=eg1*dx1*dinvr1_dz1;
-  double dpyg1_dz1=eg1*dy1*dinvr1_dz1;
-  double dpzg1_dz1=eg1*(-1./r1+dz1*dinvr1_dz1);
-  double dpxg2_dz1=eg2*dx2*dinvr2_dz1;
-  double dpyg2_dz1=eg2*dy2*dinvr2_dz1;
-  double dpzg2_dz1=eg2*(-1./r2+dz2*dinvr2_dz1);
+  const double dpxg1_dz1=eg1*dx1*dinvr1_dz1;
+  const double dpyg1_dz1=eg1*dy1*dinvr1_dz1;
+  const double dpzg1_dz1=eg1*(-1./r1+dz1*dinvr1_dz1);
+  const double dpxg2_dz1=eg2*dx2*dinvr2_dz1;
+  const double dpyg2_dz1=eg2*dy2*dinvr2_dz1;
+  const double dpzg2_dz1=eg2*(-1./r2+dz2*dinvr2_dz1);
 
-  double dpxg1_dxg1=eg1*(1./r1+dx1*dinvr1_dxg1);
-  double dpyg1_dxg1=eg1*dy1*dinvr1_dxg1;
-  double dpzg1_dxg1=eg1*dz1*dinvr1_dxg1;
+  const double dpxg1_dxg1=eg1*(1./r1+dx1*dinvr1_dxg1);
+  const double dpyg1_dxg1=eg1*dy1*dinvr1_dxg1;
+  const double dpzg1_dxg1=eg1*dz1*dinvr1_dxg1;
 
-  double dpxg1_dyg1=eg1*dx1*dinvr1_dyg1;
-  double dpyg1_dyg1=eg1*(1./r1+dy1*dinvr1_dyg1);
-  double dpzg1_dyg1=eg1*dz1*dinvr1_dyg1;
+  const double dpxg1_dyg1=eg1*dx1*dinvr1_dyg1;
+  const double dpyg1_dyg1=eg1*(1./r1+dy1*dinvr1_dyg1);
+  const double dpzg1_dyg1=eg1*dz1*dinvr1_dyg1;
 
-  double dpxg2_dxg2=eg2*(1./r2+dx2*dinvr2_dxg2);
-  double dpyg2_dxg2=eg2*dy2*dinvr2_dxg2;
-  double dpzg2_dxg2=eg2*dz2*dinvr2_dxg2;
+  const double dpxg2_dxg2=eg2*(1./r2+dx2*dinvr2_dxg2);
+  const double dpyg2_dxg2=eg2*dy2*dinvr2_dxg2;
+  const double dpzg2_dxg2=eg2*dz2*dinvr2_dxg2;
 
-  double dpxg2_dyg2=eg2*dx2*dinvr2_dyg2;
-  double dpyg2_dyg2=eg2*(1./r2+dy2*dinvr2_dyg2);
-  double dpzg2_dyg2=eg2*dz2*dinvr2_dyg2;
+  const double dpxg2_dyg2=eg2*dx2*dinvr2_dyg2;
+  const double dpyg2_dyg2=eg2*(1./r2+dy2*dinvr2_dyg2);
+  const double dpzg2_dyg2=eg2*dz2*dinvr2_dyg2;
 
   JA(3,0)=dpxg1_dx1+dpxg2_dx1;
   JA(3,1)=dpxg1_dy1+dpxg2_dy1;
@@ -1158,7 +1155,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     Gaudi::SymMatrix7x7 dau1mcov;
 //    dau1cov=dau1->covMatrix()  ;  // trick
     convertE2M(dau1para,dau1cov, dau1mpara, dau1mcov);
-    int id1=abs(dau1->particleID().pid());
+    const int id1=abs(dau1->particleID().pid());
     if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
       for(int k=0; k<=6; k++) dau1mcov(6,k)=0.0;
     }
@@ -1619,10 +1616,9 @@ bool OfflineVertexFitter::requireMassConstraint(const LHCb::Particle* part,
   nominalMass=0.0;
 
   if(m_applyDauMassConstraint && !part->isBasicParticle()) {
-    int pid = part->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-    double hbar = 6.58211889*pow(10,-22);
-    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    const int pid = part->particleID().pid();
+    ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    const double wid = hbar_Planck/partProp->lifetime();
     if(wid<m_widthThreshold) {
       require=true;
       nominalMass=partProp->mass();
