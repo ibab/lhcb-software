@@ -11,6 +11,10 @@ def readDBLookup():
     Read the dblookup.xml file. Returns a dictionary with aliases
     as keys and read/write properties as value.
     '''
+    aliasDict = {}
+    if 'CORAL_DBLOOKUP_PATH' not in os.environ:
+        # we do not know where to find the dblooup.xml file
+        return aliasDict
     dblookup = open(os.environ['CORAL_DBLOOKUP_PATH'] + os.sep + 'dblookup.xml', 'r').read()
     expr = re.compile(r'<logicalservice.+?name\s*=\s*"(?P<alias>\S+)".*?accessMode\s*=\s*"(?P<access>\w+)"', re.S)
     dbList = expr.findall(dblookup)
@@ -490,7 +494,9 @@ class myDBTable(qt.QSplitter):
             # Get the correct payload text from the information given
             if payloadKey != '':
                 xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload'][payloadKey]
-                self.textDB.setText(str(xmlText))
+                # @todo: make the conversion to Unicode more robust (the src may not be ISO)
+                qs = qt.QTextCodec.codecForName("ISO8859-1").toUnicode(xmlText)
+                self.textDB.setText(qs)
                 self.buttonExport.setEnabled(True)
 
 
@@ -506,7 +512,10 @@ class myDBTable(qt.QSplitter):
             except Exception, details:
                 raise Exception, details
             else:
-                xmlFile.write(str(self.textDB.text()))
+                # @todo: make the conversion to Unicode more robust (the src may not be ISO)
+                qs = self.textDB.text()
+                s = qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
+                xmlFile.write(str(s))
                 xmlFile.close()
 
 
@@ -679,20 +688,25 @@ class ConditionEditor(qt.QVBox):
         if fileDialog.exec_loop():
             fileName = str(fileDialog.selectedFile())
             xmlText = open(fileName).read()
-            self.xmlEditor.clear()
-            self.xmlEditor.setText(xmlText)
+            self.setEditorText(xmlText)
 
     def setEditorText(self, text):
         '''
         Set the contents of the xml editor
         '''
-        self.xmlEditor.setText(text)
+        # @todo: make the conversion to Unicode more robust (the src may not be ISO)
+        qs = qt.QTextCodec.codecForName("ISO8859-1").toUnicode(text)
+        self.xmlEditor.clear()
+        self.xmlEditor.setText(qs)
 
     def getEditorText(self):
         '''
         Returns the contents of the xml editor
         '''
-        return self.xmlEditor.text()
+        # @todo: make the conversion to Unicode more robust (the src may not be ISO)
+        qs = self.xmlEditor.text()
+        s = qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
+        return str(s)
 
     def exportToFile(self):
         '''
@@ -706,7 +720,7 @@ class ConditionEditor(qt.QVBox):
             except Exception, details:
                 raise Exception, details
             else:
-                xmlFile.write(str(self.xmlEditor.text()))
+                xmlFile.write(self.getEditorText())
                 xmlFile.close()
 
     def editExternally(self):
@@ -714,12 +728,11 @@ class ConditionEditor(qt.QVBox):
         Export the condition to a temporary file, end edit with emacs.
         '''
         fd,name = tempfile.mkstemp(suffix=self.fileExtension)
-        os.fdopen(fd,"w").write(str(self.xmlEditor.text()))
+        os.fdopen(fd,"w").write(self.getEditorText())
         try:
             if os.system("%s %s"%(self.externalEditorCmd,name)) == 0 :
                 xmlText = open(name).read()
-                self.xmlEditor.clear()
-                self.xmlEditor.setText(xmlText)
+                self.setEditorText(xmlText)
         finally:
             os.remove(name)
 

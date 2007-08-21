@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.61 2007-07-05 13:48:43 cattanem Exp $
+! $Id: release.notes,v 1.62 2007-08-21 09:45:33 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-08-21 - Marco Clemencic
+ - Fixed 2 bugs in the browser
+   - Check if the environment variable CORAL_DBLOOKUP_PATH exists before using
+     it.
+   - Work around for a problem with the character encoding. Qt uses UTF, while
+     we have to use ISO-8859-1 in the database. 
 
 !===================== Tools/CondDBUI v2r4 2007-07-05 =========================
 ! 2007-07-05 - Marco Clemencic
