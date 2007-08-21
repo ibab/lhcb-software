@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
+// $Id: DefaultVeloHitManager.h,v 1.3 2007-08-21 16:56:17 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -24,6 +24,9 @@ namespace Tf {
   template <typename SENSORTYPE, typename HIT, int NZONES>
   class DefaultVeloHitManager : public VeloHitManager<SENSORTYPE,HIT,NZONES> {
 
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nHalfs;
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nStations;
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nZones;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_dataValid;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_velo;
@@ -195,7 +198,7 @@ namespace Tf {
   template <typename SENSORTYPE, typename HIT, int NZONES>
   void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::createPointerListsAndSort()
   {
-    for (unsigned int half=0; half<VeloHitManager<SENSORTYPE,HIT,NZONES>::NHALFS; ++ half) {
+    for (unsigned int half=0; half<VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nHalfs; ++ half) {
 
       for (StationIterator iS = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].begin();
            iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].end();

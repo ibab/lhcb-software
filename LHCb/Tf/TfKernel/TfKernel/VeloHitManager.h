@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
+// $Id: VeloHitManager.h,v 1.3 2007-08-21 16:56:17 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -98,17 +98,18 @@ namespace Tf
   protected:
 
 
-    static const unsigned int NHALFS    = RegionID::VeloRIndex::kNHalfs;
-    static const unsigned int NSTATIONS = RegionID::VeloRIndex::kNStations;
+    static const unsigned int m_nHalfs    = RegionID::VeloRIndex::kNHalfs;
+    static const unsigned int m_nStations = RegionID::VeloRIndex::kNStations;
+    static const unsigned int m_nZones    = NZONES;
 
     /// The list of stations
-    mutable Stations m_stations[NHALFS];
+    mutable Stations m_stations[m_nHalfs];
 
     /// mapping from sensor numbers to station iterators
     mutable std::vector<StationIterator> m_stationBySensorNumber;
 
     /// The data
-    mutable std::vector<HIT> m_data[NHALFS][NSTATIONS][NZONES];
+    mutable std::vector<HIT> m_data[m_nHalfs][m_nStations][NZONES];
 
     /// Cache validity flag
     mutable bool m_dataValid;
@@ -142,7 +143,7 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   VeloHitManager<SENSORTYPE,HIT,NZONES>::~VeloHitManager()
   {
-    for (unsigned int half=0; half<NHALFS; ++ half) {
+    for (unsigned int half=0; half<m_nHalfs; ++ half) {
       for (StationIterator iS = m_stations[half].begin();
            iS !=  m_stations[half].end();
            ++iS) {
@@ -198,7 +199,7 @@ namespace Tf
   StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure()
   {
     // clean up
-    for (unsigned int half=0; half<NHALFS; ++half) {
+    for (unsigned int half=0; half<m_nHalfs; ++half) {
       for (unsigned int s=0; s<m_stations[half].size(); ++s) {
         delete m_stations[half][s];
       }
@@ -221,14 +222,14 @@ namespace Tf
     }
 
     // sort by station z position
-    for (unsigned int half=0; half<NHALFS; ++half) {
+    for (unsigned int half=0; half<m_nHalfs; ++half) {
       std::sort(m_stations[half].begin(),m_stations[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
     }
 
     // create mapping from sensor numbers to station iterators
     m_stationBySensorNumber.resize(maxSensorNumber+1);
 
-    for (unsigned int half=0; half<NHALFS; ++half) {
+    for (unsigned int half=0; half<m_nHalfs; ++half) {
       for (StationIterator si = m_stations[half].begin();
            si != m_stations[half].end();
            ++si) {
@@ -259,8 +260,8 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   void VeloHitManager<SENSORTYPE,HIT,NZONES>::clearHits()
   {
-    for (unsigned int half=0; half<NHALFS; ++ half) {
-      for (unsigned int station=0; station<NSTATIONS; ++station) {
+    for (unsigned int half=0; half<m_nHalfs; ++ half) {
+      for (unsigned int station=0; station<m_nStations; ++station) {
         for (unsigned int zone=0; zone<NZONES; ++zone) {
           m_data[half][station][zone].clear();
         }
