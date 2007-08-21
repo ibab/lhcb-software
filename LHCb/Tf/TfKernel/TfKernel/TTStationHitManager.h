@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.9 2007-08-20 19:03:32 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.10 2007-08-21 13:56:34 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -160,7 +160,7 @@ namespace Tf
      *  @param[in] selector The selector object.
      */
     template < typename SELECTOR >
-    void prepareHits( const SELECTOR & selector );
+    void prepareHitsInWindow( const SELECTOR & selector );
 
     /** Load the hits for a given region of interest
      *
@@ -502,15 +502,15 @@ namespace Tf
   {
     m_hits_all.clear();
     this->setAllHitsPrepared(false);
-    for(TTStationID s=0; s<maxStations(); s++)
+    for ( TTStationID s = 0; s<maxStations(); ++s )
     {
       this->setAllHitsPrepared(s,false);
       m_hits_stations[s].clear();
-      for (TTLayerID l=0; l<maxLayers(); l++)
+      for ( TTLayerID l = 0; l<maxLayers(); ++l )
       {
         this->setAllHitsPrepared(s,l,false);
         m_hits_layers[s][l].clear();
-        for (TTRegionID t=0; t<maxRegions(); t++)
+        for ( TTRegionID t = 0; t<maxRegions(); ++t )
         {
           this->setAllHitsPrepared(s,l,t,false);
           for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
@@ -583,8 +583,9 @@ namespace Tf
 
   template < class Hit         >
   template < typename SELECTOR >
-  void TTStationHitManager<Hit>::prepareHits( const SELECTOR & selector )
+  void TTStationHitManager<Hit>::prepareHitsInWindow( const SELECTOR & selector )
   {
+    this->clearHits();
     for (TTStationID sta=0; sta<maxStations(); ++sta )
     {
       this->setAllHitsPrepared(sta,true);

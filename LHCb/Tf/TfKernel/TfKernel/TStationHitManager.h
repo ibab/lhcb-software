@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.13 2007-08-20 19:03:31 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.14 2007-08-21 13:56:34 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -174,7 +174,7 @@ namespace Tf
      *  @param[in] selector The selector object.
      */
     template < typename SELECTOR >
-    void prepareHits( const SELECTOR & selector );
+    void prepareHitsInWindow( const SELECTOR & selector );
 
     /** Load the hits for a given region of interest
      *
@@ -277,10 +277,10 @@ namespace Tf
       return ( iRegion > maxOTRegions()-1 ?
                static_cast<const Tf::EnvelopeBase*>(this->itHitCreator()->region(iStation,
                                                                                  iLayer,
-                                                                                 iRegion-maxOTRegions())) :
+                                                                                 iRegion.itRegionID())) :
                static_cast<const Tf::EnvelopeBase*>(this->otHitCreator()->region(iStation,
                                                                                  iLayer,
-                                                                                 iRegion)) );
+                                                                                 iRegion.otRegionID())) );
     }
 
   public:
@@ -496,11 +496,11 @@ namespace Tf
 
     /// Initialise the IT hits for the current event using the given selector object
     template < typename SELECTOR >
-    void prepareITHits( const SELECTOR & selector );
+    void prepareITHitsInWindow( const SELECTOR & selector );
 
     /// Initialise the OT hits for the current event using the given selector object
     template < typename SELECTOR >
-    void prepareOTHits( const SELECTOR & selector );
+    void prepareOTHitsInWindow( const SELECTOR & selector );
 
     /// Is OT hit cleaning activated
     inline bool cleanOTHits() const { return m_cleanOTHits; }
@@ -785,7 +785,7 @@ namespace Tf
   inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta,
                                                      const TLayerID   lay) const
   {
-    for (OTRegionID it=0; it < this->maxITRegions(); ++it)
+    for (ITRegionID it=0; it < this->maxITRegions(); ++it)
     {
       prepareITHits(sta,lay,it);
     }
@@ -910,18 +910,18 @@ namespace Tf
 
   template < class Hit         >
   template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareHits( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareHitsInWindow( const SELECTOR & selector )
   {
     this->clearHits();             // Clear any previous hits
-    this->prepareOTHits(selector); // select the OT hits
-    this->prepareITHits(selector); // select the IT hits
+    this->prepareOTHitsInWindow(selector); // select the OT hits
+    this->prepareITHitsInWindow(selector); // select the IT hits
     // Signifiy all hits for this event are ready - I.e. no decoding on demand
-    setAllHitsPrepared(true);
+    this->setAllHitsPrepared(true);
   }
 
   template < class Hit         >
   template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareITHits( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareITHitsInWindow( const SELECTOR & selector )
   {
     for (TStationID sta=0; sta < this->maxStations(); ++sta)
     {
@@ -954,7 +954,7 @@ namespace Tf
 
   template < class Hit         >
   template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareOTHits( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareOTHitsInWindow( const SELECTOR & selector )
   {
     for (TStationID sta=0; sta<this->maxStations(); ++sta)
     {

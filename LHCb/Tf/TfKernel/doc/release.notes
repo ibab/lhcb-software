@@ -4,6 +4,12 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-21 - Chris Jones
+ - Minor bug fixes to the T and TT hit managers
+  + Fix ambiguities in method names
+  + OTRangeID -> ITRangeID 
+ - Add test alg to exercise hit managers
+
 ! 2007-08-21 - Wouter Hulsbergen
  - fixed bug in OTHitCleaner::removeClusters
  - removed maps from OTHitCleaner::removeHotModules and STHitCleaner::removeHotBeetles to speed things up
