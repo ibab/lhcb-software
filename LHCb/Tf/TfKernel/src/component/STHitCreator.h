@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *  $Id: STHitCreator.h,v 1.5 2007-08-21 18:16:08 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -35,7 +35,7 @@ namespace Tf
    *
    *  Implementation of Tf::ISTHitCreator.
    *
-   *  Creates the STHit objects for the Tf tracking framework
+   *  Creates the Tf::STHit objects for the Tf tracking framework
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
@@ -99,10 +99,10 @@ namespace Tf
                                    const TLayerID iLayer,
                                    const ITRegionID  iRegion) const ;
 
-   // Load all the TT hits
+    // Load all the TT hits
     virtual STHitRange ttHits() const ;
 
-   // Load the ST hits for a given region of interest
+    // Load the ST hits for a given region of interest
     virtual STHitRange hits(const TTStationID iStation,
                             const TTLayerID iLayer) const ;
 
@@ -138,13 +138,13 @@ namespace Tf
     void loadHits() const ;
 
     // access on demand the IT Detector Data object
-    inline HitCreatorGeom::STDetector* itDetData() const 
+    inline HitCreatorGeom::STDetector* itDetData() const
     {
       return m_itdetectordata ;
     }
 
     // access on demand the TT Detector Data object
-    inline HitCreatorGeom::STDetector* ttDetData() const 
+    inline HitCreatorGeom::STDetector* ttDetData() const
     {
       return m_ttdetectordata ;
     }

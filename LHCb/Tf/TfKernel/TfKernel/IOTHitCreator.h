@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.5 2007-08-21 18:16:07 jonrob Exp $
+ *  $Id: IOTHitCreator.h,v 1.6 2007-08-21 18:20:30 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -172,7 +172,7 @@ namespace Tf
      *  @param[in] iLayer   Station layer ID
      *  @param[in] iRegion  Region within the layer
      *
-     *  @return OTRegion object
+     *  @return Pointer to the OTRegion object
      */
     virtual const OTRegion* region(const TStationID iStation, 
                                    const TLayerID iLayer, 

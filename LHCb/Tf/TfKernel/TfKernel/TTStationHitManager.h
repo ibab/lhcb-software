@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.10 2007-08-21 13:56:34 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.11 2007-08-21 18:16:08 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -49,22 +49,22 @@ namespace Tf
    *
    *  @code
    *  // Get all the hits in the TT stations
-   *  TTStationHitManager::HitRange range = hitMan->hits();
+   *  Tf::TTStationHitManager::HitRange range = hitMan->hits();
    *
    *  // Get all the hits in one specific TT station
-   *  TTStationID sta = ...;
-   *  TTStationHitManager::HitRange range = hitMan->hits(sta);
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTStationHitManager::HitRange range = hitMan->hits(sta);
    *
    *  // Get all the hits in one specific layer of one TT station
-   *  TTStationID sta = ...;
-   *  TTLayerID   lay = ...;
-   *  TTStationHitManager::HitRange range = hitMan->hits(sta,lay);
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTLayerID   lay = ...;
+   *  Tf::TTStationHitManager::HitRange range = hitMan->hits(sta,lay);
    *
    *  // Get all the hits in a specific 'region' of one layer of one TT station
-   *  TTStationID sta = ...;
-   *  TTLayerID   lay = ...;
-   *  TTRegionID  reg = ...;
-   *  TTStationHitManager::HitRange range = hitMan->hits(sta,lay,reg);
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTLayerID   lay = ...;
+   *  Tf::TTRegionID  reg = ...;
+   *  Tf::TTStationHitManager::HitRange range = hitMan->hits(sta,lay,reg);
    *  @endcode
    *
    *  In addition, it is possible to perform a custom selection of hits based on
@@ -77,7 +77,7 @@ namespace Tf
    *  StateRegionSelector selector( *test_state, nsigma );
    *  hitMan->prepareHits(selector);
    *  // Can now use any of the hits(..) methods to access hit ranges, e.g.
-   *  TTStationHitManager::HitRange range = hitMan->hits();
+   *  Tf::TTStationHitManager::HitRange range = hitMan->hits();
    *  // To the selected hits in all stations, layers and regions 
    *  @endcode
    *
@@ -88,7 +88,7 @@ namespace Tf
    *
    *  @code
    *   // Iterate over the returned range
-   *  for ( TTStationHitManager::HitRange::const_iterator iR = range.begin();
+   *  for ( Tf::TTStationHitManager::HitRange::const_iterator iR = range.begin();
    *        iR != range.end(); ++iR )
    *  {
    *    // do something with the hit

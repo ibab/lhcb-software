@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.3 2007-08-21 17:52:08 jonrob Exp $
+ *  $Id: OTHitCreator.h,v 1.4 2007-08-21 18:16:08 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -41,7 +41,7 @@ namespace Tf
    *
    *  Implementation of Tf::IOTHitCreator.
    *
-   *  Creates the OTHit objects for the Tf tracking framework
+   *  Creates the Tf::OTHit objects for the Tf tracking framework
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
