@@ -5,7 +5,11 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v2r0 2007-08-17 ===========================
+!=========================== LbMIB v2r0 2007-08-21 ===========================
+! 2007-08-21 - Gloria Corti for Magnus Lieng
+ - Fix bug in MIB-Example.opts
+   . the option "MIBackground.MIBSource" should be "MIBackground.MIBSources"
+
 ! 2007-08-17 - Gloria Corti
  - Modify code as not to process empty events, i.e. the generation of an
    "event" (or bunch) is repeated until at least one track from any MIB source

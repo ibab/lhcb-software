@@ -1,4 +1,4 @@
-// $Id: MIB-Example.opts,v 1.2 2007-08-17 12:54:14 gcorti Exp $
+// $Id: MIB-Example.opts,v 1.3 2007-08-21 16:43:44 gcorti Exp $
 
 /** @file
  *
@@ -37,11 +37,13 @@ Generator.Members -= { "Generation" };  // Comment to merge with other events
 // T=0: both beams, T=1: beam1, T=2: beam2
 // N=Num. of bunches traveling (beam1), X=Num. of bunches traveling (beam2)
 MIBackground.EventType = 62151000;
+
 // Luminosity to be set in header. It is NOT used by CollimatorSourceAlg! 
 //MIBackground.Luminosity = 2.e32/cm2/s;
+
 // Use only one source and configure it accordingly
 //--------------------------------------------------------------------------
-MIBackground.MIBSource = { "CollimatorSource" };
+MIBackground.MIBSources = { "CollimatorSource" };
 
 // Input File Options:
 //--------------------------------------------------------------------------
@@ -50,7 +52,7 @@ MIBackground.MIBSource = { "CollimatorSource" };
 // MIB-StagedShield.opts & MIB-Shield.opts
 MIBackground.CollimatorSource.ParticleSourceFile = 
   "$MIBDATAROOT/data/TCTV.staged_shield.mu.data";
-// True for binary file, false for ascii. (Default: false)
+// True for binary file, false for ascii. (Default: true)
 //MIBackground.CollimatorSource.FileIsBinary = true;
 // Keep or discard generated binary file. (Default: false)
 //MIBackground.CollimatorSource.SaveTempBinFile = false;
