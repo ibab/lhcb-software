@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ISTHitCreator
  *
- *  $Id: ISTHitCreator.h,v 1.5 2007-08-21 18:16:08 jonrob Exp $
+ *  $Id: ISTHitCreator.h,v 1.6 2007-08-21 19:11:15 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -30,7 +30,8 @@ namespace Tf
    *  Tf::STHit data objects and provides access to these objects by region.
    *
    *  Methods are provided to return the hits in a selected part of the ST detectors.
-   *  E.g.
+   *
+   *  E.g. for IT :-
    *
    *  @code
    *  // Get all the hits in the IT stations
@@ -50,7 +51,11 @@ namespace Tf
    *  Tf::TLayerID   lay = ...;
    *  Tf::ITRegionID reg = ...;
    *  Tf::STHitRange range = hitMan->hits(sta,lay,reg);
+   *  @endcode
    *
+   *  Or, for TT :-
+   *
+   *  @code
    *  // Get all the hits in the TT stations
    *  Tf::STHitRange range = hitMan->ttHits();
    *
@@ -85,10 +90,16 @@ namespace Tf
    *  get detailed information about the geomterical properties of an ST region
    *
    *  @code
-   *  Tf::TTStationID sta = ...;
-   *  Tf::TTLayerID   lay = ...;
-   *  Tf::TTRegionID  reg = ...;
-   *  Tf::STRegion* region = hitMan->region(sta,lay,reg);
+   *  // Get region information for IT
+   *  Tf::TStationID  itsta = ...;
+   *  Tf::TLayerID    itlay = ...;
+   *  Tf::ITRegionID  itreg = ...;
+   *  Tf::STRegion* region = hitMan->region(itsta,itlay,itreg);
+   *  // Get region information for TT
+   *  Tf::TTStationID ttsta = ...;
+   *  Tf::TTLayerID   ttlay = ...;
+   *  Tf::TTRegionID  ttreg = ...;
+   *  Tf::STRegion* region = hitMan->region(ttsta,ttlay,ttreg);
    *  @endcode
    *
    *  See the Tf::STRegion and Tf::EnvelopeBase classes for more details.
