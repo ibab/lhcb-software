@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.6 2007-08-21 18:20:30 jonrob Exp $
+ *  $Id: IOTHitCreator.h,v 1.7 2007-08-21 22:44:51 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -63,17 +63,17 @@ namespace Tf
    *  }
    *  @endcode
    *
-   *  This interface also provides access to the Tf::OTRegion object, that can be used to
+   *  This interface also provides access to the Tf::IOTHitCreator::OTRegion object, that can be used to
    *  get detailed information about the geomterical properties of an OT region.
    *
    *  @code
    *  Tf::TStationID sta = ...;
    *  Tf::TLayerID   lay = ...;
    *  Tf::OTRegionID reg = ...;
-   *  Tf::OTRegion* region = hitMan->region(sta,lay,reg);
+   *  Tf::IOTHitCreator::OTRegion* region = hitMan->region(sta,lay,reg);
    *  @endcode
    *
-   *  See the Tf::OTRegion and Tf::EnvelopeBase classes for more details.
+   *  See the Tf::IOTHitCreator::OTRegion and Tf::EnvelopeBase classes for more details.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01

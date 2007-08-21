@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.4 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: RegionID.h,v 1.5 2007-08-21 22:44:51 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -16,6 +16,8 @@
 #define TFKERNEL_REGIONID_H 1
 
 #include "VeloDet/DeVeloSensor.h"
+#include "Kernel/OTChannelID.h"
+#include "Kernel/STChannelID.h"
 #include "Kernel/VeloChannelID.h"
 
 namespace Tf

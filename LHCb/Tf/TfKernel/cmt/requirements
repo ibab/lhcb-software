@@ -4,11 +4,13 @@
 #============================================================================
 package           TfKernel
 version           v1r0
+#============================================================================
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TfKernel
+branches          cmt doc src TfKernel dict
+#============================================================================
 
 #============================================================================
 # Used packages.
@@ -20,23 +22,36 @@ use     STDet           v*      Det
 use     VeloDet         v*      Det
 use     GaudiAlg        v*
 use     LoKiCore        v*      Phys
+#============================================================================
 
 #============================================================================
 # Install public includes
 #============================================================================
 apply_pattern install_more_includes more=TfKernel
+#============================================================================
 
 #============================================================================
 # Linker library building rule
 #============================================================================
 library          TfKernelLib    ../src/Lib/*.cpp 
 apply_pattern    linker_library library=TfKernelLib
+#============================================================================
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          TfKernel       ../src/component/*.cpp
 apply_pattern    component_library library=TfKernel
+#============================================================================
 
-
-# CRJ : At some point should add stuff to generate python dictionaries
+#============================================================================
+# LCG Dictionaries
+#============================================================================
+apply_pattern reflex_dictionary                                      \
+              dictionary=TfKernel                                    \
+              headerfiles=$(TFKERNELROOT)/dict/TfKernelDict.h        \
+              selectionfile=$(TFKERNELROOT)/dict/TfKernelDict.xml    \
+              options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro TfKernelDict_use_linkopts $(use_linkopts)
+#============================================================================

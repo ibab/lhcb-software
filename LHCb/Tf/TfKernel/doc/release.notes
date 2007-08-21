@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-21 - Chris Jones
+ - Add CMT incantations to generate Reflex dictionary
+
 ! 2007-08-21 - Kurt Rinnert
  - made the number of zones in the VELO hit managers available to
    non-templated derived classes (avoids hardcoding in custom hit managers)

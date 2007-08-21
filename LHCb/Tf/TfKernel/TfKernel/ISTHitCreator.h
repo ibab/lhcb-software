@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ISTHitCreator
  *
- *  $Id: ISTHitCreator.h,v 1.6 2007-08-21 19:11:15 jonrob Exp $
+ *  $Id: ISTHitCreator.h,v 1.7 2007-08-21 22:44:51 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -86,7 +86,7 @@ namespace Tf
    *  }
    *  @endcode
    *
-   *  This interface also provides access to the Tf::STRegion object, that can be used to
+   *  This interface also provides access to the Tf::ISTHitCreator::STRegion object, that can be used to
    *  get detailed information about the geomterical properties of an ST region
    *
    *  @code
@@ -94,15 +94,15 @@ namespace Tf
    *  Tf::TStationID  itsta = ...;
    *  Tf::TLayerID    itlay = ...;
    *  Tf::ITRegionID  itreg = ...;
-   *  Tf::STRegion* region = hitMan->region(itsta,itlay,itreg);
+   *  Tf::ISTHitCreator::STRegion* region = hitMan->region(itsta,itlay,itreg);
    *  // Get region information for TT
    *  Tf::TTStationID ttsta = ...;
    *  Tf::TTLayerID   ttlay = ...;
    *  Tf::TTRegionID  ttreg = ...;
-   *  Tf::STRegion* region = hitMan->region(ttsta,ttlay,ttreg);
+   *  Tf::ISTHitCreator::STRegion* region = hitMan->region(ttsta,ttlay,ttreg);
    *  @endcode
    *
-   *  See the Tf::STRegion and Tf::EnvelopeBase classes for more details.
+   *  See the Tf::ISTHitCreator::STRegion and Tf::EnvelopeBase classes for more details.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
