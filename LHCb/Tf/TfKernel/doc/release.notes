@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-21 - Wouter Hulsbergen
+ - fixed bug in OTHitCleaner::removeClusters
+ - removed maps from OTHitCleaner::removeHotModules and STHitCleaner::removeHotBeetles to speed things up
+
 ! 2007-08-20 - Chris Jones
  - Add new methods to TStationHitManager that select hits using a generic
    selector object.
