@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCleaner
  *
- *  $Id: OTHitCleaner.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+ *  $Id: OTHitCleaner.h,v 1.2 2007-08-21 08:35:31 wouter Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -50,7 +50,7 @@ namespace Tf
   private:
 
     /// Max cluster size job option
-    int m_maxclustersize;
+    int m_maxClusterSize;
 
     /// Max module occupancy
     double m_maxModuleOcc;

@@ -1,4 +1,4 @@
-// $Id: STHitCleaner.cpp,v 1.2 2007-08-15 12:12:15 jonrob Exp $
+// $Id: STHitCleaner.cpp,v 1.3 2007-08-21 08:35:31 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -70,34 +70,30 @@ void STHitCleaner::removeHotBeetles( const STHits::const_iterator begin,
                                      const STHits::const_iterator end,
                                      STHits& output ) const
 {
-
-  typedef std::pair<unsigned int,std::vector<const STHit*> > BeetleInfo;
-  typedef std::map< const DeSTSector*, BeetleInfo > BeetleMap;
-  BeetleMap bMap;
-
-  // loop over hits and group per sector
-  for ( STHits::const_iterator iH = begin; iH != end; ++iH )
-  {
-    BeetleInfo & beetle = bMap[ &(*iH)->sector() ];
-    beetle.second.push_back( *iH );
-    beetle.first += (*iH)->cluster().pseudoSize();
-  }
-
-  // Loop over hits and add to output container if not too hot
-  for ( BeetleMap::const_iterator iB = bMap.begin(); iB != bMap.end(); ++iB )
-  {
-    const unsigned occ = (iB->second.first);
+  STHits::const_iterator currentend = begin ;
+  while( currentend != end) {
+    
+    // select hits in this sector and add up total size
+    STHits::const_iterator currentbegin = currentend ;
+    const DeSTSector& sector = (*currentbegin)->sector() ;
+    unsigned int occ(0) ;
+    do { 
+      occ += (*currentend)->cluster().pseudoSize();
+      ++currentend ; 
+    } while(currentend != end && &((*currentend)->sector()) == &sector ) ;
+    
+    // add to output container if not too hot
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Sector " << iB->first->id() << " has occupancy " << occ << endreq;
+      verbose() << "Sector " << sector.id() << " has occupancy " << occ << endreq;
     }
     if ( occ <= m_maxBeetleOcc )
     {
-      output.insert( output.end(), iB->second.second.begin(), iB->second.second.end() );
+      output.insert( output.end(), currentbegin, currentend );
     }
     else if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "DeSTSector " << iB->first->id()
+      debug() << "DeSTSector " << sector.id()
               << " suppressed due to high occupancy = " << occ 
               << " > " << m_maxBeetleOcc << " maximum"
               << endreq;
