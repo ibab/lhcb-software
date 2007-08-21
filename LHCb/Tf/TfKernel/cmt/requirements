@@ -19,6 +19,7 @@ use     OTDet           v*      Det
 use     STDet           v*      Det
 use     VeloDet         v*      Det
 use     GaudiAlg        v*
+use     LoKiCore        v*      Phys
 
 #============================================================================
 # Install public includes
