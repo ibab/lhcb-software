@@ -1,6 +1,18 @@
-// $Id: IOTHitCreator.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
-#ifndef _TF_IOTDataSvc_H
-#define _TF_IOTDataSvc_H
+
+//-----------------------------------------------------------------------------
+/** @file IOTHitCreator.h
+ *
+ *  Header file for class : Tf::IOTHitCreator
+ *
+ *  $Id: IOTHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_IOTHitCreator_H
+#define TFKERNEL_IOTHitCreator_H 1
 
 #include "GaudiKernel/IAlgTool.h"
 #include "TfKernel/OTHit.h"
@@ -122,4 +134,4 @@ namespace Tf
   };
 }
 
-#endif
+#endif // TFKERNEL_IOTHitCreator_H

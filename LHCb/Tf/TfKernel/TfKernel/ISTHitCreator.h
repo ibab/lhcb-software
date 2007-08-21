@@ -1,7 +1,18 @@
-// $Id: ISTHitCreator.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
-#ifndef _TF_IITDataSvc_H
-#define _TF_IITDataSvc_H
 
+//-----------------------------------------------------------------------------
+/** @file ISTHitCreator.h
+ *
+ *  Header file for class : Tf::ISTHitCreator
+ *
+ *  $Id: ISTHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_ISTHitCreator_H
+#define TFKERNEL_ISTHitCreator_H 1
 
 #include "GaudiKernel/IAlgTool.h"
 #include "TfKernel/STHit.h"
@@ -15,13 +26,13 @@ namespace Tf
 
   /** @class ISTHitCreator ISTHitCreator.h
    *
-   *  Interface to ST data provider
+   *  Interface to ST data provider. Creates the low-level STHits.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    */
 
-  class ISTHitCreator: virtual public IAlgTool
+  class ISTHitCreator : virtual public IAlgTool
   {
   public:
 
@@ -214,4 +225,4 @@ namespace Tf
   };
 }
 
-#endif
+#endif // TFKERNEL_ISTHitCreator_H

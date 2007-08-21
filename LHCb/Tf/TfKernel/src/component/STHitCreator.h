@@ -1,11 +1,22 @@
-// $Id: STHitCreator.h,v 1.3 2007-08-19 16:54:41 jonrob Exp $
-#ifndef _ITHitCreator_H
-#define _ITHitCreator_H
+
+//-----------------------------------------------------------------------------
+/** @file STHitCreator.h
+ *
+ *  Header file for class : Tf::STHitCreator
+ *
+ *  $Id: STHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef TFKERNEL_STHitCreator_H
+#define TFKERNEL_STHitCreator_H 1
 
 #include <string>
 
 #include "GaudiAlg/GaudiTool.h"
-//#include "GaudiKernel/ToolHandle.h"
 
 #include "TfKernel/ISTHitCreator.h"
 #include "GaudiKernel/IIncidentListener.h"
@@ -20,12 +31,14 @@ namespace Tf
     class STDetector ;
   }
 
-  /** @class STHitCreator TfKernel/STHitCreator.h
+  /** @class STHitCreator STHitCreator.h
    *
-   *  Interface to data svc
+   *  Implementation of Tf::ISTHitCreator.
    *
-   *  @author M.Needham
-   *  @date   30/04/2004
+   *  Creates the STHit objects for the Tf tracking framework
+   *
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-06-01
    */
 
   class STHitCreator: public GaudiTool,
@@ -147,8 +160,9 @@ namespace Tf
     std::string m_ttclusterLocation;
     std::string m_ttdetectorLocation;
 
-  } ;
-};
+  };
 
-#endif
+}
+
+#endif // TFKERNEL_STHitCreator_H
 

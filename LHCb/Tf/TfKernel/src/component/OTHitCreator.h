@@ -1,20 +1,18 @@
-// $Id: OTHitCreator.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
-#ifndef _OTHitCreator_H
-#define _OTHitCreator_H
 
-/** @class OTHitCreator OTDataSvc.h
+//-----------------------------------------------------------------------------
+/** @file OTHitCreator.h
  *
- *  Interface to data svc
+ *  Header file for class : Tf::OTHitCreator
  *
- *  @author M.Needham
- *  @date   30/04/2004
+ *  $Id: OTHitCreator.h,v 1.3 2007-08-21 17:52:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
  */
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// OTHitCreator header file
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+#ifndef TFKERNEL_OTHitCreator_H
+#define TFKERNEL_OTHitCreator_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
@@ -37,10 +35,17 @@ namespace Tf
   namespace HitCreatorGeom {
     class OTModule ;
     class OTDetector ;
-    //class OTRegion ;
-    //template <typename RegionType> class Detector ;
-    //template <typename ModuleType, typename DetectorType> class RegionOfModules ;
   }
+
+  /** @class OTHitCreator OTHitCreator.h
+   *
+   *  Implementation of Tf::IOTHitCreator.
+   *
+   *  Creates the OTHit objects for the Tf tracking framework
+   *
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-06-01
+   */
 
   class OTHitCreator: public GaudiTool,
                       virtual public IOTHitCreator,
@@ -57,8 +62,9 @@ namespace Tf
     // destructer
     virtual ~OTHitCreator() ;
 
-    /// init
+    /// initialisation
     virtual StatusCode initialize();
+    /// finalisation
     virtual StatusCode finalize();
 
     /// incident service handle
@@ -66,35 +72,35 @@ namespace Tf
 
     // Load all the OT hits
     virtual OTHitRange hits() const ;
-   
+
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation, 
+    virtual OTHitRange hits(const TStationID iStation,
                             const TLayerID iLayer) const ;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation, 
-                            const TLayerID iLayer, 
+    virtual OTHitRange hits(const TStationID iStation,
+                            const TLayerID iLayer,
                             const OTRegionID iRegion) const ;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation, 
-                            const TLayerID iLayer, 
-                            const OTRegionID iRegion, 
-                            const float xmin, 
+    virtual OTHitRange hits(const TStationID iStation,
+                            const TLayerID iLayer,
+                            const OTRegionID iRegion,
+                            const float xmin,
                             const float xmax) const ;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation, 
-                            const TLayerID iLayer, 
+    virtual OTHitRange hits(const TStationID iStation,
+                            const TLayerID iLayer,
                             const OTRegionID iRegion,
-                            const float xmin, 
-                            const float xmax, 
+                            const float xmin,
+                            const float xmax,
                             const float ymin,
                             const float ymax) const ;
 
     // Retrieve the OTRegion for a certain region ID. The region
-    virtual const OTRegion* region(const TStationID iStation, 
-                                   const TLayerID iLayer, 
+    virtual const OTRegion* region(const TStationID iStation,
+                                   const TLayerID iLayer,
                                    const OTRegionID iRegion) const ;
 
   public:
@@ -113,7 +119,6 @@ namespace Tf
   };
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#endif
+#endif // TFKERNEL_OTHitCreator_H
 

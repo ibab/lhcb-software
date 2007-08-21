@@ -1,3 +1,16 @@
+
+//-----------------------------------------------------------------------------
+/** @file STHitCreator.h
+ *
+ *  Implementation file for class : Tf::STHitCreator
+ *
+ *  $Id: STHitCreator.cpp,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *
+ *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+ *  @date   2007-06-01
+ */
+//-----------------------------------------------------------------------------
+
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Kernel/STChannelID.h"
