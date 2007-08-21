@@ -1,4 +1,4 @@
-// $Id: HitManagersTestAlg.cpp,v 1.1 2007-08-21 13:56:34 jonrob Exp $
+// $Id: HitManagersTestAlg.cpp,v 1.2 2007-08-21 13:58:08 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -87,8 +87,8 @@ StatusCode HitManagersTestAlg::execute()
       TRegionID  tRegID  = tRegionID();
       if ( m_rndm() > 0.5 ) m_tMan->prepareHits(tStatID,tLayID,tRegID);
       THitRange trange = m_tMan->hits(tStatID,tLayID,tRegID);
-      info() << "Found " << trange.size() << " T hits for "
-             << tStatID << " " << tLayID << " " << tRegID << endreq;
+      debug() << "Found " << trange.size() << " T hits for "
+              << tStatID << " " << tLayID << " " << tRegID << endreq;
       for ( THitRange::const_iterator iT = trange.begin(); iT != trange.end(); ++iT ) {;}
     }
 
@@ -99,8 +99,8 @@ StatusCode HitManagersTestAlg::execute()
       TLayerID   tLayID  = tLayerID();
       if ( m_rndm() > 0.5 ) m_tMan->prepareHits(tStatID,tLayID);
       THitRange trange = m_tMan->hits(tStatID,tLayID);
-      info() << "Found " << trange.size() << " T hits for "
-             << tStatID << " " << tLayID << endreq;
+      debug() << "Found " << trange.size() << " T hits for "
+              << tStatID << " " << tLayID << endreq;
       for ( THitRange::const_iterator iT = trange.begin(); iT != trange.end(); ++iT ) {;}
     }
 
@@ -110,8 +110,8 @@ StatusCode HitManagersTestAlg::execute()
       TStationID tStatID = tStationID();
       if ( m_rndm() > 0.5 ) m_tMan->prepareHits(tStatID);
       THitRange trange = m_tMan->hits(tStatID);
-      info() << "Found " << trange.size() << " T hits for "
-             << tStatID << endreq;
+      debug() << "Found " << trange.size() << " T hits for "
+              << tStatID << endreq;
       for ( THitRange::const_iterator iT = trange.begin(); iT != trange.end(); ++iT ) {;}
     }
 
@@ -120,7 +120,7 @@ StatusCode HitManagersTestAlg::execute()
     {
       if ( m_rndm() > 0.5 ) m_tMan->prepareHits();
       THitRange trange = m_tMan->hits();
-      info() << "Found " << trange.size() << " T hits" << endreq;
+      debug() << "Found " << trange.size() << " T hits" << endreq;
       for ( THitRange::const_iterator iT = trange.begin(); iT != trange.end(); ++iT ) {;}
     }
 
@@ -138,8 +138,8 @@ StatusCode HitManagersTestAlg::execute()
       TTRegionID  ttRegID  = ttRegionID();
       if ( m_rndm() > 0.5 ) m_ttMan->prepareHits(ttStatID,ttLayID,ttRegID);
       TTHitRange ttrange = m_ttMan->hits(ttStatID,ttLayID,ttRegID);
-      info() << "Found " << ttrange.size() << " TT hits for "
-             << ttStatID << " " << ttLayID << " " << ttRegID << endreq;
+      debug() << "Found " << ttrange.size() << " TT hits for "
+              << ttStatID << " " << ttLayID << " " << ttRegID << endreq;
       for ( TTHitRange::const_iterator iTT = ttrange.begin(); iTT != ttrange.end(); ++iTT ) {;}
     }
 
@@ -150,8 +150,8 @@ StatusCode HitManagersTestAlg::execute()
       TTLayerID   ttLayID  = ttLayerID();
       if ( m_rndm() > 0.5 ) m_ttMan->prepareHits(ttStatID,ttLayID);
       TTHitRange ttrange = m_ttMan->hits(ttStatID,ttLayID);
-      info() << "Found " << ttrange.size() << " TT hits for "
-             << ttStatID << " " << ttLayID << endreq;
+      debug() << "Found " << ttrange.size() << " TT hits for "
+              << ttStatID << " " << ttLayID << endreq;
       for ( TTHitRange::const_iterator iTT = ttrange.begin(); iTT != ttrange.end(); ++iTT ) {;}
     }
 
@@ -161,7 +161,7 @@ StatusCode HitManagersTestAlg::execute()
       TTStationID ttStatID = ttStationID();
       if ( m_rndm() > 0.5 ) m_ttMan->prepareHits(ttStatID);
       TTHitRange ttrange = m_ttMan->hits(ttStatID);
-      info() << "Found " << ttrange.size() << " TT hits for " << ttStatID << endreq;
+      debug() << "Found " << ttrange.size() << " TT hits for " << ttStatID << endreq;
       for ( TTHitRange::const_iterator iTT = ttrange.begin(); iTT != ttrange.end(); ++iTT ) {;}
     }
 
@@ -170,7 +170,7 @@ StatusCode HitManagersTestAlg::execute()
     {
       if ( m_rndm() > 0.5 ) m_ttMan->prepareHits();
       TTHitRange ttrange = m_ttMan->hits();
-      info() << "Found " << ttrange.size() << " TT hits" << endreq;
+      debug() << "Found " << ttrange.size() << " TT hits" << endreq;
       for ( TTHitRange::const_iterator iTT = ttrange.begin(); iTT != ttrange.end(); ++iTT ) {;}
     }
 
