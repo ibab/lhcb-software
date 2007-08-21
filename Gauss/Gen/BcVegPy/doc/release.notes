@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.5 2007-06-22 12:20:13 gcorti Exp $
+! $Id: release.notes,v 1.6 2007-08-21 16:55:40 gcorti Exp $
 ! Package     : Gen/BcVegPy
 ! Responsible : 
+
+! ====================== BcVegPy v1r1p1 2007-06-22 ===========================
+! 2007-08-21 - Gloria Corti
+ - Fix problem in production on the grid due to character lenght of pdf file
+   too short. Increase from CHARACTER*100 to CHARACTER*512
+   . src/outerpdf.f
 
 ! ====================== BcVegPy v1r1 2007-06-22 ==========================
 ! 2007-05-10 - Patrick Robbe for Jibo He

@@ -130,7 +130,7 @@ C                             ********************
       Subroutine SetCtq6 (Iset)
       Implicit Double Precision (A-H,O-Z)
       Parameter (Isetmax0=5)
-      Character Flnm(Isetmax0)*6, nn*3, Tablefile*100
+      Character Flnm(Isetmax0)*6, nn*3, Tablefile*512
       Data (Flnm(I), I=1,Isetmax0)
      > / 'cteq6m', 'cteq6d', 'cteq6l', 'cteq6l','ctq61.'/
       Data Isetold, Isetmin0, Isetmin1, Isetmax1 /-987,1,100,140/
