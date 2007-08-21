@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ISTHitCreator
  *
- *  $Id: ISTHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *  $Id: ISTHitCreator.h,v 1.5 2007-08-21 18:16:08 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -26,7 +26,72 @@ namespace Tf
 
   /** @class ISTHitCreator ISTHitCreator.h
    *
-   *  Interface to ST data provider. Creates the low-level STHits.
+   *  Interface to ST data provider. Creates, on demand, the low level 
+   *  Tf::STHit data objects and provides access to these objects by region.
+   *
+   *  Methods are provided to return the hits in a selected part of the ST detectors.
+   *  E.g.
+   *
+   *  @code
+   *  // Get all the hits in the IT stations
+   *  Tf::STHitRange range = hitMan->itHits();
+   *
+   *  // Get all the IT hits in one specific T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta);
+   *
+   *  // Get all the IT hits in one specific layer of one T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::TLayerID   lay = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta,lay);
+   *
+   *  // Get all the IT hits in a specific 'region' of one layer of one T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::TLayerID   lay = ...;
+   *  Tf::ITRegionID reg = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta,lay,reg);
+   *
+   *  // Get all the hits in the TT stations
+   *  Tf::STHitRange range = hitMan->ttHits();
+   *
+   *  // Get all the TT hits in one specific TT station
+   *  Tf::TTStationID sta = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta);
+   *
+   *  // Get all the TT hits in one specific layer of one TT station
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTLayerID   lay = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta,lay);
+   *
+   *  // Get all the TT hits in a specific 'region' of one layer of one TT station
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTLayerID   lay = ...;
+   *  Tf::TTRegionID  reg = ...;
+   *  Tf::STHitRange range = hitMan->hits(sta,lay,reg);
+   *  @endcode
+   *
+   *  In all cases the returned Range object acts like a standard vector or container :-
+   *
+   *  @code
+   *   // Iterate over the returned range
+   *  for ( Tf::STHitRange::const_iterator iR = range.begin();
+   *        iR != range.end(); ++iR )
+   *  {
+   *    // do something with the hit
+   *  }
+   *  @endcode
+   *
+   *  This interface also provides access to the Tf::STRegion object, that can be used to
+   *  get detailed information about the geomterical properties of an ST region
+   *
+   *  @code
+   *  Tf::TTStationID sta = ...;
+   *  Tf::TTLayerID   lay = ...;
+   *  Tf::TTRegionID  reg = ...;
+   *  Tf::STRegion* region = hitMan->region(sta,lay,reg);
+   *  @endcode
+   *
+   *  See the Tf::STRegion and Tf::EnvelopeBase classes for more details.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01

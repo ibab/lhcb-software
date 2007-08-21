@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *  $Id: IOTHitCreator.h,v 1.5 2007-08-21 18:16:07 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -26,7 +26,54 @@ namespace Tf
 
   /** @class IOTHitCreator IOTHitCreator.h
    *
-   *  Interface to OT data provider
+   *  Interface to OT data provider. Creates, on demand, the low level 
+   *  Tf::OTHit data objects and provides access to these objects by region.
+   *
+   *  Methods are provided to return the hits in a selected part of the OT detectors.
+   *  E.g.
+   *
+   *  @code
+   *  // Get all the hits in the IT stations
+   *  Tf::OTHitRange range = hitMan->hits();
+   *
+   *  // Get all the IT hits in one specific T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::OTHitRange range = hitMan->hits(sta);
+   *
+   *  // Get all the IT hits in one specific layer of one T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::TLayerID   lay = ...;
+   *  Tf::OTHitRange range = hitMan->hits(sta,lay);
+   *
+   *  // Get all the IT hits in a specific 'region' of one layer of one T station
+   *  Tf::TStationID sta = ...;
+   *  Tf::TLayerID   lay = ...;
+   *  Tf::OTRegionID reg = ...;
+   *  Tf::OTHitRange range = hitMan->hits(sta,lay,reg);
+   *  @endcode
+   * 
+   *  In all cases the returned Range object acts like a standard vector or container :-
+   *
+   *  @code
+   *   // Iterate over the returned range
+   *  for ( Tf::OTHitRange::const_iterator iR = range.begin();
+   *        iR != range.end(); ++iR )
+   *  {
+   *    // do something with the hit
+   *  }
+   *  @endcode
+   *
+   *  This interface also provides access to the Tf::OTRegion object, that can be used to
+   *  get detailed information about the geomterical properties of an OT region.
+   *
+   *  @code
+   *  Tf::TStationID sta = ...;
+   *  Tf::TLayerID   lay = ...;
+   *  Tf::OTRegionID reg = ...;
+   *  Tf::OTRegion* region = hitMan->region(sta,lay,reg);
+   *  @endcode
+   *
+   *  See the Tf::OTRegion and Tf::EnvelopeBase classes for more details.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
