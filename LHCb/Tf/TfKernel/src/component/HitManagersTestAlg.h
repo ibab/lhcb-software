@@ -1,4 +1,4 @@
-// $Id: HitManagersTestAlg.h,v 1.1 2007-08-21 13:56:34 jonrob Exp $
+// $Id: HitManagersTestAlg.h,v 1.2 2007-08-21 14:24:31 jonrob Exp $
 #ifndef COMPONENT_HITMANAGERSTESTALG_H
 #define COMPONENT_HITMANAGERSTESTALG_H 1
 
@@ -42,6 +42,10 @@ namespace Tf
       TestHit( const Tf::OTHit & otHit ) : HitExtension<Tf::LineHit>(&otHit) { }
       TestHit( const Tf::STHit & stHit ) : HitExtension<Tf::LineHit>(&stHit) { }
       ~TestHit() { }
+    public:
+      /// Overload output to ostream
+      friend inline std::ostream& operator << ( std::ostream& os, const TestHit & hit )
+      { return os << &hit << " " << hit.hit()->x(); }
     };
 
   public:
