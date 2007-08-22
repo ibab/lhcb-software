@@ -181,7 +181,6 @@ namespace Tf
             thehits[lasthit++] = *ihit ;
           (const_cast<OTModule*>(*imodule))->setRange( hitsbegin + firsthit, hitsbegin + lasthit ) ;
         }
-        assert(lasthit == numhits) ;
       }
     }
 
@@ -299,7 +298,6 @@ namespace Tf
                                      const float ymin,
                                      const float ymax ) const
   {
-    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax,ymin,ymax) ;
   }
