@@ -22,42 +22,31 @@ class ParticleAdder : public GaudiTool, virtual public IVertexFit {
 public: 
   /// Standard constructor
   ParticleAdder( const std::string& type, 
-                   const std::string& name,
-                   const IInterface* parent);
+                 const std::string& name,
+                 const IInterface* parent);
 
   StatusCode initialize();
 
   /// Method to fit a vertex 
-  StatusCode fit( const LHCb::Particle::ConstVector&,LHCb::Vertex& ) const ;  
+  StatusCode fit( const LHCb::Particle::ConstVector&,
+                  LHCb::Vertex& ) const ;  
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
-  StatusCode fit( const LHCb::Particle::ConstVector&,LHCb::Particle&,LHCb::Vertex& ) const ; 
-  StatusCode reFit( LHCb::Particle& particle ) const {
-     LHCb::Vertex* vertex = particle.endVertex() ;
-     return fit( particle.daughtersVector(),
-                 particle , *vertex         ) ;
-  }
-  StatusCode add(const LHCb::Particle*, 
-                 LHCb::Vertex& ) const {
-    Error("add is to be implemented for ParticleAdder");
-    return StatusCode::FAILURE;
-  }
+  StatusCode fit( const LHCb::Particle::ConstVector&,
+                  LHCb::Particle&,
+                  LHCb::Vertex& ) const ; 
 
-  StatusCode remove(const LHCb::Particle*, 
-                    LHCb::Vertex& ) const {
-    Error("remove is to be implemented for ParticleAdder");
-    return StatusCode::FAILURE;
-  }
+  StatusCode reFit( LHCb::Particle& particle ) const;
 
+  StatusCode add( const LHCb::Particle*, 
+                  LHCb::Vertex& ) const;
 
-  StatusCode combine
-  ( const LHCb::Particle::ConstVector& daughter, 
-    LHCb::Particle&                    mother  , 
-    LHCb::Vertex&                      vertex  ) const 
-  {
-    return fit ( daughter , mother , vertex ) ;
-  }
+  StatusCode remove( const LHCb::Particle*, 
+                     LHCb::Vertex& ) const;
 
+  StatusCode combine( const LHCb::Particle::ConstVector& daughter, 
+                      LHCb::Particle&                    mother  , 
+                      LHCb::Vertex&                      vertex  ) const;
 
   virtual ~ParticleAdder( ); ///< Destructor
 

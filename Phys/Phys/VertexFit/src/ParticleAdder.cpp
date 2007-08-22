@@ -46,16 +46,15 @@ ParticleAdder::~ParticleAdder() {};
 // Initialize
 //=============================================================================
 StatusCode ParticleAdder::initialize(){
-  StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
-  return sc;
+  return GaudiTool::initialize();
 };
 
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts, 
-                                 LHCb::Particle& P, LHCb::Vertex& V) const
+                               LHCb::Particle& P, 
+                               LHCb::Vertex& V) const
 {
   debug() << "start ParticleAdder fit " <<endreq;
   debug() << "using " << parts.size() <<" particles" <<endreq;
@@ -92,11 +91,33 @@ StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts,
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts, 
-                                 LHCb::Vertex& V) const{  
+                               LHCb::Vertex& V) const{  
   LHCb::Particle tPart;
   return fit(parts, tPart, V);
 }
 //=============================================================================
-
-
-
+StatusCode ParticleAdder::reFit( LHCb::Particle& particle ) const {
+  LHCb::Vertex* vertex = particle.endVertex() ;
+  return fit( particle.daughtersVector(), particle ,*vertex ) ;
+}
+//=============================================================================
+StatusCode ParticleAdder::add(const LHCb::Particle*, 
+               LHCb::Vertex& ) const {
+  Error("add is to be implemented for ParticleAdder");
+  return StatusCode::FAILURE;
+}
+//=============================================================================
+StatusCode ParticleAdder::remove(const LHCb::Particle*, 
+                                 LHCb::Vertex& ) const {
+  Error("remove is to be implemented for ParticleAdder");
+  return StatusCode::FAILURE;
+}
+//=============================================================================
+StatusCode ParticleAdder::combine
+( const LHCb::Particle::ConstVector& daughter, 
+  LHCb::Particle&                    mother  , 
+  LHCb::Vertex&                      vertex  ) const 
+{
+  return fit ( daughter , mother , vertex ) ;
+}
+//=============================================================================
