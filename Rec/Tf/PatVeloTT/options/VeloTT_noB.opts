@@ -1,0 +1,7 @@
+// For Offline VeloTT tracking with no B field
+PatVeloTT.PatVeloTTTool.minMomentum = 5000.;
+PatVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
+PatVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatVeloTT.maxChi2 = 256.;
+PatVeloTT.fitTracks = false;
+PatVeloTT.InputUsedTracksNames = {"Rec/Track/Forward","Rec/Track/Match"};

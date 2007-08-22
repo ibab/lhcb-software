@@ -1,0 +1,34 @@
+#============================================================================
+# Created    : 2005-08-03
+# Maintainer : Mariusz Witek
+#============================================================================
+package           PatVeloTT
+version           v2r11
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+include_path      none
+
+#============================================================================
+# Used packages.
+#============================================================================
+use	TfKernel	v*	Tf
+use     TrackInterfaces	v*	Tr
+use     STDet           v*      Det
+use     DigiEvent       v*      Event
+use     TrackEvent      v*      Event
+
+#-- Temporary, for debug with MC truth
+use     LinkerEvent     v*      Event
+use     MCEvent         v*      Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PatVeloTT_Tf    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PatVeloTT_Tf

@@ -1,0 +1,8 @@
+// For Hlt VeloTT tracking
+PatVeloTT.minMomentum = 2000.;
+PatVeloTT.DxGroupFactor = 0.0;
+PatVeloTT.removeUsed = false;
+PatVeloTT.fitTracks = false;
+PatVeloTT.maxChi2 = 256.;
+PatVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;

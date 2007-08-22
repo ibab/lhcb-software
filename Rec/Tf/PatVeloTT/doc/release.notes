@@ -1,0 +1,129 @@
+!-----------------------------------------------------------------------------
+! Package     : Pat/PatVeloTT
+! Responsible : Mariusz Witek
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+!========================== PatVeloTT v2r11 2007-05-14 =======================
+! 2007-05-11 - Mariusz Witek
+ - split PatVeloTT into main algo and tool: PatVeloTT and PatVeloTTTool
+ - modify PatTTMagnetTool for no B field
+ - modify options, add VeloTT_noB.opts for no B field
+
+!========================== PatVeloTT v2r10 2007-03-29 =======================
+! 2007-03-29 - Marco Cattaneo
+ - Change return type of PatTTMagnetTool::prepareDeflectionTables and 
+   prepareBdlTables to void, since StatusCode could never be false
+ - Fix untested StatusCode in PatTTMagnetTool::f_bdl
+
+!========================== PatVeloTT v2r10 2007-03-28 =======================
+! 2007-03-22 - David Hutchcroft
+ - Made PatVeloTT use all VELO track states (if more than one)
+
+!========================== PatVeloTT v2r9 2007-03-02 ========================
+! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove obsolete PatVeloTT_load.cpp file
+ - Remove obsolete ApplicationMgr.DLLs options
+
+!========================== PatVeloTT v2r8 2006-11-13 ========================
+! 2006-11-13 - Mariusz Witek
+ - correction of memory leak in PatVeloTT
+
+!========================== PatVeloTT v2r7 2006-11-07 ========================
+! 2006-11-06 - Mariusz Witek
+ - removed MC checks (inside ifdef)
+
+! 2006-10-31 - Mariusz Witek
+ - modifications for off-line mode:
+    - time optimization by reducing number of Kalman fit calls.
+      PatVeloTT called after Forward and Match to remove Velo
+      tracks already used and corresponding TT hits. 
+    - stored VTT tracks are after fit inside PatVeloTT.
+      Need to change order in TrackSys/options/RecoTracking.opts
+      In principle no need to refit again by FitVeloTT.
+
+!========================== PatVeloTT v2r6 2006-10-23 ========================
+! 2006-10-20 - Mariusz Witek
+ - Use Kalman fit to select best candidate (off-line)
+ - Quality conditions for Hlt
+ - Added options for Off-line and Hlt
+
+!========================== PatVeloTT v2r5 2006-10-10 ========================
+! 2006-10-10 - Marco Cattaneo
+ - Clean up some obsolete includes
+
+! 2006-10-07 - Mariusz Witek
+- Modification and tuning of PatVeloTT package for off-line use. 
+  Tuning of reconstruction for low momentum range down to about 0.8 GeV
+- Added multipurpose tool (Magnet and TT geometry): PatTTMagnetTool.cpp
+  and its slave tool TableForFunction.cpp
+- due to low momentum tuning PatChecker reports more ghosts (20%) 
+- same algorithm should work for on-line with different parameters
+
+!========================== PatVeloTT v2r4 2006-09-26 ========================
+! 2006-09-22 - Mariusz Witek
+ - Cleaning and small modifications for HLT
+
+! 2006-09-15 - Olivier Callot
+ - Speed-up decoding by removing a test on valid TT channel ID and avoid
+   computing of sqrt(12.);
+
+!========================== PatVeloTT v2r3 2006-08-21 ========================
+! 2006-08-10 - Olivier Callot
+ - Decode and save the high threshold bit for TT coorindate
+ - Don't use the cluster size to compute the error on TT coordinate
+
+!========================== PatVeloTT v2r2 2006-08-03 ========================
+! 2006-08-03 - Marco Cattaneo
+ - Fix unitialized variables, initialize Properties in declareProperty
+ - Use DECLARE_ALGORITHM_FACTORY, DECLARE_TOOL_FACTORY macros
+
+!========================== PatVeloTT v2r1 2006-07-12 ========================
+! 2006-07-10 M. Needham
+ - Pick up low threshold hits
+
+!========================== PatVeloTT v2r0 2006-06-21 ========================
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
+! 2006-06-14 - Mariusz Witek
+ - update for DC06. Version with minimum functionality for further developments
+
+! 2006-01-26 - Jose A. Hernando
+ - PatVeloTT/*.h removing header files and put them back in src
+   src/PatVeloTT.cpp uses a tool: ITrackSelector to decide when a track should be
+                                  make from velo to VeloTT
+
+!========================== PatVeloTT v1r4 2006-01-19 ========================
+! 2006-01-19 - Jose A. Hernando
+ - PatVelo/*.h (temporary) some headers files exposed to be steer the 
+   reconstruction from Hlt. TODO: make a tool to reconstruction one seed VeloTT
+ - src/PatVeloTT.cpp some small bug fix and allowing steering the reco from Hlt
+
+!========================== PatVeloTT v1r3 2005-11-02 ========================
+! 2005-11-02 - Eduardo Rodrigues
+ - added setStatus(...) to Tracks in PatVeloTT
+
+!========================== PatVeloTT v1r2 2005-10-17 ========================
+! 2005-10-17 - Olivier Callot
+ - New algorithm to add truth information to the PatTTCoord, for debugging
+
+!========================== PatVeloTT v1r1p1 2005-10-14 ======================
+! 2005-10-14 - Marco Cattaneo
+ - Adapt to move of TrackKeys to Track.h
+
+! 2005-10-03 - Olivier Callot
+ - Test that the wafer pointer is non zero before calling STWafer function 
+   isInVDeadZone.
+
+!========================== PatVeloTT v1r1 2005-09-06 ========================
+! 2005-09-06 - Marco Cattaneo
+ - Remove PatVTTBdlTool, use BdlTool instead (from Det/Magnet) via IBdlTool
+   interface from LHCbKernel
+
+!========================== PatVeloTT v1r0 2005-09-02 ========================
+! 2005-08-08 - Olivier Callot
+ - Techcnical adaptation of the TrgVeloTT package to the Pat project.
+   Some remaining problems:
+    - reFitTrack doesn't give apparently the proper results.
