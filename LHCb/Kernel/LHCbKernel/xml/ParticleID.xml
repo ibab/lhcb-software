@@ -27,6 +27,7 @@
         access="PUBLIC"
        />
        <constructor
+        explicit = "TRUE"
         desc="Constructor with PDG code"
         initList="m_pid( pid )"
        >

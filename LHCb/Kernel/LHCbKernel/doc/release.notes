@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-08-22 - Patrick Koppenburg
+ - Make the ParticleID constructor from int explicit
+
 ! 2007-08-20 - Marco Clemencic
  - Added dictionary for std::vector<LHCb::VeloChannelID> (needed for VeloCluster
    in Event/DigiEvent). 
