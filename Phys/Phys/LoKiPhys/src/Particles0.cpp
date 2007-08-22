@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.12 2007-07-23 17:35:53 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.13 2007-08-22 17:24:02 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -652,7 +652,7 @@ LoKi::Particles::DeltaMass::DeltaMass
   , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
-  const ParticleProperty* pp = LoKi::Particles::ppFromPID( pid.pid() ) ;
+  const ParticleProperty* pp = LoKi::Particles::ppFromPID( LHCb::ParticleID( pid.pid() )) ;
   if( 0 == pp    ) 
   { Exception("DeltaMass(): Unknow ParticleID " ) ; }
   m_mass = pp->mass();  

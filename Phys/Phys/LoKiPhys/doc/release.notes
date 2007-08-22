@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.32 2007-08-20 13:24:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.33 2007-08-22 17:24:01 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2007-08-22 - Patrick Koppenburg
+ - src/Particles0.cpp: No implicit construction of ParticleID
+ - src/SelectVertex.cpp: temporarily removed as it depend on LoKiAlgo creating
+   a circular dependency
+
 ! 2007-08-20 - Vanya BELYAEV
  - increment the major version to v6r0 
-
 
 ! 2007-07-23 - Vanya BELYAEV
  - many small fixes to speed-up the compilation, 
@@ -219,6 +223,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.32  2007/08/20 13:24:02  ibelyaev
+!  increment the version to v6r0
+!
 ! Revision 1.31  2007/07/23 17:35:51  ibelyaev
 !  v4r1: speed-up compilation, reduce dictionaries and improve doxygen
 !
