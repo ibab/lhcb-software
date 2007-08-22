@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.5 2006-03-15 13:48:55 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.6 2007-08-22 12:51:13 jpalac Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -34,49 +34,43 @@ public:
   virtual ~TrgVertexFitter( ); ///< Destructor
 
 
-  StatusCode reFit( LHCb::Particle& particle ) const {
-     LHCb::Vertex* vertex = particle.endVertex() ;
-     LHCb::Particle::ConstVector t ;
-     for ( SmartRefVector<LHCb::Particle>::const_iterator i= vertex->outgoingParticles().begin(); 
-           i!= vertex->outgoingParticles().end();++i) t.push_back(*i);
-     return fit( t , particle , *vertex ) ; 
-   } ; 
+  StatusCode reFit( LHCb::Particle& particle ) const;
   
   StatusCode combine( const LHCb::Particle::ConstVector& daughters , 
                       LHCb::Particle&        mother   , 
-                      LHCb::Vertex&          vertex   ) const{
-    return fit( daughters , mother , vertex ) ;
-  };
+                      LHCb::Vertex&          vertex   ) const;
 
   /// add not active for fast vertex fitter
-  StatusCode add(const LHCb::Particle* p,LHCb::Vertex& v) const {
-    verbose() << "Print " << v.position() << " and " << p 
-              << " to inhibit compilation warnings" << endmsg ;
-    Error("Adding is not allowed by TrgVertexFitter");
-    return StatusCode::FAILURE;
-  }
+  StatusCode add(const LHCb::Particle* p,
+                 LHCb::Vertex& v) const;
   
   /// remove not active for fast vertex fitter
-  StatusCode remove(const LHCb::Particle* p,LHCb::Vertex& v) const {
-    verbose() << "Print " << v.position() << " and " << p 
-              << " to inhibit compilation warnings" << endmsg ;
-    Error("Removing is not allowed by TrgVertexFitter");
-    return StatusCode::FAILURE;
-  }
-  
+  StatusCode remove(const LHCb::Particle* p,
+                    LHCb::Vertex& v) const;
 
+private:
 
-protected:
-  StatusCode doFit( const LHCb::Particle::ConstVector& partsToFit,  LHCb::Vertex& V) const ;
-  StatusCode vertexPositionAndError(const double& AX, const double& BX, const double& CX,
-                                    const double& DX, const double& EX,
-                                    const double& AY, const double& BY, const double& CY,
-                                    const double& DY, const double& EY,
-                                    double& vX, double& vY, double& vZ, LHCb::Vertex &V) const ;
+  StatusCode doFit( const LHCb::Particle::ConstVector& partsToFit,  
+                    LHCb::Vertex& V) const ;
+
+  StatusCode vertexPositionAndError(const double& AX, 
+                                    const double& BX, 
+                                    const double& CX,
+                                    const double& DX, 
+                                    const double& EX,
+                                    const double& AY, 
+                                    const double& BY, 
+                                    const double& CY,
+                                    const double& DY, 
+                                    const double& EY,
+                                    double& vX, 
+                                    double& vY, 
+                                    double& vZ, 
+                                    LHCb::Vertex& V) const ;
 
   bool isResonance(const LHCb::Particle& P) const {
     if ( P.daughters().empty() ) return false ;
-    int pid = abs(P.particleID().pid()) ;
+    const int pid = abs(P.particleID().pid()) ;
     return (!( pid==3122 || pid==3222 || pid==310 || // s
                pid==411 || pid==421 || pid==431 || pid==4122 || // c
                pid==511 || pid==521 || pid==531 || pid==541 || pid==5122 || // b

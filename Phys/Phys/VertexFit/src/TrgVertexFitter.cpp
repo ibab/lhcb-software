@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.17 2007-07-13 08:52:54 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.18 2007-08-22 12:51:13 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -314,11 +314,20 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
 //=============================================================================
 // Compute vertex position and covariance matrix
 //=============================================================================
-StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const double& BX, const double& CX,
-                                                   const double& DX, const double& EX,
-                                                   const double& AY, const double& BY, const double& CY,
-                                                   const double& DY, const double& EY,
-                                                   double& vX, double& vY, double& vZ, Vertex &V) const
+StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, 
+                                                   const double& BX, 
+                                                   const double& CX,
+                                                   const double& DX, 
+                                                   const double& EX,
+                                                   const double& AY, 
+                                                   const double& BY, 
+                                                   const double& CY,
+                                                   const double& DY, 
+                                                   const double& EY,
+                                                   double& vX, 
+                                                   double& vY, 
+                                                   double& vZ, 
+                                                   Vertex& V) const
 {
           
   if (msgLevel(MSG::VERBOSE)) verbose() << "X : " << AX << " " << BX << " " << CX << " " << DX << " " << EX << " " << endmsg ;
@@ -344,3 +353,36 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
 
   return StatusCode::SUCCESS;
 }
+//=============================================================================
+StatusCode TrgVertexFitter::reFit( LHCb::Particle& particle ) const {
+  LHCb::Vertex* vertex = particle.endVertex() ;
+  LHCb::Particle::ConstVector t ;
+  for ( SmartRefVector<LHCb::Particle>::const_iterator i= vertex->outgoingParticles().begin(); 
+        i!= vertex->outgoingParticles().end();++i) t.push_back(*i);
+  return fit( t , particle , *vertex ) ; 
+} ; 
+//=============================================================================
+StatusCode TrgVertexFitter::combine( const LHCb::Particle::ConstVector& daughters , 
+                    LHCb::Particle&        mother   , 
+                    LHCb::Vertex&          vertex   ) const{
+  return fit( daughters , mother , vertex ) ;
+};
+//=============================================================================
+/// add not active for fast vertex fitter
+StatusCode TrgVertexFitter::add(const LHCb::Particle* p,
+               LHCb::Vertex& v) const {
+  verbose() << "Print " << v.position() << " and " << p 
+            << " to inhibit compilation warnings" << endmsg ;
+  Error("Adding is not allowed by TrgVertexFitter");
+  return StatusCode::FAILURE;
+}
+//=============================================================================
+/// remove not active for fast vertex fitter
+StatusCode TrgVertexFitter::remove(const LHCb::Particle* p,
+                  LHCb::Vertex& v) const {
+  verbose() << "Print " << v.position() << " and " << p 
+            << " to inhibit compilation warnings" << endmsg ;
+  Error("Removing is not allowed by TrgVertexFitter");
+  return StatusCode::FAILURE;
+}
+//=============================================================================
