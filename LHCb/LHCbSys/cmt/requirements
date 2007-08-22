@@ -79,14 +79,14 @@ use MDF                   v2r4p2 DAQ     # Markus Frank
 use DaVinciKernel         v6r5   Phys    # Juan Palacios
 use DaVinciMCKernel       v2r2   Phys    # Juan Palacios
 use DDDB                  v1r0   Det     # Marco Cattaneo
-use LoKiCore              v3r0   Phys    # Ivan Belyaev
-use LoKiMC                v3r0   Phys    # Ivan Belyaev
-use LoKiGen               v3r0   Phys    # Ivan Belyaev
-use LoKiGenMC             v3r0   Phys    # Ivan Belyaev
-use LoKiPhys              v4r0   Phys    # Ivan Belyaev
-use LoKiPhysMC            v5r0   Phys    # Ivan Belyaev
-use LoKiAlgo              v4r0   Phys    # Ivan Belyaev
-use LoKiAlgoMC            v4r0   Phys    # Ivan Belyaev
+use LoKiCore              v6r0   Phys    # Ivan Belyaev
+use LoKiMC                v6r0   Phys    # Ivan Belyaev
+use LoKiGen               v6r0   Phys    # Ivan Belyaev
+use LoKiGenMC             v6r0   Phys    # Ivan Belyaev
+use LoKiPhys              v6r0   Phys    # Ivan Belyaev
+use LoKiPhysMC            v6r0   Phys    # Ivan Belyaev
+use LoKiAlgo              v6r0   Phys    # Ivan Belyaev
+use LoKiAlgoMC            v6r0   Phys    # Ivan Belyaev
 
 # LHCb  Examples
 use DetDescChecks         v4r3   Det     # Ivan Belyaev
