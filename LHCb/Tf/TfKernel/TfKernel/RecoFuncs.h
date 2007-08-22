@@ -8,7 +8,7 @@
  *  pattern reco algorithms
  *
  *  CVS Log :-
- *  $Id: RecoFuncs.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: RecoFuncs.h,v 1.4 2007-08-22 15:24:56 smenzeme Exp $
  *
  *  @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-03
@@ -138,9 +138,8 @@ namespace Tf
                                     const double y0, 
                                     const double dyDz ) 
   {
-    const double z = hit->hit()->zAtYEq0() + dyDz * hit->hit()->dzDy();
-    const double y = y0 + dyDz*(z-hit->hit()->zAtYEq0());
-    hit->setZ( z ) ;
+    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
+    hit->setZ( hit->hit()->z(y) ) ;
     hit->setX( hit->hit()->x(y) ) ;
   }
 

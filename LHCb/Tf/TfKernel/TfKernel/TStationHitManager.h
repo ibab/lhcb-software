@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.15 2007-08-21 18:16:08 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.16 2007-08-22 15:24:56 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -293,7 +293,7 @@ namespace Tf
     template < typename SORTER >
     inline void sortHits( const TStationID sta,
                           const TLayerID   lay,
-                          const TRegionID  region )
+                          const TRegionID  region ) const
     {
       std::sort ( m_hits[sta][lay][region].begin(), m_hits[sta][lay][region].end(), SORTER() );
     }
@@ -304,7 +304,7 @@ namespace Tf
      */
     template < typename SORTER >
     inline void sortHits( const TStationID sta,
-                          const TLayerID   lay )
+                          const TLayerID   lay ) const
     {
       std::sort ( m_hits_layers[sta][lay].begin(), m_hits_layers[sta][lay].end(), SORTER() );
     }
@@ -313,7 +313,7 @@ namespace Tf
      *  @param[in] sta    Station ID
      */
     template < typename SORTER >
-    inline void sortHits( const TStationID sta )
+    inline void sortHits( const TStationID sta ) const
     {
       std::sort ( m_hits_stations[sta].begin(), m_hits_stations[sta].end(), SORTER() );
     }
@@ -321,7 +321,7 @@ namespace Tf
     /** Sort the all the hits
      */
     template < typename SORTER >
-    inline void sortHits( )
+    inline void sortHits( ) const
     {
       std::sort ( m_hits_all.begin(), m_hits_all.end(), SORTER() );
     }

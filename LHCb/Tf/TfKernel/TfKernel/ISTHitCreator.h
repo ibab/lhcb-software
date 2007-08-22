@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ISTHitCreator
  *
- *  $Id: ISTHitCreator.h,v 1.7 2007-08-21 22:44:51 jonrob Exp $
+ *  $Id: ISTHitCreator.h,v 1.8 2007-08-22 15:24:56 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -208,6 +208,8 @@ namespace Tf
                                    const TLayerID   iLayer,
                                    const ITRegionID iRegion) const = 0 ;
 
+
+   
     // --------------------------- TT specific --------------------------------------
 
     /** Load all the TT hits
@@ -298,6 +300,7 @@ namespace Tf
                                    const TTLayerID   iLayer,
                                    const TTRegionID iRegion) const = 0 ;
 
+    
   };
 }
 

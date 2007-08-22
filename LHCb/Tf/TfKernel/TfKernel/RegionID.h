@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.5 2007-08-21 22:44:51 jonrob Exp $
+ *  $Id: RegionID.h,v 1.6 2007-08-22 15:24:56 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -19,6 +19,7 @@
 #include "Kernel/OTChannelID.h"
 #include "Kernel/STChannelID.h"
 #include "Kernel/VeloChannelID.h"
+#include "Kernel/STChannelID.h"
 
 namespace Tf
 {
@@ -36,7 +37,7 @@ namespace Tf
 
   public:
 
-    /** @enum DetType TkKernel/RegionID.h
+    /** @enum DetType TfKernel/RegionID.h
      *
      *  Enumerated type for detector type
      *

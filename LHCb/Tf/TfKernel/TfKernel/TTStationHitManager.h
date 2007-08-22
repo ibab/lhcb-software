@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.11 2007-08-21 18:16:08 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.12 2007-08-22 15:24:56 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -253,7 +253,7 @@ namespace Tf
                                                  const TTLayerID iLayer,
                                                  const TTRegionID iRegion) const
     {
-      return this->ttHitCreator()->region(iStation,iLayer,iRegion);
+      return m_tthitcreator->region(iStation,iLayer,iRegion);
     }
 
   public:

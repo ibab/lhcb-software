@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.8 2007-08-20 19:03:31 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.9 2007-08-22 15:24:56 smenzeme Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -83,8 +83,8 @@ namespace Tf
      */
     inline XYSearchWindow searchWindow( const double z ) const
     {
-      const float y = z*((a_x*z)+b_x)+c_x;
-      const float x = m_y*z+c_y;
+      const float x = z*((a_x*z)+b_x)+c_x;
+      const float y = m_y*z+c_y;
       return XYSearchWindow( x-dx, x+dx, y-dy, y+dy );
     }
 
