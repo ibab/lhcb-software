@@ -4,16 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v5r2 2007-08-22 ==========================
 ! 2007-07-31 - Vanya BELYAEV 
-
  - Couple of tiny fixes to allow to read ALPGEN partonic events:
- 
    src/component/ReadAlpGen.cpp
    src/component/ReadFile.cpp
    src/component/ReadLHE.cpp
    src/component/ReadLHE.h
-
-
 
 ! 2007-07-27 - Gloria Corti
  - Temporarly use setting of properties without explanation third argument
