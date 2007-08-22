@@ -40,9 +40,6 @@ public:
 
 
   virtual ~PropertimeFitter( ); ///< Destructor
-
-protected:
-
  
 private:
       

@@ -43,9 +43,6 @@ public:
 
   virtual ~DirectionFitter( ); ///< Destructor
 
-protected:
-
- 
 private:
       
   IParticlePropertySvc* m_ppSvc;
