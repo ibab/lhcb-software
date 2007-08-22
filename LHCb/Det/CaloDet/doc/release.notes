@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.81 2007-08-06 21:33:13 odescham Exp $ 
+! $Id: release.notes,v 1.82 2007-08-22 19:05:13 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2007-08-22 - Olivier Deschamps
+ - implement new attribute (deltaTime) in cellParam.h
+ - implement new attribute (selectionType) in cardParam.h
+ - new algorithm : src/component DeCaloTiming.{cpp,h} to produce time-misaligned Calorimeter
+ - corresponding option file : options/CaloTiming.opts
 
 
 ! 2007-08-06 - Olivier Deschamps

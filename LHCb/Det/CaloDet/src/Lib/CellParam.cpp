@@ -1,5 +1,5 @@
 // ============================================================================
-// $Id: CellParam.cpp,v 1.6 2007-02-22 23:17:18 odescham Exp $
+// $Id: CellParam.cpp,v 1.7 2007-08-22 19:05:13 odescham Exp $
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 #define  CALODET_CELLPARAM_CPP 1 
@@ -24,7 +24,7 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
   , m_size          (      0.0 * Gaudi::Units::meter )
   , m_center        ( -99999.0 * Gaudi::Units::meter , 
                       -99999.0 * Gaudi::Units::meter , 
-                      0.0      * Gaudi::Units::meter )
+                           0.0 * Gaudi::Units::meter )
   , m_sine          (     0.0 )
   , m_gain          (     0.0 )
   , m_time          (     0.0 )
@@ -34,6 +34,7 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
   , m_neighbors     (         )
   , m_zsupNeighbors (         )
   , m_valid         ( false   )
+  , m_dtime         (  0.0    )  
 {};
 
 //=============================================================================

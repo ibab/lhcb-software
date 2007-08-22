@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.9 2007-07-19 20:37:00 odescham Exp $
+/// $Id: CardParam.h,v 1.10 2007-08-22 19:05:13 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -59,6 +59,7 @@ public:
   int  crate          () const { return m_crate          ; }
   int  slot           () const { return m_slot           ; }
   int  code           () const { return 16*m_crate+m_slot; }
+  int  SelectionType  () const { return m_selectionType;   }    
 
   std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
   
@@ -68,7 +69,7 @@ public:
   void setValidationNumber( int num )  {m_validationNumber = num;}  
   void setNeighboringCards  ( const int down  ,   
                               const int left, 
-                              const int corner, 
+                              const int corner,
                               const int previous ) { 
     m_DownNumber   = down ;
     m_LeftNumber   = left ;
@@ -76,7 +77,9 @@ public:
     m_PreviousNumber = previous;
   }
   void setIsPin(bool pin)  {    m_isPin = pin;  }
+  void setSelectionType( int num){ m_selectionType = num;}
   
+    
   
 private:
   
@@ -96,6 +99,7 @@ private:
   int m_crate;
   int m_slot;
   int m_tell1;
+  int m_selectionType; // [e,g,pi0L,pi0G] = -1 ; [hadronMaster] = 0 ; [hadronSlave1]=1 ; [hadronSlave2]=2
 };
 
 

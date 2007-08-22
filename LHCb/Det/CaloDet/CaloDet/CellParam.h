@@ -1,5 +1,5 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.6 2007-02-27 22:36:09 odescham Exp $
+// $Id: CellParam.h,v 1.7 2007-08-22 19:05:13 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
@@ -42,10 +42,11 @@ public:
   double               size          () const { return m_size          ; }
   double               sine          () const { return m_sine          ; }
   double               gain          () const { return m_gain          ; }
-  double               time          () const { return m_time          ; }
+  double               time          () const { return m_time+m_dtime  ; }
   int                  cardNumber    () const { return m_cardNumber    ; }
   int                  cardRow       () const { return m_cardRow       ; }
   int                  cardColumn    () const { return m_cardColumn    ; }
+  double               deltaTime     () const { return m_dtime         ; }
   
   
     
@@ -67,9 +68,10 @@ public:
     //                 point.mag2() ); 
     m_sine = 0;
     if(point.R() != 0)m_sine   = point.Rho()/point.R();  // MathCore methods (Cartesian3D)
-    m_time   = point.R() /Gaudi::Units::c_light *Gaudi::Units::ns; //R=sqrt(Mag2)
+    m_time   = point.R() /Gaudi::Units::c_light *Gaudi::Units::ns ; //R=sqrt(Mag2)
   }
-  
+  void setDeltaTime(double dtime){ m_dtime = dtime; }
+
   void addZsupNeighbor( const LHCb::CaloCellID& ID) { 
     m_zsupNeighbors.push_back(ID);
   }
@@ -102,6 +104,7 @@ private:
   bool m_valid;
   std::vector<LHCb::CaloCellID> m_pin;
   std::vector<int> m_led;
+  double m_dtime;
 };
 
 /// ===========================================================================

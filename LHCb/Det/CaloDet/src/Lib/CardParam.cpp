@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/07/19 20:37:01  odescham
+// fix CardParam initialisation for PIN FEB
+//
 // Revision 1.4  2007/06/14 16:10:16  odescham
 // fix FEBoard connections
 //
@@ -55,6 +58,7 @@ CardParam::CardParam( int iArea ,
     ,m_crate( iCrate)
     ,m_slot( iSlot)
     ,m_tell1 (-1)
+    ,m_selectionType(-1)
 {
   m_ids.reserve( 64 );
 } ;
