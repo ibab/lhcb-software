@@ -61,15 +61,6 @@ public:
 
   virtual ~ParticleAdder( ); ///< Destructor
 
-
-
-
-protected:
-
-  bool isResonance(const LHCb::Particle*) const; 
-  bool isVertexed(const LHCb::Particle*) const;
-
- 
 private:
       
 

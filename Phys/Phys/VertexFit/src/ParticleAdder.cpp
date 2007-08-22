@@ -29,8 +29,8 @@ DECLARE_TOOL_FACTORY(ParticleAdder);
 // Standard constructor, initializes variables
 //=============================================================================
 ParticleAdder::ParticleAdder( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                              const std::string& name,
+                              const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IVertexFit>       (this);
@@ -96,27 +96,7 @@ StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts,
   LHCb::Particle tPart;
   return fit(parts, tPart, V);
 }
-
-//==================================================================
-//  method to determine if a particle is a resonance
-//==================================================================
-
-bool ParticleAdder::isResonance(const LHCb::Particle* part) const {
-  bool isRes=false;
-  int id=part->particleID().pid();  
-  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
-  if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)) isRes=true;
-  return isRes;
-
-}
-
-//==================================================================
-//  method to determine if a particle has a reconstructed vertex 
-//==================================================================
-
-bool ParticleAdder::isVertexed(const LHCb::Particle* part) const{
-  return false;
-}
+//=============================================================================
 
 
 
