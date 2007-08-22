@@ -1,8 +1,9 @@
 
 package AnalysisSys
-version v1r5
+version v1r6
 
 branches doc cmt
+
 
 ####################################################################
 
@@ -11,7 +12,7 @@ use  CommonParticles            v3r8     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v7r3   Phys   # Marco Musy
 
 ####################################################################
-use  DaVinciMCTools     	v9r4     Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r5     Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p1   Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r4     Phys   # Marco Musy
