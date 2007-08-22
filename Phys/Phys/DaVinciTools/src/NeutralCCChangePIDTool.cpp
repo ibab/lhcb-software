@@ -1,4 +1,4 @@
-// $Id: NeutralCCChangePIDTool.cpp,v 1.2 2007-01-12 14:33:34 pkoppenb Exp $
+// $Id: NeutralCCChangePIDTool.cpp,v 1.3 2007-08-22 16:40:28 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,7 @@ LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart 
     if( newpp && newpp != oldpp )
     {
       LHCb::Particle newpart = oldpart;			/// Local copy
-      newpart.setParticleID( newpp->pythiaID() );	/// Change PID
+      newpart.setParticleID( LHCb::ParticleID( newpp->pythiaID()) );	/// Change PID
 
       /// Verbosity
       verbose() << "Returning " << newpart.particleID().pid()

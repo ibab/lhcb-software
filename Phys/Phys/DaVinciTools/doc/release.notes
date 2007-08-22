@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.278 2007-08-22 15:07:12 jpalac Exp $
+! $Id: release.notes,v 1.279 2007-08-22 16:45:25 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/NeutralCCChangePIDTool.cpp
+   Replace all by particle -> setParticleID( m_Id ); by 
+   particle -> setParticleID( LHCb::ParticleID (m_Id) );
 
 ! 2007-08-22 - Juan PALACIOS
  - src/GeomDispCalculator.cpp

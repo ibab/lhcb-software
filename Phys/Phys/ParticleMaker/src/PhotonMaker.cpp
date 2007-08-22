@@ -226,7 +226,7 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     
     // create new particle and fill it
     LHCb::Particle* particle = new LHCb::Particle( ); // photon constructor
-    particle -> setParticleID( m_Id );
+    particle -> setParticleID( LHCb::ParticleID (m_Id) );
     particle -> setProto( pp ) ;
 
     // mass and mass uncertainties

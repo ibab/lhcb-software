@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.5 2007-05-10 12:36:20 pkoppenb Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.6 2007-08-22 16:40:04 pkoppenb Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -238,7 +238,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 
 StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle g2,
                                      LHCb::Particle* pi0){
-  pi0->setParticleID( m_Id );
+  pi0->setParticleID( LHCb::ParticleID (m_Id) );
 
   LHCb::Particle* gg1;
   LHCb::Particle* gg2;

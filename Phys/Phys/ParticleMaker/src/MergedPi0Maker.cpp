@@ -1,5 +1,5 @@
 // $Id
-// $Id: MergedPi0Maker.cpp,v 1.4 2007-01-12 14:14:26 ranjard Exp $
+// $Id: MergedPi0Maker.cpp,v 1.5 2007-08-22 16:40:04 pkoppenb Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -251,7 +251,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
 
     // create new particle and fill it
     LHCb::Particle* particle = new LHCb::Particle( ); 
-    particle -> setParticleID( m_Id );
+    particle -> setParticleID( LHCb::ParticleID(m_Id) );
     particle -> setProto( pp ) ;
 
     // confidence level
