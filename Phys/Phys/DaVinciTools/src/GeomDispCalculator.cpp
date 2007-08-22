@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.19 2007-07-12 08:03:01 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.20 2007-08-22 15:06:18 jpalac Exp $
 
 // Include files
 
@@ -82,13 +82,13 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
   // the vertex. Use the transporter tool to move the first
   // measured point closer to the vertex position.
 
-  Gaudi::XYZPoint vtx = vertex.position();
-  Gaudi::SymMatrix3x3 vtxPosError = vertex.covMatrix();
+  const Gaudi::XYZPoint vtx = vertex.position();
+  const Gaudi::SymMatrix3x3 vtxPosError = vertex.covMatrix();
 
   LHCb::Particle transParticle;
-  StatusCode sctrans = m_pTransporter->transport(&particle,
-                                                 vtx.z(),
-                                                 transParticle);
+  const StatusCode sctrans = m_pTransporter->transport(&particle,
+                                                       vtx.z(),
+                                                       transParticle);
   if ( !sctrans.isSuccess() ) {
     if ( msgLevel(MSG::DEBUG)) debug() << "Transporter failed" << endmsg;
     return sctrans;
@@ -109,7 +109,7 @@ StatusCode GeomDispCalculator::calcImpactPar(const LHCb::Particle& particle,
                                              Gaudi::SymMatrix9x9& errMatrix ) const
 {
   
-  Gaudi::XYZVector displacement = particle.referencePoint() - pos;
+  const Gaudi::XYZVector displacement = particle.referencePoint() - pos;
 
   const Gaudi::XYZVector pUnit = particle.momentum().Vect().Unit();
 
@@ -147,12 +147,12 @@ Gaudi::Vector9 GeomDispCalculator::totalDeriv(const LHCb::Particle& particle,
   //Calculate the error on the impact parameter
   const double pmag = sqrt( particle.momentum().Vect().mag2() );
   const Gaudi::XYZVector pUnit = particle.momentum().Vect().Unit();
-  Gaudi::XYZVector ipVector = displ.Cross(pUnit);
+  const Gaudi::XYZVector ipVector = displ.Cross(pUnit);
 
-  Gaudi::XYZVector ipUnit = ipVector.Unit();
-  Gaudi::XYZVector derivPoint = pUnit.Cross(ipUnit);
-  Gaudi::XYZVector derivVtx = -1*derivPoint;
-  Gaudi::XYZVector derivP = (ipUnit.Cross(displ) - 
+  const Gaudi::XYZVector ipUnit = ipVector.Unit();
+  const Gaudi::XYZVector derivPoint = pUnit.Cross(ipUnit);
+  const Gaudi::XYZVector derivVtx = -1*derivPoint;
+  const Gaudi::XYZVector derivP = (ipUnit.Cross(displ) - 
                              ipUnit.Dot(ipVector)*pUnit) / pmag; 
 
   return Gaudi::Vector9(derivPoint.x(), derivPoint.y(), derivPoint.z(), 
@@ -200,15 +200,15 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
 
 // First for ip_x:
   const Gaudi::XYZVector vX(1.,0.,0);
-  double errX = calcErrComponent(vX, particle, vertex, errMatrix);
+  const double errX = calcErrComponent(vX, particle, vertex, errMatrix);
 
 // Now for ip_y:
   const Gaudi::XYZVector vY(0.,1.,0);
-  double errY = calcErrComponent(vY, particle, vertex, errMatrix);
+  const double errY = calcErrComponent(vY, particle, vertex, errMatrix);
 
 // Now for ip_z:
   const Gaudi::XYZVector vZ(0.,0,1.);
-  double errZ = calcErrComponent(vZ, particle, vertex, errMatrix);
+  const double errZ = calcErrComponent(vZ, particle, vertex, errMatrix);
 
   errVector.SetXYZ(errX, errY, errZ);
   
@@ -233,7 +233,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
   // the 3D point. Use the transporter tool to move the first
   // measured point closer to the 3D point.
   LHCb::Particle transParticle;
-  StatusCode sctrans = m_pTransporter->transport(&particle,
+  const StatusCode sctrans = m_pTransporter->transport(&particle,
                                                  position.z(),
                                                  transParticle);
   if ( !sctrans.isSuccess() ) {
@@ -274,8 +274,6 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
 
   typedef ROOT::Math::SMatrix<double, 12, 12, 
     ROOT::Math::MatRepSym<double, 12> > SymMatrix12x12;
-
-  //  typedef Gaudi::Line<Gaudi::XYZPoint, Gaudi::XYZVector> Line;
 
   if ( msgLevel(MSG::VERBOSE)){
     verbose() << "Calculating distance of " << endmsg ;
