@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.175 2007-08-20 09:17:00 pkoppenb Exp $
+! $Id: release.notes,v 1.176 2007-08-22 16:51:10 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/MCParticleMaker.cpp
+   . No Particle constructor from key anymore. Use setKeyedObjectKey(key)
 
 ! 2007-08-20 - Patrick Koppenburg
  - TrueMCFilterCriterion, FilterMCParticleArrayByDecay, DecayChainNTuple:
