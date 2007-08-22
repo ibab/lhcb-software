@@ -1,4 +1,4 @@
-// $Id: LoKiPIDTest.cpp,v 1.2 2007-07-23 17:07:44 ibelyaev Exp $
+// $Id: LoKiPIDTest.cpp,v 1.3 2007-08-22 17:25:27 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,7 +54,7 @@ namespace LoKi
         debug() << "Name/PID: "
                 << "'" << pp->particle() << "':" << pp->pdgID() << endreq ;
         // verify name -> pid map  
-        Assert ( pp->particle() == nameFromPID ( pp->pdgID    () )       , 
+        Assert ( pp->particle() == nameFromPID ( LHCb::ParticleID( pp->pdgID    () ))       , 
                  "Mismatch in Name/PID map for '" + pp->particle() + "'" ) ;
         // verify pid  -> name map  
         Assert ( pp->pdgID   () == pidFromName ( pp->particle () ).pid() , 

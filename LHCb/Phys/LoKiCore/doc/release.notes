@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.55 2007-08-20 13:15:08 ibelyaev Exp $ 
+! $Id: release.notes,v 1.56 2007-08-22 17:25:27 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/ParticleProperties.cpp src/Components/LoKiPIDTest.cpp
+   . No implicit construction of ParticleID from int
 
 ! 2007-08-20 - Vanya Belyaev
 
@@ -372,6 +376,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.55  2007/08/20 13:15:08  ibelyaev
+!  update version to v6r0
+!
 ! Revision 1.54  2007/07/25 15:14:13  ibelyaev
 !  add all 'hybrid' stuff
 !
