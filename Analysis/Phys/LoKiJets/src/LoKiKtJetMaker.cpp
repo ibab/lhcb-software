@@ -1,8 +1,11 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.6 2007-04-16 16:16:44 pkoppenb Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.7 2007-08-22 17:01:00 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/04/16 16:16:44  pkoppenb
+// removed polemic comment
+//
 // Revision 1.5  2007/03/27 11:21:18  ibelyaev
 //  v2r3:  ugly patch to solve the proplem with copy constructor
 //
@@ -322,7 +325,7 @@ StatusCode LoKiKtJetMaker::analyse   ()
     LHCb::Vertex                vJet      ;
     LHCb::Particle::ConstVector daughters ;
     
-    pJet.setParticleID     ( m_jetID       ) ;
+    pJet.setParticleID     (  LHCb::ParticleID( m_jetID )) ;
     
     pJet.setReferencePoint ( point         ) ;
     
