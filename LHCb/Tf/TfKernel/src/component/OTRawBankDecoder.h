@@ -1,5 +1,5 @@
-// $Id: OTRawBankDecoder.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
-#ifndef DECODEOTTIMEONDEMAND_H 
+// $Id: OTRawBankDecoder.h,v 1.2 2007-08-22 08:35:52 jonrob Exp $
+#ifndef DECODEOTTIMEONDEMAND_H
 #define DECODEOTTIMEONDEMAND_H 1
 
 // Include files
@@ -18,19 +18,10 @@ class DeOTDetector;
 class OTModuleMask;
 
 
-namespace LHCb 
+namespace LHCb
 {
   class OTTime;
 }
-
-
-
-/** @class OTRawBankDecoder OTRawBankDecoder.h
- *  
- * 
- *  @author Johannes Albrecht
- *  @date   2007-04-12
- */
 
 namespace Tf
 {
@@ -40,26 +31,33 @@ namespace Tf
     struct Detector ;
   }
 
-  class OTRawBankDecoder : 
-    public GaudiTool, 
-    virtual public IOTRawBankDecoder,
-    virtual public IIncidentListener  
+  /** @class OTRawBankDecoder OTRawBankDecoder.h
+   *
+   *  OT Raw Bank decoding tool
+   *
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   */
+
+  class OTRawBankDecoder : public GaudiTool,
+                           virtual public IOTRawBankDecoder,
+                           virtual public IIncidentListener
   {
-    
-  public: 
+
+  public:
     /// Standard constructor
-    OTRawBankDecoder( const std::string& type, 
-		      const std::string& name,
-		      const IInterface* parent);
-    
-    virtual ~OTRawBankDecoder( ) ; ///< Destructor  
+    OTRawBankDecoder( const std::string& type,
+                      const std::string& name,
+                      const IInterface* parent);
+
+    virtual ~OTRawBankDecoder( ) ; ///< Destructor
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual void decodeModule( const LHCb::OTChannelID& moduleId, LHCb::OTLiteTimeRange& ottimes ) const ;
-    
+
   private:
     virtual void handle ( const Incident& incident );
-    virtual StatusCode decodeGolHeaders() const ; 
-    
+    virtual StatusCode decodeGolHeaders() const ;
+
     // job options
     std::vector<double> m_startReadOutGate;   ///< Start of readout gate
     int  m_countsPerBX;                       ///< Counts per BX
@@ -67,10 +65,10 @@ namespace Tf
     double m_timePerBX;                       ///< Time Per BX
     DeOTDetector* m_tracker;                  ///< Pointer to XML geometry
     double m_tdcConversion;
-    
+
     mutable OTRawBankDecoderHelpers::Detector* m_detectordata ;
   };
-  
+
 
 }
 #endif // DECODEOTTIMEONDEMAND_H
