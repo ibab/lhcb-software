@@ -79,7 +79,7 @@ public:
   }
 
 
-protected:
+private:
 
   bool isResonance(const LHCb::Particle*) const; 
   bool isVertexed(const LHCb::Particle*) const;
