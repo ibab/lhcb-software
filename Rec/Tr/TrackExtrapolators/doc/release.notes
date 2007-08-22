@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-08-22 - Edwin Bos
+ - Corrected Track to Point and to Plane methods.
+
 !======================= TrackExtrapolators v2r13 2007-07-10 =================
 ! 2007-07-10 - Edwin Bos
  - Corrected A=A*B to A=B*A for transport matrix calculation

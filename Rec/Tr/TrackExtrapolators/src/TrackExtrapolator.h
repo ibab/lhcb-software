@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.h,v 1.12 2007-07-05 08:29:33 ebos Exp $
+// $Id: TrackExtrapolator.h,v 1.13 2007-08-22 11:38:20 ebos Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
@@ -72,6 +72,7 @@ public:
   /// Propagate a track to the closest point to the specified point
   virtual StatusCode propagate( const LHCb::Track& track,
                                 const Gaudi::XYZPoint& point,
+                                LHCb::State& state,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
   /// Propagate a state to the closest point to the specified point
@@ -82,6 +83,7 @@ public:
   /// Propagate a track to within tolerance of a plane (default = 10 microns)
   virtual StatusCode propagate( const LHCb::Track& track,
                                 Gaudi::Plane3D& plane,
+                                LHCb::State& state,
                                 double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 

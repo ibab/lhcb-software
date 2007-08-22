@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.23 2007-07-05 08:29:37 ebos Exp $
+// $Id: TrackExtrapolator.cpp,v 1.24 2007-08-22 11:38:24 ebos Exp $
 // Include files
 
 // from Gaudi
@@ -120,11 +120,12 @@ StatusCode TrackExtrapolator::propagate( State& state,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          const Gaudi::XYZPoint& point,
+					 LHCb::State& state,
                                          ParticleID  pid )
 {
   // get state closest to z of point
   const State& closest = track.closestState( point.z() );
-  State& state = const_cast<State&>(closest);
+  state = closest;
   
   // propagate the closest state
   StatusCode sc = propagate( state, point.z(), pid );
@@ -156,12 +157,13 @@ StatusCode TrackExtrapolator::propagate( State& state,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          Gaudi::Plane3D& plane,
+					 LHCb::State& state,
                                          double tolerance,
                                          ParticleID pid )
 {
   // get state closest to the plane
   const State& closest = track.closestState( plane );
-  State& state = const_cast<State&>(closest);
+  state = closest;
   
   // propagate the closest state
   StatusCode sc = propagate( state, plane, tolerance, pid );
