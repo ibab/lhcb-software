@@ -1,4 +1,4 @@
-// $Id: CollimatorSource.cpp,v 1.1 2007-08-17 12:54:14 gcorti Exp $
+// $Id: CollimatorSource.cpp,v 1.2 2007-08-22 17:34:07 gcorti Exp $
 // Include files
  
 // from Gaudi
@@ -308,7 +308,7 @@ StatusCode CollimatorSource::finalize() {
   info() << " Used as input file " << m_pSourceFile << endmsg;
   info() << " With particle at z = " << m_zOrigin/Gaudi::Units::m << " m" 
          << " and with direction dz = " << m_dz << endmsg;
-  if( m_pPerEvt = -1 ) {
+  if( m_pPerEvt == -1 ) {
     info() << "  using weight to find number of particles in event" << endmsg;
     info() << "  Sum(weights) in file is " << m_sumOfWeights 
            << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
@@ -320,7 +320,7 @@ StatusCode CollimatorSource::finalize() {
     info() << "forcing " << m_pPerEvt << " to be generated in each event" 
            << endmsg;
   }
-  if( m_fileOffset = -1 ) {
+  if( m_fileOffset == -1 ) {
     info() << "and choosing envelope method to chose particles" << endmsg;
   } else {
     info() << "picking particles from file starting from particle number "
@@ -457,14 +457,18 @@ StatusCode CollimatorSource::bookHistos() {
 
   debug() << "bookHistos" << endmsg;
 
-  m_xyDistInput  = book2D( 100, "Input: XY distribution of particle origin (cm)", 
-                           -500., 500., 200, -500., 500., 200 );
-  m_eKinInput    = book1D( 104, "Input: Ekin of particles (GeV)", 
-                           0., 100., 100 );
-  m_logEKinInput = book1D( 114, "Input: log10(Ekin) of particles (GeV)", 
-                           -2., 4., 100 );
-  m_thetaInput   = book1D( 105, "Input: Angular distribution particle momentum (degree)",
-                           0., 360., 180 );
+  if( ! m_binaryFile ) {
+    m_xyDistInput  = book2D( 100, 
+                             "Input: XY distribution of particle origin (cm)", 
+                             -500., 500., 200, -500., 500., 200 );
+    m_eKinInput    = book1D( 104, "Input: Ekin of particles (GeV)", 
+                             0., 100., 100 );
+    m_logEKinInput = book1D( 114, "Input: log10(Ekin) of particles (GeV)", 
+                             -2., 4., 100 );
+    m_thetaInput   = book1D( 105, 
+                     "Input: Angular distribution particle momentum (degree)",
+                             0., 360., 180 );
+  }
 
   m_xyDistGen = book2D( 200, "Generated: XY distribution of particle origin (cm)", 
                         -500., 500., 200, -500., 500., 200 );

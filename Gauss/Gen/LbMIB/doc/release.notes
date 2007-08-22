@@ -5,7 +5,16 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v2r0 2007-08-21 ===========================
+!=========================== LbMIB v2r0 2007-08-22 ===========================
+! 2007-08-22 - Gloria Corti for Magnus Lieng
+ - Book "XXXInput" histogram only when ascii file is read to create binary
+   since the filling is done at that moment
+   . CollimatorSource.cpp
+
+! 2007-08-22 - Gloria Corti
+ - Fix checking of variable values for printout (it was '=' insted of "==")
+   . CollimatorSource.cpp
+
 ! 2007-08-21 - Gloria Corti for Magnus Lieng
  - Fix bug in MIB-Example.opts
    . the option "MIBackground.MIBSource" should be "MIBackground.MIBSources"
