@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.103 2007-08-21 14:09:57 jpalac Exp $
+! $Id: release.notes,v 1.104 2007-08-22 12:10:23 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-08-22 - Juan Palacios
+ - src/ParticleAdder{.h, .cpp}
+   . Remove unused protected methods isResonance and isVertexed
+   . Minor clean up and move implementaitons of virtual functions to .cpp
 
 ! 2007-08-21 - Juan PALACIOS
  - src/OfflineVertexFitter{.cpp, .h}
