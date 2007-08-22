@@ -30,9 +30,9 @@ class PVReFitter : public GaudiTool, virtual public IPVReFitter {
 public: 
   /// Standard constructor
   PVReFitter( const std::string& type, 
-                   const std::string& name,
-                   const IInterface* parent);
-
+              const std::string& name,
+              const IInterface* parent);
+  
   StatusCode initialize();
 
   /// refit PV
@@ -43,10 +43,10 @@ public:
 
   virtual ~PVReFitter( ); ///< Destructor
 
-protected:
+private:
   
-  StatusCode fitPV(LHCb::RecVertex*, std::vector<LHCb::Track*> & );
-  void getFinalTracks(LHCb::Particle*, std::vector<const LHCb::Track*> &);
+  StatusCode fitPV(LHCb::RecVertex*, LHCb::Track::Vector & );
+  void getFinalTracks(LHCb::Particle*, LHCb::Track::ConstVector &);
   StatusCode seedPV(LHCb::RecVertex*,
                     LHCb::Track*, 
                     LHCb::Track* );
