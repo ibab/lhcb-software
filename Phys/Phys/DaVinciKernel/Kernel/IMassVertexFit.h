@@ -139,8 +139,7 @@ public:
    *        daughters.push_back( pi1 ) ;
    *        daughters.push_back( pi2 ) ;
    *   
-   *        LHCb::Particle K0S  ; 
-   *        K0S.setParticleID( 310 ) ;    // << This line !!!
+   *        LHCb::Particle K0S( LHCb::ParticleID(310) )  ; 
    *        Vertex   Vrtx ; 
    *   
    *        StatusCode sc = fitter->fit( daughters ,

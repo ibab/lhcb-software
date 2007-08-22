@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-08-22 - Patrick Koppenburg
+ - Kernel/IMassVertexFit.h
+   . Changed doxygen comment
+
 !========================= DaVinciKernel v6r5 2007-07-24 ====================
 ! 2007-07-24 - Juan Palacios
  - Add interface Kernel/IParticleArrayFilter.h
