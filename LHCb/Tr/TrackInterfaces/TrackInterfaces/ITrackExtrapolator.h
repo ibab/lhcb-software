@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.16 2007-07-05 08:27:11 ebos Exp $
+// $Id: ITrackExtrapolator.h,v 1.17 2007-08-22 11:38:52 ebos Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -26,7 +26,7 @@ namespace LHCb {
  class StateVector ;
 };
 
-static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 2, 0 );
+static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 3, 0 );
 
 /** @class ITrackExtrapolator ITrackExtrapolator.h
  *
@@ -91,6 +91,7 @@ public:
   /// Propagate a track to the closest point to the specified point
   virtual StatusCode propagate( const LHCb::Track& track,
                                 const Gaudi::XYZPoint& point,
+                                LHCb::State& state,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a state to the closest point to the specified point
@@ -101,6 +102,7 @@ public:
   /// Propagate a track to within tolerance of a plane (default = 10 microns)
   virtual StatusCode propagate( const LHCb::Track& track,
                                 Gaudi::Plane3D& plane,
+                                LHCb::State& state,
                                 double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
