@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.10 2007-08-22 19:05:13 odescham Exp $
+/// $Id: CardParam.h,v 1.11 2007-08-23 17:53:40 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -59,7 +59,7 @@ public:
   int  crate          () const { return m_crate          ; }
   int  slot           () const { return m_slot           ; }
   int  code           () const { return 16*m_crate+m_slot; }
-  int  SelectionType  () const { return m_selectionType;   }    
+  int  selectionType  () const { return m_selectionType;   }    
 
   std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
   

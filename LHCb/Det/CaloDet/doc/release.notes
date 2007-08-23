@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.82 2007-08-22 19:05:13 odescham Exp $ 
+! $Id: release.notes,v 1.83 2007-08-23 17:53:40 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2007-08-23 - Olivier Deschamps
+ - implement Selection Board -> FEB connection (needed for L0Calo) in CardParam.h
+ - Decalorimeter  method : int DeCalorimeter::selectionType( int card)
+ - return 0 for FEB connected to hadron SB master, 1 for hadron slave1, 2 for hadron slave2 and -1 otherwise.
+ - SB->FEB cabling described in condDB > v2r2 for Hcal (no need for other devices)
 
 
 ! 2007-08-22 - Olivier Deschamps

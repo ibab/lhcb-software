@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.30 2007-08-06 21:33:13 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.31 2007-08-23 17:53:40 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -221,6 +221,8 @@ public:
                                   int&      corner )  const ;
   ///  Validation card number
   inline int validationNumber   ( const int card   )  const ;
+  // Selection Board Type
+  inline int selectionType      ( const int card   )  const ;
   ///  card area 
   inline int cardArea           ( const int card   )  const ;
   ///  card first row 
@@ -540,6 +542,12 @@ inline int DeCalorimeter::previousCardNumber(const int card ) const
 // ============================================================================
 inline int DeCalorimeter::validationNumber(const int card ) const
 {  return m_feCards[card].validationNumber();}
+
+// ============================================================================
+//  selection board type
+// ============================================================================
+inline int DeCalorimeter::selectionType(const int card ) const
+{  return m_feCards[card].selectionType();}
 
 // ============================================================================
 //  card neighbours

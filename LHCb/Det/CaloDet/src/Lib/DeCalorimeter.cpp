@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.40 2007-06-18 16:13:56 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.41 2007-08-23 17:53:40 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -493,8 +493,29 @@ StatusCode DeCalorimeter::buildCards( )  {
     m_feCards.push_back( myCard ); // add card
   }
 
+
+
+  // Selection Board  Type ( e,g.pi0L,pi0G = -1 , hadron master = 0 , had. slave1 = 1, had. slave 2 = 2)
+  if ( cond->exists( "HadronSB" ) ) {
+    std::vector<int> hadSB = cond->paramAsIntVect( "HadronSB" );
+    std::vector<int>::iterator it = hadSB.begin();
+    while( hadSB.end() > it ) {
+      unsigned int num = (*it++);
+      int nb  = (*it++);
+      while ( 0 < nb-- ) {
+        unsigned int feCard = *it++;
+        m_feCards[feCard].setSelectionType( num );
+      }
+    }
+  }
+  else{
+    msg << MSG::DEBUG << "No 'HadronSB' parameters in 'CellsToCards' condition" << endreq;
+  }   
+
+
+
   // 2nd loop on FE-Cards - 
-  //== Find the cards TO WHICH this card sends data.  
+  //== Find the cards TO WHICH this card sends data + Validation board
   for(std::vector<CardParam>::iterator icard = m_feCards.begin() ; icard != m_feCards.end() ; ++icard){
     CardParam& card = *icard;
 
@@ -561,13 +582,14 @@ StatusCode DeCalorimeter::buildCards( )  {
       card.setValidationNumber( validationCard );
     }
     
-
+  
+      
     msg << MSG::DEBUG
-        << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d #channels %4d",
-                    card.number(), card.crate(), card.slot(), card.downNumber(), card.leftNumber(), card.cornerNumber(), 
-                    card.previousNumber(), card.validationNumber(),card.ids().size() )
+        << format ("Card %3d (crate %2d slot %2d) has down %3d left %3d corner %3d previous %3d validation %2d Selection %2d #channels% 5d",
+                   card.number() , card.crate(), card.slot(), card.downNumber(), card.leftNumber(), card.cornerNumber(), 
+                   card.previousNumber(), card.validationNumber(),card.selectionType() ,card.ids().size() ) 
         << endreq;
-    msg << MSG::DEBUG << " >> boundaries : " 
+    msg << MSG::VERBOSE << " >> boundaries : " 
         << cardFirstValidRow(card.number())    << " (" << cardFirstRow( card.number() )     << ") -> "   
         << cardLastValidRow(card.number())     << " (" << cardLastRow( card.number() )      << ")  && "  
         << cardFirstValidColumn(card.number()) << " (" << cardFirstColumn( card.number() )  << ")  -> "  
@@ -602,8 +624,8 @@ StatusCode DeCalorimeter::buildTell1s( )  {
     return StatusCode::SUCCESS;
   }
   if ( !cond->exists( "Tell1" ) ) {
-    msg << MSG::DEBUG << "No 'Tell1' parameters in 'CellsToCards' condition" << endreq;
-    return StatusCode::SUCCESS;
+    msg << MSG::ERROR << "No 'Tell1' parameters in 'CellsToCards' condition" << endreq;
+    return StatusCode::FAILURE;
   }
   
   std::vector<int> temp = cond->paramAsIntVect( "Tell1" );
