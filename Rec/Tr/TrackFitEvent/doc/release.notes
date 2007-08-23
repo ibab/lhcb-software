@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-08-23 - Wouter Hulsbergen
+- added calculation of unbiased state
+
 !========================== TrackFitEvent v3r7 2007-07-23 ====================
 ! 2007-07-23 - Marco Cattaneo
  - Fixed a doxygen warning

@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.16 2006-11-22 13:08:01 jvantilb Exp $
+// $Id: FitNode.cpp,v 1.17 2007-08-23 11:10:19 wouter Exp $
 // Include files
 
 // local
@@ -90,3 +90,22 @@ void FitNode::setPredictedStateDown( const State& predictedStateDown )
   m_predictedStateDown = predictedStateDown ;
 }
 
+/// Calculate an unbiased state
+LHCb::State FitNode::unbiasedState() const
+{
+  // This performs an inverse kalman filter step.
+  // First calculate the gain matrix
+  const TrackProjectionMatrix& H = projectionMatrix();
+  double r = residual();
+  double R = errResidual2() ;
+  const TrackSymMatrix& biasedC = state().covariance() ;
+  ROOT::Math::SMatrix<double,5,1> K = (biasedC * Transpose(H)) / R;
+  // Update the state vectors
+  const TrackVector&  biasedX = state().stateVector();
+  TrackVector unbiasedX=biasedX - K.Col(0) * r;
+  // Update the covariance matrix
+  static const TrackSymMatrix unit = TrackSymMatrix( ROOT::Math::SMatrixIdentity());
+  TrackSymMatrix unbiasedC ;
+  ROOT::Math::AssignSym::Evaluate(unbiasedC, (unit + K*H)*biasedC) ;
+  return State( unbiasedX, unbiasedC, z(), state().location()) ;
+}

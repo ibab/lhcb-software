@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.16 2006-11-22 13:08:01 jvantilb Exp $
+// $Id: FitNode.h,v 1.17 2007-08-23 11:10:19 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -122,7 +122,10 @@ namespace LHCb
       
     /// set unbiased residual
     void setErrUnbiasedResidual(double value) { m_errUnbiasedResidual = value; }
-      
+    
+    /// retrieve the unbiased smoothed state at this position
+    State unbiasedState() const ;
+
   private:
     
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix
