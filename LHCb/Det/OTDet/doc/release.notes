@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.93 2007-07-25 11:17:20 wouter Exp $
+! $Id: release.notes,v 1.94 2007-08-23 12:37:30 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-08-23 - Wouter Hulsbergen
+ - bug fixes in rt-relation, affecting use of inverse
 
 ! 2007-07-25 - Wouter Hulsbergen (more a-team changes)
  - changed parameterization for fast geometry access

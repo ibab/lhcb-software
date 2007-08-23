@@ -25,7 +25,7 @@ namespace OTDet
   } ;
   
   inline RtRelation::RtRelation(float tmin, float tmax, const std::vector<float>& radius) 
-    : m_tmin(tmin), m_tmax(tmax), m_radius(radius), m_dt( tmax / (radius.size()-1)), m_rmin(radius.front()), m_rmax(radius.back()) 
+    : m_tmin(tmin), m_tmax(tmax), m_radius(radius), m_dt( (tmax-tmin) / (radius.size()-1)), m_rmin(radius.front()), m_rmax(radius.back()) 
   {}
   
   inline float RtRelation::radius( float time ) const 
@@ -33,7 +33,7 @@ namespace OTDet
     float        fbin = (time-m_tmin)/m_dt ;
     unsigned int ibin = int(fbin) ;
     float        w    = fbin - ibin ;
-    return time <= m_rmin ? m_rmin : ( time >= m_tmax ? m_rmax : (1-w)*m_radius[ibin] + w*m_radius[ibin+1] ) ;
+    return time <= m_tmin ? m_rmin : ( time >= m_tmax ? m_rmax : (1-w)*m_radius[ibin] + w*m_radius[ibin+1] ) ;
   }
 
   inline float RtRelation::extrapolatedradius( float time ) const 
@@ -58,7 +58,7 @@ namespace OTDet
   {
     // first find the bin with a binary search
     std::vector<float>::const_iterator it = std::lower_bound(m_radius.begin(),m_radius.end(),r) ;
-    size_t ibin = it - m_radius.begin() ;
+    int ibin = it - m_radius.begin() - 1 ;
     return r <= m_rmin ? m_tmin :
       (r >= m_rmax ? m_tmax :
        m_tmin + m_dt * (ibin + (r - m_radius[ibin])/(m_radius[ibin+1]-m_radius[ibin])) ) ;
