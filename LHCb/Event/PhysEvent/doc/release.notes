@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.126 2007-08-22 17:20:32 pkoppenb Exp $
+! $Id: release.notes,v 1.127 2007-08-23 09:50:35 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2007-08-23 - Juan PALACIOS
+ - xml/Particle.xml
+   . Remove new method setKeyedObjectKey(int key).
+   . Add constructor Particle(const ParticleID& pid, const int key) 
+ -cmt/requirements
+   . increase version to v11r3
 
 ! 2007-08-22 - Patrick Koppenburg
  - Particle: remove constructor from int key
