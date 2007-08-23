@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.9 2007-08-17 15:22:30 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.10 2007-08-23 12:01:24 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -38,7 +38,8 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::*>" />
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::*>"   />
   
-  <class pattern   = "LoKi::Valid<*LHCb::*>"              />
+  <class pattern   = "LoKi::Valid<*LHCb::*>"            />
+  <class pattern   = "LoKi::TheSame<*LHCb::*>"          />
   
   <!-- 
        

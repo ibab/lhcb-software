@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.5 2007-08-17 15:22:31 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.6 2007-08-23 12:01:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -104,6 +104,9 @@ namespace
     LoKi::Monitoring::Counter<const LHCb::VertexBase*>  m_60 ;
     LoKi::Monitoring::Stat<const LHCb::VertexBase*>     m_61 ;
     LoKi::Monitoring::Plot<const LHCb::VertexBase*>     m_62 ;
+    // additional 
+    LoKi::TheSame<const LHCb::Particle*>                m_71 ;
+    LoKi::TheSame<const LHCb::VertexBase*>              m_72 ;
   } ;  
 }
 // ============================================================================
