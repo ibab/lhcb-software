@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.2 2007-03-02 15:22:07 cattanem Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -223,12 +223,6 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
      !Relations::IsConvertible<const T1*,const void*>::same)
-// ============================================================================
-
-
-
-// ============================================================================
-// The END 
 // ============================================================================
 #endif // CALOTRACKMATCHALG_H
 // ============================================================================

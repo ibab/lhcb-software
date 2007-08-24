@@ -1,8 +1,11 @@
-// $Id: ClusChi22ID.cpp,v 1.4 2006-06-22 15:40:40 ibelyaev Exp $
+// $Id: ClusChi22ID.cpp,v 1.5 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/22 15:40:40  ibelyaev
+//  fix incinsistencied for 'Brem'-algorithms
+//
 // Revision 1.2  2006/06/20 18:17:48  odescham
 // minor update to please ChargedProtoPAlg
 //
@@ -35,12 +38,12 @@ protected:
     ISvcLocator*       pSvc ) 
     :  CaloChi22ID ( name , pSvc ) 
   {
-    setProperty ( "Input"  , LHCb::CaloIdLocation::ClusterMatch ) ;
-    setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2     ) ;
+    _setProperty ( "Input"  , LHCb::CaloIdLocation::ClusterMatch ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2     ) ;
     // @todo it must be in agrement with "Threshold" for PhotonMatchAlg 
-    setProperty ( "CutOff" , "1000"  ) ; //  
+    _setProperty ( "CutOff" , "1000"  ) ; //  
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Long       ,
                     LHCb::Track::Ttrack     ,
                     LHCb::Track::Downstream ) ) ;

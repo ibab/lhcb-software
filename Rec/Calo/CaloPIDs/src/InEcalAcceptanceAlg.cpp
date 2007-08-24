@@ -1,8 +1,11 @@
-// $Id: InEcalAcceptanceAlg.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
+// $Id: InEcalAcceptanceAlg.cpp,v 1.2 2007-08-24 21:25:19 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:29  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Local
 // ============================================================================
@@ -25,13 +28,13 @@ protected:
     ISvcLocator*       pSvc ) 
     : InCaloAcceptanceAlg ( name , pSvc ) 
   {
-    setProperty ( "Output" , LHCb::CaloIdLocation::InEcal ) ;
-    setProperty ( "Tool"   , "InEcalAcceptance/InEcal:PUBLIC"     ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::InEcal ) ;
+    _setProperty ( "Tool"   , "InEcalAcceptance/InEcal:PUBLIC"     ) ;
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                  ( LHCb::Track::Long       ,
-                    LHCb::Track::Downstream ,
-                    LHCb::Track::Ttrack     ) ) ;
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                   ( LHCb::Track::Long       ,
+                     LHCb::Track::Downstream ,
+                     LHCb::Track::Ttrack     ) ) ;
   } ;
   /// virtual proected destructor 
   virtual ~InEcalAcceptanceAlg() {} ; 

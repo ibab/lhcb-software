@@ -1,4 +1,4 @@
-// $Id: CaloChi22ID.h,v 1.2 2007-03-02 15:22:07 cattanem Exp $
+// $Id: CaloChi22ID.h,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOCHI22ID_H 
 #define CALOPIDS_CALOCHI22ID_H 1
@@ -40,6 +40,8 @@ class CaloChi22ID : public CaloTrackAlg
 public:
   /// algorithm execution 
   virtual StatusCode execute() ;
+
+
 protected:
   /// Standard protected constructor
   CaloChi22ID 
@@ -52,6 +54,10 @@ private:
   CaloChi22ID           ( const CaloChi22ID& ) ;
   CaloChi22ID& operator=( const CaloChi22ID& ) ;  
 protected:
+
+  
+  
+
   /// perform the actual job 
   template <class TABLEI, class TABLEO>
   inline StatusCode doTheJob 
@@ -84,7 +90,7 @@ inline StatusCode CaloChi22ID::doTheJob
   const TABLEI*                 input  ,
   TABLEO*                       output ) const 
 {
-  Assert ( 0 != tracks , "Invalid ocntainer of input tracks" ) ;
+  Assert ( 0 != tracks , "Invalid container of input tracks" ) ;
   
   for ( LHCb::Track::Container::const_iterator itrack = tracks->begin() ; 
         tracks->end() != itrack ; ++itrack ) 
@@ -94,7 +100,7 @@ inline StatusCode CaloChi22ID::doTheJob
     typename TABLEI::Range links = input->relations ( track ) ;
     // fill the relation table 
     const float chi2  = links.empty() ? m_large : links.front().weight() ;
-    output -> i_push ( track , chi2 ) ;                      // NB!: i_push 
+    output -> i_push ( track , chi2 ) ;                      // NB!: i_push
   }
   return StatusCode::SUCCESS ;
 } ;
@@ -112,17 +118,14 @@ inline StatusCode CaloChi22ID::doTheJob
         m_tracks.end() != i ; ++i ) 
   {
     const LHCb::Track::Container* tracks = get<LHCb::Track::Container>(*i) ;
-    doTheJob ( tracks , input , output ) ;
+    StatusCode sc = doTheJob ( tracks , input , output ) ;
+    if(sc.isFailure())return sc;
   }
   /// MANDATORY: i_sort after i_push 
   output->i_sort() ;                                     // NB: i_push 
   //
   return StatusCode::SUCCESS ;
 } ;
-// ============================================================================
-
-// ============================================================================
-// The END 
 // ============================================================================
 #endif // CALOCHI22ID_H
 // ============================================================================

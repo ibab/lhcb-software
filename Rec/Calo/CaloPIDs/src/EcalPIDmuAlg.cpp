@@ -1,8 +1,11 @@
-// $Id: EcalPIDmuAlg.cpp,v 1.2 2006-11-06 11:05:24 vegorych Exp $
+// $Id: EcalPIDmuAlg.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/06 11:05:24  vegorych
+//  New PID tuning for DC06
+//
 // Revision 1.1  2006/06/18 18:35:28  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -30,18 +33,18 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    setProperty ( "Input"  , LHCb::CaloIdLocation::EcalE  ) ;
-    setProperty ( "Output" , LHCb::CaloIdLocation::EcalPIDmu  ) ;
-    setProperty ( "nVlong" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
-    setProperty ( "nVdown" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
-    setProperty ( "nVTtrack" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
-    setProperty ( "nMlong" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
-    setProperty ( "nMdown" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
-    setProperty ( "nMTtrack" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
-    setProperty ( "HistogramL" , "CaloPIDs/CALO/ECALPIDM/h3" ) ;
-    setProperty ( "HistogramD" , "CaloPIDs/CALO/ECALPIDM/h5" ) ;
-    setProperty ( "HistogramT" , "CaloPIDs/CALO/ECALPIDM/h6" ) ;
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+    _setProperty ( "Input"  , LHCb::CaloIdLocation::EcalE  ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::EcalPIDmu  ) ;
+    _setProperty ( "nVlong" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
+    _setProperty ( "nVdown" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
+    _setProperty ( "nVTtrack" ,   Gaudi::Utils::toString( 5 * Gaudi::Units::GeV ) );
+    _setProperty ( "nMlong" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
+    _setProperty ( "nMdown" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
+    _setProperty ( "nMTtrack" , Gaudi::Utils::toString(  25 * Gaudi::Units::GeV ) );
+    _setProperty ( "HistogramL" , "CaloPIDs/CALO/ECALPIDM/h3" ) ;
+    _setProperty ( "HistogramD" , "CaloPIDs/CALO/ECALPIDM/h5" ) ;
+    _setProperty ( "HistogramT" , "CaloPIDs/CALO/ECALPIDM/h6" ) ;
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Long       ,
                     LHCb::Track::Ttrack     ,
                     LHCb::Track::Downstream ) ) ;

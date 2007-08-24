@@ -1,8 +1,11 @@
-// $Id: BremMatchAlg.cpp,v 1.3 2006-06-21 18:43:29 ibelyaev Exp $
+// $Id: BremMatchAlg.cpp,v 1.4 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/06/21 18:43:29  ibelyaev
+//  fix 'Brem' problem & speed-up it a bit
+//
 // Revision 1.2  2006/06/20 18:17:48  odescham
 // minor update to please ChargedProtoPAlg
 //
@@ -50,16 +53,16 @@ protected:
   {
     Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Photons     ) ;
     //
-    setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-    setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
-    setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
-    setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
-    setProperty ( "Threshold" , "10000"                             ) ;
+    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+    _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
+    _setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
+    _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
+    _setProperty ( "Threshold" , "10000"                             ) ;
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                  ( LHCb::Track::Velo     ,
-                    LHCb::Track::Long     ,
-                    LHCb::Track::Upstream ) ) ;
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                   ( LHCb::Track::Velo     ,
+                     LHCb::Track::Long     ,
+                     LHCb::Track::Upstream ) ) ;
   }
   /// virtual and protected destrcutror
   virtual ~BremMatchAlg() {}
@@ -80,6 +83,8 @@ StatusCode BremMatchAlg::execute ()
   //
   Assert ( !m_tracks .empty() , "No Input tracks"   ) ;
   Assert ( !m_calos  .empty() , "No Input Clusters" ) ;
+  //if(sc.isFailure())warning() << "Asserting FAILED " << endreq;
+  
   //
   typedef LHCb::RelationWeighted2D<LHCb::Track,LHCb::CaloHypo,float> Table ;
   BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::ITrHypoTable2D)) ;
@@ -91,6 +96,3 @@ StatusCode BremMatchAlg::execute ()
   // perform the actual jobs 
   return doTheJob<LHCb::CaloHypo,Table>( table ) ;
 } ;
-// ============================================================================
-// The END 
-// ============================================================================

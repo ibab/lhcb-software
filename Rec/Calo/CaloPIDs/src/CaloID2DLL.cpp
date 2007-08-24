@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.4 2006-11-27 15:48:09 vegorych Exp $
+// $Id: CaloID2DLL.cpp,v 1.5 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/27 15:48:09  vegorych
+// warning VERY PRELIMINARY was removed
+//
 // Revision 1.3  2006/11/06 11:05:24  vegorych
 //  New PID tuning for DC06
 //
@@ -85,10 +88,10 @@ CaloID2DLL::CaloID2DLL
   declareProperty ( "nVupstr"   , m_vScale_ut ) ;  
   declareProperty ( "nVvelo"    , m_vScale_vt ) ;  
   // track types 
-  setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                ( LHCb::Track::Long       ,
-                  LHCb::Track::Ttrack     ,
-                  LHCb::Track::Downstream ) ) ;
+  _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                 ( LHCb::Track::Long       ,
+                   LHCb::Track::Ttrack     ,
+                   LHCb::Track::Downstream ) ) ;
 } ;
 
 // ============================================================================
@@ -166,8 +169,4 @@ StatusCode CaloID2DLL::execute()
 // ============================================================================
 
 
-
-// ============================================================================
-/// The END 
-// ============================================================================
 

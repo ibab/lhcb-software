@@ -1,8 +1,11 @@
-// $Id: InBremAcceptanceAlg.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
+// $Id: InBremAcceptanceAlg.cpp,v 1.2 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:28  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Local
 // ============================================================================
@@ -26,13 +29,13 @@ protected:
     ISvcLocator*       pSvc ) 
     : InCaloAcceptanceAlg ( name , pSvc ) 
   {
-    setProperty ( "Output" , LHCb::CaloIdLocation::InBrem     ) ;
-    setProperty ( "Tool"   , "InBremAcceptance/InBrem:PUBLIC" ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::InBrem     ) ;
+    _setProperty ( "Tool"   , "InBremAcceptance/InBrem:PUBLIC" ) ;
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                  ( LHCb::Track::Velo     ,
-                    LHCb::Track::Long     ,
-                    LHCb::Track::Upstream ) ) ;
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                   ( LHCb::Track::Velo     ,
+                     LHCb::Track::Long     ,
+                     LHCb::Track::Upstream ) ) ;
     //
   } ;
   /// virtual proected destructor 

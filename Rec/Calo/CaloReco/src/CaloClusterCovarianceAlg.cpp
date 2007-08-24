@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.7 2007-08-24 21:24:20 odescham Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -188,23 +188,21 @@ StatusCode CaloClusterCovarianceAlg::execute()
     // skip nulls 
     if( 0 == *cluster  ) { continue ; }                // CONTINUE !
     StatusCode sc =   tagger () -> tag    ( *cluster ) ; 
-    if( sc.isFailure() ) 
-    {    
+    if( sc.isFailure() ){
       Error("Error from tagger, skip cluster ", sc ) ; 
       debug() << *cluster << endreq ;
       continue ; 
     }
-    if( sc.isSuccess() )     { sc = cov    () -> process( *cluster ) ; }
-    else 
-    { 
+
+    sc = cov    () -> process( *cluster ) ;    
+    if( sc.isFailure() ){ 
       Error("Error from cov,    skip cluster ", sc ) ; 
       debug() << *cluster << endreq ;
       continue ; 
     }
-    if( sc.isSuccess() )     {
-      sc = spread () -> process( *cluster ) ;
-    }
-    else { 
+
+    sc = spread () -> process( *cluster ) ;
+    if( sc.isFailure() ){ 
       Error("Error from spread, skip cluster ", sc ) ; 
       debug() << *cluster << endreq ;
       continue ; 

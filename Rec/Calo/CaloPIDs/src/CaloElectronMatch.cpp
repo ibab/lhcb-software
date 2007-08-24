@@ -1,8 +1,11 @@
-// $Id: CaloElectronMatch.cpp,v 1.2 2006-08-03 08:45:59 jonrob Exp $
+// $Id: CaloElectronMatch.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/03 08:45:59  jonrob
+// Add missing data initialisations
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 //  
@@ -101,9 +104,9 @@ protected:
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     // 
-    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
-    setProperty ( "Tolerance"    , "5" ) ; // 10 millimeters
-    setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
+    _setProperty ( "Tolerance"    , "5" ) ; // 10 millimeters
+    _setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
   } ;
   /// virtual and protected destructor 
   virtual ~CaloElectronMatch(){} ;

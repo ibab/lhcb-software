@@ -1,8 +1,11 @@
-// $Id: CaloBremMatch.cpp,v 1.2 2006-06-21 18:43:29 ibelyaev Exp $
+// $Id: CaloBremMatch.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/21 18:43:29  ibelyaev
+//  fix 'Brem' problem & speed-up it a bit
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -102,9 +105,9 @@ protected:
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     // 
-    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
-    setProperty ( "Tolerance"    , "10" ) ; // 10 millimeters
-    setProperty ( "zForFastExtrapolator" , "0" ) ; // 0  meters 
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
+    _setProperty ( "Tolerance"    , "10" ) ; // 10 millimeters
+    _setProperty ( "zForFastExtrapolator" , "0" ) ; // 0  meters 
   } ;
   /// virtual and protected destructor 
   virtual ~CaloBremMatch(){} ;

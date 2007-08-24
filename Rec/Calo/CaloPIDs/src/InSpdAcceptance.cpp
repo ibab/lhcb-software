@@ -1,4 +1,4 @@
-// $Id: InSpdAcceptance.cpp,v 1.2 2007-03-02 15:22:08 cattanem Exp $
+// $Id: InSpdAcceptance.cpp,v 1.3 2007-08-24 21:25:19 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +29,9 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Spd ) ;
-    setProperty ( "UseFiducial" , "false"  ) ;
-    setProperty ( "Tolerance"   , "1" ) ;  /// 1 * Gaudi::Units::mm 
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Spd ) ;
+    _setProperty ( "UseFiducial" , "false"  ) ;
+    _setProperty ( "Tolerance"   , "1" ) ;  /// 1 * Gaudi::Units::mm 
   } ;
   /// virtual and protected destructor 
   virtual ~InSpdAcceptance(){} ;

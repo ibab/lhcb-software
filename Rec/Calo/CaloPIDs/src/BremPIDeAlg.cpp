@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.4 2007-05-26 17:13:45 vegorych Exp $
+// $Id: BremPIDeAlg.cpp,v 1.5 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/05/26 17:13:45  vegorych
+// new PIDs from DC06 and BremPID added
+//
 // Revision 1.3  2006/11/06 11:05:24  vegorych
 //  New PID tuning for DC06
 //
@@ -36,22 +39,22 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
-    setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
-    setProperty ( "nVlong" , Gaudi::Utils::toString( 200 ) );
-    setProperty ( "nVvelo" , Gaudi::Utils::toString( 200 ) );
-    setProperty ( "nVupstr" , Gaudi::Utils::toString( 200 ) );
-    setProperty ( "nMlong" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "nMvelo" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "nMupstr" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "HistogramU" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
-    setProperty ( "HistogramL" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
-    setProperty ( "HistogramV" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
+    _setProperty ( "nVlong" , Gaudi::Utils::toString( 200 ) );
+    _setProperty ( "nVvelo" , Gaudi::Utils::toString( 200 ) );
+    _setProperty ( "nVupstr" , Gaudi::Utils::toString( 200 ) );
+    _setProperty ( "nMlong" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    _setProperty ( "nMvelo" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    _setProperty ( "nMupstr" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    _setProperty ( "HistogramU" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    _setProperty ( "HistogramL" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    _setProperty ( "HistogramV" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
     // track types 
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                  ( LHCb::Track::Velo     ,
-                    LHCb::Track::Long     ,
-                    LHCb::Track::Upstream ) ) ;
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                   ( LHCb::Track::Velo     ,
+                     LHCb::Track::Long     ,
+                     LHCb::Track::Upstream ) ) ;
   };
   /// virtual protected destructor 
   virtual ~BremPIDeAlg() {};

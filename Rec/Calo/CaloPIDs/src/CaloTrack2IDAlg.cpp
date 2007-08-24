@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.2 2007-03-02 15:22:07 cattanem Exp $
+// $Id: CaloTrack2IDAlg.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,9 +50,9 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
   declareProperty ( "Filter"      , m_filter   ) ;
   declareProperty ( "Tool"        , m_toolName ) ;
   //
-  setProperty     ( "StatPrint"   , "false"    ) ;
+  _setProperty     ( "StatPrint"   , "false"    ) ;
   // track types:
-  setProperty     ( "AcceptedType" , Gaudi::Utils::toString<int>
+  _setProperty     ( "AcceptedType" , Gaudi::Utils::toString<int>
                     ( LHCb::Track::Long       ,
                       LHCb::Track::Downstream ,
                       LHCb::Track::Ttrack     ) ) ;

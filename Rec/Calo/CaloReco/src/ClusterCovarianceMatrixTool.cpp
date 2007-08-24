@@ -1,4 +1,4 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.4 2006-07-19 06:59:03 cattanem Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.5 2007-08-24 21:24:20 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -60,11 +60,13 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
         dynamic_cast<const IProperty*> ( parent );
       if( 0 != prop )
         {
-          prop->getProperty( &resolution      );
-          prop->getProperty( &gainError       );
-          prop->getProperty( &noiseIncoherent );
-          prop->getProperty( &noiseCoherent   );
-          prop->getProperty( &detData         );
+          StatusCode sc;
+          sc=prop->getProperty( &resolution      );
+          sc=prop->getProperty( &gainError       );
+          sc=prop->getProperty( &noiseIncoherent );
+          sc=prop->getProperty( &noiseCoherent   );
+          sc=prop->getProperty( &detData         );
+          if(sc.isFailure())warning()<<"Unable to get properties"<<endreq;
         }
     }
   ///

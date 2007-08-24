@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.5 2006-11-28 13:15:17 cattanem Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.6 2007-08-24 21:24:20 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -76,8 +76,7 @@ CaloSharedCellAlg::~CaloSharedCellAlg() {};
 // ============================================================================
 StatusCode CaloSharedCellAlg::initialize() 
 {
-  MsgStream log( msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  debug() << "==> Initialise" << endreq;
   ///
   StatusCode sc = GaudiAlgorithm::initialize();
   ///
@@ -101,8 +100,7 @@ StatusCode CaloSharedCellAlg::execute()
   using namespace SharedCells     ;
   using namespace LHCb::CaloDigitStatus ;
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endreq;
   //
 
   // useful typedefs
@@ -140,7 +138,8 @@ StatusCode CaloSharedCellAlg::execute()
   const unsigned int cutOff = 2 ;
   typedef Digit2ClustersConnector   Table;
   Table  table;
-  table.load( output->begin() , output->end  () , cutOff ) ;
+  StatusCode scc = table.load( output->begin() , output->end  () , cutOff ) ;
+  if(scc.isFailure())warning()<<"Unable to load the table"<<endreq;
   
   /// loop over all digits in the table  
   for( Table::Map::iterator entry = table.map().begin() ; 

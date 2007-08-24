@@ -1,4 +1,4 @@
-// $Id: Track2SpdEAlg.cpp,v 1.3 2007-03-02 15:22:08 cattanem Exp $
+// $Id: Track2SpdEAlg.cpp,v 1.4 2007-08-24 21:25:19 odescham Exp $
 // ============================================================================
 // Local
 // ============================================================================
@@ -23,9 +23,9 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrack2IDAlg( name , pSvc ) 
   {
-    setProperty ( "Output" , LHCb::CaloIdLocation::SpdE  ) ;
-    setProperty ( "Filter" , LHCb::CaloIdLocation::InSpd  ) ;
-    setProperty ( "Tool"   , "SpdEnergyForTrack/SpdE:PUBLIC"   ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::SpdE  ) ;
+    _setProperty ( "Filter" , LHCb::CaloIdLocation::InSpd  ) ;
+    _setProperty ( "Tool"   , "SpdEnergyForTrack/SpdE:PUBLIC"   ) ;
   } ;
   /// virtual protected destructor 
   virtual ~Track2SpdEAlg(){} ;  

@@ -1,4 +1,4 @@
-// $Id: InHcalAcceptance.cpp,v 1.2 2007-03-02 15:22:08 cattanem Exp $
+// $Id: InHcalAcceptance.cpp,v 1.3 2007-08-24 21:25:19 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +29,9 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Hcal ) ;
-    setProperty ( "UseFiducial" , "true"  ) ;
-    setProperty ( "Tolerance"   , "10" ) ;  /// 10 * Gaudi::Units::mm 
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Hcal ) ;
+    _setProperty ( "UseFiducial" , "true"  ) ;
+    _setProperty ( "Tolerance"   , "10" ) ;  /// 10 * Gaudi::Units::mm 
   } ;
   /// virtual and protected destructor 
   virtual ~InHcalAcceptance(){} ;

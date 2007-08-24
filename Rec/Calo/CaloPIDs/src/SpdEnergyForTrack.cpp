@@ -1,8 +1,11 @@
-// $Id: SpdEnergyForTrack.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
+// $Id: SpdEnergyForTrack.cpp,v 1.2 2007-08-24 21:25:19 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:29  ibelyaev
+//  the firstcommmit for DC06 branch
+//
 // ============================================================================
 // local
 // ============================================================================
@@ -25,9 +28,9 @@ protected:
     const IInterface*  parent ) 
     : CaloEnergyForTrack ( type , name , parent ) 
   {
-    setProperty ( "DataAddress" , LHCb::CaloDigitLocation::Spd ) ;
-    setProperty ( "Tolerance"   , "2"    ) ; /// 2 * Gaudi::Units::mm 
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Spd   ) ;
+    _setProperty ( "DataAddress" , LHCb::CaloDigitLocation::Spd ) ;
+    _setProperty ( "Tolerance"   , "2"    ) ; /// 2 * Gaudi::Units::mm 
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Spd   ) ;
   } ;
   virtual ~SpdEnergyForTrack() {}
 private:

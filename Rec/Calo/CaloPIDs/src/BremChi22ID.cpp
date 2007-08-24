@@ -1,4 +1,4 @@
-// $Id: BremChi22ID.cpp,v 1.4 2007-03-02 15:22:07 cattanem Exp $
+// $Id: BremChi22ID.cpp,v 1.5 2007-08-24 21:25:17 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,6 +6,7 @@
 // ============================================================================
 #include "CaloChi22ID.h"
 #include "ToVector.h"
+#include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================
 /** The preconfigured instance of class CaloChi22ID 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -22,15 +23,15 @@ protected:
     ISvcLocator*       pSvc ) 
     :  CaloChi22ID ( name , pSvc ) 
   {
-    setProperty ( "Input"  , LHCb::CaloIdLocation::BremMatch ) ;
-    setProperty ( "Output" , LHCb::CaloIdLocation::BremChi2      ) ;
+    _setProperty( "Input"  , LHCb::CaloIdLocation::BremMatch ) ;
+    _setProperty( "Output" , LHCb::CaloIdLocation::BremChi2      ) ;
     // @todo it must be in agrement with "Threshold" for BremMatchAlg 
-    setProperty ( "CutOff" , "10000"  ) ; //  
+    _setProperty( "CutOff" , "10000"  ) ; //  
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
-                  ( LHCb::Track::Velo     ,
-                    LHCb::Track::Long     ,
-                    LHCb::Track::Upstream ) ) ;
+    _setProperty( "AcceptedType" , Gaudi::Utils::toString<int>
+                   ( LHCb::Track::Velo     ,
+                     LHCb::Track::Long     ,
+                     LHCb::Track::Upstream ) ) ;
   } ;
   /// protected vertual destructor
   virtual ~BremChi22ID(){}; 

@@ -1,4 +1,4 @@
-// $Id: EcalChi22ID.cpp,v 1.3 2007-05-31 14:47:22 cattanem Exp $
+// $Id: EcalChi22ID.cpp,v 1.4 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,12 +23,12 @@ protected:
     ISvcLocator*       pSvc ) 
     :  CaloChi22ID ( name , pSvc ) 
   {
-    setProperty ( "Input"  , LHCb::CaloIdLocation::ElectronMatch ) ;
-    setProperty ( "Output" , LHCb::CaloIdLocation::EcalChi2      ) ;
+    _setProperty ( "Input"  , LHCb::CaloIdLocation::ElectronMatch ) ;
+    _setProperty ( "Output" , LHCb::CaloIdLocation::EcalChi2      ) ;
     // @todo it must be in agrement with "Threshold" for ElectonMatchAlg 
-    setProperty ( "CutOff" , "10000"  ) ; //  
+    _setProperty ( "CutOff" , "10000"  ) ; //  
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Long       ,
                     LHCb::Track::Ttrack     ,
                     LHCb::Track::Downstream ) ) ;
@@ -46,9 +46,6 @@ private:
 DECLARE_ALGORITHM_FACTORY ( EcalChi22ID ) ;
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
 
 
 

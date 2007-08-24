@@ -1,8 +1,11 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.2 2007-08-24 21:25:18 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:29  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -41,7 +44,7 @@ InCaloAcceptanceAlg::InCaloAcceptanceAlg
   declareProperty ( "Output"      , m_output   ) ;
   declareProperty ( "Tool"        , m_toolName ) ;
   //
-  setProperty     ( "StatPrint"   , "false"    ) ;
+  _setProperty     ( "StatPrint"   , "false"    ) ;
 };
 // ============================================================================
 /// algorithm initialization 
@@ -112,8 +115,3 @@ StatusCode InCaloAcceptanceAlg::execute()
   
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
