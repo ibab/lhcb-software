@@ -1,6 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.5 2007-07-25 19:49:13 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.6 2007-08-24 11:14:20 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -102,7 +102,7 @@ private:
   CaloHypoMonitor &operator=( const CaloHypoMonitor& );
 private:
   // hypo multiplicity
-  double m_multMax;
+  int m_multMax;
   // hypo energy  distribution
   double m_energyMax;
   // hypo transverse momentum distribution

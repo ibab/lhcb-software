@@ -10,8 +10,8 @@ MoniCaloSeq.OutputLevel=1;
 CaloDigitMonitor.Members   += { "CaloDigitMonitor/EcalDigitMonitor",
                                 "CaloDigitMonitor/HcalDigitMonitor",
                                 "CaloDigitMonitor/PrsDigitMonitor",
-                                "CaloDigitMonitor/SpdDigitMonitor",
-                                "SpdMonitor"
+                                "CaloDigitMonitor/SpdDigitMonitor"
+                                ,"SpdMonitor"
 };
 
 #include "$CALOMONIDSTOPTS/CaloDigitMonitor.opts"

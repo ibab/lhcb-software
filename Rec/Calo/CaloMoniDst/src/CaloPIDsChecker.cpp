@@ -1,8 +1,11 @@
-// $Id: CaloPIDsChecker.cpp,v 1.1 2007-07-25 19:49:13 odescham Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.2 2007-08-24 11:14:20 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2007/07/25 19:49:13  odescham
+// major release : see doc
+//
 // Revision 1.4  2005/12/08 13:14:40  odescham
 // v2r1 - use Cnv tracks only in CaloPIDsMontor.cpp
 //
@@ -117,10 +120,11 @@ public:
   virtual StatusCode execute();
   /// standard algorithm finalization
   virtual StatusCode finalize()
-  { divide( h1["21"], h1["11"], h1["31"] );
-    divide( h1["22"], h1["12"], h1["32"] );
-    divide( h1["23"], h1["13"], h1["33"] );
-
+  { 
+    StatusCode sc = divide( h1["21"], h1["11"], h1["31"] );
+    if(sc.isSuccess())sc=divide( h1["22"], h1["12"], h1["32"] );
+    if(sc.isSuccess())sc= divide( h1["23"], h1["13"], h1["33"] );
+    if(!sc.isSuccess())error()<<"Failed dividing histograms " << endreq;
 
     if( NULL != m_track2MCLink ) delete m_track2MCLink;
     m_track2MCLink = NULL;

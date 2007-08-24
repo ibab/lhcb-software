@@ -33,7 +33,12 @@ public:
   { declareProperty( "Input",    m_inputData );
     declareProperty( "Inputs",   m_inputs );
     declareProperty( "Detector", m_detData );
-    setProperty( "HistoTopDir", "CaloMoniDst/" );
+    StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
+    sc.isSuccess() ? 
+      info() << "HistoTopDir set to 'CaloMoniDst/' " << endreq :
+      info() << "HistoTopDir setProperty failed " << endreq ;
+    
+      
   }
 // destructor
   virtual ~CaloMoniAlg() {}
@@ -73,15 +78,11 @@ public:
   }
 
 // fill histogram
-  inline StatusCode hFill1( std::string hid, double value, double w=1. )
-  { if ( 0 == fill(h1[hid],value,w) ) return StatusCode::FAILURE;
-    else                             return StatusCode::SUCCESS;
-  }
-//
-  inline StatusCode hFill2( std::string hid, double x, double y, double w=1. )
-  { if ( 0 == fill(h2[hid],x,y,w) ) return StatusCode::FAILURE;
-    else                           return StatusCode::SUCCESS;
-  }
+  inline AIDA::IHistogram1D* hFill1( std::string hid, double value, double w=1. )
+  { return  fill(h1[hid],value,w);}
+  //
+  inline AIDA::IHistogram2D* hFill2( std::string hid, double x, double y, double w=1. )
+  { return fill(h2[hid],x,y,w); }
 protected:
 //
 // Histogram Map
