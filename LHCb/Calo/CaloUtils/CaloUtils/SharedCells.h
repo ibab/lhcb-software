@@ -1,4 +1,4 @@
-// $Id: SharedCells.h,v 1.6 2007-01-15 07:52:53 cattanem Exp $ 
+// $Id: SharedCells.h,v 1.7 2007-08-24 21:28:04 odescham Exp $ 
 // =========================================================================== 
 #ifndef CALOUTILS_SHAREDCELLS_H 
 #define CALOUTILS_SHAREDCELLS_H 1
@@ -84,7 +84,8 @@ namespace SharedCells
         weight[index]  = eClu ;
       }
     /// make redistribution of energy
-    SharedCells::redistribute( List , weight );
+    StatusCode sc = SharedCells::redistribute( List , weight );
+    if(!sc.isSuccess())return sc;
     /// make iteration  
     return SharedCells::summedEnergyAlgorithm( List , --NiT  ) ;  
   };
@@ -265,8 +266,9 @@ namespace SharedCells
         weight[index]  = 
           e * exp( -1.0 * dist / size[ ID.area() ] ) ;
       }
-    /// redistribute the energies  
-    SharedCells::redistribute( List , weight );
+    /// redistribute the energies   
+    StatusCode sc = SharedCells::redistribute( List , weight );
+    if(!sc.isSuccess())return sc;
     /// make iterations 
     return 
       SharedCells::summedDistanceAlgorithm( List, Det , ID , size, --NiT ) ;

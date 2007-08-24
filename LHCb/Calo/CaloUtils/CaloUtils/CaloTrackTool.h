@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.5 2006-06-18 18:32:55 ibelyaev Exp $
+// $Id: CaloTrackTool.h,v 1.6 2007-08-24 21:28:04 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -58,6 +58,9 @@ namespace Calo
   public:
     /// initialize the tool 
     virtual StatusCode initialize () ;
+
+    void _setProperty(const std::string& p,const std::string& v);
+
   protected:
     /// standard constructor 
     CaloTrackTool

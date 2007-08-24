@@ -1,4 +1,4 @@
-// $Id: CaloTrackAlg.cpp,v 1.6 2007-01-15 07:52:59 cattanem Exp $
+// $Id: CaloTrackAlg.cpp,v 1.7 2007-08-24 21:28:04 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -28,9 +28,10 @@ CaloTrackAlg::CaloTrackAlg
   , m_use () 
 {
   //
-  m_use.declareProperties ( this ) ;
+  StatusCode sc = m_use.declareProperties ( this ) ;
+  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endreq;
   //
-  setProperty ( "CheckTracks" , "true" ) ;
+  _setProperty ( "CheckTracks" , "true" ) ;
 } ;
 // ============================================================================
 /// destructor
@@ -53,6 +54,17 @@ StatusCode CaloTrackAlg::initialize()
 /// standard algorithm finalization 
 StatusCode CaloTrackAlg::finalize  () { return GaudiAlgorithm::finalize() ; }
 // ============================================================================
+
+
+void CaloTrackAlg::_setProperty(const std::string& p ,const std::string& v){
+  StatusCode sc = setProperty(p,v);
+  if(sc.isSuccess()){
+    debug() << " setting Property "<<p<< " to " << v <<endreq ;
+  }
+  else{
+    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endreq ;
+  }
+}
 
 // ============================================================================
 // The END 

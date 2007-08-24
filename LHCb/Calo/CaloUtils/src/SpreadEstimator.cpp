@@ -1,4 +1,4 @@
-// $Id: SpreadEstimator.cpp,v 1.11 2007-01-15 07:53:01 cattanem Exp $
+// $Id: SpreadEstimator.cpp,v 1.12 2007-08-24 21:28:04 odescham Exp $
 // ============================================================================
 // Include files
 #include "CaloDet/DeCalorimeter.h"
@@ -76,6 +76,7 @@ StatusCode SpreadEstimator::operator()
   unsigned int ncells  = 0   ;
   
   double cellsize      = -10 ;
+ 
   
   const LHCb::CaloCluster::Entries& entries = cluster->entries() ;
   for ( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ;
@@ -113,7 +114,7 @@ StatusCode SpreadEstimator::operator()
   }
   ///
   /// strange combinations 
-  if ( ncells    <= 0 ) { return StatusCode ( 223 ) ; }
+  if ( ncells    <= 0 ) {return StatusCode ( 223 ) ;  }
   /// energy is not positive  
   if ( etot      <= 0 ) { return StatusCode ( 224 ) ; }
   /// seed cell was not found

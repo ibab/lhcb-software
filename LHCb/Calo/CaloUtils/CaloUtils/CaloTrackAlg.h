@@ -1,8 +1,11 @@
-// $Id: CaloTrackAlg.h,v 1.6 2006-06-18 18:32:55 ibelyaev Exp $
+// $Id: CaloTrackAlg.h,v 1.7 2007-08-24 21:28:04 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/06/18 18:32:55  ibelyaev
+//  fix soem minor bugs
+//
 // Revision 1.5  2006/06/13 14:13:52  cattanem
 // TrackUse moved to TrackEvent
 //
@@ -60,6 +63,13 @@ public:
   virtual StatusCode initialize(); 
   /// standard algorithm finalization 
   virtual StatusCode finalize  ();
+
+
+public:
+  //
+  void _setProperty(const std::string& p,const std::string& v);
+  
+
 protected:
   /// Standard constructor
   CaloTrackAlg
@@ -76,6 +86,7 @@ private:
   /// assignement operator  is  private 
   CaloTrackAlg& operator=
   ( const CaloTrackAlg& );
+
 protected:
   /// check if the track to be used @see TrackUse 
   inline bool use  ( const LHCb::Track* track ) const { return m_use( track) ; } 

@@ -1,8 +1,11 @@
-// $Id: CaloData.h,v 1.6 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: CaloData.h,v 1.7 2007-08-24 21:28:04 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.5  2002/04/02 12:30:20  ocallot
 // Fix CaloData.h reference to CaloEvent/CaloDigit.h
 //
@@ -25,8 +28,8 @@
 // update due tomodifications in Event/CaloEvent
 // 
 // ===========================================================================
-#ifndef     CALOALGS_CALODATA_H
-#define     CALOALGS_CALODATA_H 1 
+#ifndef     CALOUTILS_CALODATA_H
+#define     CALOUTILS_CALODATA_H 1 
 // ===========================================================================
 // from STL 
 #include <string>
@@ -59,10 +62,10 @@ namespace CaloData
    *  @param  messageService (obsolete) message service pointer 
    */
   template< class OUTPUTTYPE>
-  StatusCode Digits( IDataProviderSvc*  dataService         ,  
-                     const std::string& address             , 
-                     OUTPUTTYPE         output              , 
-                     IMessageSvc*       messageService  = 0 ) 
+  StatusCode Data( IDataProviderSvc*  dataService         ,  
+                   const std::string& address             , 
+                   OUTPUTTYPE::CONTAINER   output              , 
+                   IMessageSvc*       messageService  = 0 ) 
   {
     ///
     IMessageSvc* aux = 0  ; 
@@ -74,24 +77,20 @@ namespace CaloData
         return StatusCode::FAILURE ; 
       }
     /// retrive data from the store 
-    SmartDataPtr< ObjectVector<CaloDigit> > smart( dataService , address ); 
+    SmartDataPtr< ObjectVector<OUTPUTTYPE> > smart( dataService , address ); 
     /// success??
     if( !smart )           
       { throw CaloException("CaloData::  unable to retrieve "+address ); 
       return StatusCode::FAILURE;  }
     /// copy data using output iterator, remove nulls   
     std::remove_copy( smart->begin() , smart->end() , 
-                      output , (CaloDigit *) 0 ); 
+                      OUTPUTTYPE::CONTAINER , (OUTPUTTYPE *) 0 ); 
     return StatusCode::SUCCESS;                           /* RETURN! */  
     };
   ///
 }; // end of namespace CaloData
 
-// ===========================================================================
-// The End 
-// ===========================================================================
 #endif  //  CALOUTILS_CALODATA_H
-// ===========================================================================
 
 
 

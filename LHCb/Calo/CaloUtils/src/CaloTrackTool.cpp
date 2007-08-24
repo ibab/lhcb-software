@@ -1,8 +1,11 @@
-// $Id: CaloTrackTool.cpp,v 1.2 2006-06-18 18:32:55 ibelyaev Exp $
+// $Id: CaloTrackTool.cpp,v 1.3 2007-08-24 21:28:04 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/18 18:32:55  ibelyaev
+//  fix soem minor bugs
+//
 // Revision 1.1  2006/06/06 11:59:52  ibelyaev
 //  new base classes for PIDs & rewritten TrackUse
 // 
@@ -60,9 +63,10 @@ Calo::CaloTrackTool::CaloTrackTool
   // detector 
   declareProperty ( "Calorimeter"          , m_detectorName         ) ; 
   // use track types 
-  m_use.declareProperties ( this ) ;
+  StatusCode sc = m_use.declareProperties ( this ) ;
+  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endreq;
   // 
-  setProperty     ( "CheckTracks"          , "false"                ) ;
+  _setProperty     ( "CheckTracks"          , "false"                ) ;
 } ;
 // ============================================================================
 /// initialize the tool 
@@ -82,6 +86,15 @@ StatusCode Calo::CaloTrackTool::initialize ()
   return StatusCode::SUCCESS ;
 } ;
 // ============================================================================
+void Calo::CaloTrackTool::_setProperty(const std::string& p ,const std::string& v){
+  StatusCode sc = setProperty(p,v);
+  if(sc.isSuccess()){
+    debug() << " setting Property "<<p<< " to " << v <<endreq ;
+  }
+  else{
+    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endreq ;
+  }
+}
 
 // ============================================================================
 // The END
