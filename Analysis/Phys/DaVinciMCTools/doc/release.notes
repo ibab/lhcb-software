@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.176 2007-08-22 16:51:10 pkoppenb Exp $
+! $Id: release.notes,v 1.177 2007-08-24 07:27:42 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-08-23 - Juan PALACIOS
+ - src/MCParticleMaker.cpp
+   . No setKeyedObjectKey(int ley) anymore, use Particle constructor
+     Particle(const ParticleID&, const int key).
 
 ! 2007-08-22 - Patrick Koppenburg
  - src/MCParticleMaker.cpp
