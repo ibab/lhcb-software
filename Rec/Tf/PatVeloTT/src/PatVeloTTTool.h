@@ -1,12 +1,12 @@
-// $Id: PatVeloTTTool.h,v 1.1.1.1 2007-08-22 15:30:38 smenzeme Exp $
-#ifndef PATVELOTTTOOL_H 
+// $Id: PatVeloTTTool.h,v 1.2 2007-08-24 12:44:07 jonrob Exp $
+#ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Event/Track.h" 
+#include "Event/Track.h"
 #include "TfKernel/TTStationHitManager.h"
 
 // local
@@ -16,37 +16,38 @@
 
 static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
-/** @class PatVeloTTTool PatVeloTTTool.h
- *  
- *
- *  @author Mariusz Witek
- *  @date   2007-05-08
- *  @update for A-Team framework 2007-08-20 SHM
- *
- */
-
 namespace Tf {
 
+  /** @class PatVeloTTTool PatVeloTTTool.h
+   *
+   *  PatVeloTT tool
+   *  
+   *  @author Mariusz Witek
+   *  @date   2007-05-08
+   *  @update for A-Team framework 2007-08-20 SHM
+   *
+   */
+
   class PatVeloTTTool : public GaudiTool {
-  public: 
-    
+  public:
+
     // Return the interface ID
     static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
-    
+
     /// Standard constructor
-    PatVeloTTTool( const std::string& type, 
-		   const std::string& name,
-		   const IInterface* parent);
-    
+    PatVeloTTTool( const std::string& type,
+                   const std::string& name,
+                   const IInterface* parent);
+
     virtual ~PatVeloTTTool( ); ///< Destructor
-    
+
     StatusCode PatVeloTTTool::initialize ( );
-    
-    
+
+
     void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-    
+
   protected:
-    
+
     void simpleFit( PatVTTTrack& vttt );
     void simpleFitTracks( std::vector<PatVTTTrack>&);
     void selectBestTracks( std::vector<PatVTTTrack>& vttTracks);
@@ -54,12 +55,12 @@ namespace Tf {
     void localCleanUp(std::vector<PatVTTTrack>&);
     void getCandidates(LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
     void saveCandidate( VeloTTHits& theClusters, PatVTTTrack& candidate);
-    
+
   private:
     class compPseudoChi2  {
     public:
       bool operator() (PatVTTTrack* first, PatVTTTrack* second ) {
-	return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
+        return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
       }
     };
     double m_maxXSlope;
@@ -76,16 +77,16 @@ namespace Tf {
     double m_xTolSlope;
     double m_yTol;
     double m_yTolSlope;
-    double m_dxGroupTol;  
-    double m_dxGroupFactor;  
+    double m_dxGroupTol;
+    double m_dxGroupFactor;
     double m_zMidTT;
-    
+
     TTStationHitManager < VeloTTHit> *      m_ttHitManager;
-    
+
     PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
     bool m_verbose;
-    
+
   };
 }
 #endif // PATVELOTTTOOL_H

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-08-24 - Chris Jones
+ - Fix some doxygen errors due to the addition of the Tf:: namespace
+
 !========================== PatVeloTT v2r11 2007-05-14 =======================
 ! 2007-05-11 - Mariusz Witek
  - split PatVeloTT into main algo and tool: PatVeloTT and PatVeloTTTool
