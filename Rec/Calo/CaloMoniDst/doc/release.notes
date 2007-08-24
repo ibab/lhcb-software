@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.10 2007-07-25 19:49:12 odescham Exp $ 
+! $Id: release.notes,v 1.11 2007-08-24 01:56:33 odescham Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2007-08-22 - Albert Puig Beloous & Olivier Deschamps
+ - new SpdMonitor algorithm
+
 
 ! 2007-07-25 - Konstantin Beloous & Olivier Deschamps
  - Major release 

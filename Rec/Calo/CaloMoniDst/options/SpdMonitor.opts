@@ -1,0 +1,2 @@
+//SpdMonitor.HistogramFlag = true; // default
+//SpdMonitor.EcalThreshold = 700 ; // default
