@@ -21,7 +21,7 @@ namespace Tf
   namespace Tsa
   {
 
-    /** @class TsaOTXSearch TsaOTXSearch.h
+    /** @class OTXSearch TsaOTXSearch.h
      * Follow track and pick up hits
      * @author M. Needham
      **/

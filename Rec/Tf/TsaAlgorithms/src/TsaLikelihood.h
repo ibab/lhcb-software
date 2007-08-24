@@ -34,7 +34,7 @@ namespace Tf
   namespace Tsa
   {
 
-    /** @class TsaLikelihood TsaLikelihood.h
+    /** @class Likelihood TsaLikelihood.h
      * Follow a track and pick up hits
      * @author M. Needham
      **/

@@ -23,7 +23,7 @@ namespace Tf
   namespace Tsa
   {
 
-    /** @class TsaOTStereoSearch TsaOTStereoSearch.h
+    /** @class OTStereoSearch TsaOTStereoSearch.h
      * Follow track and pick up hits
      * @author M. Needham
      **/

@@ -16,7 +16,7 @@ namespace Tf
 
     class SeedLineFit;
 
-    /** @class TsaITStereoSearch TsaITStereoSearch.h
+    /** @class ITStereoSearch TsaITStereoSearch.h
      *  Follow track and pick up hits
      * @author M. Needham
      **/
