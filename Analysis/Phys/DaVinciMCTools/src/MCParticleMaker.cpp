@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.33 2007-08-22 16:51:10 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.34 2007-08-24 07:27:22 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.33  2007/08/22 16:51:10  pkoppenb
+// No constructor from key
+//
 // Revision 1.32  2007/06/15 16:18:38  jpalac
 // Fix includes for interfaces formerly coming from Kernel, now in MCInterfaces.
 //
@@ -238,8 +241,9 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     KeyedObject<int>::key_type  mcKey=(*icand)->key(); /// get the MCParticle key for a later link to Particle
 
     //    std::auto_ptr<LHCb::Particle> particle( new LHCb::Particle(mcKey) );
-    LHCb::Particle* particle = new LHCb::Particle() ;
-    particle->setKeyedObjectKey(mcKey);
+    LHCb::Particle* particle = new LHCb::Particle((*icand)->particleID(), 
+                                                  mcKey) ;
+    //    particle->setKeyedObjectKey(mcKey);
 
     StatusCode sc = fillParticle( **icand, *particle, covariance); /// fill the particle contents
     if(sc.isFailure()) continue;
