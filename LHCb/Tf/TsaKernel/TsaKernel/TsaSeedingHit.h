@@ -7,10 +7,7 @@
 #include "TfKernel/LineHit.h"
 #include "TfKernel/OTHit.h"
 #include "TfKernel/STHit.h"
-
-// RICH include to add boost memory pool
-// If used long term this file should be moved to a common LHCb package
-#include "RichKernel/BoostMemPoolAlloc.h"
+#include "Kernel/MemPoolAlloc.h"
 
 namespace Tf
 {
@@ -22,9 +19,8 @@ namespace Tf
      *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
      *  @date   2007-06-01
      */
-    class SeedingHit : public HitExtension<Tf::LineHit>
-    // comment the following line to disable boost memory pool for new/delete
-                     ,public Rich::BoostMemPoolAlloc<Tf::Tsa::SeedingHit>
+    class SeedingHit : public HitExtension<Tf::LineHit>,
+                       public LHCb::MemPoolAlloc<Tf::Tsa::SeedingHit>
     {
 
     public:
@@ -37,8 +33,8 @@ namespace Tf
           m_onTrack(false)
       { }
 
-      /// Constructor from an Tf::OTHit
-      SeedingHit( const Tf::OTHit & otHit )
+      /// Constructor from a Tf::OTHit
+      SeedingHit( const Tf::OTHit & otHit ) 
         : HitExtension<Tf::LineHit>(&otHit),
           m_isOT        ( true ),
           // just use value direct from OT hit
@@ -50,7 +46,7 @@ namespace Tf
           m_onTrack(false)
       { }
 
-      /// Constructor from an Tf::STHit
+      /// Constructor from a Tf::STHit
       SeedingHit( const Tf::STHit & stHit )
         : HitExtension<Tf::LineHit>(&stHit),
           m_isOT        ( false ),

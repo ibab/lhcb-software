@@ -21,10 +21,6 @@ use STDet       v*  Det
 use GSL         v*  LCG_Interfaces
 use LHCbMath    v*  Kernel
 use TfKernel    v*  Tf
-# Only needed for boost memory pool
-# should come from somewhere global in the longer term
-# Matt/Marco - Remind CRJ about this when you read this !
-use RichKernel  v*  Rich
 
 # Note : we are appending _Tf to the library name simply to 
 #        prevent conflicts with the original in Tr/ - When these are no

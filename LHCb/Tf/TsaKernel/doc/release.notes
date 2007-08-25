@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-08-25 - Chris Jones
+ - Remove dependency on RichKernel
+
 2007-08-16 M Needham 
  - Change to untruncated drift distance in TsaSeedingHit
  - Move onTrack method to TsaSeedingHit from SeedHit
