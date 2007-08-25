@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.5 2007-08-25 16:55:01 jonrob Exp $
+// $Id: DefaultVeloHitManager.h,v 1.6 2007-08-25 19:49:04 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -177,9 +177,7 @@ namespace Tf {
     const DeVeloRType* rs = m_velo->rSensor(clu.channelID().sensor());
     const unsigned int stationNumber = rs->station();
     const unsigned int half          = static_cast<unsigned int>(rs->isRight());
-    const unsigned int zone          = (rs->isDownstream()
-                                        ? 3-rs->zoneOfStrip(clu.channelID().strip())
-                                        : rs->zoneOfStrip(clu.channelID().strip()));
+    const unsigned int zone          = rs->globalZoneOfStrip(clu.channelID().strip());
     m_data[half][stationNumber][zone].push_back(VeloRHit(rs,clu,signal));
   }
 

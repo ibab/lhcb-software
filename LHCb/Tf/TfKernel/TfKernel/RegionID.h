@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.7 2007-08-23 13:27:26 jonrob Exp $
+ *  $Id: RegionID.h,v 1.8 2007-08-25 19:49:04 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -246,7 +246,7 @@ namespace Tf
       m_station ( 0 ),
       m_layer   ( static_cast<unsigned char>(sensor->isRight()) ),
       // XXX???XXX Would be nice to document the reasoning behind this 'magic conversion' somewhere ?
-      m_region  ( sensor->isR() && sensor->isDownstream() ? 3-sensor->zoneOfStrip(id.strip()) : sensor->zoneOfStrip(id.strip()) )
+      m_region  ( sensor->globalZoneOfStrip(id.strip()) )
   { }
 
 } // Tf namespace ends

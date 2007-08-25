@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.7 2007-08-25 19:26:36 jonrob Exp $
+ *  $Id: HitBase.h,v 1.8 2007-08-25 19:49:04 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -72,7 +72,10 @@ namespace Tf
         UsedByTsaSeeding=0, ///< Hit has been used by the Tsa Seeding algorithm
         UsedByPatForward,   ///< Hit has been used by the Pat Forward tracking algorithm
         UsedByPatSeeding,   ///< Hit has been used by the Pat Seeding algorithm
-        UsedByVeloPhi,      ///< Hit has been used by the Velo Phi tracking algorithm XXX???XXX
+        UsedByVeloOpen,     ///< Hit has been used by the Velo Open tracking algorithm
+        UsedByVeloGeneric,  ///< Hit has been used by the Velo Generic tracking algorithm
+        UsedByVeloGeneral,  ///< Hit has been used by the Velo General tracking algorithm
+        UsedByVeloSpace,    ///< Hit has been used by the Velo Space tracking algorithm 
         UsedByVeloRZ,       ///< Hit has been used by the Velo R-Z tracking algorithm
         UsedByUnknown,      ///< Hit has been used by an unkown algorithm
         Unusable,           ///< Hit is unusable (XXX???XXX On what basis, decided by whom?)
@@ -82,7 +85,7 @@ namespace Tf
     /// Nested type that describes 'use' status of this hit
     typedef std::bitset<NUMSTATUSBITS> StatusFlag ;
 
-    /// The hit type tag (XXX???XXX Wouter, could you maybe expand a bit on what these tag structs are for and how they are used ?)
+    /// The hit type tag 
     typedef hit_base_tag hit_type_tag;
 
   public:
@@ -156,10 +159,15 @@ namespace Tf
     /** Access the region(detector) type for the hit */
     inline unsigned int type    () const { return static_cast<unsigned int>(m_regionID.type()); }
 
-    /** Access the velo half for the hit (XXX???XXX Same as layer() - So why have it ?) */
+    /** Access the velo half for the hit.  
+     * Internally stored as a layer, but client code is more readable using this accessor.
+     */
     inline unsigned int veloHalf() const { return static_cast<unsigned int>(m_regionID.veloHalf()); }
 
-    /** Access the zone number for the hit XXX???XXX what is a zone ? */
+    /** Access the zone number for the hit.  
+     * A VELO r hit can be in zones 0-3 in the direction of global phi. 
+     * A VELO  phi hit either in the inner or outer zone of a phi sensor. 
+     */
     inline unsigned int zone    () const { return static_cast<unsigned int>(m_regionID.zone()); }
 
     // dynamic casts

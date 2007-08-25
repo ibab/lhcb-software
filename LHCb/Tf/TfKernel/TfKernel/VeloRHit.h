@@ -1,4 +1,4 @@
-// $Id: VeloRHit.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: VeloRHit.h,v 1.2 2007-08-25 19:49:04 krinnert Exp $
 #ifndef INCLUDE_TF_VELORHIT_H
 #define INCLUDE_TF_VELORHIT_H 1
 
@@ -64,13 +64,12 @@ namespace Tf {
   inline VeloRHit::VeloRHit(const DeVeloRType* s, const LHCb::VeloLiteCluster& c, float signal)
     : VeloHit(c
         , RegionID(c.channelID(),s)
-        , s->globalROfStrip(c.channelID().strip())+c.interStripFraction()*s->rPitch(c.channelID().strip())
-        , s->halfboxROfStrip(c.channelID().strip())+c.interStripFraction()*s->rPitch(c.channelID().strip())
+        , s->globalR(c.channelID().strip(),c.interStripFraction())
+        , s->halfboxR(c.channelID().strip(),c.interStripFraction())
         , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
         , ((s->rPitch(c.channelID().strip())*c.pseudoSize())*(s->rPitch(c.channelID().strip())*c.pseudoSize()))/
         float(12)
         , signal
-        , (s->isDownstream() ? 3 - c.channelID().strip()/512 : c.channelID().strip()/512 )
         )
     , m_sensor(s)
     { ; }

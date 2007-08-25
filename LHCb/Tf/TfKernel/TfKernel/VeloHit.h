@@ -1,4 +1,4 @@
-// $Id: VeloHit.h,v 1.2 2007-08-16 14:37:26 jonrob Exp $
+// $Id: VeloHit.h,v 1.3 2007-08-25 19:49:04 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHIT_H
 #define INCLUDE_TF_VELOHIT_H 1
 
@@ -35,7 +35,6 @@ namespace Tf {
     double interStripFraction()            const { return m_clu.interStripFraction(); }
     unsigned int size()                    const { return m_clu.pseudoSize(); }
     bool isPileUp()                        const { return m_clu.isPileUp(); }
-    unsigned char zone()                   const { return m_zone; }
 
     //----------------------------------------------------------------------
     // functors
@@ -120,16 +119,14 @@ namespace Tf {
                    , float coordHalfBox
                    , float coordIdeal
                    , float variance
-                   , float signal
-                   , unsigned char zone);
+                   , float signal);
 
   protected:
 
-    LHCb::VeloLiteCluster m_clu; ///< link to cluster
-    float m_coordHalfBox;
-    float m_coordIdeal;
-    float m_signal;
-    unsigned char m_zone;
+    LHCb::VeloLiteCluster m_clu; ///< the cluster
+    float m_coordHalfBox;        ///< the coordinate in the VELO halfbox frame
+    float m_coordIdeal;          ///< the coordinate in the ideal global frame
+    float m_signal;              ///< the total ADC counts of the cluster (if constructed from a full cluster)
 
   };
 
@@ -145,8 +142,7 @@ namespace Tf {
                           , float coordHalfBox
                           , float coordIdeal
                           , float variance
-                          , float signal
-                          , unsigned char zone)
+                          , float signal)
     : HitBase(LHCb::LHCbID(c.channelID())
               , rid
               , coord
@@ -155,7 +151,6 @@ namespace Tf {
     , m_coordHalfBox(coordHalfBox)
     , m_coordIdeal(coordIdeal)
     , m_signal(signal)
-    , m_zone(zone)
   { ; }
 
 }

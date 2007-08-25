@@ -1,4 +1,4 @@
-// $Id: VeloPhiHit.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: VeloPhiHit.h,v 1.2 2007-08-25 19:49:04 krinnert Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
 
@@ -61,13 +61,12 @@ namespace Tf {
   inline VeloPhiHit::VeloPhiHit(const DeVeloPhiType* s, const LHCb::VeloLiteCluster& c, float signal)
     : VeloHit(c
         , RegionID(c.channelID(),s)
-        , s->globalPhiOfStrip(c.channelID().strip())+c.interStripFraction()*s->phiPitch(c.channelID().strip())
-        , s->halfboxPhiOfStrip(c.channelID().strip())+c.interStripFraction()*s->phiPitch(c.channelID().strip())
-        , s->idealPhiOfStrip(c.channelID().strip())+c.interStripFraction()*(s->phiPitch(c.channelID().strip()))
+        , s->globalPhi(c.channelID().strip(),c.interStripFraction())
+        , s->halfboxPhi(c.channelID().strip(),c.interStripFraction())
+        , s->idealPhi(c.channelID().strip(),c.interStripFraction())
         , ((s->phiPitch(c.channelID().strip())*c.pseudoSize())*(s->phiPitch(c.channelID().strip())*c.pseudoSize()))/
         float(12)
         , signal
-        , ( c.channelID().strip() < 683 ? 0 : 1 )
         )
     , m_sensor(s)
   {

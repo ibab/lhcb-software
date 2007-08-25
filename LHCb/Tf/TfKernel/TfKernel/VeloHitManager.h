@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.3 2007-08-21 16:56:17 krinnert Exp $
+// $Id: VeloHitManager.h,v 1.4 2007-08-25 19:49:04 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -165,15 +165,16 @@ namespace Tf
 
     m_velo = getDet<DeVelo>( m_detectorLocation );
 
-    sc = updateStationStructure();
-    if(!sc.isSuccess()) {
-      error() << "Failed to update geometry cache." << endreq;
-      return sc;
-    }
-
     // make sure we are up-to-date on populated VELO stations
     registerCondition(m_velo->geometry(), &Tf::VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure);
 
+    // first update
+    sc = updMgrSvc()->update(this);
+    if(!sc.isSuccess()) {
+      error() << "Failed to update station structure." << endreq;
+      return sc;
+    }
+  
     // invalidate measurement cache at the end of each event
     incSvc()->addListener(this, IncidentType::EndEvent);
 

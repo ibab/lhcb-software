@@ -4,6 +4,17 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-08-25 - Kurt Rinnert
+ - a little documentation
+ - removed redundant zone member from VeloHit
+ - removed functionality from VeloSensorHits that is now provide by the VELO
+   detector element
+ - adapted VELO hit constructors to the improved interface of the VELO
+   detector element
+ - the first update of geometry related caches in VELO hit managers is now
+   triggered via the update manager service, avoiding double initialisation at
+   job startup.
+
 ! 2007-08-21 - Chris Jones
  - Add CMT incantations to generate Reflex dictionary
 
