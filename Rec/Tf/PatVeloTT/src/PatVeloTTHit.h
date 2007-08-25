@@ -9,7 +9,7 @@
 namespace Tf {
 
   /** @class PatVeloTTHit
-   *  Extended hit class for PatVeloTT algorithms
+   *  Extended TT hit class for PatVeloTT algorithms.
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-019
    **/
@@ -27,17 +27,17 @@ namespace Tf {
       m_z(stHit.z()),
       m_planeCode(2 * stHit.station() + (stHit.layer()%2)){}
 
-    /// Desctructor
+    /// Destructor
     ~PatVeloTTHit() { }
 
-    /// Accessors
+    // Accessors
     double x()                    const { return m_x; }
     double z()                    const { return m_z; }
     int    mask()                 const { return 1 << m_planeCode; }
     int    planeCode()            const { return m_planeCode; }
 
 
-    /// Setters
+    // Setters
     void setX( double x )                     { m_x = x; }
     void setZ( double z )                     { m_z = z; }
 
