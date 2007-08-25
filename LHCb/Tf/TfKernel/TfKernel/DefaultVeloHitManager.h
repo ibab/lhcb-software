@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.3 2007-08-21 16:56:17 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.4 2007-08-25 16:52:04 jonrob Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -56,8 +56,8 @@ namespace Tf {
 
   private:
 
-    void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag);
-    void addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag);
+    void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_rhit_tag);
+    void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_phihit_tag);
     void createPointerListsAndSort();
 
   private:
@@ -168,7 +168,7 @@ namespace Tf {
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_rhit_tag)
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_rhit_tag)
   {
     // only import r clusters
     if ( !clu.isRType() ) return;
@@ -183,7 +183,7 @@ namespace Tf {
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, velo_phihit_tag)
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_phihit_tag)
   {
     // only import r clusters
     if ( !clu.isPhiType() ) return;

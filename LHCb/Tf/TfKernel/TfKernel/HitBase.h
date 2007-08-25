@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.5 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: HitBase.h,v 1.6 2007-08-25 16:52:06 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -33,17 +33,6 @@ namespace Tf
   class STHit;
   class OTHit;
 
-  //-------------------------------------------------------------------
-  // Hit type tags
-  //-------------------------------------------------------------------
-  struct hit_base_tag                          {};  ///< type tag for hit base
-  struct line_hit_tag    : public hit_base_tag {};  ///< type tag for line hit
-  struct ot_hit_tag      : public line_hit_tag {};  ///< type tag for OT hit
-  struct st_hit_tag      : public line_hit_tag {};  ///< type tag for ST hit
-  struct velo_hit_tag    : public hit_base_tag {};  ///< type tag for Velo hit
-  struct velo_rhit_tag   : public velo_hit_tag {};  ///< type tag for Velo R hit
-  struct velo_phihit_tag : public velo_hit_tag {};  ///< type tag for Velo Phi hit
-
   /** @class HitBase TfKernel/HitBase.h
    *  Base class for storage of hits in all tracking systems
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
@@ -51,6 +40,23 @@ namespace Tf
    */
   class HitBase
   {
+
+  public:
+
+    /** @struct hit_base_tag @brief type tag for hit base */
+    struct hit_base_tag                          {}; 
+    /** @struct line_hit_tag @brief type tag for line hit */
+    struct line_hit_tag    : public hit_base_tag {}; 
+    /** @struct ot_hit_tag @brief type tag for OT hit */
+    struct ot_hit_tag      : public line_hit_tag {};
+    /** @struct st_hit_tag @brief type tag for ST hit */
+    struct st_hit_tag      : public line_hit_tag {}; 
+    /** @struct velo_hit_tag @brief type tag for Velo hit */
+    struct velo_hit_tag    : public hit_base_tag {}; 
+    /** @struct velo_rhit_tag @brief type tag for Velo R hit */
+    struct velo_rhit_tag   : public velo_hit_tag {}; 
+    /** @struct velo_phihit_tag @brief type tag for Velo Phi hit */
+    struct velo_phihit_tag : public velo_hit_tag {}; 
 
   public:
 
@@ -78,6 +84,8 @@ namespace Tf
 
     /// The hit type tag (XXX???XXX Wouter, could you maybe expand a bit on what these tag structs are for and how they are used ?)
     typedef hit_base_tag hit_type_tag;
+
+  public:
 
     //== Simple accessors to internal data members
 
@@ -187,7 +195,7 @@ namespace Tf
   protected:
 
     // only inherited objects are supposed to be created
-    
+
     /** Default constructor */
     HitBase() {}
 
@@ -197,9 +205,9 @@ namespace Tf
      *  @param coord    The coord value for this hit (XXX???XXX What is this ?)
      *  @param variance The value of the variance for this hit
      */
-    HitBase( const LHCb::LHCbID id, 
-             const RegionID& regionid, 
-             const float coord    = 0, 
+    HitBase( const LHCb::LHCbID id,
+             const RegionID& regionid,
+             const float coord    = 0,
              const float variance = 0 )
       : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance) {}
 
@@ -214,7 +222,7 @@ namespace Tf
   protected:
 
     LHCb::LHCbID m_lhcbID;          ///< The hit LHCbID channel identifier
-    RegionID m_regionID;            ///< The hit RegionID       
+    RegionID m_regionID;            ///< The hit RegionID
     float m_coord;                  ///< The hit coord (XXX???XXX X value ?)
     float m_variance;               ///< The hit variance
     mutable StatusFlag m_status;    ///< The hit status word (bit packed)
