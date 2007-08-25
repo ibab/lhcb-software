@@ -1,16 +1,16 @@
-#ifndef VELOTTTHITMANAGER_H 
-#define VELOTTHITMANAGER_H 1
+#ifndef PATVELOTTTHITMANAGER_H 
+#define PATVELOTTTHITMANAGER_H  1
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TfKernel/TTStationHitManager.h"
 
-#include "VeloTTHit.h"
+#include "PatVeloTTHit.h"
 
 namespace Tf {
 
-  /** @class VeloTTHitManager PatTStationHitManager.h
+  /** @class PatVeloTTHitManager PatTStationHitManager.h
    *
    *  Velo station hit manager for Pat.
    *
@@ -18,18 +18,18 @@ namespace Tf {
    *  @date   2007-06-01
    */
 
-  class VeloTTHitManager : public TTStationHitManager<VeloTTHit>
+  class PatVeloTTHitManager : public TTStationHitManager<PatVeloTTHit>
   {
 
   public:
 
-    VeloTTHitManager( const std::string& type,
+    PatVeloTTHitManager( const std::string& type,
                       const std::string& name,
                       const IInterface* parent) ;
 
-    virtual ~VeloTTHitManager( );
+    virtual ~PatVeloTTHitManager( );
 
   };
 }
 
-#endif // VELOTTHITMANAGER_H
+#endif // PATVELOTTTHITMANAGER_H 

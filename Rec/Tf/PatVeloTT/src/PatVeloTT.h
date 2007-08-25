@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.h,v 1.2 2007-08-24 12:44:07 jonrob Exp $
+// $Id: PatVeloTT.h,v 1.3 2007-08-25 14:27:37 jonrob Exp $
 #ifndef PATVELOTT_H
 #define PATVELOTT_H 1
 
@@ -11,7 +11,7 @@
 #include "TfKernel/TTStationHitManager.h"
 
 // local
-#include "VeloTTHit.h"
+#include "PatVeloTTHit.h"
 
 namespace Tf {
 
@@ -51,7 +51,7 @@ namespace Tf {
 
     ITrackSelector* m_trackSelector; // tool to accept a track
 
-    TTStationHitManager < VeloTTHit> *      m_ttHitManager;
+    TTStationHitManager<PatVeloTTHit> *      m_ttHitManager;
 
     std::string m_inputTracksName;    ///< input container name
     std::string m_outputTracksName;   ///< output container name

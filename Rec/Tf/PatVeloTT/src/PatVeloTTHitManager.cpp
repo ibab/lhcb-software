@@ -2,32 +2,30 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-
 //From TfData
 #include "TfKernel/STHit.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeTTSector.h"
 
 // local
-#include "VeloTTHitManager.h"
-#include "VeloTTHit.h"
+#include "PatVeloTTHitManager.h"
+#include "PatVeloTTHit.h"
 
 using namespace Tf;
 
-DECLARE_TOOL_FACTORY( VeloTTHitManager );
+DECLARE_TOOL_FACTORY( PatVeloTTHitManager );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VeloTTHitManager::VeloTTHitManager( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
-  : TTStationHitManager<VeloTTHit> ( type, name , parent )
+PatVeloTTHitManager::PatVeloTTHitManager( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : TTStationHitManager<PatVeloTTHit> ( type, name , parent )
 {
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloTTHitManager::~VeloTTHitManager() { }
-
+PatVeloTTHitManager::~PatVeloTTHitManager() { }

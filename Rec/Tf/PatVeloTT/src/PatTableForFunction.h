@@ -1,16 +1,16 @@
-// $Id: TableForFunction.h,v 1.2 2007-08-24 12:44:08 jonrob Exp $
-#ifndef TABLEFORFUNCTION_H
-#define TABLEFORFUNCTION_H 1
+// $Id: PatTableForFunction.h,v 1.1 2007-08-25 14:27:37 jonrob Exp $
+#ifndef PATTABLEFORFUNCTION_H
+#define PATTABLEFORFUNCTION_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-static const InterfaceID IID_TableForFunction ( "TableForFunction", 1, 0 );
+static const InterfaceID IID_PatTableForFunction ( "PatTableForFunction", 1, 0 );
 
 namespace Tf {
 
-  /** @class TableForFunction TableForFunction.h newtool/TableForFunction.h
+  /** @class PatTableForFunction PatTableForFunction.h
    *
    *  Some internal class for pat
    *
@@ -46,18 +46,18 @@ namespace Tf {
    *
    */
 
-  class TableForFunction : public GaudiTool {
+  class PatTableForFunction : public GaudiTool {
   public:
 
     // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_TableForFunction; }
+    static const InterfaceID& interfaceID() { return IID_PatTableForFunction; }
 
     /// Standard constructor
-    TableForFunction( const std::string& type,
+    PatTableForFunction( const std::string& type,
                       const std::string& name,
                       const IInterface* parent);
 
-    virtual ~TableForFunction( ); ///< Destructor
+    virtual ~PatTableForFunction( ); ///< Destructor
 
     void   addVariable(int nBin, double lowVal, double highVal);
     void   prepareTable();

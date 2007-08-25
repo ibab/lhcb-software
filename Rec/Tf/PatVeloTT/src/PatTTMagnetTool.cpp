@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.1.1.1 2007-08-22 15:30:37 smenzeme Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.2 2007-08-25 14:27:37 jonrob Exp $
 
 // Include files
 
@@ -16,7 +16,7 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 // local
-#include "TableForFunction.h"
+#include "PatTableForFunction.h"
 #include "PatTTMagnetTool.h"
 
 //-----------------------------------------------------------------------------
@@ -137,8 +137,8 @@ void PatTTMagnetTool::prepareBdlTables() {
   //
   //                      slopeY    zOrigin    zVeloEnd
 
-  m_lutBdl       = tool<TableForFunction>("TableForFunction/table1",this);
-  m_lutZHalfBdl  = tool<TableForFunction>("TableForFunction/table2",this);
+  m_lutBdl       = tool<PatTableForFunction>("PatTableForFunction/table1",this);
+  m_lutZHalfBdl  = tool<PatTableForFunction>("PatTableForFunction/table2",this);
 
   m_lutBdl->addVariable(30, -0.3, 0.3);
   m_lutBdl->addVariable(10, -250.*Gaudi::Units::mm, 250.*Gaudi::Units::mm);
@@ -183,8 +183,8 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 
   // prepare deflection tables
 
-  m_lutDxLay    = tool<TableForFunction>("TableForFunction/table3",this);
-  m_lutDxToMom  = tool<TableForFunction>("TableForFunction/table4",this);
+  m_lutDxLay    = tool<PatTableForFunction>("PatTableForFunction/table3",this);
+  m_lutDxToMom  = tool<PatTableForFunction>("PatTableForFunction/table4",this);
 
   // Retrieve extrapolators
   ITrackExtrapolator* my_linear = tool<ITrackExtrapolator>( "TrackLinearExtrapolator" );

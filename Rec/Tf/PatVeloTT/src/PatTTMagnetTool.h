@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.h,v 1.2 2007-08-24 12:44:07 jonrob Exp $ 
+// $Id: PatTTMagnetTool.h,v 1.3 2007-08-25 14:27:37 jonrob Exp $ 
 #ifndef PATTTMAGNETTOOL_H
 #define PATTTMAGNETTOOL_H 1
 
@@ -8,7 +8,7 @@
 
 // Forward declarations
 class IMagneticFieldSvc;
-class TableForFunction;
+class PatTableForFunction;
 #include "STDet/DeSTDetector.h"
 
 
@@ -68,15 +68,15 @@ namespace Tf {
 
     /// pointer to mag field service
     IMagneticFieldSvc* m_magFieldSvc;
-    TableForFunction* m_lutBdl;
-    TableForFunction* m_lutZHalfBdl;
+    PatTableForFunction* m_lutBdl;
+    PatTableForFunction* m_lutZHalfBdl;
 
     double m_zCenterTT;
     double m_zMidField;
 
     double m_dist2mom;
-    TableForFunction* m_lutDxLay;
-    TableForFunction* m_lutDxToMom;
+    PatTableForFunction* m_lutDxLay;
+    PatTableForFunction* m_lutDxToMom;
 
     std::vector<double> m_lutVar; // auxiliary vector used as argument
 
