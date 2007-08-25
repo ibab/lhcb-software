@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.16 2007-08-22 15:24:56 smenzeme Exp $
+ *  $Id: TStationHitManager.h,v 1.17 2007-08-25 14:28:45 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -35,14 +35,6 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/TfIDTypes.h"
 #include "TfKernel/RegionSelectors.h"
-
-// Boost
-//#include <boost/lambda/lambda.hpp>
-//#include <boost/lambda/bind.hpp>
-//#include <vector>
-//#include <algorithm>
-//using namespace std;
-//using namespace boost::lambda;
 
 /// Static interface ID
 static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );
@@ -715,9 +707,6 @@ namespace Tf
       Tf::OTHits selectedhits;
       m_otCleaner->cleanHits( othits, selectedhits );
       // convert only those selected
-      // CRJ : Can't seem to get this boost stuff to work...
-      //std::for_each( selectedhits.begin(), selectedhits.end(),
-      //               bind( **_1, sta, lay, region )(this->addHit) );
       for ( OTHits::const_iterator itOTH = selectedhits.begin();
             itOTH != selectedhits.end(); ++itOTH )
       {
@@ -755,6 +744,7 @@ namespace Tf
     }
     else
     {
+      // no cleaning, so just convert everything
       for ( STHitRange::const_iterator itSTH = sthits.begin();
             itSTH < sthits.end(); ++itSTH )
       {
