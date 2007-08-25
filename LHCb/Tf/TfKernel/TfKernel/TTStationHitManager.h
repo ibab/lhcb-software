@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.13 2007-08-25 14:28:45 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.14 2007-08-25 19:26:36 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -78,7 +78,7 @@ namespace Tf
    *  hitMan->prepareHits(selector);
    *  // Can now use any of the hits(..) methods to access hit ranges, e.g.
    *  Tf::TTStationHitManager::HitRange range = hitMan->hits();
-   *  // To the selected hits in all stations, layers and regions 
+   *  // Which gives the selected hits in all stations, layers and regions in the TT stations
    *  @endcode
    *
    *  The only requirement on the selector object used is it must implement one specific method.

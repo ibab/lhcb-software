@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.6 2007-08-25 16:52:06 jonrob Exp $
+ *  $Id: HitBase.h,v 1.7 2007-08-25 19:26:36 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -212,11 +212,13 @@ namespace Tf
       : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance) {}
 
     /** Set the coord value
-     *  @param x The coord value to use */
+     *  @param x The coord value to use 
+     */
     void setCoord(const float x) { m_coord = x ; }
 
     /** Set the variance value
-     *  @param x The variance value to use */
+     *  @param v The variance value to use 
+     */
     void setVariance(const float v) { m_variance = v ; }
 
   protected:

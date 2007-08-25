@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.9 2007-08-22 15:24:56 smenzeme Exp $
+// $Id: RegionSelectors.h,v 1.10 2007-08-25 19:26:36 jonrob Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -37,14 +37,25 @@ namespace Tf
   /** @class StateRegionSelector RegionSelectors.h TfKernel/RegionSelectors.h
    *
    *  Selector object for use in conjunction with the TStationHitManager and
-   *  TTStationHitManager classes. In order to be used be these clases, the selector
-   *  must implement one specific method, 'searchWindow', which returns the search window
-   *  parameters (min and max x and y) for a given z value.
+   *  TTStationHitManager classes. 
    *
-   *  Can be used to select hits with a given #sigma region around a given
-   *  track State.
-   *  Uses a second order polynomial in z to compute the y value and a first
+   *  This implementation selects hits within a given number of sigma region around a given
+   *  track State. Uses a second order polynomial in z to compute the y value and a first
    *  or polynominal in z for x.
+   *
+   *  Example usage :- 
+   *  @code
+   *   LHCb::State * test_state = ....;
+   *   const double nsigma = 3.0;
+   *   StateRegionSelector selector( *test_state, nsigma );
+   *   // hitMan is a pointer to a T or TT station hit manager
+   *   hitMan->prepareHits(selector);
+   *  @endcode 
+   *
+   *  In order to be used with the TStationHitManager or TTStationHitManager hit 
+   *  manager classes, the selector objects must implement one specific method, 
+   *  'searchWindow', which returns the search window  parameters 
+   *  (min and max x and y) for a given z value.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-08-20
@@ -54,9 +65,9 @@ namespace Tf
 
   public:
 
-    /** Constructor from an LHCb::Statech window size in # sigma
+    /** Constructor from an LHCb::Statech window size in number of sigma
      *  @param aState Reference to the LHCb::State object to search for hits around
-     *  @param nSigma Size of the search window, in #sigma * error.
+     *  @param nSigma Size of the search window, in number of sigma * error.
      */
     StateRegionSelector( const LHCb::State & aState, const double nSigma )
     {
@@ -80,6 +91,8 @@ namespace Tf
      *  TTStationHitManager classes.
      *  @param z The z position for which a search window should be created
      *  @return The Search window
+     *  @see TStationHitManager
+     *  @see TTStationHitManager
      */
     inline XYSearchWindow searchWindow( const double z ) const
     {
