@@ -1,4 +1,4 @@
-// $Id: ExtendedVeloRHitManager.h,v 1.1.1.1 2007-08-13 11:13:58 jonrob Exp $
+// $Id: ExtendedVeloRHitManager.h,v 1.2 2007-08-25 16:57:06 jonrob Exp $
 #ifndef INCLUDE_EXTENDENDVELORHITMANAGER_H
 #define INCLUDE_EXTENDENDVELORHITMANAGER_H 1
 
@@ -9,7 +9,7 @@ namespace Tf {
   static const InterfaceID IID_ExtendedVeloRHitManager( "Tf::ExtendedVeloRHitManager", 1, 0 );
 
   /** @class ExtendedVeloRHitManager ExtendedVeloRHitManager.h
-   * Base class for user dereived HitManagers. 
+   * Base class for user dereved VeloR HitManagers. 
    *
    * @author Kurt Rinnert <kurt.rinnert@cern.ch>
    * @date   2007-08-07

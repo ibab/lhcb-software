@@ -1,4 +1,4 @@
-// $Id: DefaultVeloRHitManager.h,v 1.2 2007-08-19 16:54:41 jonrob Exp $
+// $Id: DefaultVeloRHitManager.h,v 1.3 2007-08-25 16:55:01 jonrob Exp $
 #ifndef INCLUDE_TF_DEFAULTVELORHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELORHITMANAGER_H 1
 
@@ -14,7 +14,8 @@ namespace Tf {
 
   /** @class DefaultVeloRHitManager DefaultVeloRHitManager.h
    *
-   *
+   *  Default Hit manager for Velo R hits
+   * 
    * @author Kurt Rinnert <kurt.rinnert@cern.ch>
    * @date   2007-07-31
    */
