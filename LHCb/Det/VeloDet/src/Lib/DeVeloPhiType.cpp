@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.36 2007-07-23 01:08:55 krinnert Exp $
+// $Id: DeVeloPhiType.cpp,v 1.37 2007-08-25 19:43:48 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -62,6 +62,7 @@ DeVeloPhiType::DeVeloPhiType(const std::string& name)
   , m_idealPhi(m_numberOfStrips,0.0)
   , m_associatedRSensor(0)
   , m_otherSidePhiSensor(0)
+  , m_otherSideRSensor(0)
   , m_stripLengths(VeloDet::deVeloPhiTypeStaticStripLengths())
 {
 }
@@ -160,17 +161,17 @@ StatusCode DeVeloPhiType::initialize()
   /// Build up map of strips to routing lines
   BuildRoutingLineMap();
 
-  // fill global phi cache
-  sc = updateGeometryCache();
+  // register geometry conditions, update global r of strip cache
+  updMgrSvc()->
+    registerCondition(this,this->m_geometry,&DeVeloPhiType::updateGeometryCache);
+
+  // first update
+  sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to update geometry cache." << endreq;
     return sc;
   }
   
-  // register geometry conditions, update global r of strip cache
-  updMgrSvc()->
-    registerCondition(this,this->m_geometry,&DeVeloPhiType::updateGeometryCache);
-
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -626,31 +627,147 @@ std::auto_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChanne
 
 StatusCode DeVeloPhiType::updatePhiCache()
 {
-  for (unsigned int strip=0; strip<m_numberOfStrips; ++ strip) {
-    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>  limits = localStripLimits(strip);
-    double x = (limits.first.x()  + limits.second.x())/2.0;
-    double y = (limits.first.y()  + limits.second.y())/2.0;
+  for (unsigned int zone=0; zone<m_numberOfZones; ++zone) {
+
+    unsigned int firstStrip = m_nbInner*zone;
+    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>  limits = localStripLimits(firstStrip);
+    double r0 = (limits.first.rho()+limits.second.rho())/2.0;
+
+    double d0 = zone ? m_outerDistToOrigin : m_innerDistToOrigin;
+    d0 = isDownstream() ? d0 : -d0;
+    m_idealDistToOrigin[zone] = d0;
+    double offset = asin(d0/r0);
+    m_idealOffsetAtR0[zone] = offset;
     
-    Gaudi::XYZPoint lp(x,y,0.0);
-    m_idealPhi[strip]=localPhiToGlobal(lp.phi());
+    Gaudi::XYZPoint begin = localToGlobal(limits.first);
+    Gaudi::XYZPoint end   = localToGlobal(limits.second);
+    r0 = (begin.rho()+end.rho())/2.0;
+    Gaudi::XYZVector dx = end-begin;
+    Gaudi::XYZPoint center = begin + 0.5*dx;
+    d0 = r0*sin(center.phi()-dx.phi());
+    m_globalDistToOrigin[zone] = d0;
+    m_globalOffsetAtR0[zone] = asin(d0/r0);
     
-    Gaudi::XYZPoint gp = localToGlobal(lp);
-    m_globalPhi[strip] = gp.phi();
+    begin = localToVeloHalfBox(limits.first);
+    end   = localToVeloHalfBox(limits.second);
+    r0 = (begin.rho()+end.rho())/2.0;
+    dx = end-begin;
+    center = begin + 0.5*dx;
+    d0 = r0*sin(center.phi()-dx.phi());
+    m_halfboxDistToOrigin[zone] = d0;
+    m_halfboxOffsetAtR0[zone] = asin(d0/r0);
     
-    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-    m_halfboxPhi[strip] = hbp.phi();
+    for (unsigned int s=0; s<m_stripsInZone[zone]; ++s) {
+
+      unsigned int strip = s + m_nbInner*zone;
+      double phi0 = phiOfStrip(strip,0.0,r0);
+      double x = r0*cos(phi0);
+      double y = r0*sin(phi0);
+
+      Gaudi::XYZPoint lp(x,y,0.0);
+      m_idealPhi[strip]=localPhiToGlobal(lp.phi());
+
+      Gaudi::XYZPoint gp = localToGlobal(lp);
+      m_globalPhi[strip] = gp.phi();
+
+      Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
+      m_halfboxPhi[strip] = hbp.phi();
+    }
   }
-  
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloPhiType::updateZoneLimits()
+{
+  for (unsigned int zone=0; zone<2; ++zone) {
+    unsigned int minStrip = (zone ? m_nbInner : 0 );
+    unsigned int maxStrip = (zone ? m_numberOfStrips-1 : m_nbInner-1 );
+    unsigned int midStrip = (minStrip+maxStrip)/2;
+
+    // determine the r ranges of the zones in global frame
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
+    std::vector<double> rLimits;
+    rLimits.push_back(globalLimitsMin.first.rho()); rLimits.push_back(globalLimitsMin.second.rho());
+    rLimits.push_back(globalLimitsMax.first.rho()); rLimits.push_back(globalLimitsMax.second.rho());
+    rLimits.push_back(globalLimitsMid.first.rho()); rLimits.push_back(globalLimitsMid.second.rho());
+    m_globalRLimitsZone[zone].first  = *std::min_element(rLimits.begin(),rLimits.end());
+    m_globalRLimitsZone[zone].second = *std::max_element(rLimits.begin(),rLimits.end());
+
+    std::vector<double> phiLimits;
+    phiLimits.push_back(globalLimitsMin.first.phi()); phiLimits.push_back(globalLimitsMin.second.phi());
+    phiLimits.push_back(globalLimitsMax.first.phi()); phiLimits.push_back(globalLimitsMax.second.phi());
+    // map to [0,2pi] for righ hand side sensors
+    if (isRight()) {
+      for (unsigned int i=0; i<phiLimits.size(); ++i) {
+        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
+      }
+    }
+    m_globalPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end()); 
+    m_globalPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end()); 
+    // map back to [-pi,pi]
+    if (isRight()) {
+      if (m_globalPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;   
+      if (m_globalPhiLimitsZone[zone].second > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;   
+    } 
+ 
+    // determine the r ranges of the zones in VELO half box frame
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
+      (globalToVeloHalfBox(globalLimitsMin.first),globalToVeloHalfBox(globalLimitsMin.second));
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMax
+      (globalToVeloHalfBox(globalLimitsMax.first),globalToVeloHalfBox(globalLimitsMax.second));
+    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMid
+      (globalToVeloHalfBox(globalLimitsMid.first),globalToVeloHalfBox(globalLimitsMid.second));
+    rLimits.clear();
+    rLimits.push_back(halfBoxLimitsMin.first.rho()); rLimits.push_back(halfBoxLimitsMin.second.rho());
+    rLimits.push_back(halfBoxLimitsMax.first.rho()); rLimits.push_back(halfBoxLimitsMax.second.rho());
+    rLimits.push_back(halfBoxLimitsMid.first.rho()); rLimits.push_back(halfBoxLimitsMid.second.rho());
+    m_halfboxRLimitsZone[zone].first  = *std::min_element(rLimits.begin(),rLimits.end());
+    m_halfboxRLimitsZone[zone].second = *std::max_element(rLimits.begin(),rLimits.end());
+
+    phiLimits.clear();
+    phiLimits.push_back(halfBoxLimitsMin.first.phi()); phiLimits.push_back(halfBoxLimitsMin.second.phi());
+    phiLimits.push_back(halfBoxLimitsMax.first.phi()); phiLimits.push_back(halfBoxLimitsMax.second.phi());
+    // map to [0,2pi] for righ hand side sensors
+    if (isRight()) {
+      for (unsigned int i=0; i<phiLimits.size(); ++i) {
+        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
+      }
+    }
+    m_halfboxPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end()); 
+    m_halfboxPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end()); 
+    // map back to [-pi,pi]
+    if (isRight()) {
+      if (m_halfboxPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;   
+      if (m_halfboxPhiLimitsZone[zone].second > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;   
+    } 
+
+    // extend the phi ranges by half a strip pitch
+    double pitch = fabs(phiPitch(minStrip));
+    m_globalPhiLimitsZone [zone].first  -= pitch/2.0;
+    m_globalPhiLimitsZone [zone].second += pitch/2.0;
+    m_halfboxPhiLimitsZone[zone].first  -= pitch/2.0;
+    m_halfboxPhiLimitsZone[zone].second += pitch/2.0;
+  }
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode DeVeloPhiType::updateGeometryCache()
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
-  
+
   StatusCode sc = updatePhiCache();
   if(!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to update phi cache." << endreq;
+    return sc;
+  }
+
+  sc = updateZoneLimits();
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR << "Failed to update zone limit cache." << endreq;
     return sc;
   }
 

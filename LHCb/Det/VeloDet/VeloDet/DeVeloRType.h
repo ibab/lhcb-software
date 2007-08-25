@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.23 2007-07-23 01:08:54 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.24 2007-08-25 19:43:48 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -141,6 +141,16 @@ public:
     return m_innerPitch + m_pitchSlope*(radius - innerRadius());
   }
 
+  /// Return the radius of the centre of strip plus interstrip fraction*pitch in the global frame
+  inline float globalR(unsigned int strip, double isp) const {
+    return m_globalR[strip] + isp*rPitch(strip);
+  }
+  
+  /// Return the radius of the centre of strip plus interstrip fraction*pitch in the halfbox frame
+  inline float halfboxR(unsigned int strip, double isp) const {
+    return m_halfboxR[strip] + isp*rPitch(strip);
+  }
+  
   /// Return the radius of the centre of the strip in the global frame
   inline float globalROfStrip(unsigned int strip) const { return m_globalR[strip]; }
 
@@ -161,6 +171,18 @@ public:
       This is a constant value for zone 2 and should be used with caution **/
   double phiMaxZone(unsigned int zone, double radius) const;
    
+  /// The phi range [-pi,pi] of the given global zone in the global frame.
+  const std::pair<double,double>& globalPhiRange(unsigned int globalZone) const { return m_globalPhiLimitsZone[globalZone]; }
+  
+  /// The phi range [-pi,pi] of the given global zone in the halfbox frame.
+  const std::pair<double,double>& halfboxPhiRange(unsigned int globalZone) const { return m_halfboxPhiLimitsZone[globalZone]; }
+  
+  /// The r range of the given global zone in the global frame.
+  const std::pair<double,double>& globalRRange(unsigned int globalZone) const { return m_globalRLimitsZone[globalZone]; }
+  
+  /// The r range of the given global zone in the halfbox frame.
+  const std::pair<double,double>& halfboxRRange(unsigned int globalZone) const { return m_halfboxRLimitsZone[globalZone]; }
+  
   /// The minimum phi of a strip
   double phiMinStrip(unsigned int strip) const {
     return m_stripPhiLimits[strip].first;
@@ -186,11 +208,17 @@ public:
   /// Access to the r sensor on the other side of the VELO
   inline const DeVeloRType* otherSideRSensor() const { return m_otherSideRSensor; }
   
+  /// Access to the phi sensor on the other side of the VELO
+  inline const DeVeloPhiType* otherSidePhiSensor() const { return m_otherSidePhiSensor; }
+  
   /// Set the associated phi sensor.  This should only be called by DeVelo::initialize()
   inline void setAssociatedPhiSensor(const DeVeloPhiType* ps) { m_associatedPhiSensor = ps; }
   
   /// Set the r sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
   inline void setOtherSideRSensor(const DeVeloRType* rs) { m_otherSideRSensor = rs; }
+
+  /// Set the phi sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
+  inline void setOtherSidePhiSensor(const DeVeloPhiType* ps) { m_otherSidePhiSensor = ps; }
 
 
 private:
@@ -212,6 +240,9 @@ private:
   /// Calculate the strip radii in the halfbox frame when the alignment changes
   StatusCode updateHalfboxR();
 
+  /// Calculate the zone limits in the global and halfbox frame
+  StatusCode updateZoneLimits();
+  
   /// Update geomtry cache when the alignment changes
   StatusCode updateGeometryCache();
     
@@ -244,11 +275,26 @@ private:
   /// cache for strip radii in the halfbox frame
   std::vector<float> m_halfboxR;
 
+  /// cache for phi range of zones in global frame
+  std::pair<double,double> m_globalPhiLimitsZone[4];
+
+  /// cache for phi range of zones in halfbox frame
+  std::pair<double,double> m_halfboxPhiLimitsZone[4];
+  
+  /// cache for r range of zones in global frame
+  std::pair<double,double> m_globalRLimitsZone[4];
+
+  /// cache for r range of zones in halfbox frame
+  std::pair<double,double> m_halfboxRLimitsZone[4];
+  
   /// pointer to associated phi sensor
   const DeVeloPhiType* m_associatedPhiSensor;
   
   /// pointer to the r sensor on the other side of the VELO
   const DeVeloRType* m_otherSideRSensor;
+  
+  /// pointer to the phi sensor on the other side of the VELO
+  const DeVeloPhiType* m_otherSidePhiSensor;
   
   // These are references to local statics accessed via static functions
   // implemented in DeVeloRType.cpp. I stree this because these are

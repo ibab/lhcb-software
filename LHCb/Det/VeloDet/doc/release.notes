@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.171 2007-07-23 06:30:51 cattanem Exp $
+! $Id: release.notes,v 1.172 2007-08-25 19:43:48 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-08-25 - Kurt Rinnert
+ - new caches of phi and r ranges in DeVeloRType and DeVeloPhiType in global
+   and VELO halfbox frames.
+ - added the concept of a global zone (only relevant for DeVeloRType).
+ - added cache of strip impact paramters in several frames to DeVeloPhiType
+   (only at the level of inner/outer zone, extension to cache per strip is
+   trivial but costly in memory).
+ - improved interface simplifying access to coordinates in several frames
+ - added direct access to other type sensors in the opposite VELO half (this
+   is safer because it does not imply the assiociated sensor on the same
+   module to exist).
+ - the first update of geometry related caches is now triggered via the update
+   manager service, avoiding double initialisation at job startup.
 
 !======================== VeloDet v12r0 2007-07-23 ===========================
 ! 2007-07-19 - Kurt Rinnert

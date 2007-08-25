@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.34 2007-07-23 01:08:55 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.35 2007-08-25 19:43:48 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -93,6 +93,11 @@ public:
   /// The zones number for a given strip
   //  virtual unsigned int zoneOfStrip(const LHCb::VeloChannelID& channel)=0;
   virtual unsigned int zoneOfStrip(const unsigned int strip) const = 0;
+  
+  /// The global zone number for a strip (corrected for downstream facing r type sensors)
+  unsigned int globalZoneOfStrip(const unsigned int strip) const { 
+    return isPhi() ? static_cast<unsigned int>(strip>682) : (isDownstream() ? 3-strip/512 : strip/512); 
+  }
   
   /// The number of strips in a zone
   virtual unsigned int stripsInZone(const unsigned int zone) const = 0;

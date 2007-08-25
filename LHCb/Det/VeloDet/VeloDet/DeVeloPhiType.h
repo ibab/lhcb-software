@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.25 2007-07-23 01:08:54 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.26 2007-08-25 19:43:48 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -105,6 +105,18 @@ public:
   /// The maximum radius for a given zone of the sensor
   virtual double rMax(const unsigned int zone) const;
 
+  /// The phi range [-pi,pi] of the given zone in the global frame.
+  const std::pair<double,double>& globalPhiRange(unsigned int zone) const { return m_globalPhiLimitsZone[zone]; }
+  
+  /// The phi range [-pi,pi] of the given zone in the halfbox frame.
+  const std::pair<double,double>& halfboxPhiRange(unsigned int zone) const { return m_halfboxPhiLimitsZone[zone]; }
+  
+  /// The r range of the given zone in the global frame.
+  const std::pair<double,double>& globalRRange(unsigned int zone) const { return m_globalRLimitsZone[zone]; }
+  
+  /// The r range of the given zone in the halfbox frame.
+  const std::pair<double,double>& halfboxRRange(unsigned int zone) const { return m_halfboxRLimitsZone[zone]; }
+  
   /// Determines if 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
 
@@ -153,6 +165,84 @@ public:
   
   /// phi at strip centre with ideal alignment
   inline float idealPhiOfStrip(unsigned int strip) const { return m_idealPhi[strip]; }
+ 
+  /// get the global frame phi offset at a given radius in the given zone 
+  inline double globalPhiOffset(unsigned int zone, double radius) const {
+    double c0 = m_globalOffsetAtR0[zone];
+    double d0 = m_globalDistToOrigin[zone];
+    return asin(d0/radius) - c0;
+  }
+  
+  /// get the halfbox frame phi offset at a given radius in the given zone 
+  inline double halfboxPhiOffset(unsigned int zone, double radius) const {
+    double c0 = m_halfboxOffsetAtR0[zone];
+    double d0 = m_halfboxDistToOrigin[zone];
+    return asin(d0/radius) - c0;
+  }
+  
+  /// get the ideal frame phi offset at a given radius in the given zone 
+  inline double idealPhiOffset(unsigned int zone, double radius) const {
+    double c0 = m_idealOffsetAtR0[zone];
+    double d0 = m_idealDistToOrigin[zone];
+    return asin(d0/radius) - c0;
+  }
+  
+  /// phi for a given inter strip fraction and strip in the global frame
+  inline double globalPhi(unsigned int strip, double fraction) const {
+    double phi = m_globalPhi[strip] + fraction*globalPhiPitch(strip);
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
+
+  /// phi at a given radius in the global frame
+  inline double globalPhi(unsigned int strip, double fraction, double radius) const {
+    double c0     = radius < m_middleRadius? m_globalOffsetAtR0[0] : m_globalOffsetAtR0[1];
+    double d0     = radius < m_middleRadius? m_globalDistToOrigin[0] : m_globalDistToOrigin[1];
+    double offset = asin(d0/radius);
+    double phi    = m_globalPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
+  
+  /// phi for a given inter strip fraction and strip in the halfbox frame
+  inline double halfboxPhi(unsigned int strip, double fraction) const {
+    double phi = m_halfboxPhi[strip] + fraction*globalPhiPitch(strip);
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
+
+  /// phi at a given radius in the halfbox frame
+  inline double halfboxPhi(unsigned int strip, double fraction, double radius) const {
+    double c0     = radius < m_middleRadius? m_halfboxOffsetAtR0[0] : m_halfboxOffsetAtR0[1];
+    double d0     = radius < m_middleRadius? m_halfboxDistToOrigin[0] : m_halfboxDistToOrigin[1];
+    double offset = asin(d0/radius);
+    double phi    = m_halfboxPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
+  
+  /// phi for a given inter strip fraction and strip in the ideal frame
+  inline double idealPhi(unsigned int strip, double fraction) const {
+    double phi = m_idealPhi[strip] + fraction*globalPhiPitch(strip);
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
+
+  /// phi at a given radius in the ideal frame
+  inline double idealPhi(unsigned int strip, double fraction, double radius) const {
+    double c0     = radius < m_middleRadius? m_idealOffsetAtR0[0] : m_idealOffsetAtR0[1];
+    double d0     = radius < m_middleRadius? m_idealDistToOrigin[0] : m_idealDistToOrigin[1];
+    double offset = asin(d0/radius);
+    double phi    = m_idealPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
+    phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
+    return phi; 
+  }
   
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
@@ -167,7 +257,6 @@ public:
       return m_outerTilt;
     } 
   }
-    
 
   /// Returns the offset in phi for a given radius
   inline double phiOffset(double radius) const {
@@ -189,6 +278,15 @@ public:
     return  (m_nbInner > strip) ? m_innerPitch : m_outerPitch;
   }
 
+  /// The phi pitch in mm at a given radius, with the correct sign in the global frame
+  inline double globalPhiPitch(double radius) const {
+    return isDownstream() ? -phiPitch(radius): phiPitch(radius);
+  }
+  /// The phi pitch in radians for a given strip, with the correct sign in the global frame
+  inline double globalPhiPitch(unsigned int strip) const {
+    return isDownstream() ? -phiPitch(strip): phiPitch(strip);
+  }
+
   /// Return the distance to the origin for sensor
   inline double distToOrigin(unsigned int strip) const {
     return (m_nbInner > strip) ? m_innerDistToOrigin : m_outerDistToOrigin;
@@ -206,12 +304,17 @@ public:
   /// Access to the phi sensor on the other side of the VELO
   inline const DeVeloPhiType* otherSidePhiSensor() const { return m_otherSidePhiSensor; }
   
+  /// Access to the r sensor on the other side of the VELO
+  inline const DeVeloRType* otherSideRSensor() const { return m_otherSideRSensor; }
+  
   /// Set the associated R sensor.  This should only be called by DeVelo::initialize()
   inline void setAssociatedRSensor(const DeVeloRType* rs) { m_associatedRSensor = rs; }
 
   /// Set the phi sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
   inline void setOtherSidePhiSensor(const DeVeloPhiType* ps) { m_otherSidePhiSensor = ps; }
 
+  /// Set the r sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
+  inline void setOtherSideRSensor(const DeVeloRType* rs) { m_otherSideRSensor = rs; }
 
 protected:
 
@@ -225,6 +328,9 @@ private:
    *  Also caches the phi for ideal alignment.
    */  
   StatusCode updatePhiCache();
+  
+  /// Calculate the zone limits in the global and halfbox frame
+  StatusCode updateZoneLimits();
   
   /// Update the geometry cache when the alignment changes
   StatusCode updateGeometryCache();
@@ -262,6 +368,24 @@ private:
   //  double m_halfCoverage;
   bool m_down;
 
+  /// cache of strip impact parameters for each zone in the ideal frame
+  double m_idealDistToOrigin[2];
+  
+  /// cache of strip impact parameters for each zone in the halfbox frame
+  double m_halfboxDistToOrigin[2];
+  
+  /// cache of strip impact parameters for each zone in the global frame
+  double m_globalDistToOrigin[2];
+  
+  /// cache of offset for each zone with the correct sign for the ideal frame
+  double m_idealOffsetAtR0[2];
+  
+  /// cache of offset for each zone with the correct sign for the halfbox frame
+  double m_halfboxOffsetAtR0[2];
+  
+  /// cache of offset for each zone with the correct sign for the global frame
+  double m_globalOffsetAtR0[2];
+  
   /// cache of global phi at the strip centres
   std::vector<float> m_globalPhi;
     
@@ -271,11 +395,26 @@ private:
   /// cache of ideal phi 
   std::vector<float> m_idealPhi;
     
+  /// cache for phi range of zones in global frame
+  std::pair<double,double> m_globalPhiLimitsZone[2];
+
+  /// cache for phi range of zones in halfbox frame
+  std::pair<double,double> m_halfboxPhiLimitsZone[2];
+  
+  /// cache for r range of zones in global frame
+  std::pair<double,double> m_globalRLimitsZone[2];
+
+  /// cache for r range of zones in halfbox frame
+  std::pair<double,double> m_halfboxRLimitsZone[2];
+  
   /// link to associated R sensor on the same module
   const DeVeloRType* m_associatedRSensor;
   
   /// pointer to the phi sensor on the other side of the VELO
   const DeVeloPhiType* m_otherSidePhiSensor;
+  
+  /// pointer to the r sensor on the other side of the VELO
+  const DeVeloRType* m_otherSideRSensor;
   
   /// Pattern is based on sequence of six strips (outer, inner, outer, inner, outer, outer)
   void BuildRoutingLineMap();

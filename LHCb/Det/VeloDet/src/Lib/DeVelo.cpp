@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.81 2007-07-23 01:08:55 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.82 2007-08-25 19:43:48 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -197,9 +197,13 @@ StatusCode DeVelo::initialize() {
 
     // other side sensor links
     if (rRS) rRS->setOtherSideRSensor(lRS);
+    if (rRS) rRS->setOtherSidePhiSensor(lPS);
     if (lRS) lRS->setOtherSideRSensor(rRS);
+    if (lRS) lRS->setOtherSidePhiSensor(rPS);
     if (rPS) rPS->setOtherSidePhiSensor(lPS);
+    if (rPS) rPS->setOtherSideRSensor(lRS);
     if (lPS) lPS->setOtherSidePhiSensor(rPS);
+    if (lPS) lPS->setOtherSideRSensor(rRS);
     
   } 
   
