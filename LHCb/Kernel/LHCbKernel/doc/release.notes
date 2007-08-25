@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-08-25 - Chris Jones
+ - Import header file MemPoolAlloc.h from RichKernel, so the class can be 
+   used in Tf packages without a dependency on RichKernel
+
 ! 2007-08-22 - Patrick Koppenburg
  - Make the ParticleID constructor from int explicit
 
