@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.8 2007-08-25 19:49:04 krinnert Exp $
+ *  $Id: RegionID.h,v 1.9 2007-08-26 14:10:41 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -88,11 +88,14 @@ namespace Tf
     inline unsigned char region()   const { return m_region ; }
 
     /** Returns the 'velohalf' number 
-     *  ( XXX???XXX Same as layer(), so why do we need both ? ) */
+     *  This is internally the same as the layer.  But a half is not a layer.
+     *  Hence this accessor to make client code more readable,*/
     inline unsigned char veloHalf() const { return m_layer ; }
 
     /** Return the 'zone' number
-     *  ( XXX???XXX Same as region(), so again, why do we need both ? ) */
+     *  This is internally the same as the region. But the VELO detector
+     *  element calls this a zone.  Hence this accessor to make client
+     *  code more consistent and readable. */
     inline unsigned char zone()     const { return m_region ; }
 
     /** @struct OTIndex TkKernel/RegionID.h
@@ -175,8 +178,8 @@ namespace Tf
           kMinHalf=0,     ///< Minimum valid Velo-R half number
           kMaxHalf=1,     ///< Maximum valid Velo-R half number
           kNHalfs=2,      ///< Number of Velo-R halfs
-          kMinZone=0,     ///< Minimum valid Velo-R zone number (XXX???XXX Why do we call these zones and not regions like other sub-dets ?)
-          kMaxZone=3,     ///< Maximum valid Velo-R zone number (XXX???XXX Why do we call these zones and not regions like other sub-dets ?)
+          kMinZone=0,     ///< Minimum valid Velo-R zone number. Called zone not region to follow VELO detector element conventions. 
+          kMaxZone=3,     ///< Maximum valid Velo-R zone number. Called zone not region to follow VELO detector element conventions.
           kNZones=4       ///< Number of Velo-R zones
         } ;
     } ;
@@ -196,8 +199,8 @@ namespace Tf
           kMinHalf=0,     ///< Minimum valid Velo-Phi half number
           kMaxHalf=1,     ///< Maximum valid Velo-Phi half number
           kNHalfs=2,      ///< Number of Velo-Phi halfs
-          kMinZone=0,     ///< Minimum valid Velo-Phi zone number (XXX???XXX Why do we call these zones and not regions like other sub-dets ?)
-          kMaxZone=1,     ///< Maximum valid Velo-Phi zone number (XXX???XXX Why do we call these zones and not regions like other sub-dets ?)
+          kMinZone=0,     ///< Minimum valid Velo-Phi zone number. Called zone not region to follow VELO detector element conventions.
+          kMaxZone=1,     ///< Maximum valid Velo-Phi zone number. Called zone not region to follow VELO detector element conventions.
           kNZones=2       ///< Number of Velo-Phi zones
         } ;
     } ;
@@ -245,7 +248,6 @@ namespace Tf
     : m_dettype ( VeloR+static_cast<int>(sensor->isPhi()) ),
       m_station ( 0 ),
       m_layer   ( static_cast<unsigned char>(sensor->isRight()) ),
-      // XXX???XXX Would be nice to document the reasoning behind this 'magic conversion' somewhere ?
       m_region  ( sensor->globalZoneOfStrip(id.strip()) )
   { }
 

@@ -1,4 +1,4 @@
-// $Id: VeloSensorHits.h,v 1.3 2007-08-25 19:49:04 krinnert Exp $
+// $Id: VeloSensorHits.h,v 1.4 2007-08-26 14:10:41 krinnert Exp $
 #ifndef INCLUDE_TF_VELOSENSORHITS_H
 #define INCLUDE_TF_VELOSENSORHITS_H 1
 
@@ -113,17 +113,8 @@ namespace Tf {
     /// Get the number of zones
     unsigned int nZones() const { return ZONES; }
 
-    /// check whether a given phi +/- tol lies inside the zone boundaries in the global frame
-    bool insidePhiRange(unsigned int zone, double phi, double tol);
-
-    /// check whether a given r +/- tol lies inside the zone boundaries in the global frame
-    bool insideRRange(unsigned int zone, double r, double tol);
-
-    /// check whether a given phi +/- tol lies inside the zone boundaries in the half box frame
-    bool insidePhiRangeHalfBox(unsigned int zone, double phi, double tol);
-
-    /// check whether a given r +/- tol lies inside the zone boundaries in the half box frame
-    bool insideRRangeHalfBox(unsigned int zone, double r, double tol);
+    /// Get the VELO half index
+    unsigned int veloHalf() const { return static_cast<unsigned int>(m_sensor->isRight()); }
 
     /// Sort the containers
     void sort();

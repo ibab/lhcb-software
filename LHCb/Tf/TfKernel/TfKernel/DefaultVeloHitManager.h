@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.6 2007-08-25 19:49:04 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.7 2007-08-26 14:10:41 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -199,8 +199,8 @@ namespace Tf {
   {
     for (unsigned int half=0; half<VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nHalfs; ++ half) {
 
-      for (StationIterator iS = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].begin();
-           iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stations[half].end();
+      for (StationIterator iS = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationsHalf[half].begin();
+           iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationsHalf[half].end();
            ++iS ) {
         Station* station = *iS;
         station->clear();

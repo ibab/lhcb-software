@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.4 2007-08-25 19:49:04 krinnert Exp $
+// $Id: VeloHitManager.h,v 1.5 2007-08-26 14:10:41 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -62,24 +62,48 @@ namespace Tf
     StatusCode   finalize(); ///< Tool finalize
 
     /// Retrieve station iterator based on sensor number
-    StationIterator station(const VeloSensorID sensorNumber)
+    Station* station(const VeloSensorID sensorNumber)
     { if (!m_dataValid) { this->prepareHits(); } ; return m_stationBySensorNumber[sensorNumber]; }
 
+    /// Retrieve iterator into VELO half station list by sensor number
+    StationIterator stationIterHalf(const VeloSensorID sensorNumber)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationIterHalfBySensorNumber[sensorNumber]; }
+    
+    /// Retrieve iterator into full VELO station list by sensor number
+    StationIterator stationIterAll(const VeloSensorID sensorNumber)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationIterAllBySensorNumber[sensorNumber]; }
+    
     /// Retrieve iterator to first station in a VELO half
-    StationIterator stationsBegin(const VeloHalfID half)
-    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].begin(); }
+    StationIterator stationsHalfBegin(const VeloHalfID half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsHalf[half].begin(); }
 
     /// Retrieve iterator to the end of stations in a VELO half
-    StationIterator stationsEnd(const VeloHalfID half)
-    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].end(); }
+    StationIterator stationsHalfEnd(const VeloHalfID half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsHalf[half].end(); }
 
     /// Retrieve reverse iterator to last station in a VELO half
-    StationReverseIterator stationsReverseBegin(const VeloHalfID  half)
-    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rbegin(); }
+    StationReverseIterator stationsHalfReverseBegin(const VeloHalfID  half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsHalf[half].rbegin(); }
 
     /// Retrieve reverse iterator to the reverse end of stations in a VELO half
-    StationReverseIterator stationsReverseEnd(const VeloHalfID  half)
-    { if (!m_dataValid) { this->prepareHits(); } ; return m_stations[half].rend(); }
+    StationReverseIterator stationsHalfReverseEnd(const VeloHalfID  half)
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsHalf[half].rend(); }
+
+    /// Retrieve iterator to first station in a VELO half
+    StationIterator stationsAllBegin()
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsAll.begin(); }
+
+    /// Retrieve iterator to the end of stations in a VELO half
+    StationIterator stationsAllEnd()
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsAll.end(); }
+
+    /// Retrieve reverse iterator to last station in a VELO half
+    StationReverseIterator stationsAllReverseBegin()
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsAll.rbegin(); }
+
+    /// Retrieve reverse iterator to the reverse end of stations in a VELO half
+    StationReverseIterator stationsAllReverseEnd()
+    { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsAll.rend(); }
 
     /// The preparation of hits, implemented by derived classes
     virtual void prepareHits() = 0;
@@ -97,17 +121,25 @@ namespace Tf
 
   protected:
 
-
     static const unsigned int m_nHalfs    = RegionID::VeloRIndex::kNHalfs;
     static const unsigned int m_nStations = RegionID::VeloRIndex::kNStations;
     static const unsigned int m_nZones    = NZONES;
 
-    /// The list of stations
-    mutable Stations m_stations[m_nHalfs];
+    /// The list of stations by VELO half. Sorted by z in each half.
+    mutable Stations m_stationsHalf[m_nHalfs];
 
-    /// mapping from sensor numbers to station iterators
-    mutable std::vector<StationIterator> m_stationBySensorNumber;
+    /// The list of all stations sorted by z.
+    mutable Stations m_stationsAll;
 
+    /// mapping from sensor numbers to stations
+    mutable Stations m_stationBySensorNumber;
+
+    /// mapping from sensor number to station iterators in a VELO half
+    mutable std::vector<StationIterator> m_stationIterHalfBySensorNumber;
+
+    /// mapping from sensor number to station iterators in the whole VELO
+    mutable std::vector<StationIterator> m_stationIterAllBySensorNumber;
+    
     /// The data
     mutable std::vector<HIT> m_data[m_nHalfs][m_nStations][NZONES];
 
@@ -143,12 +175,10 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   VeloHitManager<SENSORTYPE,HIT,NZONES>::~VeloHitManager()
   {
-    for (unsigned int half=0; half<m_nHalfs; ++ half) {
-      for (StationIterator iS = m_stations[half].begin();
-           iS !=  m_stations[half].end();
-           ++iS) {
-        delete *iS;
-      }
+    for (StationIterator iS = m_stationsAll.begin();
+        iS !=  m_stationsAll.end();
+        ++iS) {
+      delete *iS;
     }
   }
 
@@ -200,12 +230,12 @@ namespace Tf
   StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::updateStationStructure()
   {
     // clean up
+    for (unsigned int s=0; s<m_stationsAll.size(); ++s) {
+      delete m_stationsAll[s];
+    }
+    m_stationsAll.clear();
     for (unsigned int half=0; half<m_nHalfs; ++half) {
-      for (unsigned int s=0; s<m_stations[half].size(); ++s) {
-        delete m_stations[half][s];
-      }
-      m_stations[half].clear();
-
+      m_stationsHalf[half].clear();
     }
 
     // the maximum sensor number, determines size of sparse vector used for mapping
@@ -219,23 +249,33 @@ namespace Tf
       SENSORTYPE* s = dynamic_cast<SENSORTYPE*>(*sensorIter);
       if ( !s ) continue; // only create stations for the correct type
       if (s->sensorNumber() > maxSensorNumber) maxSensorNumber = s->sensorNumber();
-      m_stations[static_cast<unsigned int>(s->isRight())].push_back(new VeloSensorHits<SENSORTYPE,HIT,NZONES>(s));
+      m_stationsAll.push_back(new VeloSensorHits<SENSORTYPE,HIT,NZONES>(s));
+      m_stationsHalf[static_cast<unsigned int>(s->isRight())].push_back(m_stationsAll.back());
     }
 
     // sort by station z position
     for (unsigned int half=0; half<m_nHalfs; ++half) {
-      std::sort(m_stations[half].begin(),m_stations[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
+      std::sort(m_stationsHalf[half].begin(),m_stationsHalf[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
     }
+    std::sort(m_stationsAll.begin(),m_stationsAll.end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
 
     // create mapping from sensor numbers to station iterators
     m_stationBySensorNumber.resize(maxSensorNumber+1);
+    m_stationIterHalfBySensorNumber.resize(maxSensorNumber+1);
+    m_stationIterAllBySensorNumber.resize(maxSensorNumber+1);
 
     for (unsigned int half=0; half<m_nHalfs; ++half) {
-      for (StationIterator si = m_stations[half].begin();
-           si != m_stations[half].end();
+      for (StationIterator si = m_stationsHalf[half].begin();
+           si != m_stationsHalf[half].end();
            ++si) {
-        m_stationBySensorNumber[(*si)->sensor()->sensorNumber()] = si;
+        m_stationIterHalfBySensorNumber[(*si)->sensor()->sensorNumber()] = si;
       }
+    }
+    for (StationIterator si = m_stationsAll.begin();
+        si != m_stationsAll.end();
+        ++si) {
+      m_stationIterAllBySensorNumber[(*si)->sensor()->sensorNumber()] = si;
+      m_stationBySensorNumber[(*si)->sensor()->sensorNumber()] = *si;
     }
 
     return StatusCode::SUCCESS;
@@ -267,9 +307,9 @@ namespace Tf
           m_data[half][station][zone].clear();
         }
       }
-      for (StationIterator si=m_stations[half].begin(); si!=m_stations[half].end(); ++si) {
-        (*si)->clear();
-      }
+    }
+    for (StationIterator si=m_stationsAll.begin(); si!=m_stationsAll.end(); ++si) {
+      (*si)->clear();
     }
 
     m_dataValid = false;
