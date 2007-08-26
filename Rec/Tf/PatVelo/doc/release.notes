@@ -1,0 +1,359 @@
+!-----------------------------------------------------------------------------
+! Package     : Pat/PatVelo
+! Responsible : David Hutchcroft
+! Purpose     : Velo pattern recognition
+!-----------------------------------------------------------------------------
+
+!========================== PatVelo v3r0 2007-08-26 ==========================
+! 2007-08-26 - Kurt Rinnert
+ - added hit extensions needed in new track finding framwork
+ - added hit manangers needed in new track finding framwork
+ - added utility class for dealing with circular ranges. (I.e. angles in our
+   case. But the implementation is very generic and should probably be moved
+   somewhere else. Where remains to be decided.)
+ - ported RZ and space tracking using the new track finding framework
+
+!========================== PatVelo v2r17 2007-07-18 =========================
+! 2007-07-18 - David Hutchcroft
+ - Fix for using uninitialised variable in PatVeloGeneralTracking
+
+!========================== PatVelo v2r16 2007-07-10 =========================
+! 2007-07-10 - David Hutchcroft
+ - More complete bug fix to status of PatVelo(R) tracks. All flags should 
+   now be OK
+
+! 2007-07-07 - David Hutchcroft
+ - Bug fix to PatVeloSpaceTool.cpp to stop flag copy from ancestor flagging 
+   3D tracks as RZ tracks
+
+! 2007-07-04 - David Hutchcroft
+ - Made all of the R, Space, Generic, Open and General tracking set their own 
+   history type in the LHCb::Tracks produced
+
+! 2007-07-03 - David Hutchcroft
+ - PatVeloGeneralTracking: designed to run after the 2D and 3D tracking to catch 
+   tracks not from the interaction point
+ - PatVeloFilterUsedClusters: added to mark only clusters in existing 3D tracks as used
+ - Removed clone cleaning from PatVeloTrackTool (will not work with 
+   ITracksFromTrack interface in next version and was turned off by default anyway)
+ - Made linear fit a semi public part of PatVeloSpaceTrack to also use in 
+   PatVeloGeneralTracking
+ - Defaults are fine for closed tracking
+
+!========================== PatVelo v2r15 2007-06-14 =========================
+! 2007-06-13 - Olivier Callot
+ - New algorithm PatVeloOpenTracking with auxiliary class PatVeloOpenTrack
+   This is the tracking without pointing condition developed by Muriel Pivk
+   and adapted to more recent Brunel versions. It can be run alone, i.e. in
+   place of R + Space tracking, giving double ghost rate for a bit lower
+   efficiency, higher for Ks decay products, and takes ~80 ms. 
+   It can also be run AFTER the standard R + space, to recover strange decay 
+   tracks. In this case, it adds 2% ghosts for .6% increased efficiency for 
+   normal long over 5 GeV, and 4% for Strange long over 5 GeV, for a 21 ms 
+   processing time. 
+   It can also run in the open configuration. 
+
+!========================== PatVelo v2r14 2007-05-15 =========================
+! 2007-05-15 - David Hutchcroft
+ - Bug fix to 3D track fit with cluster sort direction reversed 
+
+!========================== PatVelo v2r13 2007-04-25 =========================
+! 2007-04-25 - David Hutchcroft
+ - Tweak range of z to search to -170mm -- +120mm
+
+! 2007-04-23 - David Hutchcroft
+ - Automatically determine range of sensors to scan from options [for beam gas]
+
+! 2007-04-19 - David Hutchcroft
+ - Added the concept of a station to PatVeloSector (determined automatically in
+   PatVeloDataHolder::setGeometry)
+   Means events with significant missing sensors in the readout are reconstructed
+   properly in PatVeloRTracking and PatVeloSpaceTool
+ - Turned off clone merging in code by default 
+
+! 2007-04-03 - Tomas Lastovicka
+ - ACDC flag is back again! - on request
+ - Code cleaning
+ - Option DoNotRefit added - forces no re-fitting of tracks during track 
+   seed propagation. Tracks are always completely re-fitted just before 
+   their storage.
+ - State-on-Track is fully box-aligned (its position)
+
+! 2007-03-05 - David Hutchcroft
+ - Updated to work with new DeVelo interface
+ - Fixed all unchecked StatusCodes
+ - A few small code speed ups and name corrections/improvements
+ - Improved angular comparisons
+ - Also make outward track fit for VELO tracks: write two states to Track
+ - Merge clone tracks by comparisons on angles and z position
+
+!========================== PatVelo v2r12 2007-03-05 =========================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete file PatVelo_load.cpp
+
+! 2007-02-22 - David Hutchcroft
+ - Added small tolerance to code to fix phi between -pi and pi in PatVeloSectors
+
+! 2007-02-19 - David Hutchcroft
+ - Ensured that the sensors not in the readout are skipped in PatVeloRTracking 
+   and PatVeloSpaceTool, needed for ACDC also required in normal running if 
+   sensors off or disconnected.
+   Used the suggestion of Marco Clemencic to improve regsitering conditions in
+   PatVeloAlignTool
+
+! 2007-02-19 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+
+! 2007-02-15 - David Hutchcroft
+ - PatVeloAlignTool now regsisters all of the sensors with the update manager
+   service so the cached parameters will update correctly. 
+   PatVeloDataHolder is also updated via PatVeloAlignTool
+
+!========================== PatVelo v2r11 2007-02-05 =========================
+! 2007-01-23 - David Hutchcroft
+ - Added an option (off by default) to PatVeloSpaceTool to use the RZ crossing
+   tracks better when the VELO is open
+
+! 2007-01-19 - David Hutchcroft
+ - Added an option (off by default) to PatVeloRTracking to look for RZ tracks
+   crossing R sectors when the VELO is open
+
+!========================= PatVelo v2r10p5 2006-12-07 ========================
+
+! 2006-12-07 - Malcolm John
+ - PatVeloGeneric - change the seeding so that it looks for clusters in three
+                    consecutive READ-OUT sensors. This means the seeding in
+                    the Generic case will work even if there is a switched-off
+                    module between working ones. Directly applicable to ACDC.
+
+!========================== PatVelo v2r10 2006-11-07 =========================
+
+! 2006-11-12 - Tomas Lastovicka
+ - PatVeloGeneric - added KalmanState=4 option (State at z=0 with covariance 
+                    matrix from PatGenericFitter)
+             - removed temporary ACDC2 flag
+
+! 2006-11-03 - Tomas Lastovicka
+ - PatVeloGeneric - added flagged option to propagate tracks seeds forward
+
+! 2006-11-02 - Mark TOBIN
+ - Update to work with renamed functions in VeloDet.
+
+! 2006-10-25 - David Hutchcroft
+ - Changed default alignment procedure to use misalignment in from Sensor to 
+   Velo half box. Then correct the position of the track to the global frame 
+   after fitting in PatVeloSpaceTracking.
+ 
+!========================== PatVelo v2r9 2006-10-11 ==========================
+! 2006-10-10 - Olivier Callot
+ - Fix a bit in PatVeloRTracking : Adding the cluster on th eother side was
+   not working, due to a wrong direction flag.
+ - Added to PatVeloRTracking an option to merge tracks shraing enough clusters.
+   This is not ON by default, as this decreases the clone rate, but also decreases
+   the Space tracking efficiency, to be understood! It also takes some time...
+ - Allow several candidates in PatVeloSpaceTool, to get some increase in efficiency
+   at the price of some more ghosts and clones. A clean-up is added to merge tracks
+   sharing many hits.
+
+! 2006-10-09 - David Hutchcroft
+ - Bug fix in PatVeloAlignTool when using a large number of R alignment sectors
+
+! 2006-10-07 - Tomas Lastovicka
+ - PatVeloGeneric can account for alignment without approximations
+ - new option flag FullAlignment added
+ - PatGenericFitter modified
+
+!========================== PatVelo v2r8 2006-09-21 ==========================
+! 2006-09-20 - David Hutchcroft and Jose Angel Hernando-Morata
+ - Changed to allow selection of 2D tracks to process in 3D and storing phi of 
+   2D track in state[1]
+ - Other minor ++not++ style code changes
+
+! 2006-08-21 - Tomas Lastovicka
+ - works with ACDC2 test beam DATA (needs temporary ACDC2 flag)
+ - code cleaning and revision
+
+!========================== PatVelo v2r7 2006-08-03 ==========================
+! 2006-08-03 - Marco Cattaneo
+ - Use DECLARE_TOOL_FACTORY, DECLARE_ALGORITHM_FACTORY macros everywhere
+ - Use Gaudi::Units everywhere
+
+! 2006-08-02 - David Hutchcroft
+ - Restructured the 3D pattern recognition to allow single RZ tracks to be 
+   found as 3D tracks for the trigger. Two new tools to do this: 
+   PatVeloSpaceTool and PatVeloTrackTool 
+   Also moved algorithms out of headers into cpp files. 
+
+!========================== PatVelo v2r6 2006-07-31 ==========================
+! 2006-07-31 - Tomas Lasovicka
+ - A cut on number of clusters used in seeding added, to resolve possible
+   speed issues
+ - Track seeding done sector-wise, not sensor-wise
+ - Acceptance control also for track seeds, not only during the track 
+   propagation
+
+! 2006-07-25 - Marco Cattaneo
+ - Use LHCbMath::inv_sqrt_12 instead of cached value
+
+! 2006-07-20 - Tomas Lasovicka
+ - PatGenericFitter splitted into cpp and header file
+ - PatVeloGeneric: Added option KalmanState to control seeding of Kalman 
+                   filter. One may use large covariance matrix and a state at
+                   end/beginning of Velo.
+
+! 2006-07-19 - David Hutchcroft
+ - Moved algorithm code from PatVeloSector.h to a new PatVeloSector.cpp
+   Cached values of sqrt(1/12) instead of repeatedly calculating them.
+
+!========================== PatVelo v2r5 2006-07-06 ==========================
+! 2006-07-06 - Tomas Lasovicka
+ - Various fixes in PatGenericFitter (vectors instead of arrays, 
+   Gaudi::Units::pi, ...), comments added
+
+! 2006-07-06 - David Hutchcroft
+ - Bug fix to PatVeloAlignTool to make adding more alignment regions work
+
+! 2006-06-30 - David Hutchcroft
+ - Modified the PatVeloDataHolder and PatVeloLoadClusters to have less 
+   depedance on the order of sensors in the XML for testbeam studies
+ - Fixed PatVeloGeneric to set track->setPatRecStatus( LHCb::Track::PatRecIDs );
+
+!========================== PatVelo v2r4 2006-05-21 ==========================
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
+! 2006-05-19 - David Hutchcroft
+ - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
+
+!========================== PatVelo v2r3 2006-05-17 ==========================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
+! 2006-05-17 - Aras Papadelis 
+ - Added algorithm PatVeloFilterClusters (author D. Hutchcroft). Mainly 
+   intended for use in VELO testbeam. 
+
+! 2006-05-13 - David Hutchcroft
+ - Fixed bug in 2D pattern recognition for backwards tracks. 
+
+! 2006-05-11 - Olivier Callot
+ - New bool option "FromClusters" in PatVeloLoadClusters to get the data from
+   VeloCLusters, while the default is from VeloLiteClusters
+ - Option "LowThreshold" = 22 to remove clusters with totalCharge() below this
+   value, in case on uses VeloClusters. 
+
+! 2006-05-11 M Needham
+ - add possibility to reject spillover for 3-D tracks
+ - default cut 0.7
+
+!========================== PatVelo v2r2 2006-05-03 ==========================
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+
+! 2006-04-26 - Olivier Callot
+ - Fix two bugs introduced by David:
+    Use different tolerance for right-left matching
+    removetracks with too much already used hits.
+
+! 2006-04-24 - David Hutchcroft
+ - Fixed crash bug in PatVeloRTracking when measuring backward tracks
+ - Needed to ask PatVeloSectors if sensor is downstream/right
+
+! 2006-04-10 - David Hutchcroft
+ - Removed some unnessecary sorting from sector containers when filling
+   PatVeloDataStore
+
+!========================== PatVelo v2r1 2006-04-04 ==========================
+! 2006-04-04 - David Hutchcroft
+ - Changed paths to use default (not HLT paths)
+ - Removed all level1 options from PatVeloRTracking
+
+! 2006-04-04 - Matt Needham
+ - Fix default input location to compile with TrackEvent v2r2
+
+!========================== PatVelo v2r0 2006-03-28 ==========================
+! 2006-03-28 - David Hutchcroft
+  - Fixed bug in 3D pattern recognition (3D long >5GeV efficiency now >95%)
+  - Now deleting overlap R hits from non-overlap tracks ~15% less ghosts
+
+! 2006-03-24 - David Hutchcroft
+  - Set PatDataStore name to default
+
+! 2006-03-23 - David Hutchcroft
+  -Modified to load data into PatDataStoreName::Hlt (rather than L1) 
+  -also fixed LHCb:: namespace on track locations
+
+! 2006-03-23 - Mark Tobin
+ - Modified to work with new VeloDet interface
+
+! 2006-03-02 David Hutchcroft
+ - Fixes to work with new XML structure
+ - made alignment offsets optional
+ - Reinstated ITrackSelector 
+ - Now generates tracks in new model
+
+! 2006-02-20 David Hutchcroft
+ - Major rewrite to encompass the new track model and 
+   new input data from VeloLiteClusters
+ - removed the files src/PatVeloDecodeL1.cpp, src/PatVeloDecodeL1.h,
+   src/PatVeloDecodeRaw.cpp and src/PatVeloDecodeRaw.h
+ - Added the files src/PatVeloLoadClusters.cpp and src/PatVeloLoadClusters.h
+ - This code complies with LHCb v20r0 but has not actually been tested
+ - Commented out Jose's addtion below as the ITrackSelector interface 
+   does not actually exist (or it does but in TrCheck not TrackInterfaces)
+
+! 2006-01-26 Jose A. Hernando
+  - src/PatVeloSpaceTracking.cpp adding property to set a TrackSelector tool
+    in the loop of the tracks it will ask the tool TrackSelector if the track is
+    accepted, if so it will do the 3d tracking to steer the algorithm for the Hlt
+
+!========================== PatVelo v1r6 2006-01-19 ==========================
+! 2006-01-18 Jose A. Hernando
+ - src/PatVeloRTracking.cpp and PatVeloSpaceTracking.cpp
+    adding options to indicate the input/output tracks location
+   modifying the name in the location on the PatDataStore to uniform the location of tracks in Hlt
+
+!========================== PatVelo v1r5 2005-12-05 ==========================
+! 2005-12-05 - David Hutchcroft
+ - Added the PatVeloAlignTool code to make the pattern recognition 
+   (partially) independant of the known mis-alignments
+
+!========================== PatVelo v1r4 2005-11-23 ==========================
+! 2005-11-02 - Eduardo Rodrigues
+ - added setStatus(...) to Tracks in PatVeloRTracking and PatVeloSpaceTracking
+
+! 2005-10-25 - David Hutchcroft
+ - Fixed bug in how code mapped sectors to zones in R sensors
+   (reduce clone rate in RZ tracking)
+
+!========================== PatVelo v1r3 2005-10-17 ==========================
+! 2005-10-17 - Olivier Callot
+ - Set the history value for the track.
+
+!========================= PatVelo v1r2p1 2005-10-14 =========================
+! 2005-10-14 - Marco Cattaneo
+ - Adapt to move of TrackKeys.h to Track
+
+!========================== PatVelo v1r2 2005-08-08 ==========================
+! 2005-08-08 - Olivier Callot
+ - Changed the extra track flags definition from PatTrack to TrackKeys 
+   namespace, for future inclusion in the normal TrackKeys namespace.
+
+!========================== PatVelo v1r1 2005-07-07 ==========================
+! 2005-07-01 - David Hutchcroft
+ - Modified code to work with downstream Velo R sensors
+
+!========================== PatVelo v1r0 2005-06-24 ==========================
+! 2005-06-21 - Olivier Callot
+ - Initial creation from Trg/TrgVelo
+
+   Contains the Velo data decoding, from L1 and from Raw, the VeloDataHolder
+   which have the Velo data per sector, the R and Space tracking with the
+   temporary tracks and phiList.
+
+   PatVeloDataHolder   : Tool to keep Velo data per sector, with geometry
+   PatVeloDecodeL1     : Decode the whole Velo from L1 buffer
+   PatVeloDecodeRaw    : Decode the whole Velo from Raw buffer
+   PatVeloRTracking    : Make Velo RZ tracks
+   PatVeloSpaceTracking: Make space tracks from Velo RZ tracks.

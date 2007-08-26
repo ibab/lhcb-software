@@ -1,0 +1,74 @@
+// $Id: PatVeloSpaceTracking.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+#ifndef TF_PATVELOSPACETRACKING_H 
+#define TF_PATVELOSPACETRACKING_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
+
+// track selection tool
+#include "TrackInterfaces/ITrackSelector.h"
+
+// PatVeloSpaceTool interface
+#include "TrackInterfaces/ITracksFromTrack.h"
+
+// local
+#include "PatVeloSpaceTrack.h"
+#include "PatVeloSpaceTool.h"
+#include "PatVeloPhiHitManager.h"
+
+namespace Tf {
+  /** @class PatVeloSpaceTracking PatVeloSpaceTracking.h
+   *   
+   *
+   *  @author Olivier Callot
+   *  @date   2005-06-09
+   */
+
+  class PatVeloSpaceTracking : public GaudiAlgorithm {
+    public: 
+      /// Standard constructor
+      PatVeloSpaceTracking( const std::string& name, ISvcLocator* pSvcLocator );
+
+      virtual ~PatVeloSpaceTracking( ); ///< Destructor
+
+      virtual StatusCode initialize();    ///< Algorithm initialization
+      virtual StatusCode execute   ();    ///< Algorithm execution
+      virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+    private:
+      StatusCode storeTracks(std::vector<PatVeloSpaceTrack*> tracks);
+
+      bool accept(const LHCb::Track& track); ///< Use TrackSelector if required
+
+    private:
+
+      std::string m_inputTracksLocation;
+      std::string m_outputTracksLocation;
+      std::string m_trackSelectorName; /// name of the tool to accept tracks
+
+      ITrackSelector* m_trackSelector; /// pointer to the tool to select tracks
+
+      ITracksFromTrack * m_PatVeloSpaceTool; ///< tool that does the pattern recog.
+
+      LHCb::Tracks* m_inputTracks;   ///< Container for input RZ tracks
+      LHCb::Tracks* m_outputTracks;  ///< Container for output Space tracks
+
+      PatVeloPhiHitManager* m_hitManager;  ///< tool to handle extended phi hits
+
+      /// sort function for track lengths; then by sensor number in a tie
+      /// NOTE using greater [instead of less] to make longer tracks sort first
+      struct greater_trackLength{    
+        bool operator()(LHCb::Track* const &first, 
+            LHCb::Track* const &second) { 
+          if ( first->nLHCbIDs() == second->nLHCbIDs() ) {
+            return ( first->lhcbIDs()[0].veloID().sensor() > 
+                second->lhcbIDs()[0].veloID().sensor() );
+          }
+          return ( first->nLHCbIDs() > second->nLHCbIDs() ) ;
+        }
+      };
+
+  };
+}
+#endif // TF_PATVELOSPACETRACKING_H

@@ -1,0 +1,30 @@
+#============================================================================
+# Created    : 2005-05-26
+# Maintainer : David Hutchcroft
+#============================================================================
+package           PatVelo
+version           v3r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+
+# Used packages
+#============================================================================
+use     TrackInterfaces v*      Tr
+use     VeloDet         v*      Det
+use     DigiEvent       v*      Event
+use     TrackEvent      v*      Event
+use     TfKernel        v*      Tf
+use     LHCbMath        v*      Kernel
+use     GaudiAlg        v*
+
+# Component library building rule
+#============================================================================
+library          PatVelo_Tf    ../src/*.cpp 
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PatVelo_Tf
+

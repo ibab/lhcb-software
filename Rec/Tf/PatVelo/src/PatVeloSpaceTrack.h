@@ -1,0 +1,250 @@
+// $Id: PatVeloSpaceTrack.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+#ifndef TF_PATVELOSPACETRACK_H
+#define TF_PATVELOSPACETRACK_H 1
+
+// Include files
+
+#include "Event/Track.h"
+
+// Gaudi
+#include "GaudiKernel/boost_allocator.h"
+
+#include "PatVeloHit.h"
+#include "CircularRangeUtils.h"
+
+namespace Tf {
+  /** @class PatVeloSpaceTrack PatVeloSpaceTrack.h
+   *
+   *Local working track during Velo space tracking
+   *  @author Olivier Callot
+   *  @date   2005-06-10
+   */
+  class PatVeloSpaceTrack {
+    public:
+      PatVeloSpaceTrack( );   ///< Standard constructor
+
+      ~PatVeloSpaceTrack( ) {}; ///< Destructor
+
+      /// add and R coordinate: update rz parameters
+      void addRCoord( PatVeloRHit* coord );
+
+      /// fit the RZ part of the track
+      void fitRZ();
+
+      /// add a phi coord
+      void addPhi( PatVeloPhiHit* phiCoord ) { m_phiCoord.push_back( phiCoord ); }
+
+      /// set vaild flag
+      void setValid( bool flag )         { m_valid = flag; }
+
+      /// set the R zone of the track (indicates phi range)
+      void setZone( int zone )           { m_zone = zone;   }
+
+      /// set if track is forward or backwards
+      void setBackward( bool flag )      { m_backward = flag; }
+
+      /// find interpolated R at z
+      double rInterpolated( double z );
+
+      /// if this coord is on the track set the effective phi and r of the coord
+      void setPhiInterpolated( PatVeloRHit* myCoord );
+
+      /// fit the track, computes point, direction and covariance matrix.
+      void fitSpaceTrack ( double stepError, bool inwardFit = true );
+
+      /// set the tracks ancestor (RZ track normally)
+      void setAncestor( const LHCb::Track* tr )      { m_ancestor = tr; }
+
+    public:
+      // inline getters
+      inline double meanZ()           const { return m_meanZ; }
+      inline double rPred( double z ) const { return m_pos0 + z * m_slope; }
+      inline double rErr2( double z ) const { 
+        return m_posErr + (z-m_meanZ)*(z-m_meanZ) * m_slopeErr;  
+      }
+      inline std::vector<PatVeloRHit*>* rCoords()    { return &m_rCoord; };
+      inline unsigned int nbCoords()          const  { return m_rCoord.size(); }
+      inline std::vector<PatVeloPhiHit*>* phiCoords(){ return &m_phiCoord; };
+      inline bool valid()          const { return m_valid; }
+      inline double firstZ()       const { return m_rCoord[0]->z(); }
+      inline double rSlope()       const { return m_slope; }
+      inline int zone()            const { return m_zone; }
+      inline bool backward()       const { return m_backward; }
+      inline const Gaudi::XYZPoint&  point( ) const { return m_point; }
+      inline double slopeX()       const { return m_slopeX; }
+      inline double slopeY()       const { return m_slopeY; }
+      inline double chi2Dof( )     const { return m_chiSqDof; }
+      inline const LHCb::Track* ancestor() const { return m_ancestor; }
+      inline unsigned int minRSensor() const { return m_minRSensor; }
+      inline unsigned int maxRSensor() const { return m_maxRSensor; }
+
+      inline const Gaudi::TrackSymMatrix& covariance()  const { return m_cov; }
+
+      void setChiSqDof( double chi )     { m_chiSqDof = chi; }
+
+      //== Auxilliary for sorting
+      class decreasingByLength  {
+        public:
+          bool operator() (const PatVeloSpaceTrack* first,
+              const PatVeloSpaceTrack* second) const {
+            if ( 0==first  ) return true;
+            if ( 0==second ) return false;
+
+            if ( first->nbCoords() == second->nbCoords() ) {
+              return first->firstZ() > second->firstZ();
+            }
+            return first->nbCoords() > second->nbCoords() ;
+          }
+      };
+
+      // BOOST pool allocator contructor
+#ifndef _WIN32
+
+      /// operator new
+      static void* operator new ( size_t size ){
+        return 
+          ( sizeof(PatVeloSpaceTrack) == size ?
+            boost::singleton_pool<PatVeloSpaceTrack, sizeof(PatVeloSpaceTrack)>::malloc() :
+            ::operator new(size)
+          );
+      }
+
+      /// placement operator new
+      /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+      /// it is not needed in libstdc++ >= 3.4
+      static void* operator new ( size_t size, void* pObj ){
+        return ::operator new (size,pObj);
+      }
+
+      /// operator delete
+      static void operator delete ( void* p ){
+        boost::singleton_pool<PatVeloSpaceTrack, 
+          sizeof(PatVeloSpaceTrack)>::is_from(p) ?
+            boost::singleton_pool<PatVeloSpaceTrack,sizeof(PatVeloSpaceTrack)>::free(p) :
+              ::operator delete(p);
+      }
+
+      /// placement operator delete
+      /// not sure if really needed, but it does not harm
+      static void operator delete ( void* p, void* pObj ){
+        ::operator delete (p, pObj);
+      }
+#endif
+
+    protected:
+
+      /// find the two coords closest to a z position (may be both on one side)
+      template<typename HIT>
+      std::pair<const HIT*,const HIT*> surroundZ(const std::vector<HIT*>& cont,double z) const;
+
+    private:
+      double m_s0; 
+      double m_sr;
+      double m_sz;
+      double m_srz;
+      double m_srz2;
+      double m_sz2;
+      bool   m_valid;
+      int    m_zone;
+      bool   m_xZone;
+      bool   m_negZone;
+      bool   m_backward;
+
+      double m_pos0;
+      double m_slope;
+
+      double m_firstZ;
+      double m_meanZ;
+      double m_posErr;
+      double m_slopeErr;
+      double m_chiSqDof;
+
+      std::vector<PatVeloRHit*>   m_rCoord;
+      std::vector<PatVeloPhiHit*> m_phiCoord;
+
+      Gaudi::XYZPoint   m_point;
+      double       m_slopeX;
+      double       m_slopeY;
+      Gaudi::TrackSymMatrix m_cov;
+
+      unsigned int m_maxRSensor;
+      unsigned int m_minRSensor;
+
+      const LHCb::Track* m_ancestor;
+
+      const CircularRangeUtils<double> m_angleUtils;
+  };
+
+
+  template<typename HIT>
+    std::pair<const HIT*,const HIT*> PatVeloSpaceTrack::surroundZ(const std::vector<HIT*>& cont,double z) const {
+      // assume sorted, but do not know if accending or decending
+      typename std::vector<HIT*>::const_iterator it1,it2,itCurr;
+      itCurr = cont.begin();
+      it2 = itCurr;
+      double dz2 = (*it2)->z() - z;
+      ++itCurr;
+      it1 = itCurr;
+      double dz1 = (*it1)->z() - z;
+      for ( ++itCurr ; itCurr != cont.end() ; ++itCurr ){
+        double dzCurrent = (*itCurr)->z() - z;      
+        if ( fabs(dzCurrent) > fabs(dz2) ) break;  //both points already closer
+        dz2 = dz1;      
+        dz1 = dzCurrent;
+        it2 = it1;
+        it1 = itCurr;
+        if( GSL_SIGN(dz1) != GSL_SIGN(dz2) ) break; // points bracket z
+      }
+      return std::pair<const HIT*,const HIT*>(*it1,*it2);
+    }
+
+  // OK make a little struture to hold the accumulating values
+  // use linear regression in each frame seperatly 
+  namespace PatVeloSpaceTrackLocal{
+    struct FrameParam {    
+      FrameParam () : w(0.), x(0.), z(0.), xz(0.), z2(0.) {};    
+      double w;      // sum of weights of points
+      double x;      // sum of (weight*value)
+      double z;      // sum of (weight*z)
+      double xz;     // sum of (weight*value*z)   
+      double z2;     // sum of (weight*z^2)
+      double x0;     // intercept [ x at z=0 ]
+      double dxdz;   // slope
+      double denom;  // denominator for several calculations
+      // function to increment values
+      inline void increment(double iw, double ix, double iz){
+        w += iw;
+        x += iw * ix;
+        z += iw * iz;
+        xz += iw * ix * iz;
+        z2 += iw * iz * iz;
+      }
+      // function to set xz intercept and slope of xz
+      void fitLinear(){
+        denom = z2 * w - z * z ;
+        if ( 0 == denom ) denom = 1;
+        x0  = ( x * z2 - xz * z  ) / denom ;
+        dxdz= ( xz * w  - x * z  ) / denom ;
+      }
+      // get errors on value^2
+      inline double errorX2(double zUse){
+        return ( z2 - 2 * z * zUse +  w * zUse * zUse ) / denom;
+      }
+      // get errors on value*z
+      inline double errorXZ(double zUse){
+        return - ( z  -   w*zUse ) / denom ;
+      }
+      inline double errorsDxDz2(){
+        return w / denom ;
+      }
+      inline double pred(double z){
+        fitLinear();
+        return x0 + dxdz * z;
+      }
+      inline double predErr2(double z){
+        return errorX2(z) + gsl_pow_2(z*errorsDxDz2());
+      }
+    };
+  }
+}
+#endif // TF_PATVELOSPACETRACK_H
