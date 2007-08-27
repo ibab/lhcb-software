@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.h,v 1.1 2007-08-27 09:32:24 jucogan Exp $
+// $Id: ProcUtilities.h,v 1.2 2007-08-27 09:39:25 jucogan Exp $
 
 #ifndef L0MUONKERNEL_PROCUTILITIES_H
 #define L0MUONKERNEL_PROCUTILITIES_H     1
@@ -32,7 +32,7 @@ namespace L0Muon {
   int offsetM1(int offM1, int procVersion=-1);
 
   // Used for retrieving pads (L0MuonOutputs::l0muoncandidate)
-  std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu, 
+  std::vector<LHCb::MuonTileID> add2pads(int quarter,int board, int pu, 
                                                  int colM3, int rowM3, int offM2, int offM1,
                                                  int procVersion, bool debug=false);
   int addM1Offset(int M1nX, int offM1, int procVersion=-1);
