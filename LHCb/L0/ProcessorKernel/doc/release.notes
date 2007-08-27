@@ -4,6 +4,14 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+
+!======================== ProcessorKernel v5r0 2007-08-27 ===================
+! 2007-08-27 - Julien Cogan
+ - Register factory : add the possibility to deal with a second instance of the
+   factory. The instance is selected with the selectInstance static method.
+ - Unit : delete the sub units in the destructor
+ - TileRegister: handle register with duplicated tiles (yields a new attribute
+   stored in the XML). 
 !======================== ProcessorKernel v4r0 2006-12-14 ===================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
