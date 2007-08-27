@@ -12,7 +12,12 @@ L0Muon::Unit::Unit() {
 }
 
     
-L0Muon::Unit::~Unit() {} 
+L0Muon::Unit::~Unit() {
+  std::vector<L0Muon::Unit*>::iterator iu;
+  for (iu=m_units.begin();iu!=m_units.end();iu++){
+    delete *iu;
+  }
+} 
 
 void L0Muon::Unit::setParent(L0Muon::Unit * unit)
 {
