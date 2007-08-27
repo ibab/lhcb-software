@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-08-28 M Needham 
+ - Add selection possibility to TrackContainer copy
+
 !========================== TrackUtils v1r13 2007-07-05 ======================
 ! 2007-07-04 - David Hutchcroft
  - Fixed TrackToDST for PatVeloR tracks so that states correctly prepared

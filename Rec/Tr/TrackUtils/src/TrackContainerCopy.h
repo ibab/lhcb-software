@@ -1,4 +1,4 @@
-// $Id: TrackContainerCopy.h,v 1.3 2007-03-21 09:25:14 cattanem Exp $
+// $Id: TrackContainerCopy.h,v 1.4 2007-08-27 14:50:30 mneedham Exp $
 #ifndef _TrackContainerCopy_H_
 #define _TrackContainerCopy_H_
 
@@ -14,6 +14,8 @@
 #include <string>
 
 
+class ITrackSelector;
+
 class TrackContainerCopy: public GaudiAlgorithm {
 
 public:
@@ -23,13 +25,18 @@ public:
               ISvcLocator* pSvcLocator);
   virtual ~TrackContainerCopy();
 
+  virtual StatusCode initialize();
+
   virtual StatusCode execute();
 
 private:
 
   std::string m_inputLocation;
   std::string m_outputLocation;
-  bool        m_copyFailures;   ///< If true, copy also tracks that failed fit  
+  bool        m_copyFailures;   ///< If true, copy also tracks that failed fit 
+  ITrackSelector* m_selector;
+  std::string  m_selectorName;
+ 
 };
 
 #endif
