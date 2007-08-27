@@ -1,4 +1,4 @@
-// $Id: CaloMCTools1.h,v 1.3 2007-03-30 06:55:54 cattanem Exp $
+// $Id: CaloMCTools1.h,v 1.4 2007-08-27 14:04:38 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -388,8 +388,13 @@ namespace CaloMCTools
     MCCaloHistory<LHCb::MCCaloHit> evaluator( mcmap() ) ;
     
     // use it! 
-    std::for_each( hits.begin() , hits.end() , evaluator ) ;
+    //    std::for_each( hits.begin() , hits.end() , evaluator ) ;
+    for(LHCb::MCCaloDigit::Hits::const_iterator ihit = hits.begin();ihit!=hits.end();ihit++){
+      evaluator( *ihit).ignore();
+    }
     
+
+
     return StatusCode::SUCCESS ;                             // RETURN 
   };
 

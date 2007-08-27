@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.7 2006-12-14 10:33:17 ranjard Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.8 2007-08-27 14:03:50 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/12/14 10:33:17  ranjard
+// v3r0 - use InstallArea and fix CaloReCreateMCLinks.cpp to use new Gaudi
+//
 // Revision 1.6  2006/02/23 14:03:40  ibelyaev
 //  change the default configuration of CaloReCreateMCLinks
 //
@@ -149,7 +152,6 @@ DECLARE_ALGORITHM_FACTORY(CaloReCreateMCLinks)
 StatusCode CaloReCreateMCLinks::execute() 
 {
   //
-  const StatusCode OK = StatusCode::SUCCESS  ;
   //
   if ( m_raw.size() != m_mc.size () ) 
   { return Error ( " 'Raw' and 'MC' containers in a contradiction " ) ; }
@@ -161,7 +163,7 @@ StatusCode CaloReCreateMCLinks::execute()
     // "ignore" mode ?
     if ( m_ignore && !exist<LHCb::MCCaloDigits> ( addr2 ) ) 
     { 
-      Warning ( "(MC)container is not found '" + addr2 + "', skip" , OK, 0 ) ; 
+      Warning ( "(MC)container is not found '" + addr2 + "', skip" , StatusCode::SUCCESS , 0 ) ; 
       continue ;                                        // CONTINUE 
     }
     //
