@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-08-28 M Needham
+ - Add clone killing algorithms based on relative entropy
+ 
+
 ! 2007-08-28 M Needham 
  - Add selection possibility to TrackContainer copy
 
