@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.8 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.9 2007-08-27 23:18:20 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -164,7 +167,7 @@ namespace Relations
     ( const size_type reserve = 0 ) 
       : BaseTable () 
       , m_entries () 
-    { if ( 0 < reserve ) { i_reserve( reserve ) ; } ; };
+    { if ( 0 < reserve ) { i_reserve( reserve ).ignore() ; } ; };
     /// constructor from any "direct" interface 
     RelationBase
     ( const IDirect& copy ) 
@@ -188,7 +191,7 @@ namespace Relations
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
       // reserve the space for relations
-      i_reserve ( r.size() );
+      i_reserve ( r.size() ).ignore();
       // invert all relations    
       for ( typename IInverse::iterator entry = r.begin() ; 
             r.end() != entry ; ++entry )

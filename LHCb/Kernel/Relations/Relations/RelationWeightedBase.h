@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.10 2006-06-12 16:02:08 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.11 2007-08-27 23:18:20 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/06/12 16:02:08  ibelyaev
+//  add Reserve.h file into include
+//
 // Revision 1.9  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -301,7 +304,7 @@ namespace Relations
     ( const size_t reserve = 0 )
       : BaseWeightedTable () 
       , m_entries () 
-    { if ( 0 < reserve ) { i_reserve ( reserve ) ; } };
+    { if ( 0 < reserve ) { i_reserve ( reserve ).ignore() ; } };
     /// destructor (virtual)
     virtual ~RelationWeightedBase() {} ;
     /// constructor from any "direct" interface 
@@ -327,7 +330,7 @@ namespace Relations
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
       // reserve the space for relations
-      i_reserve ( r.size() );
+      i_reserve ( r.size() ).ignore();
       // invert all relations    
       for ( typename IInverse::iterator entry = r.begin() ; r.end() != entry ; ++entry )
       { i_push ( entry->to() , entry->from() , entry->weight() ) ;  }

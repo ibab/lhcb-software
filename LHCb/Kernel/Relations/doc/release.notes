@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.46 2007-03-23 16:40:18 cattanem Exp $ 
+! $Id: release.notes,v 1.47 2007-08-27 23:18:20 odescham Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.46 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.47 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+
+! 2007-08-28
+ - Fix untested StatusCode in RelationBase and RelationWeightedBase
 
 !====================== Relations v5r1 2007-03-23 ============================
 ! 2007-03-23 - Marco Cattaneo
