@@ -1,4 +1,4 @@
-// $Id: L0DUBase.h,v 1.3 2006-11-03 14:58:50 cattanem Exp $
+// $Id: L0DUBase.h,v 1.4 2007-08-27 08:24:08 jucogan Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
@@ -32,6 +32,7 @@ namespace L0DUBase{
     namespace Sum     { static const unsigned int Mask  = 0x7FFE0000 , Shift = 17; }; // SpdMult & SumEt 
   }
   namespace Muon {
+    static const unsigned int emptyMuonData = 1<<16;
     // from CU
     namespace Pt1      { static const unsigned int Mask  = 0xFE       , Shift = 1;  };
     namespace Address1 { static const unsigned int Mask  = 0x7F00     , Shift = 8;  };
