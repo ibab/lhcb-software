@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.7 2006-08-21 12:41:13 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.8 2007-08-27 08:36:36 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -39,6 +39,8 @@ namespace L0Muon {
   
     /// single instance for the factory
     static RegisterFactory* instance();
+
+    static void selectInstance(int i){ m_sel= i<2 ? i : 1; }
   
     /**
        Create a register.
@@ -91,6 +93,9 @@ namespace L0Muon {
                       boost::dynamic_bitset<> *tilestag, 
                       boost::dynamic_bitset<> *stripstag);
 
+
+  private:
+
     /// Utilities for XML decoding: get the attribute key in the list di 
     /// and convert it into an integer, a string,...
     int         getAttributeInt(DOMNamedNodeMap* di, const char* key);
@@ -99,9 +104,12 @@ namespace L0Muon {
 
   private:
 
-    static RegisterFactory* m_instance;
+    static RegisterFactory* m_instance_0;
+    static RegisterFactory* m_instance_1;
     std::map<std::string,Register*> m_registers;    // registers repository    
     bool m_found;
+    static int m_sel;
+    
 
 
   };

@@ -1,21 +1,33 @@
 #include "ProcessorKernel/RegisterFactory.h"
 
-L0Muon::RegisterFactory* L0Muon::RegisterFactory::m_instance=0;
+L0Muon::RegisterFactory* L0Muon::RegisterFactory::m_instance_0=0;
+L0Muon::RegisterFactory* L0Muon::RegisterFactory::m_instance_1=0;
+int L0Muon::RegisterFactory::m_sel=0;
 
 L0Muon::RegisterFactory::RegisterFactory() {
 
   m_found =0;
-  
+
 }
 
 L0Muon::RegisterFactory::~RegisterFactory() {}
 
 L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
   
-  if ( m_instance == 0 ) {
-    m_instance = new L0Muon::RegisterFactory;
-  } 
-  return m_instance;
+  if (m_sel==0) {
+    if ( m_instance_0 == 0 ) {
+      m_instance_0 = new L0Muon::RegisterFactory;
+    } 
+    return m_instance_0;
+  }
+
+  if (m_sel==1) {
+    if ( m_instance_1 == 0 ) {
+      m_instance_1 = new L0Muon::RegisterFactory;
+    } 
+    return m_instance_1;
+  }
+  
 }
 
 L0Muon::Register* L0Muon::RegisterFactory::createRegister
@@ -125,7 +137,8 @@ void L0Muon::RegisterFactory::dump(bool full) {
 
 void  L0Muon::RegisterFactory::reset(){
   m_registers.clear();
-  m_instance=0;
+  m_instance_0=0;
+  m_instance_1=0;
 }
 
 
@@ -226,9 +239,11 @@ void L0Muon::RegisterFactory::tileRegisterFromNode(DOMNode* pNode){
   std::string name = getAttributeStr(di, "name");
   std::string type = getAttributeStr(di, "type");
   int size         = getAttributeInt(di, "size");
+  bool duplicatedTiles = getAttributeInt(di, "duplicatedTiles");
 
   TileRegister* preg = createTileRegister(name,size);
   preg->setType(type);
+  if (duplicatedTiles) preg->setDuplicatedTiles(true);
 
   std::vector<LHCb::MuonTileID> ids;  
   boost::dynamic_bitset<> tilestag ;
