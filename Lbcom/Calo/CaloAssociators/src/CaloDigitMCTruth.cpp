@@ -1,6 +1,6 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.9 2006-05-17 16:11:59 cattanem Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.10 2007-08-27 14:05:25 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -125,8 +125,13 @@ protected:
     // 
     declareProperty ( "Input"     , m_input    ) ;
     declareProperty ( "Detector"  , m_detector ) ;
-    //
-    setProperty     ( "StatPrint" , "true"     ) ;
+    
+
+    StatusCode sc = setProperty     ( "StatPrint" , "true"     ) ;
+    sc.isSuccess() ?
+      debug() << "StatPrint set to 'true' " << endreq :
+      warning()<<"Setting StatPrint FAILED" << endreq;
+
   };
   /// virtual destructor (protected)
   virtual ~CaloDigitMCTruth() {}
@@ -230,13 +235,10 @@ StatusCode CaloDigitMCTruth::execute    ()
     MCHistory history( &map1 ) ;
     
     // build the history
-    StatusCode _sc = history( digit ) ;
-    //always() 
-    //  << " code is " << _sc.getCode() << endreq ;
-
-    
-    //if ( 0 != map1.size() ) 
-    //{ always() <<  " map1 size " << map1.size() << endreq ; }
+    history( digit ).ignore();
+    //StatusCode _sc = history( digit ) ;
+    //debug() << "code is " << _sc.getCode() << endreq;
+    //if(_sc.isFailure())warning() << "history FAILED" << endreq;
 
     // copy history map into the separate container 
     CaloMCMap map2( map1 ) ;
@@ -247,7 +249,8 @@ StatusCode CaloDigitMCTruth::execute    ()
       { 
         const LHCb::MCParticle* particle = entry -> first  ;
         const double            energy   = entry -> second ;
-        updateCaloMCMap ( particle , energy , map2 ) ; 
+        StatusCode up = updateCaloMCMap ( particle , energy , map2 ) ; 
+        if(up.isFailure())warning() <<"updateCaloMCMap FAILED " << endreq;
       }
     }
     
@@ -274,6 +277,7 @@ StatusCode CaloDigitMCTruth::execute    ()
       // fill actual relations 
       linker.link ( digit , particle , energy ) ;
       
+
       // increment the counter 
       ++nLinks ;
       
@@ -294,7 +298,3 @@ StatusCode CaloDigitMCTruth::execute    ()
 };
 // ============================================================================
 
-
-// ============================================================================
-// The END
-// ============================================================================
