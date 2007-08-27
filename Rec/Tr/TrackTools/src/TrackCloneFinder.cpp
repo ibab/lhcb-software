@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.9 2007-01-23 16:36:39 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.10 2007-08-27 15:25:12 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -71,6 +71,7 @@ bool TrackCloneFinder::areClones( LHCb::Track& track1,
   if ( ! m_compareAtLHCbIDsLevel ) {
     n1 = track1.nMeasurements();
     n2 = track2.nMeasurements();
+    
   }
   else {
     n1 = track1.nLHCbIDs();
@@ -81,8 +82,14 @@ bool TrackCloneFinder::areClones( LHCb::Track& track1,
     if ( n1 > n2 ) {
       track2.setFlag( LHCb::Track::Clone, true );
     }
-    else {
+    else if (n2 > n1) {
       track1.setFlag( LHCb::Track::Clone, true );
+    }
+    else{
+      const double chi1 = track1.chi2PerDoF();
+      const double chi2 = track2.chi2PerDoF();
+      chi1 < chi2 ? track2.setFlag( LHCb::Track::Clone, true ) :
+                    track1.setFlag( LHCb::Track::Clone, true );
     }
   }
 
