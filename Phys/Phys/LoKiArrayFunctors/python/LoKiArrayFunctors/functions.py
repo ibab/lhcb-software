@@ -148,6 +148,9 @@ APT2          = LoKi.AParticles.TransverseMomentum ( 2 )
 APT3          = LoKi.AParticles.TransverseMomentum ( 3 )
 ## @see LoKi::Cuts::APT4
 APT4          = LoKi.AParticles.TransverseMomentum ( 4 )
+
+## @see LoKi::Cuts::ASAME
+ASAME         = LoKi.TheSame    ( _T )
 ## @see LoKi::Cuts::ASIZE
 ASIZE         = LoKi.AParticles.Size   ()
 
