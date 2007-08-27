@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.68 2007-07-11 14:27:29 cattanem Exp $
+! $Id: release.notes,v 1.69 2007-08-27 08:25:05 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+! 2007-07-11 - Julien Cogan	
+ - xml/L0MuonData.xml (new file): new class to store the lists of muon tiles 
+   received by the L0Muon processing units. 
+ - Event/L0DUBase.h : add the defintion of emptyMuonData 
+   (L0MuonBase.h becomes obsolete)
+ - xml/L0Muon.xml: add new locations for the L0MuonCandidates
 
 !======================== L0Event v16r4 2007-06-11 ===========================
 ! 2007-07-11 - Patrick Koppenburg
