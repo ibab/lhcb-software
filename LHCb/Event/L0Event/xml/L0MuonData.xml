@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name="L0Event">
+    <class 
+      name="L0MuonData" 
+      id="6003" 
+      author="J. Cogan" 
+      desc="L0Muon trigger data">
+      <desc> * Lists of muon tiles received by a L0Muon processing unit.</desc>
+      <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
+      &KeyedObject;
+      <import name="Kernel/MuonTileID"/>
+      <location name="Default"  place="/Event/Trig/L0/MuonData"/>
+      <constructor 
+        argList="LHCb::MuonTileID pu, std::vector&lt;LHCb::MuonTileID&gt; ols, std::vector&lt;LHCb::MuonTileID&gt; neighs" 
+	initList = "KeyedObject&lt;LHCb::MuonTileID&gt;( pu ), m_ols( ols ), m_neighs( neighs )"
+        desc="Constructor with full information" />
+      <attribute name="ols" type="std::vector&lt;LHCb::MuonTileID&gt;" desc="MuonTileIDs of the hit received by optical links" setMeth="FALSE"/>
+      <attribute name="neighs" type="std::vector&lt;LHCb::MuonTileID&gt;" desc="MuonTileIDs of the hit send by neihgbouring PUs" setMeth="FALSE"/>
+    </class>  
+  </package>
+</gdd>
