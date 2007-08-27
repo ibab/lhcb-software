@@ -1,4 +1,4 @@
-// $Id: UnitFactory.h,v 1.1 2005-07-01 12:42:43 jucogan Exp $
+// $Id: UnitFactory.h,v 1.2 2007-08-27 09:32:24 jucogan Exp $
 
 #ifndef L0MUONKERNEL_UNITFACTORY_H
 #define L0MUONKERNEL_UNITFACTORY_H     1
@@ -13,7 +13,8 @@
 
 #include <string>
 #include <map>
-#include "L0MuonKernel/L0MUnit.h"
+#include "ProcessorKernel/Unit.h"
+//#include "L0MuonKernel/L0MUnit.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
@@ -37,16 +38,28 @@ public:
   
   /// single instance for the factory
   static UnitFactory* instance();
-  
-  /**
-     Create a unit.
-   */
-  Unit* createUnit(DOMNode* pNode, std::string type);
 
+  /// Fill the factory from the XML file describing the registers
+  Unit* createUnit(DOMNode* pNode, std::string type);
+//   Unit* fromXML(DOMNode* pNode);
+  void fromXML(DOMNode* pNode);
   
+  /// Empty the factory
+  void reset();
+
+  Unit * topUnit(){return m_topUnit;}
+  
+
+private:
+
+  int getAttributeInt(DOMNamedNodeMap* di, const char* key);
+  std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
+
 private:
 
   static UnitFactory* m_instance;
+  
+  Unit * m_topUnit;
 
 };
 

@@ -4,7 +4,8 @@
 #include <algorithm>
 
 #include "L0MuonKernel/Tower.h"
-#include "L0MuonKernel/Utilities.h"
+
+#include "L0MuonKernel/ProcUtilities.h"
 
 L0Muon::Tower::Tower() {
 
@@ -68,16 +69,17 @@ void L0Muon::Tower::setBit(int sta, int row, int col) {
   int yFoI = m_maxYFoI[sta];
   
   if (col < 0 || col >= (24+2* xFoI) ) {
-    if (m_debug) std::cout << "--- Tower::setBit Column is not valid !" << std::endl;
-    if (m_debug) std::cout << "--- Tower::setBit Station: " << sta << " Col: " << col << std::endl;
+    if (m_debug) std::cout << "--- Tower::setBit WARNING Column is not valid !" << std::endl;
+    if (m_debug) std::cout << "--- Tower::setBit -> Station: " << sta << " Col: " << col <<" min=0 - max="<<24+2*xFoI<< std::endl;
     return;	      
   }
   if (row < 0 || row >= (4+2*yFoI) ) {
-    if (m_debug) std::cout << "--- Tower::setBit Row is not valid ! " << std::endl;
-    if (m_debug) std::cout << "--- Tower::setBit Station: " << sta << " Row: " << row << std::endl;
+    if (m_debug) std::cout << "--- Tower::setBit WARNING Row is not valid ! " << std::endl;
+    if (m_debug) std::cout << "--- Tower::setBit -> Station: " << sta << " Row: " << row <<" min=0 - max="<<4+2*yFoI<< std::endl;
     return;	      
   }
   
+  if (m_debug) std::cout << "--- Tower::setBit SET Station: " << sta << " Row: " << row << std::endl;
   
   m_bittable[sta][row].set(col);
   
@@ -170,6 +172,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
       // If the M3 bit is set; a seed is found
       if ( (*rowM3).test(colM3)){
 
+        int colseed =colM3;
+
         // Iterators over bittable rows
         std::vector< boost::dynamic_bitset<> >::iterator rowInd; 
         std::vector< boost::dynamic_bitset<> >::iterator rowCentral;
@@ -180,11 +184,6 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         boost::dynamic_bitset<>::size_type colCentral;
         // Station index
         int sta;
-
-        // Seed coordinates
-        int colseed =colM3;
-        std::pair<int, int> xyseed = std::make_pair(colseed,rowseed);
-        int addM3= xyseed.second+(xyseed.first<<2);
  
         if (m_debug) std::cout <<"--- Tower::processTower: Seed found col,row= "<<colseed<<" "<<rowseed<< std::endl;
 
@@ -250,7 +249,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
           // Loop over colums in the field 
           for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
             if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
-            int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+//             int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+            int ipendulum = L0Muon::pendulumM2(icol, m_procVersion);
             if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "<<ipendulum<< std::endl;
             colInd=colCentral+ipendulum;
             if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
@@ -283,7 +283,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
         // Extrapolation in M1
         int signM2 =offM2>0 ? +1:-1;
-        int extrapM1=signM2*L0Muon::ExtrapolationM1[abs(offM2)];
+//         int extrapM1=signM2*L0Muon::ExtrapolationM1[signM2*offM2];
+        int extrapM1=signM2*L0Muon::extrapolationM1(signM2*offM2,m_procVersion);
         if (m_debug) std::cout <<"--- Tower::processTower:   extrapM1= "<<extrapM1<< std::endl;
         // If M1 is ignored
         if (m_ignoreM1==true){  
@@ -317,8 +318,11 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
             // Loop over colums in the field 
             for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
               if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
-              int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
-              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "<<ipendulum<< std::endl;
+//               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+//               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol)*int((icol+1)/2)); // start searching towards beam
+              int ipendulum = L0Muon::pendulumM1(icol, m_procVersion);
+              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "
+                                     <<ipendulum<< std::endl;
               colInd=colCentral+ipendulum;
               if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
                                      <<m_xfoi[sta]+ipendulum<< std::endl;
@@ -342,25 +346,33 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         } // End If M1 is used
         if (m_debug) std::cout <<"--- Tower::processTower: M1 OK"<< std::endl;
         
+        // In version 0, the offset in M1 is given  as it is, i.e. in the granularity of M3.
+        // In next version, it is given in the granularity of M1.
+// //         if (m_procVersion!=0) {
+// //           if (offM1>=0) offM1++;
+// //           offM1 = (offM1>>1);// expressed with M1 granularity (le hard est 'homogène') 
+// //         }
+        offM1 = L0Muon::offsetM1(offM1,m_procVersion);
+        
         if (m_debug) std::cout <<"--- Tower::processTower: CANDIDATE FOUND"<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:  addM3= "<< addM3 << std::endl;
+        if (m_debug) std::cout <<"--- Tower::processTower:  colM3= "<< colseed <<" rowM3= "<<rowseed << std::endl;
         if (m_debug) std::cout <<"--- Tower::processTower:  offM2= "<< offM2 << std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:  offM1= "<< offM1 << std::endl;
-
-       // Compute PT
+        if (m_debug) std::cout <<"--- Tower::processTower:  offM1= "<< offM1 <<std::endl;
+        
+        // Compute PT
         if (m_debug) std::cout <<"--- Tower::processTower: padM1= "<<padM1.toString()<< std::endl;
         if (m_debug) std::cout <<"--- Tower::processTower: padM2= "<<padM2.toString()<< std::endl;
-        double pt = L0Muon::ptcalc(padM1,padM2,m_ptparam,m_debug)[0];
+        double pt = L0Muon::kine(padM1,padM2,m_procVersion,m_debug)[0];
         if (m_debug) std::cout <<"--- Tower::processTower: pt= "<<pt<< std::endl;
 
         // Create MuonCandidate (without the pu and board info)
-        PMuonCandidate muoncand( new MuonCandidate());
-        muoncand->setPT(pt,m_ptparam[7],int(m_ptparam[8]));
-        muoncand->setCharge(pt);
-        muoncand->setAddM3(addM3);
+        L0Muon::PMuonCandidate muoncand( new L0Muon::MuonCandidate());
+        muoncand->setColM3(colseed);
+        muoncand->setRowM3(rowseed);
         muoncand->setOffM2(offM2);
-        muoncand->setOffM1(offM1);// expressed with M3 granularity (la tour est 'super-homogène') 
-
+        muoncand->setOffM1(offM1);
+        muoncand->setPT(pt,m_dpt,m_nbits);
+        muoncand->setCharge(pt);
         puCandidates.push_back(muoncand);
         if (m_debug) std::cout <<"--- Tower::processTower: candidate pushed in vector"<< std::endl;
 
@@ -370,6 +382,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
   } // End of Loop over rows  
   if (m_debug) std::cout <<"--- Tower::processTower: Out "<< std::endl;
   
+  // Order the vector of candidates
+  L0Muon::candidatesOrdering( & puCandidates, m_procVersion);
   // Return the vector of candidates
   return puCandidates;
   

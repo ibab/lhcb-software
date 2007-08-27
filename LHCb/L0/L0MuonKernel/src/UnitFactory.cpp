@@ -7,29 +7,29 @@
 #include "L0MuonKernel/ProcUnit.h"
 #include "L0MuonKernel/CoreUnit.h"
 #include "L0MuonKernel/FormattingUnit.h"
-#include "L0MuonKernel/L0BufferProcUnit.h"
-#include "L0MuonKernel/L0BufferBCSUnit.h"
-#include "L0MuonKernel/L0BufferSlaveUnit.h"
-#include "L0MuonKernel/L0BufferCtrlUnit.h"
-#include "L0MuonKernel/Tell1CtrlUnit.h"
-#include "L0MuonKernel/Tell1ProcUnit.h"
-#include "L0MuonKernel/RawBufferCtrlUnit.h"
-#include "L0MuonKernel/RawBufferProcUnit.h"
-#include "L0MuonKernel/OLDumpUnit.h"
+#include "L0MuonKernel/FormattingOutUnit.h"
 
 L0Muon::UnitFactory* L0Muon::UnitFactory::m_instance=0;
 
 L0Muon::UnitFactory::UnitFactory() {
 }
 
-L0Muon::UnitFactory::~UnitFactory() {}
+L0Muon::UnitFactory::~UnitFactory() {
+}
 
 L0Muon::UnitFactory* L0Muon::UnitFactory::instance() {
   
+//   std::cout <<"L0Muon::UnitFactory::instance m_instance= "<<m_instance<<std::endl;
+  
   if ( m_instance == 0 ) {
+//     std::cout <<"L0Muon::UnitFactory::instance new instance ! m_instance= "<<m_instance<<std::endl;
     m_instance = new L0Muon::UnitFactory;
   } 
   return m_instance;
+}
+
+void L0Muon::UnitFactory::reset() {
+  m_instance=0;
 }
 
 L0Muon::Unit* L0Muon::UnitFactory::createUnit(DOMNode* pNode, std::string type) {
@@ -69,41 +69,9 @@ L0Muon::Unit* L0Muon::UnitFactory::createUnit(DOMNode* pNode, std::string type) 
     // // //std::cout <<"<UnitFactory::createUnit> FormattingUnit"<<std::endl;
     FormattingUnit* pu = new FormattingUnit(pNode);
     return pu;
-  } else if (type == "L0BufferProcUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> L0BufferUnit"<<std::endl;
-    L0BufferProcUnit* pu = new L0BufferProcUnit(pNode);
-    return pu;
-  } else if (type == "L0BufferBCSUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> L0BufferUnit"<<std::endl;
-    L0BufferBCSUnit* pu = new L0BufferBCSUnit(pNode);
-    return pu;
-  } else if (type == "L0BufferSlaveUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> L0BufferUnit"<<std::endl;
-    L0BufferSlaveUnit* pu = new L0BufferSlaveUnit(pNode);
-    return pu;
-  } else if (type == "L0BufferCtrlUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> L0BufferUnit"<<std::endl;
-    L0BufferCtrlUnit* pu = new L0BufferCtrlUnit(pNode);
-    return pu;
-  } else if (type == "Tell1CtrlUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> t"<<std::endl;
-    Tell1CtrlUnit* pu = new Tell1CtrlUnit(pNode);
-    return pu;
-  } else if (type == "Tell1ProcUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> Tell1Unit"<<std::endl;
-    Tell1ProcUnit* pu = new Tell1ProcUnit(pNode);
-    return pu;
-  } else if (type == "RawBufferCtrlUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> RawBufferCtrlUnit"<<std::endl;
-    RawBufferCtrlUnit* pu = new RawBufferCtrlUnit(pNode);
-    return pu;
-  } else if (type == "RawBufferProcUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> RawBufferProcUnit"<<std::endl;
-    RawBufferProcUnit* pu = new RawBufferProcUnit(pNode);
-    return pu;
-  } else if (type == "OLDumpUnit"){
-    // // //std::cout <<"<UnitFactory::createUnit> OLDumpUnit"<<std::endl;
-    OLDumpUnit* pu = new OLDumpUnit(pNode);
+  } else if (type == "FormattingOutUnit"){
+    // // //std::cout <<"<UnitFactory::createUnit> FormattingOutUnit"<<std::endl;
+    FormattingOutUnit* pu = new FormattingOutUnit(pNode);
     return pu;
   } else {
     std::cout <<"<L0Muon::UnitFactory::createUnit> ERROR: UNKNOWN UNIT TYPE "<<type<<"\n";
@@ -112,3 +80,61 @@ L0Muon::Unit* L0Muon::UnitFactory::createUnit(DOMNode* pNode, std::string type) 
   
 }
 
+// L0Muon::Unit * L0Muon::UnitFactory::fromXML(DOMNode* pNode){
+void L0Muon::UnitFactory::fromXML(DOMNode* pNode){
+  
+//   L0Muon::Unit * top=0;
+  m_topUnit  =0;
+  DOMNode *child = pNode->getFirstChild();
+  while(child){
+    if (child->getNodeType()==3) {
+      child = child->getNextSibling();
+      continue;
+    }
+    DOMNamedNodeMap* di = child->getAttributes();
+    std::string type = getAttributeStr(di, "type");
+//     top = createUnit(child,type);
+    m_topUnit = createUnit(child,type);
+    break;
+  }
+//   return top;
+  
+}
+////////////////////////////////////////////////////////////////////////////////
+//
+//  getAttribute
+//
+////////////////////////////////////////////////////////////////////////////////
+
+int L0Muon::UnitFactory::getAttributeInt(DOMNamedNodeMap* di, const char* key){
+  
+  const XMLCh* valX;
+  int          valI;
+  
+  XMLCh* xmlKey = XMLString::transcode(key);
+  
+  valX = di->getNamedItem(xmlKey)->getNodeValue();
+  valI = XMLString::parseInt(valX);
+  
+  XMLString::release(&xmlKey); //Release memory used by the transcode method
+  return valI;
+
+}
+
+std::string L0Muon::UnitFactory::getAttributeStr(DOMNamedNodeMap* di, const char* key){
+
+  const XMLCh* valX;
+  char*  valC;
+  std::string  valS;
+  
+  XMLCh* xmlKey = XMLString::transcode(key);
+  
+  valX = di->getNamedItem(xmlKey)->getNodeValue();
+  valC = XMLString::transcode(valX);
+  valS = valC;
+  
+  XMLString::release(&xmlKey); //Release memory used by the transcode method
+  XMLString::release(&valC);   //Release memory used by the transcode method
+  return valS;
+  
+}

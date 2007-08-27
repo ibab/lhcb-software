@@ -1,4 +1,4 @@
-// $Id: L0MuonKernelFromXML.h,v 1.2 2006-03-03 15:13:39 jucogan Exp $
+// $Id: L0MuonKernelFromXML.h,v 1.3 2007-08-27 09:32:24 jucogan Exp $
 
 #ifndef L0MUONKERNEL_L0MUONKERNELFROMXML_H
 #define L0MUONKERNEL_L0MUONKERNELFROMXML_H     1
@@ -14,7 +14,7 @@ owning registers
 #include <string>
 #include <map>
 #include "ProcessorKernel/RegisterFactory.h"
-#include "L0MuonKernel/L0MUnit.h"
+//#include "ProcessorKernel/Unit.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
@@ -25,10 +25,8 @@ XERCES_CPP_NAMESPACE_USE
 
 namespace L0Muon {
 
-  Unit * L0MuonKernelFromXML(std::string XmlFileName);
-
-  int getAttributeInt(DOMNamedNodeMap* di, const char* key);
-  std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
+//   Unit* L0MuonKernelFromXML(std::string XmlFileName);
+  void L0MuonKernelFromXML(std::string XmlFileName, bool emulator=true);
 
 };  // namespace L0Muon
 

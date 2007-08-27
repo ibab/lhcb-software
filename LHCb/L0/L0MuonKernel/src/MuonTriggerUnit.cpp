@@ -13,6 +13,7 @@ void L0Muon::MuonTriggerUnit::initialize() {
   m_ptparameters =  m_properties["ptParameters"]; 
   m_xfoi         =  m_properties["foiXSize"]; 
   m_yfoi         =  m_properties["foiYSize"];
+  m_procVersion  =  m_properties["procVersion"];
 
   L0Muon::Unit::initialize();
 }
@@ -29,3 +30,4 @@ int L0Muon::MuonTriggerUnit::yFoi(int sta)
   int yfoi= m_yfoi[sta];
   return yfoi;
 }
+

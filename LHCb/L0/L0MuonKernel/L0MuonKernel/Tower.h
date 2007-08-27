@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.14 2006-03-06 09:54:38 jucogan Exp $
+// $Id: Tower.h,v 1.15 2007-08-27 09:32:24 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -25,8 +25,7 @@
 namespace L0Muon {
 
 
-  //  const int ExtrapolationM1[11]={0,+4,-4,+7,-7,+11,-11,+14,-14,+18,-18};
-  const int ExtrapolationM1[6]={0,+4,+7,+11,+14,+18};
+//   const int ExtrapolationM1[6]={0,+4,+7,+11,+15,+18};
 
   class Tower  {
   public:
@@ -96,7 +95,15 @@ namespace L0Muon {
     }
     
     /// set parameter for calculating pT
-    void setPtparam(std::vector<double> ptparam) { m_ptparam= ptparam;}
+    //     void setPtparam(std::vector<double> ptparam) { m_ptparam= ptparam;}
+    void setPtparam(std::vector<double> ptparam) { 
+      m_dpt= ptparam[0];
+      m_nbits = int(ptparam[1]);
+    }
+
+    void setProcVersion(int version) {
+      m_procVersion= version;
+    }
     
     /// set flag for searching without M1
     void setIgnoreM1(bool ignoreM1){ 
@@ -130,13 +137,16 @@ namespace L0Muon {
     int m_xfoi[5]; // Foi in X
     int m_yfoi[5]; // Foi in Y
    
-    std::vector<double> m_ptparam; // Parameters used in the PT computation and encoding
-    
-    bool m_ignoreM1; // Ignore M1 flag   
-    
     StationMap m_bittable[5]; // Array of bits in each stations
-
     IDMap m_idmap[5];// Map relating the local coordinates and the MuonTileID of every fired pad
+    
+    
+    // These parameters depend on the emulator version
+    //     std::vector<double> m_ptparam; // Parameters used in the PT computation and encoding
+    int m_procVersion;
+    float m_dpt;
+    int m_nbits;
+    bool m_ignoreM1; // Ignore M1 flag   
     
     bool m_debug; // Debug flag
 

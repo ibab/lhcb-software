@@ -46,6 +46,7 @@ void L0Muon::FormattingUnit::preexecute(){
       firedPads.push_back(*ipads);
     }    
   }  
+  if (m_debug) std::cout <<"*!* Formatting::preexecute: firedPads contains "<<firedPads.size()<<" tiles"<<std::endl;
 
   std::map<std::string,Register*>::iterator out;
 
@@ -59,17 +60,21 @@ void L0Muon::FormattingUnit::preexecute(){
     for ( out = m_outputs.begin(); out != m_outputs.end(); out++ ) {
       TileRegister* outtr = dynamic_cast<TileRegister*>(out->second);
       std::vector<LHCb::MuonTileID> outPads = outtr->getTileVector();
-    
+      
+      if (m_debug) std::cout << "*!* Formatting::preexecute: ouput register: "<<out->first<< std::endl;
+      
       std::vector<LHCb::MuonTileID>::iterator init;
       std::vector<LHCb::MuonTileID>::iterator outit;
        
       if ( ! outPads.empty()){
         for ( outit = outPads.begin(); outit != outPads.end(); outit++) {
-                   
+
           for ( init = firedPads.begin(); init != firedPads.end(); init++) {
               
             if (outit->intercept(*init).isValid()) {
            
+              if (m_debug) std::cout << "*!* Formatting::preexecute: tiles IN: "<<init->toString() 
+                                     <<" - OUT: "<<outit->toString() << std::endl;
               outtr->setTile(*outit);
             }
           }

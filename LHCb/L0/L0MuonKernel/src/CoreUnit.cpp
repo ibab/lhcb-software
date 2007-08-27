@@ -11,6 +11,7 @@ L0Muon::CoreUnit::CoreUnit(LHCb::MuonTileID id):L0MUnit(id) {
 }
     
 L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {  
+  m_tower = Tower();
 }
     
 L0Muon::CoreUnit::~CoreUnit() {};  
@@ -72,7 +73,7 @@ bool L0Muon::CoreUnit::makeTower() {
 
   bool seedFound=false;
 
-  unsigned int nreg = m_mid.region();
+  unsigned int pureg = m_mid.region();
 
   // Layout of pads in M3
   MuonLayout layout(48,8);
@@ -86,49 +87,98 @@ bool L0Muon::CoreUnit::makeTower() {
   if (m_debug) std::cout << "*!! Core:makeTower " << "refpad " << refpad.toString() << std::endl;
 
   std::vector<LHCb::MuonTileID>::iterator ip ;
-  std::vector<LHCb::MuonTileID>::iterator itmp;
+  std::vector<LHCb::MuonTileID>::iterator ipM3gran;
 
   // Loop over fired pads
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
     if (m_debug) std::cout << "*!! Core:makeTower " << "pad " << (*ip).toString() << std::endl;
-    // Pads'station
-    int nsta = ip->station();
+    // Pad's station
+    int sta = ip->station();
 
+    // Pad's region
+    unsigned int ipreg = ip->region();
+ 
     // if a pad is found in M3, a seed is found: set the flag
-    if (nsta==2) seedFound=true;
+    if (sta==2) seedFound=true;
 
     // Vector of tiles with M3 granularity containing the fired pad
-    std::vector<LHCb::MuonTileID> tmp;    
-    if ( ip->region() == nreg ) {
-      if (m_debug) std::cout << "*!! Core:makeTower " << "ip->region==nreg" << std::endl;
-      tmp = layout.tiles(*ip);
-    } else if ( ip->region() != nreg){
-      if (m_debug) std::cout << "*!! Core:makeTower ip->region != nreg" << std::endl;
-      if (m_debug) std::cout << "*!! Core:makeTower quarter " << (*ip).quarter() 
-                             << " region " << (*ip).region() << " nreg " << nreg << std::endl;
-      tmp = layout.tilesInRegion((*ip), nreg); 
-    }
-    
+    std::vector<LHCb::MuonTileID> padsM3gran;    
+    padsM3gran = layout.tiles(*ip);
+ 
     // Loop over the tiles in M3 granularity 
-    for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
-      
-      // Local coordinated of the pad (PU frame)
-      int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(nsta);
-      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(nsta);    
-      std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
-      
-      // Set the corresponding bit in the tower
-      m_tower.setBit(nsta, nYindex, nXindex );
-      
-      // Fill the map relating the local coordinates and the MuonTileID
-      m_tower.setPadIdMap(nsta, yx, *ip);
-      if (m_debug) std::cout << "*!! Core:makeTower " 
-                             << " sta= "<<nsta
-                             << " yx= "<<yx.first<<","<<yx.second
-                             << " *ip= "<<(*ip).toString()
-                             << " itmp= "<<(*itmp).toString()
-                             << std::endl;
+    for ( ipM3gran = padsM3gran.begin(); ipM3gran != padsM3gran.end(); ipM3gran++ ) {
+      if (m_debug) std::cout << "*!! Core:makeTower ip->region pad in M3 granularity: " << (*ipM3gran).toString()<< std::endl;
+  
+      // Coordinates in Pu's region
+      if (ipreg>pureg) {
+        for (int ix=0;ix<2;++ix) {
+          // Modify the coordinates to match the pu's region
+          int nX = ix+ ipM3gran->nX()*2;
+          for (int iy=0;iy<2;++iy) {
+            int nY = iy+ ipM3gran->nY()*2;
+            // Local coordinated of the pad (PU frame)
+            int nXindex= nX-refX+m_tower.maxXFoi(sta);    
+            int nYindex= nY-refY+m_tower.maxYFoi(sta);
+            std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+         
+            // Set the corresponding bit in the tower
+            m_tower.setBit(sta, nYindex, nXindex );
+            // Fill the map relating the local coordinates and the MuonTileID
+            m_tower.setPadIdMap(sta, yx, *ip);
+         
+            if (m_debug) std::cout << "*!! Core:makeTower UPPER region"
+                                   << " sta= "<<sta
+                                   << " nX= "<<nX<< " nY= "<<nY
+                                   << " y= "<<yx.first<<",x="<<yx.second
+                                   << " *ip= "<<(*ip).toString()
+                                   << " ipM3gran= "<<(*ipM3gran).toString()
+                                   << std::endl;
+          }
+        }
+     
+      } else if (ipreg<pureg) {
+        // Modify the coordinates to match the pu's region
+        int nX = ipM3gran->nX()/2;
+        int nY = ipM3gran->nY()/2;
+        // Local coordinated of the pad (PU frame)
+        int nXindex= nX-refX+m_tower.maxXFoi(sta);    
+        int nYindex= nY-refY+m_tower.maxYFoi(sta);
+        std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+     
+        // Set the corresponding bit in the tower
+        m_tower.setBit(sta, nYindex, nXindex );
+        // Fill the map relating the local coordinates and the MuonTileID
+        m_tower.setPadIdMap(sta, yx, *ip);
+
+        if (m_debug) std::cout << "*!! Core:makeTower LOWER region" 
+                               << " sta= "<<sta
+                               << " nX= "<<nX<< " nY= "<<nY
+                               << " yx= "<<yx.first<<","<<yx.second
+                               << " *ip= "<<(*ip).toString()
+                               << " ipM3gran= "<<(*ipM3gran).toString()
+                               << std::endl;
+      } else {
+        // Local coordinated of the pad (PU frame)
+        int nXindex= (ipM3gran->nX())-refX+m_tower.maxXFoi(sta);    
+        int nYindex= (ipM3gran->nY())-refY+m_tower.maxYFoi(sta);
+        std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+     
+        // Set the corresponding bit in the tower
+        m_tower.setBit(sta, nYindex, nXindex );
+     
+        // Fill the map relating the local coordinates and the MuonTileID
+        m_tower.setPadIdMap(sta, yx, *ip);
+
+        if (m_debug) std::cout << "*!! Core:makeTower SAME region"
+                               << " sta= "<<sta
+                               << " nX= "<<ipM3gran->nX()<< " nY= "<<ipM3gran->nY()
+                               << " yx= "<<yx.first<<","<<yx.second
+                               << " *ip= "<<(*ip).toString()
+                               << " ipM3gran= "<<(*ipM3gran).toString()
+                               << std::endl;
+      }
+   
     } // End of Loop over the tiles in M3 granularity 
   } // End of Loop over fired pads
 
@@ -143,7 +193,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   // The table of correspondance between position in tower and pad in M1
   // is filled in this function which should be called during the initialization 
   // phase.
-  unsigned int nreg = m_mid.region();
+  unsigned int pureg = m_mid.region();
 
   // Layout of pads in M3
   MuonLayout layout(48,8);
@@ -159,7 +209,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "refpad " << refpad.toString() << std::endl;
 
   std::vector<LHCb::MuonTileID>::iterator ip ;
-  std::vector<LHCb::MuonTileID>::iterator itmp;
+  std::vector<LHCb::MuonTileID>::iterator ipM3gran;
 
 
   // Set station
@@ -171,36 +221,88 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
 
     if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "pad " << (*ip).toString() << std::endl;
 
+    // Pad's region
+    unsigned int ipreg = ip->region();
+
     // Vector of tiles with M3 granularity containing the fired pad
-    std::vector<LHCb::MuonTileID> tmp;    
-    if ( ip->region() == nreg ) {
-      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "ip->region==nreg" << std::endl;
-      tmp = layout.tiles(*ip);
-    } else if ( ip->region() != nreg){
-      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap ip->region != nreg" << std::endl;
-      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap quarter " << (*ip).quarter() 
-                             << " region " << (*ip).region() << " nreg " << nreg << std::endl;
-      tmp = layout.tilesInRegion((*ip), nreg); 
-    }
-    
+    std::vector<LHCb::MuonTileID> padsM3gran;    
+    padsM3gran = layout.tiles(*ip);
+
     // Loop over the tiles in M3 granularity 
-    for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
+    for ( ipM3gran = padsM3gran.begin(); ipM3gran != padsM3gran.end(); ipM3gran++ ) {
+      if (m_debug) std::cout << "*!! Core:makeTower ip->region pad in M3 granularity: " << (*ipM3gran).toString()<< std::endl;
+     
+      // Coordinates in Pu's region
+      if (ipreg>pureg) {
+        for (int ix=0;ix<2;++ix) {
+          // Modify the coordinates to match the pu's region
+          int nX = ix+ ipM3gran->nX()*2;
+          for (int iy=0;iy<2;++iy) {
+            int nY = iy+ ipM3gran->nY()*2;
+            // Local coordinated of the pad (PU frame)
+            int nXindex= nX-refX+m_tower.maxXFoi(sta);    
+            int nYindex= nY-refY+m_tower.maxYFoi(sta);
+            std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+            
+            // Set the corresponding bit in the tower
+            m_tower.setBit(sta, nYindex, nXindex );
+            // Fill the map relating the local coordinates and the MuonTileID
+            m_tower.setPadIdMap(sta, yx, *ip);
+            
+            if (m_debug) std::cout << "*!! Core:makeTower UPPER region"
+                                   << " sta= "<<sta
+                                   << " nX= "<<nX<< " nY= "<<nY
+                                   << " y= "<<yx.first<<",x="<<yx.second
+                                   << " *ip= "<<(*ip).toString()
+                                   << " ipM3gran= "<<(*ipM3gran).toString()
+                                   << std::endl;
+          }
+        }
+        
+      } else if (ipreg<pureg) {
+        // Modify the coordinates to match the pu's region
+        int nX = ipM3gran->nX()/2;
+        int nY = ipM3gran->nY()/2;
+        // Local coordinated of the pad (PU frame)
+        int nXindex= nX-refX+m_tower.maxXFoi(sta);    
+        int nYindex= nY-refY+m_tower.maxYFoi(sta);
+        std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+        
+        // Set the corresponding bit in the tower
+        m_tower.setBit(sta, nYindex, nXindex );
+        // Fill the map relating the local coordinates and the MuonTileID
+        m_tower.setPadIdMap(sta, yx, *ip);
+
+        if (m_debug) std::cout << "*!! Core:makeTower LOWER region" 
+                               << " sta= "<<sta
+                               << " nX= "<<nX<< " nY= "<<nY
+                               << " yx= "<<yx.first<<","<<yx.second
+                               << " *ip= "<<(*ip).toString()
+                               << " ipM3gran= "<<(*ipM3gran).toString()
+                               << std::endl;
+      } else {
+        // Local coordinated of the pad (PU frame)
+        int nXindex= (ipM3gran->nX())-refX+m_tower.maxXFoi(sta);    
+        int nYindex= (ipM3gran->nY())-refY+m_tower.maxYFoi(sta);
+        std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+        
+        // Set the corresponding bit in the tower
+        m_tower.setBit(sta, nYindex, nXindex );
+        
+        // Fill the map relating the local coordinates and the MuonTileID
+        m_tower.setPadIdMap(sta, yx, *ip);
+
+        if (m_debug) std::cout << "*!! Core:makeTower SAME region"
+                               << " sta= "<<sta
+                               << " nX= "<<ipM3gran->nX()<< " nY= "<<ipM3gran->nY()
+                               << " yx= "<<yx.first<<","<<yx.second
+                               << " *ip= "<<(*ip).toString()
+                               << " ipM3gran= "<<(*ipM3gran).toString()
+                               << std::endl;
+      }
       
-      // Local coordinated of the pad (PU frame)
-      int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(sta);
-      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(sta);    
-      std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
-      
-      // Fill the map relating the local coordinates and the MuonTileID
-      m_tower.setPadIdMap(sta, yx, *ip);
-      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " 
-                             << " sta= "<<sta
-                             << " yx= "<<yx.first<<","<<yx.second
-                             << " *ip= "<<(*ip).toString()
-                             << " itmp= "<<(*itmp).toString()
-                             << std::endl;
     } // End of Loop over the tiles in M3 granularity 
-  } // End of Loop over pads
+  } // End of Loop over M1 pads
 }
 
 void L0Muon::CoreUnit::initialize() {
@@ -219,6 +321,9 @@ void L0Muon::CoreUnit::initialize() {
   
   // Set the pt parameters
   m_tower.setPtparam(pmuontrigger->ptParameters());
+
+  // Set the emulator version
+  m_tower.setProcVersion(pmuontrigger->procVersion());
 
   // Candidate Register handler for output candidates
   char buf[4096];
@@ -270,25 +375,35 @@ void L0Muon::CoreUnit::execute() {
   // Return if no candidate has been found
   std::vector<PMuonCandidate> candidates = m_tower.processTower(m_mid);
   if (m_debug) std::cout << "*!* CoreUnit::execute after m_tower.processTower "<< std::endl;
-  std::vector<PMuonCandidate>::iterator itcand;
   if (m_debug) std::cout << "*!* CoreUnit::execute candidates size= "<<candidates.size()<< std::endl;
   if (candidates.empty()) return;
 
-  // Fill the candidate register with first 2 candidates
-  int icand=0; 
-  for (itcand=candidates.begin();itcand<candidates.end();itcand++) {
-    if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates icand= "<<icand<< std::endl;
-    m_candRegHandlerOut.setMuonCandidate(*itcand,icand);
-    if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates : cand set in register "<< std::endl;
-    icand++;
-    if (icand==2) break;
+  // Fill the status register 
+  int ncand=candidates.size();
+  if (m_debug) std::cout << "*!* CoreUnit::execute candidate ncand= "<<ncand<< std::endl;
+  // Fill the candidate register with first and last candidates (match according hardware behavior)
+  if (ncand>0) {
+    m_candRegHandlerOut.setMuonCandidate(candidates[0],0);
+    if (ncand>1) m_candRegHandlerOut.setMuonCandidate(candidates[ncand-1],1);
   }
-
-  if (m_debug) std::cout << "*!* CoreUnit::execute candidates icand= "<<icand<< std::endl;
-  m_candRegHandlerOut.setCandStatus(icand);
-  if (m_debug) std::cout << "*!* CoreUnit::execute after m_candRegHandlerOut.setCandStatus(icand); icand="<<icand<<std::endl;
   
-     
+  if (ncand>2) ncand=3;
+  m_candRegHandlerOut.setStatus(ncand);
+  if (m_debug) std::cout << "*!* CoreUnit::execute after m_candRegHandlerOut.setCandStatus(ncand); ncand= "<<ncand<<std::endl;
+
+
+//   // Fill the candidate register with first 2 candidates
+//   if (ncand<3) { // TEMPORARY - THIS RESTRICTION IS THERE TO MATCH THE HARDWARE - JC 19/12/06
+//     int icand=0; 
+//     std::vector<PMuonCandidate>::iterator itcand;
+//     for (itcand=candidates.begin();itcand<candidates.end();itcand++) {
+//       if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates icand= "<<icand<< std::endl;
+//       m_candRegHandlerOut.setMuonCandidate(*itcand,icand);
+//       if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates : cand set in register "<< std::endl;
+//       icand++;
+//       if (icand==2) break;
+//     }
+//   } // END OF TEMPORARY CONDITION     
 }
 
 bool L0Muon::CoreUnit::preprocess() {
@@ -360,24 +475,6 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::CoreUnit::process(int xfoiM1,int xfo
 
   return candidates;
   
-//   if (m_debug) std::cout << "*!* CoreUnit::process after m_tower.processTower "<< std::endl;
-//   std::vector<PMuonCandidate>::iterator itcand;
-//   if (m_debug) std::cout << "*!* CoreUnit::process candidates size= "<<candidates.size()<< std::endl;
-//   if (candidates.empty()) return;
-
-//   // Fill the candidate register with first 2 candidates
-//   int icand=0; 
-//   for (itcand=candidates.begin();itcand<candidates.end();itcand++) {
-//     if (m_debug) std::cout << "*!* CoreUnit::process inside loop over candidates icand= "<<icand<< std::endl;
-//     m_candRegHandlerOut.setMuonCandidate(*itcand,icand);
-//     if (m_debug) std::cout << "*!* CoreUnit::process inside loop over candidates : cand set in register "<< std::endl;
-//     icand++;
-//     if (icand==2) break;
-//   }
-
-//   if (m_debug) std::cout << "*!* CoreUnit::process candidates icand= "<<icand<< std::endl;
-//   m_candRegHandlerOut.setCandStatus(icand);
-//   if (m_debug) std::cout << "*!* CoreUnit::process after m_candRegHandlerOut.setCandStatus(icand); icand="<<icand<<std::endl;  
   
 }
 

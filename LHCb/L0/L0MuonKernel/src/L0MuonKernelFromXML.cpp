@@ -5,9 +5,8 @@
 
 static const std::string XMLL0MuonTrigger =  "L0MuonTrigger";
 
-L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
-
-  
+// L0Muon::Unit* L0Muon::L0MuonKernelFromXML(std::string xmlFileName){  
+void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){  
 
   DOMDocument*  doc;      //The DOM document
   DOMElement*   root;     //The root element
@@ -44,101 +43,55 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
   doc  = parser->parseURI(xmlFileName.c_str());
   root = doc->getDocumentElement();
  
-  //Get the RegisterFactory node
+  // Get the RegisterFactory node
+  //-----------------------------
   xmlStr = XMLString::transcode("RegisterFactory");
   li = root->getElementsByTagName(xmlStr);
   XMLString::release(&xmlStr);
   //Consistency check
   if( li->getLength() == 0 ){
     std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  No node found ... exiting" << std::endl;
+    std::cout << "<L0Muon::L0MuonKernelFromXML>  RegisterFactory : no node found ... exiting" << std::endl;
     exit(-1);
   }
-  
   if( li->getLength() > 1 ){
     std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  Too many nodes found ... exiting" << std::endl;
+    std::cout << "<L0Muon::L0MuonKernelFromXML>  RegisterFactory : too many nodes found ... exiting" << std::endl;
     exit(-1);    
-  }
-  
-  // Decode the node
+  }  // Decode the node
   child = li->item(0);
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
   rfactory->fromXML(child);
 
-  // Get the UnitFactory node
-  xmlStr = XMLString::transcode("UnitFactory");
-  li = root->getElementsByTagName(xmlStr);
-  XMLString::release(&xmlStr);
-  //Consistency check
-  if( li->getLength() == 0 ){
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  No node found ... exiting" << std::endl;
-    exit(-1);
-  }
-  
-  if( li->getLength() > 1 ){
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
-    std::cout << "<L0Muon::L0MuonKernelFromXML>  Too many nodes found ... exiting" << std::endl;
-    exit(-1);    
-  }
-  
-  // Decode the node
-  Unit* top=0;
-  child = li->item(0);
-  child = li->item(0)->getFirstChild ();
-  while(child){
-    if (child->getNodeType()==3) {
-      child = child->getNextSibling();
-      continue;
+  if (emulator) {
+
+    // Get the UnitFactory node
+    //-------------------------
+    xmlStr = XMLString::transcode("UnitFactory");
+    li = root->getElementsByTagName(xmlStr);
+    XMLString::release(&xmlStr);
+    //Consistency check
+    if( li->getLength() == 0 ){
+      std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
+      std::cout << "<L0Muon::L0MuonKernelFromXML>  UnitFactory : no node found ... exiting" << std::endl;
+      exit(-1);
+    }  
+    if( li->getLength() > 1 ){
+      std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
+      std::cout << "<L0Muon::L0MuonKernelFromXML>  UnitFactory : too many nodes found ... exiting" << std::endl;
+      exit(-1);    
     }
+    // Decode the node
+    child = li->item(0);
     L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
-    DOMNamedNodeMap* di = child->getAttributes();
-    std::string type = getAttributeStr(di, "type");
-    top = ufactory->createUnit(child,type);
-    break;
+    //   L0Muon::Unit * top = ufactory->fromXML(child);
+    ufactory->fromXML(child);
+
   }
 
   parser->release();
   XMLPlatformUtils::Terminate();
 
-  return top;
-}
-////////////////////////////////////////////////////////////////////////////////
-//
-//  getAttribute
-//
-////////////////////////////////////////////////////////////////////////////////
+//   return top;
 
-int L0Muon::getAttributeInt(DOMNamedNodeMap* di, const char* key){
-  
-  const XMLCh* valX;
-  int          valI;
-  
-  XMLCh* xmlKey = XMLString::transcode(key);
-  
-  valX = di->getNamedItem(xmlKey)->getNodeValue();
-  valI = XMLString::parseInt(valX);
-  
-  XMLString::release(&xmlKey); //Release memory used by the transcode method
-  return valI;
-
-}
-
-std::string L0Muon::getAttributeStr(DOMNamedNodeMap* di, const char* key){
-
-  const XMLCh* valX;
-  char*  valC;
-  std::string  valS;
-  
-  XMLCh* xmlKey = XMLString::transcode(key);
-  
-  valX = di->getNamedItem(xmlKey)->getNodeValue();
-  valC = XMLString::transcode(valX);
-  valS = valC;
-  
-  XMLString::release(&xmlKey); //Release memory used by the transcode method
-  XMLString::release(&valC);   //Release memory used by the transcode method
-  return valS;
-  
 }

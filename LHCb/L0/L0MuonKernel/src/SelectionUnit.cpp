@@ -20,40 +20,53 @@ void L0Muon::SelectionUnit::select()
 
   // Extract the candidates with highest Pt;
   // Fill the output register with candidates
-  std::pair<int,int> usedCand(-1,-1);
+  std::pair<int,int> usedPair(-1,-1);
   for (int ibest=0; ibest<2; ibest++) {
-    int bestPT=-1;
-    std::pair<int,int> bestCand(-1,-1);
+    PMuonCandidate best(new MuonCandidate());
+    std::pair<int,int> bestPair(-1,-1);
     // Loop over input registers
     for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
       // Loop over input candidates in register
       for (int icand = 0;icand<2;icand++) {
         int index = (*itHandlerMap).first;
         if (m_candRegHandlerIn[index].isEmpty(icand)) continue;
-        if (index==usedCand.first && icand==usedCand.second) continue;
-        int pt = m_candRegHandlerIn[index].getCandPT(icand);
-        if (pt>bestPT ) {
-          bestPT = pt;
+        if (index==usedPair.first && icand==usedPair.second) continue;
+        PMuonCandidate cand = m_candRegHandlerIn[index].getMuonCandidate(icand);
+        if (cand->pT()>best->pT() ) {
+          best = cand;
           std::pair<int,int> tmppair(index,icand);
-          bestCand = tmppair;
+          bestPair = tmppair;
         }
       } // End of Loop over input candidates in register
     } // End of Loop over input registers
-    if (bestCand.first==-1 || bestCand.second==-1) break;
-    PMuonCandidate bestCandidate = m_candRegHandlerIn[bestCand.first].getMuonCandidate(bestCand.second);
-    m_candRegHandlerOut.setMuonCandidate(bestCandidate,ibest);
-    usedCand = bestCand;
+    if (bestPair.first==-1 || bestPair.second==-1) break;
+    m_candRegHandlerOut.setMuonCandidate(best,ibest);
+    usedPair = bestPair;
   }
   
   
   // Set the output status
-  int statusORed=0;
+  int status_ncand=0;
+  int status_error=0;
   for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
     int index = (*itHandlerMap).first;
-    int status = m_candRegHandlerIn[index].getCandStatus();
-    statusORed = status ==3 ? status:statusORed;
+    int ncand = (m_candRegHandlerIn[index].getStatus())&0x3;
+    int error = ((m_candRegHandlerIn[index].getStatus())>>2)&0x3;
+    status_ncand+=ncand;
+    status_error|=error;
   }
-  m_candRegHandlerOut.setCandStatus(statusORed);
+  status_error|= status_ncand>2 ? 0xC : 0;
+  status_ncand = status_ncand>2 ? 3 : status_ncand;
+  int status=((status_ncand)&0x3) + ((status_error<<2)&0xC);
+  m_candRegHandlerOut.setStatus(status);
+  
+//   int statusORed=0;
+//   for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
+//     int index = (*itHandlerMap).first;
+//     int status = m_candRegHandlerIn[index].getStatus();
+//     statusORed = status ==3 ? status:statusORed;
+//   }
+//   m_candRegHandlerOut.setStatus(statusORed);
 
 }
 

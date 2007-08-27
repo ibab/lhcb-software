@@ -45,16 +45,19 @@ void L0Muon::CtrlUnit::initialize()
 }
 
 void L0Muon::CtrlUnit::execute() {
-  
-  std::map<int, CandRegisterHandler>::iterator itHandlerMap;
+  if (m_debug) std::cout<<"L0Muon::CtrlUnit::execute mid: "
+                        <<"Q"<<m_mid.quarter()+1<<std::endl;
 
   // Fill the board number in the input registers
-
+  std::map<int, CandRegisterHandler>::iterator itHandlerMap;
   for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
+    int ncand= (*itHandlerMap).second.numberOfCandidates();
+    if (m_debug) std::cout<< "L0Muon::CtrlUnit::execute number of cand in register: "<<ncand<<std::endl;
     for (int icand = 0;icand<2;icand++) {
       int iboard = (*itHandlerMap).first;
       if (m_candRegHandlerIn[iboard].isEmpty(icand)) continue;
       m_candRegHandlerIn[iboard].setCandBoard(iboard,icand);
+      m_candRegHandlerIn[iboard].setCandQuarter(m_mid.quarter(),icand);
     }
   }
 

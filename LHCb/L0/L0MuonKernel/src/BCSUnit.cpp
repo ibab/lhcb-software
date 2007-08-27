@@ -77,16 +77,22 @@ void L0Muon::BCSUnit::initialize()
 
 
 void L0Muon::BCSUnit::execute() {
+  if (m_debug) std::cout<<"L0Muon::BCSUnit::execute mid: "
+                        <<"Q"<<m_mid.quarter()+1<<"R"<<m_mid.region()+1<<m_mid.nX()<<m_mid.nY()<<std::endl;
+
   // Fill the pu number in the input registers
   std::map<int, CandRegisterHandler>::iterator itHandlerMap;
-
   for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
     int ncand= (*itHandlerMap).second.numberOfCandidates();
+    if (m_debug) std::cout<< "L0Muon::BCSUnit::execute number of cand in register: "<<ncand<<std::endl;
     ncand = ncand>2 ? 2 : ncand;
     for (int icand = 0;icand<ncand;icand++) {
       //if (m_candRegHandlerIn[iboard].isEmpty(icand)) continue;
       int ipu = (*itHandlerMap).first;
+      if (m_debug) std::cout<< "L0Muon::BCSUnit::execute setting PU # "<<ipu
+                            << " for candidate # "<<icand<<std::endl;
       m_candRegHandlerIn[ipu].setCandPU(ipu,icand);
+      if (m_debug) m_candRegHandlerIn[ipu].dump(icand);
     }
   }
   

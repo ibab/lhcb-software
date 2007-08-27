@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.4 2006-03-06 09:56:00 jucogan Exp $
+// $Id: CandRegisterHandler.h,v 1.5 2007-08-27 09:32:23 jucogan Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -19,37 +19,41 @@ namespace L0Muon {
 
   typedef unsigned int   ContentType ; 
 
-  static const ContentType BitsCandAddM3  =  7 ;
-  static const ContentType BitsCandOffM2  =  4 ;
-  static const ContentType BitsCandOffM1  =  4 ;
-  static const ContentType BitsCandPT     =  7 ;
-  static const ContentType BitsCandCharge =  1 ;
-  static const ContentType BitsCandPU     =  2 ;
-  static const ContentType BitsCandBoard  =  4 ;
-
-  static const ContentType BitsCandTot    = BitsCandAddM3+BitsCandOffM2+BitsCandOffM1+\
-                                            BitsCandPT+BitsCandCharge+BitsCandPU+BitsCandBoard ;
-
-  static const ContentType BitsCandStatus =  4 ;
-
-  static const ContentType BitsCandRegTot = 2*BitsCandTot + BitsCandStatus;
-                                                                
-
-  static const ContentType ShiftCandAddM3 = 0;
-  static const ContentType ShiftCandOffM2 = ShiftCandAddM3  + BitsCandAddM3 ;
-  static const ContentType ShiftCandOffM1 = ShiftCandOffM2  + BitsCandOffM2 ;
-  static const ContentType ShiftCandPT    = ShiftCandOffM1  + BitsCandOffM1 ;
-  static const ContentType ShiftCandCharge= ShiftCandPT     + BitsCandPT    ;
-  static const ContentType ShiftCandPU    = ShiftCandCharge + BitsCandCharge;
-  static const ContentType ShiftCandBoard = ShiftCandPU     + BitsCandPU    ;
-
-  static const ContentType ShiftCandStatus= 2*BitsCandTot;
-
-  static const ContentType BitsCandNumber =  2 ;
-  static const ContentType ShiftCandNumber= ShiftCandStatus;
 
   class CandRegisterHandler  {
   
+  private:
+    static const ContentType BitsCandOffM1   = 4 ;
+    static const ContentType BitsCandOffM2   = 4 ;
+    static const ContentType BitsCandColM3   = 5 ;
+    static const ContentType BitsCandRowM3   = 2 ;
+    static const ContentType BitsCandPadding = 1 ;
+    static const ContentType BitsCandPT      = 7 ;
+    static const ContentType BitsCandCharge  = 1 ;
+    static const ContentType BitsCandBoard   = 4 ;
+    static const ContentType BitsCandPU      = 2 ;
+    static const ContentType BitsCandQuarter = 2 ;
+                                             
+    static const ContentType BitsStatus      = 4 ;
+    
+    static const ContentType ShiftCandOffM1  = 0;                                                  //  0
+    static const ContentType ShiftCandOffM2  = ShiftCandOffM1  + BitsCandOffM1  ;                  //  4
+    static const ContentType ShiftCandColM3  = ShiftCandOffM2  + BitsCandOffM2  ;                  //  8
+    static const ContentType ShiftCandRowM3  = ShiftCandColM3  + BitsCandColM3  ;                  // 13
+    static const ContentType ShiftCandPT     = ShiftCandRowM3  + BitsCandRowM3  + BitsCandPadding; // 16
+    static const ContentType ShiftCandCharge = ShiftCandPT     + BitsCandPT     ;                  // 23
+    static const ContentType ShiftCandBoard  = ShiftCandCharge + BitsCandCharge ;                  // 24
+    static const ContentType ShiftCandPU     = ShiftCandBoard  + BitsCandBoard  ;                  // 28   
+    static const ContentType ShiftCandQuarter= ShiftCandPU     + BitsCandPU     ;                  // 30
+
+    static const ContentType BitsCandTot     = ShiftCandQuarter+ BitsCandQuarter;                  // 32
+    static const ContentType BitsCandRegTot  = 2*BitsCandTot + BitsStatus;
+    
+    static const ContentType ShiftStatus     = 2*BitsCandTot;
+
+    static const ContentType BitsCandAddM3   = BitsCandColM3 + BitsCandRowM3; 
+    static const ContentType ShiftCandAddM3  = ShiftCandColM3;
+
   public:
     
 
@@ -63,8 +67,23 @@ namespace L0Muon {
     void clear(){
       m_candRegister->reset();
     }
-                                                                                                    
+
+    bool isValid()
+    {
+      return (m_candRegister!=0);
+    }
+    
+
+    /// Candidate register size in bits
+    static const int size() {return BitsCandRegTot;}   
+
     /// Set the candidate's properties in the register
+    void setCandColM3 (int candColM3 , int icand){
+      m_candRegister->set(candColM3  ,BitsCandColM3  ,ShiftCandColM3 +icand*BitsCandTot);
+    }  
+    void setCandRowM3 (int candRowM3 , int icand){
+      m_candRegister->set(candRowM3  ,BitsCandRowM3  ,ShiftCandRowM3 +icand*BitsCandTot);
+    }  
     void setCandAddM3 (int candAddM3 , int icand){
       m_candRegister->set(candAddM3  ,BitsCandAddM3  ,ShiftCandAddM3 +icand*BitsCandTot);
     }  
@@ -86,24 +105,36 @@ namespace L0Muon {
     void setCandBoard (int candBoard , int icand){
       m_candRegister->set(candBoard  ,BitsCandBoard  ,ShiftCandBoard +icand*BitsCandTot);
     }  
-    void setCandStatus(int candStatus           ){
-      m_candRegister->set(candStatus ,BitsCandStatus ,ShiftCandStatus);
+    void setCandQuarter (int candQuarter , int icand){
+      m_candRegister->set(candQuarter  ,BitsCandQuarter  ,ShiftCandQuarter +icand*BitsCandTot);
+    }  
+    void setStatus(int status ){
+      m_candRegister->set(status ,BitsStatus ,ShiftStatus);
     }  
 
     void setMuonCandidate(PMuonCandidate cand, int icand);
 
     /// Get the candidate's properties from the register
-    int getCandAddM3 (int icand){
+    int getCandColM3(int icand){
+      return m_candRegister->getulong(BitsCandColM3  ,ShiftCandColM3 +icand*BitsCandTot);
+    }  
+    int getCandRowM3(int icand){
+      return m_candRegister->getulong(BitsCandRowM3  ,ShiftCandRowM3 +icand*BitsCandTot);
+    }  
+    int getCandAddM3(int icand){
       return m_candRegister->getulong(BitsCandAddM3  ,ShiftCandAddM3 +icand*BitsCandTot);
     }  
-    int getCandOffM2 (int icand){
+    int getCandOffM2(int icand){
       return m_candRegister->getulong(BitsCandOffM2  ,ShiftCandOffM2 +icand*BitsCandTot);
     }  
-    int getCandOffM1 (int icand){
+    int getCandOffM1(int icand){
       return m_candRegister->getulong(BitsCandOffM1  ,ShiftCandOffM1 +icand*BitsCandTot);
     }  
-    int getCandPT    (int icand){
+    int getCandPT(int icand){
       return m_candRegister->getulong(BitsCandPT     ,ShiftCandPT    +icand*BitsCandTot);
+    }  
+    int getCandPTCharged(int icand){
+      return m_candRegister->getulong(BitsCandPT+BitsCandCharge ,ShiftCandPT    +icand*BitsCandTot);
     }  
     int getCandCharge(int icand){
       return m_candRegister->getulong(BitsCandCharge ,ShiftCandCharge+icand*BitsCandTot);
@@ -114,8 +145,11 @@ namespace L0Muon {
     int getCandBoard (int icand){
       return m_candRegister->getulong(BitsCandBoard  ,ShiftCandBoard +icand*BitsCandTot);
     }
-    int getCandStatus(         ){
-      return m_candRegister->getulong(BitsCandStatus ,ShiftCandStatus  );
+    int getCandQuarter (int icand){
+      return m_candRegister->getulong(BitsCandQuarter  ,ShiftCandQuarter +icand*BitsCandTot);
+    }
+    int getStatus(         ){
+      return m_candRegister->getulong(BitsStatus ,ShiftStatus  );
     }  
 
     PMuonCandidate getMuonCandidate(int icand);
@@ -142,29 +176,39 @@ namespace L0Muon {
         if ( isEmpty(icand) ){
           std::cout << " X ";
         } else {
-          std::cout << " Pu= "<<getCandPU(icand);
-          std::cout << " Board= "<<getCandBoard(icand);
-          std::cout << " AddM3= "<<getCandAddM3(icand);
-          std::cout << " OffM2= "<<getCandOffM2(icand);
-          std::cout << " OffM1= "<<getCandOffM1(icand);
-          std::cout << " Pt= "<<getCandPT(icand);
+          std::cout << " Quarter= " <<getCandQuarter(icand);
+          std::cout << " Pu= "      <<getCandPU(icand);
+          std::cout << " Board= "   <<getCandBoard(icand);
           if (getCandCharge(icand)>0)
             std::cout << " + ";
           else
             std::cout << " - ";
+          std::cout << " Pt= "      <<getCandPT(icand);
+          std::cout << " AddM3= "   <<getCandAddM3(icand);
+          std::cout << " OffM2= "   <<getCandOffM2(icand);
+          std::cout << " OffM1= "   <<getCandOffM1(icand);
+          //          std::cout << "   =>  "   <<getCandWord(icand);
         }
         std::cout <<"\n";
-//         std::cout <<tab<<"        bitset: "<<m_candRegister->getBitset(BitsCandTot,icand*BitsCandTot)<<"\n"; 
       } else {
         dump(0,tab);
         dump(1,tab);
-        std::cout <<tab<< "status= "<<getCandStatus()<<"\n";
+        std::cout <<tab<< "status= "<<getStatus()<<"\n";
       }
       
     }
-    
-    
  
+  private:
+//     void setCandWord(unsigned int word , int icand){
+//       m_candRegister->set(word  ,BitsCandTot  ,icand*BitsCandTot);
+//     }  
+//     unsigned int getCandWord(int icand){
+//       return m_candRegister->getulong(BitsCandTot , icand*BitsCandTot);
+//     }
+
+//     friend void writeCandInRegister(CandRegisterHandler * handler,unsigned int data, int icand, int version);
+//     friend unsigned int readCandFromRegister(CandRegisterHandler * handler,int icand, int version);
+    
   private:
     Register * m_candRegister;
     

@@ -49,6 +49,10 @@ namespace L0Muon {
     /// Return parameters for calculating pT
     std::vector<double> ptParameters(){ return m_ptparameters;}
 
+    /// Return the emulator version
+    int procVersion(){ return m_procVersion;}
+    
+
     /// Return the flag to zero supress or not the rawbuffer
     bool zip(){return m_zip;}
      
@@ -59,6 +63,7 @@ namespace L0Muon {
     std::vector<int> m_yfoi;    
     bool m_ignoreM1;
     std::vector<double> m_ptparameters;
+    int m_procVersion;
     bool m_zip;
 
   };
