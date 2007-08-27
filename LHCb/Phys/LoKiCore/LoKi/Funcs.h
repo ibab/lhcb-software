@@ -1,4 +1,5 @@
-// $Id: Funcs.h,v 1.3 2007-08-12 18:53:35 ibelyaev Exp $
+
+// $Id: Funcs.h,v 1.4 2007-08-27 12:27:52 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -39,26 +40,24 @@ namespace LoKi
       LoKi::Valid<TYPE>                  m_201  ;
       // LoKi::SimpleSwitch<TYPE>           m_202  ;
       // LoKi::Switch<TYPE>                 m_203  ;
+      LoKi::TheSame<TYPE>                m_204  ;
       // LoKi::EqualToValue<TYPE>           m_205  ;
-      // #ifndef LOKI_DICTIONARIES_FULL
-//       LoKi::TheSame<TYPE>                m_204  ;
-//       LoKi::Min<TYPE>                    m_301 ;
-//       LoKi::Max<TYPE>                    m_302 ;
-//       LoKi::And<TYPE>                    m_303 ;
-//       LoKi::Or<TYPE>                     m_304 ;
-//       LoKi::Not<TYPE>                    m_305 ;
-//       LoKi::Less<TYPE>                   m_306 ;
-//       LoKi::Equal<TYPE>                  m_307 ;
-//       LoKi::LessOrEqual<TYPE>            m_308 ;
-//       LoKi::Plus<TYPE>                   m_309 ;
-//       LoKi::Minus<TYPE>                  m_310 ;
-//       LoKi::Multiply<TYPE>               m_311 ;
-//       LoKi::Divide<TYPE>                 m_312 ;
-//       LoKi::ComposeFunction<TYPE>        m_313 ;
-//       LoKi::ComposeFunction2<TYPE>       m_314 ;
-//       LoKi::NotEqual<TYPE>               m_315 ;
-//       LoKi::NotEqualToValue<TYPE>        m_316 ;
-// #endif // LOKI_DICTIONARIES_FULL
+      // LoKi::Min<TYPE>                    m_301 ;
+      // LoKi::Max<TYPE>                    m_302 ;
+      // LoKi::And<TYPE>                    m_303 ;
+      // LoKi::Or<TYPE>                     m_304 ;
+      // LoKi::Not<TYPE>                    m_305 ;
+      // LoKi::Less<TYPE>                   m_306 ;
+      // LoKi::Equal<TYPE>                  m_307 ;
+      // LoKi::LessOrEqual<TYPE>            m_308 ;
+      // LoKi::Plus<TYPE>                   m_309 ;
+      // LoKi::Minus<TYPE>                  m_310 ;
+      // LoKi::Multiply<TYPE>               m_311 ;
+      // LoKi::Divide<TYPE>                 m_312 ;
+      // LoKi::ComposeFunction<TYPE>        m_313 ;
+      // LoKi::ComposeFunction2<TYPE>       m_314 ;
+      // LoKi::NotEqual<TYPE>               m_315 ;
+      // LoKi::NotEqualToValue<TYPE>        m_316 ;
       //
       Funcs () ; // undefined constructor 
     } ;

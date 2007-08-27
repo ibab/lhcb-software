@@ -69,9 +69,9 @@ MCONE      = LoKi.Constant     ( _MCP )(1.0)
 ## @see LoKi::Cuts::MCZERO
 MCZERO     = LoKi.Constant     ( _MCP )(0.0)
 ## @see LoKi::Cuts::MCMIN
-MCMIN      = LoKi.Min          ( _MCP )
+#MCMIN      = LoKi.Min          ( _MCP )
 ## @see LoKi::Cuts::MCMIN
-MCMAX      = LoKi.Max          ( _MCP )
+#MCMAX      = LoKi.Max          ( _MCP )
 ## @see LoKi::Cuts::MCVALID
 MCVALID    = LoKi.Valid        ( _MCP )()
 ## @see LoKi::Cuts::MCSAME
@@ -217,9 +217,9 @@ MCVONE      = LoKi.Constant     ( _MCV )(1.0)
 ## @see LoKi::Cuts::MCVZERO
 MCVZERO     = LoKi.Constant     ( _MCV )(0.0)
 ## @see LoKi::Cuts::MCVMIN
-MCVMIN      = LoKi.Min          ( _MCV )
+#MCVMIN      = LoKi.Min         ( _MCV )
 ## @see LoKi::Cuts::MCVMIN
-MCVMAX      = LoKi.Max          ( _MCV )
+#MCVMAX      = LoKi.Max         ( _MCV )
 ## @see LoKi::Cuts::MCVVALID
 MCVVALID    = LoKi.Valid        ( _MCV )()
 ## @see LoKi::Cuts::MCVSAME

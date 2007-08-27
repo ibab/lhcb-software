@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.10 2007-08-16 13:51:41 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.11 2007-08-27 12:28:52 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -34,6 +34,10 @@
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::MC*>"          />
 
   <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
+  <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
+
+
+
 
 <!-- 
      
@@ -66,9 +70,7 @@
      <class pattern   = "LoKi::ComposeFunction2<*LHCb::MC*>" />
      
      <class pattern   = "LoKi::Compare<*LHCb::MC*>"          />
-     
-     <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
-     
+          
 -->
  
   <class pattern   = "LoKi::MCParticles::*"                />

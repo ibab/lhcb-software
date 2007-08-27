@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.8 2007-08-16 13:51:04 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.9 2007-08-27 12:28:24 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -32,7 +32,8 @@
   <class pattern   = "LoKi::PredicateFromPredicate<*HepMC::*>"        />
   <class pattern   = "LoKi::FunctionFromFunction<*HepMC::*>"          />
 
-  <class pattern   = "LoKi::Valid<*HepMC::*>"            />
+  <class pattern   = "LoKi::Valid<*HepMC::*>"         />
+  <class pattern   = "LoKi::TheSame<*HepMC::*>"       />
   
   <!-- 
        
@@ -67,7 +68,6 @@
        
        <class pattern   = "LoKi::Compare<*HepMC::*>"          />
        
-       <class pattern   = "LoKi::TheSame<*HepMC::*>"         />
        
        <class pattern = "LoKi::Monitoring::Counter<*HepMC::*>"   />
        <class pattern = "LoKi::Monitoring::Stat<*HepMC::*>"      />

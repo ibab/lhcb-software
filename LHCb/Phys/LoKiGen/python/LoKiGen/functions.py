@@ -156,6 +156,8 @@ GPY      = LoKi.GenParticles.MomentumY ()
 GPZ      = LoKi.GenParticles.MomentumZ () 
 ## @see LoKi::Cuts::GQUARK
 GQUARK    = LoKi.GenParticles.HasQuark
+## @see LoKi::Cuts::GSAME
+GSAME     = LoKi.TheSame      ( _GP )
 ## @see LoKi::Cuts::GSTATUS
 GSTATUS   = LoKi.GenParticles.Status ( )
 ## @see LoKi::Cuts::GSTRANGE
@@ -192,9 +194,9 @@ GVONE      = LoKi.Constant ( _GV )(1.0)
 ## @see LoKi::Cuts::GVZERO
 GVZERO     = LoKi.Constant ( _GV )(0.0)
 ## @see LoKi::Cuts::GVMIN
-GVMIN      = LoKi.Min          ( _GV )
+#GVMIN      = LoKi.Min          ( _GV )
 ## @see LoKi::Cuts::GVMAX
-GVMAX      = LoKi.Max          ( _GV )
+#GVMAX      = LoKi.Max          ( _GV )
 ## @see LoKi::Cuts::GVVALID
 GVVALID    = LoKi.Valid        ( _GV )()
 ## @see LoKi::Cuts::GVSAME
