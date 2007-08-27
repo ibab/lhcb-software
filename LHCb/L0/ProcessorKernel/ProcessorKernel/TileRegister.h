@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.11 2006-08-30 06:42:04 cattanem Exp $
+// $Id: TileRegister.h,v 1.12 2007-08-27 08:44:54 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -17,6 +17,7 @@
 #include "ProcessorKernel/Register.h"
 #include "Kernel/MuonTileID.h"
 #include <stdio.h>
+
 
 namespace L0Muon {
 
@@ -52,6 +53,15 @@ public:
   /// Destructor
   ~TileRegister();
   
+  /// set the duplicatedTiles flag
+  void setDuplicatedTiles(bool flag=true) 
+  {
+    m_duplicatedTiles=flag; 
+  }
+  
+  /// check if there are duplicated tiles in the tile list
+  bool checkDuplicatedTiles();
+
   /// set the vector of MuonTileIDs
   void setTileVector(const std::vector<LHCb::MuonTileID>& ids);
 
@@ -66,7 +76,7 @@ public:
 
   /// Return the vector of MuonTileIDs for bits set to 1      
   std::vector<LHCb::MuonTileID> firedTiles();
-
+  
   /// Set the tile id
   void setTile(LHCb::MuonTileID & id);
   
@@ -96,6 +106,8 @@ public:
   std::string toXML(std::string tab="");
 
 private:
+
+  bool m_duplicatedTiles;
 
   std::vector<LHCb::MuonTileID> m_ids ;  // MuonTileIDs mapping
   std::vector<LHCb::MuonTileID> m_pads;

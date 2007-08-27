@@ -5,24 +5,38 @@ L0Muon::TileRegister::TileRegister() {
 
 }
 
-L0Muon::TileRegister::TileRegister(int bits) : L0Muon::Register(bits) {
-
+L0Muon::TileRegister::TileRegister(int bits) 
+  : L0Muon::Register(bits){
+  m_duplicatedTiles = false; 
 }
 
-L0Muon::TileRegister::TileRegister(int bits, unsigned long pattern) : 
-  L0Muon::Register(bits,pattern) {
-
-}
+L0Muon::TileRegister::TileRegister(int bits, unsigned long pattern) 
+  : L0Muon::Register(bits,pattern) {
+  m_duplicatedTiles = false; 
+} 
     
 L0Muon::TileRegister::TileRegister(int bits, 
                                    unsigned long pattern,
-				   std::vector<LHCb::MuonTileID> ids) : 
-  L0Muon::Register(bits,pattern), m_ids(ids) {
-
-
+                                   std::vector<LHCb::MuonTileID> ids) 
+  : L0Muon::Register(bits,pattern), m_ids(ids){
+  m_duplicatedTiles = false; 
 }    
     
 L0Muon::TileRegister::~TileRegister() {}    
+
+bool L0Muon::TileRegister::checkDuplicatedTiles() {
+  for (unsigned int ind1 =0; ind1 < m_ids.size(); ++ind1){
+    if (!tile(ind1).isDefined()) continue;
+    for (unsigned int ind2 =ind1+1; ind2 < m_ids.size(); ++ind2){
+      //       if ( m_ids[ind1] == m_ids[ind2]) return true;
+      if ( tile(ind1) == tile(ind2)) {
+        std::cout << tile(ind1).toString()<<" "<<tile(ind2).toString()<<std::endl;
+        return true;
+      }
+    }    
+  }  
+  return false ;
+}
 
 
 std::vector<LHCb::MuonTileID> L0Muon::TileRegister::firedTiles() {
@@ -45,14 +59,13 @@ void L0Muon::TileRegister::setTileVector(const std::vector<LHCb::MuonTileID>& id
 
 
 void L0Muon::TileRegister::setTile(LHCb::MuonTileID & id){
-  unsigned int index =0;  
   for (unsigned int ind =0; ind < m_ids.size(); ind++){
-    LHCb::MuonTileID mid = m_ids[ind];
+    //LHCb::MuonTileID mid = m_ids[ind];
     if ( m_ids[ind]== id){
-      index =ind;
-      m_bitset.set(index);
+      m_bitset.set(ind);
       m_set = true; 
-      break;
+      if (!m_duplicatedTiles)
+        break;
     }    
   }  
 }
@@ -177,6 +190,9 @@ std::string L0Muon::TileRegister::toXML(std::string tab){
   sprintf(buf,"%d",size());
   str = buf;
   xmlString +=" size = \""+str+"\" ";
+  std::string  duplicatedTiles = "0";
+  if (checkDuplicatedTiles()) duplicatedTiles = "1";
+  xmlString +=" duplicatedTiles = \""+duplicatedTiles+"\" ";
   xmlString +=" >\n";
   std::vector<LHCb::MuonTileID>::iterator  i_ids = m_ids.begin();
   for (int i = 0; i<size();i++) {
