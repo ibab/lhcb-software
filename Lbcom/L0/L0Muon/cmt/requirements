@@ -1,17 +1,18 @@
 package L0Muon
 
-version v7r1
+version v7r2
 
 branches cmt src options doc
 
 include_path none
 
-use L0MuonKernel v*   L0
-use MuonKernel   v*   Muon
-use L0Event      v*   Event
-use DAQEvent     v*   Event
-use DigiEvent    v*   Event
-use MuonDAQ      v*   Muon
+use L0MuonKernel    v*   L0
+use ProcessorKernel v*   L0
+use MuonKernel      v*   Muon
+use L0Event         v*   Event
+use DAQEvent        v*   Event
+use DigiEvent       v*   Event
+use MuonDAQ         v*   Muon
 
 
 library L0Muon ../src/component/*.cpp

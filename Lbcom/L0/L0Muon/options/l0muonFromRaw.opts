@@ -1,0 +1,14 @@
+//
+// L0MuonFromRaw options
+//
+// XML data file to configure the simulation
+L0MuonFromRaw.ConfigFile = "$PARAMFILESROOT/data/L0MuonKernel_mode0.xml";
+//L0MuonFromRaw.ProcVersion = 0;
+// L0MuonFromRaw.Extension = "FromRaw";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+// L0MuonFromRaw.OutputLevel=  3;
+//L0MuonFromRaw.OutputTool.OutputLevel=  2;
+
+// Overwrite default FOI: should be relaxed for optimization:
+//L0MuonFromRaw.PtParameters = {40.,7.};

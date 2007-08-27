@@ -1,23 +1,9 @@
-// XML data file to configure the simulation
-L0Muon.ConfigFile = "$PARAMFILESROOT/data/L0MuonKernel.xml";
+ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
 
-// Overwrite default FOI: should be relaxed for optimization:
-//L0Muon.FoiXSize = {4,5,0,2,4};
-//L0Muon.FoiYSize = {0,0,0,1,1};
-//L0Muon.PtParameters = {545.,665.5,309.5,1.39,1210.,1527.,1647.,40.,7.};
+ApplicationMgr.DLLs += { "L0Muon"};
 
-//L0Muon.StoreInBuffer =true;
-//===========================================
-//For trigger studies: 
-//candidate search without M1
-//L0Muon.IgnoreM1 =false;
-//===========================================
+L0.Members += { "L0MuonAlg/L0Muon"};
+#include "$L0MUONROOT/options/l0muonAlg.opts"
 
-
-
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-L0Muon.OutputLevel=3;
-//L0Muon.DebugMode =true;
-
-
-
+L0.Members += { "L0MuonCandidatesFromRaw/L0MuonFromRaw"};
+#include "$L0MUONROOT/options/l0muonFromRaw.opts"

@@ -1,6 +1,13 @@
-!  $Id: release.notes,v 1.34 2007-04-25 11:22:10 cattanem Exp $
+!  $Id: release.notes,v 1.35 2007-08-27 10:26:31 jucogan Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+!========================= L0Muon v7r2 2007-08-27 ========================
+! 2007-08-27 - Julien Cogan
+ - Major change to handle different processor versions and bank versions
+  o remove the L0MuonProcessorDatasFromRaw (processor data are produced
+    by L0MuonAlg)
+  o add the L0MuonOutput tool to write/decode L0Muon banks
 
 !========================= L0Muon v7r1 2007-04-25 ========================
 ! 2007-04-25 - Marco Cattaneo

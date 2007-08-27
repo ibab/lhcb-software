@@ -5,11 +5,14 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "MuonKernel/MuonSystemLayout.h"
-#include "L0MuonKernel/MuonTriggerUnit.h"
+
+#include "ProcessorKernel/Property.h"
+#include "ProcessorKernel/Unit.h"
 
 #include "MuonDAQ/IMuonRawBuffer.h"
 
-//class IMuonTileXYZTool; 
+#include "L0MuonOutputs.h"
+
 class L0MuonAlg : public GaudiAlgorithm {
     
 public:
@@ -24,16 +27,14 @@ public:
     
 private:
 
-  void setLayouts();              // Set the layouts to be used in fillOLsfromCoords
-  int setL0MuonProperties();      // Set the properties of L0MuonKernel Units
+  void setLayouts(); // Set the layouts to be used in fillOLsfromCoords
+  std::map<std::string,L0Muon::Property>  l0MuonProperties(); // Build the properties of L0MuonKernel Units
 
   StatusCode fillOLsfromDigits(); // Fill the Optical Links before processing
-  int fillRawEvent();             // Fill the RawEvent container
-  int fillL0ProcessorData();      // Fill the L0ProcessorData container
 
-  std::string dumpCandidates();   // Print out the candidate sent to L0DU
-  std::string dumpRawRegisters(); // Print out the RawBuffer registers
-
+  int m_procVersion;                      // Version bank to write
+  int m_bankVersion;                      // Version bank to write
+  int m_outputMode;                         // Output mode (0=light, 1=standard, 2=full)
   // Algorithme's properties
   std::vector<int> m_foiXSize;        // values of FoI's in X
   std::vector<int> m_foiYSize;        // values of FoI's in Y
@@ -42,11 +43,12 @@ private:
   bool m_ignoreM1;                    // Flag to use M1 or not (latter case not tested)
   bool m_debug;                       // Flag to turn on debug mode for L0MuonKernel
   bool m_storeFlag;                   // Flag to enable/disable event storage in raw banks
-  bool m_zip;                         // Flag to turn on the compression of the RawBuffer registers
-  std::string m_l0BufPath;            // Directory where to write the L0Buffers
 
   // For trigger emulation
-  L0Muon::MuonTriggerUnit*  m_muontriggerunit; // Top Unit of the L0Muon emulator
+  L0Muon::Unit*  m_muontriggerunit; // Top Unit of the L0Muon emulator
+
+  // For output to RAwEvent, TES ot L0ProcessorDatas
+  L0MuonOutputs* m_outputTool;
 
   MuonSystemLayout m_layout;   // pad layout for the whole MuonSystem
   MuonSystemLayout m_lulayout; // logical unit layout for the whole MuonSystem 
@@ -54,16 +56,10 @@ private:
   MuonSystemLayout m_stripH;   // vertical strip layout for the whole MuonSystem
   MuonSystemLayout m_stripV;   // horizontal strip layout for the whole MuonSystem
 
-  //  IMuonTileXYZTool *m_iTileXYZTool;// this is a tool to get coordinates from ID
-
-  // Counters for final report
-  int m_totNumCand; // Tot number of candidates found
-  int m_totTrigEvt; // Tot number of events with at least a candidate
-  int m_totRawSize; // Total size of the raw buffer
-  int m_totEvent ;  // Tot number of events processed
+  int m_totEvent;
   
-  // Interface to muon raw buffer 
+ // Interface to muon raw buffer 
   IMuonRawBuffer* m_muonBuffer; 
 };
 
-#endif      // L0MUONKERNEL_CRATE_H  
+#endif      // L0MUONTRIGGER_L0MUONALG_H
