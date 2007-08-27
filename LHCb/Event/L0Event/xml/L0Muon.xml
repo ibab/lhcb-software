@@ -3,11 +3,16 @@
 <gdd>
   <package name='L0Event' >
 
-    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' location="/Event/Trig/L0/Muon" desc='L0Muon trigger candidate'>
+    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' desc='L0Muon trigger candidate'>
       <desc> *  representing the output of the L0Muon trigger processor.</desc>
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
+      <location name="Default"  place="/Event/Trig/L0/MuonCtrl"/>
+      <location name="Ctrl"     place="/Event/Trig/L0/MuonCtrl"/>
+      <location name="CtrlBCSU" place="/Event/Trig/L0/MuonCtrlBCSU"/>
+      <location name="BCSU"     place="/Event/Trig/L0/MuonBCSU"/>
+      <location name="PU"       place="/Event/Trig/L0/MuonPU"/>
       <constructor  desc="Empty constructor"/>
       <constructor argList="double pt, double theta, double phi, 
                             std::vector&lt;MuonTileID&gt; pads, int encodedPt" 
