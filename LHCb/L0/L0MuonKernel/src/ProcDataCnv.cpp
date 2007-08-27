@@ -1,6 +1,7 @@
 #include "L0MuonKernel/ProcDataCnv.h"
 #include "ProcessorKernel/RegisterFactory.h"
 #include "Kernel/MuonLayout.h"
+#include <math.h>
 
 /**
    Constructor.
