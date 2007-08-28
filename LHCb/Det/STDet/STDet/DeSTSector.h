@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.19 2007-07-25 11:18:19 wouter Exp $
+// $Id: DeSTSector.h,v 1.20 2007-08-28 12:05:01 jonrob Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -21,8 +21,8 @@
  *
  * <b> Additional information: </b>
  * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
-   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
- */
+ \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
+*/
 
 
 namespace LHCb{
@@ -38,154 +38,154 @@ public:
   DeSTSector ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeSTSector(); 
- 
-  /** initialization method 
-  * @return Status of initialisation
-  */
+  virtual ~DeSTSector();
+
+  /** initialization method
+   * @return Status of initialisation
+   */
   virtual StatusCode initialize();
 
-  /** sector identfier 
-  * @return id 
-  */
+  /** sector identfier
+   * @return id
+   */
   unsigned int id() const;
 
   /** set sector id */
   void setID(const unsigned int id);
 
   /** check whether contains
-  *  @param  aChannel channel
-  *  @return bool
-  */
+   *  @param  aChannel channel
+   *  @return bool
+   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
   /** detector pitch
-  * @return pitch
-  */
+   * @return pitch
+   */
   double pitch() const;
 
   /** number of strips
-  * @return number of strips
-  */
+   * @return number of strips
+   */
   unsigned int nStrip() const;
 
-  /** 
-  * check if valid strip number
-  * 
-  */
+  /**
+   * check if valid strip number
+   *
+   */
   bool isStrip(const unsigned int strip) const;
 
-  /** convert a local u to a strip 
-  * @param  u local u
-  * @return strip 
-  **/ 
+  /** convert a local u to a strip
+   * @param  u local u
+   * @return strip
+   **/
   unsigned int localUToStrip(const double u) const;
 
   /** convert strip to local U
-  * @param strip
-  * @param offset
-  * @return local u
-  */
+   * @param strip
+   * @param offset
+   * @return local u
+   */
   double localU(const unsigned int strip, double offset = 0.) const;
 
-  /** trajectory 
-  * @return trajectory for the fit 
-  */
+  /** trajectory
+   * @return trajectory for the fit
+   */
   std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::STChannelID& aChan,
                                              const double offset) const;
-  
-  /** trajectory 
-  * @return trajectory of the first strip
-  */
+
+  /** trajectory
+   * @return trajectory of the first strip
+   */
   std::auto_ptr<LHCb::Trajectory> trajectoryFirstStrip() const;
 
-  /** trajectory 
-  * @return trajectory of the last strip
-  */
+  /** trajectory
+   * @return trajectory of the last strip
+   */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
   /** Trajectory parameterized along y-axis */
-  void trajectory(unsigned int strip, float offset, float& dxdy, float& dzdy, 
-		  float& xAtYEq0, float& zAtYEq0, float& ybegin, float& yend) const ;
-  
-  /** plane corresponding to the sector 
-  * @return the plane 
-  */
-  Gaudi::Plane3D plane() const;  
- 
+  void trajectory(unsigned int strip, float offset, float& dxdy, float& dzdy,
+                  float& xAtYEq0, float& zAtYEq0, float& ybegin, float& yend) const ;
+
+  /** plane corresponding to the sector
+   * @return the plane
+   */
+  Gaudi::Plane3D plane() const;
+
   /** plane corresponding to the module entrance
-  * @return the plane 
-  */
-  Gaudi::Plane3D entryPlane() const; 
+   * @return the plane
+   */
+  Gaudi::Plane3D entryPlane() const;
 
   /** plane corresponding to the module exit
-  * @return the plane 
-  */
-  Gaudi::Plane3D exitPlane() const; 
+   * @return the plane
+   */
+  Gaudi::Plane3D exitPlane() const;
 
   /** localInActive
-  * @param  point point in local frame
-  * @param  tol   tolerance
-  * @return bool in active region 
-  */
-  bool localInActive(const Gaudi::XYZPoint& point, 
+   * @param  point point in local frame
+   * @param  tol   tolerance
+   * @return bool in active region
+   */
+  bool localInActive(const Gaudi::XYZPoint& point,
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
-   
+
   /** localInBondGap
-  * @param  v   v in local frame
-  * @param  tol tolerance
-  * @return bool in a bond gap - ie dead region
-  */
+   * @param  v   v in local frame
+   * @param  tol tolerance
+   * @return bool in a bond gap - ie dead region
+   */
   bool localInBondGap( const double v ,double tol = 0) const;
-  
+
   /** localInBox
-  * @param u    u in local frame
-  * @param v    v in local frame
-  * @param uTol
-  * @param vTol
-  * @return bool in active region of box 
-  */
-  bool localInBox(const double u, const double v, 
-		  double uTol = 0, double vTol = 0) const;
+   * @param u    u in local frame
+   * @param v    v in local frame
+   * @param uTol
+   * @param vTol
+   * @return bool in active region of box
+   */
+  bool localInBox(const double u, const double v,
+                  double uTol = 0, double vTol = 0) const;
 
 
   /** globalInActive
-  * @param  point point in global frame
-  * @param  tol   tolerance
-  * @return bool in active region 
-  */
-  bool globalInActive(const Gaudi::XYZPoint& point, 
-                     Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
-   
-  /** globalInBondGap
-  * @param  gpoint point in global frame
-  * @param  tol    tolerance
-  * @return bool in a bond gap - ie dead region
-  */
-  bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
-  
-  /** globalInBox
-  * @param  gpoint point in global frame
-  * @param  tol    vTol
-  * @return bool in active region of box 
-  */
-  bool globalInBox(const Gaudi::XYZPoint& gpoint, 
-	 	   Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
+   * @param  point point in global frame
+   * @param  tol   tolerance
+   * @return bool in active region
+   */
+  bool globalInActive(const Gaudi::XYZPoint& point,
+                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
-  /** 
+  /** globalInBondGap
+   * @param  gpoint point in global frame
+   * @param  tol    tolerance
+   * @return bool in a bond gap - ie dead region
+   */
+  bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
+
+  /** globalInBox
+   * @param  gpoint point in global frame
+   * @param  tol    vTol
+   * @return bool in active region of box
+   */
+  bool globalInBox(const Gaudi::XYZPoint& gpoint,
+                   Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
+
+  /**
    * @return capacitance
-  */ 
+   */
   double capacitance() const;
 
-  /** strip length 
-  * @return strip length
-  */
+  /** strip length
+   * @return strip length
+   */
   double stripLength() const;
 
 
-  /** thickness 
-  * @return thickness
-  */
+  /** thickness
+   * @return thickness
+   */
   double thickness() const;
 
   /** get the next channel left */
@@ -195,8 +195,8 @@ public:
   LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
   /**
-  * @return type
-  */
+   * @return type
+   */
   std::string type() const;
 
   /** @return stereo angle */
@@ -210,7 +210,7 @@ public:
 
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
-     
+
   /** print to msgstream */
   MsgStream& printOut( MsgStream& os) const;
 
@@ -237,7 +237,7 @@ private:
   double m_thickness;
   double m_uMinLocal;
   double m_uMaxLocal;
-  double m_vMinLocal; 
+  double m_vMinLocal;
   double m_vMaxLocal;
 
 
@@ -328,10 +328,10 @@ inline double DeSTSector::cosAngle() const {
 }
 
 inline void DeSTSector::trajectory(unsigned int strip,
-				   float offset,
-				   float& dxdy, float& dzdy, 
-				   float& xAtYEq0, float& zAtYEq0, 
-				   float& ybegin, float& yend) const
+                                   float offset,
+                                   float& dxdy, float& dzdy,
+                                   float& xAtYEq0, float& zAtYEq0,
+                                   float& ybegin, float& yend) const
 {
   float numstrips = offset + strip - m_firstStrip ;
   dxdy    = m_dxdy ;
