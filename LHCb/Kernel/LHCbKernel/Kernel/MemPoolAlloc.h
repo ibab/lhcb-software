@@ -5,7 +5,7 @@
  *  Header file for class LHCb::MemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: MemPoolAlloc.h,v 1.1 2007-08-25 14:31:16 jonrob Exp $
+ *  $Id: MemPoolAlloc.h,v 1.2 2007-08-28 12:49:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -24,7 +24,7 @@ namespace LHCb
   //-----------------------------------------------------------------------------
   /** @class MemPoolAlloc MemPoolAlloc.h Kernel/MemPoolAlloc.h
    *
-   *  Templated classes providing an interface to the boost memory pool management.
+   *  Templated class providing an interface to the boost memory pool management.
    *
    *  Usage is simply via inheritance, i.e.
    *

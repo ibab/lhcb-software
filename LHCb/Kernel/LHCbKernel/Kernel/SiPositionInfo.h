@@ -1,18 +1,20 @@
-// $Id: SiPositionInfo.h,v 1.1 2006-02-28 14:01:15 szumlat Exp $
-#ifndef KERNEL_SIPOSITIONINFO_H 
+// $Id: SiPositionInfo.h,v 1.2 2007-08-28 12:49:17 jonrob Exp $
+#ifndef KERNEL_SIPOSITIONINFO_H
 #define KERNEL_SIPOSITIONINFO_H 1
 
 // Include files
 
-/** @class SiPositionInfo SiPositionInfo.h Kernel/SiPositionInfo.h
- *  
- *
- *  @author Tomasz Szumlak
- *  @date   2006-02-27
- */
-
 namespace LHCb
 {
+
+  /** @struct SiPositionInfo SiPositionInfo.h Kernel/SiPositionInfo.h
+   *
+   *  Adds position information to a channel identifier
+   *
+   *  @author Tomasz Szumlak
+   *  @date   2006-02-27
+   */
+
   template <class ChannelType>
   struct SiPositionInfo
   {
