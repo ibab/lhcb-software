@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.18 2007-08-28 13:04:28 jonrob Exp $
+// $Id: FitNode.h,v 1.19 2007-08-28 13:08:31 jonrob Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -12,9 +12,11 @@ namespace LHCb
   /** @class FitNode FitNode.h Event/FitNode.h
    *
    *  This File contains the declaration of the FitNode.
+   *
    *  A FitNode is a basket of objects at a given z position.
    *  The information inside the FitNode has to be sufficient
    *  to allow smoothing and refitting.
+   *
    *  At the moment a FitNode contains or allows you to access
    *  info on the the (kth) measurement,
    *  transport from k --> k + 1 , predicted state at k+1
