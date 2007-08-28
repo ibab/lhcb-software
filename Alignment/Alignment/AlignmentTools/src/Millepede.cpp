@@ -99,35 +99,20 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   m_residual_cut = res_cut;
   m_residual_cut_init = res_cut_init; 
  
-  nagb	  = nglo;    // Number of global derivatives
+  nagb	  = 6*nglo;    // Number of global derivatives
   nalc	  = nloc;       // Number of local derivatives
   nstdev  = nstd;     // Number of StDev for local fit chisquare cut
-
-  int ndof = 0;
-
-  for (int i=0; i<6; i++)
-  {
-    verbose() << "GetDOF(" << i << ")= " << DOF[i] << endmsg;
-
-    if (DOF[i]) ndof++;
-
-  }
-
-  int n_stations = nagb/ndof;
-
-  info() << "You want to take into account " << ndof << " degrees of freedom" << endmsg;
-  info() << "You have " << n_stations << " objects to align" << endmsg;
 
   m_par.clear();       // Vector containing the alignment constants
   m_par.resize(nagb);
 
-  info() << "Number of global parameters   : " << nagb << endmsg;
-  info() << "Number of local parameters    : " << nalc << endmsg;
-  info() << "Number of standard deviations : " << nstdev << endmsg;
+  debug() << "Number of global parameters   : " << nagb << endmsg;
+  debug() << "Number of local parameters    : " << nalc << endmsg;
+  debug() << "Number of standard deviations : " << nstdev << endmsg;
 
   if (nagb>mglobl || nalc>mlocal)
   {
-    debug() << "Too many parameters !!!!!" << endmsg;
+    debug() << "Two many parameters !!!!!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -174,22 +159,27 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
 
   // ...and we allow them to move if requested
 
-  int compteur = 0;
+  for (int i=0; i<6; i++)
+  {
+    verbose() << "GetDOF(" << i << ")= " << DOF[i] << endmsg;
 
-  for (int i=0; i<6; i++) {
-    debug() << "GetDOF(" << i << ")= " << DOF[i] << " Sigm " << Sigm[i] << endmsg;
-    if (DOF[i]) {
-      for (int j=compteur*n_stations; j<(compteur+1)*n_stations; j++) {
-	debug() << "Calling ParSig with j = " << j << " Sigm[" << i << "] = " << Sigm[i] << " m_fixed = " << m_fixed << endreq;
-	if ((j-compteur*n_stations) != m_fixed) {
-	  ParSig(j,Sigm[i]); // Check that module is not fixed
-	}
-      }
-      compteur++;
-    }
+    if (DOF[i]) {for (int j=i*nglo; j<(i+1)*nglo; j++) ParSig(j,Sigm[i]);}
+
   }
 
-  for (int j=0; j<nagb; j++) debug() << "Sigm(" << j << ")= " << psigm[j] << endmsg;
+  if (m_fixed >= 0 && m_fixed < nglo )
+  {
+    debug() << "You are fixing module " << m_fixed << endmsg;
+
+    ParSig(m_fixed,0.);
+    ParSig(nglo+m_fixed,0.);
+    ParSig(2*nglo+m_fixed,0.);
+    ParSig(3*nglo+m_fixed,0.);
+    ParSig(4*nglo+m_fixed,0.);
+    ParSig(5*nglo+m_fixed,0.);
+  }
+
+  for (int j=0; j<nagb; j++) verbose() << "Sigm(" << j << ")= " << psigm[j] << endmsg;
 
   // Activate iterations (if requested)
 
@@ -222,7 +212,7 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   debug() << "" << endmsg;
   debug() << "-----------------------------------------------------" << endmsg;
   debug() << "" << endmsg;
-	
+		
   return StatusCode::SUCCESS;
 }
 
@@ -724,7 +714,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 	// reject the track if rmeas is too important (outlier)
 	if (fabs(rmeas) >= m_residual_cut_init && itert <= 1)  
 	{
-	  info() << "Rejecting track due to residual cut in iteration 0-1!!!!!" << endmsg;
+	  debug() << "Rejecting track due to residual cut in iteration 0-1!!!!!" << endmsg;
 	  if (single_fit == 0) locrej++;      
 	  indst.clear(); // reset stores and go to the next track 
 	  arest.clear();	  
@@ -733,7 +723,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 
 	if (fabs(rmeas) >= m_residual_cut && itert > 1)   
 	{
-	  info() << "Rejected track due to residual cut in iteration " << itert << "!!!!!" << endmsg;
+	  debug() << "Rejected track due to residual cut in iteration " << itert << "!!!!!" << endmsg;
 	  if (single_fit == 0) locrej++;      
 	  indst.clear(); // reset stores and go to the next track 
 	  arest.clear();	  
@@ -767,7 +757,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
  
     if (rms > cutval) // Reject the track if too much...
     {
-      info() << "Rejected track because rms (" << rms << ") larger than " << cutval << " !!!!!" << endmsg;
+      debug() << "Rejected track because rms (" << rms << ") larger than " << cutval << " !!!!!" << endmsg;
       locrej++;      
       indst.clear(); // reset stores and go to the next track 
       arest.clear();

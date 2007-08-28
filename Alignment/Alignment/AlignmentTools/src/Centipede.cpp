@@ -54,10 +54,159 @@ StatusCode Centipede::InitMille( bool DOF[],
   Sigma[3] = 10000000.0;
   Sigma[4] = 10000000.0;
   Sigma[5] = 10000000.0;
+
+
+  debug() << "" << endmsg;
+  debug() << "----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "    Entering InitMille" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "-----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+
+  ncs = 0;
+  loctot  = 0;                        // Total number of local fits
+  locrej  = 0;                        // Total number of local fits rejected
+  cfactref  = 1.0;                    // Reference value for Chi^2/ndof cut
+
+  Millepede::SetTrackNumber(0);       // Number of local fits (starts at 0)
+
+  m_residual_cut = res_cut;
+  m_residual_cut_init = res_cut_init; 
+ 
+  nagb	  = nglo;    // Number of global derivatives
+  nalc	  = nloc;       // Number of local derivatives
+  nstdev  = nstd;     // Number of StDev for local fit chisquare cut
+
+  int ndof = 0;
+
+  for (int i=0; i<6; i++)
+  {
+    verbose() << "GetDOF(" << i << ")= " << DOF[i] << endmsg;
+
+    if (DOF[i]) ndof++;
+
+  }
+
+  int n_stations = nagb/ndof;
+
+  info() << "You want to take into account " << ndof << " degrees of freedom" << endmsg;
+  info() << "You have " << n_stations << " objects to align" << endmsg;
+
+  m_par.clear();       // Vector containing the alignment constants
+  m_par.resize(nagb);
+
+  info() << "Number of global parameters   : " << nagb << endmsg;
+  info() << "Number of local parameters    : " << nalc << endmsg;
+  info() << "Number of standard deviations : " << nstdev << endmsg;
+
+  if (nagb>mglobl || nalc>mlocal)
+  {
+    debug() << "Too many parameters !!!!!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // All parameters initializations
+
+  for (int i=0; i<mglobl; i++)
+  {
+    corrv[i] = 0.;
+    psigm[i] = 0.;
+    pparm[i] = 0.;
+    dparm[i] = 0.;
+    scdiag[i] = 0.;
+    indgb[i] = 0; 
+    nlnpa[i] = 0; 
+    indnz[i] = 0; 
+    indbk[i] = 0;
+    
+    for (int j=0; j<mglobl;j++) corrm[i][j] = 0.;
+    for (int j=0; j<mlocal;j++) clcmat[i][j] = 0.;        
+    for (int j=0; j<mcs;j++) adercs[j][i] = 0.;   
+  }
+
+  for (int i=0; i<mgl; i++)
+  {
+    diag[i] = 0.; 
+    bgvec[i] = 0.;
+
+    for (int j=0; j<mgl;j++) cgmat[i][j] = 0.; 
+  }
+
+  for (int i=0; i<mlocal; i++)
+  {
+    blvec[i] = 0.; 
+    indlc[i] = 0;
+
+    for (int j=0; j<mlocal;j++) clmat[i][j] = 0.; 
+  }
+
+  for (int j=0; j<mcs;j++) arhs[j] = 0.;   
+
+  // Then we fix all parameters...
+
+  for (int j=0; j<nagb; j++)  ParSig(j,0.0);
+
+  // ...and we allow them to move if requested
+
+  int compteur = 0;
+
+  for (int i=0; i<6; i++) {
+    debug() << "GetDOF(" << i << ")= " << DOF[i] << " Sigm " << Sigma[i] << endmsg;
+    if (DOF[i]) {
+      for (int j=compteur*n_stations; j<(compteur+1)*n_stations; j++) {
+	debug() << "Calling ParSig with j = " << j << " Sigm[" << i << "] = " << Sigma[i] << " m_fixed = " << m_fixed << endreq;
+	if ((j-compteur*n_stations) != m_fixed) {
+	  ParSig(j,Sigma[i]); // Check that module is not fixed
+	}
+      }
+      compteur++;
+    }
+  }
+
+  for (int j=0; j<nagb; j++) debug() << "Sigm(" << j << ")= " << psigm[j] << endmsg;
+
+  // Activate iterations (if requested)
+
+  itert   = 0;	// By default iterations are turned off
+  cfactr  = startfact;
+  if (m_iteration) Millepede::InitUn(startfact);          
+
+  arest.clear();  // Number of stored parameters when doing local fit
+  arenl.clear(); // Linear or not
+  indst.clear(); 
+
+  storeind.clear();
+  storeare.clear();
+  storenl.clear();
+  storeplace.clear();
+
+  // Memory allocation for the stores
+
+  debug() << "Store size is " << n_fits*(nagb+nalc+3) << endmsg;
+
+  storeind.reserve(2*n_fits*(nagb+nalc+3));
+  storeare.reserve(2*n_fits*(nagb+nalc+3));
+  storenl.reserve(2*n_fits*(nagb+nalc+3));
+  storeplace.reserve(2*n_fits);
+
+  debug() << "" << endmsg;
+  debug() << "----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "    InitMille has been successfully called!" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "-----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+	
+  return StatusCode::SUCCESS;
+
+
+
+
   // call S.V.'s initmille!
-  return Millepede::InitMille( DOF, Sigma, nglo, 
-			       nloc, startfact, nstd, 
-			       res_cut, res_cut_init, n_fits );
+  //  return Millepede::InitMille( DOF, Sigma, nglo, 
+  //			       nloc, startfact, nstd, 
+  //			       res_cut, res_cut_init, n_fits );
 }
 
 
