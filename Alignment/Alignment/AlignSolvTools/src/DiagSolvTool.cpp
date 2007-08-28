@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.3 2007-07-12 09:21:28 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.4 2007-08-28 14:44:04 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -198,8 +198,14 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
     MonTuple->column("mode",nteig_mode);
     MonTuple->column("eigenval",nteig_eigval);
     MonTuple->column("eparam",nteig_eigmod);
-    MonTuple->column("erreparam",nteig_erreigmod);      
-
+    MonTuple->column("erreparam",nteig_erreigmod);  
+    std::vector<double> eigenvector;
+    for (int j=0;j<w.size();j++) {
+      eigenvector.push_back(z[i][j]);
+    }
+    
+    MonTuple->farray("eigenvec",eigenvector.begin(),eigenvector.end(),"nvec",w.size());
+    
     StatusCode sc = MonTuple->write();  
     if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;
   }

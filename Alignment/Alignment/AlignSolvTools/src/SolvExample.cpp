@@ -1,4 +1,4 @@
-// $Id: SolvExample.cpp,v 1.5 2007-06-28 16:33:56 ahicheur Exp $
+// $Id: SolvExample.cpp,v 1.6 2007-08-28 14:44:04 ahicheur Exp $
 // Include files 
 
 // from Gaudi
@@ -246,7 +246,8 @@ StatusCode SolvExample::execute() {
 StatusCode SolvExample::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
+  //finalize the tool to close it properly
+  m_solver->finalize();
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

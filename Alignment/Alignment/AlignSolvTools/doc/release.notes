@@ -6,9 +6,10 @@
  - J. Blouw: new version, since Adlene has incorporated new features.
 
 !=========================== AlignSolvTools v2r0 2007-05-15 ==================
+! 2007-08-28 - Adlene Hicheur
+ - Added eigen vectors in monitoring ntuple
 ! 2007-07-11 - Adlene Hicheur
  - Change DiagSolvTool into GaudiTupleTool to output monitoring ntuple properly
-
 ! 2007-06-28 - Adlene Hicheur
  - Split tools into subtools with a common interface
  - Changed SolvExample algorithm accordingly
