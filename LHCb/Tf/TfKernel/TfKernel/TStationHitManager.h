@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.18 2007-08-25 19:26:36 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.19 2007-08-28 14:41:23 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -20,9 +20,6 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-
-// Event model
-#include "Event/State.h"
 
 // Tf framework
 #include "TfKernel/IOTHitCreator.h"
@@ -141,9 +138,6 @@ namespace Tf
     }
 
   public:
-
-    /// Initialise the hits for the current event for the given Track State
-    void prepareHits(const LHCb::State & aState, const double nSigma);
 
     /** Initialise the hits for the current event using the given selector object
      *
@@ -479,12 +473,6 @@ namespace Tf
 
     /// Prepare all hits in OT
     void prepareOTHits() const;
-
-    /// Prepare all hits in IT around the given state within the given tolerance
-    void prepareITHits(const LHCb::State & aState, const double nSigma);
-
-    /// Prepare all hits in OT around the given state within the given tolerance
-    void prepareOTHits(const LHCb::State & aState, const double nSigma);
 
     /// Initialise the IT hits for the current event using the given selector object
     template < typename SELECTOR >
@@ -971,114 +959,6 @@ namespace Tf
           }
           processRange ( othits, sta, lay, ot );
         }
-      }// layer
-    } // station
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // These methods need addressing, to remove the hard-coded stuff
-  // put back to allow testing with HLT etc.
-  // should eventually be removed
-
-  template<class Hit>
-  void TStationHitManager<Hit>::prepareHits(const LHCb::State & aState, const double nSigma)
-  {
-    this->clearHits();
-    this->prepareOTHits(aState, nSigma);
-    this->prepareITHits(aState, nSigma);
-    // Signifiy all hits for this event are ready - I.e. no decoding on demand
-    setAllHitsPrepared(true);
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const LHCb::State & aState, const double nSigma)
-  {
-
-    // WARNING : This is temporary solution. A better method that allows an arbitary hit window
-    //           (using trajectories ??) should be implemented instead
-
-    double m_y = aState.ty();
-    double c_y = aState.y() - m_y*aState.z();
-
-    double a_x = aState.qOverP()/42.;
-    double b_x = aState.tx() -2*aState.z()*a_x;
-    double c_x = aState.x() - aState.z()*(b_x + a_x*aState.z());
-
-    double dy = nSigma*sqrt(aState.errY2());
-    double dx = nSigma*sqrt(aState.errX2());
-
-    double x, y, z;
-
-    for (TStationID sta=0; sta < this->maxStations(); ++sta)
-    {
-      this->setAllHitsPrepared(sta,true);
-      for (TLayerID lay=0; lay < this->maxLayers(); ++lay)
-      {
-        this->setAllHitsPrepared(sta,lay,true);
-
-        // IT hits
-        for (ITRegionID it=0; it < this->maxITRegions(); ++it)
-        {
-          this->setAllHitsPrepared(sta,lay,it,true);
-          z = this->itHitCreator()->region(sta,lay,it)->z();
-          y = z*((a_x*z)+b_x)+c_x;
-          x = m_y*z+c_y;
-
-          Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it,x-dx,x+dx,y-dy,y+dy) ;
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << sthits.size() << " ITHits for station=" << sta
-                    << " layer=" << lay << " region=" << it << endreq;
-          }
-          processRange ( sthits, sta, lay, it + this->maxOTRegions() );
-        }
-
-      }// layer
-    } // station
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const LHCb::State & aState, const double nSigma)
-  {
-
-    // WARNING : This is temporary solution. A better method that allows an arbitary hit window
-    //           (using trajectories ??) should be implemented instead
-
-    double m_y = aState.ty();
-    double c_y = aState.y() - m_y*aState.z();
-
-    double a_x = aState.qOverP()/42.;
-    double b_x = aState.tx() -2*aState.z()*a_x;
-    double c_x = aState.x() - aState.z()*(b_x + a_x*aState.z());
-
-    double dy = nSigma*sqrt(aState.errY2());
-    double dx = nSigma*sqrt(aState.errX2());
-
-    double x, y, z;
-
-    for (TStationID sta=0; sta<this->maxStations(); ++sta)
-    {
-      this->setAllHitsPrepared(sta,true);
-      for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
-      {
-        this->setAllHitsPrepared(sta,lay,true);
-        // OT hits
-        for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
-        {
-          this->setAllHitsPrepared(sta,lay,ot,true);
-          z = this->otHitCreator()->region(sta,lay,ot)->z();
-          y = z*((a_x*z)+b_x)+c_x;
-          x = m_y*z+c_y;
-
-          Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot,x-dx,x+dx,y-dy,y+dy) ;
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << othits.size() << " OTHits for station=" << sta
-                    << " layer=" << lay << " region=" << ot << endreq;
-          }
-          processRange ( othits, sta, lay, ot );
-        }
-
       }// layer
     } // station
   }

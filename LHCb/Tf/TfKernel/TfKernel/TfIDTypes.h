@@ -1,4 +1,4 @@
-// $Id: TfIDTypes.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
+// $Id: TfIDTypes.h,v 1.4 2007-08-28 14:41:23 jonrob Exp $
 #ifndef TFKERNEL_TFIDTYPES_H
 #define TFKERNEL_TFIDTYPES_H 1
 
@@ -163,7 +163,7 @@ namespace Tf
    *  Valid TT layer region IDs are in the range 0 to 11.
    *
    *  See Tf::RegionID for more details
-   * 
+   *
    *  @todo A little ascii diagram of the TT regions ??
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert

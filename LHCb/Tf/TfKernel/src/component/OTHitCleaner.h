@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCleaner
  *
- *  $Id: OTHitCleaner.h,v 1.2 2007-08-21 08:35:31 wouter Exp $
+ *  $Id: OTHitCleaner.h,v 1.3 2007-08-28 14:41:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -39,7 +39,6 @@ namespace Tf
    *
    *  @date   2007-06-01
    *
-   *  @todo See if a proper interface can be added whilst maintaining the templated methods ?
    *  @todo Is it possible to have a common interface for OT and ST (other?) cleaning tools
    **/
   //-----------------------------------------------------------------------------
