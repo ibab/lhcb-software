@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.4 2007-08-18 16:51:59 jonrob Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.5 2007-08-28 12:14:09 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -137,8 +137,6 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
         for ( int layer = 0; layer < 4; ++layer ) {     //  Loop over layers in box
 
           //  Loop over clusters in that layer
-          //Tsa::STRange iRange =  m_dataSvc->partition(station,layer+1,box);
-          //Tsa::STRange iRange = range(hint, station, layer+1, box);
           const TfTsHitNumMap::TfRegions & tfRegions = m_hitNumMap.tfITRegions(box);
           for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
                 iTfR != tfRegions.end(); ++iTfR )
@@ -146,9 +144,6 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
             Range iRange = m_hitMan->hits(station-1,layer,*iTfR);
             for (Hits::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter)
             {
-              //Tsa::STCluster* clus = *itIter;
-              // CRJ : Hit cleaning not yet available
-              //if ( clus->isHot() || clus->onTrack()) continue;  //  Ignore clusters from hot regions
               if ((*itIter)->onTrack()) continue;
 
               //  Find seed candidate's coordinate at the cluster (midpoint)
@@ -181,10 +176,8 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
                 if (layer == 1 || layer == 2){
                   const double slope = seed->xSlope(aHit->z(),TsaConstants::z0);
                   Gaudi::XYZVector vec(1., TsaConstants::tilt*slope, -slope);
-                  //Gaudi::XYZPoint point(seed->x(aHit->z(),TsaConstants::z0),aHit->clus()->yMid(), aHit->z() );
                   Gaudi::XYZPoint point(seed->x(aHit->z(),TsaConstants::z0),aHit->yMid(), aHit->z() );
                   Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point);
-                  //if (Tsa::ClusFun::intersection(aHit->clus(),plane,iPoint) == true) {
                   if (Tf::intersection(*itIter,plane,iPoint) )
                   {
                     verbose() << "  Intersection Point " << iPoint << endreq;

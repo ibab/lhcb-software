@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.2 2007-08-28 12:14:09 jonrob Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -151,9 +151,9 @@ void SeedTrackCnv::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, const 
   aState.setTy(aTrack->sy());
 
   // p estimate can come from the curvature or the pt kick
-  if (m_pFromCurvature == true) {
-    aState.setQOverP(Tsa::estimateCurvature(aTrack->tx(), m_curvFactor));
-    if (m_largeErrors == true) {
+  if (m_pFromCurvature) {
+    aState.setQOverP(estimateCurvature(aTrack->tx(), m_curvFactor));
+    if (m_largeErrors) {
       aState.setErrQOverP2( m_EQdivP2*gsl_pow_2(stateVec(4)));
     }
     else {

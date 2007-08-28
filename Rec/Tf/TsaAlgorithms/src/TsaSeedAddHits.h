@@ -62,9 +62,6 @@ namespace Tf
 
     private:
 
-      //Tsa::STRange range(const int hint, const int station,
-      //                   const int layer, const int box) const;
-
       SeedParabolaFit* m_parabolaFit;
       SeedLineFit* m_fitLine;
 
