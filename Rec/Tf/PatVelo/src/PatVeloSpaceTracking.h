@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloSpaceTracking.h,v 1.2 2007-08-28 12:02:56 jonrob Exp $
 #ifndef TF_PATVELOSPACETRACKING_H 
 #define TF_PATVELOSPACETRACKING_H 1
 
@@ -18,13 +18,14 @@
 #include "PatVeloPhiHitManager.h"
 
 namespace Tf {
+
   /** @class PatVeloSpaceTracking PatVeloSpaceTracking.h
    *   
-   *
+   *  Algorithm wich implements Velo space point tracking
+   *  
    *  @author Olivier Callot
    *  @date   2005-06-09
    */
-
   class PatVeloSpaceTracking : public GaudiAlgorithm {
     public: 
       /// Standard constructor

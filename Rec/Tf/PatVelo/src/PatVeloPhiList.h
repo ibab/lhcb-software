@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiList.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloPhiList.h,v 1.2 2007-08-28 12:02:56 jonrob Exp $
 #ifndef TF_PATVELOPHILIST_H 
 #define TF_PATVELOPHILIST_H 1
 
@@ -8,6 +8,7 @@
 namespace Tf {
   /** @class PatVeloPhiList PatVeloPhiList.h
    *  
+   *  List of Velo Phi hits
    *
    *  @author Olivier Callot
    *  @date   2005-06-10
