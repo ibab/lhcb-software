@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.2 2007-05-11 14:41:37 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.3 2007-08-28 10:18:05 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -25,6 +25,7 @@ IID_ITAConfigTool("ITAConfig",0,0);
 namespace LHCb {
 	class Track;
 	class LHCbID;
+        class State;
 };
 
 class ITAConfigTool : virtual public IAlgTool {
@@ -36,10 +37,29 @@ class ITAConfigTool : virtual public IAlgTool {
   }
 
   virtual StatusCode Initialize( std::vector<std::string> & ) = 0;
-  virtual StatusCode FillMatrix( LHCb::Track &, 
-				 LHCb::LHCbID &, 
+  virtual StatusCode CalcResidual( const LHCb::Track &, 
+				 const LHCb::LHCbID &, 
 				 const int &,
+				 const double &,
+				 double &,
+				 double &,
+				 double &,
+				 LHCb::State & ) = 0;
+  virtual StatusCode FillMatrix( const int &,
+				 const double [], 
+				 const double &, 
+				 const double &, 
 				 const double & ) = 0;
+  virtual int InvMatrix( double [][4],
+			 double [],
+			 const int & ) = 0;
+  virtual StatusCode ConfMatrix( const double &,
+				 const double &,
+				 const double &,
+				 const double &,
+				 double [],
+				 double [][4] ) = 0;
+  virtual StatusCode ZeroMatrVec( double [][4], double [] ) = 0;
   virtual StatusCode CacheDetElements() = 0;
   virtual StatusCode ResetGlVars() = 0;
   virtual bool AlignDetector( std::string & ) = 0;

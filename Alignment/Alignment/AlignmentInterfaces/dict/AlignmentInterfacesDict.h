@@ -6,7 +6,8 @@
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
 #include "AlignmentInterfaces/IDerivatives.h"
-#include "AlignmentInterfaces/IMillepede.h"
 #include "AlignmentInterfaces/ITAConfigTool.h"
+#include "AlignmentInterfaces/IMillepede.h"
+#include "AlignmentInterfaces/ICentipede.h"
 
 #endif // DICT_ALIGNMENTINTERFACESDICT_H

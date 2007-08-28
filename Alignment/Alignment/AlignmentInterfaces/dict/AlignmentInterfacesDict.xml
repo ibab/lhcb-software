@@ -6,4 +6,5 @@
   <class name    = "IDerivatives" />
   <class name    = "ITAConfigTool" />
   <class name    = "IMillepede" />
+  <class name    = "ICentipede" />
 </lcgdict>
