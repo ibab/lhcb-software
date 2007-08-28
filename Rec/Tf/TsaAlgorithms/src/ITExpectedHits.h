@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: ITExpectedHits.h,v 1.2 2007-08-28 10:46:35 jonrob Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -51,8 +51,8 @@ namespace Tf
       virtual StatusCode initialize();
 
       // execute method
-      virtual StatusCode collect(const Tsa::Parabola& parab,
-                                 const Tsa::Line& line,
+      virtual StatusCode collect(const Parabola& parab,
+                                 const Line& line,
                                  const LHCb::STChannelID& aChan,
                                  std::vector<IITExpectedHits::ITPair>& hits ,
                                  const unsigned int iSector) const;
@@ -60,16 +60,12 @@ namespace Tf
     private:
 
       bool insideSector(const DeSTSector* sector,
-                        const Tsa::Line3D& line) const;
+                        const Line3D& line) const;
 
       bool insideLayer(const DeSTLayer* sector,
-                       const Tsa::Line3D& line) const;
+                       const Line3D& line) const;
 
-      // Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const DeSTSector* sector,
-      //          const Gaudi::XYZPoint& aPoint) const;
-
-
-      Gaudi::XYZPoint intersection(const Tsa::Line3D& line,
+      Gaudi::XYZPoint intersection(const Line3D& line,
                                    const Gaudi::Plane3D& aPlane) const;
 
       DeSTDetector* m_tracker;

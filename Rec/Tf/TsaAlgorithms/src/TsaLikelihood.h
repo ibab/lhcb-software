@@ -60,18 +60,18 @@ namespace Tf
 
     private:
 
-      void expectationIT(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+      void expectationIT(const Line& aLine, const Parabola& aParab,
                          std::vector<SeedPnt>& pnts, int* layers, const int& sect,
                          int& nFound,
                          int& nExp) const;
 
-      void expectationOT(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+      void expectationOT(const Line& aLine, const Parabola& aParab,
                          std::vector<SeedPnt>& pnts, int* layers ,
                          const int& sect,
                          int& nxFound,
                          int& nxExp, double& xLik) const;
 
-      void expectationMixed(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+      void expectationMixed(const Line& aLine, const Parabola& aParab,
                             std::vector<SeedPnt>& pnts, int* layers ,
                             const int& sect,
                             int& nxFound,

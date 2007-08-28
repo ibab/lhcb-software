@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: ITExpectedHits.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -35,8 +35,8 @@ StatusCode ITExpectedHits::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
-                                   const Tsa::Line& line,
+StatusCode ITExpectedHits::collect(const Parabola& parab,
+                                   const Line& line,
                                    const LHCb::STChannelID& aChan,
                                    std::vector<IITExpectedHits::ITPair>& hits,
                                    const unsigned int iSector) const
@@ -67,10 +67,10 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 
   if (layer != 0){
 
-    Tsa::Line tanLine = parab.tangent(layer->globalCentre().z());
+    Line tanLine = parab.tangent(layer->globalCentre().z());
 
-    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,
-                                            line,layer->globalCentre().z());
+    Line3D aLine3D = createLine3D(tanLine,
+                                  line,layer->globalCentre().z());
 
     const DeSTLayer::Sectors& tSectors = layer->sectors();
     verbose() << "Found " << tSectors.size() << " Sectors" << endreq;
@@ -136,7 +136,7 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 };
 
 bool ITExpectedHits::insideLayer(const DeSTLayer* layer,
-                                 const Tsa::Line3D& line) const{
+                                 const Line3D& line) const{
 
   bool isIn = false;
   Gaudi::XYZPoint point;
@@ -148,7 +148,7 @@ bool ITExpectedHits::insideLayer(const DeSTLayer* layer,
 }
 
 bool ITExpectedHits::insideSector(const DeSTSector* sector,
-                                  const Tsa::Line3D& line) const{
+                                  const Line3D& line) const{
 
   bool isIn = false;
   Gaudi::XYZPoint point;
@@ -159,7 +159,7 @@ bool ITExpectedHits::insideSector(const DeSTSector* sector,
   return isIn;
 }
 
-Gaudi::XYZPoint ITExpectedHits::intersection(const Tsa::Line3D& line,
+Gaudi::XYZPoint ITExpectedHits::intersection(const Line3D& line,
                                              const Gaudi::Plane3D& aPlane) const{
 
   // make a plane
@@ -168,3 +168,4 @@ Gaudi::XYZPoint ITExpectedHits::intersection(const Tsa::Line3D& line,
   Gaudi::Math::intersection(line,aPlane,inter,mu);
   return inter;
 }
+

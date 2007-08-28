@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: OTExpectedHits.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -38,8 +38,8 @@ StatusCode OTExpectedHits::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
-                                   const Tsa::Line& line,
+StatusCode OTExpectedHits::collect(const Parabola& parab,
+                                   const Line& line,
                                    const LHCb::OTChannelID& aChan,
                                    std::vector<IOTExpectedHits::OTPair>& hits,
                                    const unsigned int iSector) const{
@@ -57,8 +57,8 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
   }
 
   if (aModule != 0){
-    Tsa::Line tanLine = parab.tangent(aModule->z());
-    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,aModule->z());
+    Line tanLine = parab.tangent(aModule->z());
+    Line3D aLine3D = createLine3D(tanLine,line,aModule->z());
     Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
     Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
     aModule->calculateHits(globalEntry,globalExit,hits);
@@ -69,7 +69,7 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
 
 
 bool OTExpectedHits::insideModule(const DeOTModule* module,
-                                  const Tsa::Line3D& line) const{
+                                  const Line3D& line) const{
 
   bool isIn = false;
   Gaudi::XYZPoint point;
@@ -80,7 +80,7 @@ bool OTExpectedHits::insideModule(const DeOTModule* module,
   return isIn;
 }
 
-Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line, const DeOTModule* module,
+Gaudi::XYZPoint OTExpectedHits::intersection(const Line3D& line, const DeOTModule* module,
                                              const Gaudi::XYZPoint& aPoint) const{
 
   // make a plane
@@ -92,7 +92,7 @@ Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line, const DeOT
 }
 
 
-Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line,
+Gaudi::XYZPoint OTExpectedHits::intersection(const Line3D& line,
                                              const Gaudi::Plane3D& aPlane) const{
 
   // make a plane
@@ -102,7 +102,7 @@ Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line,
   return inter;
 }
 
-DeOTModule* OTExpectedHits::findModule(const Tsa::Parabola& parab, const Tsa::Line& line,
+DeOTModule* OTExpectedHits::findModule(const Parabola& parab, const Line& line,
                                        const LHCb::OTChannelID& aChan, const unsigned int iSector) const{
 
   // pick up layer...
@@ -112,8 +112,8 @@ DeOTModule* OTExpectedHits::findModule(const Tsa::Parabola& parab, const Tsa::Li
 
     DeOTModule* firstModule = theLayer->quarters().front()->modules().front();;
 
-    Tsa::Line tanLine = parab.tangent(firstModule->z());
-    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,firstModule->z());
+    Line tanLine = parab.tangent(firstModule->z());
+    Line3D aLine3D = createLine3D(tanLine,line,firstModule->z());
     Gaudi::XYZPoint aPoint;
     double mu = 0;
     if (Gaudi::Math::intersection(aLine3D,theLayer->plane(),aPoint, mu) == true){

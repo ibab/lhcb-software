@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaLikelihood.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -138,8 +138,8 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
     double yLik = 0.;
 
     // Fill seed track parameters into format required by tool to determine expected hits
-    Tsa::Line aLine( seed->sy(), seed->y0() );
-    Tsa::Parabola aParab( seed->tx(), seed->sx(), seed->x0() );
+    Line aLine( seed->sy(), seed->y0() );
+    Parabola aParab( seed->tx(), seed->sx(), seed->x0() );
     std::vector<SeedPnt>& ypnts = seed->yPnts();
 
     if (sect<3){
@@ -201,7 +201,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
   return StatusCode::SUCCESS;
 }
 
-void Likelihood::expectationOT(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+void Likelihood::expectationOT(const Line& aLine, const Parabola& aParab,
                                std::vector<SeedPnt>& pnts, int* layers,
                                const int& sect, int& nFound,
                                int& nExp, double& lik) const{
@@ -237,7 +237,7 @@ void Likelihood::expectationOT(const Tsa::Line& aLine, const Tsa::Parabola& aPar
 
 
 
-void Likelihood::expectationIT(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+void Likelihood::expectationIT(const Line& aLine, const Parabola& aParab,
                                std::vector<SeedPnt>& pnts, int* layers, const int& sect,
                                int& nFound,
                                int& nExp) const{
@@ -276,7 +276,7 @@ void Likelihood::expectationIT(const Tsa::Line& aLine, const Tsa::Parabola& aPar
   } // station
 }
 
-void Likelihood::expectationMixed(const Tsa::Line& aLine, const Tsa::Parabola& aParab,
+void Likelihood::expectationMixed(const Line& aLine, const Parabola& aParab,
                                   std::vector<SeedPnt>& pnts, int* layers, const int& sect,
                                   int& nFound,
                                   int& nExp, double& lik) const{

@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-08-28 - 
+ - Some fixes for WIN32 compilation
+
 ! 2007-08-18 - Chris Jones
  - Adapt to removal of OTStationHitManager and ITStationHitManager classes
    from TfKernel

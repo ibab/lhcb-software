@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: OTExpectedHits.h,v 1.2 2007-08-28 10:46:35 jonrob Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -52,8 +52,8 @@ namespace Tf
       virtual StatusCode initialize();
 
       // execute method
-      virtual StatusCode collect(const Tsa::Parabola& parab,
-                                 const Tsa::Line& line,
+      virtual StatusCode collect(const Parabola& parab,
+                                 const Line& line,
                                  const LHCb::OTChannelID& aChan,
                                  std::vector<IOTExpectedHits::OTPair>& hits,
                                  const unsigned int iSector ) const;
@@ -61,19 +61,19 @@ namespace Tf
     private:
 
       bool insideModule(const DeOTModule* layer,
-                        const Tsa::Line3D& line) const;
+                        const Line3D& line) const;
 
 
-      Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const DeOTModule* module,
+      Gaudi::XYZPoint intersection(const Line3D& line, const DeOTModule* module,
                                    const Gaudi::XYZPoint& aPoint) const;
 
 
-      Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const Gaudi::Plane3D& aPlane) const;
+      Gaudi::XYZPoint intersection(const Line3D& line, const Gaudi::Plane3D& aPlane) const;
 
       bool correctSector(const unsigned int quart, const unsigned int iSector) const;
 
-      DeOTModule* findModule(const Tsa::Parabola& parab,
-                             const Tsa::Line& line,
+      DeOTModule* findModule(const Parabola& parab,
+                             const Line& line,
                              const LHCb::OTChannelID& aChan,
                              const unsigned int iSector) const;
 
