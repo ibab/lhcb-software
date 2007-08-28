@@ -22,3 +22,14 @@ AllTrueBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2PhiPhi.DecayDescriptor = "B_s0 -> K+ K+ K- K-" ; // all kaons need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueBs2PhiPhi" };
 
+/*
+ *  Now for tracks
+ */
+SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
+                                "FilterTrueTracks" };
+
+TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
+FilterTrueTracks.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma})(phi(1020) -> ^K+ ^K- {,gamma}{,gamma})]cc" ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
+FilterTrueTracks.OutputLevel = 3 ;

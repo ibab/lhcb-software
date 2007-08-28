@@ -12,9 +12,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-08-28 - Patrick Koppenburg
+ - FilterTrueTracks : temporary algorithm to filter true tracks.
+ - options: Use it everywhere.
+
 ! 2007-08-10 - Patrick Koppenburg
  - HltSelChecker.cpp: added nDoF
- - 
 
 ! 2007-08-07 - Patrick Koppenburg
  - Bu2MuMuK: data moved.

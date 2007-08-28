@@ -28,4 +28,25 @@ HltExclusiveCorrs.Algorithms += { "AllTrueBd2MuMuKstar" };
  * This is a little complicated...
  */
 #include "$HLTSELCHECKERROOT/options/L0MuCheck.opts"
+/*
+ *  Now for tracks
+ */
+SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
+                                "FilterTrueTracks" };
 
+TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
+FilterTrueTracks.MCDecayFinder.Decay =  "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc" ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
+FilterTrueTracks.OutputLevel = 3 ;
+/*
+ *  Now for muons tracks
+ */
+SeqTrueSignalMuons.Members = { "TrackAssociator/TrueSignalHltMuons",
+                                "FilterTrueTracks/FilterTrueMuons" };
+
+TrueSignalHltMuons.TracksInContainer = "/Event/Hlt/Track/MuonsFromAlley" ;
+FilterTrueMuons.MCDecayFinder.Decay =  "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc" ;
+FilterTrueMuons.TracksPath = { "Hlt/Track/MuonsFromAlley" } ;
+FilterTrueMuons.OutputPath = "Hlt/Track/SignalMuons" ;
+FilterTrueMuons.OutputLevel = 3 ;

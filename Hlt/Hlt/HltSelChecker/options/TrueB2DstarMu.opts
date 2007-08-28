@@ -29,3 +29,25 @@ AllTrueB2DstarMu.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2DstarMu.DecayDescriptor = "[B0 -> mu+ pi- pi- K+]cc" ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueB2DstarMu" };
 
+/*
+ *  Now for tracks
+ */
+SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
+                                "FilterTrueTracks" };
+
+TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
+FilterTrueTracks.MCDecayFinder.Decay =  "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
+FilterTrueTracks.OutputLevel = 3 ;
+/*
+ *  Now for muons tracks
+ */
+SeqTrueSignalMuons.Members = { "TrackAssociator/TrueSignalHltMuons",
+                                "FilterTrueTracks/FilterTrueMuons" };
+
+TrueSignalHltMuons.TracksInContainer = "/Event/Hlt/Track/MuonsFromAlley" ;
+FilterTrueMuons.MCDecayFinder.Decay =  "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
+FilterTrueMuons.TracksPath = { "Hlt/Track/MuonsFromAlley" } ;
+FilterTrueMuons.OutputPath = "Hlt/Track/SignalMuons" ;
+FilterTrueMuons.OutputLevel = 3 ;

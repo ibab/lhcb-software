@@ -25,3 +25,14 @@ SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBd2D0Kstar"};
 AllTrueBd2D0Kstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBd2D0Kstar.DecayDescriptor = "[B0 -> K+ pi- pi+ pi-]cc" ; // all particles need to be there
 HltExclusiveCorrs.Algorithms += { "AllTrueBd2D0Kstar" };
+/*
+ *  Now for tracks
+ */
+SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
+                                "FilterTrueTracks" };
+
+TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
+FilterTrueTracks.MCDecayFinder.Decay =  "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
+FilterTrueTracks.OutputLevel = 3 ;
