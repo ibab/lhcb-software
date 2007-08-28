@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+!=========================== AlignSolvTools v2r1 2007-05-15 ==================
+ - J. Blouw: new version, since Adlene has incorporated new features.
+
 !=========================== AlignSolvTools v2r0 2007-05-15 ==================
 ! 2007-07-11 - Adlene Hicheur
  - Change DiagSolvTool into GaudiTupleTool to output monitoring ntuple properly
