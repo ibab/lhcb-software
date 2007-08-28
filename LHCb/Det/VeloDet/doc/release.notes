@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.172 2007-08-25 19:43:48 krinnert Exp $
+! $Id: release.notes,v 1.173 2007-08-28 12:05:43 jonrob Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-08-28 - 
+ - Minor fixes for WIN32
 
 ! 2007-08-25 - Kurt Rinnert
  - new caches of phi and r ranges in DeVeloRType and DeVeloPhiType in global

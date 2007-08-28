@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.24 2007-08-25 19:43:48 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.25 2007-08-28 12:05:43 jonrob Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -143,12 +143,12 @@ public:
 
   /// Return the radius of the centre of strip plus interstrip fraction*pitch in the global frame
   inline float globalR(unsigned int strip, double isp) const {
-    return m_globalR[strip] + isp*rPitch(strip);
+    return static_cast<float>( m_globalR[strip] + isp*rPitch(strip) );
   }
   
   /// Return the radius of the centre of strip plus interstrip fraction*pitch in the halfbox frame
   inline float halfboxR(unsigned int strip, double isp) const {
-    return m_halfboxR[strip] + isp*rPitch(strip);
+    return static_cast<float>(m_halfboxR[strip] + isp*rPitch(strip));
   }
   
   /// Return the radius of the centre of the strip in the global frame

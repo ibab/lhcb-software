@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.29 2007-07-14 20:19:38 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.30 2007-08-28 12:05:43 jonrob Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -171,8 +171,8 @@ void DeVeloSensor::initSensor()
   m_isPhi    = m_type.find("Phi")==0;
 
   if ( m_type == "R" || m_type == "Phi" || m_type == "Veto" ) {
-    m_isLeft = param<int>("Left");
-    m_isDownstream=param<int>("Downstream");
+    m_isLeft = 0 != param<int>("Left");
+    m_isDownstream = 0 != param<int>("Downstream");
     m_fullType = m_type + ( (m_isDownstream) ? "DnStrm" : "UpStrm" )
       + ( (m_isLeft) ? "Left" : "Right");
   } else {
@@ -183,9 +183,9 @@ void DeVeloSensor::initSensor()
   }
   // test new parameters ....
   if(m_isR) { 
-    m_isDownstream = param<int>("DownstreamR");
+    m_isDownstream = 0 != param<int>("DownstreamR");
   } else if (m_isPhi) {
-    m_isDownstream = param<int>("DownstreamPhi");
+    m_isDownstream = 0 != param<int>("DownstreamPhi");
   }
 }
 
@@ -275,11 +275,9 @@ StatusCode DeVeloSensor::updateStripInfoCondition () {
 StatusCode DeVeloSensor::updateReadoutCondition () {
 
   m_readoutCondition = condition(m_readoutConditionName.c_str());
-  m_isReadOut = 
-    static_cast<bool>(m_readoutCondition->paramAsInt("ReadoutFlag"));
-  m_tell1WithoutSensor = 
-    static_cast<bool>(m_readoutCondition->paramAsInt("Tell1WithoutSensor"));
-
+  m_isReadOut          = (0 != m_readoutCondition->paramAsInt("ReadoutFlag"));
+  m_tell1WithoutSensor = (0 != m_readoutCondition->paramAsInt("Tell1WithoutSensor"));
+  
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.44 2007-08-25 19:43:48 krinnert Exp $
+// $Id: DeVeloRType.cpp,v 1.45 2007-08-28 12:05:43 jonrob Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -714,7 +714,7 @@ StatusCode DeVeloRType::updateGlobalR()
     double r   = rOfStrip(strip);
     Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
     Gaudi::XYZPoint gp = localToGlobal(lp);
-    m_globalR[strip] = gp.rho();
+    m_globalR[strip] = static_cast<float>(gp.rho());
   }
   
   return StatusCode::SUCCESS;
@@ -727,7 +727,7 @@ StatusCode DeVeloRType::updateHalfboxR()
     double r   = rOfStrip(strip);
     Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
     Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-    m_halfboxR[strip] = hbp.rho();
+    m_halfboxR[strip] = static_cast<float>(hbp.rho());
   }
 
   return StatusCode::SUCCESS;
