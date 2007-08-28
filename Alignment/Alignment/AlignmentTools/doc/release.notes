@@ -3,6 +3,14 @@ Package : AlignmentTools
 Package Coordinator : Sebastien Viret
 Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
+</PRE><H1><A NAME=v2r6>2007-05-14 AlignmentTools v2r7</A></H1><PRE>
+- 28/08/2007 - Johan Blouw ** v2r7 **
+  -> added Centipede class, which acts as a tool to hide the different use of
+     Millepede by the Heidelberg group. That is, Centipede inherits from Millepede and
+     overloads/replaces certain methods in the Millepede class.
+  -> small change to Millepede.h: variables in the class are now 'protected' instead of  
+     'private', so that the Centipede class can use them.
+ 
 </PRE><H1><A NAME=v2r6>2007-05-14 AlignmentTools v2r6</A></H1><PRE>
 - 15/05/2007 - Johan Blouw     ** v2r6 **
   -> removed *_load.cpp since it is not needed anymore

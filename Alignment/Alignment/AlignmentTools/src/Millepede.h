@@ -39,13 +39,11 @@ public:
 			    double rmeas, double sigma);
   virtual StatusCode ZerLoc(double dergb[], double derlc[], double dernl[], double dernl_i[]);
   virtual StatusCode FitLoc(int n, double track_params[], int single_fit);
-  virtual StatusCode FitLoc(int n, double track_params[], int single_fit, 
-			    double estimated_para[], double &chi2, double &res);
 
   virtual int  GetTrackNumber();
   virtual void SetTrackNumber(int value);
 
-private:
+ protected:
 
 // Max. dimensions
 
