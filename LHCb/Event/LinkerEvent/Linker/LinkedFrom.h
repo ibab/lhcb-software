@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.23 2007-07-26 13:17:14 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.24 2007-08-28 14:52:12 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -105,8 +105,8 @@ public:
 
   /** returns a vector of keys, for int linked to TARGET. */
   std::vector<KEY>& keyRange( const TARGET* target ) {
-    m_int.clear();
-    if ( NULL == m_links ) return m_int;
+    m_keys.clear();
+    if ( NULL == m_links ) return m_keys;
     m_curReference.setLinkID( -1 );
     m_wantedKey = target->index();
     //== check that the target's container is known.
@@ -116,16 +116,16 @@ public:
       link = m_links->linkMgr()->link( container->registry()->identifier() ); 
       if ( 0 != link )  link->setObject( container );
     }
-    if ( 0 == link ) return m_int;
+    if ( 0 == link ) return m_keys;
     //== Define the target's linkID and index
     m_curReference.setLinkID( short(link->ID()) );
     m_curReference.setObjectKey( target->index() );
     int key = m_links->firstSource( m_curReference, m_srcIterator );
     while ( m_wantedKey == m_curReference.objectKey() ) {
-      m_int.push_back( key );
+      m_keys.push_back( KEY(key) );
       key = m_links->nextSource( m_curReference, m_srcIterator );
     }
-    return m_int;
+    return m_keys;
   };
 
   LRangeIt beginRange()   { return m_vect.begin(); }
@@ -155,6 +155,6 @@ private:
   std::vector<std::pair<int,int> >::const_iterator m_srcIterator;
   int                                m_wantedKey;
   LRange                             m_vect;
-  std::vector<KEY>                   m_int;
+  std::vector<KEY>                   m_keys;
 };
 #endif // LINKER_LINKEDFROM_H

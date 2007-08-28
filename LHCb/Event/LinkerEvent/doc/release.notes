@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2007-08-28 - Olivier Callot
+ - Insert keys in keyRange using explicitly KEY( int value)
+
 ! 2007-07-26 - Olivier Callot
  - Add a third template class to LinkedFrom, specifying the type of KEY of the 
    SOURCE object.
