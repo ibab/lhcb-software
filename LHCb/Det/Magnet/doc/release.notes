@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !====================== Magnet v3r5 2007-07-27 ===============================
+! 2007-08-28 - Adlene Hicheur
+- AnalyticFieldSvc: fixed derivation of B field values from odd/even symmetries
 ! 2007-07-27 - Adlene Hicheur
  - AnalyticFieldSvc: modified GetParam and Bcalculation to read new param.
  - Added Bdl testing method in MagFieldReader

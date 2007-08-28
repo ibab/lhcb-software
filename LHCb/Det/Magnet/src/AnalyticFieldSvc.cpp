@@ -530,8 +530,8 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
   
   MagVec coord(3);
 
-  coord[0]=point.x()/Gaudi::Units::m;  
-  coord[1]=point.y()/Gaudi::Units::m;
+  coord[0]=fabs(point.x())/Gaudi::Units::m;   
+  coord[1]=fabs(point.y())/Gaudi::Units::m;
   coord[2]=point.z()/Gaudi::Units::m;
 
   int iReg = 0;
@@ -563,6 +563,16 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
 
   bf*=Gaudi::Units::tesla;
   
+  if( point.x() < 0. && point.y() >= 0. ){
+    bf.SetX( -bf.x() );
+  }
+  else if(  point.x() < 0. &&  point.y()  < 0. ){
+    bf.SetZ( -bf.z() );
+  }
+  else if( point.x() >= 0. && point.y() < 0. ){
+    bf.SetX( -bf.x() );
+    bf.SetZ( -bf.z() );
+  } 
 
   return ;
 }

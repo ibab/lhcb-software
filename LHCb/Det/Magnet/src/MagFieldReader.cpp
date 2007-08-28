@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.cpp,v 1.7 2007-07-27 16:40:00 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.8 2007-08-28 14:49:22 ahicheur Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ MagFieldReader::MagFieldReader( const std::string& name,
   declareProperty("Step", m_step =   100.0*Gaudi::Units::mm);  
   declareProperty("Xmin", m_xMin =     0.0*Gaudi::Units::mm);  
   declareProperty("Xmax", m_xMax =  4000.0*Gaudi::Units::mm);
-  declareProperty("Xmin", m_yMin =     0.0*Gaudi::Units::mm);  
+  declareProperty("Ymin", m_yMin =     0.0*Gaudi::Units::mm);  
   declareProperty("Ymax", m_yMax =  4000.0*Gaudi::Units::mm);
   declareProperty("FieldSvcName",m_FieldServiceName="MagneticFieldSvc");
   declareProperty("TestFieldInt",m_testbdl=false);
