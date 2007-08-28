@@ -1,4 +1,4 @@
-// $Id: IOTHitCleaner.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
+// $Id: IOTHitCleaner.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
 #ifndef TFTOOLS_IOTHITCLEANER_H
 #define TFTOOLS_IOTHITCLEANER_H 1
 
@@ -71,9 +71,9 @@ namespace Tf
       {
         // the monolayer calculation is currently the slowest
         return
-          abs(lhs->straw()-rhs->straw())==1 &&
-          &(lhs->module()) == &(rhs->module()) &&
-          lhs->monolayer() == rhs->monolayer() ;
+          abs((int)(lhs->straw()-rhs->straw()))==1 &&
+          (&(lhs->module()) == &(rhs->module())) &&
+          (lhs->monolayer() == rhs->monolayer()) ;
       }
     };
 

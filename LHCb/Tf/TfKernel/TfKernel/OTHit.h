@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.5 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: OTHit.h,v 1.6 2007-08-28 12:03:58 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -72,7 +72,7 @@ namespace Tf
         wire. The velocity has been corrected for sign and direction */
     inline float propagationTime( const double globaly ) const 
     {
-      return ( yReadout() -  globaly )/module().propagationVelocityY(); 
+      return (float)((yReadout()- globaly)/module().propagationVelocityY()); 
     }
 
     /** The drift time after correction for propagation time */
@@ -111,7 +111,7 @@ namespace Tf
     inline unsigned int monolayer() const { return module().monoLayerB(straw()) ; }
 
     /** The length of the wire */
-    inline float wireLength() const { return module().wireLength(m_rawhit.channel()); }
+    inline double wireLength() const { return module().wireLength(m_rawhit.channel()); }
 
   private: // data
 

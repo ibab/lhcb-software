@@ -1,4 +1,4 @@
-// $Id: OTHitCleaner.cpp,v 1.4 2007-08-21 08:35:31 wouter Exp $
+// $Id: OTHitCleaner.cpp,v 1.5 2007-08-28 12:03:58 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -120,7 +120,7 @@ void OTHitCleaner::removeClusters( const OTHits::const_iterator begin,
           ++nextindex ;
           std::advance(nexthit, (*nextindex - thisindex ) ) ;
           bool endofcluster = nextindex==endindex ||
-            abs( (*nexthit)->straw() - (*thishit)->straw()) != 1 ;
+            abs( (int)((*nexthit)->straw() - (*thishit)->straw()) ) != 1 ;
           if(endofcluster) {
             // flip the bools if the cluster is accepted
             if( std::distance(lastindex,nextindex) <= m_maxClusterSize)

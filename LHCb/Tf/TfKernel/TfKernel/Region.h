@@ -5,7 +5,7 @@
  *  Header file for track finding 'Region' objects
  *
  *  CVS Log :-
- *  $Id: Region.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: Region.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -136,9 +136,9 @@ namespace Tf
     const ISolid* solid = detelement.geometry()->lvolume()->solid();
     const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
     if(!mainBox) throw std::runtime_error("Tf::HitCreatorGeom::Envelope: wrong type of volume") ;
-    float xsize = mainBox->xsize();
-    float ysize = mainBox->ysize();
-    float zsize = mainBox->zsize();
+    double xsize = mainBox->xsize();
+    double ysize = mainBox->ysize();
+    double zsize = mainBox->zsize();
     m_cosT = detelement.cosAngle() ;
     m_sinT = detelement.sinAngle() ;
 

@@ -1,5 +1,5 @@
-#ifndef RECOFUNCS_H 
-#define RECOFUNCS_H 1
+#ifndef TFKERNEL_RECOFUNCS_H 
+#define TFKERNEL_RECOFUNCS_H 1
 
 //-----------------------------------------------------------------------------
 /** @file RecoFuncs.h
@@ -8,7 +8,7 @@
  *  pattern reco algorithms
  *
  *  CVS Log :-
- *  $Id: RecoFuncs.h,v 1.4 2007-08-22 15:24:56 smenzeme Exp $
+ *  $Id: RecoFuncs.h,v 1.5 2007-08-28 12:03:58 jonrob Exp $
  *
  *  @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-03
@@ -178,4 +178,4 @@ namespace Tf
 
 }
 
-#endif // RECOFUNCS_H
+#endif // TFKERNEL_RECOFUNCS_H

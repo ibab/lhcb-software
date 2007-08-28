@@ -1,4 +1,4 @@
-// $Id: VeloPhiHit.h,v 1.2 2007-08-25 19:49:04 krinnert Exp $
+// $Id: VeloPhiHit.h,v 1.3 2007-08-28 12:03:58 jonrob Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
 
@@ -20,37 +20,37 @@ namespace Tf {
 
   public:
 
-      //----------------------------------------------------------------------
-      // typedefs
-      //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    // typedefs
+    //----------------------------------------------------------------------
 
-      typedef std::vector<VeloPhiHit* > container_type; 
-      typedef LoKi::Range_<container_type> range_type;
+    typedef std::vector<VeloPhiHit* > container_type;
+    typedef LoKi::Range_<container_type> range_type;
 
-      typedef velo_phihit_tag hit_type_tag; ///< the hit type tag
+    typedef velo_phihit_tag hit_type_tag; ///< the hit type tag
 
-    public:
+  public:
 
-      /// Standard Constructor
-      inline VeloPhiHit(const DeVeloPhiType* sensor, const LHCb::VeloLiteCluster& clu, float signal);
+    /// Standard Constructor
+    inline VeloPhiHit(const DeVeloPhiType* sensor, const LHCb::VeloLiteCluster& clu, float signal);
 
-      //== simple accessors
-      double phi()                           const { return m_coord; }
-      double phiHalfBox()                    const { return m_coordHalfBox; }
-      double phiIdeal()                      const { return m_coordIdeal; }
-      double z()                             const { return m_sensor->z(); }
-      const DeVeloPhiType* sensor()          const { return m_sensor; } 
+    //== simple accessors
+    double phi()                           const { return m_coord; }
+    double phiHalfBox()                    const { return m_coordHalfBox; }
+    double phiIdeal()                      const { return m_coordIdeal; }
+    double z()                             const { return m_sensor->z(); }
+    const DeVeloPhiType* sensor()          const { return m_sensor; }
 
-    private:
+  private:
 
-      const DeVeloPhiType* m_sensor;        ///< link to detector element
+    const DeVeloPhiType* m_sensor;        ///< link to detector element
   };
 
   //----------------------------------------------------------------------
   // shortcut typedefs
   //----------------------------------------------------------------------
 
-  typedef VeloPhiHit::container_type VeloPhiHits; 
+  typedef VeloPhiHit::container_type VeloPhiHits;
   typedef VeloPhiHit::range_type VeloPhiHitRange;
 
   //----------------------------------------------------------------------
@@ -60,14 +60,15 @@ namespace Tf {
   // constructor
   inline VeloPhiHit::VeloPhiHit(const DeVeloPhiType* s, const LHCb::VeloLiteCluster& c, float signal)
     : VeloHit(c
-        , RegionID(c.channelID(),s)
-        , s->globalPhi(c.channelID().strip(),c.interStripFraction())
-        , s->halfboxPhi(c.channelID().strip(),c.interStripFraction())
-        , s->idealPhi(c.channelID().strip(),c.interStripFraction())
-        , ((s->phiPitch(c.channelID().strip())*c.pseudoSize())*(s->phiPitch(c.channelID().strip())*c.pseudoSize()))/
-        float(12)
-        , signal
-        )
+              , RegionID(c.channelID(),s)
+              , s->globalPhi(c.channelID().strip(),c.interStripFraction())
+              , s->halfboxPhi(c.channelID().strip(),c.interStripFraction())
+              , s->idealPhi(c.channelID().strip(),c.interStripFraction())
+              , (float)(((s->phiPitch(c.channelID().strip())*c.pseudoSize())*
+                         (s->phiPitch(c.channelID().strip())*c.pseudoSize()))/
+                        float(12))
+              , signal
+              )
     , m_sensor(s)
   {
     ;

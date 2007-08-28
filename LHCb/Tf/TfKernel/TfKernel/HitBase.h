@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.8 2007-08-25 19:49:04 krinnert Exp $
+ *  $Id: HitBase.h,v 1.9 2007-08-28 12:03:58 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -102,7 +102,7 @@ namespace Tf
 
     /** Access the weight (1/variance) value
      *  @return The value of the weight for this hit */
-    inline float        weight  ()      const { return 1.0 / variance();  }
+    inline float        weight  ()      const { return (float)(1.0/variance());  }
 
     /** Access the LHCbID channel identifier
      *  @return The channel identifier for this hit */

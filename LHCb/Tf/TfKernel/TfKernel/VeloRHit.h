@@ -1,4 +1,4 @@
-// $Id: VeloRHit.h,v 1.2 2007-08-25 19:49:04 krinnert Exp $
+// $Id: VeloRHit.h,v 1.3 2007-08-28 12:03:58 jonrob Exp $
 #ifndef INCLUDE_TF_VELORHIT_H
 #define INCLUDE_TF_VELORHIT_H 1
 
@@ -19,66 +19,74 @@ namespace Tf {
 
   class VeloRHit : public VeloHit {
 
-    public:
+  public:
 
-      //----------------------------------------------------------------------
-      // shortcut typedefs
-      //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    // shortcut typedefs
+    //----------------------------------------------------------------------
 
-      typedef std::vector<VeloRHit* > container_type; 
-      typedef LoKi::Range_<container_type> range_type;
+    typedef std::vector<VeloRHit* > container_type;
+    typedef LoKi::Range_<container_type> range_type;
 
-      typedef velo_rhit_tag hit_type_tag; ///< the hit type tag
+    typedef velo_rhit_tag hit_type_tag; ///< the hit type tag
 
-    public:
+  public:
 
-      /// Standard Constructor
-      inline VeloRHit(const DeVeloRType* sensor, const LHCb::VeloLiteCluster& clus, float signal);
+    /** Standard Constructor
+     *  @param[in] sensor Pointer to DeVeloRType sensor for this hit
+     *  @param[in] clus   Associated Velo Cluster
+     *  @param[in] signal The cluster signal
+     */
+    inline VeloRHit(const DeVeloRType* sensor,
+                    const LHCb::VeloLiteCluster& clus, float signal);
 
-      //== simple accessors
-      double r()                             const { return m_coord; }
-      double rHalfBox()                      const { return m_coordHalfBox; }
-      double rIdeal()                        const { return m_coordIdeal; }
-      double z()                             const { return m_sensor->z(); }
-      const DeVeloRType* sensor()            const { return m_sensor; } 
+    //== simple accessors
+    double r()                             const { return m_coord; }
+    double rHalfBox()                      const { return m_coordHalfBox; }
+    double rIdeal()                        const { return m_coordIdeal; }
+    double z()                             const { return m_sensor->z(); }
+    /// Returns pointer to the associated sensor for this hit
+    const DeVeloRType* sensor()            const { return m_sensor; }
 
-    private:
+  private:
 
-      const DeVeloRType* m_sensor;        ///< link to detector element
+    const DeVeloRType* m_sensor;        ///< link to detector element
 
   };
 
-  
+
   //----------------------------------------------------------------------
   // shortcut typedefs
   //----------------------------------------------------------------------
 
-  typedef VeloRHit::container_type VeloRHits; 
+  typedef VeloRHit::container_type VeloRHits;
   typedef VeloRHit::range_type VeloRHitRange;
 
   //----------------------------------------------------------------------
-  // inline implementations  
+  // inline implementations
   //----------------------------------------------------------------------
 
   // constructor
-  inline VeloRHit::VeloRHit(const DeVeloRType* s, const LHCb::VeloLiteCluster& c, float signal)
+  inline VeloRHit::VeloRHit(const DeVeloRType* s, 
+                            const LHCb::VeloLiteCluster& c, 
+                            float signal)
     : VeloHit(c
-        , RegionID(c.channelID(),s)
-        , s->globalR(c.channelID().strip(),c.interStripFraction())
-        , s->halfboxR(c.channelID().strip(),c.interStripFraction())
-        , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
-        , ((s->rPitch(c.channelID().strip())*c.pseudoSize())*(s->rPitch(c.channelID().strip())*c.pseudoSize()))/
-        float(12)
-        , signal
-        )
-    , m_sensor(s)
-    { ; }
-
-
+              , RegionID(c.channelID(),s)
+              , s->globalR(c.channelID().strip(),c.interStripFraction())
+              , s->halfboxR(c.channelID().strip(),c.interStripFraction())
+              , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
+              , (float)(((s->rPitch(c.channelID().strip())*c.pseudoSize())*
+                         (s->rPitch(c.channelID().strip())*c.pseudoSize()))/
+                        float(12))
+              , signal
+              )
+      , m_sensor(s)
+  { ; }
+  
   // our dynamic casts
-  inline const VeloRHit* HitBase::veloRHit() const 
-  { 
-    return type()==RegionID::VeloR ? static_cast<const VeloRHit*>(this) : 0; 
+  inline const VeloRHit* HitBase::veloRHit() const
+  {
+    return type()==RegionID::VeloR ? static_cast<const VeloRHit*>(this) : 0;
   }
 
 }

@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.3 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: LineHit.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -79,7 +79,7 @@ namespace Tf
     inline float z(const float globalY = 0) const { return m_zAtYEq0 + globalY*m_dzdy ; }
 
     /** y coordinate in middle of the line */
-    inline float y() const { return 0.5*(yBegin()+yEnd()); }
+    inline float y() const { return (float)0.5*(yBegin()+yEnd()); }
 
     /** tan of stereo angle */
     inline float tanT() const { return -m_dxdy ; }
@@ -106,7 +106,7 @@ namespace Tf
     inline float xMax() const { return std::max(x(yBegin()),x(yEnd())) ; }
 
     /** y coordinate of line mid point */
-    inline float yMid() const { return 0.5*(yBegin()+yEnd()) ; }
+    inline float yMid() const { return (float)0.5*(yBegin()+yEnd()) ; }
 
     /** x coordinate of line mid point */
     inline float xMid() const { return x(yMid()) ; }
@@ -166,7 +166,7 @@ namespace Tf
                 RegionID     ( rawhit.channel() ) )
   {
     aModule.trajectory( rawhit.channel().straw(), m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend) ;
-    setCoord( m_xAtYEq0 * aModule.cosAngle() ) ;
+    setCoord( (float)(m_xAtYEq0 * aModule.cosAngle()) ) ;
   }
 
   inline LineHit::LineHit( const DeSTSector& aSector, 
@@ -174,12 +174,12 @@ namespace Tf
     : HitBase ( LHCb::LHCbID ( clus.channelID() ),
                 RegionID     ( clus.channelID() ),
                 0,
-                aSector.pitch()*aSector.pitch()/12 ) // XXX???XXX magic number ...
+                (float)(aSector.pitch()*aSector.pitch()/12.0) ) // XXX???XXX magic number ...
   {
     aSector.trajectory( clus.channelID().strip(), 
-                        clus.interStripFraction(), 
+                        (float)clus.interStripFraction(), 
                         m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend );
-    setCoord( m_xAtYEq0 * aSector.cosAngle() ) ;
+    setCoord( (float)(m_xAtYEq0 * aSector.cosAngle()) ) ;
   }
 
 }
