@@ -1,26 +1,26 @@
-// $Id: CircleTraj.h,v 1.9 2006-12-06 15:35:21 graven Exp $
+// $Id: CircleTraj.h,v 1.10 2007-08-28 13:04:59 jonrob Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
 // Include files
 #include "Kernel/DifTraj.h"
 
-/** @class CircleTraj CircleTraj.h
- *
- * Trajectory parameterized as a circle
- *
- * @author Edwin Bos, Eduardo Rodrigues
- * @date   30/01/2006
- * 
- */
-
 #include "GaudiKernel/boost_allocator.h"
 
 namespace LHCb
 {
 
+  /** @class CircleTraj CircleTraj.h Kernel/CircleTraj.h
+   *
+   * Trajectory parameterized as a circle
+   *
+   * @author Edwin Bos, Eduardo Rodrigues
+   * @date   30/01/2006
+   *
+   */
+
   class CircleTraj : public Trajectory {
-    
+
   public:
 
     /// Default Destructor
@@ -40,7 +40,7 @@ namespace LHCb
                 const Vector& normal, // direction of end
                 const Vector& origin2point, // direction of start
                 const Trajectory::Range& range); // valid range, in radius*deltaphi
-    
+
     /// Constructor from a center, the directions of the
     /// start and end of the traj wrt. the center, and the radius.
     /// The Traj goes along the 'short' arc from origin+radius*dir1.unit()
@@ -49,37 +49,37 @@ namespace LHCb
                 const Vector& dir1, // direction of start
                 const Vector& dir2, // direction of end
                 double radius);
-    
-    /// Point on the trajectory at arclength from the starting point    
+
+    /// Point on the trajectory at arclength from the starting point
     virtual Point position( double arclength ) const;
-    
+
     /// First derivative of the trajectory at arclength from the starting point
     virtual Vector direction( double arclength ) const;
-    
+
     /// Second derivative of the trajectory at arclength from the starting point
     virtual Vector curvature( double arclength ) const;
-    
+
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
     virtual void expansion( double arclength,
                             Point& p,
                             Vector& dp,
                             Vector& ddp ) const;
-    
+
     /// Return arclen at which the trajectory is
     /// closest to the specified point
     virtual double arclength( const Point& point ) const;
-    
+
     /// distance along the trajectory until deviation from the
     /// 1st order expansion reaches the given tolerance.
     virtual double distTo1stError( double arclength,
-                                   double tolerance, 
+                                   double tolerance,
                                    int pathDirection = +1 ) const;
-    
-    /// distance along trajectory until deviation from the 
+
+    /// distance along trajectory until deviation from the
     /// 2nd order expansion reaches the given tolerance.
     virtual double distTo2ndError( double arclength,
-                                   double tolerance, 
+                                   double tolerance,
                                    int pathDirection = +1 ) const;
 
 #ifndef _WIN32
@@ -103,8 +103,8 @@ namespace LHCb
     static void operator delete ( void* p )
     {
       boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::is_from(p) ?
-      boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::free(p) :
-      ::operator delete(p);
+        boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::free(p) :
+        ::operator delete(p);
     }
 
     /// placement operator delete
@@ -114,17 +114,17 @@ namespace LHCb
       ::operator delete (p, pObj);
     }
 #endif
-        
-    
+
+
   private :
 
     Point  m_origin;
     Vector m_normal;
     Vector m_dirStart;
-    double m_radius;  
+    double m_radius;
 
   }; // class CircleTraj
-  
+
 } // namespace LHCb
 
 #endif /// LHCbKernel_CircleTraj_H
