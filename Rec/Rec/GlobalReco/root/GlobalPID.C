@@ -208,6 +208,20 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     }
   }
 
+  if ( config.useFixedGraphRange && !config.superImpose )
+  {
+    TPad* XYpad = new TPad("XYpad","XYpad",0.0,0.0,1.,1.,0,0,0);
+    XYpad->SetFillStyle(0);
+    XYpad->SetFrameFillStyle(0);
+    XYpad->SetLogx( config.logX );
+    XYpad->SetLogy( config.logY );
+    XYpad->Draw(); 
+    XYpad->cd();
+    TH1F* temp = XYpad->DrawFrame(config.minGraphX, config.minGraphY, config.maxGraphX, config.maxGraphY);
+    temp->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()    );
+    temp->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() ); 
+  }
+
   // make a graph
   TGraphErrors * g = new TGraphErrors( ideff.size(),
                                        &*ideff.begin(), &*misideff.begin(),
@@ -216,19 +230,27 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
   g->SetMarkerSize(0.5);
   g->SetMarkerColor(config.color);
   g->SetLineColor(config.color);
-  if ( !config.superImpose )
+
+  if ( config.useFixedGraphRange )
   {
-    g->SetTitle( config.title.c_str() );
-    g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
-    g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
-    g->Draw("ALP");
+    g->Draw("LP");
   }
   else
   {
-    g->SetTitle( "" );
-    g->GetXaxis()->SetTitle( "" );
-    g->GetYaxis()->SetTitle( "" );
-    g->Draw("LP");
+    if ( !config.superImpose )
+    {
+      g->SetTitle( config.title.c_str() );
+      g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
+      g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
+      g->Draw("ALP");
+    }
+    else
+    {
+      g->SetTitle( "" );
+      g->GetXaxis()->SetTitle( "" );
+      g->GetYaxis()->SetTitle( "" );
+      g->Draw("LP");
+    }
   }
 
   // labels
@@ -527,6 +549,7 @@ GlobalPID::GlobalPID(TTree *tree)
 GlobalPID::~GlobalPID()
 {
   if (fChain) delete fChain->GetCurrentFile();
+  //reset();
 }
 
 Int_t GlobalPID::GetEntry(Long64_t entry)

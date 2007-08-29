@@ -16,6 +16,7 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TCanvas.h>
+#include <TH2F.h>
 
 /// ROOT class for producing PID plots from a TTree
 class GlobalPID
@@ -108,7 +109,10 @@ public: // classes
         superImpose(false),writeCutValues(true),
         color(kBlack),textSize(0.024),
         imageFile(""),
-        cutType(">"),secCutType(">")
+        cutType(">"),
+        secCutType(">"),
+        useFixedGraphRange(true),
+        minGraphX(60), maxGraphX(100), minGraphY(1), maxGraphY(40)
     { }
   public:
     double minIDeff,maxIDeff,minMisIDeff,maxMisIDeff;
@@ -131,6 +135,8 @@ public: // classes
     double textSize;
     std::string imageFile;
     std::string cutType, secCutType;
+    bool useFixedGraphRange;
+    double minGraphX,maxGraphX,minGraphY,maxGraphY;
   };
 
 public:
