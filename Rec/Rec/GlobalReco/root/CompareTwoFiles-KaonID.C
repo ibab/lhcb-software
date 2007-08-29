@@ -11,6 +11,11 @@
 
   // K-pi RICH
   pid->configReset();
+  pid->config.useFixedGraphRange = true;
+  pid->config.minGraphX = 40;
+  pid->config.maxGraphX = 100;
+  pid->config.minGraphY = 1;
+  pid->config.maxGraphY = 20;
   pid->config.title     = "RICH Kaon ID : Gas Radiators";
   pid->config.subtitle  = "Full Offline";
   pid->config.minP      = 3   * GeV;
@@ -19,6 +24,7 @@
   pid->config.maxPt     = 100 * GeV;
   pid->config.minCut    = -30;
   pid->config.maxCut    = 35;
+  pid->config.nSteps    = 100;
   pid->config.minMisIDeff = 1.0;
   pid->config.idType    = GlobalPID::Kaon;
   pid->config.misidType = GlobalPID::Pion;
@@ -33,6 +39,7 @@
 
   // K-pi RICH
   pid->configReset();
+  pid->config.useFixedGraphRange = true;
   pid->config.subtitle  = "Full Offline";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
@@ -40,6 +47,7 @@
   pid->config.maxPt     = 100  * GeV;
   pid->config.minCut    = -30;
   pid->config.maxCut    = 35;
+  pid->config.nSteps    = 100;
   pid->config.idType    = GlobalPID::Kaon;
   pid->config.misidType = GlobalPID::Pion;
   pid->config.var1      = GlobalPID::richDLLk;
@@ -56,6 +64,7 @@
 
   // K-pi RICH
   pid->configReset();
+  pid->config.useFixedGraphRange = true;
   pid->config.subtitle  = "Fast Offline";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
@@ -63,6 +72,7 @@
   pid->config.maxPt     = 100  * GeV;
   pid->config.minCut    = -30;
   pid->config.maxCut    = 35;
+  pid->config.nSteps    = 100;
   pid->config.idType    = GlobalPID::Kaon;
   pid->config.misidType = GlobalPID::Pion;
   pid->config.var1      = GlobalPID::richDLLk;
@@ -76,6 +86,7 @@
 
   // K-pi RICH
   pid->configReset();
+  pid->config.useFixedGraphRange = true;
   pid->config.subtitle  = "Fast Offline";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
@@ -83,6 +94,7 @@
   pid->config.maxPt     = 100  * GeV;
   pid->config.minCut    = -30;
   pid->config.maxCut    = 35;
+  pid->config.nSteps    = 100;
   pid->config.idType    = GlobalPID::Kaon;
   pid->config.misidType = GlobalPID::Pion;
   pid->config.var1      = GlobalPID::richDLLk;
