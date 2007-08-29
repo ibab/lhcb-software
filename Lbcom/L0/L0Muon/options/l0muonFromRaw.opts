@@ -2,7 +2,7 @@
 // L0MuonFromRaw options
 //
 // XML data file to configure the simulation
-L0MuonFromRaw.ConfigFile = "$PARAMFILESROOT/data/L0MuonKernel_mode0.xml";
+L0MuonFromRaw.ConfigFile = "$PARAMFILESROOT/data/L0MuonKernel.xml";
 //L0MuonFromRaw.ProcVersion = 0;
 // L0MuonFromRaw.Extension = "FromRaw";
 
