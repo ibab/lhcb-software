@@ -1,8 +1,11 @@
-// $Id: OSiterator.h,v 1.1 2002-04-22 16:49:52 ibelyaev Exp $ 
+// $Id: OSiterator.h,v 1.2 2007-08-29 09:30:02 jonrob Exp $ 
 // ============================================================================
 // CVS tag $Nane:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/22 16:49:52  ibelyaev
+//  new files to eliminate the dependency of 'Event' on 'Calo'
+//
 // ============================================================================
 #ifndef    KERNEL_OSITERATOR_H 
 #define    KERNEL_OSITERATOR_H  1 
@@ -10,7 +13,7 @@
 // STL 
 #include <iterator>
 
-/** @class OSIterator OSIterator.h Kernel/OSIterator.h
+/** @class OS_iterator OSIterator.h Kernel/OSIterator.h
  *  @brief output stream iterator 
  *
  *  a simple helpful class for maintain the notion  
