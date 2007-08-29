@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.7 2006-10-05 16:38:01 frankb Exp $
+// $Id: RawDataAddress.h,v 1.8 2007-08-29 08:22:12 apuignav Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -22,11 +22,11 @@ namespace LHCb  {
     *  @version 1.0
     */
   class RawDataAddress : public GenericAddress  {
-
-  protected:
+  public:
     static const size_t GIGA_BYTE = 1073741824;   // == (1024*1024*1024)
     typedef std::vector<RawBank*> Banks;
 
+  protected:
     /// Pointer to vector of raw bank
     std::pair<char*,int> m_data;
     /// Pointer to vector of raw banks

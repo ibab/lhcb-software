@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.11 2007-04-20 12:40:24 cattanem Exp $
+// $Id: MDFIO.h,v 1.12 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -153,7 +153,8 @@ namespace LHCb {
       */
     virtual StatusCode commitRawBanks(int               compTyp,
                                       int               chksumTyp,
-                                      void* const       ioDesc);
+                                      void* const       ioDesc,
+																			std::string 			m_bankLocation);
 
     /** Commit raw banks to IO stream. -- Main entry point --
       * @param[in] raw       Pointer to RawEvent

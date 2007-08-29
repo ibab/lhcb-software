@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.7 2007-04-20 12:40:25 cattanem Exp $
+// $Id: RawEventTestDump.cpp,v 1.8 2007-08-29 08:22:12 apuignav Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -58,6 +58,11 @@ namespace LHCb  {
       static int evt = 0;
       ++evt;
       info << MSG::INFO;
+      if ( !raw ) {
+        info << MSG::ERROR << "Failed to access " << RawEventLocation::Default << endmsg;
+        // Don't want to exit for this -- this is a debugging algorithm only!
+        return StatusCode::SUCCESS;        
+      }
       for(int j=0; j<RawBank::LastType; ++j)  {
         RawBank::BankType i = RawBank::BankType(j);
         const std::vector<RawBank*>& b = raw->banks(i);

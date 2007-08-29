@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.7 2006-09-25 12:32:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.8 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -42,6 +42,7 @@ void LHCb::MDFWriter::construct()   {
   declareProperty("ChecksumType",   m_genChecksum=1);     // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=false);      // Generate MD5 checksum
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
+	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
 }
 
 LHCb::MDFWriter::~MDFWriter()   {
@@ -77,9 +78,10 @@ StatusCode LHCb::MDFWriter::finalize() {
 /// Execute procedure
 StatusCode LHCb::MDFWriter::execute()    {
   setupMDFIO(msgSvc(),eventSvc());
+  MsgStream log(msgSvc(), name());
   switch(m_dataType) {
     case MDF_NONE:
-      return commitRawBanks(m_compress, m_genChecksum, &m_connection);
+      return commitRawBanks(m_compress, m_genChecksum, &m_connection, m_bankLocation);
     case MDF_BANKS:
     case MDF_RECORDS:
       return commitRawBuffer(m_dataType, m_compress, m_genChecksum, &m_connection);

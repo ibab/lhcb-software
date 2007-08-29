@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.15 2007-03-23 18:54:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.16 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -72,8 +72,7 @@ std::pair<const char*,int> LHCb::MDFIO::getDataFromAddress() {
   return std::pair<const char*,int>(0,0);
 }
 
-StatusCode 
-LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
+StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
                             RawBank*          hdr_bank,
                             int               compTyp,
                             int               chksumTyp,
@@ -98,9 +97,9 @@ LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc)
+StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, std::string m_bankLocation)
 {
-  SmartDataPtr<RawEvent> raw(m_evtSvc,"/Event/DAQ/RawEvent");
+  SmartDataPtr<RawEvent> raw(m_evtSvc,m_bankLocation);
   if ( raw )  {
     typedef std::vector<RawBank*> _V;
     const _V& bnks = raw->banks(RawBank::DAQ);

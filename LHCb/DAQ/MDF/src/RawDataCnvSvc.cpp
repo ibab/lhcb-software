@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.13 2006-10-27 16:11:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.14 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -69,6 +69,7 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc)
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
+	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
 }
 
 /// Service initialization
@@ -124,6 +125,10 @@ const CLID& LHCb::RawDataCnvSvc::objType() const  {
 StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  
 {
   if ( pAddr )  {
+    RawDataAddress* rawAdd = dynamic_cast<RawDataAddress*>(pAddr);
+    rawAdd->setSvcType(ROOT_StorageType);
+    return dataProvider()->retrieveObject("/Event",refpObj);
+#if 0
     if ( pAddr->clID() == CLID_DataObject )  {
       refpObj = new DataObject();
       return StatusCode::SUCCESS;
@@ -132,6 +137,7 @@ StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& re
       refpObj = new RawEvent();
       return StatusCode::SUCCESS;
     }
+#endif
   }
   return StatusCode::FAILURE;
 }
@@ -301,7 +307,7 @@ StatusCode LHCb::RawDataCnvSvc::commitOutput(CSTR , bool doCommit )
       long typ = repSvcType();
       setupMDFIO(msgSvc(),dataProvider());
       if ( typ == RAWDATA_StorageType || typ == MBM_StorageType )  {
-        StatusCode sc = commitRawBanks(m_compress,m_genChecksum,(*m_current).second);
+        StatusCode sc = commitRawBanks(m_compress,m_genChecksum,(*m_current).second, m_bankLocation);
         m_current = m_fileMap.end();
         return sc;
       }

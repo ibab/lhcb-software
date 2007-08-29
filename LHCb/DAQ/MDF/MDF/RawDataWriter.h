@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.h,v 1.4 2007-04-20 12:40:25 cattanem Exp $
+// $Id: RawDataWriter.h,v 1.5 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  RawDataWriter.h
 //	--------------------------------------------------------------------
@@ -92,6 +92,8 @@ namespace LHCb    {
     bool          m_genMD5;
     /// Timeout before really closing the file
     int           m_closeTMO;
+		/// Location of the raw banks in the TES
+		std::string		m_bankLocation;
 
   protected:
     /// Access output file according to runnumber and orbit

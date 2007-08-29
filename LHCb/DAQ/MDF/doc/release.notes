@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-08-28 - Albert Puig
+  - Modified commitRawBanks in order to allow a different location of the 
+    raw banks in the TES.
+  - Bugfix in RawDataAddress.h.
+
 ! 2007-04-01 - Markus Frank
   - Fix structure of RawEventDescriptor to match memory layout
     of MEP_SINGLE_EVT in MEP buffer for amd64 (int->long)

@@ -1,4 +1,4 @@
-// $Id: MDFWriterLite.h,v 1.5 2007-04-20 12:40:24 cattanem Exp $
+// $Id: MDFWriterLite.h,v 1.6 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  MDFWriterLite.h
 //	--------------------------------------------------------------------
@@ -60,6 +60,8 @@ namespace LHCb    {
     size_t	  m_maxFileSizeKB;
     /// Maximum number of events in a file (after which a new file will be written)
     size_t        m_maxFileEvents;
+		/// Location of the raw banks in the TES
+		std::string		m_bankLocation;
 
 
     /// Internal setup (may not be called from sub-classes!

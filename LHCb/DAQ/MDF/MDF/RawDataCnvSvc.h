@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.h,v 1.7 2007-04-20 12:40:25 cattanem Exp $
+// $Id: RawDataCnvSvc.h,v 1.8 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -53,6 +53,8 @@ namespace LHCb  {
     /// Reference to data manager interface
     IDataManagerSvc*  m_dataMgr;
     int               m_evtsBefore, m_evtsAfter;
+		/// Location of the raw banks in the TES
+		std::string		m_bankLocation;
 
     /// Helper to print errors and return bad status
     StatusCode error(CSTR msg)  const;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.6 2006-10-27 16:11:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.7 2007-08-29 08:22:12 apuignav Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -98,6 +98,7 @@ LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
   declareProperty("GenerateMD5",    m_genMD5=false);                // Generate MD5 checksum
   declareProperty("CloseTimeout",   m_closeTMO=0);                  // Timeout before really closing the file
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
+	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
 }
 
 /// Initialize the algorithm.
@@ -220,7 +221,7 @@ StatusCode LHCb::RawDataWriter::execute()    {
   if ( f )  {
     switch(m_dataType)  {
     case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
-      sc = commitRawBanks(m_compress, m_genChecksum, f);
+      sc = commitRawBanks(m_compress, m_genChecksum, f, m_bankLocation);
       break;
     case MDF_RECORDS: // Ready to write MDF records...
     case MDF_BANKS:   // Ready to write banks structure with first bank containing MDF header...
