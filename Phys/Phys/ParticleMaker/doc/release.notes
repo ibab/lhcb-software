@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.70 2007-08-22 16:40:02 pkoppenb Exp $ 
+! $Id: release.notes,v 1.71 2007-08-30 12:14:54 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2007-08-30 - Patrick Koppenburg
+ - src/CombinedPM: protect verbose and debug
 
 ! 2007-08-22 - Patrick Koppenburg
  - src/MergedPi0Maker.cpp, src/PhotonMaker.cpp, src/ResolvedPi0Maker.cpp:

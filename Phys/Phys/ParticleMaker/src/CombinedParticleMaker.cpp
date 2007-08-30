@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.24 2007-08-15 17:21:30 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.25 2007-08-30 12:14:55 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -205,7 +205,7 @@ StatusCode CombinedParticleMaker::finalize()
 StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
 {
 
-  debug() << "Will get ProtoParticles from " << m_input << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Will get ProtoParticles from " << m_input << endmsg ;
 
   if (!exist<ProtoParticles>(m_input)){
     Warning("No ProtoParticles at "+m_input);
@@ -221,7 +221,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Making Particles from " << protos->size() << " ProtoParticles at "
+    if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << protos->size() << " ProtoParticles at "
             << m_input << endmsg;
   }
 
@@ -237,12 +237,14 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     ++tally.totProtos;
 
     // Select tracks
-    verbose() << "Trying Track " << track->key() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << track->key() << endmsg;
     if ( !m_trSel->accept(*track) ) continue;
-    verbose() << " -> Track selected" << track->key() ;
-    if ( track->hasStateAt( LHCb::State::FirstMeasurement )) 
-      verbose() << " " << track->stateAt( LHCb::State::FirstMeasurement ).momentum() ;
-    verbose() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << " -> Track selected " << track->key() ;
+      if ( track->hasStateAt( LHCb::State::FirstMeasurement )) 
+        verbose() << " " << track->stateAt( LHCb::State::FirstMeasurement ).momentum() ;
+      verbose() << endmsg;
+    }
     ++tally.selProtos;
 
     // Do PID checks ?
@@ -253,7 +255,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
           iP != m_protoMap.end(); ++iP )
     {
       const bool selected = (*iP).second->isSatisfied( *iProto );
-      verbose() << " -> Particle type " << (*iP).first->particle()
+      if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << (*iP).first->particle()
                 << " selected=" << selected << endmsg;
       bool madeP(false);
       if ( selected )
@@ -336,30 +338,32 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   /*
   for ( std::vector< LHCb::State*>::const_iterator s = proto->track()->states().begin() ;
         s != proto->track()->states().end() ; ++s){
-    verbose() << " A   State is at " << (*s)->position() << " and has slopes " << (*s)->slopes() << endmsg  ;  
+    if (msgLevel(MSG::VERBOSE)) verbose() << " A   State is at " 
+    << (*s)->position() << " and has slopes " << (*s)->slopes() << endmsg  ;  
   }
   */
 
   LHCb::State& usedState = proto->track()->firstState() ; // backup
   if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
     usedState = proto->track()->stateAt( LHCb::State::ClosestToBeam );
-    verbose() << "Using state at " << usedState.position() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Using state at " << usedState.position() << endmsg ;
   } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
     usedState = proto->track()->stateAt( LHCb::State::FirstMeasurement );
-    verbose() << "Using state at " << usedState.position() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Using state at " << usedState.position() << endmsg ;
   } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
   
 
   // finally, set Particle infor from State using tool
-  verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
             << usedState.momentum() << endmsg ;
   StatusCode sc = m_p2s->state2Particle( usedState, *particle );
-  verbose() << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() 
+    << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
 
   // Add BremmStrahlung for electrons
   if (sc.isSuccess() && "e+" == pprop->particle() && m_addBremPhoton ){
     if( m_brem->addBrem( particle ) )
-      debug() << " ------- BremStrahlung has been added to the particle" << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << " ------- BremStrahlung has been added to the particle" << endmsg;
   }
   return sc;
 }
