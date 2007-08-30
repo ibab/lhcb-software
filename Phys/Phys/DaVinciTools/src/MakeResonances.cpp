@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.31 2007-07-31 14:12:16 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.32 2007-08-30 11:56:35 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -308,7 +308,7 @@ StatusCode MakeResonances::execute() {
     sc = StatusCode::SUCCESS;
   }
   if ( msgLevel(MSG::DEBUG) || m_printStats )
-    always() << "Found " << Final.size() << " candidates " << endmsg ;
+    always() << "Saved " << Final.size() << " candidates " << endmsg ;
   
   return sc;
 };
