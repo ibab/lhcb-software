@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.4 2007-08-27 10:26:32 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.5 2007-08-30 09:58:27 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -98,6 +98,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   // If compare
   if ( "" != m_extension ) {
+
     //== Compare 
     LHCb::L0MuonCandidates* replayed = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default );
     LHCb::L0MuonCandidates* fromraw  = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default + m_extension );
@@ -105,7 +106,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     bool error = false;
    // If the number of candidate don't match
     if (replayed->size()!=fromraw->size()) {
-      info() << "Error : from raw  !=  replayed" <<endreq;
+      info() << "Error : replayed !=  from raw" <<endreq;
       info() << " size    : "<<replayed->size()<<" -VS- "<<fromraw->size()<<endreq;
       info() << " => Evt number : "<< m_totEvent<< endreq;
       error = true;
@@ -121,7 +122,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
         
           error = true;
 
-          info() << "Error : from raw  !=  replayed  (both with "<<replayed->size()<<" candidates)" <<endreq;
+          info() << "Error :   replayed !=  from raw  (both with "<<replayed->size()<<" candidates)" <<endreq;
           info() << " PT      : "<< (*it_replayed)->pt()    << " -VS- "  << (*it_fromraw)->pt()    << endreq;
           info() << " theta   : "<< (*it_replayed)->theta() << " -VS- "  << (*it_fromraw)->theta() << endreq;
           info() << " phi     : "<< (*it_replayed)->phi()   << " -VS- "  << (*it_fromraw)->phi()   << endreq;
