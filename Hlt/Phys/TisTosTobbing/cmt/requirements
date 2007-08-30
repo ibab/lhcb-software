@@ -15,8 +15,6 @@ branches          cmt doc src TisTosTobbing
 #============================================================================
 # use   Package      v1r*    Hat
 
-use DaVinci             v*    Phys
-
 use GaudiAlg            v*
 
 use HltEvent            v*    Event
