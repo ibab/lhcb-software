@@ -162,18 +162,20 @@ void L0Muon::CtrlFinalCnv::decodeBankDC06(std::vector<unsigned int> raw){
   
   int qcand[2] = {0,0};
  
-//std::cout.setf(std::ios::uppercase) ;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06 -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
-//for (std::vector<unsigned int>::iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
-//  std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
-//}
-//std::cout<<std::dec;
-//std::cout.unsetf(std::ios::uppercase);
+// std::cout.setf(std::ios::uppercase) ;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06 -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
+// for (std::vector<unsigned int>::iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
+//   std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
+// }
+// std::cout<<std::dec;
+// std::cout.unsetf(std::ios::uppercase);
 
   int status =( (raw[1]>>4)& 0xF);
 
-  int ncandidates = (status& 0x3);
-//   std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06 => ncandidates= "<<ncandidates<<std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06 => status= 0x"<<std::hex<<std::setw(8)<<status<<std::dec<<std::endl;
+  int ncandidates = (status& 0xF);
+  //ncandidates = ncandidates>2 ? 2 : ncandidates;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06 => ncandidates= "<<ncandidates<<std::endl;
   int start = 8;
   int iwd   = 1;
   unsigned int data  = 0;
@@ -192,17 +194,17 @@ void L0Muon::CtrlFinalCnv::decodeBankDC06(std::vector<unsigned int> raw){
       int q=( data>> 29 )& ( (1<<2 ) -1 );
       if (q/2==m_side) {
         int ir = q-2*m_side;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \ticand= "<<icand<< " q:" <<q<<" belong to this side"<<std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \tdata= "<<std::hex<<std::setw(8)<<data<<std::dec<<std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t PT=     " << int(( data>>  0 ) & ( (1<<7 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Charge= " << int(( data>>  7 ) & ( (1<<1 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t RowM3=  " << int(( data>>  8 ) & ( (1<<2 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t ColM3=  " << int(( data>> 10 ) & ( (1<<5 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t OffM2=  " << int(( data>> 15 ) & ( (1<<4 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t OffM1=  " << int(( data>> 19 ) & ( (1<<4 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t PU=     " << int(( data>> 23 ) & ( (1<<2 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Board=  " << int(( data>> 25 ) & ( (1<<4 ) -1 )) << std::endl;
-//std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Quarter=" << int(( data>> 29 ) & ( (1<<2 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \ticand= "<<icand<< " q:" <<q<<" belong to this side"<<std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \tdata= "<<std::hex<<std::setw(8)<<data<<std::dec<<std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t PT=     " << int(( data>>  0 ) & ( (1<<7 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Charge= " << int(( data>>  7 ) & ( (1<<1 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t RowM3=  " << int(( data>>  8 ) & ( (1<<2 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t ColM3=  " << int(( data>> 10 ) & ( (1<<5 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t OffM2=  " << int(( data>> 15 ) & ( (1<<4 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t OffM1=  " << int(( data>> 19 ) & ( (1<<4 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t PU=     " << int(( data>> 23 ) & ( (1<<2 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Board=  " << int(( data>> 25 ) & ( (1<<4 ) -1 )) << std::endl;
+// std::cout<<"\t=> L0Muon::CtrlFinalCnv::decodeBankDC06  \t Quarter=" << int(( data>> 29 ) & ( (1<<2 ) -1 )) << std::endl;
         L0Muon::writeCandInRegister(&m_candRegHandler[ir],data,qcand[ir],bankVersion);
         qcand[ir]++;
       }
