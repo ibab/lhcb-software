@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.25 2007-08-30 12:14:55 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.26 2007-08-30 12:21:37 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -240,10 +240,8 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << track->key() << endmsg;
     if ( !m_trSel->accept(*track) ) continue;
     if (msgLevel(MSG::VERBOSE)) {
-      verbose() << " -> Track selected " << track->key() ;
-      if ( track->hasStateAt( LHCb::State::FirstMeasurement )) 
-        verbose() << " " << track->stateAt( LHCb::State::FirstMeasurement ).momentum() ;
-      verbose() << endmsg;
+      verbose() << " -> Track selected " << track->key()  
+                << " " << track->firstState().momentum() << endmsg;
     }
     ++tally.selProtos;
 
