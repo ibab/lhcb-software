@@ -22,6 +22,10 @@ HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" 
 HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
 HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
 /*
+ * MC truth associated tracks
+ */
+SeqHltCharged.Members += { "GaudiSequencer/SeqTrueSignalTracks" }; // debug
+/*
  * Hacking of errors
  */
 SeqHltCharged.Members += { "HltInsertTrackErrParam"} ;
@@ -114,6 +118,8 @@ HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
 HltMuonForTES.OutputLevel =3;
 // ToolSvc.CloneFinderTool.CompareAtLHCbIDsLevel=true;
 HltMuonForTES.CloneFinderTool.CompareAtLHCbIDsLevel=true;
+
+SeqHltMuons.Members += { "GaudiSequencer/SeqTrueSignalMuons" } ; // debug
 
 SeqHltMuons.Members += { "ChargedProtoPAlg/HltMuonPAlg" } ;
 //HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 

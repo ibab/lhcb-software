@@ -2,6 +2,9 @@ package HltSys
 version v1r8
 
 branches cmt doc options
+
+# TMP --- not for release
+use GlobalReco v* Rec
  
 #=======================================================
 # LHCb High Level Trigger packages
@@ -39,8 +42,10 @@ use LoKiAlgo            v*     Phys   # Vanya Belyaev
 use LoKiAlgoMC          v*     Phys   # Vanya Belyaev
 use LoKiArrayFunctors   v*     Phys   # Vanya Belyaev
 use LoKiTrigger         v*     Phys   # Vanya Belyaev
+use LoKi                v*     Phys   # Vanya Belyaev
+use LoKiExample         v*     Ex     # Vanya Belyaev (should go to Analysis)
 
-
+use TisTosTobbing       v*     Phys   # Tomasz Skwarnicki  
 
 
 
