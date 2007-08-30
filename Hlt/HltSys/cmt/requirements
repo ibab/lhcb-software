@@ -3,9 +3,6 @@ version v1r8
 
 branches cmt doc options
 
-# TMP --- not for release
-use GlobalReco v* Rec
- 
 #=======================================================
 # LHCb High Level Trigger packages
 #=======================================================
