@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.1 2007-08-30 04:06:41 tskwarni Exp $
+// $Id: ITriggerTisTos.h,v 1.2 2007-08-30 13:38:18 pkoppenb Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -147,8 +147,6 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITriggerTisTos; }
 
-  virtual StatusCode         initialize() = 0;
-  
   // ------------  various ways to define trigger input ------------------------------
 
   /// must be called by the user before any trigger input definition calls if the trigger structure may have changed since the previous event  

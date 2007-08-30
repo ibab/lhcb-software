@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.2 2007-08-30 04:06:41 tskwarni Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.3 2007-08-30 13:38:18 pkoppenb Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -34,21 +34,28 @@ static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos"
  *   for given Trigger Selection Summary (or set of Trigger Selection Summaries) with  
  *   respect to a user specified "Offline Input".
  * @par
- *   The Tool can be used to TisTos either Trigger Selections run in Alleys (the summary holds either Tracks or Vertices) or in HltExclusive (the summary holds Particles).
+ *   The Tool can be used to TisTos either Trigger Selections run in Alleys (
+ *   the summary holds either Tracks or Vertices) or in HltExclusive (the summary holds Particles).
  * @par
  *   The tool can also return a vector of all TOS matches in the Trigger Selection Output (saved in Summary) 
- *   to the Offline Input, which, depending on the Selection Summary can be either a vector of Tracks, RecVertecies or Particles.   
- *   This vector is ordered according to the match quality, with the best match (implementation dependent!) coming first. 
+ *   to the Offline Input, which, depending on the Selection Summary can be either a 
+ *   vector of Tracks, RecVertecies or Particles.   
+ *   This vector is ordered according to the match quality, with the best match 
+ *   (implementation dependent!) coming first. 
  * @par
- *   User can also obtain a list of LHCbIDs of hits derived from Offline Input used by the tool to perform matching between the offline and
+ *   User can also obtain a list of LHCbIDs of hits derived from Offline Input used 
+ *   by the tool to perform matching between the offline and
  *   trigger content.
  * @par
- *   The interface was designed with hit based matching in mind, but the tool could be implemented without it, in which case LHCbID input or output
+ *   The interface was designed with hit based matching in mind, but the tool could be 
+ *   implemented without it, in which case LHCbID input or output
  *   functions could do nothing.
  *
  * @par Offline Input
- *   Particle (with or without daughters), ProtoParticle, Track, a vector of LHCbIDs, or combination of these can be passed as Offline Input.
- *   Passing ProtoParticle is not the same as passing the track the ProtoParticle may be built on, since the tool can take input from PID info 
+ *   Particle (with or without daughters), ProtoParticle, Track, a vector of LHCbIDs, 
+ *   or combination of these can be passed as Offline Input.
+ *   Passing ProtoParticle is not the same as passing the track the ProtoParticle may 
+ *   be built on, since the tool can take input from PID info 
  *   (e.g. to grab Muon hits for matching).
  * @par
  *   @c setOfflineInput() called without parameters initializes new Offline Input.
@@ -56,33 +63,45 @@ static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos"
  * @par
  *   @c setOfflineInput( <input> ) is a shortcut to the sequence of the above.
  * @par
- *   Once the Offline Input is defined, many calls to the output functions can be made without re-entering the Offline Input.
+ *   Once the Offline Input is defined, many calls to the output functions can be 
+ *   made without re-entering the Offline Input.
  * @par
- *   The Offline Input can also be passed in functions which retrieve outputs, but this becomes inefficient if many output function calls are
- *   made passing the same Offline Input (as the Offline Input is pre-processed and stored in an internal representation).
+ *   The Offline Input can also be passed in functions which retrieve outputs, 
+ *   but this becomes inefficient if many output function calls are
+ *   made passing the same Offline Input (as the Offline Input is pre-processed 
+ *   and stored in an internal representation).
  *   
  * @par Trigger Selection Input
  *   Trigger Selection Input is passed as an argument to output functions.
- *   Trigger Selection Summary is defined by its name (@c std::string). The tool does not check the passed names for validity.
- *   If Trigger Selection Summary is not found (because the selection was not run for that event, its output was not saved or the name is invalid) 
+ *   Trigger Selection Summary is defined by its name (@c std::string). 
+ *   The tool does not check the passed names for validity.
+ *   If Trigger Selection Summary is not found (because the selection was 
+ *   not run for that event, its output was not saved or the name is invalid) 
  *   dummy output is returned without any warnings.
  * @par
  *   All output functions accept single Trigger Selection name.
  * @par
- *   @c selectionTisTos can also accept a vector of Trigger Selection names, in which case the output is OR (or AND depending on the last parameter) between
- *   all specified selections. Use this e.g. to TisTos Alleys with multiple exit selections or entire collection of Alleys. 
+ *   @c selectionTisTos can also accept a vector of Trigger Selection names, 
+ *   in which case the output is OR (or AND depending on the last parameter) between
+ *   all specified selections. Use this e.g. to TisTos Alleys with multiple 
+ *   exit selections or entire collection of Alleys. 
  * 
  * @par Outputs of @c selectionTisTos. 
  *   @c decision, @c tis, @c tos - are all of @c bool type.
  * @par
- *   @c decision is true if the trigger selection was satisfied (false if it failed or was not run). This output is independent of the Offline Input!
+ *   @c decision is true if the trigger selection was satisfied 
+ *  (false if it failed or was not run). This output is independent of the Offline Input!
  * @par
- *   @c TIS = Trigger Independent of Signal ("Signal" = Offline Input) is true if the selection is satisfied with trigger
- *   tracks/vertices/particles which are not matched to the Offline Input. Matching criteria are implementation dependent.   
+ *   @c TIS = Trigger Independent of Signal ("Signal" = Offline Input) 
+ *   is true if the selection is satisfied with trigger
+ *   tracks/vertices/particles which are not matched to the Offline 
+ *   Input. Matching criteria are implementation dependent.   
  * @par    
  *   @c TOS = Trigger on Signal is true if the selection is satisfied with trigger
- *   tracks/vertices/particles which are matched to the Offline Input. Matching criteria are implementation dependent and
- *   not necessarily the same as for TIS (i.e. not-TIS object is not necessarily the same as TOS object).
+ *   tracks/vertices/particles which are matched to the Offline Input. 
+ *   Matching criteria are implementation dependent and
+ *   not necessarily the same as for TIS (i.e. not-TIS object is not 
+ *   necessarily the same as TOS object).
  * @par 
  *   TIS, TOS are not mutually exclusive categories i.e. TIS==true and TOS==true is possible.
  * @par  
@@ -92,8 +111,10 @@ static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos"
  * 
  * @par Simple Example:
  *     @code
- *      // obtain Tis,Tos calssification of the Hadron Alley with respect to selected B candidate 
- *      ITriggerSelectionTisTos* triggerSelectionTisTosTool = tool<ITriggerSelectionTisTos>("TriggerSelectionTisTos","TriggerSelectionTisTos",this);
+ *      // obtain Tis,Tos calssification of the Hadron Alley with respect 
+ *      to selected B candidate 
+ *      ITriggerSelectionTisTos* triggerSelectionTisTosTool = 
+ *          tool<ITriggerSelectionTisTos>("TriggerSelectionTisTos",this);
  *      LHCb::Particle signalB =...
  *      bool decision,tis,tos;
  *      triggerSelectionTisTosTool->selectionTisTos( signalB, "HadTrigger", decision, tis, tos);  
@@ -109,8 +130,6 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITriggerSelectionTisTos; }
 
-  virtual StatusCode         initialize() = 0;
-  
   // ------------  various ways to define off-line input ------------------------------
 
   /// erase previous input 

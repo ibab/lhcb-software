@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2007-08-30 08:56:36 pkoppenb Exp $
+ ! $Id: release.notes,v 1.6 2007-08-30 13:38:18 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
@@ -9,14 +9,16 @@
  - removed slc4 directory
  - removed depndency on DaVinci
  - removed _load file
+ - removed initialise in I*.h
 
-! 20070829 - TisTosTobbing v2r0
+! 20070829 - Tomasz Skwarnicki
   Add TriggerTisTos tool.
   TriggerSelectionTisTos code: 
      Extend Ecal hits support.
      Add result caching.
      Cleanup and add docs.
 
-! 20070808 - TisTosTobbing v1r0
+!====================== TisTosTobbing v1r0 2007-8-8 ==================
+! 2007-08-08 - Tomasz Skwarnicki
   First release of TriggerSelectionTisTos tool
 
