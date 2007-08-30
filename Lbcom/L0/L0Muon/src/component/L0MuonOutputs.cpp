@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.1 2007-08-27 10:26:32 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.2 2007-08-30 09:58:01 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -499,7 +499,7 @@ std::vector<unsigned int> L0MuonOutputs::DC06RawBanks(){
   for (int i= 0; i<2; ++i) {
     ncandidates += m_ctrlFinal[i].muonCandidates().size();
   }
-  word=(ncandidates<<4);
+  word=( (ncandidates<<4) & 0xF0);
 
   // End of 2nd word and next words ...
   int cursor = 8;
