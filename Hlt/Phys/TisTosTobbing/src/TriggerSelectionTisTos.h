@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.1.1.1 2007-08-09 01:31:19 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -9,6 +9,7 @@
 
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "Event/Track.h"
 
 namespace LHCb {
   class HltSummary;
@@ -16,16 +17,20 @@ namespace LHCb {
   
 /** @class TriggerSelectionTisTos TriggerSelectionTisTos.h
  *  
- *
  *  @author Tomasz Skwarnicki
  *  @date   2007-08-06
+ *
+ *  Hit based implementation of Tis,Tos'ing Trigger Selection(s).
+ *  @sa  ITriggerSelectionTisTos docs for more explanation.
+ *  This interface also defines inlined shortcuts to set Offline Input and get an output in one call. 
  */
 class TriggerSelectionTisTos : public GaudiTool, virtual public ITriggerSelectionTisTos {
 public: 
 
-  // hits are split into following categories for individual matching
+  /// hits are split into @c HitType categories for matching in each category 
   enum HitType {kVelo,kTT,kOTIT,kMuon,kEcal,kHcal,nHitTypes,kNotUsed=nHitTypes};
 
+  /// ClassifiedHits arrays of dimension @c nHitTypes are used as argument in internal methods 
   typedef std::vector<LHCb::LHCbID> ClassifiedHits;
 
 
@@ -39,115 +44,171 @@ public:
 
   virtual StatusCode         initialize();
   
-  // ------------  various ways to define off-line input
+  // ------------  various ways to define off-line input -------------------------
 
-  void setOfflineInput( ); // erase previous input 
+  /// erase previous input 
+  void setOfflineInput( ); 
  
-  //    Detector hit input 
+  ///    Detector hit input 
   void addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist, ClassifiedHits hitidlist[] );
+  ///    Detector hit input seen via interface
   void addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist ){ addToOfflineInput( hitlist, m_offlineInput );  }
-  
 
+  ///    Calo hit input 
+  void addToOfflineInput( const std::vector<LHCb::CaloCellID> & hitlist, ClassifiedHits hitidlist[] );
 
-  //    Track input 
+  ///    Track input 
   void addToOfflineInput( const LHCb::Track & track,  ClassifiedHits hitidlist[] );  
+  ///    Track input seen via interface
   void addToOfflineInput( const LHCb::Track & track ){ addToOfflineInput( track, m_offlineInput );  }
   
-  
-  //    Proto-particle input
+  ///    Proto-particle input
   void addToOfflineInput( const LHCb::ProtoParticle & protoParticle, ClassifiedHits hitidlist[]  ); 
+  ///    Proto-particle input seen via interface
   void addToOfflineInput( const LHCb::ProtoParticle & protoParticle ){ addToOfflineInput( protoParticle, m_offlineInput );  }
   
-  //    Particle input; for composite particles loop over daughters will be executed
+  ///    Particle input; for composite particles loop over daughters will be executed
   void addToOfflineInput( const LHCb::Particle & particle, ClassifiedHits hitidlist[] ); 
+  ///    Particle input seen via interface
   void addToOfflineInput( const LHCb::Particle & particle ){ addToOfflineInput( particle, m_offlineInput );  }  
 
-  // -------------- outputs:
-  //
-  //    decision =  was trigger satisfied ? (this is independent of offline input passed to this tool!)
-  //    tis      =  Trigger Independent of Signal  
-  //                (trigger selection was satisified independently of the offline input passed to this tool)
-  //    tos      =  Trigger On Signal  
-  //                (the offline input passed to this tool was sufficient to satisfy this trigger selection)
-  //   
-  //    comments:
-  //         if decision==false then tis=false and tos=false 
-  //
-  //         tis, tos are not mutually exclusive ( tis==true and tos=true is possible, TOE in TriggerSource terminology)
-  //
-  //         TOB (Trigger On Both ) =  decision && !tis && !tos  
-  //           
 
-  // ------------ single selection summary TisTos
-  void selectionTisTos( std::string selectionName,  
-                                bool & decision, bool & tis, bool & tos ); 
+  // ------------  TIS,TOS output functions  ------------------------
+
+  /// single Trigger Selection Summary TisTos  (define Offline Input before calling)
+  void selectionTisTos( const std::string & selectionName,  
+                        bool & decision, bool & tis, bool & tos ); 
 
 
-  // ------------ multiple selections summary TisTos
-  void selectionTisTos( std::vector< std::string > selectionNames,
-                                bool & decision, bool & tis, bool & tos ,
-                                bool selectionOR = true);  // set to false if an AND between selections is required
+  /// multiple Trigger Selection Summaries TisTos (set selectionOR=false for an AND) (define Offline Input before calling)
+  void selectionTisTos( const std::vector< std::string > & selectionNames,
+                        bool & decision, bool & tis, bool & tos ,
+                        bool selectionOR = kSelectionDefaultLogic );  
 
   
-  // ------------ auxiliary output:  list of LHCbIDs corresponding to present offline input
+  // ------------ auxiliary outputs ---------------------------------
+
+  /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
   std::vector<LHCb::LHCbID> offlineLHCbIDs(); 
 
-  // ------------  additional functionality:  lists of tracks/vertices/particles from selection summary
-  //               satisfying TOS, ordered according to TOS quality (best first)
-  //               return empty vector in case of a mismatch between the output type and the selection summary
-  std::vector<const LHCb::Track*>     matchedTOSTracks( std::string selectionName );
-  std::vector<const LHCb::RecVertex*> matchedTOSVertices( std::string selectionName );
-  std::vector<const LHCb::Particle*>  matchedTOSParticles( std::string selectionName );
+  /// lists of tracks from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName );
+  /// lists of vertices from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName );
+  /// lists of particles from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName );
 
 
   // --------------------- utilities ------------------------
 
+  /// classify hit into @c HitType
   static int hitMatchType(const LHCb::LHCbID & id);
 
+  /** @par matchIDs
+   *  Dimension of @c offidlist (input) and @c overlap (output) arrays is @c nHitTypes
+   *  @par
+   *  Returned overlap values are in the range [0.,1.] if hits of that type are present on the input Track, otherwise the returned value is 2.0
+   */ 
+
+  /// calculate hit overlap between the @c Track (here from Trigger Summary) and set of @c ClasssifiedHits (here from Offline Input) for each @c HitType
   static void matchIDs(const LHCb::Track & track, 
-                const ClassifiedHits offidlist[],
-                double overlap[] );
+                       const ClassifiedHits offidlist[],
+                       double overlap[] );
     
-  static std::vector<const LHCb::Particle*> finalStateParticles(const LHCb::Particle* particle);
-
-protected:
-
-private:
-
-
+  /// return TIS,TOS for a vector of Tracks (here from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void trackListTISTOS(const std::vector<LHCb::Track*> & ontracks,
                        const ClassifiedHits offidlist[],
                        bool& TIS,bool& TOS) const;
 
+  /// return TIS,TOS for a vector of Vertices (here usually track pairs from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void vertexListTISTOS(const std::vector<LHCb::RecVertex*> & onvertices,
                         const ClassifiedHits offidlist[],
                         bool& TIS,bool& TOS) const;
 
+  /// return TIS,TOS for a vector of Particles (here from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void particleListTISTOS(const SmartRefVector<LHCb::Particle> & onparticles,
-			  const ClassifiedHits offidlist[],
-			  bool& TIS,bool& TOS) const;
+                          const ClassifiedHits offidlist[],
+                          bool& TIS,bool& TOS) const;
 
+  /// for given particle returns descendent daughters (of any generation) which have no daughters themselves 
+  static std::vector<const LHCb::Particle*> finalStateParticles(const LHCb::Particle* particle);
+
+protected:
+
+  /// get Hlt Summary and configuration
   void getHltSummary();
+  
+  /// Hlt summary 
+  LHCb::HltSummary* m_summary;
+  /// Hlt configuration
+  Hlt::Configuration* m_hltconf;
+
+private:
+
+  // internal Cache of results used as long as the Offline Input remains the same
+ 
+  void clearCache()
+  {
+    m_cached_SelectionNames.clear();
+    m_cached_decision.clear();
+    m_cached_tis.clear();
+    m_cached_tos.clear();
+  }
+  
+  void storeInCache(const std::string & selectionName, bool decision, bool tis, bool tos)
+  {
+    m_cached_SelectionNames.push_back(selectionName);
+    m_cached_decision.push_back(decision);
+    m_cached_tis.push_back(tis);
+    m_cached_tos.push_back(tos);
+  }
+  
+  bool findInCache(const std::string & selectionName, bool & decision, bool & tis, bool & tos)
+  {
+    std::vector< std::string >::iterator found =
+      std::find( m_cached_SelectionNames.begin(),m_cached_SelectionNames.end(), selectionName);
+    if( found == m_cached_SelectionNames.end() )return false;
+    int index ( found - m_cached_SelectionNames.begin() );
+    decision = m_cached_decision[index];
+    tis =      m_cached_tis[index];
+    tos =      m_cached_tos[index];
+    return true;
+  }  
 
   //  -------------------------- data members --------------------
 
-  double m_TISFrac[nHitTypes]; // maximum fraction of matching hits allowed for TIS
-  double m_TOSFrac[nHitTypes]; // minimum fraction of matching hits required for TOS
+  /// maximum fraction of matching hits allowed for TIS
+  double m_TISFrac[nHitTypes]; 
+  /// minimum fraction of matching hits required for TOS
+  double m_TOSFrac[nHitTypes]; 
  
+  /// Offline Input stored as classified hits
   ClassifiedHits m_offlineInput[nHitTypes];
 
+  /// Tool for projecting track into Hcal and Ecal 
   ITrack2Calo*  m_track2calo;
+  /// Hcal detector geometry
   DeCalorimeter* m_hcalDeCal;
+  /// Ecal detector geometry
   DeCalorimeter* m_ecalDeCal;
 
+  /// Location of Muon Tracks holding muon hits
   std::string m_MuonTracksLocation;
+  /// Extracted muon track container 
   LHCb::Tracks* m_muonTracks;
   
+  /// Location of Hlt Summary
   std::string m_HltSummaryLocation;
-  LHCb::HltSummary* m_summary;
-  Hlt::Configuration* m_hltconf;
 
+  /// Counter for limiting number of warning messages
   int m_warning_count;  
   
+  // Cache of results for the same Offline Input
+  std::vector< std::string > m_cached_SelectionNames;
+  std::vector< bool >        m_cached_decision;
+  std::vector< bool >        m_cached_tis;
+  std::vector< bool >        m_cached_tos;
+  
+
 };
 #endif // TRIGGERSELECTIONTISTOS_H

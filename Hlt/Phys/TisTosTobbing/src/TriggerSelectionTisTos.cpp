@@ -1,18 +1,26 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.1.1.1 2007-08-09 01:31:19 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
 // Include files 
-#include "HltBase/HltUtils.h"
+#include <algorithm>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
+
+#include "GaudiKernel/Plane3DTypes.h"
+
 
 // local
 #include "TriggerSelectionTisTos.h"
 
+#include "HltBase/HltUtils.h"
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 #include "HltBase/HltConfigurationHelper.h"
 #include "Event/Track.h"
 #include "Event/Particle.h"
+
+#include "Kernel/CaloCellCode.h"
+
+
 
 using namespace LHCb;
 
@@ -46,15 +54,15 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
   declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
   declareProperty("TOSFracOTIT", m_TOSFrac[kOTIT] = 0.7 );
   declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.7 );
-  declareProperty("TOSFracEcal", m_TOSFrac[kEcal] = -0.01); // makes TOS always true (Ecal not used yet)
+  declareProperty("TOSFracEcal", m_TOSFrac[kEcal] = 0.01); 
   declareProperty("TOSFracHcal", m_TOSFrac[kHcal] = 0.01);
 
   declareProperty("TISFracVelo", m_TISFrac[kVelo] = 0.01 );
   declareProperty("TISFracTT",   m_TISFrac[kTT]   = 0.01 );
   declareProperty("TISFracOTIT", m_TISFrac[kOTIT] = 0.01 );
   declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 );
-  declareProperty("TISFracEcal", m_TISFrac[kEcal] = 1.01 ); // makes TIS always true (Ecal not used yet)
-  declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.01 );
+  declareProperty("TISFracEcal", m_TISFrac[kEcal] = 0.0099 ); 
+  declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.0099 );
 
   for( int hitType=0; hitType!=nHitTypes; ++hitType ){
     m_offlineInput[hitType].reserve(500);
@@ -63,7 +71,13 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
   m_track2calo = NULL;
   
   m_warning_count=0;
+ 
+  m_cached_SelectionNames.reserve(500);
+  m_cached_decision.reserve(500);
+  m_cached_tis.reserve(500);
+  m_cached_tos.reserve(500);
   
+ 
 }
 
 
@@ -85,21 +99,27 @@ StatusCode TriggerSelectionTisTos::initialize() {
 
   setOfflineInput();
   
-  info() << " TriggerSelectionTisTos ";
-  info() << " HltSummaryLocation=" <<  m_HltSummaryLocation;
-  info() << " OfflineMuonTrackLocation=" << m_MuonTracksLocation;
-  info() << endmsg;
-  
-  info() << " TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << endmsg;
-  info() << " TOSFracTT "   <<  m_TOSFrac[kTT]   << " TISFracTT "   << m_TISFrac[kTT]   << endmsg;
-  info() << " TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << endmsg;
-  info() << " TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << endmsg;
-  info() << " TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << endmsg;
-  info() << " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << endmsg;
-  
-
+  if( m_TOSFrac[kVelo]>1.0 && m_TISFrac[kVelo]<0.0 ){
+    info()<< " TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << " thus Velo hits not used " << endmsg;
+  }
+  if( m_TOSFrac[kTT]>1.0 && m_TISFrac[kTT]<0.0 ){
+    info()<< " TOSFracTT   " <<  m_TOSFrac[kTT] <<   " TISFracTT   " << m_TISFrac[kTT] << " thus TT hits not used " << endmsg;
+  }
+  if( m_TOSFrac[kOTIT]>1.0 && m_TISFrac[kOTIT]<0.0 ){
+    info()<< " TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << " thus OTIT hits not used " << endmsg;
+  }
+  if( m_TOSFrac[kMuon]>1.0 && m_TISFrac[kMuon]<0.0 ){
+    info()<< " TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << " thus Muon hits not used " << endmsg;
+  }
+  if( m_TOSFrac[kEcal]>1.0 && m_TISFrac[kEcal]<0.0 ){
+    info()<< " TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << " thus Ecal hits not used " << endmsg;
+  }
+  if( m_TOSFrac[kHcal]>1.0 && m_TISFrac[kHcal]<0.0 ){
+    info()<< " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << " thus Hcal hits not used " << endmsg;
+  }
  
   return StatusCode::SUCCESS;
+
 }
 
 
@@ -118,9 +138,9 @@ int TriggerSelectionTisTos::hitMatchType(const LHCbID & id)
     } else if ( id.isMuon() ) {
       hitType=kMuon;
     } else if ( id.isCalo() ) {
-      if( int( id.caloID().calo() ) == CaloCellCode::CaloNumFromName("Hcal") ){
+      if( CaloCellCode::CaloNameFromNum( id.caloID().calo() ) == "Hcal" ){
         hitType=kHcal;
-      } else if (  int( id.caloID().calo() ) == CaloCellCode::CaloNumFromName("Ecal") ){
+      } else if (  CaloCellCode::CaloNameFromNum( id.caloID().calo() ) == "Ecal" ){
         hitType=kEcal;
       }
     }
@@ -332,14 +352,12 @@ void TriggerSelectionTisTos::getHltSummary()
       std::string loca = m_HltSummaryLocation+"/Configuration";
       Hlt::DataHolder< Hlt::Configuration >* holder = get< Hlt::DataHolder<Hlt::Configuration> >(loca);
       m_hltconf = &(holder->object());
-      if( m_hltconf == NULL ){ info() << " No HLT Configuration at " << loca << " No TisTosing possible " << endmsg; 
+      if( m_hltconf == NULL ){ error() << " No HLT Configuration at " << loca << " No TisTosing possible " << endmsg; 
       }
     }
   }
 }
 
-
-//==================== PUBLIC ==================================================
 
 //=============================================================================
 // -------------- offline inputs -----------------------------------------------
@@ -359,30 +377,49 @@ void TriggerSelectionTisTos::setOfflineInput( )
   m_summary = NULL;
   m_hltconf = NULL;
 
+  clearCache();
+
 }
    
+
 //    hit list input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist, ClassifiedHits hitidlist[] )
 {
+  bool modified(false);
+  
   for( std::vector<LHCbID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
 
     int hitType=hitMatchType(*id);
     if( hitType==kNotUsed ){ continue; }
 
-    bool duplicate(false);    
-    for( std::vector<LHCbID>::const_iterator id2=(hitidlist[hitType]).begin(); 
-                                             id2!=(hitidlist[hitType]).end(); ++id2){
-      if( *id == *id2 ){ 
-        duplicate=true;
-        break;
-      }
-      
-    }
-    if( duplicate )continue;
+    if( std::find((hitidlist[hitType]).begin(),(hitidlist[hitType]).end(),*id)
+        != (hitidlist[hitType]).end() ){ continue;}
 
-    (hitidlist[hitType]).push_back(*id); 
+    (hitidlist[hitType]).push_back(*id);
+    modified = true;
     
   }
+  if( modified )clearCache();
+}
+
+//    calo hit list input ---------------------------------------------------------------
+void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::CaloCellID> & hitlist, ClassifiedHits hitidlist[] )
+{
+  bool modified(false);
+  
+  for( std::vector<CaloCellID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
+
+    int hitType=hitMatchType(*id);
+    if( hitType==kNotUsed ){ continue; }
+
+    if( std::find((hitidlist[hitType]).begin(),(hitidlist[hitType]).end(),*id)
+        != (hitidlist[hitType]).end() ){ continue;}
+
+    (hitidlist[hitType]).push_back(*id);
+    modified = true;
+    
+  }
+  if( modified )clearCache();
 }
 
 //    Track input ---------------------------------------------------------------
@@ -393,35 +430,29 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
   const std::vector<LHCbID>& ids = track.lhcbIDs();
   addToOfflineInput( ids, hitidlist);
 
+
+    
   // ------------------ add expected Hcal hits (3x3 group around cell crossed at shower max) ------------
   // do it only if needed 
   if( ( m_TOSFrac[kHcal] > 0.0 ) && ( m_TISFrac[kHcal] < 1.0 ) ){
     if( m_track2calo != NULL ){
       if( m_hcalDeCal==NULL ){ m_hcalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ); }
       if( m_hcalDeCal != NULL ){
-        if( m_track2calo->match( &track, DeCalorimeterLocation::Hcal) ){ 
-          if( m_track2calo->isValid() ){ // is matched cellid valid
-            LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
-            std::vector<LHCb::CaloCellID> cells3x3;
-            cells3x3.push_back(centerCell);
-            const std::vector<LHCb::CaloCellID> & neighbors = m_hcalDeCal->neighborCells( centerCell );
-            cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
-            for( std::vector<LHCb::CaloCellID>::const_iterator id=cells3x3.begin();id!=cells3x3.end();++id){
-              int hitType=hitMatchType(*id);
-              if( hitType==kNotUsed ){ continue; }
-              bool duplicate(false);    
-              for( std::vector<LHCbID>::const_iterator id2=(hitidlist[hitType]).begin(); 
-                   id2!=(hitidlist[hitType]).end(); ++id2){
-                if( *id == id2->caloID() ){ 
-                  duplicate=true;
-                  break;
-                }
-              }
-              if( duplicate )continue;
-              (hitidlist[hitType]).push_back(*id); 
+
+        // do not project through the magnet 
+        if( track.closestState( m_hcalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
+          if( m_track2calo->match( &track, DeCalorimeterLocation::Hcal) ){ 
+            if( m_track2calo->isValid() ){ // is matched cellid valid
+              LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
+              std::vector<LHCb::CaloCellID> cells3x3;
+              cells3x3.push_back(centerCell);
+              const std::vector<LHCb::CaloCellID> & neighbors = m_hcalDeCal->neighborCells( centerCell );
+              cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+              addToOfflineInput( cells3x3, hitidlist );
             }
           }
         }
+        
       }
     }
   }
@@ -431,32 +462,26 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
     if( m_track2calo != NULL ){
       if( m_ecalDeCal==NULL ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
       if( m_ecalDeCal != NULL ){
-        if( m_track2calo->match( &track, DeCalorimeterLocation::Ecal) ){ // play with 3rd parameter?
-          if( m_track2calo->isValid() ){ // is matched cellid valid
-            LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
-            std::vector<LHCb::CaloCellID> cells3x3;
-            cells3x3.push_back(centerCell);
-            const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
-            cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
-            for( std::vector<LHCb::CaloCellID>::const_iterator id=cells3x3.begin();id!=cells3x3.end();++id){
-              int hitType=hitMatchType(*id);
-              if( hitType==kNotUsed ){ continue; }
-              bool duplicate(false);    
-              for( std::vector<LHCbID>::const_iterator id2=(hitidlist[hitType]).begin(); 
-                   id2!=(hitidlist[hitType]).end(); ++id2){
-                if( *id == id2->caloID() ){ 
-                  duplicate=true;
-                  break;
-                }
-              }
-              if( duplicate )continue;
-              (hitidlist[hitType]).push_back(*id); 
+
+        // do not project through the magnet 
+        if( track.closestState( m_ecalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
+          if( m_track2calo->match( &track, DeCalorimeterLocation::Ecal) ){ // play with 3rd parameter?
+            if( m_track2calo->isValid() ){ // is matched cellid valid
+              LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
+              std::vector<LHCb::CaloCellID> cells3x3;
+              cells3x3.push_back(centerCell);
+              const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
+              cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+              addToOfflineInput( cells3x3, hitidlist );
             }
           }
         }
+        
       }
     }
   }
+  
+  
 
 }
 
@@ -464,7 +489,54 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & protoParticle,
                                       ClassifiedHits hitidlist[] ) 
 {
+
   const Track* t=protoParticle.track();
+
+
+  // Ecal via CaloHypo
+  if( ( m_TOSFrac[kEcal] > 0.0 ) && ( m_TISFrac[kEcal] < 1.0 ) ){
+    const SmartRefVector< LHCb::CaloHypo > &caloVec = protoParticle.calo();
+    if( caloVec.size() > 0 ){
+      const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
+      LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+      if( 0!=t ){
+        if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+          centerCell  = (*(hypo->clusters().begin()))->seed();
+          //          info() << " EmCharged " << centerCell << endmsg;          
+        }
+      } else {
+        if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+          centerCell  = (*(hypo->clusters().begin()))->seed();
+          //    info() << " Photon " << centerCell << endmsg;          
+        } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+          // Split Photons
+          const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+          const LHCb::CaloHypo* g1 = *(hypos.begin() );
+          centerCell  = (*(g1->clusters().begin()))->seed();
+          const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+          centerCell1 = (*(g2->clusters().begin()))->seed();
+          // info() << " Pi0Merged " << centerCell << centerCell1 << endmsg;          
+        }        
+      }
+      
+      if( !(centerCell == dummyCell) ){
+        if( m_ecalDeCal==NULL ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+        std::vector<LHCb::CaloCellID> cells3x3;
+        cells3x3.push_back(centerCell);
+        const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
+        cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+        if( !(centerCell1 == dummyCell) ){
+          cells3x3.push_back(centerCell1);
+          const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell1 );
+          cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+        }
+        addToOfflineInput( cells3x3, hitidlist );
+      }
+    }
+  }
+  
+   
+    
   if( 0!=t ){
     // add hits from track itself (possibly projected hcal and ecal hits too)
     addToOfflineInput(*t,hitidlist);
@@ -496,6 +568,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
       }
     }
   }
+
 }
 
 
@@ -538,22 +611,25 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle,
 
 
 // ------------ single selection summary TisTos
-void TriggerSelectionTisTos::selectionTisTos( std::string selectionName,  
+void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,  
 					      bool & decision, bool & tis, bool & tos )
 {
+  if( findInCache( selectionName, decision, tis, tos ) )return;
+
   decision=false; tis=false; tos=false;
   getHltSummary();
-  if( (m_summary==NULL)||(m_hltconf==NULL) )return;
+  if( (m_summary==NULL)||(m_hltconf==NULL) ){ storeInCache(selectionName,decision,tis,tos); return;}
+  
 
   int selID = HltConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
   decision= m_summary->hasSelectionSummary( selID );
-  if( !decision )return;
+  if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
 
   const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selID );
 
   decision= sel.decision();
-  if( !decision )return;
+  if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
 
   if( sel.data().size() > 0 ){
     
@@ -565,7 +641,7 @@ void TriggerSelectionTisTos::selectionTisTos( std::string selectionName,
   if (holder) {
     const std::vector<Track*> & tracks = holder->object();
     trackListTISTOS(tracks,m_offlineInput,tis,tos);
-    return;
+    storeInCache(selectionName,decision,tis,tos); return;
   } 
 
   // try as vertex trigger
@@ -574,7 +650,7 @@ void TriggerSelectionTisTos::selectionTisTos( std::string selectionName,
   if (holderv) {
     const std::vector<RecVertex*> & vertices = holderv->object();
     vertexListTISTOS(vertices,m_offlineInput,tis,tos);
-    return;
+    storeInCache(selectionName,decision,tis,tos); return;
   } 
 
   }
@@ -585,10 +661,11 @@ void TriggerSelectionTisTos::selectionTisTos( std::string selectionName,
     particleListTISTOS( particles,m_offlineInput,tis,tos);
   }
 
+  storeInCache(selectionName,decision,tis,tos);
 }
 
 // ------------ multiple selections summary TisTos
-void TriggerSelectionTisTos::selectionTisTos( std::vector< std::string > selectionNames,
+void TriggerSelectionTisTos::selectionTisTos( const std::vector< std::string > & selectionNames,
                                 bool & decision, bool & tis, bool & tos ,
                                 bool selectionOR)
 {
@@ -637,7 +714,7 @@ std::vector<LHCb::LHCbID> TriggerSelectionTisTos::offlineLHCbIDs()
 //               satisfying TOS, ordered according to TOS quality (best first)
 //               return empty vector in case of a mismatch between the output type and the selection summary
 
-std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( std::string selectionName )
+std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( const std::string & selectionName )
 {
   std::vector<const LHCb::Track*> matchedTracks;
 
@@ -708,7 +785,7 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( st
   return matchedTracks;
 }
 
-std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( std::string selectionName )
+std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( const std::string & selectionName )
 {
   std::vector<const  LHCb::RecVertex*> matchedVertices;
 
@@ -787,7 +864,7 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
 }
 
 
-std::vector<const LHCb::Particle*>  TriggerSelectionTisTos::matchedTOSParticles( std::string selectionName )
+std::vector<const LHCb::Particle*>  TriggerSelectionTisTos::matchedTOSParticles( const std::string & selectionName )
 {
   std::vector<const  LHCb::Particle*> matchedParticles;
 

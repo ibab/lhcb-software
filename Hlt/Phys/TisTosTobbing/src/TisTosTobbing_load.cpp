@@ -1,4 +1,4 @@
-// $Id: TisTosTobbing_load.cpp,v 1.1.1.1 2007-08-09 01:31:19 tskwarni Exp $
+// $Id: TisTosTobbing_load.cpp,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
 // Include files 
 
 
@@ -16,5 +16,6 @@
 DECLARE_FACTORY_ENTRIES(PreselTIS) {
   
   DECLARE_TOOL( TriggerSelectionTisTos );
+  DECLARE_TOOL( TriggerTisTos );
 
 }
