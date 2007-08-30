@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2007-08-30 08:23:14 pkoppenb Exp $
+! $Id: release.notes,v 1.5 2007-08-30 08:56:36 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
@@ -8,6 +8,7 @@
 ! 2007-08-30 - Patrick Koppenburg
  - removed slc4 directory
  - removed depndency on DaVinci
+ - removed _load file
 
 ! 20070829 - TisTosTobbing v2r0
   Add TriggerTisTos tool.
