@@ -1,10 +1,7 @@
-! $Id: release.notes,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
+! $Id: release.notes,v 1.3 2007-08-30 08:17:41 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
-
-! 20070808 - TisTosTobbing v1r0
-  First release of TriggerSelectionTisTos tool
 
 ! 20070829 - TisTosTobbing v2r0
   Add TriggerTisTos tool.
@@ -12,6 +9,9 @@
      Extend Ecal hits support.
      Add result caching.
      Cleanup and add docs.
+
+! 20070808 - TisTosTobbing v1r0
+  First release of TriggerSelectionTisTos tool
 
 ! ====================================================================
  
