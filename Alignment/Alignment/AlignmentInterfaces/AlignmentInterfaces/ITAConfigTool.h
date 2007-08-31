@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.3 2007-08-28 10:18:05 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.4 2007-08-31 09:58:38 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
