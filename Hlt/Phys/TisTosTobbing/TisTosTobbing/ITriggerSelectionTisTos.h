@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.3 2007-08-30 13:38:18 pkoppenb Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.4 2007-08-31 16:54:34 tskwarni Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -130,51 +130,26 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITriggerSelectionTisTos; }
 
-  // ------------  various ways to define off-line input ------------------------------
 
-  /// erase previous input 
+  // -------------------------------------------------
+  // ------------ basic interface (must be implemented)
+  // -------------------------------------------------
+
+  /// erase previous Offline Input 
   virtual void setOfflineInput( ) = 0; 
  
+
   /// Particle input; for composite particles loop over daughters will be executed
-  virtual void addToOfflineInput( const LHCb::Particle & particle ) = 0; // add to input without erasing previous content
-  /// Shortcut to initalize input and add a particle to it
-  void setOfflineInput(   const LHCb::Particle & particle )
-    { setOfflineInput(); addToOfflineInput(particle); }
-  
+  virtual void addToOfflineInput( const LHCb::Particle & particle ) = 0; 
+
   /// Proto-particle input
-  virtual void addToOfflineInput( const LHCb::ProtoParticle & protoParticle ) = 0; // add to input without erasing previous content
-  /// Shortcut to initalize input and add a proto-particle to it
-  void setOfflineInput(   const LHCb::ProtoParticle & protoParticle )
-    { setOfflineInput(); addToOfflineInput(protoParticle); }
-  
+  virtual void addToOfflineInput( const LHCb::ProtoParticle & protoParticle ) = 0; 
+
   /// Track input 
-  virtual void addToOfflineInput( const LHCb::Track & track ) = 0;  // add to input without erasing previous content  
-  /// Shortcut to initalize input and add a track to it
-  void setOfflineInput(   const LHCb::Track & track )
-    { setOfflineInput(); addToOfflineInput(track); }
-  
+  virtual void addToOfflineInput( const LHCb::Track & track ) = 0;  
+
   ///    Detector hit input 
   virtual void addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist ) = 0;
-  /// Shortcut to initalize input and add hits to it
-  void setOfflineInput(   const std::vector<LHCb::LHCbID> & hitlist )
-    { setOfflineInput(); addToOfflineInput(hitlist); }
-  
-
-  // -------------- outputs:
-  //
-  //    decision =  was trigger satisfied ? (this is independent of offline input passed to this tool!)
-  //    tis      =  Trigger Independent of Signal  
-  //                (trigger selection was satisified independently of the offline input passed to this tool)
-  //    tos      =  Trigger On Signal  
-  //                (the offline input passed to this tool was sufficient to satisfy this trigger selection)
-  //   
-  //    comments:
-  //         if decision==false then tis=false and tos=false 
-  //
-  //         tis, tos are not mutually exclusive ( tis==true and tos=true is possible, TOE in TriggerSource terminology)
-  //
-  //         TOB (Trigger On Both ) =  decision && !tis && !tos  
-  //           
 
   /// single Trigger Selection Summary TisTos  (define Offline Input before calling)
   virtual void selectionTisTos( const std::string & selectionName,  
@@ -183,7 +158,44 @@ public:
   /// multiple Trigger Selection Summaries TisTos (set selectionOR=false for an AND) (define Offline Input before calling)
   virtual void selectionTisTos( const std::vector< std::string > & selectionNames,
                                 bool & decision, bool & tis, bool & tos ,
-                                bool selectionOR = kSelectionDefaultLogic ) = 0;  // set to false if an AND between selections is required
+                                bool selectionOR = kSelectionDefaultLogic ) = 0;  // false->AND
+
+  // ------------ auxiliary outputs
+
+  /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
+  virtual std::vector<LHCb::LHCbID> offlineLHCbIDs()  = 0; 
+
+  /// ordered list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  virtual std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName ) = 0;
+  /// ordered list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  virtual std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName ) = 0;
+  /// ordered list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  virtual std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName ) = 0;
+
+  // -------------------------------------------------
+  // ------------ inlined shortcuts for user convenience
+  // -------------------------------------------------
+
+  // ------------  various ways to define off-line input ------------------------------
+
+  /// Shortcut to initalize input and add a particle to it
+  void setOfflineInput(   const LHCb::Particle & particle )
+    { setOfflineInput(); addToOfflineInput(particle); }
+  
+  /// Shortcut to initalize input and add a proto-particle to it
+  void setOfflineInput(   const LHCb::ProtoParticle & protoParticle )
+    { setOfflineInput(); addToOfflineInput(protoParticle); }
+  
+  /// Shortcut to initalize input and add a track to it
+  void setOfflineInput(   const LHCb::Track & track )
+    { setOfflineInput(); addToOfflineInput(track); }
+  
+  /// Shortcut to initalize input and add hits to it
+  void setOfflineInput(   const std::vector<LHCb::LHCbID> & hitlist )
+    { setOfflineInput(); addToOfflineInput(hitlist); }
+  
+
+  // -------------- outputs:
 
    // shortcuts to define Offline Input and get results in one call
    // do not use shortcuts if calling the tool mutiple times with the same offline input 
@@ -241,9 +253,6 @@ public:
   
   // ------------ auxiliary outputs
 
-  /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
-  virtual std::vector<LHCb::LHCbID> offlineLHCbIDs()  = 0; 
-
    /// shortcuts to define Offline Input and get list of hits in one call
    std::vector<LHCb::LHCbID> offlineLHCbIDs(const LHCb::Particle & particle)
      { setOfflineInput(particle); return offlineLHCbIDs(); }
@@ -258,13 +267,6 @@ public:
   //               satisfying TOS, ordered according to TOS quality (best first)
   //               return empty vector in case of a mismatch between the output type and the selection summary
 
-  /// lists of tracks from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
-  virtual std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName ) = 0;
-  /// lists of vertices from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
-  virtual std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName ) = 0;
-  /// lists of particles from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
-  virtual std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName ) = 0;
-
    /// shortcuts to define Offline Input and get matched TOS objects in one call
    std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Track & track, const std::string & selectionName )
      { setOfflineInput(track); return  matchedTOSTracks(selectionName); }
@@ -275,7 +277,7 @@ public:
    std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Particle & particle, const std::string & selectionName )
      { setOfflineInput(particle); return  matchedTOSTracks(selectionName); }
    /// shortcuts to define Offline Input and get matched TOS objects in one call
-   std::vector<const LHCb::Track*> matchedTOSTracks( const std::vector<LHCb::LHCbID> & hitlist,  const std::string & selectionName )
+   std::vector<const LHCb::Track*> matchedTOSTracks( const std::vector<LHCb::LHCbID> & hitlist,const std::string & selectionName)
      { setOfflineInput(hitlist); return  matchedTOSTracks(selectionName); }
 
    /// shortcuts to define Offline Input and get matched TOS objects in one call

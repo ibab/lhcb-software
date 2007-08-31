@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.1 2007-08-30 04:06:42 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.2 2007-08-31 16:54:34 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -40,7 +40,8 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
   declareInterface<ITriggerTisTos>(this);
 
   m_InputSelectionsToIgnore.push_back("PV2D");  // Not really signal selection
-  m_InputSelectionsToIgnore.push_back("MuonTAndTConfirmed"); // optional input selection (contaminates upstream with huge TOB fraction)
+  // optional input selection (contaminates upstream with huge TOB fraction)
+  m_InputSelectionsToIgnore.push_back("MuonTAndTConfirmed"); 
   declareProperty("InputTriggerSelectionsToIgnore",
                    m_InputSelectionsToIgnore);
 
@@ -67,7 +68,7 @@ StatusCode TriggerTisTos::initialize() {
   debug() << " InputTriggerSelectionsToIgnore=";
   for( std::vector<std::string>::const_iterator iTsel=m_InputSelectionsToIgnore.begin();
        iTsel!=m_InputSelectionsToIgnore.end(); ++iTsel ){
-    debug() << *iTsel;
+    debug() << *iTsel << " ";
   }
   debug() << endmsg;
   

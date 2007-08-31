@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.1 2007-08-30 04:06:42 tskwarni Exp $
+// $Id: TriggerTisTos.h,v 1.2 2007-08-31 16:54:34 tskwarni Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -36,17 +36,17 @@ public:
 
   virtual StatusCode         initialize(); 
 
-  /// must be called by the user before any trigger input definition calls if the trigger structure may have changed since the previous event  
+  /// must be called by user before Trigger Input calls if the trigger structure may have changed since the previous call
   void refreshTriggerStructure();
 
   /// erase previous Trigger Input 
   void setTriggerInput( );
 
-  /// add Trigger Selection Name pattern to Trigger Input; pattern may contain wild character *; all matching selection names will be added
+  /// add Trigger Selection Name pattern to Trigger Input; pattern may contain wild character *, all matches will be added
   void addToTriggerInput( const std::string & selectionNameWithWildChar,
                           bool alleyExitsOnly = true);
 
-  /// returns Trigger Selection names matching optional pattern of decision,tis,tos for previously defined Trigger and Offline Inputs
+  /// returns Trigger Selection names matching optional pattern of decision,tis,tos for previously set Trigger and Offline Inputs
   std::vector< std::string > triggerSelectionNames( unsigned int decisionRequirement = kAnything, 
                                                     unsigned int tisRequirement      = kAnything,
                                                     unsigned int tosRequirement      = kAnything, 
@@ -104,7 +104,8 @@ private:
 
   /// obtain Alley Exit selection names from HltConfiguration
   void getAlleyExitSelections();  
-  /// check this input selection (and its inputs) and update tis,tos (previousTis,previousTos - status of tis,tos search before this trigger tree is checked; if both true - dont quit drilling) 
+
+  /// check this input selection (and its inputs) and update tis,tos (previousTis,previousTos - status of tis,tos search)
   void recursiveInputTriggerTisTos( const std::string & selName,  bool & tis,  bool & tos, bool previousTis, bool previousTos);
 
   static const std::vector< std::string > m_empty_selections;

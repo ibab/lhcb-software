@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.3 2007-08-31 16:54:34 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -91,11 +91,11 @@ public:
   /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
   std::vector<LHCb::LHCbID> offlineLHCbIDs(); 
 
-  /// lists of tracks from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  /// ordered list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
   std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName );
-  /// lists of vertices from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  /// ordered list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
   std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName );
-  /// lists of particles from Selection Summary (none if mismatch) satisfying TOS, ordered according to TOS quality (best first) (define Offline Input before calling)
+  /// ordered list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
   std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName );
 
 
@@ -107,25 +107,26 @@ public:
   /** @par matchIDs
    *  Dimension of @c offidlist (input) and @c overlap (output) arrays is @c nHitTypes
    *  @par
-   *  Returned overlap values are in the range [0.,1.] if hits of that type are present on the input Track, otherwise the returned value is 2.0
+   *  Returned overlap values are in the range [0.,1.] if hits of that type are present on the input Track, 
+   *  otherwise the returned value is 2.0
    */ 
 
-  /// calculate hit overlap between the @c Track (here from Trigger Summary) and set of @c ClasssifiedHits (here from Offline Input) for each @c HitType
+  /// calculate hit overlap between the (trigger) @c Track and set of @c ClasssifiedHits (Offline Input) for each @c HitType
   static void matchIDs(const LHCb::Track & track, 
                        const ClassifiedHits offidlist[],
                        double overlap[] );
     
-  /// return TIS,TOS for a vector of Tracks (here from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  /// return TIS,TOS for a vector of (trigger) Tracks with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void trackListTISTOS(const std::vector<LHCb::Track*> & ontracks,
                        const ClassifiedHits offidlist[],
                        bool& TIS,bool& TOS) const;
 
-  /// return TIS,TOS for a vector of Vertices (here usually track pairs from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  /// return TIS,TOS for a vector of (trigger) Vertices with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void vertexListTISTOS(const std::vector<LHCb::RecVertex*> & onvertices,
                         const ClassifiedHits offidlist[],
                         bool& TIS,bool& TOS) const;
 
-  /// return TIS,TOS for a vector of Particles (here from Trigger Summary) with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  /// return TIS,TOS for a vector of (trigger) Particles with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void particleListTISTOS(const SmartRefVector<LHCb::Particle> & onparticles,
                           const ClassifiedHits offidlist[],
                           bool& TIS,bool& TOS) const;

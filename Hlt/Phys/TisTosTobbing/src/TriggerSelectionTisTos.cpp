@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.2 2007-08-30 04:06:42 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.3 2007-08-31 16:54:34 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -547,7 +547,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
           m_muonTracks = get<LHCb::Tracks>(LHCb::TrackLocation::Muon);
         } else {
           if( m_warning_count++ < 10 ){
-            warning() << " No offline muon tracks at " << m_MuonTracksLocation << " thus, muon hits will be ignored on trigger tracks. " << endmsg;
+            warning() << " No offline muon tracks at " << m_MuonTracksLocation 
+                      << " thus, muon hits will be ignored on trigger tracks. " << endmsg;
             if( m_warning_count==10 ){
               warning() << " The above warning was printed for the last time " << endmsg;
             }
