@@ -1,4 +1,3 @@
-
 #ifndef ALIGNTRTOOLS_Derivatives_H
 #define ALOGNTRTOOLS_Derivatives_H 1
 
@@ -11,9 +10,9 @@
 // from Alignment/AlignmentInterfaces
 #include "AlignmentInterfaces/IDerivatives.h"
 
-/** @class Derivatives
+/** @class Derivatives 
  *
- *  Define the x position in the module of the hit of the
+ *  Define the x position in the module of the hit of the 
  *  track with the module
  *
  *  @author M.Deissenroth
@@ -24,22 +23,20 @@ class Derivatives : public GaudiTool, virtual public IDerivatives {
 
 public:
 
-  Derivatives( const std::string& type,
+  Derivatives( const std::string& type, 
 	       const std::string& name,
 	       const IInterface* parent); ///< Standard constructor
-
+  
 virtual ~Derivatives(); ///< Destructor
 
 
-  StatusCode initialize( const int &, const int &, const
-std::vector<bool>& );
+  StatusCode initialize( const int &, const int &, const std::vector<bool>& );
 
-  StatusCode SetGlobal( const Gaudi::XYZVector &, const Gaudi::XYZVector &,
+  StatusCode SetGlobal( const Gaudi::XYZVector &, 
 			const Gaudi::Transform3D &,
 			std::vector<double> &, const int &, const double &, const double & );
 
-  StatusCode SetLocal( std::vector<double> &, const int &, const double &,
-const double & );
+  StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double & );
 
 
 
@@ -47,15 +44,15 @@ const double & );
   double GetGlobalDerivative_Y();
   double GetGlobalDerivative_Z();
   double GetGlobalDerivative_RotZ();
-
-
+  
+  
   void SetTrueSlope(double slope[]);
   void SetTrueOrigin(double origin[]);
   void SetModulePos(double modulepos[]);
   void SetModuleRot(double modulerot[]);
   void SetModuleOffset(double moduleoff[]);
   void SetStereo(double);
-
+  
 
 private:
   int m_n_elements;
@@ -75,9 +72,9 @@ private:
   double m_globalderiv_Z; // value of global derivative delta Z
   double m_globalderiv_RotZ; // value of global derivative rotation alpha
   double m_Stereo;
-
-
-};
+  
+  
+}; 
 
 
 

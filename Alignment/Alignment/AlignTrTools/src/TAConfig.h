@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.6 2007-08-28 11:51:30 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.7 2007-08-31 09:59:31 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -19,7 +19,7 @@
 #include "AlignmentInterfaces/ITAConfigTool.h"
 // Interfaces
 // Alignment
-#include "AlignmentInterfaces/ICentipede.h"
+#include "AlignmentInterfaces/IMillepede.h"
 #include "AlignmentInterfaces/IDerivatives.h"
 // Poca 
 #include "Kernel/ITrajPoca.h"
@@ -71,7 +71,7 @@ class TAConfig : public GaudiTupleTool,
    
    virtual ~TAConfig(); // Destructor
    
-    /** Millepede-style alignment problem was properly configured
+   /** Millepede-style alignment problem was properly configured
     *
     *  @param 
     *
@@ -80,43 +80,22 @@ class TAConfig : public GaudiTupleTool,
     *  @retval 
     */
    StatusCode Initialize( std::vector<std::string> &);
-   StatusCode ConfMatrix( const double &,
-			  const double &,
-			  const double &,
-			  const double &,
-			  double [],
-			  double [][4] );
-   StatusCode ZeroMatrVec( double [][4], 
-			   double [] );
-   int InvMatrix( double [][4], 
-		  double [], 
-		  const int & ); 
-   StatusCode CalcResidual( const LHCb::Track &,
-			    const LHCb::LHCbID &,
-			    const int &,
-			    const double &,
-			    double &,
-			    double &,
-			    double &,
-			    LHCb::State & );
-   StatusCode FillMatrix( const int &,
-			  const double [],
-			  const double &,
-			  const double &, 
+   StatusCode FillMatrix( LHCb::Track &, 
+			  LHCb::LHCbID &, 
+			  const int &, 
 			  const double &);
    StatusCode CacheDetElements();
    StatusCode ResetGlVars();
    StatusCode GlobalFit( std::vector<double> & parameter, 
 			 std::vector<double> & error, 
-			 std::vector<double> & pull) 
-   {
+			 std::vector<double> & pull) {
      double *par = new double [parameter.size()];
      double *err = new double [error.size()];
      double *pul = new double [pull.size()];
      VectortoArray(parameter,par);
      VectortoArray(error,err);
      VectortoArray(pull,pul);
-     StatusCode sc = m_Centipede->MakeGlobalFit( par, err, pul );
+     StatusCode sc = m_Millepede->MakeGlobalFit( par, err, pul );
      if ( sc.isFailure() ) {
        info() << "Error in Millepede's !";
        delete [] par;
@@ -133,37 +112,37 @@ class TAConfig : public GaudiTupleTool,
      return StatusCode::SUCCESS;
    };
    
-   StatusCode LocalTrackFit( int &tr_cnt,
-                             std::vector<double> &trpar,
-                             const int & single_fit,
-                             std::vector<double> & estimated,
-                             double & chi2,
-                             double & residual) {
+   StatusCode LocalTrackFit( int &tr_cnt, 
+			     std::vector<double> &trpar, 
+			     const int & single_fit, 
+			     std::vector<double> & estimated, 
+			     double & chi2, 
+			     double & residual) {
      double *tr_par = new double [trpar.size()+2]; //
      double *est = new double [estimated.size()];
      VectortoArray( trpar, tr_par );
      VectortoArray( estimated, est );
-     StatusCode sc = m_Centipede->FitLoc(tr_cnt, trpar, 0, estimated, chi2, residual);
+     StatusCode sc = m_Millepede->FitLoc( tr_cnt, tr_par, 0 );
      if ( sc.isFailure() )
        info() << "Millepede local fit returns " << sc.getCode() << endreq;
-     //     chi2 = tr_par[trpar.size()+1]; //decode chi2 from tracking parameters variable
-     //     residual = tr_par[trpar.size()+2]; //decode residual
+     //     m_Millepede->FitLoc(tr_cnt, tr_par, 0, est, chi2, residual);
+     chi2 = tr_par[trpar.size()+1]; //decode chi2 from tracking parameters variable
+     residual = tr_par[trpar.size()+2]; //decode residual
      ArraytoVector( tr_par, trpar);
      ArraytoVector( est, estimated );
      delete [] tr_par;
      delete [] est;
      return StatusCode::SUCCESS;
    };
-
-  
-  
-  bool AlignDetector( std::string &det ) {
-    if ( det == "Velo" )
-      return velo_detector;
-    else if ( det == "TT" )
-      return tt_detector;
-    else if ( det == "IT" ) 
-      return it_detector;
+   
+   
+   bool AlignDetector( std::string &det ) {
+     if ( det == "Velo" )
+       return velo_detector;
+     else if ( det == "TT" )
+       return tt_detector;
+     else if ( det == "IT" ) 
+       return it_detector;
      else if ( det == "OT" )
        return ot_detector;
      return false;
@@ -172,32 +151,10 @@ class TAConfig : public GaudiTupleTool,
    int NumTrPars() {
      return m_ntrack_pars;
    };
-  //    int NumAlignPars() {
-  //      return 6 * m_DETmap.size();
-  //    };
-  //MD
    int NumAlignPars() {
-     return m_n_dof * m_DETmap.size();
+     return 6 * m_DETmap.size();
    };
    
-  /*********************************************
-   * MD  getMPTrackPoints                       *
-   * get the track information of Millepede     *
-   *********************************************/
-  std::vector< std::vector<double> > TAConfig::getMPHits(){
-    
-    return m_trackpoints;
-   };
-  /*********************************************
-   * MD  clearMPTrackPoints                       *
-   * clear the track information of Millepede     *
-   * for the next track                         *
-   *********************************************/
-  void TAConfig::clearMPHits(){
-    m_trackpoints.clear();
-  };
-  
-
    Gaudi::XYZVector Residual( LHCb::Track &, LHCb::LHCbID & );
    StatusCode Rank( LHCb::LHCbID &, int & );
  private:
@@ -215,7 +172,7 @@ class TAConfig : public GaudiTupleTool,
    void VectortoArray(const std::vector<double>& , double[] );
    void ArraytoVector(const double[], std::vector<double>& );
    std::string m_inputcontainer;
-   std::string m_CentipedeTool;
+   std::string m_MillepedeTool;
    std::string m_MilleConfTool;
    std::string m_derivativTool;
    std::vector<std::string> m_detectors;
@@ -239,10 +196,9 @@ class TAConfig : public GaudiTupleTool,
    std::vector<bool> m_VELOmap_l;
    std::vector<bool> m_VELOmap_r;
    bool m_fix;
-   //   std::multiset m_fix_dofs;
-   std::vector<bool> m_fix_first, m_fix_last;
-   std::vector<bool> m_fix_x, m_fix_y, m_fix_z;
-   std::vector<bool> m_fix_a, m_fix_b, m_fix_g;
+   bool m_fix_first, m_fix_last;
+   bool m_fix_x, m_fix_y, m_fix_z;
+   bool m_fix_a, m_fix_b, m_fix_g;
    double m_zmoy_l, m_zmoy_r;
    double s_zmoy_l, s_zmoy_r;
    //  std::vector<bool> m_OTmap;
@@ -256,7 +212,6 @@ class TAConfig : public GaudiTupleTool,
    // Millepede configuration variables
    std::map<std::string, int> m_C_pos;
    std::map<std::string, int> constrain_it, constrain_ot, constrain_tt, constrain_velo;
-
    bool *m_DOF;
    int m_n_dof;
    bool m_CONSTRAINT[9];
@@ -299,8 +254,6 @@ class TAConfig : public GaudiTupleTool,
 
   std::string m_previous_de;
 
-
-
   // VELO specific stuff
 
 
@@ -325,13 +278,11 @@ class TAConfig : public GaudiTupleTool,
 
   // Interfaces
   ITrajPoca *m_poca;
-  IMagneticFieldSvc *m_bField;
-  ICentipede *m_Centipede;
+  IMagneticFieldSvc *m_pIMF;
+  IMillepede *m_Millepede;
   IDerivatives *m_derivatives;
   ITrackExtrapolator* m_extrapolator;
 
-  //MD check MP track fit
-  std::vector< std::vector<double> > m_trackpoints;
 };
 
 
