@@ -4,7 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!========================== GENSER v3r2 2007-08-01 ===========================
+!========================== GENSER v3r2 2007-08-31 ===========================
+! 2007-08-31 - Gloria Corti
+ - Move use of Pythia8 to LbPythia package
+ - Re-insert lhapdf_dummy in linking macro otherwise some unresolved external
+   symbols when making executable
+
 ! 2007-08-01 - Gloria Corti
  - Modify LHAPATH to be set without using relative path in the name
 
