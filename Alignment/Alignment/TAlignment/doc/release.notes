@@ -3,6 +3,15 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-08-30 - Johan Blouw
+ - re-organizing GAlign class by moving tool-related code to TAConfig class.
+ - added a linker library so that methods from GAlign can be called from
+   python
+ - added dictionaries for the above purpose
+ - added modifications to the requirements file accordingly
+ NOTE: this is not intended as a "best solution"; in a next release I'd 
+ prefer to remove the linker library and the dictionaries.
+
 ! 2007-08-16 - Gerhard Raven
  - make sure the same pivot points are used consistently  in AlignAlgorithm
  - add some more monitoring
