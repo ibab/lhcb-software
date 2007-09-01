@@ -2,6 +2,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-09-01 - Jan Amoraal
+ - Minor clean-ups and optimisations in MCOTDepositCreator and 
+   MCOTTimeCreator
+
 !====================== OTSimulation v3r12 2007-06-29 =====================
 ! 2007-06-27 - Jan Amoraal
  - Fix unchecked status code in OTSmearer
