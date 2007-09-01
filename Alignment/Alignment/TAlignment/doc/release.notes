@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-09-01 - Jan Amoraal
+ - Added AlignmentElement and FindAlignment (Framework++)
+ - Added a small testing algorithm
+
 ! 2007-08-30 - Johan Blouw
  - re-organizing GAlign class by moving tool-related code to TAConfig class.
  - added a linker library so that methods from GAlign can be called from
