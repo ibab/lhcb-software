@@ -5,6 +5,7 @@
 #include <utility>
 #include "GaudiKernel/VectorMap.h"
 #include "Kernel/LHCbID.h"
+#include "boost/lambda/lambda.hpp"
 
 /// Anonymous namespace
 namespace {
@@ -32,7 +33,7 @@ namespace {
       /// Note: ++not++ does not apply here.
       if (!fixed.empty() && fixed[predicate++]) continue;
       elements.push_back((*i));
-      typedef typename ACTION1::sig<boost::lambda::tuple<ACTION1,typename ITER::value_type> >::type ID;
+      typedef typename ACTION1::template sig<boost::lambda::tuple<ACTION1,typename ITER::value_type> >::type ID;
       ID chanID = chanIDfromDetElem((*i));
       /// Note: ++not++ does not apply here.
       indices.insert(elemIDfromChanID(chanID), index++);
@@ -50,7 +51,7 @@ namespace {
                                ACTION1             chanIDfromLHCbID,  ///< Get channel id from LHCb id
                                ACTION2             elemIDfromChanID) {///< Get element id from channel id
       if (!isSubDet(anLHCbID)) return std::make_pair(false, 0u);
-      typedef typename ACTION1::sig<boost::lambda::tuple<ACTION1,LHCb::LHCbID> >::type ID;
+      typedef typename ACTION1::template sig<boost::lambda::tuple<ACTION1,LHCb::LHCbID> >::type ID;
       ID aChannel = chanIDfromLHCbID(anLHCbID);
       typename MAP::iterator iter = indexMap.find(elemIDfromChanID(aChannel)); 
       return iter != indexMap.end() ? std::make_pair(true, iter->second) : std::make_pair(false, 0u); 
