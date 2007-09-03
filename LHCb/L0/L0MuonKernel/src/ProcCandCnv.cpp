@@ -148,7 +148,7 @@ std::vector<unsigned int> L0Muon::ProcCandCnv::rawBank(int bankVersion, int ievt
     unsigned int word;
     
     // Event numbers
-    word = ((l0_bid)&0xFFF)<<16 + (event_number)&0xFFF;
+    word = ( (l0_bid<<16)&0xFFF0000 )+ ( event_number&0xFFF );
     raw.push_back(word);
 
     // Status
