@@ -4,6 +4,14 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-03 - Johannes Albrecht
+	- src/TsaConfirmTool
+			- fixed memory leak in execute: return statement in case of more than
+				10000 T hits is removed 
+			- cleanup of loops: functionality is unchanged, but less containers
+				used 
+			-	job option maxNumHits is obsolete
+
 ! 2007-08-17 - J. Hernando
 	- src/HadronSeedTool adding location in the HCalo to the state
 
