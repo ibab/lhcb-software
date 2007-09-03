@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.6 2007-04-27 12:36:29 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.7 2007-09-03 14:46:53 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,7 @@ TsaConfirmTool::TsaConfirmTool( const std::string& type,
   declareProperty("initOT", m_initOT = true);
 
   //from TsaSeed
-  declareProperty("maxNumHits", m_maxNumHits = 10000);
+  //  declareProperty("maxNumHits", m_maxNumHits = 10000);
   declareProperty("calcLikelihood", m_calcLikelihood = true);
 
   declareProperty("selectorType", m_selectorType = "TsaSeedSelector");
@@ -192,35 +192,20 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   /*
    *  Steering routine for Tsa track seeding
    */
-  typedef LHCb::STLiteCluster::FastContainer FastContainer;
-  LHCb::OTTimes* otCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
-  FastContainer* liteCont = get<FastContainer>( LHCb::STLiteClusterLocation::ITClusters);
-  double nHit = liteCont->size() + otCont->size();
-
-  if(msgLevel(MSG::DEBUG)) debug()<<"number of hits (OT + IT) = "<<nHit <<endmsg;
-  
-  SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
-  seedSel->reserve(64);
-   
   std::vector<SeedStub*> stubs[3];            //  IT stubs per station
   for (unsigned iS = 0; iS < 3; ++iS) stubs[iS].reserve(100);
- 
-  SeedHits* hitsCont = new SeedHits();
-  hitsCont->reserve(1000);
-    
-  if (nHit > m_maxNumHits) return StatusCode::SUCCESS;
-    
+  
   // Loop over sectors of tracker (0-2 are IT, 3-4 are OT)
   for ( int sector = 0; sector < 5; ++sector ) {
-      
+    
     std::vector<SeedHit*> hits[6], sHits[6];  //  Hits per layer in X and stereo
-     
+    
     std::vector<SeedTrack*> seeds;            //  Seed candidates within the sector
     seeds.reserve(64);
      
     // x search: give state as input to restrict slope
-    LHCb::State* aState = seedState.clone();
-    m_xSearchStep[sector]->execute(*aState , seeds , hits ); // x search
+    LHCb::State aState(seedState);
+    m_xSearchStep[sector]->execute(aState , seeds , hits ); // x search
     //m_xSearchStep[sector]->execute(seeds,hits);  
 
     if (sector >2 ) m_xSelection->execute(seeds); // x selection
@@ -239,29 +224,40 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       m_finalSelection->execute(seeds); 
     }
      
-    //Delete the temporary objects that have been created
+    // Convert TsaSeedTracks to LHCb tracks
     for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
-      seedSel->insert( *it);
+      if ( ((*it)->select() != 0)
+           &&((*it)->lik() > m_likCut) ) {
+        LHCb::Track* fitTrack = this->convert(*it);
+        outputTracks.push_back( fitTrack );
+      }
+      
     }
-
+    
     //  For those IT stubs that remain, try to extend them into the OT
     if ( sector > 2 ) {
       std::vector<SeedTrack*> extendedSeeds; 
       extendedSeeds.reserve(10);
       m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
       m_finalSelection->execute(extendedSeeds); 
+    
+      //Convert TsaSeedTracks to LHCb tracks
       for ( std::vector<SeedTrack*>::iterator itEx = extendedSeeds.begin(); extendedSeeds.end() != itEx; ++itEx ) {
-        seedSel->insert( *itEx);
+        if ( ((*itEx)->select() != 0)
+             &&((*itEx)->lik() > m_likCut) ) {
+          LHCb::Track* fitTrack = this->convert(*itEx);
+          outputTracks.push_back( fitTrack );
+        }
       }
     }
 
     for ( int lay = 0; lay < 6; ++lay ) {
       for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it ) {
-        hitsCont->insert(*it);
+        delete *it;
       }
        
       for ( std::vector<SeedHit*>::iterator it = sHits[lay].begin(); sHits[lay].end() != it; ++it ) {
-        hitsCont->insert(*it);
+        delete *it;
       }
     }
   }//loop sectors
@@ -275,25 +271,10 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   
   if(m_debugMode) {
     tTracking.stop();
-    m_DataStore->nTHits = int(nHit);
+    //    m_DataStore->nTHits = int(nHit);
     tConvert.start();
   }
    
-  /*
-   *  Convert TsaSeedTracks to LHCb tracks
-   */
-  for (SeedTracks::const_iterator iterTrack = seedSel->begin(); 
-       iterTrack != seedSel->end(); ++iterTrack) {
-    
-    if ( ((*iterTrack)->select() != 0)
-         &&((*iterTrack)->lik() > m_likCut) ) {
-      
-      LHCb::Track* fitTrack = this->convert(*iterTrack);
-      outputTracks.push_back( fitTrack );
-    }
-  }
- 
-
   if( msgLevel(MSG::DEBUG) ) debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
 
   if(m_debugMode) {
@@ -304,8 +285,6 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   //clean up containers  
   delete otClusters;
   delete itClusters;
-  delete hitsCont;
-  delete seedSel;
   
   return StatusCode::SUCCESS;
   
@@ -329,7 +308,7 @@ LHCb::Track* TsaConfirmTool::convert(const SeedTrack* aTrack) const{
   // add history
   fitTrack->setHistory(LHCb::Track::TsaTrack);
   fitTrack->setType(LHCb::Track::Ttrack);
-  fitTrack ->setPatRecStatus( LHCb::Track::PatRecIDs );
+  fitTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
   fitTrack->addInfo(LHCb::Track::Likelihood, aTrack->lik());
 
   return fitTrack;
