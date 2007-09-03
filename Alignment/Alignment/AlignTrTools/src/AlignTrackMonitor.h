@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.1 2007-01-08 15:51:43 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.2 2007-09-03 13:23:32 jblouw Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -15,6 +15,7 @@
 //===========================================================================
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiAlg/Tuple.h"
 
@@ -33,6 +34,7 @@
 #include "Event/STMeasurement.h"
 #include "Event/OTTime.h"
 #include "Event/MuonPID.h"
+#include "Event/ODIN.h"
 
 // Track
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -46,11 +48,13 @@
 
 // Other
 #include "gsl/gsl_cdf.h"
+#include "gsl/gsl_math.h"
 #include <vector>
 #include <list>
 //===========================================================================
 
 class ITrackExtrapolator;
+class IMagneticFieldSvc;
 
 class AlignTrackMonitor: public GaudiTupleAlg{
   friend class AlgFactory<AlignTrackMonitor>;
@@ -142,7 +146,7 @@ private:
   const int m_nSubLayers;
   const int m_nStraws;
 
-  const int m_pdgMuonID; // Muon PDG PID
+  const unsigned int m_pdgMuonID; // Muon PDG PID
 
   int m_nMaxITHits;
   double m_itCloseHitTol;
@@ -162,18 +166,23 @@ private:
 
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
   ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool
-  ITrajPoca* m_poca; ///< Pointer to the ITrajPoca interface
+  IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
 
   const LHCb::Tracks* m_tracks;
-  const LHCb::MCHeader* m_evtHeader;
+  const LHCb::ODIN * odin;
   const LHCb::MuonPIDs* m_muIDs;
   const STLiteClusters* m_itClusters;
   const LHCb::OTTimes* m_otTimes;
 
   DirectTable* m_directTable;
+  bool m_mcData;
 
   // Global Variables
   long m_nEvents;
+  long m_evtNr;
+  long m_runNr;
+  int m_tracksMultiplicity;
+  double m_ghostRate;
 
   // Track Variables
   int m_nGoodTracks;
@@ -196,11 +205,9 @@ private:
 
   double m_trackP;
   double m_trackPt;
+  double m_trackErrP;
   double m_trackMCP;
   double m_trackMCPt;
-  double m_trackErrP;
-
-  int m_trackQ;
 
   // Hits Variables
   int m_nRes;
@@ -217,8 +224,6 @@ private:
 
   Array m_tx;
   Array m_ty;
-
-  Array m_lToHit;
 
   int m_nLadOverlaps;
   Array m_ladOverlaps;

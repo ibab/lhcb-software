@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.3 2007-05-14 17:47:31 cattanem Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.4 2007-09-03 13:23:32 jblouw Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -21,11 +21,8 @@
 // Global Variables
 //===========================================================================
 // Declaration of the algorithm factory
-//static const AlgFactory<AlignTrackMonitor> s_factory;
-//const IAlgFactory& AlignTrackMonitorFactory = s_factory;
-DECLARE_ALGORITHM_FACTORY(AlignTrackMonitor);
+DECLARE_ALGORITHM_FACTORY ( AlignTrackMonitor );
 //===========================================================================
-
 
 //===========================================================================
 // Constructor
@@ -47,14 +44,17 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   , m_pdgMuonID ( 13 ) {
   
   // constructor
+  // Clone finder
   this -> declareProperty ( "CloneFinderTool",
                             m_cloneFinderName = "TrackCloneFinder" );
 
+  // Location of the IT/OT geometries
   this -> declareProperty ( "OTGeometryPath",
                             m_otTrackerPath = DeOTDetectorLocation::Default );
   this -> declareProperty ( "ITGeometryPath",
                             m_itTrackerPath = DeSTDetLocation::IT );
 
+  // Location of the different objects in use
   this -> declareProperty ( "ITClustersLocation",
                             m_itClustersPath = LHCb::STLiteClusterLocation::ITClusters );
   this -> declareProperty ( "OTTimesLocation",
@@ -63,14 +63,13 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   this -> declareProperty ( "MuonIDLocation",
                             m_muonPIDsPath = LHCb::MuonPIDLocation::Default );
 
+  // Are we using MC or real data?
+  this -> declareProperty ( "MCData", m_mcData = true );
+
   // 48 = 12 (layers) * 2 (ladder overlaps) * 2 (box overlaps)
   this -> declareProperty ( "MaxNumberITHits", m_nMaxITHits = 48 );
-  this -> declareProperty ( "IsolatedTrackITTolerance",
-                            m_itCloseHitTol = 0.5*Gaudi::Units::mm );
   this -> declareProperty ( "IsolatedTrackNStripsTolerance",
                             m_nStripsTol = 2 );
-  this -> declareProperty ( "IsolatedTrackOTTolerance",
-                            m_otCloseHitTol = 2*Gaudi::Units::mm );
   this -> declareProperty ( "IsolatedTrackNStrawsTolerance",
                             m_nStrawsTol = 1 );
   this -> declareProperty ( "TrackMuonMatchZ", m_trMuMatchZ = 12500 );
@@ -105,8 +104,8 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
                                            "CloneFinderTool", this );
 
-  // Get the Poca tool
-  m_poca = tool<ITrajPoca>( "TrajPoca" );
+  // Get The Magnetic Field
+  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
   // Get OT geometry
   m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
@@ -123,17 +122,20 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_itLayers.sort();
   m_itLayers.unique();
 
+  m_nEvents = 0;
+
   // Printing the parameters (option-choosable) being used
   info() << endmsg 
          << "===== Parameters of the Track Selection for T-Alignment =====" << endmsg
          << "Tracks will be retrieved at " << m_tracksPath << endmsg
-         << "A track is isolated if no hit is found within " << m_itCloseHitTol
-         << " mm in IT or " << m_otCloseHitTol << " mm in OT" << endmsg
+         << "A track is isolated if no hit is found within " << m_nStripsTol
+         << " strips in IT or " << m_nStrawsTol << " straws in OT" << endmsg
          << "Track-Muon matching done if chi2 < " << m_trMuMatchChi2 
          << " for position at z = " << m_trMuMatchZ << " mm" << endmsg
          << "=============================================================" << endmsg
          << endmsg;
-    
+
+  debug() << "AlignTrackMonitor initialized successfully" << endmsg;    
 
   return StatusCode::SUCCESS;
 }
@@ -145,11 +147,14 @@ StatusCode AlignTrackMonitor::initialize ( ) {
 //===========================================================================
 StatusCode AlignTrackMonitor::execute ( ) {
 
-  // Get the event header
-  m_evtHeader = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default );
+  debug() << "AlignTrackMonitor starting execution" << endmsg;
   
+  // Get the odin information
+  odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+
   // Get the tracks
   m_tracks = get<LHCb::Tracks>( m_tracksPath );
+  m_tracksMultiplicity = m_tracks->size();
 
   // Get the ST clusters
   if ( exist<STLiteClusters>( m_itClustersPath ) )
@@ -170,16 +175,30 @@ StatusCode AlignTrackMonitor::execute ( ) {
   m_directTable = associator.direct();
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << "Retrieved " << m_tracks->size() << " tracks." << endmsg;
+    debug() << "Retrieved " << m_tracksMultiplicity << " tracks." << endmsg;
     debug() << "Retrieved " << m_itClusters->size() << " IT clusters." << endmsg;
     debug() << "Retrieved " << m_otTimes->size() << " OT times." << endmsg;
   }
+
+  //**********************************************************************
+  // Global Variables
+  //**********************************************************************
+  m_runNr = odin->runNumber();
+  m_evtNr = odin->eventNumber(); 
+  m_nEvents++;
+  //**********************************************************************
 
   // Loop over tracks - select some and make some plots
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   m_nGoodTracks = 0;
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = *(*iTracks);
+
+    if ( iTracks == m_tracks->begin() )
+      if ( isGhostTrack( &aTrack ) )
+        m_ghostRate = (double)1/m_tracksMultiplicity;
+      else
+        m_ghostRate = 0;
 
     bool isAClone = false;
     // Do not run code on clones
@@ -190,6 +209,12 @@ StatusCode AlignTrackMonitor::execute ( ) {
         isAClone = true;
         break;
       }
+      
+      // Compute ghost rate
+      if ( iTracks == m_tracks->begin() )
+        if ( isGhostTrack( &tr2 ) )
+          m_ghostRate += (double)1/m_tracksMultiplicity;
+
     }
     if ( isAClone ) {
       if ( msgLevel( MSG::DEBUG ) )
@@ -253,14 +278,6 @@ StatusCode
 AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
                                    Tuples::Tuple trackSelTuple ) {
 
-  StatusCode sc;
-
-  //**********************************************************************
-  // Global Variables
-  //**********************************************************************
-  m_nEvents = m_evtHeader->evtNumber();
-  //**********************************************************************
-
   //**********************************************************************
   // Tracks Variables
   //**********************************************************************
@@ -279,11 +296,11 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
 
   m_trackP = aTrack->p();
   m_trackPt = aTrack->pt();
-  m_trackMCP = defValue;
-  m_trackMCPt = defValue;
   m_trackErrP = sqrt(aTrack->firstState().errP2());
-
-  m_trackQ = aTrack->charge();
+  if ( m_mcData ) {
+    m_trackMCP = defValue;
+    m_trackMCPt = defValue;
+  }
   //**********************************************************************
 
   //**********************************************************************
@@ -304,9 +321,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
   m_tx.clear();
   m_ty.clear();
 
-  m_lToHit.clear();
-  m_lToHit.push_back(0);
-
   m_nLadOverlaps = 0;
   m_ladOverlaps.clear();
   m_ladOverlapsZ.clear();
@@ -322,23 +336,25 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
   m_isMuonTrack = (0 != m_matchedMuon);
   //**********************************************************************
 
-  //**********************************************************************
-  // MCP and MCPt (get MCParticle linked to the track)
-  //**********************************************************************
-  // Retrieve the Linker table
-  LinkedTo<LHCb::MCParticle,LHCb::Track>
-    directLink( evtSvc(), msgSvc(), m_tracksPath );
-  if ( directLink.notFound() )
-    Error("Linker table not found", StatusCode::SUCCESS, 1);
-
-  // Get MCParticle linked by highest weight to Track and get its p and pt
   LHCb::MCParticle* mcPart = new LHCb::MCParticle;
-  mcPart = directLink.first( aTrack );
-  if ( 0 != mcPart ) {
-    m_trackMCP  = mcPart->p();
-    m_trackMCPt = mcPart->pt();
+  if ( m_mcData ) {
+    //**********************************************************************
+    // MCP and MCPt (get MCParticle linked to the track)
+    //**********************************************************************
+    // Retrieve the Linker table
+    LinkedTo<LHCb::MCParticle,LHCb::Track>
+      directLink( evtSvc(), msgSvc(), m_tracksPath );
+    if ( directLink.notFound() )
+      Error("Linker table not found", StatusCode::SUCCESS, 1);
+    
+    // Get MCParticle linked by highest weight to Track and get its p and pt
+    mcPart = directLink.first( aTrack );
+    if ( 0 != mcPart ) {
+      m_trackMCP  = mcPart->p();
+      m_trackMCPt = mcPart->pt();
+    }
+    //**********************************************************************
   }
-  //**********************************************************************
 
   unsigned int overlapStation = abs(defValue);
   unsigned int itStationHit = abs(defValue);
@@ -374,7 +390,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
         ++nTStationsHit;
       }
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "Hits (Station,Box,Layer,Ladder,Strip) = (" 
+        verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = (" 
                   << theSTID.station() << "," << theSTID.detRegion() << "," 
                   << theSTID.layer() << "," << theSTID.sector() << "," 
                   << theSTID.strip() << ")" << endmsg;
@@ -390,7 +406,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
         ++nTStationsHit;
       }
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "Hits (Station,Layer,Quarter,Module,Straw) = (" 
+        verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = (" 
                   << theOTID.station() << "," << theOTID.layer() << "," 
                   << theOTID.quarter() << "," << theOTID.module() << "," 
                   << theOTID.straw() << ")" << endmsg;
@@ -442,7 +458,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
     //**********************************************************************
     // Overlaps
     //**********************************************************************
-    bool getLength = true;
     std::vector<LHCb::Node*>::const_iterator iNodes2 = iNodes+1;
     for ( ; iNodes2 != aTrack->nodes().end(); ++iNodes2 ) {
 
@@ -457,22 +472,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
         theSTID2 = aNode2.measurement().lhcbID().stID();
       else if ( aNode2.measurement().type() == LHCb::Measurement::OT )
         theOTID2 = aNode2.measurement().lhcbID().otID();
-      
-      //**********************************************************************
-      // Length between this hit (aNode) and next one (1st aNode2 in the loop)
-      //**********************************************************************
-      if ( getLength ) {
-        Gaudi::XYZPoint hitPos2;
-        sc = m_extrapolator->position( *aTrack, aNode2.z(), hitPos2 );
-        if ( !sc.isFailure() ) {
-          Gaudi::XYZVector dVec = hitPos2 - hitPos;
-          m_lToHit.push_back(dVec.R());
-          if ( msgLevel( MSG::DEBUG ) )
-            debug() << "Track Length between Hits: L = " << m_lToHit.back() << endmsg;
-          getLength = false;
-        }
-      }
-      //**********************************************************************
       
       if ( (aNode.measurement().type() == LHCb::Measurement::IT) &&
            (aNode2.measurement().type() == LHCb::Measurement::IT) ) {
@@ -519,16 +518,20 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack,
           if ( theSTID.station() != overlapStation ) {
             overlapStation = theSTID.station();
             // Get a vector of box overlap residuals
-            m_boxOverlaps[overlapStation-1] =
-              boxOverlap( aTrack, theSTID, theSTID2 );
-            if ( msgLevel(MSG::DEBUG) ) {
-              debug() << "Station " << overlapStation 
-                      << ": Found IT box overlap: boxOverlap = " << endmsg;
-              for ( int i=0; i<m_nLayers; ++i )
-                debug() << "layer " << i << " overlap = " 
-                        << m_boxOverlaps[overlapStation-1][i] << endmsg;
+            if ( int(overlapStation-1) < m_nStations ) {
+              m_boxOverlaps[overlapStation-1] =
+                boxOverlap( aTrack, theSTID, theSTID2 );
+              if ( msgLevel(MSG::DEBUG) ) {
+                debug() << "Station " << overlapStation 
+                        << ": Found IT box overlap: boxOverlap = " << endmsg;
+                for ( int i=0; i<m_nLayers; ++i )
+                  debug() << "layer " << i << " overlap = " 
+                          << m_boxOverlaps[overlapStation-1][i] << endmsg;
+              }
+              ++m_nBoxOverlaps;
             }
-            ++m_nBoxOverlaps;
+            else
+              Warning( "#Station > max number of stations", StatusCode::SUCCESS, 1 );
           }
         }
         //**********************************************************************
@@ -622,17 +625,19 @@ LHCb::MuonPID* AlignTrackMonitor::isMuonTrack (const LHCb::Track* aTrack) {
 
   std::list<std::pair<double,LHCb::MuonPID*> > matchedMuList;
 
-  //**********************************************************************
-  // Get MCParticle linked by highest weight to Track, get its ID and
-  // check that it is a muon (only for testing)
-  LinkedTo<LHCb::MCParticle,LHCb::Track>
-    directLink( evtSvc(), msgSvc(), m_tracksPath );
-  if ( directLink.notFound() )
-    Error("Linker table not found", StatusCode::SUCCESS, 1);
-
   LHCb::MCParticle* muonPart = new LHCb::MCParticle;
-  muonPart = directLink.first( aTrack );
-  //**********************************************************************
+  if ( m_mcData ) {
+    //**********************************************************************
+    // Get MCParticle linked by highest weight to Track, get its ID and
+    // check that it is a muon (only for testing)
+    LinkedTo<LHCb::MCParticle,LHCb::Track>
+      directLink( evtSvc(), msgSvc(), m_tracksPath );
+    if ( directLink.notFound() )
+      Error("Linker table not found", StatusCode::SUCCESS, 1);
+    
+    muonPart = directLink.first( aTrack );
+    //**********************************************************************
+  }
   
   LHCb::MuonPIDs::const_iterator iMuPIDs = m_muIDs->begin();
   for ( ; iMuPIDs != m_muIDs->end(); ++iMuPIDs ) {
@@ -653,21 +658,20 @@ LHCb::MuonPID* AlignTrackMonitor::isMuonTrack (const LHCb::Track* aTrack) {
     }
 
     double chi2 =
-      pow(trState.x()-muState.x(),2)/(trState.errX2()+muState.errX2()) +
-      pow(trState.y()-muState.y(),2)/(trState.errY2()+muState.errY2());
-
-    //     plot(chi2, 701, "chi2", 0, 50, 100);
+      gsl_pow_2(trState.x()-muState.x())/(trState.errX2()+muState.errX2()) +
+      gsl_pow_2(trState.y()-muState.y())/(trState.errY2()+muState.errY2());
 
     if (chi2<m_trMuMatchChi2) {
       if ( msgLevel( MSG::DEBUG ) )
         debug() << "Track matched to a muon" << endmsg;
-      if ( 0 != muonPart )
-        if ( muonPart->particleID().abspid() != m_pdgMuonID ) {
-          std::ostringstream mess;
-          mess << "Track should not be matched to a muon! (MCParticle ID = " 
-               << muonPart->particleID().abspid() << ")";
-          Warning( mess.str(), StatusCode::SUCCESS, 1 );
-        }
+      if ( m_mcData )
+        if ( 0 != muonPart )
+          if ( muonPart->particleID().abspid() != m_pdgMuonID ) {
+            std::ostringstream mess;
+            mess << "Track should not be matched to a muon! (MCParticle ID = " 
+                 << muonPart->particleID().abspid() << ")";
+            Warning( mess.str(), StatusCode::SUCCESS, 1 );
+          }
       matchedMuList.push_back(std::make_pair(chi2,(*iMuPIDs)));
     }
   }
@@ -679,15 +683,16 @@ LHCb::MuonPID* AlignTrackMonitor::isMuonTrack (const LHCb::Track* aTrack) {
 
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "Track not matched to a muon" << endmsg;
-  if ( 0 != muonPart )
-    if ( (muonPart->particleID().abspid() == m_pdgMuonID) &&
-         (muonPart->p() > 5*Gaudi::Units::GeV) ) {
-      std::ostringstream mess;
-      mess << "Track could be matched to a muon! (MCParticle ID = " 
-           << muonPart->particleID().abspid() << ")";
-      Warning( mess.str(), StatusCode::SUCCESS, 1 );
-    }
-
+  if ( m_mcData )
+    if ( 0 != muonPart )
+      if ( (muonPart->particleID().abspid() == m_pdgMuonID) &&
+           (muonPart->p() > 5*Gaudi::Units::GeV) ) {
+        std::ostringstream mess;
+        mess << "Track could be matched to a muon! (MCParticle ID = " 
+             << m_pdgMuonID << " and P > 5 GeV)";
+        Warning( mess.str(), StatusCode::SUCCESS, 1 );
+      }
+  
   delete muonPart;
 
   return 0;
@@ -835,7 +840,7 @@ AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
                                 LHCb::STChannelID STChanID1,
                                 LHCb::STChannelID STChanID2 ) {
 
-  Array fitPar ( 4,defValue );
+  Array fitPar ( 5,defValue );
 
   Array boxOverlap ( m_nLayers, defValue );
   std::vector<LHCb::Node*> hitsOverlapBox1;
@@ -881,9 +886,6 @@ AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
     return boxOverlap;
   }
 
-  double xTrack = 0;
-  double yTrack = 0;
-
   for ( int hitCnt=0; iNodes != iNodesEnd; ++iNodes, ++hitCnt ) {
     if ( hitCnt>=m_nLayers ) {
       std::ostringstream mess;
@@ -899,19 +901,24 @@ AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
       continue;
     }
 
-    xTrack = fitPar[0]*aNode2.z() + fitPar[1];
-    yTrack = fitPar[2]*aNode2.z() + fitPar[3];
+    double xTrack = fitPar[0]*aNode2.z()*aNode2.z() + fitPar[1]*aNode2.z() + fitPar[2];
+    double yTrack = fitPar[3]*aNode2.z() + fitPar[4];
     
     double b = -(aNode2.measurement().trajectory().beginPoint().X()-
                  aNode2.measurement().trajectory().endPoint().X())/
       (aNode2.measurement().trajectory().beginPoint().Y()-
        aNode2.measurement().trajectory().endPoint().Y());
-    
-    boxOverlap[hitCnt] =
-      (xTrack +
-       b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
-       aNode2.measurement().trajectory().endPoint().X())/
-      sqrt(1+b*b);    
+
+    if ( hitCnt < m_nLayers )
+      boxOverlap[hitCnt] =
+        (xTrack +
+         b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
+         aNode2.measurement().trajectory().endPoint().X())/
+        sqrt(1+b*b);
+    else {
+      Warning( "#Layer > max number of layers", StatusCode::SUCCESS, 1 );
+      return boxOverlap;
+    }
   }
 
   return boxOverlap;
@@ -929,12 +936,13 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
   int nHitsToFit = hitsOverlapBox.size();
 
   StatusCode sc;
-  Array fitPar (4, defValue );
+  Array fitPar (5, defValue );
 
   // If 4+ hits in box, fit piece of track with a straight line
   // and using minimisation of chi2
-  Array xPar(5,0);
+  Array xPar(8,0);
   Array yPar(5,0);
+  Gaudi::XYZPoint bFieldPoint;
   std::vector<LHCb::Node*>::const_iterator iNodes = hitsOverlapBox.begin();
   for ( ; iNodes != hitsOverlapBox.end(); ++iNodes ) {
     const LHCb::Node& aNode = *(*iNodes);
@@ -952,39 +960,58 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
       continue;
     }
 
-    double xHit = 0;
-    if ( aNode.measurement().trajectory().beginPoint().X() ==
-         aNode.measurement().trajectory().endPoint().X() )
-      xHit = aNode.measurement().trajectory().beginPoint().X();
-    else
-      xHit = aNode.measurement().trajectory().beginPoint().X() +
-        hitState.y()*
-        (aNode.measurement().trajectory().endPoint().X() -
-         aNode.measurement().trajectory().beginPoint().X())/
-        (aNode.measurement().trajectory().endPoint().Y() -
-         aNode.measurement().trajectory().beginPoint().Y());
+    double xHit =
+      aNode.measurement().trajectory().beginPoint().X() +
+      hitState.y()*
+      (aNode.measurement().trajectory().endPoint().X() -
+       aNode.measurement().trajectory().beginPoint().X())/
+      (aNode.measurement().trajectory().endPoint().Y() -
+       aNode.measurement().trajectory().beginPoint().Y());
 
-    xPar[0] += 1/pow(aNode.errResidual(),2);
-    xPar[1] += aNode.z()/pow(aNode.errResidual(),2);
-    xPar[2] += pow(aNode.z(),2)/pow(aNode.errResidual(),2);
-    xPar[3] += (aNode.z()*xHit)/pow(aNode.errResidual(),2);
-    xPar[4] += xHit/pow(aNode.errResidual(),2);
-    yPar[0] += 1/hitState.errY2();
+    bFieldPoint = hitState.position();
+
+    double sig2_res = gsl_pow_2(aNode.errResidual());
+
+//     xPar[0] += gsl_pow_4(aNode.z())/sig2_res;
+    xPar[1] += gsl_pow_3(aNode.z())/sig2_res;
+    xPar[2] += gsl_pow_2(aNode.z())/sig2_res;
+//     xPar[3] += gsl_pow_2(aNode.z())*xHit/sig2_res;
+    xPar[4] += aNode.z()/sig2_res;
+    xPar[5] += aNode.z()*xHit/sig2_res;
+    xPar[6] += xHit/sig2_res;
+    xPar[7] += 1/sig2_res;
+
+    yPar[0] += gsl_pow_2(aNode.z())/hitState.errY2();
     yPar[1] += aNode.z()/hitState.errY2();
-    yPar[2] += pow(aNode.z(),2)/hitState.errY2();
-    yPar[3] += (aNode.z()*hitState.y())/hitState.errY2();
-    yPar[4] += hitState.y()/hitState.errY2();
+    yPar[2] += aNode.z()*hitState.y()/hitState.errY2();
+    yPar[3] += hitState.y()/hitState.errY2();
+    yPar[4] += 1/hitState.errY2();
   }
 
-  // x = fitPar[0]*z + fitPar[1]
-  // y = fitPar[2]*z + fitPar[3]
+  Gaudi::XYZVector bfield;
+  m_pIMF -> fieldVector ( bFieldPoint, bfield );
+  double pT = 0;
+  m_extrapolator -> pt ( *aTrack, bFieldPoint.z(), pT );
+
+  // x = fitPar[0]*z² + fitPar[1]*z + fitPar[2]
+  // y = fitPar[3]*z + fitPar[4]
   if ( !sc.isFailure() ) {
-    fitPar[0] = (xPar[0]*xPar[3] - xPar[1]*xPar[4])/
-      (xPar[0]*xPar[2] - xPar[1]*xPar[1]);
-    fitPar[1] = (xPar[4] - fitPar[0]*xPar[1])/xPar[0];
-    fitPar[2] = (yPar[0]*yPar[3] - yPar[1]*yPar[4])/
-      (yPar[0]*yPar[2] - yPar[1]*yPar[1]);
-    fitPar[3] = (yPar[4] - fitPar[2]*yPar[1])/yPar[0];
+
+    // Using pT constrained fit
+    double D = gsl_pow_2(xPar[4])-xPar[2]*xPar[7];
+    
+    fitPar[0] = 2 * bfield.y() / pT;
+    
+    fitPar[1] = (xPar[5]*xPar[7]-xPar[4]*xPar[6]+
+                 (xPar[2]*xPar[4]-xPar[1]*xPar[7])*fitPar[0])/(-D);
+
+    fitPar[2] = ((xPar[4]*xPar[5]-xPar[2]*xPar[6]) +
+                 (gsl_pow_2(xPar[2])-xPar[1]*xPar[4])*fitPar[0])/D;
+
+    fitPar[4] = (yPar[1]*yPar[2]-yPar[0]*yPar[3])/(gsl_pow_2(yPar[1])-yPar[0]*yPar[4]);
+
+    fitPar[3] = (yPar[2]-yPar[1]*fitPar[4])/yPar[0];
+
   }
   else 
     fitPar.clear();
@@ -1002,89 +1029,73 @@ StatusCode AlignTrackMonitor::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   //**********************************************************************
   // Fill the NTuple columns
   //**********************************************************************
+  //     plot(variable, tag, "variable", min, max, nbins);
   // Global Variables
-  trackSelTuple -> column( "NEvents", m_nEvents );
-  
+  trackSelTuple -> column ( "NEvents", m_nEvents );
+  trackSelTuple -> column ( "EvtNr", m_evtNr );
+  trackSelTuple -> column ( "RunNr", m_runNr );
+  trackSelTuple -> column ( "Multiplicity", m_tracksMultiplicity );
+  trackSelTuple -> column ( "GhostRate", m_ghostRate );
+
   // Track Variables                     
-  trackSelTuple -> column( "NTrack", m_nGoodTracks );
+  trackSelTuple -> column ( "NTrack", m_nGoodTracks );
   
-  trackSelTuple -> column( "IsAGhost", m_isGhostTrack );
-  trackSelTuple -> column( "IsAMuon", m_isMuonTrack );
+  trackSelTuple -> column ( "IsAGhost", m_isGhostTrack );
+  trackSelTuple -> column ( "IsAMuon", m_isMuonTrack );
   
-  trackSelTuple -> column( "NITHits", m_nITHits );
-  trackSelTuple -> column( "NOTHits", m_nOTHits );
-  trackSelTuple -> column( "NSharedHits", m_nSharedHits );
-  trackSelTuple -> column( "FSharedHits", m_fSharedHits );
-  trackSelTuple -> column( "NNeighbouringHits", m_nCloseHits );
-  trackSelTuple -> column( "NHoles", m_nHoles );
+  trackSelTuple -> column ( "NITHits", m_nITHits );
+  trackSelTuple -> column ( "NOTHits", m_nOTHits );
+  trackSelTuple -> column ( "NSharedHits", m_nSharedHits );
+  trackSelTuple -> column ( "FSharedHits", m_fSharedHits );
+  trackSelTuple -> column ( "NNeighbouringHits", m_nCloseHits );
+  trackSelTuple -> column ( "NHoles", m_nHoles );
   
-  trackSelTuple -> column( "TrackChi2PerDoF", m_trackChi2PerDoF );
-  trackSelTuple -> column( "TrackChi2Prob", m_trackChi2Prob );
+  trackSelTuple -> column ( "TrackChi2PerDoF", m_trackChi2PerDoF );
+  trackSelTuple -> column ( "TrackChi2Prob", m_trackChi2Prob );
   
-  trackSelTuple -> column( "TrackP", m_trackP );
-  trackSelTuple -> column( "TrackPt", m_trackPt );
-  trackSelTuple -> column( "TrackMCP", m_trackMCP );
-  trackSelTuple -> column( "TrackMCPt", m_trackMCPt );
-  trackSelTuple -> column( "TrackErrP", m_trackErrP );
-
-  trackSelTuple -> column( "TrackQ", m_trackQ );  
-
+  trackSelTuple -> column ( "TrackP", m_trackP );
+  trackSelTuple -> column ( "TrackPt", m_trackPt );
+  trackSelTuple -> column ( "TrackErrP", m_trackErrP );
+  if ( m_mcData ) {
+    trackSelTuple -> column ( "TrackMCP", m_trackMCP );
+    trackSelTuple -> column ( "TrackMCPt", m_trackMCPt );
+  }
+  
   // Hits Variables
-  trackSelTuple -> farray( "Residuals", m_res.begin(),
-                           m_res.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "ErrResiduals", m_errRes.begin(),
-                           m_errRes.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "Residuals", m_res.begin(),
+                            m_res.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "ErrResiduals", m_errRes.begin(),
+                            m_errRes.end(), "NResiduals", m_nMaxITHits );
   
-  trackSelTuple -> farray( "HitX", m_hitX.begin(),
-                           m_hitX.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "HitY", m_hitY.begin(),
-                           m_hitY.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "HitZ", m_hitZ.begin(),
-                           m_hitZ.end(), "NResiduals", m_nMaxITHits );
-
-  trackSelTuple -> farray( "HitLocalX", m_hitLocalX.begin(),
-                           m_hitLocalX.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "HitLocalY", m_hitLocalY.begin(),
-                           m_hitLocalY.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "HitLocalZ", m_hitLocalZ.begin(),
-                           m_hitLocalZ.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitX", m_hitX.begin(),
+                            m_hitX.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitY", m_hitY.begin(),
+                            m_hitY.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitZ", m_hitZ.begin(),
+                            m_hitZ.end(), "NResiduals", m_nMaxITHits );
   
-  trackSelTuple -> farray( "TXAtHit", m_tx.begin(),
-                           m_tx.end(), "NResiduals", m_nMaxITHits );
-  trackSelTuple -> farray( "TYAtHit", m_ty.begin(),
-                           m_ty.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitLocalX", m_hitLocalX.begin(),
+                            m_hitLocalX.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitLocalY", m_hitLocalY.begin(),
+                            m_hitLocalY.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "HitLocalZ", m_hitLocalZ.begin(),
+                            m_hitLocalZ.end(), "NResiduals", m_nMaxITHits );
   
-  trackSelTuple -> farray( "LengthToHit", m_lToHit.begin(),
-                           m_lToHit.end(), "NResiduals", m_nMaxITHits );
-
-  trackSelTuple -> farray( "LadOverlaps", m_ladOverlaps.begin(),
-                           m_ladOverlaps.end(),  "NLadOverlaps", m_nMaxITHits );
-  trackSelTuple -> farray( "LadOverlapsZ", m_ladOverlapsZ.begin(),
-                           m_ladOverlapsZ.end(), "NLadOverlaps", m_nMaxITHits );
+  trackSelTuple -> farray ( "TXAtHit", m_tx.begin(),
+                            m_tx.end(), "NResiduals", m_nMaxITHits );
+  trackSelTuple -> farray ( "TYAtHit", m_ty.begin(),
+                            m_ty.end(), "NResiduals", m_nMaxITHits );
   
-  trackSelTuple -> column( "NBoxOverlaps", m_nBoxOverlaps );
+  trackSelTuple -> farray ( "LadOverlaps", m_ladOverlaps.begin(),
+                            m_ladOverlaps.end(),  "NLadOverlaps", m_nMaxITHits );
+  trackSelTuple -> farray ( "LadOverlapsZ", m_ladOverlapsZ.begin(),
+                            m_ladOverlapsZ.end(), "NLadOverlaps", m_nMaxITHits );
   
-  trackSelTuple -> matrix( "BoxOverlaps", m_boxOverlaps,
-                           m_nStations, m_nLayers );
+  trackSelTuple -> column ( "NBoxOverlaps", m_nBoxOverlaps );
+  trackSelTuple -> matrix ( "BoxOverlaps", m_boxOverlaps,
+                            m_nStations, m_nLayers );
   //**********************************************************************
   
   return trackSelTuple->write();  
 }
 //===========================================================================
-
-
-// Test Geometry informations
-// channelID: ???
-// station: one of 3 stations
-// detRegion: one of 4 boxes in one station
-// layer: one of 4 layers in one box
-// sector: one of 7 ladders in one layer
-
-// uniqueDetRegion=detRegion+8*uniqueLayer:
-// 48 values == 3 stations * 4 boxes/station * 4 layers/box
-
-// uniqueLayer=layer+8*station:
-// 12 values (layers) == 3 stations * 4 layers/station
-
-// uniqueSector=sector+32*uniqueDetRegion:
-// 336 values (ladders) == 3 stations * 4 boxes/station * 4 layers/box * 7 ladders/layer

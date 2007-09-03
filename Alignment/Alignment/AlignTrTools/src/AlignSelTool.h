@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.2 2007-04-25 14:07:06 jblouw Exp $
+// $Id: AlignSelTool.h,v 1.3 2007-09-03 13:23:32 jblouw Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -10,12 +10,6 @@
 #include "AlignmentInterfaces/IAlignSelTool.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
-
-// #include "OTDet/DeOTDetector.h"
-// #include "OTDet/DeOTModule.h"
-
-// #include "STDet/DeSTDetector.h"
-// #include "STDet/DeITLayer.h"
 
 #include "Event/Track.h"
 #include "Event/OTTime.h"
@@ -59,9 +53,7 @@ private:
 
   bool m_fieldOn;
 
-  double m_otCloseHitTol;
   double m_nStrawsTol;
-  double m_itCloseHitTol;
   double m_nStripsTol;
 
   //=============================================================================
@@ -73,14 +65,10 @@ private:
   int c_maxNHoles;
   int c_maxNSharedHits;
   int c_maxNCloseHits;
+  std::string c_trackType;
   //=============================================================================
 
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
-
-//   DeOTDetector* m_otTracker;           ///< Pointer to the OT XML geom
-//   std::string   m_otTrackerPath;       ///< Name of the OT XML geom path
-//   DeSTDetector* m_itTracker;           ///< Pointer to the IT XML geom
-//   std::string   m_itTrackerPath;       ///< Name of the IT XML geom path
 
   std::string m_tracksPath;
   LHCb::Track theTrack;

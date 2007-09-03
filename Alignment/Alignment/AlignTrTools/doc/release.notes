@@ -8,6 +8,9 @@ Purpose: LHCb Alignment Tools
 - J. Blouw 
   -> updated Derivatives class
   -> updated TAConfig class
+- L. Nicolas
+  => updated AlignSelTool class
+  => updated AlignTrackMonitor class
 
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>
 - J. Blouw modified requirements file to remove explict version dependency

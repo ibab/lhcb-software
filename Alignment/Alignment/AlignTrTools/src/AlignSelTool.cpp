@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.2 2007-05-14 17:47:31 cattanem Exp $
+// $Id: AlignSelTool.cpp,v 1.3 2007-09-03 13:23:32 jblouw Exp $
 // Include files 
 
 // from Gaudi
@@ -32,11 +32,6 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   
   declareInterface<IAlignSelTool>(this);
 
-//   declareProperty( "ITGeometryPath",
-//                    m_itTrackerPath = DeSTDetLocation::location("IT") );
-//   declareProperty ( "OTGeometryPath",
-//                     m_otTrackerPath = DeOTDetectorLocation::Default );
-
   declareProperty( "TracksLocation", m_tracksPath = "Rec/Track/Tsa" );
   declareProperty( "ITClustersLocation",
                    m_itClustersPath = LHCb::STLiteClusterLocation::ITClusters );
@@ -44,13 +39,10 @@ AlignSelTool::AlignSelTool ( const std::string& type,
                     m_otTimesPath = LHCb::OTTimeLocation::Default );
 
   declareProperty( "BFieldStatus",                   m_fieldOn        = true          );
-  declareProperty ( "IsolatedTrackOTTolerance",
-                    m_otCloseHitTol = 2*Gaudi::Units::mm );
   declareProperty ( "IsolatedTrackNStrawsTolerance", m_nStrawsTol = 1 );
-  declareProperty ( "IsolatedTrackITTolerance",
-                    m_itCloseHitTol = 0.5*Gaudi::Units::mm );
   declareProperty ( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2 );
 
+  declareProperty( "TrackType",                      c_trackType      = "ALL"         );
   declareProperty( "MinMomentumCut",                 c_minP           = defValue      );
   declareProperty( "Chi2PerDoFMaxCut",               c_maxChi2PerDoF  = abs(defValue) );
   declareProperty( "Chi2ProbMinCut",                 c_minChi2Prob    = defValue      );
@@ -76,10 +68,37 @@ StatusCode AlignSelTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
-//   m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
-//   m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
-
   m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
+
+  info() << "Track Selection criteria:" << endmsg;
+  if ( c_trackType.compare( "ALL" ) ) {
+    if ( !c_trackType.compare( "IT" ) ) {
+      info() << "          Will select tracks with hits only in IT!" << endmsg;
+    }
+    else if ( !c_trackType.compare( "OT" ) ) {
+      info() << "          Will select tracks with hits only in OT!" << endmsg;
+    }
+    else if ( !c_trackType.compare( "BOTH" ) ) {
+      info() << "          Will select tracks with hits both in IT and in OT!" << endmsg;
+    }
+  }
+  else
+    info() << "          Will select all types of tracks!" << endmsg;
+
+  if ( c_minP != defValue )
+    info() << "          Min P cut = " << c_minP << endmsg;
+  if ( c_maxChi2PerDoF != abs(defValue) )
+    info() << "          Max chi2/DoF cut = " << c_maxChi2PerDoF << endmsg;
+  if ( c_minChi2Prob != defValue )
+    info() << "          Min chi2 prob. cut = " << c_minChi2Prob << endmsg;
+  if ( c_maxNHoles != abs(defValue) )
+    info() << "          Max # holes cut = " << c_maxNHoles << endmsg;
+  if ( c_maxNSharedHits != abs(defValue) )
+    info() << "          Max # shared hits cut = " << c_maxNSharedHits << endmsg;
+  if ( c_maxNCloseHits != abs(defValue) )
+    info() << "          Max # neighbouring hits cut = " << c_maxNCloseHits << endmsg;
+
+  debug() << "AlignSelTool initialized successfully" << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -90,6 +109,8 @@ StatusCode AlignSelTool::initialize ( ) {
 // Cutting on all the variables
 //=============================================================================
 bool AlignSelTool::selectTrack ( LHCb::Track* aTrack ) {
+
+  debug() << "AlignSelTool starting selectTrack" << endmsg;
 
   if ( c_maxNCloseHits < abs(defValue) ) {
     // Get The IT Clusters
@@ -135,6 +156,20 @@ int AlignSelTool::getAllVariables ( LHCb::Track* aTrack ) {
           ++nOTHits;
     }
   }
+
+  // Selecting only tracks of defined track type
+  if ( c_trackType.compare( "ALL" ) )
+    if ( !c_trackType.compare( "IT" ) ) {
+      if ( (nOTHits != 0) || (nITHits == 0) ) return defValue;
+    }
+    else if ( !c_trackType.compare( "OT" ) ) {
+      if ( (nOTHits == 0) || (nITHits != 0) ) return defValue;
+    }
+    else if ( !c_trackType.compare( "BOTH" ) ) {
+      if ( (nOTHits == 0) || (nITHits == 0) ) return defValue;
+    }
+    else
+      Warning("Track type not defined, selecting all types!", StatusCode::SUCCESS, 1);
   
   m_trP = 0;
   m_trChi2PerDoF = 0;
