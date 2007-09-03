@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.2 2007-04-27 12:36:52 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.3 2007-09-03 14:56:33 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -78,7 +78,7 @@ private:
   std::string m_seedStubLocation;
 
   std::string m_selectorType;
-  double m_maxNumHits;
+  //double m_maxNumHits;
   bool m_calcLikelihood; 
 
   std::vector<ITsaSeedStep*> m_xSearchStep;
