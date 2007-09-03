@@ -32,120 +32,149 @@ class genClassDicts:
       pass
 #--------------------------------------------------------------------------------
   def genPackageDict(self,godPackage):    
-    pkg_namespace = godPackage['attrs']['namespace']
     if godPackage.has_key('class'):
-      for cl in godPackage['class']:
-        clnamespace = cl['attrs'].get('namespace',pkg_namespace)
-        clname = clnamespace+'::'+cl['attrs']['name']
-        #clname = cl['attrs']['namespace']+'::'+cl['attrs']['name']
-        ##clname = cl['attrs']['name']
-        # add include file line
-        self.sIncludes = self.conc(self.sIncludes, '#include "%s%s.h"' % (self.srcOutputDir, cl['attrs']['name']))
-        # get the class id
-        if cl['attrs'].has_key('id'):
-          id = cl['attrs']['id']
-          sid = ' id="%08x-0000-0000-0000-000000000000"' %int(id)
-        else:
-          sid=''
-        cnstr =  '  <class name="%s"%s' % (clname,sid)
-        trans = False
-        # add transient flags if they exist
-        if cl.has_key('attribute'):
-          for attr in cl['attribute']:
-            if attr['attrs'].get('transient') == 'TRUE' :
-              if trans == False :
-                cnstr += '>'
-                trans = True
-	      cnstr += ' <field name="m_%s" transient="true"/>' % (attr['attrs']['name'])
-        if trans:
-          cnstr += ' </class>'
-        else:
-          cnstr += '/>'
-        # add class name for selection file
-        self.sClassSelections = self.conc(self.sClassSelections, cnstr)
-        if cl.has_key('template'):
-          for t in cl['template']:
-            # name of template class
-            tcname = t['attrs']['name']
-            if tcname[-4:] == 'Dict' : tcname = tcname[:-4]
-            # name of first template parameter (THIS is a short cut to the class name)
-            t1name = t['attrs']['t1'].replace('THIS',clname)
-            # stl vector is a bit special
-            if tcname.lower() == 'vector':
-              # include header file
-              self.sIncludes = self.conc(self.sIncludes, '#include <vector>')
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, 'std::vector<%s> m_std_vector_%s;' % (t1name, self.clean(t1name)))
-              # include element for selection file
-              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<%s>"/>' % t1name)
-	    elif tcname == "KeyedObject":
-              if t1name != 'int':
-                # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-                self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/KeyedObject.h"')
-                # include template instantiation
-                self.sDictInstances = self.conc(self.sDictInstances, 'KeyedObject<%s> m_KeyedObject_%s;' % (t1name, self.clean(t1name)))
-                # include element for selection file
-                ko =  '  <class name="KeyedObject<%s>">' % (t1name)
-                ko += ' <field name="m_hasKey" transient="true"/>'
-                ko += ' <field name="m_refCount" transient="true"/>'
-                ko += ' </class>'
-                self.sClassSelections = self.conc(self.sClassSelections, ko)
-            elif tcname == "KeyedContainer":
+      self.genPackageDictClass(godPackage)
+    if godPackage.has_key('namespace'):
+      self.genPackageDictNamespace(godPackage)
+    return
+#--------------------------------------------------------------------------------
+  def genPackageDictNamespace(self, godPackage):
+
+    pkg_namespace = godPackage['attrs']['namespace']
+
+    for ns in godPackage['namespace']:
+      ns_name = ns['attrs']['name']
+
+      includes_xml = '#include "%s%s.h"' % (self.srcOutputDir, ns_name)
+      self.sIncludes = self.conc(self.sIncludes, includes_xml)
+
+      typetags = [('enum','enum'),('method','function')]
+      for typ,tag in typetags:
+        try:
+          things = ns[typ]
+          for thing in things:
+            xml_str = '  <%s name="%s::%s::%s"/>'%(tag,pkg_namespace,ns_name,thing['attrs']['name'])
+            self.sClassSelections = self.conc(self.sClassSelections, xml_str)
+        except KeyError:
+          pass
+
+    return
+
+#--------------------------------------------------------------------------------
+  def genPackageDictClass(self,godPackage):
+    pkg_namespace = godPackage['attrs']['namespace']
+    for cl in godPackage['class']:
+      clnamespace = cl['attrs'].get('namespace',pkg_namespace)
+      clname = clnamespace+'::'+cl['attrs']['name']
+      #clname = cl['attrs']['namespace']+'::'+cl['attrs']['name']
+      ##clname = cl['attrs']['name']
+      # add include file line
+      self.sIncludes = self.conc(self.sIncludes, '#include "%s%s.h"' % (self.srcOutputDir, cl['attrs']['name']))
+      # get the class id
+      if cl['attrs'].has_key('id'):
+        id = cl['attrs']['id']
+        sid = ' id="%08x-0000-0000-0000-000000000000"' %int(id)
+      else:
+        sid=''
+      cnstr =  '  <class name="%s"%s' % (clname,sid)
+      trans = False
+      # add transient flags if they exist
+      if cl.has_key('attribute'):
+        for attr in cl['attribute']:
+          if attr['attrs'].get('transient') == 'TRUE' :
+            if trans == False :
+              cnstr += '>'
+              trans = True
+            cnstr += ' <field name="m_%s" transient="true"/>' % (attr['attrs']['name'])
+      if trans:
+        cnstr += ' </class>'
+      else:
+        cnstr += '/>'
+      # add class name for selection file
+      self.sClassSelections = self.conc(self.sClassSelections, cnstr)
+      if cl.has_key('template'):
+        for t in cl['template']:
+          # name of template class
+          tcname = t['attrs']['name']
+          if tcname[-4:] == 'Dict' : tcname = tcname[:-4]
+          # name of first template parameter (THIS is a short cut to the class name)
+          t1name = t['attrs']['t1'].replace('THIS',clname)
+          # stl vector is a bit special
+          if tcname.lower() == 'vector':
+            # include header file
+            self.sIncludes = self.conc(self.sIncludes, '#include <vector>')
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, 'std::vector<%s> m_std_vector_%s;' % (t1name, self.clean(t1name)))
+            # include element for selection file
+            self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<%s>"/>' % t1name)
+          elif tcname == "KeyedObject":
+            if t1name != 'int':
               # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
+              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/KeyedObject.h"')
               # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
-              # Add container id to class id
-              if cl['attrs'].has_key('id'):
-                sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x60000)
+              self.sDictInstances = self.conc(self.sDictInstances, 'KeyedObject<%s> m_KeyedObject_%s;' % (t1name, self.clean(t1name)))
               # include element for selection file
-              kc =  '  <class name="%s<%s,Containers::KeyedObjectManager<Containers::hashmap> >"%s>' % (tcname, t1name,sid)
-	      kc += ' <field name="m_cont" transient="true"/>'
-	      kc += ' <field name="m_random" transient="true"/>'
-	      kc += ' </class>'
-              self.sClassSelections = self.conc(self.sClassSelections, kc)
-	    elif tcname == "SmartRef":	
-              # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRef.h"')
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, 'SmartRef<%s> m_SmartRef_%s;' % (t1name, self.clean(t1name)))
-              # include element for selection file
-	      sr =  '  <class name="SmartRef<%s>">' % (t1name)
-	      sr += ' <field name="m_target" transient="true"/>'
-	      sr += ' </class>'
-              self.sClassSelections = self.conc(self.sClassSelections, sr)
-	    elif tcname == "SmartRefVector":
-              # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRefVector.h"')
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRef.h"')
-              self.sIncludes = self.conc(self.sIncludes, '#include <vector>')
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, 'SmartRefVector<%s> m_SmartRefVector_%s;' % (t1name, self.clean(t1name)))
-              self.sDictInstances = self.conc(self.sDictInstances, 'std::vector<SmartRef<%s> > m_std_vector_SmartRef_%s;' % (t1name, self.clean(t1name)))
-              # include element for selection file
-	      srv =  '  <class name="SmartRefVector<%s>">' % (t1name)
-	      srv += ' <field name="m_contd" transient="true"/>'
-	      srv += ' <field name="m_data" transient="true"/>'
-	      srv += ' </class>'
-              self.sClassSelections = self.conc(self.sClassSelections, srv)
-              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<SmartRef<%s> >"/>' % (t1name))
-            elif tcname == "ObjectVector":
-              # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
-              # Add container id to class id
-              if cl['attrs'].has_key('id'):
-                sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x20000)
-              # include element for selection file
-              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<%s>"%s/>' % (tcname, t1name,sid))
-            else:
-              # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
-              # include element for selection file
-              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<%s>"/>' % (tcname, t1name))
+              ko =  '  <class name="KeyedObject<%s>">' % (t1name)
+              ko += ' <field name="m_hasKey" transient="true"/>'
+              ko += ' <field name="m_refCount" transient="true"/>'
+              ko += ' </class>'
+              self.sClassSelections = self.conc(self.sClassSelections, ko)
+          elif tcname == "KeyedContainer":
+            # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+            # Add container id to class id
+            if cl['attrs'].has_key('id'):
+              sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x60000)
+            # include element for selection file
+            kc =  '  <class name="%s<%s,Containers::KeyedObjectManager<Containers::hashmap> >"%s>' % (tcname, t1name,sid)
+            kc += ' <field name="m_cont" transient="true"/>'
+            kc += ' <field name="m_random" transient="true"/>'
+            kc += ' </class>'
+            self.sClassSelections = self.conc(self.sClassSelections, kc)
+          elif tcname == "SmartRef":	
+            # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRef.h"')
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, 'SmartRef<%s> m_SmartRef_%s;' % (t1name, self.clean(t1name)))
+            # include element for selection file
+            sr =  '  <class name="SmartRef<%s>">' % (t1name)
+            sr += ' <field name="m_target" transient="true"/>'
+            sr += ' </class>'
+            self.sClassSelections = self.conc(self.sClassSelections, sr)
+          elif tcname == "SmartRefVector":
+            # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRefVector.h"')
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRef.h"')
+            self.sIncludes = self.conc(self.sIncludes, '#include <vector>')
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, 'SmartRefVector<%s> m_SmartRefVector_%s;' % (t1name, self.clean(t1name)))
+            self.sDictInstances = self.conc(self.sDictInstances, 'std::vector<SmartRef<%s> > m_std_vector_SmartRef_%s;' % (t1name, self.clean(t1name)))
+            # include element for selection file
+            srv =  '  <class name="SmartRefVector<%s>">' % (t1name)
+            srv += ' <field name="m_contd" transient="true"/>'
+            srv += ' <field name="m_data" transient="true"/>'
+            srv += ' </class>'
+            self.sClassSelections = self.conc(self.sClassSelections, srv)
+            self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<SmartRef<%s> >"/>' % (t1name))
+          elif tcname == "ObjectVector":
+            # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+            # Add container id to class id
+            if cl['attrs'].has_key('id'):
+              sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x20000)
+            # include element for selection file
+            self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<%s>"%s/>' % (tcname, t1name,sid))
+          else:
+            # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+            self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
+            # include template instantiation
+            self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+            # include element for selection file
+            self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<%s>"/>' % (tcname, t1name))
 #--------------------------------------------------------------------------------
   def appendFile(self, fileName, tmplname):
     file = open(fileName)
