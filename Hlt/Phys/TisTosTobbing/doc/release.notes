@@ -1,13 +1,14 @@
- ! $Id: release.notes,v 1.7 2007-08-31 16:54:34 tskwarni Exp $
+ ! $Id: release.notes,v 1.8 2007-09-03 15:24:43 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
  
+
+!====================== TisTosTobbing v2r0 2007-09-03 ==================
 ! 2007-08-31 - Tomasz Skwarnicki
 - improve documentation
 - fix lines which are too long
-
 
 ! 2007-08-30 - Patrick Koppenburg
  - removed slc4 directory
