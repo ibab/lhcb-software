@@ -1,9 +1,15 @@
- ! $Id: release.notes,v 1.8 2007-09-03 15:24:43 pkoppenb Exp $
+ ! $Id: release.notes,v 1.9 2007-09-03 15:35:09 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
  
+
+! 2007-09-03 - Patrick Koppenburg
+ - moved interfaces to DaVinciKernel
+ - Changed include directory to Kernel/ -> needs DaVinci v19r5
+ - Removed includes and added dependency on DaVinciKernel
+ - increment to v2r1
 
 !====================== TisTosTobbing v2r0 2007-09-03 ==================
 ! 2007-08-31 - Tomasz Skwarnicki

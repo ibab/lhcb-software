@@ -1,11 +1,11 @@
-// $Id: TriggerSelectionTisTos.h,v 1.3 2007-08-31 16:54:34 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.4 2007-09-03 15:35:09 pkoppenb Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TisTosTobbing/ITriggerSelectionTisTos.h"            // Interface
+#include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "HltBase/HltConfigurationHelper.h"

@@ -3,12 +3,12 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           TisTosTobbing
-version           v2r0
+version           v2r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TisTosTobbing
+branches          cmt doc src
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -24,8 +24,10 @@ use HltBase             v*    Hlt
 
 use CaloDet          v*      Det 
 
+use DaVinciKernel    v* Phys
+
 # =============== include directories =========================================
-apply_pattern     install_more_includes more=TisTosTobbing
+# apply_pattern     install_more_includes more=TisTosTobbing
 
 #============================================================================
 # Component library building rule

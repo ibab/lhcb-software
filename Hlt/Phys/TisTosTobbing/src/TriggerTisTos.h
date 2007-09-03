@@ -1,11 +1,11 @@
-// $Id: TriggerTisTos.h,v 1.2 2007-08-31 16:54:34 tskwarni Exp $
+// $Id: TriggerTisTos.h,v 1.3 2007-09-03 15:35:09 pkoppenb Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TisTosTobbing/ITriggerTisTos.h"            // Interface
+#include "Kernel/ITriggerTisTos.h"            // Interface
 
 #include "TriggerSelectionTisTos.h"
 #include "HltBase/HltConfigurationHelper.h"
