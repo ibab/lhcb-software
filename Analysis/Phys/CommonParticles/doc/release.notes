@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-09-03 - Patrick Koppenburg
+ - Moved dilepton for K*MuuMu into StandardJpsi as StdLoosePenguinDimuon
+ - increment to v3r9
+
 !========================== CommonParticles v3r8 2007-03-09 ===================
 ! 2007-03-08 - Chris Jones
  - Some changes to default cuts for Standard basic particles
