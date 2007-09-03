@@ -18,6 +18,8 @@ void L0Muon::SelectionUnit::select()
 
   m_candRegHandlerOut.clear();
 
+  int ncandidates = 0;
+
   // Extract the candidates with highest Pt;
   // Fill the output register with candidates
   std::pair<int,int> usedPair(-1,-1);
@@ -26,22 +28,23 @@ void L0Muon::SelectionUnit::select()
     std::pair<int,int> bestPair(-1,-1);
     // Loop over input registers
     for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
+      int index = (*itHandlerMap).first;
       // Loop over input candidates in register
       for (int icand = 0;icand<2;icand++) {
-        int index = (*itHandlerMap).first;
         if (m_candRegHandlerIn[index].isEmpty(icand)) continue;
-        if (index==usedPair.first && icand==usedPair.second) continue;
+        if (index==usedPair.first && icand==usedPair.second) continue; // candidate has already been used
         PMuonCandidate cand = m_candRegHandlerIn[index].getMuonCandidate(icand);
         if (cand->pT()>best->pT() ) {
           best = cand;
           std::pair<int,int> tmppair(index,icand);
           bestPair = tmppair;
         }
-      } // End of Loop over input candidates in register
-    } // End of Loop over input registers
+      } // End of Loop over input candidates in register (icand)
+    } // End of Loop over input registers (index)
     if (bestPair.first==-1 || bestPair.second==-1) break;
     m_candRegHandlerOut.setMuonCandidate(best,ibest);
     usedPair = bestPair;
+    ++ncandidates;
   }
   
   
@@ -52,11 +55,10 @@ void L0Muon::SelectionUnit::select()
     int index = (*itHandlerMap).first;
     int ncand = (m_candRegHandlerIn[index].getStatus())&0x3;
     int error = ((m_candRegHandlerIn[index].getStatus())>>2)&0x3;
-    status_ncand+=ncand;
+    status_ncand = (ncand==3) ? 3 : status_ncand;
     status_error|=error;
   }
-  status_error|= status_ncand>2 ? 0xC : 0;
-  status_ncand = status_ncand>2 ? 3 : status_ncand;
+  status_ncand = (status_ncand==3) ? 3 : ncandidates;
   int status=((status_ncand)&0x3) + ((status_error<<2)&0xC);
   m_candRegHandlerOut.setStatus(status);
   
