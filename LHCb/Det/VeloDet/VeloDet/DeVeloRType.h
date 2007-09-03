@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.25 2007-08-28 12:05:43 jonrob Exp $
+// $Id: DeVeloRType.h,v 1.26 2007-09-03 19:50:35 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -234,11 +234,8 @@ private:
   /// Return x and y position for the intersect of the cut-off line and a given radius
   void intersectCutOff(const double radius, double& x, double& y) const;
 
-  /// Calculate the global strip radii when the alignment changes
-  StatusCode updateGlobalR();
-
-  /// Calculate the strip radii in the halfbox frame when the alignment changes
-  StatusCode updateHalfboxR();
+  /// Calculate the global and half box strip radii when the alignment changes
+  StatusCode updateStripRCache();
 
   /// Calculate the zone limits in the global and halfbox frame
   StatusCode updateZoneLimits();

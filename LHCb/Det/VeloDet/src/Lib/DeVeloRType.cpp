@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.45 2007-08-28 12:05:43 jonrob Exp $
+// $Id: DeVeloRType.cpp,v 1.46 2007-09-03 19:50:35 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -707,29 +707,54 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
 
 }
 
-StatusCode DeVeloRType::updateGlobalR()
+StatusCode DeVeloRType::updateStripRCache()
 {
+  // We do not use the radius at the centre of the strip, because in
+  // the global frame this is no longer the occupancy weighted mean.
+  // Instead we integrate over the strip wighted by occupancy which is
+  // o = const./r.  The constant cancels in the weighted mean.
   for (unsigned int strip=0; strip<m_numberOfStrips; ++strip) {
-    double phi = (phiMaxStrip(strip) + phiMinStrip(strip))/2.0;
-    double r   = rOfStrip(strip);
-    Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
+    double phiMin = phiMaxStrip(strip) > phiMinStrip(strip) ? phiMinStrip(strip) : phiMaxStrip(strip);
+    double phiMax = phiMaxStrip(strip) > phiMinStrip(strip) ? phiMaxStrip(strip) : phiMinStrip(strip);
+    double rLocal =  rOfStrip(strip);
+
+    double dphi   = (phiMax-phiMin)/10.0;
+    double num   = 0.0;
+    double hbden = 0.0;
+    double gden  = 0.0;
+    double phiLocal=phiMin;
+
+    // integrate over strip
+    for ( ; phiLocal < phiMax; phiLocal += dphi) {
+      Gaudi::XYZPoint lp(rLocal*cos(phiLocal),rLocal*sin(phiLocal),0.0);
+      
+      num += dphi;
+      
+      Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
+      hbden += dphi/hbp.rho();
+      
+      Gaudi::XYZPoint gp = localToGlobal(lp);
+      gden += dphi/gp.rho();
+    }
+
+    // deal with the last interval, it might be shorter than the original dphi
+    dphi = phiMax - phiLocal + dphi;
+    num += dphi;
+    
+    Gaudi::XYZPoint lp(rLocal*cos(phiMax),rLocal*sin(phiMax),0.0);
+    
+    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
+    hbden += dphi/hbp.rho();
+    
     Gaudi::XYZPoint gp = localToGlobal(lp);
-    m_globalR[strip] = static_cast<float>(gp.rho());
+    gden += dphi/gp.rho();
+
+    // store the results
+    m_halfboxR[strip] = static_cast<float>(num/hbden);
+    m_globalR [strip] = static_cast<float>(num/gden);
+
   }
   
-  return StatusCode::SUCCESS;
-}
-
-StatusCode DeVeloRType::updateHalfboxR()
-{
-  for (unsigned int strip=0; strip<m_numberOfStrips; ++strip) {
-    double phi = (phiMaxStrip(strip) + phiMinStrip(strip))/2.0;
-    double r   = rOfStrip(strip);
-    Gaudi::XYZPoint lp(r*cos(phi),r*sin(phi),0.0);
-    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-    m_halfboxR[strip] = static_cast<float>(hbp.rho());
-  }
-
   return StatusCode::SUCCESS;
 }
 
@@ -802,15 +827,9 @@ StatusCode DeVeloRType::updateGeometryCache()
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   
-  StatusCode sc = updateGlobalR();
+  StatusCode sc = updateStripRCache();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update global r cache." << endreq;
-    return sc;
-  }
-  
-  sc = updateHalfboxR();
-  if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update halfbox r cache." << endreq;
+    msg << MSG::ERROR << "Failed to update strip r cache." << endreq;
     return sc;
   }
 

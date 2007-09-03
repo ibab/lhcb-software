@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.173 2007-08-28 12:05:43 jonrob Exp $
+! $Id: release.notes,v 1.174 2007-09-03 19:50:35 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
-! 2007-08-28 - 
+! 2007-09-03 - Kurt Rinnert
+ - changed the definition of strip radius in halfbox and global frames.  The
+   cached values are no longer computed from the strip centre in the local
+   frame.  Instead the strip radius is now an occupancy weighted mean.  In
+   ideal geometry this is the same.  It was confirmed that the results in the
+   ideal geometry setup do not change.  
+   The integration is performed numreically with ten sampling points.  Of
+   course this slows down application initialisation a bit.  However, this
+   penalty is of order 1% of the overall application initialisation CPU
+   consumption (according to callgrind).  Whether 10 sampling points is a good
+   choice can only be determined with realistic data.  
+
+! 2007-08-28 - Chris Jones
  - Minor fixes for WIN32
 
 ! 2007-08-25 - Kurt Rinnert
