@@ -63,6 +63,10 @@ class Centipede : public Millepede, virtual public ICentipede {
 			    double &chi2, 
 			    double &res );
 
+  virtual StatusCode MakeGlobalFit( std::vector<double> &, 
+				    std::vector<double> &,
+				    std::vector<double> & );
+
   virtual void VectortoArray( const std::vector<double> &, double * );
   virtual void ArraytoVector( const double *, std::vector<double> & );
  private:

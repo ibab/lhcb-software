@@ -36,6 +36,30 @@ Centipede::~Centipede() {
   //  delete m_Singlepede; 
 };
 
+StatusCode Centipede::MakeGlobalFit( std::vector<double> &par, std::vector<double> &err, std::vector<double> &pull ) {
+  double *para = new double[par.size()];
+  double *error = new double[err.size()];
+  double *pul = new double[pull.size()];
+  VectortoArray(par,para);
+  VectortoArray(err,error);
+  VectortoArray(pull,pul);
+  StatusCode sc = Millepede::MakeGlobalFit( para, error, pul );
+  if ( sc.isFailure() ) {
+     info() << "Error in Millepede's !";
+     delete [] para;
+     delete [] error;
+     delete [] pul;
+     return StatusCode::FAILURE;
+  }
+  ArraytoVector( para, par );
+  ArraytoVector( error, err );
+  ArraytoVector( pul, pull );
+  delete [] para;
+  delete [] error;
+  delete [] pul;
+   
+  return StatusCode::SUCCESS;
+};
 StatusCode Centipede::InitMille( bool DOF[],
 				 int nglo,
 				 int nloc, 

@@ -3,6 +3,10 @@ Package : AlignmentTools
 Package Coordinator : Sebastien Viret
 Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
+</PRE><H1><A NAME=v2r6>2007-09-03 AlignmentTools v2r8</A></H1><PRE>
+- 03/09/2007 - JOhan Blouw ** v2r8 **
+  -> samll change in Centipede class such that it's methods are only called with vectors.
+
 </PRE><H1><A NAME=v2r6>2007-08-28 AlignmentTools v2r7p1</A></H1><PRE>
 - 28/08/2007 - Seb Viret ** v2r7p1 **
   -> Small change of the InitMille() method in Millepede (back to v2r5 version). Centipede is still using the InitMille method it needs (with nglo = the total number of degrees of freedom).
