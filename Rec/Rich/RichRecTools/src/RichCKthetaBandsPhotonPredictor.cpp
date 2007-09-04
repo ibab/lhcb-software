@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.2 2007-08-10 18:15:27 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.3 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -122,11 +122,11 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
   if ( segment->trackSegment().rich() == pixel->detector() )
   {
 
-    // segment / hit separation squared
-    const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
-
     // which radiator
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
+    // segment / hit separation squared
+    const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
 
     // Check overall boundaries
     if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.2 2007-06-22 13:48:51 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.3 2007-09-04 16:50:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -167,14 +167,14 @@ StatusCode BackgroundEstiAvHPD::overallRICHBackgrounds()
   for ( Rich::Detectors::const_iterator iRich = detectors().begin();
         iRich != detectors().end(); ++iRich )
   {
-    verbose() << "Computing HPD backgrounds in " << *iRich << endreq;
+    //verbose() << "Computing HPD backgrounds in " << *iRich << endreq;
 
     int iter = 1;
     bool cont = true;
     double rnorm = 0.0;
     while ( cont )
     {
-      verbose() << " -> Iteration " << iter << endreq;
+      //verbose() << " -> Iteration " << iter << endreq;
 
       int nBelow(0), nAbove(0);
       double tBelow = 0.0;
@@ -183,15 +183,15 @@ StatusCode BackgroundEstiAvHPD::overallRICHBackgrounds()
             ++iPD )
       {
         const LHCb::RichSmartID pd = iPD->first;
-        const double obs           = iPD->second;
-        const double exp           = (m_expPDsignals[*iRich])[pd];
         double & bkg               = (m_expPDbkg[*iRich])[pd];
 
         if ( 1 == iter )
         {
+          const double obs = iPD->second;
+          const double exp = (m_expPDsignals[*iRich])[pd];
           // First iteration, just set background for this HPD to the difference
           // between the observed and and expected number of hits in the HPD
-          verbose() << "  -> HPD " << pd << " obs. = " << obs << " exp. = " << exp << endreq;
+          //verbose() << "  -> HPD " << pd << " obs. = " << obs << " exp. = " << exp << endreq;
           bkg = obs - exp;
         }
         else
@@ -215,18 +215,18 @@ StatusCode BackgroundEstiAvHPD::overallRICHBackgrounds()
 
       } // end loop over signal PDs
 
-      verbose() << " -> Above = " << nAbove << " Below = " << nBelow << endreq;
+      //verbose() << " -> Above = " << nAbove << " Below = " << nBelow << endreq;
 
       if ( nBelow > 0 && nAbove > 0 )
       {
         // we have some HPDs above and below expectation
         // calculate the amount of signal below per above HPD
         rnorm = tBelow / ( static_cast<double>(nAbove) );
-        verbose() << "  -> Correction factor per HPD above = " << rnorm << endreq;
+        //verbose() << "  -> Correction factor per HPD above = " << rnorm << endreq;
       }
       else
       {
-        verbose() << "  -> Aborting iterations" << endreq;
+        //verbose() << "  -> Aborting iterations" << endreq;
         cont = false;
       }
       if ( iter > m_maxBkgIterations ) cont = false;
@@ -273,7 +273,8 @@ StatusCode BackgroundEstiAvHPD::pixelBackgrounds()
     if ( bkg < m_minPixBkg ) bkg = m_minPixBkg;
     (*pixel)->setCurrentBackground( bkg );
 
-    // Debug printout
+    // printout
+    /*
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Pixel " << (*pixel)->hpdPixelCluster()
@@ -283,6 +284,7 @@ StatusCode BackgroundEstiAvHPD::pixelBackgrounds()
                 << " bkg "  << (*pixel)->currentBackground()
                 << endreq;
     }
+    */
 
   } // loop over pixels
 

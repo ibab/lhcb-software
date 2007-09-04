@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.17 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.18 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -125,7 +125,7 @@ double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
 {
 
   // Some parameters of the segment
-  const double momentum = sqrt(segment->trackSegment().bestMomentum().Mag2());
+  const double momentum = (double)sqrt((float)(segment->trackSegment().bestMomentum().Mag2()));
   const double Esq      = momentum*momentum + m_particleMassSq[id];
   const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
   const double gammaSq  = Esq/m_particleMassSq[id];
@@ -141,12 +141,4 @@ double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
   if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
 
   return ( nPhot < 0 ? 0 : nPhot );
-}
-
-double SellmeirFunc::paraW ( const Rich::RadiatorType rad,
-                             const double energy ) const
-{
-  const double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
-  const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );
-  return m_X[rad] * (X-Y);
 }

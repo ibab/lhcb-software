@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::Initialise
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.6 2007-08-09 16:11:12 jonrob Exp $
+ *  $Id: RichRecInit.h,v 1.7 2007-09-04 16:50:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -52,7 +52,8 @@ namespace Rich
 
       virtual ~Initialise();   ///< Destructor
 
-      virtual StatusCode execute(); /// Algorithm execution
+      virtual StatusCode initialize(); ///< Algorithm initialisation
+      virtual StatusCode execute();    ///< Algorithm execution
 
     private:
 

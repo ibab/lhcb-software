@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.14 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,6 +29,9 @@
 #include "RichKernel/IRichDetParameters.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 namespace Rich
 {
@@ -65,9 +68,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 

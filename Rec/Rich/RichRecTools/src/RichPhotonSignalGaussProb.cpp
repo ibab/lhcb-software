@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.1 2007-06-22 14:35:58 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.2 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,6 +21,11 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
+namespace
+{
+  static const double root_two_pi = sqrt( 2.0 * M_PI );
+}
+
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( PhotonSignalGaussProb );
@@ -33,6 +38,8 @@ PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
 {
   // interface
   declareInterface<IPhotonSignal>(this);
+  // JOs
+  declareProperty( "MinExpArg", m_minArg = -650 );
 }
 
 StatusCode PhotonSignalGaussProb::initialize()
@@ -62,18 +69,15 @@ StatusCode PhotonSignalGaussProb::initialize()
   const double demagScale       = 4.8;
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
+  // exp params
+  m_expMinArg = exp( m_minArg );
+
   // Informational Printout
   debug() << " Mirror radii of curvature    = "
           << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
           << " Pixel area                   = " << m_pixelArea << endreq;
 
   return sc;
-}
-
-StatusCode PhotonSignalGaussProb::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 double
@@ -110,8 +114,8 @@ double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
                                               const double thetaExpRes ) const
 {
   // See note LHCB/98-040 page 11 equation 18
-  const double expArg = 0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
-  return ( exp( -(expArg>650 ? 650 : expArg) ) / ( sqrt(2.*M_PI)*thetaExpRes ) ); 
+  const double expArg = -0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
+  return ( expArg>m_minArg ? exp(expArg) : m_expMinArg ) / ( root_two_pi*thetaExpRes ); 
 }
 
 double

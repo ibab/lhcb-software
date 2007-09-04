@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.2 2007-08-14 15:10:38 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.3 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -30,13 +30,14 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichParticleProperties.h"
 
-// RichKernel
+// Kernel
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
+#include "RichKernel/FastMaths.h"
 
 // GSL
 #include "gsl/gsl_math.h"

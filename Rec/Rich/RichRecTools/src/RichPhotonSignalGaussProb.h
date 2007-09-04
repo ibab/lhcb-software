@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.h,v 1.1 2007-06-22 14:35:58 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.h,v 1.2 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -67,9 +67,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
@@ -105,6 +102,10 @@ namespace Rich
 
       /// Temporary local value pixel area
       double m_pixelArea;
+
+      // chaced parameters
+      double m_minArg;
+      double m_expMinArg;
 
     };
 

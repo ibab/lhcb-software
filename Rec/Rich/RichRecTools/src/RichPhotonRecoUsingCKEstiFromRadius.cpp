@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.4 2007-08-14 15:10:38 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.5 2007-09-04 16:54:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -170,9 +170,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const float diff_y = segPSide.y() - pixPRad.y();
 
   // estimate phi from these hits
-  // CRJ : The atan2 here is a significant fraction of the time taken by this method
-  //       Only need it approximately, so scope for use of some sort of 'fast' version here ?
-  const float phiCerenkov = Gaudi::Units::pi + atan2( diff_y, diff_x );
+  // use full atan2
+  //const float phiCerenkov = Gaudi::Units::pi + atan2( diff_y, diff_x );
+  // use fast atan2
+  const float phiCerenkov = Gaudi::Units::pi + Rich::Maths::atan2_f( diff_y, diff_x );
 
   // seg - pixel separation
   const double sep2 = gsl_pow_2(diff_x) + gsl_pow_2(diff_y);

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.5 2007-08-09 16:11:12 jonrob Exp $
+ *  $Id: RichRecInit.cpp,v 1.6 2007-09-04 16:50:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -37,6 +37,19 @@ Initialise::Initialise( const std::string& name,
 
 // Destructor
 Initialise::~Initialise() {}
+
+StatusCode Initialise::initialize()
+{
+  const StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // preload tools
+  if ( m_loadRawTracks || m_makeTracks ) trackCreator();
+  if ( m_makePixels                    ) pixelCreator();
+  if ( m_makePhotons                   ) photonCreator();
+
+  return sc;
+}
 
 StatusCode Initialise::execute()
 {

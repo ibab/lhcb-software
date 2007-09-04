@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.13 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.14 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -111,6 +111,14 @@ namespace Rich
       boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
     };
+
+    inline double SellmeirFunc::paraW ( const Rich::RadiatorType rad,
+                                        const double energy ) const
+    {
+      const double X = m_RXSPscale[rad] * (double)log( (float)((m_REP[rad]+energy)/(m_REP[rad]-energy)) );
+      const double Y = m_RXSMscale[rad] * (double)log( (float)((m_REM[rad]+energy)/(m_REM[rad]-energy)) );
+      return m_X[rad] * (X-Y);
+    }
 
   }
 }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.17 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.18 2007-09-04 16:54:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -67,48 +67,31 @@ StatusCode GeomTool::initialize()
   return sc;
 }
 
-StatusCode GeomTool::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
 double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
                                     const LHCb::RichRecPixel * pixel ) const
 {
   double sep2 = 99999999;
 
-  // Same RICH ? (should not be needed since photon creator should do check)
-  //if ( segment->trackSegment().rich() == pixel->detector() )
-  //{
+  // Pixel position, in local HPD coords corrected for average radiator distortion
+  const Gaudi::XYZPoint & pixP
+    = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
 
-    // Pixel position, in local HPD coords corrected for average radiator distortion
-    const Gaudi::XYZPoint & pixP
-      = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
+  // segment position ray traced to HPD panel, in local HPD coords
+  const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
 
-    // segment position ray traced to HPD panel, in local HPD coords
-    const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
-
-    if ( Rich::Rich1 == pixel->detector() )
-    {
-      if ( pixP.y()*segP.y() > 0 ||
+  if ( ( Rich::Rich1 == pixel->detector() && // RICH1
+         ( pixP.y()*segP.y() > 0 ||
            ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
-             ( pixP.y() < 0 && segment->photonsInYMinus() ) ) )
-      {
-        sep2 = (pixP-segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel())).Mag2();
-      }
-    }
-    else // RICH2
-    {
-      if ( pixP.x()*segP.x() > 0 ||
-           ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
-             ( pixP.x() < 0 && segment->photonsInXMinus() ) ) )
-      {
-        sep2 = (pixP-segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel())).Mag2();
-      }
-    }
-
-    //} 
+             ( pixP.y() < 0 && segment->photonsInYMinus() ) ) ) )
+       || // RICH2
+       ( pixP.x()*segP.x() > 0 ||
+         ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
+           ( pixP.x() < 0 && segment->photonsInXMinus() ) ) ) )
+  {
+    const Gaudi::XYZPoint & segPanelPnt = segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel());
+    //sep2 = (pixP-segPanelPnt).Mag2();
+    sep2 = gsl_pow_2(pixP.x()-segPanelPnt.x()) + gsl_pow_2(pixP.y()-segPanelPnt.y());
+  }
 
   return sep2;
 }
@@ -223,12 +206,9 @@ void GeomTool::setCorrLocalPos( const LHCb::RichRecPixel * pixel,
   {
     pos.setPosition(Rich::Aerogel, getCorrPos(pixel->localPosition(),Rich::Aerogel));
     pos.setPosition(Rich::Rich1Gas,getCorrPos(pixel->localPosition(),Rich::Rich1Gas));
-    //pos.setPosition(Rich::Rich2Gas,pixel->localPosition());
   }
   else
   {
-    //pos.setPosition(Rich::Aerogel,pixel->localPosition());
-    //pos.setPosition(Rich::Rich1Gas,pixel->localPosition());
     pos.setPosition(Rich::Rich2Gas,getCorrPos(pixel->localPosition(),Rich::Rich2Gas));
   }
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-09-04 - Chris Jones
+ - Minor speed improvements to photon signal and sellmeir tools
+
 ! 2007-08-13 - Chris Jones
  - Adapt to changes in RichKernel
  - Set 'closest HPD' smartID in RichRecSegment
