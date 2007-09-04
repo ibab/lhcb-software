@@ -1,12 +1,10 @@
-# $Id: requirements,v 1.21 2007-03-23 16:40:17 cattanem Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.21 $  
+# $Id: requirements,v 1.22 2007-09-04 16:19:23 cattanem Exp $
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v5r0
+version v5r2
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python

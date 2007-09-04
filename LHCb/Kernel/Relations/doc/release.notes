@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.47 2007-08-27 23:18:20 odescham Exp $ 
+! $Id: release.notes,v 1.48 2007-09-04 16:19:23 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.47 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.48 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
@@ -8,6 +8,7 @@
 !-----------------------------------------------------------------------------
 
 
+!====================== Relations v5r2 2007-09-04 ============================
 ! 2007-08-28
  - Fix untested StatusCode in RelationBase and RelationWeightedBase
 
