@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.108 2007-07-25 11:18:19 wouter Exp $
+!$Id: release.notes,v 1.109 2007-09-04 16:02:54 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v3r6 2007-09-04 ==========================
 ! 2007-07-25 - Wouter Hulsbergen (more a-team changes)
  - changed parameterization for fast geometry access
 
