@@ -1,0 +1,23 @@
+#============================================================================
+# Created    : 04/09/2007
+# Maintainer : Luigi Delbuono delbuono@in2p3.fr
+#============================================================================
+# $Id: requirements,v 1.1.1.1 2007-09-04 15:59:14 jonrob Exp $
+#============================================================================
+
+package RichRecStereoTools
+version v1r0
+
+# ================ structure ================================================
+branches src cmt doc
+include_path none
+
+# ================ dependencies =============================================
+use RichRecBase      v*   Rich
+
+# ================ component library=========================================
+library          RichRecStereoTools  ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern component_library library=RichRecStereoTools
