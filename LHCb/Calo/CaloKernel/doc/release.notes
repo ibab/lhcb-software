@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.40 2007-08-06 21:08:29 odescham Exp $
+! $Id: release.notes,v 1.41 2007-09-04 16:16:51 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -8,6 +8,7 @@
 ! =============================================================================
 
 
+!======================= CaloKernel v5r1 2007-09-04 ===========================
 ! 2007-08-06 - Olivier Deschamps
  - make CaloVector::addEntry a void method instead of an always successful StatusCode
 
