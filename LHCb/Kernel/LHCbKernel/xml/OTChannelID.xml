@@ -2,85 +2,134 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 
 <gdd>
-  <package name='LHCbKernel'>
-    <class name='OTChannelID' 
-           author='Jeroen van Tilburg and Jacopo Nardulli'
-           desc='This class describes a single straw and contains the TDC-Time'
-           virtual='FALSE'                                                      >
+  
+  <package name    = "LHCbKernel">
+    
+    <class name    = "OTChannelID" 
+           author  = "Jeroen van Tilburg and Jacopo Nardulli"
+           desc    = "Simple class that represents a straw and the tdc time of a hit"
+           virtual = "FALSE"                                                      >
+      
       &StlVector;
-      <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw, int iTdcTime=0' 
-                   desc='constructor with station, layer, quarter, module, straw and tdcTime'>
+     
+      <constructor argList = "unsigned int station, unsigned int layer, unsigned int quarter, unsigned int module, unsigned int straw, 
+                              unsigned int tdcTime=0u" 
+                   desc    = "Explicit constructor from the geometrical location of the straw and the tdc time of the hit">
         <code>    
-          m_channelID = (iStation &lt;&lt; stationBits) + 
-                        (iLayer &lt;&lt; layerBits) + 
-                        (iQuarter &lt;&lt; quarterBits) + 
-                        (iModule &lt;&lt; moduleBits) + 
-                        (iStraw &lt;&lt; strawBits) +
-                        (iTdcTime &lt;&lt; tdcTimeBits);
+          m_channelID = (station &lt;&lt; stationBits) + 
+                        (layer   &lt;&lt; layerBits  ) + 
+                        (quarter &lt;&lt; quarterBits) + 
+                        (module  &lt;&lt; moduleBits ) + 
+                        (straw   &lt;&lt; strawBits  ) +
+                        (tdcTime &lt;&lt; tdcTimeBits);
         </code>
       </constructor>
 
-      <constructor argList='int id' 
-                   initList = 'm_channelID(id)' 
-                   desc='constructor with channelID'>
+
+      <constructor argList  = "unsigned int id" 
+                   initList = "m_channelID(id)"
+                   desc     = "Constructor from int">
         <code></code>
       </constructor>
 
       <copyconstructor/>
 
-      <method type='bool' name='operator=='
-              argList='const OTChannelID aChannel' const='TRUE' 
-              desc='comparison equality'>
+      <method type    = "bool" 
+              name    = "operator=="
+              argList = "const OTChannelID aChannel" 
+              const   = "TRUE" 
+              desc    = "Comparison equality">
         <code> return (this->channelID() == aChannel.channelID()); </code>
       </method>
-      <method type='bool' name='operator&lt;' 
-              argList='const OTChannelID aChannel' const='TRUE' 
-              desc='comparison &lt;'> 
+      
+      <method type    = "bool" 
+              name    = "operator&lt;" 
+              argList = "const OTChannelID aChannel" 
+              const   = "TRUE" 
+              desc    = "Comparison &lt;"> 
         <code> return (this->channelID() &lt; aChannel.channelID()); </code>
       </method>
-      <method type='bool' name='operator&gt;' 
-              argList='const OTChannelID aChannel' const='TRUE' 
-              desc='comparison &gt;'> 
+      
+      <method type    = "bool" 
+              name    = "operator&gt;" 
+              argList = "const OTChannelID aChannel" 
+              const   = "TRUE" 
+              desc    = "Comparison &gt;"> 
         <code> return (this->channelID() &gt; aChannel.channelID()); </code>
       </method>
-      <method type='' name='operator int' const='TRUE' 
-              desc='operator overload, for use of channel ID as the key'> 
+
+      <method type  = "" 
+              name  = "operator unsigned int" 
+              const = "TRUE" 
+              desc  = "Operator overload, to cast channel ID to unsigned int. Used by linkers where the key (channel id) is an int"> 
         <code> return m_channelID; </code>
       </method>
-      <method type='unsigned' name='geometry' const='TRUE'
-              desc='returns the geometrical part of the channelID'>
+
+      <method type  = "unsigned int" 
+              name  = "geometry" 
+              const = "TRUE"
+              desc  = "Returns the geometrical part of the channelID">
         <code> return (m_channelID &amp; uniqueStrawMask); </code>
       </method> 
 
-      <method type = 'bool' name='sameGeometry' 
-              argList = 'const OTChannelID testChannel' const = 'TRUE' 
-              desc = 'true if same geometric channel '>
-      
-         <code> return (geometry() == testChannel.geometry()); </code>
+      <method type    = "bool" 
+              name    = "sameGeometry" 
+              argList = "const OTChannelID testChannel" 
+              const   = "TRUE" 
+              desc    = "True if same geometric channel">
+        <code> return (geometry() == testChannel.geometry()); </code>
       </method>  
   
-      <method type = 'bool' name='sameTime' 
-              argList = 'const OTChannelID testChannel' const = 'TRUE' 
-              desc = 'true if same tdc counts'>
-      
-         <code> return (tdcTime() == testChannel.tdcTime()); </code>
+      <method type    = "bool" 
+              name    = "sameTime" 
+              argList = "const OTChannelID testChannel" 
+              const   = "TRUE" 
+              desc    = "true if same tdc counts">
+        <code> return (tdcTime() == testChannel.tdcTime()); </code>
       </method> 
 
-      <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
-        <bitfield name='tdcTime' length='8' desc='TDC-time'/>
-        <bitfield name='straw' length='8' desc='Straw' setMeth='FALSE'/>
-        <bitfield name='module' length='4' desc='Module' setMeth='FALSE'/>
-        <bitfield name='quarter' length='2' desc='Quarter' setMeth='FALSE'/>
-        <bitfield name='layer' length='2' desc='Layer' setMeth='FALSE'/>
-        <bitfield name='station' length='2' desc='Station' setMeth='FALSE'/>
-        <bitfield name='uniqueLayer' length='layer, station' 
-                  desc='Unique layer' setMeth='FALSE'/>
-        <bitfield name='uniqueQuarter' length='quarter, layer, station' 
-                  desc='Unique quarter' setMeth='FALSE'/>
-        <bitfield name='uniqueModule' length='module, quarter, layer, station' 
-                  desc='Unique layer' setMeth='FALSE'/>
-        <bitfield name='uniqueStraw' length='straw, module, quarter, layer, station'
-                  desc='Unique straw' setMeth='FALSE'/>
+      <attribute  type = "bitfield" 
+                  name = "channelID" 
+                  desc = "OT Channel ID of straw">
+        <bitfield name    = "tdcTime" 
+                  length  = "8" 
+                  desc    = "TDC-time of hit"/>
+        <bitfield name    = "straw" 
+                  length  = "8" 
+                  desc    = "Straw id" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "module" 
+                  length  = "4" 
+                  desc    = "Module id" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "quarter" 
+                  length  = "2" 
+                  desc    = "Quarter id" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "layer" 
+                  length  = "2" 
+                  desc    = "Layer id" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "station" 
+                  length  = "2" 
+                  desc    = "Station id" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "uniqueLayer" 
+                  length  = "layer, station" 
+                  desc    = "Unique layer id, i.e. this layer belong to this station" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "uniqueQuarter" 
+                  length  = "quarter, layer, station" 
+                  desc    = "Unique quarter id, i.e. this quarter belongs to this layer and station"
+                  setMeth = "FALSE"/>
+        <bitfield name    = "uniqueModule" 
+                  length  = "module, quarter, layer, station" 
+                  desc    = "Unique module id, i.e. this module belongs to this quarter, layer and station" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "uniqueStraw" 
+                  length  = "straw, module, quarter, layer, station"
+                  desc    = "Unique straw, i.e. this straw belongs to this module, quarter, layer and station" 
+                  setMeth = "FALSE"/>
       </attribute>
 
       <method 
@@ -95,5 +144,7 @@
       </method>
 
     </class>
+
   </package>
+
 </gdd>

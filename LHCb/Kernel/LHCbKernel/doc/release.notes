@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r7 2007-09-04 ========================
 ! 2007-08-25 - Chris Jones
  - Import header file MemPoolAlloc.h from RichKernel, so the class can be 
    used in Tf packages without a dependency on RichKernel
