@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.25 2007-03-18 19:54:57 gcorti Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.26 2007-09-04 16:29:57 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -214,7 +214,12 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
-        const int trackID = (const_cast<RichG4Hit*>(g4hit))->GetTrackID();
+        // const int trackID = (const_cast<RichG4Hit*>(g4hit))->GetTrackID(); //replaced for Windows 4-9-2007
+          RichG4Hit* nonconstg4hit = const_cast<RichG4Hit*>(g4hit);    //      with this and the next line
+          const int trackID = nonconstg4hit->GetTrackID();             //      as suggested by GC.
+
+
+
         const MCParticle * mcPart = table[trackID].particle();
         if ( mcPart )
         {
