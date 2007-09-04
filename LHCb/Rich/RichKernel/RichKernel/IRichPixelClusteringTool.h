@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: IRichPixelClusteringTool.h,v 1.2 2007-02-02 17:40:14 jonrob Exp $
+ *  $Id: IRichPixelClusteringTool.h,v 1.3 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -54,9 +54,12 @@ namespace Rich
        *
        *  @param smartIDs Reference to vector of pixel RichSmartIDs to cluster
        *
-       *  @return A shared auto pointer to the set of clusters for this HPD
+       *  @return A pointer to the set of clusters for this HPD
+       *
+       *  @attention The user takes ownership of the returned object. 
+       *             It is up to the owner to delete the object when no longer needed.
        */
-      virtual const Rich::HPDPixelClusters::ConstSharedPtn
+      virtual const Rich::HPDPixelClusters *
       findClusters( LHCb::RichSmartID::Vector & smartIDs ) const = 0;
 
     };

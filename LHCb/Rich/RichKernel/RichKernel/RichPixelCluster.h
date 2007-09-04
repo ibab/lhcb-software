@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.3 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichPixelCluster.h,v 1.4 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -26,7 +26,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/BoostMemPoolAlloc.h"
+#include "Kernel/MemPoolAlloc.h"
 
 // Boost
 #include <boost/shared_ptr.hpp>
@@ -43,7 +43,7 @@ namespace Rich
    *  @date   07/02/2007
    */
   //-----------------------------------------------------------------------------------------------
-  class HPDPixelCluster : public Rich::BoostMemPoolAlloc<HPDPixelCluster>
+  class HPDPixelCluster : public LHCb::MemPoolAlloc<Rich::HPDPixelCluster>
   {
 
   public:
@@ -131,7 +131,7 @@ namespace Rich
    *  @date   21/03/2006
    */
   //-----------------------------------------------------------------------------
-  class HPDPixelClusters : public Rich::BoostMemPoolAlloc<HPDPixelClusters>
+  class HPDPixelClusters : public LHCb::MemPoolAlloc<Rich::HPDPixelClusters>
   {
 
   public:
@@ -154,7 +154,7 @@ namespace Rich
      *  @date   21/03/2006
      */
     //-----------------------------------------------------------------------------
-    class Cluster : public Rich::BoostMemPoolAlloc<HPDPixelClusters::Cluster>
+    class Cluster : public LHCb::MemPoolAlloc<Rich::HPDPixelClusters::Cluster>
     {
 
     public: // definitions

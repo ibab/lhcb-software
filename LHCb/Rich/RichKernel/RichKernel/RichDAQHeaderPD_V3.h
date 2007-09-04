@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV3::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V3.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V3.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -113,7 +113,7 @@ namespace Rich
        *  @date   2003-11-06
        */
       class RichDAQHeaderPD : public HeaderPDBase,
-                              public Rich::BoostMemPoolAlloc<RichDAQHeaderPD>
+                              public LHCb::MemPoolAlloc<RichDAQHeaderPD>
       {
 
       public: // methods

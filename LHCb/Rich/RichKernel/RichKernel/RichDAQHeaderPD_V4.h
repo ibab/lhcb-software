@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V4.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V4.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -146,7 +146,7 @@ namespace Rich
         }
 
         /// Destructor
-        virtual ~RichDAQHeaderPD( );
+        virtual ~RichDAQHeaderPD( ) { }
 
         /// Retrieve the Level0 ID
         inline Level0ID l0ID() const

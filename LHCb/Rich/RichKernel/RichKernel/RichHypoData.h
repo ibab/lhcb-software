@@ -5,7 +5,7 @@
  *  Header file for utility class : RichHypoData
  *
  *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.17 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichHypoData.h,v 1.18 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -23,7 +23,7 @@
 #include "Kernel/RichParticleIDType.h"
 
 // RichKernel
-#include "RichKernel/BoostMemPoolAlloc.h"
+#include "Kernel/MemPoolAlloc.h"
 #include "RichKernel/BoostArray.h"
 
 namespace Rich
@@ -41,7 +41,7 @@ namespace Rich
   //------------------------------------------------------------------------
 
   template <class TYPE>
-  class HypoData : public Rich::BoostMemPoolAlloc< HypoData<TYPE> >
+  class HypoData : public LHCb::MemPoolAlloc< HypoData<TYPE> >
   {
 
   public: // definitions

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::NullFooter
  *
  *  CVS Log :-
- *  $Id: RichDAQNullFooter.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQNullFooter.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -15,6 +15,7 @@
 #ifndef RICHDAQ_RICHDAQNULLFOOTER_H
 #define RICHDAQ_RICHDAQNULLFOOTER_H 1
 
+// Kernel
 #include "RichKernel/RichDAQFooterPDBase.h"
 
 namespace Rich
@@ -33,7 +34,7 @@ namespace Rich
     //=============================================================================================
 
     class NullFooter : public FooterPDBase,
-                       public Rich::BoostMemPoolAlloc<NullFooter>
+                       public LHCb::MemPoolAlloc<NullFooter>
     {
 
     public:
