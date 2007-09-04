@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!======================= LinkerEvent v3r2 2007-09-04 =========================
 ! 2007-08-28 - Olivier Callot
  - Insert keys in keyRange using explicitly KEY( int value)
 
