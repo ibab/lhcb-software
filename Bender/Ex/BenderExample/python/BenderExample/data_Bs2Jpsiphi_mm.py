@@ -240,10 +240,10 @@ for f in LFNs :
         if os.path.exists ( win ) : wins += [ win ]
 
 if   afss :
-        
-        pass
-        #FILEs = afss
-        #print "Use local AFS-files #%s at '%s'"%(len(FILEs),afsdir)
+   
+        #pass
+        FILEs = afss
+        print "Use local AFS-files #%s at '%s'"%(len(FILEs),afsdir)
         
 elif wins :
         FILEs = afss
