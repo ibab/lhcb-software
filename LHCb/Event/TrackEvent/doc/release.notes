@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-04 - Wouter Hulsbergen
+ - Added 'extra-info' fields in track enum for information from track fit.
+
 ! 2007-08-16 - Eduardo Rodrigues
  - fillStream method of Track:
    - corrected the latest modifications: it was assuming a track always has

@@ -132,7 +132,11 @@
         <enumval name = "Likelihood" value = "1" desc=""/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
-
+        <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFit)"/>
+        <enumval name = "FitVeloNDoF"  value = "18" desc="NDoF of the velo segment chisq"/>
+        <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFit)"/>
+        <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
+        <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
        </enum>
 
    <typedef
