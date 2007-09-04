@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-04 - Wouter Hulsbergen
+ - removed 'Upstream' job-option from KalmanFitter since that already existed in MasterFitter client
+ - added filling of delta-chisquare contributions on all FitNodes (for breakpoint analysis)
+ - added method to fill 'extra-info' with segment chisquares to MasterFitter
+
 !=========================== TrackFitter v2r16 2007-07-05 ===================
 ! 2007-07-05 - Edwin Bos
  - Removed transportMatrix() use from TrackKalmanFilter

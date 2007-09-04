@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.32 2007-06-29 09:58:09 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.33 2007-09-04 08:34:59 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -251,7 +251,8 @@ StatusCode TrackMasterFitter::fit( Track& track )
   // determine the track states at user defined z positions
   sc = determineStates( track );
   if ( sc.isFailure() )  clearNodes( nodes );  // clear the node vector
-
+  
+  fillExtraInfo( track ) ;
 
   return sc;
 }
@@ -546,3 +547,101 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
 }
 
 //=========================================================================
+
+void TrackMasterFitter::fillExtraInfo(Track& track ) const 
+{
+  // This routine calculates the chisquare contributions from
+  // different segments of the track. It uses the 'delta-chisquare'
+  // contributions from the bi-directional kalman fit. Summing these
+  // leads to a real chisquare only if the contributions are
+  // uncorrelated. For a Velo-TT-T track you can then calculate:
+  //
+  // - the chisuare of the T segment and the T-TT segment by using the
+  // 'upstream' contributions 
+  //
+  // - the chisquare of the Velo segment and the Velo-TT segment by
+  // using the 'downstream' contributions
+  //
+  // Note that you cannot calculate the contribution of the TT segment
+  // seperately (unless there are no T or no Velo hits). Also, if
+  // there are Muon hits, you cannot calculate the T station part, so
+  // for now this only works for tracks without muon hits.
+
+  // Clean up the track info
+  track.eraseInfo( Track::FitVeloChi2 ) ;
+  track.eraseInfo( Track::FitVeloNDoF ) ;
+  track.eraseInfo( Track::FitTChi2 ) ;
+  track.eraseInfo( Track::FitTNDoF ) ;
+  track.eraseInfo( Track::FitMatchChi2 ) ;
+
+  // Compute the chisquare integrals for forward and backward
+  // upstream   == from T to Velo
+  // downstream == from Velo to T
+  double chisqT[2]    = {0,0} ;
+  double chisqTT[2]   = {0,0} ;
+  double chisqVelo[2] = {0,0} ;
+  int    nhitsT(0), nhitsTT(0), nhitsVelo(0) ;
+  for( std::vector<Node*>::const_iterator iNode = iNode = track.nodes().begin(); 
+       iNode != track.nodes().end(); ++iNode ) 
+    if( (*iNode)->hasMeasurement() ) {
+      const FitNode* node = dynamic_cast<FitNode*>(*iNode) ;
+      if(!node) {
+	error() << "fillExtraInfo: node is not a FitNode" << endmsg ;
+      } else {
+	switch( node->measurement().type() ) {
+	case Measurement::VeloR:
+	case Measurement::VeloPhi:
+	  chisqVelo[0] += node->deltaChi2Upstream() ;
+	  chisqVelo[1] += node->deltaChi2Downstream() ;
+	  ++nhitsVelo ;
+	  break;
+	case Measurement::TT:
+	  chisqTT[0] += node->deltaChi2Upstream() ;
+	  chisqTT[1] += node->deltaChi2Downstream() ;
+	  ++nhitsTT ;
+	  break;
+	case Measurement::OT:
+	case Measurement::IT:
+	  chisqT[0] += node->deltaChi2Upstream() ;
+	  chisqT[1] += node->deltaChi2Downstream() ;
+	  ++nhitsT ;
+	  break;
+	default:
+	  break;
+	}
+      }
+    }
+
+  const int nPar = track.firstState().nParameters() ;
+  
+  if( track.hasT() ) {
+    track.addInfo( Track::FitTChi2 , m_upstream ? chisqT[0] : chisqT[1] ) ;
+    track.addInfo( Track::FitTNDoF , nhitsT - nPar ) ;
+    // if( track.hasTT() ) {
+    //   track.addInfo( TTTChi2Key , m_upstream ? chisqT[0] + chisqTT[0] : chisqT[1] + chisqTT[1] ) ;
+    //   track.addInfo( TTTNDoFKey , nhitsT + nhitsTT - nPar ) ;
+    // }
+  }
+
+  if( track.hasVelo() ) {
+    track.addInfo( Track::FitVeloChi2, m_upstream ? chisqVelo[1] : chisqVelo[0] ) ;
+    track.addInfo( Track::FitVeloNDoF, nhitsVelo - nPar ) ;
+    // if( track.hasTT() ) {
+    //   track.addInfo( VeloTTChi2Key , m_upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0] ) ;
+    //   track.addInfo( VeloTTNDoFKey , nhitsVelo + nhitsTT - nPar ) ;
+    // }
+  
+    if( track.hasT() ) {
+      // Calculate the chisquare of the breakpoint between TT and T
+      double thischisqT       = m_upstream ? chisqT[0] : chisqT[1] ;
+      double thischisqVeloTT  = m_upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0] ;
+      // they should be equal, but this is safer
+      double chisqTot   = std::max( chisqT[0]+chisqTT[0]+chisqVelo[0], chisqT[1]+chisqTT[1]+chisqVelo[1] ) ;
+      double chisqMatch = chisqTot - thischisqT - thischisqVeloTT ;
+      track.addInfo( Track::FitMatchChi2, chisqMatch ) ;
+    }
+
+    double thischisqvelo = m_upstream ? chisqVelo[1] : chisqVelo[0] ;
+    assert( thischisqvelo == track.info( Track::FitVeloChi2, 0 ) );
+  }
+}

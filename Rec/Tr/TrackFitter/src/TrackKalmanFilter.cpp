@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.42 2007-07-05 08:28:22 ebos Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.43 2007-09-04 08:34:59 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -50,8 +50,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
                    "TrackProjectorSelector" );
   declareProperty( "StoreTransport"   , m_storeTransport    = true   );
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
-  declareProperty( "FitUpstream"      , m_upstream          = true   );
-
+  
 }
 
 //=========================================================================
@@ -98,6 +97,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   std::vector<Node*>::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
   TrackSymMatrix seedCov = state.covariance();
+  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
 
   // Set the reference vector (initially this is taken from the seed state)
   TrackVector refVec = state.stateVector();
@@ -115,8 +115,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     if ( sc.isFailure() ) return failure( "unable to predict node" );
 
     // save predicted state
-    if ( m_upstream ) node.setPredictedStateUp( state );
-    else              node.setPredictedStateDown( state );
+    if ( upstream ) node.setPredictedStateUp( state );
+    else            node.setPredictedStateDown( state );
 
     // update the reference vector
     refVec = state.stateVector();
@@ -131,6 +131,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // add the chisquare
       chisq += node.chi2();
+      if ( upstream ) node.setDeltaChi2Upstream( node.chi2() );
+      else            node.setDeltaChi2Downstream( node.chi2() ) ;
       ++ndof ;
     }
 
@@ -143,7 +145,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   if ( m_biDirectionalFit ) {
 
     // Reset the covariance matrix and chisquare
-    chisq = 0 ;
+    double chisqreverse(0) ;
     state.setCovariance( seedCov );
 
     // Loop over the nodes in the revers order (should be sorted)
@@ -167,8 +169,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       }
 
       // save predicted state
-      if ( !m_upstream ) node.setPredictedStateUp( state );
-      else               node.setPredictedStateDown( state );
+      if ( !upstream ) node.setPredictedStateUp( state );
+      else             node.setPredictedStateDown( state );
 
       // set the reference vector
       refVec = state.stateVector();
@@ -182,11 +184,13 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         refVec = node.measurement().refVector();
 
 	// add the chisquare
-	chisq += node.chi2() ;
+	chisqreverse += node.chi2() ;
+	if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
+	else             node.setDeltaChi2Downstream( node.chi2() ) ;
       }
 
       // save filtered state
-      if ( !m_upstream ) node.setState( state );
+      if ( !upstream ) node.setState( state );
 
       // Smoother step
       sc = biSmooth( node );
@@ -196,6 +200,10 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       ++irNode;
     } // end of prediction and filter
     track.setFitHistory( Track::BiKalman );
+    // Ideally, the chisquares of the two directions are equal. For
+    // convergence and breakpoint analysis we rather have the maximum
+    // if they differ.
+    if( chisq < chisqreverse ) chisq = chisqreverse ;
   } else {
    // Loop in opposite direction for the old RTS smoother
     std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
@@ -205,7 +213,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       FitNode& prevNode = dynamic_cast<FitNode&>(**iPrevNode);
       FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
       // Smoother step
-      sc = smooth( thisNode, prevNode );
+      sc = smooth( thisNode, prevNode, upstream );
       if ( sc.isFailure() ) return failure( "unable to smooth node!" );
       ++ithisNode;
       ++iPrevNode;
@@ -215,7 +223,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
   // set the chisquare
   track.setChi2AndDoF( chisq, ndof );
-  
+
   return sc;
 }
 
@@ -397,13 +405,14 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 // M. Needham 9/11/99
 //----------------------------------------------------------------
 StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
-                                      const FitNode& prevNode ) const
+                                      const FitNode& prevNode,
+				      bool upstream ) const
 {
   // Get the predicted state from the previous node
-  const TrackVector& prevNodeX = (m_upstream) ? 
+  const TrackVector& prevNodeX = (upstream) ? 
     prevNode.predictedStateUp().stateVector() :
     prevNode.predictedStateDown().stateVector();
-  const TrackSymMatrix& prevNodeC = (m_upstream) ?
+  const TrackSymMatrix& prevNodeC = (upstream) ?
     prevNode.predictedStateUp().covariance() :
     prevNode.predictedStateDown().covariance();
 
@@ -501,10 +510,6 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
       Matrix1x1(Similarity( H, smoothedC ))(0,0);
     if ( errRes2 < 0.) return failure( "Negative residual error in smoother!" );
     thisNode.setErrResidual( sqrt(errRes2) );
-    
-    const double errMeasure2 = thisNode.errMeasure2() ;
-    thisNode.setUnbiasedResidual( res * errMeasure2 / errRes2 );
-    thisNode.setErrUnbiasedResidual( sqrt( errMeasure2 * errMeasure2 / errRes2 )) ;
   }
   
   return StatusCode::SUCCESS;

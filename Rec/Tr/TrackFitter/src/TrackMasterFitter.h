@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.7 2007-06-27 06:56:56 mneedham Exp $
+// $Id: TrackMasterFitter.h,v 1.8 2007-09-04 08:34:59 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -73,6 +73,9 @@ protected:
 
   //! Create the nodes from the measurements
   StatusCode makeNodes( LHCb::Track& track ) const;
+
+  //! Add info from fitter as extrainfo to track
+  void fillExtraInfo( LHCb::Track& track ) const ;
 
 protected:
 

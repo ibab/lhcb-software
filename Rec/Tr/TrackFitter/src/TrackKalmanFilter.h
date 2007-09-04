@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.18 2007-06-27 06:56:56 mneedham Exp $
+// $Id: TrackKalmanFilter.h,v 1.19 2007-09-04 08:34:59 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -42,6 +42,8 @@ public:
   //! fit a track
   StatusCode fit( LHCb::Track& track ) ;
 
+protected:
+
   //! predict the state at this node
   StatusCode predict( LHCb::FitNode& node, LHCb::State& state, 
                       const Gaudi::TrackVector& refVec  ) const;  
@@ -58,12 +60,10 @@ public:
   StatusCode filter( LHCb::FitNode& node, LHCb::State& state ) const;
   
   //! smooth 2 nodes
-  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 ) const;
+  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1, bool upstream ) const;
 
   //! smoother for bidirectional fit nodes
   StatusCode biSmooth( LHCb::FitNode& node0 ) const;
-
-private:
 
   // ! check that the contents of the cov matrix are fine
   StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const;
@@ -73,6 +73,8 @@ private:
 
   // ! invert this matrix
   StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat ) const;
+
+private:
 
   //! extrapolator
   ITrackExtrapolator* m_extrapolator;
@@ -86,8 +88,7 @@ private:
   std::string m_projectorSelectorName;      ///< name of the projector selector in Gaudi
   bool m_storeTransport;            ///< store the transport of the extrapolator
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit
-  bool m_upstream;                  ///< Flag to set upstream fit
-
+  
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
 
