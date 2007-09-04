@@ -857,7 +857,6 @@ namespace RICH
       allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/10TO70", "Long Tracks"+titletag, "long_10to70GeV", imageType );
       // 70 - 100 GeV
       allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/70TO100", "Long Tracks"+titletag, "long_70to100GeV", imageType );
-   
 
       // 2 - 100 GeV
       allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/2TO100", "Long Tracks"+titletag, "long_pt05_2to100GeV", imageType );
