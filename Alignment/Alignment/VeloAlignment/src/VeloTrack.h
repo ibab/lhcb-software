@@ -1,29 +1,10 @@
-
-//   **************************************************************************
-//   *                                                                        *
-//   *                      ! ! ! A T T E N T I O N ! ! !                     *
-//   *                                                                        *
-//   *  This file was created automatically by GaudiObjDesc, please do not    *
-//   *  delete it or edit it by hand.                                         *
-//   *                                                                        *
-//   *  If you want to change this file, first change the corresponding       *
-//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
-//   *  are using it from inside a Gaudi-package).                            *
-//   *                                                                        *
-//   **************************************************************************
-
 #ifndef VeloTrack_H
 #define VeloTrack_H 1
 
 // Include files
 
 #include <vector>
-#include "Kernel/Point3DTypes.h"
-
-#include "GaudiKernel/MsgStream.h"
-
-//#include "GaudiKernel/KeyedObject.h"
-//#include "GaudiKernel/KeyedContainer.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 class VeloTrack
 {
@@ -40,6 +21,8 @@ class VeloTrack
     /// Default Destructor
     virtual ~VeloTrack() {}
   
+    void GetTrackSlope();
+
     /// Clear the AlignTrack before use
     void reset();
   
@@ -208,10 +191,8 @@ class VeloTrack
 
 inline VeloTrack::VeloTrack() 
 {
-
           m_Coords.reserve(42);
-          reset();         
-        
+          reset();                 
 }
 
 

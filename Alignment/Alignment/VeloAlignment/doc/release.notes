@@ -3,6 +3,38 @@
 
 
 !=============================================================================
+! 04/09/2007 - Sebastien Viret  ** v3r0 **
+
+  New version in preparation of the integration of VeloAlignment into the 
+  Alignment project	
+
+  Changes are:
+
+  - Align.cpp(h) : Changed to a GaudiTupleAlg, simplification of nTuple filling
+	           procedure.
+
+  - TrackStore.cpp(h) : Cluster positions are now computed using VeloDet information.
+
+ 		        The track states are now defined in VELO box frames, this is taken
+			into account when expressing the local spacepoints into global frames.
+
+			Add an ACDC joboption (in TrackStore.opts) having the same purpose that
+			the ACDC option of PatVeloGeneric. Suppress obsoletes options.
+
+                        GetTrackSlope() method is suppressed and ported to the VeloTrack class.
+ 
+  - MilleConfig.cpp(h) : Minor changes, except that we have now 3 global params instead of 4
+			 for the box alignment (cosmetic change mainly...). 
+
+  - PVHisto.cpp(h) : Suppress GetTrackSlope() (see VeloTrack())
+
+  - VeloTrack.cpp(h) : Added GetTrackSlope() here, inorder to avoid duplication.
+
+  This version has been tested successfully with Brunel v31r8, using events 
+  misaligned with the new CondDB. It's now using AlignmentInterfaces package
+  instead of AlignmentTools.
+
+!=============================================================================
 ! 26/04/2007 - Sebastien Viret  ** v2r4 **
 
   New optimisation of the code. In particular, the AlignTrack.xml file has been

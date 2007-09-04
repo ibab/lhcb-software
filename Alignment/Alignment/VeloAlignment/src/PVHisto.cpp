@@ -121,7 +121,6 @@ StatusCode PVHisto::FindPVTracks(VeloTracks& aPV, double m_z_min,
     {
       if(aPV[iteration].nPVnumber() == -99 && aPV[iteration].nZclos() > m_z_min && aPV[iteration].nZclos() < m_z_max)  
       {
-	//cout << "n_sel_tracks is " << n_sel_tracks << endl;
         n_sel_tracks++;
 	zCloseHisto.fill(aPV[iteration].nZclos());
       }
@@ -171,9 +170,7 @@ StatusCode PVHisto::FindPVTracks(VeloTracks& aPV, double m_z_min,
        	if(aPV[iteration].nPVnumber() == -99)  
 	{
 	  zclos_bin = zCloseHisto.getbin(aPV[iteration].nZclos());      
-	  //
-	  //	  cout << aPV[iteration].nZclos() << endl;
-	  //
+	  
 	  if (zclos_bin <= end && zclos_bin >= start)
 	  {
 	    n_v_tracks++;
@@ -366,18 +363,19 @@ StatusCode PVHisto::FitPV(VeloTracks& aPV, int PV_number)
 
   iteration=0;
 
-  /*
-  cout << " " << endl;
-  cout << "Primary vertex coordinates (in mm): " << endl;
-  cout << "x_v = " << vp_x << endl;
-  cout << "y_v = " << vp_y << endl;
-  cout << "z_v = " << vp_z << endl;
-  cout << " " << endl;
   
-  cout << " Final Chisquare is " << chisq << endl;
-  cout << " Final ndof is " << n_dof << endl;
-  cout << " " << endl;  
+  //cout << " " << endl;
+  //cout << "Primary vertex coordinates (in mm): " << endl;
+  //cout << "x_v = " << vp_x << endl;
+  //cout << "y_v = " << vp_y << endl;
+  //cout << "z_v = " << vp_z << endl;
+  //cout << " " << endl;
   
-  */
+  //cout << " Final Chisquare is " << chisq << endl;
+  //cout << " Final ndof is " << n_dof << endl;
+  //cout << " " << endl;  
+  
+ 
   return StatusCode::SUCCESS;
 } 
+

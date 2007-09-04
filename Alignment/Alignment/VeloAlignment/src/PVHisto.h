@@ -27,7 +27,6 @@ public:
   PVHisto::iterator getbin( double val );
   inline PVHisto::iterator begin(){ return m_Histo.begin(); };
   inline PVHisto::iterator end(){ return m_Histo.end(); };
-  void print( MsgStream& msg, MSG::Level lvl, PVHisto::iterator& start, PVHisto::iterator& end );
   void reset();
   inline double maxVal() { return m_MaxVal; };
   inline PVHisto::iterator maxBin() { return m_MaxBin; };

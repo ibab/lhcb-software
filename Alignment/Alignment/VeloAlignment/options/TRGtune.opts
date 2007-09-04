@@ -2,12 +2,10 @@
 // tuning for Pattern recognition algorithm
 //
 
-PatVeloLoadClusters.IgnoreAlignment    = true;
-PatVeloLoadClusters.FromClusters       = true; // rather than VeloLiteClusters
-PatVeloLoadClusters.LowThreshold       = 4;
-PatVeloLoadClusters.OutputLevel        = 3;
-ToolSvc.PatVeloDataHolder.OutputLevel  = 3;
-PatVeloGeneric.OutputLevel             = 3;
+// Uncomment to skip the PatVeloAlignTool
+
+//PatVeloLoadClusters.IgnoreAlignment       = true;
+//ToolSvc.PatVeloDataHolder.IgnoreAlignment = true;
 
 // 
 // 1. For classic VELO tracks
@@ -16,23 +14,29 @@ PatVeloGeneric.OutputLevel             = 3;
 PatVeloRTracking.rMatchTol   = 2.;
 PatVeloRTracking.rExtraTol   = 2.;
 PatVeloRTracking.MaxRSlope   = 0.6;
-PatVeloRTracking.rOverlapTol = 0.;
+//PatVeloRTracking.rOverlapTol = 0.;
 //PatVeloRTracking.PrivateBest = true; // !!! This option is not yet available
 
-ToolSvc.PatVeloSpaceTool.PhiAngularTol = 0.01;
-ToolSvc.PatVeloSpaceTool.PhiMatchTol   = 0.5;
-ToolSvc.PatVeloSpaceTool.PhiFirstTol   = 0.5;
-PatVeloSpaceTracking.MaxChiSq          = 15.0;
-PatVeloSpaceTracking.CleanOverlaps     = true;
+ToolSvc.PatVeloSpaceTool.PhiAngularTol = 0.02;
+ToolSvc.PatVeloSpaceTool.PhiMatchTol   = 1.5;
+ToolSvc.PatVeloSpaceTool.PhiFirstTol   = 1.5;
+ToolSvc.PatVeloSpaceTool.MaxChiSqDof   = 15.0;
+//PatVeloSpaceTracking.CleanOverlaps    = true;
 
 //
 // 2. For HALO tracks
 //
 
 
-PatVeloGeneric.FullAlignment        = false;
+PatVeloGeneralTracking.PointErrorScale  = 2.;
+PatVeloGeneralTracking.PointErrorMin    = 1.;
+PatVeloGeneralTracking.PhiAngularTol    = 0.02;
+PatVeloGeneralTracking.MaxChiSqDof      = 15.0;
+PatVeloGeneralTracking.forwardStepError = 0.002;
+
+PatVeloGeneric.FullAlignment        = true;
 PatVeloGeneric.MinModules           = 4;  // 5 for closed VELO, 3 for Open
-PatVeloGeneric.ClusterCut           = 40;
+PatVeloGeneric.ClusterCut           = 10;
 PatVeloGeneric.KalmanState          = 4;
 PatVeloGeneric.ForwardProp          = true;
 PatVeloGeneric.MaxSkip              = 3;
@@ -43,10 +47,8 @@ PatVeloGeneric.SigmaTol             = 5;
 PatVeloGeneric.RAliTol              = 0.05;
 PatVeloGeneric.PAliTol              = 0.005;
 
-//PatVeloGeneric.OverlapProp          = true; // !!! Option not yet available
-//PatVeloGeneric.ACDC2                = true; // !!! Option available until PatVelo v2r10
-
-
+//PatVeloGeneric.OverlapProp          = true;  // !!! Option not yet available
+PatVeloGeneric.ACDC                 = false; // 
 
 
 

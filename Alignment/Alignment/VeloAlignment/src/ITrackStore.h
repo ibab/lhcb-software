@@ -12,8 +12,6 @@
 //from DetDesc
 #include "VeloDet/DeVelo.h"
 
-//class AlignTrack;
-
 /** @class ITrackStore ITrackStore.h VeloAlignment/ITrackStore.h
  * 
  *
@@ -33,6 +31,5 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackStore; }
 
   virtual StatusCode TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, double Map_VELO[]) = 0;
-  virtual StatusCode GetTrackSlope(VeloTrack& atrack) = 0;
 };
 #endif // VELOALIGNMENT_ITRACKSTORE_H

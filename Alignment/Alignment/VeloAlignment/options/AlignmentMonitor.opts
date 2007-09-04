@@ -3,11 +3,13 @@
 
 Align.OutputLevel = 3;
 
-NTupleSvc.Output += { "ALIGN DATAFILE='Align.root' OPT='NEW' TYP='ROOT'"};
+// Other outputs
+
+NTupleSvc.Output = {"FILE1 DATAFILE='Align.root' OPT='NEW' TYP='ROOT'"};
 
 Align.Monitor_Constants  = true;   //  Alignment constants at different stages 
 Align.Monitor_PV         = true;   //  Primary vertex information
 Align.Monitor_Overlaps   = true;   //  Overlap tracks information
 Align.Monitor_Tracks     = true;   //  Track info (params, residuals,...)
-Align.Monitor_Tracks_num = 500;    //  How many track in the TrackInfo sample ?
+Align.Monitor_Tracks_num = 50;     //  How many track in the TrackInfo sample ?
 

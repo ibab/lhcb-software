@@ -2,28 +2,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/NTuple.h"
-
-
-//from DetDesc
-#include "VeloDet/DeVelo.h"
-#include "DetDesc/AlignmentCondition.h"
-#include "DetDesc/ParamValidDataObject.h"
-
-// Event
-#include "Event/Track.h"
 
 // local
 #include "Align.h"
-#include "ITrackStore.h"
-#include "AlignmentTools/IMillepede.h"
-#include "MilleConfig.h"
-#include "PVHisto.h"
-#include "VeloTrack.h"
-#include "math.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Align
@@ -31,17 +12,15 @@
 // 2005-07-28 : Sebastien Viret
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<Align>          s_factory ;
-const        IAlgFactory& AlignFactory = s_factory ; 
 
+DECLARE_ALGORITHM_FACTORY( Align );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 Align::Align( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator )
   // The following variables will be set via a joboptions files
 {
   declareProperty("Internal_Alignment"        , m_step1);
@@ -82,7 +61,7 @@ Align::~Align() {};
 // Initialization
 //=============================================================================
 StatusCode Align::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
@@ -93,12 +72,6 @@ StatusCode Align::initialize() {
   nLeft_tracks  = 0;    // Number of left tracks
   nRight_tracks = 0;    // Number of right tracks
 
-  sc = bookNTuple();
-  if(sc.isFailure()){
-    error() << "Could not book ntuples" << endmsg;
-    return sc;
-  }
-  
   Align::DefineVeloMap();         // Define the stations to be aligned
   Align::GetAlignmentConstants(); // Get the previous constants from the CondDB  
 
@@ -116,8 +89,8 @@ StatusCode Align::initialize() {
   control_tracks.clear();  // Control sample (tracks not used for alignment)
   overlap_tracks.clear();  // Containers of overlap tracks 
 
-  PV_tracks.clear();                   // (needed for STEP2: PV tracks)
-  my_PV_finder    = new PVHisto();     // The PV tool
+  PV_tracks.clear();                // (needed for STEP2: PV tracks)
+  my_PV_finder    = new PVHisto();  // The PV finding tool
 
   return StatusCode::SUCCESS;
 };
@@ -149,9 +122,6 @@ StatusCode Align::execute() {
   for (iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ) 
   {    
     ++nTracks;
-
-    verbose() << "Event " << nEvents << endmsg;
-    verbose() << "Track " << nTracks << endmsg;
 
     LHCb::Track* my_fitted_track = *iTrack ;          // retrieve track
 
@@ -239,7 +209,7 @@ StatusCode Align::finalize() {
 
     // Set the configuration for the left box internal alignment
 
-    my_Config->InitMilleTool(my_align,true,0, m_align, m_sigma, m_constrain, 
+    my_Config->InitMilleTool(my_align,0, m_align, m_sigma, m_constrain, 
 			     4, m_starfactr, 3, m_residual_cut, &VELOmap[0],nLeft_tracks);
 
     Align::FindAlignment(my_Config);           // Make the global fit 
@@ -272,7 +242,7 @@ StatusCode Align::finalize() {
     
     // Now set the configuration for the right box internal alignment
     
-    my_Config->InitMilleTool(my_align,true,1, m_align, m_sigma, m_constrain, 
+    my_Config->InitMilleTool(my_align,1, m_align, m_sigma, m_constrain, 
 			     4, m_starfactr, 3, m_residual_cut, &VELOmap[0],nRight_tracks);
 
     Align::FindAlignment(my_Config);           // Make the global fit
@@ -316,8 +286,7 @@ StatusCode Align::finalize() {
       my_corrected_track.setNEvent(control_tracks[iteration].nEvent());
 	
       my_Config->correcTrack(control_tracks[iteration],my_corrected_track,
-			     misal_left,misal_right,misal_box,
-			     &VELOmap[0]);
+			     misal_left,misal_right,&VELOmap[0]);
 
       Align::fill_params(my_corrected_track,1);	 
 
@@ -352,7 +321,7 @@ StatusCode Align::finalize() {
     if (m_moni_constants) Align::fill_misalignments(misal_box, error_box, pulls_box, 6);
   }   
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 
@@ -420,8 +389,7 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 	my_corrected_track.setNEvent(overlap_tracks[iteration].nEvent());
 	
 	my_config->correcTrack(overlap_tracks[iteration],my_corrected_track,
-			       misal_left,misal_right,misal_box,
-			       &VELOmap[0]);
+			       misal_left,misal_right,&VELOmap[0]);
 	
 	if (my_corrected_track.nIsGood()) 
 	  my_config->PutOverlapTrack(my_corrected_track,my_align);
@@ -446,9 +414,9 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 	  VeloTrack my_corrected_track  = VeloTrack();  // create AlignTrack 
 	  
 	  my_corrected_track.setNEvent(j);
+
 	  my_config->correcTrack(selected_tracks[iteration],my_corrected_track,
-				 misal_left,misal_right,misal_box,
-				 &VELOmap[0]);
+				 misal_left,misal_right,&VELOmap[0]);
 	  
 	  if (my_corrected_track.nIsGood())
 	    PV_tracks.push_back(my_corrected_track);
@@ -689,121 +657,17 @@ StatusCode Align::GetAlignmentConstants()
 // Monitoring nTuples : used for development, should be switched off in 
 //                      the future (replaced by histograms) 
 //
-
-
-StatusCode Align::bookNTuple() {
-
-  MsgStream log(msgSvc(), name());
-
-  if ( 0 == ntupleSvc() ) {
-    log << MSG::FATAL << "NtupleSvc is not available !" << endreq ;
-    return StatusCode::FAILURE ;
-  }
-
-  //align info
-    
-  if (m_moni_constants)
-  {
-    std::string ntupleName1 = "ALIGN/constants"; 
-    NTuplePtr nt1(ntupleSvc(), ntupleName1 );
-    if ( ! nt1 ) {
-      nt1 = ntupleSvc()->book(ntupleName1, CLID_ColumnWiseTuple, "constants info" );
-    }
-    if ( ! nt1 ) {
-      log << MSG::FATAL << "Could not create ntuple constants info" << endreq;
-      return StatusCode::FAILURE;
-    }
-  
-    nt1->addItem( "type",       n_typeA);
-    nt1->addItem( "station",    n_stationA);
-    nt1->addItem( "DOF",        n_dof);
-    nt1->addItem( "mis_value",  n_const);
-    nt1->addItem( "mis_error",  n_error);
-    nt1->addItem( "mis_pull",   n_pull);
-  }  
-
-  //track closest info
- 
-  if (m_moni_tracks)
-  {
-    std::string ntupleName2 = "ALIGN/trackinfo"; 
-    NTuplePtr nt2(ntupleSvc(), ntupleName2 );
-    if ( ! nt2 ) {
-      nt2 = ntupleSvc()->book(ntupleName2, CLID_ColumnWiseTuple, "track closest info" );
-    }
-    if ( ! nt2 ) {
-      log << MSG::FATAL << "Could not create ntuple track closest info" << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    nt2->addItem( "step",       n_step);
-    nt2->addItem( "side",       n_side);
-    nt2->addItem( "vx",         n_vx);
-    nt2->addItem( "vy",         n_vy);
-    nt2->addItem( "vz",         n_vz);
-    nt2->addItem( "station",    n_stationB);
-    nt2->addItem( "X_clus",     n_X);
-    nt2->addItem( "Y_clus",     n_Y);
-    nt2->addItem( "res_X",      n_resX);
-    nt2->addItem( "res_Y",      n_resY);
-  }
-
-  //primary vertex info
- 
-  if (m_moni_PV)
-  {
-    std::string ntupleName3 = "ALIGN/PV"; 
-    NTuplePtr nt3(ntupleSvc(), ntupleName3 );
-    if ( ! nt3 ) {
-      nt3 = ntupleSvc()->book(ntupleName3, CLID_ColumnWiseTuple, "primary vertex info" );
-    }
-    if ( ! nt3 ) {
-      log << MSG::FATAL << "Could not create ntuple PV info" << endreq;
-      return StatusCode::FAILURE;
-    }
-  
-    nt3->addItem( "event",       n_eventV);
-    nt3->addItem( "PV_number",   n_vertex);
-    nt3->addItem( "Track_num",   n_PVtracks);
-    nt3->addItem( "PV_x",        n_PVx);
-    nt3->addItem( "PV_y",        n_PVy);
-    nt3->addItem( "PV_z",        n_PVz);
-  }
- 
-  //overlap info
-
-  if (m_moni_overlaps)
-  {
-    std::string ntupleName4 = "ALIGN/overlaps"; 
-    NTuplePtr nt4(ntupleSvc(), ntupleName4 );
-    if ( ! nt4 ) {
-      nt4 = ntupleSvc()->book(ntupleName4, CLID_ColumnWiseTuple, "overlaps info" );
-    }
-    if ( ! nt4 ) {
-      log << MSG::FATAL << "Could not create ntuple overlaps info" << endreq;
-      return StatusCode::FAILURE;
-    }
-  
-    nt4->addItem( "event",       n_event);
-    nt4->addItem( "track",       n_track);
-    nt4->addItem( "type",        n_type);
-    nt4->addItem( "x",           n_x);
-    nt4->addItem( "y",           n_y);
-    nt4->addItem( "z",           n_z);
-    nt4->addItem( "station",     n_station);
-  }
-  
-  return StatusCode::SUCCESS;
-  
-}
-
-
 /////////////////////////////////////////////////////
+
 StatusCode Align::fill_params(VeloTrack& my_track, int my_step) 
 {
 
+  debug() << "Control track on event : " << my_track.nEvent() << endmsg;
+
+  Tuple tuple=nTuple("Trackinfo", "Test sample");
+  
   double slx, sly, x0, y0;
-  n_step = my_step;
+  int n_side = 0;
   
   slx  = my_track.nSlope_x();
   x0   = my_track.nXo_x();
@@ -814,27 +678,30 @@ StatusCode Align::fill_params(VeloTrack& my_track, int my_step)
 
   for (int k=0; k<Ncoords; k++)
   {
-    n_step = my_step;
-  
-    if (slx!=0.0 || sly!=0.0) n_vz = -(slx*x0+sly*y0)/(slx*slx+sly*sly);
-    n_vy = sly*n_vz+y0;
-    n_vx = slx*n_vz+x0;
+    if (slx==0.0 && sly==0.0) return StatusCode::SUCCESS;
   
     (my_track.nType() == 0)      
       ? n_side =0
       : n_side =1;
 
-    n_stationB = ((my_track.Coords()[k]).first).z();
-    //    wghtx = ((my_track->Coords()[k]).second).x();
-    n_X = ((my_track.Coords()[k]).first).x();
-    //    wghty = ((my_track->Coords()[k]).second).y();
-    n_Y = ((my_track.Coords()[k]).first).y();
+    double n_stationB = ((my_track.Coords()[k]).first).z();
+    double n_X = ((my_track.Coords()[k]).first).x();
+    double n_Y = ((my_track.Coords()[k]).first).y();
   
-    n_resX = n_X-(slx*n_stationB+x0);
-    n_resY = n_Y-(sly*n_stationB+y0);
+    double n_resX = n_X-(slx*n_stationB+x0);
+    double n_resY = n_Y-(sly*n_stationB+y0);
 
-    Align::writeNtuple("ALIGN/trackinfo");
-
+    tuple->column( "step",    my_step);
+    tuple->column( "side",    n_side);
+    tuple->column( "vx",      slx*(-(slx*x0+sly*y0)/(slx*slx+sly*sly))+x0);
+    tuple->column( "vy",      sly*(-(slx*x0+sly*y0)/(slx*slx+sly*sly))+y0);
+    tuple->column( "vz",      -(slx*x0+sly*y0)/(slx*slx+sly*sly));
+    tuple->column( "station", ((my_track.Coords()[k]).first).z());
+    tuple->column( "X_clus",  ((my_track.Coords()[k]).first).x());
+    tuple->column( "Y_clus",  ((my_track.Coords()[k]).first).y());
+    tuple->column( "res_X",      n_resX);
+    tuple->column( "res_Y",      n_resY);
+    tuple->write();
   }
 
   return StatusCode::SUCCESS;
@@ -846,16 +713,18 @@ StatusCode Align::fill_overlaps(VeloTrack& my_track, int my_step)
 
   debug() << "Overlap track on event : " << my_track.nEvent() << endmsg;
 
+  Tuple tuple=nTuple("Overlaps", "Overlap track info");
+
   for (unsigned int j=0; j<my_track.Coords().size(); j++)
   {
-    n_event = my_track.nEvent();
-    n_track = my_track.nTrack();
-    n_type  = my_track.nType()+my_step;
-    n_x = ((my_track.Coords()[j]).first).x();
-    n_y = ((my_track.Coords()[j]).first).y();
-    n_z = ((my_track.Coords()[j]).first).z();
-    n_station = ((my_track.Coords()[j]).second).z();
-    Align::writeNtuple("ALIGN/overlaps");
+    tuple->column( "event",   my_track.nEvent());
+    tuple->column( "track",   my_track.nTrack());
+    tuple->column( "type",    my_track.nType()+my_step);
+    tuple->column( "x",       ((my_track.Coords()[j]).first).x());
+    tuple->column( "y",       ((my_track.Coords()[j]).first).y());
+    tuple->column( "z",       ((my_track.Coords()[j]).first).z());
+    tuple->column( "station", ((my_track.Coords()[j]).second).z());
+    tuple->write();
   }
 
   return StatusCode::SUCCESS;
@@ -869,17 +738,21 @@ StatusCode Align::fill_misalignments(std::vector<double> constants, std::vector<
  
   int n_stat = constants.size()/6; // 21 for internal stuff, 2 for the boxes 
 
+  Tuple tuple=nTuple("Constants", "Misalignment values");
+
   for (int i=0;i<n_stat;i++) 
   {
     for (int jj=0; jj<6; jj++)
     {
-      n_typeA = my_step;    
-      n_stationA = i;
-      n_dof    = jj;
-      n_const  = constants[i+n_stat*jj];
-      n_error  = errors[i+n_stat*jj];
-      n_pull   = pulls[i+n_stat*jj];
-      Align::writeNtuple("ALIGN/constants");
+  
+      tuple->column( "type",       my_step);
+      tuple->column( "station",    i);
+      tuple->column( "DOF",        jj);
+      tuple->column( "mis_value",  constants[i+n_stat*jj]);
+      tuple->column( "mis_error",  errors[i+n_stat*jj]);
+      tuple->column( "mis_pull",   pulls[i+n_stat*jj]);
+  
+      tuple->write();
     }
   }
 
@@ -895,6 +768,8 @@ StatusCode Align::fill_primary(VeloTracks& aPV, int PV_numb)
 
   debug() << PV_numb+1 << " primary vertices found "<< endmsg;
 
+  Tuple tuple=nTuple("PV", "Primary vertices");
+
   for (int k=0; k<=PV_numb; k++) 
   {  
     int compteur = 0;
@@ -904,14 +779,16 @@ StatusCode Align::fill_primary(VeloTracks& aPV, int PV_numb)
     {
       if (aPV[iteration].nPVnumber() == k && compteur == 0)  
       {      
-	n_eventV = aPV[iteration].nEvent();
-	n_vertex = k;
-	n_PVtracks = aPV[iteration].nTrack();
-	n_PVx = aPV[iteration].nPV_x();
-	n_PVy = aPV[iteration].nPV_y();
-	n_PVz = aPV[iteration].nPV_z();
+
+	tuple->column( "event",       aPV[iteration].nEvent());
+	tuple->column( "PV_number",   k);
+	tuple->column( "Track_num",   aPV[iteration].nTrack());
+	tuple->column( "PV_x",        aPV[iteration].nPV_x());
+	tuple->column( "PV_y",        aPV[iteration].nPV_y());
+	tuple->column( "PV_z",        aPV[iteration].nPV_z());
+	tuple->write();
+
 	compteur = 1;
-	Align::writeNtuple("ALIGN/PV");
       }
 
       iteration++;
@@ -921,27 +798,4 @@ StatusCode Align::fill_primary(VeloTracks& aPV, int PV_numb)
   return StatusCode::SUCCESS;
 }
 
-/////////////////////////////////////////////////////
-StatusCode Align::writeNtuple(std::string ntupleName) 
-{
-  MsgStream log(msgSvc(), name());
-
-  NTuplePtr my_ntuple( ntupleSvc(), ntupleName);
-
-  if (my_ntuple) 
-  {
-    StatusCode sc = ntupleSvc()->writeRecord( my_ntuple.ptr() );
-    if (sc.isFailure()) 
-    {
-      info() << "Failure to write event in NTuple " << ntupleName << endmsg;
-      return sc;
-    }
-  }
-  else 
-  {
-    info() << "Can't find the NTuple " << ntupleName << endmsg;
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
-}
 

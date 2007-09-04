@@ -2,9 +2,8 @@
 #define MILLECONFIG_H 1
 
 // Include files
-//#include "GaudiKernel/MsgStream.h"
 
-#include "AlignmentTools/IMillepede.h"
+#include "AlignmentInterfaces/IMillepede.h"
 #include "VeloTrack.h"
 
 /** @class MilleConfig MilleConfig.h VeloAlignment/MilleConfig.h
@@ -22,7 +21,7 @@ public:
   MilleConfig();
   virtual ~MilleConfig( ); ///< Destructor
 
-  void InitMilleTool(IMillepede *my_millepede, bool i_align, int right,
+  void InitMilleTool(IMillepede *my_millepede, int right,
 		     std::vector<bool> DOF, std::vector<double> Sigm,
 		     std::vector<bool> Cons, int nloc, double starfact, 
 		     int nstd, std::vector<double> res_cut, double VELOmap[],
@@ -45,10 +44,7 @@ public:
 			 VeloTrack& correctrack, 
 			 std::vector<double> left_constants, 
 			 std::vector<double> right_constants,
-			 std::vector<double> box_constants,  
 			 double VELOmap[]);
-
-  StatusCode GetTrackSlope(VeloTrack& atrack);
 
 // Is it internal or box alignment ?
 

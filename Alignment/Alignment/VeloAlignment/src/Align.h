@@ -3,12 +3,24 @@
 
 // Include files
 
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/NTuple.h"
+#include "math.h"
 
+//from DetDesc
+#include "VeloDet/DeVelo.h"
+#include "DetDesc/AlignmentCondition.h"
+#include "DetDesc/ParamValidDataObject.h"
+
+// Event
+#include "Event/Track.h"
+
+// from Gaudi
+
+#include "GaudiAlg/GaudiTupleAlg.h"
+
+// from VeloAlignment
+
+#include "ITrackStore.h"
+#include "AlignmentInterfaces/IMillepede.h"
 #include "MilleConfig.h"
 #include "PVHisto.h"
 #include "VeloTrack.h"
@@ -23,7 +35,7 @@
 class ITrackStore;
 class IMillepede;
 
-class Align : public GaudiAlgorithm {
+class Align : public GaudiTupleAlg {
 public: 
   /// Standard constructor
   Align( const std::string& name, ISvcLocator* pSvcLocator );
@@ -40,8 +52,6 @@ public:
   StatusCode GetAlignmentConstants();
 
 
-  StatusCode bookNTuple();
-  StatusCode writeNtuple(std::string ntupleName); 
   StatusCode fill_params(VeloTrack& my_track, int my_step);
   StatusCode fill_overlaps(VeloTrack& my_track, int my_step);
   StatusCode fill_misalignments(std::vector<double> constants, std::vector<double> errors, 
@@ -143,41 +153,5 @@ private:
 
   int nLeft_tracks;
   int nRight_tracks;
-
- /// Pointer to N-tuple
-
-  NTuple::Item<double>              n_typeA;
-  NTuple::Item<double>              n_stationA;
-  NTuple::Item<double>              n_dof;
-  NTuple::Item<double>              n_const;
-  NTuple::Item<double>              n_error;
-  NTuple::Item<double>              n_pull;
-
-  NTuple::Item<double>              n_eventV;
-  NTuple::Item<double>              n_vertex;
-  NTuple::Item<double>              n_PVtracks;
-  NTuple::Item<double>              n_PVx;
-  NTuple::Item<double>              n_PVy;
-  NTuple::Item<double>              n_PVz;
-
-  NTuple::Item<double>              n_event;
-  NTuple::Item<double>              n_track;
-  NTuple::Item<double>              n_type;
-  NTuple::Item<double>              n_x;
-  NTuple::Item<double>              n_y;
-  NTuple::Item<double>              n_z;
-  NTuple::Item<double>              n_station;
-
-  NTuple::Item<double>              n_step;
-  NTuple::Item<double>              n_side;
-  NTuple::Item<double>              n_vx;
-  NTuple::Item<double>              n_vy;
-  NTuple::Item<double>              n_vz;
-  NTuple::Item<double>              n_stationB;
-  NTuple::Item<double>              n_X;
-  NTuple::Item<double>              n_Y;
-  NTuple::Item<double>              n_resX;
-  NTuple::Item<double>              n_resY;
-
 };
 #endif // VELOALIGNMENT_ALIGN_H

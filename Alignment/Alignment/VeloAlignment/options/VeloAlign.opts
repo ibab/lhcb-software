@@ -8,7 +8,6 @@
 // Option file for monitoring (control sample, constants,...)
 #include "$VELOALIGNMENTOPTS/AlignmentMonitor.opts" 
 
-
 //
 // Then we set the alignment job properties
 //
@@ -27,7 +26,7 @@
 ////////////////////////////////////////////////////
 
 
-Align.Internal_alignment    = false;   // Turn this step on
+Align.Internal_alignment    = true;   // Turn this step on
 
 // Modules to be aligned (1=ON, 0=OFF)
 
@@ -54,17 +53,17 @@ Align.General_Maxtracks     = 100;                                     // Max. n
 
 
 Align.Box_alignment        = true;
-Align.Box_VELOopen         = true;
+Align.Box_VELOopen         = false;
 Align.Box_TrackperPV       = 2;
 Align.Box_DOF              = {1,1,1,1,1,1};                         
 Align.Box_PTerms           = {10.0,10.0,10.0,0.03,0.03,0.03}; 
-Align.Box_EQs              = {0,0,0,0,0,0}; 
+Align.Box_EQs              = {1,1,1,1,1,0}; 
 Align.Box_Residual_Cut     = {1.5,0.4};
 
 // Specific options for primary vertices
                             
-Align.Box_Z_window         = 1000.;    // Where to look for PV seeds (in mm) (350 for closed, 1000 for open)
-Align.Box_MinTracks_perPV  = 4;      // Minimal number of tracks per PV (10 for m-bias events)
+Align.Box_Z_window         = 350.;    // Where to look for PV seeds (in mm) (350 for closed, 1000 for open)
+Align.Box_MinTracks_perPV  = 10;      // Minimal number of tracks per PV (10 for m-bias events)
 Align.Box_PV_Z_window      = 1.;      // Zclos range for all PV candidate tracks
 Align.Box_PV_IPmax         = 0.8;      // Max IP for PV candidate
 Align.Box_PV_Track_IPmax   = 0.8;     // Max track IP (w.r.t. PV candidate)

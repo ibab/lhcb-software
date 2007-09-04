@@ -2,18 +2,13 @@
 #define VELOALIGNMENT_TRACKSTORE_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
-
 #include "ITrackStore.h"            // Interface
-
 #include "VeloTrack.h"
 
+// from Gaudi
+#include "GaudiAlg/GaudiTool.h"
 #include "Kernel/LHCbID.h"
-#include "Kernel/ParticleID.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // TrFitEvent
 #include "Event/Track.h"
@@ -47,7 +42,6 @@ public:
   /// Initialization
   virtual StatusCode initialize();
   virtual StatusCode TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, double Map_VELO[]);
-  virtual StatusCode GetTrackSlope(VeloTrack& atrack);
 
 protected:
 
@@ -59,13 +53,12 @@ private:
   DeVelo* my_velo;
   LHCb::VeloClusters* m_veloClusters;
 
-  double m_momentum_cut;   // Momentum cut
-  double m_RDiffCut;       // Difference bet. R estimated in phi and R sensor, for the same half station
   int    m_NonzerCut;      // Minimum number of valid coordinates on a track 
   int    m_NonzerOver;     // Minimum number of valid coordinates on the overlap side
   bool   m_OverlapCut;     // Do we take the overlap or not ?
   double m_xOverlapCut;    // X max value for overlap track
   bool   m_MissedHits;     // Do we take the tracks with missed hits ?
+  bool   m_ACDC;           // ACDC (aka real) or DC06 geometry ?
 
   const DeVeloRType* rDet;
   const DeVeloPhiType* phiDet;

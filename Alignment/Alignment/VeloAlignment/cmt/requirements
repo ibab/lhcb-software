@@ -1,6 +1,6 @@
 # =============================================================================
 package       VeloAlignment
-version       v2r4
+version       v3r0
 
 # =========== structure =======================================================
 branches      doc cmt src
@@ -16,11 +16,10 @@ use           GaudiAlg          v*
 # Needed for TrackStore
 
 use           TrackEvent        v*    Event
-use           TrackFitEvent     v*    Tr
 use           VeloDet           v*    Det
 
 # Needed for Millepede
-use           AlignmentTools    v*    Alignment
+use           AlignmentInterfaces    v*    Alignment
 
 # =========== constituents =====================================================
 library       VeloAlignment           ../src/*.cpp
