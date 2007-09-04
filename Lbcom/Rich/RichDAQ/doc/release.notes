@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-09-04 - Chris Jones
+ - Remove auto pointers from clustering interfaces in favour of a simple 
+   pointer, which the uer then 'owns'
+
 ! 2007-08-09 - Chris Jones
  - Update HPD occupancy tool to be able to run with explicit RICH1 or 
    RICH2 setting.

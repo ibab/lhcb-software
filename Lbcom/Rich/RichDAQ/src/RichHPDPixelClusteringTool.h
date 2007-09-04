@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.6 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.7 2007-09-04 16:55:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -61,7 +61,7 @@ namespace Rich
     public: // methods (and doxygen comments) inherited from interface
 
       /// Applies a pixel clusering algorithm to the given HPD RichSmartIDs
-      virtual const Rich::HPDPixelClusters::ConstSharedPtn
+      virtual const Rich::HPDPixelClusters *
       findClusters( LHCb::RichSmartID::Vector & smartIDs ) const;
 
     private: // data members

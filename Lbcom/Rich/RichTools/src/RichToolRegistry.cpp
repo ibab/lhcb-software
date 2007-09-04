@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.17 2007-08-09 16:00:25 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.18 2007-09-04 16:57:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -72,6 +72,8 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::TabulatedSignalDetectionEff/RichSignalDetectionEff" );
   defaultTools.push_back ( "Rich::Rec::TabulatedGasQuartzWindowAbs/RichGasQuartzWindow" );
   defaultTools.push_back ( "Rich::Rec::TrackSelector/TrackSelector" );
+  defaultTools.push_back ( "Rich::Rec::StereoFitter/RichStereoFitter" );
+  defaultTools.push_back ( "Rich::Rec::StereoProjection/RichStereoProjection" );
   // other tools
   defaultTools.push_back ( "OdinTimeDecoder/OdinTimeDecoder" );
 

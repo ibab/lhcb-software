@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-09-04 - Chris Jones
+ - Add default name mappings for tools in RichRecStereoTools
+
 ! 2007-08-13 - Chris Jones
  - Adapt to changes in RichGeomPhoton in RichKernel
 

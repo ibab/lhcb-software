@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.19 2007-08-09 15:54:02 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.20 2007-09-04 16:55:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -72,7 +72,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   if ( startSize < m_minHPDocc ) return false;
 
   // find the clusters
-  HPDPixelClusters::ConstSharedPtn clusters = m_clustTool->findClusters( smartIDs );
+  const HPDPixelClusters * clusters = m_clustTool->findClusters( smartIDs );
  
   // Print out clustering results
   if ( msgLevel(MSG::VERBOSE) )
@@ -93,6 +93,9 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     hpd << hpdID;
     Warning( "Partially suppressed HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
   }
+
+  // cleanup
+  delete clusters;
 
   // return status
   return suppress;

@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.6 2007-04-23 12:58:44 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.7 2007-09-04 16:55:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -51,17 +51,20 @@ StatusCode HPDPixelClusteringTool::initialize()
   return sc;
 }
 
-const Rich::HPDPixelClusters::ConstSharedPtn
+const Rich::HPDPixelClusters *
 HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) const
 {
 
   // Make a local pixel data object
   HPDPixelClusters * pixelData = new HPDPixelClusters( smartIDs );
 
+  // make sure pixels are sorted ok
+  // this should be automatic via decoding but can do it here to be sure
+  // as because the vector should be in the correct order, it should be v fast
+  SmartIDSorter::sortByRegion(smartIDs);
+
   // loop over pixels
   // requires them to be sorted by row then column
-  // this should be automatic via decoding but its fast so safer to be sure
-  SmartIDSorter::sortByRegion(smartIDs);
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
@@ -132,6 +135,6 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     verbose() << *pixelData << endreq;
   }
 
-  // finally, return a shared auto smart pointer to this cluster object
-  return HPDPixelClusters::ConstSharedPtn(pixelData);
+  // finally, return pointer to this cluster object
+  return pixelData;
 }
