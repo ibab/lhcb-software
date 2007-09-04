@@ -16,7 +16,7 @@ if ($_POST["DoUpload"]) {
   
   // get task's histogram list
   $conn=HistDBconnect(1);
-  $query="select NAME from VIEWHISTOGRAM where TASK='${task}'";
+  $query="select TITLE||SUBTITSTRING(SUBTITLE) from VIEWHISTOGRAM where TASK='${task}'";
   $stid = OCIParse($conn,$query);
   OCIExecute($stid);
   $hlist='';

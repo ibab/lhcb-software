@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.12 2007-09-04 15:20:55 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -19,6 +19,10 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
+  // check that this API version is in sync with DB current schema
+  Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.CheckSchema(:x1); end;");
+  fstmt->setInt(1,m_DBschema);
+  fstmt->executeUpdate ();
 }
 
 OnlineHistDB::~OnlineHistDB () {  
@@ -272,53 +276,6 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
 
 
 
-//OnlineRootHist* OnlineHistDB::getRootHist(std::string Identifier,
-//					  std::string Page,
-//					  int Instance ) {}
-
-// OnlineRootHist* OnlineHistDB::getRootHist(std::string Identifier,
-// 					  std::string Page,
-// 					  int Instance ) {
-//   OnlineRootHist* h=0;
-//   // // see if the histogram object exists already
-// //   std::vector<OnlineHistogram*>::iterator ih;
-// //   for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-// //     if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
-// // 	(*ih)->instance() == Instance ) {
-// //       h = *ih;
-// //       break;
-// //     }
-// //   }
-//   if (!h) {
-//     Statement *astmt=m_conn->createStatement 
-//       ("begin :x1 := OnlineHistDB.GetHID(:x2,:x3); end;");
-//     try{
-//       astmt->registerOutParam(1, OCCIINT);
-//       astmt->setString(2, Identifier);
-//       astmt->registerOutParam(3, OCCIINT);
-//       astmt->execute();
-//     }catch(SQLException ex) {
-//       dumpError(ex,"OnlineHistDB::getHistogram for Histogram "+Identifier);
-//     }
-//     if(astmt->getInt(1)) {
-//       h= new OnlineRootHist(*this,Identifier,Page,Instance);
-//       if (h->isAbort()) {
-// 	cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
-// 	    << Identifier <<endl;
-// 	delete h;
-// 	h=0;
-//       }
-//       else 
-// 	m_myHist.push_back(h);
-//     }
-//     else {
-//       	cout << "Warning from OnlineHistDB::getHistogram : histogram " << Identifier <<
-// 	  " not found in the DB" << endl;
-//     }
-//     m_conn->terminateStatement (astmt);  
-//   }
-//   return h;
-// }
 
 
 

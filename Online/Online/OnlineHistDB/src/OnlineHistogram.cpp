@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.12 2007-09-04 15:20:55 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -87,8 +87,8 @@ bool OnlineHistogram::verifyPage(std::string Page, int Instance) {
   if (m_page != "_NONE_") {
     ResultSet *rset;
     Statement *query = 
-      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2 AND INSTANCE=:3");
-    query->setString(1,m_hid);
+      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO SH ,VIEWHISTOGRAM VH WHERE VH.NAME=:1 AND SH.PAGE=:2 AND SH.INSTANCE=:3");
+    query->setString(1,m_identifier);
     query->setString(2,Page);
     query->setInt(3,Instance);
     try{

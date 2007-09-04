@@ -7,9 +7,9 @@ create or replace package OnlineHistDB as
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0, SFreq float := NULL, 
 	Ref  varchar2:='NONE' );
- procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype IN varchar2:= '');
+ procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '');
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
- function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  mytype IN varchar2 ) 
+ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  thetype  VIEWHISTOGRAM.HSTYPE%TYPE ) 
    return varchar2 ;
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
  procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL);
@@ -65,6 +65,7 @@ create or replace package OnlineHistDB as
 	return number;
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
+ procedure CheckSchema(dbschema int := 0);
  procedure mycommit(dbschema int := 0);
 end OnlineHistDB;
 /
@@ -297,7 +298,7 @@ exception
  
 
 procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', 
-                           mytype IN varchar2:= '') is
+                           mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '') is
  out HISTOGRAM.HID%TYPE;
  begin
  if (title = '_BYSN_') then
@@ -333,21 +334,21 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
      raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
   end if;
   if (tk = 'Adder') then -- expect one more field for the taskname
-     tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_Adder_[^/]*/([^/]+)/[^/]+/[^/]+$','\1');
+     tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_Adder_[^/]*/([^/]+)/.+$','\1');
      if (tk = ServiceName) then
-       raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+       raise_application_error(-20052,'syntax error in Service Name '||ServiceName);
      end if;
-     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)/[^/]+$','\1');
-     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/[^/]+/([^/]+)$','\1');
+     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)/.+$','\1');
+     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/[^/]+/(.+)$','\1');
   else	
-     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/([^/]+)/[^/]+$','\1'); 
-     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)$','\1');
+     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/([^/]+)/.+$','\1'); 
+     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/(.+)$','\1');
   end if;
   if (algo = ServiceName) then
-    raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+    raise_application_error(-20053,'syntax error in Service Name '||ServiceName);
   end if;
   if (title = ServiceName) then
-    raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+    raise_application_error(-20054,'syntax error in Service Name '||ServiceName);
   end if;
   hid := DeclareHistByAttributes(tk,algo,title,mytype);
   if (hid != '_none_') then 
@@ -360,7 +361,7 @@ end  DeclareHistByServiceName;
 -----------------------
 
 
-function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, mytype IN varchar2 ) 
+function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, thetype  VIEWHISTOGRAM.HSTYPE%TYPE ) 
   return varchar2 is
  hstitle HISTOGRAMSET.HSTITLE%TYPE;
  subtitle  HISTOGRAM.SUBTITLE%TYPE;
@@ -380,17 +381,21 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
  mywn thresholds;
  myal thresholds;
  oldtype  VIEWHISTOGRAM.HSTYPE%TYPE := 'NON'; 
+ mytype  VIEWHISTOGRAM.HSTYPE%TYPE := thetype;
 
  begin
  savepoint beforeDHwrite;
- if (INSTR(title,'_$') != 0) then
+ if (INSTR(title,Set_Separator()) != 0) then
    hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$.*$','\1');
    subtitle :=  REGEXP_REPLACE(title,'^.*_\$(.*)$','\1');
  else
    hstitle := title;
    subtitle := NULL;
  end if;
-
+ -- backw. compat. hack
+ if (mytype = 'HPD') then
+  mytype := 'P1D';
+ end if;
   -- see if histogram exists
   --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$'||subtitle||'___');
  open myh(subtitle,hstitle,algo,tk);
@@ -972,7 +977,7 @@ procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varcha
  CURSOR cpg is select PAGENAME from PAGE where PAGENAME=theName;
  myPName  PAGE.PAGENAME%TYPE;
  Nin int;
- condition varchar2(500);
+ condition varchar2(5000);
  CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xhisto SHOWHISTO.HISTO%TYPE,Xinstance SHOWHISTO.INSTANCE%TYPE) is 
 	select PAGE from SHOWHISTO where PAGE=Xpage and HISTO=Xhisto and INSTANCE=Xinstance;
  inst int;
@@ -1169,12 +1174,12 @@ EXCEPTION
   ROLLBACK TO beforeDHdelete;
   raise_application_error(-20050,SQLERRM); 
 end DeleteHistogram;
+-----------------------------------
 
------------------------
-procedure mycommit(dbschema int := 0) is
+procedure CheckSchema(dbschema int := 0) is
  curschema ERGOSUM.version%TYPE;
  curapi ERGOSUM.apiversion%TYPE;
- begin
+begin
  SELECT version,apiversion into curschema,curapi  from ERGOSUM;
  if (dbschema != curschema) then
    rollback;
@@ -1184,9 +1189,14 @@ You are using an HistDB API version incompatible with the current DB schema.
 No changes can be committed. Please update to OnlineHistDB '||curapi||' 
 -----------------------------------------------------------------------------
 ');
- else 
-  commit;
  end if;
+end CheckSchema;
+
+-----------------------
+procedure mycommit(dbschema int := 0) is
+begin
+ CheckSchema(dbschema);
+ commit;
 end mycommit;
 
 end OnlineHistDB; -- end of package

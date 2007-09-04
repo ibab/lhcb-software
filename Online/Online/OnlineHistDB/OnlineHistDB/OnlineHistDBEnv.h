@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.7 2007-07-17 15:54:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.8 2007-09-04 15:20:54 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -25,6 +25,7 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int maxHTsize = 3;
   static const std::string DB="lbora01:1528/HISTOGRAMDB";
   static const std::string ACCOUNT="HIST_WRITER";
+  static const std::string m_SetSeparator = "_$";
 }
 
 
@@ -81,7 +82,7 @@ class OnlineHistDBEnv {
   Environment* m_env;
   Connection* m_conn;
   std::string m_user;
- private:
+ private: 
   std::string toUpper(string str) {
     for(unsigned int i=0;i<str.length();i++)
       str[i] = toupper(str[i]);

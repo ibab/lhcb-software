@@ -17,7 +17,8 @@ macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
 macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
 apply_pattern  linker_library library=OnlineHistDB 
 
-macro_append ROOT_linkopts " -lHist"
+macro_append ROOT_linkopts " -lHist" \
+  WIN32                    " libHist.lib"
 macro_append OnlineHistDB_shlibflags " -locci " \
   WIN32                              " oci.lib ociw32.lib oraocci10.lib "
 
