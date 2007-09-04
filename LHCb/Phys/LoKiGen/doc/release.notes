@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.37 2007-08-20 13:18:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2007-09-04 12:27:57 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -15,15 +15,13 @@
 ! -----------------------------------------------------------------------------
 
 
+!=========================== LoKiGen v6r0 2007-09-04 ==========================
 ! 2007-08-20 - Vanya Belyaev
-
- - incrment the major version to v6r0 
-
+ - increment the major version to v6r0 
 
 ! 2007-07-25 - Vanya BELYAEV
-
  - add all "hybrid"-functionality for the 
-   interplay between C++ and Python, in particular for hybriod factory.
+   interplay between C++ and Python, in particular for hybrid factory.
 
 New Files: 
   LoKi/GenHybridEngine.h
@@ -40,11 +38,9 @@ New Files:
   src/Components/LoKiGen_dll.cpp
 
 ! 2007-07-23 - Vanya BELYAEV
-
  - many tiny updates to minimize the dependencies, 
    reduce the dictionaries, decrease the compilation time
-   and improve the doxugen documentation
- 
+   and improve the doxygen documentation
  - cmt/requirements 
     version increment to v3r1
 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.29 2007-08-20 13:20:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2007-09-04 12:22:57 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,9 +15,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v6r0 2007-09-04 ============================
 ! 2007-08-20 - Vanya Belyaev
  - increment the major version to v6r0 
-
 
 ! 2007-08-20 - Patrick Koppenburg
  - LoKi/MCFinderObj.h
@@ -25,7 +25,6 @@
      LHCb::MCParticle::Vector by ConstVector.
 
 ! 2007-07-26 - Vanya BELYAEV
-
  - src/Components/HybridMCParticleArrayFilter.cpp
   add LoKi::Hybrid::MCParticleArrayFilter 
    the first "hybrid" implementation of new interface 
@@ -356,6 +355,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.29  2007/08/20 13:20:12  ibelyaev
+!  increment the version to v6r0
+!
 ! Revision 1.28  2007/08/20 09:21:27  pkoppenb
 ! No Vector of MCParticles
 !
