@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.17 2007-08-23 11:10:19 wouter Exp $
+// $Id: FitNode.cpp,v 1.18 2007-09-04 08:34:22 wouter Exp $
 // Include files
 
 // local
@@ -28,24 +28,24 @@ using namespace LHCb;
 
 /// Standard constructor, initializes variables
 FitNode::FitNode():
-Node()
+  Node(),
+  m_transportIsSet(false),
+  m_projectionTerm(0),
+  m_deltaChi2Up(0),
+  m_deltaChi2Down(0)
 {
   // FitNode default constructor
-  m_transportMatrix = TrackMatrix();
-  m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackSymMatrix();
-  m_transportIsSet  = false;
 }
 
 /// Constructor from a z position
 FitNode::FitNode( double zPos ):
-Node()
+  Node(),
+  m_transportIsSet(false),
+  m_projectionTerm(0),
+  m_deltaChi2Up(0),
+  m_deltaChi2Down(0)
 {
   //FitNode constructer
-  m_transportMatrix = TrackMatrix();
-  m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackSymMatrix();
-  m_transportIsSet  = false;
   State tempState = State();
   tempState.setZ( zPos );
   m_state = tempState.clone();
@@ -53,29 +53,43 @@ Node()
 
 /// Constructor from a Measurement
 FitNode::FitNode(Measurement& aMeas):
-Node(){
+  Node(),
+  m_transportIsSet(false),
+  m_projectionTerm(0),
+  m_deltaChi2Up(0),
+  m_deltaChi2Down(0)
+{
   //FitNode constructer
-  m_transportMatrix = TrackMatrix();
-  m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackSymMatrix();
-  m_transportIsSet  = false;
-  m_measurement     = &aMeas;
+  m_measurement   = &aMeas;
   State tempState = State();
   tempState.setZ( aMeas.z() );
   m_state = tempState.clone();
 }
 
-FitNode::FitNode( const FitNode& rhs ) : Node(rhs){
+FitNode::FitNode( const FitNode& rhs ) : 
+  Node(rhs),
+  m_transportMatrix   (rhs.m_transportMatrix),
+  m_transportVector   (rhs.m_transportVector),
+  m_noiseMatrix       (rhs.m_noiseMatrix),
+  m_transportIsSet    (rhs.m_transportIsSet),
+  m_projectionTerm    (rhs.m_projectionTerm),
+  m_predictedStateUp  (rhs. m_predictedStateUp),
+  m_predictedStateDown(rhs. m_predictedStateDown),
+  m_deltaChi2Up       (rhs.m_deltaChi2Up),
+  m_deltaChi2Down     (rhs.m_deltaChi2Down)
+{
   //FitNode copy constructer
-  m_transportMatrix = rhs.m_transportMatrix;
-  m_transportVector = rhs.m_transportVector;
-  m_noiseMatrix     = rhs.m_noiseMatrix;
-  m_transportIsSet  = rhs.m_transportIsSet ;
 }
 
 /// Destructor
 FitNode::~FitNode()
 {
+}
+
+// Clone the node
+LHCb::Node* FitNode::clone() const
+{
+  return new LHCb::FitNode(*this) ;
 }
 
 /// Update the State predicted by the upstream filter

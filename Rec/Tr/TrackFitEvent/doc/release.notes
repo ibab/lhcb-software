@@ -4,6 +4,13 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-04 - Wouter Hulsbergen
+- changes to FitNode
+  - removed cached unbiased residual. replaced with calculation on the fly
+  - added fields for chisquare contribution of upstream and downstream fit
+  - implemented missing clone method
+  - initialized all data members in constructors
+
 ! 2007-08-23 - Wouter Hulsbergen
 - added calculation of unbiased state
 

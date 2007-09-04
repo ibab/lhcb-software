@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.19 2007-08-28 13:08:31 jonrob Exp $
+// $Id: FitNode.h,v 1.20 2007-09-04 08:34:22 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -47,6 +47,9 @@ namespace LHCb
 
     /// Destructor
     virtual ~FitNode();
+
+    /// Clone the Node
+    virtual Node* clone() const;
 
     /// retrieve transport matrix
     const Gaudi::TrackMatrix& transportMatrix() const
@@ -114,19 +117,27 @@ namespace LHCb
     void setPredictedStateDown( const State& predictedStateDown );
 
     /// retrieve unbiased residual
-    double unbiasedResidual() const { return m_unbiasedResidual; }
-
-    /// set unbiased residual
-    void setUnbiasedResidual(double value) { m_unbiasedResidual = value; }
+    double unbiasedResidual() const 
+    { return residual() * errMeasure2() / errResidual2() ; }
 
     /// retrieve error on unbiased residual
-    double errUnbiasedResidual() const { return m_errUnbiasedResidual; }
-
-    /// set unbiased residual
-    void setErrUnbiasedResidual(double value) { m_errUnbiasedResidual = value; }
+    double errUnbiasedResidual() const 
+    { return errMeasure2()/errResidual() ; }
 
     /// retrieve the unbiased smoothed state at this position
     State unbiasedState() const ;
+
+    /// set chisq contribution in upstream filter
+    void setDeltaChi2Upstream(double dchi2) { m_deltaChi2Up = dchi2 ; }
+
+    /// retrieve chisq contribution in upstream filter
+    float deltaChi2Upstream() const { return m_deltaChi2Up ; }
+
+    /// set chisq contribution in downstream filter
+    void setDeltaChi2Downstream(double dchi2) { m_deltaChi2Down = dchi2 ; }
+
+    /// retrieve chisq contribution in downstream filter
+    float deltaChi2Downstream() const { return m_deltaChi2Down ; }
 
   private:
 
@@ -137,8 +148,8 @@ namespace LHCb
     double                m_projectionTerm;     ///< Constant term in projection
     State                 m_predictedStateUp;   ///< predicted state upstream
     State                 m_predictedStateDown; ///< predicted state downstream
-    double                m_unbiasedResidual;   ///< residual w/o measurement
-    double                m_errUnbiasedResidual;///< error res w/o measurement
+    double                m_deltaChi2Up;        ///< chisq contribution in upstream filter
+    double                m_deltaChi2Down;      ///< chisq contribution in downstream filter
   };
 
 } // namespace LHCb
