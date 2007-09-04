@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.127 2007-08-23 09:50:35 jpalac Exp $
+! $Id: release.notes,v 1.128 2007-09-04 14:16:56 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================== PhysEvent v11r3 2007-09-04 ========================
 ! 2007-08-23 - Juan PALACIOS
  - xml/Particle.xml
    . Remove new method setKeyedObjectKey(int key).
