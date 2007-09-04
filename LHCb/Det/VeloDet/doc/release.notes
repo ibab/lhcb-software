@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.174 2007-09-03 19:50:35 krinnert Exp $
+! $Id: release.notes,v 1.175 2007-09-04 16:09:57 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r1 2007-09-04 ===========================
 ! 2007-09-03 - Kurt Rinnert
  - changed the definition of strip radius in halfbox and global frames.  The
    cached values are no longer computed from the strip centre in the local
