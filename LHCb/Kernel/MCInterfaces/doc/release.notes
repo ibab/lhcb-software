@@ -4,6 +4,7 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r2 2007-09-04 ===========================
 ! 2007-08-20 - Patrick Koppenburg
  - IMCDecayFinder: replace all LHCb::MCParticle::Vector by ConstVector. 
    This could cause user code not to compile anymore. Increment Interface 
