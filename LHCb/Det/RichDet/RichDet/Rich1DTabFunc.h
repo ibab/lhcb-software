@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.7 2007-04-04 10:56:28 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.8 2007-09-04 16:35:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -36,7 +36,7 @@ namespace Rich
    *  type based on a simple linear algorithm 'gsl_interp_linear'.
    *
    *  For other possibilities see
-   *  http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
+   *  http://www.gnu.org/software/gsl/manual/html_node/Interpolation.html
    *
    *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
    *  @date   2003-08-13
@@ -50,8 +50,7 @@ namespace Rich
 
     /** Default Constructor with optional interpolator type argument
      *
-     *  @param interType   GSL Interpolator type. See
-     *                     http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
+     *  @param interType   GSL Interpolator type.
      */
     TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear );
 
