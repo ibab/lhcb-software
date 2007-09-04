@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.22 2007-08-13 12:41:32 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.23 2007-09-04 16:46:57 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -37,6 +37,7 @@
         <import name="RichKernel/RichPixelCluster"/>
         <import name="RichKernel/RichObjPtn"/>
         <import name="RichRecBase/RichRadCorrLocalPositions"/>
+        <import name="Kernel/FastAllocVector"/>
 
         <location name="Offline" place="Rec/Rich/OfflineEvent/Pixels"/>
         <location name="HLT"     place="Rec/Rich/HLTEvent/Pixels"/>
@@ -238,7 +239,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "Tracks" 
                 desc   = "Container type for RichRecTracks" 
-                type   = "std::vector&lt;LHCb::RichRecTrack*&gt;"
+                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecTrack*&gt;"
         />
             
         <!--method 
@@ -277,7 +278,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "Photons" 
                 desc   = "Container type for RichRecPhotons" 
-                type   = "std::vector&lt;LHCb::RichRecPhoton*&gt;"
+                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecPhoton*&gt;"
         />
             
         <!--method 
@@ -316,7 +317,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "RingsOnPixel" 
                 desc   = "Container type for RichRecRingOnPixel" 
-                type   = "std::vector&lt;LHCb::RichRecRingOnPixel&gt;"
+                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecRingOnPixel&gt;"
         />
 
         <method 

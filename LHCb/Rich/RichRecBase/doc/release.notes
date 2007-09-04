@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-04 - Chris Jones
+ - Update to use Mem pool allocator class from LHCbKernel
+
+! 2007-09-04 - Chris Jones
  - Add interfaces for stereographic fitting and projection tools in new
    component package Rich/RichRecStereoTools
 

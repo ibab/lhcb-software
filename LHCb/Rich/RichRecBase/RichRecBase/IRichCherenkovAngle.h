@@ -5,15 +5,15 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ICherenkovAngle
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovAngle.h,v 1.9 2007-04-23 16:50:23 cattanem Exp $
+ *  $Id: IRichCherenkovAngle.h,v 1.10 2007-09-04 16:46:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_IRICHCHERENKOVANGLE_H
-#define RICHRECTOOLS_IRICHCHERENKOVANGLE_H 1
+#ifndef RICHRECBASE_IRICHCHERENKOVANGLE_H
+#define RICHRECBASE_IRICHCHERENKOVANGLE_H 1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -27,8 +27,6 @@ namespace LHCb
 {
   class RichRecSegment;
 }
-
-
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichCherenkovAngle( "Rich::Rec::ICherenkovAngle", 1, 0 );

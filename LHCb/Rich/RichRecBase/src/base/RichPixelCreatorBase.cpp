@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.25 2007-08-13 12:41:32 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.26 2007-09-04 16:46:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -324,7 +324,7 @@ namespace Rich
                 else
                 {
                   // perform clustering on the remaining pixels in this HPD
-                  HPDPixelClusters::ConstSharedPtn clusters = hpdClusTool(rich)->findClusters( smartIDs );
+                  const HPDPixelClusters * clusters = hpdClusTool(rich)->findClusters( smartIDs );
                   if ( msgLevel(MSG::DEBUG) )
                   {
                     debug() << "From " << smartIDs.size() << " RichSmartIDs found "
@@ -355,6 +355,9 @@ namespace Rich
 
                   } // loop over clusters
 
+                  // cleanup 
+                  delete clusters;
+
                 } // do clustering if
 
               } // any smartids left after clustering ?
@@ -382,7 +385,7 @@ namespace Rich
 
       // if there are some pixels, compute iterators
       // Should eventually look into if this can be done
-      // whilst filling, avoiding the need for the "after-the -fact" loop
+      // whilst filling, avoiding the need for the "after-the-fact" loop
 
       if ( !richPixels()->empty() )
       {

@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V4.cpp,v 1.1 2007-04-26 20:14:08 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V4.cpp,v 1.2 2007-09-04 16:45:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/04/2007
@@ -22,7 +22,7 @@ namespace Rich
     namespace RichDAQHeaderV4
     {
 
-      RichDAQHeaderPD::~RichDAQHeaderPD() {}
+      //RichDAQHeaderPD::~RichDAQHeaderPD() {}
 
       // Read correct number of data words from given stream
       // Note, after this call data pointer is incremented to the next word after the header

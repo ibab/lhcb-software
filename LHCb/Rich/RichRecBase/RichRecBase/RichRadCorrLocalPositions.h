@@ -1,4 +1,4 @@
-// $Id: RichRadCorrLocalPositions.h,v 1.3 2007-08-09 15:51:12 jonrob Exp $
+// $Id: RichRadCorrLocalPositions.h,v 1.4 2007-09-04 16:46:57 jonrob Exp $
 #ifndef RICHRECBASE_RICHRADCORRLOCALPOSITIONS_H
 #define RICHRECBASE_RICHRADCORRLOCALPOSITIONS_H 1
 
@@ -11,8 +11,7 @@
 
 // Kernel
 #include "Kernel/RichRadiatorType.h"
-#include "RichKernel/BoostMemPoolAlloc.h"
-//#include "RichKernel/BoostArray.h"
+#include "Kernel/MemPoolAlloc.h"
 
 namespace Rich
 {
@@ -27,7 +26,7 @@ namespace Rich
      *  @date   2007-03-28
      */
 
-    class RadCorrLocalPositions : public Rich::BoostMemPoolAlloc<Rich::Rec::RadCorrLocalPositions>
+    class RadCorrLocalPositions : public LHCb::MemPoolAlloc<Rich::Rec::RadCorrLocalPositions>
     {
 
     public:
@@ -74,7 +73,6 @@ namespace Rich
     private:
 
       /// The corrected local positions
-      //boost::array<Gaudi::XYZPoint,Rich::NRadiatorTypes> m_pos;
       std::vector<Gaudi::XYZPoint> m_pos;
 
     };

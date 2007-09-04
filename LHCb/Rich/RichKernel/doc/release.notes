@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.158 2007-09-04 16:45:10 jonrob Exp $
+! $Id: release.notes,v 1.159 2007-09-04 16:46:32 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -8,6 +8,7 @@
  - Add header file defining some 'fast' math functions
  - Various speed optimisations to clustering tool interfaces and DAQ
    definitions
+ - Switch to using memory pool classes from LHCbKernel
 
 ! 2007-08-13 - Chris Jones
  - Remove the use of boost::format in RichDAQDefinitions.h

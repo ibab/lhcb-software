@@ -4,7 +4,7 @@
  *
  *  Header file for utility class : Rich::PhotonSpectra
  *
- *  $Id: RichPhotonSpectra.h,v 1.17 2007-04-26 22:07:29 jonrob Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.18 2007-09-04 16:46:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -19,9 +19,7 @@
 
 // LHCbKernel
 #include "Kernel/RichParticleIDType.h"
-
-// RichKernel
-#include "RichKernel/BoostMemPoolAlloc.h"
+#include "Kernel/MemPoolAlloc.h"
 
 namespace Rich
 {
@@ -36,12 +34,10 @@ namespace Rich
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2003-07-12
-   *
-   *  @todo Review if a fixed sized boost::array could be used internally to speed up operator[] access
    */
 
   template <class TYPE>
-  class PhotonSpectra : public Rich::BoostMemPoolAlloc< PhotonSpectra<TYPE> >
+  class PhotonSpectra : public LHCb::MemPoolAlloc< PhotonSpectra<TYPE> >
   {
 
   public: // definitions
