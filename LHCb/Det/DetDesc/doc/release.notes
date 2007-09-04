@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.323 2007-08-01 17:56:32 marcocle Exp $ 
+! $Id: release.notes,v 1.324 2007-09-04 07:03:49 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v17r6 2007-09-04 ==============================
+! 2007-09-04 - Marco Cattaneo for Brett Viren
+ - Fix gcc 4.0.3 compilation (Savannah patch 28908)
 
 ! 2007-08-01 - Marco Clemencic
  - Made GeometryInfoPlus objects unregister from the UpdateManagerSvc on deletion
@@ -11,7 +15,8 @@
 
 ! 2007-07-17 - Juan Palacios
  - DetDesc/GlobalToLocalDelta.h
-   . Clarify signature and doxygen documentation localDeltaFromGlobalTransform methods.
+   . Clarify signature and doxygen documentation localDeltaFromGlobalTransform
+     methods.
 
 !====================== DetDesc v17r5 2007-07-11 ==============================
 ! 2007-07-11 - Juan PALACIOS
