@@ -18,6 +18,7 @@ namespace TrackParameters
   static const double hiTolerance     = 1e-40;          ///< High tolerance
   static const double lowTolerance    = 1e-20;          ///< Low tolerance
   static const double looseTolerance  = 1e-5;           ///< Loose tolerance
+  static const double propagationTolerance = 1e-6*Gaudi::Units::mm ; ///< Tolerance for extrapolators
   static const double moliereFactor   = 13.6*Gaudi::Units::MeV; ///< Moliere factor
 };
 
