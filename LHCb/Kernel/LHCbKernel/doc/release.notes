@@ -4,10 +4,13 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r7 2007-09-05 ========================
 ! 2007-09-04 - Chris Jones
  - Add FastAllocVector class, that uses a different allocator
 
-!===================== LHCbKernel v7r7 2007-09-04 ========================
+! 2007-09-04 - Marco Cattaneo for Jan Amoraal
+ - Improved comments of OTChannelID.xml
+
 ! 2007-08-25 - Chris Jones
  - Import header file MemPoolAlloc.h from RichKernel, so the class can be 
    used in Tf packages without a dependency on RichKernel
