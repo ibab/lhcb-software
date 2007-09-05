@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-05
+ - Ensure state flags is initialized
+
 ! 2007-09-04 - Wouter Hulsbergen
  - Added 'extra-info' fields in track enum for information from track fit.
 

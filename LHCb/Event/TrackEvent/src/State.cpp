@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.27 2006-12-15 14:04:21 cattanem Exp $
+// $Id: State.cpp,v 1.28 2007-09-05 07:54:39 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -26,6 +26,7 @@ using namespace Gaudi;
 // Default constructor
 //=============================================================================
 State::State(): 
+m_flags(0),
 m_stateVector(TrackVector()),
 m_covariance(TrackSymMatrix()),
 m_z(0.0){
