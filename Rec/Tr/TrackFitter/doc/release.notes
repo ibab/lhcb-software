@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-05 - Wouter Hulsbergen
+ - revision of verbose/debug output
+ - fixed bug in code committed yesterday that lead to run-time exception for failed track fits
+
 ! 2007-09-04 - Wouter Hulsbergen
  - removed 'Upstream' job-option from KalmanFitter since that already existed in MasterFitter client
  - added filling of delta-chisquare contributions on all FitNodes (for breakpoint analysis)

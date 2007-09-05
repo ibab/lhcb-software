@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.43 2007-09-04 08:34:59 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.44 2007-09-05 14:19:23 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -106,6 +106,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   // ==> prediction and filter
   double chisq(0) ;
   int ndof(-state.nParameters()) ;
+  if( msgLevel( MSG::VERBOSE ) )
+    verbose() << "Running forward filter" << endmsg ;
 
   for ( ; iNode != nodes.end(); ++iNode) {
     FitNode& node = dynamic_cast<FitNode&>(**iNode);
@@ -144,6 +146,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   // Run the bidirectional fit
   if ( m_biDirectionalFit ) {
 
+    if( msgLevel( MSG::VERBOSE ) )
+      verbose() << "Running backward filter" << endmsg ;
+    
     // Reset the covariance matrix and chisquare
     double chisqreverse(0) ;
     state.setCovariance( seedCov );
@@ -282,6 +287,9 @@ StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
     aState.setZ( z );
     aState.setLocation( (aNode.state()).location() );
   }
+  
+  if( msgLevel( MSG::VERBOSE ) )
+    verbose() << " after predict state = " << aState << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -310,6 +318,9 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 
   aState.setZ( aNode.z() );
   aState.setLocation( (aNode.state()).location() );
+
+  if( msgLevel( MSG::VERBOSE ) )
+    verbose() << " after predictReverseFit state = " << aState << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -352,7 +363,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   Measurement& meas = node.measurement();
 
   // check z position
-  if ( fabs(meas.z() - state.z()) > 1e-6) {
+  if ( fabs(meas.z() - state.z()) > TrackParameters::propagationTolerance ) {
     Warning( "Z positions of State and Measurement are not equal", 0, 1 );
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
@@ -395,6 +406,10 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   node.setResidual( res );
   node.setErrResidual( sqrt(errorRes2) );
 
+  if( msgLevel( MSG::VERBOSE ) )
+    verbose() << " chisquare of node = " << node.chi2() << std::endl
+	      << " filtered state = " << state << endmsg ;
+  
   return StatusCode::SUCCESS;
 }
 

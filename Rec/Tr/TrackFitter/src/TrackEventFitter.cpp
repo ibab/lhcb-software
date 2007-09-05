@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.13 2007-05-03 11:12:07 cattanem Exp $
+// $Id: TrackEventFitter.cpp,v 1.14 2007-09-05 14:19:23 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -102,15 +102,22 @@ StatusCode TrackEventFitter::execute() {
 
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << "#### Fitting Track # " << track.key() << " ####" << endmsg
-              << "  # of states before fit:" << track.nStates() << endmsg
-              << "  States are: " << endreq;
-      const std::vector<State*>& allstates = track.states();
-      for ( unsigned int it = 0; it < allstates.size(); it++ ) {
-        debug() << "  - z = " << allstates[it]->z() << endreq
-                << "  - stateVector = "
-                << allstates[it]->stateVector() << endreq
-                << "  - covariance = " << endreq
-                << allstates[it]->covariance() << endreq;
+              << "  # of states before fit:" << track.nStates() << endmsg ;
+      if(  track.nStates()>0 ) {
+	if( msgLevel( MSG::VERBOSE ) ) {
+	  verbose() << "  States are: " << endreq;
+	  const std::vector<State*>& allstates = track.states();
+	  for ( unsigned int it = 0; it < allstates.size(); it++ ) {
+	    verbose() << "  - z = " << allstates[it]->z() << endreq
+		      << "  - stateVector = "
+		      << allstates[it]->stateVector() << endreq
+		      << "  - covariance = " << endreq
+		      << allstates[it]->covariance() << endreq;
+	  }
+	} else {
+	  debug() << "  First state vector = " << track.firstState().stateVector() 
+		  << " at z = " << track.firstState().z() << endmsg ;
+	}
       }
     }
 
@@ -122,8 +129,7 @@ StatusCode TrackEventFitter::execute() {
       // -----------------------------------------
       if ( m_makeNewContainer ) tracksNewCont -> add( &track );
       if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << "Fitted successfully track # " << track.key() << endmsg
-                << "  # of states after fit:" << track.nStates() << endmsg;
+        debug() << "Fitted successfully track # " << track.key() << endmsg;
       }
     }
     else {

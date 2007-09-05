@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.33 2007-09-04 08:34:59 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.34 2007-09-05 14:19:24 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -220,6 +220,9 @@ StatusCode TrackMasterFitter::fit( Track& track )
       
     // Update the reference trajectories in the measurements
     updateRefVectors( track );
+    if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
+				<< " ref state = (" << track.nodes().back()->state().stateVector() 
+				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
   }
   
   // Outlier removal iterations
@@ -244,16 +247,23 @@ StatusCode TrackMasterFitter::fit( Track& track )
       
     // Update the reference trajectories in the measurements
     updateRefVectors( track );
-
+    if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
+				<< " ref state = (" << track.nodes().back()->state().stateVector() 
+				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
     ++iter;  
   }
 
   // determine the track states at user defined z positions
   sc = determineStates( track );
-  if ( sc.isFailure() )  clearNodes( nodes );  // clear the node vector
+  if ( sc.isFailure() )  {
+    clearNodes( nodes );  // clear the node vector
+    debug() << "fit failed" << endmsg ;
+  } else {
+    if ( m_debugLevel && !track.states().empty() )
+      debug() << "first state = " << track.firstState() << endmsg;
+    fillExtraInfo( track ) ;
+  }
   
-  fillExtraInfo( track ) ;
-
   return sc;
 }
 
@@ -612,7 +622,7 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
       }
     }
 
-  const int nPar = track.firstState().nParameters() ;
+  const int nPar = track.nStates()>0 ? track.firstState().nParameters() : 5 ;
   
   if( track.hasT() ) {
     track.addInfo( Track::FitTChi2 , m_upstream ? chisqT[0] : chisqT[1] ) ;
