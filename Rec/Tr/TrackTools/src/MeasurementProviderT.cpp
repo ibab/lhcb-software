@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.2 2007-07-23 11:27:37 spozzi Exp $
+// $Id: MeasurementProviderT.cpp,v 1.3 2007-09-05 12:37:10 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -19,6 +19,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "Event/TrackParameters.h"
 
 template <typename T>
 class MeasurementProviderT : public GaudiTool, 
@@ -208,7 +209,7 @@ StatusCode MeasurementProviderT<T>::update( LHCb::Measurement& ameas,
   } else {
     // move the reference vector to the z position of the measurement
     LHCb::StateVector refvectoratz = refvector ;
-    if(refvectoratz.z() != meas->z() ) {
+    if( fabs(refvectoratz.z()-meas->z()) > TrackParameters::propagationTolerance ) {
       sc = const_cast<ITrackExtrapolator*>(&(*m_extrapolator))->propagate( refvectoratz, meas->z() ) ;
       if( !sc.isSuccess() ) 
 	error() << "Problem progagating state from " << refvector.z() << " to " << ameas.z() << endreq ;

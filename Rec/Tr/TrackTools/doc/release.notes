@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-09-05 - Wouter Hulsbergen
+ - got rid of != for doubles in MeasurementProvider
+
 ! 2007-08-27
  - Use chi2 in clone killing in case the two tracks have the 
    same number of hits 
