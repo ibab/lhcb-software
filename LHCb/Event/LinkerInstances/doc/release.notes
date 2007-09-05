@@ -3,14 +3,19 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+!==================== LinkerInstances v3r3 2007-09-05 =========================
+! 2007-09-05 - Marco Cattaneo
+ - Remove std::vector<std::pair<int,unsigned int> >, now in libSTLRflx.so
+
 ! 2007-08-15 - Juan Palacios
   - cmt/requirements
     . use Event/PhysEvent
   - dict/linker_instances.h
-    . Add LinkedTo<LHCb::MCParticle, LHCb::Particle> and LinkedFrom<LHCb::Particle, LHCb::MCParticle>
+    . Add LinkedTo<LHCb::MCParticle, LHCb::Particle> and
+          LinkedFrom<LHCb::Particle, LHCb::MCParticle>
 
 ! 2007-07-31 - Jose A. Hernando
- - adding linkedTo and linedFrom for ContainedObject to be use to link with LHCbIDs
+ - adding linkedTo and linkedFrom for ContainedObject to be use to link with LHCbIDs
 
 !==================== LinkerInstances v3r2p3 2007-03-16 ====================
 ! 2007-03-16 - Marco Cattaneo
