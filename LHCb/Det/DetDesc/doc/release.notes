@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.324 2007-09-04 07:03:49 cattanem Exp $ 
+! $Id: release.notes,v 1.325 2007-09-05 14:17:16 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v17r6 2007-09-04 ==============================
+!====================== DetDesc v17r6 2007-09-05 ==============================
+! 2007-09-05 - Marco Cattaneo
+ - Undo the unregistering of GeometryInfoPlus, as it causes crashes after the
+   finalisation of the DetectorDataSvc
+
 ! 2007-09-04 - Marco Cattaneo for Brett Viren
  - Fix gcc 4.0.3 compilation (Savannah patch 28908)
 
