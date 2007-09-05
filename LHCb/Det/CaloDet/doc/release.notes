@@ -1,27 +1,27 @@
-! $Id: release.notes,v 1.83 2007-08-23 17:53:40 odescham Exp $ 
+! $Id: release.notes,v 1.84 2007-09-05 06:31:33 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
 
+!======================== CaloDet v8r4 2007-09-05 =============================
 ! 2007-08-23 - Olivier Deschamps
  - implement Selection Board -> FEB connection (needed for L0Calo) in CardParam.h
  - Decalorimeter  method : int DeCalorimeter::selectionType( int card)
- - return 0 for FEB connected to hadron SB master, 1 for hadron slave1, 2 for hadron slave2 and -1 otherwise.
- - SB->FEB cabling described in condDB > v2r2 for Hcal (no need for other devices)
-
+ - return 0 for FEB connected to hadron SB master, 1 for hadron slave1,
+   2 for hadron slave2 and -1 otherwise.
+ - SB->FEB cabling described in SQLDDDB>v2r2 for Hcal (no need for other devices)
 
 ! 2007-08-22 - Olivier Deschamps
  - implement new attribute (deltaTime) in cellParam.h
  - implement new attribute (selectionType) in cardParam.h
- - new algorithm : src/component DeCaloTiming.{cpp,h} to produce time-misaligned Calorimeter
+ - new algorithm : src/component DeCaloTiming.{cpp,h} to produce time-misaligned
+   Calorimeter
  - corresponding option file : options/CaloTiming.opts
-
 
 ! 2007-08-06 - Olivier Deschamps
  - Fix unchecked StatusCode's in CaloDet/DeCalorimter.h
-
 
 !======================== CaloDet v8r3 2007-07-20 =============================
 ! 2007-07-19 - Olivier Deschamps

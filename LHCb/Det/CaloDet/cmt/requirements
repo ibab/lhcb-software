@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.57 2007-07-18 12:20:15 cattanem Exp $ 
+# $Id: requirements,v 1.58 2007-09-05 06:31:32 cattanem Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v8r3
+version  v8r4
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet dict
