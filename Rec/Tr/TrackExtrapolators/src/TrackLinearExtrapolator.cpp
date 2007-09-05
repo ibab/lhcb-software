@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.20 2007-07-05 08:30:18 ebos Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.21 2007-09-05 13:15:06 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -25,10 +25,12 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                Gaudi::TrackMatrix* transMat,
                                                LHCb::ParticleID pid )
 {
+  // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::hiTolerance ) { 
-    debug() << "already at required z position" << endreq;
-    return StatusCode::SUCCESS; 
+  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    return StatusCode::SUCCESS ;
   }
 
   if( transMat != NULL ) {

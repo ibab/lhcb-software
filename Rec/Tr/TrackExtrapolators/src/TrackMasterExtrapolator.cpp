@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.26 2007-07-10 08:05:51 ebos Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.27 2007-09-05 13:15:06 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -133,14 +133,19 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 
   //check if not already at required z position
   const double zStart = state.z();
-  if (fabs(zNew-zStart) < TrackParameters::hiTolerance) {
-    debug() << "already at required z position" << endreq;
+  if (fabs(zNew-zStart) < TrackParameters::propagationTolerance) {
+    if( m_debugLevel ) debug() << "already at required z position" << endreq;
     return StatusCode::SUCCESS;
   }
 
   bool isUpstream = zStart > zNew ; 
   int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
   double zStep  = ( zNew - zStart ) / nbStep;
+  size_t nWallsTot(0) ;
+  
+  if( msgLevel( MSG::VERBOSE ) ) verbose() << "state_in = " << state << std::endl
+					   << "z_out = " << zNew
+					   << "num steps = " << nbStep << endreq ;
 
   for ( int step=0 ; nbStep > step ; ++step ) {
     TrackVector& tX = state.stateVector();
@@ -149,34 +154,38 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
     
     // protect against vertical or looping tracks
     if ( fabs(start.x()) > m_maxTransverse ) {
-      debug() << "Protect against absurd tracks: x=" << start.x() 
-              << " (max " << m_maxTransverse << " allowed)." << endreq;
+      if( m_debugLevel )
+	debug() << "Protect against absurd tracks: x=" << start.x() 
+		<< " (max " << m_maxTransverse << " allowed)." << endreq;
       return Warning( "Protect against absurd tracks. See debug for details" );
     }
     if ( fabs(start.y()) > m_maxTransverse ) {
                //          StatusCode::FAILURE, 1 );
-      debug() << "Protect against absurd tracks: y=" << start.y() 
-              << " (max " << m_maxTransverse << " allowed)." << endreq;
+      if( m_debugLevel )
+	debug() << "Protect against absurd tracks: y=" << start.y() 
+		<< " (max " << m_maxTransverse << " allowed)." << endreq;
       return Warning( "Protect against absurd tracks. See debug for details" );
     }
     if (fabs(state.tx()) > m_maxSlope) {
-      debug() << "Protect against looping tracks: tx=" << state.tx() 
-              << " (max " << m_maxSlope << " allowed)." << endreq;
+      if( m_debugLevel )
+	debug() << "Protect against looping tracks: tx=" << state.tx() 
+		<< " (max " << m_maxSlope << " allowed)." << endreq;
       return Warning( "Protect against looping tracks. See debug for details" );
     }    
     if (fabs(state.ty()) > m_maxSlope) {
-      debug() << "Protect against looping tracks: ty=" << state.ty() 
-              << " (max " << m_maxSlope << " allowed). " << endreq;
+      if( m_debugLevel )
+	debug() << "Protect against looping tracks: ty=" << state.ty() 
+		<< " (max " << m_maxSlope << " allowed). " << endreq;
       return Warning( "Protect against looping tracks. See debug for details" );
     }
-
+    
     // process walls
 
     if( m_applyMultScattCorr || m_applyEnergyLossCorr || m_applyElectronEnergyLossCorr ) {
 
       IMaterialLocator::Intersections intersections;
-      int nWall = 0 ;
-      nWall = m_materialLocator->intersect( start, vect,intersections  );
+      int nWall = m_materialLocator->intersect( start, vect,intersections  );
+      nWallsTot += nWall ;
 
       for( IMaterialLocator::Intersections::const_iterator it = intersections.begin() ;
 	   it != intersections.end(); ++it ) {
@@ -188,8 +197,9 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 	
 	// check for success
 	if ( sc.isFailure() ) {
-	  debug() << "Transport to " << zWall
-		  << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+	  if( m_debugLevel )
+	    debug() << "Transport to " << zWall
+		    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
 	  return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
 	}
 	
@@ -224,14 +234,14 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 
     // propagate from last wall to target
     double ztarget = start.z() + vect.z() ;
-    if(state.z() != ztarget) {
+    if( fabs( state.z() - ztarget )> TrackParameters::propagationTolerance ) {
       ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
       sc = thisExtrapolator->propagate( state, ztarget, upMat );
       
       // check for success
       if ( sc.isFailure() ) {
-        debug() << "Transport to " << ztarget
-                << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+        if ( m_debugLevel ) debug() << "Transport to " << ztarget
+				    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
         return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
       }
       
@@ -244,8 +254,9 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 
   } // loop over steps
 
-  if ( m_debugLevel ) debug() << "State extrapolated succesfully" << endreq;
-  
+  if( msgLevel( MSG::VERBOSE ) ) verbose() << "state_out = " << state << std::endl
+					   << "number of walls = " << nWallsTot << endreq ;
+
   return sc ;
 }
 

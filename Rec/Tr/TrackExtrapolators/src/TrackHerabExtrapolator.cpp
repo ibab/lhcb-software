@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.20 2007-07-05 08:30:02 ebos Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.21 2007-09-05 13:15:05 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -75,10 +75,12 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               Gaudi::TrackMatrix* transMat,
                                               LHCb::ParticleID pid )
 {
+  // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::hiTolerance ) { 
-    debug() << "already at required z position" << endreq;
-    return StatusCode::SUCCESS; 
+  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    return StatusCode::SUCCESS ;
   }
   
   // prepare Q/p transport - note RK expects zStart as 1st argument
@@ -101,6 +103,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   if( istat != 0 ) {
     Warning( "Runga kutta: transport impossible ", StatusCode::FAILURE, 1 );
     if (istat == 1) Warning( "curling track", StatusCode::FAILURE, 1 );
+    *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );  
     return StatusCode::FAILURE;
   }
 

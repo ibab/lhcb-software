@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.11 2007-07-05 08:30:09 ebos Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.12 2007-09-05 13:15:06 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -66,10 +66,12 @@ StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               Gaudi::TrackMatrix* transMat,
                                               LHCb::ParticleID pid)
 {
+  // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::hiTolerance ) { 
-    debug() << "already at required z position" << endreq;
-    return StatusCode::SUCCESS; 
+  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    return StatusCode::SUCCESS ;
   }
 
   // prepare Q/p transport - note Kisel expects zStart as 1st argument

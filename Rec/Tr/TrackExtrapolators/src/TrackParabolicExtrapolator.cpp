@@ -68,10 +68,13 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                   Gaudi::TrackMatrix* transMat,
                                                   LHCb::ParticleID pid )
 {
+  // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::hiTolerance ) { 
-    debug() << "already at required z position" << endreq;
-    return StatusCode::SUCCESS; 
+  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    // Reset the transport matrix
+    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    return StatusCode::SUCCESS ;
   }
   
   // get the B field at midpoint
@@ -119,7 +122,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   // Check whether not already at reference point
   XYZPoint P     = state.position();
   XYZVector diff = point - P;
-  if( diff.R() < TrackParameters::hiTolerance ) { return StatusCode::SUCCESS; }
+  if( diff.R() < TrackParameters::propagationTolerance ) { return StatusCode::SUCCESS; }
   
   XYZPoint midP = P + 0.5*diff;
   m_pIMF -> fieldVector( midP, m_B ).ignore();
