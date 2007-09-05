@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.86 2007-06-08 14:29:42 cattanem Exp $
+! $Id: release.notes,v 1.87 2007-09-05 16:07:01 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+!======================== MCEvent v2r5 2007-09-05 ============================
+! 2007-09-05 - Marco Cattaneo
+ - Remove from MCRichSegment.xml directive to make a template dictionary that
+   is already present in libMathRflx.so
 
 !======================== MCEvent v2r4 2007-06-07 ============================
 ! 2007-06-07 - Marco Cattaneo
