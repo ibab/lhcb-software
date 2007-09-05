@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.h,v 1.1 2006-02-09 11:04:16 szumlat Exp $
+// $Id: VeloSimMoni.h,v 1.2 2007-09-05 13:21:17 dhcroft Exp $
 #ifndef VELOSIMMONI_H 
 #define VELOSIMMONI_H 1
 
@@ -31,8 +31,8 @@ public:
 
 protected:
 
-  virtual StatusCode getData();
-  virtual StatusCode VeloFEMonitor();
+  void getData();
+  void VeloFEMonitor();
 
 private:
 

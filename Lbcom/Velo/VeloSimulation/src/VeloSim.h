@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.8 2007-02-26 15:54:18 cattanem Exp $
+#// $Id: VeloSim.h,v 1.9 2007-09-05 13:21:17 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -43,44 +43,76 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-  bool isLess(LHCb::MCVeloFE* fe) const
-  {
-    return ( (fe->charge()<m_threshold)?true:false );
-  }
-
 protected:
 
 private:
 
-  StatusCode getInputData();
+/// test if MCVeloFE charge is below m_threshold
+  inline bool isLess(LHCb::MCVeloFE* fe) const  {
+    return ( (fe->charge()<m_threshold)?true:false );
+  }
+
+  /// Load the event and spillover from the TES
+  void getInputData(); 
+
+  /// process requested simulation steps
   StatusCode simulation();
-  StatusCode chargeSim(bool spillOver);
-  long simPoints(LHCb::MCHit* hit);
+  
+  /// Simulation of charge deposition between entry and exit of MCHit
+  void chargeSim(bool spillOver);
+
+  /// Number of points to deposite charge along the trajectory of the hit
+  int simPoints(LHCb::MCHit* hit);
+
+  /// spread the charge over the points to simulate
   void chargePerPoint(LHCb::MCHit* hit, int Npoints,
                       std::vector<double>& Spoints, bool SpillOver);
+
+  /// add delta ray charges if required
   void deltaRayCharge(double charge, double tol,
                       int Npoints, std::vector<double>& Spoints);
+
+  /// allow the deposited charge points to diffuse to the strips
   void diffusion(LHCb::MCHit* hit, int Npoints,
                  std::vector<double>& Spoints, bool SpillOver);
-  void testSim(LHCb::MCHit* hit, bool SpillOver);
+
+  /// add the charge to a front end channel with MChit link (if not 0)
   void fillFE(LHCb::MCVeloFE* myFE, LHCb::MCHit* hit, double charge);
-  void fillFE(LHCb::MCVeloFE* myFE, double charge);
-  StatusCode coupling();
+  
+  /// add the charge to a front end channel, no MC link
+  inline void fillFE(LHCb::MCVeloFE* myFE, double charge){
+    fillFE(myFE, 0, charge);
+  }
+
+  /// setup capacitive coupling
+  void coupling();
+
+  /// From an originally sorted list, find the strip with the previous key,
+  /// or create a new one.
   LHCb::MCVeloFE* findOrInsertPrevStrip(LHCb::MCVeloFEs::iterator FEIt, 
                                         bool& valid, bool& create);
+
+  /// From an originally sorted list, find the strip with the next key,
+  /// or create a new one.
   LHCb::MCVeloFE* findOrInsertNextStrip(LHCb::MCVeloFEs::iterator FEIt, 
                                         bool& valid, bool& create);
-  StatusCode pedestalSim();
-  StatusCode noiseSim();
-  double noiseSigma(double stripCapacitance);
+
+  void pedestalSim(); ///< add a pedestal value to the FEs
+  void noiseSim();    ///< Add noise to the strips 
+  /// sigma of the noise from strip capacitance
+  double noiseSigma(double stripCapacitance); 
+  /// Added noise of a strip from strip capacitance
   double noiseValue(double stripCapacitance);
+  /// Noise to add to an otherwise empty strip from strip capacitance
   double noiseValueTail(double stripCapacitance);
-  StatusCode CMSim();
+  void CMSim(); ///< Common mode simulation
   StatusCode VeloSim::deadStrips();
   StatusCode finalProcess();
   StatusCode storeOutputData();
   LHCb::MCVeloFE* findOrInsertFE(LHCb::VeloChannelID& stripKey);
-  double spillOverReminder(double TOF);
+
+  double chargeTimeFactor(double TOF, double bunchOffset);
+
   // check conditions Data Base
   bool checkConditions(LHCb::MCHit* aHit);
   // data members
@@ -107,7 +139,6 @@ private:
   //  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
   // control simulation sections
 
-  bool m_chargeSim;
   bool m_inhomogeneousCharge;
   bool m_coupling;
   bool m_noiseSim;
@@ -150,6 +181,9 @@ private:
   double m_adcScale;
   double m_offPeakSamplingTime;
   bool m_makeNonZeroSuppressedData;
+
+  bool m_isDebug; ///< debug level for output
+  bool m_isVerbose; ///< debug level for output
   
 };
 //

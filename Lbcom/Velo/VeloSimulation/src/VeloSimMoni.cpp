@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.10 2006-05-29 11:55:23 szumlat Exp $
+// $Id: VeloSimMoni.cpp,v 1.11 2007-09-05 13:21:17 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -119,7 +119,7 @@ StatusCode VeloSimMoni::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //
-StatusCode VeloSimMoni::getData()
+void VeloSimMoni::getData()
 {
   debug()<< " ==> VeloSimMoni::getData" <<endmsg;
   // 
@@ -129,10 +129,10 @@ StatusCode VeloSimMoni::getData()
   }else{
     m_mcVFEsCont=get<LHCb::MCVeloFEs>(LHCb::MCVeloFELocation::Default);
   }
-  return StatusCode::SUCCESS;
+  return;
 }
 //
-StatusCode VeloSimMoni::VeloFEMonitor()
+void VeloSimMoni::VeloFEMonitor()
 {
   debug()<< " ==> VeloSimMoni::VeloFEMonitor" <<endmsg;
   //  
@@ -381,6 +381,6 @@ StatusCode VeloSimMoni::VeloFEMonitor()
    }
   }
  }
-  return StatusCode::SUCCESS;
+  return;
 }
 //

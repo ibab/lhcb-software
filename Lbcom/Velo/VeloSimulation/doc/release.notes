@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-05 - David Hutchcroft
+ - Modified the treatment of the timing of particle arrivals to correctly 
+   implement spillover with the right fractions in each sensor
+ - Fixed the unchecked StatusCodes
+ - In VeloSim wrapped all message service calls with a test on output level
+
 !===================== VeloSimulation v2r5 2007-03-05 ======================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete VeloSimulation_load.cpp file
