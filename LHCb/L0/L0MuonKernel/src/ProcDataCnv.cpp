@@ -149,13 +149,16 @@ void L0Muon::ProcDataCnv::decodeBank(std::vector<unsigned int> raw, int version)
 //   std::cout.setf(std::ios::uppercase) ;
 //   std::cout << "L0Muon::ProcDataCnv::decodeBank  header= 0x"<<std::setw(8)<<std::hex<<header<<std::dec<<std::endl;
 //   std::cout.unsetf(std::ios::uppercase);
-  int length = (header & 0x3FFF)/4; // length in bytes
-//   std::cout << "L0Muon::ProcDataCnv::decodeBank  length= "<<length<<std::endl;
-  int count = 0;
+  int nOLwords = (header & 0x3FFF)/4; // in words of 32 bytes
+//   std::cout << "L0Muon::ProcDataCnv::decodeBank  nOLwords= "<<nOLwords<<std::endl;
 
+  //
   // Optical links
+  //
+ 
+  // Read the first nOLwords words of raw into a single bitset
   boost::dynamic_bitset<> rawbitset;
-  for (int iwd=0; iwd<length; ++iwd){
+  for (int iwd=0; iwd<nOLwords; ++iwd){
     boost::dynamic_bitset<> bitset(32,raw[iwd+1]);
     int rawsize = rawbitset.size();
     rawbitset.resize(rawsize+32);
@@ -164,25 +167,44 @@ void L0Muon::ProcDataCnv::decodeBank(std::vector<unsigned int> raw, int version)
     rawbitset|=bitset;
   }
 
-//   std::cout << "L0Muon::ProcDataCnv::decodeBank  compressed bitset size= "<<rawbitset.size()<<std::endl;
-  rawbitset = unapplyCompression(rawbitset);
-//   std::cout << "L0Muon::ProcDataCnv::decodeBank  uncompressed bitset size= "<<rawbitset.size()<<std::endl;
-
-  count = 0;
+  //
+  // rawbitset contains the compressed optical link data for the full quarter.
+  // CAUTION: it also contains the compressed error data bits (32 bits once decompressed)
+  // - uncompressed the data for each processing board 
+  // - fill the register for each PU of each board
+  int padding=0;
   for (int iboard = 0; iboard <12 ; iboard++) {
-    for (int ipu = 0; ipu <4 ; ipu++) {
-      boost::dynamic_bitset<> bitset = rawbitset>>(count*10*16);
-      bitset.resize(10*16);
-      if (m_ols[iboard][ipu]!=0)
-        m_ols[iboard][ipu]->set(bitset);
-      ++count;
+ 
+   if (iboard%3==0) {
+      padding = rawbitset.size();
     }
-  }
-//   std::cout << "L0Muon::ProcDataCnv::decodeBank  -> registers filled. "<<std::endl;
 
+    boost::dynamic_bitset<> olbitset = unapplyCompression(rawbitset,4*12*16);
+    for (int ipu = 0; ipu <4 ; ipu++) {
+      boost::dynamic_bitset<> bitset = olbitset>>((ipu*12+2)*16);
+      bitset.resize(10*16);
+      if (m_ols[iboard][ipu]!=0) 
+        m_ols[iboard][ipu]->set(bitset);        
+    }
+
+    if ((iboard+1)%3==0) {
+      padding -= rawbitset.size();
+      padding  = ( 4 - (padding%4) )% 4;
+      rawbitset = rawbitset>>padding;
+      int size=rawbitset.size();
+      rawbitset.resize(size-padding);
+    }
+
+  }
+  
+  if (nOLwords+1==raw.size()) return; // raw bank stops here
+  
+  //
   // Neighbours
+  //
+
   rawbitset.clear();
-  for (unsigned int iwd=length+1; iwd<raw.size(); ++iwd){
+  for (unsigned int iwd=nOLwords+1; iwd<raw.size(); ++iwd){
     boost::dynamic_bitset<> bitset(32,raw[iwd]);
     int rawsize = rawbitset.size();
     rawbitset.resize(rawsize+32);
@@ -191,17 +213,32 @@ void L0Muon::ProcDataCnv::decodeBank(std::vector<unsigned int> raw, int version)
     rawbitset|=bitset;
   }
 
-  rawbitset = unapplyCompression(rawbitset);
-
-  count = 0;
+  // rawbitset contains the compressed neighbours data for the full quarter.
+  // - uncompressed the data for each processing board
+  // - fill the register for each PU of each board
+  padding=0;
   for (int iboard = 0; iboard <12 ; iboard++) {
+
+   if (iboard%3==0) {
+      padding = rawbitset.size();
+    }
+
+    boost::dynamic_bitset<> neighbitset = unapplyCompression(rawbitset,4*17*16);
     for (int ipu = 0; ipu <4 ; ipu++) {
-      boost::dynamic_bitset<> bitset = rawbitset>>(count*17*16);
+      boost::dynamic_bitset<> bitset = rawbitset>>(ipu*17*16);
       bitset.resize(17*16);
       if (m_neighs[iboard][ipu]!=0)
         m_neighs[iboard][ipu]->set(bitset);
-      ++count;
     }
+
+    if ((iboard+1)%3==0) {
+      padding -= rawbitset.size(); // size of the 3 processing boards part that have just been decompressed
+      padding  = ( 4 - (padding%4) )% 4;
+      rawbitset = rawbitset>>padding;
+      int size=rawbitset.size();
+      rawbitset.resize(size-padding);
+    }
+
   }
 
 }
@@ -220,34 +257,48 @@ std::vector<unsigned int> L0Muon::ProcDataCnv::rawBank(int version, int mode)
   if (mode>0) {
     
     boost::dynamic_bitset<> rawbitset;
+    // Loop over processing boards
     for (int iboard = 0; iboard <12 ; iboard++) {
+      
+      boost::dynamic_bitset<> olbitset;
+      
+      // Loop over PUs
       for (int ipu = 0; ipu <4 ; ipu++) {
 
-        boost::dynamic_bitset<> bitset;
+        boost::dynamic_bitset<> pubitset;
         if (m_ols[iboard][ipu]!=0) 
         {
-          bitset = m_ols[iboard][ipu]->getBitset();
-//           std::cout << "L0Muon::ProcDataCnv::rawBank  got bitset for board "
-//                     <<iboard<<" and pu "<<ipu
-//                     <<" -- size is : "<<bitset.size()<<std::endl;
+          pubitset = m_ols[iboard][ipu]->getBitset();
+          pubitset.resize(12*16);
+          pubitset = pubitset<<(2*16); // add the 2 error report words
         } else {
-          bitset.clear();
-          bitset.resize(10*16);
-          std::cout << "L0Muon::ProcDataCnv::rawBank  set empty bitset for board "
-                    <<iboard<<" and pu "<<ipu<<std::endl;
+          pubitset.resize(12*16);
         }
-        bitset = applyCompression(bitset);
 
-        int size = bitset.size();
+        int pusize = pubitset.size();
+        int olsize = olbitset.size();
+        olbitset.resize(pusize+olsize); 
+        pubitset.resize(pusize+olsize);
+        pubitset<<=(olsize);
+        olbitset|=pubitset;
+      }// End of loop over PUs
+ 
+      olbitset = applyCompression(olbitset);
+      
+      int size = olbitset.size();
+      int rawsize = rawbitset.size();
+      olbitset.resize(size+rawsize);
+      rawbitset.resize(size+rawsize);
+      olbitset<<=rawsize;
+      rawbitset|=olbitset;
+      
+      if ((iboard+1)%3==0) { // end of treatment of the 3 boards connected to the same PP-FPGA of the TELL1
         int rawsize = rawbitset.size();
-//         std::cout << "L0Muon::ProcDataCnv::rawBank  adding "<<size<<" bits to the "<<rawsize<<" existing bits"<<std::endl;
-        rawbitset.resize(rawsize+size); 
-        bitset.resize(rawsize+size);
-        bitset<<=(rawsize);
-        rawbitset|=bitset;
+        int padding = ( 4 - (rawsize%4) )%4;
+        rawbitset.resize(rawsize+padding);
       }
-    }
-//     std::cout << "L0Muon::ProcDataCnv::rawBank  bitset is ready; size= "<<rawbitset.size()<<std::endl;
+
+    }// End of loop over processing boards
   
     unsigned int size = 0;
     while(size<rawbitset.size()) {
@@ -257,7 +308,6 @@ std::vector<unsigned int> L0Muon::ProcDataCnv::rawBank(int version, int mode)
       unsigned int word = bitset.to_ulong();
       raw.push_back(word);
     }
-//     std::cout << "L0Muon::ProcDataCnv::rawBank  rawbank size is "<<raw.size()<<" words"<<std::endl;
   
     // update sub-detector specific header 
     header = (raw.size()-1)*4;// length in bytes
@@ -268,27 +318,48 @@ std::vector<unsigned int> L0Muon::ProcDataCnv::rawBank(int version, int mode)
   if (mode>1) {
     
     boost::dynamic_bitset<> rawbitset;
+    // Loop over processing boards
     for (int iboard = 0; iboard <12 ; iboard++) {
+      
+      boost::dynamic_bitset<> neighbitset;
+      
+      // Loop over PUs
       for (int ipu = 0; ipu <4 ; ipu++) {
 
-        boost::dynamic_bitset<> bitset;
+        boost::dynamic_bitset<> pubitset;
         if (m_neighs[iboard][ipu]!=0) 
         {
-          bitset = m_neighs[iboard][ipu]->getBitset();
+          pubitset = m_neighs[iboard][ipu]->getBitset();
         } else {
-          bitset.resize(17*16);
+          pubitset.resize(17*16);
         }
-        bitset = applyCompression(bitset);
 
-        int size = bitset.size();
+        int pusize    = pubitset.size();
+        int neighsize = neighbitset.size();
+        neighbitset.resize(pusize+neighsize);
+        pubitset.resize(pusize+neighsize);
+        pubitset<<=(neighsize);
+        neighbitset|=pubitset;
+      }// End of loop over PUs
+
+      neighbitset = applyCompression(neighbitset);
+      
+      int size = neighbitset.size();
+      int rawsize = rawbitset.size();
+      neighbitset.resize(size+rawsize);
+      rawbitset.resize(size+rawsize);
+      neighbitset<<=rawsize;
+      rawbitset|=neighbitset;
+
+      if ((iboard+1)%3==0) { // end of treatment of the 3 boards connected to the same PP-FPGA of the TELL1
         int rawsize = rawbitset.size();
-        rawbitset.resize(rawsize+size);
-        bitset.resize(rawsize+size);
-        bitset<<=(rawsize);
-        rawbitset|=bitset;
+        int padding = ( 4 - (rawsize%4) )%4;
+        rawbitset.resize(rawsize+padding);
       }
-    }
+
+    }// End of loop over processing boards
   
+
     unsigned int size = 0;
     while(size<rawbitset.size()) {
       boost::dynamic_bitset<> bitset = (rawbitset>>size);
@@ -308,13 +379,9 @@ std::vector<unsigned int> L0Muon::ProcDataCnv::rawBank(int version, int mode)
 
 boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bitset<> bitset_to_compress){
   // Compress the bit set in input
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\tIN -"
-//             <<" bitset_to_compress.size()= "<< bitset_to_compress.size()
-//             <<" ; bitset_to_compress.count()= "<< bitset_to_compress.count()<<std::endl;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\tbitset: "<<bitset_to_compress<<std::endl;
-
+  
   int nbitsPrefix  = m_compressionParameter;
-  int nbitsSequence=nbitsPrefix+1;
+  int nbitsSequence= nbitsPrefix+1;
   int maximumLength = int(pow(2,nbitsPrefix));
 
   int n0;
@@ -330,29 +397,21 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bit
   boost::dynamic_bitset<> leftoverSequence;
 
   boost::dynamic_bitset<>::size_type lastPos=0;
+  --lastPos;
+  
   boost::dynamic_bitset<>::size_type currentPos=bitset_to_compress.find_first();
 
   while (currentPos<bitset_to_compress.size()) {
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:.."<<"  currentPos= "<<currentPos<<std::endl;
   
     // Code the sequence of 0
-    nchar = currentPos-lastPos;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  nchar= "<<nchar<<std::endl;
+    nchar      = currentPos-lastPos-1;
     n0         = nchar/maximumLength;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  n0= "<<n0<<std::endl;
     leftover   = nchar%maximumLength;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  leftover= "<<leftover<<std::endl;
     size       = n0 + nbitsSequence;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  size= "<<size<<std::endl;
     sequence = (leftover<<1)+1;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "
-//               <<"  sequence= "<<sequence<<std::endl;
     leftoverSequence= boost::dynamic_bitset<> (size,sequence);
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  leftoverSequence= "<<leftoverSequence<<std::endl;
     encodedSequence.resize(size);
     encodedSequence|=leftoverSequence<<n0;
-//     std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  encodedSequence= "<<encodedSequence<<std::endl;
-  
 
     // Add the encoded sequence to the compressed bitset
     shift   = compressedBitset.size();
@@ -368,25 +427,21 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bit
   }
 
   // Code the last sequence of 0
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\tlast ......."<<std::endl;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:.."
-//             <<"  currentPos= "<<currentPos<<" ;lastPos= "<<lastPos<<std::endl;
-  nchar = bitset_to_compress.size()-lastPos;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  nchar= "<<nchar<<std::endl;
+  nchar = bitset_to_compress.size()-lastPos-1;
   n0         = nchar/maximumLength;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  n0= "<<n0<<std::endl;
   leftover   = nchar%maximumLength;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  leftover= "<<leftover<<std::endl;
   size       = n0;
-  size+=nbitsSequence;
-  sequence = (leftover<<1)+1;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  sequence= "<<sequence<<std::endl;
-  leftoverSequence= boost::dynamic_bitset<>(size,sequence);
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  leftoverSequence= "<<leftoverSequence<<std::endl;
-  encodedSequence.resize(size);
-  encodedSequence|=leftoverSequence<<n0;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t:  "<<"  encodedSequence= "<<encodedSequence<<std::endl;
-
+  if (leftover>0) { // if the file ends with a number of 0s which is a multiple of maximumLength, do not write the last sequence
+    size+=nbitsSequence;
+    sequence = (leftover<<1)+1;
+    leftoverSequence= boost::dynamic_bitset<>(size,sequence);
+    encodedSequence.resize(size);
+    encodedSequence|=leftoverSequence<<n0;
+  } else {
+    encodedSequence.resize(size);
+  }
+  
+  
   // Add the encoded sequence to the compressed bitset
   shift   = compressedBitset.size();
   newsize = shift + encodedSequence.size();
@@ -394,80 +449,91 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bit
   encodedSequence.resize(newsize);
   compressedBitset|=encodedSequence<<shift;
 
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t"<<"compressedBitset= "<<compressedBitset<<std::endl;
-//   std::cout << "L0Muon::ProcDataCnv::applyCompression\t"<<"OUT  -"
-//             << " compressedBitset.size = "<<compressedBitset.size() 
-//             << " ; compressedBitset.count = "<<compressedBitset.count() <<std::endl;
   return compressedBitset;
 }
 
 
-boost::dynamic_bitset<> L0Muon::ProcDataCnv::unapplyCompression(boost::dynamic_bitset<> compressed){
+boost::dynamic_bitset<> L0Muon::ProcDataCnv::unapplyCompression(boost::dynamic_bitset<> & compressed, unsigned int length){
   
-//   std::cout << "L0Muon::ProcDataCnv::unapplyCompression\tIN -" 
-//             << " compressedSize= "<< compressed.size()
-//             << " ; # of bits set = "<< compressed.count()<<std::endl;
-//   std::cout << "L0Muon::ProcDataCnv::unapplyCompression\tcompressed bitset: "
-//             << compressed <<std::endl;
 
-  boost::dynamic_bitset<> uncompressed;  
-  unsigned int uncompressedSize = uncompressed.size();
+  boost::dynamic_bitset<> uncompressed(0);  
 
+  // if the compressed bistset is empty, return immediatly
+  unsigned int uncompressedSize = 0;
+  if (compressed.size()==0) {
+    return uncompressed;    
+  }
+  
   int nbitsPrefix  = m_compressionParameter;
+  int nbitsSequence= nbitsPrefix+1;
   int maximumLength = int(pow(2,nbitsPrefix));
-//   std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t"<<"nbitsPrefix= "<<nbitsPrefix<<std::endl;
 
+  // if the no bits are set in the compressed bistset, return the corresponding sequence
   unsigned int compressedSize = compressed.size();
   if (compressed.count()==0) {
-    uncompressed.resize(compressedSize*maximumLength);
+    compressed>>=(length/maximumLength);
+    uncompressed.resize(length);
     return uncompressed;
   }
-//   std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t"<<"compressedSize= "<<compressedSize<<std::endl;
 
   boost::dynamic_bitset<>::size_type lastPos=0;
   boost::dynamic_bitset<>::size_type currentPos=compressed.find_first();
 
   while (currentPos<compressed.size()) {
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:.."<<" currentPos= "<<currentPos<<std::endl;
 
-    // Decode a sequence.
-    // A sequence is made of 3 parts:
-    // - a series of 0 eventually
-    // - a 1
-    // - a number coded on nbitsPrefix
-
-    // the series of 0 contains n0
-    int n0 =  currentPos - lastPos;
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:  "<<" n0= "<< n0<<std::endl;
-
+    int n0 =  (currentPos - lastPos) * maximumLength;
+    boost::dynamic_bitset<> number = (compressed>>(currentPos+1));
     // the number is
-    boost::dynamic_bitset<> number = (compressed>>currentPos+1);
     number.resize(nbitsPrefix);
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:  "<<"number= "<<number.to_ulong()<<std::endl;
+    int n0tot = n0 + number.to_ulong();
 
-    uncompressedSize+=n0*maximumLength + number.to_ulong();
+    if ( (n0+uncompressedSize) >= length) {
 
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:  adding: "<< n0*maximumLength + number.to_ulong()<<" 0\n";
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:  uncompressedSize:"<<"= "<<uncompressedSize<<std::endl; 
+      currentPos = lastPos+(length-uncompressedSize)/maximumLength;
+      compressed>>=(currentPos);
+      compressed.resize(compressedSize-currentPos);
+
+      uncompressed.resize(length); 
+      return uncompressed;
+
+    } else if ( (n0tot+uncompressedSize) == length || (n0tot+uncompressedSize) == (length+1) ) {
+
+      compressed>>=(currentPos+nbitsSequence);
+      compressed.resize(compressedSize-currentPos-nbitsSequence);
+
+      uncompressed.resize(length); 
+      return uncompressed;
+
+    }
+
+    uncompressedSize+=n0tot;
+
     uncompressed.resize(uncompressedSize);
     uncompressed.push_back(1);
+    uncompressedSize+=1;
 
     currentPos+=nbitsPrefix+1;
     lastPos= currentPos;
-//     std::cout << "L0Muon::ProcDataCnv::unapplyCompression\t:  "
-//               <<" compressed.size()"<<"= "<<compressed.size()
-//               <<" currentPos"<<"= "<<currentPos
-//               <<std::endl;
+
     currentPos=compressed.find_next(lastPos-1);   
 
   }
 
-  // Remove the ending 1
-  uncompressed.resize(uncompressedSize);
-//   std::cout << "L0Muon::ProcDataCnv::unapplyCompression\tOUT - " 
-//             <<  " uncompressed.size()= "<< uncompressed.size()
-//             <<  " uncompressed.count()= "<< uncompressed.count() <<std::endl;
-
+  
+  int n0 =  ( compressedSize - lastPos) * maximumLength;
+  if ( (n0+uncompressedSize) >= length) {
+      currentPos = lastPos+(length-uncompressedSize)/maximumLength;
+      compressed>>=(currentPos);
+      compressed.resize(compressedSize-currentPos);
+  }
+  
+  uncompressed.resize(length); 
   return uncompressed;
 }
 
+
+
+
+
+
+  

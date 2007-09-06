@@ -49,7 +49,7 @@ namespace L0Muon {
     int m_compressionParameter;
 
     boost::dynamic_bitset<> applyCompression(boost::dynamic_bitset<> bitset_to_compress);
-    boost::dynamic_bitset<> unapplyCompression(boost::dynamic_bitset<> compressed);
+    boost::dynamic_bitset<> unapplyCompression(boost::dynamic_bitset<> & compressed, unsigned int length);
 
     int m_quarter;
 
