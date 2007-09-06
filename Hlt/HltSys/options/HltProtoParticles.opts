@@ -53,6 +53,7 @@ HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 // RICH
 //---------------------------------------------------------------------
 HltChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
+HltChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID";
 // no calo yet
 HltChargedProtoPAlg.UseCaloSpdPID = false ;
 HltChargedProtoPAlg.UseCaloPrsPID = false ;

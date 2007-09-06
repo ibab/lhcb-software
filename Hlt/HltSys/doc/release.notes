@@ -7,6 +7,7 @@ Purpose: LHCb High Level Trigger packages.
 
 ! 2007-09-06 - Patrick Koppenburg
  - Hack errors of muons as well
+ - Take MuonIDfrom Hlt location
 
 ! 2007-09-05 - Tomasz Skwarnicki
  - set HltMuonID.MuonTrackLocation in HltProtoParticles.opts to avoid conflicts with offline
