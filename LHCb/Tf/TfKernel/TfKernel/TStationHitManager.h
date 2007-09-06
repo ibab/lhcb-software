@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.19 2007-08-28 14:41:23 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.20 2007-09-06 16:34:21 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -38,6 +38,11 @@ static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );
 
 namespace Tf
 {
+
+  class IStationSelector {
+  public:
+    virtual XYSearchWindow searchWindow(double z) const = 0;
+  };
 
   /** @class TStationHitManager TStationHitManager.h TfKernel/TStationHitManager.h 
    *
@@ -159,8 +164,7 @@ namespace Tf
      *
      *  @param[in] selector The selector object.
      */
-    template < typename SELECTOR >
-    void prepareHitsInWindow( const SELECTOR & selector );
+    virtual void prepareHitsInWindow( const IStationSelector & selector );
 
     /** Load the hits for a given region of interest
      *
@@ -426,61 +430,11 @@ namespace Tf
     /// Access the maximum number of regions
     inline TRegionID maxRegions()     const { return TRegionID(m_nReg);    }
 
-    /** Prepare all hits in the given IT region
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     *  @param[in] region Region within the layer
-     */
-    void prepareITHits(const TStationID sta,
-                       const TLayerID   lay,
-                       const ITRegionID region) const;
-
-    /** Prepare all hits in the given IT layer
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     */
-    void prepareITHits(const TStationID sta,
-                       const TLayerID   lay) const;
-
-    /** Prepare all hits in the given IT station
-     *  @param[in] sta    Station ID
-     */
-    void prepareITHits(const TStationID sta) const;
-
-    /// Prepare all hits in IT
-    void prepareITHits() const;
-
-    /** Prepare all hits in the given OT region
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     *  @param[in] region Region within the layer
-     */
-    void prepareOTHits(const TStationID sta,
-                       const TLayerID   lay,
-                       const OTRegionID region) const;
-
-    /** Prepare all hits in the given OT layer
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     */
-    void prepareOTHits(const TStationID sta,
-                       const TLayerID   lay) const;
-
-    /** Prepare all hits in the given OT station
-     *  @param[in] sta    Station ID
-     */
-    void prepareOTHits(const TStationID sta) const;
-
-    /// Prepare all hits in OT
-    void prepareOTHits() const;
-
     /// Initialise the IT hits for the current event using the given selector object
-    template < typename SELECTOR >
-    void prepareITHitsInWindow( const SELECTOR & selector );
+    void prepareITHitsInWindow( const IStationSelector & selector );
 
     /// Initialise the OT hits for the current event using the given selector object
-    template < typename SELECTOR >
-    void prepareOTHitsInWindow( const SELECTOR & selector );
+    void prepareOTHitsInWindow( const IStationSelector & selector );
 
     /// Is OT hit cleaning activated
     inline bool cleanOTHits() const { return m_cleanOTHits; }
@@ -518,8 +472,8 @@ namespace Tf
      *  @param[in] region Region within the layer
      */
     void prepareHits(const TStationID sta,
-                     const TLayerID   lay,
-                     const TRegionID  region) const;
+		     const TLayerID   lay,
+		     const TRegionID  region) const;
 
     /** Initialise all the hits for the current event in the given region
      *  @param[in] sta    Station ID
@@ -532,13 +486,14 @@ namespace Tf
      *  @param[in] sta    Station ID
      */
     void prepareHits(const TStationID sta) const;
-
+    
     /** Initialise all the hits for the current event
      */
     virtual void prepareHits() const;
 
   protected:
 
+    
     /** Method that controls what happens when an extended hit is made from an OTHit.
      *  virtual, to allow users to reimplement the method as they see fit
      *  @param[in] othit Reference to the underlying OTHit to make an extended hit from
@@ -552,6 +507,25 @@ namespace Tf
     virtual Hit * createHit( const Tf::STHit & sthit ) const;
 
   private:
+
+     /** Prepare all hits in the given IT region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
+
+    void prepareITHits(const TStationID sta,
+                       const TLayerID   lay,
+                       const ITRegionID region) const;
+
+    /** Prepare all hits in the given OT region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     */
+    void prepareOTHits(const TStationID sta,
+                       const TLayerID   lay,
+                       const OTRegionID region) const;
 
     /// max number of stations
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
@@ -741,33 +715,6 @@ namespace Tf
     }
   }
 
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits() const
-  {
-    for (TStationID sta=0; sta < this->maxStations(); ++sta)
-    {
-      prepareITHits(sta);
-    }
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta) const
-  {
-    for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
-    {
-      prepareITHits(sta,lay);
-    }
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta,
-                                                     const TLayerID   lay) const
-  {
-    for (ITRegionID it=0; it < this->maxITRegions(); ++it)
-    {
-      prepareITHits(sta,lay,it);
-    }
-  }
 
   template<class Hit>
   inline void TStationHitManager<Hit>::prepareITHits(const TStationID sta,
@@ -775,40 +722,7 @@ namespace Tf
                                                      const ITRegionID region) const
   {
     Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region) ;
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Found " << sthits.size() << " ITHits for station=" << sta
-              << " layer=" << lay << " region=" << region << endreq;
-    }
     this -> processRange ( sthits, sta, lay, TRegionID(region) );
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits() const
-  {
-    for (TStationID sta=0; sta<this->maxStations(); ++sta)
-    {
-      this -> prepareOTHits(sta);
-    }
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const TStationID sta) const
-  {
-    for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
-    {
-      this -> prepareOTHits(sta,lay);
-    }
-  }
-
-  template<class Hit>
-  inline void TStationHitManager<Hit>::prepareOTHits(const TStationID sta,
-                                                     const TLayerID   lay) const
-  {
-    for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
-    {
-      this -> prepareOTHits(sta,lay,ot);
-    }
   }
 
   template<class Hit>
@@ -817,11 +731,6 @@ namespace Tf
                                                      const OTRegionID region) const
   {
     Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,region) ;
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Found " << othits.size() << " OTHits for station=" << sta
-              << " layer=" << lay << " region=" << region << endreq;
-    }
     this -> processRange ( othits, sta, lay, TRegionID(region) );
   }
 
@@ -887,8 +796,7 @@ namespace Tf
   //--------------------------------------------------------------------------------------------
 
   template < class Hit         >
-  template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareHitsInWindow( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareHitsInWindow( const IStationSelector & selector )
   {
     this->clearHits();             // Clear any previous hits
     this->prepareOTHitsInWindow(selector); // select the OT hits
@@ -898,8 +806,7 @@ namespace Tf
   }
 
   template < class Hit         >
-  template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareITHitsInWindow( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareITHitsInWindow( const IStationSelector & selector )
   {
     for (TStationID sta=0; sta < this->maxStations(); ++sta)
     {
@@ -919,20 +826,14 @@ namespace Tf
           Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it,
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << sthits.size() << " ITHits for station=" << sta
-                    << " layer=" << lay << " region=" << it << endreq;
-          }
-          processRange ( sthits, sta, lay, it + this->maxOTRegions() );
+	  processRange ( sthits, sta, lay, it + this->maxOTRegions() );
         }
       }// layer
     } // station
   }
 
   template < class Hit         >
-  template < typename SELECTOR >
-  void TStationHitManager<Hit>::prepareOTHitsInWindow( const SELECTOR & selector )
+  void TStationHitManager<Hit>::prepareOTHitsInWindow( const IStationSelector & selector )
   {
     for (TStationID sta=0; sta<this->maxStations(); ++sta)
     {
@@ -952,12 +853,7 @@ namespace Tf
           Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot,
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << othits.size() << " OTHits for station=" << sta
-                    << " layer=" << lay << " region=" << ot << endreq;
-          }
-          processRange ( othits, sta, lay, ot );
+	  processRange ( othits, sta, lay, ot );
         }
       }// layer
     } // station
