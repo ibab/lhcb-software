@@ -3,6 +3,12 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2007-09-06 - Stephanie Hansmann-Menzemer
+ - remove prepareIT/OT interfaces for all but region level
+ - move prepareIT/OT interfaces to private
+ - modify prepareHitsInWindow functions: instead of template SELECTOR
+   use inherited classes from IStationSelector, to allow to override
+   prepareHitsInWindow in inherited TStationManagers
 
 ! 2007-08-28 - 
  - Various minor fixes for WIN32 compilation
