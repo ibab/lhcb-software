@@ -3,7 +3,7 @@ L0.Members += { "L0CaloAlg/L0Calo",
                 "L0MuonAlg/L0Muon",
                 "PuVetoAlg/L0PuVeto",
                 "L0DU"};
-#include "$L0MUONROOT/options/l0muon.opts"
+#include "$L0MUONROOT/options/l0muonAlg.opts"
 
 // Do not create rawBank when re-running L0DU out of Boole
 L0DU.StoreInBuffer = false;   
