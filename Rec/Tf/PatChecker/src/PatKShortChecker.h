@@ -1,4 +1,4 @@
-// $Id: PatKShortChecker.h,v 1.1.1.1 2007-08-22 15:38:27 smenzeme Exp $
+// $Id: PatKShortChecker.h,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
 #ifndef PATKSHORTCHECKER_H 
 #define PATKSHORTCHECKER_H 1
 
@@ -13,8 +13,6 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 #include "Linker/LinkerTool.h"
-
-#include "PatMCInfo.h"
 
 /** @class PatKShortChecker PatKShortChecker.h
  *  Monitor the KShort in an event
@@ -48,7 +46,6 @@ namespace Tf{
     std::string  m_inputLocation;
     
     IParticlePropertySvc* m_ppSvc;
-    PatMCInfo*            m_mcInfo;
     TrAsct*               m_trToMCP;          ///< Truth associator
     TrAsct*               m_seedToMCP;        ///< Truth associator
     TrAsct*               m_downToMCP;        ///< Truth associator

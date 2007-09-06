@@ -1,4 +1,4 @@
-// $Id: PatChecker.h,v 1.1.1.1 2007-08-22 15:38:27 smenzeme Exp $
+// $Id: PatChecker.h,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
 #ifndef PATCHECKER_H 
 #define PATCHECKER_H 1
 
@@ -8,7 +8,6 @@
 #include "GaudiAlg/ISequencerTimerTool.h"
 
 // local
-#include "PatMCInfo.h"
 #include "PatCounter.h"
 #include "PatTTCounter.h"
 
@@ -43,8 +42,6 @@ namespace Tf {
     bool m_checkMissedSeed;
     bool m_checkMissedKShort;
     bool m_checkMatchNotForward;
-    
-    PatMCInfo* m_mcInfo;
     
     PatCounter* m_veloRz;
     PatCounter* m_veloSpace;

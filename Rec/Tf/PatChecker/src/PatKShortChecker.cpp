@@ -1,4 +1,4 @@
-// $Id: PatKShortChecker.cpp,v 1.1.1.1 2007-08-22 15:38:27 smenzeme Exp $
+// $Id: PatKShortChecker.cpp,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -47,8 +47,6 @@ StatusCode PatKShortChecker::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-
-   m_mcInfo = tool<PatMCInfo>( "PatMCInfo", this );
 
   m_ppSvc     = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
   m_trToMCP   = new TrAsct( evtSvc(), m_inputLocation);
@@ -199,10 +197,7 @@ StatusCode PatKShortChecker::execute() {
       unsigned int nbDown = 0;
       unsigned int nbSeed = 0;
       for ( itPi = children.begin(); children.end() != itPi; itPi++ ) {
-        if ( MSG::DEBUG >= msgLevel() ) {
-          m_mcInfo->printMCParticle( *itPi );
-          m_mcInfo->printTrueMeasurements( *itPi );
-        }
+       
         bool found = false;
         bool longTrack = false;
         bool downstream = false;

@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.cpp,v 1.1.1.1 2007-08-22 15:38:27 smenzeme Exp $
+// $Id: PatLHCbID2MCParticle.cpp,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -56,8 +56,6 @@ StatusCode PatLHCbID2MCParticle::initialize() {
   m_ithitcreator.retrieve().ignore();
   m_tthitcreator.retrieve().ignore();
 
-  m_store = tool<PatDataStore>( "PatDataStore" );
-
   return StatusCode::SUCCESS;
 };
 
@@ -77,30 +75,61 @@ StatusCode PatLHCbID2MCParticle::execute() {
   LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> 
     veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
 
-  PatVeloContainer* veloCoords = m_store->veloCoords();
+  LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
 
-  debug() << "Associating " << veloCoords->size() << " velo coords" <<endreq;
-  
-  for ( std::vector<PatVeloCoord*>::const_iterator itV = veloCoords->begin();
-        veloCoords->end() != itV; ++itV ) {
-    m_partList.clear();
-    int id   = (*itV)->veloID();
-    int size = (*itV)->size();
-    for ( int nn = 0; size > nn; ++nn ) {
-      if ( isVerbose )  verbose() << format( "   VeloChannelID %8x ", id );
-      part = veloLink.first( id );
-      while ( 0 != part ) {
-        if ( isVerbose ) verbose() << " " << part->key();
-        addToList( part );
-        part = veloLink.next();
+  if (clusters){
+    LHCb::VeloClusters::const_iterator iClus;
+    
+    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      m_partList.clear();
+      int id   = LHCb::LHCbID( (*iClus)->channelID()).veloID();
+      int size = (*iClus)->pseudoSize();
+      for ( int nn = 0; size > nn; ++nn ) {
+	if ( isVerbose )  verbose() << format( "   VeloChannelID %8x ", id );
+	part = veloLink.first( id );
+	while ( 0 != part ) {
+	  if ( isVerbose ) verbose() << " " << part->key();
+	  addToList( part );
+	  part = veloLink.next();
+	}
+	if ( isVerbose ) verbose() << endreq;
+	id++;
       }
-      if ( isVerbose ) verbose() << endreq;
-      id++;
+      for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
+	      m_partList.begin(); m_partList.end() != itP; ++itP ) {
+	LHCb::LHCbID temp = (*iClus)->channelID();
+	lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
+      }
     }
-    for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-	    m_partList.begin(); m_partList.end() != itP; ++itP ) {
-      LHCb::LHCbID temp = (*itV)->channelID();
-      lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
+  }
+  else {
+    LHCb::VeloLiteCluster::FastContainer * liteClusters =
+      get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
+    
+    if (liteClusters){
+      LHCb::VeloLiteCluster::FastContainer::const_iterator iClus;
+    
+      for(iClus = liteClusters->begin(); iClus != liteClusters->end(); ++iClus) {
+	m_partList.clear();
+	int id   = LHCb::LHCbID( (*iClus).channelID()).veloID();
+	int size = (*iClus).pseudoSize();
+	for ( int nn = 0; size > nn; ++nn ) {
+	  if ( isVerbose )  verbose() << format( "   VeloChannelID %8x ", id );
+	  part = veloLink.first( id );
+	  while ( 0 != part ) {
+	    if ( isVerbose ) verbose() << " " << part->key();
+	    addToList( part );
+	    part = veloLink.next();
+	  }
+	  if ( isVerbose ) verbose() << endreq;
+	  id++;
+	}
+	for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
+		m_partList.begin(); m_partList.end() != itP; ++itP ) {
+	  LHCb::LHCbID temp = (*iClus).channelID();
+	  lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
+	}
+      }
     }
   }
 
@@ -113,8 +142,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
 
   //== TT
   STHitRange tthits = m_tthitcreator->ttHits();
-  always() << "Associating " << tthits.size() << " TT coords" <<endmsg;
- 
+   
   for (STHitRange::const_iterator itTTH = tthits.begin();
        itTTH < tthits.end();itTTH++){
 

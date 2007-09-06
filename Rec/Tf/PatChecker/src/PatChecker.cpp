@@ -1,4 +1,4 @@
-// $Id: PatChecker.cpp,v 1.1.1.1 2007-08-22 15:38:27 smenzeme Exp $
+// $Id: PatChecker.cpp,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -62,8 +62,6 @@ StatusCode PatChecker::initialize() {
     veloTTName    = LHCb::TrackLocation::HltVeloTT;
     forwardName   = LHCb::TrackLocation::HltForward;
   }
-
-  m_mcInfo = tool<PatMCInfo>( "Tf::PatMCInfo", this );
 
   m_veloRz = tool<PatCounter>( "Tf::PatCounter", "VeloRZ", this );
   m_veloRz->setContainer( veloRzName );
@@ -319,9 +317,6 @@ StatusCode PatChecker::execute() {
          0 <= foundRZ &&
          flags.size() == 4 &&
          flags[3] ) {
-      info() << "=== Missed long track > 5 GeV in Velo Space === RZ = " << foundRZ << endreq;
-      m_mcInfo->printMCParticle( part );
-      m_mcInfo->printTrueMeasurements( part );
     }
 
     flags.clear();
@@ -342,10 +337,6 @@ StatusCode PatChecker::execute() {
          0 <= foundSpace &&
          10000. < fabs( part->p() ) &&
          isLong ) {
-      info() << "=== Missed long track > 10 GeV in Forward === Velo Space = "
-             << foundSpace << format( " flags %8x",  trackInfo.fullInfo( part ) )<< endreq;
-      m_mcInfo->printMCParticle( part );
-      m_mcInfo->printTrueMeasurements( part );
     }
     m_ttForward->count( part, flags, ids );
     m_best->count( part, flags, ids );
@@ -356,9 +347,6 @@ StatusCode PatChecker::execute() {
          0 <= foundMatch &&
          10000. < fabs( part->p() ) &&
          isLong ) {
-      info() << "=== Missed long track > 10 GeV in Forward, found in Match === " << endreq;
-      m_mcInfo->printMCParticle( part );
-      m_mcInfo->printTrueMeasurements( part );
     }
 
     m_ttMatch->count( part, flags, ids );
@@ -378,20 +366,7 @@ StatusCode PatChecker::execute() {
     // take tsa or PatSeeding
     if ( 0 > foundSeed ) foundSeed = foundSeed2;
     
-    if ( m_checkMissedSeed &&
-         0 >  foundSeed ) {
-      if ( strangeDown ) {
-        info() << "=== Missed seed for strange daughter" << endreq;
-        m_mcInfo->printMCParticle( part );
-        m_mcInfo->printTrueMeasurements( part );
-      } else if ( isLong && over5 ) {
-        info() << "=== Missed seed for long > 5 GeV" << endreq;
-        m_mcInfo->printMCParticle( part );
-        m_mcInfo->printTrueMeasurements( part );
-      }
-    } 
-
-
+   
     flags.clear();
     flags.push_back( true );
     flags.push_back( foundSeed > 0 );
@@ -407,15 +382,6 @@ StatusCode PatChecker::execute() {
       flags.push_back( fromKsFromB && over5 );
     }
     int foundKShort = m_kShort->count( part, flags, ids );
-    if ( m_checkMissedKShort &&
-         0 >  foundKShort &&
-         7 == flags.size() &&
-         over5 && fromKsFromB ) {
-      info() << "=== Missed track > 5 GeV in KShort, seed = "
-             << foundSeed << endreq;
-      m_mcInfo->printMCParticle( part );
-      m_mcInfo->printTrueMeasurements( part );
-    } 
     m_ttKShort->count( part, flags, ids );
 
     if ( 3 < flags.size() && fromKsFromB && 0 <= foundKShort ) {
@@ -443,11 +409,6 @@ StatusCode PatChecker::execute() {
       flags.push_back( 5000. < fabs( part->p() ) );
       m_kSNew->count( part, flags, ids );  
 
-      if ( msgLevel( MSG::DEBUG ) ) {
-        info() << "=== Pi from KS from B, KsTrack id "
-               << seedFromKs[itP-partFromKs.begin()] << endreq;
-        m_mcInfo->printMCParticle( part );
-      }
     }
   }
   
