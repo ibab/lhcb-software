@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.5 2007-08-30 09:58:27 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.6 2007-09-06 19:46:19 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -97,9 +97,10 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // If compare
-  if ( "" != m_extension ) {
+  if ( ("" != m_extension) && (exist<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default )) ) {
 
     //== Compare 
+    
     LHCb::L0MuonCandidates* replayed = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default );
     LHCb::L0MuonCandidates* fromraw  = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default + m_extension );
 

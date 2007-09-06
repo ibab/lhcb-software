@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.1 2007-08-27 10:26:32 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.2 2007-09-06 19:46:19 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -77,6 +77,7 @@ private:
   double m_averagePt;
   double m_averageCh;
   
+  int m_bankEventCounter;
   
 };
 #endif // COMPONENT_L0MUONOUTPUTS_H

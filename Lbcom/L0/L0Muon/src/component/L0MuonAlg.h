@@ -32,17 +32,24 @@ private:
 
   StatusCode fillOLsfromDigits(); // Fill the Optical Links before processing
 
-  int m_procVersion;                      // Version bank to write
-  int m_bankVersion;                      // Version bank to write
-  int m_outputMode;                         // Output mode (0=light, 1=standard, 2=full)
-  // Algorithme's properties
+  // Emulator running modes
+  int m_procVersion;                 // Version bank to write
+  int m_bankVersion;                 // Version bank to write
+  int m_outputMode;                  // Output mode (0=light, 1=standard, 2=full)
+  // Emulator properties
   std::vector<int> m_foiXSize;        // values of FoI's in X
   std::vector<int> m_foiYSize;        // values of FoI's in Y
   std::vector<double> m_ptParameters; // Pt calculation parameters
   std::string  m_configfile;          // Config file name
   bool m_ignoreM1;                    // Flag to use M1 or not (latter case not tested)
   bool m_debug;                       // Flag to turn on debug mode for L0MuonKernel
+  
+  // Algorithm's properties
+  std::string m_extension;            // Extension to the location of the L0MuonCandidates
   bool m_storeFlag;                   // Flag to enable/disable event storage in raw banks
+  int  m_inputSource;                 // Specify where to take the input data for the processing
+                                      //  - 0: from Muon output
+                                      //  - 1: from the input of the processor (extracted form L0Muon itself) 
 
   // For trigger emulation
   L0Muon::Unit*  m_muontriggerunit; // Top Unit of the L0Muon emulator

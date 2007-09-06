@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.2 2007-08-30 09:58:01 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.3 2007-09-06 19:46:19 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,8 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   m_rawBankSizeTot= 0;
   m_nCandFinalTot = 0;
   m_nTriggeredEvt = 0;
-
+  
+  m_bankEventCounter  = 0;
 }
 //=============================================================================
 // Destructor
@@ -69,7 +70,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
   int rawBankSize = 0;
 
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  debug() << "decodeRawBanks:  ==> Execute rawEvt instanciated" << endmsg;
+  debug() << "decodeRawBanks:  ==> got rawEvt " << endmsg;
 
   // L0Muon Banks
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
@@ -159,6 +160,8 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
 
   ++m_rawBankNorm;
   m_rawBankSizeTot += rawBankSize;
+
+  debug() << "decodeRawBanks:  ==> done" << endmsg;
   
   return StatusCode::SUCCESS;
 
@@ -167,9 +170,15 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
 StatusCode L0MuonOutputs::writeRawBanks(int mode, int bankVersion){
 
   int rawBankSize = 0;
-
-  LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
-  int ievt = evt->evtNumber();
+  int ievt;
+  
+  if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
+    LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
+    ievt = evt->evtNumber();
+  } else {
+    ievt = m_bankEventCounter;
+    ++m_bankEventCounter;
+  }  
   
   LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   std::vector<unsigned int> data;
@@ -240,7 +249,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
 
   // Candidates selected by the controller boards
   // L0Muon (always there - light, standard and debug modes)
-  location = LHCb::L0MuonCandidateLocation::Default + extension;
+  location = rootInTES() + LHCb::L0MuonCandidateLocation::Default + extension;
   LHCb::L0MuonCandidates* pl0mcands = new LHCb::L0MuonCandidates();
   put(pl0mcands , location );
   debug() << "writeOnTES -------------------------"<< endreq;
