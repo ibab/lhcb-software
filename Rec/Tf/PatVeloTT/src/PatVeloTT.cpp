@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.cpp,v 1.2 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatVeloTT.cpp,v 1.3 2007-09-06 16:17:16 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode PatVeloTT::initialize() {
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
-  m_ttHitManager   = tool<TTStationHitManager <PatVeloTTHit> >("Tf::PatVeloTTHitManager");
+  m_ttHitManager   = tool<TTStationHitManager <PatTTHit> >("Tf::PatTTStationHitManager");
   
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;

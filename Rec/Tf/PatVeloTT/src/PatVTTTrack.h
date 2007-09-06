@@ -1,4 +1,4 @@
-// $Id: PatVTTTrack.h,v 1.3 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatVTTTrack.h,v 1.4 2007-09-06 16:17:16 smenzeme Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
 
-#include "PatVeloTTHit.h"
+#include "PatKernel/PatTTHit.h"
 
 namespace Tf {
 
@@ -38,7 +38,7 @@ namespace Tf {
 
       LocalHit() : m_hit(0) {};
 
-      LocalHit( PatVeloTTHit* hit, double dist ) {
+      LocalHit( PatTTHit* hit, double dist ) {
         m_hit = hit;
         m_dist = dist;
         m_inFourLayersSol = false;
@@ -47,7 +47,7 @@ namespace Tf {
       ~LocalHit () { } ;
 
       double distance() const { return m_dist; }
-      PatVeloTTHit* hit()        { return m_hit; }
+      PatTTHit* hit()        { return m_hit; }
 
       void setInFourLayersSolution(bool inFour) { m_inFourLayersSol = inFour; }
       bool inFourLayersSolution() const { return m_inFourLayersSol; }
@@ -60,7 +60,7 @@ namespace Tf {
       };
 
     private:
-      PatVeloTTHit*  m_hit;
+      PatTTHit*  m_hit;
       double  m_dist;
       bool    m_inFourLayersSol;
     };
@@ -115,7 +115,7 @@ namespace Tf {
       return m_origin.y() + m_slope.y() * ( z - m_origin.z() ) ;
     }
 
-    void storeHit( double dist, PatVeloTTHit* hit ) {
+    void storeHit( double dist, PatTTHit* hit ) {
       LocalHit dum( hit, dist );
       m_list.push_back( dum );
     }
@@ -152,7 +152,7 @@ namespace Tf {
       }
     }
 
-    PatVeloTTHits& clusters() { return m_clusters;}
+    PatTTHits& clusters() { return m_clusters;}
 
     void setBadCandidate(bool badCandidate){ m_badCandidate = badCandidate;}
 
@@ -175,7 +175,7 @@ namespace Tf {
     // Select the best list of sorted hits...
     //=========================================================================
     void bestLists(double tol, double tol_factor,
-                   std::vector<PatVeloTTHits> & hitsSolutions, MsgStream& msg){
+                   std::vector<PatTTHits> & hitsSolutions, MsgStream& msg){
 
       bool isDebug = (msg.level() == MSG::DEBUG);
 
@@ -338,7 +338,7 @@ namespace Tf {
         msg << "Number of solutions: " << LocalHitsLists.size() << endreq;
       }
 
-      // Now create the different PatVeloTTHit combinations and add them to the vector of solutions
+      // Now create the different PatTTHit combinations and add them to the vector of solutions
       std::vector<std::vector<LocalHitIterators> >::iterator iLocalHitsLists;
       for(iLocalHitsLists = LocalHitsLists.begin(); iLocalHitsLists != LocalHitsLists.end(); ++iLocalHitsLists){
 
@@ -347,7 +347,7 @@ namespace Tf {
         }
 
         // The compatible clusters made from these LocalHits
-        PatVeloTTHits hitsCandidate;
+        PatTTHits hitsCandidate;
         hitsCandidate.reserve(8);
 
         std::vector<LocalHitIterators>::iterator iSub;
@@ -402,7 +402,7 @@ namespace Tf {
     Gaudi::XYZPoint m_origin;
     Gaudi::XYZVector m_slope;
     LocalHits m_list;
-    PatVeloTTHits m_clusters;
+    PatTTHits m_clusters;
     double m_dx;
     double m_dxvar;
     double m_chi2PerDoF;

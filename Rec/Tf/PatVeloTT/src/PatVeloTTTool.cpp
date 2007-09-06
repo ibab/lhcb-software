@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.2 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatVeloTTTool.cpp,v 1.3 2007-09-06 16:17:17 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -107,7 +107,7 @@ StatusCode PatVeloTTTool::initialize ( ) {
   }
 
 
-  m_ttHitManager   = tool<TTStationHitManager <PatVeloTTHit> >("Tf::PatVeloTTHitManager");
+  m_ttHitManager   = tool<TTStationHitManager <PatTTHit> >("Tf::PatTTStationHitManager");
 
   return StatusCode::SUCCESS;
 }
@@ -206,9 +206,9 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
         //--------------------------------------------------------------------------
         // Loop on hits
         //--------------------------------------------------------------------------
-        TTStationHitManager<PatVeloTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
+        TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
 
-        for ( PatVeloTTHits::const_iterator itH = range.begin();
+        for ( PatTTHits::const_iterator itH = range.begin();
               range.end() != itH; ++itH ) {
 
           double xOnTrack = cand.xAtZ( (*itH)->z() );
@@ -252,7 +252,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   // Numbering warning : layer 0 is the 1st layer
 
   // The choice of clusters for this Velo track: accept several solutions
-  std::vector<PatVeloTTHits> theSolutions;
+  std::vector<PatTTHits> theSolutions;
   theSolutions.reserve(10); // reserve in case of many solutions for this Velo track
 
   // Try with 3 or 4 clusters in at least 3 different layers
@@ -268,12 +268,12 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   bool unique = (nSolutions == 1);
 
   // Create the candidates with corresponding best clusters
-  std::vector<PatVeloTTHits>::const_iterator itheSolutions;
+  std::vector<PatTTHits>::const_iterator itheSolutions;
   for(itheSolutions = theSolutions.begin(); itheSolutions != theSolutions.end(); ++itheSolutions){
 
     PatVTTTrack candidate( veloTr );
 
-    PatVeloTTHits theClusters = *itheSolutions;
+    PatTTHits theClusters = *itheSolutions;
 
     if(m_debug){
       debug() << " the solution " << itheSolutions - theSolutions.begin()
@@ -299,7 +299,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 //=========================================================================
 // Attach clusters to candidate, compute mean dx ...
 //=========================================================================
-void PatVeloTTTool::saveCandidate(PatVeloTTHits& theClusters,PatVTTTrack& candidate){
+void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate){
 
   // Attach best clusters to the candidate, recompute the scaled dx for each cluster and the mean dx
   int nClusters = 0;
@@ -311,10 +311,10 @@ void PatVeloTTTool::saveCandidate(PatVeloTTHits& theClusters,PatVTTTrack& candid
   double dyDz = candidate.slopeY();
   m_PatTTMagnetTool->dxNormFactorsTT( dyDz,  normFact);
 
-  PatVeloTTHits::const_iterator itClus;
+  PatTTHits::const_iterator itClus;
   for(itClus = theClusters.begin(); itClus != theClusters.end(); ++itClus){
 
-    PatVeloTTHit* cluster = *itClus;
+    PatTTHit* cluster = *itClus;
 
     double xOnTrack = candidate.xAtZ( (*itClus)->z() );
     double yAt0 = candidate.yAtZ(0);
@@ -391,7 +391,7 @@ void PatVeloTTTool::simpleFitTracks(std::vector<PatVTTTrack>& vttTracks) {
 //=========================================================================
 void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
-  PatVeloTTHits theHits = vtttr.clusters();
+  PatTTHits theHits = vtttr.clusters();
   int nHits = theHits.size();
   if(3>nHits) {
     return;
@@ -427,10 +427,10 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
   double z0 = zTT;
 
-  for ( PatVeloTTHits::const_iterator itH = theHits.begin();
+  for ( PatTTHits::const_iterator itH = theHits.begin();
         theHits.end() != itH; itH++ ) {
 
-    PatVeloTTHit* pdigi = (*itH);
+    PatTTHit* pdigi = (*itH);
 
     double y0 = yVelo -  ySlopeVelo * zVelo;
     updateTTHitForTrack(pdigi, y0, ySlopeVelo);
@@ -487,10 +487,10 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
   if(m_debug) debug() << " Velo-TT track refit. Points:" << endmsg;
 
-  for ( PatVeloTTHits::const_iterator itH = theHits.begin();
+  for ( PatTTHits::const_iterator itH = theHits.begin();
         theHits.end() != itH; itH++ ) {
 
-    PatVeloTTHit* pdigi = (*itH);
+    PatTTHit* pdigi = (*itH);
 
     double zd    = pdigi->z();
     double xd    = xTTFit + xSlopeTTFit*(zd-zTT);
@@ -704,7 +704,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     if(m_debug) debug() << " good candidate? " << (!ok) << endmsg;
     if(cand.badCandidate()) continue;
 
-    PatVeloTTHits candClusters = cand.clusters();
+    PatTTHits candClusters = cand.clusters();
     if(m_debug) debug() << " with n clusters " << candClusters.size() << endmsg;
     if (candClusters.size() == 0) continue;
 
@@ -751,7 +751,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     if(m_debug) debug() << " added State " << temp.stateVector()
                         << " cov \n" << temp.covariance() << endmsg;
 
-    for( PatVeloTTHits::const_iterator iClusB = candClusters.begin();
+    for( PatTTHits::const_iterator iClusB = candClusters.begin();
          iClusB != candClusters.end(); ++iClusB){
       (*iClusB)->hit()->setUsed( true );
 

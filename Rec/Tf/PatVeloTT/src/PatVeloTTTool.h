@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.h,v 1.3 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatVeloTTTool.h,v 1.4 2007-09-06 16:17:17 smenzeme Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -12,7 +12,7 @@
 // local
 #include "PatVTTTrack.h"
 #include "PatTTMagnetTool.h"
-#include "PatVeloTTHit.h"
+#include "PatKernel/PatTTHit.h"
 
 static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
@@ -54,7 +54,7 @@ namespace Tf {
     void prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);
     void localCleanUp(std::vector<PatVTTTrack>&);
     void getCandidates(LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
-    void saveCandidate( PatVeloTTHits& theClusters, PatVTTTrack& candidate);
+    void saveCandidate( PatTTHits& theClusters, PatVTTTrack& candidate);
 
   private:
     class compPseudoChi2  {
@@ -81,7 +81,7 @@ namespace Tf {
     double m_dxGroupFactor;
     double m_zMidTT;
 
-    TTStationHitManager<PatVeloTTHit> *      m_ttHitManager;
+    TTStationHitManager<PatTTHit> *      m_ttHitManager;
 
     PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
