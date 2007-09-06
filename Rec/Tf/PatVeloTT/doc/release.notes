@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-06 - Stephanie Hansmann-Menzemer
+- move PatVeloTTHit and PatVeloTTHitManager to new PatKernel package, adapt
+  algorithms accordingly
+
 ! 2007-08-25 - Chris Jones
  - Rename a few classes to include 'Pat' in their names
 
