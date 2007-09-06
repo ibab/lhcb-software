@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.64 2007-07-20 06:28:38 cattanem Exp $
+! $Id: release.notes,v 1.65 2007-09-06 21:45:38 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+! 2007-09-06 - Julien Cogan
+ - Modification in L0Sequence.opts to follow up changes in L0Muon (v7r3)
 !========================== L0DU v7r6 2006-07-20 =========================
 ! 2007-07-19 - Marco Cattaneo
  - Remove Brunel.opts (functionality moved to Brunel, from v31r8)
