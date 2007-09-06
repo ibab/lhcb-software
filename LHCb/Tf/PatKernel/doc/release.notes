@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/PatKernel
+! Responsible : Stephanie Hansmann-Menzemer
+! Purpose     : 
+!-----------------------------------------------------------------------------
+!2007-09-06 - Stephanie Hansmann-Menzemer
+- first release of package, serves as Kernel package for PatVeloTT and
+  PatForward packages
