@@ -6,6 +6,11 @@
 
 
 !============================ L0MuonKernel v7r0 2007-06-01 ===============
+! 2007-09-06
+ - Modification of ProcDataCnv to foolow up the change of specification in
+   RLE compression.
+! 2007-09-03 - Julien Cogan
+ - Introduction of converter to write raw bank
 ! 2007-08-27 - Julien Cogan 
  - Major changes in the algorithm to match the hardware
    o modify the extrapolation table
