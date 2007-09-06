@@ -1,11 +1,13 @@
-!  $Id: release.notes,v 1.36 2007-09-06 19:46:19 jucogan Exp $
+!  $Id: release.notes,v 1.37 2007-09-06 20:09:40 jucogan Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
-!========================= L0Muon v7r2 2007-08-27 ========================
+!========================= L0Muon v7r3 2007-09-06 ========================
 ! 2007-09-06 - Julien Cogan
  - Add the possiblity to start the L0Muon emulator with L0Muon data in 
    input
+
+!========================= L0Muon v7r2 2007-08-27 ========================
 ! 2007-08-27 - Julien Cogan
  - Major change to handle different processor versions and bank versions
   o remove the L0MuonProcessorDatasFromRaw (processor data are produced
