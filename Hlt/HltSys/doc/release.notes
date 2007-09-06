@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-09-06 - Patrick Koppenburg
+ - Hack errors of muons as well
+
 ! 2007-09-05 - Tomasz Skwarnicki
  - set HltMuonID.MuonTrackLocation in HltProtoParticles.opts to avoid conflicts with offline
  - set .DoCleanUp = false in all forward HltTracking steps (HltRecoSequence,Muon and Had Alleys)

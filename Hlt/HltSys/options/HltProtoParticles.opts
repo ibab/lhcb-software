@@ -119,6 +119,11 @@ HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
 HltMuonForTES.OutputLevel =3;
 // ToolSvc.CloneFinderTool.CompareAtLHCbIDsLevel=true;
 HltMuonForTES.CloneFinderTool.CompareAtLHCbIDsLevel=true;
+/*
+ * Hacking of errors
+ */
+SeqHltMuons.Members += { "HltInsertTrackErrParam/HltInsertTrackErrParamMuons"} ;
+HltInsertTrackErrParamMuons.InputLocation = "Hlt/Track/MuonsFromAlley" ;
 
 SeqHltMuons.Members += { "GaudiSequencer/SeqTrueSignalMuons" } ; // debug
 
