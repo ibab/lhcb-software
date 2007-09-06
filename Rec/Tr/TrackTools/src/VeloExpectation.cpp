@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.3 2007-05-29 13:43:06 mneedham Exp $
+ *  $Id: VeloExpectation.cpp,v 1.4 2007-09-06 12:01:55 mneedham Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -26,6 +26,8 @@
 
 // Event
 #include "Event/State.h"
+
+#include "Event/TrackParameters.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -251,7 +253,8 @@ double VeloExpectation::zBeamLine(const Track& aTrack) const{
     const TrackVector& vec = state.stateVector();
     double z = state.z();
     // check on division by zero (track parallel to beam line!)
-    if ( vec[2] != 0 || vec[3] != 0 ) {
+    if ( fabs(vec[2]) > TrackParameters::lowTolerance 
+        || vec[3]  > TrackParameters::lowTolerance ) {
       z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
     }
   }
