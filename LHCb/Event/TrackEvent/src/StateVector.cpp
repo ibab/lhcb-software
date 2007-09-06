@@ -1,4 +1,4 @@
-// $Id: StateVector.cpp,v 1.1 2007-05-21 10:23:32 wouter Exp $
+// $Id: StateVector.cpp,v 1.2 2007-09-06 11:44:07 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -28,8 +28,8 @@ using namespace Gaudi;
 StateVector::StateVector(const Gaudi::XYZPoint& pos, 
 			 const Gaudi::XYZVector& dir,
 			 double qop)
-  : m_parameters(pos.x(),pos.y(),dir.z()!=0 ? dir.x()/dir.z() :0,
-		 dir.z()!=0 ? dir.y()/dir.z() : 0,qop),
+  : m_parameters(pos.x(),pos.y(),fabs(dir.z()) > TrackParameters::lowTolerance  ? dir.x()/dir.z() :0.0,
+		  fabs(dir.z()) > TrackParameters::lowTolerance ? dir.y()/dir.z() : 0,qop),
     m_z(pos.z()) {}
 
 //=============================================================================

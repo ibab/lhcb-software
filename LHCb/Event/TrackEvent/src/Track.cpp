@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.39 2007-05-15 06:57:34 wouter Exp $ // Include files
+// $: Track.cpp,v 1.39 2007/05/15 06:57:34 wouter Exp $ // Include files
 
 // local
 #include "Event/Track.h"

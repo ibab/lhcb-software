@@ -410,7 +410,7 @@
         const   = 'TRUE'>
         <code>
   double qP = firstState().qOverP();
-  return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
+  return ( fabs(qP)  &gt; TrackParameters::lowTolerance  ? int(fabs(qP)/qP) : 0 );
         </code>
       </method>
 

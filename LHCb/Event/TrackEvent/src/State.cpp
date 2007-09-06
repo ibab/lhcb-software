@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.28 2007-09-05 07:54:39 mneedham Exp $
+// $Id: State.cpp,v 1.29 2007-09-06 11:44:07 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -97,7 +97,7 @@ SymMatrix6x6 State::posMomCovariance() const
   // This is the Jacobian of (x,y,px,py,pz) w.r.t. (x,y,tx,ty,Q/p)
   const double invNorm3 = invNorm * invNorm * invNorm;
   //  const double invP = fabs(qP);
-  const double q = qP == 0. ? 0. : (qP > 0. ? 1. : -1.);
+  const double q = fabs(qP) > TrackParameters::lowTolerance ? 0.0 : (qP > 0.0 ? 1.0 : -1.0);
   jmat(2,2) = mom * (1.+tY*tY)*invNorm3;
   jmat(2,3) = jmat(3,2) = -mom * tX * tY * invNorm3;
   jmat(2,4) = -q * tX * invNorm / (qP*qP);
