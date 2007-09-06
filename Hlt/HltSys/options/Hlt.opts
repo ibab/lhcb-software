@@ -23,13 +23,15 @@ HltInitSeq.Members = {"PatInitEvent",
 // the Alleys sequencer
 //
 
-HltAllAlleys.Members ={"HltSequencer/HltMuonAlley",
+HltAllAlleys.Members ={"HltSequencer/HltL0TriggerSequence",
+                       "HltSequencer/HltMuonAlley",
                        "HltSequencer/HltHadAlley",
                          // ,"HltSequencer/HltCaloAlley"
                        "HltSelectionEntry/HltAlleys"
-
 };
-HltAllAlleys.ModeOr=true;
+HltAllAlleys.ModeOr=true; 
+
+#include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
 
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"

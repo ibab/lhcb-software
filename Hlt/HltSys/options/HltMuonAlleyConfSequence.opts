@@ -28,8 +28,8 @@ HltMuonAlley.Members += {
 };
 
 EnterMuonAlley.Members += {
-"L0Entry/L0MuonEntry",
-"L0MuonCandidatesFromRaw"
+"L0Entry/L0MuonEntry"
+// ,"L0MuonCandidatesFromRaw"   moved to HltL0TriggerSequence
 };
 RealMuonAlley.Members += {
 "HltSequencer/HltMuonTConfL0SingleAlley"
@@ -122,7 +122,8 @@ HltMuonTConfL0SingleTriggerDimuon.ModeOr = true;
 HltMuonTConfL0DimuonAlley.MeasureTime=true;
 HltMuonTConfL0DimuonAlley.Members += {   "L0Entry/L0DimuonEntry",
                                          //"L0MuonCandidatesFromRaw",
-                                         "L0Muon2Tracks/L0MuonDimuon", 
+                                         //"L0Muon2Tracks/L0MuonDimuon", 
+                                         //"L0Muon2Tracks/L0TriggerDimuon", in HltL0TriggerSequence 
                                          "L0Vertex2Tracks", 
                                          "GaudiSequencer/DecodeForTConf",                                           
                                          "L0MuonConfWithT/L0MuonConfL0DimuonWithT",
@@ -172,8 +173,8 @@ L0SingleMuonEntry.SelectionName = "MuonEntry";
 L0SingleMuonEntry.OutputLevel=3;
 
 L0MuonSingleMuon.L0MuonType="single";
-L0MuonSingleMuon.L0MuonThresold="1300";
-L0MuonSingleMuon.OutputL0MuonTracksName="Rec/Track/L0MuonSingle";
+L0MuonSingleMuon.L0MuonThresold=1300.0;
+L0MuonSingleMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
 L0MuonSingleMuon.OutputTracksName="Hlt/Track/L0MuonSingle";
 L0MuonSingleMuon.OutputLevel=3;
 
@@ -253,6 +254,7 @@ HltMuonTConfForwardPartialForL0Single.OrderByPt= false;
 HltMuonTConfForwardPartialForL0Single.InputTracksName="Hlt/Track/MuonAndTVelo";
 HltMuonTConfForwardPartialForL0Single.OutputTracksName="Hlt/Track/MuonsForwardSingle";
 HltMuonTConfForwardPartialForL0Single.OutputLevel = 3;
+PatHltMuonTConfForwardPartialForL0Single.DoCleanUp = false;
 
 MuonTConfL0SingleTriggerSingle.InputTracksName ="Hlt/Track/MuonsForwardSingle";
 MuonTConfL0SingleTriggerSingle.PrimaryVerticesName = "Hlt/Vertex/PV2D";
@@ -283,15 +285,16 @@ L0DimuonEntry.L0ChannelsName = {"dimuon"};
 //L0DimuonEntry.SelectionName = "L0DiMuonEntry";
 L0DimuonEntry.SelectionName = "DiMuonEntry";
 
-L0MuonDimuon.L0MuonType="dimuon";
-L0MuonDimuon.L0MuonThresold="1500";
-L0MuonDimuon.OutputL0MuonTracksName="Rec/Track/L0MuonDimuon";
-L0MuonDimuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
+// L0TriggerDimuon now configured in HltL0TriggerSequence
+//L0MuonDimuon.L0MuonType="dimuon";
+//L0MuonDimuon.L0MuonThresold="1500";
+//L0MuonDimuon.OutputL0MuonTracksName="Rec/Track/L0MuonDimuon";
+//L0MuonDimuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
 //L0MuonDimuon.OutputTracksName="Hlt/Track/L0MuonDimuon";
-L0MuonDimuon.OutputVerticesName="Hlt/Vertex/L0Dimuon";
-L0MuonDimuon.OutputLevel=3;
+//L0MuonDimuon.OutputVerticesName="Hlt/Vertex/L0TriggerDimuon";
+//L0MuonDimuon.OutputLevel=3;
 
-L0Vertex2Tracks.InputVerticesName="Hlt/Vertex/L0Dimuon";
+L0Vertex2Tracks.InputVerticesName="Hlt/Vertex/L0TriggerDimuon";
 L0Vertex2Tracks.OutputTracksName="Hlt/Track/L0MuonDimuon";
 L0MuonConfL0DimuonWithT.InputTracksName = "Hlt/Track/L0MuonDimuon";
 L0MuonConfL0DimuonWithT.OutputTracksName = "Hlt/Track/DiMuonConfirmedWithT";
@@ -315,7 +318,7 @@ SpaceMuonMatchForL0Dimuon.OutputTracksName ="Hlt/Track/DiMuonAndTVelo";
 HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.InputTracksName = "Hlt/Track/DiMuonAndTVelo";
 //HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.OutputVerticesName="Hlt/Vertex/PreTriggerL0DimuonsPairNoIP";
 HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.OutputVerticesName="Hlt/Vertex/MuonPreTriggerPureDiMuon";
-HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.InputVerticesName = "Hlt/Vertex/L0Dimuon";
+HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.InputVerticesName = "Hlt/Vertex/L0TriggerDimuon";
 HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.OutputDimuonVerticesName="Rec/Vertex/PreL0DimuonsPairNoIP";
 HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.PreTrigger=true;
 HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.OutputLevel=3;
@@ -323,7 +326,7 @@ HltMuonTConfL0DimuonPreTriggerDiMuonsNoIP.OutputLevel=3;
 HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.InputTracksName = "Hlt/Track/DiMuonAndTVelo";
 //HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.OutputVerticesName="Hlt/Vertex/PreTriggerL0DimuonsPairWithIP";
 HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.OutputVerticesName="Hlt/Vertex/MuonPreTriggerPureIPDiMuon";
-HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.InputVerticesName = "Hlt/Vertex/L0Dimuon";
+HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.InputVerticesName = "Hlt/Vertex/L0TriggerDimuon";
 HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.OutputDimuonVerticesName="Rec/Vertex/PreL0DimuonsPairWithIP";
 HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.PrimaryVerticesName = "Hlt/Vertex/PV2D";
 HltMuonTConfL0DimuonPreTriggerDiMuonsWithIP.PreTrigger=true;
@@ -337,6 +340,7 @@ HltMuonTConfForwardPartialForL0Dimuon.OrderByPt= true;
 HltMuonTConfForwardPartialForL0Dimuon.InputTracksName="Hlt/Track/DiMuonAndTVelo";
 HltMuonTConfForwardPartialForL0Dimuon.OutputTracksName="Hlt/Track/DiMuonsForward";
 HltMuonTConfForwardPartialForL0Dimuon.OutputLevel = 3;
+PatHltMuonTConfForwardPartialForL0Dimuon.DoCleanUp = false;
 
 
 HltMuonTConfL0DimuonTriggerDiMuonsNoIP.InputTracksName = "Hlt/Track/DiMuonsForward";

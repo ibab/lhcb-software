@@ -38,6 +38,7 @@ HltMuonIDSeq.Members += { "MuonRec", "MuonID/HltMuonID" };
 #include "$HLTSYSROOT/options/HltMuonID.opts"
 HltMuonID.TrackLocation = "Hlt/Track/ForwardCLEANED" ;
 HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" ;
+HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
 //---------------------------------------------------------------------

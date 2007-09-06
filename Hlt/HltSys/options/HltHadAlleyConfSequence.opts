@@ -9,13 +9,14 @@
 //--------------------------
 HltSummaryWriter.Save += {"PV2D",
                           "HadL0Entry",
-                          "HadL0Calos",
+                          "L0TriggerHadron",
                           "HadPreTriggerSingle",
                           "HadTrigger"};
 
 HltHadAlley.Members = {"L0Entry/HadL0Entry",
                        "GaudiSequencer/HltRecoVeloRZSeq",
-                       "HltPrepareL0Calos/HadL0Prepare",
+                       //"HltPrepareL0Calos/HadL0Prepare",
+                       // "HltPrepareL0Calos/L0TriggerHadron", in HltL0TriggerSequence
                        "GaudiSequencer/DVHltHadAlley",
                        "HltTrackFilter/HadSingleTFRZVelo",
                        "HltTracking/HadSingleTRVelo",
@@ -44,19 +45,20 @@ HadL0Entry.L0ChannelsName = {"hadron"};
 HadL0Entry.SelectionName = "HadL0Entry";
 HadL0Entry.OutputLevel = 3;
 
+// L0TriggerHadron now configured in HltL0TriggerSequence
 //
 // select the L0Calo candidates above
 // to get refined L0Calos please use CaloMakerTool = "HadronSeedTool"
 //
-HadL0Prepare.OutputTracksName = "HadL0Calos";
+//HadL0Prepare.OutputTracksName = "L0TriggerHadron";
 // HadL0Prepare.CaloMakerTool = "HadronSeedTool";
-HadL0Prepare.OutputLevel = 3;
+//HadL0Prepare.OutputLevel = 3;
 
 //
 // select RZVelo tracks with an IP and matched to L0Calo
 //
 HadSingleTFRZVelo.InputTracksName     = "RZVelo";
-HadSingleTFRZVelo.InputTracks2Name    = "HadL0Calos";
+HadSingleTFRZVelo.InputTracks2Name    = "L0TriggerHadron";
 HadSingleTFRZVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFRZVelo.OutputTracksName    = "HadSingleTFRZVelo";
 HadSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
@@ -82,7 +84,7 @@ HadSingleTRVelo.OutputLevel = 3;
 // Select Velo tracks with an IP and matched to L0Calo
 //
 HadSingleTFVelo.InputTracksName  = "HadSingleTRVelo";
-HadSingleTFVelo.InputTracks2Name = "HadL0Calos";
+HadSingleTFVelo.InputTracks2Name = "L0TriggerHadron";
 HadSingleTFVelo.OutputTracksName = "HadSingleTFVelo";
 HadSingleTFVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFVelo.HistogramUpdatePeriod = 0;
@@ -105,6 +107,7 @@ HadSingleTRForward.InputTracksName  = "HadSingleTFVelo";
 HadSingleTRForward.OutputTracksName = "HadSingleTRForward";
 HadSingleTRForward.RecoName = "Forward";
 HadSingleTRForward.OutputLevel = 3;
+PatHadSingleTRForward.DoCleanUp = false;
 
 //
 // Select forward track with a given Pt

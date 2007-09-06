@@ -39,6 +39,7 @@ HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
 HltRecoForward.RecoName = "Forward";
 HltRecoForward.HistogramUpdatePeriod = 0;
 HltRecoForward.OutputLevel = 3;
+PatHltRecoForward.DoCleanUp = false;
 
 
 //-----------------------------

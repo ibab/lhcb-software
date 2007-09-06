@@ -5,6 +5,15 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-09-05 - Tomasz Skwarnicki
+ - set HltMuonID.MuonTrackLocation in HltProtoParticles.opts to avoid conflicts with offline
+ - set .DoCleanUp = false in all forward HltTracking steps (HltRecoSequence,Muon and Had Alleys)
+   to fix the problem with corrupted selection summaries
+ - add HltL0TriggerSequence with conversion of all L0 triggers to Hlt summaries (for L0 TisTosing)
+   use standard summary names: L0TriggerXXX where XXX is the name of "L0Channel" with 1st letter
+   capitalized; 
+   remove such conversions from Dimuon and Had Alleys and make them use standard L0 names
+
 ! 2007-08-15 - Patrick Koppenburg
  - Change of syntax in ChargedProtoPAlg
  - Declare correct ProtoParticle location for HltForwardMuons
