@@ -1,4 +1,4 @@
-// $Id: IsBEvent.h,v 1.2 2006-03-15 13:37:21 pkoppenb Exp $
+// $Id: IsBEvent.h,v 1.3 2007-09-07 13:23:48 pkoppenb Exp $
 #ifndef ISBEVENT_H 
 #define ISBEVENT_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/MCParticle.h"
+#include "Kernel/IWriteSelResult.h"
 
 /** @class IsBEvent IsBEvent.h
  *  
@@ -31,7 +32,6 @@ protected:
 
 private:
   bool goodEvent(LHCb::MCParticles*); ///< loop
-  StatusCode writeSelResult();
 
 private:
   std::vector<std::string> m_required; ///< List of required particles
@@ -39,6 +39,6 @@ private:
   bool m_avoidSelResult ; ///< Avoid SelResult
   
   std::vector<int> m_particles ; ///< required particles
-  std::string m_selResults ;     ///< SelResults container location
+  IWriteSelResult* m_writeTool ;                  ///< SelResultWriter
 };
 #endif // ISBEVENT_H

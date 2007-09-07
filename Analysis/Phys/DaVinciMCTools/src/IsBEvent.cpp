@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.5 2007-01-12 14:03:52 ranjard Exp $
+// $Id: IsBEvent.cpp,v 1.6 2007-09-07 13:23:48 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ IsBEvent::IsBEvent( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_particles()
-  , m_selResults(LHCb::SelResultLocation::Default)
+    , m_writeTool()
 {
   m_required.push_back("b"); // default is to require a b-quark
   declareProperty( "RequiredParticles", m_required );
@@ -73,6 +73,8 @@ StatusCode IsBEvent::initialize() {
   else info() << "Will be looking for events with " << m_particles << endmsg;
   if (m_andMode) info() << "... of which all have to be there!" << endmsg;
 
+  m_writeTool = tool<IWriteSelResult>("WriteSlResult");
+
   return StatusCode::SUCCESS;
 };
 
@@ -94,7 +96,7 @@ StatusCode IsBEvent::execute() {
   setFilterPassed(found);
   
   StatusCode sc = StatusCode::SUCCESS;
-  if ( !m_avoidSelResult ) sc = writeSelResult() ;
+  if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),filterPassed()) ;
 
   return StatusCode::SUCCESS;
 };
@@ -128,32 +130,6 @@ bool IsBEvent::goodEvent(LHCb::MCParticles* mcparts){
   return m_andMode ; // in and-mode one is happy. in or-mode unhappy.
 }
 
-//=============================================================================
-//  write selResult
-//=============================================================================
-StatusCode IsBEvent::writeSelResult() {
-  
-  LHCb::SelResults* SelResCtr ;
-  if ( exist<LHCb::SelResults>(m_selResults) ){
-    debug() << "SelResult exists already " << endreq ;
-    SelResCtr = get<LHCb::SelResults>(m_selResults);
-  } else {
-    debug() << "Putting new SelResult container " << endreq ;
-    SelResCtr = new LHCb::SelResults();
-    put(SelResCtr,m_selResults);
-
-  }
-  
-  // Create and fill selection result object
-  LHCb::SelResult* myResult = new LHCb::SelResult();
-  myResult->setFound(filterPassed());
-  myResult->setLocation( ("/Event/Phys/"+name()));
-  verbose() << "Selresult location set to " << "/Event/Phys/"+name() << endreq;
-  myResult->setDecay("No decay");
-  SelResCtr->insert(myResult);
-  debug() << "Wrote SelResult " << filterPassed() << " to " << "/Event/Phys/"+name() << endmsg ;
-  return StatusCode::SUCCESS ;   
-}
 ///=============================================================================
 //  Finalize
 //=============================================================================
