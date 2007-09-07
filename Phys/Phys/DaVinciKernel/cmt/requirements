@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2007-09-03 15:22:30 pkoppenb Exp $
+# $Id: requirements,v 1.47 2007-09-07 13:26:52 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
@@ -13,10 +13,10 @@ branches          cmt doc dict src Kernel
 
 # Used packages. 
 #============================================================================
-use RecEvent   v* Event
 use PhysEvent  v* Event
 use GaudiAlg   v* 
 use Relations  v* Kernel
+use RecInterfaces v* Kernel
 
 # Exported header files
 #============================================================================

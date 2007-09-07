@@ -27,21 +27,18 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_particleReFitterNames ()
   , m_particleReFitters     ()
   //
-  , m_checkOverlapName      ( "CheckOverlap" )
+  , m_checkOverlapName      ( "CheckOverlap" ) 
   , m_checkOverlap          ( 0 )
-  , m_algorithm2IDToolName  ( "Algorithm2ID" )
-  , m_algorithm2IDTool      ( 0 )
-  , m_taggingTool           ( 0 )
   , m_taggingToolName       ( "BTaggingTool" )
-  //
-  ,
-  m_descendants(0),
-  m_descendantsName("ParticleDescendants"),
-  m_ppSvc(0),
-  m_setFilterCalled(false),
-  m_countFilterWrite(0),
-  m_countFilterPassed(0),
-  m_algorithmID(-1)
+  , m_taggingTool           ( 0 )
+  , m_descendants           (0)
+  , m_descendantsName         ("ParticleDescendants")
+  , m_writeSelResultName      ( "WriteSelResult" )
+  , m_writeSelResult          ( 0 )
+  , m_ppSvc                  (0)
+  , m_setFilterCalled          (false)
+  , m_countFilterWrite        (0)
+  , m_countFilterPassed       (0)
 {
   // 
   m_vertexFitNames [ "Offline" ] = "OfflineVertexFitter" ;
@@ -55,6 +52,8 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty ( "GeomTools"         , m_geomToolNames     ) ;
   //
   declareProperty ( "CheckOverlapTool"  , m_checkOverlapName  ) ;
+  //
+  declareProperty ( "WriteSelResultTool"  , m_writeSelResultName  ) ;
   //
   m_filterNames    [ "" ]        = "ParticleFilter" ;
   declareProperty ( "ParticleFilters"   , m_filterNames       ) ;
@@ -144,6 +143,9 @@ StatusCode DVAlgorithm::loadTools() {
   debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
   checkOverlap();
   
+  debug() << ">>> Preloading WriteSelResults Tool" << endmsg;
+  writeSelResult();
+  
   /*  Not preloading non-mandatory tools
   // particle filter
   for ( size_t i = 0; i < m_fileNames.size();++i) {
@@ -151,9 +153,6 @@ StatusCode DVAlgorithm::loadTools() {
   particleFilter(i); 
   }
   
-  debug() << ">>> Preloading Algorithm2ID Tool" << endmsg;
-  algorithm2ID();
-
   debug() << ">>> Preloading BTagging Tool" << endmsg;
   flavourTagging();
 
@@ -213,37 +212,22 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 //=============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
 
-  std::string location = LHCb::SelResultLocation::Default;
-  verbose() << "SelResult to be saved to " << location << endmsg ;
-
-  LHCb::SelResults* resultsToSave = 0 ;
-  // Check if SelResult contained has been registered by another algorithm
-  if ( exist<LHCb::SelResults>(location) ){
-    verbose() << "SelResult exists already " << endmsg ;
-    resultsToSave = get<LHCb::SelResults>(location);
-  } else {
-    verbose() << "Putting new SelResult container " << endmsg ;
-    resultsToSave = new LHCb::SelResults();
-    put(resultsToSave,location);
-  }
-
-  // Create and fill selection result object
-  LHCb::SelResult* myResult = new LHCb::SelResult();
-  myResult->setFound(filterPassed());
-  myResult->setLocation( ("/Event/Phys/"+name()));
+   // Create and fill selection result object
+  LHCb::SelResult myResult;
+  myResult.setFound(filterPassed());
+  myResult.setLocation( ("/Event/Phys/"+name()));
   verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
             << endmsg;
-  myResult->setDecay(m_decayDescriptor);
+  myResult.setDecay(m_decayDescriptor);
+
+  StatusCode sc = writeSelResult()->write(myResult);
     
   if (filterPassed()) m_countFilterPassed++;
   m_countFilterWrite++;
   verbose() << "wrote " << filterPassed() << " -> " <<
     m_countFilterWrite << " & " << m_countFilterPassed << endmsg ;
 
-  resultsToSave->insert(myResult);
-  verbose() << "Number of objects in existingSelRes: "
-            << resultsToSave->size() << endmsg;
-  return StatusCode::SUCCESS ;
+  return sc ;
 
 }
 
@@ -290,13 +274,4 @@ void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString){
   }
   desktop()->imposeOutputLocation(outputLocationString);  
   return;  
-}
-// ============================================================================
-// Algorithm ID
-//=============================================================================
-int DVAlgorithm::getAlgorithmID(){
-  if ( m_algorithmID < 0 ) {
-    m_algorithmID = algorithmID()->idFromName(name());
-  }
-  return  m_algorithmID ;
 }

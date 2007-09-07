@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.4 2007-08-03 11:41:56 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.5 2007-09-07 13:25:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,7 @@ CheckSelResult::CheckSelResult( const std::string& name,
   , m_nEvents(0)
   , m_totEvents(0)
   , m_headerPath(RecHeaderLocation::Default)
+    , m_writeTool()
 {
   m_algorithms.clear();
   declareProperty( "Algorithms", m_algorithms );
@@ -64,6 +65,8 @@ StatusCode CheckSelResult::initialize() {
   if (!m_avoidSelResult) info() 
     << "You have set AvoidSelResult to false -> will write out to TES" << endmsg; 
 
+  m_writeTool = tool<IWriteSelResult>("WriteSlResult");
+
   return StatusCode::SUCCESS;
 };
 
@@ -81,7 +84,7 @@ StatusCode CheckSelResult::execute() {
   if ( NULL!=SelResCtr ) { 
     StatusCode sc = algoLoop(SelResCtr);   // loop
     if (!sc) return sc;
-    if ( !m_avoidSelResult ) sc = writeSelResult(SelResCtr) ; // write out
+    if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),filterPassed()) ; // write out
     if (!sc) return sc;
   }
   // some stats
@@ -155,24 +158,6 @@ SelResults* CheckSelResult::readSelResult ( ) {
   }
   
   return SelResCtr ;
-}
-//=============================================================================
-//  write selResult
-//=============================================================================
-StatusCode CheckSelResult::writeSelResult(SelResults*& SelResCtr) {
-
-  // Create and fill selection result object
-  SelResult* myResult = new SelResult();
-  myResult->setFound(filterPassed());
-  myResult->setLocation( ("/Event/Phys/"+name()));
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Selresult location set to " << "/Event/Phys/"+name() << endmsg;
-  myResult->setDecay("No decay");
-  SelResCtr->insert(myResult);
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Wrote SelResult " << filterPassed() << " to " << "/Event/Phys/"+name() << endmsg ;
-  
-  return StatusCode::SUCCESS ;
-  
 }
 //=============================================================================
 //  Finalize

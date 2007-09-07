@@ -20,9 +20,9 @@
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IFilterCriterion.h"
 #include "Kernel/ICheckOverlap.h"
-#include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
+#include "Kernel/IWriteSelResult.h"
 
 // from Boost
 #include <boost/lexical_cast.hpp>
@@ -113,9 +113,6 @@ public:
   /// Should be avoided!
   void imposeOutputLocation (const std::string& outputLocationString);  
 
-  /// get algorithm ID
-  int getAlgorithmID();
- 
   /// Accessor for PhysDesktop Tool
   inline IPhysDesktop* desktop()const
   {
@@ -199,18 +196,11 @@ public:
   }
   */
 
-  /// Accessor for Algorithm2ID Tool
-  inline IAlgorithm2ID* algorithmID()const{
-    return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
+  /// Accessor for WriteSelResult Tool
+  inline IWriteSelResult* writeSelResult()const
+  {
+    return getTool<IWriteSelResult>(m_writeSelResultName,m_writeSelResult);
   }
-
-  /* @todo move to this signature when maps in job options become available
-  /// Accessor for Algorithm2ID Tool
-  inline IAlgorithm2ID* algorithmID(const std::string& name="") const{
-    return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
-  }
-  */
-
   /// Tagging Tool
   inline IBTaggingTool* flavourTagging()const{
     return getTool<IBTaggingTool>(m_taggingToolName,m_taggingTool);
@@ -343,6 +333,7 @@ private:
   /// The actual map of "nickname -> tool" for Particle Refitters 
   mutable GaudiUtils::VectorMap<std::string,IParticleReFitter*> m_particleReFitters ;
   
+  
 protected: 
   
   /// Concrete type of CheckOverlap tool
@@ -350,21 +341,21 @@ protected:
   /// Reference to CheckOverlap
   mutable ICheckOverlap* m_checkOverlap;
   
-  /// Concrete Type of IAlgorithm2ID tool
-  std::string m_algorithm2IDToolName;
-  /// Reference to Algorithm2ID
-  mutable IAlgorithm2ID* m_algorithm2IDTool;
-  
-  /// Reference to FlavourTagging
-  mutable IBTaggingTool* m_taggingTool;
   /// Concrete Type of FlavourTagging tool
   std::string m_taggingToolName;
+  /// Reference to FlavourTagging
+  mutable IBTaggingTool* m_taggingTool;
 
   /// Reference to ParticleDescendants
   mutable IParticleDescendants* m_descendants;
   /// Concrete Type of ParticleDescendants  tool
   std::string m_descendantsName;
 
+  /// Concrete type of CheckOverlap tool
+  std::string m_writeSelResultName;
+  /// Reference to CheckOverlap
+  mutable IWriteSelResult* m_writeSelResult;
+  
   /// Reference to ParticlePropertySvc
   mutable IParticlePropertySvc* m_ppSvc;
 
@@ -387,10 +378,6 @@ private:
   /// Number of passing events
   int m_countFilterPassed ;
   
-  /// - For GaudiAlgorithm -
-  /// Algorithm ID
-  int m_algorithmID ;
-
   /// Switch PreloadTools to false no to preload any tools.
   /// This will have the effect that they will be loaded on demand, when needed,
   /// at any event. This option is thus only recommended for use of DVAlgorithm

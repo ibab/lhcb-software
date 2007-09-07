@@ -3,7 +3,6 @@
 <!-- DaVinciKernel -->
 
   <class name = "DVAlgorithm"/>
-  <class name = "IAlgorithm2ID"/>
   <class name = "IBestParticles"/>
   <class name = "IBremAdder"/>
   <class name = "IBTaggingTool"/>

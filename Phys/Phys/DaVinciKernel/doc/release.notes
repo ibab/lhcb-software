@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-09-07 - Patrick Koppenburg
+ - DVAlgorithm: 
+   . use WriteSelResult Tool
+   . Do not use IAlgorithm2ID
+ - IAlgorithm2ID.H : removed. Dictionaries fixed accordingly.
+
 !========================= DaVinciKernel v6r6 2007-09-04 ====================
 ! 2007-09-03 - Patrick Koppenburg
  - Added TisTosTobbing interfaces
