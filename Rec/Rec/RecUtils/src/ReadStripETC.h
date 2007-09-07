@@ -1,10 +1,11 @@
-// $Id: ReadStripETC.h,v 1.2 2006-07-18 16:27:30 pkoppenb Exp $
+// $Id: ReadStripETC.h,v 1.3 2007-09-07 12:21:13 pkoppenb Exp $
 #ifndef READSTRIPETC_H 
 #define READSTRIPETC_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "Kernel/IWriteSelResult.h"
 
 /** @class ReadStripETC ReadStripETC.h
  *  
@@ -50,6 +51,8 @@ private:
   bool m_usedSelectionsFilled ;
   
   long m_longType ; ///< ``Type'' code of ``long'' as defined in INTupleItem class  
+
+  IWriteSelResult* m_writeSelResult ; ///< SelResult writer tool
 
 };
 #endif // READSTRIPETC_H

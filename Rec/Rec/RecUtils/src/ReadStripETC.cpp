@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.cpp,v 1.3 2007-07-12 15:00:54 cattanem Exp $
+// $Id: ReadStripETC.cpp,v 1.4 2007-09-07 12:21:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ ReadStripETC::ReadStripETC( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
   , m_usedSelectionsFilled(false)
   , m_longType(8)
+    , m_writeSelResult(0)
 {
   m_vetoedFields.push_back("entry");
   m_vetoedFields.push_back("nChargedProto");
@@ -66,6 +67,8 @@ StatusCode ReadStripETC::initialize() {
           i != m_selections.end(); ++i ) info() << *i << " " ;
     info() << endmsg ;
   }
+
+  m_writeSelResult = tool<IWriteSelResult>("WriteSelResult"); // not private
 
   return StatusCode::SUCCESS;
 }
@@ -136,19 +139,6 @@ StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& ntIN){
 // Filling of SelResults
 //=============================================================================
 StatusCode ReadStripETC::fillSelResults(NTuplePtr& ntIN)const{
-  
-  LHCb::SelResults* resultsToSave ;
-  std::string location = LHCb::SelResultLocation::Default;
-  // Check if SelResult contained has been registered by another algorithm
-  if ( exist<LHCb::SelResults>(location) ){
-    verbose() << "SelResult exists already " << endmsg ;
-    resultsToSave = get<LHCb::SelResults>(location);
-  } else {
-    verbose() << "Putting new SelResult container " << endmsg ;
-    resultsToSave = new LHCb::SelResults();
-    put(resultsToSave,location);
-  }
-
   for ( std::vector<std::string>::const_iterator i = m_usedSelections.begin() ;
         i != m_usedSelections.end(); ++i ) {
     NTuple::Item<long> val;
@@ -158,11 +148,7 @@ StatusCode ReadStripETC::fillSelResults(NTuplePtr& ntIN)const{
       err() << "Could not read value of " << *i << endmsg ;
       return StatusCode::FAILURE;
     }
-    LHCb::SelResult* myResult = new LHCb::SelResult();
-    myResult->setFound((val!=0));
-    myResult->setLocation( ("/Event/Phys/"+*i));
-    debug() << "Created SelResult " << *i << " with result " << val<< endmsg ;
-    resultsToSave->insert(myResult);
+    m_writeSelResult->write(*i,(val!=0));
   }
   return StatusCode::SUCCESS ;
 }

@@ -4,6 +4,12 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+! 2007-09-07 - Patrick Koppenburg
+ - New tool WriteSelResult that does what it's called.
+ - Use this tool in RadStripETC
+ - depend on Kernel/RecInterfaces
+ - increment to v1r3
+
 !============================ RecUtils v1r2 2007-07-12 =======================
 ! 2007-07-12 - Marco Cattaneo
  - Adapt CopyStripETC and ReadStripETC to new DataStreamTool in Gaudi v19r4 
