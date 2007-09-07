@@ -5,6 +5,196 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r9>2007-09-07 LHCbSys v22r9</A></H1><PRE>
+This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
+
+- Packages added:    RecInterfaces v1r0 - Interfaces use RecEvent classes
+- Packages modified: GaudiObjDesc v10r3, KernelSys v6r8, LHCbKernel v7r6,
+    CaloKernel v5r1, ProcessorKernel v5r0, L0MuonKernel v7r1, EventSys v23r8,
+    DAQEvent v7r5, HltEvent v8r4, MCEvent v2r5, LinkerEvent v3r2, L0Event v16r5,
+    PhysEvent v11r3, TrackEvent v4r6, DAQSys v3r4, CaloDAQ v4r0, DetSys v9r9,
+    DetDesc v17r6, CaloDet v8r4, OTDet v7r6, STDet v4r6, VeloDet v12r1,
+    DetCond v11r6, CondDBUI v2r5, MCInterfaces v1r2, DaVinciKernel v6r6,
+    LoKiAlgo v6r0, LoKiAlgoMC v6r0, LoKiCore v6r0, LoKiGen v6r0, LoKiGenMC v6r0,
+    LoKiMC v6r0, LoKiPhys v6r0, LoKiPhysMC v6r0, PatTools v3r2,
+    LinkerInstances v3r3, IOExample v2r1
+
+- In GaudiObjDesc v10r3
+  . Apply patch 1256, to include enums and functions in generated dictionary
+
+- In LHCbKernel v7r7
+  . Add FastAllocVector class, that uses a different allocator
+  . Import header file MemPoolAlloc.h from RichKernel
+  . Make the ParticleID constructor from int explicit
+  . Added dictionary for std::vector<LHCb::VeloChannelID>
+  . Update RichTraceMode to include new result enum, which contains 
+    information on the acceptance of the ray trace (in HPD, in panel etc.)
+  . Add option to perform correction for refraction at Aerogel/Rich1Gas 
+    boundary during ray tracing
+  . Minor fix to logic in OTChannelID fillStream printout
+  . Improved comments of OTChannelID.xml
+  . Add MuonLayout to dictionary
+
+- In CaloKernel v5r1
+  . make CaloVector::addEntry a void method instead of an always successful
+    StatusCode
+
+- In ProcessorKernel v6r0
+  . Register factory : add the possibility to deal with a second instance of the
+    factory. The instance is selected with the selectInstance static method.
+  . Unit : delete the sub units in the destructor
+  . TileRegister: handle register with duplicated tiles (yields a new attribute
+    stored in the XML, requires ParamFiles v7r0).
+
+- In L0MuonKernel v7r1
+  . Introduction of converter to write raw bank
+  . Major changes in the algorithm to match the hardware
+   o modify the extrapolation table
+   o modify the direction to start to look for hits
+   o modify addM3 encoding
+   o modify offM1 encoding (given in M1 granularity)
+  . Major changes in the architecture to write the Raw and L0 buffers
+    (units replaced by converters)
+  . Modification of ProcDataCnv to foolow up the change of specification in
+    RLE compression.
+
+- In DAQEvent v7r5
+  . Add bank types L0MuonCtrlAll, L0MuonProcCand, L0MuonProcData, L0MuonRaw,
+                   L0MuonError, L0CaloFull and L0CaloError
+
+- In HltEvent v8r4
+  . More enums for the Hlt selections and the dimuon alley
+
+- In LinkerEvent v3r2
+  . Add a third template class to LinkedFrom, specifying the type of KEY of the 
+    SOURCE object.
+  . Removed method intRange of LinkedFrom.
+  . New method keyRange of LinkedFrom returning a vector of KEYS.
+  . Insert keys in keyRange using explicitly KEY( int value)
+
+- In L0Event v16r5
+  . xml/L0MuonData.xml (new file): new class to store the lists of muon tiles 
+    received by the L0Muon processing units. 
+  . Event/L0DUBase.h : add the defintion of emptyMuonData 
+    (L0MuonBase.h becomes obsolete)
+  . xml/L0Muon.xml: add new locations for the L0MuonCandidates
+
+- In PhysEvent v11r3
+  . xml/Particle.xml:
+    + Add constructor Particle(const ParticleID& pid, const int key) 
+    + Remove constructor from int key
+
+- In TrackEvent v4r6
+  . Ensure no comparisions with != == between floats
+  . Add 'propagationTolerance' to TrackParameters
+  . Ensure state flags is initialized
+  . Added 'extra-info' fields in track enum for information from track fit
+  . More fixes to fillStream method of Track
+
+- In CaloDAQ v4r0
+  . Global review :
+    + make the decoding interfaces and tools more uniform
+    + new base interface CaloDaq/ICaloReadoutTool
+    + new version number for all interfaces in CaloDAQ
+    + CaloReadout.h moved from CaloDaq/ to src/
+    + cleaning (printout, remove unecessary StatusCodes, ...)
+    + check the decoding stuff was fully robust against corrupted/missing data
+
+- In DetDesc v17r6
+  . Fix gcc 4.0.3 compilation (Savannah patch 28908)
+  . Added missing release of UMS from GeometryInfoPlus.
+  . DetDesc/GlobalToLocalDelta.h: Clarify signature and doxygen documentation 
+    of localDeltaFromGlobalTransform methods
+
+- In CaloDet v8r4
+  . implement Selection Board-> FEB connection (needed for L0Calo) in CardParam.h
+    corresponding Hcal cabling is described in SQLDDDB > v2r2
+  . Decalorimeter  method : int DeCalorimeter::selectionType( int card)
+  . implement new attribute (deltaTime) in cellParam.h
+  . implement new attribute (selectionType) in cardParam.h
+  . new algorithm and options to produce time-misaligned Calorimeter
+
+- In OTDet v7r6
+  . Bug fixes in rt-relation, affecting use of inverse
+
+- In OTDet v7r6, STDet v4r6
+  . Changed parameterization for fast geometry access
+
+- In VeloDet v12r1
+  . Changed the definition of strip radius in halfbox and global frames.  The
+    cached values are no longer computed from the strip centre in the local
+    frame.  Instead the strip radius is now an occupancy weighted mean.  In
+    ideal geometry this is the same. 
+  . Minor fixes for WIN32
+  . new caches of phi and r ranges in DeVeloRType and DeVeloPhiType in global
+    and VELO halfbox frames.
+  . added the concept of a global zone (only relevant for DeVeloRType).
+  . added cache of strip impact paramters in several frames to DeVeloPhiType
+    (only at the level of inner/outer zone, extension to cache per strip is
+    trivial but costly in memory).
+  . improved interface simplifying access to coordinates in several frames
+  . added direct access to other type sensors in the opposite VELO half 
+  . the first update of geometry related caches is now triggered via the update
+    manager service, avoiding double initialisation at job startup.
+
+- In DetCond v11r6
+  . Fix bugs related to 'lazy connection' feature
+
+- In CondDBUI v2r5
+  . Fixed 2 bugs in the browser
+
+- In MCInterfaces v1r2, SimComponents v2r5, LoKiMC v6r0
+  . IMCDecayFinder: replace all LHCb::MCParticle::Vector by ConstVector
+
+- In DaVinciKernel v6r6
+  . DVAlgorithm: use WriteSelResult Tool, remove IAlgorithm2ID usage
+  . Remove IAlgorithm2ID.h
+  . Added TisTosTobbing interfaces
+  . Changed a doxygen comment in IMassVertexFit.h 
+
+- In LoKiCore v6r0
+  . Move the "hybrid" stuff from LoKiHybridBase 
+  . New functionality 
+    + LoKi/Monitoring.h :
+      Three new metafunctions, Counter, Stat and Plot for self-monitoring 
+    + LoKi/Info.f and LoKi/ExtraInfo.h :
+      Generic utilities & functors for manipulation with "extraInfo" data members
+    + LoKi/ILoKiSvc and LoKi/Services.h : Add access to AlgContext Service
+  . src/ParticleProperties.cpp src/Components/LoKiPIDTest.cpp: 
+    No implicit construction of ParticleID from int
+
+- In LoKiGen v6r0
+  . Add all "hybrid"-functionality for the interplay between C++ and Python,
+    in particular for hybrid factory.
+
+- In LoKiMC v6r0
+  . src/Components/HybridMCParticleArrayFilter.cpp: 
+    Add LoKi::Hybrid::MCParticleArrayFilter, the first "hybrid" implementation
+    of new interface IMCParticleArrayFilter 
+
+- In LoKiPhys v6r0
+  . src/Particles0.cpp: No implicit construction of ParticleID
+  . src/SelectVertex.cpp: temporarily removed as it depend on LoKiAlgo creating
+    a circular dependency
+
+- In LoKiAlgo v6r0
+  . remove src\MomentumCombiner.cpp
+
+- In LoKiCore v6r0, LoKiGen v6r0, LoKiMC v6r0, LoKiGenMC v6r0, LoKiPhys v6r0,
+     LoKiAlgo v6r0, LoKiAlgoMC v6r0
+  . Many minor updates to minimize the dependencies, reduce the dictionaries,
+    decrease the compilation time and improve the doxygen documentation
+
+- In PatTools v3r2
+  . Bug fix in PatContainer - iterators become invalid  on windows after clear()
+
+- in CaloDet v8r4, CaloUtils v7r5, CaloDAQ v4r0, Relations v5r2
+  . Fix unchecked StatusCodes
+
+- In IOExample v2r1
+  . Update input files
+  . Fix DataOnDemandSvc usage in ReadMin.opts
+
 </PRE><H1><A NAME=v22r8>2007-07-24 LHCbSys v22r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
@@ -69,6 +259,16 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 - In DaVinciMCKernel v2r2
   . Add interfaces IFilterMCParticles and IMCParticleArrayFilter.
   . Add skeleton implementation FilterMCParticlesBase
+
+- In EventSys v23r8
+  . Added actions to copy rootmap files from RELAX into the LHCB install area
+    rootmap file to enable auto-loading for RELAX dictionaries.
+
+- In LinkerInstances v3r3
+  . Add dictionaries for linkers to/from LHCbID and Particle
+
+- In MCEvent v2r5, LinkerInstances v3r3, DetDesc v17r6
+  . Remove duplicate dictionaries already in libMathRflx and libSTLRflx
 
 - In OTDet v7r5, CaloDet v8r3
   . Fix doxygen warnings
