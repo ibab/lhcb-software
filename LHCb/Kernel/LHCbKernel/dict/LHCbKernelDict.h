@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.4 2007-08-20 13:41:43 marcocle Exp $
+// $Id: LHCbKernelDict.h,v 1.5 2007-09-07 11:52:38 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -13,6 +13,7 @@
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
 #include "Kernel/MuonTileID.h"
+#include "Kernel/MuonLayout.h"
 #include "Kernel/Trajectory.h"
 #include "Kernel/CircleTraj.h"
 #include "Kernel/LineTraj.h"
