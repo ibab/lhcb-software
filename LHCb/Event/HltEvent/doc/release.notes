@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
+! 2007-09-07 - Sandra Amato
+ - included Muon2DxDist Muon3DxDist Muon3DyDist MuonTdist enums
 
 !======================== HltEvent v8r4 2007-09-04 ===========================
 ! 2007-08-02 - Patrick Koppenburg
