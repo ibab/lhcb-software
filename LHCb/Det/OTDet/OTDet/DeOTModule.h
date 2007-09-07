@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.28 2007-07-25 10:53:47 wouter Exp $
+// $Id: DeOTModule.h,v 1.29 2007-09-07 13:24:53 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -291,21 +291,24 @@ public:
   const OTDet::RtRelation& rtRelation() const ;
 
   /** Drift distance for given drift time */
-  float driftDistance(float drifttime ) const ;
+  float driftRadius(float drifttime ) const ;
+
+  /** Drift radius plus resolution for given drift time */
+  OTDet::RadiusWithError driftRadiusWithError( float drifttime ) const ;
 
   /** Drift distance for given drift time. Extrapolate outside cell if
       time is outside [tmin,tmax]. Usefull for pattern recognition,
       but kind of slow. */
-  float untruncatedDriftDistance( float drifttime ) const ;
+  float untruncatedDriftRadius( float drifttime ) const ;
   
+  /** Drift time plus resolution for given drift radius */
+  OTDet::DriftTimeWithError driftTimeWithError( float radius ) const ;
+
   /** Maximum drift time */
   float maxDriftTime() const ;
 
-  /** Resolution for given drift time */ 
-  float resolution(float drifttime ) const ;
-  
   /** Drifttime resolution for given drift time */ 
-  float driftTimeResolution( float drifttime ) const ;
+  float driftTimeResolution( float radius ) const ;
   
   /** Propagation velocity */
   float propagationVelocity() const ;
@@ -408,7 +411,6 @@ private:
   std::vector<float> m_strawt0 ;                ///< vector with t0 for every straw
   std::vector<float> m_strawdefaulttof ;        ///< vector with default tof correction for straw
   OTDet::RtRelation m_rtrelation ;              ///< rt-relation
-  float m_resolution ;                          ///< resolution
   float m_propagationVelocity ;                 ///< propagation velocity
   float m_propagationVelocityY ;                ///< propagation velocity in y-direction (cached for speed)
 };
@@ -654,24 +656,28 @@ inline void DeOTModule::trajectory(unsigned int aStraw,
   yend    = ybegin + m_dy[mono] ;
 }
 
-inline float DeOTModule::driftDistance( float drifttime ) const {
+inline float DeOTModule::driftRadius( float drifttime ) const {
   return m_rtrelation.radius(drifttime) ;
 }
 
-inline float DeOTModule::untruncatedDriftDistance( float drifttime ) const {
+inline float DeOTModule::untruncatedDriftRadius( float drifttime ) const {
   return m_rtrelation.extrapolatedradius(drifttime) ;
+}
+
+inline OTDet::RadiusWithError DeOTModule::driftRadiusWithError( float drifttime ) const {
+  return m_rtrelation.radiusWithError(drifttime) ;
+}
+
+inline OTDet::DriftTimeWithError DeOTModule::driftTimeWithError( float radius ) const {
+  return m_rtrelation.drifttimeWithError(radius) ;
 }
 
 inline float DeOTModule::maxDriftTime() const {
   return m_rtrelation.tmax() ;
 }
 
-inline float DeOTModule::resolution(float /*drifttime*/ ) const {
-  return m_resolution ;
-}  
-
-inline float DeOTModule::driftTimeResolution( float drifttime ) const {
-  return m_resolution / m_rtrelation.drdt( drifttime ) ;
+inline float DeOTModule::driftTimeResolution( float radius ) const {
+  return m_rtrelation.drifttimeError( radius ) ;
 }
 
 inline float DeOTModule::propagationVelocity() const {

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.95 2007-09-04 16:05:50 cattanem Exp $
+! $Id: release.notes,v 1.96 2007-09-07 13:24:53 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-09-07 - Wouter Hulsbergen
+ - revision of RtRelation class to be better suited for calibration algorithm
+ - moved resolution to RtRelation
 
 !========================== OTDet v7r6 2007-09-04 =========================
 ! 2007-08-23 - Wouter Hulsbergen
