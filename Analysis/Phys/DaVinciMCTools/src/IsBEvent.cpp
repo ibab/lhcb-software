@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.6 2007-09-07 13:23:48 pkoppenb Exp $
+// $Id: IsBEvent.cpp,v 1.7 2007-09-07 13:42:36 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ StatusCode IsBEvent::initialize() {
   else info() << "Will be looking for events with " << m_particles << endmsg;
   if (m_andMode) info() << "... of which all have to be there!" << endmsg;
 
-  m_writeTool = tool<IWriteSelResult>("WriteSlResult");
+  m_writeTool = tool<IWriteSelResult>("WriteSelResult");
 
   return StatusCode::SUCCESS;
 };
