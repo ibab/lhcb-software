@@ -1,9 +1,10 @@
-// $Id: WriteSelResult.cpp,v 1.1 2007-09-07 12:21:14 pkoppenb Exp $
+// $Id: WriteSelResult.cpp,v 1.2 2007-09-07 15:34:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
+#include "Event/SelResult.h"
 // local
 #include "WriteSelResult.h"
 
