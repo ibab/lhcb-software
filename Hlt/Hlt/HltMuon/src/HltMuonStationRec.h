@@ -1,4 +1,4 @@
-// $Id: HltMuonStationRec.h,v 1.2 2007-07-12 16:41:29 asatta Exp $
+// $Id: HltMuonStationRec.h,v 1.3 2007-09-07 14:41:28 sandra Exp $
 #ifndef HLTMUONSTATIONREC_H 
 #define HLTMUONSTATIONREC_H 1
 
@@ -17,7 +17,13 @@ public:
   /// Standard constructor
   HltMuonStationRec( IMessageSvc *svc ) {p_svc=svc;}; 
 
-  virtual ~HltMuonStationRec( ) {}; ///< Destructor
+  virtual ~HltMuonStationRec( ) {
+       for ( std::vector<HltMuonRegion*>::iterator itR = m_region.begin();
+                m_region.end() != itR; ++itR ) 
+          delete *itR;          
+
+
+}; ///< Destructor
 
   void setZ( double z )        { m_z = z;    }
   double z( )            const { return m_z; }

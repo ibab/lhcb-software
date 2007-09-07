@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.4 2007-07-12 16:41:29 asatta Exp $
+// $Id: HltMuonRec.cpp,v 1.5 2007-09-07 14:41:28 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,8 @@ HltMuonRec::HltMuonRec( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltMuonRec::~HltMuonRec() {}; 
+HltMuonRec::~HltMuonRec() {
+}; 
 
 //=============================================================================
 // Initialization
