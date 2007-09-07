@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r6 2007-09-07 ======================
 ! 2007-09-05 - David Hutchcroft
  - Modified the treatment of the timing of particle arrivals to correctly 
    implement spillover with the right fractions in each sensor
