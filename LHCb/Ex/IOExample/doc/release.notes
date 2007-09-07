@@ -1,7 +1,12 @@
-$Id: release.notes,v 1.18 2007-03-05 10:27:54 cattanem Exp $
+$Id: release.notes,v 1.19 2007-09-07 15:03:45 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
+
+!====================== IOExample v2r1 2007-09-07 =========================
+! 2007-09-07 - Marco Cattaneo
+ - Update input files
+ - Fix DataOnDemandSvc usage in ReadMin.opts
 
 !====================== IOExample v2r0p3 2007-03-05 =======================
 ! 2007-03-05 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.18 2007-03-05 10:27:54 cattanem Exp $
+// $Id: ReadMin.opts,v 1.19 2007-09-07 15:03:45 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -13,7 +13,6 @@ StoreExplorerAlg.ExploreRelations = 1;
 // DumpMCEvent algorithm dumps MC part of main event
 ApplicationMgr.TopAlg     += { "DumpMCEventAlg" };
 DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
-
 ApplicationMgr.EvtMax      = 5;
 
 // Set up POOL persistency and load DLLs that contain the necessary dictionaries
@@ -24,6 +23,8 @@ ApplicationMgr.EvtMax      = 5;
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
 // Unpack the packed containers on demand
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler = true ;
 #include "$STDOPTS/UnpackDigi.opts"
 
 // Input data file can be produced by first running IOMin.exe with WriteMin.opts

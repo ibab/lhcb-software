@@ -1,6 +1,6 @@
 // Options to read POOL .sim file and make a copy
-EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // B->J/Psi(mumu)Ks events with Gauss v25r0, XmlDDDB v30r8
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
