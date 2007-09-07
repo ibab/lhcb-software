@@ -1,20 +1,15 @@
-// $Id: OTTimeCreator.h,v 1.10 2007-04-08 16:58:03 janos Exp $
+// $Id: OTTimeCreator.h,v 1.11 2007-09-07 13:19:21 wouter Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // Kernel
 #include "Kernel/OTChannelID.h"
+#include "OTDAQ/OTRawBankDecoder.h"
 
-// Event
-#include "Event/RawBank.h"
-#include "Event/RawEvent.h"
-
-//local
-#include "Event/GolHeader.h"
-#include "Event/DataWord.h"
 
 // forward declarations
 class DeOTDetector;
@@ -44,29 +39,11 @@ protected:
 
 private:
   
-  // From Raw to OTTime
-  void raw2OTTime(const int station, const int layer, const int quarter, const int module, 
-                  const LHCb::DataWord dataWord, LHCb::OTTimes& times) const;
-
-  /// Make the OTTimes
-  void createTimes(const LHCb::OTChannelID aChan, LHCb::OTTimes& time) const;
-
-  /// t0 calibration
-  double correctedTime(const LHCb::OTChannelID aChan, 
-                       const double unCorrectedTime) const;
-  
-  // Get address information 
-  int getStrawID(const int otisID, const int channel) const;
-
   // job options
   std::string m_timeLocation;
   bool m_tofCorrection;                     ///< Time of Flight Correction
-  std::vector<double> m_startReadOutGate;   ///< Start of readout gate
-  int m_countsPerBX;                        ///< Counts per BX
-  int  m_numberOfBX;                        ///< Number of BX
-  double m_timePerBX;                       ///< Time Per BX
-  DeOTDetector* m_tracker;                  ///< Pointer to XML geometry
-  double m_tdcConversion;
+  DeOTDetector* m_tracker;                  ///< Pointer to XML geometry 
+  ToolHandle<OTRawBankDecoder> m_rawbankdecoder ;
 };
 
 #endif // OTDAQ_OTTIMECREATOR_H

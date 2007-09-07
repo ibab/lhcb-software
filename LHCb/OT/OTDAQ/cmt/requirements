@@ -18,5 +18,8 @@ apply_pattern install_more_includes more=OTDAQ offset=Event
 
 # ================= component library ====================
 library OTDAQ *.cpp
-
 apply_pattern component_library library=OTDAQ
+
+#================== linker library =======================
+library OTDAQLib   ../src/OTLiteTime.cpp 
+apply_pattern linker_library library=OTDAQLib
