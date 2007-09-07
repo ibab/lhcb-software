@@ -1,4 +1,4 @@
-#include "OTDAQ/OTLiteTime.h"
+#include "Event/OTLiteTime.h"
 
 namespace LHCb
 {

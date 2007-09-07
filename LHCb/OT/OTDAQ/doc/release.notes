@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2007-09-07 - Kurt Rinnert
+ - fixed include path in OTLiteTime.cpp
+
 ! 2007-09-07 - Wouter Hulsbergen
  - Added OTLiteTime and OTRawBankDecoder
  - Modified OTTimeCreator to use OTRawBankDecoder
@@ -149,12 +152,12 @@ Package manager : J. Nardulli
   - GOL-header: -------------------------------------------------------------
                 bit     31  30-29   28-16     15-0
                          0   ID    nothing  GOL-size
-		-------------------------------------------------------------
+      -------------------------------------------------------------
   - For each two hits a data word is filled. The GOL-size is the number of the data-words 
     inside the GOL.
   - data word:  -------------First hit---------||-----Next hit----------------
                 bit     31  30-29  28-24  23-16  15  14-13    12-8  7-0
                          1 OTIS-ID straw  time    1 OTIS-ID  straw  time
-		-------------------------------------------------------------
+      -------------------------------------------------------------
   - The straw number runs from 0-31. 
 
