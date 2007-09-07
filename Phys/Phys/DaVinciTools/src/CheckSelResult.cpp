@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.5 2007-09-07 13:25:14 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.6 2007-09-07 13:40:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode CheckSelResult::initialize() {
   if (!m_avoidSelResult) info() 
     << "You have set AvoidSelResult to false -> will write out to TES" << endmsg; 
 
-  m_writeTool = tool<IWriteSelResult>("WriteSlResult");
+  m_writeTool = tool<IWriteSelResult>("WriteSelResult");
 
   return StatusCode::SUCCESS;
 };
