@@ -1,10 +1,8 @@
-// $Id: TfKernelDict.h,v 1.1 2007-08-21 22:44:51 jonrob Exp $
+// $Id: TfKernelDict.h,v 1.2 2007-09-07 13:32:10 wouter Exp $
 #ifndef DICT_TFKERNELDICT_H 
 #define DICT_TFKERNELDICT_H 1
 
 #include "TfKernel/TfIDTypes.h"
-
-#include "TfKernel/OTLiteTime.h"
 
 #include "TfKernel/OTHit.h"
 #include "TfKernel/STHit.h"
@@ -18,8 +16,6 @@
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/ISTHitCleaner.h"
 #include "TfKernel/IOTHitCleaner.h"
-
-#include "TfKernel/IOTRawBankDecoder.h"
 
 // instantiate some templated classes, to get them into the dictionary
 namespace 

@@ -3,6 +3,13 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+! 2007-09-07 - Wouter Hulsbergen
+ - moved OTLiteTime and OTRawBankDecoder to OT/OTDAQ
+ - removed building of linker library since nothing left to link 
+ - adapted OTHit to interface change in DeOTModule
+ - reimplemented OTHitCleaner to speed it up
+
 ! 2007-09-06 - Stephanie Hansmann-Menzemer
  - remove prepareIT/OT interfaces for all but region level
  - move prepareIT/OT interfaces to private

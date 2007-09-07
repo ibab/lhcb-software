@@ -13,8 +13,6 @@
 
   <class name = "Tf::RegionID" />
 
-  <class name = "LHCb::OTLiteTime" />
-
   <class name = "Tf::OTHit" />
   <class name = "Tf::STHit" />
   <class name = "Tf::VeloRHit" />
@@ -36,7 +34,5 @@
   <class name = "Tf::Envelope&lt;Tf::OTHit::DetectorElementType&gt;" />
   <class name = "Tf::ISTHitCreator::STRegion" />
   <class name = "Tf::IOTHitCreator::OTRegion" />
-
-  <class name = "Tf::IOTRawBankDecoder" />
 
 </lcgdict>

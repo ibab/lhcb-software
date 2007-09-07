@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
+ *  $Id: LineHit.h,v 1.5 2007-09-07 13:32:10 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -16,7 +16,6 @@
 #define TFKERNEL_LINEHIT_H 1
 
 #include "TfKernel/HitBase.h"
-#include "TfKernel/OTLiteTime.h"
 
 // DetElems
 #include "STDet/DeSTSector.h"
@@ -24,6 +23,7 @@
 
 // Eventmodel
 #include "Event/STLiteCluster.h"
+#include "Event/OTLiteTime.h"
 
 namespace Tf
 {

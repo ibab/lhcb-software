@@ -52,11 +52,11 @@ namespace Tf
       void print(std::ostream& os) const ;
 
       // loading and clearing event
-      size_t loadHits(const IOTRawBankDecoder& decoder, float tmin, float tmax) ;
+      size_t loadHits(const OTRawBankDecoder& decoder, float tmin, float tmax) ;
       void clearEvent() { m_ownedhits.clear() ;  m_sortedhits.clear() ; m_isloaded = false ;}
       void setRange( OTHits::const_iterator begin, OTHits::const_iterator end ) { m_hitrange = OTHitRange(begin,end) ; }
-
-    private:
+      static size_t moduleIndexInRegion( LHCb::OTChannelID id ) { return id.module() + (id.quarter()%2) * 9 ; }
+     private:
       const DeOTModule* m_det ;
       mutable HitContainer m_ownedhits ;        // these are the hits which the module owns
       mutable SortedHitContainer m_sortedhits ; // hits sorted in x. I hope I can get rid of it.
@@ -75,14 +75,13 @@ namespace Tf
     inline bool compareHitX( const Tf::OTHit* lhs, const Tf::OTHit* rhs) { return lhs->xT() < rhs->xT() ; }
 
     /// Decode this module
-    size_t OTModule::loadHits(const IOTRawBankDecoder& decoder,
+    size_t OTModule::loadHits(const OTRawBankDecoder& decoder,
                               float tmin, float tmax)
     {
       if( !m_isloaded ) {
         // create the otlitetimes
-        LHCb::OTLiteTimeRange otlitetimes ;
         const DeOTModule& moduleelement = detelement() ;
-        decoder.decodeModule( moduleelement.elementID(), otlitetimes ) ;
+        LHCb::OTLiteTimeRange otlitetimes = decoder.decodeModule( moduleelement.elementID() ) ;
 
         // create the hits
         size_t numhits = otlitetimes.size() ;
@@ -146,7 +145,8 @@ namespace Tf
                 aregion = new OTRegionImp(regionid,*this) ;
                 insert( aregion ) ;
               }
-              aregion->insert( (*imodule)->elementID().module(), new HitCreatorGeom::OTModule(**imodule) ) ;
+	      size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
+              aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule) ) ;
               ++nummodules ;
             }
       for(RegionContainer::iterator ireg = regions().begin() ; ireg != regions().end() ; ++ireg)
@@ -199,7 +199,7 @@ namespace Tf
                              const std::string& name,
                              const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_otdecoder("Tf::OTRawBankDecoder"),
+    m_otdecoder("OTRawBankDecoder"),
     m_rejectOutOfTime(false),
     m_tmin(-8*Gaudi::Units::ns),
     m_tmax(56*Gaudi::Units::ns),
@@ -229,7 +229,6 @@ namespace Tf
 
     // tool handle to the otlitetimedecoder
     sc = m_otdecoder.retrieve() ;
-    sc.ignore() ;
 
     // get geometry and copy the hierarchy y to navigate hits. do we
     // want to delay this till the first event?
@@ -242,7 +241,7 @@ namespace Tf
       m_tmax = 0 ;
     }
 
-    return StatusCode::SUCCESS;
+    return sc ;
   }
 
   StatusCode OTHitCreator::finalize()
@@ -310,6 +309,26 @@ namespace Tf
     return m_detectordata->region(iStation,iLayer,iRegion) ;
   }
 
+
+  // Retrieve an OTModule
+  const Tf::HitCreatorGeom::OTModule* OTHitCreator::module( const LHCb::OTChannelID id ) const 
+  {
+    Tf::RegionID regionid(id) ;
+    const Tf::HitCreatorGeom::OTRegionImp* thisregion = 
+      m_detectordata->region(regionid.station(),regionid.layer(),regionid.region()) ;
+    size_t modindex = Tf::HitCreatorGeom::OTModule::moduleIndexInRegion( id ) ;
+    const Tf::HitCreatorGeom::OTModule* thismodule = thisregion->modules()[modindex] ;
+    assert( thismodule->detelement().elementID() == id ) ;
+    return thismodule ;
+  }
+
+  Tf::OTHit OTHitCreator::hit( const LHCb::OTChannelID id ) const
+  {
+    // we could as well use OTDet here .. we only need the element.
+    const Tf::HitCreatorGeom::OTModule* thismodule = module(id) ;
+    return Tf::OTHit( thismodule->detelement(), LHCb::OTLiteTime(id)) ;
+  }
+  
   //   void OTHitCreator::insertHits(const std::vector<size_t>& modules) const
   //   {
   //     // this call invalidates all pointers in modules that we don't

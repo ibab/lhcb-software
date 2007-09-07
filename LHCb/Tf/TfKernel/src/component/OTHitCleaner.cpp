@@ -1,4 +1,4 @@
-// $Id: OTHitCleaner.cpp,v 1.5 2007-08-28 12:03:58 jonrob Exp $
+// $Id: OTHitCleaner.cpp,v 1.6 2007-09-07 13:32:10 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -90,6 +90,10 @@ void OTHitCleaner::removeClusters( const OTHits::const_iterator begin,
   OTHits::const_iterator currentend = begin ;
   size_t numhits = std::distance(begin,end) ;
   std::vector<bool> selectedhits(numhits,false) ;
+  typedef std::vector<size_t> IndexContainer ;
+  IndexContainer indexmono[2] ;
+  indexmono[0].reserve(64) ;
+  indexmono[1].reserve(64) ;
 
   while( currentend != end) {
     // first select hits in this module
@@ -99,37 +103,34 @@ void OTHitCleaner::removeClusters( const OTHits::const_iterator begin,
     
     // now divide the hits by mono layer. I wanted to nmake this a
     // container of iterators but the compilor doesn't like it.
-    typedef std::vector<size_t> IndexContainer ;
-    IndexContainer indexmono[2] ;
+    indexmono[0].clear() ;
+    indexmono[1].clear() ;
     for( OTHits::const_iterator it = currentbegin; it != currentend ; ++it)
       indexmono[ (*it)->monolayer() ].push_back(std::distance(begin,it)) ;
 
     // process each monolayer
     for(unsigned int imono=0; imono<2; ++imono)
       if( !indexmono[imono].empty() ) {
-        // count cluster size. if cluster small enough, accept
-        // hits. what a mess!
-        IndexContainer::const_iterator lastindex = indexmono[imono].begin() ;
-        IndexContainer::const_iterator endindex  = indexmono[imono].end() ;
-        IndexContainer::const_iterator nextindex = lastindex ;
-        OTHits::const_iterator nexthit = begin ;
-        std::advance(nexthit, * nextindex ) ;
-        while( nextindex != endindex ) {
-          size_t thisindex = *nextindex ;
-          OTHits::const_iterator thishit = nexthit ;
-          ++nextindex ;
-          std::advance(nexthit, (*nextindex - thisindex ) ) ;
-          bool endofcluster = nextindex==endindex ||
-            abs( (int)((*nexthit)->straw() - (*thishit)->straw()) ) != 1 ;
+	IndexContainer::const_iterator clusterbeginindex = indexmono[imono].begin() ;
+	IndexContainer::const_iterator clusterendindex   = indexmono[imono].begin() ;
+	IndexContainer::const_iterator endindex  = indexmono[imono].end() ;
+	OTHits::const_iterator currenthit(begin) ;
+	std::advance(currenthit,*clusterendindex) ;
+	while(clusterendindex  != endindex ) {
+	  bool endofcluster = ++clusterendindex == endindex ;
+	  if( !endofcluster ) {
+	    OTHits::const_iterator nexthit(begin) ;
+	    std::advance(nexthit,*clusterendindex) ;
+	    endofcluster = abs( (int)(*currenthit)->straw() - (*nexthit)->straw() ) != 1 ;
+	    currenthit = nexthit ;
+	  }
           if(endofcluster) {
             // flip the bools if the cluster is accepted
-            if( std::distance(lastindex,nextindex) <= m_maxClusterSize)
-              for( ; lastindex!=nextindex; ++lastindex)
-                selectedhits[*lastindex] = true ;
-            // otherwise, just update the index
-            else
-              lastindex = nextindex ;
-          }
+            if( std::distance(clusterbeginindex,clusterendindex) <= m_maxClusterSize)
+              for( ; clusterbeginindex!=clusterendindex; ++clusterbeginindex)
+                selectedhits[*clusterbeginindex] = true ;
+	    clusterbeginindex = clusterendindex ;
+	  }
         }
       }
   }

@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.6 2007-08-28 12:03:58 jonrob Exp $
+ *  $Id: OTHit.h,v 1.7 2007-09-07 13:32:10 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -17,7 +17,6 @@
 
 // Include files
 #include "TfKernel/LineHit.h"
-#include "Event/OTTime.h"
 #include "LoKi/Range.h"
 
 namespace Tf
@@ -84,24 +83,24 @@ namespace Tf
     /** The drift distance after correction for propagation time */
     inline float driftDistance( const double globaly ) const
     { 
-      return module().driftDistance( driftTime( globaly) ) ; 
+      return module().driftRadius( driftTime( globaly) ) ; 
     }
 
-    /** XXX???XXX No idea what this returns */
+    /** Test if this hit is out-of-time */
     bool outOfTime( const double globaly, const double numsigma ) const ;
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
      *  XXX???XXX If obsolete, should we not remove this method entirely */
     inline float untruncatedDriftDistance( const double globaly ) const 
     { 
-      return module().untruncatedDriftDistance( driftTime( globaly) ) ; 
+      return module().untruncatedDriftRadius( driftTime( globaly) ) ; 
     }
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
      *  XXX???XXX If obsolete, should we not remove this method entirely */
     inline float untruncatedDriftDistance() const 
     { 
-      return module().untruncatedDriftDistance( driftTime(yMid()) ) ; 
+      return module().untruncatedDriftRadius( driftTime(yMid()) ) ; 
     }
 
     /** Access the straw number for this hit */
@@ -144,9 +143,9 @@ namespace Tf
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
     const float time = driftTime(yMid()) ;
-    m_driftDistance  = aModule.driftDistance(time) ;
-    const float res = aModule.resolution(time) ;
-    setVariance(res*res) ;
+    OTDet::RadiusWithError r = aModule.driftRadiusWithError( time ) ;
+    m_driftDistance  = r.val ;
+    setVariance(r.err*r.err) ;
   }
 
   inline bool OTHit::outOfTime( double globaly, double numsigma ) const 

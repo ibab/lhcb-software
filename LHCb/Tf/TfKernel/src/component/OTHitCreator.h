@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.4 2007-08-21 18:16:08 jonrob Exp $
+ *  $Id: OTHitCreator.h,v 1.5 2007-09-07 13:32:10 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -20,7 +20,7 @@
 #include "TfKernel/IOTHitCreator.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "TfKernel/OTHit.h"
-#include "OTRawBankDecoder.h"
+#include "OTDAQ/OTRawBankDecoder.h"
 
 namespace LHCb{
   class OTChannelID;
@@ -103,13 +103,19 @@ namespace Tf
                                    const TLayerID iLayer,
                                    const OTRegionID iRegion) const ;
 
+
+    // Create a single OTHit from an lhcbid
+    OTHit hit( const LHCb::OTChannelID id ) const ;    
+
   public:
     double tmin() const { return m_tmin ; }
     double tmax() const { return m_tmax ; }
     bool   rejectOutOfTime() const { return m_rejectOutOfTime ; }
-    const IOTRawBankDecoder* decoder() const { return &(*m_otdecoder) ; }
+    const OTRawBankDecoder* decoder() const { return &(*m_otdecoder) ; }
+    const HitCreatorGeom::OTModule* module( const LHCb::OTChannelID id ) const ;
+
   private:
-    ToolHandle<IOTRawBankDecoder> m_otdecoder ;
+    ToolHandle<OTRawBankDecoder> m_otdecoder ;
     bool m_rejectOutOfTime ;
     double m_tmin ;
     double m_tmax ;
