@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.2 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackMonitor.cpp,v 1.3 2007-09-07 08:56:25 mneedham Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -42,8 +42,8 @@ StatusCode TrackMonitor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // guess that the size of the histograms at ref is ~ 0.35 by 0.3
-  m_xMax = GSL_MAX(5.0*Gaudi::Units::cm, 0.35*m_refZ);
-  m_yMax = GSL_MAX(5.0*Gaudi::Units::cm, 0.3*m_refZ);
+  m_xMax = GSL_MAX(5.0, 0.35*m_refZ/Gaudi::Units::cm);
+  m_yMax = GSL_MAX(5.0, 0.3*m_refZ/Gaudi::Units::cm);
 
   
   return StatusCode::SUCCESS;
