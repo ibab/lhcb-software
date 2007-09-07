@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v4r5
+version           v4r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -32,5 +32,3 @@ apply_pattern god_dictionary files=../xml/*.xml
 #============================================================================
 library       TrackEvent        *.cpp
 apply_pattern linker_library	library=TrackEvent
-
-macro_append cppflags '-Wfloat-equal -Wconversion -Wsign-compare -Wmissing-noreturn'

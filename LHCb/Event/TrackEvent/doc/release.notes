@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r6 2007-09-07 ==========================
 ! 2007-09-06 M Needham
  - Ensure no comparisions with != == between floats
  
@@ -11,7 +12,6 @@
  - Add 'propagationTolerance' to TrackParameters
 
 ! 2007-09-05 - M. Needham 
-
  - Ensure state flags is initialized
 
 ! 2007-09-04 - Wouter Hulsbergen
