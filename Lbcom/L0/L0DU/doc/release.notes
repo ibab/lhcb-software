@@ -1,17 +1,19 @@
-! $Id: release.notes,v 1.65 2007-09-06 21:45:38 jucogan Exp $
+! $Id: release.notes,v 1.66 2007-09-07 15:35:55 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v7r7 2007-09-07 =========================
 ! 2007-09-06 - Julien Cogan
  - Modification in L0Sequence.opts to follow up changes in L0Muon (v7r3)
-!========================== L0DU v7r6 2006-07-20 =========================
+
+!========================== L0DU v7r6 2007-07-20 =========================
 ! 2007-07-19 - Marco Cattaneo
  - Remove Brunel.opts (functionality moved to Brunel, from v31r8)
  - Boole.opts changed to remove Boole dependency and renamed WriteETC.opts
  - BooleRead.opts changed to remove Boole dependency and renamed ReadETC.opts
 
-!========================== L0DU v7r5 2006-07-16 =========================
+!========================== L0DU v7r5 2007-07-16 =========================
 ! 2007-07-15 - Patrick Koppenburg
  - src/L0Strip.*
    . Added L0 information
