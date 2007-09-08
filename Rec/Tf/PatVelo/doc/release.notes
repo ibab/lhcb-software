@@ -4,7 +4,15 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
-!========================== PatVelo v3r0 2007-08-26 ==========================
+! 2007-09-08 - Kurt Rinnert
+ - the PatVeloHit extended hit now cachs the zone
+ - bugfix in PatVeloTrackTool: the phi coordinates were set wrongly, not
+   taking into account the reference radius.  This led to wrong states after
+   the fit and hence bad performace of downstream algorithms.
+ - changed default tune of PatVeloSpaceTool to adapt to the bugfix in
+   PatVeloTrackTool
+ - gave the PatVeloSpaceTool a name that allows configuration via options
+
 ! 2007-08-26 - Kurt Rinnert
  - added hit extensions needed in new track finding framwork
  - added hit manangers needed in new track finding framwork

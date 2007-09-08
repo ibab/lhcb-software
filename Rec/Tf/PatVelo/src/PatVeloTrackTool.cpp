@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.2 2007-09-08 19:45:59 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -118,7 +118,8 @@ namespace Tf {
     for( iP = phiCoords->begin() ; iP != phiCoords->end() ; ++iP ){
       double z = (*iP)->z();
       double r = track->rInterpolated( z );      
-      (*iP)->setRadiusAndPhi(r,(*iP)->coordHalfBox());
+      double phi = (*iP)->coordHalfBox() + (*iP)->sensor()->halfboxPhiOffset((*iP)->zone(),r);
+      (*iP)->setRadiusAndPhi(r,phi);
     }
     return;
   }
@@ -231,6 +232,7 @@ namespace Tf {
       // reset phi coords
       this->setPhiCoords(patTrack);
       patTrack->fitSpaceTrack( forwardStepError, false );
+
       LHCb::State lastVeloState;
       lastVeloState.setState( patTrack->point().x() + boxOffset.x(),
           patTrack->point().y() + boxOffset.y(),

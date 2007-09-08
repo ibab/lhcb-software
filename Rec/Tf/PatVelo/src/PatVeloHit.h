@@ -1,4 +1,4 @@
-// $Id: PatVeloHit.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloHit.h,v 1.2 2007-09-08 19:45:59 krinnert Exp $
 #ifndef INCLUDE_TF_PATVELOHIT_H
 #define INCLUDE_TF_PATVELOHIT_H 1
 
@@ -42,6 +42,7 @@ namespace Tf {
           , m_referencePhi(0.0)
           , m_sinPhi(0.0)
           , m_cosPhi(1.0)
+          , m_zone(hit->sensor()->globalZoneOfStrip(hit->strip()))
           {;}
 
         ~PatVeloHit() {;} ///< Destructor
@@ -51,6 +52,9 @@ namespace Tf {
 
         /// access to sensor pointer
         const SENSORTYPE* sensor() const { return this->hit()->sensor(); } 
+
+        /// shortcut access to the global zone
+        unsigned int zone() const { return m_zone; }
 
         /// access to reference radius
         double referenceR() const { return m_referenceR; }
@@ -88,6 +92,7 @@ namespace Tf {
         double m_referencePhi;
         double m_sinPhi;
         double m_cosPhi;
+        unsigned int m_zone;
 
     };
 

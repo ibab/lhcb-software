@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.2 2007-09-08 19:45:59 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -40,8 +40,8 @@ namespace Tf {
 
       declareProperty( "FractionFound"   , m_fractionFound    = 0.35      );
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );
-      declareProperty( "PhiMatchTol"     , m_phiMatchTol      = 0.188      );
-      declareProperty( "PhiFirstTol"     , m_phiFirstTol      = 0.107       );
+      declareProperty( "PhiMatchTol"     , m_phiMatchTol      = 0.16      );
+      declareProperty( "PhiFirstTol"     , m_phiFirstTol      = 0.09       );
       declareProperty( "AdjacentSectors" , m_adjacentSectors = false      );
       declareProperty( "FractionPhiMerge", m_fractionPhiMerge = 0.5       );
       declareProperty( "stepError"       , m_stepError        = 0.002     );
