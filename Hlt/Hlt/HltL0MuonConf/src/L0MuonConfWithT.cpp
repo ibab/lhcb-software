@@ -1,4 +1,4 @@
-// $Id: L0MuonConfWithT.cpp,v 1.4 2007-07-12 17:52:36 asatta Exp $
+// $Id: L0MuonConfWithT.cpp,v 1.5 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -31,9 +31,7 @@ L0MuonConfWithT::L0MuonConfWithT( const std::string& name,
     declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName = "Hlt/Tracks/ConfirmedL0Muon");
 
-  declareProperty("nSigma",m_nsigma=5);
   declareProperty("debugInfo", m_debugInfo = false);
-  declareProperty("MyOutput", m_myOutput = "Hlt/Track/L0TsaConfTool");
 
 }
 //=============================================================================
@@ -52,7 +50,7 @@ StatusCode L0MuonConfWithT::initialize() {
   
   m_prepareMuonSeed = tool<IPrepareMuonSeed>("PrepareMuonSeed");
 
-  m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool" );
+  m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool", this );
   m_outputMuonTracks =
     m_patDataStore->createTrackContainer( m_outputMuonTracksName, 20 );
  
@@ -88,13 +86,10 @@ StatusCode L0MuonConfWithT::execute() {
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
-//info()<<" sono qui "<<endreq;
+
    std::vector<LHCb::Track*>* foundTracksTmp = new std::vector<LHCb::Track*>;
   foundTracksTmp->reserve(50);
-  LHCb::Tracks* output = new LHCb::Tracks();
-  output->reserve(50);
 
-//info()<<" e ora qui"<<endreq;
   
 
   int muonCounter=0;  
@@ -171,14 +166,11 @@ StatusCode L0MuonConfWithT::execute() {
     debug()<<" after seed definition "<<seedState.qOverP()<<" "<<regionL0Cand<<endreq;
     
 
-  //  info()<<" dopo prepare "<<endreq;
     //play with seeding tool
     m_TsaConfirmTool->tracks( seedState , *foundTracksTmp );
-   // info()<<" qopo tsa "<<endreq;
     for( iterTrack = foundTracksTmp->begin();
        iterTrack != foundTracksTmp->end() ;
        iterTrack++ ) {
-//       info()<<"T  track "<<endreq;
       LHCb::Track* fitTrack =  (*iterTrack)->clone();
       fitTrack->addToAncestors (*it);
       //copy the muon tiles from L0muon track
@@ -193,18 +185,17 @@ StatusCode L0MuonConfWithT::execute() {
       }
  
       Track* outTr = m_outputMuonTracks->newEntry();
-     // info()<<" muon "<<endreq;   
       outTr->copy(*fitTrack);
       outTr->setFlag(Track::L0Candidate,true);
 //      outTr->addToAncestors(*it);
 //info()<<" size "<<outTr->ancestors().size()<<" "
 //	<<(outTr->ancestors())[0]<<" "<<*it<<" "<<outTr<<endreq;
       m_outputTracks->push_back(outTr);
-    //output->insert(outTr);
 
      // info()<<" hlt container"<<endreq;
       setFilterPassed(true);
       delete  (*iterTrack);
+      delete(fitTrack);
    
     }
 
@@ -215,7 +206,6 @@ StatusCode L0MuonConfWithT::execute() {
     
   }//end loop muons
 
-  //put(output, m_myOutput);
 
   delete foundTracksTmp;
 

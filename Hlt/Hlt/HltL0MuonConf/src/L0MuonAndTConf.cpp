@@ -1,9 +1,12 @@
-// $Id: L0MuonAndTConf.cpp,v 1.4 2007-07-12 17:52:36 asatta Exp $
+// $Id: L0MuonAndTConf.cpp,v 1.5 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Event/MuonCoord.h"
+#include "Event/HltNames.h"
+#include "Event/HltEnums.h"
+
 
 // local
 #include "L0MuonAndTConf.h"
@@ -27,7 +30,6 @@ L0MuonAndTConf::L0MuonAndTConf( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "maxDist",m_maxdist=100);
-//  declareProperty( "skipFilter",m_skipFilter=false);
   
 }
 //=============================================================================
@@ -56,18 +58,16 @@ StatusCode L0MuonAndTConf::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
-//  HltAlgorithm::beginExecute();
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {   
      MuonTileID tileM4, tileM5;
-    if(calcDLL(*itT, tileM4, tileM5)<m_maxdist){ 
+    double dist = calcDLL(*itT, tileM4, tileM5);    
+    if(dist<m_maxdist){ 
       setFilterPassed(true);
-       //if(!skipFilter){
-//	(*itT)->setFlag(Track::L0Candidate,true);
-  //     }
        (*itT)->addToAncestors (*itT);
        (*itT)->addToLhcbIDs(tileM4);
        (*itT)->addToLhcbIDs(tileM5);
+       (*itT)->addInfo(HltNames::particleInfoID("MuonTdist"),dist);
        m_outputTracks->push_back(*itT);
 
 
@@ -75,8 +75,6 @@ StatusCode L0MuonAndTConf::execute() {
     
   }
   
-//  HltAlgorithm::endExecute();
-//  if(m_skipFilter) setFilterPassed(true);
   
   return StatusCode::SUCCESS;
 }

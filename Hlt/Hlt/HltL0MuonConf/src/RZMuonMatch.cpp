@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.cpp,v 1.4 2007-07-12 17:52:36 asatta Exp $
+// $Id: RZMuonMatch.cpp,v 1.5 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,6 @@ StatusCode RZMuonMatch::initialize() {
   
   m_matchToolPointer=tool<IMatchTVeloTracks>( "MatchTVeloTracks" );
 
- info()<<"exit "<<endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -82,7 +81,6 @@ StatusCode RZMuonMatch::execute() {
       
       
 
-      //    StatusCode sc=tryMatch(pTr2d);
     
       if(StatusCode::SUCCESS == sc) {
         debug()<<" success "<<endreq;
@@ -122,6 +120,7 @@ StatusCode RZMuonMatch::execute() {
       
       }
     }
+    tt++;
   }  
   
 //  HltAlgorithm::endExecute();

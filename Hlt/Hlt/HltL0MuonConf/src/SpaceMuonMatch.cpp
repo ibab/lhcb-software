@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.cpp,v 1.5 2007-07-12 17:52:36 asatta Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.6 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -77,7 +77,6 @@ StatusCode SpaceMuonMatch::execute() {
       Track* outputTrack=new Track();
       float x_dist, y_dist; 
       StatusCode sc=m_matchToolPointer->match3dVelo(*pTrack,*muon,*outputTrack, x_dist, y_dist);
-      debug()<<" dopo muon "<<sc<<endreq;      
       if(StatusCode::SUCCESS == sc) {
         debug() << "Matched " << endmsg;
 
@@ -102,7 +101,8 @@ StatusCode SpaceMuonMatch::execute() {
         outTr->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist2dRecalc);
         outTr->addInfo(HltNames::particleInfoID("Muon3DxDist"),x_dist);
         outTr->addInfo(HltNames::particleInfoID("Muon3DyDist"),y_dist);
-
+        double tDist = (*itMuon)->info(LHCb::HltEnums::MuonTdist,-1);
+        outTr->addInfo(HltNames::particleInfoID("MuonTdist"),tDist );
         std::vector< LHCb::LHCbID > list_lhcb=(*itMuon)->lhcbIDs();
 
         for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
@@ -127,6 +127,7 @@ StatusCode SpaceMuonMatch::execute() {
       delete outputTrack;       
             
     }
+    tt++;
   }  
 //  HltAlgorithm::endExecute();
   return StatusCode::SUCCESS;

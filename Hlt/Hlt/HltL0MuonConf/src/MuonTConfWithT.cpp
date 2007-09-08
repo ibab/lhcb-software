@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.cpp,v 1.5 2007-07-26 07:17:39 asatta Exp $
+// $Id: MuonTConfWithT.cpp,v 1.6 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode MuonTConfWithT::initialize() {
   
   m_prepareMuonSeed = tool<IPrepareMuonTSeed>("PrepareMuonTSeed");
 
-  m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool" );
+  m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool", this );
   m_outputMuonTracks =
     m_patDataStore->createTrackContainer( m_outputMuonTracksName, 20 );
  
@@ -73,14 +73,10 @@ StatusCode MuonTConfWithT::execute() {
 
   m_countEvent++;
 
-//info()<<" sono qui "<<endreq;
    std::vector<LHCb::Track*>* foundTracksTmp = new std::vector<LHCb::Track*>;
   foundTracksTmp->reserve(50);
-  //LHCb::Tracks* output = new LHCb::Tracks();
-  //output->reserve(50);
 
 
-//info()<<" e ora qui"<<endreq;
   
   m_inputL0Muons = get<L0MuonCandidates>(L0MuonCandidateLocation::Default); 
 
@@ -88,18 +84,14 @@ StatusCode MuonTConfWithT::execute() {
 
   std::vector<LHCb::Track*>::iterator iterTrack;
   m_totMuonInput=m_totMuonInput+m_patInputTracks->size();
-int nummu=0;  
+  int nummu=0;  
   for ( std::vector<Track*>::const_iterator itT = m_patInputTracks->begin();
         m_patInputTracks->end() != itT; itT++ ) {
     
     
     Track* pTrack = (*itT);
 
-
-
-
-    std::vector<LHCbID> muonTiles=
-      pTrack->lhcbIDs();
+    std::vector<LHCbID> muonTiles= pTrack->lhcbIDs();
     MuonTileID tileM2=muonTiles[0].muonID();
     MuonTileID tileM3=muonTiles[1].muonID();
     
@@ -107,12 +99,9 @@ int nummu=0;
     L0MuonCandidates::const_iterator itL0Mu;
     std::vector<LHCb::Track*>::iterator iterTrack;
     bool L0clone=false;
-    //int nummu=0;
     for (itL0Mu = m_inputL0Muons->begin();
          itL0Mu!=m_inputL0Muons->end();
          itL0Mu++){
-      //  std::vector<MuonTileID> list_of_tile= (*itL0Mu)->muonTileIDs(1);
-      //MuonTileID tileM2=*(list_of_tile.begin());
       std::vector<MuonTileID> list_of_tileM3= (*itL0Mu)->muonTileIDs(2);
       MuonTileID L0tileM3=*(list_of_tileM3.begin());
       if(tileM3==L0tileM3)L0clone=true;
@@ -132,14 +121,11 @@ int nummu=0;
     if( sctmp.isFailure() ){
       err()<<"Failed to prepare the seed"<<endmsg;
     }
-  //  info()<<" dopo prepare "<<endreq;
     //play with seeding tool
     m_TsaConfirmTool->tracks( myState , *foundTracksTmp );
-   // info()<<" qopo tsa "<<endreq;
     for( iterTrack = foundTracksTmp->begin();
        iterTrack != foundTracksTmp->end() ;
        iterTrack++ ) {
-       //info()<<" track "<<endreq;
       LHCb::Track* fitTrack =  (*iterTrack)->clone();
       fitTrack->addToAncestors (*itT);
 
@@ -147,34 +133,24 @@ int nummu=0;
       fitTrack->addToLhcbIDs(tileM3);
  
       Track* outTr = m_outputMuonTracks->newEntry();
-     // info()<<" muon "<<endreq;   
       outTr->copy(*fitTrack);
       outTr->setFlag(Track::L0Candidate,false);
 
       m_outputTracks->push_back(outTr);
- //     output->insert(outTr);
-     // info()<<" hlt container"<<endreq;
-//      setFilterPassed(true);
       delete  (*iterTrack);
+      delete  (fitTrack);
    
     }
 
     if(m_debugInfo)
- info()<<"Tool found : "<<foundTracksTmp->size()
-                           <<" tracks for the seed number "<<muonCounter<<" !"<<endmsg;
+              info()<<"Tool found : "<<foundTracksTmp->size()
+                    <<" tracks for the seed number "<<muonCounter<<" !"<<endmsg;
      foundTracksTmp->clear();
 
     
   }//end loop muons
 
-//put(output, "Hlt/Track/MuonTrackConf");
-
   delete foundTracksTmp;
-//  setFilterPassed(true);
-//info()<<" output size "<< m_outputTracks->size()<<" "<< 
-//m_outputMuonTracks->size()<<endreq;
-//  HltAlgorithm::endExecute();	
-//  setFilterPassed(true);
  
   return StatusCode::SUCCESS;
 }

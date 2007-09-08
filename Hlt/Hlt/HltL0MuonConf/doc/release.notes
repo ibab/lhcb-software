@@ -3,6 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2007-09-08 - Sandra Amato
+ - SpaceMuonMatch: added Tdist info to the track 
+ - L0MuonAndTConf: added Tdist info to the track
+ - L0MuonConfWithT: fixed memory leak, made the TsaConfirmTool belong to the algorithm
+ - MuonTConfWithT: fixed memory leak, made the TsaConfirmTool belong to the algorithm
 
 !========================== HltL0MuonConf v1r1 2007-07-31 ===================
 ! 2007-07-26 - Alessia Satta 

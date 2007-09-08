@@ -1,4 +1,4 @@
-// $Id: PrepareDimuon.cpp,v 1.1 2007-07-12 17:52:36 asatta Exp $
+// $Id: PrepareDimuon.cpp,v 1.2 2007-09-08 18:34:11 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,6 @@ StatusCode PrepareDimuon::initialize() {
 //=============================================================================
 StatusCode PrepareDimuon::execute() {
 
-  debug() << "==> Execute" << endmsg;
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
   HltAlgorithm::beginExecute(); 
