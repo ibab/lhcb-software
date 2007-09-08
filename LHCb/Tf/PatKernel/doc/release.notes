@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2007-09-08 - Kurt Rinnert
+ - fixed the name of the include directory in requirements file
+
 !2007-09-06 - Stephanie Hansmann-Menzemer
 - first release of package, serves as Kernel package for PatVeloTT and
   PatForward packages
