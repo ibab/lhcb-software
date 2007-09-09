@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.12 2007-02-22 13:30:24 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.13 2007-09-09 13:59:49 robbep Exp $
 // Include files
 
 // local
@@ -19,6 +19,7 @@
 #include "Generators/IDecayTool.h"
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
+#include "Generators/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalForcedFragmentation
@@ -144,6 +145,9 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
                                                           isInverted ,
                                                           dummyHasFlipped ) ;
 
+        // Erase daughters of signal particle
+        HepMCUtils::RemoveDaughters( theSignal ) ;
+        
         theParticleList.clear() ;
         theParticleList.push_back( theSignal ) ;
 

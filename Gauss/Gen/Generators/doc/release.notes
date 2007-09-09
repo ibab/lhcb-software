@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.104 2007-08-22 18:09:33 gcorti Exp $
+! $Id: release.notes,v 1.105 2007-09-09 13:59:48 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-09-09 - Patrick Robbe
+ - src/component/SignalForcedFragmentation: fix problem with particles
+   already decayed (bug introduced when fixing CP violation with other
+   generation methods).
 
 !====================== Generators v7r3 2007-08-22 ===========================
 ! 2007-07-17 - Patrick Robbe
