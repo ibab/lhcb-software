@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.105 2007-09-09 13:59:48 robbep Exp $
+! $Id: release.notes,v 1.106 2007-09-09 15:49:08 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
@@ -9,6 +9,8 @@
  - src/component/SignalForcedFragmentation: fix problem with particles
    already decayed (bug introduced when fixing CP violation with other
    generation methods).
+ - src/Lib/Signal.cpp: change name of iterators in nested loops for Windows
+   compilation.
 
 !====================== Generators v7r3 2007-08-22 ===========================
 ! 2007-07-17 - Patrick Robbe

@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.20 2007-07-17 14:23:13 robbep Exp $
+// $Id: Signal.cpp,v 1.21 2007-09-09 15:49:09 robbep Exp $
 // Include files 
 
 // local
@@ -108,9 +108,9 @@ StatusCode Signal::initialize( ) {
     svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
   
   info() << "Generating Signal events of " ;
-  PIDs::const_iterator it ;
-  for ( it = m_pids.begin() ; it != m_pids.end() ; ++it ) {
-    ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
+  PIDs::const_iterator it2 ;
+  for ( it2 = m_pids.begin() ; it2 != m_pids.end() ; ++it2 ) {
+    ParticleProperty * prop = ppSvc -> findByStdHepID( *it2 ) ;
     info() << prop -> particle() << " " ;
 
     LHCb::ParticleID pid( prop -> pdgID() ) ;
