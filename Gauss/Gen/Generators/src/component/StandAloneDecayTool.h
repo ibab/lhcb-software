@@ -1,4 +1,4 @@
-// $Id: StandAloneDecayTool.h,v 1.2 2006-08-28 21:27:28 robbep Exp $
+// $Id: StandAloneDecayTool.h,v 1.3 2007-09-09 19:33:10 robbep Exp $
 #ifndef GENERATORS_STANDALONEDECAYTOOL_H 
 #define GENERATORS_STANDALONEDECAYTOOL_H 1
 
@@ -16,7 +16,7 @@
 class StandAloneDecayTool : public Signal {
 public:
   /// Standard constructor
-  StandAloneDecayTool( const std::string& name , const std::string & name ,
+  StandAloneDecayTool( const std::string & type , const std::string & name ,
                        const IInterface * parent ) ;
   
   virtual ~StandAloneDecayTool( ) ; ///< Destructor

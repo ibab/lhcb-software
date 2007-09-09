@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.12 2007-01-12 15:17:36 ranjard Exp $
+// $Id: EvtGenDecay.cpp,v 1.13 2007-09-09 19:32:43 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -311,7 +311,7 @@ StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenParticle * theMother ,
 // or is of the type targetId
 //=============================================================================
 StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenParticle * theMother ,
-                                                int targetId ) const {
+                                                const int targetId ) const {
   checkParticle( theMother ) ;
 
   EvtParticle * part( 0 ) ;
@@ -422,7 +422,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
 //=============================================================================
 // Check if given Pdg Id is defined in the decay table
 //=============================================================================
-bool EvtGenDecay::isKnownToDecayTool( int pdgId ) const {
+bool EvtGenDecay::isKnownToDecayTool( const int pdgId ) const {
   EvtId id = EvtPDL::evtIdFromStdHep( pdgId ) ;
   if ( id == EvtId(-1,-1) ) return false ;
   if ( 0  == EvtDecayTable::getNMode( id.getAlias() ) ) return false ;

@@ -1,18 +1,18 @@
-// $Id: LHAPDFCommonBlocks.cpp,v 1.2 2006-02-07 17:23:25 robbep Exp $
+// $Id: LHAPDFCommonBlocks.cpp,v 1.3 2007-09-09 19:32:43 robbep Exp $
 // access LHAPDF common LHASILENT
 #include "Generators/LHAPDFCommonBlocks.h"
 
 extern "C" {
 #ifdef WIN32
-  void __stdcall GETLHAPARM( int * , char * , int ) ;
-  void __stdcall SETLHAPARM( int * , char * , int ) ;
-  void __stdcall GETLHAVALUE( int * , double * ) ;
-  void __stdcall SETLHAVALUE( int * , double * ) ;
+  void __stdcall GGETLHAPARM( int * , char * , int ) ;
+  void __stdcall GSETLHAPARM( int * , char * , int ) ;
+  void __stdcall GGETLHAVALUE( int * , double * ) ;
+  void __stdcall GSETLHAVALUE( int * , double * ) ;
 #else 
-  void getlhaparm_( int * , char * , int ) ;
-  void setlhaparm_( int * , char * , int ) ;
-  void getlhavalue_( int * , double * ) ;
-  void setlhavalue_( int * , double * ) ;
+  void ggetlhaparm_( int * , char * , int ) ;
+  void gsetlhaparm_( int * , char * , int ) ;
+  void ggetlhavalue_( int * , double * ) ;
+  void gsetlhavalue_( int * , double * ) ;
 #endif
 }
 
@@ -28,9 +28,9 @@ void Lhacontrol::setlhaparm( int n , const std::string & value ) {
   strcpy( arg , value.c_str() ) ;
   if ( n < 1 || n > lenlhaparm() ) return ;
 #ifdef WIN32
-  SETLHAPARM( & n , arg , strlen( arg ) ) ;
+  GSETLHAPARM( & n , arg , strlen( arg ) ) ;
 #else
-  setlhaparm_( & n , arg , strlen( arg ) ) ;
+  gsetlhaparm_( & n , arg , strlen( arg ) ) ;
 #endif
   delete [] arg ;
 }
@@ -42,9 +42,9 @@ void Lhacontrol::getlhaparm( int n , std::string & value ) {
   }
   char * arg = new char[ 20 ] ;
 #ifdef WIN32
-  GETLHAPARM( &n , arg , strlen( arg ) ) ;
+  GGETLHAPARM( &n , arg , strlen( arg ) ) ;
 #else
-  getlhaparm_( &n , arg , strlen( arg ) ) ;
+  ggetlhaparm_( &n , arg , strlen( arg ) ) ;
 #endif
   value = arg ;
   delete [] arg ;
@@ -54,9 +54,9 @@ void Lhacontrol::getlhaparm( int n , std::string & value ) {
 void Lhacontrol::setlhavalue( int n , double value ) {
   if ( n < 1 || n > lenlhaparm() ) return ;
 #ifdef WIN32
-  SETLHAVALUE( &n , &value ) ;
+  GSETLHAVALUE( &n , &value ) ;
 #else
-  setlhavalue_( &n , &value ) ;
+  gsetlhavalue_( &n , &value ) ;
 #endif
 }
 
@@ -66,9 +66,9 @@ void Lhacontrol::getlhavalue( int n , double & value ) {
     return ;
   }  
 #ifdef WIN32
-  GETLHAVALUE( &n , &value ) ;
+  GGETLHAVALUE( &n , &value ) ;
 #else
-  getlhavalue_( &n , &value ) ;
+  ggetlhavalue_( &n , &value ) ;
 #endif
 }
 

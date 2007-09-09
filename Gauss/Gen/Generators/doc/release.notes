@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.106 2007-09-09 15:49:08 robbep Exp $
+! $Id: release.notes,v 1.107 2007-09-09 19:32:43 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
@@ -11,6 +11,9 @@
    generation methods).
  - src/Lib/Signal.cpp: change name of iterators in nested loops for Windows
    compilation.
+ - src/Lib/LHAPDFCommonBlocks.cpp, LHAPDFUtils.F: rename routine whose names
+   are used in the new LHAPDF version
+ - Various fixes for Windows compilation
 
 !====================== Generators v7r3 2007-08-22 ===========================
 ! 2007-07-17 - Patrick Robbe

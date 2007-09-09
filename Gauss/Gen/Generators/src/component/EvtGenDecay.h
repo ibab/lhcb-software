@@ -1,6 +1,27 @@
-// $Id: EvtGenDecay.h,v 1.4 2006-02-05 21:02:45 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.5 2007-09-09 19:32:44 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
+
+// Avoid contamination with WINDOWS symbols
+#ifdef WIN32
+#define NOATOM
+#define NOGDI
+#define NOGDICAPMASKS
+#define NOMETAFILE
+#define NOMINMAX
+#define NOMSG
+#define NOOPENFILE
+#define NORASTEROPS
+#define NOSCROLL
+#define NOSOUND
+#define NOSYSMETRICS
+#define NOTEXTMETRIC
+#define NOWH
+#define NOCOMM
+#define NOKANJI
+#define NOCRYPT
+#define NOMCX
+#endif
 
 // Include files
 // from STL
@@ -72,7 +93,7 @@ public:
   
   /// Implements IDecayTool::generateDecayWithLimit
   virtual StatusCode generateDecayWithLimit( HepMC::GenParticle * theMother,
-                                             int targetId ) const ;
+                                             const int targetId ) const ;
 
   /// Implements IDecayTool::enableFlip
   virtual void enableFlip() const ; 
@@ -81,7 +102,7 @@ public:
   virtual void disableFlip() const ;
   
   /// Implements IDecayTool::isKnownToDecayTool
-  virtual bool isKnownToDecayTool( int pdgId ) const ;
+  virtual bool isKnownToDecayTool( const int pdgId ) const ;
 
   /// Implements IDecayTool::getSignalBr
   virtual double getSignalBr( ) const ;
