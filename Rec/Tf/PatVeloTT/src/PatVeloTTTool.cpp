@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.3 2007-09-06 16:17:17 smenzeme Exp $
+// $Id: PatVeloTTTool.cpp,v 1.4 2007-09-10 08:55:10 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -183,7 +183,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
       for (TTRegionID reg=0; reg<m_ttHitManager->maxRegions(); reg++){
         if( 0 == m_ttHitManager->hits(sta,lay,reg).size()) continue;
 
-        const ISTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
+        const ITTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
 
         double zTTReg = regionB->z();
         double x = cand.xAtZ(zTTReg);

@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.cpp,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
+// $Id: PatLHCbID2MCParticle.cpp,v 1.3 2007-09-10 08:55:10 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -32,8 +32,8 @@ PatLHCbID2MCParticle::PatLHCbID2MCParticle( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_othitcreator("Tf::OTHitCreator"),
-    m_ithitcreator("Tf::STHitCreator/ITHitCreator"),
-    m_tthitcreator("Tf::STHitCreator/TTHitCreator")
+    m_ithitcreator("Tf::STHitCreator<Tf::IT>/ITHitCreator"),
+    m_tthitcreator("Tf::STHitCreator<Tf::TT>/TTHitCreator")
 {
   m_targetName = "Pat/LHCbID";
   declareProperty( "TargetName", m_targetName );
@@ -141,7 +141,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
     otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
 
   //== TT
-  STHitRange tthits = m_tthitcreator->ttHits();
+  STHitRange tthits = m_tthitcreator->hits();
    
   for (STHitRange::const_iterator itTTH = tthits.begin();
        itTTH < tthits.end();itTTH++){
@@ -167,7 +167,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
   }
 
   //== T coordinates
-  STHitRange ithits = m_ithitcreator->itHits();
+  STHitRange ithits = m_ithitcreator->hits();
   for (STHitRange::const_iterator itSTH = ithits.begin();
 	     itSTH < ithits.end();itSTH++){
     m_partList.clear();

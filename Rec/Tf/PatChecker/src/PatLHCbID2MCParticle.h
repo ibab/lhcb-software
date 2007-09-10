@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.h,v 1.2 2007-09-06 16:38:52 smenzeme Exp $
+// $Id: PatLHCbID2MCParticle.h,v 1.3 2007-09-10 08:55:10 wouter Exp $
 #ifndef PATLHCBID2MCPARTICLE_H 
 #define PATLHCBID2MCPARTICLE_H 1
 
@@ -12,7 +12,8 @@
 
 #include "GaudiKernel/ToolHandle.h"
 #include "TfKernel/IOTHitCreator.h"
-#include "TfKernel/ISTHitCreator.h"
+#include "TfKernel/IITHitCreator.h"
+#include "TfKernel/ITTHitCreator.h"
  
 
 /** @class PatLHCbID2MCParticle PatLHCbID2MCParticle.h
@@ -55,8 +56,8 @@ namespace Tf {
     std::string m_targetName;
     std::vector<const LHCb::MCParticle*> m_partList;
     ToolHandle<IOTHitCreator> m_othitcreator;
-    ToolHandle<ISTHitCreator> m_ithitcreator;
-    ToolHandle<ISTHitCreator> m_tthitcreator;
+    ToolHandle<IITHitCreator> m_ithitcreator;
+    ToolHandle<ITTHitCreator> m_tthitcreator;
   };
 }
 #endif // PATLHCBID2MCPARTICLE_H

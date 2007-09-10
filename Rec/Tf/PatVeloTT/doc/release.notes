@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-10 - Wouter Hulsbergen
+ - adapted to splitting of STHitCreator
+
 ! 2007-09-06 - Stephanie Hansmann-Menzemer
 - move PatVeloTTHit and PatVeloTTHitManager to new PatKernel package, adapt
   algorithms accordingly
