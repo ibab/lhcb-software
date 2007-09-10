@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.2 2007-09-08 19:45:59 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.3 2007-09-10 12:14:36 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -429,7 +429,7 @@ namespace Tf {
       for ( itP = iPhiList->coords().begin();
           iPhiList->coords().end() != itP; ++itP ) {
         phiCan->addPhi( *itP );
-        if ( m_markClustersUsed ) (*itP)->hit()->setUsed( true );
+        if ( m_markClustersUsed ) (*itP)->hit()->setStatus( HitBase::UsedByVeloSpace );
       }
       phiCan->setChiSqDof( iPhiList->chiSq() );
       accepted.push_back( phiCan );

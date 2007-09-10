@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatRZTrack.cpp,v 1.2 2007-09-10 12:14:36 krinnert Exp $
 // Include files 
 
 // local
@@ -60,7 +60,7 @@ namespace Tf {
   void PatRZTrack::tagUsedCoords()  {
     for ( VeloRHits::iterator itC = m_coord.begin();
         m_coord.end() != itC; ++itC ){
-      (*itC)->setUsed( true );
+      (*itC)->setStatus(HitBase::UsedByVeloRZ);
     }
   }
 

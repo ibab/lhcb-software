@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-09-10 - Kurt Rinnert
+ - the RZ and space tracking now set the proper status flags of the used hits.
+
 ! 2007-09-08 - Kurt Rinnert
  - the PatVeloHit extended hit now cachs the zone
  - bugfix in PatVeloTrackTool: the phi coordinates were set wrongly, not
