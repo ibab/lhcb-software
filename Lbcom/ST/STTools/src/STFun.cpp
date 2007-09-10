@@ -1,4 +1,4 @@
-// $Id: STFun.cpp,v 1.5 2007-06-29 14:37:24 mneedham Exp $
+// $Id: STFun.cpp,v 1.6 2007-09-10 07:00:58 wouter Exp $
 #include "STFun.h"
 
 
@@ -16,7 +16,7 @@ std::pair<double, unsigned int > STFun::position(const SmartRefVector<LHCb::STDi
   double trimmedCharge = 0.0; double firstMoment =0.0; 
   iterDigit = digits.begin();
   for (; iterDigit != digits.end() ; ++iterDigit){
-    if ((*iterDigit)->depositedCharge() > trimVal){
+    if ((*iterDigit)->depositedCharge() >= trimVal){
       firstMoment += ((*iterDigit)->depositedCharge()*(double)(*iterDigit)->channelID().strip());
       trimmedCharge += (*iterDigit)->depositedCharge() ;
       ++nUsed;
@@ -40,13 +40,13 @@ std::pair<double, unsigned int> STFun::position(const LHCb::STCluster::ADCVector
     if (iter->second > maxCharge) maxCharge = iter->second;
     ++iter; 
   }
-  const double trimVal = trim*maxCharge;
+  const unsigned int trimVal = int(trim*maxCharge) ;
 
   // calc trimmed mean
   unsigned int i =0; unsigned int nUsed = 0;
   iter = strips.begin();
   while (iter != strips.end()){
-    if (iter->second > trimVal){
+    if (iter->second >= trimVal){
       trimmedCharge += iter->second;
       firstMoment += iter->second
                    *(double)i;
