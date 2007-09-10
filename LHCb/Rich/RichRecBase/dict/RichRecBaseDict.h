@@ -39,13 +39,15 @@ namespace
 {
   struct _Instantiations 
   {
-    Rich::ObjPtn<Rich::Rec::RadCorrLocalPositions>   obj_1;
-    Rich::ObjPtn<std::vector<LHCb::RichRecTrack*> >  obj_2;
-    Rich::ObjPtn<std::vector<LHCb::RichRecPhoton*> > obj_3;
-    Rich::HypoData<LHCb::RichRecRing*>               obj_4;
-    Rich::HypoData<float>                            obj_5;
+    Rich::ObjPtn<Rich::Rec::RadCorrLocalPositions>                 obj_1;
+    Rich::ObjPtn<std::vector<LHCb::RichRecTrack*> >                obj_2;
+    Rich::ObjPtn<std::vector<LHCb::RichRecPhoton*> >               obj_3;
+    Rich::HypoData<LHCb::RichRecRing*>                             obj_4;
+    Rich::HypoData<float>                                          obj_5;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecRingOnPixel> > obj_6;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecPhoton*> >     obj_7;
+    Rich::ObjPtn<LHCb::FastAllocVector<LHCb::RichRecTrack*> >      obj_8;
   };
 }
 
 #endif // DICT_RICHRECBASEDICT_H
-
