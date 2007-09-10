@@ -1,8 +1,9 @@
 import copy, time
 import Online.PVSS    as PVSS
 import Online.Utils   as Utils
+import Online.SetupParams as Params
+import Online.Streaming.PartitionInfo as PartitionInfo
 from   Online.Streaming.SlotPolicy import SlotPolicy as SlotPolicy
-from   Online.Streaming.PartitionInfo import PartitionInfo as PartitionInfo
 from   Online.Streaming.StreamingDescriptor import StreamingDescriptor as StreamingDescriptor
 
 log            = Utils.log
@@ -10,19 +11,16 @@ error          = PVSS.error
 warning        = Utils.warning
 printSlots     = Utils.printSlots
 std            = PVSS.gbl.std
-DeviceSensor   = PVSS.DeviceSensor
-DeviceListener = PVSS.PyDeviceListener
-PVSS.logPrefix = 'PVSS Control '
 
 DataPoint = PVSS.DataPoint
 debug = 0
-NUM_INFRASTRUCTURE_TASKS = 5
 
 def getNodesFromSlots(slots):
   nodes = {}
   for i in slots:
     nodes[i[:i.find(':')]] = 1
   return nodes.keys()
+
 # =============================================================================
 class FSMmanip:
   """
@@ -50,10 +48,11 @@ class FSMmanip:
 
   """
   # ===========================================================================
-  def __init__(self,partition,name,manager,type):
-    self.partition = partition
-    self.name    = name
-    self.manager = manager
+  def __init__(self,info,type,match='*'):
+    self.info    = info
+    self.name    = info.name
+    self.match   = match
+    self.manager = info.manager
     self.reader  = self.manager.devReader()
     self.writer  = self.manager.devWriter()
     typ          = self.manager.typeMgr().type(type)
@@ -61,7 +60,7 @@ class FSMmanip:
     self.enabled = self._fsmLookup('mode.enabled',typ)
     self.labels  = self._fsmLookup('ui.label',typ)
     self.visible = self._fsmLookup('ui.visible',typ)
-    self.types   = self._fsmLookup('type',typ)
+    self.fsmtypes= self._fsmLookup('type',typ)
     self.tnode   = self._fsmLookup('tnode',typ)
     self.names   = self._tskLookup('Name',tsk_typ)
     self.inUse   = self._tskLookup('InUse',tsk_typ)
@@ -71,29 +70,32 @@ class FSMmanip:
     self.cmds    = self._tskLookup('FMC_Start',tsk_typ)
     self.slots = {}
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'_*'),tsk_typ)
+    obj.lookup(DataPoint.original(self.name+'_'+match),tsk_typ)
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]
-      node = node.split('_')[2]
+      itms = node.split('_')
+      node = itms[2]
+      if len(itms)>2 and itms[3][:3]=="MON":
+        node = node+'_'+itms[3]
       if not self.slots.has_key(node): self.slots[node] = []
       self.slots[node].append(i)
-    self.class0Tasks = {}
-    self.class1Tasks = {}
-    self.class0Parents = {}
-    self.class1Parents = {}
+    self.tasks = {}
     self.nodeParents = {}
-    
+    rdr = self.manager.devReader()
+    rdr.add(self.fsmtypes.container)
+    rdr.execute()
+
   # ===========================================================================
   def _fsmLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'|'+self.name+'_*.'+dp),type)
+    obj.lookup(DataPoint.original(self.name+'|'+self.name+'_'+self.match+'.'+dp),type)
     return obj
   
   # ===========================================================================
   def _tskLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'_*.'+dp),type)
+    obj.lookup(DataPoint.original(self.name+'_'+self.match+'.'+dp),type)
     return obj
   
   # ===========================================================================
@@ -101,30 +103,21 @@ class FSMmanip:
     m = {}
     nam = self.name+'_'
     tag = self.name+'|'+nam
-    for i in self.class0Tasks.keys():
+    for i in self.tasks.keys():
       if debug: log(self.name+'> Task map:'+tag+' '+i+' '+i[5:9],timestamp=1)
-      if i[5:9]=="strm":
-        dpn = self.name+'|FSM_StrmNode_FWDM.fsm.sendCommand'
-      else:
-        dpn = self.name+'|FSM_RecvNode_FWDM.fsm.sendCommand'
+      dpn = self.name+'|FSM_Tasks_FWDM.fsm.sendCommand'
       if not m.has_key(dpn): m[dpn] = []
       m[dpn].append(str(nam+i).upper())
-      dp0 = tag+i+'FSM_Class0_FWDM.fsm.sendCommand'
-      if not m.has_key(dp0): m[dp0] = []
-      m[dp0].append(str(nam+i).upper()+'_CLASS0')
-      dp1 = tag+i+'FSM_Class1_FWDM.fsm.sendCommand'
-      if not m.has_key(dp1): m[dp1] = []
-      m[dp1].append(str(nam+i).upper()+'_CLASS1')
-    for i in self.class0Tasks.keys():
-      for j in self.class0Tasks[i]:
-        dp = tag+i+'_Class0FSM_DimTask_FWDM.fsm.sendCommand'
+    for i in self.tasks.keys():
+      for j in self.tasks[i]:
+        dp = tag+i+'FSM_DimTask_FWDM.fsm.sendCommand'
         if not m.has_key(dp): m[dp] = []
         val = self.enabled.container[j].name()
         val = val[val.find('|')+1:val.find('.')]
         m[dp].append(val.upper())
-    for i in self.class1Tasks.keys():
-      for j in self.class1Tasks[i]:
-        dp = tag+i+'_Class1FSM_DimTask_FWDM.fsm.sendCommand'
+    for i in self.tasks.keys():
+      for j in self.tasks[i]:
+        dp = tag+i+'FSM_DimTask_FWDM.fsm.sendCommand'
         if not m.has_key(dp): m[dp] = []
         val = self.enabled.container[j].name()
         val = val[val.find('|')+1:val.find('.')]
@@ -160,11 +153,8 @@ class FSMmanip:
                                      
   # ===========================================================================
   def collectTaskSlots(self):
-    self.class0Tasks = {}
-    self.class1Tasks = {}
+    self.tasks = {}
     self.taskSlots = {}
-    self.class0Parents = {}
-    self.class1Parents = {}
     self.nodeParents = {}
     nam = self.name+'|'+self.name+'_'
     num = self.enabled.container.size()
@@ -173,6 +163,9 @@ class FSMmanip:
     cnt_0 = 0
     cnt_1 = 1
     for i in xrange(num):
+      if self.fsmtypes.container[i].data != "FSM_DimTask":
+        if debug: log('skip:'+str(self.enabled.container[i].name()))
+        continue
       node0 = self.enabled.container[i].name()
       key = self.name+'|'+self.name
       node1 = node0[node0.find(key)+len(key)+1:]
@@ -180,15 +173,13 @@ class FSMmanip:
       if debug: log('node2:'+node2+' '+node0)
       if node0.find(tag) > 0: continue
       item = node1[node1.find('_')+1:]
+      if item[:3]=="MON":
+        node2 = node1[:node1.find('_')+4]
+        item = item[4:]
       task_id = int(item[:3])
-      if task_id < NUM_INFRASTRUCTURE_TASKS:
-        if not self.class0Tasks.has_key(node2):
-          self.class0Tasks[node2] = []
-        self.class0Tasks[node2].append(i)
-      else:
-        if not self.class1Tasks.has_key(node2):
-          self.class1Tasks[node2] = []
-        self.class1Tasks[node2].append(i)
+      if not self.tasks.has_key(node2):
+        self.tasks[node2] = []
+      self.tasks[node2].append(i)
       if not self.taskSlots.has_key(node2):
         self.taskSlots[node2] = {}
       self.taskSlots[node2][i] = self.slots[node2][task_id]
@@ -196,16 +187,14 @@ class FSMmanip:
         if debug: log('Add node:'+node2)
         self.nodeParents[node2] = self.enabled.container.size()
         self.addNodeObject(nam+node2)
-        self.class0Parents[node2] = self.enabled.container.size()
-        self.addNodeObject(nam+node2+'_Class0')
-        self.class1Parents[node2] = self.enabled.container.size()
-        self.addNodeObject(nam+node2+'_Class1')
-      
+    print 'Task nodes:',self.tasks.keys(),self.tasks
+    
   # ===========================================================================
   def enableObject(self, i, node, enabled, visible, label, type="NONE"):
     if debug:
       print 'Enable slot for:', i, i.__class__, enabled, visible, label
       print 'Enable:', self.enabled.container[i].name()
+    #visible = 1
     self.enabled.container[i].data = int(enabled)
     self.writer.add(self.enabled.container[i])
     self.labels.container[i].data = label
@@ -235,62 +224,21 @@ class FSMmanip:
   def reset(self):
     for i in self.nodeParents.keys():
       self.enableObject(self.nodeParents[i],i,-1,0,'Disabled')
-    for i in self.class0Parents.keys():
-      self.enableObject(self.class0Parents[i],i,-1,0,'Disabled')
-    for i in self.class1Parents.keys():
-      self.enableObject(self.class1Parents[i],i,-1,0,'Disabled')
-    for i in self.class0Tasks.keys():
-      for j in self.class0Tasks[i]:
+    for i in self.tasks.keys():
+      for j in self.tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
         self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
-    for i in self.class1Tasks.keys():
-      for j in self.class1Tasks[i]:
+    for i in self.tasks.keys():
+      for j in self.tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
         self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
     res = self.writer.execute()
     return self._commitFSM(self._makeTaskMap(),'DISABLE')
 
   # ===========================================================================
-  def allocateInfrastructure(self,processes):
-    cl0 = copy.deepcopy(self.class0Tasks)
-    self.class0Tasks = {}
-    # print cl0
-    for n in self.nodeParents.keys():
-      print 'Node parent:',n
-    for n in processes.keys():
-      if debug: print '--->',len(processes[n]),' Class 0 tasks running on node:',n
-    for (n,task_list) in processes.items():
-      if debug: print 'allocateInfrastructure:',n
-      if self.nodeParents.has_key(n):
-        if len(task_list) > 0:
-          itm1 = self.nodeParents[n]
-          itm2 = self.class0Parents[n]
-          if self.enabled.container[itm1].data != 1:
-            self.enableObject(itm1,n,1,1,n)
-          if self.enabled.container[itm2].data != 1:
-            self.enableObject(itm2,n,1,1,'Class0')
-      self.class0Tasks[n] = []
-      for task in task_list:
-        if cl0.has_key(n) and len(cl0[n]) > 0:
-          i = cl0[n][0]
-          if debug: print 'Task:',i,task
-          self.enableObject(i,n,1,1,task[2])
-          cmd = '-e -o -u '+task[1]+' -D PARTITION='+self.partition+' /home/frankm/runGaudi.sh '+task[1]+'.opts Class0 '+task[3]
-          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
-          self.class0Tasks[n].append(i)
-          del cl0[n][0]
-        else:
-          error(self.name+': No task slots for Class 0 present!',timestamp=1)
-          if not cl0.has_key(n): error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
-          else:                  error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
-          return None
-          
-    return self
-
-  # ===========================================================================
   def allocateProcesses(self,processes):
-    cl1 = copy.deepcopy(self.class1Tasks)
-    self.class1Tasks = {}
+    cl1 = copy.deepcopy(self.tasks)
+    self.tasks = {}
     for n in processes.keys():
       if debug: print '--->',len(processes[n]),' Class 1 tasks running on node:',n
     for (n,task_list) in processes.items():
@@ -298,30 +246,24 @@ class FSMmanip:
       if self.nodeParents.has_key(n):
         if len(task_list) > 0:
           itm1 = self.nodeParents[n]
-          itm2 = self.class1Parents[n]
           if self.enabled.container[itm1].data != 1:
             self.enableObject(itm1,n,1,1,n)
-          if self.enabled.container[itm2].data != 1:
-            self.enableObject(itm2,n,1,1,'Class1')
       if self.nodeParents.has_key(n):
         if len(task_list) > 0:
           itm1 = self.nodeParents[n]
-          itm2 = self.class1Parents[n]
           if self.enabled.container[itm1].data != 1:
             self.enableObject(itm1,n,1,1,n)
-          if self.enabled.container[itm2].data != 1:
-            self.enableObject(itm2,n,1,1,'Class1')
 
-
-      self.class1Tasks[n] = []
+      self.tasks[n] = []
+      script = Params.gauditask_startscript
       for task in task_list:
         if cl1.has_key(n) and len(cl1[n]) > 0:
           i = cl1[n][0]
           if debug: print 'Task:',task
           self.enableObject(i,n,1,1,task[2])
-          cmd = '-e -o -u '+task[1]+' -D PARTITION='+self.partition+' /home/frankm/runGaudi.sh '+task[1]+'.opts Class1 '+task[3]
+          cmd = task[6]+'#-e -o -u '+task[1]+' -D PARTITION='+self.info.detectorName()+' '+script+' '+task[1]+'.opts '+task[4]+' '+task[3]+' '+task[5]
           self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
-          self.class1Tasks[n].append(i)
+          self.tasks[n].append(i)
           del cl1[n][0]
         else:
           error(self.name+': No task slots for Class 1 present!',timestamp=1)
@@ -382,32 +324,28 @@ class BlockSlotPolicy(SlotPolicy):
 
 # =============================================================================
 #
-# CLASS: Control
+# CLASS: Allocator
 #
 # =============================================================================
-class Control(StreamingDescriptor,DeviceListener):
+class Allocator(StreamingDescriptor):
   """ @class Control
 
       @author  M.Frank
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager, name, info_interface):
+  def __init__(self, manager, name, info_interface, policy=(BlockSlotPolicy,BlockSlotPolicy)):
     """ Default constructor
-        @param  manager       Reference to PVSS ControlManager
-        @param  name          Name of the Streaming control datapoint
+        @param  manager         Reference to PVSS ControlManager
+        @param  name            Name of the Streaming control datapoint
+        @param  info_interface  Creator for RunInfo interpreter
+        @param  policy          Slot llocation policy object
 
         @return reference to initialized object
     """
     StreamingDescriptor.__init__(self,manager,name)
-    DeviceListener.__init__(self,self,manager)
-    self.control  = self.get('Command')
-    self.state  = self.get('State')
-    PVSS.info(name+': Listen to '+self.control.name(),1)
-    PVSS.info(name+': Answer to '+self.state.name(),1)
-    self.sensor = DeviceSensor(manager,self.control)
-    self.recvAllocationPolicy = BlockSlotPolicy
-    self.strmAllocationPolicy = BlockSlotPolicy
+    self.recvAllocationPolicy = policy[0]
+    self.strmAllocationPolicy = policy[1]
     self.infoInterface        = info_interface
 
   # ===========================================================================
@@ -443,27 +381,7 @@ class Control(StreamingDescriptor,DeviceListener):
     return (slots,nodes,remaining)
 
   # ===========================================================================
-  def _usePartition(self,datapoint,partition):
-    log('Using partition: '+partition,timestamp=1)
-    use = DataPoint(self.manager,DataPoint.original(datapoint+'.InUse'))
-    use.data = 1
-    self.writer.add(use)
-    nam = DataPoint(self.manager,DataPoint.original(datapoint+'.Name'))
-    nam.data = partition
-    self.writer.add(nam)
-    fsm = DataPoint(self.manager,DataPoint.original(datapoint+'.FSMSlice'))
-    fsm.data = self.name+"_Slice"+datapoint[len(datapoint)-2:];
-    self.writer.add(fsm)
-    
-    self.active.data.push_back(datapoint)
-    self.writer.add(self.active)
-    if self.writer.execute():
-      return datapoint
-    error('Failed to allocate partition:'+datapoint+' for '+partition)
-    return None
-
-  # ===========================================================================
-  def allocPartition(self,partition):
+  def allocPartition(self,rundp_name,partition):
     p = self.inUse.data
     n = self.active.data
     for i in xrange(len(p)):
@@ -477,10 +395,17 @@ class Control(StreamingDescriptor,DeviceListener):
         for j in xrange(len(n)):
           if i==j: n0.push_back(partition)
           else:    n0.push_back(n[j])
+        slice = self.partitionName(i)
         self.active.data = n0
         self.writer.add(self.inUse)
         self.writer.add(self.active)
-        return self._usePartition(self.partitionName(i),partition)
+        self.active.data.push_back(slice)
+        info = PartitionInfo.PartitionInfo(self.manager,slice).load()
+        info.initialize(rundp_name,partition,self.writer)
+        if self.writer.execute():
+          return info
+        error('Failed to allocate partition:'+datapoint+' for '+partition)
+        return None
     error('Failed to load storage configuration:'+self.name)
     return None
 
@@ -515,7 +440,7 @@ class Control(StreamingDescriptor,DeviceListener):
     return None
 
   # ===========================================================================
-  def allocateSlots(self,partition,num_recv_slots,recv_slots_per_node,num_strm_slots,strm_slots_per_node):
+  def allocateSlots(self,rundp_name,partition,num_recv_slots,recv_slots_per_node,num_strm_slots,strm_slots_per_node):
     """
     Allocate slots in the receiving and streaming layer of the storage system.
     Note: All input data must already be read.
@@ -545,27 +470,26 @@ class Control(StreamingDescriptor,DeviceListener):
       return None
     all_strm_slots,all_strm_nodes,rem_strm_slices = self._selectSlices(slices,strmSlices)
 
-    dp = self.allocPartition(partition)
-    if dp is not None:
-      part_info = PartitionInfo(self.manager,dp)
+    part_info = self.allocPartition(rundp_name,partition)
+    if part_info is not None:
       self.recvSlices.data = rem_recv_slices
       self.strmSlices.data = rem_strm_slices
-      part_info.datapoints[3].data = all_recv_nodes   # RecvNodes
-      part_info.datapoints[4].data = all_recv_slots   # RecvSlices
-      part_info.datapoints[5].data = all_strm_nodes   # StreamNodes
-      part_info.datapoints[6].data = all_strm_slots   # StreamSlices
+      part_info.datapoints[PartitionInfo.RECVNODES].data  = all_recv_nodes   # RecvNodes
+      part_info.datapoints[PartitionInfo.RECVSLICES].data = all_recv_slots   # RecvSlices
+      part_info.datapoints[PartitionInfo.STRMNODES].data  = all_strm_nodes   # StreamNodes
+      part_info.datapoints[PartitionInfo.STRMSLICES].data = all_strm_slots   # StreamSlices
       self.writer.add(self.recvSlices)
       self.writer.add(self.strmSlices)
-      self.writer.add(part_info.datapoints[3])
-      self.writer.add(part_info.datapoints[4])
-      self.writer.add(part_info.datapoints[5])
-      self.writer.add(part_info.datapoints[6])
+      self.writer.add(part_info.datapoints[PartitionInfo.RECVNODES])
+      self.writer.add(part_info.datapoints[PartitionInfo.RECVSLICES])
+      self.writer.add(part_info.datapoints[PartitionInfo.STRMNODES])
+      self.writer.add(part_info.datapoints[PartitionInfo.STRMSLICES])
       if self.writer.execute():
-        return (dp,all_recv_nodes,all_recv_slots,all_strm_nodes,all_strm_slots)
+        return part_info
     return None
   
   # ===========================================================================
-  def allocate(self,rundp_name,partition,recv_slots_per_node,strm_slots_per_node):
+  def allocate(self,rundp_name,partition,recv_slots_per_node=5,strm_slots_per_node=2):
     """
     Allocate slots in the receiving and streaming layer of the storage system.
     Note: All input data must already be read.
@@ -585,101 +509,94 @@ class Control(StreamingDescriptor,DeviceListener):
       error('[Partition already allocated] Cannot allocate partition for:'+partition)
       return None
     info_obj = self.infoInterface.create(rundp_name,partition).load()
-    if info_obj.flag.data == 0:
+    if not info_obj.doStreaming():
       warning('Use flag is not set. No need to allocate resources for partition:'+partition)
       return None
+    
+    self.load()
     nLayer1Slots = info_obj.numLayer1Slots()
     nLayer2Slots = info_obj.numLayer2Slots()
-    res = self.allocateSlots(partition,nLayer1Slots,recv_slots_per_node,nLayer2Slots,strm_slots_per_node)
+    part_info = self.allocateSlots(rundp_name,partition,nLayer1Slots,recv_slots_per_node,nLayer2Slots,strm_slots_per_node)
 
-    # This in configure:
-    if res is not None:
-      # Allocation was successful: Now update Info table+tasks
-      dp,recv_nodes,recv_slots,strm_nodes,strm_slots = res
-      log('allocateSlots took:'+str(time.time()-start)+' seconds')
-      info_obj.clearTasks()
-      log('clearTasks took:'+str(time.time()-start)+' seconds')
-      if info_obj.defineTasks(recv_slots,strm_slots):
-        slice = 'Slice'+dp[len(self.name+'_Partition_'):]
-        log('info_obj.defineTasks(recv_slots,strm_slots) took:'+str(time.time()-start)+' seconds')
-        class0_tasks,class1_tasks = info_obj.collectTasks({},{})
-        for i,j in class0_tasks.items(): log('-->Class 0:'+str(i)+' with '+str(len(j))+' tasks')
-        for i,j in class1_tasks.items():
-          log('-->Class 1:'+str(i)+' with '+str(len(j))+' tasks')
-          #for t in j: log('   -->Class 1 Tark:'+str(t))
-        if self.allocateFSM(partition,slice,class0_tasks,class1_tasks) is None:
-          self.free(rundp_name,partition)
-          return None
-        if debug: log('allocateFSM(slice,info_obj) took:'+str(time.time()-start)+' seconds')
-        return (self.name+'_'+slice,recv_slots,strm_slots)
+    if part_info is not None:   # Allocation was successful: Now update Info table+tasks
+      return part_info.name
+    self.free(rundp_name,partition)
+    error('Failed to allocate slots for partition:'+self.name)
+    return None
+
+  # ===========================================================================
+  def configure(self,rundp_name,partition):
+    "Configure partition content after all information is set."
+    existing = self.getPartition(partition)
+    if existing is None:
+      error('[Partition not allocated] Cannot find partition for:'+partition)
+      return None
+    info_obj = self.infoInterface.create(rundp_name,partition).load()
+    if not info_obj.doStreaming():
+      warning('Use flag is not set. No need to allocate resources for partition:'+partition)
+      return None
+    dp, slice, id = existing
+    part_info = PartitionInfo.PartitionInfo(self.manager,slice).load()
+    tasks = info_obj.defineTasks(part_info)
+    if tasks:
+      fsm_manip = FSMmanip(part_info,'_FwFsmDevice',match='*')
+      fsm_manip.collectTaskSlots()
+      fsm_manip.reset()
+      if fsm_manip.allocateProcesses(tasks) is None:
+        #self.free(rundp_name,partition)
+        return None
+      if fsm_manip.commit() is None:
+        #self.free(rundp_name,partition)
+        return None
+      self.infoInterface.showPartition(partition=part_info,extended=1)
+      return part_info.name
     error('Failed to allocate slots for partition:'+self.name)
     return None
   
-  # ===========================================================================
-  def allocateFSM(self,partition,slice,class0_tasks,class1_tasks):
-    slice_name = self.name+'_'+slice
-    fsm_manip = FSMmanip(partition,slice_name,self.manager,'_FwFsmDevice')
-    fsm_manip.collectTaskSlots()
-    fsm_manip.reset()
-    if fsm_manip.allocateInfrastructure(class0_tasks) is None:
-      return None
-    if fsm_manip.allocateProcesses(class1_tasks) is None:
-      return None
-    return fsm_manip.commit()
-
   # ===========================================================================
   def free(self, rundp_name, partition):
     "Free partition and all related content."
     res = self.getPartition(partition)
     if res is not None:
       dp, nam, id = res
-      part_info = PartitionInfo(self.manager,nam)
-      if part_info.load(self.reader):
+      part_info = PartitionInfo.PartitionInfo(self.manager,nam).load(self.reader)
+      self.reader.add(self.inUse)
+      self.reader.add(self.active)
+      self.reader.add(self.recvSlices)
+      self.reader.add(self.strmSlices)
+      if self.reader.execute():
         slice = part_info.fsmSlice()
         #print 'Partition name:',nam, slice
         for i in part_info.datapoints[4].data:
           self.recvSlices.data.push_back(i)
         for i in part_info.datapoints[6].data:
           self.strmSlices.data.push_back(i)
-        part_info.datapoints[0].data = ''
-        part_info.datapoints[1].data = 0
-        part_info.datapoints[2].data = ''
-        part_info.datapoints[3].data.clear()
-        part_info.datapoints[4].data.clear()
-        part_info.datapoints[5].data.clear()
-        part_info.datapoints[6].data.clear()
+        part_info.clear()
+        part_info.saveAll(self.writer)
         self.writer.add(self.recvSlices)
         self.writer.add(self.strmSlices)
-        self.writer.add(part_info.datapoints[0])
-        self.writer.add(part_info.datapoints[1])
-        self.writer.add(part_info.datapoints[2])
-        self.writer.add(part_info.datapoints[3])
-        self.writer.add(part_info.datapoints[4])
-        self.writer.add(part_info.datapoints[5])
-        self.writer.add(part_info.datapoints[6])
-        inst = self.infoInterface.create(rundp_name,partition)
-        inst.load()
         if self.freePartition(res):
-          wr = inst.manager.devWriter()
-          inst.clearTasks(wr)
-          if wr.execute():
-            return (1,slice)
+          return slice
         error('[Cannot commit] Cannot free partition for '+partition,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
-        return (0,None)
+        return None
     error('[Partition not allocated] Cannot free partition for '+partition,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
-    return (2,None)
+    return "WAS_NOT_ALLOCATED"
 
+  # ===========================================================================
+  def recover(self, rundp_name, partition):
+    return self.free(rundp_name, partition)
+  
   # ===========================================================================
   def showSummary(self, extended=None):
     actor = PVSS.DpVectorActor(self.manager)
     typ   = self.manager.typeMgr().type('StreamPartition')
-    actor.lookup(DataPoint.original(self.name+'_Partition*.Name'),typ)
+    actor.lookup(DataPoint.original(self.name+'_Slice*.Name'),typ)
     partitions = []
     log('Stream Control contains a total of '+str(len(actor.container))+' partitions',timestamp=1)
     for i in xrange(len(actor.container)):
       nam = actor.container[i].name()
       nam = nam[nam.find(':')+1:nam.find('.')]
-      partitions.append(PartitionInfo(self.manager,nam))
+      partitions.append(PartitionInfo.PartitionInfo(self.manager,nam))
     for i in partitions:
       self.reader.add(i.datapoints)
     self.load()
@@ -693,149 +610,6 @@ class Control(StreamingDescriptor,DeviceListener):
     info_obj = None
     for i in partitions:
       if extended and i.inUse():
-        info_obj = self.infoInterface.create(i.detectorName())
+        info_obj = self.infoInterface.create('LBECS:'+i.detectorName()+'_RunInfo',i.detectorName())
       else: info_obj = None
       self.infoInterface.showPartition(info_obj,i)
-    
-  # ===========================================================================
-  def makeAnswer(self,status,msg):
-    "Create answer object from status."
-    m = status + msg
-    # log('Answer:'+str(m))
-    self.writer.clear()
-    self.state.data = m
-    self.writer.add(self.state)
-    if self.writer.execute():
-      return 1
-    return 0
-  
-  # ===========================================================================
-  def handleDevices(self):
-    "Callback once per device sensor list on datapoint change."
-    return 1
-  
-  # ===========================================================================
-  def handleDevice(self):
-    "Callback once per item in the device sensor list on datapoint change."
-    import traceback
-    cmd = ''
-    try:
-      nam = self.dp().name()
-      cmd = self.dp().value().data()
-      itms = cmd.split('/')
-      if len(itms) == 4:
-        command   = itms[0]
-        storage   = itms[1]
-        partition = itms[2]
-        partID    = itms[3]
-        runDpName = "ECS"+partition+":"+partition+"_RunInfo"
-        answer = '/'+storage+'/'+partition+"/"+str(partID)
-        result = None
-        if storage == self.name:
-          try:
-            if command == "ALLOCATE":
-              result = self.allocate(runDpName,partition,5,2)
-              if result is not None:
-                return self.makeAnswer(command,answer+'/'+result[0])
-            elif command == "DEALLOCATE":
-              result = self.free(runDpName,partition)
-              if result[0] == 1: result = result[1]
-              else: result = None                   # partition was not allocated!
-              if result is not None:
-                return self.makeAnswer(command,answer+'/'+result)
-            elif command == "RECOVER":
-              result = self.free(runDpName,partition)
-              if result[0] == 1: result = result[1]
-              elif result[0] == 2: result = "WAS_NOT_ALLOCATED"
-              else: result = None                   # partition was not allocated!
-            if result is not None:
-              #print answer+'/'+result
-              return self.makeAnswer('READY',answer+'/'+result)
-            msg = 'The command:"'+cmd+'" failed. [Internal Error] '
-            error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
-            return self.makeAnswer('ERROR',answer)
-          except Exception,X:
-            error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
-            traceback.print_exc()
-            return self.makeAnswer('ERROR',answer)
-          except:
-            error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.ILLEGAL_ARG)
-            traceback.print_exc()
-            return self.makeAnswer('ERROR',answer)
-        msg = 'The command:"'+cmd+'" failed. [Bad Streaming System] '+storage
-        error(msg,timestamp=1,type=PVSS.ILLEGAL_ARG)
-        return self.makeAnswer('ERROR',answer)
-      error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1,type=PVSS.ARG_MISSING)
-      return 0
-    except Exception,X:
-      error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.UNDEFD_FUNC)
-      traceback.print_exc()
-      return 0
-    except:
-      error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.UNDEFD_FUNC)
-      traceback.print_exc()
-    return 0
- 
-  # ===========================================================================
-  def run(self):
-    self.sensor=PVSS.DeviceSensor(self.manager,self.control)
-    self.sensor.addListener(self)
-    self.sensor.run(1)
-
-# =============================================================================
-def runTest():
-  c = PVSS.controlsMgr()
-  s = Control(c,'TestStorage')
-  return (c,s)
-
-# =============================================================================
-def run(manager=None,name='TestStorage'):
-  mgr = manager
-  if mgr is None: mgr = PVSS.controlsMgr()
-  ctrl = Control(mgr,name)
-  sensor=PVSS.DeviceSensor(mgr,ctrl.control)
-  sensor.addListener(ctrl)
-  sensor.run(1)
-  return (mgr,ctrl,sensor)
-
-# =============================================================================
-if __name__ == "__main__":
-  mgr,ctrl = runTest()
-  ctrl.show()
-  
-runInfoCmds = """
-import Online.PVSS as PVSS
-from   Online.RunInfo import RunInfoCreator as RunInfo
-import Online.Streaming.StreamingControl as StreamingControl
-from   Online.RunInfoClasses.Monitoring import MonitoringInfoCreator as MonInfo
-mgr = PVSS.controlsMgr()
-
-ctrl = StreamingControl.Control(mgr,'MonTest',MonInfo(mgr,'Storage'))
-ctrl.show()
-ctrl.show(extended=1)
-ctrl.free('LHCb')
-res=ctrl.allocate('LHCb',5,2)
-ctrl.free('LHCb')
-ctrl.show()
-
-
-ctrl = StreamingControl.Control(mgr,'Storage',RunInfo(mgr))
-ctrl.show()
-ctrl.show(extended=1)
-sensor=PVSS.DeviceSensor(mgr,ctrl.control)
-sensor.addListener(ctrl)
-sensor.run(1)
-
-info_obj=RunInfo(mgr,'LHCb')
-info_obj.show()
-
-
-ctrl.allocate('MUON',5,2)
-ctrl.free('MUON')
-
-reload(StreamingControl)
-mgr,ctrl = StreamingControl.runTest()
-ctrl.free('MUON')
-ctrl.allocate('MUON',5,2)
-
-"""
