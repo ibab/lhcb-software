@@ -5,7 +5,7 @@
  * Implementation of vaious fast mathematical functions for the Rich
  *
  * CVS Log :-
- * $Id: FastMaths.h,v 1.1 2007-09-04 16:45:09 jonrob Exp $
+ * $Id: FastMaths.h,v 1.2 2007-09-10 13:27:01 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 02/09/2007
@@ -31,7 +31,7 @@ namespace Rich
     inline double atan2_f( const double y, const double x )
     {
       double z(0);
-      if ( x==0 )
+      if ( fabs(x) < 1e-10 )
       {
         z = ( y<0 ? -M_PI_2 : y>0 ? M_PI_2 : 0 );
       }
