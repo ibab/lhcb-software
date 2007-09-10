@@ -1,18 +1,18 @@
 
 //-----------------------------------------------------------------------------
-/** @file ISTHitCreator.h
+/** @file IITHitCreator.h
  *
- *  Header file for class : Tf::ISTHitCreator
+ *  Header file for class : Tf::IITHitCreator
  *
- *  $Id: ISTHitCreator.h,v 1.8 2007-08-22 15:24:56 smenzeme Exp $
+ *  $Id: IITHitCreator.h,v 1.1 2007-09-10 08:54:31 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
  */
 //-----------------------------------------------------------------------------
 
-#ifndef TFKERNEL_ISTHitCreator_H
-#define TFKERNEL_ISTHitCreator_H 1
+#ifndef TFKERNEL_IITHitCreator_H
+#define TFKERNEL_IITHitCreator_H 1
 
 #include "GaudiKernel/IAlgTool.h"
 #include "TfKernel/STHit.h"
@@ -22,9 +22,9 @@
 namespace Tf
 {
   /// Static ID object
-  static const InterfaceID IID_ISTHitCreator( "Tf::ISTHitCreator", 0, 0 );
+  static const InterfaceID IID_IITHitCreator( "Tf::IITHitCreator", 0, 0 );
 
-  /** @class ISTHitCreator ISTHitCreator.h
+  /** @class IITHitCreator IITHitCreator.h
    *
    *  Interface to ST data provider. Creates, on demand, the low level 
    *  Tf::STHit data objects and provides access to these objects by region.
@@ -86,7 +86,7 @@ namespace Tf
    *  }
    *  @endcode
    *
-   *  This interface also provides access to the Tf::ISTHitCreator::STRegion object, that can be used to
+   *  This interface also provides access to the Tf::IITHitCreator::STRegion object, that can be used to
    *  get detailed information about the geomterical properties of an ST region
    *
    *  @code
@@ -94,21 +94,21 @@ namespace Tf
    *  Tf::TStationID  itsta = ...;
    *  Tf::TLayerID    itlay = ...;
    *  Tf::ITRegionID  itreg = ...;
-   *  Tf::ISTHitCreator::STRegion* region = hitMan->region(itsta,itlay,itreg);
+   *  Tf::IITHitCreator::STRegion* region = hitMan->region(itsta,itlay,itreg);
    *  // Get region information for TT
    *  Tf::TTStationID ttsta = ...;
    *  Tf::TTLayerID   ttlay = ...;
    *  Tf::TTRegionID  ttreg = ...;
-   *  Tf::ISTHitCreator::STRegion* region = hitMan->region(ttsta,ttlay,ttreg);
+   *  Tf::IITHitCreator::STRegion* region = hitMan->region(ttsta,ttlay,ttreg);
    *  @endcode
    *
-   *  See the Tf::ISTHitCreator::STRegion and Tf::EnvelopeBase classes for more details.
+   *  See the Tf::IITHitCreator::STRegion and Tf::EnvelopeBase classes for more details.
    *
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-06-01
    */
 
-  class ISTHitCreator : virtual public IAlgTool
+  class IITHitCreator : virtual public IAlgTool
   {
   public:
 
@@ -116,14 +116,12 @@ namespace Tf
     typedef Tf::Region<STHit> STRegion ;
 
     /// Retrieve interface ID
-    static const InterfaceID& interfaceID() { return IID_ISTHitCreator ; }
-
-    // --------------------------- IT specific --------------------------------------
+    static const InterfaceID& interfaceID() { return IID_IITHitCreator ; }
 
     /** Load all the IT hits
      *  @return Range object for the hits ion the selected region of interest
      */
-    virtual STHitRange itHits() const = 0 ;
+    virtual STHitRange hits() const = 0 ;
 
     /** Load the IT hits for a given region of interest
      *
@@ -207,101 +205,7 @@ namespace Tf
     virtual const STRegion* region(const TStationID iStation,
                                    const TLayerID   iLayer,
                                    const ITRegionID iRegion) const = 0 ;
-
-
-   
-    // --------------------------- TT specific --------------------------------------
-
-    /** Load all the TT hits
-     *  @return Range object for the hits ion the selected region of interest
-     */
-    virtual STHitRange ttHits() const = 0 ;
-    
-    /** Load the TT hits for a given region of interest
-     *
-     * @attention This call may lead to loading on demand and
-     *            may invalidate iterators returned by a previous call.
-     *
-     *  @param[in] iStation Station ID
-     *  @param[in] iLayer   Station layer ID
-     *
-     *  @return Range object for the hits in the selected region of interest
-     */
-    virtual STHitRange hits(const TTStationID iStation,
-                            const TTLayerID iLayer) const = 0 ;
-
-    /** Load the TT hits for a given region of interest
-     *
-     * @attention This call may lead to loading on demand and
-     *            may invalidate iterators returned by a previous call.
-     *
-     *  @param[in] iStation Station ID
-     *  @param[in] iLayer   Station layer ID
-     *  @param[in] iRegion  Region within the layer
-     *
-     *  @return Range object for the hits in the selected region of interest
-     */
-    virtual STHitRange hits(const TTStationID iStation,
-                            const TTLayerID iLayer,
-                            const TTRegionID iRegion) const = 0 ;
-
-    /** Load the TT hits for a given region of interest
-     *
-     * @attention This call may lead to loading on demand and
-     *            may invalidate iterators returned by a previous call.
-     *
-     *  @param[in] iStation Station ID
-     *  @param[in] iLayer   Station layer ID
-     *  @param[in] iRegion  Region within the layer
-     *  @param[in] xmin     Minimum x value for region of interest
-     *  @param[in] xmax     Maximum x value for region of interest
-     *
-     *  @return Range object for the hits in the selected region of interest
-     */
-    virtual STHitRange hits(const TTStationID iStation,
-                            const TTLayerID iLayer,
-                            const TTRegionID iRegion,
-                            const float xmin,
-                            const float xmax) const = 0 ;
-
-    /** Load the TT hits for a given region of interest
-     *
-     * @attention This call may lead to loading on demand and
-     *            may invalidate iterators returned by a previous call.
-     *
-     *  @param[in] iStation Station ID
-     *  @param[in] iLayer   Station layer ID
-     *  @param[in] iRegion  Region within the layer
-     *  @param[in] xmin     Minimum x value for region of interest
-     *  @param[in] xmax     Maximum x value for region of interest
-     *  @param[in] ymin     Minimum y value for region of interest
-     *  @param[in] ymax     Maximum y value for region of interest
-     *
-     *  @return Range object for the hits in the selected region of interest
-     */
-    virtual STHitRange hits(const TTStationID iStation,
-                            const TTLayerID iLayer,
-                            const TTRegionID iRegion,
-                            const float xmin,
-                            const float xmax,
-                            const float ymin,
-                            const float ymax) const = 0 ;
-
-    /** Retrieve the TT STRegion for a certain region ID. The region
-     *   knows its 'size' and gives access to its hits.
-     *
-     *  @param[in] iStation Station ID
-     *  @param[in] iLayer   Station layer ID
-     *  @param[in] iRegion  Region within the layer
-     *
-     *  @return Pointer to the STRegion object
-     */
-    virtual const STRegion* region(const TTStationID iStation,
-                                   const TTLayerID   iLayer,
-                                   const TTRegionID iRegion) const = 0 ;
-
-    
   };
 }
 
-#endif // TFKERNEL_ISTHitCreator_H
+#endif // TFKERNEL_IITHitCreator_H

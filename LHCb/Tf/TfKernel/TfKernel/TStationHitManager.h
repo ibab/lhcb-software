@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.20 2007-09-06 16:34:21 smenzeme Exp $
+ *  $Id: TStationHitManager.h,v 1.21 2007-09-10 08:54:31 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -23,7 +23,8 @@
 
 // Tf framework
 #include "TfKernel/IOTHitCreator.h"
-#include "TfKernel/ISTHitCreator.h"
+#include "TfKernel/IITHitCreator.h"
+#include "TfKernel/ITTHitCreator.h"
 #include "TfKernel/IOTHitCleaner.h"
 #include "TfKernel/ISTHitCleaner.h"
 #include "TfKernel/LineHit.h"
@@ -399,7 +400,7 @@ namespace Tf
     inline const Tf::IOTHitCreator * otHitCreator() const { return &*m_othitcreator; }
 
     /// The underlying IT hit creator
-    inline const Tf::ISTHitCreator * itHitCreator() const { return &*m_ithitcreator; }
+    inline const Tf::IITHitCreator * itHitCreator() const { return &*m_ithitcreator; }
 
     /** Add a hit to the container
      *  @param hit Pointer to the hit to add
@@ -543,7 +544,7 @@ namespace Tf
     ToolHandle<Tf::IOTHitCreator> m_othitcreator ;
 
     /// The underlying IT hit creator
-    ToolHandle<Tf::ISTHitCreator> m_ithitcreator ;
+    ToolHandle<Tf::IITHitCreator> m_ithitcreator ;
 
     /// The OT hit cleaner
     Tf::IOTHitCleaner * m_otCleaner;
@@ -578,7 +579,7 @@ namespace Tf
                                                const IInterface* parent) :
     GaudiTool (type, name, parent),
     m_othitcreator ( "Tf::OTHitCreator/OTHitCreator" ),
-    m_ithitcreator ( "Tf::STHitCreator/ITHitCreator" ),
+    m_ithitcreator ( "Tf::STHitCreator<Tf::IT>/ITHitCreator" ),
     m_otCleaner    ( NULL ),
     m_itCleaner    ( NULL )
   {

@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.4 2007-08-21 17:52:08 jonrob Exp $
+ *  $Id: STHitCreator.cpp,v 1.5 2007-09-10 08:54:31 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -17,7 +17,12 @@
 #include "Kernel/STDataFunctor.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+
 #include "TfKernel/RegionID.h"
+
+#include "TfKernel/IITHitCreator.h"
+#include "TfKernel/ITTHitCreator.h"
+#include "Event/STCluster.h"
 
 #include "STHitCreator.h"
 #include "HitCreatorGeom.h"
@@ -59,7 +64,7 @@ namespace Tf
     class STDetector : public Detector<STRegionImp>
     {
     public:
-      STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation, STHitCreator& parent) ;
+      STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation, GaudiTool& parent) ;
       void loadHits() ;
       // no loading on demand
       void loadHits( STRegionImp::ModuleContainer::const_iterator /*begin*/,
@@ -67,11 +72,11 @@ namespace Tf
 
     private:
       std::string m_clusterlocation ;
-      STHitCreator* m_parenttool ;
+      GaudiTool* m_parenttool ;
     } ;
 
     STDetector::STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation,
-                           STHitCreator& parent)
+                           GaudiTool& parent)
       : m_clusterlocation(clusterlocation), m_parenttool(&parent)
     {
       // copy the entire hierarchy
@@ -137,39 +142,33 @@ namespace Tf
         setIsLoaded(true) ;
       }
     }
-
-
   }
 
-  DECLARE_TOOL_FACTORY( STHitCreator );
-
-  STHitCreator::STHitCreator(const std::string& type,
-                             const std::string& name,
-                             const IInterface* parent):
+  template<class Trait>
+  STHitCreator<Trait>::STHitCreator(const std::string& type,
+				    const std::string& name,
+				    const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_itdetectordata(NULL),
-    m_ttdetectordata(NULL)
+    m_detectordata(0)
   {
-    declareInterface<ISTHitCreator>(this);
-    declareProperty("ITClusterLocation", m_itclusterLocation=LHCb::STLiteClusterLocation::ITClusters) ;
-    declareProperty("ITDetectorLocation",m_itdetectorLocation=DeSTDetLocation::IT);
-    declareProperty("TTClusterLocation", m_ttclusterLocation=LHCb::STLiteClusterLocation::TTClusters) ;
-    declareProperty("TTDetectorLocation",m_ttdetectorLocation=DeSTDetLocation::TT);
+    declareInterface<typename Trait::ISTHitCreator>(this);
+    declareProperty("ClusterLocation", m_clusterLocation=Trait::defaultClusterLocation()) ;
+    declareProperty("DetectorLocation",m_detectorLocation=Trait::defaultDetectorLocation()) ;
   }
 
-  STHitCreator::~STHitCreator() { }
+  template<class Trait>
+  STHitCreator<Trait>::~STHitCreator() { }
 
-  StatusCode STHitCreator::initialize()
+  template<class Trait>
+  StatusCode STHitCreator<Trait>::initialize()
   {
 
     const StatusCode sc = GaudiTool::initialize();
     if (sc.isFailure()) return Error("Failed to initialize",sc);
 
     // get geometry and copy the hierarchy y to navigate hits
-    const DeSTDetector* itdet = getDet<DeSTDetector>(m_itdetectorLocation);
-    m_itdetectordata = new HitCreatorGeom::STDetector(*itdet,m_itclusterLocation,*this) ;
-    const DeSTDetector* ttdet = getDet<DeSTDetector>(m_ttdetectorLocation);
-    m_ttdetectordata = new HitCreatorGeom::STDetector(*ttdet,m_ttclusterLocation,*this) ;
+    const DeSTDetector* itdet = getDet<DeSTDetector>(m_detectorLocation);
+    m_detectordata = new HitCreatorGeom::STDetector(*itdet,m_clusterLocation,*this) ;
 
     // reset pointer to list of clusters at beginevent
     incSvc()->addListener(this, IncidentType::EndEvent);
@@ -177,130 +176,107 @@ namespace Tf
     return sc;
   }
 
-  StatusCode STHitCreator::finalize()
+  template<class Trait>
+  StatusCode STHitCreator<Trait>::finalize()
   {
-    delete m_itdetectordata;
-    delete m_ttdetectordata;
+    delete m_detectordata;
     return GaudiTool::finalize();
   }
 
-  void STHitCreator::handle ( const Incident& incident )
+  template<class Trait>
+  void STHitCreator<Trait>::handle ( const Incident& incident )
   {
     if ( IncidentType::EndEvent == incident.type() ) 
     {
-      if ( m_itdetectordata ) m_itdetectordata->clearEvent() ;
-      if ( m_ttdetectordata ) m_ttdetectordata->clearEvent() ;
+      if ( m_detectordata ) m_detectordata->clearEvent() ;
     }
   }
 
-  //-------------------------------------------------------------------------------
-
-  Tf::STHitRange STHitCreator::hits(const TStationID iStation,
-                                    const TLayerID iLayer) const
+  template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hits(const typename Trait::StationID iStation,
+					   const typename Trait::LayerID iLayer) const
   {
-    if( !itDetData()->isLoaded() ) itDetData()->loadHits() ;
-    return itDetData()->stations()[iStation]->layers[iLayer]->hits() ;
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    return m_detectordata->stations()[iStation]->layers[iLayer]->hits() ;
+  }
+  
+  template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hits(const typename Trait::StationID iStation,
+					   const typename Trait::LayerID iLayer,
+					   const typename Trait::RegionID iRegion) const
+  {
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    return m_detectordata->stations()[iStation]->layers[iLayer]->regions[iRegion]->hits() ;
   }
 
-  Tf::STHitRange STHitCreator::hits(const TStationID iStation,
-                                    const TLayerID iLayer,
-                                    const ITRegionID iRegion) const
+  template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hits() const
   {
-    if( !itDetData()->isLoaded() ) itDetData()->loadHits() ;
-    return itDetData()->stations()[iStation]->layers[iLayer]->regions[iRegion]->hits() ;
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    return m_detectordata->hits() ;
   }
-
-  Tf::STHitRange STHitCreator::itHits() const
+  
+  template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hits( const typename Trait::StationID iStation,
+					    const typename Trait::LayerID iLayer,
+					    const typename Trait::RegionID iRegion,
+					    const float xmin,
+					    const float xmax ) const
   {
-    if( !itDetData()->isLoaded() ) itDetData()->loadHits() ;
-    return itDetData()->hits() ;
-  }
-
-  Tf::STHitRange STHitCreator::hits( const TStationID iStation,
-                                     const TLayerID iLayer,
-                                     const ITRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax ) const
-  {
-    if( !itDetData()->isLoaded() ) itDetData()->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = itDetData()->region(iStation,iLayer,iRegion) ;
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax) ;
   }
-
-  Tf::STHitRange STHitCreator::hits( const TStationID iStation,
-                                     const TLayerID iLayer,
-                                     const ITRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax,
-                                     const float ymin,
-                                     const float ymax) const
+  
+  template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hits( const typename Trait::StationID iStation,
+					    const typename Trait::LayerID iLayer,
+					    const typename Trait::RegionID iRegion,
+					    const float xmin,
+					    const float xmax,
+					    const float ymin,
+					    const float ymax) const
   {
-    if( !itDetData()->isLoaded() ) itDetData()->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = itDetData()->region(iStation,iLayer,iRegion) ;
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax,ymin,ymax) ;
   }
 
-  const Tf::ISTHitCreator::STRegion*
-  STHitCreator::region( const TStationID iStation,
-                        const TLayerID iLayer,
-                        const ITRegionID  iRegion ) const
+  template<class Trait>
+  const typename STHitCreator<Trait>::STRegion*
+  STHitCreator<Trait>::region( const typename Trait::StationID iStation,
+			       const typename Trait::LayerID iLayer,
+			       const typename Trait::RegionID  iRegion ) const
   {
-    return itDetData()->region(iStation,iLayer,iRegion) ;
+    return m_detectordata->region(iStation,iLayer,iRegion) ;
   }
 
- //-------------------------------------------------------------------------------
+  //====================================================================================
+  // template instantiations
+  //====================================================================================
 
-  Tf::STHitRange STHitCreator::hits(const TTStationID iStation,
-                                    const TTLayerID iLayer) const
-  {
-    if( !ttDetData()->isLoaded() ) ttDetData()->loadHits() ;
-    return ttDetData()->stations()[iStation]->layers[iLayer]->hits() ;
-  }
+  struct IT {
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("IT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::ITClusters ; }
+    typedef IITHitCreator ISTHitCreator ;
+    typedef TStationID StationID ;
+    typedef TLayerID   LayerID ;
+    typedef ITRegionID RegionID ;
+  } ;
+    
+  typedef STHitCreator<IT> ITHitCreator ;
+  DECLARE_TOOL_FACTORY( ITHitCreator );
 
-  Tf::STHitRange STHitCreator::hits(const TTStationID iStation,
-                                    const TTLayerID iLayer,
-                                    const TTRegionID iRegion) const
-  {
-    if( !ttDetData()->isLoaded() ) ttDetData()->loadHits() ;
-    return ttDetData()->stations()[iStation]->layers[iLayer]->regions[iRegion]->hits() ;
-  }
-
-  Tf::STHitRange STHitCreator::ttHits() const
-  {
-    if( !ttDetData()->isLoaded() ) ttDetData()->loadHits() ;
-    return ttDetData()->hits() ;
-  }
-
-  Tf::STHitRange STHitCreator::hits( const TTStationID iStation,
-                                     const TTLayerID iLayer,
-                                     const TTRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax ) const
-  {
-    if( !ttDetData()->isLoaded() ) ttDetData()->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = ttDetData()->region(iStation,iLayer,iRegion) ;
-    return region->hits(xmin,xmax) ;
-  }
-
-  Tf::STHitRange STHitCreator::hits( const TTStationID iStation,
-                                     const TTLayerID iLayer,
-                                     const TTRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax,
-                                     const float ymin,
-                                     const float ymax) const
-  {
-    if( !ttDetData()->isLoaded() ) ttDetData()->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = ttDetData()->region(iStation,iLayer,iRegion) ;
-    return region->hits(xmin,xmax,ymin,ymax) ;
-  }
-
-  const Tf::ISTHitCreator::STRegion*
-  STHitCreator::region( const TTStationID iStation,
-                        const TTLayerID iLayer,
-                        const TTRegionID  iRegion ) const
-  {
-    return ttDetData()->region(iStation,iLayer,iRegion) ;
-  }
-
+  
+  struct TT {
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("TT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::TTClusters ; }
+    typedef ITTHitCreator ISTHitCreator ;
+    typedef TTStationID StationID ;
+    typedef TTLayerID   LayerID ;
+    typedef TTRegionID RegionID ;
+  } ;
+  
+  typedef STHitCreator<TT> TTHitCreator ;
+  DECLARE_TOOL_FACTORY( TTHitCreator );
 }

@@ -22,7 +22,8 @@
   <class name = "Tf::STHitRange" />
   <class name = "Tf::OTHitRange" />
 
-  <class name = "Tf::ISTHitCreator" />
+  <class name = "Tf::ITTHitCreator" />
+  <class name = "Tf::IITHitCreator" />
   <class name = "Tf::IOTHitCreator" />
   <class name = "Tf::ISTHitCleaner" />
   <class name = "Tf::IOTHitCleaner" />

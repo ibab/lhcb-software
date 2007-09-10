@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.14 2007-08-25 19:26:36 jonrob Exp $
+ *  $Id: TTStationHitManager.h,v 1.15 2007-09-10 08:54:31 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -18,7 +18,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "TfKernel/ISTHitCreator.h"
+#include "TfKernel/ITTHitCreator.h"
 #include "TfKernel/LineHit.h"
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/RecoFuncs.h"
@@ -249,7 +249,7 @@ namespace Tf
      *
      *  @return Pointer to the STRegion object
      */
-    inline const ISTHitCreator::STRegion* region(const TTStationID iStation,
+    inline const ITTHitCreator::STRegion* region(const TTStationID iStation,
                                                  const TTLayerID iLayer,
                                                  const TTRegionID iRegion) const
     {
@@ -311,7 +311,7 @@ namespace Tf
   protected:
 
     /// Direct access to the underlying hit creator
-    inline const Tf::ISTHitCreator * ttHitCreator() const { return &*m_tthitcreator; }
+    inline const Tf::ITTHitCreator * ttHitCreator() const { return &*m_tthitcreator; }
 
     /** Add a hit to the container
      *  @param hit Pointer to the hit to add
@@ -445,7 +445,7 @@ namespace Tf
     static const int m_nReg = Tf::RegionID::TTIndex::kNRegions;
 
     /// The underlying TT hit creator
-    ToolHandle<Tf::ISTHitCreator> m_tthitcreator ;
+    ToolHandle<Tf::ITTHitCreator> m_tthitcreator ;
 
     mutable Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
     // CRJ : This is ugly but just a first bash to provide *something* that works
@@ -467,7 +467,7 @@ namespace Tf
                                                  const std::string& name,
                                                  const IInterface* parent) :
     GaudiTool (type, name, parent),
-    m_tthitcreator("Tf::STHitCreator/TTHitCreator")
+    m_tthitcreator("Tf::STHitCreator<Tf::TT>/TTHitCreator")
   {
     declareInterface<TTStationHitManager<Hit> >(this);
   }

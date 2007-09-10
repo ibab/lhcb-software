@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-10 - Wouter Hulsbergen
+ - split STHitCreator in IT/TTHitCreator
+
 ! 2007-09-07 - Wouter Hulsbergen
  - moved OTLiteTime and OTRawBankDecoder to OT/OTDAQ
  - removed building of linker library since nothing left to link 

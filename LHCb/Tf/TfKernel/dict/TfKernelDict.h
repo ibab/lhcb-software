@@ -1,4 +1,4 @@
-// $Id: TfKernelDict.h,v 1.2 2007-09-07 13:32:10 wouter Exp $
+// $Id: TfKernelDict.h,v 1.3 2007-09-10 08:54:31 wouter Exp $
 #ifndef DICT_TFKERNELDICT_H 
 #define DICT_TFKERNELDICT_H 1
 
@@ -12,7 +12,8 @@
 #include "TfKernel/Region.h"
 #include "TfKernel/RegionID.h"
 
-#include "TfKernel/ISTHitCreator.h"
+#include "TfKernel/ITTHitCreator.h"
+#include "TfKernel/IITHitCreator.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/ISTHitCleaner.h"
 #include "TfKernel/IOTHitCleaner.h"
