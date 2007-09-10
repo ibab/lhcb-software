@@ -27,6 +27,8 @@ checkFiles()
 if test -z $1;
     then
     echo "No Project name given!";
+    echo "usage: CopyBack.sh <project-name>"
+    echo "Choose one of: STORAGE MONITORING LBECS"
     exit 0;
 fi;
 export PVSS_PROJECT_NAME=$1
@@ -48,8 +50,9 @@ if test ${PVSS_PROJECT_NAME} = STORAGE -o ${PVSS_PROJECT_NAME} = MONITORING;
 	-proj ${PVSS_PROJECT_NAME} \
 	-out  ${ONLINECONTROLSROOT}/pvss/dplist/${PVSS_PROJECT_NAME}.dpl \
 	-filter DOP \
-	-filterDp fwOT_StorageCluster.* \
+	-filterDp fwOT_StreamCluster.* \
 	-filterDp fwOT_StreamControl.* \
+	-filterDp fwOT_StreamConfigurator.* \
 	-filterDp fwOT_JobOptionsControl.* \
 	-filterDp fwOT_FSM_*.*;
 elif test ${PVSS_PROJECT_NAME} = LBECS;

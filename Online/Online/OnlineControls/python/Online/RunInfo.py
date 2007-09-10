@@ -23,7 +23,6 @@ import Online.Utils as Utils
 import Online.PVSSSystems as Systems
 from Online.RunInfoClasses.General import General as General
 from Online.RunInfoClasses.Storage import Storage as Storage
-from Online.RunInfoClasses.HLTFarm import HLTFarm as HLTFarm
 sum       = Utils.sum
 log       = Utils.log
 error     = Utils.error
@@ -42,7 +41,7 @@ def vector2String(c):
   return s
 
 # =============================================================================
-class RunInfo(General,Storage,HLTFarm):
+class RunInfo(General,Storage):
   """ @class RunInfo
   
       Connect to all storage related datapoints in the RunInfo object
@@ -60,16 +59,10 @@ class RunInfo(General,Storage,HLTFarm):
     """
     General.__init__(self,manager,name)
     Storage.__init__(self)
-    HLTFarm.__init__(self)
+    #HLTFarm.__init__(self)
     self.tell1Boards = self.dp('SubDeterctors.tell1List')
     self.reader.add(self.tell1Boards)    
     
-  # ===========================================================================
-  def numLayer2Slots(self):
-    return sum(self.strMult.data)
-  # ===========================================================================
-  def numLayer1Slots(self):
-    return self.nSubFarm.data
   # ===========================================================================
   def addDevices(self, deviceIO):
     "Add task devices to device IO structure for read/write access"
@@ -78,7 +71,7 @@ class RunInfo(General,Storage,HLTFarm):
     if wr is None or wr.get() is None: wr = self.manager.devWriter()
     #log('Adddevices:RunInfo wr='+str(wr.get())+'  '+str(deviceIO.get()))
     Storage.addDevices(self,wr)
-    HLTFarm.addDevices(self,wr)
+    #HLTFarm.addDevices(self,wr)
     if deviceIO is None or deviceIO.get() is None:
       #print '+++++++++++++++++++++++++++++++++++++> Exec IO'
       if wr.execute(0,1):
@@ -92,7 +85,7 @@ class RunInfo(General,Storage,HLTFarm):
   def show(self):
     "Show all information from the RunInfo structure."
     if self.load():
-      self.showSubfarms()
+      #self.showSubfarms()
       self.showStreams()
       General.show(self)
       return
@@ -105,7 +98,7 @@ class RunInfo(General,Storage,HLTFarm):
     """
     log('RunInfo: Defining tasks for partition '+self.name)
     Storage.defineTasks(self,recv_slots,strm_slots)
-    HLTFarm.defineTasks(self,recv_slots,strm_slots)
+    #HLTFarm.defineTasks(self,recv_slots,strm_slots)
     log('RunInfo: Defining tasks for partition '+self.name+'   ... done')
     wr = self.manager.devWriter()
     self.addDevices(wr)
@@ -116,22 +109,9 @@ class RunInfo(General,Storage,HLTFarm):
     Clear all tasks definition in the storage layer for a given partition.
     """
     Storage.clearTasks(self,writer)
-    HLTFarm.clearTasks(self,writer)
+    #HLTFarm.clearTasks(self,writer)
     return writer
   
-  # ===========================================================================
-  def collectTasks(self,class0_tasks,class1_tasks):
-    class0_tasks = self._collectTasks(class0_tasks,self.rcvInfraTasks)
-    print 'rcvInfraTasks:',len(self.rcvInfraTasks.data)
-    for i,j in class0_tasks.items(): log('+++-->Class 0:'+str(i)+' with '+str(len(j))+' tasks')
-    
-    class0_tasks = self._collectTasks(class0_tasks,self.strInfraTasks)
-    class1_tasks = self._collectTasks(class1_tasks,self.receivers)
-    class1_tasks = self._collectTasks(class1_tasks,self.rcvSenders)
-    class1_tasks = self._collectTasks(class1_tasks,self.strReceivers)
-    class1_tasks = self._collectTasks(class1_tasks,self.streamers)
-    return (class0_tasks,class1_tasks)
-
 class RunInfoCreator:
   def __init__(self):
     pass

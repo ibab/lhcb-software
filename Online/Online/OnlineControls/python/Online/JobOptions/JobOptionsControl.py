@@ -163,17 +163,15 @@ class OptionsWriter(CommandListener):
     result = None
     print command, sysName, partition, partID
     if command == "CONFIGURE" or command == "ALLOCATE":
+      self.streamInfo = None
       result = self.write(rundp_name,partition)
+      self.streamInfo = None
       if result is not None:
         return self.makeAnswer('READY',answer)
     elif command == "RESET" or command == "DEALLOCATE":
       return self.makeAnswer('READY',answer)
     elif command == "RECOVER":
       return self.makeAnswer('READY',answer)
-      #result = self.write(partition)
-      #if result is not None:
-      #  return self.makeAnswer('READY',answer)
-      
     return None
 
 # =============================================================================
@@ -218,13 +216,13 @@ class StorageOptionsWriter(OptionsWriter):
   def additionalOptions(self, context, run, activity, task):
     return {'HostName':'@HostName@', 'ProcessName':'@ProcessName@', 'ProcessNickName':'@ProcessNickName@', 'ProcessType':'@ProcessType@'}
   # ===========================================================================
-  def checkTasks(self, opts, run, activity, task, data, item, opt=-1):
+  def checkTasks(self, opts, run, activity, task, data):
     done = 0
     for i in data:
       it = i.split('/')
       items = it[:-1]
       eval_item = eval(it[-1])
-      # print '++++++++++++++++++++++>',task.name,items
+      ## print '++++++++++++++++++++++>',task.name,items
       if task.name == items[3]:
         done = 1
         options = opts.value
@@ -283,22 +281,33 @@ class StorageOptionsWriter(OptionsWriter):
       print 'Task:',i
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
+    import Online.Streaming.StreamingDescriptor as StreamingDescriptor
+    import Online.Streaming.PartitionInfo as PartitionInfo
+    import Online.SetupParams as Params
+    if not self.streamInfo:
+      system_mgr = Systems.controlsMgr(Params.storage_system_name)
+      res = StreamingDescriptor.findPartition(system_mgr,'Storage',run.name)
+      if res is not None:
+        dp, nam, id = res
+        self.streamInfo = PartitionInfo.PartitionInfo(system_mgr,nam).load()
+    if not self.streamInfo:
+      error('###\n###   Cannot access Stream Slice for partition:'+run.name+'\n###',
+            timestamp=1,type=PVSS.ILLEGAL_VALUE)
+      return None
     if self.hostType == 'RECV':
-      if self.checkTasks(opts,run,activity,task,run.rcvSenders.data,5,4):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.recvSenders()):
         return self
-      if self.checkTasks(opts,run,activity,task,run.receivers.data,-1):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.recvReceivers()):
         return self
-      if self.checkTasks(opts,run,activity,task,run.rcvInfraTasks.data,-1):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.recvInfrastructure()):
         return self
-      self.printTasks(run.receivers.data)
     elif self.hostType == 'STREAM':
-      if self.checkTasks(opts,run,activity,task,run.strReceivers.data,3):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.streamReceivers()):
         return self
-      if self.checkTasks(opts,run,activity,task,run.streamers.data,2,3):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.streamSenders()):
         return self
-      if self.checkTasks(opts,run,activity,task,run.strInfraTasks.data,3):
+      if self.checkTasks(opts,run,activity,task,self.streamInfo.streamInfrastructure()):
         return self
-      self.printTasks(run.strInfraTasks.data)
     error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
@@ -331,7 +340,7 @@ class MonitoringOptionsWriter(OptionsWriter):
             'ProcessType':'@ProcessType@'
             }
   # ===========================================================================
-  def checkTasks(self, opts, run, activity, task, data, item, opt=-1):
+  def checkTasks(self, opts, run, activity, task, data):
     done = 0
     for i in data:
       it = i.split('/')
@@ -396,24 +405,38 @@ class MonitoringOptionsWriter(OptionsWriter):
       print 'Task:',i
   # ===========================================================================
   def writeOptions(self, opts, info, activity, task):
+    import Online.Streaming.StreamingDescriptor as StreamingDescriptor
+    import Online.Streaming.PartitionInfo as PartitionInfo
+    import Online.SetupParams as Params
+    if not self.streamInfo:
+      system_mgr = Systems.controlsMgr(Params.monitor_system_name)
+      res = StreamingDescriptor.findPartition(system_mgr,'Monitoring',info.name)
+      if res is not None:
+        dp, nam, id = res
+        self.streamInfo = PartitionInfo.PartitionInfo(system_mgr,nam).load()
+    if not self.streamInfo:
+      error('###\n###   Cannot access Stream Slice for partition:'+info.name+'\n###',
+            timestamp=1,type=PVSS.ILLEGAL_VALUE)
+      return None
     done = 0
     if self.hostType == 'MONRELAY':
-      done = done + self.checkTasks(opts,info,activity,task,info.senders.data,5,4)
-      done = done + self.checkTasks(opts,info,activity,task,info.relayTasks.data,5,4)
-      done = done + self.checkTasks(opts,info,activity,task,info.relayInfraTasks.data,-1)
-      if done > 0: return self
-      self.printTasks(info.senders.data)
-      self.printTasks(info.relayTasks.data)
-      self.printTasks(info.relayInfraTasks.data)
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.dataSources())
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.recvReceivers())
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.recvSenders())
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.recvInfrastructure())
     elif self.hostType == 'MONI':
-      done = done + self.checkTasks(opts,info,activity,task,info.monReceivers.data,3)
-      done = done + self.checkTasks(opts,info,activity,task,info.monTasks.data,2,3)
-      done = done + self.checkTasks(opts,info,activity,task,info.monInfraTasks.data,3)
-      if done > 0: return self
-      self.printTasks(info.monReceivers.data)
-      self.printTasks(info.monTasks.data)
-      self.printTasks(info.monInfraTasks.data)
-      return self
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.streamReceivers())
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.streamSenders())
+      done = done + self.checkTasks(opts,info,activity,task,self.streamInfo.streamInfrastructure())
+    if done > 0: return self
+
+    self.printTasks(self.streamInfo.dataSources())
+    self.printTasks(self.streamInfo.recvReceivers())
+    self.printTasks(self.streamInfo.recvSenders())
+    self.printTasks(self.streamInfo.recvInfrastructure())
+    self.printTasks(self.streamInfo.streamReceivers())
+    self.printTasks(self.streamInfo.streamSenders())
+    self.printTasks(self.streamInfo.streamInfrastructure())
     error('### UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None

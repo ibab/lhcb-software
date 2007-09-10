@@ -7,10 +7,28 @@ DataPoint   = PVSS.DataPoint
 printSlots  = Utils.printSlots
 
 # =============================================================================
+def findPartition(manager,name,partition):
+  "Select partition by allocation name."
+  actor = PVSS.DpVectorActor(manager)
+  typ   = manager.typeMgr().type('StreamPartition')
+  rdr   = manager.devReader()
+  actor.lookup(DataPoint.original(name+'_Slice*.Name'),typ)
+  for i in actor.container: rdr.add(i)
+  if rdr.execute():
+    for i in actor.container:
+      nam = i.name()
+      nam = nam[nam.find(':')+1:nam.find('.')]
+      id  = int(nam[len(nam)-2:],16)
+      if i.data == partition:
+        return (i.name(), nam, id)
+    return None
+  return None
+
+# =============================================================================
 class StreamingDescriptor(object):
   """ @class StreamingDescriptor
       This class describes the shared streaming control structure.
-      
+   
       @author  M.Frank
       @version 1.0
   """
@@ -40,11 +58,11 @@ class StreamingDescriptor(object):
         
         @return Initialized PVSS datapoint
     """
-    return DataPoint(self.manager,DataPoint.original(self.name+'.'+name))
+    return DataPoint(self.manager,DataPoint.original(self.name+'Alloc.'+name))
     
   # ===========================================================================
   def partitionName(self,which):
-    return self.name+'_Partition_%02X'%(which,)
+    return self.name+'_Slice%02X'%(which,)
 
   # ===========================================================================
   def load(self):
@@ -76,17 +94,7 @@ class StreamingDescriptor(object):
 
   # ===========================================================================
   def getPartition(self, partition):
-    "Select partition by allocation name."
-    actor = PVSS.DpVectorActor(self.manager)
-    typ   = self.manager.typeMgr().type('StreamPartition')
-    actor.lookup(DataPoint.original(self.name+'_Partition*.Name'),typ)
-    for i in actor.container: self.reader.add(i)
-    if self.load():
-      for i in actor.container:
-        nam = i.name()
-        nam = nam[nam.find(':')+1:nam.find('.')]
-        id  = int(nam[len(nam)-2:],16)
-        if i.data == partition:
-          return (DataPoint(self.manager,i.name()), nam, id)
-      return None
+    res = findPartition(self.manager,self.name,partition)
+    if res:
+      return (DataPoint(self.manager,res[0]), res[1], res[2])
     return None

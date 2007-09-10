@@ -16,6 +16,7 @@ void StreamControlPanel_setListItems(string shape_name, dyn_string values)  {
 }
 //=============================================================================
 dyn_string StreamControlPanel_getStrings(string dp, string type)  {
+  StreamControl_trace("StreamControlPanel_getStrings:"+dp+" ["+type+"]");
   dyn_string items = dpNames(dp,type);
   dyn_string values, result;
   int res = dpGet(items,values);
@@ -44,9 +45,8 @@ dyn_string StreamControlPanel_getStringVectors(string dp,string type)  {
 }
 //=============================================================================
 int StreamControlPanel_showPanel(string stream,string partition,string ref,string panel,int offsety=130,int offsetx=0)  {
-  //DebugN("StreamControlPanel_showPanel:",stream,partition);
+  StreamControl_trace("StreamControlPanel_showPanel:"+stream+" "+partition+" "+ref+" "+panel);
   dyn_string params = makeDynString("$partition:"+partition,"$stream:"+stream,"$offset:"+offsety);
-  //DebugN("StreamControlPanel_showPanel:",myModuleName(), myPanelName(),"Offset=",offsety,params);
   int res = addSymbol(myModuleName(), myPanelName(), panel, ref, params, offsetx, offsety, 0, 1., 1.);
   return StreamControlPanel_checkErrors(res);
 }
@@ -67,84 +67,41 @@ void StreamControlPanel_addTasks(dyn_string tasks,string node,string& val)  {
   }
 }
 //=============================================================================
-void StreamControlPanel_initXXXX(string stream, string partition, string name, string node)
+void StreamControlPanel_initTasksPanel(string stream, string partition, string name, string node)
 {
-  string strm_upper = strtoupper(stream);
-  if ( strpos(strm_upper,"STORAGE") >= 0 )
-    StreamControlPanel_initStorageTasksPanel(stream,partition,name,node);
-  else
-    StreamControlPanel_initMonitoringTasksPanel(stream,partition,name,node);
-}
-//=============================================================================
-void StreamControlPanel_initMonitoringTasksPanel(string stream, string partition, string name, string node)
-{
+  StreamControl_trace("StreamControlPanel_initMonitoringTasksPanel:"+stream+" "+partition+" "+name+" "+node);
+  string font = "Arial,8,-1,5,50,0,0,0,0,0";
   string val, dp = dpSubStr(name,DPSUB_DP);
-  dyn_string relayInfraTasks, relayTasks, senderTasks;
-  dyn_string monInfraTasks, monTasks, monReceivers;
+  dyn_string dataSenders, recvInfrastructure, recvReceivers, recvSenders;
+  dyn_string strmInfrastructure, strmReceivers, strmSenders;
   int res = dpGet(
-    partition+"_RunInfo.MonFarm.relayTasks",relayTasks,
-    partition+"_RunInfo.MonFarm.senderTasks",senderTasks,
-    partition+"_RunInfo.MonFarm.relayInfrastructureTasks",relayInfraTasks,
-    partition+"_RunInfo.MonFarm.monInfrastructureTasks",monInfraTasks,
-    partition+"_RunInfo.MonFarm.monReceivers",monReceivers,
-    partition+"_RunInfo.MonFarm.monTasks",monTasks
+    name+".DataSenders",dataSenders,
+    name+".RecvInfrastructure",recvInfrastructure,
+    name+".RecvReceivers",recvReceivers,
+    name+".RecvSenders",recvSenders,
+    name+".StreamInfrastructure",strmInfrastructure,
+    name+".StreamReceivers",strmReceivers,
+    name+".StreamSenders",strmSenders
     );
   StreamControlPanel_checkErrors(res);
   string val = "";
-  StreamControlPanel_addTasks(relayInfraTasks,node,val);
-  StreamControlPanel_addTasks(monInfraTasks,node,val);
-  m_class0TasksFrame.text = "Class 0 Tasks of Partition: "+partition;
-  m_class0Tasks.backCol   = "_Transparent";
-  m_class0Tasks.text = val;
-  m_class0Tasks.readOnly = 1;
-  m_class0Tasks.backCol = "white";
-  val = "";
-  StreamControlPanel_addTasks(senderTasks,node,val);
-  StreamControlPanel_addTasks(relayTasks,node,val);
-  StreamControlPanel_addTasks(monReceivers,node,val);
-  StreamControlPanel_addTasks(monTasks,node,val);
-  m_class1TasksFrame.text = "Class 1 Tasks of Partition: "+partition;
+  StreamControlPanel_addTasks(dataSenders,node,val);
+  StreamControlPanel_addTasks(recvInfrastructure,node,val);
+  StreamControlPanel_addTasks(recvReceivers,node,val);
+  StreamControlPanel_addTasks(recvSenders,node,val);
+  StreamControlPanel_addTasks(strmInfrastructure,node,val);
+  StreamControlPanel_addTasks(strmReceivers,node,val);
+  StreamControlPanel_addTasks(strmSenders,node,val);
+  m_class1TasksFrame.text = "Tasks for "+stream+" of Partition "+partition+" on "+node;
   m_class1Tasks.backCol = "_Transparent";
-  m_class1Tasks.text = val;
-  m_class1Tasks.readOnly = 1;
   m_class1Tasks.backCol = "white";
+  m_class1Tasks.readOnly = 1;
+  m_class1Tasks.font = font;  
+  m_class1Tasks.text = val;
 }
 //=============================================================================
-void StreamControlPanel_initStorageTasksPanel(string stream, string partition, string name, string node)
-{
-  string val, dp = dpSubStr(name,DPSUB_DP);
-  dyn_string recvInfraTasks, recvSenderTasks, recvReceiverTasks;
-  dyn_string strmInfraTasks, strmReceiverTasks, strmWriterTasks;
-  int res = dpGet(
-    partition+"_RunInfo.HLTFarm.receiverTasks",recvReceiverTasks,
-    partition+"_RunInfo.Storage.recvSenders",recvSenderTasks,
-    partition+"_RunInfo.Storage.recvInfrastructureTasks",recvInfraTasks,
-    partition+"_RunInfo.Storage.streamInfrastructureTasks",strmInfraTasks,
-    partition+"_RunInfo.Storage.streamReceivers",strmReceiverTasks,
-    partition+"_RunInfo.Storage.streamWriters",strmWriterTasks
-    );
-  StreamControlPanel_checkErrors(res);
-  string val = "";
-  StreamControlPanel_addTasks(recvInfraTasks,node,val);
-  StreamControlPanel_addTasks(strmInfraTasks,node,val);
-  m_class0TasksFrame.text = "Class 0 Tasks of Partition: "+partition;
-  m_class0Tasks.backCol   = "_Transparent";
-  m_class0Tasks.text = val;
-  m_class0Tasks.readOnly = 1;
-  m_class0Tasks.backCol = "white";
-  //DebugN("Class 0 tasks:",val);
-  val = "";
-  StreamControlPanel_addTasks(recvReceiverTasks,node,val);
-  StreamControlPanel_addTasks(recvSenderTasks,node,val);
-  StreamControlPanel_addTasks(strmReceiverTasks,node,val);
-  StreamControlPanel_addTasks(strmWriterTasks,node,val);
-  m_class1TasksFrame.text = "Class 1 Tasks of Partition: "+partition;
-  m_class1Tasks.backCol = "_Transparent";
-  m_class1Tasks.text = val;
-  m_class1Tasks.readOnly = 1;
-  m_class1Tasks.backCol = "white";
-
-  //DebugN("Class 0 tasks:",val);
+void StreamControl_trace(string msg)  {
+  DebugN(msg);
 }
 //=============================================================================
 //
@@ -153,13 +110,13 @@ void StreamControlPanel_initStorageTasksPanel(string stream, string partition, s
 //=============================================================================
 void StreamControlPanel_CheckDisplay(string dp, string value)  {
   int offset = isDollarDefined("$offset") ? getDollarValue("$offset") : 130;
-  // DebugN("Rebuilding displays.....",m_streamName.text,m_displayedPartitions.text,offset);
+  StreamControl_trace("Rebuilding displays.....",m_streamName.text+" "+m_displayedPartitions.text+" "+offset);
   StreamControlPanel_removeDisplay(m_streamName.text,m_displayedPartitions.text);
   m_displayedPartitions.text = StreamControlPanel_showDisplay(m_streamName.text,offset);
 }
 //=============================================================================
 string StreamControlPanel_initDisplay(string stream, string partition, int offset=130)  {
-  // DebugN("Connect to :",stream+".State");
+  StreamControl_trace("Connect to :"+stream+".State");
   m_streamName.text        = stream;
   //m_streamName.visible     = 1;
   m_streamName.backCol     = "yellow";
@@ -167,12 +124,12 @@ string StreamControlPanel_initDisplay(string stream, string partition, int offse
   m_command.text           = "Refresh";
   m_partition.visible      = 0;
   m_displayedPartitions.visible = 0;
-  int res = dpConnect("StreamControlPanel_CheckDisplay",stream+".State");
+  int res = dpConnect("StreamControlPanel_CheckDisplay",stream+"Alloc.State");
   StreamControlPanel_checkErrors(res);
 }
 //=============================================================================
 string StreamControlPanel_showDisplay(string stream, int offset=130)  {
-  dyn_string partitions = StreamControlPanel_getStrings(stream+"_Partition*.Name","StreamPartition");
+  dyn_string partitions = StreamControlPanel_getStrings(stream+"_Slice*.Name","StreamPartition");
   string parts = "";
   for (int i=1, n=dynlen(partitions); i<=n; ++i)  {
     string partition = partitions[i];
@@ -188,56 +145,49 @@ string StreamControlPanel_showDisplay(string stream, int offset=130)  {
 }
 //=============================================================================
 string StreamControlPanel_removeDisplay(string stream, string partitions)  {
-  // DebugN("Disconnect from :",stream+".State");
-  int res;// = dpDisconnect("StreamControlPanel_CheckDisplay",stream+".State");
+  StreamControl_trace("StreamControlPanel_removeDisplay:"+stream+" "+partitions);
+  int res = 0;// = dpDisconnect("StreamControlPanel_CheckDisplay",stream+".State");
   StreamControlPanel_checkErrors(res);
   dyn_string items  = strsplit(partitions," ");
   for (int i=1; i<=dynlen(items); ++i)  {
     string item = strltrim(strrtrim(items[i]," ")," ");
     res = removeSymbol(myModuleName(), myPanelName(), item);
-    //DebugN("Remove partition display:"+item);
+    StreamControl_trace("Remove partition display:"+item);
   }
 }
 //=============================================================================
 void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
   string name = StreamControlPanel_getPartition(stream,partition);
-  DebugN("StreamControlPanel_initPartitionDisplay:",stream,partition,name);
-  if ( strlen(name)>0 )  {
-    if ( strpos(stream,"Moni") >= 0 ) {
-      StreamControlPanel_initMoniPartitionDisplay(stream,partition,name);
-    }
-    else  {
-      StreamControlPanel_initStreamPartitionDisplay(stream,partition,name);
-    }
-  }
-}
-//=============================================================================
-void StreamControlPanel_initStreamPartitionDisplay(string stream, string partition, string name)  {
+  StreamControl_trace("StreamControlPanel_initPartitionDisplay:"+stream+" "+partition+" "+name);
   int flag;
-  string val, dp = dpSubStr(name,DPSUB_DP);
+  string     rundp_name, val, dp = dpSubStr(name,DPSUB_DP);
   dyn_int    strmMult;
   dyn_string rcvInfra, recvTasks, recvInfraTasks, recvSenderTasks, recvReceiverTasks;
   dyn_string strmInfra, strmTypes, strmTasks, strmInfraTasks, strmReceiverTasks, strmWriterTasks;
   dyn_string recv_slices = StreamControlPanel_getStringVectors(dp+".RecvSlices","StreamPartition");
   dyn_string strm_slices = StreamControlPanel_getStringVectors(dp+".StreamSlices","StreamPartition");
-  m_frame.text     = "DAQ Partition: "+partition;
+  m_frame.text     = "Partition: "+partition;
   StreamControlPanel_setListItems("m_recvSlots",recv_slices);
   StreamControlPanel_setListItems("m_strmSlots",strm_slices);
+  rundp_name = "LBECS:"+partition;
   int res = dpGet(
-    partition+"_RunInfo.Storage.recvInfrastructure",rcvInfra,
-    partition+"_RunInfo.HLTFarm.receiverTasks",recvReceiverTasks,
-    partition+"_RunInfo.Storage.streamInfrastructure",strmInfra,
-    partition+"_RunInfo.Storage.streamTypes",strmTypes,
-    partition+"_RunInfo.Storage.streamMultiplicity",strmMult,
-    partition+"_RunInfo.Storage.recvSenders",recvSenderTasks,
-    partition+"_RunInfo.Storage.recvInfrastructureTasks",recvInfraTasks,
-    partition+"_RunInfo.Storage.streamInfrastructureTasks",strmInfraTasks,
-    partition+"_RunInfo.Storage.streamReceivers",strmReceiverTasks,
-    partition+"_RunInfo.Storage.streamWriters",strmWriterTasks,
-    partition+"_RunInfo.Storage.storeFlag",flag
+    rundp_name+"_RunInfo.Storage.recvInfrastructure",rcvInfra,
+    rundp_name+"_RunInfo.Storage.streamInfrastructure",strmInfra,
+    rundp_name+"_RunInfo.Storage.streamTypes",strmTypes,
+    rundp_name+"_RunInfo.Storage.streamMultiplicity",strmMult,
+    rundp_name+"_RunInfo.Storage.storeFlag",flag
     );
   StreamControlPanel_checkErrors(res);
-  string val = "Flag:\nReceiving layer infrastructure:\nStreaming layer infrastructure:\nOutput streams:\t\t";
+  res = dpGet(
+    dp+".RecvReceivers",recvReceiverTasks,
+    dp+".RecvSenders",recvSenderTasks,
+    dp+".RecvInfrastructure",recvInfraTasks,
+    dp+".StreamInfrastructure",strmInfraTasks,
+    dp+".StreamReceivers",strmReceiverTasks,
+    dp+".StreamSenders",strmWriterTasks
+    );
+  StreamControlPanel_checkErrors(res);
+  string val = "Flag:\nReceive infrastructure:\nStream infrastructure:\nOutput streams:\t\t";
   val = val + "\nReceiving layer:\t\nStreaming layer:\t";
   m_desc.text = val;
   val = flag+"\n";
@@ -262,70 +212,7 @@ void StreamControlPanel_initStreamPartitionDisplay(string stream, string partiti
   if ( dynlen(strmReceiverTasks) > 0 )
     val = val + dynlen(strmReceiverTasks) + " receiver(s) ";
   if ( dynlen(strmWriterTasks) > 0 )
-    val = val + dynlen(strmWriterTasks) + " file writer(s) ";
-  m_params.text = val;
-  m_desc.backCol   = "_Button";
-  m_params.backCol = "_Button";
-  m_desc.backCol   = "_Transparent";
-  m_params.backCol = "_Transparent";
-  m_displayedPartitions.visible = 0;
-  m_partition.visible = 0;
-}
-//=============================================================================
-void StreamControlPanel_initMoniPartitionDisplay(string stream, string partition, string name)  {
-  int flag;
-  string val, dp = dpSubStr(name,DPSUB_DP);
-  dyn_int    monMult;
-  dyn_string monStreams, monTypes, monInfra, monTasks, monInfraTasks, monReceivers, senderTasks;
-  dyn_string relayTasks, relayInfra, relayInfraTasks;
-  dyn_string relay_slices = StreamControlPanel_getStringVectors(dp+".RecvSlices","StreamPartition");
-  dyn_string moni_slices  = StreamControlPanel_getStringVectors(dp+".StreamSlices","StreamPartition");
-  m_frame.text = "DAQ Partition: "+partition;
-  StreamControlPanel_setListItems("m_recvSlots",relay_slices);
-  StreamControlPanel_setListItems("m_strmSlots",moni_slices);
-  int res = dpGet(
-    partition+"_RunInfo.MonFarm.senderTasks",             senderTasks,
-    partition+"_RunInfo.MonFarm.monTypes",                monTypes,
-    partition+"_RunInfo.MonFarm.monStreams",              monStreams,
-    partition+"_RunInfo.MonFarm.monMultiplicity",         monMult,
-    partition+"_RunInfo.MonFarm.monInfrastructure",       monInfra,
-    partition+"_RunInfo.MonFarm.monInfrastructureTasks",  monInfraTasks,
-    partition+"_RunInfo.MonFarm.monReceivers",            monReceivers,
-    partition+"_RunInfo.MonFarm.monTasks",                monTasks,
-    partition+"_RunInfo.MonFarm.relayTasks",              relayTasks,
-    partition+"_RunInfo.MonFarm.relayInfrastructure",     relayInfra,
-    partition+"_RunInfo.MonFarm.relayInfrastructureTasks",relayInfraTasks,
-    partition+"_RunInfo.MonFarm.monFlag",                 flag
-    );
-  StreamControlPanel_checkErrors(res);
-  string dsc = "Flag:\nInfrastructure:\nMonitoring types:\t";
-  string val = flag+"\nRelay:";
-  for(int i=1; i<=dynlen(relayInfra); ++i)  
-    val = val + relayInfra[i] + "  ";
-  val = val + "  Monitoring:";
-  for(int i=1; i<=dynlen(monInfra); ++i)  
-    val = val + monInfra[i] + "  ";
-  val = val + "\n";
-  for(int i=1; i<=dynlen(monTypes); ++i)  {
-    if ( i>1 && ((i-1)%3) == 0 )  {
-      val = val + "\n";
-      dsc = dsc + "\n";
-    }
-    val = val + monTypes[i] + " ["+monStreams[i]+"/"+monMult[i]+"] ";
-  }
-  dsc = dsc + "\nRelay setup:\t\nMonitoring setup:\t\n";
-  val = val + "\n" + dynlen(relay_slices) + " slots used with ";
-  if ( dynlen(senderTasks) > 0 )
-    val = val + dynlen(senderTasks) + " sender(s) and ";
-  if ( dynlen(relayInfraTasks) > 0 )
-    val = val + dynlen(relayInfraTasks) + " infrastructure task(s) ";
-  val = val + "\n" + dynlen(moni_slices) + " slots used with ";
-  if ( dynlen(monReceivers) > 0 )
-    val = val + dynlen(monReceivers) + " receiver(s) ";
-  if ( dynlen(monInfraTasks) > 0 )
-    val = val +dynlen(monInfraTasks) + " infrastructure task(s) ";
-  
-  m_desc.text = dsc;
+    val = val + dynlen(strmWriterTasks) + " senders(s) ";
   m_params.text = val;
   m_desc.backCol   = "_Button";
   m_params.backCol = "_Button";
@@ -339,7 +226,8 @@ void StreamControlPanel_initMoniPartitionDisplay(string stream, string partition
 //  ALLOCATION DISPLAY
 //
 //=============================================================================
-void StreamControlPanel_initAllocPanel(string name,string partition)  {
+void StreamControlPanel_initAllocPanel(string name, string partition)  {
+  string font = "Arial,8,-1,5,50,0,0,0,0,0";
   m_streamName.text = name;
   m_partition.text = partition;
   StreamControlPanel_setupAllocWidgets();
@@ -354,7 +242,11 @@ void StreamControlPanel_initAllocPanel(string name,string partition)  {
   m_strmSlots.enabled = 0;
   m_recvCheck.visible = 0;
   m_strmCheck.visible = 0;
-  StreamControlPanel_initAllocData(partition);
+  m_strmSlots.font = font;
+  m_recvInfraTaskTypes.font = font;
+  m_strmInfraTaskTypes.font = font;
+  m_strmTypes.font = font;
+  StreamControlPanel_initAllocData(name,partition);
 }
 //=============================================================================
 void StreamControlPanel_setupAllocWidgets()  {
@@ -378,18 +270,37 @@ void StreamControlPanel_setupAllocWidgets()  {
   m_Ok.toolTipText                = "Save changes to datapoints and close panel.";
 }
 //=============================================================================
-void StreamControlPanel_initAllocData(string partition)  {
-  int recv_slots = 1;
-  int strm_slots = 0;
-  string info = partition+"_RunInfo.";
+void StreamControlPanel_initAllocData(string stream, string partition)  {
+  int recv_slots = 1, strm_slots = 0, recv_strategy = 2, strm_strategy = 2;
+  string info = "LBECS:"+partition+"_RunInfo.";
   dyn_int strm_mult;
   dyn_string recv_infra, strm_infra, strm_types;
-  int res = dpGet(info+"HLTFarm.nSubFarms",recv_slots,
-                  info+"Storage.recvInfrastructure", recv_infra,
-                  info+"Storage.streamInfrastructure", strm_infra,
-                  info+"Storage.streamMultiplicity", strm_mult,
-                  info+"Storage.streamTypes", strm_types);
-  StreamControlPanel_checkErrors(res);
+  int res = -1;
+  if ( strpos(stream,"Storage") >= 0 )  {
+    res = dpGet(info+"HLTFarm.nSubFarms",recv_slots,
+                info+"Storage.recvInfrastructure", recv_infra,
+                info+"Storage.streamInfrastructure", strm_infra,
+                info+"Storage.streamMultiplicity", strm_mult,
+                info+"Storage.streamTypes", strm_types,
+                info+"Storage.recvStrategy", recv_strategy,
+                info+"Storage.strmStrategy", strm_strategy);
+  }
+  else if ( strpos(stream,"Monitoring") >= 0 )  {
+    res = dpGet(info+"MonFarm.relayInfrastructure", recv_infra,
+                info+"MonFarm.monInfrastructure", strm_infra,
+                info+"MonFarm.monMultiplicity", strm_mult,
+                info+"MonFarm.monTypes", strm_types,
+                info+"MonFarm.recvStrategy", recv_strategy,
+                info+"MonFarm.strmStrategy", strm_strategy);
+    recv_slots = 0;
+    if ( 0 == res )  {
+      for(int i=1, n=dynlen(strm_mult); i<n; ++i) 
+        recv_slots = recv_slots + strm_mult[i];   
+    }
+  }
+  else  {
+    StreamControlPanel_checkErrors(res);
+  }
   string s= "";
   for(int i=1, n=dynlen(strm_mult); i<=n; ++i)  {
     strm_slots = strm_slots + strm_mult[i];
@@ -414,13 +325,13 @@ void StreamControlPanel_initAllocData(string partition)  {
   m_recvStrategy.sbMinimum = 1;
   m_recvStrategy.sbMaximum = 50;
   m_recvStrategy.sbStep = 1;
-  m_recvStrategy.text = 2;
+  m_recvStrategy.text = recv_strategy;
 
   m_strmSlots.text = strm_slots;
   m_strmStrategy.sbMinimum = 1;
   m_strmStrategy.sbMaximum = 20;
   m_strmStrategy.sbStep = 1;
-  m_strmStrategy.text = 2;
+  m_strmStrategy.text = strm_strategy;
 }
 //=============================================================================
 void StreamControlPanel_checkRecvAllocation()  {
@@ -429,9 +340,9 @@ void StreamControlPanel_checkRecvAllocation()  {
 void StreamControlPanel_checkStrmAllocation()  {
 }
 //=============================================================================
-int StreamControlPanel_AllocSave(string partition)  {
+int StreamControlPanel_AllocSave(string stream, string partition)  {
   // Are you sure ....
-  string info = partition+"_RunInfo.";
+  string info = "LBECS:"+partition+"_RunInfo.";
   dyn_float df;
   dyn_string ds;
   string msg = "Are you sure you want to save the parameters ?";
@@ -439,6 +350,8 @@ int StreamControlPanel_AllocSave(string partition)  {
                      makeDynString("$1:"+msg,"$2:Cancel","$3:Ok"),50,50,ds,df);
   if ( ds[1] == 0 )   {
     string s0 = m_strmTypes.text, s1 = m_recvInfraTaskTypes.text, s2 = m_strmInfraTaskTypes.text;
+    int recv_strategy = m_recvStrategy.text;
+    int strm_strategy = m_strmStrategy.text;
     strreplace(s0,"\n"," ");
     while ( strpos(s0,"  ")>0 ) strreplace(s0,"  "," ");
     strreplace(s0,"/"," ");
@@ -459,31 +372,44 @@ int StreamControlPanel_AllocSave(string partition)  {
       dynAppend(types,strm_typs[i]);
       dynAppend(mult,strm_typs[i+1]);
     }
-    int res = dpSet(info+"Storage.recvInfrastructure", recv_infra,
-                    info+"Storage.streamInfrastructure", strm_infra,
-                    info+"Storage.streamMultiplicity", mult,
-                    info+"Storage.streamTypes", types);
+    int res = -1;
+    if ( strpos(stream,"Storage") >= 0 )  {
+      res = dpSet(info+"Storage.recvInfrastructure", recv_infra,
+                  info+"Storage.streamInfrastructure", strm_infra,
+                  info+"Storage.streamMultiplicity", mult,
+                  info+"Storage.streamTypes", types,
+                  info+"Storage.recvStrategy", recv_strategy,
+                  info+"Storage.strmStrategy", strm_strategy);
+    }
+    else if ( strpos(stream,"Monitoring") >= 0 )  {
+      res = dpSet(info+"MonFarm.relayInfrastructure", strm_infra,
+                  info+"MonFarm.monInfrastructure", recv_infra,
+                  info+"MonFarm.monMultiplicity", mult,
+                  info+"MonFarm.monTypes", types,
+                  info+"MonFarm.recvStrategy", recv_strategy,
+                  info+"MonFarm.strmStrategy", strm_strategy);
+    }
     StreamControlPanel_checkErrors(res);
-    StreamControlPanel_initAllocData(partition);
+    StreamControlPanel_initAllocData(stream,partition);
     return res;
   }
   return 0;
 }
 //=============================================================================
-int StreamControlPanel_AllocOk()  {
-  int res = StreamControlPanel_AllocSave();  
+int StreamControlPanel_AllocOk(string stream, string partition)  {
+  int res = StreamControlPanel_AllocSave(stream,partition);  
   if ( res == 0 )  {
     PanelOff();
   }
 }
 //=============================================================================
-void StreamControlPanel_AllocCancel(string partition)  {
-  StreamControlPanel_initAllocData(partition);
+void StreamControlPanel_AllocCancel(string stream, string partition)  {
+  StreamControlPanel_initAllocData(stream, partition);
   PanelOff();
 }
 //=============================================================================
-void StreamControlPanel_AllocReset(string partition)  {
-  StreamControlPanel_initAllocData(partition);
+void StreamControlPanel_AllocReset(string stream, string partition)  {
+  StreamControlPanel_initAllocData(stream, partition);
 }
 //=============================================================================
 //
@@ -635,7 +561,8 @@ bool StreamControlPanel_showInfrastructure(string name)  {
 }
 //=============================================================================
 string StreamControlPanel_getPartition(string stream,string name)  {
-  dyn_string items = dpNames(stream+"_Partition*.Name","StreamPartition");
+  StreamControl_trace("StreamControlPanel_getPartition:"+stream+" Name:"+name);
+  dyn_string items = dpNames(stream+"_Slice*.Name","StreamPartition");
   dyn_string values;
   int res = dpGet(items,values);
   if ( 0 == res )  {
@@ -651,7 +578,7 @@ string StreamControlPanel_getPartition(string stream,string name)  {
 //=============================================================================
 string StreamControlPanel_getPartitionNameFromSlice(string stream,string name)  {
   // DebugN("StreamControlPanel_getPartitionNameFromSlice:"+stream+" Name:"+name);
-  dyn_string items = dpNames(stream+"_Partition*.FSMSlice","StreamPartition");
+  dyn_string items = dpNames(stream+"_Slice*.FSMSlice","StreamPartition");
   dyn_string values;
   int res = dpGet(items,values);
   if ( 0 == res )  {
@@ -773,6 +700,21 @@ void StreamControlPanel_install()  {
   else {
     DebugN("Data type StreamControl are already defined....Nothing to do.");
   }
+  if ( dynlen(dpTypes("StreamConfigurator")) ==0 ) {
+    dyn_dyn_string names;
+    dyn_dyn_int    types;
+    names[1]  = makeDynString ("StreamConfigurator","","","");
+    names[2]  = makeDynString ("","Command","","");
+    names[3]  = makeDynString ("","State","","");
+    types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
+    types[2]  = makeDynInt (0,DPEL_STRING,0,0);
+    types[3]  = makeDynInt (0,DPEL_STRING,0,0);
+    int result = dpTypeCreate(names,types);
+    StreamTaskMgr_checkErrors(result);
+  }   
+  else {
+    DebugN("Data type StreamConfigurator are already defined....Nothing to do.");
+  }
   if ( dynlen(dpTypes("StreamPartition")) ==0 ) {
     dyn_dyn_string names;
     dyn_dyn_int types;
@@ -780,18 +722,35 @@ void StreamControlPanel_install()  {
     names[2]  = makeDynString ("","FSMSlice","","");
     names[3]  = makeDynString ("","InUse","","");
     names[4]  = makeDynString ("","Name","","");
-    names[5]  = makeDynString ("","RecvNodes","","");
-    names[6]  = makeDynString ("","RecvSlices","","");
-    names[7]  = makeDynString ("","StreamNodes","","");
-    names[8]  = makeDynString ("","StreamSlices","","");
+    names[5]  = makeDynString ("","RunInfo","","");
+    names[6]  = makeDynString ("","RecvNodes","","");
+    names[7]  = makeDynString ("","RecvSlices","","");
+    names[8]  = makeDynString ("","StreamNodes","","");
+    names[9]  = makeDynString ("","StreamSlices","","");
+    names[10] = makeDynString ("","DataSenders","","");
+    names[11] = makeDynString ("","RecvInfrastructure","","");
+    names[12] = makeDynString ("","RecvReceivers","","");
+    names[13] = makeDynString ("","RecvSenders","","");
+    names[14] = makeDynString ("","StreamInfrastructure","","");
+    names[15] = makeDynString ("","StreamReceivers","","");
+    names[16] = makeDynString ("","StreamSenders","","");
+
     types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
     types[2]  = makeDynInt (0,DPEL_STRING,0,0);
     types[3]  = makeDynInt (0,DPEL_INT,0,0);
     types[4]  = makeDynInt (0,DPEL_STRING,0,0);
-    types[5]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[5]  = makeDynInt (0,DPEL_STRING,0,0);
     types[6]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
     types[7]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
     types[8]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[9]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[10] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[11] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[12] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[13] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[14] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[15] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+    types[16] = makeDynInt (0,DPEL_DYN_STRING,0,0);
     int result = dpTypeCreate(names,types);
     StreamTaskMgr_checkErrors(result);
   }   

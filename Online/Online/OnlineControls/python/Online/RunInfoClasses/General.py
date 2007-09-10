@@ -24,13 +24,39 @@ class General:
 
         @return reference to initialized object
     """
-    self.manager = manager
-    self.name    = name
-    self.reader  = self.manager.devReader()
-    self.runTyp  = self.dp('general.runType')
-    self.partID  = self.dp('general.partId')
+    self.manager  = manager
+    self.name     = name
+    self.reader   = self.manager.devReader()
+    self.runTyp     = self.dp('general.runType')
+    self.partID     = self.dp('general.partId')
+    self.nSubFarm   = self.dp('HLTFarm.nSubFarms')
+    self.storeFlag  = self.dp('Storage.storeFlag')
+    self.rcvInfra   = self.dp('Storage.recvInfrastructure')
+    self.strInfra   = self.dp('Storage.streamInfrastructure')
+    self.streams    = self.dp('Storage.streamTypes')
+    self.strMult    = self.dp('Storage.streamMultiplicity')
+
+    self.monFlag    = self.dp('MonFarm.monFlag')
+    self.monTypes   = self.dp('MonFarm.monTypes')
+    self.monStreams = self.dp('MonFarm.monStreams')
+    self.monMult    = self.dp('MonFarm.monMultiplicity')
+    self.monInfra   = self.dp('MonFarm.monInfrastructure')
+    self.relayInfra = self.dp('MonFarm.relayInfrastructure')
+
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
+    self.reader.add(self.nSubFarm)
+    self.reader.add(self.storeFlag)
+    self.reader.add(self.streams)
+    self.reader.add(self.strMult)
+    self.reader.add(self.rcvInfra)
+    self.reader.add(self.strInfra)
+    self.reader.add(self.monFlag)
+    self.reader.add(self.monTypes)
+    self.reader.add(self.monMult)
+    self.reader.add(self.monStreams)
+    self.reader.add(self.monInfra)
+    self.reader.add(self.relayInfra)
 
   # ===========================================================================
   def dp(self,name):
@@ -70,29 +96,55 @@ class General:
     if wr.execute(0,1) is not None:
       return self
     return None
-  # ===========================================================================
-  def _collectTasks(self,tasks,data):
-    if debug: print '_collectTasks: ',data.name(),data.data.size()
-    for i in data.data:
-      items = i.split('/')
-      if len(items) > 0:
-        if not tasks.has_key(items[0]):
-          tasks[items[0]] = []
-        tasks[items[0]].append(items)
-    return tasks
-  
+
   # ===========================================================================
   def showGeneral(self):
     "Show all information from the RunInfo structure."
     log('Run type:                    '+str(self.runTyp.data))
     log('Partition ID                 '+str(self.partID.data))
+    if self.storeFlag>0:
+      log('Data storage is enabled')
+      for i in xrange(len(self.streams.data)):
+        fmt = 'Data stream:                 %-20s with multiplicity:%d'
+        log(fmt%(self.streams.data[i],self.strMult.data[i]))
+    s = 'Receive infrastructure:      '
+    for i in xrange(len(self.recvInfra.data)):
+      s = s + self.recvInfra.data[i]
+    log(s)
+    if self.storeFlag>0:
+      s = 'Streaming infrastructure:    '
+      for i in xrange(len(self.recvInfra.data)):
+        s = s + self.recvInfra.data[i]
+      log(s)
+
   # ===========================================================================
   def show(self):
-    "Show all information from the RunInfo structure."
+    "Show all information from the Storage structure."
     if self.load():
+      self.showStreams()
+      self.showMonitors()
       self.showGeneral()
-      return;
+      return
     error('Failed to load RunInfo for partition:'+self.name)
+
+  # ===========================================================================
+  def showStreams(self):
+    "Show output stream related information of the RunInfo datapoint."
+    streams = self.streams.data
+    multiplicity = self.strMult.data
+    log('Output to %d logical streams'%len(self.streams.data))
+    for i in xrange(len(streams)):
+      log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
+
+  # ===========================================================================
+  def showMonitors(self):
+    "Show monitor stream related information of the RunInfo datapoint."
+    streams = self.monTypes.data
+    multiplicity = self.monMult.data
+    log('Output to %d logical streams'%len(streams))
+    for i in xrange(len(streams)):
+      log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
+      
   # ===========================================================================
   def setPartitionID(self,partID,save=0):
     return self._setDataItem(self.partID,partID,save)
@@ -105,3 +157,10 @@ class General:
   # ===========================================================================
   def runType(self):
     return self._dataItem(self.runTyp)
+
+# =============================================================================
+def create(rundp_name):
+    items = rundp_name.split(':')
+    mgr = Systems.controlsMgr(items[0])
+    partition = items[1][:items[1].find('_')]
+    return General(mgr,partition)

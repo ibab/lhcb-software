@@ -10,8 +10,8 @@ main()  {  StreamControlPanel_initPartitionDisplay($stream, $partition);    }
  E E E E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -30,9 +30,9 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 18 38 122 132
+ 18 38 142 132
 0
 
 E
@@ -43,7 +43,7 @@ E
 17 9
 "m_strmSlots"
 ""
-1 130 40 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 150 40 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 11 0 0 0 0 0
 E E E
@@ -53,9 +53,9 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 128 38 232 132
+ 148 38 272 132
 0
 
 E
@@ -86,7 +86,7 @@ LANG:1 16 Receiving Layer:
 2 42
 "m_allStrmSlotText"
 ""
-1 20 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 40 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 54 0 0 0 0 0
 E E E
@@ -96,19 +96,19 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 130 20 230 30
-0 2 2 "0s" 0 0 0 64 0 0  130 20 1
+E E 0 1 1 2 1 E U  1 E 150 20 250 30
+0 2 2 "0s" 0 0 0 64 0 0  150 20 1
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
 1
 LANG:1 16 Streaming Layer:
-2 46
+2 51
 "m_desc"
 ""
-1 239.8441558441558 22.15384615384616 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 280 20 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
-58 0 0 0 0 0
+63 0 0 0 0 0
 E E E
 0
 1
@@ -116,19 +116,19 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E 0.9220779220779221 0 1.076923076923077 18.54545454545455 -10.15384615384615 1 E 240 30 390 130
-0 2 2 "0s" 0 0 0 64 0 0  240 30 1
+E E 0 1 1 2 1 E U  1 E 280 20 410 130
+0 2 2 "0s" 0 0 0 64 0 0  280 20 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
-2 47
+2 52
 "m_params"
 ""
-1 392.0406091370558 22.15384615384616 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 410 20 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
-59 0 0 0 0 0
+64 0 0 0 0 0
 E E E
 0
 1
@@ -136,10 +136,10 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E 1.020304568527919 0 1.076923076923077 -16.08121827411172 -10.15384615384615 1 E 400 30 790 130
-0 2 2 "0s" 0 0 0 64 0 0  400 30 1
+E E 0 1 1 2 1 E U  1 E 410 20 790 130
+0 2 2 "0s" 0 0 0 64 0 0  410 20 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 

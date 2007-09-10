@@ -27,27 +27,14 @@ class HLTFarm:
     """
     self.nodes     = self.dp('HLTFarm.nodeList')
     self.subFarms  = self.dp('HLTFarm.subFarms')
-    self.nSubFarm  = self.dp('HLTFarm.nSubFarms')
-    self.receivers = self.dp('HLTFarm.receiverTasks')
     self.reader.add(self.nodes)
     self.reader.add(self.subFarms)
-    self.reader.add(self.nSubFarm)
-    self.reader.add(self.nodes)
-    self.reader.add(self.receivers)
     
   # ===========================================================================
   def addDevices(self, deviceIO):
     """
     Add task devices to device IO structure for read/write access
     """
-    wr = deviceIO
-    if wr is None: wr = self.manager.devWriter()
-    wr.add(self.receivers)
-    #log('HLTFarm: Adddevices:HLT wr='+str(wr)+'  '+str(deviceIO.get()))
-    if deviceIO is None:
-      if wr.execute(0,1):
-        return wr
-      return None
     return deviceIO
   # ===========================================================================
   def showSubfarms(self):
@@ -55,17 +42,13 @@ class HLTFarm:
     Show subfarm related information of the RunInfo datapoint.
     """
     farms = self.subFarms.data
-    recv = self.receivers.data
     nSF = self.nSubFarm.data
     if len(farms) != nSF:
       error('Subfarm allocation inconsistency: nSubFarm(%d) != len(subFarms)(%d)'%(len(farms),nSF))
-    full = len(recv) == len(farms)
-    log('Input from %d sub farms'%self.nSubFarm.data)
-    for i in xrange(len(farms)):
-      if full:
-        log(' -> Subfarm:%-12s sending to: %s'%(farms[i],recv[i]))
-      else:
-        log(' -> Subfarm:%-24s '%(farms[i],))
+    log('Input from %d sub farms'%nSF)
+    for i in nSF:
+      log(' -> Subfarm:%-24s '%(farms[i],))
+      #log(' -> Subfarm:SF%02d '%(i,))
   # ===========================================================================
   def show(self):
     """
@@ -82,22 +65,13 @@ class HLTFarm:
     Define all tasks in the storage layer for a given partition.
     The result is storen in runInfo datapoints for further processing.    
     """
-    # log('HLTFarm: Defining tasks for partition '+self.name)
-    self.receivers.data.clear()
-    for i in xrange(len(recv_slots)):
-      slot = recv_slots[i]
-      node = slot[:slot.find(':')]
-      short_name = self.subFarms.data[i]+'_HLT'
-      task = self.name+'_'+node+'_'+short_name
-      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLTRec/("'+self.subFarms.data[i]+'",)')
+    pass
 
   # ===========================================================================
   def clearTasks(self, writer):
     """
     Clear all tasks definition in the storage layer for a given partition.
     """
-    empty = std.vector('std::string')()
-    self.receivers.data = empty
     self.addDevices(writer)
     return writer
 

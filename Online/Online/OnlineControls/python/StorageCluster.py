@@ -6,11 +6,11 @@ def run():
   import Online.PVSS as PVSS
   import Online.RunInfo as RunInfo
   import Online.JobOptions.JobOptionsControl as WR
-  import Online.Streaming.StreamingControl as StreamingControl
+  import Online.Streaming.Control as Control
   import Online.Streaming.Simulator as StreamingSimulator
   name = 'Storage'
   stream_mgr = Systems.controlsMgr(Params.storage_system_name)
-  ctrl = StreamingControl.Control(stream_mgr,name,RunInfo.RunInfoCreator())
+  ctrl = Control.Control(stream_mgr,name,RunInfo.RunInfoCreator())
   sensor=PVSS.DeviceSensor(stream_mgr,ctrl.control)
   sensor.addListener(ctrl)
   sensor.run(1)

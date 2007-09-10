@@ -15,12 +15,10 @@ import Online.PVSS        as PVSS
 import Online.Utils       as Utils
 import Online.SetupParams as Params
 import Online.PVSSSystems as Systems
+import Online.Streaming.PartitionInfo as PartitionInfo
 from Online.InstallerBase import InstallerBase as InstallerBase
-PVSS.logPrefix = 'PVSS Control '
+
 std            = PVSS.gbl.std
-log            = Utils.log
-error          = Utils.error
-warning        = Utils.warning
 
 # =============================================================================
 class Installer(InstallerBase):
@@ -34,7 +32,8 @@ class Installer(InstallerBase):
   # ===========================================================================
   def __init__(self, mgr, dev):
     "Default constructor"
-    InstallerBase.__init__(self,mgr,dev)
+    InstallerBase.__init__(self,mgr,dev+'Alloc')
+    self.system           = dev
     self.numSubFarm       = Params.hlt_numSubFarms
     self.numPartition     = Params.daq_numPartition
     self.numStreamPerNode = Params.storage_streams_per_node
@@ -51,18 +50,22 @@ class Installer(InstallerBase):
     typ    = self.manager.typeMgr().type('StreamControl')
     device = dm.createDevice(self.name,typ,1)
     if device.get() is None:
-      warning('Failed to create device "'+self.name+'"')
+      Utils.warning('Failed to create device "'+self.name+'"')
     partitions = PVSS.DpIDVector()
     errs = 0
     self.dps.clear()
+    infos = []
     for i in xrange(self.numPartition):
-      device = self.createPartition(self.name+'_Partition_%02X'%(i,))
-      if ( device ):
-        partitions.push_back(device.id())
+      slice = '_Slice%02X'%(i,)
+      p = PartitionInfo.create(self.manager,self.system+slice,self.system+'Config'+slice)
+      if p:
+        partitions.push_back(p[0].id())
+        infos.append(p)
       else:
-        error("Errors occurred during device creation.")
+        Utils.error("Errors occurred during device creation.")
         return
-    self.set('Command','unload')
+
+    self.set('Command','')
     self.set('State','UNKNOWN')
     self.set('PartitionDesc',partitions)
     self.set('InUse',std.vector('int')(16,0))
@@ -87,34 +90,6 @@ class Installer(InstallerBase):
     self.set('StreamNodes',strmNodes)
     self.set('StreamSlices',slices)
     return self.write(prefix='StreamControl('+self.name+'): ')
-
-  # ===========================================================================
-  def createPartition(self, name):
-    "Create a new partition"
-    DP = PVSS.DataPoint
-    empty = std.vector('std::string')()
-    dm = self.manager.deviceMgr()
-    typ = self.manager.typeMgr().type('StreamPartition')
-    device = dm.createDevice(name,typ,1)
-    if device.get() is None:
-      warning('Failed to create device "'+name+'"')
-    device = dm.device(name)
-    if device.get() is None:
-      error('Failed to access device "'+name+'"')
-      return None
-    self.dps.push_back(DP(self.manager,DP.original(name+'.InUse')))
-    self.dps.back().data = 0
-    self.dps.push_back(DP(self.manager,DP.original(name+'.Name')))
-    self.dps.back().data = ''
-    self.dps.push_back(DP(self.manager,DP.original(name+'.RecvNodes')))
-    self.dps.back().data = empty
-    self.dps.push_back(DP(self.manager,DP.original(name+'.RecvSlices')))
-    self.dps.back().data = empty
-    self.dps.push_back(DP(self.manager,DP.original(name+'.StreamNodes')))
-    self.dps.back().data = empty
-    self.dps.push_back(DP(self.manager,DP.original(name+'.StreamSlices')))
-    self.dps.back().data = empty
-    return device
 
 # =============================================================================
 def install(name):

@@ -108,7 +108,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 1.03030303030303 0 3.608247422680401 -10.6060606060606 203.0927835051548 0 E 20 13 351 111
+E E 0 0 1 0 1 E 1.303030303030303 0 3.608247422680401 -16.06060606060606 203.0927835051548 0 E 20 13 351 111
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
@@ -117,7 +117,7 @@ LANG:1 29 StreamTask Manager Data Types
 13 10
 "m_installStreamTaskMgrTypes"
 ""
-1 19.9999999999997 269.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 19.99999999999974 269.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 15 0 0 0 0 0
 E E E
@@ -129,7 +129,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 17.9999999999997 267.9999999999998 172 291.9999999999998
+ 17.99999999999974 267.9999999999998 152 291.9999999999998
 
 T 
 1
@@ -139,7 +139,7 @@ LANG:1 23 Install datapoint types
 13 11
 "m_uninstallStreamTaskMgrTypes"
 ""
-1 19.9999999999997 299.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 19.99999999999974 299.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 17 0 0 0 0 0
 E E E
@@ -151,7 +151,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 17.9999999999997 297.9999999999998 172 321.9999999999998
+ 17.99999999999974 297.9999999999998 152 321.9999999999998
 
 T 
 1
@@ -173,7 +173,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 408 172 432
+ 18 408 152 432
 
 T 
 1
@@ -195,7 +195,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 438 172 462
+ 18 438 152 462
 
 T 
 1
@@ -303,7 +303,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 378 172 402
+ 18 378 152 402
 0
 
 E
@@ -345,7 +345,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 468 172 492
+ 18 468 152 492
 
 T 
 1
@@ -355,7 +355,7 @@ LANG:1 12 Generate FSM
 13 22
 "PUSH_BUTTON7"
 ""
-1 180 470 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 160 470.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 33 0 0 0 0 0
 E E E
@@ -367,7 +367,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 178 468 252 492
+ 158 468.0000000000002 232 492.0000000000002
 
 T 
 1
@@ -377,7 +377,7 @@ LANG:1 10 Start Tree
 13 23
 "PUSH_BUTTON8"
 ""
-1 270 470 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 250 470.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 35 0 0 0 0 0
 E E E
@@ -389,7 +389,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 268 468 342 492
+ 248 468.0000000000002 322 492.0000000000002
 
 T 
 1
@@ -411,7 +411,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 538 172 562
+ 18 538 152 562
 
 T 
 1
@@ -456,7 +456,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 568 172 592
+ 18 568 152 592
 
 T 
 1
@@ -466,7 +466,7 @@ LANG:1 16 Generate All FSM
 13 26
 "PUSH_BUTTON11"
 ""
-1 180 570 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 160 570.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 41 0 0 0 0 0
 E E E
@@ -478,7 +478,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 178 568 252 592
+ 158 568.0000000000002 232 592.0000000000002
 
 T 
 1
@@ -488,7 +488,7 @@ LANG:1 12 Start Slices
 13 27
 "PUSH_BUTTON12"
 ""
-1 270 570 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 250 570.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 43 0 0 0 0 0
 E E E
@@ -500,7 +500,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 268 568 342 592
+ 248 568.0000000000002 322 592.0000000000002
 
 T 
 1
@@ -510,7 +510,7 @@ LANG:1 11 Stop Slices
 13 28
 "PUSH_BUTTON13"
 ""
-1 180 269.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 160 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 45 0 0 0 0 0
 E E E
@@ -522,7 +522,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 178 267.9999999999998 332 291.9999999999998
+ 158 268 252 292
 
 T 
 1
@@ -532,7 +532,7 @@ LANG:1 14 Install Stream
 13 29
 "PUSH_BUTTON14"
 ""
-1 180 299.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 160 300.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 47 0 0 0 0 0
 E E E
@@ -544,7 +544,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 178 297.9999999999998 332 321.9999999999998
+ 158 298.0000000000002 252 322.0000000000002
 
 T 
 1
@@ -566,7 +566,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 508 172 532
+ 18 508 152 532
 
 T 
 1
@@ -588,7 +588,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 18 327.9999999999998 172.0000000000003 351.9999999999998
+ 18 327.9999999999998 152.0000000000003 351.9999999999998
 
 T 
 1
@@ -810,7 +810,7 @@ LANG:1 16 # Class 1 Tasks:
 20 44
 "m_isMonitoring"
 ""
-1 190 430 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 170 430.0000000000002 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 74 0 0 0 0 0
 E E E
@@ -822,7 +822,7 @@ LANG:1 0
 1
 LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
 0 ""
- 188 428 312 452
+ 168 428.0000000000002 292 452.0000000000002
 1
 T 
 1
@@ -848,8 +848,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 190 380 270 400
-0 2 2 "0s" 0 0 0 64 0 0  190 380 1
+E E 0 1 1 2 1 E U  1 E 170 380.0000000000002 250 400.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  170 380.0000000000002 1
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
@@ -858,7 +858,7 @@ LANG:1 27 Monitoring [if applicable]:
 22 46
 "m_monitoringInput"
 ""
-1 220 430 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 200 430.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 78 0 0 0 0 0
 E E E
@@ -870,7 +870,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 218 428 342 452
+ 198 428.0000000000002 322 452.0000000000002
 0
 
 E
@@ -880,7 +880,7 @@ E
 21 48
 "m_monitoringClass1"
 ""
-1 300 400 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 280 400.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 81 0 0 0 0 0
 E E E
@@ -892,7 +892,7 @@ LANG:1 0
 1
 LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
 0 ""
- 298 398 342 422
+ 278 398.0000000000002 322 422.0000000000002
 0
 
 E
@@ -913,13 +913,79 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 192 402 290 420
-0 2 2 "0s" 0 0 0 192 0 0  192 402 1
+E E 0 1 1 2 1 E U  1 E 172 402.0000000000002 270 420.0000000000002
+0 2 2 "0s" 0 0 0 192 0 0  172 402.0000000000002 1
 1
 LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
 0 ""
 1
 LANG:1 16 # Class 1 Tasks:
+13 50
+"PUSH_BUTTON17"
+""
+1 260 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+85 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 258 268 352 292
+
+T 
+1
+LANG:1 12 Generate FSM
+"main() {  StreamTaskMgr_genStreamFSM(m_streamSelect.selectedText);  }" 0
+ E E E
+13 51
+"PUSH_BUTTON18"
+""
+1 260 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+87 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 258 298 302 322
+
+T 
+1
+LANG:1 5 Start
+"main() {  StreamTaskMgr_startStreamTree(m_streamSelect.selectedText);  }" 0
+ E E E
+13 52
+"PUSH_BUTTON19"
+""
+1 310 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+89 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 308 298 352 322
+
+T 
+1
+LANG:1 4 Stop
+"main() {  StreamTaskMgr_stopStreamTree(m_streamSelect.selectedText);  }" 0
+ E E E
 0
 LAYER, 1 
 1

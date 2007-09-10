@@ -4,13 +4,13 @@ def run():
   import Online.PVSS as PVSS
   import Online.RunInfo as RunInfo
   import Online.JobOptions.JobOptionsControl as WR
-  import Online.Streaming.StreamingControl as StreamingControl
+  import Online.Streaming.Control as Control
   import Online.Streaming.Simulator as StreamingSimulator
   import Online.RunInfoClasses.Monitoring as MonInfo
   name = 'Monitoring'
   mgr = PVSS.controlsMgr()
   info = MonInfo.MonitoringInfoCreator(mgr,'Storage')
-  ctrl = StreamingControl.Control(mgr,name,info)
+  ctrl = Control.Control(mgr,name,info)
   sensor=PVSS.DeviceSensor(mgr,ctrl.control)
   sensor.addListener(ctrl)
   sensor.run(1)

@@ -5,6 +5,8 @@
 if test -z $1;
     then
     echo "No Project name given!";
+    echo "usage: Install.sh <project-name>"
+    echo "Choose one of: STORAGE MONITORING LBECS"
     exit 0;
 fi;
 export PVSS_PROJECT_NAME=$1

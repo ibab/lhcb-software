@@ -13,8 +13,8 @@ void _p1()  {}// DebugN(\"Panel EditType after call:\"+jo_editType);            
 void __t() {}
 " 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -200,7 +200,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 3 1 0 1 E U  0 E 12 162 92 207
+E E 0 3 1 0 1 E U  0 E 12 162 94 207
 0 2 0 "0s" 0 0 0 192 0 0  12 162 1
 1
 LANG:1 96 -*-Arial Black-*-i-normal-*-37-*-100-100-*-*-iso8859-1|-37,0,0,0,404,1,0,0,0,0,0,0,0,Arial Black
@@ -452,8 +452,16 @@ LANG:1 0
 0
  160 120 621 321
 15 PVSS.TextEdit.1
-1
+5
 0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
 ""
 E0
 LAYER, 2 

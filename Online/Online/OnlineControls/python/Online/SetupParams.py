@@ -63,6 +63,8 @@ hlt_numSubFarms     = 50
 # Joboptions control parameters
 if platform.system() == 'Linux': jobopts_optsdir = "/home/frankm/options"
 else:                            jobopts_optsdir = "J:/options"
+gauditask_startscript='/home/frankm/runGaudi.sh'
+
 
 # Storage parameters
 # Stream definitions are in Online.RunInfoClasses.Installer
