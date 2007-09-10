@@ -7,6 +7,8 @@
 ! 2007-09-10 - Kurt Rinnert
  - another fix in the PatVeloTrackTool, the mapping to [-pi,pi] is now
    guaranteed in the setPhiCoords method.
+ - similar fix in PatVeloSpaceTool.  This only affects rare edge cases and was
+   not protected in the good ol' Pat code as well. 
 
 ! 2007-09-10 - Kurt Rinnert
  - the RZ and space tracking now set the proper status flags of the used hits.

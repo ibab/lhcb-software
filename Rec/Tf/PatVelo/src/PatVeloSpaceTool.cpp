@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.3 2007-09-10 12:14:36 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.4 2007-09-10 17:38:02 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -326,7 +326,7 @@ namespace Tf {
     for ( itP = station->hits(zone).begin(); station->hits(zone).end() != itP; ++itP ) {
 
       // check if co-ord is compatible with the min and max for the sector.
-      double phi = (*itP)->coordHalfBox() + offset;
+      double phi = m_angleUtils.add((*itP)->coordHalfBox(),offset);
       if (!m_angleUtils.contains(phiRange,phi)) continue;
 
       // set a possible `point' (incorporating R info) corresponding to
