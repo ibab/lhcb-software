@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.9 2007-05-02 14:46:27 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.10 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.9 2007-05-02 14:46:27 frankm Exp $
+// $Id: Internals.h,v 1.10 2007-09-10 09:39:50 frankm Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -110,6 +110,10 @@ namespace PVSS  {
   int defaultSystemID();
   /// Access default system name
   const char* defaultSystemName();
+  /// Access the event host name
+  const char* eventHostName();
+  /// Access data host name
+  const char* dataHostName();
   /// Access type name by DpElement type identifier
   const char* pvss_type_name(int typ);
   /// Set debug flag

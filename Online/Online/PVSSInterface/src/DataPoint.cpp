@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.27 2007-08-09 20:03:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.28 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.27 2007-08-09 20:03:58 frankm Exp $
+// $Id: DataPoint.cpp,v 1.28 2007-09-10 09:39:50 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -191,17 +191,17 @@ template <typename T> struct GetRef   {
 #define EXPLICIT_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) \
                                     EXPLICIT_DATA_SPECIALIZATIONS(x)
 
-
 // Default constructor
 DataPoint::DataPoint(ControlsManager* m) 
-: m_id(s_nullDP), m_valid(0), m_mgr(m), m_val(0)
+: m_id(s_nullDP), m_valid(0),  m_name(), m_mgr(m), m_val(0)
 {
 }
 
 // Initializing constructor
 DataPoint::DataPoint(ControlsManager* m, const std::string& nam) 
-: m_id(s_nullDP), m_valid(0), m_name(nam), m_mgr(m), m_val(0)
+: m_id(s_nullDP), m_valid(0), m_name(), m_mgr(m), m_val(0)
 {
+  m_name = m_mgr->dpFullName(nam);
 }
 
 /// Initializing constructor
@@ -214,7 +214,7 @@ DataPoint::DataPoint(ControlsManager* m, const DpID& dpid)
     m_id = s_nullDP;
     return;
   }
-  m_name = nam;
+  m_name = m_mgr->dpFullName(nam);
 }
 
 // Copy constructor
@@ -236,18 +236,9 @@ DataPoint::~DataPoint()   {
 
 /// load datapoint identifier
 const DpID& DataPoint::load() const  {
-  std::string nam = m_name;
   DataPoint* p = const_cast<DataPoint*>(this);
-  std::string::size_type idx1 = m_name.find(":");
-  if ( idx1 == std::string::npos )
-    nam = m_mgr->name()+":"+m_name;
-  else {
-    std::string::size_type idx2 = m_name.find(".");
-    if ( idx2 != std::string::npos && idx1 > idx2 )
-      nam = m_mgr->name()+":"+m_name;
-  }
-  if ( !pvss_lookup_dpid(nam.c_str(),p->m_id) )    {
-    throw std::invalid_argument("DataPoint> The datapoint:"+nam+" does not exist!");
+  if ( !pvss_lookup_dpid(m_name.c_str(),p->m_id) )    {
+    throw std::invalid_argument("DataPoint> The datapoint:"+m_name+" does not exist!");
   }
   p->m_valid = true;
   return m_id;
@@ -298,18 +289,7 @@ std::string DataPoint::original(const std::string& dp)  {
 
 /// Extract name of datapoint from online/original name
 std::string DataPoint::dpname(const std::string& dp)    {
-  std::string::size_type id1 = dp.find(":");
-  std::string::size_type id2 = dp.rfind(":");
-  if ( id1 == std::string::npos && id2 == std::string::npos )
-    return dp;
-  else if ( id2 > id1 )
-    return dp.substr(0,id2);
-  else if ( id1 == id2 )  {
-    std::string s = dp.substr(id1,3);
-    if( s == ":_o")
-      return dp.substr(0,id1);
-  }
-  return dp;
+  return ControlsManager::dpName(dp);
 }
 
 /// Extract name of datapoint from online/original name
@@ -328,13 +308,7 @@ std::string DataPoint::dpname()  const {
 
 /// Extract system name of datapoint from online/original name
 std::string DataPoint::sysname(const std::string& dp)   {
-  std::string::size_type id1 = dp.find(":");
-  std::string::size_type id2 = dp.rfind(":",id1+1);
-  if ( id1 == std::string::npos && id2 == std::string::npos )
-    return "";
-  else if ( id2 == std::string::npos )
-    return dp.substr(0,id1);
-  return dp.substr(0,id1);
+  return ControlsManager::dpSystemName(dp);
 }
 
 /// Extract system name of datapoint from online/original name
@@ -352,13 +326,7 @@ std::string DataPoint::sysname()  const {
 
 /// Extract system name of datapoint from online/original name
 std::string DataPoint::elementName(const std::string& dp)   {
-  std::string::size_type id1 = dp.find(":");
-  std::string::size_type id2 = dp.rfind(":",id1+1);
-  if ( id1 == std::string::npos && id2 == std::string::npos )
-    return dp;
-  else if ( id2 == id1 )
-    return dp.substr(id1+1);
-  return dp.substr(id1+1,id2-id1);
+  return ControlsManager::dpElementName(dp);
 }
 
 /// Extract system name of datapoint from online/original name
@@ -641,11 +609,10 @@ DPListActor::~DPListActor() {
 
 bool DPListActor::lookup(const std::string& nam, const DevType* typ)  {
   int id = (typ) ? typ->id() : 0;
-  const std::string& mn = m_manager->name();
-  std::string t = ::strncmp(nam.c_str(),mn.c_str(),mn.length())  ? mn+":"+nam : nam;
-  if ( pvss_lookup_dpidset(t.c_str(),m_dpids,m_count,id) )  {
+  std::string dp_name = m_manager->dpFullName(nam);
+  if ( pvss_lookup_dpidset(dp_name.c_str(),m_dpids,m_count,id) )  {
     std::for_each(&m_dpids[0],&m_dpids[m_count],ListHandler(this));
     return true;
   }
-  throw std::runtime_error("Cannot load datapoint identifiers for type:"+t);
+  throw std::runtime_error("Cannot load datapoint identifiers for type:"+dp_name);
 }

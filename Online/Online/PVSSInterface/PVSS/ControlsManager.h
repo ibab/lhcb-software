@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.2 2007-04-26 18:22:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.3 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  ControlsManager.h
 //  --------------------------------------------------------------------
@@ -59,6 +59,8 @@ namespace PVSS {
     ControlsManager(int i, const std::string nam);
     /// Standard destructor
     virtual ~ControlsManager();
+    /// Return the host name of the event manager of this system
+    std::string hostName() const;
     /// Access to error logger
     Printer* logger() const                {  return m_logger.get();}
     /// Access to controls manager
@@ -75,6 +77,17 @@ namespace PVSS {
     std::auto_ptr<ReadTransaction> readTransaction();
     /// Create transaction object to write device data to PVSS
     std::auto_ptr<WriteTransaction> writeTransaction();
+
+
+    /// Full data point name with system name
+    std::string dpFullName(const std::string& nam) const;
+    /// Extract name of datapoint from online/original name
+    static std::string dpName(const std::string& dp);
+    /// Extract system name of datapoint from online/original name
+    static std::string dpSystemName(const std::string& dp);
+    /// Extract system name of datapoint from online/original name
+    static std::string dpElementName(const std::string& dp);
+
   };
 }      // End namespace PVSS
 #endif // ONLINE_PVSS_CONTROLSMANAGER_H

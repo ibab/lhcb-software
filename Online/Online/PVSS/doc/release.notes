@@ -1,0 +1,7 @@
+Package: PVSS
+Author:  Markus Frank
+
+! 10-09-2007 Markus Frank
+  PVSS interface package for CMT
+
+  New Package.

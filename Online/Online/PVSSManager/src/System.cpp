@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/System.cpp,v 1.4 2007-08-09 20:03:47 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/System.cpp,v 1.5 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,11 +6,12 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: System.cpp,v 1.4 2007-08-09 20:03:47 frankm Exp $
+// $Id: System.cpp,v 1.5 2007-09-10 09:39:50 frankm Exp $
 
 #include "PVSS/Internals.h"
 
 // PVSS include files
+#include "Resources.hxx"
 #include "Manager.hxx"
 #include "ErrHdl.hxx"
 
@@ -42,6 +43,17 @@ const char* PVSS::defaultSystemName()   {
   }
   return s_sysName;
 }
+
+const char* PVSS::eventHostName()   {
+  return Resources::getEventHost().c_str();
+}
+
+
+const char* PVSS::dataHostName()   {
+  return Resources::getDataHost().c_str();
+}
+
+
 #if 0
 namespace PVSS {
   std::vector<std::string> PVSS::systemNames();

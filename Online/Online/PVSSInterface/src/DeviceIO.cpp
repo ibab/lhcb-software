@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.8 2007-08-09 20:03:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.9 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.8 2007-08-09 20:03:58 frankm Exp $
+// $Id: DeviceIO.cpp,v 1.9 2007-09-10 09:39:50 frankm Exp $
 
 // Framework include files
 #include "PVSS/ControlsManager.h"
@@ -21,16 +21,7 @@ using namespace PVSS;
 
 static DpID lookup(ControlsManager* manager,const std::string& name)  {
   DpID onl(0);
-  std::string nam = DataPoint::online(name);
-  std::string::size_type idx1 = nam.find(":");
-  if ( idx1 == std::string::npos ) {
-    nam = std::string(manager->name()+":"+nam);
-  }
-  else {
-    std::string::size_type idx2 = nam.find(".");
-    if ( idx2 != std::string::npos && idx1 > idx2 )
-      nam = manager->name()+":"+nam;
-  }
+  std::string nam = manager->dpFullName(DataPoint::online(name));
   if ( !pvss_lookup_dpid(nam.c_str(),onl) )    {
     throw std::invalid_argument("DeviceIO> The datapoint:"+nam+" does not exist!");
   }

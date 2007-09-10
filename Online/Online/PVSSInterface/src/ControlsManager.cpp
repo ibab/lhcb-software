@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.5 2007-08-09 20:03:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.6 2007-09-10 09:39:50 frankm Exp $
 //  ====================================================================
 //  ControlsManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ControlsManager.cpp,v 1.5 2007-08-09 20:03:58 frankm Exp $
+// $Id: ControlsManager.cpp,v 1.6 2007-09-10 09:39:50 frankm Exp $
 //#define _UseSpecializedManip
 
 // Framework include files
@@ -21,6 +21,8 @@
 #include "PVSS/DevType.h"
 #include "PVSS/Printer.h"
 #include "PVSS/Internals.h"
+#include "RTL/rtl.h"
+
 using namespace PVSS;
 
 namespace PVSS {
@@ -85,7 +87,7 @@ namespace PVSS {
 ControlsManager::ControlsManager(int i, const std::string nam)
 : NamedIdentified(i,nam), m_cfgMgr(0), m_devMgr(0), m_devTypeMgr(0), m_logger(0)
 {
-  ::printf("PVSS> Create controls manager for system[%d] %s\n",i,nam.c_str());
+  ::printf("PVSS> Create controls manager for system[%d] %s on %s\n",i,nam.c_str(),hostName().c_str());
   m_cfgMgr = CfgManip<CfgManager>::create(this,i,nam);
   pvss_load_configurations(m_cfgMgr,i,
                      CfgManip<CfgType>::add,
@@ -124,4 +126,67 @@ std::auto_ptr<DeviceIO> ControlsManager::devWriter()    {
   return std::auto_ptr<DeviceIO>(new DeviceIO(this,DeviceIO::Write()));
 }
 
+/// Full data point name with system name
+std::string ControlsManager::dpFullName(const std::string& nam)  const {
+  std::string::size_type idx1 = nam.find(":");
+  if ( idx1 == std::string::npos )
+    return name()+":"+nam;
+  else {
+    std::string::size_type idx2 = nam.find(".");
+    if ( idx2 != std::string::npos && idx1 > idx2 )
+      return name()+":"+nam;
+    else if ( 0 != ::strncmp(nam.c_str(),name().c_str(),name().length()) ) {
+      return name()+":"+dpName(nam);
+    }
+  }
+  return nam;
+}
 
+/// Extract name of datapoint from online/original name
+std::string ControlsManager::dpName(const std::string& dp)    {
+  std::string::size_type id1 = dp.find(":");
+  std::string::size_type id2 = dp.rfind(":");
+  if ( id1 == std::string::npos && id2 == std::string::npos )
+    return dp;
+  else if ( id2 > id1 )
+    return dp.substr(0,id2);
+  else if ( id1 == id2 )  {
+    std::string s = dp.substr(id1,3);
+    if( s == ":_o")
+      return dp.substr(0,id1);
+    else
+      return dp.substr(id1+1);
+  }
+  return dp;
+}
+
+/// Extract system name of datapoint from online/original name
+std::string ControlsManager::dpSystemName(const std::string& dp)   {
+  std::string::size_type id1 = dp.find(":");
+  std::string::size_type id2 = dp.rfind(":",id1+1);
+  if ( id1 == std::string::npos && id2 == std::string::npos )
+    return "";
+  else if ( id2 == std::string::npos )
+    return dp.substr(0,id1);
+  return dp.substr(0,id1);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string ControlsManager::dpElementName(const std::string& dp)   {
+  std::string::size_type id1 = dp.find(":");
+  std::string::size_type id2 = dp.rfind(":",id1+1);
+  if ( id1 == std::string::npos && id2 == std::string::npos )
+    return dp;
+  else if ( id2 == id1 )
+    return dp.substr(id1+1);
+  return dp.substr(id1+1,id2-id1);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string ControlsManager::hostName()  const {
+  static std::string host = eventHostName();
+  if ( host == "localhost" ) {
+    host = RTL::nodeName();
+  }
+  return host;
+}

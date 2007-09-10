@@ -1,7 +1,7 @@
 package PVSS
 version v3r1
 
-branches  cmt doc src
+branches  cmt doc
 use LCG_Settings v* 
 use GaudiPolicy  v*
 #macro PVSS_home "$(SITEROOT)/lhcb/online/control/pvss/3.6" \
@@ -10,7 +10,6 @@ macro PVSS_home "/opt/pvss/pvss2_v3.6"
 macro PVSS_native_version "V36_051"
 macro PVSS_api   "$(PVSS_home)/api"
 macro PVSS_inc   "$(PVSS_api)/include"
-#set PVSS_II      '/localdisk/pvss/TESTSTORAGE/config/config'
 set PVSS_II      '/localdisk/pvss/STORAGE/config/config'
 set PVSS_II_HOME "$(PVSS_home)"
 set PVSS_SYSTEM_ROOT "$(PVSS_home)"
