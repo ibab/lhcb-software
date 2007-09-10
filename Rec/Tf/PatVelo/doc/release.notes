@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-10 - Kurt Rinnert
+ - another fix in the PatVeloTrackTool, the mapping to [-pi,pi] is now
+   guaranteed in the setPhiCoords method.
+
+! 2007-09-10 - Kurt Rinnert
  - the RZ and space tracking now set the proper status flags of the used hits.
 
 ! 2007-09-08 - Kurt Rinnert
