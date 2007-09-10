@@ -1,4 +1,4 @@
-// $Id: VeloRHit.h,v 1.3 2007-08-28 12:03:58 jonrob Exp $
+// $Id: VeloRHit.h,v 1.4 2007-09-10 16:42:30 krinnert Exp $
 #ifndef INCLUDE_TF_VELORHIT_H
 #define INCLUDE_TF_VELORHIT_H 1
 
@@ -45,6 +45,10 @@ namespace Tf {
     double rHalfBox()                      const { return m_coordHalfBox; }
     double rIdeal()                        const { return m_coordIdeal; }
     double z()                             const { return m_sensor->z(); }
+    //== access to coords used for sorting and searching (for r the same as coords)
+    double sortCoord()                     const { return m_coord; }
+    double sortCoordHalfBox()              const { return m_coordHalfBox; }
+    double sortCoordIdeal()                const { return m_coordIdeal; }
     /// Returns pointer to the associated sensor for this hit
     const DeVeloRType* sensor()            const { return m_sensor; }
 

@@ -1,4 +1,4 @@
-// $Id: VeloHit.h,v 1.3 2007-08-25 19:49:04 krinnert Exp $
+// $Id: VeloHit.h,v 1.4 2007-09-10 16:42:30 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHIT_H
 #define INCLUDE_TF_VELOHIT_H 1
 
@@ -50,7 +50,7 @@ namespace Tf {
       template<typename HIT>
       bool operator() (const HIT* lhs, const HIT* rhs) const
       {
-        return lhs->coord() < rhs->coord();
+        return lhs->sortCoord() < rhs->sortCoord();
       }
     };
 
@@ -64,7 +64,7 @@ namespace Tf {
       template<typename HIT>
       bool operator() (const HIT* lhs, const HIT* rhs) const
       {
-        return lhs->coordHalfBox() < rhs->coordHalfBox();
+        return lhs->sortCoordHalfBox() < rhs->sortCoordHalfBox();
       }
     };
 
@@ -78,7 +78,7 @@ namespace Tf {
       template<typename HIT>
       bool operator() (const HIT* lhs, const HIT* rhs) const
       {
-        return lhs->coordIdeal() < rhs->coordIdeal();
+        return lhs->sortCoordIdeal() < rhs->sortCoordIdeal();
       }
     };
 

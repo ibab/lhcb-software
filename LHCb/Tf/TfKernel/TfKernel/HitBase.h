@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.9 2007-08-28 12:03:58 jonrob Exp $
+ *  $Id: HitBase.h,v 1.10 2007-09-10 16:42:30 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -69,7 +69,9 @@ namespace Tf
      */
     enum EStatus
       {
-        UsedByTsaSeeding=0, ///< Hit has been used by the Tsa Seeding algorithm
+        Unusable=0,         ///< Hit is unusable (XXX???XXX On what basis, decided by whom?)
+        UsedByUnknown,      ///< Hit has been used by an unkown algorithm
+        UsedByTsaSeeding,   ///< Hit has been used by the Tsa Seeding algorithm
         UsedByPatForward,   ///< Hit has been used by the Pat Forward tracking algorithm
         UsedByPatSeeding,   ///< Hit has been used by the Pat Seeding algorithm
         UsedByVeloOpen,     ///< Hit has been used by the Velo Open tracking algorithm
@@ -77,8 +79,6 @@ namespace Tf
         UsedByVeloGeneral,  ///< Hit has been used by the Velo General tracking algorithm
         UsedByVeloSpace,    ///< Hit has been used by the Velo Space tracking algorithm 
         UsedByVeloRZ,       ///< Hit has been used by the Velo R-Z tracking algorithm
-        UsedByUnknown,      ///< Hit has been used by an unkown algorithm
-        Unusable,           ///< Hit is unusable (XXX???XXX On what basis, decided by whom?)
         NUMSTATUSBITS       ///< Number of status types - For internal use.
       };
 

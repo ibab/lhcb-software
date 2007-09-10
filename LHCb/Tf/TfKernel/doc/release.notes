@@ -4,6 +4,26 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-10 - Kurt Rinnert
+ - moved unknown and unusable flags to the beginning of the list in HitBase.
+   This is just a minor cosmetic change ensuring they can keep their special
+   position after future extensions.
+ - added concept of sort coordinate to VELO hits.  For r hits this is simply
+   the coordinate.  For phi hits in the right VELO half this is the coordinate
+   mapped to [pi/2,3/2pi].  This coordinate is used for sorting, when
+   looking for hits in a range and when looking up the hit closest to a
+   given position.
+ - implemented proper sorting and lookup for phi hits in the right VELO half.
+   This is now based on the concept of a sort coordinate (see above).  The
+   change is completely transparent to clients which still operate in [-pi,pi]
+   only. 
+ - added convenience wrapper for access to sensor number of a VeloSensorHits
+   instance
+ - added accessor to VeloSensorHits to retrieve the closest hit at a given
+   reference radius in all frames.  This only makes sense for phi type sensor
+   hits.  There is no implementation for r type sensor hits and any attempt to
+   call the mehtod in this case will result in a compile time error.
+
 ! 2007-09-10 - Wouter Hulsbergen
  - split STHitCreator in IT/TTHitCreator
 

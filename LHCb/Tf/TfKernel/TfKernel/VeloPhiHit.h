@@ -1,6 +1,8 @@
-// $Id: VeloPhiHit.h,v 1.3 2007-08-28 12:03:58 jonrob Exp $
+// $Id: VeloPhiHit.h,v 1.4 2007-09-10 16:42:30 krinnert Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
+
+#include "GaudiKernel/PhysicalConstants.h"
 
 #include "VeloDet/DeVeloPhiType.h"
 #include "Event/VeloLiteCluster.h"
@@ -40,11 +42,20 @@ namespace Tf {
     double phiIdeal()                      const { return m_coordIdeal; }
     double z()                             const { return m_sensor->z(); }
     const DeVeloPhiType* sensor()          const { return m_sensor; }
+    //== access to coords used for sorting and searching (mapped to [pi/2,3/2pi] on the right side)
+    double sortCoord()                     const { return m_sortCoord; }
+    double sortCoordHalfBox()              const { return m_sortCoordHalfBox; }
+    double sortCoordIdeal()                const { return m_sortCoordIdeal; }
 
   private:
 
     const DeVeloPhiType* m_sensor;        ///< link to detector element
+
+    float m_sortCoord;        ///< phi mapping for sorting in global frame, [pi/2,3/2pi] on the right side 
+    float m_sortCoordHalfBox; ///< phi mapping for sorting in half box frame, [pi/2,3/2pi] on the right side           
+    float m_sortCoordIdeal;   ///< phi mapping for sorting in ideal frame, [pi/2,3/2pi] on the right side 
   };
+  
 
   //----------------------------------------------------------------------
   // shortcut typedefs
@@ -70,6 +81,9 @@ namespace Tf {
               , signal
               )
     , m_sensor(s)
+    , m_sortCoord(s->isRight() && m_coord<0 ? m_coord+2.0*Gaudi::Units::pi : m_coord)
+    , m_sortCoordHalfBox(s->isRight() && m_coordHalfBox<0 ? m_coordHalfBox+2.0*Gaudi::Units::pi : m_coordHalfBox)
+    , m_sortCoordIdeal(s->isRight() && m_coordIdeal<0 ? m_coordIdeal+2.0*Gaudi::Units::pi : m_coordIdeal)
   {
     ;
   }
