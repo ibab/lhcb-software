@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-10 - Kurt Rinnert
+ - propagated sort coordinate interface to VELO hit extension base class.
+
+! 2007-09-10 - Kurt Rinnert
  - moved unknown and unusable flags to the beginning of the list in HitBase.
    This is just a minor cosmetic change ensuring they can keep their special
    position after future extensions.
