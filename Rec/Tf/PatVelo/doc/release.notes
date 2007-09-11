@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 - Kurt Rinnert
+ - added convenience wrapper for sensor number access to PatVeloHit
+ - added port of PatGenericFitter, as of now untested (and unused)
+
 ! 2007-09-10 - Kurt Rinnert
  - another fix in the PatVeloTrackTool, the mapping to [-pi,pi] is now
    guaranteed in the setPhiCoords method.
