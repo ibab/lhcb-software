@@ -53,16 +53,30 @@ myApplication.optsfile = File ( myApplication.cmt_user_path
 #------------------------------------------------------------------------------
 # Define a job splitter. The "standard" job splitter acts on input data file
 # and as such not suitable for Gauss.
-# A dedicated splitter for Gauss making n identical jobs (but for random
-# numbers) is planned for a future version of Ganga
+# A dedicated splitter for Gauss is available that will make n identical jobs
+# (but for random numbers) 
 #------------------------------------------------------------------------------
-mySplitter = None
+# No job splitting
+#mySplitter = None
+# Gauss splitter. Lauch two jobs of 5 events each
+mySplitter = GaussSplitter( numberOfJobs = 2 , eventsPerJob = 5 )
+#------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Job merging does not work as yet
-# See https://savannah.cern.ch/bugs/?21054 for details
+# Job merging
 #------------------------------------------------------------------------------
-myMerger = None
+# No merging
+#myMerger = None
+#
+# Root file merging. For more details run from the ganga prompt
+#  ganga > help( RootMerger )
+#myMerger = RootMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#
+# SmartMerger - Able to handle various file formats (including root files)
+#               For more details run from the ganga prompt
+#  ganga > help( SmartMerger )
+myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
@@ -99,21 +113,3 @@ j = Job (
 ) 
 j.submit()
 #------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------
-# Create 5 identical jobs to the one above but with different random seeds by
-# changing the run number and for each the first event number,
-# each job has 100 events (a pseudo-splitter)
-# Also set a different name for each job.
-#------------------------------------------------------------------------------
-myNevtPerJob = 100;
-myNJobs = 5;
-for i in range(myNJobs):
-  jn = j.copy()
-  firstEvt = i*myNevtPerJob + 1
-  jn.name = 'MyGauss_%d'%(i)
-  jn.application.extraopts = 'ApplicationMgr.EvtMax = %d; \nGaussGen.RunNumber = 2; \nGaussGen.FirstEventNumber = %d;'%(myNevtPerJob,firstEvt)
-  jn.submit()
-
-#------------------------------------------------------------------------------
-
