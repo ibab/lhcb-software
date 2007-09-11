@@ -4,8 +4,14 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+
+! 2007-09-11 M Needham
+ - Add IHitExpectation interface
+
+
 ! 2007-08-22 - Edwin Bos
  - Corrected Track to Point and to Plane methods.
+
 
 !====================== TrackInterfaces v3r7 2007-07-23 ======================
 ! 2007-07-23 - Silvia Pozzi and Wouter Hulsbergen

@@ -21,4 +21,5 @@
   <class name    = "ITrajectoryProvider"     />
   <class name    = "IVeloExpectation"        />
   <class name    = "ITrajFitter"             />
+  <class name = "IHitExpectation" />
 </lcgdict>
