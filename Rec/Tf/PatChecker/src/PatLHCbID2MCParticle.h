@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.h,v 1.3 2007-09-10 08:55:10 wouter Exp $
+// $Id: PatLHCbID2MCParticle.h,v 1.4 2007-09-11 12:33:17 krinnert Exp $
 #ifndef PATLHCBID2MCPARTICLE_H 
 #define PATLHCBID2MCPARTICLE_H 1
 
@@ -58,6 +58,10 @@ namespace Tf {
     ToolHandle<IOTHitCreator> m_othitcreator;
     ToolHandle<IITHitCreator> m_ithitcreator;
     ToolHandle<ITTHitCreator> m_tthitcreator;
+    bool m_linkOT;
+    bool m_linkIT;
+    bool m_linkTT;
+    bool m_linkVELO;
   };
 }
 #endif // PATLHCBID2MCPARTICLE_H
