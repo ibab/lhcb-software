@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+Chris Jones 11/09/2007
+ - Update example ganga job to remove warnings about missing features (now 
+   available) and to add examples of job merging.
+
 </PRE><H1><A NAME=v31r8>2007-07-23 Brunel v31r8</A></H1><PRE>
  - Update options files to take geometry tags from $DDDBROOT/options
  - Brunel processing now all takes place in a single GaudiSequencer TopAlg

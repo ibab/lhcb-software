@@ -53,20 +53,28 @@ myApplication.optsfile = File ( myApplication.cmt_user_path
 
 #-------------------------------------------------------------------------------
 # Define a job splitter (very useful for many input data files)
-# Does not work yet in released ganga versions for DC06 applications
-# See https://savannah.cern.ch/bugs/index.php?20954 for details
-# Planned to be fixed in Ganga 4.2.3
 #-------------------------------------------------------------------------------
+# Split jobs into 2 input files per job. max of 10 files in total (thus 5 jobs)
 mySplitter = SplitByFiles ( filesPerJob = 2, maxFiles = 10 )
 # Use a single job, no splitting
 #mySplitter = None
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# Job merging does not work as yet
-# See https://savannah.cern.ch/bugs/?21054 for details
+# Job merging
 #-------------------------------------------------------------------------------
-myMerger = None
+# No merging
+#myMerger = None
+#
+# Root file merging. For more details run from the ganga prompt
+#  ganga > help( RootMerger )
+#myMerger = RootMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#
+# SmartMerger - Able to handle various file formats (including root files)
+#               For more details run from the ganga prompt
+#  ganga > help( SmartMerger )
+myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
