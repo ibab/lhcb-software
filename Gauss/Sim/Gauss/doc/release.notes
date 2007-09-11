@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 - Chris Jones
+ - Update example ganga job to remove warnings about missing features (now 
+   available) and to add examples of job merging and GaussSplitter.
+
 !======================== Gauss v30r3 2007-07-04 =============================
 ! 2007-07-04 - Gloria Corti
  - Use v* instead of explicit version number in requirements
