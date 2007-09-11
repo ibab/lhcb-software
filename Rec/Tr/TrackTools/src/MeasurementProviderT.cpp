@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.3 2007-09-05 12:37:10 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.4 2007-09-11 14:40:50 mneedham Exp $
 // Include files
 
 //=============================================================================
@@ -209,7 +209,7 @@ StatusCode MeasurementProviderT<T>::update( LHCb::Measurement& ameas,
   } else {
     // move the reference vector to the z position of the measurement
     LHCb::StateVector refvectoratz = refvector ;
-    if( fabs(refvectoratz.z()-meas->z()) > TrackParameters::propagationTolerance ) {
+    if( fabs(refvectoratz.z()-meas->z()) > 1e-10 ) {
       sc = const_cast<ITrackExtrapolator*>(&(*m_extrapolator))->propagate( refvectoratz, meas->z() ) ;
       if( !sc.isSuccess() ) 
 	error() << "Problem progagating state from " << refvector.z() << " to " << ameas.z() << endreq ;

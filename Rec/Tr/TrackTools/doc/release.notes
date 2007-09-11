@@ -2,8 +2,11 @@
 ! Package     : Tr/TrackTools
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
+
+! 2007-09-11 M Needham
+ - Add hit expectation tools
 
 ! 2007-09-06 M. Needham
  - more ensuring no comparisions between of equality between floats !
