@@ -1,0 +1,140 @@
+//options for T confirmation with L0 muon single
+
+L0MuonConfL0SingleWithT.TsaConfirmTool.nSigma=5;
+L0MuonConfL0SingleWithT.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.L0ConfToolITDataSvc.sortData = true;
+L0MuonConfL0SingleWithT.L0ConfToolOTDataSvc.sortData = true;
+
+//from TsaSeed
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS0.sector = 0;
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS1.sector = 1;
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS2.sector = 2;
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS3.sector = 3;
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS4.sector = 4;
+
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS0.sector = 0;
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS1.sector = 1;
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS2.sector = 2;
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS3.sector = 3;
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS4.sector = 4;
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0SingleWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+//options for T confirmation with L0 muon dimuon
+
+L0MuonConfL0DimuonWithT.TsaConfirmTool.nSigma=5;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.L0ConfToolITDataSvc.sortData = true;
+L0MuonConfL0DimuonWithT.L0ConfToolOTDataSvc.sortData = true;
+
+//from TsaSeed
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS0.sector = 0;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS1.sector = 1;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS2.sector = 2;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS3.sector = 3;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS4.sector = 4;
+
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS0.sector = 0;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS1.sector = 1;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS2.sector = 2;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS3.sector = 3;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS4.sector = 4;
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+L0MuonConfL0DimuonWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+
+
+
+//options for T confirmation with muon segment (sigma is larger than for L0)
+
+MuonTConfL0SingleWithT.TsaConfirmTool.nSigma=10;
+MuonTConfL0SingleWithT.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.L0ConfToolITDataSvc.sortData = true;
+MuonTConfL0SingleWithT.L0ConfToolOTDataSvc.sortData = true;
+
+//from TsaSeed
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS0.sector = 0;
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS1.sector = 1;
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS2.sector = 2;
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS3.sector = 3;
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS4.sector = 4;
+
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS0.sector = 0;
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS1.sector = 1;
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS2.sector = 2;
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS3.sector = 3;
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS4.sector = 4;
+
+// MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS0.nSigmaTx = 5;
+// MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS1.nSigmaTx = 5;
+// MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS2.nSigmaTx = 5;
+// MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS3.nSigmaTx = 5;
+// MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS4.nSigmaTx = 5;
+
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+MuonTConfL0SingleWithT.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+
