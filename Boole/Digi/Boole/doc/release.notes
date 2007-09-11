@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+Chris Jones 11/09/2007
+ - Update example ganga job to remove warnings about missing features (now 
+   available) and to add examples of job merging.
+
 </PRE><H1><A NAME=v14r4>2007-07-23 Boole v14r4</A></H1><PRE>
  - Run L0Filter algorithm after L0 simulation, to make L0 result available if
    needed (Boole.opts)
