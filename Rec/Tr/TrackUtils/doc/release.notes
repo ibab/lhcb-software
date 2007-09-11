@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 M Needham
+ - Add algorithm that adds likelihood to the track
+
 ! 2007-08-28 M Needham
  - Add clone killing algorithms based on relative entropy
  
