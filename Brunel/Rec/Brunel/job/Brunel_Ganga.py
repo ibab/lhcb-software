@@ -61,7 +61,7 @@ mySplitter = SplitByFiles ( filesPerJob = 2, maxFiles = 10 )
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# Job merging
+# Job merging (merge output from sub-jobs from job splitter, if used)
 #-------------------------------------------------------------------------------
 # No merging
 #myMerger = None
