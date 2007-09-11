@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.107 2007-09-09 19:32:43 robbep Exp $
+! $Id: release.notes,v 1.108 2007-09-11 17:48:32 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-09-11 - Patrick Robbe
+ - src/Lib/GenCouters.cpp: fix problem with D counters
 
 ! 2007-09-09 - Patrick Robbe
  - src/component/SignalForcedFragmentation: fix problem with particles

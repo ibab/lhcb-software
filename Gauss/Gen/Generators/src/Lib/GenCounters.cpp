@@ -1,4 +1,4 @@
-// $Id: GenCounters.cpp,v 1.4 2006-04-06 16:34:34 robbep Exp $
+// $Id: GenCounters.cpp,v 1.5 2007-09-11 17:48:32 robbep Exp $
 // Include files
 
 // local
@@ -318,8 +318,8 @@ void GenCounters::updateHadronCounters( const HepMC::GenEvent * theEvent ,
   for ( iter = endD.begin() ; iter != endD.end() ; ++iter ) {
     if ( 0 != signalV ) {
       if ( HepMCUtils::commonTrees( signalV ,
-                                    (*iter) -> end_vertex() ) ) ;
-      continue ;
+                                    (*iter) -> end_vertex() ) ) 
+        continue ;
     }
     
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
