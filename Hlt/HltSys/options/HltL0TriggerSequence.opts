@@ -9,8 +9,8 @@ HltSummaryWriter.Save += {"L0TriggerElectron",
                           "L0TriggerGlobalPi0",
                           "L0TriggerHadron",
                           "L0TriggerMuon",
-                          "L0TriggerDimuon",
-                          "L0TriggerMuonnoglob"
+                          "L0TriggerDiMuon",
+                          "L0TriggerMuonNoGlob"
 };
 
 HltL0TriggerSequence.Members = {
@@ -21,8 +21,8 @@ HltL0TriggerSequence.Members = {
   "HltSequencer/PrepareL0TriggerHadronSeq",
   "HltSequencer/L0MuonCandidatesFromRawSeq",
   "HltSequencer/PrepareL0TriggerMuonSeq",
-  "HltSequencer/PrepareL0TriggerDimuonSeq",
-  "HltSequencer/PrepareL0TriggerMuonnoglobSeq"
+  "HltSequencer/PrepareL0TriggerDiMuonSeq",
+  "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"
 };
 HltL0TriggerSequence.ModeOr = true;
 
@@ -64,14 +64,14 @@ PrepareL0TriggerMuonSeq.Members = {
   "L0Muon2Tracks/L0TriggerMuon"
 };
 
-PrepareL0TriggerDimuonSeq.Members = {
-  "L0Entry/L0EntryTriggerDimuon",
-  "L0Muon2Tracks/L0TriggerDimuon"
+PrepareL0TriggerDiMuonSeq.Members = {
+  "L0Entry/L0EntryTriggerDiMuon",
+  "L0Muon2Tracks/L0TriggerDiMuon"
 };
 
-PrepareL0TriggerMuonnoglobSeq.Members = {
-  "L0Entry/L0EntryTriggerMuonnoglob",
-  "L0Muon2Tracks/L0TriggerMuonnoglob"
+PrepareL0TriggerMuonNoGlobSeq.Members = {
+  "L0Entry/L0EntryTriggerMuonNoGlob",
+  "L0Muon2Tracks/L0TriggerMuonNoGlob"
 };
 
 L0EntryTriggerElectron.L0ChannelsName = {"electron"};
@@ -81,8 +81,8 @@ L0EntryTriggerGlobalPi0.L0ChannelsName = {"globalPi0"};
 L0EntryTriggerHadron.L0ChannelsName = {"hadron"};
 L0EntryTriggerAllMuons.L0ChannelsName = {"muon","dimuon","muonnoglob"};
 L0EntryTriggerMuon.L0ChannelsName = {"muon"};
-L0EntryTriggerDimuon.L0ChannelsName = {"dimuon"};
-L0EntryTriggerMuonnoglob.L0ChannelsName = {"muonnoglob"};
+L0EntryTriggerDiMuon.L0ChannelsName = {"dimuon"};
+L0EntryTriggerMuonNoGlob.L0ChannelsName = {"muonnoglob"};
 
 L0EntryTriggerElectron.SelectionName = "L0EntryTriggerElectronEntry";
 L0EntryTriggerPhoton.SelectionName = "L0EntryTriggerPhotonEntry";
@@ -91,8 +91,8 @@ L0EntryTriggerGlobalPi0.SelectionName = "L0EntryTriggerGlobalPi0Entry";
 L0EntryTriggerHadron.SelectionName = "L0EntryTriggerHadronEntry";
 L0EntryTriggerAllMuons.SelectionName = "L0EntryTriggerAllMuonsEntry";
 L0EntryTriggerMuon.SelectionName = "L0EntryTriggerMuonEntry";
-L0EntryTriggerDimuon.SelectionName = "L0EntryTriggerDimuonEntry";
-L0EntryTriggerMuonnoglob.SelectionName = "L0EntryTriggerMuonnoglobEntry";
+L0EntryTriggerDiMuon.SelectionName = "L0EntryTriggerDiMuonEntry";
+L0EntryTriggerMuonNoGlob.SelectionName = "L0EntryTriggerMuonNoGlobEntry";
 
 L0EntryTriggerElectron.OutputLevel = 3;
 L0EntryTriggerPhoton.OutputLevel = 3;
@@ -101,8 +101,8 @@ L0EntryTriggerGlobalPi0.OutputLevel = 3;
 L0EntryTriggerHadron.OutputLevel = 3;
 L0EntryTriggerAllMuons.OutputLevel = 3;
 L0EntryTriggerMuon.OutputLevel = 3;
-L0EntryTriggerDimuon.OutputLevel = 3;
-L0EntryTriggerMuonnoglob.OutputLevel = 3;
+L0EntryTriggerDiMuon.OutputLevel = 3;
+L0EntryTriggerMuonNoGlob.OutputLevel = 3;
 
 
 L0TriggerElectron.OutputTracksName = "L0TriggerElectron";
@@ -111,8 +111,8 @@ L0TriggerLocalPi0.OutputTracksName = "L0TriggerLocalPi0";
 L0TriggerGlobalPi0.OutputTracksName = "L0TriggerGlobalPi0";
 L0TriggerHadron.OutputTracksName = "L0TriggerHadron";
 L0TriggerMuon.OutputTracksName = "L0TriggerMuon";
-L0TriggerDimuon.OutputVerticesName= "L0TriggerDimuon"; // vertex output
-L0TriggerMuonnoglob.OutputTracksName = "L0TriggerMuonnoglob";
+L0TriggerDiMuon.OutputVerticesName= "L0TriggerDiMuon"; // vertex output
+L0TriggerMuonNoGlob.OutputTracksName = "L0TriggerMuonNoGlob";
 
 
 // see L0DUBase::Fiber::Type
@@ -123,8 +123,8 @@ L0TriggerLocalPi0.CaloType = 3;  // localPi0
 L0TriggerGlobalPi0.CaloType = 4;  // globalPi0
 
 L0TriggerMuon.L0MuonType="single";
-L0TriggerDimuon.L0MuonType="dimuon";
-L0TriggerMuonnoglob.L0MuonType="single";
+L0TriggerDiMuon.L0MuonType="dimuon";
+L0TriggerMuonNoGlob.L0MuonType="single";
 
 L0TriggerElectron.MinEt = 2600.0; 
 L0TriggerPhoton.MinEt = 2300.0; 
@@ -133,8 +133,8 @@ L0TriggerLocalPi0.MinEt = 4300.0;
 L0TriggerGlobalPi0.MinEt = 3700.0;
 
 L0TriggerMuon.L0MuonThresold=1300.0;
-L0TriggerDimuon.L0MuonThresold=1500.0;
-L0TriggerMuonnoglob.L0MuonThresold=1500.0;
+L0TriggerDiMuon.L0MuonThresold=1500.0;
+L0TriggerMuonNoGlob.L0MuonThresold=1500.0;
 
 
 L0TriggerElectron.OutputLevel = 3;
@@ -143,19 +143,19 @@ L0TriggerLocalPi0.OutputLevel = 3;
 L0TriggerGlobalPi0.OutputLevel = 3;
 L0TriggerHadron.OutputLevel = 3;
 L0TriggerMuon.OutputLevel = 3;
-L0TriggerDimuon.OutputLevel = 3;
-L0TriggerMuonnoglob.OutputLevel = 3;
+L0TriggerDiMuon.OutputLevel = 3;
+L0TriggerMuonNoGlob.OutputLevel = 3;
 
 
-// muon specific options
+// Muon specific options
 
-L0TriggerDimuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
+L0TriggerDiMuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
 
 //   this is storage for L0MuonCandidates->tracks without Pt cuts
 //   sharing will speed things up
 L0TriggerMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
-L0TriggerDimuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
-L0TriggerMuonnoglob.OutputL0MuonTracksName="Rec/Track/L0Muons";
+L0TriggerDiMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
+L0TriggerMuonNoGlob.OutputL0MuonTracksName="Rec/Track/L0Muons";
 
 
 

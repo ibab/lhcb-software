@@ -4,6 +4,11 @@ Package Coordinator: Jose Angel Hernando Morata
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
+
+! 2007-09-11 Tomasz Skwarnicki
+ - slight change in naming convention for L0Trigger summary names for easier matching
+   HltL0TriggerSequence and HltMuonAlleyConfSequence changed
+
 ! 2007-09--08 - Sandra Amato
  - cretated file TtrackTsaConfirmTool.opts with options for T tracks
  - added filter FilterDescriptor  += {"FlagL0Candidate,=,1"} to pretrigger and trigger in single muon
