@@ -73,7 +73,7 @@ mySplitter = SplitByFiles ( filesPerJob = 2, maxFiles = 10 )
 # SmartMerger - Able to handle various file formats (including root files)
 #               For more details run from the ganga prompt
 #  ganga > help( SmartMerger )
-myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+myMerger = SmartMerger( files = ['00001820_00000001_4.root'], ignorefailed = 1 )
 #
 #-------------------------------------------------------------------------------
 
