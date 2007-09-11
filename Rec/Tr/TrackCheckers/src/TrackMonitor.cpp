@@ -1,10 +1,11 @@
-// $Id: TrackMonitor.cpp,v 1.3 2007-09-07 08:56:25 mneedham Exp $
+// $Id: TrackMonitor.cpp,v 1.4 2007-09-11 14:45:58 mneedham Exp $
 // Include files 
 #include "TrackMonitor.h"
 
 //event
 #include "Event/Track.h"
 #include "Event/State.h"
+#include "Kernel/LHCbID.h"
 
 // gsl
 #include "gsl/gsl_math.h"
@@ -16,6 +17,15 @@
 #include <map>
 
 #include "Map.h"
+
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+using namespace boost::lambda;
+using namespace LHCb;
+using namespace Gaudi;
+
 
 DECLARE_ALGORITHM_FACTORY( TrackMonitor );
 
@@ -101,9 +111,43 @@ void TrackMonitor::fillHistograms(const LHCb::Track* aTrack,
 
   // expert checks  
   if (fullDetail() == true){
+
     plot(aTrack->nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
     plot(aTrack->nMeasurementsRemoved(),type+"/101","#outliers", -0.5, 10.5, 61);
-   
+
+    // found hits of each type
+    const std::vector<LHCb::LHCbID>& ids = aTrack->lhcbIDs();
+    const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
+    const unsigned int nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isIT,_1));
+    const unsigned int nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isOT,_1));
+    const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
+
+    plot(nTTHits, type+"/110", "# TT hits",  -0.5, 10.5 ,11);
+    plot(nITHits, type+"/111", "# IT hits",  -0.5, 50.5 ,51);
+    plot(nOTHits, type+"/112", "# OT hits", -0.5, 50.5 ,51);
+    plot(nVeloHits, type+"/113","# Velot hits" ,-0.5, 50.5 ,51);
+
+    // compare to what we expected
+    if (aTrack->hasInfo(LHCb::Track::nExpectedOT) == true){
+      plot(nOTHits  - aTrack->info(LHCb::Track::nExpectedOT,9999.), type+"/120", "# OT missed",  -10.5, 10.5 ,21);
+    }
+
+    // compare to what we expected
+    if (aTrack->hasInfo(LHCb::Track::nExpectedIT) == true){
+      plot(nITHits  - aTrack->info(LHCb::Track::nExpectedIT, 9999.), type+"/121", "# IT missed",  -10.5, 10.5 ,21);
+    }
+
+    // compare to what we expected
+    if (aTrack->hasInfo(LHCb::Track::nExpectedTT) == true){
+      plot(nTTHits - aTrack->info(LHCb::Track::nExpectedTT, 9999.), type+"/122","# TT missed" , -10.5, 10.5 ,21);
+    }
+
+    // compare to what we expected
+    if (aTrack->hasInfo(LHCb::Track::nExpectedVelo) == true){
+      plot(nVeloHits - aTrack->info(LHCb::Track::nExpectedVelo, 9999.), type+"/123","# Velo missed" ,-10.5, 10.5 ,21);
+    }
+
+
     // track parameters at some reference z
     LHCb::State aState;
     StatusCode sc = extrapolator()->propagate(*aTrack, m_refZ,
@@ -121,8 +165,11 @@ void TrackMonitor::fillHistograms(const LHCb::Track* aTrack,
       LHCb::Track::AdditionalInfo(iterInfo->first);
       std::string title = Gaudi::Utils::toString(infoName);
       const TrackMaps::InfoHistMap& histMap = TrackMaps::infoHistDescription();
-      const TrackMaps::HistoRange range = histMap.find(infoName)->second;
-      plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
+      TrackMaps::InfoHistMap::const_iterator iterM = histMap.find(infoName);
+      if (iterM != histMap.end()) {
+        const TrackMaps::HistoRange range = histMap.find(infoName)->second;
+        plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
+      }
     } // iterInfo
 
   }

@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackCheckerBase.h,v 1.2 2007-09-11 14:45:58 mneedham Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -125,6 +125,12 @@ class TrackCheckerBase : public GaudiHistoAlg {
   */
   LinkInfo reconstructed(const LHCb::MCParticle* particle) const;
 
+  /** What tracks were reconstructed from this particle
+  * @param particle
+  * @return rec tracks 
+  */
+  TrackCheckerBase::InverseRange TrackCheckerBase::reconstructedTracks(const LHCb::MCParticle* particle) const;
+
   /** Selected as type
   *
   * @return bool
@@ -186,6 +192,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   std::string m_all;                                                                       
 
   IMCDecayFinder* m_decayFinder;
+
 
 };
 

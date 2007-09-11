@@ -8,6 +8,16 @@
  - Bug fix, pulls at first meas were in fact last meas
 
 !======================= TrackCheckers v3r0 2007-07-10 =======================
+
+! 2007-09-11 M Needham
+ - Add found/expected hits histos to TrackMonitor
+ - Update the histo property maps
+ - Protect TrackEffChecker/TrackMonitor in case that info exists
+   but histo properties do not
+
+! 2007-09-07 M Needham
+ - Bug fix in TrackMonitor
+
 ! 2007-07-10 M. Needham
  - Remove velo missed tag
 

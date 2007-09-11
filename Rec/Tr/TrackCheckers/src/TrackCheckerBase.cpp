@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackCheckerBase.cpp,v 1.2 2007-09-11 14:45:58 mneedham Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -106,6 +106,10 @@ TrackCheckerBase::LinkInfo TrackCheckerBase::reconstructed(const LHCb::MCParticl
     info.purity = range.begin()->weight();
   }
   return info; 
+}
+
+TrackCheckerBase::InverseRange TrackCheckerBase::reconstructedTracks(const LHCb::MCParticle* particle) const{
+  return m_inverseTable->relations(particle);
 }
 
 const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) const{

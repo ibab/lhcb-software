@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.2 2007-07-05 16:12:27 mneedham Exp $
+// $Id: TrackEffChecker.cpp,v 1.3 2007-09-11 14:45:58 mneedham Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -169,8 +169,11 @@ void TrackEffChecker::plots(const std::string& type,
     LHCb::Track::AdditionalInfo(iterInfo->first);
     std::string title = Gaudi::Utils::toString(infoName);
     const TrackMaps::InfoHistMap& histMap = TrackMaps::infoHistDescription();
-    const TrackMaps::HistoRange range = histMap.find(infoName)->second;
-    plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
+    TrackMaps::InfoHistMap::const_iterator iterM = histMap.find(infoName);
+    if (iterM != histMap.end()) {
+      const TrackMaps::HistoRange range = histMap.find(infoName)->second;
+      plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
+    }
   } // iterInfo
 
 }
