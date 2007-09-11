@@ -65,7 +65,7 @@ namespace MaterialLocatorUtils {
       //   rc = m_volume.intersectLine(p,v,intersections,0,1,0) ;
       // but
       Gaudi::XYZPoint pprime = p ; 
-      pprime.SetZ(z1) ;
+      pprime.SetZ(p.z()-m_zcenter) ;
       if(m_hasdaughters) {
 	static ILVolume::Intersections own ;
 	own.clear() ;
@@ -105,7 +105,7 @@ SimplifiedMaterialLocator::SimplifiedMaterialLocator( const std::string& type,
   : MaterialLocatorBase(type, name, parent)
 { 
   declareInterface<IMaterialLocator>(this);
-  declareProperty( "TrackfitGeometryPath" , m_tgvolname = "/dd/TrackfitGeometry/Geometry/lvLHCb" );
+  declareProperty( "Geometry" , m_tgvolname = "/dd/TrackfitGeometry/Geometry/lvLHCb" );
 }
 
 StatusCode SimplifiedMaterialLocator::initialize()

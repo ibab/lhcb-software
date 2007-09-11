@@ -3,14 +3,11 @@
 
 // Include files
 // -------------
-// from Gaudi
-// #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ServiceHandle.h"
-
 #include "DetDesc/ITransportSvc.h"
-
-// from TrackInterfaces
 #include "MaterialLocatorBase.h"
+
+class IGeometryInfo ;
 
 /** @class DetailedMaterialLocator DetailedMaterialLocator.h \
  *         "DetailedMaterialLocator.h"
@@ -39,7 +36,9 @@ public:
   
 private:
   double m_minRadThickness ;                     ///< minimum radiation thickness
+  std::string m_geometrypath ;                   ///< name of the geometry
   ServiceHandle<ITransportSvc> m_transportSvc ;  ///< handle to transport service
+  mutable IGeometryInfo* m_geometry ;
 };
 
 #endif // TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H 

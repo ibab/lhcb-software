@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 - Wouter Hulsbergen
+ - Fixed bug in SimplifiedMaterialLocator that would make it miss entire volumes
+
 ! 2007-09-05 - Wouter Hulsbergen
  - Fixed bug in extrapolators: transport matrix was not calculated if extrapolation distance below threshold
  - Replaced 'hiTolerance' with 'propagationTolerance'
