@@ -1,4 +1,4 @@
-// $Id: VeloSensorHits.h,v 1.5 2007-09-10 16:42:30 krinnert Exp $
+// $Id: VeloSensorHits.h,v 1.6 2007-09-11 11:04:51 krinnert Exp $
 #ifndef INCLUDE_TF_VELOSENSORHITS_H
 #define INCLUDE_TF_VELOSENSORHITS_H 1
 
@@ -83,27 +83,27 @@ namespace Tf {
 
     /// Get all hits in a zone inside an interval specified in global coordinates
     typename DATATYPE::range_type  hits(unsigned int zone, double min, double max) { 
-      return hitsWrap(zone,min,max,typename DATATYPE::hit_type_tag()); }
+      return hitsWrap(zone,min,max,m_sensor); }
 
     /// Get all hits in a zone inside an interval specified in half box coordinates
     typename DATATYPE::range_type  hitsHalfBox(unsigned int zone, double min, double max) { 
-      return hitsHalfBoxWrap(zone,min,max,typename DATATYPE::hit_type_tag()); }
+      return hitsHalfBoxWrap(zone,min,max,m_sensor); }
     
     /// Get all hits in a zone inside an interval specified in ideal coordinates
     typename DATATYPE::range_type  hitsIdeal(unsigned int zone, double min, double max) { 
-      return hitsIdealWrap(zone,min,max,typename DATATYPE::hit_type_tag()); }
+      return hitsIdealWrap(zone,min,max,m_sensor); }
 
     /// Get the hit closest to pos inside pos +/- tol, if any. Pos and tol refer to global coordinates.
     value_type closestHit(unsigned int zone, double pos, double tol) { 
-      return closestHitWrap(zone,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitWrap(zone,pos,tol,m_sensor); }
 
     /// Get the hit closest to pos inside pos +/- tol, if any. Pos and tol refer to half box coordinates.
     value_type closestHitHalfBox(unsigned int zone, double pos, double tol)  { 
-      return closestHitHalfBoxWrap(zone,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitHalfBoxWrap(zone,pos,tol,m_sensor); }
 
     /// Get the hit closest to pos inside pos +/- tol, if any. Pos and tol refer to ideal coordinates.
     value_type closestHitIdeal(unsigned int zone, double pos, double tol) { 
-      return closestHitIdealWrap(zone,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitIdealWrap(zone,pos,tol,m_sensor); }
 
     /** Get the hit closest to pos inside pos +/- tol at reference radius, if any. 
      * Pos and tol refer to global coordinates.
@@ -112,7 +112,7 @@ namespace Tf {
      * in a compile time error.
      */
     value_type closestHitAtR(unsigned int zone, double r, double pos, double tol) { 
-      return closestHitAtRImp(zone,r,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitAtRImp(zone,r,pos,tol,m_sensor); }
 
     /** Get the hit closest to pos inside pos +/- tol at reference radius, if any. 
      * Pos and tol refer to half box coordinates.
@@ -121,7 +121,7 @@ namespace Tf {
      * in a compile time error.
      */
     value_type closestHitAtRHalfBox(unsigned int zone, double r, double pos, double tol) { 
-      return closestHitAtRHalfBoxImp(zone,r,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitAtRHalfBoxImp(zone,r,pos,tol,m_sensor); }
 
     /** Get the hit closest to pos inside pos +/- tol at reference radius, if any. 
      * Pos and tol refer to ideal coordinates.
@@ -130,7 +130,7 @@ namespace Tf {
      * in a compile time error.
      */
     value_type closestHitAtRIdeal(unsigned int zone, double r, double pos, double tol) { 
-      return closestHitAtRIdealImp(zone,r,pos,tol,typename DATATYPE::hit_type_tag()); }
+      return closestHitAtRIdealImp(zone,r,pos,tol,m_sensor); }
 
     /// find the hit with a given LHCbID
     value_type hitByLHCbID(unsigned int zone, LHCb::LHCbID id);
@@ -168,32 +168,32 @@ namespace Tf {
     VeloSensorHits();
 
     /// r-type wrapper for closest hit in global frame implementation
-    value_type closestHitWrap(unsigned int zone, double pos, double tol, HitBase::velo_rhit_tag) {
+    value_type closestHitWrap(unsigned int zone, double pos, double tol, const DeVeloRType*) {
       return closestHitImp(zone, pos, tol); 
     }
       
     /// phi-type wrapper for closest hit in global frame implementation
-    value_type closestHitWrap(unsigned int zone, double pos, double tol, HitBase::velo_phihit_tag) {
+    value_type closestHitWrap(unsigned int zone, double pos, double tol, const DeVeloPhiType*) {
       return closestHitImp(zone, (m_sensor->isRight() && pos<0 ? pos + 2.0*Gaudi::Units::pi : pos), tol); 
     }
       
     /// r-type wrapper for closest hit in half box frame implementation
-    value_type closestHitHalfBoxWrap(unsigned int zone, double pos, double tol, HitBase::velo_rhit_tag) {
+    value_type closestHitHalfBoxWrap(unsigned int zone, double pos, double tol, const DeVeloRType*) {
       return closestHitHalfBoxImp(zone, pos, tol); 
     }
       
     /// phi-type wrapper for closest hit in half box frame implementation
-    value_type closestHitHalfBoxWrap(unsigned int zone, double pos, double tol, HitBase::velo_phihit_tag) {
+    value_type closestHitHalfBoxWrap(unsigned int zone, double pos, double tol, const DeVeloPhiType*) {
       return closestHitHalfBoxImp(zone, (m_sensor->isRight() && pos<0 ? pos + 2.0*Gaudi::Units::pi : pos), tol); 
     }
       
     /// r-type wrapper for closest hit in ideal frame implementation
-    value_type closestHitIdealWrap(unsigned int zone, double pos, double tol, HitBase::velo_rhit_tag) {
+    value_type closestHitIdealWrap(unsigned int zone, double pos, double tol, const DeVeloRType*) {
       return closestHitIdealImp(zone, pos, tol); 
     }
       
     /// phi-type wrapper for closest hit in ideal frame implementation
-    value_type closestHitIdealWrap(unsigned int zone, double pos, double tol, HitBase::velo_phihit_tag) {
+    value_type closestHitIdealWrap(unsigned int zone, double pos, double tol, const DeVeloPhiType*) {
       return closestHitIdealImp(zone, (m_sensor->isRight() && pos<0 ? pos + 2.0*Gaudi::Units::pi : pos), tol); 
     }
       
@@ -207,36 +207,36 @@ namespace Tf {
     value_type closestHitIdealImp(unsigned int zone, double pos, double tol) ;
 
     /// r-type wrapper for closest hit in global frame implementation
-    typename DATATYPE::range_type hitsWrap(unsigned int zone, double min, double max, HitBase::velo_rhit_tag) {
+    typename DATATYPE::range_type hitsWrap(unsigned int zone, double min, double max, const DeVeloRType*) {
       return hitsImp(zone, min, max); 
     }
       
     /// phi-type wrapper for closest hit in global frame implementation
-    typename DATATYPE::range_type hitsWrap(unsigned int zone, double min, double max, HitBase::velo_phihit_tag) {
+    typename DATATYPE::range_type hitsWrap(unsigned int zone, double min, double max, const DeVeloPhiType*) {
       return hitsImp(zone
           , (m_sensor->isRight() && min<0 ? min + 2.0*Gaudi::Units::pi : min)
           , (m_sensor->isRight() && max<0 ? max + 2.0*Gaudi::Units::pi : max));
     }
       
     /// r-type wrapper for closest hit in half box frame implementation
-    typename DATATYPE::range_type hitsHalfBoxWrap(unsigned int zone, double min, double max, HitBase::velo_rhit_tag) {
+    typename DATATYPE::range_type hitsHalfBoxWrap(unsigned int zone, double min, double max, const DeVeloRType*) {
       return hitsHalfBoxImp(zone, min, max); 
     }
       
     /// phi-type wrapper for closest hit in half box frame implementation
-    typename DATATYPE::range_type hitsHalfBoxWrap(unsigned int zone, double min, double max, HitBase::velo_phihit_tag) {
+    typename DATATYPE::range_type hitsHalfBoxWrap(unsigned int zone, double min, double max, const DeVeloPhiType*) {
       return hitsHalfBoxImp(zone
           , (m_sensor->isRight() && min<0 ? min + 2.0*Gaudi::Units::pi : min)
           , (m_sensor->isRight() && max<0 ? max + 2.0*Gaudi::Units::pi : max));
     }
       
     /// r-type wrapper for closest hit in ideal frame implementation
-    typename DATATYPE::range_type hitsIdealWrap(unsigned int zone, double min, double max, HitBase::velo_rhit_tag) {
+    typename DATATYPE::range_type hitsIdealWrap(unsigned int zone, double min, double max, const DeVeloRType*) {
       return hitsIdealImp(zone, min, max); 
     }
       
     /// phi-type wrapper for closest hit in ideal frame implementation
-    typename DATATYPE::range_type hitsIdealWrap(unsigned int zone, double min, double max, HitBase::velo_phihit_tag) {
+    typename DATATYPE::range_type hitsIdealWrap(unsigned int zone, double min, double max, const DeVeloPhiType*) {
       return hitsIdealImp(zone
           , (m_sensor->isRight() && min<0 ? min + 2.0*Gaudi::Units::pi : min)
           , (m_sensor->isRight() && max<0 ? max + 2.0*Gaudi::Units::pi : max));
@@ -252,13 +252,13 @@ namespace Tf {
     typename DATATYPE::range_type  hitsIdealImp(unsigned int zone, double min, double max);
 
     /// Implementation of access to closest hit at reference radius in global frame. Only makes sense for phi.
-    value_type closestHitAtRImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag);
+    value_type closestHitAtRImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*);
 
     /// Implementation of access to closest hit at reference radius in half box frame. Only makes sense for phi.
-    value_type closestHitAtRHalfBoxImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag);
+    value_type closestHitAtRHalfBoxImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*);
 
     /// Implementation of access to closest hit at reference radius in ideal frame. Only makes sense for phi.
-    value_type closestHitAtRIdealImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag);
+    value_type closestHitAtRIdealImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*);
 
   private:
 
@@ -443,7 +443,7 @@ namespace Tf {
   }
 
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>
-  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag)
+  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*)
   {
     // nothing to see here, please move along
     if ( m_data[zone].empty() ) return 0;
@@ -466,7 +466,7 @@ namespace Tf {
   }
 
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>
-  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRHalfBoxImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag)
+  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRHalfBoxImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*)
   {
     // nothing to see here, please move along
     if ( m_data[zone].empty() ) return 0;
@@ -489,7 +489,7 @@ namespace Tf {
   }
 
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>
-  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRIdealImp(unsigned int zone, double r, double pos, double tol, HitBase::velo_phihit_tag)
+  DATATYPE*  VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::closestHitAtRIdealImp(unsigned int zone, double r, double pos, double tol, const DeVeloPhiType*)
   {
     // nothing to see here, please move along
     if ( m_data[zone].empty() ) return 0;

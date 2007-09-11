@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 - Kurt Rinnert
+ - changed overloading in VeloSensorHits from hit type tags to sensor type.
+   This expresses more clearly what is meant and also makes it easier to use
+   the new methods in derived hit managers.
+
 ! 2007-09-10 - Kurt Rinnert
  - propagated sort coordinate interface to VELO hit extension base class.
 
