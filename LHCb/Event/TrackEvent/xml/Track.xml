@@ -131,6 +131,10 @@
         access = "PUBLIC" >
         <enumval name = "Likelihood" value = "1" desc=""/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
+        <enumval name = "nExpectedVelo" value = "10" desc="number of expected Velo hits"/>
+        <enumval name = "nExpectedTT" value = "11" desc="number of expected TT hits"/>
+        <enumval name = "nExpectedIT" value = "12" desc="number of expected IT hits"/>
+        <enumval name = "nExpectedOT" value = "13" desc="number of expected OT hits"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
         <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFit)"/>
         <enumval name = "FitVeloNDoF"  value = "18" desc="NDoF of the velo segment chisq"/>

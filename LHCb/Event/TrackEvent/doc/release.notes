@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-11 M Needham
+ - Add number of expected hits in VELO, TT, OT, IT to track extraInfo
+
 !======================= TrackEvent v4r6 2007-09-07 ==========================
 ! 2007-09-06 M Needham
  - Ensure no comparisions with != == between floats
