@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.17 2007-06-25 15:54:24 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.18 2007-09-12 15:17:04 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -44,7 +44,7 @@ AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,
       << classID()
       << endmsg;
 
-  setTransformation(translation, rotation, pivot);
+  setOffNominalTransformation(translation, rotation, pivot);
 
 }
 
@@ -61,7 +61,7 @@ StatusCode AlignmentCondition::initialize() {
   return makeMatrices();
 }
 //=============================================================================
-void AlignmentCondition::matrix(const Gaudi::Transform3D& newMatrix) 
+void AlignmentCondition::offNominalMatrix(const Gaudi::Transform3D& newMatrix) 
 {
   m_matrix=newMatrix.Inverse();
   m_matrixInv=m_matrix;
@@ -69,9 +69,9 @@ void AlignmentCondition::matrix(const Gaudi::Transform3D& newMatrix)
 }
 //=============================================================================
 StatusCode 
-AlignmentCondition::setTransformation( const std::vector<double>& translation,
-                                       const std::vector<double>& rotation,
-                                       const std::vector<double>& pivot) 
+AlignmentCondition::setOffNominalTransformation( const std::vector<double>& translation,
+                                                 const std::vector<double>& rotation,
+                                                 const std::vector<double>& pivot) 
 {
   loadParams(translation, rotation, pivot);
   return makeMatrices();

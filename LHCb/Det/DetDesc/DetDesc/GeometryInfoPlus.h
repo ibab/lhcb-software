@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.7 2007-06-25 08:58:12 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.8 2007-09-12 15:17:04 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -117,7 +117,7 @@ public:
 
   /// transformation matrix from global reference
   /// system to the local one
-  inline const Gaudi::Transform3D&  matrix() const 
+  inline const Gaudi::Transform3D&  toLocalMatrix() const 
   {
     return  *m_matrix;
   }
@@ -125,7 +125,7 @@ public:
   /// transformation matrix from local  reference
   /// system to the global one.
   /// Full transformation including misalignments.
-  const Gaudi::Transform3D&  matrixInv() const 
+  const Gaudi::Transform3D&  toGlobalMatrix() const 
   {
     return *m_matrixInv;  
   }
@@ -133,7 +133,7 @@ public:
   /// transformation matrix from global reference
   /// system to the local one.
   /// Ideal transformation with no misalignments.
-  const Gaudi::Transform3D& idealMatrix() const 
+  const Gaudi::Transform3D& toLocalMatrixNominal() const 
   {
     return *m_idealMatrix;
   }
@@ -141,7 +141,7 @@ public:
   /// transformation matrix from local reference
   /// system to the global one.
   /// Ideal geometry with no misalignments.
-  inline const Gaudi::Transform3D&  idealMatrixInv() const 
+  inline const Gaudi::Transform3D&  toGlobalMatrixNominal() const 
   {
     return *m_idealMatrixInv;
   }
@@ -150,17 +150,19 @@ public:
   /// Transformation matrix for the volume corresponding
   /// to this IGeometryInfo. Uses the transformations of parent 
   /// volumes that are on this detector element level.
-  const Gaudi::Transform3D& localIdealMatrix() const;
+  const Gaudi::Transform3D& ownToLocalMatrixNominal() const;
 
-  const Gaudi::Transform3D& localDeltaMatrix() const;
+  const Gaudi::Transform3D& ownToNominalMatrix() const;
+
+  const Gaudi::Transform3D ownToOffNominalMatrix() const;
 
   /**
    * Transformation relating this frame to frame of the parent.
    * Includes local misalignment.
    */
-  const Gaudi::Transform3D  localMatrix() const 
+  const Gaudi::Transform3D  ownMatrix() const 
   {
-    return Gaudi::Transform3D(this->localDeltaMatrix() * this->localIdealMatrix() );
+    return Gaudi::Transform3D(this->ownToNominalMatrix() * this->ownToLocalMatrixNominal() );
     
   }
   
@@ -168,19 +170,19 @@ public:
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
   /// Will re-do calculation of all matrices.
   /// Works even if this GeometryInfo has no AlignmentCondition.
-  StatusCode localDeltaMatrix(const Gaudi::Transform3D&);
+  StatusCode ownToOffNominalMatrix(const Gaudi::Transform3D&);
 
   /// Update the transformation parametrs in this GeometryInfo's
   /// AlignmentCondifion and re-do calculation of all matrices.
-  StatusCode localDeltaParams(const std::vector<double>& trans,
-                              const std::vector<double>& rot,
-                              const std::vector<double>& pivot =
-                              std::vector<double>(3) );
+  StatusCode ownToOffNominalParams(const std::vector<double>& trans,
+                                   const std::vector<double>& rot,
+                                   const std::vector<double>& pivot =
+                                   std::vector<double>(3) );
 
   /// tranform the point from the global reference systemn 
   /// to the local reference system  
   inline Gaudi::XYZPoint toLocal( const Gaudi::XYZPoint& globalPoint ) const {
-    return ( matrix() * globalPoint );
+    return ( toLocalMatrix() * globalPoint );
   }
   
   
@@ -188,7 +190,7 @@ public:
   ///  to the global reference system  
   inline Gaudi::XYZPoint toGlobal( const Gaudi::XYZPoint& localPoint  ) const 
   {
-    return ( matrixInv() * localPoint  );
+    return ( toGlobalMatrix() * localPoint  );
   }
 
   /// is the given point in the global reference system
@@ -426,8 +428,8 @@ private:
 
   /// Force the local delta matrix to be newDelta and re-do all
   /// necessary matrix calculations
-  StatusCode setLocalDeltaMatrix(const Gaudi::Transform3D& 
-                                 newDelta);
+  StatusCode setLocalOffNominalDeltaMatrix(const Gaudi::Transform3D& 
+                                           newDelta);
   
 
   StatusCode getAlignmentCondition();

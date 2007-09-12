@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.25 2007-09-05 14:17:16 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.26 2007-09-12 15:17:04 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -243,14 +243,14 @@ StatusCode GeometryInfoPlus::calculateMatrices()
 
     if (!idealMatrixLoaded()) {
       log() << MSG::VERBOSE << "store ideal..." << endmsg;
-      m_pvMatrices.push_back( gi->localIdealMatrix() );
+      m_pvMatrices.push_back( gi->ownToLocalMatrixNominal() );
     } else {
       log() << MSG::VERBOSE << "ideal already stored..." << endmsg;
     }
     
     
     log() << MSG::VERBOSE << "store delta for " << endmsg;
-    m_deltaMatrices.push_back( gi->localDeltaMatrix() );
+    m_deltaMatrices.push_back( gi->ownToNominalMatrix() );
 
     parentGeomInfos.push_back(gi);
 
@@ -305,7 +305,7 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
                                            )                 
                         );
 
-  m_matrixInv=new Gaudi::Transform3D( matrix().Inverse() );
+  m_matrixInv=new Gaudi::Transform3D( toLocalMatrix().Inverse() );
 
   log() << MSG::VERBOSE << "calculated full matrices" << endmsg;
   
@@ -327,26 +327,26 @@ void GeometryInfoPlus::calculateIdealMatrix(matrix_iterator pvFirst,
   
 }
 //=============================================================================
-StatusCode GeometryInfoPlus::localDeltaMatrix(const Gaudi::Transform3D& newDelta) 
+StatusCode GeometryInfoPlus::ownToOffNominalMatrix(const Gaudi::Transform3D& newDelta) 
 {
   // Need to do this depending on whether there is an 
   // AlignmentCondition present. So check for that, and if there is,
   // also change the matrix in the AlignmentCondition data member.
-  if (this->hasAlignmentCondition()) myAlignmentCondition()->matrix(newDelta );
-  return setLocalDeltaMatrix(newDelta);
+  if (this->hasAlignmentCondition()) myAlignmentCondition()->offNominalMatrix(newDelta );
+  return setLocalOffNominalDeltaMatrix(newDelta);
 }
 //=============================================================================
-StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
-                                              const std::vector<double>& rot,
-                                              const std::vector<double>& pivot)
+StatusCode GeometryInfoPlus::ownToOffNominalParams(const std::vector<double>& trans,
+                                                 const std::vector<double>& rot,
+                                                 const std::vector<double>& pivot)
 {
   // should also make children re-calculate matrices by calling their
   // calculateMatrices methods iteratively.
 
   if (this->hasAlignmentCondition()) {
     
-    return (myAlignmentCondition()->setTransformation(trans, rot, pivot) ) ? 
-      setLocalDeltaMatrix(myAlignmentCondition()->matrix()) :
+    return (myAlignmentCondition()->setOffNominalTransformation(trans, rot, pivot) ) ? 
+      setLocalOffNominalDeltaMatrix(myAlignmentCondition()->offNominalMatrix()) :
       StatusCode::FAILURE;
   }
   
@@ -355,8 +355,8 @@ StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
 }
 
 //=============================================================================
-StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const Gaudi::Transform3D& 
-                                                 newDelta)
+StatusCode GeometryInfoPlus::setLocalOffNominalDeltaMatrix(const Gaudi::Transform3D& 
+                                                           newDelta)
 {
 
   // should also make children re-calculate matrices by calling their
@@ -494,7 +494,7 @@ StatusCode GeometryInfoPlus::registerSupportGI()
   return StatusCode::SUCCESS;  
 }
 //=============================================================================
-const Gaudi::Transform3D& GeometryInfoPlus::localIdealMatrix() const
+const Gaudi::Transform3D& GeometryInfoPlus::ownToLocalMatrixNominal() const
 {
 
   if (0!=m_localIdealMatrix) {
@@ -529,16 +529,21 @@ const Gaudi::Transform3D& GeometryInfoPlus::localIdealMatrix() const
 
 }
 //=============================================================================
-const Gaudi::Transform3D& GeometryInfoPlus::localDeltaMatrix() const 
+const Gaudi::Transform3D& GeometryInfoPlus::ownToNominalMatrix() const 
 {
   if (0!=m_localDeltaMatrix) return *m_localDeltaMatrix;
 
   m_localDeltaMatrix = (this->hasAlignmentCondition())      ?
-    new Gaudi::Transform3D(myAlignmentCondition()->matrix()) :
+    new Gaudi::Transform3D(myAlignmentCondition()->toNominalMatrix()) :
     m_localDeltaMatrix = new Gaudi::Transform3D();        
 
   return *m_localDeltaMatrix;
   
+}
+//=============================================================================
+const Gaudi::Transform3D GeometryInfoPlus::ownToOffNominalMatrix() const 
+{
+  return ownToNominalMatrix().Inverse();
 }
 //=============================================================================
 IGeometryInfo* const GeometryInfoPlus::supportIGeometryInfo() const

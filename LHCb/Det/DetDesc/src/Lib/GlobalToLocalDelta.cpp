@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.13 2007-07-11 16:36:35 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.14 2007-09-12 15:17:05 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -17,8 +17,8 @@ const Gaudi::Transform3D localDeltaMatrix(const IDetectorElement* DE,
 const Gaudi::Transform3D localDeltaMatrix(const IGeometryInfo* GI,
                                           const Gaudi::Transform3D& toMisaligned_global) {
 
-  const Gaudi::Transform3D d_0 = GI->localDeltaMatrix().Inverse();
-  const Gaudi::Transform3D T   = GI->matrixInv();
+  const Gaudi::Transform3D d_0 = GI->ownToOffNominalMatrix();
+  const Gaudi::Transform3D T   = GI->toGlobalMatrix();
   return d_0 * T.Inverse() * toMisaligned_global * T;
 
 }
@@ -59,8 +59,8 @@ const Gaudi::Transform3D localDeltaFromGlobalTransform(const IDetectorElement* D
 
 const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
                                                        const Gaudi::Transform3D& globalTransform) {
-  const Gaudi::Transform3D d_0 = GI->localDeltaMatrix().Inverse();
-  const Gaudi::Transform3D T_inv   = GI->matrix();
+  const Gaudi::Transform3D d_0 = GI->ownToOffNominalMatrix();
+  const Gaudi::Transform3D T_inv   = GI->toLocalMatrix();
   return d_0 * T_inv * globalTransform;
 }
 
@@ -75,9 +75,9 @@ const Gaudi::Transform3D localDeltaFromParentTransform(const IDetectorElement* p
 const Gaudi::Transform3D localDeltaFromParentTransform(const IGeometryInfo* parentGI,
                                                        const IGeometryInfo* GI,
                                                        const Gaudi::Transform3D& parentTransform) {
-  const Gaudi::Transform3D d_0 = GI->localDeltaMatrix().Inverse();
-  const Gaudi::Transform3D T_parent = parentGI->matrixInv();
-  const Gaudi::Transform3D T_k2n_inv   = GI->matrix() * T_parent;
+  const Gaudi::Transform3D d_0 = GI->ownToOffNominalMatrix();
+  const Gaudi::Transform3D T_parent = parentGI->toGlobalMatrix();
+  const Gaudi::Transform3D T_k2n_inv   = GI->toLocalMatrix() * T_parent;
   return d_0 * T_k2n_inv * parentTransform;
 }
   
