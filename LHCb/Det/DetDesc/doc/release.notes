@@ -1,9 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.326 2007-09-07 08:54:03 cattanem Exp $ 
+! $Id: release.notes,v 1.327 2007-09-12 15:18:13 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-09-12 - Juan Palacios
+  - cmt/requirements
+    . Increase version to 18r0
+  - DetDesc/IGeometryInfo.h, AlignmentCondition.h
+    . Change names of methods returning 3D transformations for more explicit 
+      and hopefully clearer ones. Increase IGeometryInfo interface major version to 3.
+  - DetDesc/GeometryInfoPlus.h
+  - src/Lib/GeometryInfoPlus.cpp, AlignmentCondition.cpp, GlobalToLocalDelta.cpp
+    . Adapt to changes in interfaces above.
 
 !====================== DetDesc v17r6 2007-09-07 ==============================
 ! 2007-09-07 - Marco Cattaneo
