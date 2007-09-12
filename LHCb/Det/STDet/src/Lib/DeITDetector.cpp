@@ -82,15 +82,12 @@ void DeITDetector::flatten(){
     DeITStation::Children::const_iterator iterBox = tStation->boxes().begin();
     for (;iterBox != tStation->boxes().end(); ++iterBox){
       DeITBox* tBox = *iterBox;
+      m_boxes.push_back(tBox);
       DeITBox::Children::const_iterator iterLayer = tBox->layers().begin();
       for (;iterLayer != tBox->layers().end(); ++iterLayer){
         DeITLayer* tLayer = *iterLayer;
         m_layers.push_back(tLayer);
 	const DeSTLayer::Sectors& tSectors = tLayer->sectors();
-	//       for (DeSTLayer::Sectors::const_iterator iter = tSectors.begin(); iter != tSectors.end(); ++iter){
-          //DeSTSector* tSector = *iter;
-	  //        m_sectors.push_back(*iter);
-        //} 
         m_sectors.insert(m_sectors.begin(),tSectors.begin(),tSectors.end());
        }  // iterLayer
     }  // box

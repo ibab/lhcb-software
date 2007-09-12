@@ -1,4 +1,4 @@
-// $Id: DeITDetector.h,v 1.5 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeITDetector.h,v 1.6 2007-09-12 08:28:51 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
@@ -24,6 +24,9 @@ class DeSTSector;
 class DeITDetector : public DeSTDetector  {
 
 public:
+
+  /** box vector typedef **/
+  typedef std::vector<DeITBox*> Boxes;
 
   /** Constructor */
   DeITDetector ( const std::string& name = "" ) ;
@@ -53,22 +56,44 @@ public:
   */
   virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint); 
 
-  /** 
-  *  short cut to pick up the wafer corresponding to a channel
-  * @param channel 
-  * @return sector 
+  /** flat vector of boxes
+  * @return vector of boxes
   */
-  // virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
+  const Boxes& boxes() const;
+
+  /** get the number of layers **/
+  unsigned int nBox() const;
+
+  /** get the number of readout sectors **/
+  unsigned int nBoxPerStation() const;
+
+  /** number of layers per station **/
+  unsigned int nLayerPerBox() const;
 
 private:
 
   /** make flat list of lowest descendents  and also layers*/
   void flatten();
 
-  //  typedef GaudiUtils::VectorMap<unsigned int,DeSTSector*> SectorMap;
-  //SectorMap m_sMap;
+  Boxes m_boxes;
 
 };
+
+inline const DeITDetector::Boxes& DeITDetector::boxes() const{
+  return m_boxes;
+}
+
+inline unsigned int DeITDetector::nBox() const{
+  return boxes().size();
+}
+
+inline unsigned DeITDetector::nBoxPerStation() const{
+  return nStation()/nBox();
+}
+
+inline unsigned DeITDetector::nLayerPerBox() const{
+  return nLayer()/nBox();
+}
 
 #endif // _DeITDetector_H
 

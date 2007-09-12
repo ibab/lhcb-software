@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.20 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeSTDetector.h,v 1.21 2007-09-12 08:28:51 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -159,6 +159,16 @@ public:
   /** get the number of strips in detector*/
   unsigned int nStrip() const; 
 
+
+  /** get the number of layers **/
+  unsigned int nLayer() const;
+
+  /** get the number of readout sectors **/
+  unsigned int nReadoutSector() const;
+
+  /** number of layers per station **/
+  unsigned int nLayersPerStation() const;
+
 protected:
 
   /** set the first Station number */
@@ -249,13 +259,6 @@ inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID
 }
 
 inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
-  /*
-  DeSTDetector::Sectors::iterator iter = m_sectors.begin();
-  while((iter != m_sectors.end())&&((*iter)->contains(aChannel) == false)){
-    ++iter;
-  } // iter
-  return (iter != m_sectors.end() ? (*iter)->isStrip(aChannel.strip()) :false);
-  */
   DeSTSector* aSector = findSector(aChannel);
   return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false); 
 }
@@ -263,6 +266,18 @@ inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
 inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel){
  SectorMap::iterator iter = m_sMap.find(aChannel.uniqueSector());
  return (iter != m_sMap.end() ? iter->second : 0);
+}
+
+inline unsigned int DeSTDetector::nLayer() const{
+  return layers().size();
+}
+
+inline unsigned int DeSTDetector::nReadoutSector() const{
+  return sectors().size();
+}
+
+inline unsigned int DeSTDetector::nLayersPerStation() const{
+  return nLayer()/nStation();
 }
 
 #endif // _DeSTDetector_H
