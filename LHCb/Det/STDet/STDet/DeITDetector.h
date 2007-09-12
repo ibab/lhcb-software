@@ -1,4 +1,4 @@
-// $Id: DeITDetector.h,v 1.6 2007-09-12 08:28:51 mneedham Exp $
+// $Id: DeITDetector.h,v 1.7 2007-09-12 08:58:02 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
@@ -88,11 +88,11 @@ inline unsigned int DeITDetector::nBox() const{
 }
 
 inline unsigned DeITDetector::nBoxPerStation() const{
-  return nStation()/nBox();
+  return nBox()/nStation();
 }
 
 inline unsigned DeITDetector::nLayerPerBox() const{
-  return nLayer()/nBox();
+  return nBox()/nLayer;
 }
 
 #endif // _DeITDetector_H
