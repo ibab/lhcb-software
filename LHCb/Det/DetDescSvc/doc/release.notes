@@ -1,10 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.32 2007-08-02 17:04:42 marcocle Exp $ 
+! $Id: release.notes,v 1.33 2007-09-12 15:48:30 jpalac Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-09-12 - Juan Palacios
+ - cmt/requirements
+   . Increase version to v1r13
+ - src/TransportSvcGoodLocalGI.h, TransportSvcIntersections.h
+   . Adapt to new IGeometryInfo interface: IGeometryInfo::matrix() is now 
+     IGeometryInfo::toLocalMatrix.
 
 ! 2007-08-02 - Marco Clemencic
  - Added an option to dump the network of dependencies as a DIA file (see
