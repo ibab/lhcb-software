@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.14 2007-06-25 15:53:25 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.15 2007-09-12 15:13:29 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -39,18 +39,18 @@ public:
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_AlignmentCondition; };
   /**
-   * Return the misaligned -> nominal 3D transformation matrix.
-   */
-  inline const Gaudi::Transform3D& matrix() const
-  {
-    return m_matrix;
-  }
-  /**
    * Return the nominal -> misaligned 3D transformation matrix.
    */
-  inline const Gaudi::Transform3D& matrixInv() const
+  inline const Gaudi::Transform3D& offNominalMatrix() const
   {
     return m_matrixInv;
+  }
+  /**
+   * Return the misaligned -> nominal 3D transformation matrix.
+   */
+  inline const Gaudi::Transform3D& toNominalMatrix() const
+  {
+    return m_matrix;
   }
 
   /**
@@ -58,7 +58,7 @@ public:
    * @param newMatrix new full transformation object describing aligned to 
    *        misalinged transformation in the frame of the detector element..
    */
-  void matrix(const Gaudi::Transform3D& newMatrix);
+  void offNominalMatrix(const Gaudi::Transform3D& newMatrix);
 
   /**
    * Set a new 3D transformation starting from the basic set of parameters
@@ -69,9 +69,9 @@ public:
    * @param pivot       vector containing X,Y,Z pivot point for rotation.
    * @return            StatusCode
    */
-  StatusCode setTransformation( const std::vector<double>& translation,
-                                const std::vector<double>& rotation,
-                                const std::vector<double>& pivot);
+  StatusCode setOffNominalTransformation( const std::vector<double>& translation,
+                                          const std::vector<double>& rotation,
+                                          const std::vector<double>& pivot);
 
 protected:
 
