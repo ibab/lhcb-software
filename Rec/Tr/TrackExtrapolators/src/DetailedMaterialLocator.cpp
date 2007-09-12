@@ -69,8 +69,8 @@ size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const G
       ITransportSvc* nonconsttransportservice = const_cast<ITransportSvc*>(&(*m_transportSvc)) ;
       const double mintick = 0 ;
       const double maxtick = 1 ;
-      rc = nonconsttransportservice->intersections( start, vect, mintick, maxtick, intersepts, m_minRadThickness,
-						    m_geometry, m_geometry);
+      rc = nonconsttransportservice->intersections( start, vect, mintick, maxtick, intersepts, 
+						    m_minRadThickness, m_geometry);
       chronoSvc()->chronoStop(chronotag);  
     } catch (GaudiException& exception) {
       error() << "caught transportservice exception " << exception << std::endl
