@@ -1,4 +1,4 @@
-// $Id: TransportSvcGoodLocalGI.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $
+// $Id: TransportSvcGoodLocalGI.h,v 1.3 2007-09-12 15:47:01 jpalac Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -43,8 +43,8 @@ inline bool  TransportSvc::goodLocalGI
   ///
   unsigned int nInt = 
     lv->solid()->intersectionTicks
-    ( gi->matrix() * point1                         , 
-      gi->matrix() * Gaudi::XYZVector( point2 - point1 ) , 
+    ( gi->toLocalMatrix() * point1                         , 
+      gi->toLocalMatrix() * Gaudi::XYZVector( point2 - point1 ) , 
       tickMin   ,     tickMax  ,  m_local_ticks     ) ; 
   /// 
   if ( debug ) std::cout << " goodLocalGI : nInt " << nInt << std::endl;

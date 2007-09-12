@@ -1,4 +1,4 @@
-// $Id: TransportSvcIntersections.h,v 1.3 2007-03-19 15:15:32 cattanem Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.4 2007-09-12 15:47:01 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -127,8 +127,8 @@ unsigned long TransportSvc::intersections
     /// delegate the calculation to the logical volume 
     const ILVolume* lv = giLocal->lvolume();   
     lv->intersectLine
-      ( giLocal->matrix() * point , 
-        giLocal->matrix() * vect  , 
+      ( giLocal->toLocalMatrix() * point , 
+        giLocal->toLocalMatrix() * vect  , 
         intersept                 , 
         tickMin                   , 
         tickMax                   , 
