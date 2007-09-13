@@ -4,6 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r7 2007-09-13 ========================
+
+! 2007-09-13 - Juan PALACIOS
+ - cmt/requirements
+   . Increase version to v10r7
+
 ! 2007-08-13 - Chris Jones
  - Update DeRichHPDPanel TDS locations
  - Update methods that return a RichSmartID to always set the HPD properties
