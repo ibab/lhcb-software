@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.20 2007-02-05 19:05:13 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.21 2007-09-13 09:22:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -172,13 +172,13 @@ StatusCode CondDBTestAlgorithm::execute() {
   info() << m_m01->name() << ":\n"
          << m_m01->printParams()
          << "\n transformation =  \n"
-         << m_m01->matrix()
+         << m_m01->offNominalMatrix()
          << endmsg;
 
   info() << m_m12->name() << ":\n"
          << m_m12->printParams()
          << "\n transformation =  \n"
-         << m_m12->matrix()
+         << m_m12->offNominalMatrix()
          << endmsg;
 
   if (m_direct_mapping_test){

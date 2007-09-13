@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.10 2007-05-29 13:40:22 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.11 2007-09-13 09:22:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ StatusCode MultiDBTest::execute() {
   info() << "       DB = " << m_cond2->paramAsString("Database") << endmsg;
 
   info() << "Align1: " << m_align1->validSince() << " -> " << m_align1->validTill() << endmsg;
-  info() << m_align1->matrix() << endmsg;
+  info() << m_align1->offNominalMatrix() << endmsg;
 
   return StatusCode::SUCCESS;
 };
