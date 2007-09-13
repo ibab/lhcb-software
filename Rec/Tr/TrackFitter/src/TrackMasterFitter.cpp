@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.35 2007-09-13 07:33:49 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.36 2007-09-13 12:59:31 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -79,7 +79,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
-  declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
+  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.15)(5.0e-7));
   declareProperty( "SetRefInfo"     , m_setRefInfo = true                 );
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator"        );
@@ -189,7 +189,8 @@ StatusCode TrackMasterFitter::fit( Track& track )
     seedCov(1,1) = m_errorY2;
     seedCov(2,2) = m_errorTx2;
     seedCov(3,3) = m_errorTy2;
-    seedCov(4,4) = gsl_pow_2( m_errorP * seed.qOverP() );
+    // error is like A^2/p^2 + B^2
+    seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);
     debug() << "-> seed state covariance matrix blown up" << endmsg;
   }
 
@@ -548,9 +549,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
 
   // Sort the nodes in z
   if ( m_upstream ) {
-    stable_std::sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
+    std::stable_sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
   } else {
-    stable_std::sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
+    std::stable_sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
   }
 
   return StatusCode::SUCCESS;
