@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.94 2007-06-11 09:24:02 cattanem Exp $
+! $Id: release.notes,v 1.95 2007-09-13 09:44:21 jpalac Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2007-09-13 - Juan PALACIOS
+ - Changes to adapt to new IGeometryInfo interface.
+   NEEDS Det/DetDesc v18r0 OR HIGHER
+ - src/Lib/MuonChamberLayout.cpp
+   . Change callt to IGeometryIngo::matrixInv() by IGeometryInfo::toGlobalMatrix()
+ - cmt/requirements
+   . Increase version to v6r4
 
 !========================= MuonDet v6r3 2007-06-11 ========================
 ! 2007-06-11 - Marco Cattaneo

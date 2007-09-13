@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.26 2007-06-11 16:04:57 cattanem Exp $
+// $Id: MuonChamberLayout.cpp,v 1.27 2007-09-13 09:44:21 jpalac Exp $
 // Include files 
 
 // Gaudi
@@ -899,7 +899,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 
     //I'm intrested in the Chamber, not the gaps
     IGeometryInfo* cInfo = muChamber->geometry();
-    Gaudi::Transform3D vTransForm = cInfo->matrixInv();
+    Gaudi::Transform3D vTransForm = cInfo->toGlobalMatrix();
 
     Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
     vTransForm.GetDecomposition(vrota,vtrans);
@@ -969,7 +969,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 	FoundGap = true;
 	IGeometryInfo *gInfo =  muGap->geometry();
 
-	Gaudi::Transform3D vTransForm = gInfo->matrixInv();
+	Gaudi::Transform3D vTransForm = gInfo->toGlobalMatrix();
 
 	Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
 	vTransForm.GetDecomposition(vrota,vtrans);
