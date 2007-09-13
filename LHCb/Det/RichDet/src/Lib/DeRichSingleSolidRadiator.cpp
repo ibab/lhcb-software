@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.22 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.23 2007-09-13 13:10:55 jpalac Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -177,7 +177,7 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
 {
 
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
+  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -202,7 +202,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
 {
 
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
-  Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
+  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -227,7 +227,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
 {
 
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
+  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -253,7 +253,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 {
 
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  const Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
+  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.59 2007-08-13 12:29:07 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.60 2007-09-13 13:10:55 jpalac Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -260,7 +260,7 @@ StatusCode DeRichHPDPanel::initialize()
   m_localPlaneNormal2 = m_localPlane2.Normal();
 
   // Cache information for PDWindowPoint method
-  m_vectorTransf = geometry()->matrix();
+  m_vectorTransf = geometry()->toLocalMatrix();
   m_kaptonSolid = 
     pvHPDSMaster0->lvolume()->pvolume("pvRichHPDKaptonShield")->lvolume()->solid();
 
@@ -308,7 +308,7 @@ StatusCode DeRichHPDPanel::initialize()
     m_pvWindow.push_back( pvWindow );
     m_pvKapton.push_back( pvKapton );
     m_HPDCentres.push_back( pvHPDMaster->toMother(zero) );
-    m_HPDWindowToGlobal.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() *
+    m_HPDWindowToGlobal.push_back( geometry()->toGlobalMatrix() * pvHPDMaster->matrixInv() *
                                    pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
     m_panelToSilicon.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() *
                                 pvHPDMaster->matrix() );

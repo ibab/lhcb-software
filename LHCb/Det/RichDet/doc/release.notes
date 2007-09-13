@@ -4,11 +4,25 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-09-13 - Juan PALACIOS
+ - Changes to adapt to new IGeometryInfo interface. 
+   NEEDS Det/DetDesc v18r0 OR HIGHER!
+ - Files modified:
+   RichDet/DeRichBeamPipe.h
+   RichDet/DeRichHPD.h
+   src/Lib/DeRichBeamPipe.cpp
+   src/Lib/DeRichHPD.cpp
+   src/Lib/DeRichHPDPanel.cpp
+   src/Lib/DeRichMultiSolidRadiator.cpp
+   src/Lib/DeRichSingleSolidRadiator.cpp
+   src/Lib/DeRichSphMirror.cpp
+
 !======================== RichDet v10r7 2007-09-13 ========================
 
 ! 2007-09-13 - Juan PALACIOS
  - cmt/requirements
    . Increase version to v10r7
+
 
 ! 2007-08-13 - Chris Jones
  - Update DeRichHPDPanel TDS locations

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.28 2007-04-03 15:42:33 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.29 2007-09-13 13:10:55 jpalac Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -200,7 +200,7 @@ StatusCode DeRichSphMirror::initialize()
   const Gaudi::XYZVector localCentreNormal
     (Gaudi::XYZVector(-m_localMirrorCentre.x(),-m_localMirrorCentre.y(),
                       -m_localMirrorCentre.z()).unit() );
-  m_centreNormal = geometry()->matrixInv()*localCentreNormal;
+  m_centreNormal = geometry()->toGlobalMatrix()*localCentreNormal;
   msg << MSG::DEBUG << "Normal vector at the centre" << m_centreNormal << endmsg;
 
   m_centreNormalPlane = Gaudi::Plane3D(m_centreNormal, m_mirrorCentre);
@@ -299,7 +299,7 @@ StatusCode DeRichSphMirror:: intersects(const Gaudi::XYZPoint& globalP,
                                         Gaudi::XYZPoint& intersectionPoint ) const
 {
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(globalP) );
-  Gaudi::XYZVector vLocal( geometry()->matrix()*globalV );
+  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*globalV );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -320,7 +320,7 @@ StatusCode DeRichSphMirror:: intersects(const Gaudi::XYZPoint& globalP,
 StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
                                         const Gaudi::XYZVector& globalV ) const
 {
-  Gaudi::XYZVector vLocal( geometry()->matrix()*globalV );
+  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*globalV );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP),

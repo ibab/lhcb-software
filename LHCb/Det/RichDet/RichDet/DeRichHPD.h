@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.10 2007-08-09 15:23:28 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.11 2007-09-13 13:10:54 jpalac Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -85,7 +85,7 @@ public:
    */
   Gaudi::XYZPoint windowCentreInIdeal() const
   {
-    return geometry()->idealMatrixInv() * m_pvWindow->toMother(Gaudi::XYZPoint(0,0,sqrt(m_winInRsq)));
+    return geometry()->toGlobalMatrixNominal() * m_pvWindow->toMother(Gaudi::XYZPoint(0,0,sqrt(m_winInRsq)));
   }
 
   /**

@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.5 2007-02-28 18:31:07 marcocle Exp $
+ * $Id: DeRichBeamPipe.cpp,v 1.6 2007-09-13 13:10:55 jpalac Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
@@ -80,7 +80,7 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
                                     Gaudi::XYZPoint& exitPoint ) const
 {
   const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position) );
-  const Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
+  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);

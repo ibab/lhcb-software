@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.7 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.8 2007-09-13 13:10:54 jpalac Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -110,7 +110,7 @@ public:
   {
     ISolid::Ticks ticks;
     return ( 0 != m_localCone->intersectionTicks ( geometry()->toLocal(position),
-                                                   geometry()->matrix()*direction,
+                                                   geometry()->toLocalMatrix()*direction,
                                                    ticks ) );
   }
 
