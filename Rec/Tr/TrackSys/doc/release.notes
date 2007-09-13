@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-09-13 M. Needham
+ - Increase # of fit iterations to get better convergence
+
 ! 2007-09-13 M Needham
  - Update ErrorP to add extra parameter
  - Increase number of fit iterations to 2 --> better safe than sorry ! 
