@@ -111,7 +111,7 @@ FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "Trac
 
 // Tsa fit
 FitTsaSeed.Fitter.ErrorP              = {1e-3,5e-8};
-FitTsaSeed.Fitter.NumberFitIterations = 1;
+FitTsaSeed.Fitter.NumberFitIterations = 2;
 FitTsaSeed.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitTsaSeed.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitTsaSeed.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
@@ -131,7 +131,7 @@ FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackL
 
 // VeloTT fit
 FitVeloTT.Fitter.ErrorP              = {1e-3,5e-8};
-FitVeloTT.Fitter.NumberFitIterations = 1;
+FitVeloTT.Fitter.NumberFitIterations = 2;
 FitVeloTT.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitVeloTT.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
 FitVeloTT.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
