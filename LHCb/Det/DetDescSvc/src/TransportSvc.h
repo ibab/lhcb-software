@@ -1,4 +1,4 @@
-// $Id: TransportSvc.h,v 1.3 2006-07-26 09:46:58 cattanem Exp $ 
+// $Id: TransportSvc.h,v 1.4 2007-09-13 14:19:16 wouter Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -162,7 +162,7 @@ private:
   mutable Gaudi::XYZPoint          m_prevPoint2          ; 
   mutable double                   m_previousThreshold   ;
   mutable IGeometryInfo*           m_previousGuess       ; 
-  mutable IGeometryInfo*           m_previousAlternative ; 
+  mutable IGeometryInfo*           m_previousTopGeometry ; 
   mutable ILVolume::Intersections  m_localIntersections  ; 
   /// some cache:
   mutable ILVolume::Intersections  m_local_intersects    ; 

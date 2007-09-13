@@ -1,4 +1,4 @@
-// $Id: TransportSvcIntersections.h,v 1.4 2007-09-12 15:47:01 jpalac Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.5 2007-09-13 14:19:16 wouter Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -55,6 +55,10 @@ unsigned long TransportSvc::intersections
     
     /// check the input parameters of the line 
     if( tickMin >= tickMax && vect.mag2() <= 0 ) { return 0;}
+    
+    // Set the top level geometry, because this is what is in the cache
+    IGeometryInfo* topGeometry = alternativeGeometry ? alternativeGeometry : standardGeometry() ;
+ 
     ///
     Gaudi::XYZPoint point1( point + vect * tickMin ) ; 
     Gaudi::XYZPoint point2( point + vect * tickMax ) ; 
@@ -62,7 +66,7 @@ unsigned long TransportSvc::intersections
     if( point1              == m_prevPoint1          && 
         point2              == m_prevPoint2          &&
         threshold           == m_previousThreshold   &&
-        alternativeGeometry == m_previousAlternative && 
+        topGeometry         == m_previousTopGeometry && 
         guessGeometry       == m_previousGuess         ) 
       {
         /// use cached container!!!
@@ -88,30 +92,27 @@ unsigned long TransportSvc::intersections
     
     IGeometryInfo* giLocal = 0 ; 
     IGeometryInfo* gi      = 
-      ( 0 != guessGeometry       && 
+      // try the guess geometry
+     ( 0 != guessGeometry       && 
         0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
                                       guessGeometry ,
-                                      standardGeometry() ) ) ) ? 
+                                      alternativeGeometry ) ) ) ? 
       guessGeometry       : 
-      ( 0 != alternativeGeometry && 
-        0 != ( giLocal = findLocalGI( point1 , 
-                                      point2 , 
-                                      alternativeGeometry ,
-                                      standardGeometry() ) ) ) ? 
-      alternativeGeometry : 
-      ( 0 != previousGeometry()  && 
-        0 != ( giLocal = findLocalGI( point1 , 
+      // try the previous geometry (only if top-geometry matches)
+      ( previousGeometry() && topGeometry == m_previousTopGeometry &&
+	0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
                                       previousGeometry() ,
-                                      standardGeometry() ) ) ) ? 
-      previousGeometry()  : 
-      ( 0 != standardGeometry()  && 
-        0 != ( giLocal = findLocalGI( point1 , 
+                                      topGeometry ) ) ) ? 
+      // just take the top geometry
+      previousGeometry() :
+      ( 0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
-                                      standardGeometry() ,
-                                      standardGeometry() ) ) ) ? 
-      standardGeometry()  : 0 ;  
+                                      topGeometry,
+                                      topGeometry ) ) ) ? 
+      
+      topGeometry : 0 ;
     
     ///
     if( 0 == giLocal )
@@ -139,7 +140,7 @@ unsigned long TransportSvc::intersections
     m_prevPoint2           = point2              ; 
     m_previousThreshold    = threshold           ;
     m_previousGuess        = guessGeometry       ;
-    m_previousAlternative  = alternativeGeometry ;
+    m_previousTopGeometry  = topGeometry ;
     
     /// intersections 
     m_localIntersections.clear();
@@ -155,7 +156,7 @@ unsigned long TransportSvc::intersections
       m_prevPoint2           = Gaudi::XYZPoint() ; 
       m_previousThreshold    = -1000.0      ; 
       m_previousGuess        = 0            ; 
-      m_previousAlternative  = 0            ;
+      m_previousTopGeometry  = 0            ;
       m_localIntersections.clear()          ; 
       
       ///  2) throw new exception:
@@ -168,7 +169,7 @@ unsigned long TransportSvc::intersections
             << ",Tick=" << tickMin << "/" << tickMax  
             << "Thrsh=" << threshold; 
         if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
-        if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
+        if( 0 != guessGeometry ) { ost << "G.Geo!=NULL" ; }  
         message += ost.str();             
         Assert( false , message , Exception );
       }
@@ -180,7 +181,7 @@ unsigned long TransportSvc::intersections
       m_prevPoint2           = Gaudi::XYZPoint() ; 
       m_previousThreshold    = -1000.0      ; 
       m_previousGuess        = 0            ; 
-      m_previousAlternative  = 0            ;
+      m_previousTopGeometry  = 0            ;
       m_localIntersections.clear()          ; 
       
       /// 2) throw new exception:
@@ -193,7 +194,7 @@ unsigned long TransportSvc::intersections
             << ",Tick=" << tickMin << "/" << tickMax  
             << "Thrsh=" << threshold; 
         if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
-        if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
+        if( 0 != guessGeometry ) { ost << "G.Geo!=NULL" ; }  
         message += ost.str();             
         Assert( false , message );
       }

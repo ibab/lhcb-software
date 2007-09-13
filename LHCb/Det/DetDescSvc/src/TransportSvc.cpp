@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.4 2007-03-19 15:15:32 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.5 2007-09-13 14:19:16 wouter Exp $
 // ============================================================================
 
 /// from GaudiKernel 
@@ -50,7 +50,7 @@ TransportSvc::TransportSvc
   , m_prevPoint2                  (                       ) 
   , m_previousThreshold           (        -10000         ) 
   , m_previousGuess               (          0            ) 
-  , m_previousAlternative         (          0            ) 
+  , m_previousTopGeometry         (          0            ) 
   , m_localIntersections          (                       )
   ///
   , m_local_intersects            (                       )
