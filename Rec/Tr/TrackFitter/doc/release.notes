@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-13 M Needham
+ - stable sort the nodes rather than sort (ensure order is always same) 
+
 ! 2007-09-05 - Wouter Hulsbergen
  - revision of verbose/debug output
  - fixed bug in code committed yesterday that lead to run-time exception for failed track fits

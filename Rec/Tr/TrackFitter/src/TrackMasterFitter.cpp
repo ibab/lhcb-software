@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.34 2007-09-05 14:19:24 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.35 2007-09-13 07:33:49 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -548,9 +548,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
 
   // Sort the nodes in z
   if ( m_upstream ) {
-    std::sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
+    stable_std::sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
   } else {
-    std::sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
+    stable_std::sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
   }
 
   return StatusCode::SUCCESS;
