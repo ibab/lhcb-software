@@ -1,122 +1,117 @@
-// $Id: TrackBuildCloneTable.cpp,v 1.1 2007-08-27 14:52:33 mneedham Exp $
-
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
-
-// track interfaces
-#include "Event/Track.h"
-#include "Event/State.h"
-#include "Event/TrackUnitsConverters.h"
-
-// from Event/LinkerEvent
-#include "Linker/LinkerWithKey.h"
- 
-#include "LHCbMath/MatrixUtils.h"
+// $Id: TrackBuildCloneTable.cpp,v 1.2 2007-09-14 13:03:41 jonrob Exp $
 
 #include "TrackBuildCloneTable.h"
-
-#include "TrackInterfaces/ITrackExtrapolator.h"
 
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( TrackBuildCloneTable );
 
 TrackBuildCloneTable::TrackBuildCloneTable(const std::string& name,
-                       ISvcLocator* pSvcLocator):
+                                           ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator)
 {
- 
- declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
- declareProperty("outputLocation", m_outputLocation = TrackLocation::Default+"Clones");
- declareProperty("klCut", m_klCut = 5000);
- declareProperty("zState", m_zState = 0.0);
- declareProperty("maxDz", m_maxDz = 2.0*Gaudi::Units::m);
+
+  declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
+  declareProperty("outputLocation", m_outputLocation = TrackLocation::Default+"Clones");
+  declareProperty("klCut", m_klCut = 5000);
+  declareProperty("zState", m_zState = 0.0);
+  declareProperty("maxDz", m_maxDz = 2.0*Gaudi::Units::m);
+  declareProperty("ExtrapolatorType", m_extraType = "TrackHerabExtrapolator" );
 
 }
 
-TrackBuildCloneTable::~TrackBuildCloneTable()
+TrackBuildCloneTable::~TrackBuildCloneTable() { }
+
+StatusCode TrackBuildCloneTable::initialize()
 {
-  // destructor
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if (sc.isFailure()) { return Error("Failed to initialize",sc); }
+
+  m_extrapolator = tool<ITrackExtrapolator>(m_extraType);
+
+  info() << "Will build clone table for z=" << m_zState 
+         << "mm at '" << m_outputLocation << "'" << endreq;
+  info() << "Max Kullbeck Liebler Distance = " << m_klCut << endreq;
+
+  return sc;
 }
 
-StatusCode TrackBuildCloneTable::initialize() {
-  
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-     return Error("Failed to initialize");
-  }
+StatusCode TrackBuildCloneTable::execute()
+{
 
-  m_extrapolator = tool<ITrackExtrapolator>("TrackHerabExtrapolator");
-  return StatusCode::SUCCESS;
-}
-
-StatusCode TrackBuildCloneTable::execute(){
-
+  // Tracks
   const Tracks* inCont = get<Tracks>(m_inputLocation);
 
+  // new linker to store results
   LinkerWithKey<Track,Track> myLink( eventSvc(), msgSvc(), m_outputLocation);
 
   // working objects ---> invert the covariance matrix only once...
-  CloneTracks tracks; tracks.reserve(inCont->size());
-  for (Tracks::const_iterator iterT = inCont->begin(); 
-       iterT != inCont->end(); ++iterT){
-    State tmpState = (*iterT)->closestState(m_zState);
-    
+  CloneTrack::Vector tracks;
+  tracks.reserve(inCont->size());
+  for ( Tracks::const_iterator iterT = inCont->begin();
+        iterT != inCont->end(); ++iterT )
+  {
+
+    // get state closest to reference z pos
+    const State & closestState = (*iterT)->closestState(m_zState);
+
     // only take ones that are close in z
-    if (fabs(tmpState.z() - m_zState) > m_maxDz ) continue ;
+    if ( fabs(closestState.z() - m_zState) > m_maxDz ) continue ;
 
-    //extrapolate
-    StatusCode sc = m_extrapolator->propagate(tmpState, m_zState);
-    if (sc.isFailure() ) continue;
+    // clone state
+    State tmpState = closestState;
 
-    // build object
-    CloneTrack aTrack; aTrack.track = *iterT;
-    aTrack.state = tmpState;
-    Gaudi::TrackSymMatrix G1 = aTrack.state.covariance();
-    invert(G1);
-    aTrack.invCov = G1;
+    // extrapolate to desired z pos
+    const StatusCode sc = m_extrapolator->propagate(tmpState, m_zState);
+    if (sc.isFailure()) continue;
 
-    tracks.push_back(aTrack);
+    // make new object, directly in the vector
+    tracks.push_back( CloneTrack(tmpState,*iterT) );
+
   } // inCont
- 
-  // loop over the working objects 
-  for (CloneTracks::const_iterator iterC1 = tracks.begin(); 
-       iterC1 != tracks.end(); ++iterC1){
-    for (CloneTracks::const_iterator iterC2 = tracks.begin(); 
-      iterC2 != tracks.end(); ++iterC2){
-      if (iterC1->track != iterC2->track) {
-        double dist = kullbeckLieblerDist(*iterC1,*iterC2);
-        if (dist < m_klCut){
-          myLink.link(iterC1->track,iterC2->track, dist );
-	}
+
+  // loop over the working objects
+  for ( CloneTrack::Vector::const_iterator iterC1 = tracks.begin();
+        iterC1 != tracks.end(); ++iterC1 )
+  {
+    // KL dist is symmetric between tracks, so only compute for each pair once
+    CloneTrack::Vector::const_iterator iterC2 = iterC1;
+    ++iterC2;
+    for ( ; iterC2 != tracks.end(); ++iterC2 )
+    {
+      const double dist = kullbeckLieblerDist(*iterC1,*iterC2);
+      if (dist < m_klCut)
+      {
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << "Possible clones Track1 : key = " << iterC1->track->key()
+                  << " history = " << iterC1->track->history() << endreq;
+          debug() << "                Track2 : key = " << iterC2->track->key()
+                  << " history = " << iterC2->track->history() << endreq;
+          debug() << "                       : KL distance = " << dist << endreq;
+        }
+        // fill twice, for each way around for the track pair
+        myLink.link( iterC1->track, iterC2->track, dist );
+        myLink.link( iterC2->track, iterC1->track, dist );
       }
     } // iterC2
   } // iterC1
 
   return StatusCode::SUCCESS;
-};
+}
 
 double TrackBuildCloneTable::kullbeckLieblerDist(const CloneTrack& track1,
-                                                 const CloneTrack& track2) const{
-
-  const Gaudi::TrackVector diffVec = track1.state.stateVector()  
-                               - track2.state.stateVector(); 
-  const Gaudi::TrackSymMatrix diffCov = track1.state.covariance() 
-                               - track2.state.covariance();
+                                                 const CloneTrack& track2) const
+{
+  const Gaudi::TrackVector diffVec    
+    = track1.state.stateVector() - track2.state.stateVector();
+  const Gaudi::TrackSymMatrix diffCov 
+    = track1.state.covariance()  - track2.state.covariance();
 
   const Gaudi::TrackSymMatrix invDiff = track2.invCov - track1.invCov;
   const Gaudi::TrackSymMatrix invSum = track2.invCov + track1.invCov;
   const Gaudi::TrackMatrix diff = diffCov * invDiff;
-  
+
   // trace
   return Gaudi::Math::trace(diff) + Similarity(invSum,diffVec);
 }
-
-bool TrackBuildCloneTable::invert(Gaudi::TrackSymMatrix& m) const{
-
-  TrackUnitsConverters::convertToG3( m );
-  bool OK = m.Invert();
-  TrackUnitsConverters::convertToG4( m );
-  return OK;
-} 

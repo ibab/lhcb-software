@@ -1,55 +1,84 @@
-// $Id: TrackCloneCleaner.h,v 1.1 2007-08-27 14:52:33 mneedham Exp $
+// $Id: TrackCloneCleaner.h,v 1.2 2007-09-14 13:03:41 jonrob Exp $
 #ifndef _TrackCloneCleaner_H_
 #define _TrackCloneCleaner_H_
-
-/** @class TrackCloneCleaner TrackCloneCleaner.h
- *
- *  Clean out tracks with some criteria from the container
- *
- *  @author M.Needham
- *  @date   30/05/2006
- */
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include <string>
 #include <vector>
 
-namespace LHCb{
-  class Track;
-}
+#include "Event/Track.h"
 
-class TrackCloneCleaner: public GaudiAlgorithm {
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+// from Event/LinkerEvent
+#include "Linker/LinkedFrom.h"
+
+/** @class TrackCloneCleaner TrackCloneCleaner.h
+ *
+ *  Clean out clone tracks, using information from the Clone linker table
+ *
+ *  @author M.Needham
+ *  @date   30/05/2006
+ */
+class TrackCloneCleaner: public GaudiAlgorithm
+{
 
 public:
 
   // Constructors and destructor
   TrackCloneCleaner(const std::string& name,
-              ISvcLocator* pSvcLocator);
+                    ISvcLocator* pSvcLocator);
+
+  /// Destructor
   virtual ~TrackCloneCleaner();
 
+  /// Initialise
+  virtual StatusCode initialize();
+
+  /// Execute
   virtual StatusCode execute();
 
 private:
 
-  class WorkingTrack{
-    public:
-      WorkingTrack(){}    
-      LHCb::Track* track;
-      bool clone;
-      double chi2() const {return track->chi2PerDoF();}
-      double nMeas() const {return track->nMeasurements();}
-      bool sameTrack(const LHCb::Track* aTrack) const {return track == aTrack;}
+  /** @class WorkingTrack TrackCloneCleaner.h
+   *
+   *  Working track object for TrackCloneCleaner algorithm
+   *
+   *  @author M.Needham
+   *  @date   30/05/2006
+   */
+  class WorkingTrack
+  {
+  public:
+    WorkingTrack() : track(NULL), clone(false) {}
+    WorkingTrack( LHCb::Track* _track, const bool _clone = false )
+      : track(_track), clone(_clone) {}
+    // Access track Chi^2
+    inline double chi2() const  { return track->chi2PerDoF(); }
+    /// Access number of LHCbIDs
+    inline double nLHCbIDs() const { return track->nLHCbIDs(); }
+    /// Compare to see if its the same track
+    inline bool sameTrack(const LHCb::Track* aTrack) const { return track == aTrack; }
+    /// Return the track type ranking
+    int trackTypeRank() const;
+  public:
+    LHCb::Track* track; ///< Pointer to the track object
+    bool clone;         ///< Clone flag
+  public:
+    typedef std::vector<WorkingTrack> Vector;
   };
 
-  typedef std::vector<WorkingTrack> WorkingTracks;
+private:
 
-  void tagClone(WorkingTracks& tracks, 
-		const LHCb::Track* aTrack) const;
+  std::string m_inputLocation;  ///< Locations of Tracks in TES
+  std::string m_linkerLocation; ///< Location of Clone linker in TES
+  double m_cloneCut;            ///< Clone cut value
 
-  std::string m_inputLocation;
-  std::string m_outputLocation;
-  std::string m_linkerLocation;
+  std::string m_cloneTagTES;    ///< tag to add to tracks identified as rejected clones
+  LHCb::Track::AdditionalInfo m_cloneTag;
 
 };
 

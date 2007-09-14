@@ -4,6 +4,12 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - Chris Jones
+ - Clean up TrackBuildClone table a little for speed
+ - Update TrackCloneCleaner to instead of creating a new 'cleaned' track
+   container, simply flag those tracks in the original container that are
+   likely clone candidates
+
 ! 2007-09-11 M Needham
  - Add algorithm that adds likelihood to the track
 
