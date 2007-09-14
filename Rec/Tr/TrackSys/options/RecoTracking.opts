@@ -110,3 +110,8 @@ CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
 
 // Set of standard fitting options
 #include "$TRACKSYSROOT/options/Fitting.opts"
+
+// Clone finding and flagging
+RecoTrSeq.Members += { "GaudiSequencer/TrackClonesSeq" };
+TrackClonesSeq.MeasureTime = true;
+#include "$TRACKSYSROOT/options/TrackClones.opts"

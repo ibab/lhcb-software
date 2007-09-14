@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - Chris Jones
+ - Add options to run a new sequence at the end of the tracking, to find
+   and flag clones using the new KL distance algorithms
+
 ! 2007-09-13 M. Needham
  - Increase # of fit iterations to get better convergence
 
