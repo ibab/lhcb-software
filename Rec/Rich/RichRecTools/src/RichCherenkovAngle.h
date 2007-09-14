@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.13 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.14 2007-09-14 13:39:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -72,9 +72,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 

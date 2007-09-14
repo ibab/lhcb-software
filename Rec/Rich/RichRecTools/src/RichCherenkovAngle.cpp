@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.23 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.24 2007-09-14 13:39:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,7 +39,6 @@ CherenkovAngle::CherenkovAngle ( const std::string& type,
 
 StatusCode CherenkovAngle::initialize()
 {
-
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -69,12 +68,6 @@ StatusCode CherenkovAngle::initialize()
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
   return sc;
-}
-
-StatusCode CherenkovAngle::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 double
