@@ -1,4 +1,4 @@
-// $Id: SolidTicks.h,v 1.12 2007-01-17 12:10:24 cattanem Exp $ 
+// $Id: SolidTicks.h,v 1.13 2007-09-14 14:33:52 wouter Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTICKS_H
 #define     DETDESC_SOLIDTICKS_H 1 
@@ -206,6 +206,36 @@ namespace SolidTicks
           { ticks.push_back  (                 tickMax ) ; }
       }
     // adjancent are already removed 
+    return ticks.size () ;
+  };
+  
+  /** Remove or adjust intervals such that they overlap with tick range
+   *  Assume that "ticks" are already sorted, come in pairs and 
+   *  that adjancent ticks are removed.
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
+   *  @see ISolid 
+   *  @param ticks   container of "ticks" (sorted and in pairs) 
+   *  @param tickMin minimal value of tick 
+   *  @param tickMax maximal value of tick 
+   *  @return number of ticks 
+   */
+  inline unsigned int
+  adjustToTickRange( ISolid::Ticks & ticks, const ISolid::Tick & tickMin, const ISolid::Tick & tickMax ) 
+  {
+    // useful local typedefs 
+    typedef ISolid::Tick            Tick     ; 
+    typedef ISolid::Ticks::iterator iterator ;
+    if( !ticks.empty() ) {
+      static ISolid::Ticks validticks ; validticks.clear() ;
+      // explicitely use that ticks come in pairs
+      for( ISolid::Ticks::iterator it = ticks.begin() ; it+1 < ticks.end(); it +=2) 
+	if( *it <= tickMax && *(it+1) >= tickMin ) {
+	  validticks.push_back( std::max( tickMin, *it) ) ;
+	  validticks.push_back( std::min( tickMax, *(it+1)) ) ;
+	}
+      ticks.swap(validticks) ;
+    }
     return ticks.size () ;
   };
   
