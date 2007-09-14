@@ -1,4 +1,4 @@
-// $Id: PatVeloHit.h,v 1.3 2007-09-11 16:25:53 krinnert Exp $
+// $Id: PatVeloHit.h,v 1.4 2007-09-14 13:20:29 dhcroft Exp $
 #ifndef INCLUDE_TF_PATVELOHIT_H
 #define INCLUDE_TF_PATVELOHIT_H 1
 
@@ -32,6 +32,7 @@ namespace Tf {
 
         typedef std::vector<PatVeloHit* > container_type; 
         typedef LoKi::Range_<container_type> range_type;
+        typedef typename HIT::hit_type_tag    hit_type_tag;
 
       public:
 
@@ -53,8 +54,15 @@ namespace Tf {
         /// access to sensor pointer
         const SENSORTYPE* sensor() const { return this->hit()->sensor(); } 
 
-        /// access to sensor number
-        unsigned int sensorNumber() const { return this->hit()->sensor()->sensorNumber(); } 
+        /// access to sensor number of hit
+        unsigned int sensorNumber() const { 
+	  return this->hit()->channelID().sensor(); 
+	} 
+
+        /// access to strip number of hit
+        unsigned int stripNumber() const { 
+	  return this->hit()->channelID().strip(); 
+	} 
 
         /// shortcut access to the global zone
         unsigned int zone() const { return m_zone; }

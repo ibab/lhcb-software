@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.4 2007-09-10 17:38:02 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.5 2007-09-14 13:20:29 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -253,7 +253,7 @@ namespace Tf {
 
       std::pair<double,double> range;
       // check if extrapolated rz track is compatible with this phi sector
-      bool hasRange = phiRange( r, zone, m_phiAngularTol, station, phiZone, range);
+      bool hasRange = m_trackTool->phiRange( r, zone, m_phiAngularTol, station, phiZone, range);
 
       // Adjacent sectors applies only on 2nd and later sensors
       if ( m_adjacentSectors && nStationsTried > 1 ){
@@ -266,7 +266,7 @@ namespace Tf {
         if( newZone != -9 ){
           std::pair<double,double> newRange;
           bool oldHasRange = hasRange;
-          hasRange = phiRange( r, newZone, m_phiAngularTol, station, phiZone, newRange);
+          hasRange = m_trackTool->phiRange( r, newZone, m_phiAngularTol, station, phiZone, newRange);
           // if new zone check is OK
           if(hasRange){
             // if either bigger range or old zone check failed use new zone check
@@ -535,41 +535,4 @@ namespace Tf {
       }
     }
   }
-
-  /// compare the phi of a sector with the RZ track to see if compatible
-  bool PatVeloSpaceTool::phiRange( double radius, int RZone, double tol,
-      PatVeloPhiHitManager::Station* phiStation, unsigned int phiZone,
-      std::pair<double,double>& phiOverlap) {
-    // check if extrapolated rz track is compatible with this phi sector
-    // RZone is the R sensor zone of the RZ track
-
-    // tol is a tolerance parameter to allow for uncertainties
-    // the resulting overlap range, if any, is returned
-
-    // sector radius check
-    if ( phiStation->sensor()->halfboxRRange(phiZone).first  > radius ) return false;
-    if ( phiStation->sensor()->halfboxRRange(phiZone).second < radius ) return false;
-
-    // hits in this phi sector
-    if ( phiStation->empty(phiZone) ) return false;
-
-    // Determine which r sensor to use based on the r zone. 
-    // R zones from 4-7 are on the right hand side of the VELO.
-    const DeVeloPhiType* phiSensor = phiStation->sensor();
-    const DeVeloRType*   rSensor   = phiSensor->associatedRSensor();
-    // do we need to look at the other side?
-    if ((phiSensor->isLeft() && RZone > 3) || (phiSensor->isRight() && RZone < 4)) {
-      rSensor = phiSensor->otherSideRSensor();
-    }
-    // does this sensor exist?
-    if (!rSensor) return false;
-
-    // map to local zone
-    unsigned int localRZone = rSensor->isRight() ? RZone-4 : RZone;
-
-    // get the overlap, if any
-    return m_angleUtils.overlap(rSensor->halfboxPhiRange(localRZone),
-        phiSensor->halfboxPhiRange(phiZone),tol,phiOverlap);
-  }
-
 }

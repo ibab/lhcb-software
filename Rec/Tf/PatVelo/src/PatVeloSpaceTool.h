@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloSpaceTool.h,v 1.2 2007-09-14 13:20:29 dhcroft Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
 
@@ -70,11 +70,6 @@ namespace Tf {
 
       /// Merge phi lists sharing clusters
       void mergePhiLists( bool backward );
-
-      /// compare the phi of a sector with the RZ track to see if compatible
-      bool phiRange( double radius, int RZone, double tol,
-          PatVeloPhiHitManager::Station* phiStation, unsigned int phiZone,
-          std::pair<double,double>& phiOverlap);
 
     private:
       bool m_markClustersUsed; ///< Mark clusters as used if found as a 3D track

@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.2 2007-09-08 19:45:59 krinnert Exp $
+// $Id: PatVeloSpaceTracking.cpp,v 1.3 2007-09-14 13:20:29 dhcroft Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -100,8 +100,7 @@ namespace Tf {
       put(m_outputTracks, m_outputTracksLocation );
     }
     m_outputTracks->reserve(500);
-                                                             
-                                                             
+
     if( msgLevel( MSG::VERBOSE ) ){
       info() <<"Retrieved " << m_inputTracks->size()
         << " tracks from " << m_inputTracksLocation << endreq;
@@ -128,7 +127,7 @@ namespace Tf {
         std::vector<LHCb::Track*>::iterator iOut;
         for( iOut = output.begin() ; iOut != output.end() ; ++iOut ){
           delete *iOut; // remove track
-        }  	
+        }
         return sc;
       }
     }
@@ -136,11 +135,11 @@ namespace Tf {
     std::vector<LHCb::Track*>::iterator iOut;
     for( iOut = output.begin() ; iOut != output.end() ; ++iOut ){
       m_outputTracks->insert(*iOut);
-    }  
+    }
 
     if ( isDebug ) debug() << "Found " <<output.size()
-        << " new 3D VELO tracks, in total " 
-        << m_outputTracks->size() << " in " 
+        << " new 3D VELO tracks, in total "
+        << m_outputTracks->size() << " in "
         << m_outputTracksLocation
         << endreq;
 

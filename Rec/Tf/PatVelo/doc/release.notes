@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - David Hutchcroft
+ - Added a converted version of PatVeloGeneralTracking in new Tf framework
+ - Remove R clusters from cut outs on space tracks
+
 ! 2007-09-11 - Kurt Rinnert
  - added convenience wrapper for sensor number access to PatVeloHit
  - added port of PatGenericFitter, as of now untested (and unused)
