@@ -1,4 +1,4 @@
-// $Id: Material.cpp,v 1.6 2006-05-17 16:02:39 cattanem Exp $ 
+// $Id: Material.cpp,v 1.7 2007-09-14 15:40:31 wouter Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -11,7 +11,7 @@
 using namespace Gaudi::Units;
 
 //////////////////////
-Material::Material( const std::string& /* name */  , 
+Material::Material( const std::string& name        , 
                     const double       dens        , 
                     const double       rl          , 
                     const double       al          ,
@@ -19,7 +19,7 @@ Material::Material( const std::string& /* name */  ,
                     const double       press       , 
                     const eState       s           )
   : DataObject          ( )
-  , m_name              ( ""         )
+  , m_name              ( name       )
   , m_density           ( dens       )
   , m_radiationLength   ( rl         )
   , m_absorptionLength  ( al         )
