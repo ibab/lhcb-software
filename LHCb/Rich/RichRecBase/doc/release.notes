@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - Chris Jones
+ - Make another method in the pixel creator base class virtual, to allow it
+  to be reimplemented in derived tools.
+
 ! 2007-09-04 - Chris Jones
  - Update to use Mem pool allocator class from LHCbKernel
 
