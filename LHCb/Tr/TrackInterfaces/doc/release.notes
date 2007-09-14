@@ -4,6 +4,8 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-09-13 M. Needham
+ - Update IHitExpectation interface
 
 ! 2007-09-11 M Needham
  - Add IHitExpectation interface
