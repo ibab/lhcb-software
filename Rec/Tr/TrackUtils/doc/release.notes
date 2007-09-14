@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - Louis Nicolas
+ - new algorithm TrackRemoveDoubleITHits: when two hits are found in the same IT
+	 ladder, remove both lhcbIDs from the track's lhcbIDs. Probably useful for
+	 alignment.
+
 ! 2007-09-14 - Chris Jones
  - Clean up TrackBuildClone table a little for speed
  - Update TrackCloneCleaner to instead of creating a new 'cleaned' track
