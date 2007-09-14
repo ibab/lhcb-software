@@ -4,6 +4,8 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2007-09-14 M Needham
+ - Update hit expectation tools
 
 ! 2007-09-11 M Needham
  - Add hit expectation tools

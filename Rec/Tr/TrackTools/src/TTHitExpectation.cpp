@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.1 2007-09-11 14:41:25 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -71,6 +71,7 @@ IHitExpectation::Info TTHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   IHitExpectation::Info info;
   info.likelihood = 0.0;
+  info.nFound = 0;
   info.nExpected = nExpected(aTrack);
   return info;
 }

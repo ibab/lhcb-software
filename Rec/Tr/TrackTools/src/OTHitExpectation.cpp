@@ -1,4 +1,4 @@
-// $Id: OTHitExpectation.cpp,v 1.1 2007-09-11 14:40:50 mneedham Exp $
+// $Id: OTHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -86,7 +86,9 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   IHitExpectation::Info info;
   info.nExpected = 0;
+  info.nFound = 0;
   info.likelihood = 0.0;
+
 
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
 
@@ -120,12 +122,12 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
 
     for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
 
-      std::vector<LHCbID>::const_iterator lIter = ids.begin();
-      while (lIter != ids.end() && lIter->otID().geometry() != iter->first.geometry()) ++lIter; 
+      std::vector<LHCbID>::const_iterator lIter = otHits.begin();
+      while (lIter != otHits.end() && lIter->otID().geometry() != iter->first.geometry()) ++lIter; 
  
       ++(info.nExpected);
-      if (lIter != ids.end() ) {
-        // do nothing
+      if (lIter != otHits.end() ) {
+        ++(info.nFound);
       }
       else {
         info.likelihood += log( m_likPar[0] + exp( m_likPar[1] * fabs(iter->second) - m_likPar[2] ) );
@@ -139,9 +141,6 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
 unsigned int OTHitExpectation::nExpected(const LHCb::Track& aTrack) const{
 
   IHitExpectation::Info info = expectation(aTrack);
-  info.nExpected = 0;
-  info.likelihood = 0;
-
   return info.nExpected;
 }
 

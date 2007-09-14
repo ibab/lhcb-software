@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.cpp,v 1.1 2007-09-11 14:40:48 mneedham Exp $
+// $Id: ITHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -79,19 +79,12 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   IHitExpectation::Info info;
   info.likelihood = 0.0;
-  info.nExpected = nExpected(aTrack);
-  return info;
-}
-
-
-unsigned int ITHitExpectation::nExpected(const LHCb::Track& aTrack) const{
-
+  info.nFound = 0;
+  info.nExpected  = 0;
 
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
   std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
   LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
-
-  unsigned int nExpected = 0u;
 
   Tsa::Parabola aParab(0.,0.,0.);
   Tsa::Line aLine(0.,0.);
@@ -104,10 +97,8 @@ unsigned int ITHitExpectation::nExpected(const LHCb::Track& aTrack) const{
 
 
     STChannelID chan = (*iterL)->elementID();
-    //    if (chan.station() != iStation){
     aParab = xParabola(aTrack,(*iterL)->globalCentre().z());
     aLine = yLine(aTrack,(*iterL)->globalCentre().z());
-      // }      
 
     typedef std::vector<IITExpectedHits::ITPair> ITPairs;
     ITPairs output;
@@ -133,11 +124,21 @@ unsigned int ITHitExpectation::nExpected(const LHCb::Track& aTrack) const{
     for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter ){ 
       if ( int(iter->second) != old) {
         old = int(iter->second);
-        ++nExpected;
+        ++(info.nExpected);
+        std::vector<LHCb::LHCbID>::iterator itIter = std::find(itHits.begin(), itHits.end(), iter->first); 
+        if (itIter != itHits.end() ) ++(info.nFound);
       }
-    }        
+    }  // pairs      
   } //layer
   
-  return nExpected;
+
+  return info;
+}
+
+
+unsigned int ITHitExpectation::nExpected(const LHCb::Track& aTrack) const{
+
+  return expectation(aTrack).nExpected;
+
 }  
 
