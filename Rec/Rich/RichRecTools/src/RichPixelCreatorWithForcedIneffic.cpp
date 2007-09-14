@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.4 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.5 2007-09-14 13:39:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -49,10 +49,14 @@ StatusCode PixelCreatorWithForcedIneffic::initialize()
     return Error( "Unable to create Random generator" );
   }
 
-  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::top]    << "% of RICH1 top-panel pixels" << endreq;
-  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::bottom] << "% of RICH1 bottom-panel pixels" << endreq;
-  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::left]   << "% of RICH2 left-panel pixels" << endreq;
-  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::right]  << "% of RICH2 right-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::top]    
+         << "% of RICH1 top-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::bottom] 
+         << "% of RICH1 bottom-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::left]   
+         << "% of RICH2 left-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::right]  
+         << "% of RICH2 right-panel pixels" << endreq;
 
   return sc;
 }
@@ -71,4 +75,12 @@ PixelCreatorWithForcedIneffic::buildPixel( const Rich::HPDPixelCluster& cluster 
   const double rF = m_rejFrac[cluster.rich()][cluster.panel().panel()];
   return ( 0 < rF && m_rndm() < rF ?
            NULL : PixelCreatorFromRawBuffer::buildPixel(cluster) );
+}
+
+LHCb::RichRecPixel *
+PixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID & id ) const
+{
+  const double rF = m_rejFrac[id.rich()][id.panel()];
+  return ( 0 < rF && m_rndm() < rF ?
+           NULL : PixelCreatorFromRawBuffer::buildPixel(id) );
 }

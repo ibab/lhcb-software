@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.4 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.5 2007-09-14 13:39:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -62,8 +62,11 @@ namespace Rich
 
     protected: // methods
 
-      /// Build a new RichRecPixel
+      /// Build a new RichRecPixel from a Rich::HPDPixelCluster
       virtual LHCb::RichRecPixel * buildPixel ( const Rich::HPDPixelCluster& cluster ) const;
+
+      /// Build a new RichRecPixel a single LHCb::RichSmartID
+      virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID & id ) const;
 
     private:
 

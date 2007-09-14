@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.19 2007-08-13 12:44:22 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.20 2007-09-14 13:39:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,7 +35,8 @@ TrackCreatorFromRecoTracks( const std::string& type,
     m_trTracksLocation     ( LHCb::TrackLocation::Default   ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false )
+    m_buildHypoRings       ( false ),
+    m_cloneCut             ( Rich::NRiches )
 {
 
   // declare interface for this tool
@@ -51,6 +52,9 @@ TrackCreatorFromRecoTracks( const std::string& type,
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
+  m_cloneCut[Rich::Rich1] = 350;
+  m_cloneCut[Rich::Rich2] = 500;
+  declareProperty( "CloneCut",                 m_cloneCut           );
 
 }
 
@@ -61,21 +65,17 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichExpectedTrackSignal", m_signal      );
-  acquireTool( m_trSegToolNickName,       m_segMaker,    this );
+  acquireTool( "RichExpectedTrackSignal", m_signal         );
+  acquireTool( m_trSegToolNickName,       m_segMaker, this );
   if ( m_buildHypoRings )
   {
     acquireTool( "RichMassHypoRings", m_massHypoRings );
     info() << "Will create Mass hypothesis rings for each track" << endreq;
   }
 
-  return sc;
-}
+  info() << "Clone cut (Rich1/Rich2) " << m_cloneCut << endreq;
 
-StatusCode TrackCreatorFromRecoTracks::finalize()
-{
-  // Execute base class method
-  return TrackCreatorBase::finalize();
+  return sc;
 }
 
 const StatusCode TrackCreatorFromRecoTracks::newTracks() const
@@ -206,6 +206,23 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endreq;
+
+        const Rich::DetectorType rich = (*iSeg)->rich();
+
+        // check for clone flags
+        if ( ( rich == Rich::Rich1 && 
+               trTrack->info(LHCb::Track::Rich1Clone,1e99)<m_cloneCut[rich] ) ||
+             ( rich == Rich::Rich2 &&
+               trTrack->info(LHCb::Track::Rich2Clone,1e99)<m_cloneCut[rich] ) )
+        {
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << "   -> " << (*iSeg)->radiator() 
+                      << " TrackSegment rejected due to Clone information" << endreq;
+          }
+          delete *iSeg;
+          continue;
+        }
 
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* *iSeg - responsible for deletion

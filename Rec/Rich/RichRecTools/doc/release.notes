@@ -4,6 +4,12 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-09-14 - Chris Jones
+ - Add new tool to randomly reject a given fraction of tracks
+   (RichTrackCreatorFromRecoTracksWithForcedIneffic). Useful to study RICH 
+   performance as a function of tracking efficiency.
+ - Update Track Creator to use clone information
+
 ! 2007-09-04 - Chris Jones
  - Minor speed improvements to photon signal and sellmeir tools
 

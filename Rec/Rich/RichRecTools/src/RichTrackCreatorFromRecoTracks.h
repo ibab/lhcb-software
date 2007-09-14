@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.7 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.8 2007-09-14 13:39:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,9 +44,6 @@ namespace Rich
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
-     *
-     *  @todo Tidy up how the ray traced track HPD panel impact points are stored
-     *        in the RichRecSegment class
      */
     //-------------------------------------------------------------------------------------
 
@@ -65,9 +62,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 
@@ -116,6 +110,9 @@ namespace Rich
 
       /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
       bool m_buildHypoRings;
+
+      /// Clone cut for each Rich
+      std::vector<double> m_cloneCut;
 
     };
 
