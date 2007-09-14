@@ -141,6 +141,9 @@
         <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFit)"/>
         <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
+        <enumval name = "VertexClone"  value = "101" desc="Track is flagged as being a (rejected) clone of another track at z=0"/>
+        <enumval name = "Rich1Clone"   value = "102" desc="Track is flagged as being a (rejected) clone of another track in the Rich1 volume"/>
+        <enumval name = "Rich2Clone"   value = "103" desc="Track is flagged as being a (rejected) clone of another track in the Rich2 volume"/>
        </enum>
 
    <typedef
