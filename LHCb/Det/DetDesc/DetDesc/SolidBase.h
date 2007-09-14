@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.16 2007-09-14 14:35:25 wouter Exp $
+// $Id: SolidBase.h,v 1.17 2007-09-14 15:28:17 wouter Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -223,12 +223,20 @@ protected:
   template <class aPoint>
   inline bool isOutBSphere   
   ( const aPoint& point         ,
-    const double      tolerance = 0 ) const 
+    const double      tolerance ) const 
   {
-    if( 0 == tolerance ) 
-      { return  point.mag2 () > rMax () * rMax () ? true : false ; }
     const  double rmax = rMax()  + tolerance ;
-    return rmax <= 0 ? true : point.mag2() > rmax * rmax ;
+    return rmax <= 0 || point.mag2() > rmax * rmax ;
+  };
+  
+  /** Fast check if the point is outside the bounding sphere of the solid
+   *  @param point point to be checked  
+   *  @return true of point is outside the bounding sphere 
+   */
+  template <class aPoint>
+  inline bool isOutBSphere ( const aPoint& point  ) const 
+  {
+    return  point.mag2 () > rMax () * rMax () ;
   };
   
   /** Fast check if the point is outside the bounding cylinder 
@@ -240,20 +248,27 @@ protected:
   template <class aPoint>
   inline bool isOutBCylinder 
   ( const aPoint& point         , 
-    const double      tolerance = 0 ) const 
+    const double      tolerance ) const 
   {
-    if( 0 != tolerance ) 
-      {
-        const double rhomax = rhoMax() + tolerance ;
-        return rhomax <= 0 ? true : 
-          point.z     () < zMin   () - tolerance ? true :
-          point.z     () > zMax   () + tolerance ? true :
-          point.perp2 () > rhomax * rhomax       ? true : false ;
-      };
+    const double rhomax = rhoMax() + tolerance ;
+    return rhomax <= 0 ? true : 
+      point.z     () < zMin   () - tolerance ? true :
+      point.z     () > zMax   () + tolerance ? true :
+      point.perp2 () > rhomax * rhomax       ? true : false ;
+  };
+  
+  /** Fast check if the point is outside the bounding cylinder 
+   *  of the solid
+   *  @param point point to be checked 
+   *  @return true of point is outside the bounding cylinder 
+   */
+  template <class aPoint>
+  inline bool isOutBCylinder ( const aPoint& point ) const 
+  {
     return 
-      point.z     () < zMin   ()             ? true :
-      point.z     () > zMax   ()             ? true :
-      point.perp2 () > rhoMax () * rhoMax () ? true : false ;
+      point.z     () < zMin   () ||
+      point.z     () > zMax   () ||
+      point.perp2 () > rhoMax () * rhoMax () ;
   };
   
   /** Fast check if the segment of the line between two points 
