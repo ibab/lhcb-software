@@ -20,6 +20,7 @@ use   LinkerEvent        v*    Event
 use   TrackEvent         v*    Event
 use   TrackInterfaces    v*    Tr
 use   LHCbMath           v*    Kernel
+use   STDet              v*    Det
 
 include_path      none
 #============================================================================
