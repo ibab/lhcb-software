@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.327 2007-09-12 15:18:13 jpalac Exp $ 
+! $Id: release.notes,v 1.328 2007-09-14 15:42:11 wouter Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-09-14 - Wouter Hulsbergen
+  - modifications to SolidBox and SolidTubs to speed things up
 
 ! 2007-09-12 - Juan Palacios
   - cmt/requirements
@@ -35,6 +38,7 @@
    . Clarify signature and doxygen documentation localDeltaFromGlobalTransform
      methods.
 
+>>>>>>> 1.327
 !====================== DetDesc v17r5 2007-07-11 ==============================
 ! 2007-07-11 - Juan PALACIOS
  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
