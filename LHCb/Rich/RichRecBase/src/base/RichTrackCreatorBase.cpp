@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.13 2007-08-13 12:41:32 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.14 2007-09-14 13:36:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -73,7 +73,7 @@ namespace Rich
 
       // tools
       acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
-      acquireTool( "RichRayTracing",          m_rayTrace     );
+      acquireTool( "RichRayTracing",  m_rayTrace             );
       acquireTool( "TrackSelector", m_trSelector, this       );
 
       // Setup incident services
