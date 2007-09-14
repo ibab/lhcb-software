@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidBox.cpp,v 1.19 2007-09-14 15:41:02 wouter Exp $ 
 // ===========================================================================
 // DetDesc 
 #include "DetDesc/DetDesc.h" 
@@ -115,115 +115,80 @@ unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
 {
   return intersectionTicksImpl(point, vect, ticks);
 };
+
+// ============================================================================
+inline bool inrange( const double x, const double xmin, const double xmax) {
+  // local helper function. is there a gsl/std solution for this?
+  return xmin <= x && x <= xmax ; 
+}
 // ============================================================================
 template<class aPoint, class aVector>
 unsigned int SolidBox::intersectionTicksImpl( const aPoint & point  ,
                                               const aVector& vect   ,
                                               ISolid::Ticks& ticks  ) const
 {  
-
   ///
-  ticks.clear();
-
-  unsigned int nTicks = ticks.size();
+  ticks.clear() ;
   Tick tick = 0;
-
+  // use temporary static array, because push_backs are slow
+  double theticks[6] ;
+  int ntick(0u) ;
+  
   // find intersection ticks with z-planes
   if ( vect.z() != 0 ) {
-    tick = ( zHalfLength() - point.z() ) / vect.z() ;
-
-    aPoint intersect = point + tick*vect;
-    if( intersect.x() > xMin() && intersect.x() < xMax() &&
-        intersect.y() > yMin() && intersect.y() < yMax() )
-      ticks.push_back( tick );
-
-    tick = ( -1.0*zHalfLength() - point.z() ) / vect.z() ;
-    intersect = point + tick*vect;
-    if( intersect.x() > xMin() && intersect.x() < xMax() &&
-        intersect.y() > yMin() && intersect.y() < yMax() )
-      ticks.push_back( tick );
-
+    tick = ( -zHalfLength() - point.z() ) / vect.z() ;
+    if( inrange( point.x() + tick* vect.x(), xMin(), xMax() ) &&
+	inrange( point.y() + tick* vect.y(), yMin(), yMax() ) )
+      theticks[ntick++] = tick ;
+    tick = (  zHalfLength() - point.z() ) / vect.z() ;
+    if( inrange( point.x() + tick* vect.x(), xMin(), xMax() ) &&
+	inrange( point.y() + tick* vect.y(), yMin(), yMax() ) )
+      theticks[ntick++] = tick ;
   }
-  if ( ticks.size() - nTicks == 2 ) {
-    std::sort( ticks.begin() , ticks.end() ) ;
-    return 2u;
+  
+  if( ntick != 2) {
+    // find intersection ticks with x-planes
+    if ( vect.x() != 0 ) {
+      tick = ( -xHalfLength() - point.x() ) / vect.x() ;
+      if( inrange( point.z() + tick* vect.z(), zMin(), zMax() ) &&
+	  inrange( point.y() + tick* vect.y(), yMin(), yMax() ) )
+	theticks[ntick++] = tick ;
+      tick = (  xHalfLength() - point.x() ) / vect.x() ;
+      if( inrange( point.z() + tick* vect.z(), zMin(), zMax() ) &&
+	  inrange( point.y() + tick* vect.y(), yMin(), yMax() ) )
+	theticks[ntick++] = tick ;
+    }
+    
+    if( ntick != 2) {
+      // find intersection ticks with y-planes
+      if ( vect.y() != 0 ) {
+	tick = ( -yHalfLength() - point.y() ) / vect.y() ;
+	if( inrange( point.z() + tick* vect.z(), zMin(), zMax() ) &&
+	  inrange( point.x() + tick* vect.x(), xMin(), xMax() ) )
+	  theticks[ntick++] = tick ;
+	tick = (  yHalfLength() - point.y() ) / vect.y() ;
+	if( inrange( point.z() + tick* vect.z(), zMin(), zMax() ) &&
+	  inrange( point.x() + tick* vect.x(), xMin(), xMax() ) )
+	  theticks[ntick++] = tick ;
+      }
+    }
   }
-
-
-  // find intersection ticks with x-planes
-  if ( vect.x() != 0 ) {
-    tick = ( xHalfLength() - point.x() ) / vect.x() ;
-
-    aPoint intersect = point + tick*vect;
-    if( intersect.z() > zMin() && intersect.z() < zMax() &&
-        intersect.y() > yMin() && intersect.y() < yMax() )
-      ticks.push_back( tick );
-
-    if ( ticks.size() - nTicks == 2u ) {
-      std::sort( ticks.begin() , ticks.end() ) ;
-      return 2u;
+  
+  if(ntick==2) {
+    if( theticks[0] < theticks[1] ) {
+      ticks.push_back( theticks[0] ) ;
+      ticks.push_back( theticks[1] ) ;
+    } else {
+      ticks.push_back( theticks[1] ) ;
+      ticks.push_back( theticks[0] ) ;
     }
-
-    tick = ( -1.0*xHalfLength() - point.x() ) / vect.x() ;
-    intersect = point + tick*vect;
-    if( intersect.z() > zMin() && intersect.z() < zMax() &&
-        intersect.y() > yMin() && intersect.y() < yMax() )
-      ticks.push_back( tick );
-
-    if ( ticks.size() - nTicks == 2u ) {
-      std::sort( ticks.begin() , ticks.end() ) ;
-      return 2u;
-    }
-
+  } else {
+    ntick = 0 ;
   }
+  
+  return ntick;
+}
 
-  // find intersection ticks with y-planes
-  if ( vect.y() != 0 ) {
-    tick = ( yHalfLength() - point.y() ) / vect.y() ;
-
-    aPoint intersect = point + tick*vect;
-    if( intersect.x() > xMin() && intersect.x() < xMax() &&
-        intersect.z() > zMin() && intersect.z() < zMax() )
-      ticks.push_back( tick );
-
-    if ( ticks.size() - nTicks == 2 ) {
-      std::sort( ticks.begin() , ticks.end() ) ;
-      return 2u;
-    }
-
-    tick = ( -1.0*yHalfLength() - point.y() ) / vect.y() ;
-    intersect = point + tick*vect;
-    if( intersect.x() > xMin() && intersect.x() < xMax() &&
-        intersect.z() > zMin() && intersect.z() < zMax() )
-      ticks.push_back( tick );
-
-    if ( ticks.size() - nTicks == 2 ) {
-      std::sort( ticks.begin() , ticks.end() ) ;
-      return 2u;
-    }
-
-  }
- return 0u;
-
-  ///
-  // find intersection ticks with x-planes
- //  SolidTicks::LineIntersectsTheX( point , vect ,        xHalfLength() , 
- //                                  std::back_inserter( ticks ) ); 
- // SolidTicks::LineIntersectsTheX( point , vect , -1.0 * xHalfLength() , 
- //                                  std::back_inserter( ticks ) ); 
-  // find intersection ticks with y-planes
-// SolidTicks::LineIntersectsTheY( point , vect ,        yHalfLength() , 
-//                                 std::back_inserter( ticks ) ); 
-//  SolidTicks::LineIntersectsTheY( point , vect , -1.0 * yHalfLength() , 
-//                                  std::back_inserter( ticks ) ); 
-  // find intersection ticks with z-planes
-//  SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , 
-//                                  std::back_inserter( ticks ) ); 
-//  SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , 
-//                                  std::back_inserter( ticks ) ); 
-// sort and remove adjancent and some EXTRA ticks and return 
-//  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
-};
 /// ===========================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
@@ -252,10 +217,6 @@ bool SolidBox::isInside( const Gaudi::RhoZPhiPoint   & point ) const
 template <class aPoint>
 bool SolidBox::isInsideImpl( const aPoint& point ) const
 { 
-  /* if ( fabs( point.z() ) > zHalfLength() || 
-       fabs( point.x() ) > xHalfLength() ||
-       fabs( point.y() ) > yHalfLength() ) { return false; }
-       return true;*/
   return (fabs(point.z()) < zHalfLength() &&
           fabs(point.y()) < yHalfLength() && 
           fabs(point.x()) < xHalfLength()); 
@@ -316,17 +277,25 @@ unsigned int SolidBox::intersectionTicksImpl( const aPoint & Point,
                                               const Tick&    tickMin ,
                                               const Tick&    tickMax ,
                                               Ticks&         ticks   ) const  
-{
+{ 
   if( isOutBBox( Point , Vector  , tickMin , tickMax  ) ) { return 0 ; }
-  if( !crossBSphere( Point , Vector )                   ) { return 0 ; }
-  
-  //
-  return SolidBase::intersectionTicks ( Point   , 
-                                        Vector  ,
-                                        tickMin , 
-                                        tickMax ,
-                                        ticks   );
-};
+  unsigned int rc = SolidBox::intersectionTicksImpl( Point,Vector,ticks );
+  // we can optimize this because in a box there are at 0 or 2 ticks.
+  if( rc !=0 ) {
+    //assert( rc==2 ) ;
+    Tick& first  = ticks[0] ;
+    Tick& second = ticks[1] ;
+    if( first > tickMax || second < tickMin ) {
+      ticks.clear() ;
+      rc =0 ;
+    } else {
+      if( first < tickMin ) first = tickMin ;
+      if( second > tickMax) second = tickMax ;
+    }
+  }
+  return rc ;
+}
+
 // ============================================================================
 
 // ============================================================================

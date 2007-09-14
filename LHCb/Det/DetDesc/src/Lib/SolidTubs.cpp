@@ -1,4 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidTubs.cpp,v 1.19 2007-09-14 15:41:02 wouter Exp $ 
 // ============================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -355,45 +355,62 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
   /// line with null direction vector is not able to intersect any solid. 
   if( vect.mag2() == 0  )                 { return 0 ; } ///< RETURN!
   
-  if( !crossBCylinder( point , vect ) )   { return 0 ; }
+  // need to optimize these
   if( !crossBSphere  ( point , vect ) )   { return 0 ; }
+  if( !crossBCylinder( point , vect ) )   { return 0 ; }
   
-  // find intersection points ("ticks") with cylinder (outer radius) 
-  SolidTicks::LineIntersectsTheCylinder( point                       , 
-                                         vect                        ,
-                                         outerRadius()               , 
-                                         std::back_inserter( ticks ) ); 
-  // find intersection points("ticks") with cylinder (inner radius) 
+  // first the cylinders
+  static ISolid::Ticks tmpticks ; tmpticks.clear() ;
+  SolidTicks::LineIntersectsTheCylinder( point, vect,outerRadius(),std::back_inserter( tmpticks   ) ); 
   if( innerRadius() > 0 ) 
-    { SolidTicks::LineIntersectsTheCylinder( point                       , 
-                                             vect                        , 
-                                             innerRadius()               , 
-                                             std::back_inserter( ticks ) ); }
+    SolidTicks::LineIntersectsTheCylinder( point, vect, innerRadius(), std::back_inserter( tmpticks ) );
+  
+  // check that ticks are actually inside z-range and phi-range
+  for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it)
+    if( fabs(point.z() + *it * vect.z()) < zHalfLength() &&
+	(noPhiGap() ||
+	 insidePhi(atan2( point.y() + *it * vect.y(), point.x() + *it * vect.x())) ) )
+      ticks.push_back(*it) ;
+  
   // find intersection points("ticks") with z-planes 
-  SolidTicks::LineIntersectsTheZ( point , 
-                                  vect  , -1.0 * zHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  SolidTicks::LineIntersectsTheZ( point , 
-                                  vect ,        zHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  ///
-  if( 0   * Gaudi::Units::degree !=  startPhiAngle() || 
-      360 * Gaudi::Units::degree !=  deltaPhiAngle()   )
-    {
-      SolidTicks::LineIntersectsThePhi( point                       , 
-                                        vect                        , 
-                                        startPhiAngle()             , 
-                                        std::back_inserter( ticks ) );
-      SolidTicks::LineIntersectsThePhi( point                             , 
-                                        vect                              , 
-                                        startPhiAngle() + deltaPhiAngle() , 
-                                        std::back_inserter( ticks )       );
+  tmpticks.clear() ;
+  SolidTicks::LineIntersectsTheZ( point , vect  , -1.0 * zHalfLength() , std::back_inserter( tmpticks ) ); 
+  SolidTicks::LineIntersectsTheZ( point , vect ,         zHalfLength() , std::back_inserter( tmpticks ) );
+
+  // check that ticks are actually inside radial range and phi
+  for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
+    double x = point.x() + *it * vect.x() ;
+    double y = point.y() + *it * vect.y() ;
+    double r = sqrt(x*x+y*y) ;
+    if(innerRadius()<=r && r<=outerRadius() && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
+      ticks.push_back(*it) ;
+  }
+  
+  if(!noPhiGap()) {
+    tmpticks.clear() ;
+    SolidTicks::LineIntersectsThePhi( point                       , 
+				      vect                        , 
+				      startPhiAngle()             , 
+				      std::back_inserter( tmpticks ) );
+    SolidTicks::LineIntersectsThePhi( point                             , 
+				      vect                              , 
+				      startPhiAngle() + deltaPhiAngle() , 
+				      std::back_inserter( tmpticks )       );
+    
+    // check that we are anywhere inside this cylinder
+    for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
+      if( fabs(point.z() + *it * vect.z()) < zHalfLength() ) {
+	double x = point.x() + *it * vect.x() ;
+	double y = point.y() + *it * vect.y() ;
+	double r = sqrt(x*x+y*y) ;
+	if(innerRadius()<=r && r<=outerRadius() )
+	  ticks.push_back(*it) ;
+      }
     }
-  /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , 
-                                           point , 
-                                           vect  , 
-                                           *this );    
+  }
+
+  std::sort(ticks.begin(),ticks.end()) ;
+  return ticks.size() ;
 };
 
 // ============================================================================
@@ -509,15 +526,12 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint & Point,
                                                const ISolid::Tick& tickMax,
                                                ISolid::Ticks& ticks) const  
 {
-  
+  // don't call down to SolidBase because it performs more complicated
+  // tick operations than we need
   if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }
-  
-  return SolidBase::intersectionTicks ( Point   , 
-                                        Vector  ,
-                                        tickMin , 
-                                        tickMax ,
-                                        ticks   );
-};
+  SolidTubs::intersectionTicksImpl( Point,Vector,ticks );
+  return SolidTicks::adjustToTickRange( ticks, tickMin, tickMax ) ;
+}
 // ============================================================================
 
 // ============================================================================
