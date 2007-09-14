@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.2 2007-09-11 14:45:58 mneedham Exp $
+// $Id: TrackCheckerBase.cpp,v 1.3 2007-09-14 13:01:04 jonrob Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -112,15 +112,23 @@ TrackCheckerBase::InverseRange TrackCheckerBase::reconstructedTracks(const LHCb:
   return m_inverseTable->relations(particle);
 }
 
-const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) const{
-  TrackCheckerBase::DirectRange range = m_directTable->relations(aTrack);
-  const LHCb::MCParticle* particle = 0;
-  if (range.empty() == false) particle = range.begin()->to();
+const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) const
+{
+  const LHCb::MCParticle * particle = NULL;
+  if (!m_directTable) 
+  {
+    Error( "Track MCParticle table missing. Did you call initializeEvent() ?");
+  }
+  else
+  {
+    TrackCheckerBase::DirectRange range = m_directTable->relations(aTrack);
+    if (range.empty() == false) particle = range.begin()->to();
+  }
   return particle;
 }
 
-bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const{
-
+bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const
+{
   // loop back and see if there is a B in the history
   bool fromB = false;
   const LHCb::MCParticle* mother = mcPart->mother();
