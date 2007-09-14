@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.15 2007-01-09 16:01:21 cattanem Exp $
+// $Id: SolidBase.h,v 1.16 2007-09-14 14:35:25 wouter Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -188,22 +188,31 @@ protected:
   template <class aPoint>
   inline bool isOutBBox      
   ( const aPoint& point         , 
-    const double      tolerance = 0 ) const 
+    const double      tolerance ) const 
   {
     return 
-      0 == tolerance ?      
-      ( point.z () < zMin ()             ? true :
-        point.z () > zMax ()             ? true :
-        point.x () < xMin ()             ? true :
-        point.x () > xMax ()             ? true :
-        point.y () < yMin ()             ? true :
-        point.y () > yMax ()             ? true : false ) :
-      ( point.z () < zMin () - tolerance ? true :
-        point.z () > zMax () + tolerance ? true :
-        point.x () < xMin () - tolerance ? true :
-        point.x () > xMax () + tolerance ? true :
-        point.y () < yMin () - tolerance ? true :
-        point.y () > yMax () + tolerance ? true : false ) ;
+      point.z () < zMin () - tolerance ||
+      point.z () > zMax () + tolerance ||
+      point.x () < xMin () - tolerance ||
+      point.x () > xMax () + tolerance ||
+      point.y () < yMin () - tolerance ||
+      point.y () > yMax () + tolerance ;
+  };
+  /** Fast check if the point is outside the bounding box of the solid
+   *  @param point     point to be checked 
+   *  @return true of point is outside the bounding box 
+   */
+  template <class aPoint>
+  inline bool isOutBBox      
+  ( const aPoint& point ) const 
+  {
+    return 
+      point.z () < zMin () ||
+      point.z () > zMax () ||
+      point.x () < xMin () ||
+      point.x () > xMax () ||
+      point.y () < yMin () ||
+      point.y () > yMax () ;
   };
   
   /** Fast check if the point is outside the bounding sphere of the solid
@@ -258,34 +267,42 @@ protected:
   inline bool isOutBBox      
   ( const aPointA& p1            , 
     const aPointB& p2            , 
-    const double      tolerance = 0 ) const 
+    const double      tolerance ) const 
   { 
-    if( 0 == tolerance ) 
-      {
-        if( p1.z() < zMin() && p2.z() < zMin() ) { return true ; }
-        if( p1.z() > zMax() && p2.z() > zMax() ) { return true ; }
-        if( p1.x() < xMin() && p2.x() < xMin() ) { return true ; }
-        if( p1.x() > xMax() && p2.x() > xMax() ) { return true ; }
-        if( p1.y() < yMin() && p2.y() < yMin() ) { return true ; }
-        if( p1.y() > yMax() && p2.y() > yMax() ) { return true ; }
-      }
-    else
-      {
-        const double zmin =             zMin() - tolerance ;
-        if( p1.z() < zmin   && p2.z() < zmin   ) { return true ; }
-        const double zmax =             zMax() + tolerance ;
-        if( p1.z() > zmax   && p2.z() > zmax   ) { return true ; }
-        const double xmin =             xMin() - tolerance ;
-        if( p1.x() < xmin   && p2.x() < xmin   ) { return true ; }
-        const double xmax =             xMax() + tolerance ;
-        if( p1.x() > xmax   && p2.x() > xmax   ) { return true ; }
-        const double ymin =             yMin() - tolerance ;
-        if( p1.y() < ymin   && p2.y() < ymin   ) { return true ; }
-        const double ymax =             yMax() + tolerance ;
-        if( p1.y() > ymax   && p2.y() > ymax   ) { return true ; }
-      }    
+    const double zmin =             zMin() - tolerance ;
+    if( p1.z() < zmin   && p2.z() < zmin   ) { return true ; }
+    const double zmax =             zMax() + tolerance ;
+    if( p1.z() > zmax   && p2.z() > zmax   ) { return true ; }
+    const double xmin =             xMin() - tolerance ;
+    if( p1.x() < xmin   && p2.x() < xmin   ) { return true ; }
+    const double xmax =             xMax() + tolerance ;
+    if( p1.x() > xmax   && p2.x() > xmax   ) { return true ; }
+    const double ymin =             yMin() - tolerance ;
+    if( p1.y() < ymin   && p2.y() < ymin   ) { return true ; }
+    const double ymax =             yMax() + tolerance ;
+    if( p1.y() > ymax   && p2.y() > ymax   ) { return true ; }
     //
     return  false ;
+  };
+
+  /** Fast check if the segment of the line between two points 
+   *  is outside the bounding box 
+   *  @param p1  first  point of the segment 
+   *  @param p2  second point of the segment 
+   *  @return true if the whole segment is "outside" of the bounding box 
+   */
+  template<class aPointA, class aPointB>
+  inline bool isOutBBox      
+  ( const aPointA& p1            , 
+    const aPointB& p2 ) const 
+  { 
+    return 
+      ( p1.z() < zMin() && p2.z() < zMin() ) ||
+      ( p1.z() > zMax() && p2.z() > zMax() ) ||
+      ( p1.x() < xMin() && p2.x() < xMin() ) ||
+      ( p1.x() > xMax() && p2.x() > xMax() ) ||
+      ( p1.y() < yMin() && p2.y() < yMin() ) ||
+      ( p1.y() > yMax() && p2.y() > yMax() ) ;
   };
 
   /** Fast check if the segment of the line between two points 
@@ -303,9 +320,27 @@ protected:
     const aVector&  v             , 
     const ISolid::Tick& tmin          ,
     const ISolid::Tick& tmax          , 
-    const double        tolerance = 0 ) const 
+    const double        tolerance ) const 
   {
     return isOutBBox( p + tmin * v , p + tmax * v , tolerance );
+  };  
+  
+  /** Fast check if the segment of the line between two points 
+   *  is outside the bounding box 
+   *  @param p     first  point of the segment 
+   *  @param v     vector along the line
+   *  @param tmin "minimal value of tick"
+   *  @param tmax "maximal value of tick"
+   *  @return true if the whole segment is "outside" of the bounding box 
+   */
+  template <class aPoint, class aVector>
+  inline bool isOutBBox      
+  ( const aPoint&   p             , 
+    const aVector&  v             , 
+    const ISolid::Tick& tmin          ,
+    const ISolid::Tick& tmax ) const 
+  {
+    return isOutBBox( p + tmin * v , p + tmax * v );
   };  
   
   /** Fast check if the line cross the bounding sphere  
