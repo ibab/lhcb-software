@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-14 - Chris Jones
+ - Add monitor for Clone variable (KL distance)
+ - Add a little additional protection to TrackCheckerBase
+
 ! 2007-08-01 M. Needham
  - Bug fix, pulls at first meas were in fact last meas
 
