@@ -38,4 +38,4 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //EvtTupleSvc.Output = {} ;
 //ApplicationMgr.OutStream = {};
 
-#include "$DAVINCIROOT/options/DC06_v4_BB_lumi2_rdst.opts"
+#include "$DAVINCIROOT/options/Phys_v4_BB_lumi2.opts"
