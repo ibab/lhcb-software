@@ -21,7 +21,7 @@ EvtTupleSvc.Output =  {  } ;
 GlobalOR.Algorithms = @TagCreator.ToLookAt;                            
 DSTOR.ItemList = @DstWriter.ItemList;                                   
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = 100 ;
 PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
 
 //SeqWriteTag.OutputLevel = 1 ;
@@ -37,3 +37,4 @@ ApplicationMgr.OutStream = { "Sequencer/SeqWriteTag" } ;
  *  One could also write a DST
  */
 // ApplicationMgr.OutStream += { "DstWriter" } ; 
+
