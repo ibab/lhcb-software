@@ -18,7 +18,7 @@
 #include "TsaKernel_Tf/TsaConstants.h"
 
 #include "TsaTStationHitManager.h"
-#include "TfKernel_Tf/RecoFuncs.h"
+#include "TfKernel/RecoFuncs.h"
 
 #include "SeedLineFit.h"
 #include "SeedParabolaFit.h"

@@ -4,7 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-! 2007-09-16 M Needham
+! 2007-09-16 - Kurt Rinnert
+ - fixed TsaSeedAddHits include (TfKernel was accidently changed to
+   TfKernel_Tf)
+
+! 2007-09-16 - M Needham
  - Follow temp move of header files to TsaKernel_Tf
 
 ! 2007-08-28 - 
@@ -46,7 +50,7 @@
 
 ! 2007-03-27 - Johannes Albrecht
  - TsaCollector: adapt x-search window
- - TsaXSearchBase: include job option for nSigma of tx, fix small sign bug	 
+ - TsaXSearchBase: include job option for nSigma of tx, fix small sign bug  
  - TsaOTClusterCreator: put OTTimeLocation as job option 
 
 !======================= TsaAlgorithms v2r2 2007-03-21 ======================
