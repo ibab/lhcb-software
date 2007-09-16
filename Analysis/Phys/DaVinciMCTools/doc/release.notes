@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.178 2007-09-07 13:23:48 pkoppenb Exp $
+! $Id: release.notes,v 1.179 2007-09-16 17:15:59 sposs Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-09-16 - Stephane Poss
+ - Restore L0 decision in Ntuple
+ - Restore MCparticle-Particle association for non composite particles
 
 ! 2007-09-07 - Patrick Koppenburg
  - IsBEvent: use WriteSelResult Tool

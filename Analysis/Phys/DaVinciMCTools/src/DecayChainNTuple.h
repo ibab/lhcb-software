@@ -1,4 +1,4 @@
-// $Id: DecayChainNTuple.h,v 1.16 2007-08-20 09:17:00 pkoppenb Exp $
+// $Id: DecayChainNTuple.h,v 1.17 2007-09-16 17:15:59 sposs Exp $
 // ============================================================================
 #ifndef DECAYCHAINNTUPLE_H
 #define DECAYCHAINNTUPLE_H 1
@@ -154,7 +154,7 @@ private:
   // Composite associator
   Particle2MCLinker* m_pCompositeAsct;
   // Ref. to link associator
-  //Particle2MCLinks* m_pAsctLinks;
+  Particle2MCLinker* m_pAsctLinks;
   // std::string m_inputComposite;
   std::vector<std::string>  m_inputComposite;
   

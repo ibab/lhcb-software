@@ -1,10 +1,10 @@
-// $Id: DecayChainNTuple.cpp,v 1.24 2007-08-20 09:17:00 pkoppenb Exp $
+// $Id: DecayChainNTuple.cpp,v 1.25 2007-09-16 17:15:59 sposs Exp $
 // ============================================================================
 // Always define MCCheck
 #define MCCheck 1
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/IDecayFinder.h"
@@ -28,7 +28,7 @@
 #endif
 //#include "Event/RecVertex.h"
 #include "CaloKernel/CaloVector.h"
-//#include "Event/L0DUReport.h"
+#include "Event/L0DUReport.h"
 //#include "Event/L1Score.h"
 //#include "Event/HltScore.h"
 
@@ -39,7 +39,7 @@
 // Implementation file for class : DecayChainNTuple
 //
 // 2004-08-01 : Luis Fernandez
-// 19-10-2006:  Adapted to DC06: Jacopo Nardulli 
+// 19-10-2006:  Adapted to DC06: Jacopo Nardulli
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -85,7 +85,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("RequireTrigger", m_requireTrigger = false);
   declareProperty("RequireTagging", m_requireTagging = false);
   declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks with Rich
-  declareProperty("UseOnlineCalo", m_useOnlineCalo = false); // Protection for MC -> Part online association 
+  declareProperty("UseOnlineCalo", m_useOnlineCalo = false); // Protection for MC -> Part online association
   declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
   declareProperty("GeomTool", m_geomToolName = "Default"); // For online use TrgDispCalculator
   declareProperty("FillProperTime", m_FillProperTime = false);
@@ -93,7 +93,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-DecayChainNTuple::~DecayChainNTuple() {}; 
+DecayChainNTuple::~DecayChainNTuple() {};
 
 //=============================================================================
 // Initialization
@@ -117,20 +117,20 @@ StatusCode DecayChainNTuple::initialize() {
 
   // Retrieve the LifetimeFitter
   // sc = toolSvc()->retrieveTool("LifetimeFitter", m_pLifetimeFitter, this);
-  
+
   m_pLifetimeFitter = tool<ILifetimeFitter>("PropertimeFitter", this);
   if(!m_pLifetimeFitter){
     err() << " Unable to retrieve LifetimeFitter tool" << endreq;
     return sc;
   }
-  
+
 
   // Set the dk to be looked at
   m_pDKFinder->setDecay(m_Decay);
   info() << "Will look for the decay: "<< m_pDKFinder->decay() << endreq;
 
 
-  // OnOfflineTool 
+  // OnOfflineTool
   m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool", this );
 
   //  m_PVContainer = m_OnOfflineTool->getPVLocation() ;
@@ -139,7 +139,7 @@ StatusCode DecayChainNTuple::initialize() {
   if(m_geomToolName == "Default"){
     m_IPTool = tool<IGeomDispCalculator>(m_OnOfflineTool->dispCalculator(),this);
     debug() << "Using " << m_OnOfflineTool->dispCalculator() << endreq;
-  } 
+  }
   else{
     m_IPTool = tool<IGeomDispCalculator>(m_geomToolName,this);
   }
@@ -162,12 +162,21 @@ StatusCode DecayChainNTuple::initialize() {
   // Set the MC dk to be looked at
   m_pMCDKFinder->setDecay(m_MCDecay);
   info() << "Will look for the MC decay: "<< m_pMCDKFinder->decay() << endreq;
-  
+
   // Link associator
-  //m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>("Particle2MCLinksAsct", "LinkAsct", this);
-  
+  m_pAsctLinks =new Particle2MCLinker( this, Particle2MCMethod::Links,
+                                       m_inputComposite);
+  if(!m_pAsctLinks){
+    err() << " Unable to retrieve Particle2MCLinker tool" << endreq;
+    return sc;
+  }
+
   // Composite
   m_pCompositeAsct = new Particle2MCLinker(this, Particle2MCMethod::Composite, m_inputComposite);
+  if(!m_pCompositeAsct){
+    err() << " Unable to retrieve composite Particle2MCLinker tool" << endreq;
+    return sc;
+  }
 
   // for calo clusters association
   //const IAsctCl2MCP*  m_pAsctCl2MCP = get<IAsctCl2MCP> ( "Relations" + LHCb::CaloClusterLocation::Default + "CCs2MCPs") ;
@@ -187,17 +196,17 @@ StatusCode DecayChainNTuple::initialize() {
 // Main execution
 //=============================================================================
 StatusCode DecayChainNTuple::execute() {
-  
+
   setFilterPassed(false);
 
   //---------------------------------------------
   // Retrieve informations about event
   LHCb::RecHeader* evt = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);
-  
+
   if(evt){
     debug() << "Retrieved EVENT: " << evt->evtNumber() << endreq;
     m_event = evt->evtNumber();
-      
+    m_run = evt->runNumber();
   } else{
     fatal() << "Not able to retrieve event" << endreq;
     return StatusCode::FAILURE;
@@ -207,8 +216,8 @@ StatusCode DecayChainNTuple::execute() {
   // Reset counter m_n and m_mcn if MCCheck
   if(m_bookedNTuple){
     std::map<int, HandleNTuple*>::iterator it;
-    for (it = m_HandleNTupleMap.begin(); 
-         it != m_HandleNTupleMap.end(); 
+    for (it = m_HandleNTupleMap.begin();
+         it != m_HandleNTupleMap.end();
          it++){
       it->second->clean();
 #ifdef MCCheck
@@ -242,13 +251,13 @@ StatusCode DecayChainNTuple::execute() {
     mothervec.push_back(jmothervec);
   }
   debug() << "Found " << mothervec.size() << " reconstructed decay: " << m_pDKFinder->decay() << endreq;
-  
+
   bool foundDK = (mothervec.size()>0);
 
   // Skip event if no DOI
   if(!foundDK){
     debug() << "Leaving since no DOI found" << endreq;
-    return StatusCode::SUCCESS ;    
+    return StatusCode::SUCCESS ;
   }
 
   //---------------------------------------------
@@ -301,27 +310,27 @@ StatusCode DecayChainNTuple::execute() {
   // Write the ntuple
   WriteNTuple(mothervec);
   if (!sc.isSuccess()){
-    debug() << "WRITING NTUPLE SUCCESS " << endreq; 
+    debug() << "WRITING NTUPLE SUCCESS " << endreq;
     return sc;
   }
-  
+
   //---------------------------------------------
 
 #ifdef MCCheck
   //---------------------------------------------
-  // Write the true decay part 
+  // Write the true decay part
   if(m_FillMCDecay){
     WriteMCNTuple(MCHead);
     if (!sc.isSuccess()) return sc;
   }
-  debug() << "WRITING MCNTUPLE SUCCESS " << endreq;   
+  debug() << "WRITING MCNTUPLE SUCCESS " << endreq;
   //---------------------------------------------
 #endif
 
   //---------------------------------------------
   // Save the ntuple
   if(m_bookedNTuple && foundDK){
-    debug() << "Here " << endreq;   
+    debug() << "Here " << endreq;
     NTuplePtr ntuple(ntupleSvc(), m_ntupleName);
     sc = ntuple->write();
     if (sc.isFailure()) err() << "Cannot write NTuple " << endreq;
@@ -339,10 +348,12 @@ StatusCode DecayChainNTuple::finalize() {
 
   // release tools
   //  StatusCode sc = toolSvc()->releaseTool(m_pAsctLinks);
- 
+
   // Call destructor
   m_pCompositeAsct->~Particle2MCLinker();
-
+  m_pAsctLinks->~Particle2MCLinker();
+  delete m_pAsctLinks;
+  delete m_pCompositeAsct;
   if (adddau) delete adddau;
   if (add)    delete add;
 
@@ -352,12 +363,12 @@ StatusCode DecayChainNTuple::finalize() {
 //=============================================================================
 //  DecayChainNTuple::HandleNTuple::HandleNTuple
 //=============================================================================
-DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number, 
+DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number,
                                              ILifetimeFitter *lifetimefitter,
                                              IGeomDispCalculator* iptool,
                                              IVisPrimVertTool* visPrimVertTool,bool doPropTime)
   : m_iptool(iptool)
-  , m_visPrimVertTool(visPrimVertTool), 
+  , m_visPrimVertTool(visPrimVertTool),
     m_lifetimefitter(lifetimefitter)
 {
   StatusCode sc;
@@ -384,7 +395,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("dllmupi_lab"+label,m_n,m_dllmupi); // dll(mu-pi)
   sc = nt->addIndexedItem("dllkpi_lab"+label,m_n,m_dllkpi); // dll(K-pi)
   sc = nt->addIndexedItem("dllppi_lab"+label,m_n,m_dllppi); // dll(p-pi)
-  
+
   // Global Rich PIDs
   sc = nt->addIndexedItem("globdllpi_lab"+label,m_n,m_globdllpi); // dll pion
   sc = nt->addIndexedItem("globdllk_lab"+label,m_n,m_globdllk); // dll kaon
@@ -421,7 +432,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 
   // Primary vertices
 
-  // PV w.r.t. the particle has the smallest IPS    
+  // PV w.r.t. the particle has the smallest IPS
   sc = nt->addIndexedItem("chitwosIPSPV_lab"+label,m_n,m_chitwosIPSPV);
   sc = nt->addIndexedItem("sIPSPVx_lab"+label,m_n,m_sIPSPVx);
   sc = nt->addIndexedItem("sIPSPVy_lab"+label,m_n,m_sIPSPVy);
@@ -434,7 +445,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // sc = nt->addIndexedItem("sIPe_lab"+label,m_n,m_sIPe);
   sc = nt->addIndexedItem("sIPS_lab"+label,m_n,m_sIPS);
 
-  // PV w.r.t. the particle has the largest IPS    
+  // PV w.r.t. the particle has the largest IPS
   sc = nt->addIndexedItem("chitwolIPSPV_lab"+label,m_n,m_chitwolIPSPV);
   sc = nt->addIndexedItem("lIPSPVx_lab"+label,m_n,m_lIPSPVx);
   sc = nt->addIndexedItem("lIPSPVy_lab"+label,m_n,m_lIPSPVy);
@@ -453,20 +464,20 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("FS_lab"+label,m_n,m_FS);
 
   // Cosine of the angle between the particle momentum (p)
-  // and the flight distance (F) w.r.t the PV for which the 
+  // and the flight distance (F) w.r.t the PV for which the
   // IPS of the composite particle is the smallest
   sc = nt->addIndexedItem("cospF_lab"+label,m_n,m_cospF);
 
   // Lifetime
 
   if (doPropTime) {
-    
+
     sc = nt->addIndexedItem("taufit_lab"+label,m_n,m_taufit);
     sc = nt->addIndexedItem("taufitErr_lab"+label,m_n,m_taufitErr);
     sc = nt->addIndexedItem("ctfitChi2_lab"+label,m_n,m_ctfitChi2);
 
   }
-  
+
   // Track information
   sc = nt->addIndexedItem("trchitwo_lab"+label,m_n,m_trchitwo);
   sc = nt->addIndexedItem("trDoF_lab"+label,m_n,m_trDoF);
@@ -483,7 +494,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("stateTYErr_lab"+label,m_n,m_stateTYErr);
   sc = nt->addIndexedItem("stateQoverP_lab"+label,m_n,m_stateQoverP);
   sc = nt->addIndexedItem("stateQoverPErr_lab"+label,m_n,m_stateQoverPErr);
-  
+
   // sc = nt->addIndexedItem("_lab"+label,m_n,m_);
 
 #ifdef MCCheck
@@ -543,7 +554,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 //  DecayChainNTuple::HandleNTuple::FillNTuple
 //=============================================================================
 #ifndef MCCheck
-void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, 
+void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs,
                                                 LHCb::RichPIDs* globalPIDs,IPhysDesktop* desktop,bool doPropTime)
 #endif
 
@@ -567,7 +578,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     m_trueID[m_n] = mclink->particleID().pid();
   }
   else{ // not associated, take particle ID
-    m_trueID[m_n] = part.particleID().pid(); 
+    m_trueID[m_n] = part.particleID().pid();
   }
 #endif
 
@@ -590,14 +601,14 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   double xTrack = 0.0;
   double yTrack = 0.0;
   double zTrack = 0.0;
-  
+
   const LHCb::Track* track(0);
 
   if(pporig){
-    track = pporig->track(); 
+    track = pporig->track();
   } else {
     const LHCb::Particle::ConstVector daughtersVec = part.daughtersVector();
-    LHCb::Particle::ConstVector::const_iterator idaughter; 
+    LHCb::Particle::ConstVector::const_iterator idaughter;
     for (idaughter = daughtersVec.begin() ; idaughter != daughtersVec.end(); ++idaughter){
       if((*idaughter)->isBasicParticle()){
         track = (*idaughter)->proto()->track();
@@ -616,16 +627,16 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   m_dllmupi[m_n] = -999.;
   m_dllkpi[m_n] = -999.;
   m_dllppi[m_n] = -999.;
-  
+
   // Global Rich PIDs
   m_globdllpi[m_n] = -999.;
-  m_globdllk[m_n] = -999.; 
-  
+  m_globdllk[m_n] = -999.;
+
   // Track information
   m_trchitwo[m_n] = -999.;
   m_trDoF[m_n] = -999.;
   m_trtype[m_n] = -999.;
-  
+
   m_stateX[m_n] = -999.;
   m_stateXErr[m_n] = -999.;
   m_stateY[m_n] = -999.;
@@ -636,7 +647,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   m_stateTYErr[m_n] = -999.;
   m_stateQoverP[m_n] = -999.;
   m_stateQoverPErr[m_n] = -999.;
-  
+
 #ifdef MCCheck
   m_MCstateX[m_n] = -999.;
   m_MCstateY[m_n] = -999.;
@@ -644,11 +655,11 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   m_MCstateTY[m_n] = -999.;
   m_MCstateQoverP[m_n] = -999.;
 #endif
-  
+
   if(pporig){
     if (track){ // If I have a track
       // std::cout  << " Tracks Type " << track->type() << std::endl;
-      
+
       // Retrieve Delta log-likelihood values
       // dll(e-pi)
       m_dllepi[m_n] = pporig->info(LHCb::ProtoParticle::CombDLLe,0);
@@ -658,7 +669,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       m_dllkpi[m_n] = pporig->info(LHCb::ProtoParticle::CombDLLk,0);
       // dll(p-pi)
       m_dllppi[m_n] = pporig->info( LHCb::ProtoParticle::CombDLLp,0 );
-      
+
       /*
         if(track->isLong()) m_trtype[m_n]= 4.;  // Long track
         else if (track->isVelotrack()) m_trtype[m_n]= 1.;  // Velo track
@@ -667,18 +678,18 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
         else if (track->isTtrack()) m_trtype[m_n]= 6.;  // T track
         else if (track->isBackward()) m_trtype[m_n]= 7.;  // Backward track
       */
-    
+
       m_trchitwo[m_n] = track->chi2();
       m_trDoF[m_n] = track->nDoF();
-   
+
       // state vector TrStateP closest to IP
       const LHCb::State* ClosestTrStateP = &(track->firstState());
-      
+
       if(ClosestTrStateP){
         xTrack = ClosestTrStateP->x();
         yTrack = ClosestTrStateP->y();
         zTrack = ClosestTrStateP->z();
-      
+
         m_stateX[m_n] = ClosestTrStateP->x();
         m_stateXErr[m_n] = sqrt(ClosestTrStateP->errX2());
         m_stateY[m_n] = ClosestTrStateP->y();
@@ -690,12 +701,12 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
         m_stateQoverP[m_n] = ClosestTrStateP->qOverP();
         m_stateQoverPErr[m_n] = sqrt(ClosestTrStateP->errQOverP2());
       }
-      
+
       m_trtype[m_n] = (float) track->type();
-    
+
       // Global Rich PIDs
       if(globalPIDs){
-        LHCb::RichPID* globalpid = globalPIDs->object(track->key());    
+        LHCb::RichPID* globalpid = globalPIDs->object(track->key());
         if(globalpid){
           /*  
               std::cout << " DLLPion = "
@@ -710,42 +721,42 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       }
     }
   }
-  
+
 #ifdef MCCheck
   // Compute the extrapolated state vector of the associated MCParticle (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
   if(isSig){
-    
+
     int Q = (mclink->particleID().pid()) > 0 ? 1 : -1;
-    
+
     const LHCb::MCVertex* oVtxMCLink= mclink->originVertex();
     const Gaudi::XYZPoint& oVtxMCLinkPos = oVtxMCLink->position();
-    
+
     double MCx0 = oVtxMCLinkPos.x();
     double MCy0 = oVtxMCLinkPos.y();
     double MCz0 = oVtxMCLinkPos.z();
-    
+
     // std::cout << "--> Original true position [mm] x = " << MCx0
     //       << " , y = " << MCy0 << " , z = " << MCz0 << std::endl;
 
-    // std::cout << "--> Closest to origin position of the track [mm] x = " << xTrack 
+    // std::cout << "--> Closest to origin position of the track [mm] x = " << xTrack
     //          << " , y = " << yTrack << " , z = " << zTrack << std::endl;
 
     // tx slope
     double MCstateTX = (mclink->momentum().px())/(mclink->momentum().pz());
     // ty slope
     double MCstateTY = (mclink->momentum().py())/(mclink->momentum().pz());
-    
-    // xz-projection    
+
+    // xz-projection
     double MCstateX = (MCx0 + ((zTrack - MCz0)* MCstateTX));
 
     // yz-projection
     double MCstateY = (MCy0 + ((zTrack - MCz0)* MCstateTY));
-    
+
     // std::cout << "--> Extrapolated true position [mm] x = " << MCstateX
     //          << " , y = " << MCstateY << " , z = " << zTrack << std::endl;
-    
+
     double MCstateQoverP = Q/sqrt((mclink->momentum().Vect().mag2()));
-    
+
     m_MCstateX[m_n] = MCstateX;
     m_MCstateY[m_n] = MCstateY;
     m_MCstateTX[m_n] = MCstateTX;
@@ -774,7 +785,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   m_onTrxvar[m_n] = part.posCovMatrix()(0,0);
   m_onTryvar[m_n] = part.posCovMatrix()(1,1);
   m_onTrzvar[m_n] = part.posCovMatrix()(2,2);
-  
+
   // Decay vtx if any; otherwise set to -100000
   const LHCb::VertexBase* v = part.endVertex();
   if(!v){
@@ -786,7 +797,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     m_vxvar[m_n] = -1.;
     m_vyvar[m_n] = -1.;
     m_vzvar[m_n] = -1.;
-  } 
+  }
   else{
     m_vchitwo[m_n] = v->chi2();
     m_vnDoF[m_n]= v->nDoF();
@@ -844,7 +855,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 
   double ipcheck, ipecheck; // for ip filling
 
-  // PV w.r.t. the particle has the smallest IPS    
+  // PV w.r.t. the particle has the smallest IPS
   const Gaudi::XYZPoint& sPV = sIPSPV->position();
   m_chitwosIPSPV[m_n] = sIPSPV->chi2();
   m_sIPSPVx[m_n] = sPV.x();
@@ -861,7 +872,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   // m_sIPe[m_n] = ipecheck ;
   m_sIPS[m_n] = (ipcheck/ipecheck);
 
-  // PV w.r.t. the particle has the largest IPS    
+  // PV w.r.t. the particle has the largest IPS
   const Gaudi::XYZPoint& lPV = lIPSPV->position();
   m_chitwolIPSPV[m_n] = lIPSPV->chi2();
   m_lIPSPVx[m_n] = lPV.x();
@@ -881,7 +892,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 
   // Unsigned flight distance/significance (sec-prim) if composite
   // w.r.t. the PV for which the particle has the smallest IPS
-  if(!v){ // no sec vtx  
+  if(!v){ // no sec vtx
     m_FD[m_n] = -999.;
     m_FS[m_n] = -999.;
   }
@@ -895,9 +906,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   }
 
   // Cosine of the angle between the particle momentum (p)
-  // and the flight distance (F) w.r.t the PV for which the 
-  // IPS of the composite particle is the smallest  
-  if(!v){ // no sec vtx  
+  // and the flight distance (F) w.r.t the PV for which the
+  // IPS of the composite particle is the smallest
+  if(!v){ // no sec vtx
     m_cospF[m_n] = -2.;
   }
   else{
@@ -912,9 +923,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 
   // Lifetime
   if (doPropTime) {
-    
+
     double ct, ctErr, ctChi2;
-  
+
     if(!v){ // no sec vtx
       m_taufit[m_n] = -999.;
       m_taufitErr[m_n] = -999.;
@@ -922,7 +933,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     }
     else{
       m_lifetimefitter->fit(*sIPSPV, part, ct, ctErr, ctChi2);
-    
+
       // tau in ps
       // Obsolete old conversion
       //     m_taufit[m_n] = 1000 * (((ct/mm) /c_light)/ns);
@@ -932,7 +943,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       m_ctfitChi2[m_n] = ctChi2;
     }
   }
-  
+
 
 #ifdef MCCheck
   // Look if a the particle is associated to signal
@@ -948,10 +959,10 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 //  Book the ntuple
 //=============================================================================
 StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
-  
+
   verbose() << "Entering BookNTuple" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   // Mother (or head) of the decay
   LHCb::Particle::Vector::iterator imother;
 
@@ -961,12 +972,12 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
       imother++){
 
     debug() << "Mother ID = " << (*imother)->particleID().pid() << endreq;
-    
+
     // Get all the decay members (should be flagged)
     //    const std::vector<LHCb::Particle*> Children;
     //const std::vector<LHCb::Particle*>::iterator ichild;
 
-    LHCb::Particle::ConstVector Children;  
+    LHCb::Particle::ConstVector Children;
     LHCb::Particle::ConstVector::const_iterator ichild;
     m_pDKFinder->decayMembers(*imother, Children);
 
@@ -976,7 +987,7 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
     if(!nt){ // Check if already booked
       nt = ntupleSvc()->book(m_ntupleName, CLID_ColumnWiseTuple, "Decay Tree Ntuple");
       if(nt){  // ntuple sucessfully booked
-          
+
         m_bookedNTuple = true;
 
         // NTuple global variables
@@ -1022,14 +1033,14 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         // Beg of more detailed tagging information
 
         // Total number of taggers for a given tag
-        sc = nt->addIndexedItem("nTaggers", m_nTags, m_nTaggers); 
+        sc = nt->addIndexedItem("nTaggers", m_nTags, m_nTaggers);
         // Total number of tagger particles for a given tag
         sc = nt->addIndexedItem("nTaggerParts", m_nTags, m_nTaggerParts);
 
         // All taggers information, maximum of 20 taggers for a given tag
         sc = nt->addIndexedItem("TaggerType", m_nTags, 20, m_TaggerType);
-        // TaggerType {none = 0 ,unknown = 1, 
-        //             OS_Muon = 2, OS_Electron = 3, OS_Kaon = 4, SS_Kaon = 5, SS_Pion = 6, 
+        // TaggerType {none = 0 ,unknown = 1,
+        //             OS_Muon = 2, OS_Electron = 3, OS_Kaon = 4, SS_Kaon = 5, SS_Pion = 6,
         //             jetCharge = 7, OS_jetCharge = 8, SS_jetCharge = 9,VtxCharge = 10, Topology};
         sc = nt->addIndexedItem("TaggerDecision", m_nTags, 20, m_TaggerDecision);
         sc = nt->addIndexedItem("TaggerW", m_nTags, 20, m_TaggerW);
@@ -1049,13 +1060,13 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         unsigned int mothernr = 0;
         int forthekeydau = 0;
         unsigned int subdaunr = 1;
-          
+
         //---------------------------------------------
         // Book the mother
         int pidmother = (*imother)->particleID().pid();
         ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
         info() << "Booking ParticleName (mother) " << ppmother->particle() << endreq;
-          
+
         const std::string pnamemother = ppmother->particle();
 
         // Case of identical parts: take arbitrary offset and add (500000*forthekeymother)
@@ -1065,7 +1076,7 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         forthekeymother++;
 
         int key =  ((offsetmother + (500000*forthekeymother)));
-        add = new HandleNTuple(nt, mothernr, m_pLifetimeFitter, 
+        add = new HandleNTuple(nt, mothernr, m_pLifetimeFitter,
                                m_IPTool,m_VISPrimVertTool,m_FillProperTime);
         m_HandleNTupleMap.insert(std::make_pair(key, add));
 
@@ -1077,27 +1088,27 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         //---------------------------------------------
         // Book the children
         for (ichild = Children.begin() ; ichild != Children.end() ; ++ichild){
-          debug() << "Child has ID = " 
+          debug() << "Child has ID = "
                   << (*ichild)->particleID().pid() << endreq;
-            
+
           int pid = (*ichild)->particleID().pid();
           // int abspid = (*ichild)->particleID().abspid();
           ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
           info() << "Booking Subdaughter number = " << subdaunr
                  << " , ParticleName " << pp->particle() << endreq;
-            
+
           const std::string pname = pp->particle();
           // Case of identical parts: take arbitrary offset and add (500000*forthekeydau)
           int offsetdau = 99;
           offsetdau++;
-          
+
           forthekeydau++;
 
-          int keydau =  ((offsetdau + (500000*forthekeydau)));           
+          int keydau =  ((offsetdau + (500000*forthekeydau)));
           adddau = new HandleNTuple(nt, subdaunr,   m_pLifetimeFitter,
                                     m_IPTool,m_VISPrimVertTool,m_FillProperTime);
           m_HandleNTupleMap.insert(std::make_pair(keydau, adddau));
-          
+
           verbose() << "Added " << pname << " with key " << keydau
                     << " and address " << adddau << endreq;
           subdaunr++;
@@ -1112,9 +1123,9 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
     debug() << "NTuple is booked" << endreq;
 
   } // imother
-  
+
   verbose() << "Leaving BookNTuple" << endreq;
-  
+
   return sc;
 }
 
@@ -1148,7 +1159,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     debug() << "Primary vertex coordinates = ( "
             << (*ivert)->position().x()
             << " , " << (*ivert)->position().y()
-            << " , " << (*ivert)->position().z() << " ) and chi2 = " 
+            << " , " << (*ivert)->position().z() << " ) and chi2 = "
             << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
     // Fill NTuple global variables, here the reconstructed PV is indexed by m_nRecoPV
     m_RecoPVx[m_nRecoPV] = (*ivert)->position().x();
@@ -1171,7 +1182,6 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
   //  int nMCPV = collisions->size();
   //  debug() << "Number of MC primaries " << nMCPV << endreq;
-   
   const SmartRefVector<LHCb::MCVertex> mcVertices = mcheader->primaryVertices();  
   int nMCPV = mcVertices.size();
   debug() << "Number of MC primaries " << nMCPV << endreq;
@@ -1206,7 +1216,6 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     debug() << " -> is a visible interaction: " << isMCPVvisible << endreq;
     // Fill NTuple
     m_VisMCPV[m_nMCPV] = (long) isMCPVvisible;
-
   } // end loop over collisions
   //---------------------------------------------
 
@@ -1220,22 +1229,22 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
   //---------------------------------------------
 
   //---------------------------------------------
-  LHCb::MCParticle::ConstVector MCHead;  
+  LHCb::MCParticle::ConstVector MCHead;
   const LHCb::MCParticle* imc = NULL;
   while (m_pMCDKFinder->findDecay(*kmcparts, imc)){
     const LHCb::MCParticle* jmc = const_cast<LHCb::MCParticle*>(imc);
     MCHead.push_back(jmc);
   }
-  //---------------------------------------------  
+  //---------------------------------------------
 #endif
 
-  //---------------------------------------------  
+  //---------------------------------------------
   LHCb::RichPIDs* globalPIDs = NULL;
   if (m_useRichOnlinePID){
 
     if(!exist<LHCb::RichPIDs>(m_richOnlinePIDLocation)){
       Warning("You requested the online Rich, make sure you run it. No RichPIDs at "+m_richOnlinePIDLocation);
-    } 
+    }
     else{
       globalPIDs = get<LHCb::RichPIDs>(m_richOnlinePIDLocation);
       if(NULL == globalPIDs){
@@ -1248,12 +1257,12 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     } // if  RichPIDs exists
 
   }
-  //---------------------------------------------  
+  //---------------------------------------------
 
-  //---------------------------------------------  
+  //---------------------------------------------
   // L0
   bool L0Decision = false;
-  // Hlt 
+  // Hlt
   bool HLTDecision = false;
   bool HLTGen      = false;
   bool HLTIncB     = false;
@@ -1261,17 +1270,18 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
   bool HLTDstar    = false;
   bool HLTExB      = false;
   bool HLTInc      = false;
-  /*
-    if(m_requireTrigger){
+  long Level0decision = 0;
 
-    L0DUReport* report = get<L0DUReport>(L0DUReportLocation::Default);
+  if(m_requireTrigger){
+    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
     debug() << "L0 decision: " << L0Decision << endreq;
-    
+    Level0decision = report->decision();
+    /*
     // Hlt full detail
     HltScore* scoreHlt = NULL;
     if (!exist<HltScore>(m_HltScoreLocation)){
     Warning("You requested the trigger, make sure you run it. No HltScore at "+m_HltScoreLocation);
-    } 
+    }
     else {
     scoreHlt = get<HltScore>(m_HltScoreLocation);
     if(NULL == scoreHlt){
@@ -1300,12 +1310,13 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
     } // if scoreHlt != NULL
     } // if HltScore exists
-
-    } // m_requireTrigger
-  */  
-  //---------------------------------------------  
+    */
+  } // m_requireTrigger
 
   //---------------------------------------------  
+
+
+  //---------------------------------------------
   if(m_requireTagging){
 
     // Reset index
@@ -1314,7 +1325,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     LHCb::FlavourTags* tags = NULL;
     if (!exist<LHCb::FlavourTags>(m_TagLocation)){
       Warning("You requested the tagging, make sure you run it. No FlavourTags at " + m_TagLocation);
-    } 
+    }
     else {
       tags = get<LHCb::FlavourTags>(m_TagLocation);
       if(NULL == tags){
@@ -1353,7 +1364,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
           // The taggers for this tag
           std::vector<Tagger> theTaggers = theTag->taggers();
           debug() << " Number of taggers found = " << theTaggers.size() << endreq;
-          
+
           // Reset index
           int nTaggers = 0;
           int nTaggerParts = 0;
@@ -1375,12 +1386,12 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
           m_TaggerW[m_nTags][nTaggers] = iTaggers->omega();
 
           // The vector of Particles used to build the Tagger
-          debug() << " Number of particles used to make this tagger = " 
+          debug() << " Number of particles used to make this tagger = "
           << iTaggers->taggerParts().size() << endreq;
 
           std::vector<Particle>::iterator iTaggerParts;
-          for(iTaggerParts = iTaggers->taggerParts().begin(); 
-          iTaggerParts != iTaggers->taggerParts().end(); 
+          for(iTaggerParts = iTaggers->taggerParts().begin();
+          iTaggerParts != iTaggers->taggerParts().end();
           ++iTaggerParts){
 
           // not to be out of range ...
@@ -1395,13 +1406,13 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
           double normIPS;
           m_IPTool->calcImpactPar(*iTaggerParts,**iPV,ip,ipe);
           normIPS = ip/ipe;
-          verbose() << "      tagger part normIPSMin = " << normIPSMin 
+          verbose() << "      tagger part normIPSMin = " << normIPSMin
           << " , normIPS = " << normIPS << endreq;
           if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
           }
 
           debug() << "  --> ID: " << iTaggerParts->particleID().pid()
-          << " , p = " << iTaggerParts->p() 
+          << " , p = " << iTaggerParts->p()
           << " , pt = " << iTaggerParts->pt()
           << " , sIPS = " << normIPSMin
           << endreq;
@@ -1414,35 +1425,23 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
           // Increment index
           nTaggerParts++;
-              
           } // iTaggerParts
-
-            // Increment index
-            nTaggers++;
-            } // iTaggers
-
-            // Fill total number of taggers and tagger particles for this tag
-            m_nTaggers[m_nTags] = nTaggers;
-            m_nTaggerParts[m_nTags] = nTaggerParts;
-
-            // End of more detailed tagging information
             */
-          
           // Increment index
           m_nTags++;
         } // itags
       } // if tags != NULL
     } // if FlavourTags exists
   } // m_requireTagging
-  //---------------------------------------------  
+  //---------------------------------------------
 
-  //---------------------------------------------  
+  //---------------------------------------------
   // Fill NTuple global variables
   m_eventNumber = m_event;
   m_runNumber = m_run;
 #ifdef MCCheck
 #endif
-  m_L0Decision = long(L0Decision);
+  m_L0Decision = Level0decision;
   m_HLTDecision = long(HLTDecision);
   m_HLTGen = long(HLTGen);
   m_HLTIncB = long(HLTIncB);
@@ -1451,12 +1450,12 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
   m_HLTExB = long(HLTExB);
   m_HLTInc = long(HLTInc);
 
-  //---------------------------------------------  
+  //---------------------------------------------
 
   //---------------------------------------------
   // Mother (or head) of the decay
   LHCb::Particle::Vector::iterator imother;
-  
+
   // Loop over all the mothers
   for(imother = mothervec.begin();
       imother != mothervec.end();
@@ -1464,7 +1463,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
     debug() << "Mother ID = " << (*imother)->particleID().pid() << endreq;
 
-#ifdef MCCheck   
+#ifdef MCCheck
     IBackgroundCategory::categories cat = m_bkgCategory->category(*imother);
     debug() << "Result of BackgroundCategory is: " << cat << endreq;
     if(m_nCand < 10000){
@@ -1474,7 +1473,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 #endif
 
     // Get all the decay members (should be flagged)
-    LHCb::Particle::ConstVector Children;  
+    LHCb::Particle::ConstVector Children;
     LHCb::Particle::ConstVector::const_iterator ichild;
     m_pDKFinder->decayMembers(*imother, Children);
 
@@ -1488,7 +1487,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     int forthekeymother = 0;
     int forthekeydau = 0;
     unsigned int subdaunr = 1;
-      
+
     //---------------------------------------------
     // Fill the mother
     int pidmother = (*imother)->particleID().pid();
@@ -1523,7 +1522,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
           isSig = (mclink == *imchead);
           if(isSig) break;
         } // for imchead
-      } // if mclink 
+      } // if mclink
     } // if endVertex
 
     // Warning: the head can be associated for 'wrong' combinations like
@@ -1557,7 +1556,6 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
                 << (*ichild)->particleID().pid() << " " << (*ichild)->momentum() << endreq;
 
       if((*ichild)->isBasicParticle()){ // if final state with origin
-        
         /*
         // beg FIXME : for now the association of online gammas requires offline clusters
         // Special case of online gammas (neutrals with origin)
@@ -1570,6 +1568,29 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
         if(myTrgCaloPart){
 
         debug() << "Special case of online gammas" << endreq;
+        std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
+        CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
+        if(myTrgCaloPart){
+        verbose() << "There is a TrgCaloParticle with ID " << myTrgCaloPart->particleID().pid()
+        << " and CellID[0] " << ClusterSeed[0] << endreq;
+
+        debug() << "Special case of online gammas" << endreq;
+
+
+
+        // The Calo clusters
+        CaloClusters* myCaloClusters = get<CaloClusters>(m_CaloClustersPath);
+        // TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+
+        // Create a CaloVector of CaloClusters for easy access and get rid of split clusters (from pi0)
+        CaloVector<const CaloCluster*>  CaloClustersVec;
+
+        for(CaloClusters::const_iterator icl = myCaloClusters->begin(); icl != myCaloClusters->end(); ++icl){
+        // forget it if split cluster
+        const CaloCluster* cl = *icl;
+        if (!(myCaloClusters == cl->parent())) continue;
+        CaloClustersVec.addEntry(cl,  cl->seed());
+        }
 
         std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
         CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
@@ -1614,17 +1635,17 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
         isSig = isSignal(mclink, MCHead);
         if(isSig) verbose() << "Found association for online gamma" << endreq;
         if(isSig) break; // just take one associated MCParticle
-
         } // ii
         } // if myTrgCaloPart
         } // online gammas
         // end FIXME
+
         */
-	
+
         // Old way, no gammas
         // Particle2MCLinksAsct::IAsct* m_pAsctLinks;
-        // mclink = m_pAsctLinks->associatedFrom(*ichild);
-        // isSig = isSignal(mclink, MCHead);
+        mclink = m_pAsctLinks->firstMCP(*ichild);
+        isSig = isSignal(mclink, MCHead);
 
         // Note : need to go AssociatorWeighted class to treat gammas and charged in the same way
         //        IRelationWeighted<LHCb::Particle,LHCb::MCParticle,double>::IAsct *pAsso = m_pAsctLinks;
@@ -1651,16 +1672,16 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
         */
       } // if final state with origin
       else{ // no origin
-        
+
         if((*ichild)->endVertex()){ // composite
           mclink = m_pCompositeAsct->firstMCP(*ichild);
           isSig = isSignal(mclink, MCHead);
         } // if endVertex
       }
-      
+
       if(mclink) verbose() << "Direct linked MC ID: " << mclink->particleID().pid() << " and p: " << mclink->momentum() << endreq;
       else verbose() << "No direct link MC" << endreq;
-      
+
       debug() << "Second Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
 #endif
@@ -1672,7 +1693,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
       forthekeydau++;
 
       std::map<int, HandleNTuple*>::iterator jkeydau = m_HandleNTupleMap.find((offsetdau + (500000*forthekeydau)));
-      
+
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
         jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs,mydesktop,m_FillProperTime);
@@ -1690,7 +1711,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
   } // imother
 
   verbose() << "Leaving WriteNTuple" << endreq;
-  
+
   return sc;
 }
 
@@ -1698,21 +1719,21 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 //  getPV
 //=============================================================================
 StatusCode DecayChainNTuple::getPV(LHCb::RecVertex::ConstVector& PVs) {
-  
+
   verbose() << "Entering getPV" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
- 
+
   // LHCb::RecVertices* vertices = get<LHCb::RecVertices>("Rec/Vertex/Primary");
   LHCb::RecVertex::ConstVector vertices = desktop()->primaryVertices();
- 
+
   if ( vertices.size()==0 ) {
     err() << "Could not find primary vertex in DEsktop" << endreq;
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   verbose() << "Number of primary vertices  = "
             << vertices.size() << endreq;
-  
+
   LHCb::RecVertex::ConstVector::const_iterator ivert;
   for( ivert = vertices.begin(); ivert != vertices.end(); ivert++){
     PVs.push_back(*ivert);
@@ -1721,7 +1742,7 @@ StatusCode DecayChainNTuple::getPV(LHCb::RecVertex::ConstVector& PVs) {
   verbose() << "Leaving getPV" << endreq;
 
   if ( PVs.empty()) warning() << "No primary vertex found in Desktop" << endreq ;
- 
+
   return sc;
 }
 
@@ -1734,7 +1755,7 @@ bool DecayChainNTuple::isSignal(const LHCb::MCParticle* MC, LHCb::MCParticle::Co
   verbose() << "Entering isSignal" << endreq;
 
   bool issig = false;
-  
+
   if(MC != NULL){
     verbose() << "There is a link " << endreq;
 
@@ -1753,7 +1774,7 @@ bool DecayChainNTuple::isSignal(const LHCb::MCParticle* MC, LHCb::MCParticle::Co
       LHCb::MCParticle::ConstVector::iterator mcdaughter ;
       //      std::vector<LHCb::MCParticle*>::iterator mcdaughter ; 
       for (mcdaughter= mclist.begin() ; mcdaughter != mclist.end(); ++mcdaughter){
-        
+
         // Check if the mc associated particle is in the list of mc parts of the true decay
         if(MC == *mcdaughter){
           issig = true;
@@ -1761,7 +1782,7 @@ bool DecayChainNTuple::isSignal(const LHCb::MCParticle* MC, LHCb::MCParticle::Co
       } // for each true daughter
     } // for each true decay
   } // if there is a link associated MCParticle
-  
+
   verbose() << "Leaving isSignal" << endreq;
 
   return issig;
@@ -1790,7 +1811,7 @@ bool DecayChainNTuple::updateMCMomentum(LHCb::MCParticle* theMC){
 
     HepMC::GenEvent * pEvt = (*it)->pGenEvt();
     HepMC::GenEvent::particle_const_iterator itp;
-    
+
     for (itp = pEvt->particles_begin(); itp != pEvt->particles_end(); ++itp){
 
       if(theMC->particleID().pid() != (*itp)->pdg_id()) continue;
@@ -1816,14 +1837,14 @@ bool DecayChainNTuple::updateMCMomentum(LHCb::MCParticle* theMC){
       verbose() << "After update MCParticle mass MeV : " << theMC->momentum().mass()
                 << " , momentum MeV = " << theMC->momentum()
                 << endreq;
-      
+
       updated = true;
       break ;
     }
   }
-  
+
   return updated;
-  
+
   verbose() << "Leaving updateMCMomentum" << endreq;
 }
 #endif
@@ -1837,7 +1858,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
 
   verbose() << "Entering WriteMCNTuple" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   //---------------------------------------------
   // Mother (or head) of the decay
   LHCb::MCParticle::Vector::iterator imcmother;
@@ -1848,13 +1869,13 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
       imcmother++){
 
     debug() << "Truth: Mother ID = " << (*imcmother)->particleID().pid() << endreq;
-    
+
     // The MC primary vertex is the origin vertex of the B, but not for prompt J/Psi
     // Get the MC PV coordinates from the Collision
     // -> check the MCVertexType: 1 = ppCollision, 2 = decay
-    
+
     const LHCb::MCVertex* headOriVtx = (*imcmother)->originVertex();
-    
+
     debug() << "Head origin vtx [mm] x = "
             << headOriVtx->position().x()
             << " , y = " << headOriVtx->position().y()
@@ -1862,7 +1883,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
             << endreq;
     
     LHCb::MCVertex::MCVertexType MCPVType = headOriVtx->type();
-    
+
     if(MCPVType == LHCb::MCVertex::ppCollision){
       debug() << "The head originates from a MC primary vertex" << endreq;
     }
@@ -1870,11 +1891,9 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
       debug() << "The head does not come from a MC primary vertex" << endreq;
     }
 
-
     const LHCb::MCVertex* MCPV = headOriVtx->primaryVertex();
     const Gaudi::XYZPoint& MCPVPosition = MCPV->position();
-   
-  
+
     debug() << "Head collision vtx [mm] x = "
             << MCPVPosition.x()
             << " , y = " << MCPVPosition.y()
@@ -1894,6 +1913,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
     // Get all the decay members (should be flagged)
     LHCb::MCParticle::ConstVector MCChildren;  
     LHCb::MCParticle::ConstVector::iterator imcchild;
+
     //    std::vector<LHCb::MCParticle*> MCChildren;
     //  std::vector<LHCb::MCParticle*>::iterator imcchild;
     m_pMCDKFinder->decayMembers(*imcmother, MCChildren);
@@ -1908,7 +1928,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
     int forthekeymother = 0;
     int forthekeydau = 0;
     unsigned int subdaunr = 1;
-   
+
     //---------------------------------------------
     // Fill the mother
     int pidmother = (*imcmother)->particleID().pid();
@@ -1937,7 +1957,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
     //---------------------------------------------
     // Fill the children
     for (imcchild = MCChildren.begin() ; imcchild != MCChildren.end() ; imcchild++){
-   
+
       int pid = (*imcchild)->particleID().pid();
       // int abspid = (*imcchild)->particleID().abspid();
       ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
@@ -1960,13 +1980,13 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
       // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
       LHCb::Particle* reco = 0;
       isReco = false;
-      
-      debug() << "Looking for link association for MC particle with ID: " << (*imcchild)->particleID().pid() 
+
+      debug() << "Looking for link association for MC particle with ID: " << (*imcchild)->particleID().pid()
               << " mass = " << (*imcchild)->momentum().mass()
               << " " << (*imcchild)->momentum() << endreq;
 
       // Corresponding particle
-      // reco = m_pAsctLinks->associatedTo(*imcchild);
+      reco = m_pAsctLinks->firstP(*imcchild);
       if(reco) isReco = true;
 
       /*
@@ -2016,6 +2036,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
       } // ii
       } // if myTrgCaloClusters != NULL
       } // if TrgCaloClusters exists
+
       }
       // end FIXME
       */
@@ -2047,7 +2068,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
   } // imcmother
 
   verbose() << "Leaving WriteMCNTuple" << endreq;
-  
+
   return sc;
 }
 #endif
@@ -2109,11 +2130,13 @@ void DecayChainNTuple::HandleNTuple::FillMCNTuple(const LHCb::MCParticle& mcpart
   // ctau = m * L dot p / p2
   // Gaudi::XYZPoint TMP = (*ivert)->position() - mcpart.originVertex()->position();
   Gaudi::XYZVector TMP2 = (*ivert)->position() - mcpart.originVertex()->position();
-  // = (1/(picosecond*c_light)) * (mcpart.momentum().mass())* 
+  // = (1/(picosecond*c_light)) * (mcpart.momentum().mass())*
   //  (mcpart.momentum().Vect())*TMP2/ mcpart.momentum().Vect().mag2();
+
   m_mctau[m_mcn] =  ((1/(picosecond*c_light)) * (mcpart.momentum().mass())* 
                      (mcpart.momentum().Vect()).Dot(TMP2))/ mcpart.momentum().Vect().mag2();
   
+
   m_mcn++;
 
   // debug() << "Done" << endreq;
