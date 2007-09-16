@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.2 2007-09-16 13:52:03 krinnert Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.3 2007-09-16 17:32:27 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -22,16 +22,16 @@ namespace Tf {
 //=============================================================================
 
 Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
-						    ISvcLocator* pSvcLocator)
+    ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ), m_Num3DCreated(0.), m_NumEvt(0.)
-  , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+, m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
 {
 
   declareProperty( "OutputTracksLocation" , 
-		   m_outputTracksLocation = LHCb::TrackLocation::Velo );
+      m_outputTracksLocation = LHCb::TrackLocation::Velo );
   declareProperty( "PointErrorScale"  ,   m_ErrScale         = 1.1       );
   declareProperty( "PointErrorMin"    ,   m_ErrMin           = 
-		   0.250*Gaudi::Units::mm);
+      0.250*Gaudi::Units::mm);
   declareProperty( "ErrorExtrapScale" ,   m_ErrExtrapScale   = 1.5       );  
   declareProperty( "PhiAngularTol"    ,   m_phiAngularTol    = 0.005     );
   declareProperty( "MaxMissedSensors" ,   m_MaxMissedSensor  = 4         );
@@ -43,7 +43,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "AddSingleClusters",   m_useSingleClusters= false     );
   declareProperty( "SingleStationWin" ,   m_NStationSingle   = 2         );
   declareProperty( "SingleClusTol"    ,   m_singleClusTol    = 
-		   0.1*Gaudi::Units::mm   );
+      0.1*Gaudi::Units::mm   );
 }
 
 //=============================================================================
@@ -55,35 +55,35 @@ Tf::PatVeloGeneralTracking::~PatVeloGeneralTracking() {};
 //=============================================================================
 // Initialization
 //=============================================================================
-  
+
 StatusCode Tf::PatVeloGeneralTracking::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
   m_isDebug   = msgLevel( MSG::DEBUG   );
   m_isVerbose = msgLevel( MSG::VERBOSE );
-    
+
   if( m_isDebug ) debug() << "==> Initialize" << endmsg;
-    
+
   m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool");
-    
+
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
-    
+
   m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager" );
   m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
 
   std::vector< DeVeloRType* >::const_iterator iRSens;
   for ( iRSens = m_velo->rSensorsBegin() ; iRSens != m_velo->rSensorsEnd() ;
-	++iRSens ){
+      ++iRSens ){
     m_isLeftRSens[(*iRSens)->sensorNumber()] = (*iRSens)->isLeft();
   }
-    
+
   m_RSensorsMin = (*m_velo->rSensorsBegin())->sensorNumber();
   m_RSensorsMax = (*m_velo->rSensorsReverseBegin())->sensorNumber();
   m_PhiSensorsMin = (*m_velo->phiSensorsBegin())->sensorNumber();
   m_PhiSensorsMax = (*m_velo->phiSensorsReverseBegin())->sensorNumber();
-    
+
   m_NSensorSingle = 2*m_NStationSingle;
-    
+
   return StatusCode::SUCCESS;
 };
 
@@ -92,7 +92,7 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 //=============================================================================
 
 StatusCode Tf::PatVeloGeneralTracking::execute() {
-  
+
   if( m_isDebug ) debug() << "==> Execute" << endmsg;
 
   // turn all back to back VeloCoords into 3D points
@@ -103,9 +103,9 @@ StatusCode Tf::PatVeloGeneralTracking::execute() {
   PointsContainer::iterator iP;
   for( iP = createdPoints.begin() ; iP != createdPoints.end() ; ++iP ){
     std::sort(iP->second.begin(), iP->second.end(), 
-	      PatVeloLocalPoint::lessX());
+        PatVeloLocalPoint::lessX());
   }
-  
+
   // make tracks
   std::vector<PatVeloSpaceTrack*> tracks;
   findTracks(createdPoints,tracks);
@@ -138,12 +138,12 @@ buildAll3DClusters( PointsContainer & createdPoints ) {
       = m_phiHitManager->stationIterAll(phiSensor->sensorNumber());
 
     if( (*phiStationIter)->empty(0) && 
-	(*phiStationIter)->empty(1) ) continue; // no Phi clusters here!
-      
+        (*phiStationIter)->empty(1) ) continue; // no Phi clusters here!
+
     for ( unsigned int zone = 0 ; (*rStationReverseIter)->nZones() > zone ; ++zone ) {
       if( (*rStationReverseIter)->empty(zone) ) continue; // no R clusters
       build3DClusters(zone,(*rStationReverseIter),(*phiStationIter),
-		      createdPoints);
+          createdPoints);
     }
   }
   return;
@@ -151,22 +151,22 @@ buildAll3DClusters( PointsContainer & createdPoints ) {
 
 void Tf::PatVeloGeneralTracking::
 build3DClusters(int zone,
-		PatVeloRHitManager::Station * rStation,
-		PatVeloPhiHitManager::Station * phiStation,
-		PointsContainer &createdPoints){
+    PatVeloRHitManager::Station * rStation,
+    PatVeloPhiHitManager::Station * phiStation,
+    PointsContainer &createdPoints){
   unsigned int RZone = zone;
   if( rStation->sensor()->isRight() ) RZone += 4; // other side of detector
 
   PatVeloRHitRange rHits = rStation->hits(zone);
   // loop over all clusters in R sector
   for ( PatVeloRHitRange::iterator iRHit = rHits.begin();
-	iRHit != rHits.end() ; ++iRHit ) {
+      iRHit != rHits.end() ; ++iRHit ) {
 
     // if cluster already used by something optionally skip
-    if ( !m_allCoords && (*iRHit)->hit()->isUsed() ) continue; 
+    if ( !m_allCoords && (*iRHit)->hit()->testStatus(Tf::HitBase::UsedByVeloSpace) ) continue; 
 
     double r = (*iRHit)->coordHalfBox();
-    
+
     unsigned int phiZone = 0; // inner is 0, outer is 1
     if ( phiStation->sensor()->halfboxRRange(phiZone).second < r ) { 
       //point is in outer phi zone (second is the outer r limit)
@@ -177,41 +177,41 @@ build3DClusters(int zone,
     double offset = phiStation->sensor()->halfboxPhiOffset(phiZone,r);
     // loop over all clusters in Phi sector
     for ( PatVeloPhiHitRange::iterator iPhiHit = phiHits.begin();
-	  iPhiHit != phiHits.end() ; ++iPhiHit ){
+        iPhiHit != phiHits.end() ; ++iPhiHit ){
       // if cluster already used by something optionally skip
-      if ( !m_allCoords && (*iPhiHit)->hit()->isUsed() ) continue; 
+      if ( !m_allCoords && (*iPhiHit)->hit()->testStatus(Tf::HitBase::UsedByVeloSpace) ) continue; 
 
       // check Phi cluster is compatible with R sector phi range 
       std::pair<double,double> range;
       bool hasRange = 
-	m_PatVeloTrackTool->phiRange( r, RZone, m_phiAngularTol,
-				      phiStation, phiZone, range);      
+        m_PatVeloTrackTool->phiRange( r, RZone, m_phiAngularTol,
+            phiStation, phiZone, range);      
       if (!hasRange) continue; // R and phi zones do not overlap
       double phi = (*iPhiHit)->coordHalfBox() + offset;
       // see if phi is in the range
       if(!m_angleUtils.contains(range,phi)) continue;      
 
       createdPoints[(*iRHit)->sensorNumber()].
-	push_back(PatVeloLocalPoint(*iRHit,*iPhiHit,phi));
+        push_back(PatVeloLocalPoint(*iRHit,*iPhiHit,phi));
     }
   }
   if(m_isVerbose) 
     verbose() << "R Sensor " << rStation->sensor()->sensorNumber()
-	      << " zone " << zone
-	      << " # R coords " << rStation->hits(zone).size()
-	      << " Phi sensor " << phiStation->sensor()->sensorNumber()
-	      << " # phi coords inner " << phiStation->hits(0).size()
-	      << " outer " << phiStation->hits(1).size()
-	      << " # points " 
-	      << createdPoints[rStation->sensor()->sensorNumber()].size() 
-	      << endreq;
+      << " zone " << zone
+      << " # R coords " << rStation->hits(zone).size()
+      << " Phi sensor " << phiStation->sensor()->sensorNumber()
+      << " # phi coords inner " << phiStation->hits(0).size()
+      << " outer " << phiStation->hits(1).size()
+      << " # points " 
+      << createdPoints[rStation->sensor()->sensorNumber()].size() 
+      << endreq;
   m_Num3DCreated += createdPoints[rStation->stationNumber()].size();
   return;
 }
 
 void Tf::PatVeloGeneralTracking::
 findTracks(PointsContainer &points,
-	   std::vector<PatVeloSpaceTrack*> &tracks){
+    std::vector<PatVeloSpaceTrack*> &tracks){
 
   // starting from back of detector find triplets of clusters in consecutive 
   // stations
@@ -221,19 +221,19 @@ findTracks(PointsContainer &points,
     iS1 = iS0;
     ++iS1; // get sensor on same side
     while( iS1 != points.rend() &&
-	   m_isLeftRSens[iS1->first] != m_isLeftRSens[iS0->first] ) ++iS1;
+        m_isLeftRSens[iS1->first] != m_isLeftRSens[iS0->first] ) ++iS1;
     if ( iS1 == points.rend() ) continue; // out of sensors to match
     if( iS1->second.empty() ) continue; // skip empty stations
     iS2 = iS1;
     ++iS2; // get sensor on same side
     while( iS2 != points.rend() &&
-	   m_isLeftRSens[iS2->first] != m_isLeftRSens[iS1->first] ) ++iS2;
+        m_isLeftRSens[iS2->first] != m_isLeftRSens[iS1->first] ) ++iS2;
     if ( iS2 == points.rend() ) continue; // out of sensors to match
     if( iS2->second.empty() ) continue; // skip empty stations
 
     if(m_isVerbose) verbose() << "Search for triplets in " 
-			      << iS0->first << ", " << iS1->first
-			      << ", " << iS2->first << endreq;
+      << iS0->first << ", " << iS1->first
+        << ", " << iS2->first << endreq;
 
     std::vector<PointsList> triplets;
     // using these three stations make tripets of comptaible clusters
@@ -241,9 +241,9 @@ findTracks(PointsContainer &points,
     // remove coords used twice based on chi^2 cuts
     sortAndKeepGoodTriplets(triplets);
     if(m_isVerbose) verbose() << "Found " << triplets.size() 
-			      << " viable triplets " << endreq;
+      << " viable triplets " << endreq;
     for( std::vector<PointsList>::iterator iT = triplets.begin();
-	 iT != triplets.end(); ++iT ){      
+        iT != triplets.end(); ++iT ){      
       if(!iT->vaild()) continue; // skip killed triplets
       PatVeloSpaceTrack * newTrack = new PatVeloSpaceTrack();
       extendTrack(*iT,points,newTrack);
@@ -255,9 +255,9 @@ findTracks(PointsContainer &points,
 
 void Tf::PatVeloGeneralTracking::
 makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
-		    std::vector<PatVeloLocalPoint> &two,	    
-		    std::vector<PatVeloLocalPoint> &three,
-		    std::vector<PointsList> &triplets){
+    std::vector<PatVeloLocalPoint> &two,	    
+    std::vector<PatVeloLocalPoint> &three,
+    std::vector<PointsList> &triplets){
   std::vector<PatVeloLocalPoint>::iterator iOne,iTwo,iThree;
   // one, two and three are sorted in X so first look at x projection
   for ( iOne = one.begin() ; iOne != one.end() ; ++iOne ){
@@ -269,26 +269,26 @@ makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
       double predX = iOne->x() + (iThree->x() - iOne->x())*ratio;
       double predY = iOne->y() + (iThree->y() - iOne->y())*ratio;
       double dPredX = m_ErrScale*GSL_MAX(iOne->deltaX(),iThree->deltaX())
-	+ m_ErrMin;
+        + m_ErrMin;
       double dPredY = m_ErrScale*GSL_MAX(iOne->deltaY(),iThree->deltaY())
-	+ m_ErrMin;
+        + m_ErrMin;
 
       // get the start and end of the possible middle points in X
       std::vector<PatVeloLocalPoint>::iterator iTwoBegin = 
-	lower_bound(two.begin(),two.end(), predX-dPredX, 
-		    PatVeloLocalPoint::lessX() );
+        lower_bound(two.begin(),two.end(), predX-dPredX, 
+            PatVeloLocalPoint::lessX() );
       std::vector<PatVeloLocalPoint>::iterator iTwoEnd = 
-	upper_bound(iTwoBegin,two.end(), predX+dPredX, 
-		    PatVeloLocalPoint::lessX() );
+        upper_bound(iTwoBegin,two.end(), predX+dPredX, 
+            PatVeloLocalPoint::lessX() );
       for( iTwo = iTwoBegin; iTwo != iTwoEnd ; ++iTwo ){
-	if( iTwo->used() ) continue;
-	if( fabs(iTwo->y()-predY) < (dPredY+iTwo->deltaY()) ){
-	  triplets.push_back
-	    (PointsList(&(*iOne),&(*iTwo),&(*iThree),
-			gsl_pow_2((iTwo->y()-predY)/(dPredY+iTwo->deltaY()))+
-			gsl_pow_2((iTwo->x()-predX)/(dPredX+iTwo->deltaX())),
-			m_isLeftRSens[iOne->rHit()->sensorNumber()]));
-	}
+        if( iTwo->used() ) continue;
+        if( fabs(iTwo->y()-predY) < (dPredY+iTwo->deltaY()) ){
+          triplets.push_back
+            (PointsList(&(*iOne),&(*iTwo),&(*iThree),
+                        gsl_pow_2((iTwo->y()-predY)/(dPredY+iTwo->deltaY()))+
+                        gsl_pow_2((iTwo->x()-predX)/(dPredX+iTwo->deltaX())),
+                        m_isLeftRSens[iOne->rHit()->sensorNumber()]));
+        }
       }
     }
   }
@@ -299,16 +299,16 @@ void Tf::PatVeloGeneralTracking::
 sortAndKeepGoodTriplets(std::vector<PointsList> &triplets){
   std::sort(triplets.begin(), triplets.end(), PointsList::lessChi2());
   for( std::vector<PointsList>::iterator iT = triplets.begin();
-       iT != triplets.end() ; ++iT ){
+      iT != triplets.end() ; ++iT ){
 
     // check all clusters still OK
     if( !iT->points()[0]->used() && 
-	!iT->points()[1]->used() && 
-	!iT->points()[2]->used() ){
+        !iT->points()[1]->used() && 
+        !iT->points()[2]->used() ){
       // kill clusters for other tracks
       for ( unsigned int i = 0 ; i < 3 ; ++i ) {
-	iT->points()[i]->rHit()->hit()->setUsed(true);
-	iT->points()[i]->phiHit()->hit()->setUsed(true);
+        iT->points()[i]->rHit()->hit()->setUsed(true);
+        iT->points()[i]->phiHit()->hit()->setUsed(true);
       }
     }else{
       iT->setValid(false);
@@ -318,8 +318,8 @@ sortAndKeepGoodTriplets(std::vector<PointsList> &triplets){
 }
 
 void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
-					     PointsContainer &points,
-					     PatVeloSpaceTrack *newTrack){
+    PointsContainer &points,
+    PatVeloSpaceTrack *newTrack){
   // maintain an seperate linear X/Y fit 
   PatVeloSpaceTrackLocal::FrameParam xFit,yFit;
 
@@ -332,23 +332,23 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
   usedRSensor.reserve(3);
   std::vector<PatVeloLocalPoint*>::iterator iPoint;  
   for( iPoint = trackPoints.points().begin();
-       iPoint != trackPoints.points().end(); ++iPoint ){
+      iPoint != trackPoints.points().end(); ++iPoint ){
     xFit.increment(1./gsl_pow_2((*iPoint)->deltaX()),
-		   (*iPoint)->x(),(*iPoint)->z());
+        (*iPoint)->x(),(*iPoint)->z());
     yFit.increment(1./gsl_pow_2((*iPoint)->deltaY()),
-		   (*iPoint)->y(),(*iPoint)->z());
+        (*iPoint)->y(),(*iPoint)->z());
     usedRSensor.push_back((*iPoint)->rHit()->sensorNumber());
     lastZ = (*iPoint)->z();
     lastSensor = GSL_MIN((*iPoint)->rHit()->sensorNumber(),lastSensor);
     if(m_isVerbose) verbose() 
       << " R sensor " << (*iPoint)->rHit()->sensorNumber()
-      << " x: " << (*iPoint)->x() << "+-" <<(*iPoint)->deltaX()
-      << " y: " << (*iPoint)->y() << "+-" <<(*iPoint)->deltaY()
-      << " from [" << (*iPoint)->rHit()->sensorNumber() << "," 
-      << (*iPoint)->rHit()->stripNumber() << "] and ["
-      << (*iPoint)->phiHit()->sensorNumber() << "," 
-      << (*iPoint)->phiHit()->stripNumber() << "]"
-      << endreq;
+        << " x: " << (*iPoint)->x() << "+-" <<(*iPoint)->deltaX()
+        << " y: " << (*iPoint)->y() << "+-" <<(*iPoint)->deltaY()
+        << " from [" << (*iPoint)->rHit()->sensorNumber() << "," 
+        << (*iPoint)->rHit()->stripNumber() << "] and ["
+        << (*iPoint)->phiHit()->sensorNumber() << "," 
+        << (*iPoint)->phiHit()->stripNumber() << "]"
+        << endreq;
   }
 
   PointsContainer::reverse_iterator iPCont;
@@ -357,7 +357,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     if( iPCont->second.empty() ) continue; // skip empty containers    
     // skip sensors used already (should be in decending order in list)
     if ( std::binary_search(usedRSensor.rbegin(), 
-			    usedRSensor.rend(), iPCont->first ) ) continue;
+          usedRSensor.rend(), iPCont->first ) ) continue;
     // predict the impact point
     double xPred = xFit.pred((iPCont->second.begin())->z());
     double xPredErr = 
@@ -373,7 +373,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     double predScale;
     if( lastZ > (iPCont->second.begin()->z())){
       predScale = ((lastZ- (iPCont->second.begin()->z()))/
-		   32.3*Gaudi::Units::mm) * m_ErrExtrapScale;
+          32.3*Gaudi::Units::mm) * m_ErrExtrapScale;
     }else{
       predScale = m_ErrExtrapScale;
     }
@@ -381,17 +381,17 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     // get the start and end of the possible middle points in X
     std::vector<PatVeloLocalPoint>::iterator iPBegin = 
       lower_bound(iPCont->second.begin(),iPCont->second.end(),
-		  xPred-(predScale * xPredErr),
-		  PatVeloLocalPoint::lessX());
+          xPred-(predScale * xPredErr),
+          PatVeloLocalPoint::lessX());
     std::vector<PatVeloLocalPoint>::iterator iPEnd = 
       upper_bound(iPBegin,iPCont->second.end(),
-		  xPred+(predScale * xPredErr),
-		  PatVeloLocalPoint::lessX());
-    
+          xPred+(predScale * xPredErr),
+          PatVeloLocalPoint::lessX());
+
     if(m_isVerbose) verbose() 
       << "X range  ( " << xPred << " +- " << (predScale * xPredErr)
-      << " ) has " << iPEnd - iPBegin << " points in R sensor " 
-      << iPCont->first << endreq;
+        << " ) has " << iPEnd - iPBegin << " points in R sensor " 
+        << iPCont->first << endreq;
 
     // put the best match here, if there is one
     PatVeloLocalPoint* bestPoint = 0;
@@ -403,32 +403,32 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
       if ( iP->used() ) continue; // skip used hits
 
       if ( fabs( iP->y() - yPred ) < (predScale*yPredErr) + iP->deltaY() ){
-	double chi2 = 
-	  gsl_pow_2(( iP->y() - yPred ) / 
-		    ((predScale * yPredErr)+iP->deltaY() )) +
-	  gsl_pow_2(( iP->x() - xPred ) / 
-		    ((predScale*xPredErr)+iP->deltaX() ));
-	if(  chi2 < bestChi2  ){
-	  bestChi2 = chi2;
-	  bestPoint = &(*iP);
-	}
+        double chi2 = 
+          gsl_pow_2(( iP->y() - yPred ) / 
+              ((predScale * yPredErr)+iP->deltaY() )) +
+          gsl_pow_2(( iP->x() - xPred ) / 
+              ((predScale*xPredErr)+iP->deltaX() ));
+        if(  chi2 < bestChi2  ){
+          bestChi2 = chi2;
+          bestPoint = &(*iP);
+        }
       }
     }
     if( bestPoint != 0 ){
-      
+
       if(m_isVerbose) verbose() 
-	<< " added x: " << bestPoint->x() 
-	<< " y: " << bestPoint->y()
-	<< " from [" << bestPoint->rHit()->sensorNumber() << "," 
-	<< bestPoint->rHit()->stripNumber() << "] and ["
-	<< bestPoint->phiHit()->sensorNumber() << "," 
-	<< bestPoint->phiHit()->stripNumber() << "]"
-	<< endreq;
-    
+        << " added x: " << bestPoint->x() 
+          << " y: " << bestPoint->y()
+          << " from [" << bestPoint->rHit()->sensorNumber() << "," 
+          << bestPoint->rHit()->stripNumber() << "] and ["
+          << bestPoint->phiHit()->sensorNumber() << "," 
+          << bestPoint->phiHit()->stripNumber() << "]"
+          << endreq;
+
       xFit.increment(1./gsl_pow_2(bestPoint->deltaX()),
-		     bestPoint->x(),bestPoint->z());
+          bestPoint->x(),bestPoint->z());
       yFit.increment(1./gsl_pow_2(bestPoint->deltaY()),
-		     bestPoint->y(),bestPoint->z());      
+          bestPoint->y(),bestPoint->z());      
       // set hits as used
       bestPoint->rHit()->hit()->setUsed(true);
       bestPoint->phiHit()->hit()->setUsed(true);
@@ -438,7 +438,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     }else{
       // protect against negative answer from unsigned int subtraction
       if( (static_cast<int>(lastSensor) - static_cast<int>(iPCont->first)) 
-	  > m_MaxMissedSensor ) break; 
+          > m_MaxMissedSensor ) break; 
     }
   }
 
@@ -446,7 +446,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
   // turn points into track
   std::vector<PatVeloLocalPoint*>::iterator ipP;
   for ( ipP = trackPoints.points().begin() ; 
-	ipP != trackPoints.points().end() ; ++ipP ){
+      ipP != trackPoints.points().end() ; ++ipP ){
     newTrack->addRCoord((*ipP)->rHit());
     newTrack->addPhi((*ipP)->phiHit());
   }
@@ -455,14 +455,14 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
   if(m_useSingleClusters) {
     extendTrackSingleClusters(xFit,yFit,newTrack);
   }
-	
+
   return;
 }
 
 void Tf::PatVeloGeneralTracking::
 extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
-			  PatVeloSpaceTrackLocal::FrameParam &yFit,
-			  PatVeloSpaceTrack *newTrack){
+    PatVeloSpaceTrackLocal::FrameParam &yFit,
+    PatVeloSpaceTrack *newTrack){
 
   // make a list of the sensors to skip as already have clusters
   // (as int to allow subtractions later)
@@ -472,12 +472,12 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
   usedPhiSensor.resize(newTrack->phiCoords()->size());
   std::vector< PatVeloRHit * >::iterator iRHit;
   for( iRHit = newTrack->rCoords()->begin() ; 
-       iRHit != newTrack->rCoords()->end() ; ++iRHit ){
+      iRHit != newTrack->rCoords()->end() ; ++iRHit ){
     usedRSensor.push_back((*iRHit)->sensorNumber());
   }
   std::vector< PatVeloPhiHit * >::iterator iPhiHit;
   for( iPhiHit = newTrack->phiCoords()->begin() ; 
-       iPhiHit != newTrack->phiCoords()->end() ; ++iPhiHit ){
+      iPhiHit != newTrack->phiCoords()->end() ; ++iPhiHit ){
     usedPhiSensor.push_back((*iPhiHit)->sensorNumber());
   }
   // ensure lists are in accending sensor number order
@@ -499,7 +499,7 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
   // search for R clusters
   for ( currS = firstRSensor; currS != lastRSensor; ++currS ){
     if ( std::binary_search(usedRSensor.begin(), 
-			    usedRSensor.end(), currS ) ) continue;
+          usedRSensor.end(), currS ) ) continue;
     // add R clusters from sensor currS
     PatVeloRHitManager::Station * rStation = 
       *(m_rHitManager->stationIterAll(currS));
@@ -512,42 +512,42 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
       double trackPhi = atan2(trackY,trackX);
       double trackR = sqrt(trackX*trackX + trackY*trackY);
       std::pair<double,double> phiRange = 
-	rStation->sensor()->halfboxPhiRange(sector);
+        rStation->sensor()->halfboxPhiRange(sector);
       // check phi range of sector
       if( ! m_angleUtils.contains(phiRange,trackPhi) ) continue;
       PatVeloRHit* rHit = 
-	rStation->closestHitHalfBox(sector, trackR, m_singleClusTol);
-      if(rHit && !rHit->hit()->isUsed()) {
-	newTrack->addRCoord(rHit);
-	rHit->hit()->setUsed(true);
+        rStation->closestHitHalfBox(sector, trackR, m_singleClusTol);
+      if(rHit && !rHit->hit()->testStatus(Tf::HitBase::UsedByVeloSpace)) {
+        newTrack->addRCoord(rHit);
+        rHit->hit()->setUsed(true);
       }
     }
   }
   // search for Phi clusters
   for ( currS = firstPhiSensor; currS != lastPhiSensor; ++currS ){
     if ( std::binary_search(usedPhiSensor.begin(), 
-			    usedPhiSensor.end(), currS ) ) continue;
+          usedPhiSensor.end(), currS ) ) continue;
     // add R clusters from sensor currS
     int numberOfPhiSectors=2;
     for ( int sector = 0 ; numberOfPhiSectors > sector ; ++sector ) {
       PatVeloPhiHitManager::Station * phiStation = 
-	*(m_phiHitManager->stationIterAll(currS));
+        *(m_phiHitManager->stationIterAll(currS));
       if( !phiStation->sensor()->isReadOut() ) break; // skip not in readout
       if( phiStation->empty(sector) ) continue;
       double trackX = xFit.pred(phiStation->z());
       double trackY = yFit.pred(phiStation->z());
       double trackR = sqrt(trackX*trackX + trackY*trackY);
       if( trackR > phiStation->sensor()->rMax(sector) ||
-	  trackR < phiStation->sensor()->rMin(sector) ) continue;
+          trackR < phiStation->sensor()->rMin(sector) ) continue;
       double trackPhi = atan2(trackY,trackX);
       double offset = phiStation->sensor()->halfboxPhiOffset(sector,trackR);
       // work with coordinate (phi = coord+offset)
       PatVeloPhiHit* phiHit = 
-	phiStation->closestHitHalfBox(sector, trackPhi-offset, 
-				      m_singleClusTol/trackR);      
-      if(phiHit && !phiHit->hit()->isUsed()) {
-	newTrack->addPhi(phiHit);
-	phiHit->hit()->setUsed(true);
+        phiStation->closestHitHalfBox(sector, trackPhi-offset, 
+            m_singleClusTol/trackR);      
+      if(phiHit && !phiHit->hit()->testStatus(Tf::HitBase::UsedByVeloSpace)) {
+        newTrack->addPhi(phiHit);
+        phiHit->hit()->setUsed(true);
       }
     }
   }
@@ -572,7 +572,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
   std::vector<PatVeloSpaceTrack*>::iterator iTr;
 
   for ( iTr = tracks.begin(); tracks.end() != iTr; ++iTr ) {
-    
+
     if(!(*iTr)->valid()) continue; // if fails skip to next track
 
     // fit the RZ trajectory (for meanZ)
@@ -581,12 +581,12 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
     m_PatVeloTrackTool->setPhiCoords(*iTr);
     // fit the track trajectory
     (*iTr)->fitSpaceTrack( m_stepError );
-    
+
     // check if probably a backward particle 
     // if closest approach to beam line is at +z from average of measurements
     // and roughly within VELO
     if( fabs((*iTr)->point().z()) < 1000*Gaudi::Units::mm && 
-	(*iTr)->point().z() > (*iTr)->meanZ() ) (*iTr)->setBackward(true);
+        (*iTr)->point().z() > (*iTr)->meanZ() ) (*iTr)->setBackward(true);
 
     // check if spillover
     if (m_PatVeloTrackTool->isSpilloverTrack(*iTr) == true) {
@@ -597,21 +597,21 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
     //  clean the worst fitted examples
     if ( (*iTr)->chi2Dof( ) > m_chiSqDofMax ) {
       if (m_isVerbose) verbose() << "Skip track with chi^2/ndf " 
-				 << (*iTr)->chi2Dof( ) 
-				 << endmsg;
+        << (*iTr)->chi2Dof( ) 
+          << endmsg;
       continue;
     }
 
     if (m_isDebug) debug() << "Found track with chi^2/ndf " 
-			   << (*iTr)->chi2Dof( ) << endmsg;
-      
+      << (*iTr)->chi2Dof( ) << endmsg;
+
     // make the found PatVeloSpaceTrack back into an LHCb::Track
     LHCb::Track* newTrack = new LHCb::Track();
     outputTracks->insert(newTrack);
     newTrack->setHistory(LHCb::Track::PatVeloGeneral);
     StatusCode sc = 
       m_PatVeloTrackTool->makeTrackFromPatVeloSpace((*iTr),newTrack,
-						    m_forwardStepError);
+          m_forwardStepError);
     if (!sc) {
       Warning("Failed to convert to LHCb::Track");
       delete newTrack;
@@ -623,7 +623,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
   for ( iTr = tracks.begin(); tracks.end() != iTr; ++iTr ) {
     delete (*iTr);
   }
-  
+
   return;
 }
 
@@ -631,6 +631,6 @@ StatusCode Tf::PatVeloGeneralTracking::finalize() {
   if( m_isDebug ) debug() << "==> Finalize" << endmsg;
 
   info() << "Created an average of " << m_Num3DCreated / m_NumEvt 
-	 << " 3D Velo Points per event" << endreq;
+    << " 3D Velo Points per event" << endreq;
   return GaudiAlgorithm::finalize();
 }

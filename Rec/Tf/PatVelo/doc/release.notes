@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-16 - Kurt Rinnert
+ - the general tracking is noe properly checking whether hits are used by the
+   space tracking (as opposed to simply checking for isUsed()).
+
+! 2007-09-16 - Kurt Rinnert
  - fixed signed/unsigned compiler warning in general tracking
 
 ! 2007-09-14 - Kurt Rinnert
