@@ -1,4 +1,4 @@
-// $Id: SeedTrack.h,v 1.1.1.1 2007-08-14 13:42:02 jonrob Exp $
+// $Id: SeedTrack.h,v 1.1 2007-09-16 09:44:45 mneedham Exp $
 #ifndef SEEDTRACK_H
 #define SEEDTRACK_H 1
 
@@ -7,8 +7,8 @@
 
 #include <algorithm>
 
-#include "TsaKernel/SeedPnt.h"
-#include "TsaKernel/SeedHit.h"
+#include "TsaKernel_Tf/SeedPnt.h"
+#include "TsaKernel_Tf/SeedHit.h"
 
 namespace LHCb{
   class LHCbID;

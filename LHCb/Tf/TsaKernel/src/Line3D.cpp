@@ -1,5 +1,5 @@
 
-#include "TsaKernel/Line3D.h"
+#include "TsaKernel_Tf/Line3D.h"
 
 namespace Tf
 {

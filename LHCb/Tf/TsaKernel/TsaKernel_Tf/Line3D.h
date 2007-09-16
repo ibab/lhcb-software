@@ -7,7 +7,7 @@
 #include "LHCbMath/Line.h"
 
 // local
-#include "TsaKernel/Line.h"
+#include "TsaKernel_Tf/Line.h"
 
 namespace Tf
 {

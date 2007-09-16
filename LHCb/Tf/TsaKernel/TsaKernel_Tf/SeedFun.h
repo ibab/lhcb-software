@@ -1,12 +1,12 @@
-// $Id: SeedFun.h,v 1.1.1.1 2007-08-14 13:42:02 jonrob Exp $
+// $Id: SeedFun.h,v 1.1 2007-09-16 09:44:45 mneedham Exp $
 #ifndef _SeedFun_H_
 #define _SeedFun_H_
 
 #include <functional>
 #include <algorithm>
 
-#include "TsaKernel/SeedFunctor.h"
-#include "TsaKernel/SeedHit.h"
+#include "TsaKernel_Tf/SeedFunctor.h"
+#include "TsaKernel_Tf/SeedHit.h"
 
 namespace Tf
 {

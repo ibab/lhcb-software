@@ -1,8 +1,8 @@
-// $Id: SeedTrack.cpp,v 1.1.1.1 2007-08-14 13:42:02 jonrob Exp $
+// $Id: SeedTrack.cpp,v 1.2 2007-09-16 09:44:46 mneedham Exp $
 // Include files 
 
 // local
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SeedTrack
