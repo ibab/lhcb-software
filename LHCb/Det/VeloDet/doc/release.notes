@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.175 2007-09-04 16:09:57 cattanem Exp $
+! $Id: release.notes,v 1.176 2007-09-16 13:39:02 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-09-16 - Kurt Rinnert
+ - the zone is now decided based on the strip in phi(strip,fraction,radius)
+   methods.  The old method based on the radius was not safe for halfbox and
+   global frames.
 
 !======================== VeloDet v12r1 2007-09-04 ===========================
 ! 2007-09-03 - Kurt Rinnert

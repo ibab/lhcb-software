@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.26 2007-08-25 19:43:48 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.27 2007-09-16 13:39:02 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -197,8 +197,8 @@ public:
 
   /// phi at a given radius in the global frame
   inline double globalPhi(unsigned int strip, double fraction, double radius) const {
-    double c0     = radius < m_middleRadius? m_globalOffsetAtR0[0] : m_globalOffsetAtR0[1];
-    double d0     = radius < m_middleRadius? m_globalDistToOrigin[0] : m_globalDistToOrigin[1];
+    double c0     = strip < m_nbInner? m_globalOffsetAtR0[0] : m_globalOffsetAtR0[1];
+    double d0     = strip < m_nbInner? m_globalDistToOrigin[0] : m_globalDistToOrigin[1];
     double offset = asin(d0/radius);
     double phi    = m_globalPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
@@ -216,8 +216,8 @@ public:
 
   /// phi at a given radius in the halfbox frame
   inline double halfboxPhi(unsigned int strip, double fraction, double radius) const {
-    double c0     = radius < m_middleRadius? m_halfboxOffsetAtR0[0] : m_halfboxOffsetAtR0[1];
-    double d0     = radius < m_middleRadius? m_halfboxDistToOrigin[0] : m_halfboxDistToOrigin[1];
+    double c0     = strip < m_nbInner? m_halfboxOffsetAtR0[0] : m_halfboxOffsetAtR0[1];
+    double d0     = strip < m_nbInner? m_halfboxDistToOrigin[0] : m_halfboxDistToOrigin[1];
     double offset = asin(d0/radius);
     double phi    = m_halfboxPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
@@ -235,8 +235,8 @@ public:
 
   /// phi at a given radius in the ideal frame
   inline double idealPhi(unsigned int strip, double fraction, double radius) const {
-    double c0     = radius < m_middleRadius? m_idealOffsetAtR0[0] : m_idealOffsetAtR0[1];
-    double d0     = radius < m_middleRadius? m_idealDistToOrigin[0] : m_idealDistToOrigin[1];
+    double c0     = strip < m_nbInner? m_idealOffsetAtR0[0] : m_idealOffsetAtR0[1];
+    double d0     = strip < m_nbInner? m_idealDistToOrigin[0] : m_idealDistToOrigin[1];
     double offset = asin(d0/radius);
     double phi    = m_idealPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
