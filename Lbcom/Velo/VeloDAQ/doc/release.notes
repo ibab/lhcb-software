@@ -3,6 +3,30 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2007-09-16 - Kurt Rinnert
+ - introduced new version 3 of VELO raw buffer.  The only difference to
+   version 2 is the treatment of interstrip positions.  These are now computed
+   and rounded exactly like on the TELL1 board.  The default for
+   PrepareVeloRawBuffer (i.e. Boole) is now the new, correct version.  The
+   old behaviour can be obtained via the BankVersion property.
+ - added proper bank version management to decoder.  The correct decoding is
+   determined from the raw bank's version.  The version can also be enforced
+   via the ForceBankVersion property (useful for testbeam data).  In all cases
+   the code is protected against unsupported bank versions.  There is one
+   dangerous scenario, however:  if a user decides to use a new version of
+   Boole and reconstructs the events with and old version Brunel, there will
+   be trouble if the bank version is not configured properly in either the
+   encoder or the decoder.  Not a likely scenario, I hope.
+   Otherwise this change is completely transparent.  Old data will be
+   processed just like before.
+ - made sure the decoder creates empty cluster and lite cluster containers on
+   the TES even if the raw event is missing or it encounters an unsupported
+   bank version.  If a byte count mismatch (corrupted raw bank) is discovered
+   during the cluster decoding the clusters from this source ID are removed from
+   the container.  Clusters from other source IDs will be still available in
+   this case. 
+     
+
 !=========================  VeloDAQ v3r5 2006-08-30 =======================
 ! 2006-08-21 - Kurt Rinnert
  - It really makes no sense to create banks for sensors that can not me mapped

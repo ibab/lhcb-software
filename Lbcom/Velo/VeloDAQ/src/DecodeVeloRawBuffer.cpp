@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.12 2006-08-16 17:28:53 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.13 2007-09-16 16:56:23 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -16,6 +16,7 @@
 
 #include "DecodeVeloRawBuffer.h"
 #include "VeloRawBankDecoder.h"
+#include "VeloRawBankVersions.h"
 
 
 //-----------------------------------------------------------------------------
@@ -34,6 +35,7 @@ DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer );
 DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
+  , m_forcedBankVersion(0) // there is no version 0, so this means bank version is not enforced
 {
   declareProperty("DecodeToVeloLiteClusters",m_decodeToVeloLiteClusters=true);
   declareProperty("DecodeToVeloClusters",m_decodeToVeloClusters=false);
@@ -42,6 +44,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("VeloLiteClustersLocation",m_veloLiteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
+  declareProperty("ForceBankVersion",m_forcedBankVersion=0);
 }
 
 
@@ -60,6 +63,22 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 
   debug () << "==> Initialise" << endreq;
 
+  // check whether enforced bank version is supported
+  if(m_forcedBankVersion) {
+    switch (m_forcedBankVersion) {
+      case VeloDAQ::v2: // ok, supported
+      case VeloDAQ::v3:
+        break;
+      default: // not supported, bail out
+        error() << "User enforced VELO raw buffer version " 
+          << m_forcedBankVersion 
+          << " is not supported."
+          << endmsg;
+        return StatusCode::FAILURE;
+    }
+  }
+  
+  
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   return StatusCode::SUCCESS;
@@ -76,7 +95,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
   if (!rawEvent) {
     error() << "Raw Event not found in " << m_rawEventLocation
 	    << endmsg;
-
+    createEmptyBanks();
     return StatusCode::FAILURE;
   }
 
@@ -135,7 +154,6 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 	      << rb->sourceID()
 	      << " to sensor number!"
 	      << endmsg;
-      return StatusCode::FAILURE;
     }
 
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
@@ -171,17 +189,34 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 	      << rb->sourceID()
 	      << " to sensor number!"
 	      << endmsg;
-      return StatusCode::FAILURE;
     }
 
-    VeloDAQ::decodeRawBankToClusters(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
+    unsigned int oldSize = clusters->size();
+    unsigned int bankVersion = m_forcedBankVersion ? m_forcedBankVersion : rb->version();
+
+    switch (bankVersion) {
+      case VeloDAQ::v2:
+        VeloDAQ::decodeRawBankToClustersV2(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
+        break;
+      case VeloDAQ::v3:
+        VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
+        break;
+      default: // bank version is not supported
+        error() << "VELO raw buffer version "
+          << bankVersion
+          << " is not supported."
+          << endmsg;
+    }
 
     if (rb->size() != byteCount) {
       error() << "Byte count mismatch between RawBank size and decoded bytes." 
 	      << " RawBank: " << rb->size() 
 	      << " Decoded: " << byteCount 
+        << " Will remove clusters for source ID " << rb->sourceID()
 	      << endmsg;
-      return StatusCode::FAILURE;
+      LHCb::VeloClusters::iterator start = clusters->begin();
+      std::advance(start,oldSize);
+      clusters->erase(start,clusters->end());
     }
 
   }
@@ -230,4 +265,11 @@ void DecodeVeloRawBuffer::dumpVeloClusters(const LHCb::VeloClusters* clusters) c
       
   }
   return;
+}
+
+void DecodeVeloRawBuffer::createEmptyBanks() {
+  LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
+  put(fastCont,m_veloLiteClusterLocation);
+  LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
+  put(clusters,m_veloClusterLocation);
 }

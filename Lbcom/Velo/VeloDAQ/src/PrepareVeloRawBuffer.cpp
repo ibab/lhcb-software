@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.23 2006-08-21 14:47:02 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.24 2007-09-16 16:56:23 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -42,6 +42,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
   declareProperty("DumpInputClusters",m_dumpInputClusters=false);
+  declareProperty("BankVersion", m_bankVersion=VeloDAQ::v3);
 }
 
 //=============================================================================
@@ -59,6 +60,19 @@ StatusCode PrepareVeloRawBuffer::initialize() {
   debug() << "==> Initialise" << endreq;
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
+
+  // check whether the requested bank version is supported
+  switch (m_bankVersion) {
+    case VeloDAQ::v2: // ok, do nothing
+    case VeloDAQ::v3:
+      break; 
+    default: // not supported, bail out
+      error() << "VELO raw buffer version " 
+        << m_bankVersion 
+        << " is not supported."
+        << endmsg;
+      return StatusCode::FAILURE;
+  }
 
   // get a list of sensor numbers to identify empty sensors
   std::vector< DeVeloSensor* >::const_iterator  sIter = m_velo->sensorsBegin();
@@ -312,10 +326,10 @@ unsigned int PrepareVeloRawBuffer::makeBank (
           verbose() << "ADC COUNT:" <<  adcCount << " STRIP:" << stripNumber
             << endmsg; 
         }
+
         // sum adc values and adc weighted strip numbers
         sumADC += adcCount;
         sumADCWeightedeStrip += static_cast<double>(stripNumber) * adcCount;
-
         // create new adc word
         bool endOfCluster = (stripSignals.size() == i+1);
         SiADCWord aw(adcCount,endOfCluster);
@@ -332,9 +346,20 @@ unsigned int PrepareVeloRawBuffer::makeBank (
 
       }
 
-      double cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
+      double cPos=0.0;
+      
+      switch (m_bankVersion) {
+        case VeloDAQ::v2:
+          cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
+          break;
+        case VeloDAQ::v3:
+          // compute the weighted mean like it is done on the TELL1
+          cPos = sumADCWeightedeStrip*static_cast<int>(65536./sumADC+0.5)/65536+1/16.; 
+          break;
+      }
       unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
       double interStripPos = cPos - channelPos; // fractional part
+
       VeloClusterWord vcw(channelPos, interStripPos, numStrips, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
 

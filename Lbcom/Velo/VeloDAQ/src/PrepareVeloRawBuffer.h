@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.13 2006-08-21 14:25:58 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.14 2007-09-16 16:56:23 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -61,8 +61,8 @@ private:
   // configurable cluster dump flag
   bool m_dumpInputClusters;
 
-  // version tag, this strongly tied to the implementation, hence const
-  const int m_bankVersion;
+  /// version tag
+  unsigned int m_bankVersion;
 
   // long lived containers for performance reasons. Also used to communicate
   // with makeBank() method

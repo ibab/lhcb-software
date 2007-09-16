@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.8 2006-08-16 17:28:53 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.9 2007-09-16 16:56:23 krinnert Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -60,6 +60,14 @@ private:
    */
   void dumpVeloClusters(const LHCb::VeloClusters* clusters) const;
 
+  /** Create empty banks
+   *
+   * Creates empty cluster and lite cluster banks on the TES.
+   * This called as a failsafe option in case the raw event 
+   * is missing.
+   * */
+  void createEmptyBanks(); 
+
 private:
 
   // configuration
@@ -68,6 +76,8 @@ private:
   bool m_decodeToVeloClusters;
 
   bool m_dumpVeloClusters;
+
+  unsigned int m_forcedBankVersion; ///< user forced bank version
 
   std::string m_rawEventLocation;
   std::string m_veloLiteClusterLocation;
