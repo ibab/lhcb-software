@@ -8,12 +8,12 @@
 
 #include <algorithm>
 
-#include "TsaKernel/ITsaStubFind.h"
-#include "TsaKernel/SeedFun.h"
-#include "TsaKernel/SeedStub.h"
-#include "TsaKernel/SeedHit.h"
-#include "TsaKernel/SeedFun.h"
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/ITsaStubFind.h"
+#include "TsaKernel_Tf/SeedFun.h"
+#include "TsaKernel_Tf/SeedStub.h"
+#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel_Tf/SeedFun.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 
 #include "LHCbMath/GeomFun.h"
 

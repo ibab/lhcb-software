@@ -1,6 +1,6 @@
 
 #include "SeedParabolaFit.h"
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
 using namespace Tf::Tsa;
 

@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::Tsa::TStationHitManager
  *
- *  $Id: TsaTStationHitManager.h,v 1.1 2007-08-18 16:51:59 jonrob Exp $
+ *  $Id: TsaTStationHitManager.h,v 1.2 2007-09-16 10:01:51 mneedham Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -16,7 +16,7 @@
 
 #include "TfKernel/TStationHitManager.h"
 
-#include "TsaKernel/TsaSeedingHit.h"
+#include "TsaKernel_Tf/TsaSeedingHit.h"
 
 namespace Tf
 {

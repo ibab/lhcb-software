@@ -1,14 +1,14 @@
 
-// $Id: TsaITXSearch.cpp,v 1.2 2007-08-18 16:51:59 jonrob Exp $
+// $Id: TsaITXSearch.cpp,v 1.3 2007-09-16 10:01:50 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "TsaITXSearch.h"
 #include "SeedParabolaFit.h"
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 //#include "TsaKernel/STCluster.h"
 
 #include <utility>

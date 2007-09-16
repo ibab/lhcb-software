@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-09-16 M Needham
+ - Follow temp move of header files to TsaKernel_Tf
+
 ! 2007-08-28 - 
  - Some fixes for WIN32 compilation
 

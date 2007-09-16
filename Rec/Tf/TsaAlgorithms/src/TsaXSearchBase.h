@@ -2,14 +2,14 @@
 #ifndef _TsaXSearchBase_H
 #define _TsaXSearchBase_H
 
-#include "TsaKernel/ITsaSeedStep.h"
+#include "TsaKernel_Tf/ITsaSeedStep.h"
 #include "GaudiAlg/GaudiTool.h"
 #include <algorithm>
-#include "TsaKernel/SeedFunctor.h"
-#include "TsaKernel/SeedFun.h"
-#include "TsaKernel/TsaConstants.h"
-#include "TsaKernel/SeedHit.h"
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedFunctor.h"
+#include "TsaKernel_Tf/SeedFun.h"
+#include "TsaKernel_Tf/TsaConstants.h"
+#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
 namespace Tf
 {

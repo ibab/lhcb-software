@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <utility>
 
-#include "TsaKernel/TsaSeedingHit.h"
-#include "TsaKernel/SeedTrack.h"
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/TsaSeedingHit.h"
+#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 
 #include "TsaXSearchBase.h"
 #include "SeedParabolaFit.h"

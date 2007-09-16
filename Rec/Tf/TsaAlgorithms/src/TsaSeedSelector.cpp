@@ -1,11 +1,11 @@
-// $Id: TsaSeedSelector.cpp,v 1.2 2007-08-16 12:45:58 mneedham Exp $
+// $Id: TsaSeedSelector.cpp,v 1.3 2007-09-16 10:01:51 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "TsaSeedSelector.h"
-#include "TsaKernel/SeedFunctor.h"
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedFunctor.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
 #include <algorithm>
 #include <utility>

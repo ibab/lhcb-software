@@ -2,7 +2,7 @@
 #ifndef _TsaSelectorBase_H
 #define _TsaSelectorBase_H
 
-#include "TsaKernel/ITsaSeedStep.h"
+#include "TsaKernel_Tf/ITsaSeedStep.h"
 #include "GaudiAlg/GaudiTool.h"
 
 #include <string>

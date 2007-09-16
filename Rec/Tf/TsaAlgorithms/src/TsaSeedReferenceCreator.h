@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaSeedReferenceCreator.h,v 1.2 2007-09-16 10:01:51 mneedham Exp $
 #ifndef _TsaSeedReferenceCreator_H
 #define _TsaSeedReferenceCreator_H
 
@@ -15,7 +15,7 @@ namespace LHCb{
 }
 class ITrajPoca;
 
-#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel_Tf/SeedTrack.h"
 
 namespace Tf
 {

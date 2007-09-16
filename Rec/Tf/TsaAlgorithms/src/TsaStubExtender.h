@@ -8,12 +8,12 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 
-#include "TsaKernel/ITsaStubExtender.h"
-#include "TsaKernel/SeedFun.h"
-#include "TsaKernel/SeedStub.h"
-#include "TsaKernel/SeedTrack.h"
-#include "TsaKernel/SeedPnt.h"
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/ITsaStubExtender.h"
+#include "TsaKernel_Tf/SeedFun.h"
+#include "TsaKernel_Tf/SeedStub.h"
+#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel_Tf/SeedPnt.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"

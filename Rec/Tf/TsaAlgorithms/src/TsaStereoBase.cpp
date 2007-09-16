@@ -1,18 +1,18 @@
-// $Id: TsaStereoBase.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaStereoBase.cpp,v 1.2 2007-09-16 10:01:51 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "TsaStereoBase.h"
-#include "TsaKernel/SeedHit.h"
-#include "TsaKernel/SeedTrack.h"
-#include "TsaKernel/SeedFun.h"
+#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel_Tf/SeedFun.h"
 #include "SeedLineFit.h"
 
 #include "Event/State.h"
 
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"

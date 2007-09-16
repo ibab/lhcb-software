@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.2 2007-08-28 10:46:35 jonrob Exp $
+// $Id: ITExpectedHits.h,v 1.3 2007-09-16 10:01:50 mneedham Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -8,11 +8,11 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 
-#include "TsaKernel/IITExpectedHits.h"
-#include "TsaKernel/Parabola.h"
-#include "TsaKernel/Line.h"
-#include "TsaKernel/Line3D.h"
-#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel_Tf/IITExpectedHits.h"
+#include "TsaKernel_Tf/Parabola.h"
+#include "TsaKernel_Tf/Line.h"
+#include "TsaKernel_Tf/Line3D.h"
+#include "TsaKernel_Tf/TsaConstants.h"
 
 // Kernel
 #include "Kernel/STChannelID.h"
