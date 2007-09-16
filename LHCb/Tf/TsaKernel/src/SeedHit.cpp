@@ -1,8 +1,8 @@
-// $Id: SeedHit.cpp,v 1.1.1.1 2007-08-14 13:42:02 jonrob Exp $
+// $Id: SeedHit.cpp,v 1.2 2007-09-16 12:21:09 krinnert Exp $
 // Include files 
 
 // local
-#include "TsaKernel/SeedHit.h"
+#include "TsaKernel_Tf/SeedHit.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SeedHit

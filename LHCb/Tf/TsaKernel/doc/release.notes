@@ -4,7 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2007-09-16 Move header files to TsaKernel_Tf (temp to avoid clash)
+! 2007-09-16 - Kurt Rinnert
+ - fixed requirements file to install the headers in TsaKernel_Tf
+ - fixed SeedHit to use temporary TsaKernel_Tf include directory
+
+! 2007-09-16 - Matt Needham
+ - Move header files to TsaKernel_Tf (temp to avoid clash)
 
 ! 2007-08-25 - Chris Jones
  - Remove dependency on RichKernel

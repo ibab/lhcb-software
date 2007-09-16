@@ -29,7 +29,7 @@ use TfKernel    v*  Tf
 #============================================================================
 # Install includes
 #============================================================================
-apply_pattern install_more_includes more=TsaKernel
+apply_pattern install_more_includes more=TsaKernel_Tf
 
 #============================================================================
 # Component library building rule
