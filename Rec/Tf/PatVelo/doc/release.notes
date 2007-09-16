@@ -4,6 +4,13 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-09-16 - Kurt Rinnert
+ - fixed signed/unsigned compiler warning in general tracking
+
+! 2007-09-14 - Kurt Rinnert
+ - backed out now unnecessary type trait from PatVeloHit 
+ - removed unnecessary hit manager member from space tracking algorithm
+
 ! 2007-09-14 - David Hutchcroft
  - Added a converted version of PatVeloGeneralTracking in new Tf framework
  - Remove R clusters from cut outs on space tracks

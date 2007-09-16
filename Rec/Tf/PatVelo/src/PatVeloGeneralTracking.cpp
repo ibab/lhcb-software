@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.1 2007-09-14 13:20:29 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.2 2007-09-16 13:52:03 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -140,7 +140,7 @@ buildAll3DClusters( PointsContainer & createdPoints ) {
     if( (*phiStationIter)->empty(0) && 
 	(*phiStationIter)->empty(1) ) continue; // no Phi clusters here!
       
-    for ( int zone = 0 ; (*rStationReverseIter)->nZones() > zone ; ++zone ) {
+    for ( unsigned int zone = 0 ; (*rStationReverseIter)->nZones() > zone ; ++zone ) {
       if( (*rStationReverseIter)->empty(zone) ) continue; // no R clusters
       build3DClusters(zone,(*rStationReverseIter),(*phiStationIter),
 		      createdPoints);

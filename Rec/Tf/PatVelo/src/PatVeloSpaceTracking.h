@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.h,v 1.2 2007-08-28 12:02:56 jonrob Exp $
+// $Id: PatVeloSpaceTracking.h,v 1.3 2007-09-16 13:52:03 krinnert Exp $
 #ifndef TF_PATVELOSPACETRACKING_H 
 #define TF_PATVELOSPACETRACKING_H 1
 
@@ -15,7 +15,6 @@
 // local
 #include "PatVeloSpaceTrack.h"
 #include "PatVeloSpaceTool.h"
-#include "PatVeloPhiHitManager.h"
 
 namespace Tf {
 
@@ -54,8 +53,6 @@ namespace Tf {
 
       LHCb::Tracks* m_inputTracks;   ///< Container for input RZ tracks
       LHCb::Tracks* m_outputTracks;  ///< Container for output Space tracks
-
-      PatVeloPhiHitManager* m_hitManager;  ///< tool to handle extended phi hits
 
       /// sort function for track lengths; then by sensor number in a tie
       /// NOTE using greater [instead of less] to make longer tracks sort first
