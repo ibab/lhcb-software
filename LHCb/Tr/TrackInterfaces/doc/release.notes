@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== TrackInterfaces v3r8 2007-09-17 ======================
+! 2007-09-17 - Marco Cattaneo for Stephanie Menzemer
+ - Add IPatSeedingTool interface, also to dictionary
+
 ! 2007-09-13 M. Needham
  - Update IHitExpectation interface
 

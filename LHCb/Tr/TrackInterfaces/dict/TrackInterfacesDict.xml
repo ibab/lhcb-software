@@ -1,8 +1,10 @@
 <lcgdict>
   <class name    = "IAddTTClusterTool"       />
+  <class name    = "IHitExpectation"         />
   <class name    = "IMaterialLocator"        />
   <class name    = "IMeasurementProvider"    />
   <class name    = "IPatForwardTool"         />
+  <class name    = "IPatSeedingTool"         />
   <class name    = "IStateCorrectionTool"    />
   <class name    = "ITrackCaloMatch"         />
   <class name    = "ITrackChi2Calculator"    />
@@ -19,7 +21,6 @@
   <class name    = "ITracksFromTrack"        />
   <class name    = "ITrackVelodEdxCharge"    />
   <class name    = "ITrajectoryProvider"     />
-  <class name    = "IVeloExpectation"        />
   <class name    = "ITrajFitter"             />
-  <class name = "IHitExpectation" />
+  <class name    = "IVeloExpectation"        />
 </lcgdict>

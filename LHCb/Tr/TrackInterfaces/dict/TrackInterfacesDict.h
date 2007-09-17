@@ -2,9 +2,11 @@
 #define DICT_TRACKINTERFACESDICT_H 1
 
 #include "TrackInterfaces/IAddTTClusterTool.h"
+#include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/IPatForwardTool.h"
+#include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/IStateCorrectionTool.h"
 #include "TrackInterfaces/ITrackCaloMatch.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
@@ -23,7 +25,6 @@
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrajFitter.h"
 #include "TrackInterfaces/IVeloExpectation.h"
-#include "TrackInterfaces/IHitExpectation.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
 
