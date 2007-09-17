@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackEvent v4r6 2007-09-17 ==========================
+! 2007-09-17 - Marco Cattaneo
+ - Remove some unneccessary includes from .cpp files
+
 ! 2007-09-14 - Chris Jones
  - Add to extraInfo enum enters for KL Clone variables at the vertex, Rich1 
    and Rich2

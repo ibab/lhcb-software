@@ -1,7 +1,6 @@
-// $Id: StateVector.cpp,v 1.2 2007-09-06 11:44:07 mneedham Exp $
+// $Id: StateVector.cpp,v 1.3 2007-09-17 06:41:45 cattanem Exp $
 
 #include <math.h>
-#include <gsl/gsl_math.h>
 
 // from GaudiKernel
 #include "GaudiKernel/GenericMatrixTypes.h"

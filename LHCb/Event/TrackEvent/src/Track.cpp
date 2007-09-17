@@ -7,7 +7,6 @@
 #include <string>
 
 // from gsl
-#include "gsl/gsl_math.h"
 #include "gsl/gsl_cdf.h"
 
 
