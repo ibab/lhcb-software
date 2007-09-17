@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.329 2007-09-17 08:53:54 cattanem Exp $ 
+! $Id: release.notes,v 1.330 2007-09-17 08:55:53 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -39,7 +39,6 @@
    . Clarify signature and doxygen documentation localDeltaFromGlobalTransform
      methods.
 
->>>>>>> 1.327
 !====================== DetDesc v17r5 2007-07-11 ==============================
 ! 2007-07-11 - Juan PALACIOS
  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
