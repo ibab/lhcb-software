@@ -1,4 +1,4 @@
-// $Id: TrackCloneCleaner.cpp,v 1.2 2007-09-14 13:03:41 jonrob Exp $
+// $Id: TrackCloneCleaner.cpp,v 1.3 2007-09-17 09:25:03 jonrob Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -21,7 +21,6 @@ TrackCloneCleaner::TrackCloneCleaner(const std::string& name,
   // track locaton
   declareProperty("inputLocation",  m_inputLocation  = TrackLocation::Default);
   declareProperty("linkerLocation", m_linkerLocation = TrackLocation::Default+"Clones");
-  declareProperty("CloneTag", m_cloneTagTES = "VertexClone" );
   declareProperty("CloneCut", m_cloneCut = 5000 );
 }
 
@@ -31,15 +30,6 @@ StatusCode TrackCloneCleaner::initialize()
 {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-
-  // CRJ : Surely something better can be done here ?
-  if      ( m_cloneTagTES == "VertexClone" ) { m_cloneTag = LHCb::Track::VertexClone; }
-  else if ( m_cloneTagTES == "Rich1Clone"  ) { m_cloneTag = LHCb::Track::Rich1Clone; }
-  else if ( m_cloneTagTES == "Rich2Clone"  ) { m_cloneTag = LHCb::Track::Rich2Clone; }
-  else
-  {
-    return Error( "Unknown Clone tag '" + m_cloneTagTES + "'" );
-  }
 
   return sc;
 }
@@ -84,7 +74,7 @@ StatusCode TrackCloneCleaner::execute()
   // sort by type (lowest rank first)
   std::stable_sort( tempTracks.begin(), tempTracks.end(),
                     bind(&WorkingTrack::trackTypeRank,_1) < bind(&WorkingTrack::trackTypeRank,_2) );
-  
+
   for ( WorkingTrack::Vector::iterator iterW = tempTracks.begin();
         iterW != tempTracks.end(); ++iterW )
   {
@@ -127,15 +117,15 @@ StatusCode TrackCloneCleaner::execute()
           if ( iter != tempTracks.end() )
           {
             iter->clone = true;
-            if ( iter->track->info(m_cloneTag,1e99) > dist )
+            if ( iter->track->info(LHCb::Track::CloneDist,1e99) > dist )
             {
               if ( msgLevel(MSG::VERBOSE) )
               {
-                verbose() << "  -> Flagging track " << iter->track 
+                verbose() << "  -> Flagging track " << iter->track
                           << " key=" << iter->track->key() << " "
                           << iter->track->history() << " as a clone" << endreq;
               }
-              iter->track->addInfo( m_cloneTag, dist );
+              iter->track->addInfo( LHCb::Track::CloneDist, dist );
             }
           }
 

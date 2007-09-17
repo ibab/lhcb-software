@@ -1,4 +1,4 @@
-// $Id: TrackCloneCleaner.h,v 1.2 2007-09-14 13:03:41 jonrob Exp $
+// $Id: TrackCloneCleaner.h,v 1.3 2007-09-17 09:25:03 jonrob Exp $
 #ifndef _TrackCloneCleaner_H_
 #define _TrackCloneCleaner_H_
 
@@ -76,9 +76,6 @@ private:
   std::string m_inputLocation;  ///< Locations of Tracks in TES
   std::string m_linkerLocation; ///< Location of Clone linker in TES
   double m_cloneCut;            ///< Clone cut value
-
-  std::string m_cloneTagTES;    ///< tag to add to tracks identified as rejected clones
-  LHCb::Track::AdditionalInfo m_cloneTag;
 
 };
 

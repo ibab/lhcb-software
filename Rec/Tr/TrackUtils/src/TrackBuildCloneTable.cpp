@@ -1,4 +1,4 @@
-// $Id: TrackBuildCloneTable.cpp,v 1.2 2007-09-14 13:03:41 jonrob Exp $
+// $Id: TrackBuildCloneTable.cpp,v 1.3 2007-09-17 09:25:03 jonrob Exp $
 
 #include "TrackBuildCloneTable.h"
 
@@ -8,16 +8,15 @@ DECLARE_ALGORITHM_FACTORY( TrackBuildCloneTable );
 
 TrackBuildCloneTable::TrackBuildCloneTable(const std::string& name,
                                            ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator)
+  GaudiAlgorithm ( name, pSvcLocator ),
+  m_zStates      ( 1, 0.0 )
 {
-
   declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
   declareProperty("outputLocation", m_outputLocation = TrackLocation::Default+"Clones");
   declareProperty("klCut", m_klCut = 5000);
-  declareProperty("zState", m_zState = 0.0);
+  declareProperty("zStates", m_zStates );
   declareProperty("maxDz", m_maxDz = 2.0*Gaudi::Units::m);
   declareProperty("ExtrapolatorType", m_extraType = "TrackHerabExtrapolator" );
-
 }
 
 TrackBuildCloneTable::~TrackBuildCloneTable() { }
@@ -29,7 +28,7 @@ StatusCode TrackBuildCloneTable::initialize()
 
   m_extrapolator = tool<ITrackExtrapolator>(m_extraType);
 
-  info() << "Will build clone table for z=" << m_zState 
+  info() << "Will build clone table for z=" << m_zStates
          << "mm at '" << m_outputLocation << "'" << endreq;
   info() << "Max Kullbeck Liebler Distance = " << m_klCut << endreq;
 
@@ -48,29 +47,46 @@ StatusCode TrackBuildCloneTable::execute()
   // working objects ---> invert the covariance matrix only once...
   CloneTrack::Vector tracks;
   tracks.reserve(inCont->size());
-  for ( Tracks::const_iterator iterT = inCont->begin();
-        iterT != inCont->end(); ++iterT )
+  for ( Tracks::const_iterator iT = inCont->begin();
+        iT != inCont->end(); ++iT )
   {
+    debug() << "Track " << (*iT)->key() << " " << (*iT)->history() << endreq;
 
-    // get state closest to reference z pos
-    const State & closestState = (*iterT)->closestState(m_zState);
+    // make working track object, directly in the vector
+    tracks.push_back( CloneTrack(*iT) );
+    CloneTrack & cloneTrack = tracks.back();
 
-    // only take ones that are close in z
-    if ( fabs(closestState.z() - m_zState) > m_maxDz ) continue ;
+    // Loop over all z positions
+    for ( std::vector<double>::const_iterator iZ = m_zStates.begin();
+          iZ != m_zStates.end(); ++iZ )
+    {
+      // get state closest to reference z pos
+      const State & cState = (*iT)->closestState(*iZ);
 
-    // clone state
-    State tmpState = closestState;
+      // only take ones that are close in z
+      if ( fabs( cState.z() - *iZ ) > m_maxDz ) continue ;
+      debug() << " -> Found state closest to z=" << *iZ << " at z=" << cState.z() << endreq;
 
-    // extrapolate to desired z pos
-    const StatusCode sc = m_extrapolator->propagate(tmpState, m_zState);
-    if (sc.isFailure()) continue;
+      // clone state
+      State tmpState ( cState );
 
-    // make new object, directly in the vector
-    tracks.push_back( CloneTrack(tmpState,*iterT) );
+      // extrapolate to desired z pos
+      const StatusCode sc = m_extrapolator->propagate(tmpState,*iZ);
+      if (sc.isFailure())
+      { Warning("Problem extrapolating state",StatusCode::SUCCESS); continue; }
+
+      // Add Clone state to clone track
+      cloneTrack.states.insert( CloneTrack::CloneStates::value_type(*iZ,CloneState(tmpState)) );
+
+    } // z states
+
+    // Did we find any states ? If not remove clone track
+    if ( cloneTrack.states.empty() ) tracks.pop_back();
 
   } // inCont
 
   // loop over the working objects
+  debug() << "Looping over all Track pairs to find clones :-" << endreq;
   for ( CloneTrack::Vector::const_iterator iterC1 = tracks.begin();
         iterC1 != tracks.end(); ++iterC1 )
   {
@@ -79,39 +95,79 @@ StatusCode TrackBuildCloneTable::execute()
     ++iterC2;
     for ( ; iterC2 != tracks.end(); ++iterC2 )
     {
-      const double dist = kullbeckLieblerDist(*iterC1,*iterC2);
-      if (dist < m_klCut)
+      // overall distance for this track pair
+      double overall_dist(0);
+      bool haveComparison(false);
+
+      // loop over possible z positions
+      for ( std::vector<double>::const_iterator iZ = m_zStates.begin();
+            iZ != m_zStates.end(); ++iZ )
+      {
+        // Do both clone tracks have states at this z ?
+        const CloneState * c1 = (*iterC1).findState(*iZ);
+        if ( c1 )
+        {
+          const CloneState * c2 = (*iterC2).findState(*iZ);
+          if ( c2 )
+          {
+            haveComparison = true;
+            const double dist = kullbeckLieblerDist(*c1,*c2);
+            overall_dist += dist;
+            if ( msgLevel(MSG::VERBOSE) || 
+                 (msgLevel(MSG::DEBUG) && dist < m_klCut ) )
+              debug() << " -> Tracks " << (*iterC1).track->key() << " and "
+                      << (*iterC2).track->key() << " both have a state at z=" << *iZ
+                      << " KL-dist=" << dist
+                      << endreq;
+          }
+        }
+      } // z states
+
+      if ( haveComparison && (overall_dist < m_klCut) )
       {
         if ( msgLevel(MSG::DEBUG) )
         {
-          debug() << "Possible clones Track1 : key = " << iterC1->track->key()
+          debug() << "  -> Possible clones Track1 : key = " << iterC1->track->key()
                   << " history = " << iterC1->track->history() << endreq;
-          debug() << "                Track2 : key = " << iterC2->track->key()
+          debug() << "                     Track2 : key = " << iterC2->track->key()
                   << " history = " << iterC2->track->history() << endreq;
-          debug() << "                       : KL distance = " << dist << endreq;
+          debug() << "                            : KL distance = " << overall_dist << endreq;
         }
         // fill twice, for each way around for the track pair
-        myLink.link( iterC1->track, iterC2->track, dist );
-        myLink.link( iterC2->track, iterC1->track, dist );
+        myLink.link( iterC1->track, iterC2->track, overall_dist );
+        myLink.link( iterC2->track, iterC1->track, overall_dist );
       }
+
     } // iterC2
   } // iterC1
 
   return StatusCode::SUCCESS;
 }
 
-double TrackBuildCloneTable::kullbeckLieblerDist(const CloneTrack& track1,
-                                                 const CloneTrack& track2) const
+double TrackBuildCloneTable::kullbeckLieblerDist( const CloneState& c1,
+                                                  const CloneState& c2) const
 {
-  const Gaudi::TrackVector diffVec    
-    = track1.state.stateVector() - track2.state.stateVector();
-  const Gaudi::TrackSymMatrix diffCov 
-    = track1.state.covariance()  - track2.state.covariance();
+  const Gaudi::TrackVector diffVec
+    = c1.state.stateVector() - c2.state.stateVector();
+  const Gaudi::TrackSymMatrix diffCov
+    = c1.state.covariance()  - c2.state.covariance();
 
-  const Gaudi::TrackSymMatrix invDiff = track2.invCov - track1.invCov;
-  const Gaudi::TrackSymMatrix invSum = track2.invCov + track1.invCov;
+  const Gaudi::TrackSymMatrix invDiff = c2.invCov - c1.invCov;
+  const Gaudi::TrackSymMatrix invSum = c2.invCov + c1.invCov;
   const Gaudi::TrackMatrix diff = diffCov * invDiff;
 
   // trace
   return Gaudi::Math::trace(diff) + Similarity(invSum,diffVec);
+}
+
+const TrackBuildCloneTable::CloneState *
+TrackBuildCloneTable::CloneTrack::findState( const double z ) const
+{
+  const CloneState * cState = NULL;
+  for ( CloneStates::const_iterator iC = states.begin();
+        iC != states.end(); ++iC )
+  {
+    if ( fabs( z - iC->first ) < 1e-3 ) { cState = &(iC->second); break; }
+  }
+  return cState;
 }
