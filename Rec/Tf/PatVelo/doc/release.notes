@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-17 - Kurt Rinnert
+ - all instances of the PatVeloSpaceTool and the PatVeloTrackTool have now
+   names that allows them to be configured via options.  The name are simply
+   the above (i.e. Tf:: is stripped).  This means existing options code will
+   work with the new framework.
+
+! 2007-09-17 - Kurt Rinnert
  - changed the used hit queries in general tracking to the more stable "is not
    used by any other algorithm than RZ" for R hits and "is not used at all"
    for Phi hits.

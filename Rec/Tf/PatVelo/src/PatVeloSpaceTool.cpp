@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.5 2007-09-14 13:20:29 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.6 2007-09-17 17:40:54 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -67,7 +67,7 @@ namespace Tf {
     // get some constants for later use
     m_numberRSensors = m_velo->numberRSensors();
 
-    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool");
+    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
 
     info() << "========== Tool " << name() << " parameters ======"   << endreq
       << "FractionFound        = " << m_fractionFound       << endreq

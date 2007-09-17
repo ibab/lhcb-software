@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.4 2007-09-17 15:21:24 krinnert Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.5 2007-09-17 17:40:54 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
   if( m_isDebug ) debug() << "==> Initialize" << endmsg;
 
-  m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool");
+  m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
