@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.16 2007-03-16 15:57:09 cattanem Exp $
+// $Id: SolidTubs.h,v 1.17 2007-09-17 08:44:53 wouter Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -209,13 +209,15 @@ protected:
   template <class aPoint>
   inline const bool insideRho ( const aPoint& point ) const ;
   
+  /// check if phi is in phi range
+  inline bool insidePhi ( const double phi /* [-pi,pi] */ ) const ;
+
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
   template <class aPoint>
-  inline const bool insidePhi ( const aPoint& point ) const ;
-  
+  inline const bool insidePhi ( const aPoint& point ) const ;  
   
   /// gap in phi ?
   inline const bool noPhiGap() const { return m_noPhiGap ; }
@@ -296,18 +298,26 @@ inline const bool SolidTubs::insideRho ( const aPoint& point ) const
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
+inline bool SolidTubs::insidePhi ( const double phi /* [-pi,pi] */ ) const
+{
+  return 
+    noPhiGap() ||
+    ( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) ||
+    ( startPhiAngle ()                   <= phi + M_PI &&
+      startPhiAngle () + deltaPhiAngle() >= phi + M_PI ) ;
+};
+
+// ===========================================================================
+/** check for phi 
+ *  @param point to be checked 
+ *  @return true if point is "inside phi" 
+ */
+// ===========================================================================
 template< class aPoint>
 inline const bool SolidTubs::insidePhi ( const aPoint& point ) const 
 {
-  if( noPhiGap()                                    ) { return true ; }
-  double phi = point.phi() ;   // [-180,180] 
-  if( startPhiAngle ()                   <= phi &&
-      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  phi += 360 * Gaudi::Units::degree ;
-  if( startPhiAngle ()                   <= phi &&
-      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  // 
-  return false ;
+  return noPhiGap() || insidePhi( point.phi() ) ;
 };
 // ===========================================================================
 // The END 
