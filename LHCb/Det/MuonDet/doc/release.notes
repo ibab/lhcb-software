@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.95 2007-09-13 09:44:21 jpalac Exp $
+! $Id: release.notes,v 1.96 2007-09-17 09:38:30 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v6r4 2007-09-17 ========================
 ! 2007-09-13 - Juan PALACIOS
  - Changes to adapt to new IGeometryInfo interface.
    NEEDS Det/DetDesc v18r0 OR HIGHER
