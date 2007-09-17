@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.7 2007-09-17 11:28:52 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.8 2007-09-17 12:50:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -46,7 +46,7 @@ namespace Rich
       declareProperty( "MaxPtCut",      m_maxPtCut    = 200 ); // in GeV
       declareProperty( "MaxFitChi2Cut", m_maxChi2Cut  = 10  );
       declareProperty( "Charge",        m_chargeSel   = 0   );
-      declareProperty( "CloneCut",      m_cloneCut    = 0   );
+      declareProperty( "CloneCut",      m_cloneCut    = -1e10 );
 
       m_jobOpts =
         boost::assign::list_of
