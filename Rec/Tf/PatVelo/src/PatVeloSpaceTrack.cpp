@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.2 2007-09-17 14:13:10 krinnert Exp $
 // Include files 
 
 // local
@@ -56,7 +56,7 @@ namespace Tf {
   /// fit the RZ part of the track
   void PatVeloSpaceTrack::fitRZ() {
     double den = ( m_sz2 * m_s0 - m_sz * m_sz );
-    if ( 0. != den ) {
+    if ( fabs(den) > 1e-10 ) {
       m_slope = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
       m_pos0  = ( m_sr  * m_sz2 - m_srz * m_sz ) / den;
       m_meanZ    = m_sz / m_s0;

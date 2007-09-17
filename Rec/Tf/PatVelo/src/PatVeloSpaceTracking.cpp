@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.4 2007-09-16 13:52:03 krinnert Exp $
+// $Id: PatVeloSpaceTracking.cpp,v 1.5 2007-09-17 14:13:10 krinnert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -112,7 +112,7 @@ namespace Tf {
     std::vector<LHCb::Track*> tracks(m_inputTracks->size());
     copy(m_inputTracks->begin(),m_inputTracks->end(),tracks.begin());
 
-    std::sort( tracks.begin(), tracks.end(), greater_trackLength() );
+    std::stable_sort( tracks.begin(), tracks.end(), greater_trackLength() );
 
     for ( std::vector<LHCb::Track*>::const_iterator itT = tracks.begin();
         tracks.end() != itT; ++itT ) {

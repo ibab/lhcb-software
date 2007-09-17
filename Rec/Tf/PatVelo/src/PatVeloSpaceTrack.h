@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.2 2007-09-17 14:13:10 krinnert Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -222,7 +222,7 @@ namespace Tf {
       // function to set xz intercept and slope of xz
       void fitLinear(){
         denom = z2 * w - z * z ;
-        if ( 0 == denom ) denom = 1;
+        if (  fabs(denom) < 1e-10 ) denom = 1;
         x0  = ( x * z2 - xz * z  ) / denom ;
         dxdz= ( xz * w  - x * z  ) / denom ;
       }

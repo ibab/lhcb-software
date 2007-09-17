@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.2 2007-09-10 12:14:36 krinnert Exp $
+// $Id: PatRZTrack.cpp,v 1.3 2007-09-17 14:13:10 krinnert Exp $
 // Include files 
 
 // local
@@ -48,7 +48,7 @@ namespace Tf {
     m_sz2 = m_sz2 + w * z * z;
 
     double den = ( m_sz2 * m_s0 - m_sz * m_sz );
-    if ( 0. != den ) {
+    if ( fabs(den) > 1e-10 ) {
       m_slope = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
       m_pos0  = ( m_sr  * m_sz2 - m_srz * m_sz ) / den;
       m_meanZ    = m_sz / m_s0;
