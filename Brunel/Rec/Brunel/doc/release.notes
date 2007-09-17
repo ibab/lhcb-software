@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+Kurt Rinnert 17/09/2007
+ - added section for pattern recognition check in Tf framework to
+   BrunelCheck.opts.  This is commented out by default, no change in default
+   behaviour.
+
 Chris Jones 11/09/2007
  - Update example ganga job to remove warnings about missing features (now 
    available) and to add examples of job merging.
@@ -949,7 +954,7 @@ Requires data produced by Boole v5r6 or later
      case 5: independent of Brunel. Use Brunelv254r1.opts as is
      case 6: Not yet implemented
 
-	  . Added Brunelv255r0.opts, Brunelv255r1.opts to support new dbases 
+     . Added Brunelv255r0.opts, Brunelv255r1.opts to support new dbases 
 
 
 - Removed features:
@@ -1310,7 +1315,7 @@ Requires data produced by Boole v5r6 or later
    . Restructure options files to simplify switching on/off of monitoring and/or
      DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
    . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
-	   (VeloDet v8r0, Brunel.opts)
+      (VeloDet v8r0, Brunel.opts)
    . Possibility to add noise to OT (off by default) (OTAlgorithms v12r1)
    . New methods in Relations (LHCbKernel v1r5)
    . Add VeloBack track type (for backwards going Velo tracks)
@@ -1961,7 +1966,7 @@ production
     use MuonSicbCnv  v4r0  (was v3)
     use TrSicbCnv    v4r0  (was v3)
     use L0Muon       v4r0  (was v3r1)
-    use OTAlgorithms v7r0	 (was v6)
+    use OTAlgorithms v7r0   (was v6)
     use TrAlgorithms v7r1  (was v6r2)
      
 ! =================================================================

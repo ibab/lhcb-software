@@ -21,6 +21,16 @@ CheckPatSeq.Members += {
                        , "PatChecker"
                        };
 
+// Pattern recognition in Tf framework
+//CheckPatSeq.Members += {
+//                          "Tf::PatLHCbID2MCParticle/PatLHCbID2MCParticle"
+//                        , "Tf::PatTrack2MCParticle/PatTrack2MCParticle"
+//                        , "Tf::PatChecker/PatChecker"
+//                        };
+//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/RZVelo" };
+//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Velo" };
+
+
 // Rich reconstruction
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 
