@@ -16,6 +16,9 @@ Reco.DetectorList += {
 // Decoding of tracking detectors, track pattern recognition, track fit
 #include "$TRACKSYSROOT/options/RecoTracking.opts"
 
+// Decoding of tracking detectors, track pattern recognition, track fit in Tf framework
+//#include "$TRACKSYSROOT/options/RecoTracking_Tf.opts"
+
 // Primary vertex
 RecoTrSeq.Members   += { "PatPVOffline" };
 

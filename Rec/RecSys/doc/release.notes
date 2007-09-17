@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+Kurt Rinnert 17/09/2007
+- added include in Reco.opts to use the Tf framework tracking options.  This
+  is commented out by default, no change in behaviour.
+
 </PRE><H1><A NAME=v4r8>2007-07-23 RecSys v4r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r8.
 
@@ -363,7 +367,7 @@ This version uses Gaudi v19r3 and LHCb v22r5.
 
 - In TsaAlgorithms v2r3
   . TsaCollector: adapt x-search window
-  . TsaXSearchBase: include job option for nSigma of tx, fix small sign bug	 
+  . TsaXSearchBase: include job option for nSigma of tx, fix small sign bug    
   . TsaOTClusterCreator: put OTTimeLocation as job option 
 
 - In MuonID v5r1
