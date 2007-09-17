@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-17 - Kurt Rinnert
+ - added Tf version of VELO open tracking options file
+
+! 2007-09-17 - Kurt Rinnert
  - more fixes in Tf framework options.  Now the sequence actually runs.
 
 ! 2007-09-17 - Kurt Rinnert

@@ -1,0 +1,6 @@
+RecoVeloSeq.Members -= {"Tf::PatVeloRTracking/PatVeloRTracking"
+                      , "Tf::PatVeloSpaceTracking/PatVeloSpaceTracking"
+                       };
+
+PatVeloGeneralTracking.PointErrorMin = 2*mm;
+ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;
