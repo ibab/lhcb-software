@@ -1,15 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.102 2007-09-13 09:22:19 jpalac Exp $
+! $Id: release.notes,v 1.103 2007-09-17 11:02:01 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!============ Ex/DetCondExample v11r2 2007-09-14 ==============================
 ! 2007-09-13 - Juan PALACIOS
  - cmt/requirements
    . Increase version to v11r2
  - src/CondDBTestAlgorithm.cpp, src/MultiDBTest.cpp
-   . Adapt to changes in AlignmentCondition interface. AlignmentCondition::matrix() is now AlignmentCondition::toNominalMatrix(). But replace by inverse, AlignmentCondition::offNominalMatrix().
+   . Adapt to changes in AlignmentCondition interface. 
+     AlignmentCondition::matrix() is now AlignmentCondition::toNominalMatrix().
+     But replace by inverse, AlignmentCondition::offNominalMatrix().
 
 !============ Ex/DetCondExample v11r1 2007-05-31 ==============================
 ! 2007-05-29 - Marco Clemencic
