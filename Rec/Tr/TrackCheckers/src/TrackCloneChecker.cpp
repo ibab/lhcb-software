@@ -1,4 +1,4 @@
-// $Id: TrackCloneChecker.cpp,v 1.1 2007-09-14 13:01:15 jonrob Exp $
+// $Id: TrackCloneChecker.cpp,v 1.2 2007-09-17 09:24:37 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -21,16 +21,29 @@ DECLARE_ALGORITHM_FACTORY( TrackCloneChecker );
 //=============================================================================
 TrackCloneChecker::TrackCloneChecker( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : TrackCheckerBase ( name , pSvcLocator )
+  : TrackCheckerBase ( name , pSvcLocator ),
+    m_nEvts          ( 0 )
 {
   declareProperty( "CloneLinkerLocation",
                    m_cloneInfoTES = LHCb::TrackLocation::Default+"Clones");
+  declareProperty( "CloneCut", m_klCut = 5000 );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 TrackCloneChecker::~TrackCloneChecker() {}
+
+//=============================================================================
+// initialize
+//=============================================================================
+StatusCode TrackCloneChecker::initialize()
+{
+  const StatusCode sc = TrackCheckerBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  return sc;
+}
 
 //=============================================================================
 // Main execution
@@ -49,55 +62,157 @@ StatusCode TrackCloneChecker::execute()
   // get the input data
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
 
-  // set up stuff for this event for base class
+  // set up stuff for this event
   initializeEvent();
+  m_MCPmap.clear();
+  ++m_nEvts;
 
   // loop over tracks
   for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
         iTk != tracks->end(); ++iTk )
   {
+    if ( msgLevel(MSG::DEBUG) && (*iTk)->hasInfo(LHCb::Track::CloneDist) )
+    {
+      debug() << "Track " << (*iTk)->key() << " given CloneDist "
+              << (*iTk)->info(LHCb::Track::CloneDist,1e99)
+              << endreq;
+    }
 
     // MCP for main track
     const LHCb::MCParticle * mcP = mcTruth(*iTk);
-    if ( !mcP || !selected(mcP) ) continue;
+    //if ( !mcP || !selected(mcP) ) continue;
+
+    debug() << "Track " << (*iTk)->key() << " " << (*iTk)->history() << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << **iTk << endreq;
+
+    // tally object
+    TrackTally & tally = m_trackMap[(*iTk)->history()];
 
     // pick up the clone info for this track
     LHCb::Track * cloneTrack = linker.first( *iTk );
     while ( cloneTrack != NULL )
     {
+      debug() << " -> Clone Info Found :-" << endreq;
 
-      // KL distance
-      const double logFLdist = log10(linker.weight());
-      
-      // MCP for clone track
-      const LHCb::MCParticle * mcP_clone = mcTruth(cloneTrack);
-      const bool mcSel = ( mcP_clone ? selected(mcP_clone) : false );
-      if ( mcP_clone && mcSel )
+      if ( mcP )
       {
-        if ( mcP == mcP_clone )
+        // MCP for clone track
+        const LHCb::MCParticle * mcP_clone = mcTruth(cloneTrack);
+        const bool mcSel = ( mcP_clone ? selected(mcP_clone) : false );
+
+        // log10(KLdistance)
+        const double logFLdist = log10(linker.weight());
+        // const bool cloneID = ( linker.weight() < m_klCut );
+
+        if ( mcP_clone && mcSel )
         {
-          plot1D( logFLdist, "KLDtrueClones", "Log10(KLDistance) | True Clones", -5, 13, 100 );
+          if ( mcP == mcP_clone )
+          {
+            debug() << "  -> True Clone : klDist = " << linker.weight() << endreq;
+            plot1D( logFLdist, "KLDtrueClones", "Log10(KLDistance) | True Clones", -5, 13, 100 );
+          }
+          else
+          {
+            debug() << "  -> Not a Clone : klDist = " << linker.weight() << endreq;
+            plot1D( logFLdist, "KLDnotClones", "Log10(KLDistance) | Not Clones", -5, 13, 100 );
+          }
+        }
+        else if ( mcP_clone && !mcSel )
+        {
+          debug() << "  -> Rejected MCP : klDist = " << linker.weight() << endreq;
+          plot1D( logFLdist, "KLDrejMCPs", "Log10(KLDistance) | Rejected MCParticles", -5, 13, 100 );
         }
         else
         {
-          plot1D( logFLdist, "KLDnotClones", "Log10(KLDistance) | Not Clones", -5, 13, 100 );
+          debug() << "  -> Ghost track : klDist = " << linker.weight() << endreq;
+          plot1D( logFLdist, "KLDghosts", "Log10(KLDistance) | Ghosts", -5, 13, 100 );
         }
-      }
-      else if ( mcP_clone && !mcSel )
-      {
-        plot1D( logFLdist, "KLDrejMCPs", "Log10(KLDistance) | Rejected MCParticles", -5, 13, 100 );
-      }
-      else
-      {
-        plot1D( logFLdist, "KLDghosts", "Log10(KLDistance) | Ghosts", -5, 13, 100 );
       }
 
       cloneTrack = linker.next();
     } // clone track
 
-  }
+    // clone ID
+    const bool cloneID = ( (*iTk)->info(LHCb::Track::CloneDist,9e99) < m_klCut );
+
+    // real clone ?
+    const bool hasMCclones = hasMCClone( *iTk );
+
+    // tallies
+    if ( mcP )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        if ( (*iTk)->hasInfo(LHCb::Track::CloneDist) )
+          debug() << " -> Clone Flag "
+                  << LHCb::Track::CloneDist << " = "
+                  << (*iTk)->info(LHCb::Track::CloneDist,9e99) << endreq;
+        if ( hasMCclones  && cloneID ) debug() << "  -> REJECTED CLONE" << endreq;
+        if ( !hasMCclones && cloneID ) debug() << "  -> REJECTED NONCLONE" << endreq;
+      }
+      if ( hasMCclones  ) ++tally.totalClones;
+      if ( !hasMCclones ) ++tally.totalNonClones;
+      if ( hasMCclones  && cloneID ) ++tally.rejectedClones;
+      if ( !hasMCclones && cloneID ) ++tally.rejectedNonClones;
+    }
+    else
+    {
+      ++tally.totalGhosts;
+      if ( cloneID ) ++tally.rejectedGhosts;
+    }
+
+  } // track loop
 
   return StatusCode::SUCCESS;
+}
+
+bool TrackCloneChecker::hasMCClone( const LHCb::Track * track )
+{
+  if ( m_MCPmap.empty() )
+  {
+    LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+    for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
+          iTk != tracks->end(); ++iTk )
+    {
+      const LHCb::MCParticle * mc = mcTruth(*iTk);
+      ++m_MCPmap[mc];
+    }
+  }
+  const LHCb::MCParticle * mcP = mcTruth(track);
+  return m_MCPmap[mcP] > 1;
+}
+
+StatusCode TrackCloneChecker::finalize()
+{
+  const std::string & lines
+    = "============================================================================================";
+  always() << lines << endreq;
+  always() << "      Clone summary for '" << m_cloneInfoTES
+           << "' IDed clones with KLdist<" <<  m_klCut<< endreq;
+  always() << lines << endreq;
+
+  std::pair<double,double> r1,r2,r3,r4,r5;
+
+  always() << "   Track type     NonClones/Evt  Clones/Evt     ClonesID/%     NonClonesID/%  GhostsID/%" << endreq;
+  for ( TrackTally::Map::const_iterator iM = m_trackMap.begin(); iM != m_trackMap.end(); ++iM )
+  {
+    const TrackTally & tally = iM->second;
+    r1 = getEff1( tally.rejectedClones, tally.totalClones/2.0 );
+    r2 = getEff1( tally.rejectedNonClones, tally.totalNonClones );
+    r3 = getEff1( tally.rejectedGhosts, tally.totalGhosts );
+    r4 = getEff2( tally.totalNonClones, m_nEvts );
+    r5 = getEff2( tally.totalClones/2.0, m_nEvts );
+    always() << boost::format( "%15s %6.2f +-%5.2f %6.2f +-%5.2f %6.2f +-%5.2f %6.2f +-%5.2f %6.2f +-%5.2f" )
+      % iM->first
+      % r4.first % r4.second % r5.first % r5.second
+      % r1.first % r1.second % r2.first % r2.second % r3.first % r3.second
+             << endreq;
+  }
+
+  always() << lines << endreq;
+
+  return TrackCheckerBase::finalize();
 }
 
 //=============================================================================
