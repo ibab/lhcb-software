@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.34 2007-09-13 14:19:15 wouter Exp $ 
+! $Id: release.notes,v 1.35 2007-09-17 09:24:32 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r13 2007-09-17 ========================
 ! 2007-09-13 - Wouter Hulsbergen
  - fixed bug in caching in TransportSvc
 
