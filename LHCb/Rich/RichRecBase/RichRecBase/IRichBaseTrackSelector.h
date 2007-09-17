@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: IRichBaseTrackSelector.h,v 1.3 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichBaseTrackSelector.h,v 1.4 2007-09-17 11:28:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -92,6 +92,9 @@ namespace Rich
 
       /// Returns the charge selection
       virtual int chargeSel() const = 0;
+
+      /// Returns the clone rejection cut
+      virtual double cloneCut() const = 0;
 
     };
 

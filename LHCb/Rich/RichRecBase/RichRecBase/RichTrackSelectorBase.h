@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.4 2007-03-19 15:03:53 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.h,v 1.5 2007-09-17 11:28:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -105,6 +105,9 @@ namespace Rich
       /// Returns the charge selection
       virtual int chargeSel() const;
 
+      /// Returns the clone rejection cut
+      virtual double cloneCut() const ;
+
       /// Returns the overall minimum momentum cut value for the given track type
       virtual double minPCut( const Rich::Rec::Track::Type type ) const;
 
@@ -125,6 +128,9 @@ namespace Rich
 
       /// Returns the charge selection for the given track type
       virtual int chargeSel( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the clone rejection cut for the given track type
+      virtual double cloneCut( const Rich::Rec::Track::Type type ) const;
 
     private: // defintions
 
@@ -176,6 +182,8 @@ namespace Rich
 
       double m_minPtCut;   ///< Min pt cut
       double m_maxPtCut;   ///< Max pt cut
+
+      double m_cloneCut;   ///< Clone rejection cut
 
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 

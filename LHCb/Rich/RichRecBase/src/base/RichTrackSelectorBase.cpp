@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.6 2007-03-09 18:04:34 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.7 2007-09-17 11:28:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -41,14 +41,17 @@ namespace Rich
 
       declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
       declareProperty( "MinPtCut",      m_minPtCut    = 0.0 ); // in GeV
-      declareProperty( "MinChi2Cut",    m_minChi2Cut  = 0.0 );
+      declareProperty( "MinFitChi2Cut", m_minChi2Cut  = 0.0 );
       declareProperty( "MaxPCut",       m_maxPCut     = 200 ); // in GeV
       declareProperty( "MaxPtCut",      m_maxPtCut    = 200 ); // in GeV
       declareProperty( "MaxFitChi2Cut", m_maxChi2Cut  = 10  );
-      declareProperty( "Charge",        m_chargeSel   = 0 );
+      declareProperty( "Charge",        m_chargeSel   = 0   );
+      declareProperty( "CloneCut",      m_cloneCut    = 0   );
 
       m_jobOpts =
-        boost::assign::list_of("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")("MinChi2Cut")("MaxChi2Cut")("Charge");
+        boost::assign::list_of
+        ("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")
+        ("MinChi2Cut")("MaxChi2Cut")("Charge")("CloneCut");
 
     }
 
@@ -216,6 +219,7 @@ namespace Rich
     double TrackSelectorBase::minChi2Cut() const { return m_minChi2Cut; }
     double TrackSelectorBase::maxChi2Cut() const { return m_maxChi2Cut; }
     int    TrackSelectorBase::chargeSel()  const { return m_chargeSel; }
+    double TrackSelectorBase::cloneCut()   const { return m_cloneCut; }
 
     double TrackSelectorBase::minPCut( const Rich::Rec::Track::Type type ) const
     {
@@ -258,6 +262,13 @@ namespace Rich
       TrackTools::const_iterator iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? chargeSel() : iT->second->chargeSel() );
     }
+
+    double TrackSelectorBase::cloneCut( const Rich::Rec::Track::Type type ) const
+    {
+      TrackTools::const_iterator iT = m_tkTools.find(type);
+      return ( iT == m_tkTools.end() ? cloneCut() : max(minPCut(),iT->second->cloneCut()) );
+    }
+
 
   }
 }
