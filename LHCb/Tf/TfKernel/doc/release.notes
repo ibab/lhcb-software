@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-17 - Kurt Rinnert
+ - added some more status query methods to HitBase.  This change is completely
+   transparent.
+
 ! 2007-09-11 - Kurt Rinnert
  - changed overloading in VeloSensorHits from hit type tags to sensor type.
    This expresses more clearly what is meant and also makes it easier to use

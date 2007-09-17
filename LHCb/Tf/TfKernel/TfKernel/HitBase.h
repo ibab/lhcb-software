@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.10 2007-09-10 16:42:30 krinnert Exp $
+ *  $Id: HitBase.h,v 1.11 2007-09-17 15:11:45 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -146,6 +146,28 @@ namespace Tf
      *  @param[in] flag Flag value to set (true=used, false=not used)
      */
     inline void         setUsed   ( const bool flag ) const { m_status.set(UsedByUnknown,flag) ; }
+
+    /** Test if the hit has been used only by any algorithm other then the one specified 
+     *  @param[in] stat The status type of the algorithm we don't care about
+     *  @retval TRUE  The hit has been used by any other than the specified algorithm
+     *  @retval FALSE The hit has not been used at all or only by the specified algorithm.
+     */
+    inline bool      isUsedByAnyOtherThan ( const EStatus stat ) const { 
+      return static_cast<bool>(static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong());
+    }
+    /** Test if the hit has been used only by a specific algorithm
+     *  @param[in] stat The status type
+     *  @retval TRUE  The hit has been used and only by this algorithm
+     *  @retval FALSE The hit has not been used at all or by any other algorithm.
+     */
+    inline bool      isUsedOnlyBy ( const EStatus stat ) const { 
+      return m_status.test(stat) && !(static_cast<bool>(static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong()));
+    }
+
+    /** Ask by how many algorithms this hit was used.
+     *  @retval Number of algorithms that used this hit.
+     */
+    inline unsigned int isUsedNTimes () const { return m_status.count(); }
 
     /** Access the region number for the hit */
     inline unsigned int region  () const { return static_cast<unsigned int>(m_regionID.region()); }
