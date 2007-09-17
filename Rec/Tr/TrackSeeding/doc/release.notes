@@ -4,6 +4,13 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-09-17 - Juan PALACIOS
+ - src/SeedHit.cpp
+   . Adapt to new IGeometryInfo interface. Replace IGeometryInfo::matrix()
+     calls by IGeometryInfo::toLocalMatrix(). Needs DetDesc v18r0 or higher.
+ - cmt/requirements
+   . Increase version to v1r2
+
 !========================= TrackSeeding v1r1 2007-03-02 ======================
 ! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions includes
