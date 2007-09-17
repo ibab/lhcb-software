@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.29 2007-09-06 11:44:07 mneedham Exp $
+// $Id: State.cpp,v 1.30 2007-09-17 09:21:36 jonrob Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -25,11 +25,11 @@ using namespace Gaudi;
 //=============================================================================
 // Default constructor
 //=============================================================================
-State::State(): 
-m_flags(0),
-m_stateVector(TrackVector()),
-m_covariance(TrackSymMatrix()),
-m_z(0.0){
+State::State():
+  m_flags(0),
+  m_stateVector(TrackVector()),
+  m_covariance(TrackSymMatrix()),
+  m_z(0.0){
   setLocation( State::LocationUnknown );
 }
 
@@ -56,7 +56,7 @@ double State::pt() const
 {
   if ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ) {
     const double txy2 =   m_stateVector[2]*m_stateVector[2]
-                        + m_stateVector[3]*m_stateVector[3];
+      + m_stateVector[3]*m_stateVector[3];
     return sqrt( txy2/(1.+txy2) ) / fabs( m_stateVector[4] );
   }
   return HUGE_VAL;
@@ -66,7 +66,7 @@ double State::pt() const
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state
 //=============================================================================
 SymMatrix6x6 State::posMomCovariance() const
-{  
+{
   // transformation from (x,y,tx,ty,Q/p) to (x,y,px,py,pz)
   const double qP = qOverP();
   const double tX = tx();
@@ -109,15 +109,47 @@ SymMatrix6x6 State::posMomCovariance() const
 #endif
 
   Gaudi::SymMatrix5x5 newCov5D =  ROOT::Math::Similarity<double,5,5>( jmat, covariance() );
-  
+
   // Now leave a row and colum of 0 for z
   Gaudi::Matrix6x6 cov6D   = Matrix6x6();
-  
+
   cov6D.Place_at( newCov5D.Sub<SymMatrix2x2>( 0, 0 ), 0, 0 );
   cov6D.Place_at( newCov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
   cov6D.Place_at( newCov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
   cov6D.Place_at( newCov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
   return cov6D.LowerBlock();
+};
+
+//=============================================================================
+// Retrieve the squared error on the charge-over-momentum Q/P of the state
+//=============================================================================
+double State::errQOverP2() const
+{
+  return m_covariance(4,4);
+};
+
+//=============================================================================
+// Update the Q/P value of the state
+//=============================================================================
+void State::setQOverP( double value )
+{
+  m_stateVector[4] = value;
+};
+
+//=============================================================================
+// Update the squared error on the Q/P of the state
+//=============================================================================
+void State::setErrQOverP2( double value )
+{
+  m_covariance(4,4) = value;
+};
+
+//=============================================================================
+// Clone the state
+//=============================================================================
+State* State::clone() const
+{
+  return new State(*this);
 };
 
 //=============================================================================
@@ -140,20 +172,12 @@ Gaudi::SymMatrix3x3 State::errSlopes() const
 };
 
 //=============================================================================
-// Retrieve the squared error on the charge-over-momentum Q/P of the state
-//=============================================================================
-double State::errQOverP2() const
-{
-  return m_covariance(4,4);
-};
-
-//=============================================================================
 // Retrieve the squared error on the momentum of the state
 //=============================================================================
 double State::errP2() const
 {
- return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? 
-          errQOverP2() * gsl_pow_4( p() ): 0. );
+  return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ?
+           errQOverP2() * gsl_pow_4( p() ): 0. );
 };
 
 //=============================================================================
@@ -161,7 +185,7 @@ double State::errP2() const
 //=============================================================================
 SymMatrix3x3 State::errMomentum() const
 {
-  const SymMatrix6x6 temp = posMomCovariance(); 
+  const SymMatrix6x6 temp = posMomCovariance();
   return temp.Sub<SymMatrix3x3>(3,3);
 };
 
@@ -179,7 +203,7 @@ double State::errQOverPperp2() const
   const double QOverPperpError = ( (norm/transSlope) * m_covariance(4,4) )
 
     + ( qOverP2 * tx2 * ty2*ty2 * m_covariance(2,2)/
-       (gsl_pow_3(transSlope)*norm))
+        (gsl_pow_3(transSlope)*norm))
 
     + ( qOverP2 * ty2 * m_covariance(3,3) / (norm*transSlope) )
 
@@ -189,17 +213,9 @@ double State::errQOverPperp2() const
     + 2. * qOverP() * ty() * m_covariance(3,4) / transSlope
 
     - 2. * ( qOverP2 * tx() * ty() * ty2 * m_covariance(2,3)
-         / ( norm* transSlope*transSlope ) );
+             / ( norm* transSlope*transSlope ) );
 
   return QOverPperpError;
-};
-
-//=============================================================================
-// Clone the state
-//=============================================================================
-State* State::clone() const
-{
-  return new State(*this);
 };
 
 //=============================================================================
@@ -218,19 +234,16 @@ void State::setState( double x, double y, double z,
 };
 
 //=============================================================================
-// Update the Q/P value of the state
+// fillstream
 //=============================================================================
-void State::setQOverP( double value )
+std::ostream& LHCb::State::fillStream(std::ostream& os) const 
 {
-  m_stateVector[4] = value;
-};
+  return os << "State :" << std::endl
+            << " flags       =" << flags() << std::endl
+            << " stateVector =" << stateVector() << std::endl
+            << " covariance  =" << covariance() << std::endl
+            << " z           =" << z() << std::endl;
+}
 
 //=============================================================================
-// Update the squared error on the Q/P of the state
-//=============================================================================
-void State::setErrQOverP2( double value )
-{
-  m_covariance(4,4) = value;
-};
 
-//=============================================================================

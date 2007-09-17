@@ -141,9 +141,7 @@
         <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFit)"/>
         <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
-        <enumval name = "VertexClone"  value = "101" desc="Track is flagged as being a (rejected) clone of another track at z=0"/>
-        <enumval name = "Rich1Clone"   value = "102" desc="Track is flagged as being a (rejected) clone of another track in the Rich1 volume"/>
-        <enumval name = "Rich2Clone"   value = "103" desc="Track is flagged as being a (rejected) clone of another track in the Rich2 volume"/>
+        <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
        </enum>
 
    <typedef
@@ -295,6 +293,9 @@
         <arg type = 'Gaudi::XYZPoint' name='pos' />
         <arg type = 'Gaudi::XYZVector' name='mom' />
         <arg type = 'Gaudi::SymMatrix6x6' name='cov6D' />
+        <code>
+ firstState().positionAndMomentum( pos, mom, cov6D );
+        </code>
       </method>
 
       <method
@@ -304,6 +305,9 @@
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZPoint' name='pos' />
         <arg type = 'Gaudi::XYZVector' name='mom' />
+       <code>
+ firstState().positionAndMomentum( pos, mom );
+       </code>
       </method>
 
       <method
@@ -323,6 +327,10 @@
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZPoint' name='pos' />
         <arg type = 'Gaudi::SymMatrix3x3' name='errPos' />
+       <code>
+  pos    = firstState().position();
+  errPos = firstState().errPosition();
+       </code>
       </method>
 
     <method
@@ -342,6 +350,10 @@
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZVector' name='slopes' />
         <arg type = 'Gaudi::SymMatrix3x3' name='errSlopes' />
+        <code>
+   slopes    = firstState().slopes();
+   errSlopes = firstState().errSlopes();
+        </code>
       </method>
 
       <method
@@ -350,7 +362,7 @@
         desc    = 'Retrieve the momentum vector at the first state'
         const   = 'TRUE'>
         <code>
-  return firstState().momentum();
+  return this->firstState().momentum();
         </code>
       </method>
 
@@ -358,25 +370,41 @@
         type    = 'double'
         name    = 'p'
         desc    = 'Retrieve the momentum at the first state'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return this->firstState().p();
+        </code>
+      </method>
 
       <method
         type    = 'double'
         name    = 'pt'
         desc    = 'Retrieve the transverse momentum at the first state'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return this->firstState().pt();
+        </code>
+      </method>
 
       <method
         type    = 'double'
         name    = 'pseudoRapidity'
         desc    = 'Retrieve the pseudorapidity at the first state'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return this->slopes().eta() ;
+        </code>
+      </method>
 
       <method
         type    = 'double'
         name    = 'phi'
         desc    = 'Retrieve the phi at the first state'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return this->slopes().phi() ;
+        </code>
+      </method>
 
       <method
         type    = 'void'
@@ -385,6 +413,10 @@
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZVector' name='mom' />
         <arg type = 'Gaudi::SymMatrix3x3' name='errMom' />
+        <code>
+  mom    = firstState().momentum();
+  errMom = firstState().errMomentum();
+        </code>
       </method>
 
       <method
@@ -393,6 +425,9 @@
         desc    = 'Retrieve the 6D (x,y,z,px,py,pz) covariance matrix at the first state'
         const   = 'TRUE'>
         <arg type='Gaudi::SymMatrix6x6' name='cov6D' />
+        <code>
+ cov6D = firstState().posMomCovariance();
+        </code>
       </method>
 
       <method
@@ -799,22 +834,6 @@
 	virtual   = "TRUE"
 	const     = "TRUE" >
 	<arg name = "os" type = "std::ostream" inout = "BOTH"/>
-	<code>
-  os &lt;&lt; "{ "
-     &lt;&lt; "type    : " &lt;&lt; type() &lt;&lt; std::endl
-     &lt;&lt; "history : " &lt;&lt; history() &lt;&lt; std::endl
-     &lt;&lt; "# states : " &lt;&lt; nStates() &lt;&lt; std::endl
-     &lt;&lt; "# ids    : " &lt;&lt; nLHCbIDs() &lt;&lt; std::endl
-     &lt;&lt; "# meas   : " &lt;&lt; nMeasurements() &lt;&lt; std::endl;
-  if ( !m_states.empty() ) {
-    os &lt;&lt; "p  : " &lt;&lt; (float) firstState().p() &lt;&lt;std::endl
-       &lt;&lt; "pt : " &lt;&lt; (float) firstState().pt() &lt;&lt;std::endl;
-  }
-  os &lt;&lt; "chi2PerDoF : " &lt;&lt; (float)m_chi2PerDoF &lt;&lt; std::endl
-     &lt;&lt; "nDoF       : " &lt;&lt; m_nDoF &lt;&lt; std::endl
-     &lt;&lt; " }";
-  return os;
-	</code>
       </method>
 
       <method

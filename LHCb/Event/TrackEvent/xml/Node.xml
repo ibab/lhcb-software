@@ -82,13 +82,6 @@
         name    = 'reset'
 	virtual = 'TRUE'
         desc    = 'Clear the node before re-use'>
-        <code>
-  if (m_state != 0 ) delete m_state;
-  m_state = 0;
-  m_residual = 0.;
-  m_errResidual = 0.;
-  m_errMeasure = 0.;
-        </code>
       </method>
 
       <method
@@ -157,7 +150,7 @@
       <method
         name    = 'setState'
         argList = 'State state'
-        desc    = 'Update the state'>
+        desc    = 'Update the MOO state'>
         <code>
   if (m_state !=0) delete m_state;
   m_state = state.clone();

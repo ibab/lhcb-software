@@ -19,104 +19,12 @@ using namespace LHCb;
 // 2004-12-14 : Jose Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-
 //=============================================================================
-// Retrieve the position and momentum vectors and the corresponding
-// 6D covariance matrix (pos:1->3,mom:4-6) at the physics state
-//=============================================================================
-void Track::positionAndMomentum( Gaudi::XYZPoint &pos,
-                                 Gaudi::XYZVector &mom,
-                                 Gaudi::SymMatrix6x6& cov6D ) const
-{
-  firstState().positionAndMomentum( pos, mom, cov6D );
-};
-
-//=============================================================================
-// Retrieve the position and momentum vectors at the physics state
-//=============================================================================
-void Track::positionAndMomentum( Gaudi::XYZPoint& pos,
-                                 Gaudi::XYZVector& mom ) const
-{
-  firstState().positionAndMomentum( pos, mom );
-};
-
-//=============================================================================
-// Retrieve the 3D-position (+ errors) at the physics state
-//=============================================================================
-void Track::position( Gaudi::XYZPoint &pos,
-                      Gaudi::SymMatrix3x3 &errPos ) const
-{
-  pos    = firstState().position();
-  errPos = firstState().errPosition();
-};
-
-//=============================================================================
-// Retrieve the slopes (dx/dz,dy/dz,1) at the physics state
-//=============================================================================
-void Track::slopes( Gaudi::XYZVector& slopes,
-                    Gaudi::SymMatrix3x3& errSlopes ) const
-{
-  slopes    = firstState().slopes();
-  errSlopes = firstState().errSlopes();
-};
-
-//=============================================================================
-// Retrieve the momentum at the physics state
-//=============================================================================
-double Track::p() const
-{
-  return firstState().p();
-};
-
-//=============================================================================
-// Retrieve the transverse momentum at the physics state
-//=============================================================================
-double Track::pt() const
-{
-  return firstState().pt();
-};
-
-
-//=============================================================================
-// Pseudorapidity of the track at the first state
-//=============================================================================
-double Track::pseudoRapidity() const
-{
-  return this->slopes().eta() ;
-}
-
-//=============================================================================
-// Phi of the track at the first state
-//=============================================================================
-double Track::phi() const
-{
-  return this->slopes().phi() ;
-}
-
-//=============================================================================
-// Retrieve the probability of chi^2 
+// Retrieve the probability of chi^2
 //=============================================================================
 double Track::probChi2() const
 {
   return gsl_cdf_chisq_Q(chi2(),nDoF());
-};
-
-//=============================================================================
-// Retrieve the momentum vector (+ errors) at the physics state
-//=============================================================================
-void Track::momentum( Gaudi::XYZVector &mom,
-                      Gaudi::SymMatrix3x3 &errMom ) const
-{
-  mom    = firstState().momentum();
-  errMom = firstState().errMomentum();
-};
-
-//=============================================================================
-// Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state
-//=============================================================================
-void Track::posMomCovariance( Gaudi::SymMatrix6x6& cov6D ) const
-{
-  cov6D = firstState().posMomCovariance();
 };
 
 //=============================================================================
@@ -125,15 +33,15 @@ void Track::posMomCovariance( Gaudi::SymMatrix6x6& cov6D ) const
 State& Track::closestState( double z )
 {
   if ( !m_nodes.empty() ) {
-    std::vector<Node*>::iterator iter = 
+    std::vector<Node*>::iterator iter =
       std::min_element( m_nodes.begin(),m_nodes.end(),
                         TrackFunctor::distanceAlongZ<Node>(z) );
     if ( iter == m_nodes.end() )
       throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
-    return (*iter)->state();    
+    return (*iter)->state();
   } else {
-    std::vector<State*>::iterator iter = 
+    std::vector<State*>::iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceAlongZ<State>(z) );
     if ( iter == m_states.end() )
@@ -149,15 +57,15 @@ State& Track::closestState( double z )
 const State & Track::closestState( double z ) const
 {
   if ( !m_nodes.empty() ) {
-    std::vector<Node*>::const_iterator iter = 
+    std::vector<Node*>::const_iterator iter =
       std::min_element( m_nodes.begin(),m_nodes.end(),
                         TrackFunctor::distanceAlongZ<Node>(z) );
     if ( iter == m_nodes.end() )
       throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
-    return (*iter)->state();    
+    return (*iter)->state();
   } else {
-    std::vector<State*>::const_iterator iter = 
+    std::vector<State*>::const_iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceAlongZ<State>(z) );
     if ( iter == m_states.end() )
@@ -173,7 +81,7 @@ const State & Track::closestState( double z ) const
 State & Track::closestState( const Gaudi::Plane3D& plane )
 {
   if ( !m_nodes.empty() ) {
-    std::vector<Node*>::iterator iter = 
+    std::vector<Node*>::iterator iter =
       std::min_element( m_nodes.begin(),m_nodes.end(),
                         TrackFunctor::distanceToPlane<Node>(plane) );
     if ( iter == m_nodes.end() )
@@ -181,7 +89,7 @@ State & Track::closestState( const Gaudi::Plane3D& plane )
                             StatusCode::FAILURE );
     return (*iter)->state();
   } else {
-    std::vector<State*>::iterator iter = 
+    std::vector<State*>::iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceToPlane<State>(plane) );
     if ( iter == m_states.end() )
@@ -197,7 +105,7 @@ State & Track::closestState( const Gaudi::Plane3D& plane )
 const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 {
   if ( !m_nodes.empty() ) {
-    std::vector<Node*>::const_iterator iter = 
+    std::vector<Node*>::const_iterator iter =
       std::min_element( m_nodes.begin(),m_nodes.end(),
                         TrackFunctor::distanceToPlane<Node>(plane) );
     if ( iter == m_nodes.end() )
@@ -205,7 +113,7 @@ const State & Track::closestState( const Gaudi::Plane3D& plane ) const
                             StatusCode::FAILURE );
     return (*iter)->state();
   } else {
-    std::vector<State*>::const_iterator iter = 
+    std::vector<State*>::const_iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
                         TrackFunctor::distanceToPlane<State>(plane) );
     if ( iter == m_states.end() )
@@ -232,15 +140,15 @@ bool Track::hasStateAt( const LHCb::State::Location& location ) const
 //=============================================================================
 State& Track::stateAt( const LHCb::State::Location& location )
 {
-  std::vector<State*>::iterator iter = 
+  std::vector<State*>::iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
   if ( iter == m_states.end() ) {
 
     std::ostringstream mess;
-    mess << "There is no state at requested location " << location 
-         << " track type " << type();      
+    mess << "There is no state at requested location " << location
+         << " track type " << type();
 
     throw GaudiException( mess.str(),
                           "Track.cpp",
@@ -254,15 +162,15 @@ State& Track::stateAt( const LHCb::State::Location& location )
 //=============================================================================
 const State& Track::stateAt( const LHCb::State::Location& location ) const
 {
-  std::vector<State*>::const_iterator iter = 
+  std::vector<State*>::const_iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
   if ( iter == m_states.end() ){
 
     std::ostringstream mess;
-    mess << "There is no state at requested location " << location 
-         << " track type " << type();      
+    mess << "There is no state at requested location " << location
+         << " track type " << type();
 
     throw GaudiException( mess.str(),
                           "Track.cpp",
@@ -278,12 +186,12 @@ void Track::addToStates( const State& state )
 {
   State* local = state.clone();
   int order = checkFlag(Track::Backward) ? -1 : 1;
-  std::vector<State*>::iterator ipos = 
+  std::vector<State*>::iterator ipos =
     std::upper_bound(m_states.begin(),
                      m_states.end(),
-                     local,  
+                     local,
                      TrackFunctor::orderByZ<State>(order));
-  m_states.insert(ipos,local);    
+  m_states.insert(ipos,local);
 };
 
 //=============================================================================
@@ -295,10 +203,10 @@ void Track::addToMeasurements( const Measurement& meas )
   if ( !isOnTrack( meas.lhcbID() ) ) return;
   Measurement* local = meas.clone();
   int order = checkFlag(Track::Backward) ? -1 : 1;
-  std::vector<Measurement*>::iterator i = 
+  std::vector<Measurement*>::iterator i =
     std::upper_bound(m_measurements.begin(),
                      m_measurements.end(),
-                     local,  
+                     local,
                      TrackFunctor::orderByZ<Measurement>(order));
   m_measurements.insert(i,local);
 };
@@ -424,7 +332,7 @@ void Track::reset()
   m_nDoF       = 0;
   m_flags      = 0;
   m_lhcbIDs.clear();
-  for (std::vector<State*>::iterator it = m_states.begin();   
+  for (std::vector<State*>::iterator it = m_states.begin();
        it != m_states.end(); ++it) delete *it;
   for (std::vector<Measurement*>::iterator it2 = m_measurements.begin();
        it2 != m_measurements.end(); ++it2) delete *it2;
@@ -493,19 +401,19 @@ void Track::clearStates() {
 };
 
 //=============================================================================
-/** Check the presence of the information associated with 
+/** Check the presence of the information associated with
  *  a given key
- *  
+ *
  *  @code
- * 
+ *
  *  const Track* p = ... ;
  *
- *  Track::Key key = ... ; 
+ *  Track::Key key = ... ;
  *  bool hasKey = p->hasInfo( key ) ;
  *
- *  @endcode 
- *  @param    key key to be checked 
- *  @return  'true' if there is informaiton with the 'key', 
+ *  @endcode
+ *  @param    key key to be checked
+ *  @return  'true' if there is informaiton with the 'key',
  *           'false' otherwise
  */
 //=============================================================================
@@ -515,21 +423,21 @@ bool LHCb::Track::hasInfo ( const int key ) const
 //=============================================================================
 /** Add new information, associated with the specified key.
  *  This method cannot be used to modify information for an already existing key
- *  
+ *
  *  @code
- * 
+ *
  *  Track* p = ... ;
  *
- *  Track::Key  key   = ... ; 
+ *  Track::Key  key   = ... ;
  *  Track::Info info  = ... ;
- * 
+ *
  *  bool inserted = p->addInfo( key , info ) ;
  *
- *  @endcode 
- * 
+ *  @endcode
+ *
  *  @param key key for the information
  *  @param info information to be associated with the key
- *  @return 'true' if information is inserted, 
+ *  @return 'true' if information is inserted,
  *         'false' if information was not inserted, due to already existing key
  */
 //=============================================================================
@@ -537,29 +445,29 @@ bool  LHCb::Track::addInfo ( const int key, const double info )
 { return m_extraInfo.insert( key , info ).second ;}
 
 //=============================================================================
-/** extract the information associated with the given key 
- *  If there is no such infomration the default value will 
- *  be returned 
- * 
+/** extract the information associated with the given key
+ *  If there is no such infomration the default value will
+ *  be returned
+ *
  *  @code
- * 
+ *
  *  const Track* p = ... ;
  *
- *  Track::Key  key   = ... ; 
+ *  Track::Key  key   = ... ;
  *
  *  // extract the information
  *  Track::Info info = p->info( key, -999 ) ;
- * 
- *  @endcode 
+ *
+ *  @endcode
  *
  *  @param key key for the information
- *  @param def the default value to be returned 
+ *  @param def the default value to be returned
  *         in the case of missing info
- *  @return information associated with the key if there 
- *          is such information, the default value otherwise 
+ *  @return information associated with the key if there
+ *          is such information, the default value otherwise
  */
 //=============================================================================
-double LHCb::Track::info( const int key, const double def ) const 
+double LHCb::Track::info( const int key, const double def ) const
 {
   ExtraInfo::iterator i = m_extraInfo.find( key ) ;
   return m_extraInfo.end() == i ? def : i->second ;
@@ -569,22 +477,61 @@ double LHCb::Track::info( const int key, const double def ) const
 /** erase the information associated with the given key
  *
  *  @code
- * 
+ *
  *  Track* p = ... ;
  *
- *  Track::Key  key   = ... ; 
- * 
+ *  Track::Key  key   = ... ;
+ *
  *  int erased = p->eraseInfo( key ) ;
  *
- *  @endcode 
- * 
+ *  @endcode
+ *
  *  @param key key for the information
- *  @return return number of erased elements 
+ *  @return return number of erased elements
  */
 //=============================================================================
-LHCb::Track::ExtraInfo::size_type 
+LHCb::Track::ExtraInfo::size_type
 LHCb::Track::eraseInfo( const int key )
-{ 
-  return m_extraInfo.erase( key ) ; 
+{
+  return m_extraInfo.erase( key ) ;
 }
 
+//=============================================================================
+// Fill stream
+//=============================================================================
+std::ostream& LHCb::Track::fillStream(std::ostream& os) const
+{
+  os << "Track : key =" << key() << std::endl
+     << " #ids       =" << nLHCbIDs() << std::endl
+     << " type       =" << type() << std::endl
+     << " history    =" << history() << std::endl
+     << " p          =" << p() << std::endl
+     << " pt         =" << pt() << std::endl
+     << " chi2PerDoF =" << chi2PerDoF() << std::endl
+     << " nDoF       =" << nDoF() << std::endl;
+
+  os << states().size() << " States at z =";
+  for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
+        iS != states().end(); ++iS )
+  {
+    if (*iS) os << " " << (*iS)->z();
+  }
+  os << " :-" << std::endl;
+  for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
+        iS != states().end(); ++iS )
+  {
+    os << **iS;
+  }
+
+  os << " extraInfo [";
+  for ( ExtraInfo::const_iterator i = extraInfo().begin();
+        i != extraInfo().end(); ++i )
+  {
+    const LHCb::Track::AdditionalInfo info =
+      static_cast<LHCb::Track::AdditionalInfo>(i->first);
+    os << " " << info << "=" << i->second;
+  }
+  os << " ]" << std::endl;
+
+  return os;
+}

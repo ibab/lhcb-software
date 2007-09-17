@@ -248,7 +248,8 @@
         name    = 'qOverP'
         desc    = 'Retrieve the charge-over-momentum Q/P of the state'
         const   = 'TRUE'
-        virtual = 'TRUE' />
+        virtual = 'TRUE' >
+      </method>
 
       <method
         type    = 'double'
@@ -351,7 +352,8 @@
         name    = 'errQOverP2'
         desc    = 'Retrieve the squared error on the charge-over-momentum Q/P of the state'
         const   = 'TRUE'
-        virtual = 'TRUE' />
+        virtual = 'TRUE'>
+      </method>
 
       <method
         type    = 'double'
@@ -377,16 +379,17 @@
       <method
         type    = 'LHCb::State*'
         name    = 'clone'
-        desc    = 'Clone the state (remember you then owe the pointer)'
+        desc    = 'Clone the state (remember you then own the pointer)'
         virtual = 'TRUE'
-        const   = 'TRUE' />
+        const   = 'TRUE' >
+      </method>
 
       <method
         name    = 'setState'
         argList = 'const Gaudi::TrackVector state'
         desc    = 'Update the state vector'>
         <code>
- m_stateVector = state;
+  m_stateVector = state;
         </code>
       </method>
 
@@ -454,13 +457,15 @@
         name    = 'setQOverP'
         argList = 'double value'
         desc    = 'Update the charge-over-momentum Q/P value of the state'
-        virtual = 'TRUE' />
+        virtual = 'TRUE' >
+      </method>
 
       <method
         name    = 'setErrQOverP2'
         argList = 'double value'
         desc    = 'Update the squared error on the charge-over-momentum Q/P of the state'
-        virtual = 'TRUE' />
+        virtual = 'TRUE' >
+      </method>
 
       <method
         type    = 'bool'
@@ -476,19 +481,10 @@
       <method
 	name      = "fillStream"
 	desc      = "printOut method to Gaudi message stream"
-	type      = "MsgStream&amp;"
+	type      = "std::ostream&amp;"
 	virtual   = "TRUE"
 	const     = "TRUE" >
-	<arg name = "os" type = "MsgStream" inout = "BOTH"/>
-	<code>
-  os &lt;&lt; "{ " &lt;&lt; "flags :	"
-     &lt;&lt; m_flags &lt;&lt; std::endl
-     &lt;&lt; "stateVector :	" &lt;&lt; m_stateVector &lt;&lt; std::endl
-     &lt;&lt; "covariance :	" &lt;&lt; m_covariance &lt;&lt; std::endl
-     &lt;&lt; "z :	        " &lt;&lt; (float)m_z &lt;&lt; std::endl
-     &lt;&lt; " }";
-  return os;
-	</code>
+	<arg name = "os" type = "std::ostream" inout = "BOTH"/>
       </method>
 
     </class>
