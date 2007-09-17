@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.330 2007-09-17 08:55:53 cattanem Exp $ 
+! $Id: release.notes,v 1.331 2007-09-17 11:33:07 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -22,10 +22,6 @@
 
 ! 2007-09-07 - Marco Cattaneo
  - Remove duplicate dictionaries already in libSTLRflx.so and libMathRflx.so
-
-! 2007-09-05 - Marco Cattaneo
- - Undo the unregistering of GeometryInfoPlus, as it causes crashes after the
-   finalisation of the DetectorDataSvc
 
 ! 2007-09-04 - Marco Cattaneo for Brett Viren
  - Fix gcc 4.0.3 compilation (Savannah patch 28908)
