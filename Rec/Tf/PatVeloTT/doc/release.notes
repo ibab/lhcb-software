@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-17 - Kurt Rinnert
+ - adapted fitter configuration in options file to new master fitter interface
+
 ! 2007-09-10 - Wouter Hulsbergen
  - adapted to splitting of STHitCreator
 
