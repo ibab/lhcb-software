@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.159 2007-09-04 16:46:32 jonrob Exp $
+! $Id: release.notes,v 1.160 2007-09-17 09:51:01 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
 
+!====================== RichKernel v7r8 2007-09-17 ====================
 ! 2007-09-04 - Chris Jones
  - Add header file defining some 'fast' math functions
  - Various speed optimisations to clustering tool interfaces and DAQ

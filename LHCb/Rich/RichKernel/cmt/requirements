@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.64 2007-07-09 15:31:09 cattanem Exp $
+# $Id: requirements,v 1.65 2007-09-17 09:51:01 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v7r7
+version v7r8
 
 # ================ structure =================================================
 branches RichKernel cmt dict doc src
