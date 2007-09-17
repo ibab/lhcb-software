@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-17 - Kurt Rinnert
+ - fixed Tsa fitter configuration in Tf framework options file
+
+! 2007-09-17 - Kurt Rinnert
  - added option files for pattern recognition in the Tf framework.  They are
    not used by default.  One has to change the $RECSYSROOT/options/Reco.opts
    (example provided) and $BRUNELROOT/BrunelCheck.opts (example provided).
