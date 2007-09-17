@@ -10,6 +10,7 @@ ToolSvc.Offline.RichTrackCreator.TrackSelector.VeloTT.MinPCut  = 1;
 ToolSvc.Offline.RichTrackCreator.TrackSelector.KsTrack.MinPCut = 1;
 ToolSvc.Offline.RichTrackCreator.TrackSelector.Seed.MinSeedLikelihood = -15;
 ToolSvc.Offline.RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
+ToolSvc.Offline.RichTrackCreator.TrackSelector.CloneCut = -1e10;
 
 // define the RichTrackSegment nickname to use
 ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "TrSegMaker";
