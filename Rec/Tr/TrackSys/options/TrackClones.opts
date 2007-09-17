@@ -1,36 +1,10 @@
 
-// Options to find clone pairs at z=0, z=1500 and z=10500
-
-TrackClonesSeq.Members += { "TrackBuildCloneTable/FindVertexClones" };
-FindVertexClones.outputLocation = "Rec/Track/VertexClones";
-FindVertexClones.zState = 0*mm;
-FindVertexClones.maxDz  = 1000*mm;
-FindVertexClones.klCut  = 5e3;
-
-TrackClonesSeq.Members += { "TrackBuildCloneTable/FindRich1TrackClones" };
-FindRich1TrackClones.outputLocation = "Rec/Track/Rich1Clones";
-FindRich1TrackClones.zState = 1500*mm;
-FindRich1TrackClones.maxDz  = 1000*mm;
-FindRich1TrackClones.klCut  = 5e3;
-
-TrackClonesSeq.Members += { "TrackBuildCloneTable/FindRich2TrackClones" };
-FindRich2TrackClones.outputLocation = "Rec/Track/Rich2Clones";
-FindRich2TrackClones.zState = 10500*mm;
-FindRich2TrackClones.maxDz  = 2000*mm;
-FindRich2TrackClones.klCut  = 5e3;
+// Options to find clone pairs
+TrackClonesSeq.Members += { "TrackBuildCloneTable/FindTrackClones" };
+FindTrackClones.zStates = { 0*mm, 990*mm, 9450*mm };
+FindTrackClones.maxDz   = 500*mm;
+FindTrackClones.klCut   = 5e3;
 
 // For each set of clones, flag the ones to reject
-
-TrackClonesSeq.Members += { "TrackCloneCleaner/FlagVertexTrackClones" };
-FlagVertexTrackClones.linkerLocation = "Rec/Track/VertexClones";
-FlagVertexTrackClones.CloneCut       = 5e3;
-
-TrackClonesSeq.Members += { "TrackCloneCleaner/FlagRich1TrackClones" };
-FlagRich1TrackClones.linkerLocation = "Rec/Track/Rich1Clones";
-FlagRich1TrackClones.CloneTag       = "Rich1Clone";
-FlagRich1TrackClones.CloneCut       = 5e3;
-
-TrackClonesSeq.Members += { "TrackCloneCleaner/FlagRich2TrackClones" };
-FlagRich2TrackClones.linkerLocation = "Rec/Track/Rich2Clones";
-FlagRich2TrackClones.CloneTag       = "Rich2Clone";
-FlagRich2TrackClones.CloneCut       = 5e3;
+TrackClonesSeq.Members += { "TrackCloneCleaner/FlagTrackClones" };
+FlagTrackClones.CloneCut = 5e3;
