@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-09-17 - Kurt Rinnert
+ - changed the used hit queries in general tracking to the more stable "is not
+   used by any other algorithm than RZ" for R hits and "is not used at all"
+   for Phi hits.
+
+! 2007-09-17 - Kurt Rinnert
  - incorporated Matt's fixes for stable sorting and float comparisons.
 
 ! 2007-09-16 - Kurt Rinnert

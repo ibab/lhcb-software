@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.3 2007-09-16 17:32:27 krinnert Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.4 2007-09-17 15:21:24 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -163,7 +163,7 @@ build3DClusters(int zone,
       iRHit != rHits.end() ; ++iRHit ) {
 
     // if cluster already used by something optionally skip
-    if ( !m_allCoords && (*iRHit)->hit()->testStatus(Tf::HitBase::UsedByVeloSpace) ) continue; 
+    if ( !m_allCoords && (*iRHit)->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ) ) continue; 
 
     double r = (*iRHit)->coordHalfBox();
 
@@ -179,7 +179,7 @@ build3DClusters(int zone,
     for ( PatVeloPhiHitRange::iterator iPhiHit = phiHits.begin();
         iPhiHit != phiHits.end() ; ++iPhiHit ){
       // if cluster already used by something optionally skip
-      if ( !m_allCoords && (*iPhiHit)->hit()->testStatus(Tf::HitBase::UsedByVeloSpace) ) continue; 
+      if ( !m_allCoords && (*iPhiHit)->hit()->isUsed() ) continue; 
 
       // check Phi cluster is compatible with R sector phi range 
       std::pair<double,double> range;
@@ -517,7 +517,7 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
       if( ! m_angleUtils.contains(phiRange,trackPhi) ) continue;
       PatVeloRHit* rHit = 
         rStation->closestHitHalfBox(sector, trackR, m_singleClusTol);
-      if(rHit && !rHit->hit()->testStatus(Tf::HitBase::UsedByVeloSpace)) {
+      if(rHit && !rHit->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ)) {
         newTrack->addRCoord(rHit);
         rHit->hit()->setUsed(true);
       }
@@ -545,7 +545,7 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
       PatVeloPhiHit* phiHit = 
         phiStation->closestHitHalfBox(sector, trackPhi-offset, 
             m_singleClusTol/trackR);      
-      if(phiHit && !phiHit->hit()->testStatus(Tf::HitBase::UsedByVeloSpace)) {
+      if(phiHit && !phiHit->hit()->isUsed()) {
         newTrack->addPhi(phiHit);
         phiHit->hit()->setUsed(true);
       }
