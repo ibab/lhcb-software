@@ -4,16 +4,16 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r8 2007-09-17 ======================
 ! 2007-09-13 M. Needham
  - Update IHitExpectation interface
 
 ! 2007-09-11 M Needham
  - Add IHitExpectation interface
 
-
 ! 2007-08-22 - Edwin Bos
- - Corrected Track to Point and to Plane methods.
-
+ - In ITrackExtrapolator, added LHCb::State& argument to Track to Point and to
+   Plane propagate methods.
 
 !====================== TrackInterfaces v3r7 2007-07-23 ======================
 ! 2007-07-23 - Silvia Pozzi and Wouter Hulsbergen
