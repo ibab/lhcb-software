@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r7 2007-09-17 =======================
 ! 2007-09-14 - Chris Jones
  - Make another method in the pixel creator base class virtual, to allow it
   to be reimplemented in derived tools.
