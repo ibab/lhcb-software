@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r6 2007-09-17 ==========================
 ! 2007-09-14 - Chris Jones
  - Add to extraInfo enum enters for KL Clone variables at the vertex, Rich1 
    and Rich2
@@ -11,7 +12,6 @@
 ! 2007-09-11 M Needham
  - Add number of expected hits in VELO, TT, OT, IT to track extraInfo
 
-!======================= TrackEvent v4r6 2007-09-07 ==========================
 ! 2007-09-06 M Needham
  - Ensure no comparisions with != == between floats
  
