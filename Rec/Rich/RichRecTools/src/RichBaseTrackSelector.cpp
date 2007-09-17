@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.9 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.10 2007-09-17 11:47:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -47,6 +47,8 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "Charge",     m_chargeSel   = 0 );
   declareProperty( "AcceptClones", m_acceptClones = false );
 
+  declareProperty( "CloneCut",    m_cloneCut   = 0 );
+
 }
 
 //=============================================================================
@@ -75,8 +77,8 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
   const int slash = name().find_last_of(".");
   const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
 
-  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e|" )
-    % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut;
+  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e| : cloneCut = %|-4.2e|" )
+    % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut % m_cloneCut;
   if ( m_acceptClones ) os << " clonesOK";
   if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;
   return os;
@@ -104,7 +106,8 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   }
 
   // clones
-  if ( !m_acceptClones && track->checkFlag(LHCb::Track::Clone) )
+  if ( !m_acceptClones && ( track->checkFlag(LHCb::Track::Clone) || 
+                            track->info(LHCb::Track::CloneDist,9e99)<m_cloneCut ) )
   {
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Track failed clone rejection" << endreq;
@@ -163,7 +166,8 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   }
 
   // clones
-  if ( !m_acceptClones && !track->trackID().unique() )
+  if ( !m_acceptClones && ( !track->trackID().unique() || 
+                            track->cloneDist()<m_cloneCut ) )
   {
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Track failed clone rejection" << endreq;
@@ -219,3 +223,4 @@ double BaseTrackSelector::maxPtCut()   const { return m_maxPtCut; }
 double BaseTrackSelector::minChi2Cut() const { return m_minChi2Cut; }
 double BaseTrackSelector::maxChi2Cut() const { return m_maxChi2Cut; }
 int    BaseTrackSelector::chargeSel()  const { return m_chargeSel; }
+double BaseTrackSelector::cloneCut()   const { return m_cloneCut; }

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.6 2007-03-10 13:19:19 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.7 2007-09-17 11:47:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -97,6 +97,9 @@ namespace Rich
       /// Returns the charge selection
       virtual int chargeSel() const;
 
+      /// Returns the clone rejection cut
+      virtual double cloneCut() const;
+
     protected: // methods
 
       /// Print the track selection
@@ -116,6 +119,8 @@ namespace Rich
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
       bool m_acceptClones; ///< Accept or reject clone tracks
+
+      double m_cloneCut;   ///< Clone rejection cut
 
     };
 

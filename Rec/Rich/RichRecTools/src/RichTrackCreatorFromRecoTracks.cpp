@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.20 2007-09-14 13:39:44 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.21 2007-09-17 11:47:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,8 +35,7 @@ TrackCreatorFromRecoTracks( const std::string& type,
     m_trTracksLocation     ( LHCb::TrackLocation::Default   ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false ),
-    m_cloneCut             ( Rich::NRiches )
+    m_buildHypoRings       ( false )
 {
 
   // declare interface for this tool
@@ -52,9 +51,6 @@ TrackCreatorFromRecoTracks( const std::string& type,
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
-  m_cloneCut[Rich::Rich1] = 350;
-  m_cloneCut[Rich::Rich2] = 500;
-  declareProperty( "CloneCut",                 m_cloneCut           );
 
 }
 
@@ -72,8 +68,6 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
     acquireTool( "RichMassHypoRings", m_massHypoRings );
     info() << "Will create Mass hypothesis rings for each track" << endreq;
   }
-
-  info() << "Clone cut (Rich1/Rich2) " << m_cloneCut << endreq;
 
   return sc;
 }
@@ -207,23 +201,6 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endreq;
 
-        const Rich::DetectorType rich = (*iSeg)->rich();
-
-        // check for clone flags
-        if ( ( rich == Rich::Rich1 && 
-               trTrack->info(LHCb::Track::Rich1Clone,1e99)<m_cloneCut[rich] ) ||
-             ( rich == Rich::Rich2 &&
-               trTrack->info(LHCb::Track::Rich2Clone,1e99)<m_cloneCut[rich] ) )
-        {
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << "   -> " << (*iSeg)->radiator() 
-                      << " TrackSegment rejected due to Clone information" << endreq;
-          }
-          delete *iSeg;
-          continue;
-        }
-
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
         LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
@@ -305,6 +282,9 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
         // track charge
         newTrack->setCharge( trTrack->charge() );
+
+        // clone variable
+        newTrack->setCloneDist( trTrack->info(LHCb::Track::CloneDist,9e90) );
 
         // Set parent information
         newTrack->setParentTrack( trTrack );
