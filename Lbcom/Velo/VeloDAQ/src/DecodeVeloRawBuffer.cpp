@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.13 2007-09-16 16:56:23 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.14 2007-09-17 13:55:46 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -154,6 +154,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 	      << rb->sourceID()
 	      << " to sensor number!"
 	      << endmsg;
+      continue;
     }
 
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
@@ -189,6 +190,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 	      << rb->sourceID()
 	      << " to sensor number!"
 	      << endmsg;
+      continue;
     }
 
     unsigned int oldSize = clusters->size();

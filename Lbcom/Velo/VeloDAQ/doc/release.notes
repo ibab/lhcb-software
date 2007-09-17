@@ -3,6 +3,12 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2007-09-17 - Kurt Rinnert
+ - make the decoder fail more graciously in case a source ID can not matched
+   to a sensor number.  This should never happen and indicates an inconsistent
+   conditions data base.  However, crashing seemed a bit harsh.  Now an error
+   message is issued and the source ID is simply skipped.
+
 ! 2007-09-16 - Kurt Rinnert
  - introduced new version 3 of VELO raw buffer.  The only difference to
    version 2 is the treatment of interstrip positions.  These are now computed
