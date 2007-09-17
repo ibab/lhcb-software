@@ -18,15 +18,13 @@
 FitForward.TracksInContainer = "Rec/Track/Forward";
 
 // Seed fit
-TrackSeedFitSeq.Members += { "TrackEventFitter/FitTsaSeed" };
-FitTsaSeed.TracksInContainer          = "Rec/Track/Tsa";
-FitTsaSeed.Fitter.ZPositions          = { 7500., 9450., 11900. };
-FitTsaSeed.Fitter.StateAtBeamLine     = false;
-FitTsa.Fitter.ErrorP                  = {0.04,5e-8};
-FitTsaSeed.Fitter.RefInfoTool         = "Tf::Tsa::SeedReferenceCreator"; // Tf version
-FitTsaSeed.Fitter.NumberFitIterations = 1;
-FitTsaSeed.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitTsa.TracksInContainer          = "Rec/Track/Tsa";
+FitTsa.Fitter.ZPositions          = { 7500., 9450., 11900. };
+FitTsa.Fitter.StateAtBeamLine     = false;
+FitTsa.Fitter.RefInfoTool         = "Tf::Tsa::SeedReferenceCreator"; // Tf version
+FitTsa.Fitter.NumberFitIterations = 2;
+FitTsa.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitTsa.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Match fit
 FitMatch.TracksInContainer = "Rec/Track/Match";

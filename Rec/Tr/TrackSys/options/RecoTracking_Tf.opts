@@ -101,6 +101,12 @@ TrackVeloTTFitSeq.Members += { "TrackEventFitter/FitVeloTT" };
 
 // Clone tracks killer: output is "best" container
 TrackPostFitSeq.Members += { "TrackEventCloneKiller" };
+TrackEventCloneKiller.TracksInContainers = {
+   "Rec/Track/VeloTT"
+  ,"Rec/Track/Forward"
+  ,"Rec/Track/Match"
+  ,"Rec/Track/Tsa" 
+};
 
 // Prepare and fit velo tracks
 TrackVeloPreFitSeq.Members += { "TrackPrepareVelo" };
