@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.10 2007-09-17 11:47:00 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.11 2007-09-17 12:51:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -47,7 +47,7 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "Charge",     m_chargeSel   = 0 );
   declareProperty( "AcceptClones", m_acceptClones = false );
 
-  declareProperty( "CloneCut",    m_cloneCut   = 0 );
+  declareProperty( "CloneCut",    m_cloneCut   = -1e10 );
 
 }
 
