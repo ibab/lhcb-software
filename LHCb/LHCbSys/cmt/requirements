@@ -18,23 +18,23 @@ use LHCbMath              v2r2    Kernel  # Juan Palacios
 use Relations             v5r2    Kernel  # Ivan Belyaev
 use CaloKernel            v5r1    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v7r7    Rich    # Chris Jones
+use RichKernel            v7r8    Rich    # Chris Jones
 use L0MuonKernel          v7r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v9r9    Det     # Marco Cattaneo
+use DetSys                v10r0   Det     # Marco Cattaneo
 use VeloDet               v12r1   Det     # Mark Tobin, Kurt Rinnert
-use DetDesc               v17r6   Det     # Marco Clemencic, Juan Palacios
+use DetDesc               v18r0   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r3p1  Det     # Marco Clemencic, Juan Palacios
-use DetDescSvc            v1r12   Det     # Marco Clemencic, Matt Needham
+use DetDescSvc            v1r13   Det     # Marco Clemencic, Matt Needham
 use XmlTools              v5r1    Tools   # Marco Clemencic
 use OTDet                 v7r6    Det     # Jan Amoraal
 use CaloDet               v8r4    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
-use MuonDet               v6r3    Det     # Alessia Satta, Alessio Sarti
+use MuonDet               v6r4    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r6    Det     # N.N.
-use RichDet               v10r6   Det     # Chris Jones
+use RichDet               v10r7   Det     # Chris Jones
 use STDet                 v3r6    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
@@ -67,9 +67,9 @@ use MCInterfaces          v1r2   Kernel  # Marco Cattaneo et al.
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use CaloInterfaces        v7r4   Calo    # Olivier Deschamps
 use CaloUtils             v7r5   Calo    # Olivier Deschamps
-use RichRecBase           v3r6   Rich    # Chris Jones
+use RichRecBase           v3r7   Rich    # Chris Jones
 use PatTools              v3r2   Pat     # Olivier Callot
-use TrackInterfaces       v3r7   Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces       v3r8   Tr      # Matt Needham
 use TsaKernel             v2r5   Tr      # Matt Needham
 use LinkerInstances       v3r3   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v11r6  Det     # Marco Clemencic
@@ -88,9 +88,10 @@ use LoKiPhys              v6r0   Phys    # Ivan Belyaev
 use LoKiPhysMC            v6r0   Phys    # Ivan Belyaev
 use LoKiAlgo              v6r0   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v6r0   Phys    # Ivan Belyaev
+use LoKiArrayFunctors     v6r0   Phys    # Ivan Belyaev
 
 # LHCb  Examples
 use DetDescChecks         v4r3   Det     # Ivan Belyaev
 use DetDescExample        v7r5   Ex      # Marco Clemencic
 use IOExample             v2r1   Ex      # Marco Cattaneo
-use DetCondExample        v11r1  Ex      # Marco Clemencic
+use DetCondExample        v11r2  Ex      # Marco Clemencic
