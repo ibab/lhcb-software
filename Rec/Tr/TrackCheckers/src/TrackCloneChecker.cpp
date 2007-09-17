@@ -1,4 +1,4 @@
-// $Id: TrackCloneChecker.cpp,v 1.2 2007-09-17 09:24:37 jonrob Exp $
+// $Id: TrackCloneChecker.cpp,v 1.3 2007-09-17 14:34:47 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -64,7 +64,6 @@ StatusCode TrackCloneChecker::execute()
 
   // set up stuff for this event
   initializeEvent();
-  m_MCPmap.clear();
   ++m_nEvts;
 
   // loop over tracks
@@ -80,7 +79,8 @@ StatusCode TrackCloneChecker::execute()
 
     // MCP for main track
     const LHCb::MCParticle * mcP = mcTruth(*iTk);
-    //if ( !mcP || !selected(mcP) ) continue;
+    //if ( !mcP ) continue;
+    if ( !selected(mcP) ) continue;
 
     debug() << "Track " << (*iTk)->key() << " " << (*iTk)->history() << endreq;
     if ( msgLevel(MSG::VERBOSE) )
@@ -137,7 +137,7 @@ StatusCode TrackCloneChecker::execute()
     const bool cloneID = ( (*iTk)->info(LHCb::Track::CloneDist,9e99) < m_klCut );
 
     // real clone ?
-    const bool hasMCclones = hasMCClone( *iTk );
+    const bool hasMCclones = hasMCClone( mcP );
 
     // tallies
     if ( mcP )
@@ -165,22 +165,6 @@ StatusCode TrackCloneChecker::execute()
   } // track loop
 
   return StatusCode::SUCCESS;
-}
-
-bool TrackCloneChecker::hasMCClone( const LHCb::Track * track )
-{
-  if ( m_MCPmap.empty() )
-  {
-    LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
-    for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
-          iTk != tracks->end(); ++iTk )
-    {
-      const LHCb::MCParticle * mc = mcTruth(*iTk);
-      ++m_MCPmap[mc];
-    }
-  }
-  const LHCb::MCParticle * mcP = mcTruth(track);
-  return m_MCPmap[mcP] > 1;
 }
 
 StatusCode TrackCloneChecker::finalize()

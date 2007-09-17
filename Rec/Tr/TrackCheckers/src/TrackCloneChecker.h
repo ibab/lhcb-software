@@ -1,4 +1,4 @@
-// $Id: TrackCloneChecker.h,v 1.2 2007-09-17 09:24:37 jonrob Exp $
+// $Id: TrackCloneChecker.h,v 1.3 2007-09-17 14:34:47 jonrob Exp $
 #ifndef TRACKCLONECHECKER_H
 #define TRACKCLONECHECKER_H 1
 
@@ -66,8 +66,8 @@ private:
 
 private:
 
-  /// Does the given track have an MC Clone
-  bool hasMCClone( const LHCb::Track * track );
+  /// Does the given MCP have reconstructed clones
+  bool hasMCClone( const LHCb::MCParticle * mcP );
 
   /// Get efficiency
   inline std::pair<double,double> getEff1( const double top,
@@ -96,13 +96,14 @@ private:
   /// KL distance cut
   double m_klCut;
 
-  /// Number of rec tracks per MCParticle
-  typedef std::map<const LHCb::MCParticle *, unsigned int> MCPmap;
-  MCPmap m_MCPmap;
-
   /// Event count
   unsigned long m_nEvts;
 
 };
+
+inline bool TrackCloneChecker::hasMCClone( const LHCb::MCParticle * mcP )
+{
+  return mcP ? reconstructedTracks(mcP).size() > 1 : false;
+}
 
 #endif // TRACKCLONECHECKER_H
