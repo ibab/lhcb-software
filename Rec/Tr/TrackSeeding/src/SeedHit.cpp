@@ -61,7 +61,7 @@ SeedHit::SeedHit(LHCb::STLiteCluster* itclus, DeSTDetector* itdet) {
 // as well
    Gaudi::XYZVector dir=traj->direction(1.0);
 
-   Gaudi::Transform3D trans = (sect->geometry())->matrix();
+   Gaudi::Transform3D trans = (sect->geometry())->toLocalMatrix();
    double xx,xy,xz,dx;
    double yx,yy,yz,dy;
    double zx,zy,zz,dz;
@@ -155,7 +155,7 @@ SeedHit::SeedHit(LHCb::OTTime* ott, DeOTDetector* otdet) {
 // z-direction is mirrored.
 
    m_station = mod->stationID();
-   Gaudi::Transform3D trans = (mod->geometry())->matrix();
+   Gaudi::Transform3D trans = (mod->geometry())->toLocalMatrix();
    double xx,xy,xz,dx;
    double yx,yy,yz,dy;
    double zx,zy,zz,dz;
