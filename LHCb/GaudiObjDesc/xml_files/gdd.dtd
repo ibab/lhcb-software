@@ -65,6 +65,7 @@
         name             CDATA                             #REQUIRED
         desc             CDATA                             #REQUIRED
         value            CDATA                             #IMPLIED
+        strTypConv       (TRUE | FALSE )                   "FALSE"
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
 >
 <!ELEMENT enumval EMPTY>

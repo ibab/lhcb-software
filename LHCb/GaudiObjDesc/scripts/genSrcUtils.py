@@ -98,12 +98,12 @@ class genSrcUtils(importUtils.importUtils):
     if godClass.has_key('enum'):
       self.addInclude('ostream',1)
       for enum in godClass['enum']:
-	enumAtt = enum['attrs']
-	if enumAtt['access'] == 'PUBLIC':
-	  enumType = className+'::'+enumAtt['name']
-	  s += 'inline std::ostream & operator << (std::ostream & s, %s e) {\n' % (enumType)
-	  s += '  switch (e) {\n'
-	  maxLen = 0
+        enumAtt = enum['attrs']
+        if enumAtt['access'] == 'PUBLIC':
+          enumType = className+'::'+enumAtt['name']
+          s += 'inline std::ostream & operator << (std::ostream & s, %s e) {\n' % (enumType)
+          s += '  switch (e) {\n'
+          maxLen = 0
           values = []
           if enumAtt.has_key('value'):
             for v in enumAtt['value'].split(',') :
@@ -115,12 +115,62 @@ class genSrcUtils(importUtils.importUtils):
               name = eval['attrs']['name']
               maxLen = max(maxLen, len(name))
               values.append(name)
-	  for v in values :
-	    s += '    case %s::%s : return s << "%s";\n' % ( className, v.ljust(maxLen), v )
-	  s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
-	  s += '  }\n'
-	  s += '}\n\n'
+          for v in values :
+            s += '    case %s::%s : return s << "%s";\n' % ( className, v.ljust(maxLen), v )
+          s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
+          s += '  }\n'
+          s += '}\n\n'
     return s
+#--------------------------------------------------------------------------------
+  def genEnumConversions(self, godClass, className=''):
+    defs  = ''
+    maps  = ''
+    dcls = ''
+    if godClass.has_key('enum'):
+      for enum in godClass['enum'] :
+        enumAtt = enum['attrs']
+        if enumAtt['strTypConv'] == 'TRUE':
+          self.addInclude('GaudiKernel/VectorMap')
+          enumType = enumAtt['name']
+
+          maxLen = 0
+          values = []
+          if enumAtt.has_key('value'):
+            for v in enumAtt['value'].split(',') :
+              name = v.split('=')[0].strip()
+              maxLen = max(len(name),maxLen)
+              values.append(name)
+          if enum.has_key('enumval'):
+            for eval in enum['enumval'] : 
+              name = eval['attrs']['name']
+              maxLen = max(maxLen, len(name))
+              values.append(name)
+
+          dcls += '  /// conversion of string to enum for type %s\n' % enumType
+          dcls += '  static %s::%s %sToType (const std::string & aName);\n\n' % ( className, enumType, enumType )
+          dcls += '  /// conversion to string for enum type %s\n' % enumType
+          dcls += '  static std::string %sToString(int aEnum);\n' % enumType
+
+          maps += '  static GaudiUtils::VectorMap<std::string,%s> & s_%sTypMap();\n' % (enumType, enumType)
+
+          defs += 'GaudiUtils::VectorMap<std::string,%s::%s> & %s::s_%sTypMap() {\n' % ( className, enumType, className, enumType )
+          defs += '  static GaudiUtils::VectorMap<std::string,%s> m;\n' % enumType
+          defs += '  if (m.empty()) {\n'
+          for v in values : defs += '    m.insert("%s",%s);\n' % (v, v)
+          defs += '  };\n'
+          defs += '  return m;\n'
+          defs += '}\n\n'
+          defs += '%s::%s %s::%sToType(const std::string & aName) {\n' % (className, enumType, className, enumType)
+          defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter =  s_%sTypMap().find(aName);\n' % ( enumType, enumType )
+          defs += '  return ( iter != s_%sTypMap().end() ? iter->second : Unknown );\n' % enumType
+          defs += '}\n\n'
+          defs += 'std::string %s::%sToString(int aEnum) {\n' % (className, enumType)
+          defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter = s_%sTypMap().begin();\n' % (enumType, enumType)
+          defs += '  while ( iter != s_%sTypMap().end() && iter->second != aEnum ) ++iter;\n' % enumType
+          defs += '  return ( iter != s_%sTypMap().end() ? iter->first : "Unknown");\n' % enumType
+          defs += '}\n'
+
+    return defs,maps,dcls
 #--------------------------------------------------------------------------------
   def genAttributes(self,modifier,godClass,namespace=0):
     s = ''
@@ -149,13 +199,13 @@ class genSrcUtils(importUtils.importUtils):
       for att in godClass['attribute'] :
         attAtt = att['attrs']
         if attAtt['access'] == modifier.upper() or modifier == 'all':
-	  attType = attAtt['type']
+          attType = attAtt['type']
           if attType in ['bitfield8','bitfield16','bitfield','bitfield32','bitfield64']:
             self.bitfieldEnums[modifier.lower()] += self.genBitfield(att)
-	    if   attType in ['bitfield8']             : attAtt['type'] = 'unsigned char'
-	    elif attType in ['bitfield16']            : attAtt['type'] = 'unsigned short int'
-	    elif attType in ['bitfield','bitfield32'] : attAtt['type'] = 'unsigned int'
-	    elif attType in ['bitfield64']            : attAtt['type'] = 'ulonglong'
+            if   attType in ['bitfield8']             : attAtt['type'] = 'unsigned char'
+            elif attType in ['bitfield16']            : attAtt['type'] = 'unsigned short int'
+            elif attType in ['bitfield','bitfield32'] : attAtt['type'] = 'unsigned int'
+            elif attType in ['bitfield64']            : attAtt['type'] = 'ulonglong'
           name = attAtt['name']
           namespaceInit = ''
           if namespace :

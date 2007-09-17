@@ -49,6 +49,7 @@ namespace @@@classNamespace@@@
   @@@destructorDecl@@@
   @@@classIDDecl@@@
   @@@streamerDecl@@@
+  @@@enumConversionDecls@@@
   @@@publicMethodDecls@@@
   @@@getSetMethodDecls@@@
   @@@publicBitfieldEnums@@@
@@ -68,6 +69,7 @@ namespace @@@classNamespace@@@
   @@@privateMethodDecls@@@
   @@@privateBitfieldEnums@@@
   @@@privateAttributes@@@
+  @@@enumConversionMaps@@@
   }; // class @@@classname@@@
 
   @@@classTypedefs@@@
@@ -86,6 +88,7 @@ namespace @@@classNamespace@@@
 @@@destructorDef@@@
 @@@classIDDef@@@
 @@@streamerDef@@@
+@@@enumConversionDefs@@@
 @@@getSetMethodDefs@@@
 @@@publicMethodDefs@@@
 @@@protectedMethodDefs@@@

@@ -750,7 +750,10 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['destructorDef']                = self.genDestructors(godClass,scoped_classname)
       classDict['classIDDef']                   = self.genClassIDFun(godClass,scoped_classname)
       classDict['getSetMethodDefs']             = self.genGetSetMethods(godClass,scoped_classname)
-
+      defs,maps,dcls = self.genEnumConversions(godClass, scoped_classname)
+      classDict['enumConversionDefs']  = defs
+      classDict['enumConversionMaps']  = maps
+      classDict['enumConversionDecls'] = dcls
       classDict['includes']                     = self.genIncludes()
       classDict['forwardDeclsGlob']             = self.genForwardDeclsGlob()
       classDict['forwardDeclsLHCb']             = self.genForwardDeclsLHCb()

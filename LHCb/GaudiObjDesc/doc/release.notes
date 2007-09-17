@@ -4,6 +4,21 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-09-17 Stefan Roiser
+- New feature for string to type conversion for enums and vice versa
+  This feature can be enabled by setting the <enum> attribute "strTypConv" to "TRUE"
+
+  !!! ATTENTION !!! this feature requires the enum to contain a value with name "Unknown"
+
+  The result will be:
+    - a static function to store the conversion types
+        GaudiUtils::VectorMap<string,[enumType]> & s_[enumType]TypMap()
+    - two static functions for the actual conversion
+        [enumType] [enumType]ToType( const std::string & )
+        std::string [enumType}ToString( int )
+
+- removed some tabs in genSrcUtils.py
+
 !======================== GaudiObjDesc v10r3 2007-09-03 ======================
 ! 2007-09-03 - Marco Cattaneo for Brett Viren
  - Apply Savannah patch 1256:
