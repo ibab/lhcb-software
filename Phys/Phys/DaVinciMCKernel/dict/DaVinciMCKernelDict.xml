@@ -8,6 +8,7 @@
   <class name = "IHepMC2MC"/>
   <class name = "IMCParticleArrayFilter"/>
   <class name = "IMC2Collision"/>
+  <class name = "IP2VVMCPartAngleCalculator"/>
   <class name = "IPV2MC"/>
 
 </lcgdict>
