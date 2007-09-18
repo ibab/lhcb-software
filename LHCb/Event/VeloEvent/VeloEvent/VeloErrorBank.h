@@ -1,4 +1,4 @@
-// $Id: VeloErrorBank.h,v 1.1 2007-09-18 00:11:45 szumlat Exp $
+// $Id: VeloErrorBank.h,v 1.2 2007-09-18 08:36:52 szumlat Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
@@ -18,8 +18,6 @@
  *  @date   2006-05-02
  */
 
-using namespace VeloTELL1;
-
 namespace VeloErrorBankLocation {
   static const std::string& Default = "Raw/Velo/VeloErrorBank";
 }
@@ -34,8 +32,8 @@ public:
 
   virtual ~VeloErrorBank( ){ } ///< Destructor
   void setEvtInfoSection(EvtInfo& inInfo);
-  void setErrorInfoSection(allError& inSec);
-  void setErrorSources(dataVec& sources);
+  void setErrorInfoSection(VeloTELL1::allError& inSec);
+  void setErrorSources(VeloTELL1::dataVec& sources);
   unsigned int eventInformation(const int PPFPGA=0) const;
   unsigned int bankList(const int PPFPGA=0) const;
   unsigned int detectorID(const int PPFPGA=0) const;
@@ -43,7 +41,7 @@ public:
   unsigned int l0EventID(const int PPFPGA=0) const;
   bool isEmpty() const;
   EvtInfo* evtInfo() const;
-  dataVec errorSources() const;
+  VeloTELL1::dataVec errorSources() const;
   unsigned int clusterDataSectionLength(const int PPFPGA=0) const;
   unsigned int adcDataSectionLength(const int PPFPGA=0) const;
   unsigned int processInfo(const int PPFPGA=0) const;
@@ -57,8 +55,8 @@ protected:
 private:
 
   EvtInfo m_evtInfoData;
-  allError m_errorInfoData;
-  dataVec m_errorSources;
+  VeloTELL1::allError m_errorInfoData;
+  VeloTELL1::dataVec m_errorSources;
 
 };
 //
@@ -67,47 +65,47 @@ inline void VeloErrorBank::setEvtInfoSection(EvtInfo& inInfo)
   m_evtInfoData=inInfo;
 }
 //
-inline void VeloErrorBank::setErrorInfoSection(allError& inSec)
+inline void VeloErrorBank::setErrorInfoSection(VeloTELL1::allError& inSec)
 {
   m_errorInfoData=inSec;
 }
 //
-inline void VeloErrorBank::setErrorSources(dataVec& sources)
+inline void VeloErrorBank::setErrorSources(VeloTELL1::dataVec& sources)
 {
   m_errorSources=sources;
 }
 //
 inline unsigned int VeloErrorBank::eventInformation(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift24)&bitMask8 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift24)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int VeloErrorBank::bankList(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift16)&bitMask8 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int VeloErrorBank::detectorID(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift12)&bitMask4 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift12)&VeloTELL1::bitMask4 );
 }
 //
 inline unsigned int VeloErrorBank::bunchCounter(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( anInfo[0]&bitMask12 );
+  return ( anInfo[0]&VeloTELL1::bitMask12 );
 }
 //
 inline unsigned int VeloErrorBank::l0EventID(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
   return ( anInfo[1] );
 }
@@ -125,7 +123,7 @@ inline EvtInfo* VeloErrorBank::evtInfo() const
   return ( anInfo );
 }
 //
-inline dataVec VeloErrorBank::errorSources() const
+inline VeloTELL1::dataVec VeloErrorBank::errorSources() const
 {
   return ( m_errorSources );
 }
@@ -133,46 +131,46 @@ inline dataVec VeloErrorBank::errorSources() const
 inline unsigned int 
 VeloErrorBank::clusterDataSectionLength(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[2]>>bitShift16)&bitMask16 );
+  return ( (anInfo[2]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
 }
 //
 inline unsigned int
 VeloErrorBank::adcDataSectionLength(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( anInfo[2]&bitMask16 );
+  return ( anInfo[2]&VeloTELL1::bitMask16 );
 }
 //
 inline unsigned int VeloErrorBank::processInfo(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[3]>>bitShift24)&bitMask8 );
+  return ( (anInfo[3]>>VeloTELL1::bitShift24)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int VeloErrorBank::PCN(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( (anInfo[3]>>bitShift16)&bitMask8 );
+  return ( (anInfo[3]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int VeloErrorBank::numberOfCluster(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   //
-  return ( anInfo[3]&bitMask16 );
+  return ( anInfo[3]&VeloTELL1::bitMask16 );
 }
 //
 inline unsigned int VeloErrorBank::errorBankLength(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   // 
   try{
-    if(((anInfo[4]>>bitShift8)&bitMask8)==0x8e){
+    if(((anInfo[4]>>VeloTELL1::bitShift8)&VeloTELL1::bitMask8)==0x8e){
       std::cout<< " ==> Data structure is coherent up to first marker! ";
     }else{
       throw std::string(" ==> Error Bank data corruption at first marker!");
@@ -181,15 +179,15 @@ inline unsigned int VeloErrorBank::errorBankLength(const int PPFPGA) const
     std::cout<< ( str ) <<std::endl;
   }
   //
-  return ( (anInfo[4]>>bitShift16)&bitMask16 );
+  return ( (anInfo[4]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
 }
 inline unsigned int VeloErrorBank::bankLength(const int PPFPGA) const
 {
-  errorInfo anInfo=m_errorInfoData[PPFPGA];
+  VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   try{
-    if((anInfo[7]&bitMask8)==0x03){
+    if((anInfo[7]&VeloTELL1::bitMask8)==0x03){
       std::cout<< " non-zero suppressed data bank length: ";
-    }else if((anInfo[7]&bitMask8)==0x04){
+    }else if((anInfo[7]&VeloTELL1::bitMask8)==0x04){
       std::cout<< " pedestal bank length: ";
     }else{
       throw std::string(" ==> Error Bank data corruption (second marker)!");
@@ -198,7 +196,7 @@ inline unsigned int VeloErrorBank::bankLength(const int PPFPGA) const
     std::cout<< ( str ) <<std::endl;
   }
   //
-  return ( (anInfo[7]>>bitShift16)&bitMask16 );
+  return ( (anInfo[7]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
 }
 //
 typedef KeyedContainer<VeloErrorBank, Containers::HashMap> VeloErrorBanks;

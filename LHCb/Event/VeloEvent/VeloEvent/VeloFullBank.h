@@ -1,4 +1,4 @@
-// $Id: VeloFullBank.h,v 1.1 2007-09-18 00:11:45 szumlat Exp $
+// $Id: VeloFullBank.h,v 1.2 2007-09-18 08:36:52 szumlat Exp $
 #ifndef VELOFULLBANK_H 
 #define VELOFULLBANK_H 1
 
@@ -14,10 +14,6 @@
  *  @author Tomasz Szumlak
  *  @date   2006-04-06
  */
-
-using namespace VeloTELL1;
-
-//static const CLID& CLID_VeloFullBank = 4005;
 
 namespace VeloFullBankLocation {
   static const std::string& Default = "Raw/Velo/ADCBank";
@@ -39,8 +35,8 @@ public:
       writeEventInfos(type);
     }
   virtual ~VeloFullBank( ) { }; ///< Destructor
-  dataVec& getSection(int blockNnb, int secNbn);
-  allEvt& getEvtInfo();
+  VeloTELL1::dataVec& getSection(int blockNnb, int secNbn);
+  VeloTELL1::allEvt& getEvtInfo();
   //
 
 protected:  
@@ -61,7 +57,7 @@ private:
   std::vector<PPFPGABlock> m_PPFPGABlocks;
   int m_NumberOfWordsInBlock;
   int m_NumberOfWordsInSection;
-  allEvt m_infos;
+  VeloTELL1::allEvt m_infos;
   
 };
 //=============================================================================
@@ -128,7 +124,7 @@ inline void VeloFullBank::writeEventInfos(const int type)
     //
     for(int PPFPGA=0; PPFPGA<VeloTELL1::NumberOfPPFPGA; PPFPGA++){
       unsigned int* dataPtr=m_bank+(PPFPGA*DataBlock)+DataSection;
-      evtInfo anInfo;
+      VeloTELL1::evtInfo anInfo;
       for(int k=0; k<VeloTELL1::EventInfoLength; k++){
         unsigned int* infoPtr=dataPtr+k;
         anInfo.push_back(*(infoPtr));
@@ -148,12 +144,12 @@ inline const int VeloFullBank::NumberOfWordsInSection() const
   return ( m_NumberOfWordsInSection ); 
 }
 //=============================================================================
-inline allEvt& VeloFullBank::getEvtInfo()
+inline VeloTELL1::allEvt& VeloFullBank::getEvtInfo()
 {
   return ( m_infos );
 }
 //=============================================================================
-inline dataVec& VeloFullBank::getSection(
+inline VeloTELL1::dataVec& VeloFullBank::getSection(
                                             int blockNbn, int secNbn)
 {
   return ( m_PPFPGABlocks[blockNbn].sections[secNbn] );

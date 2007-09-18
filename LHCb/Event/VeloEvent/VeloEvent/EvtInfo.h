@@ -1,4 +1,4 @@
-// $Id: EvtInfo.h,v 1.1 2007-09-18 00:15:37 szumlat Exp $
+// $Id: EvtInfo.h,v 1.2 2007-09-18 08:36:51 szumlat Exp $
 #ifndef EVTINFO_H 
 #define EVTINFO_H 1
 
@@ -19,8 +19,6 @@
  *  @date   2006-04-27
  */
 
-using namespace VeloTELL1;
-
 namespace EvtInfoLocation {
   static const std::string& Default = "Raw/Velo/EvtInfo";
 }
@@ -36,7 +34,7 @@ public:
   EvtInfo(){ }
   virtual ~EvtInfo( ){ }; ///< Destructor
   //  
-  void setEvtInfo(allEvt& inData);
+  void setEvtInfo(VeloTELL1::allEvt& inData);
   unsigned int bunchCounter(const int PPFPGA=0) const;
   unsigned int detectorID(const int PPFPGA=0) const;
   unsigned int bankList(const int PPFPGA=0) const;
@@ -51,135 +49,135 @@ public:
   unsigned int headerPseudoErrorFlag(const int PPFPGA=0) const;
   unsigned int PCNError(const int PPFPGA=0) const;
   unsigned int FEMPCNG(const int PPFPGA=0) const;
-  dataVec IHeader(const int PPFPGA=0) const;
-  dataVec PCNBeetle(const int PPFPGA=0) const;
+  VeloTELL1::dataVec IHeader(const int PPFPGA=0) const;
+  VeloTELL1::dataVec PCNBeetle(const int PPFPGA=0) const;
 
 protected:
 
 private:
 
-  allEvt m_evtInfo;
+  VeloTELL1::allEvt m_evtInfo;
 
 };
 //
-inline void EvtInfo::setEvtInfo(allEvt& inData)
+inline void EvtInfo::setEvtInfo(VeloTELL1::allEvt& inData)
 {
   m_evtInfo=inData;
 }
 //
 inline unsigned int EvtInfo::bunchCounter(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( anInfo[0]&bitMask12 );
+  return ( anInfo[0]&VeloTELL1::bitMask12 );
 }
 //
 inline unsigned int EvtInfo::detectorID(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift12)&bitMask4 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift12)&VeloTELL1::bitMask4 );
 }
 //
 inline unsigned int EvtInfo::bankList(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift16)&bitMask8 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int EvtInfo::eventInformation(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[0]>>bitShift24)&bitMask8 );
+  return ( (anInfo[0]>>VeloTELL1::bitShift24)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int EvtInfo::l0EventID(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
   return ( anInfo[1] );
 }
 //
 inline unsigned int EvtInfo::FEMPCN(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[2])&bitMask8 );
+  return ( (anInfo[2])&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int EvtInfo::processInfo(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[2]>>bitShift8)&bitMask8 );
+  return ( (anInfo[2]>>VeloTELL1::bitShift8)&VeloTELL1::bitMask8 );
 }
 //
 inline unsigned int EvtInfo::chipAddress(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[3]>>bitShift30)&bitMask2 );
+  return ( (anInfo[3]>>VeloTELL1::bitShift30)&VeloTELL1::bitMask2 );
 }
 //
 inline unsigned int EvtInfo::channelError(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[3]>>bitShift16)&bitMask4 );
+  return ( (anInfo[3]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask4 );
 }
 //
 inline unsigned int EvtInfo::adcFIFOError(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[3])&bitMask16 );
+  return ( (anInfo[3])&VeloTELL1::bitMask16 );
 }
 inline unsigned int EvtInfo::headerPseudoErrorFlag(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[4]>>bitShift16)&bitMask16 );
+  return ( (anInfo[4]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
 }
 //
 inline unsigned int EvtInfo::PCNError(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[4]>>bitShift8)&bitMask4 );
+  return ( (anInfo[4]>>VeloTELL1::bitShift8)&VeloTELL1::bitMask4 );
 }
 //
 inline unsigned int EvtInfo::FEMPCNG(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[4])&bitMask8 );
+  return ( (anInfo[4])&VeloTELL1::bitMask8 );
 }
 // method to check if decoding is working
 inline unsigned int EvtInfo::checker(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
   //
-  return ( (anInfo[2]>>bitShift16)&bitMask16 );
+  return ( (anInfo[2]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
 }
 //
-inline dataVec EvtInfo::IHeader(const int PPFPGA) const
+inline VeloTELL1::dataVec EvtInfo::IHeader(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
-  dataVec IHeaders;
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::dataVec IHeaders;
   for(int headNumber=0; headNumber<4; headNumber++){
-    IHeaders.push_back((anInfo[5]>>(headNumber*bitShift8))&bitMask8);
+    IHeaders.push_back((anInfo[5]>>(headNumber*VeloTELL1::bitShift8))&VeloTELL1::bitMask8);
   }
   return ( IHeaders );
 }
 //
-inline dataVec EvtInfo::PCNBeetle(const int PPFPGA) const
+inline VeloTELL1::dataVec EvtInfo::PCNBeetle(const int PPFPGA) const
 {
-  evtInfo anInfo=m_evtInfo[PPFPGA];
-  dataVec PCNBeetles;
+  VeloTELL1::evtInfo anInfo=m_evtInfo[PPFPGA];
+  VeloTELL1::dataVec PCNBeetles;
   for(int PCNBeetle=0; PCNBeetle<4; PCNBeetle++){
-    PCNBeetles.push_back((anInfo[6]>>(PCNBeetle*bitShift8))&bitMask8);
+    PCNBeetles.push_back((anInfo[6]>>(PCNBeetle*VeloTELL1::bitShift8))&VeloTELL1::bitMask8);
   }
   return ( PCNBeetles );
 }

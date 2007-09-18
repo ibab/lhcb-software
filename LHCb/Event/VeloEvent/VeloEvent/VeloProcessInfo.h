@@ -1,4 +1,4 @@
-// $Id: VeloProcessInfo.h,v 1.1 2007-09-18 00:11:45 szumlat Exp $
+// $Id: VeloProcessInfo.h,v 1.2 2007-09-18 08:36:53 szumlat Exp $
 #ifndef EVENT_VELOPROCESSINFO_H 
 #define EVENT_VELOPROCESSINFO_H 1
 
@@ -14,8 +14,6 @@
  *  @author Tomasz Szumlak
  *  @date   2006-07-10
  */
-
-using namespace VeloTELL1;
 
 namespace VeloProcessInfoLocation{
   static const std::string& Default="Raw/Velo/ProcInfo";
@@ -57,7 +55,7 @@ private:
 //
 inline bool VeloProcessInfo::isEnable(unsigned int proc)
 {
-  if(m_procType==REAL_DATA){
+  if(m_procType==VeloTELL1::REAL_DATA){
     return ( (m_dataProcessInfo>>proc)&1 );
   }else if(m_procType==SIM_DATA){
     return ( *(m_simProcessInfo.begin()+proc) );
