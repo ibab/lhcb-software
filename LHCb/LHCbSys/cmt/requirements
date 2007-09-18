@@ -78,7 +78,7 @@ use CondDBUI              v2r5   Tools   # Marco Clemencic
 use SimComponents         v2r5   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v2r4p2 DAQ     # Markus Frank
 use DaVinciKernel         v6r6   Phys    # Juan Palacios
-use DaVinciMCKernel       v2r2   Phys    # Juan Palacios
+use DaVinciMCKernel       v2r3   Phys    # Juan Palacios
 use DDDB                  v1r0   Det     # Marco Cattaneo
 use LoKi                  v6r0   Phys    # Ivan Belyaev
 use LoKiCore              v6r0   Phys    # Ivan Belyaev

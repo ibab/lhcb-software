@@ -14,17 +14,19 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
                   Tell1Kernel       v1r0 - structures for Tell1 emulation
                   TfKernel          v1r0 - core classes for the Tf framework
                   PatKernel         v1r0 - Pat base classes for Tf framework
+                  TrackFitEvent     v3r8 - Moved from REC
 - Packages modified: GaudiObjDesc v10r3, KernelSys v6r8, LHCbKernel v7r6,
     CaloKernel v5r1, ProcessorKernel v5r0, L0MuonKernel v7r1, RichKernel v7r8,
     EventSys v23r8, DAQEvent v7r5, HltEvent v8r4, MCEvent v2r5, LinkerEvent v3r2,
     L0Event v16r5, PhysEvent v11r3, RecEvent v2r6, TrackEvent v4r6,
-    VeloEvent v16r0, DAQSys v3r4, CaloDAQ v4r0, OTDAQ v5r4,
-    DetSys v10r0, DetDesc v18r0, DetDescSvc v1r13, CaloDet v8r4, MuonDet v6r4,
-    OTDet v7r6, RichDet v10r7, STDet v3r6, VeloDet v12r1, DetCond v11r6,
-    CondDBUI v2r5, MCInterfaces v1r2, TrackInterfaces v3r8, DaVinciKernel v6r6,
-    RichRecBase v3r7, LinkerInstances v3r3, LoKiAlgo v6r0, LoKiAlgoMC v6r0,
-    LoKiCore v6r0, LoKiGen v6r0, LoKiGenMC v6r0, LoKiMC v6r0, LoKiPhys v6r0,
-    LoKiPhysMC v6r0, PatTools v3r2, IOExample v2r1, DetCondExample v11r2
+    VeloEvent v16r0, DAQSys v3r4, CaloDAQ v4r0, OTDAQ v5r4, DetSys v10r0,
+    DetDesc v18r0, DetDescSvc v1r13, CaloDet v8r4, MuonDet v6r4, OTDet v7r6,
+    RichDet v10r7, STDet v3r6, VeloDet v12r1, DetCond v11r6, CondDBUI v2r5,
+    MCInterfaces v1r2, TrackInterfaces v3r8, DaVinciKernel v6r6,
+    DaVinciMCKernel v2r3,  RichRecBase v3r7, LinkerInstances v3r3, LoKiAlgo v6r0,
+    LoKiAlgoMC v6r0, LoKiCore v6r0, LoKiGen v6r0, LoKiGenMC v6r0, LoKiMC v6r0,
+    LoKiPhys v6r0, LoKiPhysMC v6r0, PatTools v3r2, IOExample v2r1,
+    DetCondExample v11r2
 
 - In GaudiObjDesc v10r3
   . Apply patch 1256, to include enums and functions in generated dictionary
@@ -226,10 +228,16 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     Plane propagate methods.
 
 - In DaVinciKernel v6r6
+  . IP2VV(Part)AngleCalculator.h:
+    Two new interfaces for tools calculating angles in e.g. B->mumuK*
   . DVAlgorithm: use WriteSelResult Tool, remove IAlgorithm2ID usage
   . Remove IAlgorithm2ID.h
   . Added TisTosTobbing interfaces
   . Changed a doxygen comment in IMassVertexFit.h 
+
+- In DaVinciMCKernel v2r3
+  . IP2VVMCPartAngleCalculator.h:
+    Interface for a tool calculating angles in a P->VV decay
 
 - In RichRecBase v3r7
   . Adapt to changes in Clone information from tracking
@@ -253,6 +261,14 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     positions, instead of doing them on-demand (for speed)
   . Update trace mode in track creator base to correct for refraction in the
     case of aerogel segments.
+
+- In TrackFitEvent v3r8
+- . Changes to FitNode:
+    o removed cached unbiased residual. replaced with calculation on the fly
+    o added fields for chisquare contribution of upstream and downstream fit
+    o implemented missing clone method
+    o initialized all data members in constructors
+  . added calculation of unbiased state
 
 - In LoKiCore v6r0
   . Move the "hybrid" stuff from LoKiHybridBase 
