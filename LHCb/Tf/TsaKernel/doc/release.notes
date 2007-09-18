@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= TsaKernel v3r0 2007-09-18 ==========================
 ! 2007-09-16 - Kurt Rinnert
  - fixed requirements file to install the headers in TsaKernel_Tf
  - fixed SeedHit to use temporary TsaKernel_Tf include directory
