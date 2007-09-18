@@ -1,9 +1,21 @@
 ! =============================================================================
-! $Id: release.notes,v 1.331 2007-09-17 11:33:07 cattanem Exp $ 
+! $Id: release.notes,v 1.332 2007-09-18 09:35:41 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-09-18 - Juan PALACIOS
+ - DetDesc/IGeometryInfo.h
+   . Improve some doxygen comments
+ - DetDesc/GeometryInfoPlus.h
+   . Remove "duplicated" doxygen comments. These should be picked up from 
+     abstract base class IGeometryInfo.
+   . Remove "inline" virtual methods and move to implementation file.
+ - DetDesc/AlignmentCondition.h
+   . Improve some doxygen comments
+ - src/Lib/GeometryInfoPlus.cpp
+   . Import some implementations which were "inlined" in the corresponding .h file.
 
 !====================== DetDesc v18r0 2007-09-17 ==============================
 ! 2007-09-14 - Wouter Hulsbergen
