@@ -216,7 +216,6 @@ int LHCb::GaudiTask::initApplication()  {
               ListItem itm(evtloop_name);
               if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
                 m_incidentSvc->addListener(this,"DAQ_ERROR");
-                DimTaskFSM::initialize();
                 sc = startRunable(runable);
                 if ( sc.isSuccess() )  {
                   return 1;
@@ -250,20 +249,6 @@ int LHCb::GaudiTask::initApplication()  {
 }
 
 int LHCb::GaudiTask::finalizeApplication()  {
-#if 0
-  std::string nam, evtloop_name;
-  IEventProcessor *evtProc = 0;
-  SmartIF<ISvcLocator> loc(m_subMgr);
-  SmartIF<IProperty>   ip(m_subMgr);
-  ip->getProperty("EventLoop",nam);
-  size_t id1 = nam.find_first_of("\"");
-  size_t id2 = nam.find_last_of("\"");
-  evtloop_name = nam.substr(id1+1,id2-id1-1);
-  ListItem itm(evtloop_name);
-  if ( loc->service(itm.name(), evtProc).isSuccess() )  {
-    evtProc->stopRun();
-  }
-#endif
   if ( m_handle )  {
     ::lib_rtl_join_thread(m_handle);
     m_handle = 0;
@@ -271,7 +256,8 @@ int LHCb::GaudiTask::finalizeApplication()  {
   gauditask_task_lock();
   if ( m_incidentSvc ) m_incidentSvc->release();
   m_incidentSvc= 0;
-  StatusCode sc = m_subMgr->finalize();
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( m_subMgr ) sc = m_subMgr->finalize();
   if ( !sc.isSuccess() )   {
     gauditask_task_unlock();
     return 0;

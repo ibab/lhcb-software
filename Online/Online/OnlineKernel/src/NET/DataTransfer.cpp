@@ -340,8 +340,8 @@ NetErrorCode NET::accept()   {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::disconnect(netentry_t *e)   {
-  ::printf("Close connection: chan=%d addr=%s\n",e->chan,inet_ntoa(e->addr.sin_addr));
-  m_mgr.remove(e->chan);
+  //::printf("Close connection: chan=%d addr=%s\n",e->chan,inet_ntoa(e->addr.sin_addr));
+  m_mgr.remove(e->chan, false);
   e->close();
   remove(e);
   delete e;
@@ -432,19 +432,37 @@ NetErrorCode NET::send(const void* buff, size_t size, netentry_t* e, int facilit
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, int facility)  {
-  RTL::Lock lock(m_lockid);
+  //
+  // This logic here is a bit complicated:
+  // The IO port manager MUST be locked before sending, because concurrent messages
+  // may arrive (if things go fast!). Taking the lock of the IO port manager
+  // prevents the NET from receiving messages in case the sender died and the 
+  // netentry_t must be removed. Otherwise a dead-lock situation cannot be
+  // avoided.
+  //
+  // M.Frank  10/08/2007
+  //
+  NetErrorCode status = NET_CONNCLOSED;
   unsigned int hash = hash32(dest.c_str());
-  std::map<unsigned int,netentry_t*>::iterator i=m_db.find(hash);
-  netentry_t *e = i != m_db.end() ? (*i).second : 0;
-  if ( !e ) {
-    if ( !(e=connect(dest)) )
-      return NET_TASKNOTFOUND;
-    m_db[e->hash] = e;                           // Connection ok 
+  void* io_lock = m_mgr.lock();
+  if ( io_lock ) {
+    RTL::Lock lock(m_lockid);
+    std::map<unsigned int,netentry_t*>::iterator i=m_db.find(hash);
+    netentry_t *e = i != m_db.end() ? (*i).second : 0;
+    if ( !e ) {
+      m_mgr.unlock(io_lock);
+      io_lock = 0;
+      if ( !(e=connect(dest)) ) {
+	return NET_TASKNOTFOUND;
+      }
+      m_db[e->hash] = e;                           // Connection ok 
+    }
+    status = send(buff,size,e,facility);
+    if (status != NET_SUCCESS)    {
+      disconnect(e);
+    }
   }
-  NetErrorCode status = send(buff,size,e,facility);
-  if (status != NET_SUCCESS)    {
-    disconnect(e);
-  }
+  if ( io_lock ) m_mgr.unlock(io_lock);
   return status;
 }
 //----------------------------------------------------------------------------------

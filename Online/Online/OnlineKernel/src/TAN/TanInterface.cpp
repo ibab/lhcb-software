@@ -346,7 +346,7 @@ int TanInterface::deallocatePort(const char* name)  {
       if      ( m_channel->isCancelled() )      return errorCode(TAN_SS_RECV_TMO);
       else if ( num_byte == sizeof(msg)  )      {
 	int scc= fatalError(TAN_SS_SUCCESS);
-	::lib_rtl_printf("TAN connection closed. %p\n",(void*)m_channel);
+	//::lib_rtl_printf("TAN connection closed. %p\n",(void*)m_channel);
         return scc;
       }
       else                                      return fatalError(errorCode(TAN_SS_MADSRV));

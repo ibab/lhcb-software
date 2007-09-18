@@ -149,9 +149,11 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
     if ( sc != 0 ) {
       int val;
       lib_rtl_lock_value(h, &val);
+#if 0
       if ( val != 0 ) {
-        lib_rtl_printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
+        ::lib_rtl_printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
       }
+#endif
     }
     if ( sc != 0 )
 #elif defined(_WIN32)
@@ -223,9 +225,11 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
       return lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X Held:%d",
         h->name,h->handle,h->held);
     }
+#if 0
     else {
       lib_rtl_printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);
     }
+#endif
 #elif defined(_WIN32)
     if ( ::ReleaseMutex(h->handle) )    {
       return 1;

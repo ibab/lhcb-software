@@ -12,3 +12,4 @@ Display.AcceptInfoMessages           = true;
 Display.AcceptedClients              = { "*ErrSrv*" };
 Display.RefusedClients               = { "*ErrLog*" };
 Display.OutputFormat                 = "% F%56W%S%7W%R%T %0W%M";
+Display.MatchNodeName                = false;

@@ -129,9 +129,8 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     *address = h.release();
     return 1;
   }
-  int err = lib_rtl_get_error();
-  //::shm_unlink(h->name);
-  ::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  //int err = lib_rtl_get_error();
+  //::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   if ( h->fd ) ::close(h->fd);
   return 0;
 #elif defined(_WIN32)

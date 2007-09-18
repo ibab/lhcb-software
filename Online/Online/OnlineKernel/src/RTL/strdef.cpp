@@ -51,48 +51,49 @@ int str_trim(const char* src, char* dst, size_t* resultant_length)    {
 int str_match_wild (const char *candidate_string, const char *pattern_string)   {
   int result = STR_NOMATCH;
   if ( candidate_string && pattern_string )   {
-	  size_t	s1_len = strlen(candidate_string);
-    size_t  s2_len = strlen(pattern_string);	
-	  size_t s1_pos = 0;
-	  size_t s2_pos = 0;
-
-	  result = STR_MATCH;
-	  for ( s1_pos = 0; s1_pos < s1_len; s1_pos++  )	  {
-		  if ( candidate_string[s1_pos] == pattern_string[s2_pos] )  {
-			  result = STR_MATCH;
-			  s2_pos++;
-		  }
-		  else if ( pattern_string[s2_pos] == '%' )	 {
-			  result = STR_MATCH;
-			  s2_pos++;
-		  }
-		  else if ( pattern_string[s2_pos] == '*' )   {
+    size_t s1_len = strlen(candidate_string);
+    size_t s2_len = strlen(pattern_string);	
+    size_t s1_pos = 0;
+    size_t s2_pos = 0;
+    
+    result = STR_MATCH;
+    for ( s1_pos = 0; s1_pos < s1_len; s1_pos++  )	  {
+      if ( candidate_string[s1_pos] == pattern_string[s2_pos] )  {
+	result = STR_MATCH;
+	s2_pos++;
+      }
+      else if ( pattern_string[s2_pos] == '%' )	 {
+	result = STR_MATCH;
+	s2_pos++;
+      }
+      else if ( pattern_string[s2_pos] == '*' )   {
         if (s2_pos+1 >= s2_len )	{ // wild card last char 
-				  s1_pos = s1_len;
-				  s2_pos++;
-				  result = STR_MATCH;
-			  }
+	  s1_pos = s1_len;
+	  s2_pos++;
+	  result = STR_MATCH;
+	}
         else	 { // wild card not last character
-			   	if ( candidate_string[s1_pos] == pattern_string[s2_pos+1] )  {
-					  s2_pos += 2;
-				  } 
-			  }
-		  }
-		  else  {
-			  result = STR_NOMATCH;
-			  s1_pos = s1_len;
-		  }
-	  } // end for
-
-
+	  if ( candidate_string[s1_pos] == pattern_string[s2_pos+1] )  {
+	    s2_pos += 2;
+	  } 
+	}
+      }
+      else  {
+	result = STR_NOMATCH;
+	// s1_pos = s1_len;
+        s2_pos = 0;
+      }
+    } // end for
+    
+    
     // Special case last char is * which can represent nothing
-	  if (( pattern_string[s2_pos] == '*' ) && ( s2_pos+1 == s2_len ))
-		  s2_pos++;
-
+    if (( pattern_string[s2_pos] == '*' ) && ( s2_pos+1 == s2_len ))
+      s2_pos++;
+    
     // we left uncheck characters in the candidate string
-	  if ( s2_pos != s2_len ) 	{
-		  result = STR_NOMATCH;
-	  }
+    if ( s2_pos != s2_len ) 	{
+      result = STR_NOMATCH;
+    }
   }
   return result;
 }

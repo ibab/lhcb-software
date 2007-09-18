@@ -7,7 +7,7 @@ StatusCode LHCb::Class2Task::initialize()  {
   if ( result == 1 ) {
     result = initApplication();
     if ( result == 1 ) {
-      return DimTaskFSM::configure();
+      return DimTaskFSM::initialize();
     }
   }
   declareState(ST_ERROR);
@@ -19,7 +19,7 @@ StatusCode LHCb::Class2Task::finalize()  {
   if ( result == 1 ) {
     result = terminateApplication();
     if ( result == 1 ) {
-      return DimTaskFSM::terminate();
+      return DimTaskFSM::finalize();
     }
   }
   declareState(ST_READY);

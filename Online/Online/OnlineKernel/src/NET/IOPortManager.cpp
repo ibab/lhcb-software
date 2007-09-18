@@ -271,7 +271,7 @@ namespace {
   void EntryMap::join() {
     ::lib_rtl_join_thread(m_thread);
     m_thread = 0;
-    ::lib_rtl_printf("Thread for port %d stopped\n",m_port);
+    //::lib_rtl_printf("Thread for port %d stopped\n",m_port);
   }
   int EntryMap::run()  {
     static bool first = true;

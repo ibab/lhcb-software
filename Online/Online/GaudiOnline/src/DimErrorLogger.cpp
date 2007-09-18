@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.13 2007-06-01 13:49:45 frankm Exp $
+// $Id: DimErrorLogger.cpp,v 1.14 2007-09-18 08:19:40 frankm Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -259,17 +259,33 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
 }
 
 void LHCb::DimErrorLogger::infoHandler() {
-  DimMessage* m = (DimMessage*)getInfo()->getData();
-  if ( m->size > 0 )  {
-    std::string task;
-    if ( m_printSvc )  {
-      task = getInfo()->getName();
-      size_t idx = task.find_last_of("/");
-      task = task.substr(0,idx);
-      m->msg[m->size] = 0;
-      task += "::";
+  const char* info = getInfo()->getName();
+  if ( info ) {
+    static const std::string node = RTL::nodeNameShort();
+    static const std::string match = "*"+RTL::nodeNameShort()+"*";
+    DimMessage* m = (DimMessage*)getInfo()->getData();
+    if ( m_matchNode && !::str_match_wild(info,match.c_str()) ) {
+      report(MSG::DEBUG, RTL::nodeNameShort()+"::"+name(), node+"> Spurious message from client "+std::string(info)+" received.");
+      return;
     }
-    task += m->src;
-    report(m->typ, task, m->msg);
+    std::vector<std::string>::iterator i=m_refusedClients.begin();
+    for(; i != m_refusedClients.end(); ++i)  {
+      if ( ::str_match_wild(info, (*i).c_str()) )  {
+	report(MSG::DEBUG, RTL::nodeNameShort()+"::"+name(), node+"> Spurious message from client "+std::string(info)+" received.");
+        return;
+      }
+    }
+    if ( m->size > 0 )  {
+      std::string task;
+      if ( m_printSvc )  {
+        task = info;
+        size_t idx = task.find_last_of("/");
+        task = task.substr(0,idx);
+        m->msg[m->size] = 0;
+        task += "::";
+      }
+      task += m->src;
+      report(m->typ, task, m->msg);
+    }
   }
 }
