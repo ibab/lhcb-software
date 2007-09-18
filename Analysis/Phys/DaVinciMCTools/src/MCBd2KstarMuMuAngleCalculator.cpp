@@ -1,4 +1,4 @@
-// $Id: MCBd2KstarMuMuAngleCalculator.cpp,v 1.1 2007-09-18 14:01:55 pkoppenb Exp $
+// $Id: MCBd2KstarMuMuAngleCalculator.cpp,v 1.2 2007-09-18 17:40:43 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -228,8 +228,7 @@ double MCBd2KstarMuMuAngleCalculator::calculateThetaL( const LHCb::MCParticle* p
   }
 
   if ( !particleLepton1 || !particleLepton2 ) {
-    warning() << "Could not find required particles !" << endmsg;
-    return StatusCode::FAILURE ;
+    Exception("Could not find required particles !") ;
   }  
 
   double thetal = m_angle->calculatePolarAngle( particle->momentum(), 
@@ -262,7 +261,7 @@ double MCBd2KstarMuMuAngleCalculator::calculateMass( const LHCb::MCParticle* par
     } 
   }
   
-  if ( !leptonMinus || !leptonPlus ) return StatusCode::FAILURE ;
+  if ( !leptonMinus || !leptonPlus ) Exception("Could not find required particles !") ;
   
   const Gaudi::LorentzVector leptonPair = ( (leptonPlus->momentum()) + 
                                             (leptonMinus->momentum()) );
