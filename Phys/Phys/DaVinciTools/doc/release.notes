@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.282 2007-09-18 13:50:27 pkoppenb Exp $
+! $Id: release.notes,v 1.283 2007-09-18 16:45:08 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-09-18 - Juan PALACIOS
+ - src/GeomDispCalculator{.h, .cpp}, src/TrgDispCalculator{.h, .cpp}
+   . Add empry implementaitons for new method
+      StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                           const LHCb::Particle& particle, 
+                                           double& distance, 
+                                           double& distanceError) const
+
 
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - New tool Bd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 

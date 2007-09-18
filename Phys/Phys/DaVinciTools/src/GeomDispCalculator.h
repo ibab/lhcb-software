@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.10 2007-03-05 10:08:34 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.11 2007-09-18 16:45:09 jpalac Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -50,70 +50,62 @@ public:
   virtual ~GeomDispCalculator() { }
 
   /// Retrieve the necessary tools
-  StatusCode initialize();    
+  StatusCode initialize();
 
-  /// Calculates the Impact Parameter and its error. 
-  /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
-                            double& ip, 
-                            double& ipErr ) const;
+                            double& impactParameter, 
+                            double& impactParameterError ) const;
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector. Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
-                            double& ip, 
-                            double& ipErr,
+                            double& impactParameter, 
+                            double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
                             Gaudi::SymMatrix9x9& errMatrix ) const;
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector and its error. 
-  /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
-                            double& ip, 
-                            double& ipErr,
+                            double& impactParameter, 
+                            double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
                             Gaudi::XYZVector& errVector ) const;
 
-  /// Calculates the Impact Parameter and its error.
-  /// Inputs: a particle and a space point.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const Gaudi::XYZPoint& point, 
                             double& ip , 
-                            double& ipErr ) const;
+                            double& impactParameterError ) const;
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector. Inputs: a particle and a space point.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const Gaudi::XYZPoint& point, 
                             double& ip , 
-                            double& ipErr,
+                            double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
                             Gaudi::SymMatrix9x9& errMatrix ) const;
 
   StatusCode calcImpactPar(const LHCb::Particle& transParticle,
                            const Gaudi::XYZPoint& pos,
                            const Gaudi::SymMatrix3x3& posError,
-                           double& ip, 
-                           double& ipErr,
+                           double& impactParameter, 
+                           double& impactParameterError,
                            Gaudi::XYZVector& ipVector, 
                            Gaudi::SymMatrix9x9& errMatrix ) const;
   
-  /// Calculates the distance of closest approach between two particles
-  /// and its error.
-  StatusCode calcCloseAppr( const LHCb::Particle& particle1,       
-                            const LHCb::Particle& particle2, 
-                            double& dist, 
-                            double& distErr ) const;
+  StatusCode calcCloseAppr( const LHCb::Particle& particle0,       
+                            const LHCb::Particle& particle1, 
+                            double& distance, 
+                            double& distanceError ) const;
 
-  /// Calculates the distance between two vertices and its error.
-  StatusCode calcVertexDis( const LHCb::VertexBase& vertex1,
-                            const LHCb::VertexBase& vertex2, double& dist, 
-                            double& distErr ) const;
+  StatusCode calcVertexDis( const LHCb::VertexBase& vertex0,
+                            const LHCb::VertexBase& vertex1, 
+                            double& distance, 
+                            double& distanceError ) const;
 
+  StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                       const LHCb::Particle& particle, 
+                                       double& distance, 
+                                       double& distanceError) const;
+  
 private:
 
   double calcErrComponent(const Gaudi::XYZVector& vProj,

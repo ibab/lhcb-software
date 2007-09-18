@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.8 2007-07-09 13:51:42 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.9 2007-09-18 16:45:09 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -285,3 +285,14 @@ StatusCode TrgDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
   
   return StatusCode::SUCCESS;
 }
+//==================================================================
+StatusCode 
+TrgDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                             const LHCb::Particle& particle, 
+                                             double& distance, 
+                                             double& distanceError) const
+{
+  
+  return StatusCode::SUCCESS;  
+}
+//==================================================================

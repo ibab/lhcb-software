@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.20 2007-08-22 15:06:18 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.21 2007-09-18 16:45:09 jpalac Exp $
 
 // Include files
 
@@ -355,7 +355,16 @@ StatusCode GeomDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
   
   return StatusCode::SUCCESS;
 }
-
+//==================================================================
+StatusCode 
+GeomDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                              const LHCb::Particle& particle, 
+                                              double& distance, 
+                                              double& distanceError) const
+{
+  
+  return StatusCode::SUCCESS;  
+}
 //==================================================================
 // 
 //==================================================================
