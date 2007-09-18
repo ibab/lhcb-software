@@ -1,0 +1,19 @@
+! Package     : InsertDB
+! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
+
+
+! 20070820 - InsertDB v1r0
+
+This program gets a list of histograms published by tasks using the Gaucho
+MonitorSvc, and inserts the meta data in the online histogram database.
+
+The program waits for the insert_histos command which should be sent to it by
+the controls system. One can also send it to the "/" service via DID.
+
+
+
+
+
+             
+
+
