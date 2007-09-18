@@ -4,6 +4,12 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v1r0 2007-09-18 =======================
+! 2007-09-18 - Marco Cattaneo
+ - Remove dictionary entries for Tf::OTHit::DetectorElementType and
+   Tf::STHit::DetectorElementType, as they translate to DeOTModule and
+   DeSTSector already in OTDet and STDet dictionaries
+
 ! 2007-09-17 - Kurt Rinnert
  - added some more status query methods to HitBase.  This change is completely
    transparent.

@@ -29,11 +29,10 @@
   <class name = "Tf::IOTHitCleaner" />
 
   <class name = "Tf::EnvelopeBase" />
-  <class name = "Tf::STHit::DetectorElementType" />
-  <class name = "Tf::OTHit::DetectorElementType" />
   <class name = "Tf::Envelope&lt;Tf::STHit::DetectorElementType&gt;" />
   <class name = "Tf::Envelope&lt;Tf::OTHit::DetectorElementType&gt;" />
-  <class name = "Tf::ISTHitCreator::STRegion" />
+  <class name = "Tf::IITHitCreator::STRegion" />
+  <class name = "Tf::ITTHitCreator::STRegion" />
   <class name = "Tf::IOTHitCreator::OTRegion" />
 
 </lcgdict>
