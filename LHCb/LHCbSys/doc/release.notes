@@ -5,15 +5,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r9>2007-09-17 LHCbSys v22r9</A></H1><PRE>
+</PRE><H1><A NAME=v22r9>2007-09-18 LHCbSys v22r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
-- Packages added:    RecInterfaces v1r0     - Interfaces use RecEvent classes
-                     LoKiArrayFunctors v6r0 - special "vector-like" functors
+- Packages added: RecInterfaces     v1r0 - Interfaces use RecEvent classes
+                  LoKi              v6r0 - Top level package for LoKi
+                  LoKiArrayFunctors v6r0 - special "vector-like" functors
+                  Tell1Kernel       v1r0 - structures for Tell1 emulation
+                  TfKernel          v1r0 - core classes for the Tf framework
+                  PatKernel         v1r0 - Pat base classes for Tf framework
 - Packages modified: GaudiObjDesc v10r3, KernelSys v6r8, LHCbKernel v7r6,
     CaloKernel v5r1, ProcessorKernel v5r0, L0MuonKernel v7r1, RichKernel v7r8,
     EventSys v23r8, DAQEvent v7r5, HltEvent v8r4, MCEvent v2r5, LinkerEvent v3r2,
-    L0Event v16r5, PhysEvent v11r3, TrackEvent v4r6, DAQSys v3r4, CaloDAQ v4r0,
+    L0Event v16r5, PhysEvent v11r3, RecEvent v2r6, TrackEvent v4r6,
+    VeloEvent v16r0, DAQSys v3r4, CaloDAQ v4r0, OTDAQ v5r4,
     DetSys v10r0, DetDesc v18r0, DetDescSvc v1r13, CaloDet v8r4, MuonDet v6r4,
     OTDet v7r6, RichDet v10r7, STDet v3r6, VeloDet v12r1, DetCond v11r6,
     CondDBUI v2r5, MCInterfaces v1r2, TrackInterfaces v3r8, DaVinciKernel v6r6,
@@ -102,6 +107,11 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     + Add constructor Particle(const ParticleID& pid, const int key) 
     + Remove constructor from int key
 
+- In RecEvent v2r6
+  . Replace Trigger RichPID location with HLT, and add explicit Offline location
+  . Add some new methods to RichPID to set the threshold info for a given
+    mass hypothesis
+
 - In TrackEvent v4r6
   . Ensure no comparisions with != == between floats
   . Add 'propagationTolerance' to TrackParameters
@@ -111,6 +121,9 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . More fixes to fillStream method of Track
   . Make a few good inline-candidate methods inline
 
+- In VeloEvent v16r0
+  . Add classes needed for non-zero suppressed data decoding
+
 - In CaloDAQ v4r0
   . Global review :
     + make the decoding interfaces and tools more uniform
@@ -119,6 +132,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     + CaloReadout.h moved from CaloDaq/ to src/
     + cleaning (printout, remove unecessary StatusCodes, ...)
     + check the decoding stuff was fully robust against corrupted/missing data
+
+- In OTDAQ v5r4
+  . Added OTLiteTime and OTRawBankDecoder
+  . Modified OTTimeCreator to use OTRawBankDecoder
 
 - In DetDesc v18r0
   . DetDesc/IGeometryInfo.h, AlignmentCondition.h
@@ -130,6 +147,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . DetDesc/GlobalToLocalDelta.h: Clarify signature and doxygen documentation 
     of localDeltaFromGlobalTransform methods
   . Modifications to SolidBox and SolidTubs to speed things up
+  . Improve doxygen documentation
 
 - In DetDescSvc v1r13, MuonDet v6r4, RichDet v10r7, DetCondExample v11r2
   . Adapt to DetDesc interface changes
@@ -153,6 +171,8 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - In OTDet v7r6
   . Bug fixes in rt-relation, affecting use of inverse
+  . revision of RtRelation class to be better suited for calibration algorithm
+  . moved resolution to RtRelation
 
 - In RichDet v10r7
   . Update DeRichHPDPanel TDS locations
