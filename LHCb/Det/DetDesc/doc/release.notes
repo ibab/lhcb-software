@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.332 2007-09-18 09:35:41 jpalac Exp $ 
+! $Id: release.notes,v 1.333 2007-09-18 09:38:34 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r0 2007-09-18 ==============================
 ! 2007-09-18 - Juan PALACIOS
  - DetDesc/IGeometryInfo.h
    . Improve some doxygen comments
@@ -15,9 +16,8 @@
  - DetDesc/AlignmentCondition.h
    . Improve some doxygen comments
  - src/Lib/GeometryInfoPlus.cpp
-   . Import some implementations which were "inlined" in the corresponding .h file.
+   . Import some implementations which were "inlined" in the corresponding .h file
 
-!====================== DetDesc v18r0 2007-09-17 ==============================
 ! 2007-09-14 - Wouter Hulsbergen
   - modifications to SolidBox and SolidTubs to speed things up
 
