@@ -1,11 +1,11 @@
-// $Id: EvtInfo.h,v 1.2 2007-09-18 08:36:51 szumlat Exp $
+// $Id: EvtInfo.h,v 1.3 2007-09-18 09:10:46 cattanem Exp $
 #ifndef EVTINFO_H 
 #define EVTINFO_H 1
 
 // Include files
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
-#include "Kernel/VeloDecodeCore.h"
+#include "Tell1Kernel/VeloDecodeCore.h"
 
 /** @class EvtInfo EvtInfo.h
  *  

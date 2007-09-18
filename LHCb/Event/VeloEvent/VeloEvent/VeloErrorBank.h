@@ -1,4 +1,4 @@
-// $Id: VeloErrorBank.h,v 1.2 2007-09-18 08:36:52 szumlat Exp $
+// $Id: VeloErrorBank.h,v 1.3 2007-09-18 09:10:46 cattanem Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
@@ -8,7 +8,7 @@
 // Include files
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
-#include "Kernel/VeloDecodeCore.h"
+#include "Tell1Kernel/VeloDecodeCore.h"
 #include "VeloEvent/EvtInfo.h"
 
 /** @class VeloErrorBank VeloErrorBank.h
