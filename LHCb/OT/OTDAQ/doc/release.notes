@@ -2,6 +2,11 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r4 2007-09-18 ======================
+! 2007-09-18 - Marco Cattaneo
+ - Undo change of 06-15 since it needs also changes to the encoding that
+   have not been made
+
 ! 2007-09-07 - Kurt Rinnert
  - fixed include path in OTLiteTime.cpp
 
