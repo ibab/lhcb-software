@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2007-06-08 14:32:39 cattanem Exp $
+# $Id: requirements,v 1.38 2007-09-18 00:11:45 szumlat Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
@@ -8,6 +8,7 @@ version v15r1
 branches cmt doc xml VeloEvent
 
 use LHCbKernel     v* Kernel
+use Tell1Kernel    v* DAQ
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
