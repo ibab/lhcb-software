@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package VeloDAQ
-version v3r5
+version v4r0
 
 # Structure, i.e. directories to process. 
 #===========================================================================
@@ -11,11 +11,12 @@ include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloDet    v*  Det
-use  DAQEvent   v*  Event
-use  VeloEvent  v*  Event
-use  DigiEvent  v*  Event
-use  SiDAQ      v*  Si
+use  VeloDet      v*  Det
+use  DAQEvent     v*  Event
+use  VeloEvent    v*  Event
+use  DigiEvent    v*  Event
+use  SiDAQ        v*  Si
+use  Tell1Kernel  v*  DAQ
 
 # Component library building rule
 #============================================================================

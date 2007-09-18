@@ -3,6 +3,16 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r0 2006-08-30 =======================
+! 2007-09-17 - Tomasz Szumlak
+ - decoding of the non-zero suppressed (NZS) banks added, new code can cope
+   with decoding of the VeloFull data bank, PedestalBank and VeloErrorBank.
+   Also EvtInfo object, that includes a number of informations critical from 
+   point of view of the emulation, can be created. Beetle headers do not
+   make a separate data stream but are part of the NZS header bank. The headers
+   are also decoded and stored. All decoding routines follow closely appropriate
+   EDMS notes describing TELL1 data formats.
+
 ! 2007-09-17 - Kurt Rinnert
  - make the decoder fail more graciously in case a source ID can not matched
    to a sensor number.  This should never happen and indicates an inconsistent
@@ -32,7 +42,6 @@
    the container.  Clusters from other source IDs will be still available in
    this case. 
      
-
 !=========================  VeloDAQ v3r5 2006-08-30 =======================
 ! 2006-08-21 - Kurt Rinnert
  - It really makes no sense to create banks for sensors that can not me mapped
