@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.12 2007-08-20 13:35:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2007-09-18 11:47:39 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKi v6r0 2007-09-18 =============================
+! 2007-09-18 - Marco Cattaneo
+ - Remove LoKiTrigger dependency to allow release in LHCB project
+
 ! 2007-08-20 - Vanya BELYAEV
  - increment the major version to v6r0 
-
 
 !========================== LoKi v5r2p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
@@ -67,6 +70,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.12  2007/08/20 13:35:49  ibelyaev
+!  increment the version to v6r0
+!
 ! Revision 1.11  2007/04/19 16:19:39  pkoppenb
 ! tagged as v5r2p1
 !
