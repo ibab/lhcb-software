@@ -34,11 +34,3 @@ use Saver             v1r2     Online
 use UPI               v1r5     Online
 use Viewer            v1r3     Online
 use Writer            v1r2     Online
-
-#=======================================================
-# Rich Online packages
-#=======================================================
-use RichOnlineMonitors     v1r1     Rich
-use RichMonitoringTools    v1r1     Rich
-use RichMonitoringSys      v1r1     Rich
-
