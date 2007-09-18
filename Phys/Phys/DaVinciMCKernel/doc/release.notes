@@ -4,13 +4,13 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r3 2007-09-18 =====================
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - IP2VVMCPartAngleCalculator.h 
    . Interface for a tool calculating angles in a P->VV decay. Similar
      to IP2VVPartAngleCalculator but with MCParticle
 
 !====================== DaVinciMCKernel v2r2 2007-07-24 =====================
-
 ! 2007-07-24 - Juan Palacios
  - Add interfaces IFilterMCParticles and IMCParticleArrayFilter.
  - Add skeleton implementation FilterMCParticlesBase
