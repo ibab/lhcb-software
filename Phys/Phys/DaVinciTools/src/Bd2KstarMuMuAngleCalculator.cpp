@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.1 2007-09-18 13:50:28 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.2 2007-09-18 14:03:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -94,7 +94,7 @@ StatusCode Bd2KstarMuMuAngleCalculator::calculateAngles( const LHCb::Particle* p
   thetak = m_angle->calculatePolarAngle( particle->momentum() , 
                                          particleKaon->momentum(),
                                          particlePion->momentum() );
-  thetak = -thetak; // def of axis  
+  thetak = Gaudi::Units::pi - thetak; // def of axis  
 
   phi    = m_angle->calculatePlaneAngle( particle->momentum(), 
                                          particleLepton1->momentum(), 
@@ -208,7 +208,7 @@ double Bd2KstarMuMuAngleCalculator::calculateThetaK( const LHCb::Particle* parti
   double thetak = m_angle->calculatePolarAngle( particle->momentum() , 
                                                 particleKaon->momentum(), 
                                                 particlePion->momentum() );  
-  return -thetak ;
+  return Gaudi::Units::pi - -thetak ;
 }
 
 
