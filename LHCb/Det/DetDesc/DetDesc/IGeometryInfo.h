@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.26 2007-09-12 15:10:00 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.27 2007-09-18 08:43:01 jpalac Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -25,8 +25,9 @@ static const InterfaceID IID_IGeometryInfo( 155 , 3 , 1 );
  *  An abstract interface to get all geometry information for 
  *          detector element
  *
- *  @version 2 
+ *  @version 3
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Juan Palacios juancho@nikhef.nl
  *  @date xx/xx/xxxx
  */
 
@@ -95,26 +96,43 @@ public:
    *  - for "ghosts","orphans" and top-level elements
    *    it is just an Identity transformation
    *  @see toGlobalMatrix()
-   *  @return the full transformation matrix  from "Global" system
+   *  @return the full 3D transformation from the global reference system
    */
   virtual const Gaudi::Transform3D&  toLocalMatrix() const = 0;
 
-  /**  Ideal transformation matrix  from Global Reference System
+  /**  Ideal transformation matrix from Global Reference System
    *   to the local reference system of this Geometry Info object,
-   *   excluding misalignments
-   *   @see idealMatrixInv()
-   *   @return the ideal transformation matrix  from "Global" system
+   *   excluding misalignments.
+   *   @see toGlobalMatrixNominal()
+   *   @return the 3D transformation from the "Global" reference system 
+   *           in the nominal frame. 
    */
   virtual const Gaudi::Transform3D&  toLocalMatrixNominal() const = 0;  
 
+  /**  Ideal transformation matrix from local Reference System
+   *   to the global reference system of this Geometry Info object,
+   *   excluding misalignments.
+   *   @see toLocalMatrixNominal()
+   *   @return the 3D transformation from "Local" system in the 
+   *           nominal frame. 
+   */
   virtual const Gaudi::Transform3D&  toGlobalMatrixNominal() const = 0;  
 
+  /**  Ideal transformation matrix from parent Reference System
+   *   to the local reference system of this Geometry Info object,
+   *   excluding misalignment.
+   *   @see ownToGlobalMatrixNominal()
+   *   @return the transformation from parent's reference system 
+   *           in the nominal frame. 
+   */
   virtual const Gaudi::Transform3D&  ownToLocalMatrixNominal() const = 0;  
 
   /**
    * Transformation that takes this IGeometryInfoPlus from an off-nominal
    * position within a its parent to the nominal one. It can be thought of as
    * the inverse of the "delta" matrix.
+   * @return the 3D transformation that returns an off-nominal position
+   *         to the nominal position in the frame of the parent
    */
   virtual const Gaudi::Transform3D&  ownToNominalMatrix() const = 0;
 
@@ -122,35 +140,47 @@ public:
    * Transformation that takes this IGeometryInfoPlus from a nominal
    * position within a its parent to the off-nominal one. It can be thought of as
    * the "delta" matrix.
+   * @return the 3D transformation that returns a nominal position
+   *         to the off-nominal position in the frame of the parent
    */
   virtual const Gaudi::Transform3D  ownToOffNominalMatrix() const = 0;
 
   /**
-   * Transformation relating this frame to frame of the parent.
+   * Transformation from this reference frame to the 
+   * reference frame of the parent.
    * Includes local misalignment.
+   * @return the 3D transrmation taking this frame to the frame of
+   *         the parent.
    */
   virtual const Gaudi::Transform3D  ownMatrix() const = 0;
 
-  /// Upate the DELTA transformation matrix of this IGeometryInfo.
+  /**
+   * Upate the nominal-> off-nominal 3D transformation of this IGeometryInfo.
+   */
   virtual StatusCode  ownToOffNominalMatrix(const Gaudi::Transform3D&) = 0;
 
-  /// Update the transformation parametrs in this GeometryInfo's
-  /// AlignmentCondifion.
+  /**
+   * Update the transformation parametrs describing the
+   * nominal->off-nominal 3D transformation of this GeometryInfo
+   */
   virtual StatusCode ownToOffNominalParams(const std::vector<double>& trans,
                                            const std::vector<double>& rot,
                                            const std::vector<double>& pivot =
                                            std::vector<double>(3)) =0;
 
-  /**  transformation matrix  from Local Reference System
-   *   to the Global Reference System of
-   *    @see toLocalMatrix()
+  /**  
+   *   transformation matrix from Local Reference System
+   *   to the Global Reference System of this IGeometryInfo.
+   *   @see toLocalMatrix()
    *  - for "ghosts","orphans" and top-level elements
    *    it is just an Identity transformation
-   *  @return the transformation matrix  from "Global" system
+   *   @return the 3D transformation from the local to the
+   *           global reference system
    */
   virtual const Gaudi::Transform3D&  toGlobalMatrix() const = 0;
 
-  /** perform transformation of point from the Global Reference System
+  /** 
+   *  Perform transformation of point from the Global Reference System
    *  to Local Reference System of Geometry Info object
    *  @see toLocalMatrix()
    *  @see toGlobalMatrix()
@@ -169,6 +199,28 @@ public:
    *  @return point in Global reference system
    */
   virtual Gaudi::XYZPoint toGlobal ( const Gaudi::XYZPoint& localPoint  ) const = 0;
+
+  /** 
+   *  Perform transformation a vector from the Global Reference System
+   *  to Local Reference System of Geometry Info object
+   *  @see toLocalMatrix()
+   *  @see toGlobalMatrix()
+   *  @see toGlobal( const Gaudi::XYZVector&)
+   *  @param  globalDirection vector in Global Reference System
+   *  @return vector in Local reference system direction
+   */
+  virtual Gaudi::XYZVector toLocal ( const Gaudi::XYZVector& globalDirection ) const = 0;
+
+  /** 
+   *  Perform transformation of a vector from the Local Reference System
+   *  to the Global Reference System
+   *  @see toLocalMatrix()
+   *  @see toGlobalMatrix()
+   *  @see toLocal( const Gaudi::XYZVector&)
+   *  @param  localVector vector in Local Reference System
+   *  @return vector in Global reference system direction
+   */
+  virtual Gaudi::XYZVector toGlobal ( const Gaudi::XYZVector& localDirection  ) const = 0;
 
   /** Check for given 3D-point - "Is inside the volume?"
    *  -  For regular case the defnition "is inside" is trivial

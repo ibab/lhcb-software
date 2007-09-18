@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.15 2007-09-12 15:13:29 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.16 2007-09-18 08:43:51 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -39,14 +39,14 @@ public:
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_AlignmentCondition; };
   /**
-   * Return the nominal -> misaligned 3D transformation matrix.
+   * Return the nominal -> off-nominal 3D transformation.
    */
   inline const Gaudi::Transform3D& offNominalMatrix() const
   {
     return m_matrixInv;
   }
   /**
-   * Return the misaligned -> nominal 3D transformation matrix.
+   * Return the off-nominal -> nominal 3D transformation.
    */
   inline const Gaudi::Transform3D& toNominalMatrix() const
   {
@@ -54,15 +54,17 @@ public:
   }
 
   /**
-   * Set a new 3D transformation starting directly from from a Transform3D
-   * @param newMatrix new full transformation object describing aligned to 
-   *        misalinged transformation in the frame of the detector element..
+   * Set a nominal -> off-nomunal 3D transformation starting directly 
+   * from from a Transform3D
+   * @param newMatrix new full transformation object describing nominal to 
+   *        off-nominal transformation in the frame of the detector element..
    */
   void offNominalMatrix(const Gaudi::Transform3D& newMatrix);
 
   /**
-   * Set a new 3D transformation starting from the basic set of parameters
-   * describing a rotation about Z, Y and X axes in that order.
+   * Set a new nominal -> off-nominal 3D transformation starting 
+   * from the basic set of parameters describing a 
+   * rotation about the Z, Y' and X" axes in that order.
    * 
    * @param translation vector containing X,Y,Z translation parameters.
    * @param rotation    vector containing rotation angles about Z,Y,X.
