@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.6 2007-09-07 13:26:52 pkoppenb Exp $
+// $Id: DaVinciKernelDict.h,v 1.7 2007-09-18 13:35:58 pkoppenb Exp $
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
 
@@ -32,6 +32,8 @@
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IMassVertexFit.h"
 #include "Kernel/IOnOffline.h"
+#include "Kernel/IP2VVAngleCalculator.h"
+#include "Kernel/IP2VVPartAngleCalculator.h"
 #include "Kernel/IParticleArrayFilter.h"
 #include "Kernel/IParticle2State.h"
 #include "Kernel/IParticle2VertexAsct.h"

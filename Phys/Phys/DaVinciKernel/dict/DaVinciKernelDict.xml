@@ -22,6 +22,8 @@
   <class name = "ILifetimeFitter"/>
   <class name = "IMassVertexFit"/>
   <class name = "IOnOffline"/>
+  <class name = "IP2VVAngleCalculator"/>
+  <class name = "IP2VVPartAngleCalculator"/>
   <class name = "IParticleArrayFilter"/>
   <class name = "IParticle2State"/>
   <class name = "IParticle2VertexAsct"/>
