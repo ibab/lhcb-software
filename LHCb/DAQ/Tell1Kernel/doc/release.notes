@@ -1,7 +1,12 @@
-package DAQ/Tell1Kernel
-package manager: C.Parkes, T.Szumlak
+! package DAQ/Tell1Kernel
+! package manager: C.Parkes, T.Szumlak
+!-------------------------------------------------------------------------
 
-!====================== Tell1Kernel v1r0 2007-09-17 ======================
+!====================== Tell1Kernel v1r0 2007-09-18 ======================
+! 2007-09-18 - Marco Cattaneo
+ - Rename include directory to Tell1Kernel
+ - Clean up requirements
+
 ! 2007-09-17 - Tomasz Szumlak
  - first import of the Tell1Kernel package
 

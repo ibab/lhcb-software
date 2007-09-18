@@ -1,4 +1,4 @@
-// $Id: VeloTell1Core.h,v 1.1.1.1 2007-09-18 00:24:31 szumlat Exp $
+// $Id: VeloTell1Core.h,v 1.1 2007-09-18 07:33:03 cattanem Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 

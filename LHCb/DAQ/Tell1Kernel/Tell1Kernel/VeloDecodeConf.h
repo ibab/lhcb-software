@@ -1,4 +1,4 @@
-// $Id: VeloDecodeConf.h,v 1.1.1.1 2007-09-18 00:24:31 szumlat Exp $
+// $Id: VeloDecodeConf.h,v 1.1 2007-09-18 07:33:02 cattanem Exp $
 #ifndef VELODECODECONF_H 
 #define VELODECODECONF_H 1
 
