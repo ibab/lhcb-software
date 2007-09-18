@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.6 2007-03-02 10:59:57 cattanem Exp $
+// $Id: IGeomDispCalculator.h,v 1.7 2007-09-18 16:35:36 jpalac Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
@@ -23,6 +23,7 @@ static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 1);
  *  Interface for Geometrical Calculation Tool. 
  *
  *  @author Miriam Gandelman
+ *  @author Juan Palacios juancho@nikhef.nl
  *  @date   14/03/2002
  */
 
@@ -31,51 +32,140 @@ class IGeomDispCalculator : virtual public IAlgTool {
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IGeomDispCalculator; }
 
-  /// Calculates the Impact Parameter and its error.
-  /// Inputs: a particle and a vertex.
-  virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::VertexBase&, 
-                                    double&, double& ) const = 0; 
+  /**
+   * Calculate the Impact Parameter, and associated error,
+   * between a vertex and a particle.
+   * @param particle
+   * @param vertex
+   * @param impactParameter
+   * @param impactParameterError
+   * @return StatusCode to report errors in the calculation
+   *
+  */
+  virtual StatusCode calcImpactPar( const LHCb::Particle& particle,
+                                    const LHCb::VertexBase& vertex, 
+                                    double& impactParameter, 
+                                    double& impactParameterError) const = 0; 
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector. Inputs: a particle and a vertex.
-  virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::VertexBase&, 
-                                    double&, double&, 
-                                    Gaudi::XYZVector&, 
-                                    Gaudi::SymMatrix9x9& ) const = 0; 
+  /**
+   * Calculate the Impact Parameter, and associated error,
+   * between a vertex and a particle.
+   * @param particle
+   * @param vertex
+   * @param impactParameter
+   * @param impactParameterError
+   * @param ipVector
+   * @param errMatrix
+   * @return StatusCode to report errors in the calculation
+   *
+  */
+  virtual StatusCode calcImpactPar( const LHCb::Particle& particle,
+                                    const LHCb::VertexBase& vertex, 
+                                    double& impactParameter, 
+                                    double& impactParameterError, 
+                                    Gaudi::XYZVector& ipVector, 
+                                    Gaudi::SymMatrix9x9& errMatrix) const = 0; 
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector. Inputs: a particle and a vertex.
-  virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::VertexBase&, 
-                                    double&, double&, 
-                                    Gaudi::XYZVector&, 
-                                    Gaudi::XYZVector& ) const = 0; 
+  /**
+   * Calculate the Impact Parameter, and associated error,
+   * between a vertex and a particle.
+   * @param particle
+   * @param vertex
+   * @param impactParameter
+   * @param impactParameterError
+   * @param ipVector
+   * @param errVector
+   * @return StatusCode to report errors in the calculation
+   *
+  */
+  virtual StatusCode calcImpactPar( const LHCb::Particle& particle,
+                                    const LHCb::VertexBase& vertex, 
+                                    double& impactParameter, 
+                                    double& impactParameterError, 
+                                    Gaudi::XYZVector& ipVector, 
+                                    Gaudi::XYZVector& errVector) const = 0; 
 
-  /// Calculates the Impact Parameter and its error.
-  /// Inputs: a particle and a space point.
-  virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const Gaudi::XYZPoint&, 
-                                    double&, double& ) const = 0; 
+  /**
+   * Calculate the Impact Parameter, and associated error,
+   * between a 3D point and a particle.
+   * @param particle
+   * @param point
+   * @param impactParameter
+   * @param impactParameterError
+   * @return StatusCode to report errors in the calculation
+   *
+  */
+  virtual StatusCode calcImpactPar( const LHCb::Particle& particle,
+                                    const Gaudi::XYZPoint& point, 
+                                    double& impactParameter, 
+                                    double& impactParameterError) const = 0; 
 
-  /// Calculates the Impact Parameter and its error and outputs also
-  /// the impact parameter vector. Inputs: a particle and a space point.
-  virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const Gaudi::XYZPoint&, double&, double&,
-                                    Gaudi::XYZVector&, 
-                                    Gaudi::SymMatrix9x9& ) const = 0; 
+  /**
+   * Calculate the Impact Parameter, and associated error,
+   * between a 3D point and a particle.
+   * @param particle
+   * @param point
+   * @param impactParameter
+   * @param impactParameterError
+   * @param ipVector
+   * @param errMatrix
+   * @return StatusCode to report errors in the calculation
+   *
+  */
+  virtual StatusCode calcImpactPar( const LHCb::Particle& particle,
+                                    const Gaudi::XYZPoint& point, 
+                                    double& impactParameter, 
+                                    double& impactParameterError,
+                                    Gaudi::XYZVector& ipVector, 
+                                    Gaudi::SymMatrix9x9& errMatrix) const = 0; 
 
-  /// Calculates the distance of closest approach between two particles
-  /// and its error.
-  virtual StatusCode calcCloseAppr( const LHCb::Particle& ,
-                                    const LHCb::Particle&, 
-                                    double&, double& ) const = 0; 
+  /**
+   * Calculates the absolute distance of closest approach, 
+   * and corresponding error, between two particles. 
+   * The order of the particles is irrelevant.
+   *
+   * @param particle0 The first particle
+   * @param particle1 The second particle
+   * @param distance: set to the calculated distance
+   * @param distanceError: set to the calculated error on the distance
+   * @return StatusCode to report errors in the calculation
+   */
+  virtual StatusCode calcCloseAppr( const LHCb::Particle& particle0,
+                                    const LHCb::Particle& particle1, 
+                                    double& distance, 
+                                    double& distanceError) const = 0; 
 
-  /// Calculates the distance between two vertices and its error.
-  virtual StatusCode calcVertexDis( const LHCb::VertexBase& ,
-                                    const LHCb::VertexBase&, 
-                                    double&, double& ) const = 0; 
+  /**
+   * Calculates the absolute distance and corresponding error 
+   * between two vertices. The order of the vertices is irrelevant.
+   *
+   * @param vertex0 The first vertex
+   * @param vertex1 The second vertex
+   * @param distance: set to the calculated distance
+   * @param distanceError: set to the calculated error on the distance
+   * @return StatusCode to report errors in the calculation
+   */
+  virtual StatusCode calcVertexDis( const LHCb::VertexBase& vertex0,
+                                    const LHCb::VertexBase& vertex1, 
+                                    double& distance, 
+                                    double& distanceError) const = 0; 
+
+  /**
+   * Calculates the signed distance and corresponding error 
+   * between a particle's orogin vertex and another vertex. 
+   * The sign is according to the sign of the particle's 
+   * Z momentum in the LHCb frame.
+   *
+   * @param vertex The vertex
+   * @param particle the particle
+   * @param distance: set to the calculated distance
+   * @param distanceError: set to the calculated error on the distance
+   * @return StatusCode to report errors in the calculation
+   */
+  virtual StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                               const LHCb::Particle& particle, 
+                                               double& distance, 
+                                               double& distanceError) const = 0; 
 
 };
 
