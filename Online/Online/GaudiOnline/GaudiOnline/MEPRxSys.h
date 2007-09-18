@@ -34,7 +34,8 @@ namespace MEPRxSys {
 	int addr_from_name(const std::string &hname, u_int32_t &addr, std::string &msg);
 	int name_from_addr(u_int32_t addr, std::string &hname, std::string &msg);
 	int send_msg(int sockfd, u_int32_t addr, u_int8_t, void *buf, int len, int flags);
-	void usleep(int us);
+	//MSF: usleep is a define by DIM !!!!
+	void microsleep(int us);
 } // namespace MEPRxSys
 
 #endif // GAUDIONLINE_MEPRXSYS_H

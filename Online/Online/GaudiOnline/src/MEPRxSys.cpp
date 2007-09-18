@@ -151,7 +151,7 @@ int recv_msg(int sockfd, void *buf, int len,  int flags)
    ioflags |= MSG_PEEK;
   }
 #ifdef _WIN32
-  int rlen = recv(s, (char *) buf, len, ioflags);
+  int rlen = recv(sockfd, (char *) buf, len, ioflags);
   return ((rlen == -1 && WSAGetLastError() == WSAEMSGSIZE) ? len : rlen);  
 #else 
   return (recvmsg(sockfd, &msg, ioflags | MSG_DONTWAIT));
@@ -220,7 +220,7 @@ addr_from_name(const std::string &hname, u_int32_t &addr, std::string &msg)
   return 0;
 }
 
-void usleep(int us) 
+void microsleep(int us) 
 {
 #ifdef _WIN32
   long millisecs = us/1000;

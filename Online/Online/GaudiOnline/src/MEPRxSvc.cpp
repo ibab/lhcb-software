@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.50 2007-07-12 09:49:52 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.51 2007-09-18 09:19:23 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -501,7 +501,7 @@ StatusCode MEPRxSvc::run() {
 
   m_forceStop = false;
   while (!m_receiveEvents) {
-    MEPRxSys::usleep(100000); // 100 ms
+    MEPRxSys::microsleep(100000); // 100 ms
   }
 
   for (;;) {
@@ -571,7 +571,7 @@ StatusCode MEPRxSvc::run() {
             forceEvent(oldest);
             freeRx(); // only if not in separate thread
           }
-          while (m_freeDsc.empty()) MEPRxSys::usleep(100) ; /* only necessary on 
+          while (m_freeDsc.empty()) MEPRxSys::microsleep(100) ; /* only necessary on 
                                                             multithreading */
           lib_rtl_lock(m_freeDscLock);
           rx = m_freeDsc.back();
