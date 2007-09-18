@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.179 2007-09-16 17:15:59 sposs Exp $
+! $Id: release.notes,v 1.180 2007-09-18 14:01:55 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-09-18 - Patrick Koppenburg for Tom Blake
+ - New tool MCBd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
+   Assumes there are tow leptons, a K and a pi in the decay chain.
 
 ! 2007-09-16 - Stephane Poss
  - Restore L0 decision in Ntuple
