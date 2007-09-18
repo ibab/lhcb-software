@@ -3,11 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r6 2007-09-18 ====================
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - IP2VV(Part)AngleCalculator.h
    . Two new interfaces for tools calculating angles in e.g. B->mumuK*
 
-!========================= DaVinciKernel v6r6 2007-09-07 ====================
 ! 2007-09-07 - Patrick Koppenburg
  - DVAlgorithm: 
    . use WriteSelResult Tool
