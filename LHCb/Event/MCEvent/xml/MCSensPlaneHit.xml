@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="MCEvent">
+<!-- ****************************************************************
+     * MCCaloSensPlaneHit.xml                                       *
+     **************************************************************** -->
+
+    <class name   = "MCSensPlaneHit"
+           desc   = "@brief Monte Carlo information from Sensitive plane"
+           id     = "232"
+           author = "Vanya Belyaev, revised by V.Romanovski and G.Corti" >
+<desc> *
+ *
+ *  The class represents general information of a particle entering a
+ *  plane sensitive detector at the Geant level (i.e. also information not
+ *  stored as an MCParticle (GEANT)
+ *  in the active material ("active energy") of
+ *  calorimetry cell from the given Monte Carlo particle
+ *  at given "time" slot (whatever it means)
+ *
+ *</desc>
+      <import name = "GaudiKernel/SystemOfUnits"/>
+      <import name = "GaudiKernel/Vector4DTypes"/>
+      <import name = "MCParticle" soft="TRUE"/>
+      &ContainedObject;
+      <base     name="ContainedObject"/>
+      <location name = "Ecal" place = "MC/Ecal/SensPlaneHits"   />
+
+      <attribute
+	name = "position"
+	desc = "Position of the hit in the sensitive plane"
+	type = "Gaudi::LorentzVector"
+	init = "0,0,-1*Gaudi::Units::km,-100*Gaudi::Units::second"	
+	/>
+
+      <attribute
+	name = "momentum"
+	desc = "Particle momentum for the hit in the sensitive plane"
+	type = "Gaudi::LorentzVector"
+	init = "0,0,-100*Gaudi::Units::TeV,-200*Gaudi::Units::TeV"	
+	/>
+
+      <attribute
+	name = "type"
+	desc = "true particle Geant identifier"
+	type = "int"
+	init = "0"
+	/>
+
+      <relation
+	name = "particle"
+	desc = "reference to the Monte Carlo particle"
+	type = "LHCb::MCParticle"
+	multiplicity = "1"
+	/>
+
+    </class>
+  </package>
+
+</gdd>
+
