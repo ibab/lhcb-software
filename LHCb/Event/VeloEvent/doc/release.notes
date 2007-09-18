@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.44 2007-06-08 14:32:39 cattanem Exp $
+! $Id: release.notes,v 1.45 2007-09-18 00:11:45 szumlat Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
+
+!====================== VeloEvent v16r0 2007-06-07 ======================
+! 2007-09-17 - Tomasz Szumlak
+ - Add classes needed for non-zero suppressed data decoding
+   (see VeloDAQ)
 
 !====================== VeloEvent v15r1 2007-06-07 ======================
 ! 2007-06-07 - Marco Cattaneo

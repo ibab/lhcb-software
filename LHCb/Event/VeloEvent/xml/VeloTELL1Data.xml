@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Szumlak -->
+<!--- Created : 2006-06-01 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+ <package name="VeloTELL1Event">
+  <class 
+   name="VeloTELL1Data"
+   author="Tomasz Szumlak"
+   desc="The VeloTELL1Data is keyed data object, with sensor number as a key, and is meant to store non-zero suppressed data (2048 ADC samples or 2048 pedestals)"
+  id="4005"
+  >
+   <base name="KeyedObject&lt;int&gt;"/>
+
+   &KeyedContainer;
+
+   <location name="ADCs" place="Raw/Velo/DecodedADC"/>
+   <location name="Pedestals" place="Raw/Velo/DecodedPed"/>
+   <location name="Headers" place="Raw/Velo/DecodedHeaders"/>
+   <location name="SimADCs" place="Raw/Velo/SimulatedADC"/>
+   <location name="SimPeds" place="Raw/Velo/SimulatedPed"/>
+   <location name="SubPeds" place="Raw/Velo/SubtractedPed"/>
+   <location name="PedSubADCs" place="Raw/Velo/SubtractedPedADCs"/>
+   <location name="FIRCorrectedADCs" place="Raw/Velo/FIRCorrected"/>
+   <location name="BitLimitADCs" place="Raw/Velo/ADC8Bit"/>
+   <location name="ReorderedADCs" place="Raw/Velo/ADCReordered"/>
+   <location name="CMSuppressedADCs" place="Raw/Velo/ADCCMSuppressed"/>
+   <location name="CMSNoise" place="Raw/Velo/CMSNoise"/>
+
+   <constructor
+    desc="constructor with key"
+    initList="KeyedObject&lt;int&gt;(numberOfTELL1), m_decodedData(), m_ALink(), m_dataType(dataType)"
+   >
+    <arg type="int" name="numberOfTELL1" const="TRUE"/>
+    <arg type="int" name="dataType" const="TRUE"/>
+   </constructor>
+
+   <enum
+    desc="Configuration constants depending on stored data type"
+    name="NZSDataType"
+    value="Headers=4, ADCs=32, WriteHeaders=40, SENSOR_ADC=2048"
+    access="PUBLIC"
+   />
+
+   <attribute
+    desc="Vector with decoded data (2048 ADC samples/pedestals)"
+    name="decodedData"
+    type="std::vector&lt;signed int&gt;"
+    setMeth="TRUE"
+    getMeth="FALSE"
+   />
+  
+   <attribute
+    desc="Vector with decoded data for one ALink (32 channels)"
+    name="ALink"
+    type="std::vector&lt;signed int&gt;"
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute
+    desc="Type of decoded data to be stored"
+    name="dataType"
+    type="int"
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+   
+   <attribute
+    desc="Name of last process"
+    name="motherProcess"
+    type="unsigned int"
+    setMeth="TRUE"
+    getMeth="TRUE"
+   />
+
+   <method
+    desc="overloaded subscripting operator"
+    name="operator[]"
+    type="std::vector&lt;signed int&gt;&amp;"
+    access="PUBLIC"
+    const="FALSE"
+   >
+    <arg name="ALinkNumber" type="int" const="TRUE"/>
+     <code>
+      int ALinkBegin=0, ALinkEnd=0;
+      if(m_dataType==WriteHeaders){
+        ALinkBegin=ALinkNumber*Headers;
+        ALinkEnd=ALinkBegin+Headers;
+      }else{
+        ALinkBegin=ALinkNumber*ADCs;
+        ALinkEnd=ALinkBegin+ADCs;
+      }
+      //
+      m_ALink.clear();
+      std::vector&lt;signed int&gt;::iterator datIt;
+      for(datIt=(m_decodedData.begin()+ALinkBegin); datIt!=(m_decodedData.begin()+ALinkEnd); datIt++){
+        m_ALink.push_back(*datIt);
+      }
+      //
+      return ( m_ALink );
+     </code>
+    </method>
+
+    <method
+     desc="return vector with all decoded samples"
+     name="data"
+     type="std::vector&lt;signed int&gt;&amp;"
+     access="PUBLIC"
+     const="FALSE"
+    >
+     <code>
+      return ( m_decodedData );
+     </code>
+    </method>
+    
+    <method
+     desc="fill the vector with adc Velo data, use restricted within TELL1 algorithms"
+     name="addALink"
+     type="void"
+     access="PUBLIC"
+     const="FALSE"
+    >
+     <arg name="inVec" type="std::vector&lt;signed int&gt;" const="FALSE"/>
+      <code>
+       assert(m_decodedData.size()&lt;=SENSOR_ADC);
+       std::vector&lt;signed int&gt;::iterator datIt;
+       datIt=inVec.begin();
+       for( ; datIt!=inVec.end(); datIt++){
+         m_decodedData.push_back(*datIt);
+       }
+      </code>
+     </method>
+
+  </class>  
+ </package>
+</gdd>
