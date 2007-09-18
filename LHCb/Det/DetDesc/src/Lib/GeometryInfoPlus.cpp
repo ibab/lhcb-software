@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.27 2007-09-17 11:33:08 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.28 2007-09-18 08:44:18 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -209,6 +209,73 @@ StatusCode GeometryInfoPlus::initialize()
   //  return ( getAlignmentCondition() ) ? cache() : StatusCode::FAILURE;  
   return ( getAlignmentCondition() ) ? 
     m_ums->update(this) : StatusCode::FAILURE;  
+}
+//=============================================================================
+bool GeometryInfoPlus::hasLVolume() const
+{
+  return m_gi_has_logical;
+}
+//=============================================================================
+bool GeometryInfoPlus::hasSupport() const 
+{
+  return m_gi_has_support;
+}
+//=============================================================================
+const AlignmentCondition* GeometryInfoPlus::alignmentCondition() const
+{  
+  return m_alignmentCondition; 
+}
+//=============================================================================
+const Gaudi::Transform3D& GeometryInfoPlus::toLocalMatrix() const
+{  
+  return  *m_matrix; 
+}
+//=============================================================================
+const Gaudi::Transform3D& GeometryInfoPlus::toGlobalMatrix() const
+{  
+  return *m_matrixInv; 
+}
+//=============================================================================
+const Gaudi::Transform3D& GeometryInfoPlus::toLocalMatrixNominal() const
+{  
+  return *m_idealMatrix; 
+}
+//=============================================================================
+const Gaudi::Transform3D& GeometryInfoPlus::toGlobalMatrixNominal() const
+{  
+  return *m_idealMatrixInv; 
+}
+//=============================================================================
+const Gaudi::Transform3D GeometryInfoPlus::ownMatrix() const
+{  
+  return Gaudi::Transform3D(this->ownToNominalMatrix() * this->ownToLocalMatrixNominal() ); 
+}
+//=============================================================================
+Gaudi::XYZPoint GeometryInfoPlus::toLocal( const Gaudi::XYZPoint& globalPoint ) const 
+{  
+  return ( toLocalMatrix() * globalPoint ); 
+}
+//=============================================================================
+Gaudi::XYZPoint GeometryInfoPlus::toGlobal( const Gaudi::XYZPoint& localPoint  ) const
+{
+  return ( toGlobalMatrix() * localPoint  );
+}
+//=============================================================================
+Gaudi::XYZVector GeometryInfoPlus::toLocal( const Gaudi::XYZVector& globalDirection ) const 
+{
+  return ( toLocalMatrix() * globalDirection );
+}
+//=============================================================================
+Gaudi::XYZVector GeometryInfoPlus::toGlobal( const Gaudi::XYZVector& localDirection  ) const
+{
+  return ( toGlobalMatrix() * localDirection  );
+}
+//=============================================================================
+bool GeometryInfoPlus::isInside( const Gaudi::XYZPoint& globalPoint ) const
+{
+  return ( hasLVolume() && 0 != lvolume() ) ?
+    lvolume()->isInside( toLocal( globalPoint ) ) :
+    isInsideDaughter( globalPoint );
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::cache() 
@@ -647,7 +714,7 @@ IGeometryInfo* GeometryInfoPlus::geoByName( const std::string& name ) const
   return gi;
 }
 //=============================================================================
-inline StatusCode GeometryInfoPlus::fullGeoInfoForPoint
+StatusCode GeometryInfoPlus::fullGeoInfoForPoint
 ( const Gaudi::XYZPoint&        point      , 
   const int                level      , 
   IGeometryInfo*&          start      , 
