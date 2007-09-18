@@ -3,6 +3,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-09-18 - Juan PALACIOS
+ - Kernel/GeomDispCalculator.h
+   . Add method calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                          const LHCb::Particle& particle, 
+                                          double& distance, 
+                                          double& distanceError) const
+   . Give reasonable names to method arguments!
+   . Improve doxygen comments.
+
 !========================= DaVinciKernel v6r6 2007-09-18 ====================
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - IP2VV(Part)AngleCalculator.h
