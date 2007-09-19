@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.48 2007-08-27 14:05:25 odescham Exp $
+! $Id: release.notes,v 1.49 2007-09-19 12:22:39 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,7 +6,10 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
- 
+!===================== CaloAssociators v6r4 2007-09-19 ========================
+! 2007-09-19 - Marco Cattaneo
+ - Remove obsolete file CaloAssociators_load.cpp
+
 ! 2007-08-27 - Olivier Deschamps
  - clean unchecked StatusCode
 

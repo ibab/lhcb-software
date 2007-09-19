@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.31 2006-10-17 13:45:30 cattanem Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
+# $Id: requirements,v 1.32 2007-09-19 12:22:39 cattanem Exp $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -8,7 +6,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v6r3
+version           v6r4
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
@@ -31,27 +29,4 @@ library           CaloAssociators  *.cpp
 
 # =============== patterns ====================================================
 apply_pattern     component_library library=CaloAssociators 
-
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.30  2006/05/17 16:11:59  cattanem
-# migrate to Gaudi::Units
-#
-# Revision 1.29  2006/04/13 08:48:24  cattanem
-# v6r1
-#
-# Revision 1.28  2006/04/06 13:26:10  odescham
-# generic tools moved to CaloUtils
-#
-# Revision 1.27  2006/03/28 14:44:36  cattanem
-# remove checks on return code from methods that only fail with exception
-#
-# Revision 1.26  2006/02/21 10:04:45  odescham
-# update for new Event Model
-#
-# Revision 1.25  2005/05/08 09:19:06  ibelyaev
-#  new relation ables and linkers
-# 
-# =============================================================================
-# The END 
 # =============================================================================
