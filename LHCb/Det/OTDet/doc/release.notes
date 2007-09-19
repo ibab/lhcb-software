@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.98 2007-09-19 06:54:19 wouter Exp $
+! $Id: release.notes,v 1.99 2007-09-19 08:24:37 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v7r6 2007-09-19 =========================
 ! 2007-09-19 - Wouter Hulsbergen
  - fix in RtRelation for compilation warnings on windows
 
-!========================== OTDet v7r6 2007-09-18 =========================
 ! 2007-09-07 - Wouter Hulsbergen
  - revision of RtRelation class to be better suited for calibration algorithm
  - moved resolution to RtRelation
