@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r4 2007-09-19 ======================
 ! 2007-09-17 Stefan Roiser
 - New feature for string to type conversion for enums and vice versa
   This feature can be enabled by setting the <enum> attribute "strTypConv" to "TRUE"
