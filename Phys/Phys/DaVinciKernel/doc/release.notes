@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-09-19 - Juan PALACIOS
+ - Kernel/GeomDispCalculator.h
+   . Correct doxygen for calcSignedFlightDistance
+
 ! 2007-09-18 - Juan PALACIOS
  - Kernel/GeomDispCalculator.h
    . Add method calcSignedFlightDistance( const LHCb::VertexBase& vertex,
