@@ -2,8 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r3 2007-09-18 ==========================
 ! 2007-09-05 Wouter Hulsbergen
- - Added double->int cast in STFun::position to remove strange optimization issue in comparison a double to an int
+ - Added double->int cast in STFun::position to remove strange optimization
+   issue in comparison a double to an int
  - Replaced > with >=
 
 !=========================== STTools v3r2 2007-07-07 ==========================
