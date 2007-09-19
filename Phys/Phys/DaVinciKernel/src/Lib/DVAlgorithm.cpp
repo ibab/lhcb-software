@@ -41,10 +41,11 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_countFilterPassed       (0)
 {
   // 
-  m_vertexFitNames [ "Offline" ] = "OfflineVertexFitter" ;
-  m_vertexFitNames [ "Trigger" ] = "TrgVertexFitter"     ;
-  m_vertexFitNames [ "Kalman"  ] = "BlindVertexFitter"   ;
-  m_vertexFitNames [ "Blind"   ] = "BlindVertexFitter"   ;
+  m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
+  m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"     ;
+  m_vertexFitNames [ "Kalman"        ] = "BlindVertexFitter"   ;
+  m_vertexFitNames [ "Blind"         ] = "BlindVertexFitter"   ;
+  m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
   //
   m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
@@ -60,17 +61,19 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   // 
   declareProperty ( "FilterCriteria"    , m_criteriaNames     ) ; // empty! 
   // 
-  m_particleCombinerNames [ ""        ] = "OfflineVertexFitter" ;
-  m_particleCombinerNames [ "Offline" ] = "OfflineVertexFitter" ;
-  m_particleCombinerNames [ "Trigger" ] = "TrgVertexFitter"     ;
-  m_particleCombinerNames [ "Kalman"  ] = "BlindVertexFitter"   ;
-  m_particleCombinerNames [ "Blind"   ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ ""              ] = "OfflineVertexFitter" ;
+  m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
+  m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
+  m_particleCombinerNames [ "Kalman"        ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "ParticleCombiners"  , m_particleCombinerNames ) ;
   //
-  m_particleReFitterNames [ ""        ] = "OfflineVertexFitter" ;
-  m_particleReFitterNames [ "Offline" ] = "OfflineVertexFitter" ;
-  m_particleReFitterNames [ "Kalman"  ] = "BlindVertexFitter"   ;
-  m_particleReFitterNames [ "Blind"   ] = "BlindVertexFitter"   ;
+  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter" ;
+  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter" ;
+  m_particleReFitterNames [ "Kalman"        ] = "BlindVertexFitter"   ;
+  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"   ;
+  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "ParticleReFitters" , m_particleReFitterNames ) ;
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "not specified" ) ;
