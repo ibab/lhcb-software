@@ -1,12 +1,12 @@
-// $Id: Decoder.cpp,v 1.1 2007-09-18 00:04:14 szumlat Exp $
+// $Id: VeloFullDecoder.cpp,v 1.1 2007-09-19 15:06:17 szumlat Exp $
 // Include files
 
 // local
-#include "Decoder.h"
+#include "VeloFullDecoder.h"
 #include <iostream>
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : Decoder
+// Implementation file for class : VeloFullDecoder
 //
 // 2006-04-21 : Tomasz Szumlak
 //-----------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 
 using namespace VeloTELL1;
 
-Decoder::Decoder(const int decoderType):
+VeloFullDecoder::VeloFullDecoder(const int decoderType):
   m_decodedData ()
 {
   decoderIni(decoderType);
@@ -25,9 +25,9 @@ Decoder::Decoder(const int decoderType):
 //=============================================================================
 // Destructor
 //=============================================================================
-Decoder::~Decoder() {}
+VeloFullDecoder::~VeloFullDecoder() {}
 //=============================================================================
-dataVec& Decoder::decode(VeloFullBank* inData)
+dataVec& VeloFullDecoder::decode(VeloFullBank* inData)
 {
   dataVec::iterator secIt;
   unsigned int decodedWord=0;
@@ -75,8 +75,8 @@ dataVec& Decoder::decode(VeloFullBank* inData)
 }
 //==============================================================================
 // to make the decoder universal one the code below to execute inside
-// Decoder constructor is provided
-void Decoder::decoderIni(const int decoderType)
+// VeloFullDecoder constructor is provided
+void VeloFullDecoder::decoderIni(const int decoderType)
 {
   if(decoderType==VeloFull){
     // during ADC decoding skip ADC headers

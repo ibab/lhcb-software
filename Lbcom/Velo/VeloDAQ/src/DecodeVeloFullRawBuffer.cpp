@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.cpp,v 1.1 2007-09-18 00:04:14 szumlat Exp $
+// $Id: DecodeVeloFullRawBuffer.cpp,v 1.2 2007-09-19 15:06:15 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 
 // local
 #include "DecodeVeloFullRawBuffer.h"
-#include "Decoder.h"
+#include "VeloFullDecoder.h"
 
 // Kernel
 #include "Kernel/VeloEventFunctor.h"
@@ -163,8 +163,8 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
   //
   if(adcDataFlag()){
     // decode both ADC and ADCHeaders
-    Decoder* ADCDecoder=new Decoder(VeloFull);
-    Decoder* HeaderDecoder=new Decoder(VeloHeader);
+    VeloFullDecoder* ADCDecoder=new VeloFullDecoder(VeloFull);
+    VeloFullDecoder* HeaderDecoder=new VeloFullDecoder(VeloHeader);
     //
     for(sensIt=m_veloADCs->begin(); sensIt!=m_veloADCs->end(); sensIt++){
       dataVec ADCData=ADCDecoder->decode(*sensIt);
@@ -254,7 +254,7 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
   }
   //
   if(pedDataFlag()){
-    Decoder* PedDecoder=new Decoder(VeloPedestal);
+    VeloFullDecoder* PedDecoder=new VeloFullDecoder(VeloPedestal);
     for(sensIt=m_veloPeds->begin(); sensIt!=m_veloPeds->end(); sensIt++){
       dataVec PedData=PedDecoder->decode(*sensIt);
       VeloTELL1Data* pedData=new VeloTELL1Data((*sensIt)->key(), VeloPedestal);

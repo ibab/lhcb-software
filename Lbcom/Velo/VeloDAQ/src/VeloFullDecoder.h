@@ -1,20 +1,20 @@
-// $Id: Decoder.h,v 1.3 2007-09-19 13:43:38 cattanem Exp $
-#ifndef VELOTELL1ALGORITHM_DECODER_H 
-#define VELOTELL1ALGORITHM_DECODER_H 1
+// $Id: VeloFullDecoder.h,v 1.1 2007-09-19 15:06:18 szumlat Exp $
+#ifndef VELOTELL1ALGORITHM_VELOFULLDECODER_H 
+#define VELOTELL1ALGORITHM_VELOFULLDECODER_H 1
 
 // Include files
 #include "VeloEvent/VeloFullBank.h"
 #include "Tell1Kernel/VeloDecodeConf.h"
 #include "Tell1Kernel/VeloDecodeCore.h"
 
-/** @class Decoder Decoder.h Decoder.h
+/** @class VeloFullDecoder VeloFullDecoder.h VeloFullDecoder.h
  *  
  *
  *  @author Tomasz Szumlak
  *  @date   2006-04-11
  */
 
-class Decoder {
+class VeloFullDecoder {
 
   enum initialShifts{
     NoShift=0,
@@ -25,8 +25,8 @@ class Decoder {
 public: 
 
   /// Standard constructor
-  Decoder(const int decoderType);
-  virtual ~Decoder( ); ///< Destructor
+  VeloFullDecoder(const int decoderType);
+  virtual ~VeloFullDecoder( ); ///< Destructor
   VeloTELL1::dataVec& decode(VeloFullBank* inData);
   
 protected:
@@ -41,5 +41,5 @@ private:
   VeloTELL1::dataVec m_decodedData;    
 
 };
-#endif // VELOTELL1ALG_DECODER_H
+#endif // VELOTELL1ALG_VELOFULLDECODER_H
 //
