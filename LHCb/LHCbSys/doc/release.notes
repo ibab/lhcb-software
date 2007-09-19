@@ -15,7 +15,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
                   TfKernel          v1r0 - core classes for the Tf framework
                   PatKernel         v1r0 - Pat base classes for Tf framework
                   TrackFitEvent     v3r8 - Moved from REC
-- Packages modified: GaudiObjDesc v10r3, KernelSys v6r8, LHCbKernel v7r6,
+- Packages modified: GaudiObjDesc v10r4, KernelSys v6r8, LHCbKernel v7r6,
     CaloKernel v5r1, ProcessorKernel v5r0, L0MuonKernel v7r1, RichKernel v7r8,
     EventSys v23r8, DAQEvent v7r5, HltEvent v8r4, MCEvent v2r5, LinkerEvent v3r2,
     L0Event v16r5, PhysEvent v11r3, RecEvent v2r6, TrackEvent v4r6,
@@ -28,7 +28,9 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     LoKiPhys v6r0, LoKiPhysMC v6r0, PatTools v3r2, IOExample v2r1,
     DetCondExample v11r2
 
-- In GaudiObjDesc v10r3
+- In GaudiObjDesc v10r4
+  . New feature for string to type conversion for enums and vice versa
+    See release notes for usage details
   . Apply patch 1256, to include enums and functions in generated dictionary
 
 - In LHCbKernel v7r7
