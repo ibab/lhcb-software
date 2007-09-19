@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r7 2007-09-19 =====================
 ! 2007-08-09 - Chris Jones
  - Update RichMCTrack info tool to correctly perform aerogel refraction
    correction.
