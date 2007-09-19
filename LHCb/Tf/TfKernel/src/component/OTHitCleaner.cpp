@@ -1,4 +1,4 @@
-// $Id: OTHitCleaner.cpp,v 1.6 2007-09-07 13:32:10 wouter Exp $
+// $Id: OTHitCleaner.cpp,v 1.7 2007-09-19 05:46:50 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -121,7 +121,7 @@ void OTHitCleaner::removeClusters( const OTHits::const_iterator begin,
 	  if( !endofcluster ) {
 	    OTHits::const_iterator nexthit(begin) ;
 	    std::advance(nexthit,*clusterendindex) ;
-	    endofcluster = abs( (int)(*currenthit)->straw() - (*nexthit)->straw() ) != 1 ;
+	    endofcluster = abs( (int)((*currenthit)->straw() - (*nexthit)->straw()) ) != 1 ;
 	    currenthit = nexthit ;
 	  }
           if(endofcluster) {

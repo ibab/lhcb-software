@@ -4,7 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
-!============================ TfKernel v1r0 2007-09-18 =======================
+!============================ TfKernel v1r0 2007-09-19 =======================
+! 2007-09-19 - Marco Cattaneo
+ - Fix Windows compilation error
+
 ! 2007-09-18 - Marco Cattaneo
  - Remove dictionary entries for Tf::OTHit::DetectorElementType and
    Tf::STHit::DetectorElementType, as they translate to DeOTModule and
