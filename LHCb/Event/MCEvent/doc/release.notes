@@ -1,15 +1,14 @@
-! $Id: release.notes,v 1.88 2007-09-18 15:57:14 gcorti Exp $
+! $Id: release.notes,v 1.89 2007-09-19 05:58:19 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
-!======================== MCEvent v2r6 2007-09-18 ============================
+!======================== MCEvent v2r5 2007-09-18 ============================
 ! 2007-09-18 - Gloria Corti
  - Add new class MCSensPlaneHit for special studies (e.g. in Calorimeters)
    providing kinematic of the particle when entering a plane
 
-!======================== MCEvent v2r5 2007-09-05 ============================
 ! 2007-09-05 - Marco Cattaneo
  - Remove from MCRichSegment.xml directive to make a template dictionary that
    is already present in libMathRflx.so
