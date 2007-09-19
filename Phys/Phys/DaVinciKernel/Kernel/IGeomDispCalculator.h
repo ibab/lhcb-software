@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.7 2007-09-18 16:35:36 jpalac Exp $
+// $Id: IGeomDispCalculator.h,v 1.8 2007-09-19 12:20:11 jpalac Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
@@ -152,7 +152,7 @@ class IGeomDispCalculator : virtual public IAlgTool {
 
   /**
    * Calculates the signed distance and corresponding error 
-   * between a particle's orogin vertex and another vertex. 
+   * between a particle's decay vertex and another vertex. 
    * The sign is according to the sign of the particle's 
    * Z momentum in the LHCb frame.
    *
