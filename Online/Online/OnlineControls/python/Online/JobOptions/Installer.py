@@ -11,7 +11,7 @@ JOI.uninstall()
 import Online.JobOptions.JobOptions as JobOptions
 import Online.SetupParams as Params
 import Online.PVSSSystems as Systems
-import Online.RunInfo as RunInfo
+import Online.RunInfoClasses.Storage as StorageInfo
 import Online.Utils as Utils
 import Online.PVSS as PVSS
 
@@ -139,7 +139,7 @@ def installPartitions():
     name = name[name.find(':')+1:]
     name = name[:name.find('_')]
     log('Partition:'+name,timestamp=1)
-    run = RunInfo.RunInfo(mgr,name)
+    run = StorageInfo.StorageInfo(mgr,name)
     run.load()
     p = JobOptions.Partition(mgr,name)
     if not p.exists():

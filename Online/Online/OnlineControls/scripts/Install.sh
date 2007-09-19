@@ -1,24 +1,15 @@
 #/bin/sh
 #
 #
+. ../scripts/InstallFiles.sh $*
 #
-if test -z $1;
-    then
-    echo "No Project name given!";
-    echo "usage: Install.sh <project-name>"
-    echo "Choose one of: STORAGE MONITORING LBECS"
-    exit 0;
+if test -e ${ONLINECONTROLSROOT}/pvss/dplist/${PVSS_PROJECT_NAME}.dpl;
+then
+  echo "Importing FSM types ...."
+  ${PVSS_SYSTEM_ROOT}/bin/PVSS00ascii -proj ${PVSS_PROJECT_NAME} -in ${ONLINECONTROLSROOT}/pvss/dplist/${PVSS_PROJECT_NAME}.dpl
+else
+  echo "No datapoints to be imported ...."
 fi;
-export PVSS_PROJECT_NAME=$1
-shift 1;
-. ../cmt/setup.sh
-#
-export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
-export PVSS_II=${PVSS_PROJECT_BASE}/config/config
-cp --recursive --force --symbolic-link ${ONLINECONTROLSROOT}/pvss/* ${PVSS_PROJECT_BASE}
-#
-echo "Importing FSM types for the storage cluster...."
-${PVSS_SYSTEM_ROOT}/bin/PVSS00ascii -proj ${PVSS_PROJECT_NAME} -in ${ONLINECONTROLSROOT}/pvss/dplist/${PVSS_PROJECT_NAME}.dpl
 #
 if test ${PVSS_PROJECT_NAME} = MONITORING;
     then
@@ -48,4 +39,9 @@ elif test ${PVSS_PROJECT_NAME} = LBECS;
     #
     echo "Executing python setup";
     python ${ONLINECONTROLSROOT}/python/InstallLBECS.py;
+elif test ${PVSS_INSTALL_NAME} = JOBOPTIONS;
+    then
+    ${PVSS_SYSTEM_ROOT}/bin/PVSS00ascii -proj ${PVSS_PROJECT_NAME} -in ${ONLINECONTROLSROOT}/pvss/dplist/JobOptionsControl.dpl
+    echo "Executing PVSS setup controller";
+    ${PVSS_SYSTEM_ROOT}/bin/PVSS00ctrl InstallJobOptionsControl.cpp;
 fi;

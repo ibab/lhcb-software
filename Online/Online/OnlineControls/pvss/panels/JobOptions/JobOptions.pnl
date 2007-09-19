@@ -13,8 +13,8 @@ void _p1()  {}// DebugN(\"Panel EditType after call:\"+jo_editType);            
 void __t() {}
 " 0
  2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -200,33 +200,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 3 1 0 1 E U  0 E 12 162 94 207
-0 2 0 "0s" 0 0 0 192 0 0  12 162 1
+E E 0 3 1 0 1 E 1.247191011235955 0 1 -2.471910112359551 0 0 E 12 167 97 216
+0 2 0 "0s" 0 0 0 192 0 0  12 167 1
 1
-LANG:1 96 -*-Arial Black-*-i-normal-*-37-*-100-100-*-*-iso8859-1|-37,0,0,0,404,1,0,0,0,0,0,0,0,Arial Black
+LANG:1 112 -*-Bitstream Charter-bold-i-normal-*-*-280-100-100-*-*-iso8859-1|-40,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Charter
 0 ""
 1
 LANG:1 4 Logo
-2 8
-"m_logo2"
-""
-1 10 210 E E E 1 E 1 E N {255,255,255} E N {255,0,51} E E
- E E
-20 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 3 1 0 1 E U  1 E 12 212 61 233
-0 2 0 "0s" 0 0 0 192 0 0  12 212 1
-1
-LANG:1 103 -*-MS Sans Serif-bold-i-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,697,1,0,0,0,0,0,0,0,MS Sans Serif
-0 ""
-1
-LANG:1 5 Logo2
 30 9
 "m_logoFrame"
 ""
@@ -240,7 +220,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 10 160 130 236
+E E 0 1 1 0 1 E 1.134453781512605 0 1 -1.344537815126051 0 0 E 10 160 130 236
 1
 LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
 0 ""
@@ -378,6 +358,26 @@ T
 LANG:1 2 Ok
 "main()  {	PanelOff(); /* Closes the panel */                                   }" 0
  E E E
+2 24
+"m_logo2"
+""
+1 9.935483870967742 210 E E E 1 E 1 E N "white" E N "red" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1.064516129032258 0 1 -0.7096774193548381 0 1 E 13 210 133 230
+0 2 2 "0s" 0 0 0 64 0 0  13 210 1
+1
+LANG:1 126 -*-Bitstream Vera Sans Mono-bold-i-normal-*-*-140-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans Mono
+0 ""
+1
+LANG:1 5 Logo2
 0
 LAYER, 1 
 1

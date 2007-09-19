@@ -7,6 +7,8 @@ import Online.StreamingComponent as Strm; res=Strm.runStorage(sim=['Slice00']);
 import Online.StreamingComponent as Strm; res=Strm.runMonitoring();
 PVSS.setDebug(66)
 """
+
+import sys, time
 import Online.SetupParams as Params
 
 def _mgr(name):
@@ -26,6 +28,22 @@ def uninstall(name='Storage'):
   #SOI.uninstall(name)
   return
 
+def runHLTopts(name='HLT'):
+  import Online.RunInfoClasses.HLTFarm as RI
+  import Online.AllocatorControl    as Control
+  import Online.JobOptions.OptionsWriter as JobOptions
+
+  info = RI.HLTFarmInfoCreator()
+  system = Params.storage_system_name
+  system = Params.jobOptionsSystemName()
+  mgr = _mgr(system)
+  nam = name+'JobOptions'
+  writer = JobOptions.HLTOptionsWriter(mgr,nam,RI.HLTFarmInfoCreator())
+  writer.optionsDir = Params.jobopts_optsdir
+  ctrl = Control.Control(mgr,nam,'Writer',[writer])
+  ctrl.run()
+  return (ctrl,writer)
+  
 def runStorage(name='Storage',sim=None):
   import Online.RunInfoClasses.Storage as RI
   import Online.AllocatorControl    as Control
@@ -39,7 +57,7 @@ def runStorage(name='Storage',sim=None):
   writer   = JobOptions.StorageOptionsWriter(mgr,name+'JobOptions',info)
   writer.optionsDir = Params.jobopts_optsdir
 
-  ctrl = Control.Control(mgr,name,[streamer,writer])
+  ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer])
   ctrl.run()
   return (ctrl,run(name,mgr,info,sim))
 
@@ -55,7 +73,7 @@ def runMonitoring(name='Monitoring',sim=None):
   writer   = JobOptions.MonitoringOptionsWriter(mgr,name+'JobOptions',info)
   writer.optionsDir = Params.jobopts_optsdir
 
-  ctrl = Control.Control(mgr,name,[streamer,writer])
+  ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer])
   ctrl.run()
   return (ctrl,run(name,mgr,info,sim))
 
@@ -72,9 +90,7 @@ def run(name,mgr,info_creator,sim=None):
       sims.append(simulator)
   return (mgr,sims)
 
-if __name__ == "__main__":
-  import sys, time
-  args = sys.argv[1:]
+def execute(args):
   sim = []
   wait = 0
   inst = 0
@@ -119,7 +135,10 @@ if __name__ == "__main__":
   if res and wait != 0:
     print 'Hit CTRL-C to quit!'
     res[0].sleep()
+    print '\n\nDone...\n\n'
     for i in res[1][1]:
       del(i)
 
-      
+if __name__ == "__main__":
+  execute(args=sys.argv[1:])
+

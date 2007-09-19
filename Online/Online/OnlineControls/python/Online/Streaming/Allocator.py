@@ -134,7 +134,7 @@ class FSMmanip:
         dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
         dpv.back().data = action+'/DEVICE(S)='+dpMap[i][0].upper()
         count = count + 1
-        if debug: log('%3d %3d %s'%(commit, count, dpv.back().data))
+        if debug: log('%-12s %3d %3d %s'%(action, commit, count, dpv.back().data))
         del dpMap[i][0]
         if len(dpMap[i])==0: del dpMap[i]
       self.writer.add(dpv)
@@ -159,9 +159,9 @@ class FSMmanip:
     nam = self.name+'|'+self.name+'_'
     num = self.enabled.container.size()
     tag = self.name+'_FWDM.mode.enabled'
-    lag_len = len(tag)
     cnt_0 = 0
     cnt_1 = 1
+    if debug: log('Entries:'+str(num)+' '+str(self.fsmtypes.container.size()))
     for i in xrange(num):
       if self.fsmtypes.container[i].data != "FSM_DimTask":
         if debug: log('skip:'+str(self.enabled.container[i].name()))
@@ -179,6 +179,7 @@ class FSMmanip:
       task_id = int(item[:3])
       if not self.tasks.has_key(node2):
         self.tasks[node2] = []
+      #log('use['+i+']:'+str(self.enabled.container[i].name()))
       self.tasks[node2].append(i)
       if not self.taskSlots.has_key(node2):
         self.taskSlots[node2] = {}
@@ -187,7 +188,9 @@ class FSMmanip:
         if debug: log('Add node:'+node2)
         self.nodeParents[node2] = self.enabled.container.size()
         self.addNodeObject(nam+node2)
-    print 'Task nodes:',self.tasks.keys(),self.tasks
+    #print 'Tasks:',self.tasks
+    #print 'TaskSlots:',self.taskSlots
+    if debug: log('Task nodes:'+str(self.tasks.keys())+' '+str(self.tasks))
     
   # ===========================================================================
   def enableObject(self, i, node, enabled, visible, label, type="NONE"):
@@ -240,7 +243,7 @@ class FSMmanip:
     cl1 = copy.deepcopy(self.tasks)
     self.tasks = {}
     for n in processes.keys():
-      if debug: print '--->',len(processes[n]),' Class 1 tasks running on node:',n
+      if debug: print '--->',len(processes[n]),' tasks running on node:',n
     for (n,task_list) in processes.items():
       if debug: print 'allocateProcesses:',n,task_list
       if self.nodeParents.has_key(n):
@@ -264,11 +267,14 @@ class FSMmanip:
           cmd = task[6]+'#-e -o -u '+task[1]+' -D PARTITION='+self.info.detectorName()+' '+script+' '+task[1]+'.opts '+task[4]+' '+task[3]+' '+task[5]
           self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
           self.tasks[n].append(i)
+          #print 'Setup Task:',task[0],task[1],task[2],n,cl1[n][0]
           del cl1[n][0]
         else:
           error(self.name+': No task slots for Class 1 present!',timestamp=1)
-          if not cl1.has_key(n): error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
-          else:                  error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
+          if not cl1.has_key(n):
+            error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
+          else:
+            error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
           return None
     return self
 
@@ -580,11 +586,16 @@ class Allocator(StreamingDescriptor):
         error('[Cannot commit] Cannot free partition for '+partition,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
         return None
     error('[Partition not allocated] Cannot free partition for '+partition,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
-    return "WAS_NOT_ALLOCATED"
+    return 'WAS_NOT_ALLOCATED'
 
   # ===========================================================================
   def recover(self, rundp_name, partition):
     return self.free(rundp_name, partition)
+  
+  # ===========================================================================
+  def recover_slice(self, rundp_name, partition):
+    log('Recover '+partition+' runDP:'+rundp_name)
+    return 'SUCCESS'  # self.free(rundp_name, partition)
   
   # ===========================================================================
   def showSummary(self, extended=None):

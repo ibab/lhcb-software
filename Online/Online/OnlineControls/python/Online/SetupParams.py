@@ -6,6 +6,9 @@ jobopts_system_name = 'LBECS'
 storage_system_name = 'STORAGE'
 monitor_system_name = 'MONITORING'
 
+def jobOptionsSystemName():
+  return "TEST";
+
 # Subdetector definitions
 detectors = {}
 detectors['LHCb'] = {'PVSSSystem':    'ECSLHCb',

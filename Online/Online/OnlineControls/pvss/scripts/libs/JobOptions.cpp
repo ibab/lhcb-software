@@ -20,6 +20,10 @@ string jo_partitionID;
 string jo_activityName;
 string jo_tell1Boards;
 
+string JobOptions_sysName()  {
+  return JobOptionsSystem+":";
+}
+
 // Print setup parameters with prefix tag
 void JobOptions_printSetup(string tag)  {
   string text;
@@ -119,7 +123,7 @@ int JobOptions_execute()  {
 //    jo_tell1Boards+".Name", boards, 
 //    jo_tell1Boards+".IP", addrs);
   if ( 0 == rc )  {
-    string dps = JobOptionsSystem+":"+JobOptionsActivity_t+"_"+activity+"_*";
+    string dps = JobOptions_sysName()+JobOptionsActivity_t+"_"+activity+"_*";
     activities = dpNames(dps);
     DebugN("Search for:"+dps);
     //DebugN(rc+" PartitionID:"+pid);
@@ -238,7 +242,7 @@ int JobOptions_listen()  {
 dyn_string JobOptions_items(string match)  {
   string typ = match + "_*";
   int    typ_len = strlen(typ)-1;
-  dyn_string items = dpNames(JobOptionsSystem+":"+typ);
+  dyn_string items = dpNames(JobOptions_sysName()+typ);
   for(int i=1, n=dynlen(items); i<=n; ++i)
     items[i] = substr(dpSubStr(items[i],DPSUB_DP),typ_len);
   return items;
@@ -303,6 +307,8 @@ void JobOptions_installControl() {
   JobOptions_typeCreate(names,types);
 }
 void JobOptions_installOptions() {
+  dyn_dyn_string names;
+  dyn_dyn_int types;
   // Create Partition type
   names[1] = makeDynString (JobOptionsPartition_t,"","","");
   names[2] = makeDynString ("","State","","");
@@ -382,12 +388,14 @@ void JobOptionsEditor_setToolTips()  {
   m_partitionID.toolTipText    = "Partition identifier of the selected partition.";
   m_activity.toolTipText       = "Active activity type of the selected partition.";
   m_state.toolTipText	       = "State of the selected partition.";
+  m_logo.toolTipText           = "Yeah! That's us!!!";
+  m_logo2.toolTipText          = m_logo.toolTipText;
 }
 /// Create a new Partition object
 int JobOptionsEditor_createObject(string name,string typ) {
   if ( strlen(name) > 0 )  {
     string n = typ+"_"+name;
-    int id = getSystemId(JobOptionsSystem+":");
+    int id = getSystemId(JobOptions_sysName());
     dyn_string names;
     dyn_uint ids;
     getSystemNames(names,ids);
@@ -410,7 +418,7 @@ int JobOptionsEditor_createObject(string name,string typ) {
 /// Delete a Partition object
 int JobOptionsEditor_deleteObject(string name,string typ) {
   if ( strlen(name) > 0 )  {
-    string n = JobOptionsSystem+":"+typ+"_"+name;
+    string n = JobOptions_sysName()+typ+"_"+name;
     if ( dpExists(n) )  {
       int rc = dpDelete(n);
       if ( 0 == rc )  {
@@ -504,9 +512,9 @@ void JobOptionsEditor_closeEditors() {
   m_state.visible	= 0;
   m_list.scale(1.,1.);
   m_logo.visible = 1;
-  m_logo.text	= "LHCb  ";
+  m_logo.text	= "LHCb";
   m_logo2.visible = 1;
-  m_logo2.text	= "    O n l i n e    ";
+  m_logo2.text	= "  Online";
   m_logoFrame.visible = 1;
   m_logoFrame.text = "";
 }
@@ -550,7 +558,7 @@ int JobOptionsEditor_showTaskTypes()  {
 /// Editor: Show all tasks executing in a node type
 int JobOptionsEditor_showNodeTasks(string text)  {
   dyn_string tasks;
-  int rc = dpGet(JobOptionsSystem+":"+JobOptionsActivity_t+"_"+text+".",tasks);
+  int rc = dpGet(JobOptions_sysName()+JobOptionsActivity_t+"_"+text+".",tasks);
   if ( 0 == rc )  {
     DebugN("JobOptionsEditor_showNodeTasks> "+JobOptionsActivity_t+"_"+text+" has "+dynlen(tasks)+" tasks.");
     int typ_len = strlen(JobOptionsActivity_t)+1;
@@ -568,7 +576,7 @@ int JobOptionsEditor_showNodeTasks(string text)  {
 int JobOptionsEditor_showNodeTypes()  {
   string activity, pid, state;
   string partName = m_list.selectedText;
-  string typ = JobOptionsSystem+":"+JobOptionsPartition_t+"_"+partName;
+  string typ = JobOptions_sysName()+JobOptionsPartition_t+"_"+partName;
   DebugN("JobOptionsEditor_showNodeTypes> "+typ);
   int rc = dpGet(typ+".Activity",activity,
     typ+".PartitionID",pid,
@@ -616,7 +624,7 @@ int JobOptionsEditor_showNodeTypes()  {
 /// Editor: Show options for one task type in edit control
 int JobOptionsEditor_showTaskType(string text)  {
   string nam = JobOptionsTaskType_t+"_"+text, opts;
-  string dp = JobOptionsSystem+":"+nam+".";
+  string dp = JobOptions_sysName()+nam+".";
   bool   tell1, defs;
   int rc = dpGet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
   if ( 0 == rc )  {
@@ -750,7 +758,7 @@ int JobOptionsEditor_save(int panel_type)  {
 /// Editor: Save job options for a given task.
 void JobOptionsEditor_saveOptions(string text)  {
   string opts  = m_textEditor.Text;
-  string dp    = JobOptionsSystem+":"+JobOptionsTaskType_t+"_"+text+".";
+  string dp    = JobOptions_sysName()+JobOptionsTaskType_t+"_"+text+".";
   bool   tell1 = m_needTell1Setup.state(0);
   bool   defs  = m_needDefaults.state(0);
   int rc = dpSet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);

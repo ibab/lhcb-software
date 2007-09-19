@@ -30,21 +30,27 @@ class Options:
 # =============================================================================
 class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
-  def __init__(self, manager, hosttype, cluster, name, info):
+  def __init__(self, manager, hosttype, name, info):
     "Object constructor."
     Control.AllocatorClient.__init__(self,manager,name)
     self.hostType = hosttype
-    self.cluster  = cluster
     self.optionsDir = None
     self.infoCreator = info
     devMgr = self.manager.deviceMgr()
     self.optionsMgr = Systems.controlsMgr(Params.jobopts_system_name)
-    if not devMgr.exists(name):
+    dp_name = self.manager.name()+':'+name
+    if not devMgr.exists(dp_name):
       typ = self.manager.typeMgr().type('JobOptionsControl')
-      if not devMgr.createDevice(name,typ,1).release():
-        error('Failed to create the datapoint:"'+name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
+      if not devMgr.createDevice(dp_name,typ,1).release():
+        error('Failed to create the datapoint:"'+dp_name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
       else:
-        log('Created the datapoint:"'+name+'"',timestamp=1)
+        log('Created the datapoint:"'+dp_name+'"',timestamp=1)
+
+  # ===========================================================================
+  def get(self,name):
+    nam = DataPoint.original(self.name+'.'+name)
+    log('Access datapoint:'+nam)
+    return DataPoint(self.manager,nam)
 
   # ===========================================================================
   def activityName(self, run):
@@ -54,21 +60,23 @@ class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
   def getParams(self, rundp_name, partition):
     run = self.infoCreator.create(rundp_name,partition).load()
-    # print 'getParams',rundp_name,partition,str(run)
+    #print 'getParams',rundp_name,partition,str(run)
     if run:
       tasks = []
       activity_name = self.activityName(run)
-      # print 'getParams',rundp_name,partition,activity_name
+      #log('getParams:'+rundp_name+' '+str(partition)+' '+str(activity_name))
       activity = JobOptions.Activity(self.optionsMgr,activity_name)
       if activity.exists():
         task_names = activity.taskNames()
+        #log('Tasks:'+str(task_names))
         for name in task_names:
-          task = JobOptions.TaskType(self.optionsMgr,name)
-          if task.exists():
-            tasks.append(task)
-          else:
-            error('The task '+name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
-            return None
+          if len(name)>0:
+            task = JobOptions.TaskType(self.optionsMgr,name)
+            if task.exists():
+              tasks.append(task)
+            else:
+              error('The task '+name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+              return None
         return (run,activity,tasks)
       else:
         error('The activity '+activity_name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
@@ -78,7 +86,11 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
-    return self.writeOptionsFile(run.name, task.name, opts)
+    #log('Opts:'+opts.value)
+    #log('Run: '+run.name)
+    #log('Task:'+task.name)
+    #log('Activity:'+activity.name)
+    return self.writeOptionsFile(run.name, task.name, opts.value)
 
   # ===========================================================================
   def writeOptionsFile(self, partition, name, opts):
@@ -87,7 +99,7 @@ class OptionsWriter(Control.AllocatorClient):
       try:
         fd = self.optionsDir+'/'+partition
         fn = fd+'/'+name+'.opts'
-        log('###   Writing options for task: '+fn,timestamp=1)
+        log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
@@ -148,7 +160,7 @@ class OptionsWriter(Control.AllocatorClient):
         else: opts.add('// ---------------- NO task specific information')
         if not self.writeOptions(opts,run,activity,task):
           return None
-      return self
+      return run
     else:
       error('The partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
@@ -163,20 +175,56 @@ class HLTOptionsWriter(OptionsWriter):
   # ===========================================================================
   def __init__(self, manager, name, info):
     "Object constructor."
-    node = socket.gethostbyaddr(socket.gethostname())[0]
-    cluster = node[:node.find('.')]
-    cluster = 'lbhlt04'
-    OptionsWriter.__init__(self,manager,'HLT',cluster, name, info)
+    print 'HLTOptionsWriter:',name
+    OptionsWriter.__init__(self, manager, 'HLT', name, info)
+    devMgr = self.manager.deviceMgr()
+    typ = self.manager.typeMgr().type('JobOptionsControl')
+    print 'Manager:',self.manager.name()
+    print 'Options Manager:',self.optionsMgr.name()
+    for i in xrange(16):
+      nam = self.manager.name()+':'+name+'Writer_%02X'%(i,)
+      if not DataPoint.exists(nam):
+        if not devMgr.createDevice(nam,typ,1).release():
+          error('Failed to create the datapoint:"'+nam+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
+        else:
+          log('Created the datapoint:"'+nam+'"',timestamp=1)
+
   # ===========================================================================
-  def configureAdditionalOptions(self, run, activity, tasks):
-    opts = {}
-    for i in run.receivers.data:
-      storage, name, short, type, node = i.split('/')
-      if node == self.cluster:
-        opts['ClusterName'] = '"'+self.cluster+'"'
-        opts['TargetTask']  = '"'+name+'"'
-        opts['TargetNode']  = '"'+storage+'"'
-        return opts
+  def configure(self, rundp_name, partition):
+    import Online.Streaming.StreamingDescriptor as StreamingDescriptor
+    import Online.Streaming.PartitionInfo as PartitionInfo
+    import Online.SetupParams as Params
+    run = OptionsWriter.configure(self,rundp_name,partition)
+    if run:
+      storage_mgr = Systems.controlsMgr(Params.storage_system_name)
+      res = StreamingDescriptor.findPartition(storage_mgr,'Storage',run.name)
+      if res is not None:
+        dp, nam, id = res
+        info = PartitionInfo.PartitionInfo(storage_mgr,nam).load()
+        farms = run.subFarms.data
+        slots = info.recvSlices()
+        if len(farms) != len(slots):
+          error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(recv)))
+          return None
+        num = len(farms)
+        run_type = run.runType()
+        for i in xrange(num):
+          node = slots[i].split(':')[0]
+          name = '%s_%s_SF%02d_HLT'%(partition,node,i)
+          farm = farms[i]
+          opts = '// Auto generated options for partition:'+partition+' activity:'+run_type+'\n'+\
+                 '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
+                 'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
+                 'OnlineEnv.Target0 = { "'+node+'-d1::'+name+'" };\n'+\
+                 'OnlineEnv.Target1 = { "'+node+'-d1" };\n'+\
+                 'OnlineEnv.Target2 = { "'+name+'" };'
+          fname = partition+'_'+farm
+          if self.writeOptionsFile(partition, fname, opts) is None:
+            error('Failed to write farm options file:'+fname,timestamp=1,type=PVSS.ILLEGAL_VALUE)
+            return None
+          log('--> Farm:'+farm+' sends to '+slots[i]+', '+name,timestamp=1)
+          print opts
+        return run
     return None
 
 # =============================================================================
@@ -189,19 +237,20 @@ class StorageOptionsWriter(OptionsWriter):
   # ===========================================================================
   def __init__(self, manager, name, info):
     "Object constructor."
-    cluster = 'storage'
-    OptionsWriter.__init__(self, manager, 'RECV', cluster, name, info)
+    OptionsWriter.__init__(self, manager, 'RECV', name, info)
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
     return {'HostName':'@HostName@', 'ProcessName':'@ProcessName@', 'ProcessNickName':'@ProcessNickName@', 'ProcessType':'@ProcessType@'}
   # ===========================================================================
   def checkTasks(self, opts, run, activity, task, data):
     done = 0
+    checked = 0
     for i in data:
       it = i.split('/')
       items = it[:-1]
       eval_item = eval(it[-1])
       ## print '++++++++++++++++++++++>',task.name,items
+      checked = checked+1
       if task.name == items[3]:
         done = 1
         options = opts.value
@@ -252,8 +301,9 @@ class StorageOptionsWriter(OptionsWriter):
         if qq.find(',')>0: qq = ('{\n    '+qq[1:-1]+'\n    }').replace(',',',\n   ')
         options = options+'%-26s = %s;\n'%('OnlineEnv.Items',qq)
         if self.writeOptionsFile(run.name, items[1], options) is None:
-          return None
+          return None        
     if done: return self
+    if not done and checked>0: return self
     return None
   def printTasks(self,data):
     for i in data:
@@ -289,6 +339,13 @@ class StorageOptionsWriter(OptionsWriter):
         return self
     error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    self.printTasks(self.streamInfo.dataSources())
+    self.printTasks(self.streamInfo.recvReceivers())
+    self.printTasks(self.streamInfo.recvSenders())
+    self.printTasks(self.streamInfo.recvInfrastructure())
+    self.printTasks(self.streamInfo.streamReceivers())
+    self.printTasks(self.streamInfo.streamSenders())
+    self.printTasks(self.streamInfo.streamInfrastructure())
     return None
   # ===========================================================================
   def configure(self, rundp_name, partition):
@@ -311,8 +368,7 @@ class MonitoringOptionsWriter(OptionsWriter):
   # ===========================================================================
   def __init__(self, manager, name, info):
     "Object constructor."
-    cluster = 'monitoring'
-    OptionsWriter.__init__(self, manager, 'MONRELAY', cluster, name, info)
+    OptionsWriter.__init__(self, manager, 'MONRELAY', name, info)
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
     return {'HostName':'@HostName@',
@@ -323,10 +379,12 @@ class MonitoringOptionsWriter(OptionsWriter):
   # ===========================================================================
   def checkTasks(self, opts, run, activity, task, data):
     done = 0
+    checked = 0
     for i in data:
       it = i.split('/')
       items = it[:-1]
       eval_item = eval(it[-1])
+      checked = checked + 1
       # print '++++++++++++++++++++++>',task.name,items[3],items
       if task.name == items[3]:
         options = opts.value
@@ -379,6 +437,7 @@ class MonitoringOptionsWriter(OptionsWriter):
         if self.writeOptionsFile(run.name, items[1], options) is None:
           return None
         done = done + 1
+    if done==0 and checked>0: return self
     return done
 
   def printTasks(self,data):

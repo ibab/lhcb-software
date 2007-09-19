@@ -1,0 +1,93 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_JobOptionsControl	_FwFsmObjectType	52825
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_JobOptionsControl.panel	_FwFsmObjectType	"JobOptions/JobOptions.pnl"	0x101	19.09.2007 17:11:42.126
+fwOT_JobOptionsControl.components	_FwFsmObjectType	"string State
+", "", "// ============================================================================
+// Initialization
+// ============================================================================
+JobOptionsControl_initialize(string domain, string device)  {
+}
+
+// ============================================================================
+// Execute command
+// ============================================================================
+int JobOptionsControl_execute(string domain,
+                              string device,
+                              string action,
+                              string target,
+                              string err)
+{
+  int idx = strpos(device,\"Writer_\");
+  if ( idx > 0 )  {
+    int partID;
+    string partName, rundp;
+    string cmd, sys = substr(device,0,idx);
+    string dp = sys + \".Command\";
+    fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+    fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+    fwDU_getCommandParameter(domain, device, \"RUN_INFO_DP\", rundp);
+    fwDU_startTimeout(15,domain,device,\"ERROR\");
+    cmd = action+\"/\"+sys+\"Writer/\"+partName+\"/\"+partID+\"/\"+rundp+\"/\"+device+\".State/\"+target+\"/\"+err;
+    int res = dpSetWait(dp,cmd);
+    if ( 0 == res )  {
+      DebugN(\"Setting DP:\"+dp+\" to \"+cmd);
+    }
+    else  {
+      DebugN(\"FAILED to set DP:\"+dp+\" to \"+cmd);
+    }
+    return res == 0 ? 1 : 0;
+  }
+  dpSet(device+\".State\",err);
+  return 0;
+}
+", "JobOptionsControl_valueChanged( string domain, string device,
+                                 string State, string &fwState )
+{
+ string s = strtoupper(State);
+ DebugN(domain,device,s);
+ if       (s == \"UNKNOWN\")        fwState = \"NOT_READY\";
+  else if (s == \"NOT_READY\")      fwState = \"NOT_READY\";
+  else if (s == \"CONFIGURED\")     fwState = \"CONFIGURED\";
+  else if (s == \"CREATED\")        fwState = \"CREATED\";
+  else if (s == \"READY\")          fwState = \"READY\";
+  else if (s == \"RUNNING\")        fwState = \"RUNNING\";
+  else if (s == \"STOPPED\")        fwState = \"STOPPED\";
+  else if (s == \"FINALIZED\")      fwState = \"FINALIZED\";
+  else                            fwState = \"ERROR\";
+}
+", "JobOptionsControl_doCommand(string domain, string device, string command)
+{ 
+  string action = strtoupper(command);
+  DebugN(domain+\"::\"+device+\"> Executing action:\"+action);
+  if (action == \"CONFIGURE\")  {
+    JobOptionsControl_execute(domain,device,\"CONFIGURE\",\"CONFIGURED\",\"ERROR\");
+    return;
+  }
+  else if (action == \"RECOVER\")    { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"LOAD\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"CREATE\")     { dpSetWait(device+\".State\",\"CREATED\");   return; }
+  else if (action == \"INITIALIZE\") { dpSetWait(device+\".State\",\"READY\");     return; }
+  else if (action == \"START\")      { dpSetWait(device+\".State\",\"RUNNING\");   return; }
+  else if (action == \"STOP\")       { dpSetWait(device+\".State\",\"STOPPED\");   return; }
+  else if (action == \"FINALIZE\")   { dpSetWait(device+\".State\",\"FINALIZED\"); return; }
+  else if (action == \"RESET\")      { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"UNLOAD\")     { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"KILL\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  DebugN(device+\"> Received unknown action:\"+action);
+} 
+"	0x101	19.09.2007 17:11:42.366
+fwOT_JobOptionsControl.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	19.09.2007 17:11:42.360
+fwOT_JobOptionsControl.actions	_FwFsmObjectType	"NOT_READY/Configure", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
+", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
+", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0"	0x101	19.09.2007 17:11:42.358
+fwOT_JobOptionsControl.parameters	_FwFsmObjectType		0x101	19.09.2007 13:01:11.496

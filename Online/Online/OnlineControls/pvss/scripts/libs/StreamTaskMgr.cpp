@@ -200,13 +200,12 @@ int StreamTaskMgr_createTree(string stream,
 {
   dyn_string recvNodes, strmNodes, sendNodes;
   // Get stream configuration from the corresponding StreamControl datapoint
-  int res;
-  if ( num_monTasks>0 )   {
-    res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
-    if ( 0 == res ) res = dpGet(monitoringInput+"Alloc.RecvNodes",sendNodes);
+  int res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
+  DebugN(stream+"> Generating tree:"+slice_name+" "+num_recvClass0+"+"+num_recvClass1+" "+
+         num_strmClass0+"+"+num_strmClass1+" Monitoring:"+monitoringInput+" "+num_monTasks);
+  if ( num_monTasks>0 && 0 == res )   {
+    res = dpGet(monitoringInput+"Alloc.RecvNodes",sendNodes);
   }
-  else
-    res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
   if ( 0 == res )  {
     string name, node = stream+"_"+slice_name;
     string stream_node = fwFsmTree_addNode("FSM", node, "FSM_Slice", 1);

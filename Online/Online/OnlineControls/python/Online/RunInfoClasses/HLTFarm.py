@@ -1,6 +1,7 @@
 import time
 import Online.PVSS as PVSS
 import Online.Utils as Utils
+import Online.PVSSSystems as Systems
 from Online.RunInfoClasses.General import General as General
 
 log       = Utils.log
@@ -9,7 +10,7 @@ std       = PVSS.gbl.std
 DataPoint = PVSS.DataPoint
 
 # =============================================================================
-class HLTFarm:
+class HLTFarmInfo(General):
   """ @class HLTFarm
   
       Connect to all storage related datapoints in the RunInfo object
@@ -18,24 +19,19 @@ class HLTFarm:
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self):
+  def __init__(self, manager, name):
     """ Default constructor
         @param  manager       Reference to PVSS ControlManager
         @param  name          Detector/Partition name of the RunInfo datapoint
 
         @return reference to initialized object
     """
+    General.__init__(self,manager,name)
     self.nodes     = self.dp('HLTFarm.nodeList')
     self.subFarms  = self.dp('HLTFarm.subFarms')
     self.reader.add(self.nodes)
     self.reader.add(self.subFarms)
     
-  # ===========================================================================
-  def addDevices(self, deviceIO):
-    """
-    Add task devices to device IO structure for read/write access
-    """
-    return deviceIO
   # ===========================================================================
   def showSubfarms(self):
     """
@@ -59,39 +55,13 @@ class HLTFarm:
       self.showGeneral()
       return
     error('Failed to load RunInfo for partition:'+self.name)    
-  # ===========================================================================
-  def defineTasks(self,recv_slots,strm_slots):
-    """
-    Define all tasks in the storage layer for a given partition.
-    The result is storen in runInfo datapoints for further processing.    
-    """
-    pass
 
-  # ===========================================================================
-  def clearTasks(self, writer):
-    """
-    Clear all tasks definition in the storage layer for a given partition.
-    """
-    self.addDevices(writer)
-    return writer
 
 # =============================================================================
-class HLTFarmInfo(HLTFarm,General):
-  """ @class HLTFarmInfo
-  
-      Connect to all HLT farm related datapoints in the RunInfo object
-      Standalone object
-
-      @author  M.Frank
-      @version 1.0
-  """
-  # ===========================================================================
-  def __init__(self, manager, name):
-    """ Default constructor
-        @param  manager       Reference to PVSS ControlManager
-        @param  name          Detector/Partition name of the RunInfo datapoint
-
-        @return reference to initialized object
-    """
-    General.__init__(self,manager,name)
-    HLTFarm.__init__(self)
+class HLTFarmInfoCreator:
+  def __init__(self):
+    pass
+  def create(self,rundp_name,partition):
+    items = rundp_name.split(':')
+    mgr = Systems.controlsMgr(items[0])
+    return HLTFarmInfo(mgr,partition)

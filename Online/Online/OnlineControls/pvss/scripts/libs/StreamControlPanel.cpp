@@ -298,9 +298,6 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
         recv_slots = recv_slots + strm_mult[i];   
     }
   }
-  else  {
-    StreamControlPanel_checkErrors(res);
-  }
   string s= "";
   for(int i=1, n=dynlen(strm_mult); i<=n; ++i)  {
     strm_slots = strm_slots + strm_mult[i];
@@ -417,7 +414,7 @@ void StreamControlPanel_AllocReset(string stream, string partition)  {
 //
 //=============================================================================
 void StreamControlPanel_init(string stream, string partition)  {
-  // DebugN("Stream:"+stream+" Partition:"+partition);
+  StreamControl_trace("Stream:"+stream+" Partition:"+partition);
   m_streamName.text = stream;
   m_partition.text   = partition;
   StreamControlPanel_setupWidgets();

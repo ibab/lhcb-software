@@ -1,0 +1,255 @@
+V 10
+1
+LANG:1 24 StreamConfigurationPanel
+PANEL,-1 -1 383 441 N "_3DFace" 1
+"$1"
+"#uses \"StreamControlPanel.cpp\"
+main()  {
+  dyn_string dpn = dpNames(\"*:*\",\"StreamControl\");
+  m_streamSelector.deleteAllItems();
+  for(int i=1; i<=dynlen(dpn); ++i)  {
+    string dp = dpSubStr(dpn[i],DPSUB_DP);
+    string item = substr(dp,0,strpos(dp,\"Alloc\"));
+    DebugN(\"Stream:\"+item);
+    m_streamSelector.appendItem(item);
+  }
+  if ( dynlen(dpn)>=1 ) {
+    m_streamSelector.selectedPos(1);
+    setValue(\"m_configPanel.m_streamName\",\"text\",m_streamSelector.text);
+  }
+  dpn = dpNames(\"*:*_RunInfo\",\"RunInfo\");
+  m_partitionSelector.deleteAllItems();
+  for(int i=1; i<=dynlen(dpn); ++i)  {
+    string dp = dpSubStr(dpn[i],DPSUB_DP);
+    string item = substr(dp,0,strpos(dp,\"_RunInfo\"));
+    DebugN(\"Partition:\"+item);
+    m_partitionSelector.appendItem(item);
+  }
+  if ( dynlen(dpn)>=1 ) {
+    m_partitionSelector.selectedPos(1);
+    setValue(\"m_configPanel.m_partition\",\"text\",m_partitionSelector.text);
+  }
+  StreamControlPanel_initAllocPanel(m_streamSelector.text,m_partitionSelector.text);
+  setValue(\"m_close\",\"visible\",0);
+  setValue(\"m_close\",\"text\",\"Cancel\");
+  setValue(\"m_configPanel.m_Ok\",\"visible\",1);
+  setValue(\"m_configPanel.m_Cancel\",\"visible\",1);
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E E 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+1 32 0 "" 47
+0
+1 33 0 "" 48
+0
+1 34 0 "" 49
+0
+1 35 0 "" 50
+0
+1 36 0 "" 53
+0
+1 37 0 "" 54
+0
+1 38 0 "" 55
+0
+1 39 0 "" 56
+0
+1 40 0 "" 57
+0
+1 41 0 "" 58
+0
+1 42 0 "" 60
+0
+1 43 0 "" 61
+0
+1 44 0 "" 63
+0
+1 45 0 "" 64
+0
+1 46 0 "" 67
+0
+1 47 0 "" 68
+0
+1 48 0 "" 69
+0
+1 49 0 "" 70
+0
+1 50 0 "" 72
+0
+1 51 0 "" 73
+0
+1 52 0 "" 74
+0
+1 53 0 "" 75
+0
+1 54 0 "" 77
+0
+22 27
+"m_partitionSelector"
+""
+1 284 10 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 282 8 376 32
+0
+
+E
+"main() {
+  string stream = m_streamSelector.text;
+  string partition = m_partitionSelector.text;
+  setValue(\"m_configPanel.m_partition\",\"text\",partition);
+  setValue(\"m_configPanel\",\"visible\",1);
+  setValue(\"m_close\",\"visible\",0);
+  StreamControlPanel_initAllocPanel(stream,partition);
+}
+" 0
+
+E
+ 1 0
+22 28
+"m_streamSelector"
+""
+1 106 10 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 104 8 198 32
+0
+
+E
+"main() {
+  setValue(\"m_configPanel.m_streamName\",\"text\",m_streamSelector.text);   
+  setValue(\"m_configPanel.m_partition\",\"text\",\"\");
+  setValue(\"m_configPanel\",\"visible\",0);
+  setValue(\"m_close\",\"visible\",1);
+}
+" 0
+
+E
+ 1 0
+2 29
+"m_streamSelectorText"
+""
+1 20 10 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+0 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 6 12 146 32
+0 2 2 "0s" 0 0 0 64 0 0  6 12 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 14 Select Stream:
+2 30
+"m_partitionSelectorText"
+""
+1 220 10 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 206 12 276 32
+0 2 2 "0s" 0 0 0 64 0 0  206 12 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 10 Partition:
+13 31
+"m_close"
+""
+1 144 390 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 142 388 236 412
+
+T 
+1
+LANG:1 6 Cancel
+"main()  {  StreamControlPanel_AllocCancel(m_streamSelector.text,m_partitionSelector.text);  }
+" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+1 55 0 "" 3
+0
+1 56 0 "" 32
+0
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+3 0 "m_configPanel"
+"StreamControl/Allocate.pnl" 20 40 T 9 1 0 1 -16 0
+1
+"$1""$1"
+0

@@ -22,7 +22,7 @@ import Online.PVSS as PVSS
 import Online.Utils as Utils
 import Online.PVSSSystems as Systems
 from Online.RunInfoClasses.General import General as General
-from Online.RunInfoClasses.Storage import Storage as Storage
+from Online.RunInfoClasses.Storage import StorageInfo as Storage
 sum       = Utils.sum
 log       = Utils.log
 error     = Utils.error
@@ -60,8 +60,6 @@ class RunInfo(General,Storage):
     General.__init__(self,manager,name)
     Storage.__init__(self)
     #HLTFarm.__init__(self)
-    self.tell1Boards = self.dp('SubDeterctors.tell1List')
-    self.reader.add(self.tell1Boards)    
     
   # ===========================================================================
   def addDevices(self, deviceIO):

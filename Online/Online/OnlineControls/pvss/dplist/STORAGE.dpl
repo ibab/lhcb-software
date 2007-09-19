@@ -12,7 +12,7 @@ fwOT_FSM_Tasks	_FwFsmObjectType	168586
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	29.08.2007 13:25:39.267
+fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	17.09.2007 09:15:45.510
 fwOT_FSM_DimTask.components	_FwFsmObjectType	"string State
 ", "", "dyn_string m_lastCommand;
 dyn_string m_lastState;
@@ -205,57 +205,96 @@ FSM_DimTask_initialize(string domain, string device)
   }
   DebugN(device+\"> Received unknown command:\"+cmd);
 } 
-"	0x101	31.08.2007 15:10:20.040
-fwOT_FSM_DimTask.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	31.08.2007 15:10:20.035
-fwOT_FSM_DimTask.actions	_FwFsmObjectType	"UNKNOWN/Load", "", "1", "", "0", "UNKNOWN/Kill", "", "1", "", "0", "UNKNOWN/Unload", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Unload", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0"	0x101	31.08.2007 15:10:20.034
-fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x141	22.08.2007 19:13:57.842
-fwOT_JobOptionsControl.panel	_FwFsmObjectType	"JobOptions/JobOptions.pnl"	0x101	22.08.2007 19:13:57.845
+"	0x101	18.09.2007 14:34:46.232
+fwOT_FSM_DimTask.states	_FwFsmObjectType	"UNKNOWN", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	18.09.2007 14:34:46.225
+fwOT_FSM_DimTask.actions	_FwFsmObjectType	"UNKNOWN/Load", "", "1", "", "0", "UNKNOWN/Kill", "", "1", "", "0", "UNKNOWN/Unload", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Unload", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0"	0x101	18.09.2007 14:34:46.224
+fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x101	17.09.2007 09:15:45.524
+fwOT_JobOptionsControl.panel	_FwFsmObjectType	"JobOptions/JobOptions.pnl"	0x101	19.09.2007 17:11:42.126
 fwOT_JobOptionsControl.components	_FwFsmObjectType	"string State
-", "", "JobOptionsControl_initialize(string domain, string device)
+", "", "// ============================================================================
+// Initialization
+// ============================================================================
+JobOptionsControl_initialize(string domain, string device)  {
+}
+
+// ============================================================================
+// Execute command
+// ============================================================================
+int JobOptionsControl_execute(string domain,
+                              string device,
+                              string action,
+                              string target,
+                              string err)
 {
-}
-
-", "JobOptionsControl_valueChanged(string domain, string device, string State, string &fwState )  {
-  DebugN(\"Acting on interrupt> Domain:\"+domain+\" Device:\"+device+\" State:\"+State);
-  dyn_string items = strsplit(State,\"/\");        
-  if ( dynlen(items) == 4 )  {
-    int partID       = items[4]; 
-    string partName  = items[3];
-    string stateName = items[1];
-    fwDU_setParameter(domain,device,\"currentPartitionID\",partID);
-    fwDU_setParameter(domain,device,\"currentPartitionName\",partName);
-    if (stateName == \"READY\")  {
-      fwState = \"READY\";
-      return;
+  int idx = strpos(device,\"Writer_\");
+  if ( idx > 0 )  {
+    int partID;
+    string partName, rundp;
+    string cmd, sys = substr(device,0,idx);
+    string dp = sys + \".Command\";
+    fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+    fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+    fwDU_getCommandParameter(domain, device, \"RUN_INFO_DP\", rundp);
+    fwDU_startTimeout(15,domain,device,\"ERROR\");
+    cmd = action+\"/\"+sys+\"Writer/\"+partName+\"/\"+partID+\"/\"+rundp+\"/\"+device+\".State/\"+target+\"/\"+err;
+    int res = dpSetWait(dp,cmd);
+    if ( 0 == res )  {
+      DebugN(\"Setting DP:\"+dp+\" to \"+cmd);
     }
+    else  {
+      DebugN(\"FAILED to set DP:\"+dp+\" to \"+cmd);
+    }
+    return res == 0 ? 1 : 0;
   }
-  fwState = \"ERROR\";
+  dpSet(device+\".State\",err);
+  return 0;
 }
-", "JobOptionsControl_doCommand(string domain, string device, string command)  {
-  int partID;
-  string partName;
-  DebugN(\"Acting on Storage instance:\"+device);
-  fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
-  fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
-  // Set timeout in case the allocation task is dead ...
-  fwDU_startTimeout(20,domain,device,\"ERROR\");
-  dpSet(device+\".Command\",command+\"/\"+device+\"/\"+partName+\"/\"+partID);
+", "JobOptionsControl_valueChanged( string domain, string device,
+                                 string State, string &fwState )
+{
+ string s = strtoupper(State);
+ DebugN(domain,device,s);
+ if       (s == \"UNKNOWN\")        fwState = \"NOT_READY\";
+  else if (s == \"NOT_READY\")      fwState = \"NOT_READY\";
+  else if (s == \"CONFIGURED\")     fwState = \"CONFIGURED\";
+  else if (s == \"CREATED\")        fwState = \"CREATED\";
+  else if (s == \"READY\")          fwState = \"READY\";
+  else if (s == \"RUNNING\")        fwState = \"RUNNING\";
+  else if (s == \"STOPPED\")        fwState = \"STOPPED\";
+  else if (s == \"FINALIZED\")      fwState = \"FINALIZED\";
+  else                            fwState = \"ERROR\";
 }
-
-"	0x101	31.08.2007 15:10:20.733
-fwOT_JobOptionsControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	31.08.2007 15:10:20.729
-fwOT_JobOptionsControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+", "JobOptionsControl_doCommand(string domain, string device, string command)
+{ 
+  string action = strtoupper(command);
+  DebugN(domain+\"::\"+device+\"> Executing action:\"+action);
+  if (action == \"CONFIGURE\")  {
+    JobOptionsControl_execute(domain,device,\"CONFIGURE\",\"CONFIGURED\",\"ERROR\");
+    return;
+  }
+  else if (action == \"RECOVER\")    { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"LOAD\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"CREATE\")     { dpSetWait(device+\".State\",\"CREATED\");   return; }
+  else if (action == \"INITIALIZE\") { dpSetWait(device+\".State\",\"READY\");     return; }
+  else if (action == \"START\")      { dpSetWait(device+\".State\",\"RUNNING\");   return; }
+  else if (action == \"STOP\")       { dpSetWait(device+\".State\",\"STOPPED\");   return; }
+  else if (action == \"FINALIZE\")   { dpSetWait(device+\".State\",\"FINALIZED\"); return; }
+  else if (action == \"RESET\")      { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"UNLOAD\")     { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  else if (action == \"KILL\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
+  DebugN(device+\"> Received unknown action:\"+action);
+} 
+"	0x101	19.09.2007 17:11:42.366
+fwOT_JobOptionsControl.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	19.09.2007 17:11:42.360
+fwOT_JobOptionsControl.actions	_FwFsmObjectType	"NOT_READY/Configure", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
-", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
+", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
-", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
-string PART_NAME = \"LHCb\"
-string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
-", "1", "", "0"	0x101	31.08.2007 15:10:20.728
-fwOT_JobOptionsControl.parameters	_FwFsmObjectType	"int currentPartitionID = 0", "string currentPartitionName = \"\"", "string currentSlice = \"\""	0x101	22.08.2007 19:13:57.858
-fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	31.08.2007 15:57:25.939
+", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0"	0x101	19.09.2007 17:11:42.358
+fwOT_JobOptionsControl.parameters	_FwFsmObjectType		0x101	19.09.2007 13:01:11.496
+fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	17.09.2007 14:13:17.722
 fwOT_StreamControl.components	_FwFsmObjectType	"string State
 ", "", "StreamControl_initialize(string domain, string device)
 {
@@ -282,7 +321,7 @@ fwOT_StreamControl.components	_FwFsmObjectType	"string State
       dyn_string names = dpNames(slice+\"_*\",\"FSM_DimTask\");
       dyn_string tasks = dpNames(slice+\"_*.Name\",\"FSM_DimTask\");
       int res = dpGet(tasks,val_tasks);
-      DebugN(\"Allocating..... got \"+dynlen(names)+\" \"+dynlen(tasks)+\" datapoints. dpGet result:\"+res);
+      DebugN(\"Allocating [\"+slice+\"]..... got \"+dynlen(names)+\" \"+dynlen(tasks)+\" datapoints. dpGet result:\"+res);
       for(int j=1, m=dynlen(val_tasks);j<=m; ++j)  {
         if (val_tasks[j] != \"NONE\")  {
           DebugN(\"Tsk:\"+tasks[j]+\" \"+val_tasks[j]);
@@ -312,6 +351,7 @@ fwOT_StreamControl.components	_FwFsmObjectType	"string State
     }
     else if (stateName == \"DEALLOCATE\")  {
       fwState = \"READY\";
+      DebugN(\"Deallocating [\"+slice+\"] datapoints.\");
       fwDim_unSubscribeCommandsByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
       fwDim_unSubscribeServicesByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
       return;
@@ -338,8 +378,8 @@ fwOT_StreamControl.components	_FwFsmObjectType	"string State
   DebugN(device,cmd);
   dpSet(device+\".Command\",cmd);
 }
-"	0x101	31.08.2007 15:57:25.963
-fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	31.08.2007 15:57:25.958
+"	0x101	18.09.2007 14:34:50.573
+fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	18.09.2007 14:34:50.568
 fwOT_StreamControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
@@ -349,13 +389,33 @@ string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
 ", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
-", "1", "", "0"	0x101	31.08.2007 15:57:25.957
-fwOT_StreamControl.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"0\""	0x101	24.08.2007 18:02:38.808
-fwOT_StreamConfigurator.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	31.08.2007 14:40:47.230
+", "1", "", "0"	0x101	18.09.2007 14:34:50.567
+fwOT_StreamControl.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"0\""	0x101	17.09.2007 09:15:45.554
+fwOT_StreamConfigurator.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	18.09.2007 13:29:17.797
 fwOT_StreamConfigurator.components	_FwFsmObjectType	"string State
 ", "", "StreamConfigurator_initialize(string domain, string device)
 {
 }
+int StreamConfigurator_execute(string domain, string device, string action, string target, string err)
+{
+  int idx = strpos(device,\"_Slice\");
+  if ( idx > 0 )  {
+    int partID;
+    string partName, rundp;
+    string cmd, sys = substr(device,0,idx);
+    string dp = sys + \"Alloc.Command\";  // 'StorageAlloc.action'
+    fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+    fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+    fwDU_getCommandParameter(domain, device, \"RUN_INFO_DP\", rundp);
+    fwDU_startTimeout(15,domain,device,\"ERROR\");
+    cmd = action+\"/\"+sys+\"Alloc/\"+partName+\"/\"+partID+\"/\"+rundp+\"/\"+device+\".State/\"+target+\"/\"+err;
+    dpSetWait(dp,cmd);
+    return 1;
+  }
+  dpSet(device+\".State\",err);
+  return 0;
+}
+
 ", "StreamConfigurator_valueChanged( string domain, string device,
                                  string State, string &fwState )
 {
@@ -376,21 +436,11 @@ fwOT_StreamConfigurator.components	_FwFsmObjectType	"string State
   string action = strtoupper(command);
   DebugN(domain,device+\"> Executing action:\"+action);
   if (action == \"CONFIGURE\")  {
-    int idx = strpos(device,\"_Slice\");
-    if ( idx > 0 )  {
-      int partID;
-      string partName, rundp;
-      string cmd, sys = substr(device,0,idx);
-      string dp = sys + \"Alloc.Command\";  // 'StorageAlloc.action'
-      fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
-      fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
-      fwDU_getCommandParameter(domain, device, \"RUN_INFO_DP\", rundp);
-      fwDU_startTimeout(15,domain,device,\"ERROR\");
-      cmd = \"CONFIGURE/\"+sys+\"Alloc/\"+partName+\"/\"+partID+\"/\"+rundp+\"/\"+device+\".State/CONFIGURED/ERROR\";
-      dpSetWait(dp,cmd);
-      return;
-    }
-    dpSet(device+\".State\",\"ERROR\");
+    StreamConfigurator_execute(domain,device,\"CONFIGURE\",\"CONFIGURED\",\"ERROR\");
+    return;
+  }
+  else if (action == \"RECOVER\")    { 
+    StreamConfigurator_execute(domain,device,\"RECOVER_SLICE\",\"NOT_READY\",\"ERROR\");
     return;
   }
   else if (action == \"LOAD\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
@@ -402,20 +452,22 @@ fwOT_StreamConfigurator.components	_FwFsmObjectType	"string State
   else if (action == \"RESET\")      { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
   else if (action == \"UNLOAD\")     { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
   else if (action == \"KILL\")       { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
-  else if (action == \"RECOVER\")    { dpSetWait(device+\".State\",\"NOT_READY\"); return; }
   DebugN(device+\"> Received unknown action:\"+action);
 } 
-"	0x101	31.08.2007 15:10:23.445
-fwOT_StreamConfigurator.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	31.08.2007 15:10:23.438
+"	0x101	18.09.2007 14:34:50.326
+fwOT_StreamConfigurator.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	18.09.2007 14:34:50.318
 fwOT_StreamConfigurator.actions	_FwFsmObjectType	"NOT_READY/Configure", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
-", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0"	0x101	31.08.2007 15:10:23.436
-fwOT_StreamConfigurator.parameters	_FwFsmObjectType		0x141	22.08.2007 19:13:57.894
-fwOT_StreamCluster.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	31.08.2007 15:57:47.135
+", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
+", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0"	0x101	18.09.2007 14:34:50.316
+fwOT_StreamConfigurator.parameters	_FwFsmObjectType		0x101	17.09.2007 09:15:45.570
+fwOT_StreamCluster.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	17.09.2007 09:23:44.278
 fwOT_StreamCluster.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to READY
-|", "", ""	0x101	31.08.2007 15:57:47.181
+|", "", ""	0x101	18.09.2007 14:35:01.000
 fwOT_StreamCluster.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECSLHCb:LHCb_RunInfo\"
@@ -439,9 +491,10 @@ if ( $ANY$FwCHILDREN not_in_state READY )  then
 endif
 set CURRPARTNAME = $StreamControl.CURRPARTNAME
 set CURRPARTID = $StreamControl.CURRPARTID
-move_to READY", "0"	0x101	31.08.2007 15:57:47.180
-fwOT_StreamCluster.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	24.08.2007 18:05:36.155
-fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	31.08.2007 14:41:45.174
+move_to READY", "0"	0x101	18.09.2007 14:35:00.999
+fwOT_StreamCluster.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	17.09.2007 09:15:45.582
+fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	17.09.2007 09:15:45.585
+fwOT_FSM_Slice.components	_FwFsmObjectType		0x101	30.08.2007 08:56:19.352
 fwOT_FSM_Slice.states	_FwFsmObjectType	"ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state NOT_READY ) and
 ( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to NOT_READY
 |when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
@@ -473,7 +526,7 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"ERROR", "FwStateAttention3", "when ( ( $
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |when ( $ALL$FwCHILDREN in_state {STOPPED,READY} )  move_to STOPPED
-|", "", ""	0x101	31.08.2007 15:10:24.771
+|", "", ""	0x101	18.09.2007 14:34:53.763
 fwOT_FSM_Slice.actions	_FwFsmObjectType	"ERROR/Recover", "", "1", "do Recover $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
     move_to NOT_READY
@@ -610,9 +663,10 @@ if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 endif
 ", "0", "FINALIZED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 ", "0", "FINALIZED/Kill", "", "1", "do Kill $ALL$FwCHILDREN
-", "0"	0x101	31.08.2007 15:10:24.770
-fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	30.08.2007 11:55:24.818
-fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	31.08.2007 15:10:10.462
+", "0"	0x101	18.09.2007 14:34:53.761
+fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	17.09.2007 09:15:45.596
+fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	17.09.2007 09:15:45.599
+fwOT_FSM_Tasks.components	_FwFsmObjectType		0x101	30.08.2007 08:56:09.375
 fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING} )  move_to CONFIGURED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
@@ -640,7 +694,7 @@ fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state FINALIZED )  move_to FINALIZED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |when ( $ALL$FwCHILDREN in_state {UNKNOWN,NOT_READY} )  move_to NOT_READY
-|", "", ""	0x101	31.08.2007 15:10:25.423
+|", "", ""	0x101	18.09.2007 14:34:54.494
 fwOT_FSM_Tasks.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "move_to CONFIGURED
 ", "0", "NOT_READY/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 ", "0", "NOT_READY/Kill", "", "1", "do Kill $ALL$FwCHILDREN
@@ -755,5 +809,5 @@ move_to FINALIZED
 ", "0", "ERROR/Stop", "", "1", "do Stop $ALL$FwCHILDREN
 ", "0", "ERROR/Kill", "", "1", "do Kill $ALL$FwCHILDREN
 ", "0", "ERROR/Unload", "", "1", "do Unload $ALL$FwCHILDREN
-", "0"	0x101	31.08.2007 15:10:25.421
-fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	30.08.2007 08:55:25.988
+", "0"	0x101	18.09.2007 14:34:54.492
+fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	17.09.2007 09:15:45.610

@@ -24,7 +24,7 @@ checkFiles()
 #
 #
 #
-if test -z $1;
+if test -z "$1";
     then
     echo "No Project name given!";
     echo "usage: CopyBack.sh <project-name>"
@@ -33,6 +33,13 @@ if test -z $1;
 fi;
 export PVSS_PROJECT_NAME=$1
 shift 1;
+if test -n "$1";
+    then
+    export PVSS_INSTALL_NAME=$1
+    echo "PVSS Install name: ${PVSS_INSTALL_NAME}"
+    shift 1;
+fi;
+
 . ../cmt/setup.sh
 export PVSS_II="/localdisk/pvss/${PVSS_PROJECT_NAME}/config/config"
 export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
@@ -43,7 +50,15 @@ checkFiles ${PVSS_PROJECT_BASE} scripts/libs *.cpp
 checkFiles ${PVSS_PROJECT_BASE} panels/JobOptions *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/StreamControl *.pnl
 #
-if test ${PVSS_PROJECT_NAME} = STORAGE -o ${PVSS_PROJECT_NAME} = MONITORING;
+if test "${PVSS_INSTALL_NAME}" = JOBOPTIONS;
+    then
+    echo "Executing PVSS setup controller";
+    echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
+    ${PVSS_II_HOME}/bin/PVSS00ascii \
+	-proj ${PVSS_PROJECT_NAME} \
+	-out  ${ONLINECONTROLSROOT}/pvss/dplist/JobOptionsControl.dpl \
+	-filter DOP -filterDp fwOT_JobOptionsControl.*
+elif test ${PVSS_PROJECT_NAME} = STORAGE -o ${PVSS_PROJECT_NAME} = MONITORING;
     then
     echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
     ${PVSS_II_HOME}/bin/PVSS00ascii \

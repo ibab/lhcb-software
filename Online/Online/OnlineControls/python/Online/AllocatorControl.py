@@ -18,12 +18,16 @@ class AllocatorClient:
     return 'SUCCESS'
 
   # ===========================================================================
+  def free(self,rundp_name, partition):
+    return 'SUCCESS'
+  # ===========================================================================
   def recover(self,rundp_name, partition):
     return 'SUCCESS'
 
   # ===========================================================================
-  def free(self,rundp_name, partition):
+  def recover_slice(self,rundp_name, partition):
     return 'SUCCESS'
+
     
 # =============================================================================
 #
@@ -37,7 +41,7 @@ class Control(PVSS.PyDeviceListener):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager, name, objects=[]):
+  def __init__(self, manager, name, postfix, objects=[]):
     """ Default constructor
         @param  manager       Reference to PVSS ControlManager
         @param  name          Name of the Streaming control datapoint
@@ -47,6 +51,7 @@ class Control(PVSS.PyDeviceListener):
     self.objects = objects
     self.manager = manager
     self.name    = name
+    self.postfix = postfix
     PVSS.PyDeviceListener.__init__(self,self,manager)
     self.writer  = manager.devWriter()
     self.control = self.objects[0].get('Command')
@@ -93,7 +98,7 @@ class Control(PVSS.PyDeviceListener):
       itms = cmd.split('/')
       if len(itms) >= 5:
         command   = itms[0]
-        storage   = itms[1][:-5]
+        storage   = itms[1][:-len(self.postfix)]
         partition = itms[2]
         partID    = itms[3]
         runDpName = itms[4]
@@ -109,6 +114,18 @@ class Control(PVSS.PyDeviceListener):
               data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
               data.data = err
               result = self.doExecute('configure',runDpName,partition)
+              if result is not None:
+                data.data = ok
+              self.writer.add(data)
+              self.writer.execute()
+              return self
+            elif command == "RECOVER_SLICE":
+              dp = itms[5]
+              ok = itms[6]
+              err = itms[7]
+              data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
+              data.data = err
+              result = self.doExecute('recover_slice',runDpName,partition)
               if result is not None:
                 data.data = ok
               self.writer.add(data)
@@ -139,7 +156,7 @@ class Control(PVSS.PyDeviceListener):
             error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.ILLEGAL_ARG)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
-        msg = 'The command:"'+cmd+'" failed. [Bad Streaming System] '+storage
+        msg = 'The command:"'+cmd+'" failed. [Bad Streaming System] '+storage+' should be:['+self.name+']'
         error(msg,timestamp=1,type=PVSS.ILLEGAL_ARG)
         return self.makeAnswer('ERROR',answer)
       print 'Parameters are:',str(itms)

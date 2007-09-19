@@ -417,27 +417,26 @@ T
 1
 LANG:1 17 Create All Slices
 "main() {  
-  bool isMonitoring = m_isMonitoring.enabled;
+  bool isMonitoring = m_isMonitoring.state(0);
   if ( isMonitoring )  {
+    DebugN(\"Monitoring:\"+isMonitoring+\" Input:\"+m_monitoringInput.selectedText+\" \"+m_monitoringClass1.text);
     StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
-                             m_streamTaskMgrTreeName.text,
-                             m_num_recvClass0.text,
-                             m_num_recvClass1.text,
-                             m_num_strmClass0.text,
-                             m_num_strmClass1.text,
-                             \"\",0
+                                m_num_recvClass0.text,
+                                m_num_recvClass1.text,
+                                m_num_strmClass0.text,
+                                m_num_strmClass1.text,
+                                m_monitoringInput.selectedText,
+                                m_monitoringClass1.text
                              );  
   }
   else {
     StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
-                             m_streamTaskMgrTreeName.text,
-                             m_num_recvClass0.text,
-                             m_num_recvClass1.text,
-                             m_num_strmClass0.text,
-                             m_num_strmClass1.text,
-                             m_monitoringInput.selectedText,
-                             m_monitoringClass1.text
-                             );  
+                                m_num_recvClass0.text,
+                                m_num_recvClass1.text,
+                                m_num_strmClass0.text,
+                                m_num_strmClass1.text,
+                                \"\",0
+                                );  
   }
 }" 0
  E E E
@@ -913,7 +912,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 172 402.0000000000002 270 420.0000000000002
+E E 0 1 1 2 1 E U  1 E 172 402.0000000000002 270 420
 0 2 2 "0s" 0 0 0 192 0 0  172 402.0000000000002 1
 1
 LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter

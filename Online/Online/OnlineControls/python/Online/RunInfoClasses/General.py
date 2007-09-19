@@ -43,20 +43,26 @@ class General:
     self.monInfra   = self.dp('MonFarm.monInfrastructure')
     self.relayInfra = self.dp('MonFarm.relayInfrastructure')
 
+    self.tell1Boards= self.dp('SubDeterctors.tell1List')
+
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
     self.reader.add(self.nSubFarm)
+    # Storage information
     self.reader.add(self.storeFlag)
     self.reader.add(self.streams)
     self.reader.add(self.strMult)
     self.reader.add(self.rcvInfra)
     self.reader.add(self.strInfra)
+    # Monitoring information
     self.reader.add(self.monFlag)
     self.reader.add(self.monTypes)
     self.reader.add(self.monMult)
     self.reader.add(self.monStreams)
     self.reader.add(self.monInfra)
     self.reader.add(self.relayInfra)
+    # Subdetector information
+    self.reader.add(self.tell1Boards)    
 
   # ===========================================================================
   def dp(self,name):
@@ -123,9 +129,22 @@ class General:
     if self.load():
       self.showStreams()
       self.showMonitors()
+      self.showTell1Boards()
       self.showGeneral()
       return
     error('Failed to load RunInfo for partition:'+self.name)
+
+  # ===========================================================================
+  def showTell1Boards(self):
+    "Show TELL1 boards related information of the RunInfo datapoint."
+    t1 = self.tell1Boards
+    log('Number of TELL1 boards:%d'%len(t1))
+    s = ''
+    for i in xrange(len(t1)):
+      s = s + ' %-12s'%(t1[i],)
+      if i>0 and ((i%5) == 0 or i==(len(t1)-1)):
+        log('->  '+s)
+        s = ''
 
   # ===========================================================================
   def showStreams(self):
