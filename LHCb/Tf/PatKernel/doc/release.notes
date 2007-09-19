@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-19 - Kurt Rinnert
+ - added dll loader for windows
+
 !============================= PatKernel v1r0 2007-09-18 =====================
 ! 2007-09-08 - Kurt Rinnert
  - fixed the name of the include directory in requirements file
