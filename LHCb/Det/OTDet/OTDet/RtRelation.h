@@ -121,12 +121,12 @@ namespace OTDet
   
   inline float RtRelation::drifttime( float r ) const 
   {
-    return polyeval(m_tcoeff,r ) ;
+    return float(polyeval(m_tcoeff,r )) ;
   }
 
   inline float RtRelation::drifttimeError( float r ) const 
   {
-    return polyeval(m_terrcoeff,r) ;
+    return float(polyeval(m_terrcoeff,r)) ;
   }
 
   inline DriftTimeWithError RtRelation::drifttimeWithError( float r ) const 
@@ -139,7 +139,7 @@ namespace OTDet
     // we probably want to cache these ...
     std::vector<double> derivcoeff(m_tcoeff.size()-1) ;
     for( size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) ;
-    return polyeval(derivcoeff,r) ;
+    return float(polyeval(derivcoeff,r)) ;
   }
   
 }
