@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.24 2007-09-16 16:56:23 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.25 2007-09-19 20:43:53 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -42,7 +42,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
   declareProperty("DumpInputClusters",m_dumpInputClusters=false);
-  declareProperty("BankVersion", m_bankVersion=VeloDAQ::v3);
+  declareProperty("BankVersion", m_bankVersion=VeloDAQ::v2);
 }
 
 //=============================================================================
@@ -329,7 +329,7 @@ unsigned int PrepareVeloRawBuffer::makeBank (
 
         // sum adc values and adc weighted strip numbers
         sumADC += adcCount;
-        sumADCWeightedeStrip += static_cast<double>(stripNumber) * adcCount;
+        sumADCWeightedeStrip += static_cast<double>(i) * adcCount;
         // create new adc word
         bool endOfCluster = (stripSignals.size() == i+1);
         SiADCWord aw(adcCount,endOfCluster);
@@ -346,19 +346,24 @@ unsigned int PrepareVeloRawBuffer::makeBank (
 
       }
 
-      double cPos=0.0;
-      
+      double       cPos          = 0.0;
+      double       interStripPos = 0.0;
+      unsigned int channelPos    = 0;
+
+      unsigned int stripNumber = stripSignals[0].first;
       switch (m_bankVersion) {
         case VeloDAQ::v2:
           cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
+          channelPos = stripNumber+static_cast<unsigned int>(cPos); // without fractional par
+          interStripPos = cPos - static_cast<unsigned int>(cPos); // fractional part
           break;
         case VeloDAQ::v3:
           // compute the weighted mean like it is done on the TELL1
-          cPos = sumADCWeightedeStrip*static_cast<int>(65536./sumADC+0.5)/65536+1/16.; 
+          cPos = sumADCWeightedeStrip*static_cast<int>(65536./sumADC+0.5)/65536.;
+          channelPos = stripNumber+static_cast<int>(cPos+1/16.0); // without fractional part
+          interStripPos = cPos - static_cast<int>(cPos) + 1/16.0; // fractional part, will be rounded to nearest 1/8
           break;
       }
-      unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
-      double interStripPos = cPos - channelPos; // fractional part
 
       VeloClusterWord vcw(channelPos, interStripPos, numStrips, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());

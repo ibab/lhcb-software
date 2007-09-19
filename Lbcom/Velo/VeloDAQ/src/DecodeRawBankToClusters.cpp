@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.13 2007-09-16 16:56:23 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.14 2007-09-19 20:43:53 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -125,7 +125,7 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
         sumWeightedPos += adci*adcValue;
         sumADC         += adcValue;
       }
-      firstStrip -= static_cast<int>(sumWeightedPos*static_cast<int>(65536./sumADC+0.5)/65536+1/16.);
+      firstStrip -= static_cast<int>(sumWeightedPos*static_cast<int>(65536./sumADC+0.5)/65536.+1/16.);
     }
 
     LHCb::VeloCluster::ADCVector adcs;
