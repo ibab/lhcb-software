@@ -1,4 +1,4 @@
-// $Id: VeloRHit.h,v 1.4 2007-09-10 16:42:30 krinnert Exp $
+// $Id: VeloRHit.h,v 1.5 2007-09-19 13:48:19 krinnert Exp $
 #ifndef INCLUDE_TF_VELORHIT_H
 #define INCLUDE_TF_VELORHIT_H 1
 
@@ -76,12 +76,12 @@ namespace Tf {
                             float signal)
     : VeloHit(c
               , RegionID(c.channelID(),s)
-              , s->globalR(c.channelID().strip(),c.interStripFraction())
-              , s->halfboxR(c.channelID().strip(),c.interStripFraction())
-              , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
-              , (float)(((s->rPitch(c.channelID().strip())*c.pseudoSize())*
+              , static_cast<float>(s->globalR(c.channelID().strip(),c.interStripFraction()))
+              , static_cast<float>(s->halfboxR(c.channelID().strip(),c.interStripFraction()))
+              , static_cast<float>(s->rOfStrip(c.channelID().strip(),c.interStripFraction()))
+              , static_cast<float>(((s->rPitch(c.channelID().strip())*c.pseudoSize())*
                          (s->rPitch(c.channelID().strip())*c.pseudoSize()))/
-                        float(12))
+                        12.0)
               , signal
               )
       , m_sensor(s)

@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.11 2007-09-17 15:11:45 krinnert Exp $
+ *  $Id: HitBase.h,v 1.12 2007-09-19 13:48:19 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -153,7 +153,7 @@ namespace Tf
      *  @retval FALSE The hit has not been used at all or only by the specified algorithm.
      */
     inline bool      isUsedByAnyOtherThan ( const EStatus stat ) const { 
-      return static_cast<bool>(static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong());
+      return 0 != (static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong());
     }
     /** Test if the hit has been used only by a specific algorithm
      *  @param[in] stat The status type
@@ -161,7 +161,7 @@ namespace Tf
      *  @retval FALSE The hit has not been used at all or by any other algorithm.
      */
     inline bool      isUsedOnlyBy ( const EStatus stat ) const { 
-      return m_status.test(stat) && !(static_cast<bool>(static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong()));
+      return m_status.test(stat) && ( 0 == (static_cast<unsigned long>(~(1 << stat)) & m_status.to_ulong()));
     }
 
     /** Ask by how many algorithms this hit was used.

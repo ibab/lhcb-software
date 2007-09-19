@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.8 2007-08-28 12:03:58 jonrob Exp $
+// $Id: DefaultVeloHitManager.h,v 1.9 2007-09-19 13:48:19 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -129,7 +129,7 @@ namespace Tf {
 
       for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
 
-        double signal = (*iClus)->totalCharge();
+        float signal = static_cast<float>((*iClus)->totalCharge());
 
         // don't use this cluster if we run in ingore mode and the total charge is too low
         if ( m_ignoreLowClusters && (signal < m_lowThreshold) ) continue;

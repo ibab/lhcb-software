@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-19 - Kurt Rinnert
+ - Fixed windows warnings in VELO related classes and HitBase
+
 !============================ TfKernel v1r0 2007-09-19 =======================
 ! 2007-09-19 - Marco Cattaneo
  - Fix Windows compilation error
