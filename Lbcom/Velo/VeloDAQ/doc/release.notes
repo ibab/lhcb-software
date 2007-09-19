@@ -3,7 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
-!=========================  VeloDAQ v4r0 2006-08-30 =======================
+!=========================  VeloDAQ v4r0 2007-09-19 =======================
+! 2007-09-19 - Marco Cattaneo
+ - Adapt to new location of Tell1Kernel includes
+
 ! 2007-09-17 - Tomasz Szumlak
  - decoding of the non-zero suppressed (NZS) banks added, new code can cope
    with decoding of the VeloFull data bank, PedestalBank and VeloErrorBank.

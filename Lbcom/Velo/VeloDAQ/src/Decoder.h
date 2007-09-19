@@ -1,11 +1,11 @@
-// $Id: Decoder.h,v 1.2 2007-09-18 08:37:02 szumlat Exp $
+// $Id: Decoder.h,v 1.3 2007-09-19 13:43:38 cattanem Exp $
 #ifndef VELOTELL1ALGORITHM_DECODER_H 
 #define VELOTELL1ALGORITHM_DECODER_H 1
 
 // Include files
 #include "VeloEvent/VeloFullBank.h"
-#include "Kernel/VeloDecodeConf.h"
-#include "Kernel/VeloDecodeCore.h"
+#include "Tell1Kernel/VeloDecodeConf.h"
+#include "Tell1Kernel/VeloDecodeCore.h"
 
 /** @class Decoder Decoder.h Decoder.h
  *  

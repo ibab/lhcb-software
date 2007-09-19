@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.h,v 1.1 2007-09-18 00:04:14 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.h,v 1.2 2007-09-19 13:43:38 cattanem Exp $
 #ifndef PREPAREVELOFULLRAWBUFFER_H 
 #define PREPAREVELOFULLRAWBUFFER_H 1
 
@@ -11,8 +11,8 @@
 
 // data model
 #include "Kernel/VeloChannelID.h"
-#include "Kernel/VeloDecodeCore.h"
-#include "Kernel/VeloDecodeConf.h"
+#include "Tell1Kernel/VeloDecodeCore.h"
+#include "Tell1Kernel/VeloDecodeConf.h"
 #include "VeloEvent/VeloFullBank.h"
 #include "VeloEvent/VeloErrorBank.h"
 

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.h,v 1.1 2007-09-18 00:04:14 szumlat Exp $
+// $Id: DecodeVeloFullRawBuffer.h,v 1.2 2007-09-19 13:43:38 cattanem Exp $
 #ifndef DECODEVELOFULLRAWBUFFER_H 
 #define DECODEVELOFULLRAWBUFFER_H 1
 
@@ -9,9 +9,9 @@
 // local
 #include "VeloEvent/VeloFullBank.h"
 #include "VeloEvent/VeloTELL1Data.h"
-#include "Kernel/VeloDecodeCore.h"
 #include "VeloEvent/EvtInfo.h"
-#include "Kernel/VeloDecodeConf.h"
+#include "Tell1Kernel/VeloDecodeCore.h"
+#include "Tell1Kernel/VeloDecodeConf.h"
 
 /** @class DecodeVeloFullRawBuffer DecodeVeloFullRawBuffer.h
  *  
