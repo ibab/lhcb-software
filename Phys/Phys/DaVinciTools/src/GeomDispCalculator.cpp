@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.21 2007-09-18 16:45:09 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.22 2007-09-19 12:51:26 jpalac Exp $
 
 // Include files
 
@@ -362,8 +362,17 @@ GeomDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
                                               double& distance, 
                                               double& distanceError) const
 {
+  const LHCb::Vertex* endVertex = particle.endVertex();
+
+  if (0 == endVertex) return StatusCode::FAILURE;
+
+  StatusCode sc = calcVertexDis(vertex, *endVertex, distance, distanceError);
+
+  if (sc == StatusCode::FAILURE) return sc;
+
+  if (particle.momentum().Pz() < 0) distance*= -1;
   
-  return StatusCode::SUCCESS;  
+  return sc;  
 }
 //==================================================================
 // 

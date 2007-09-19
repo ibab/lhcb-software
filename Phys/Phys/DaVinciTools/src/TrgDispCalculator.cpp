@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.9 2007-09-18 16:45:09 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.10 2007-09-19 12:51:26 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -267,9 +267,6 @@ StatusCode TrgDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
                                              double& distErr ) const 
 {
 
-  // Code copied from that of Sandra Amato in GeomDispCalculator
- 
-  //Calculate the distance between two vectors:
   Gaudi::XYZVector diff = vertex1.position() - vertex2.position();
   dist = diff.R();
   if (dist == 0) return StatusCode::FAILURE;
@@ -292,7 +289,18 @@ TrgDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
                                              double& distance, 
                                              double& distanceError) const
 {
+
+  const LHCb::Vertex* endVertex = particle.endVertex();
+
+  if (0 == endVertex) return StatusCode::FAILURE;
+
+  StatusCode sc = calcVertexDis(vertex, *endVertex, distance, distanceError);
+
+  if (sc == StatusCode::FAILURE) return sc;
+
+  if (particle.momentum().Pz() < 0) distance*= -1;
   
-  return StatusCode::SUCCESS;  
+  return sc;    
+
 }
 //==================================================================
