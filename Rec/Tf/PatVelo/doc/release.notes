@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-09-19 - Kurt Rinnert
+ - added dll loader for windows
+
 ! 2007-09-17 - Kurt Rinnert
  - all instances of the PatVeloSpaceTool and the PatVeloTrackTool have now
    names that allows them to be configured via options.  The name are simply
