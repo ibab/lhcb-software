@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r9>2007-09-18 LHCbSys v22r9</A></H1><PRE>
+</PRE><H1><A NAME=v22r9>2007-09-19 LHCbSys v22r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - Packages added: RecInterfaces     v1r0 - Interfaces use RecEvent classes
@@ -103,6 +103,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Event/L0DUBase.h : add the defintion of emptyMuonData 
     (L0MuonBase.h becomes obsolete)
   . xml/L0Muon.xml: add new locations for the L0MuonCandidates
+
+- In MCEvent v2r5
+  . Add new class MCSensPlaneHit for special studies (e.g. in Calorimeters)
+    providing kinematic of the particle when entering a plane
 
 - In PhysEvent v11r3
   . xml/Particle.xml:
