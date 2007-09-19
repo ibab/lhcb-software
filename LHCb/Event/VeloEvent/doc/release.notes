@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.46 2007-09-18 09:10:46 cattanem Exp $
+! $Id: release.notes,v 1.47 2007-09-19 14:35:30 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
-!====================== VeloEvent v16r0 2007-09-18 ======================
+!====================== VeloEvent v16r0 2007-09-19 ======================
+! 2007-09-19 - Marco Cattaneo
+ - Add a missing STL include
+
 ! 2007-09-18 - Marco Cattaneo
  - Adapt to new location of Tell1Kernel headers
 
