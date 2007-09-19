@@ -4,6 +4,11 @@
 !============================================================================
 
 ! 2007-09-19 - Juan PALACIOS
+
+ - src/Lib/DVAlgorithm.cpp
+   . Add ParticleAdder to list of VertexFitters, ParticleCombiners, and
+     ParticleReFitters.
+
  - Kernel/GeomDispCalculator.h
    . Correct doxygen for calcSignedFlightDistance
 
