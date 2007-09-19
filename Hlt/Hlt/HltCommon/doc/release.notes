@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-09-19 - Patrick Koppenburg
+ - Reduce verbosity of HltSummaryWriter
+
 ! 2007-08-17 - Jose A. Hernando
 	- HltFunctionFactory: check for L0Candidate flag
   - HltSumamryTool: functionality to check for the type of selection, return empty vector, preparing to return particles

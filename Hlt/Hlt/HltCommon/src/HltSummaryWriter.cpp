@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.4 2007-07-06 20:39:47 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.5 2007-09-19 17:15:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -106,7 +106,7 @@ StatusCode HltSummaryWriter::execute() {
       bool ok = m_datasummary->selectionSummary(id).decision();
       if (ok) writeSelection(id);
     } else 
-      error() << " No selection in summary Data! " << endreq;
+      Warning("No selection in summary Data!",1);
   }
 
 
