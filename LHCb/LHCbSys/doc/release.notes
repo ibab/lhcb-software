@@ -14,7 +14,6 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
                   Tell1Kernel       v1r0 - structures for Tell1 emulation
                   TfKernel          v1r0 - core classes for the Tf framework
                   PatKernel         v1r0 - Pat base classes for Tf framework
-                  TrackFitEvent     v3r8 - Moved from REC
 - Packages modified: GaudiObjDesc v10r4, KernelSys v6r8, LHCbKernel v7r6,
     CaloKernel v5r1, ProcessorKernel v5r0, L0MuonKernel v7r1, RichKernel v7r8,
     EventSys v23r8, DAQEvent v7r5, HltEvent v8r4, MCEvent v2r5, LinkerEvent v3r2,
@@ -267,14 +266,6 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     positions, instead of doing them on-demand (for speed)
   . Update trace mode in track creator base to correct for refraction in the
     case of aerogel segments.
-
-- In TrackFitEvent v3r8
-- . Changes to FitNode:
-    o removed cached unbiased residual. replaced with calculation on the fly
-    o added fields for chisquare contribution of upstream and downstream fit
-    o implemented missing clone method
-    o initialized all data members in constructors
-  . added calculation of unbiased state
 
 - In LoKiCore v6r0
   . Move the "hybrid" stuff from LoKiHybridBase 
