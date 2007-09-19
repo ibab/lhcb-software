@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.283 2007-09-18 16:45:08 jpalac Exp $
+! $Id: release.notes,v 1.284 2007-09-19 12:51:55 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-09-19 - Juan PALACIOS
+ - src/GeomDispCalculator.cpp, src/TrgDispCalculator.cpp
+  . Add implementations for calcSignedFlightDistance method.
+
 
 ! 2007-09-18 - Juan PALACIOS
  - src/GeomDispCalculator{.h, .cpp}, src/TrgDispCalculator{.h, .cpp}
