@@ -6,6 +6,88 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r9>2007-09-19 LbcomSys v6r9</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r9
+
+- Packages modified: CaloAssociators v6r4, L0Muon v7r3, L0DU v7r7, STTools v3r3,
+    RichDAQ v3r12, RichMCTools v3r7, RichTools v2r15, VeloDAQ v4r0,
+    VeloSimulation v7r6
+
+- In L0Muon v7r3
+  . Major change to handle different processor versions and bank versions
+    o remove the L0MuonProcessorDatasFromRaw (processor data are produced
+      by L0MuonAlg)
+    o add the L0MuonOutput tool to write/decode L0Muon banks
+  . Add the possiblity to start the L0Muon emulator with L0Muon data in input
+
+- In L0DU v7r7
+  . Modification in L0Sequence.opts to follow changes in L0Muon
+
+- In STTools v3r3
+  . Added double->int cast in STFun::position to remove strange optimization
+    issue in comparison a double to an int
+  . Replaced > with >=
+
+- In RichDAQ v3r12
+  . Remove auto pointers from clustering interfaces in favour of a simple 
+    pointer, which the user then 'owns'
+  . Update HPD occupancy tool to be able to run with explicit RICH1 or 
+    RICH2 setting.
+  . use EventID and BXID == and != operators
+  . Minor fix to prevent the abortion of an entire L1 bank when one HPD fails
+    its RichSmartID lookup. Now only that HPD is rejected but the remaining 
+    HPDs in the L1 bank are processed.
+
+- In RichMCTools v3r7
+  . Update RichMCTrack info tool to correctly perform aerogel refraction
+    correction.
+
+- In RichTools v2r15
+  . Adapt to changes in RichGeomPhoton in RichKernel
+  . Update the mirror segment finding tool to sort mirrors in order to distance 
+    from beamline.
+  . Add to the particle properties tool the method to return the active
+    hypothesis list.
+  . Add correction for refraction at aerogel to Rich1Gas boundary during 
+    ray tracing
+  . Update default tool mappings in tool registry.
+  . Add implementations for two new methods to the RichSmartID tool, 
+    anodeGlobalPosition, which return the position for a given RichSmartID 
+    or Rich::HPDPixelCluster on the anode pixel chip.
+
+- In VeloDAQ v4r0
+  . Add decoding of the non-zero suppressed (NZS) banks added, new code can cope
+    with decoding of the VeloFull data bank, PedestalBank and VeloErrorBank.
+    Also EvtInfo object, that includes a number of informations critical from 
+    point of view of the emulation, can be created. Beetle headers do not
+    make a separate data stream but are part of the NZS header bank. The headers
+    are also decoded and stored. All decoding routines follow closely appropriate
+    EDMS notes describing TELL1 data formats.
+  . Make the decoder fail more graciously in case a source ID can not matched to
+    a sensor number. Now an error message is issued and the source ID is skipped.
+  . Introduced new version 3 of VELO raw buffer.  The only difference to
+    version 2 is the treatment of interstrip positions.  These are now computed
+    and rounded exactly like on the TELL1 board. This now the default for Boole
+  . Added proper bank version management to decoder.  The correct decoding is
+    determined from the raw bank's version.  The version can also be enforced
+    via the ForceBankVersion property (useful for testbeam data).
+  . Made sure the decoder creates empty cluster and lite cluster containers on
+    the TES even if the raw event is missing or it encounters an unsupported
+    bank version.  If a byte count mismatch (corrupted raw bank) is discovered
+    during the cluster decoding the clusters from this source ID are removed from
+    the container.  Clusters from other source IDs will be still available in
+    this case. 
+
+- In VeloSimulation v7r6
+  . Modified the treatment of the timing of particle arrivals to correctly 
+    implement spillover with the right fractions in each sensor
+  . Fixed the unchecked StatusCodes
+  . In VeloSim wrapped all message service calls with a test on output level
+
+- In CaloAssociators v6r4
+  . Fix untested status codes
+  . Remove obsolete file CaloAssociators_load.cpp
+
 </PRE><H1><A NAME=v6r8>2007-07-20 LbcomSys v6r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r8
 
