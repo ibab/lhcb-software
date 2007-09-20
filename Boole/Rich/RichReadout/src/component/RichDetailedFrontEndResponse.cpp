@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.12 2007-03-20 11:49:39 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.13 2007-09-20 16:36:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -26,7 +26,8 @@ DECLARE_ALGORITHM_FACTORY( DetailedFrontEndResponse );
 DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : RichAlgBase ( name, pSvcLocator ),
-    actual_base ( NULL )
+    actual_base ( NULL ),
+    m_timeShift ( Rich::NRiches )
 {
 
   // job options
@@ -40,6 +41,11 @@ DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
   declareProperty( "Noise",             m_Noise = 150. );  // in electrons
   declareProperty( "Threshold",         m_Threshold = 1400. ); // in electrons
   declareProperty( "ThresholdSigma",    m_ThresholdSigma = 140. ); // in electrons
+
+   // Shift time ( value correlated settings in RichSignal )
+  m_timeShift[Rich::Rich1] = 18;
+  m_timeShift[Rich::Rich2] = 7;
+  declareProperty( "TimeCalib", m_timeShift );
 
   el_per_adc = 40.;
 
@@ -169,6 +175,8 @@ StatusCode DetailedFrontEndResponse::Analog()
                     << "  -> Energy  = " << (*iDep)->energy() << endreq;
         }
 
+        const Rich::DetectorType rich = (*iDep)->parentHit()->rich();
+
         // Course cut on deposit TOF ( -50ns to 50ns )
         if ( fabs((*iDep)->time()) < 50 )
         {
@@ -176,11 +184,8 @@ StatusCode DetailedFrontEndResponse::Analog()
           // Bin zero
           const int binZero = (int)(*iDep)->time();
 
-          // Shift time ( Rich2 value correlated to -40 in RichSignal algorithm.... )
-          const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 18 : 7 );
-
           // origin time
-          double binTime = shiftTime - binZero;
+          double binTime = m_timeShift[rich] - binZero;
 
           // dead region
           const bool dead = ( binZero < 0 && binZero > -50 );

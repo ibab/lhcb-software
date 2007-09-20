@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::Signal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.15 2007-05-29 15:50:02 cattanem Exp $
+ *  $Id: RichSignal.h,v 1.16 2007-09-20 16:36:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -106,6 +106,9 @@ namespace Rich
 
         /// random number generator
         mutable Rndm::Numbers m_rndm;
+
+        // Global time shift for each RICH, to get both to same calibrated point
+        std::vector<double> m_timeShift;
 
       };
 

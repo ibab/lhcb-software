@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2007-09-20 - Chris Jones
+ - Updates to allow the time calibrations to be adjusted via options.
+
 !======================== RichReadout v2r7 2007-06-11 ========================
 ! 2007-06-11 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 pattern

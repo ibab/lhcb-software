@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.18 2007-03-20 15:58:36 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.19 2007-09-20 16:36:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -29,7 +29,8 @@ Signal::Signal( const std::string& name,
     m_mcDeposits       ( 0 ),
     m_testSmartIDs     ( false ),
     m_smartIDTool      ( 0 ),
-    m_truth            ( 0 )
+    m_truth            ( 0 ),
+    m_timeShift ( Rich::NRiches )
 {
 
   declareProperty( "HitLocation",
@@ -46,6 +47,10 @@ Signal::Signal( const std::string& name,
                    m_lhcBkgLocation = "LHCBackground/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = LHCb::MCRichDepositLocation::Default );
+
+  m_timeShift[Rich::Rich1] = 0;
+  m_timeShift[Rich::Rich2] = 40;
+  declareProperty( "TimeCalib", m_timeShift );
 
   declareProperty( "UseSpillover",     m_doSpillover = true );
   declareProperty( "UseLHCBackground", m_doLHCBkg = true );
@@ -160,9 +165,7 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
     dep->setEnergy( (*iHit)->energy() );
 
     // TOF
-    double tof = tofOffset + (*iHit)->timeOfFlight();
-    // Global shift for Rich2.
-    if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
+    const double tof = tofOffset + (*iHit)->timeOfFlight() - m_timeShift[(*iHit)->rich()];
     dep->setTime( tof );
 
     // get history from hit

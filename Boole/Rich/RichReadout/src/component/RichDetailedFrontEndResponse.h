@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::DetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.9 2007-03-20 11:49:39 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.h,v 1.10 2007-09-20 16:36:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -114,6 +114,8 @@ namespace Rich
 
         Rndm::Numbers m_gaussThreshold;
         Rndm::Numbers m_gaussNoise;
+
+        std::vector<double> m_timeShift;
 
       };
 
