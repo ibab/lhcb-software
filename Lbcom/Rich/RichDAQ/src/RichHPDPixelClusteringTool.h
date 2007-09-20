@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.7 2007-09-04 16:55:31 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.8 2007-09-20 08:06:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -18,8 +18,8 @@
 // base class
 #include "RichKernel/RichToolBase.h"
 
-// RichKernel
-#include "RichKernel/BoostMemPoolAlloc.h"
+// Kernel
+//#include "Kernel/MemPoolAlloc.h"
 #include "RichKernel/RichSmartIDSorter.h"
 
 // interface

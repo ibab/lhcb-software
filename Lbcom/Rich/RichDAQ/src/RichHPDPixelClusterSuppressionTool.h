@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.12 2007-02-02 17:38:24 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.13 2007-09-20 08:06:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -18,8 +18,8 @@
 // base class
 #include "RichHighOccHPDSuppressionTool.h"
 
-// RichKernel
-#include "RichKernel/BoostMemPoolAlloc.h"
+// Kernel
+//#include "Kernel/MemPoolAlloc.h"
 
 // interfaces
 #include "RichKernel/IRichPixelClusteringTool.h"

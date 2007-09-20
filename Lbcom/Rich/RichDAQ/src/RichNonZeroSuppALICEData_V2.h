@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.4 2007-03-26 11:21:41 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.5 2007-09-20 08:06:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -19,8 +19,8 @@
 #include "RichHPDDataBank.h"
 #include "RichZSPacked_V2.h"
 
-// RichKernel
-#include "RichKernel/BoostMemPoolAlloc.h"
+// Kernel
+#include "Kernel/MemPoolAlloc.h"
 
 //===================================================================================
 
@@ -48,7 +48,7 @@ namespace Rich
        */
       template< class Version, class Header, class Footer >
       class RichNonZeroSuppALICEData : public HPDDataBankImp<Version,Header,Footer>,
-                                       public Rich::BoostMemPoolAlloc< RichNonZeroSuppALICEDataV2::RichNonZeroSuppALICEData<Version,Header,Footer> >
+                                       public LHCb::MemPoolAlloc< RichNonZeroSuppALICEDataV2::RichNonZeroSuppALICEData<Version,Header,Footer> >
       {
 
       public:
