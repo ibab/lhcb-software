@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r6 2007-09-20 =====================
 ! 2007-08-09 - Chris Jones
  - Add options to run new 'Fast' configuration of the RICH reconstruction
  - Update standard options to use new geom. eff. tool.
