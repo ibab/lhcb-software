@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r15 2007-09-20 ======================
 ! 2007-08-16 - Gerhard Raven
  - Fix misunderstanding on the sign in the alignmentDerivative methods of the
    (two) Traj Projectors. Only affects alignment code.
