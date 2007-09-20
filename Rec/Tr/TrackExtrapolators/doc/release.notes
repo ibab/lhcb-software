@@ -4,11 +4,13 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!======================= TrackExtrapolators v2r14 2007-09-20 =================
 ! 2007-09-11 - Wouter Hulsbergen
  - Fixed bug in SimplifiedMaterialLocator that would make it miss entire volumes
 
 ! 2007-09-05 - Wouter Hulsbergen
- - Fixed bug in extrapolators: transport matrix was not calculated if extrapolation distance below threshold
+ - Fixed bug in extrapolators: transport matrix was not calculated if
+   extrapolation distance below threshold
  - Replaced 'hiTolerance' with 'propagationTolerance'
  - Revised 'verbose' and 'debug' output of MasterExtrapolator
 
