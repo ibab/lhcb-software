@@ -23,8 +23,8 @@
 //---------------------------------------------------------------------------
 // DC06 database tags
 // Comment the two lines below to switch back to the xml dbase
-//DDDB.DefaultTAG = "DC06";
-//LHCBCOND.DefaultTAG = "DC06";
+DDDB.DefaultTAG = "DC06";
+LHCBCOND.DefaultTAG = "DC06";
 #include "$DDDBROOT/options/DC06.opts"
 
 // DC06 magnetic field
@@ -34,8 +34,8 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-//ApplicationMgr.EvtMax = 2000;
-ApplicationMgr.EvtMax = -1;
+ApplicationMgr.EvtMax = 1000;
+//ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 187;  // To skip some events
 //---------------------------------------------------------------------------
 // Histogram output
@@ -50,8 +50,10 @@ PoolDbCacheSvc.Catalog = {
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
 EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001768/DST/0000/00001768_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
+
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------

@@ -12,12 +12,13 @@
 //*********************************
 // Instantiate Escher phases
 //*******************************
-ApplicationMgr.TopAlg += { "ProcessPhase/Init",
-			   "ProcessPhase/Selection", 	//select tracks
-			   "ProcessPhase/Alignment", 	//alignment algorithm
-			   "ProcessPhase/Monitoring",	//monitor alignment
-			   "ProcessPhase/Output" 	//store selected tracks
-};
+ApplicationMgr.TopAlg += {"GaudiSequencer/EscherMainSeq"};
+EscherMainSeq.MeasureTime = true ;
+EscherMainSeq.Members += { "LbAppInit/Escher" };
+ApplicationMgr.AppName = "Escher" ;
+Escher.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel = 3;
 
 #include "$ESCHEROPTS/Alignment.opts"
 

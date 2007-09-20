@@ -4,6 +4,12 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v2r2>2007-09-18 Escher v2r2</A></H1><PRE>
+- split options files better so that the different algorithms
+  can use Escher better
+- redefined the calling sequence in the options file;
+  i.e. copied J. Amoraal's sequence definition.
+
 </PRE><H1><A NAME=v2r1>2007-05-14 Escher v2r1</A></H1><PRE>
 - 14/05/2007 Johan Blouw v2r1
   - release for the software project
