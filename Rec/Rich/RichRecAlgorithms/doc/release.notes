@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r9 2007-09-20 =====================
 ! 2007-09-04 - Chris Jones
  - Minor speed improvement to background algorithm
  - Update init algorithm to avoid tool loading during first event
