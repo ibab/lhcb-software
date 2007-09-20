@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-09-20 Tomasz Skwarnicki
+ - HltTrackMerge: allow merging 2 inputs in which either one may be empty
+     add property AllowEmptyInputTracks1 to activate the new feature (default functionality not changed)
+     add property RemoveDuplicates to allow removing duplicate tracks in merge
+ 
 ! 2007-09-19 - Patrick Koppenburg
  - Reduce verbosity of HltSummaryWriter
 

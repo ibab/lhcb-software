@@ -1,5 +1,6 @@
-// $Id: HltTrackMerge.cpp,v 1.3 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltTrackMerge.cpp,v 1.4 2007-09-20 19:22:48 tskwarni Exp $
 // Include files 
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -23,7 +24,12 @@ HltTrackMerge::HltTrackMerge( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  m_consider2 = true;
+
+  declareProperty("AllowEmptyInputTracks1", m_consider1=false);
+  declareProperty("AllowEmptyInputTracks2", m_consider2=true);
+
+  declareProperty("RemoveDuplicates", m_removeDuplicates=false);
+
 }
 //=============================================================================
 // Destructor
@@ -53,10 +59,17 @@ StatusCode HltTrackMerge::execute() {
   debug() << "==> Execute" << endmsg;
 
   copy(*m_inputTracks, *m_outputTracks);
-  copy(*m_inputTracks2,*m_outputTracks);
 
-  int n = m_outputTracks->size();
-  debug() << " merged tracks " << n <<endreq;
+  if( m_removeDuplicates && (m_inputTracks->size()>0) ){
+    for( Hlt::TrackContainer::iterator i2=m_inputTracks2->begin();
+          i2 != m_inputTracks2->end(); ++i2){
+      if( std::find( m_inputTracks->begin(),m_inputTracks->end(), *i2 ) == m_inputTracks->end() ){
+        m_outputTracks->push_back(*i2);
+      }
+    }
+  } else {
+    copy(*m_inputTracks2,*m_outputTracks);
+  }
   
   return StatusCode::SUCCESS;
 }

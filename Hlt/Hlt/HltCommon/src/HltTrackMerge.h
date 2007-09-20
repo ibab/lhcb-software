@@ -1,4 +1,4 @@
-// $Id: HltTrackMerge.h,v 1.1 2007-06-20 20:34:05 hernando Exp $
+// $Id: HltTrackMerge.h,v 1.2 2007-09-20 19:22:48 tskwarni Exp $
 #ifndef HLTTRACKMERGE_H 
 #define HLTTRACKMERGE_H 1
 
@@ -29,6 +29,8 @@ public:
 
 protected:
 
+
+  bool m_removeDuplicates;
 
 };
 #endif // HLTTRACKFILTER_H
