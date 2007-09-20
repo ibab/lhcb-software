@@ -4,6 +4,7 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r2 2007-09-20 ======================
 ! 2007-09-17 - Juan PALACIOS
  - src/SeedHit.cpp
    . Adapt to new IGeometryInfo interface. Replace IGeometryInfo::matrix()
