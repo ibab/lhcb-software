@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.103 2007-08-24 21:24:20 odescham Exp $
+! $Id: release.notes,v 1.104 2007-09-20 09:30:28 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v4r9 2007-09-20 ===================
 ! 2007-08-24 - Olivier Deschamps
  - Fix the unchecked StatusCodes
 
@@ -15,7 +16,6 @@
    and Brem
  - cmt/requirement 
    version increment to v4r8 
-
 
 !========================== CaloReco v4r7 2007-03-05 ==========================
 ! 2007-03-05 - Marco Cattaneo
