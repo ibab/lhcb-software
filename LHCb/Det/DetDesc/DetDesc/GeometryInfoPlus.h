@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.9 2007-09-18 08:43:30 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.10 2007-09-20 16:56:18 jonrob Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -330,7 +330,7 @@ private:
   IUpdateManagerSvc* m_ums;
   
 
-  inline MsgStream log() const  { return *m_log; }
+  inline MsgStream& log() const  { return *m_log; }
 
   inline bool isInsideDaughter( const Gaudi::XYZPoint& globalPoint ) const 
   {

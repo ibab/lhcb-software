@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.335 2007-09-20 16:23:31 cattanem Exp $ 
+! $Id: release.notes,v 1.336 2007-09-20 16:56:18 jonrob Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-09-20 - Chris Jones
+ - Make log() in GeometryInfoPlus.h return MsgStream by reference not value
 
 !====================== DetDesc v18r0 2007-09-20 ==============================
 ! 2007-09-20 - Wouter Hulsbergen
