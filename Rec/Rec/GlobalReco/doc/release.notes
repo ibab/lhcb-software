@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r12 2007-09-20 ======================
 ! 2007-08-19 - Patrick Koppenburg
  - Do not depend on MC
 
