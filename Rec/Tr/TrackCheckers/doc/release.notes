@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v3r1 2007-09-20 =======================
 ! 2007-09-14 - Chris Jones
  - Add monitor for Clone variable (KL distance)
  - Add a little additional protection to TrackCheckerBase
@@ -12,7 +13,6 @@
  - Bug fix, pulls at first meas were in fact last meas
 
 !======================= TrackCheckers v3r0 2007-07-10 =======================
-
 ! 2007-09-11 M Needham
  - Add found/expected hits histos to TrackMonitor
  - Update the histo property maps
