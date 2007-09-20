@@ -1,17 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.334 2007-09-20 15:47:41 wouter Exp $ 
+! $Id: release.notes,v 1.335 2007-09-20 16:23:31 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r0 2007-09-20 ==============================
 ! 2007-09-20 - Wouter Hulsbergen
  - changed tick container to a fixed capacity array
  - optimizations in calculations of intersections in cone and polycone
  - changed logic in LVolume::intersectLine and LVolume::intersectBody such that
    volumes only once intersected if they are their own cover colume
 
-!====================== DetDesc v18r0 2007-09-18 ==============================
 ! 2007-09-18 - Juan PALACIOS
  - DetDesc/IGeometryInfo.h
    . Improve some doxygen comments
