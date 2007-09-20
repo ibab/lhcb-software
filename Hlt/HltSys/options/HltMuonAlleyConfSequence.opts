@@ -19,16 +19,6 @@ HltSummaryWriter.Save += {
 "MuonTriggerPureIPDiMuon",
 "MuonsForwardSingle" ,
 "DiMuonsForward"
-,"VeloMuonConf"
-,"VeloDiMuonConf"
-,"MuonAndTVelo"
-,"DiMuonAndTVelo"
-,"RZMuon"
-,"RZDiMuon"
-,"L0MuonConfirmedWithT"
-,"MuonTConfirmedWithT"
-,"DiMuonConfirmedWithT"
-,"L0MuonDimuon"
 };
 
 HltMuonAlley.MeasureTime=true;
@@ -51,7 +41,8 @@ RealMuonAlley.ModeOr = true;
 
 HltMuonTConfL0SingleAlley.MeasureTime=true;
 HltMuonTConfL0SingleAlley.Members += {"L0Entry/L0SingleMuonEntry",
-                                      "L0Muon2Tracks/L0MuonSingleMuon", 
+                                      // "L0Muon2Tracks/L0MuonSingleMuon", 
+                                      "HltTrackMerge/L0MuonSingleMuon",
                                       "GaudiSequencer/DecodeForTConf",  
                                       "L0MuonConfWithT/L0MuonConfL0SingleWithT",
                                       "GaudiSequencer/MuonRecon", 
@@ -176,11 +167,18 @@ L0SingleMuonEntry.L0ChannelsName = {"muon" ,"muonnoglob"};
 L0SingleMuonEntry.SelectionName = "MuonEntry";
 L0SingleMuonEntry.OutputLevel=3;
 
-L0MuonSingleMuon.L0MuonType="single";
-L0MuonSingleMuon.L0MuonThresold=1300.0;
-L0MuonSingleMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
-L0MuonSingleMuon.OutputTracksName="Hlt/Track/L0MuonSingle";
-L0MuonSingleMuon.OutputLevel=3;
+// old style L0MuonSingleMuon
+// L0MuonSingleMuon.L0MuonType="single";
+// L0MuonSingleMuon.L0MuonThresold=1300.0;
+// L0MuonSingleMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
+// L0MuonSingleMuon.OutputTracksName="Hlt/Track/L0MuonSingle";
+// L0MuonSingleMuon.OutputLevel=3;
+L0MuonSingleMuon.InputTracksName="L0TriggerMuon";
+L0MuonSingleMuon.InputTracks2Name= "L0TriggerMuonNoGlob";
+L0MuonSingleMuon.OutputTracksName = "L0MuonSingle";
+L0MuonSingleMuon.AllowEmptyInputTracks1 = true;
+L0MuonSingleMuon.AllowEmptyInputTracks2 = true;
+L0MuonSingleMuon.RemoveDuplicates= true;
 
 L0MuonConfL0SingleWithT.InputTracksName = "Hlt/Track/L0MuonSingle";
 L0MuonConfL0SingleWithT.OutputTracksName = "Hlt/Track/L0MuonConfirmedWithT";

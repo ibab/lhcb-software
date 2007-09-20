@@ -26,7 +26,8 @@ HltInitSeq.Members = {"PatInitEvent",
 HltAllAlleys.Members ={"HltSequencer/HltL0TriggerSequence",
                        "HltSequencer/HltMuonAlley",
                        "HltSequencer/HltHadAlley",
-                         // ,"HltSequencer/HltCaloAlley"
+                       "HltSequencer/HltEleAlley",
+                       "HltSequencer/HltPhoAlley",
                        "HltSelectionEntry/HltAlleys"
 };
 HltAllAlleys.ModeOr=true; 
@@ -36,13 +37,18 @@ HltAllAlleys.ModeOr=true;
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
 
+#include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
+#include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
 HltAlleys.Selections = {"MuonTriggerSingle",
-                            "MuonTriggerDiMuon",
-                            "MuonTriggerIPDiMuon",
-                            "MuonTriggerPureDiMuon",
-                            "MuonTriggerPureIPDiMuon",
-                            "HadTrigger"
+                        "MuonTriggerDiMuon",
+                        "MuonTriggerIPDiMuon",
+                        "MuonTriggerPureDiMuon",
+                        "MuonTriggerPureIPDiMuon",
+                        "HadTrigger"
+                        ,"ELeTriggerEleTrk"
+                        ,"ELeTriggerSingle"
+                        ,"PhoTriggerPhoTrk"
 };
 HltAlleys.SelectionName = "HltAlleys";
 

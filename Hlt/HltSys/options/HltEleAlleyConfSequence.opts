@@ -1,0 +1,227 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+// in Had Alley #include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+//---------------------------
+// HLT Ele Alley
+//--------------------------
+HltSummaryWriter.Save += {"EleL0Entry",
+                          "ElePreTriggerSingle",
+                          "EleTriggerSingle",
+                          "EleTriggerEleTrk"
+};
+
+HltEleAlley.Members = {"L0Entry/EleL0Entry",
+                       "GaudiSequencer/HltRecoVeloRZSeq",
+                       //                       "HltPrepareL0Calos/EleL0Prepare",
+                       "GaudiSequencer/DVHltEleAlley",
+                       "HltTrackFilter/EleSingleTFRZVelo",
+                       "HltTracking/EleSingleTRVelo",
+                       "HltTrackFilter/EleSingleTFVelo",
+                       "GaudiSequencer/HltDecodeT",
+                       "HltTracking/EleSingleTRForward",
+                       "HltTrackFilter/ElePreTriggerSingle",
+                       "HltSequencer/HltEleTriggers"
+};
+HltEleAlley.MeasureTime = true;
+
+HltEleTriggers.ModeOr = true;
+HltEleTriggers.MeasureTime = true;
+HltEleTriggers.Members += { "HltTrackFilter/EleTriggerSingle",
+                            "HltSequencer/EleTriggerEleTrkSeq"
+};
+
+EleTriggerEleTrkSeq.Members += { 
+                       "HltTracking/HltRecoVelo",
+                       "HltTrackFilter/EleCompanionTFVelo",
+                       "HltTracking/EleCompanionTRForward",
+                       "HltTrackFilter/EleCompanionTFForward",
+                       "HltVertexMaker/EleDiElectronVMaker",
+                       "HltVertexFilter/EleTriggerEleTrk"
+};
+EleTriggerEleTrkSeq.MeasureTime = true;
+
+
+
+//-------------------------------------------------------------------------
+// HLT EleAlley options
+//-------------------------------------------------------------------------
+
+
+//
+// Enter if there is a L0Electron yes
+//
+EleL0Entry.L0ChannelsName = {"electron"};
+EleL0Entry.SelectionName = "EleL0Entry";
+EleL0Entry.OutputLevel = 3;
+
+
+//
+// select RZVelo tracks with an IP and matched to L0Calo
+//
+EleSingleTFRZVelo.InputTracksName     = "RZVelo";
+EleSingleTFRZVelo.InputTracks2Name    = "L0TriggerElectron";
+EleSingleTFRZVelo.PrimaryVerticesName = "PV2D";
+EleSingleTFRZVelo.OutputTracksName    = "EleSingleTFRZVelo";
+EleSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
+                                      "Calo2DChi2,<,4."
+};
+EleSingleTFRZVelo.HistogramUpdatePeriod = 1;
+EleSingleTFRZVelo.HistoDescriptor = {"rIP,400,-1.,3.",
+                                     "rIPBest,400,-1.,3.",
+                                     "Calo2DChi2,100.,0.,20.",
+                                     "Calo2DChi2Best,100.,0.,20."
+};
+EleSingleTFRZVelo.OutputLevel = 3;
+
+//
+// Velo reconstruction of selected RZVelo
+//
+EleSingleTRVelo.InputTracksName  = "EleSingleTFRZVelo";
+EleSingleTRVelo.OutputTracksName = "EleSingleTRVelo";
+EleSingleTRVelo.RecoName = "Velo";
+EleSingleTRVelo.OutputLevel = 3;
+
+//
+// Select Velo tracks with an IP and matched to L0Calo
+//
+EleSingleTFVelo.InputTracksName  = "EleSingleTRVelo";
+EleSingleTFVelo.InputTracks2Name = "L0TriggerElectron";
+EleSingleTFVelo.OutputTracksName = "EleSingleTFVelo";
+EleSingleTFVelo.PrimaryVerticesName = "PV2D";
+EleSingleTFVelo.HistogramUpdatePeriod = 1;
+EleSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
+                                    "Calo3DChi2,<,4."
+};
+EleSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
+                                   "IPBest,400,-1.,3.",
+                                   "Calo3DChi2,100.,0.,20.",
+                                   "Calo3DChi2Best,100.,0.,20."
+};
+EleSingleTFVelo.OutputLevel = 3;
+
+//
+// Make forward the selected velo tracks
+//
+EleSingleTRForward.InputTracksName  = "EleSingleTFVelo";
+EleSingleTRForward.OutputTracksName = "EleSingleTRForward";
+EleSingleTRForward.RecoName = "Forward";
+EleSingleTRForward.OutputLevel = 3;
+PatEleSingleTRForward.DoCleanUp = false;
+
+//
+// Select forward track with a given Pt
+//
+ElePreTriggerSingle.InputTracksName  = "EleSingleTRForward";
+ElePreTriggerSingle.OutputTracksName = "ElePreTriggerSingle";
+ElePreTriggerSingle.FilterDescriptor = {"PT,>,1300."};
+ElePreTriggerSingle.HistogramUpdatePeriod = 1;
+ElePreTriggerSingle.HistoDescriptor = {"PT,100,0.,6000.",
+                                       "PTBest,100,0.,6000."
+};
+ElePreTriggerSingle.OutputLevel = 3;
+
+
+//
+// do the rest of velo tracks
+//
+HltRecoVelo.InputTracksName  = "RZVelo";
+HltRecoVelo.OutputTracksName = "Velo";
+HltRecoVelo.RecoName = "Velo";
+HltRecoVelo.OutputLevel = 3;
+
+
+//
+// select velo tracks as companions 
+//
+EleCompanionTFVelo.InputTracksName     = "Velo";
+EleCompanionTFVelo.OutputTracksName    = "EleCompanionTFVelo";
+EleCompanionTFVelo.PrimaryVerticesName = "PV2D";
+EleCompanionTFVelo.InputTracks2Name    = "ElePreTriggerSingle";
+EleCompanionTFVelo.HistogramUpdatePeriod = 1;
+EleCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
+                                       "DOCA,<,0.2"
+};
+EleCompanionTFVelo.HistoDescriptor = {"IP,600,-1.,.3",
+                                      "IPBest,600,-1.,3.",
+                                      "DOCA,100,0.,1.",
+                                      "DOCABest,100,0.,1."
+};
+EleCompanionTFVelo.OutputLevel = 3;
+
+//
+// Do forward the companion tracks
+//
+EleCompanionTRForward.InputTracksName  = "EleCompanionTFVelo";
+EleCompanionTRForward.OutputTracksName = "EleCompanionTRForward";
+EleCompanionTRForward.RecoName = "Forward";
+EleCompanionTRForward.OutputLevel = 3;
+PatEleCompanionTRForward.DoCleanUp = false;
+
+
+//
+// Select companion tracks if they have a fiven Pt
+//
+EleCompanionTFForward.InputTracksName  = "EleCompanionTRForward";
+EleCompanionTFForward.OutputTracksName = "EleCompanionTFForward";
+EleCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
+EleCompanionTFForward.HistogramUpdatePeriod = 1;
+EleCompanionTFForward.HistoDescriptor = {"PT,100,0.,8000.",
+                                         "PTBest,100,0.,8000."};
+EleCompanionTFForward.OutputLevel = 3;
+
+//
+// Make vertices with the forward companion tracks 
+//
+EleDiElectronVMaker.InputTracksName    = "ElePreTriggerSingle";
+EleDiElectronVMaker.InputTracks2Name   = "EleCompanionTFForward";
+EleDiElectronVMaker.OutputVerticesName = "EleDiElectronVMaker";
+EleDiElectronVMaker.OutputLevel = 3;
+EleDiElectronVMaker.FilterDescriptor = {"DOCA,<,0.2"
+};
+EleDiElectronVMaker.HistogramUpdatePeriod = 1;
+EleDiElectronVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
+                                      "DOCABest,100,0.,0.5"
+
+};
+
+//
+// select vertices if Pt, poiting, and distance
+//
+EleTriggerEleTrk.InputVerticesName   = "EleDiElectronVMaker";
+EleTriggerEleTrk.PrimaryVerticesName = "PV2D";
+EleTriggerEleTrk.OutputVerticesName  = "EleTriggerEleTrk";
+EleTriggerEleTrk.OutputLevel = 3;
+EleTriggerEleTrk.FilterDescriptor = {"VertexMaxPT,>,1300.",
+                               "VertexMinPT,>,1000.",
+                               "VertexPointing,<,0.5",
+                               "VertexDz,>,0."
+};
+EleTriggerEleTrk.HistogramUpdatePeriod = 1;
+EleTriggerEleTrk.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
+                              "VertexMaxPTBest,100,0.,8000.",
+                              "VertexMinPT,100,0.,8000.",
+                              "VertexMinPTBest,100,0.,8000.",
+                              "VertexPointing,100,0.,1.",
+                              "VertexPointingBest,100,0.,1.",
+                              "VertexDz,100,-10.,50.",
+                              "VertexDzBest,100,-10.,50."
+};
+
+
+//   TS-added compared to HadAlley:
+
+
+EleTriggerSingle.InputTracksName  = "ElePreTriggerSingle";
+EleTriggerSingle.OutputTracksName = "EleTriggerSingle";
+EleTriggerSingle.FilterDescriptor = {"PT,>,3000."};
+EleTriggerSingle.HistogramUpdatePeriod = 1;
+EleTriggerSingle.HistoDescriptor = {"PT,100,0.,8000.",
+                                    "PTBest,100,0.,8000."};
+EleTriggerSingle.OutputLevel = 3;
+
+
+
+
