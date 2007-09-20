@@ -5,9 +5,198 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-Kurt Rinnert 17/09/2007
-- added include in Reco.opts to use the Tf framework tracking options.  This
-  is commented out by default, no change in behaviour.
+</PRE><H1><A NAME=v4r9>2007-09-20 RecSys v4r9</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r9.
+
+- Packages removed:  RichTrgGlobal (same functionality in RichGlobalPID)
+- Packages added:    RichRecStereoTools v1r0: Stereographic tools
+                     RichHLTLocalPID v1r0:    Fast local PID algorithm 
+- Packages modified: PatVelo v2r18, PatChecker v2r14, PatVeloTT v2r14,
+    TrackSys v4r9, TrackFitEvent v3r8, TrackUtils v1r14, TrackTools v2r18,
+    TrackProjectors v2r15, TrackExtrapolators v2r14, TrackFitter v2r18,
+    TrackSeeding v1r2, TrackCheckers v3r1, RichHLTSys v3r1, RichRecSys v3r6,
+    RichRecQC v2r14, RichRecMCTools v2r13, RichRecMonitors v2r12,
+    RichLocalPID v3r5, RichGlobalPID v3r5, RichPIDMerge v2r5, RichRecTools v3r13,
+    RichRecAlgorithms v2r9, GlobalReco v6r12, CaloReco v4r9, CaloPIDs v4r8,
+    MuonPIDChecker v2r1, RecUtils v1r3
+
+- In RecSys v4r9
+  . Added include in Reco.opts to use the Tf framework tracking options.  This
+    is commented out by default, no change in behaviour.
+
+- In PatVelo v2r18
+  . Changes to ensure no floating point comparisions
+  . Stable sort to ensure good ordering in PatVeloSpaceTracking
+
+- In PatVeloTT v2r14
+  . Adapt to addition of constant term to initial error of p in fit
+
+- In PatChecker v2r14
+  . Modified PatMCInfo.cpp to use keyRange instead of intRange for LinkedFrom
+  . Some additional protections to PatCounter and PatTTCounter for the case 
+    when m_link->direct() returns NULL (was causing crashes)
+  . Improvements to the debug printout from PatTrack2MCParticle (To utilise
+    the fact that LHCbIDs can now print themselves in a useful way)
+
+- In TrackSys v4r9
+  . added Tf version of VELO open tracking options file
+  . added option files for pattern recognition in the Tf framework.  They are
+    not used by default.  One has to change the $RECSYSROOT/options/Reco.opts
+    (example provided) and $BRUNELROOT/BrunelCheck.opts (example provided).
+  . Add options to run a new sequence at the end of the tracking, to find
+    and flag clones using the new KL distance algorithms
+  . Increase # of fit iterations to get better convergence
+  . Update ErrorP to add extra parameter
+  . Added Fitting.opts: file with all fitting options
+  . Added DSTRefitting.opts: file to be able to refit tracks from DST
+  . Removed obsolete TrackSeeding.opts file
+  . Removed obsolete TsaSeeding.opts file
+  . Modified and cleaned up RecoTracking.opts accordingly:
+    o cleaned up options for obsolete TrackSeeding.opts file
+    o included necessary options from TsaSeeding
+    o all fitting options now taken from Fitting.opts
+
+- In TrackFitEvent v3r8
+  . changes to FitNode
+    o removed cached unbiased residual. replaced with calculation on the fly
+    o added fields for chisquare contribution of upstream and downstream fit
+    o implemented missing clone method
+    o initialized all data members in constructors
+  . added calculation of unbiased state
+
+- In TrackUtils v1r14
+  . Add algorithm TrackRemoveDoubleITHits: when two hits are found in the same IT
+	  ladder, remove both lhcbIDs from the track's lhcbIDs.
+  . Clean up TrackBuildClone table a little for speed
+  . Update TrackCloneCleaner to instead of creating a new 'cleaned' track
+    container, simply flag those tracks in the original container that are
+    likely clone candidates
+  . Add algorithm that adds likelihood to the track
+  . Add clone killing algorithms based on relative entropy
+  . Add selection possibility to TrackContainer copy
+
+- In TrackTools v2r18
+  . Add hit expectation tools
+  . Remove comparisions of equality between floats/doubles
+  . Use chi2 in clone killing in case the two tracks have same number of hits 
+
+- In TrackProjectors v2r15
+  . Fix misunderstanding on the sign in the alignmentDerivative methods of the
+    (two) Traj Projectors. Only affects alignment code.
+
+- In TrackExtrapolators v2r14
+  . Fixed bug in SimplifiedMaterialLocator that would make it miss entire volumes
+  . Fixed bug in extrapolators: transport matrix was not calculated if
+    extrapolation distance below threshold
+  . Replaced 'hiTolerance' with 'propagationTolerance'
+  . Revised 'verbose' and 'debug' output of MasterExtrapolator
+  . Corrected Track to Point and to Plane methods.
+
+- In TrackFitter v2r18
+  . ensure error q/p is not zero for infinite momentum tracks  
+  . stable sort the nodes rather than sort (ensure order is always same) 
+  . revision of verbose/debug output
+  . removed 'Upstream' job-option from KalmanFitte since that already existed in
+    MasterFitter client
+  . added filling of delta-chisquare contributions on all FitNodes
+  . added method to fill 'extra-info' with segment chisquares to MasterFitter
+
+- In TrackSeeding v1r2
+  . Adapt to changes in IGeometryInfo interface (from DetDesc v18r0)
+
+- In TrackCheckers v3r1
+  . Add monitor for Clone variable (KL distance)
+  . Add a little additional protection to TrackCheckerBase
+  . Bug fix, pulls at first meas were in fact last meas
+
+- In RichRecQC v2r14
+  . Update PID monitor to use context to switch between HLT and Offline mode
+  . Other minor improvements.
+
+- In RichRecMCTools v2r13
+  . Update Track -> MCParticle association method to determine on the fly
+    from the Track container location which linker to use.
+
+- In RichRecMonitors v2r12
+  . Add new monitor algorithm that produces an ntuple containing information 
+    that allows correlations between RichPID results to be studied.
+  . Update algorithm that produces MC CK rings to correctly apply refraction
+    correction for aerogel rings.
+  . Adapt to changes in radiator correction location position method.
+  . Monitoring improvements
+
+- In RichLocalPID v3r5
+  . Minor increased protection for odd ball cases.
+
+- In RichGlobalPID v3r5
+  . Update base class to use context() to switch between HLT and Offline mode.
+  . Update likelihood algorithm so it is able to only consider a limited number
+    of mass hypotheses. It uses the particle properties tool to determine at
+    run time which are to be considered.
+
+- In RichPIDMerge v2r5
+  . Use context() to configure HLT and Offline modes
+
+- In RichRecTools v3r13
+  . Add new tool to randomly reject a given fraction of tracks
+    (RichTrackCreatorFromRecoTracksWithForcedIneffic).
+  . Update Track Creator to use clone information
+  . Minor speed improvements to photon signal and sellmeir tools
+  . Set 'closest HPD' smartID in RichRecSegment
+  . Downgrade some debug messages to verbose in track selector
+  . Upgrade various tools to use the active mass hypotheses list, as obtained
+    from the particle properties tool
+  . Apply aerogel refraction correction during ray tracing where appropriate.
+  . Add new photon predictor that uses the n sigma (in CK resolution) bands 
+    around the expected CK theta, as opposed to a fixed roadwidth.
+  . Add new geom. eff. tool that uses the mass CK RichRecRings associated to 
+    the RichRecSegment.
+  . Tidy update Mass hypotheses ring creator.
+  . Add a new fast photon reconstruction tool that uses the ray traced CK rings
+    as a calibration device to compute the CK theta from the pixel/segment
+    hit points on the detector plane.
+  . Rework CK cone ray tacing tool to use new interfaces etc.
+  . Tidy up geometry tool (better speed).
+  . Set average photon energy in track creator eariler during its creation 
+    (need by ray tracing methods).
+
+- In RichRecAlgorithms v2r9
+  . Minor speed improvement to background algorithm
+  . Update init algorithm to avoid tool loading during first event
+  . Add option to just load raw tracks to initialisation algorithm. 
+
+- In RichHLTSys v3r1
+  . Add configuration to run 'Offline' global PID in fast HLT mode.
+
+- In RichRecSys v3r6
+  . Add options to run new 'Fast' configuration of the RICH reconstruction
+  . Update standard options to use new geom. eff. tool.
+  . comment out local algorithm from default running 
+  . Rename algorithm instances a little
+
+- In RichRecQC v2r14, RichRecMCTools v2r13, RichRecMonitors v2r12,
+     RichRecTools v3r13
+  . Adapt to changes in RichKernel
+
+- In CaloReco v4r9, CaloPIDs v4r8
+  . Fix unchecked StatusCodes
+
+- In GlobalReco v6r12
+  . Do not depend on MC
+  . ChargedProtoPAlg: changes needed for HLT
+    o Allow to switch off Rich Muon and Velo PID.
+    o All switch options are now called UseXxxPID, like UseRichPID. This
+      is backward-incompatible with the Calo options.
+  . Update charged protoparticle maker to use context() to determine the
+    RichPID and Track locations in the TES.
+
+- In MuonPIDChecker v2r1
+  . Made it possible to change the MuonPIDs Path in the options file
+
+- In RecUtils v1r3
+  . New tool WriteSelResult that does what it's called.
+  . Use this tool in ReadStripETC
+  . depend on Kernel/RecInterfaces
 
 </PRE><H1><A NAME=v4r8>2007-07-23 RecSys v4r8</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r8.

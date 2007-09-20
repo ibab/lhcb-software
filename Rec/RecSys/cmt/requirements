@@ -1,5 +1,5 @@
 package RecSys
-version v4r8
+version v4r9
 
 branches cmt doc
  
@@ -12,33 +12,33 @@ use RecAlgs             v1r4    Rec   # Marco Cattaneo
 use RecUtils            v1r2    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
-#use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
-use CaloPIDs            v4r7    Calo  # Victor Egorychev, Vanya Belyaev
-use CaloReco            v4r8    Calo  # Olivier Deschamps
+#use CaloMoniDst         v3r0    Calo  # Olivier Deschamps
+use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
+use CaloReco            v4r9    Calo  # Olivier Deschamps
 
 # Track Fit
-use TrackSys            v4r8    Tr    # Eduardo Rodrigues
-use TrackExtrapolators  v2r13   Tr    # Eduardo Rodrigues
+use TrackSys            v4r9    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r14   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r12   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r7    Tr    # Eduardo Rodrigues
-use TrackTools          v2r17   Tr    # Eduardo Rodrigues
-use TrackFitter         v2r17   Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r14   Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackFitEvent       v3r8    Tr    # Eduardo Rodrigues
+use TrackTools          v2r18   Tr    # Eduardo Rodrigues
+use TrackFitter         v2r18   Tr    # Eduardo Rodrigues
+use TrackProjectors     v2r15   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r13   Tr    # Eduardo Rodrigues
-use TrackUtils          v1r13   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r14   Tr    # Eduardo Rodrigues
 use TrackMatching       v2r15   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackCheckers       v3r0    Tr    # Eduardo Rodrigues
-use TrackSeeding        v1r1    Tr    # Eduardo Rodrigues, Henk Jan Bulten
+use TrackCheckers       v3r1    Tr    # Eduardo Rodrigues
+use TrackSeeding        v1r2    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # Track Pattern Recognition
 use PatUtils            v1r3    Pat   # Olivier Callot
-use PatVelo             v2r17   Pat   # David Hutchcroft
-use PatVeloTT           v2r13   Pat   # Mariusz Witek
+use PatVelo             v2r18   Pat   # David Hutchcroft
+use PatVeloTT           v2r14   Pat   # Mariusz Witek
 use PatForward          v2r15   Pat   # Stephanie Hansmann-Menzemer
 use PatPV               v2r9    Pat   # Mariusz Witek
-use PatChecker          v2r13   Pat   # Olivier Callot, David Hutchcroft
+use PatChecker          v2r14   Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r5    Pat   # Olivier Callot
 use TsaAlgorithms       v2r6    Tr    # Matt Needham
 use PatKShort           v1r7    Pat   # Olivier Callot
@@ -46,24 +46,23 @@ use PatKShort           v1r7    Pat   # Olivier Callot
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
-use MuonPIDChecker      v2r0    Muon  # Erica Polycarpo, Miriam Gandelman
+use MuonPIDChecker      v2r1    Muon  # Erica Polycarpo, Miriam Gandelman
 use MuonTrackAlign      v1r0    Muon  # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichRecSys          v3r5    Rich  # Chris Jones
-#use RichRingRefit       v1r11   Rich  # Chris Jones
-use RichLocalPID        v3r4    Rich  # Chris Jones
-use RichGlobalPID       v3r4    Rich  # Chris Jones
-use RichPIDMerge	v2r4    Rich  # Chris Jones
-use RichRecAlgorithms   v2r8    Rich  # Chris Jones
-use RichRecTools        v3r12   Rich  # Chris Jones
-use RichRecMCTools      v2r12   Rich  # Chris Jones
-use RichRecMonitors     v2r11   Rich  # Chris Jones
-use RichRecQC           v2r13   Rich  # Chris Jones
-use RichHLTSys          v3r0    Rich  # Chris Jones
-use RichTrgGlobalPID    v3r6    Rich  # Chris Jones
-#use RichTrgTools        v1r2    Rich  # Chris Jones
+use RichRecSys          v3r6    Rich  # Chris Jones
+use RichLocalPID        v3r5    Rich  # Chris Jones
+use RichGlobalPID       v3r5    Rich  # Chris Jones
+use RichPIDMerge	v2r5    Rich  # Chris Jones
+use RichRecAlgorithms   v2r9    Rich  # Chris Jones
+use RichRecTools        v3r13   Rich  # Chris Jones
+use RichRecMCTools      v2r13   Rich  # Chris Jones
+use RichRecMonitors     v2r12   Rich  # Chris Jones
+use RichRecQC           v2r14   Rich  # Chris Jones
+use RichRecStereoTools  v1r0    Rich  # Chris Jones
+use RichHLTLocalPID     v1r0    Rich  # Chris Jones
+use RichHLTSys          v3r1    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r11   Rec   # Chris Jones
+use GlobalReco          v6r12   Rec   # Chris Jones
