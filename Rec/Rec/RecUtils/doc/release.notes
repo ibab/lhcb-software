@@ -4,6 +4,7 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r3 2007-09-20 =======================
 ! 2007-09-07 - Patrick Koppenburg
  - New tool WriteSelResult that does what it's called.
  - Use this tool in RadStripETC
