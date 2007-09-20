@@ -24,32 +24,16 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() {return IID_IDerivatives;}
 
-  /* Virtual method to initalize interface
-   * @input: number of track parameters, number of alignable elements, list with degrees of freedom to align
-   * @return: success
-  */
   virtual StatusCode initialize( const int &, const int &, const std::vector<bool>& ) = 0;
 
 //  virtual StatusCode SetGlobal( const Gaudi::XYZVector &, /// slope of track 
-  /* Virtual method to set global derivatives
-   * @input: slope of track, origin of track transformation matrix
-   * @input: vector with global derivatives, detector element nr. in list, z-position of this element
-   * @input: stereo_angle of this element
-   * @return: success
-  */
   virtual StatusCode SetGlobal( const Gaudi::XYZVector &, /// slope of track 
                                 const Gaudi::XYZVector &, /// origin of track 
                                 const Gaudi::Transform3D &, /// matrix representing shifts & rotations
                                 std::vector<double> &, const int &, const double &, const double & ) = 0;
  
-  /* virtual method to calculate local derivatives
-   * @input:  position in matrix, z-position of this element, stereo angle
-   * @return: vector of local derivatives
-  */
   virtual StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double & ) = 0;
 
-  /* Setters & Getters
-   */
   virtual double GetGlobalDerivative_X() = 0;
   virtual double GetGlobalDerivative_Y() = 0;
   virtual double GetGlobalDerivative_Z() = 0;
