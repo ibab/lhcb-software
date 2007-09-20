@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r5 2007-09-20 =======================
 ! 2007-08-09 - Chris Jones
  - Update base class to use context() to switch between HLT and Offline mode.
  - Update likelihood algorithm so it is able to only consider a limited number
