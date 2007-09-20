@@ -13,7 +13,7 @@ version           v2r8
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          AlignmentTools cmt doc src
+branches          cmt doc src
 
 # =========== own includes ====================================================
 include_dirs  $(ALIGNMENTTOOLSROOT)
