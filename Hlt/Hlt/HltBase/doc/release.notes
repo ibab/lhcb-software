@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-20 Tomasz Skwarnicki
+  - HltAlgorith : add special flag m_consider1
+
 ! 2007-08-17 Jose A. Hernando 
   - HltFunctions: adding function to check for L0Candidate flag
   - IHltConfSummaryTool: extra functionality (filters, type, and particles)	

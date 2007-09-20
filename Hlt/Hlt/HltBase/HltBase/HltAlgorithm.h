@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.14 2007-08-09 13:58:06 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.15 2007-09-20 19:20:54 tskwarni Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -311,13 +311,20 @@ protected:
   std::vector<std::string> m_inputSelections;
 
 
+  // Algorithms with 2 input track sources
+  // m_consider1 m_consider2
+  //    false       false   -> neither one can be empty
+  //    false       true    -> 2nd source may be empty, but 1st cannot
+  //    true                -> either one may be empty, but not at the same time 
+  bool m_consider1;
+  bool m_consider2;
+
   //------------------------
   // Histograms and Counters
   //------------------------
 
 protected:
 
-  bool m_consider2;
 
   // Counter of Input and Accepted Events
   HltCounter m_counterInput;

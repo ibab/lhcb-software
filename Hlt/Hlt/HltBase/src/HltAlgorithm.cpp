@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.15 2007-08-09 13:58:07 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.16 2007-09-20 19:20:54 tskwarni Exp $
 // Include files 
 
 // from boost
@@ -57,6 +57,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
+  m_consider1 = false;
   m_consider2 = false;
   m_selectionID = 0;
   m_outputHolder = NULL;
@@ -259,13 +260,44 @@ bool HltAlgorithm::beginExecute() {
 
   // verbose() << " histograming inputs " << endreq;
 
-  ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
-            " input tracks ");
-  if (!ok) return ok;
+  bool ok1,ok2;
 
-  ok = size(m_inputTracks2,m_nInputTracks2,m_histoInputTracks2,
+  // must check that the producer of input tracks was actually run and succeeded
+  if( m_consider1 && m_inputTracks ){
+    std::vector<std::string> cromos = EParser::parse(m_inputTracksName,"/");
+    std::string selname = cromos.back();
+    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
+    if( m_datasummary->hasSelectionSummary(id) ){
+      if( ! selectionSummary(id).decision() ){
+        m_inputTracks->clear();
+      }
+    } else {
+      m_inputTracks->clear();
+    }
+  }
+  ok1 = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
+            " input tracks ");
+
+  if (!(ok1 || m_consider1)) return ok1;
+
+  // must check that the producer of input tracks was actually run and succeeded
+  if( m_consider2 && m_inputTracks2 ){
+    std::vector<std::string> cromos = EParser::parse(m_inputTracks2Name,"/");
+    std::string selname = cromos.back();
+    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
+    if( m_datasummary->hasSelectionSummary(id) ){
+      if( ! selectionSummary(id).decision() ){
+        m_inputTracks2->clear();
+      }
+    } else {
+      m_inputTracks2->clear();
+    }
+  }
+  ok2 = size(m_inputTracks2,m_nInputTracks2,m_histoInputTracks2,
             " input tracks 2 ");
-  if (!(ok || m_consider2)) return ok;
+  if (!(ok2 || m_consider2)) return ok2;
+
+  if( m_consider1 && !(ok1||ok2) )return false;
 
   ok = size(m_patInputTracks,m_nPatInputTracks,m_histoPatInputTracks,
             " pat input tracks ");
