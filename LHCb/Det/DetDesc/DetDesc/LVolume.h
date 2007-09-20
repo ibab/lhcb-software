@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.24 2006-12-14 13:03:39 ranjard Exp $ 
+// $Id: LVolume.h,v 1.25 2007-09-20 15:03:00 wouter Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -244,9 +244,9 @@ private:
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
    *  @param Threshold threshold value 
-   *  @return number of intersections  
+   *  @return true if line intersects with body
    */
-  unsigned int intersectBody
+  bool intersectBody
   ( const Gaudi::XYZPoint        & Point         , 
     const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections , 
@@ -260,9 +260,9 @@ private:
    *  @param Vector direction vector of the line
    *  @param intersections output container
    *  @param Threshold threshold value 
-   *  @return number of intersections  
+   *  @return true if line intersects with body
    */
-  unsigned int intersectBody
+  bool intersectBody
   ( const Gaudi::XYZPoint&        Point         , 
     const Gaudi::XYZVector&       Vector        , 
     ILVolume::Intersections& intersections , 

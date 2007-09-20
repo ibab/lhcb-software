@@ -1,4 +1,4 @@
-// $Id: LVolume.cpp,v 1.33 2007-01-09 15:39:52 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.34 2007-09-20 15:03:00 wouter Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
@@ -219,10 +219,10 @@ MsgStream&    LVolume::printOut
  *  @param  Vector        direction vector of the line
  *  @param  intersections output container
  *  @param  threshold     threshold value 
- *  @return number of intersections  
+ *  @return true if line intersects with body
  */
 // ============================================================================
-unsigned int LVolume::intersectBody
+bool LVolume::intersectBody
 ( const Gaudi::XYZPoint         & Point         , 
   const Gaudi::XYZVector        & Vector        , 
   ILVolume::Intersections  & intersections , 
@@ -248,31 +248,30 @@ unsigned int LVolume::intersectBody
    *   perform the rought estimation using the coverTop() method!  
    *   Line MUST intersect the coverTop() solid at least in 2 points!
    */
-  if( Threshold > 0 || m_solid == pSolid ) 
-    { 
-      /// number of intersections
-      const unsigned n1 = 
-        pSolid->intersectionTicks( Point , Vector , ticks ) ;
-      if( n1 < 2 ) { ticks.clear() ; return 0 ; }           ///< RETURN !!!
-      /** estimate the radiation thickness of the coverTop volume 
-       *  and  construct intervals
-       */
-      intervals.clear();
-      TicksToIntervals( ticks , std::back_inserter( intervals ) );
+  
+  // calculate intersections with cover volume
+  if( pSolid->intersectionTicks( Point , Vector , ticks ) < 2) { return false ; }
+
+  if( Threshold>0 || m_solid == pSolid ) {
+    // construct intervals
+    intervals.clear();
+    TicksToIntervals( ticks , std::back_inserter( intervals ) );
+    // check the total thickness
+    if( Threshold > 0 ) {
       /// the total length of intervals (in tick units)
       double Length = 
-        std::accumulate( intervals.begin() , intervals.end       () , 
-                         0.0               , AccumulateIntervals () );
+	std::accumulate( intervals.begin() , intervals.end       () , 
+			 0.0               , AccumulateIntervals () );
       /** this volume is not to be used for estimations 
        *  of radiation thickness 
        */
-      if( Length * TickLength <= Threshold * m_material->radiationLength() ) 
-        {
-          useThisVolume = false ;   
-          ticks.clear     (); 
-          intervals.clear (); 
-        }
+      if( Length * TickLength <= Threshold * m_material->radiationLength() ) {
+	useThisVolume = false ;   
+	ticks.clear     ();
+	intervals.clear (); 
+      }
     }
+  }
   /** if this volume is to be used,  
    *  find intersections with REAL solid (not cover) 
    */
@@ -283,29 +282,15 @@ unsigned int LVolume::intersectBody
        *  for solid() == solid->coverTop() we have 
        *  already calculated ticks!
        */
-      const unsigned n1 = 
-        m_solid->intersectionTicks( Point , Vector , ticks ) ;
-      if( n1 < 2 )     { ticks.clear() ; return 0; }         ///< RETURN !!! 
+      if(  m_solid->intersectionTicks( Point , Vector , ticks ) < 2) { return false ; }
+      
       /** estimate more carefuly its contribution to the total 
        *  radiation thickness and construct intervals!
        */
       intervals.clear();
-      TicksToIntervals( ticks , std::back_inserter( intervals ) );  
-      /// the total length of intervals in Tick units
-      double Length = 
-        std::accumulate( intervals.begin() , intervals.end()   ,
-                         0.0               , AccumulateIntervals() ); 
-      /** this volume is not to be used for estimations 
-       *  of radiation thickness
-       */
-      if( Threshold > 0 && 
-          Length * TickLength < Threshold * m_material->radiationLength() ) 
-        { 
-          ticks.clear()         ; 
-          intervals.clear()     ;
-          useThisVolume = false ; 
-        }      
+      TicksToIntervals( ticks , std::back_inserter( intervals ) ); 
     }
+
   double minInterval =  Threshold * m_material->radiationLength() / TickLength;
   
   /// transform container of its own intervals into own intersection container 
@@ -316,7 +301,7 @@ unsigned int LVolume::intersectBody
     }
   }
   ///  
-  return intersections.size(); 
+  return true; 
 };
 
 // ============================================================================
@@ -326,10 +311,10 @@ unsigned int LVolume::intersectBody
  *  @param  Vector        direction vector of the line
  *  @param  intersections output container
  *  @param  threshold     threshold value 
- *  @return number of intersections  
+ *  @return true if line intersects with body 
  */
 // ============================================================================
-unsigned int LVolume::intersectBody
+bool LVolume::intersectBody
 ( const Gaudi::XYZPoint         & Point         ,
   const Gaudi::XYZVector        & Vector        ,
   ILVolume::Intersections  & intersections ,
@@ -372,41 +357,38 @@ unsigned int LVolume::intersectBody
    *  least in 2 points! common points with cover 
    *  TopSolid within range from tickMin to tickMax 
    */
-  if( useThisVolume || m_solid == pSolid ) 
-    {
-      if( pSolid->intersectionTicks( Point   ,  
-                                     Vector  , 
-                                     tickMin , 
-                                     tickMax , 
-                                     ticks   ) < 2 ) { return 0; } 
-      /// redefine tickMin and tickMax   
-      tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
-      tickMax = *std::max_element( ticks.begin() , ticks.end() ); 
-    }  
+
+  // first intersect with the covertop. return if no intersections.
+  if( pSolid->intersectionTicks( Point   ,  
+				 Vector  , 
+				 tickMin , 
+				 tickMax , 
+				 ticks   ) < 2 ) { return false ; } 
+  // redefine tickMin and tickMax. wdh: why? to hide a real bug?
+  tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
+  tickMax = *std::max_element( ticks.begin() , ticks.end() );
   
   ///
-  Intervals               intervals; 
-  if( ( useThisVolume && Threshold > 0 ) 
-      || m_solid == pSolid ) 
-    { 
-      /** estimate the radiation thickness of the coverTop 
-       *  volume and construct intervals
-       */ 
-      intervals.clear(); 
-      TicksToIntervals( ticks , std::back_inserter( intervals ) );
+  Intervals intervals; 
+  if( ( useThisVolume && Threshold > 0 ) || m_solid == pSolid ) {
+    // create the intervals for the covertop
+    TicksToIntervals( ticks , std::back_inserter( intervals ) );
+
+    // if there is a threshold, check that covertop intersection large enough
+    if( Threshold > 0 ) {
       /// the total length of intervals in Tick units 
       double Length = 
-        std::accumulate( intervals.begin() , intervals.end       () ,
-                         0.0               , AccumulateIntervals () );
+	std::accumulate( intervals.begin() , intervals.end       () ,
+			 0.0               , AccumulateIntervals () );
       /// this volume is not to be used for estimations of radiation thickness 
-      if( Length * TickLength 
-          <= Threshold * m_material->radiationLength() ) 
-        { 
-          useThisVolume = false ;   
-          intervals.clear(); 
-          ticks.clear(); 
-        }
+	if( Length * TickLength 
+	    <= Threshold * m_material->radiationLength() ) {
+	  useThisVolume = false ;   
+	  intervals.clear(); 
+	  ticks.clear(); 
+	}
     }
+  }
   /**  if this volume is to be used,  
    *   find intersections with REAL solid (not cover) 
    *   no intersections with own solid 
@@ -422,7 +404,7 @@ unsigned int LVolume::intersectBody
                                           Vector  , 
                                           tickMin , 
                                           tickMax , 
-                                          ticks   ) ) { return 0; }
+                                          ticks   ) ) { return false ; }
       /**  check for tickMin and tickMax 
        *  remove extra ticks from container
        * refine tickMin and tickMax
@@ -433,19 +415,20 @@ unsigned int LVolume::intersectBody
        *  radiation thickness and construct intervals!
        */
       intervals.clear(); 
-      TicksToIntervals( ticks , std::back_inserter( intervals ) );  
-      /// the total length of intervals in Tick units 
-      double Length = 
-        std::accumulate( intervals.begin() , intervals.end       () ,
-                         0.0               , AccumulateIntervals () );
-      /// this volume is not to be used for estimations of radiation thickness 
-      if( Length * TickLength 
-          <= Threshold * m_material->radiationLength() ) 
-        { 
-          ticks.clear()         ; 
-          intervals.clear()     ;
-          useThisVolume = false ; 
-        }  
+      TicksToIntervals( ticks , std::back_inserter( intervals ) );
+      if(Threshold>0) {
+	/// the total length of intervals in Tick units 
+	double Length = 
+	  std::accumulate( intervals.begin() , intervals.end       () ,
+			   0.0               , AccumulateIntervals () );
+	/// this volume is not to be used for estimations of radiation thickness 
+	  if( Length * TickLength 
+	      <= Threshold * m_material->radiationLength() ) {
+	    ticks.clear()         ; 
+	    intervals.clear()     ;
+	    useThisVolume = false ; 
+	  }  
+      }
     }
   /** transform container of its own intervals 
    *  into own intersection container
@@ -459,7 +442,7 @@ unsigned int LVolume::intersectBody
     }
   }
   ///
-  return intersections.size(); 
+  return true; 
   ///
 };
 
@@ -501,8 +484,8 @@ unsigned int LVolume::intersectLine
 
   // intersections with own "volume body"
   ILVolume::Intersections own;
-  intersectBody
-    ( Point     , Vector    , own       , Threshold ); 
+  if(!intersectBody( Point, Vector, own, Threshold ) ) { return 0 ; }
+
   // intersections with childrens 
   ILVolume::Intersections childrens; 
   intersectDaughters
@@ -642,26 +625,11 @@ unsigned int LVolume::intersectLine
    * is not able to intersect any volume
    */ 
   if( Vector.mag2() <= 0 ) { return 0 ; }           // RETURN !!!
-  // check the region TickMin tickMax 
-  { // the following lines are based on O.Callot's code  
-    // Check that the intersections are not all on the same side of the segment
-    const ISolid* pSolid = m_solid->coverTop() ;
-    ISolid::Ticks ticks;
-    pSolid->intersectionTicks( Point , Vector , TickMin , TickMax , ticks ) ;
-    // pSolid->intersectionTicks( Point , Vector , ticks ) ;
-    if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
-    // redefine TickMin and TicMax
-    // NB: container of "ticks" is always sorted!
-    if( TickMax < ticks.front () ) { return 0 ; }
-    if( TickMin > ticks.back  () ) { return 0 ; }
-    TickMin = ticks.front () ;
-    TickMax = ticks.back  () ;
-    if( TickMin >= TickMax       ) { return 0 ; }  // RETURN !!!
-  }
+
   // own intersections
   ILVolume::Intersections own;
-  intersectBody 
-    ( Point , Vector , own       , TickMin , TickMax , Threshold ); 
+  if( !intersectBody (Point,Vector,own,TickMin,TickMax,Threshold ) ) { return 0 ; }
+  
   /** look for the intersections of the given 
    *  line with daughter elements construct the 
    *  intersections container for daughter volumes
