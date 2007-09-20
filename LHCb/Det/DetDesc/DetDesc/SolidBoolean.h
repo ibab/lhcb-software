@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.h,v 1.20 2007-03-16 15:57:09 cattanem Exp $ 
+// $Id: SolidBoolean.h,v 1.21 2007-09-20 15:17:05 wouter Exp $ 
 // ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
@@ -191,6 +191,12 @@ protected:
    */
   SolidChildrens::iterator 
   childEnd   () { return m_sb_childrens.end  (); };
+
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const ;
 
 private:
 

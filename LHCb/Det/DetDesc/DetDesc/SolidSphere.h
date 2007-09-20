@@ -1,4 +1,4 @@
-// $Id: SolidSphere.h,v 1.16 2007-03-16 15:57:09 cattanem Exp $ 
+// $Id: SolidSphere.h,v 1.17 2007-09-20 15:17:05 wouter Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
@@ -216,6 +216,12 @@ public:
   inline       double  endThetaAngle  () const 
   { return m_sphere_startThetaAngle + m_sphere_deltaThetaAngle ; };
   
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const { return 4 ; }
+
 protected:
   
   /// gap in phi   ?

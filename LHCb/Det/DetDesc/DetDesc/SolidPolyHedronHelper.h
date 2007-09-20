@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.14 2007-03-16 15:57:09 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.15 2007-09-20 15:17:05 wouter Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDPOLYHEDRONHELPER_H
 #define     DETDESC_SOLIDPOLYHEDRONHELPER_H 1
@@ -74,6 +74,12 @@ public:
   virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
                                           const Gaudi::RhoZPhiVector & Vector,
                                           ISolid::Ticks     & ticks) const ;
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const ;
+
 protected:
   
   /** standard constructor

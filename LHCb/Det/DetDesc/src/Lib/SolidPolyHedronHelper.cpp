@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.12 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.13 2007-09-20 15:17:05 wouter Exp $ 
 // ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
@@ -182,6 +182,15 @@ SolidPolyHedronHelper::intersectionTicksImpl(const aPoint& Point,
                                            *this  );
 };
 // ============================================================================
+// ============================================================================
+/** Calculate the maximum number of ticks that a straight line could make with this solid
+  *  @return maximum number of ticks
+  */
+ISolid::Ticks::size_type SolidPolyHedronHelper::maxNumberOfTicks() const 
+{
+  // This is far more than possible, but I do not want to revise this solid now.
+  return planes().size() ;
+}
 
 // ============================================================================
 /**  add a face/plane given with 3 points

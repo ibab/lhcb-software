@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.17 2007-03-16 15:57:09 cattanem Exp $
+// $Id: SolidBox.h,v 1.18 2007-09-20 15:17:05 wouter Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -203,7 +203,14 @@ public:
    */
   inline         double  zHalfLength()  const 
   { return m_box_zHalfLength   ; };
-  
+
+
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const { return 2 ; }
+
 protected:
   
   /** default (protected) constructor 

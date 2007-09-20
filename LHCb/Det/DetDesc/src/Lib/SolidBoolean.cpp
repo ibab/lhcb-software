@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $
+// $Id: SolidBoolean.cpp,v 1.19 2007-09-20 15:17:05 wouter Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -198,7 +198,18 @@ unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & point,
   /// sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
-
+// ============================================================================
+/** Calculate the maximum number of ticks that a straight line could make with this solid
+  *  @return maximum number of ticks
+  */
+ISolid::Ticks::size_type SolidBoolean::maxNumberOfTicks() const 
+{
+  ISolid::Ticks::size_type sum =first()->maxNumberOfTicks() ;
+  for( SolidChildrens::const_iterator ci = childBegin() ;
+       childEnd() != ci ; ++ci ) 
+    if(*ci) sum += (*ci)->maxNumberOfTicks() ;
+  return sum ;
+}
 // ============================================================================
 /** calculate the intersection points("ticks") with a given line.
  *  Input - line, paramterised by  x_vect = Point + Vector * T
