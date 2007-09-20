@@ -1,8 +1,15 @@
-// $Id: SolidMath.h,v 1.7 2005-12-08 19:20:01 jpalac Exp $
+// $Id: SolidMath.h,v 1.8 2007-09-20 15:13:21 wouter Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/12/08 19:20:01  jpalac
+//
+// ! 2005-12-08 - Juan Palacios
+//  - Provide inInside and intersectionTicks methods to solids that accept
+//    points and vectors in coordinates other than cartesian. New methods pass
+//    call to templated implementations.
+//
 // Revision 1.6  2005/12/05 16:18:43  jpalac
 //
 // ! 2005-12-05 - Juan Palacios
@@ -300,6 +307,9 @@ namespace SolidTicks
     const double cosphi = cos( Phi ) ; 
     const double d      = vect.x() * sinphi - vect.y() * cosphi ; 
     if( 0 == d ) { return 0; } 
+    // only accept half the phi plane !
+    const double e      = vect.y() * point.x() - vect.x() * point.y() ;
+    if( e * d > 0 ) { return 0 ; }
     *out++ = ( point.y() * cosphi - point.x() * sinphi ) / d ; 
     return 1; 
   };
