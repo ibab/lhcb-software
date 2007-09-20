@@ -145,6 +145,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . Modified OTTimeCreator to use OTRawBankDecoder
 
 - In DetDesc v18r0
+  . changed tick container to a fixed capacity array
+  . optimizations in calculations of intersections in cone and polycone
+  . changed logic in LVolume::intersectLine and LVolume::intersectBody such that
+    volumes only once intersected if they are their own cover colume
   . DetDesc/IGeometryInfo.h, AlignmentCondition.h
     Backward incompatible change to names of methods returning 3D transformations
     for more explicit and hopefully clearer ones.
