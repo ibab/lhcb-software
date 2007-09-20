@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r13 2007-09-20 =======================
 ! 2007-08-13 - Chris Jones
  - Adapt to changes in RichKernel
 
