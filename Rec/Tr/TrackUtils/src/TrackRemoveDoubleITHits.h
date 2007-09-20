@@ -1,8 +1,8 @@
-// $Id: TrackRemoveDoubleITHits.h,v 1.1 2007-09-14 14:19:10 lnicolas Exp $
+// $Id: TrackRemoveDoubleITHits.h,v 1.2 2007-09-20 15:14:40 lnicolas Exp $
 #ifndef _TrackRemoveDoubleITHits_H_
 #define _TrackRemoveDoubleITHits_H_
 
-/** @class TrackRemoveDoubleITHits TrackRemoveDoubleITHits Align/AlignTrTools/TrackRemoveDoubleITHits.h
+/** @class TrackRemoveDoubleITHits TrackRemoveDoubleITHits Tr/TrackUtils/TrackRemoveDoubleITHits.h
  *
  *  Removes Double hits in IT ladders
  *
@@ -19,6 +19,8 @@
 
 // Event
 #include "Event/Track.h"
+#include "Event/STCluster.h"
+#include "Event/STLiteCluster.h"
 
 // STDet
 #include "STDet/DeITDetector.h"
@@ -37,6 +39,9 @@ public:
   virtual StatusCode execute();
   virtual StatusCode finalize();
 
+  bool isHighThreshold ( const LHCb::LHCbID& theLHCbID );
+  double charge ( const LHCb::LHCbID& theLHCbID );
+
 private:
 
   //======================================================================
@@ -44,6 +49,15 @@ private:
   std::string   m_itTrackerPath;       ///< Name of the IT XML geom path
   const LHCb::Tracks* m_tracks;
   std::string m_tracksPath;
+
+  bool m_keepHighThreshold;
+  std::string m_itLiteClustersPath;
+  typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
+  const STLiteClusters* m_itLiteClusters;
+
+  bool m_keepHighCharge;
+  std::string m_itClustersPath;
+  const LHCb::STCluster::Container* m_itClusters;
   //======================================================================
 
 };

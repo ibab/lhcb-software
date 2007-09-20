@@ -1,4 +1,4 @@
-// $Id: TrackRemoveDoubleITHits.cpp,v 1.1 2007-09-14 14:19:10 lnicolas Exp $
+// $Id: TrackRemoveDoubleITHits.cpp,v 1.2 2007-09-20 15:14:40 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -34,8 +34,22 @@ TrackRemoveDoubleITHits::TrackRemoveDoubleITHits ( const std::string& name,
   this -> declareProperty ( "ITGeometryPath",
                             m_itTrackerPath = DeSTDetLocation::IT );
   
-  // Location of the different objects in use
+  // Location of the tracks container
   this -> declareProperty ( "TracksLocation", m_tracksPath = "Rec/Track/Tsa" );
+
+  // Location of the IT clusters container
+  this -> declareProperty ( "ITLiteClustersLocation",
+                            m_itLiteClustersPath =
+                            LHCb::STLiteClusterLocation::ITClusters );
+  this -> declareProperty ( "ITClustersLocation",
+                            m_itClustersPath = LHCb::STClusterLocation::ITClusters );
+  
+
+  // Do we want to keep the strip with the highest charge of a double hit?
+  // OR
+  // Do we want to keep the strip with a high threshold of a double hit?
+  this -> declareProperty ( "KeepHighCharge", m_keepHighCharge = false );
+  this -> declareProperty ( "KeepHighThreshold", m_keepHighThreshold = false );
 }
 //===========================================================================
 
@@ -62,6 +76,25 @@ StatusCode TrackRemoveDoubleITHits::initialize ( ) {
   // Get IT geometry
   m_itTracker = getDet<DeITDetector>( m_itTrackerPath );
 
+  if ( m_keepHighThreshold && m_keepHighCharge ) {
+    warning() << "Cannot keep strip with highest charge AND strip with high threshold!"
+              << endmsg
+              << "User has to set one of the two properties to false!"
+              << endmsg
+              << "Will remove both LHCbIDs of the track in case of an IT double hit!"
+              << endmsg;
+    m_keepHighThreshold = false;
+    m_keepHighCharge = false;
+  } else if ( m_keepHighThreshold )
+    info() << "In case of a double IT hit, will remove one LHCbID from the track"
+           << " if one of the two only has a high threshold." << endmsg;
+  else if ( m_keepHighCharge )
+    info() << "In case of a double IT hit, will remove from the track the LHCbID"
+           << " of the strip that has the lowest charge." << endmsg;
+  else
+    info() << "In case of a double IT hit, will remove both LHCbIDs from the track."
+           << endmsg;
+
   debug() << "TrackRemoveDoubleITHits initialized successfully" << endmsg;    
 
   return StatusCode::SUCCESS;
@@ -75,11 +108,16 @@ StatusCode TrackRemoveDoubleITHits::initialize ( ) {
 StatusCode TrackRemoveDoubleITHits::execute ( ) {
 
   debug() << "TrackRemoveDoubleITHits starting execution" << endmsg;
-  
-  // Get the tracks
-  m_tracks = get<LHCb::Tracks>( m_tracksPath );
 
-  // Loop over tracks - select some and make some plots
+  // Get the tracks
+  m_tracks = get<LHCb::Tracks>( m_tracksPath );  
+
+  if ( m_keepHighThreshold )
+    m_itLiteClusters = get<STLiteClusters>( m_itLiteClustersPath );
+  else if ( m_keepHighCharge )
+    m_itClusters = get<LHCb::STCluster::Container>( m_itClustersPath );
+
+  // Loop over tracks
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = *(*iTracks);
@@ -105,14 +143,56 @@ StatusCode TrackRemoveDoubleITHits::execute ( ) {
         if ( !aLHCbID2.isIT() ) continue;
         
         //**********************************************************************
-        // Doubled hits for IT (splitted clusters at beetles boundaries)
+        // Doubled hits for IT
+        // (splitted clusters at beetles boundaries or simulated dead strips)
         //**********************************************************************
         // Two hits in same ladder
         if ( aLHCbID.stID().uniqueSector() == aLHCbID2.stID().uniqueSector() ) {
-          Warning("Found a double hit in IT. Removing both LHCbIDs from track!!!",
-                  StatusCode::SUCCESS, 1);
-          lhcbIDsToRemove.push_back( aLHCbID );
-          lhcbIDsToRemove.push_back( aLHCbID2 );
+          
+          if ( m_keepHighThreshold ) {
+            if ( isHighThreshold ( aLHCbID ) &&
+                 !isHighThreshold ( aLHCbID2 ) ) {
+              Warning("Found a double hit in IT. Removing from track LHCbID of strip with low threshold!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID2 );
+            }
+            else if ( isHighThreshold ( aLHCbID2 ) &&
+                      !isHighThreshold ( aLHCbID ) ) {
+              Warning("Found a double hit in IT. Removing from track LHCbID of strip with low threshold!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID );
+            }
+            else {
+              Warning("Found a double hit in IT. Both high or low thresholds. Removing both LHCbIDs from track!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID );
+              lhcbIDsToRemove.push_back( aLHCbID2 );
+            }
+          }
+          else if ( m_keepHighCharge ) {
+            if ( charge ( aLHCbID ) > charge ( aLHCbID2 ) ) {
+              Warning("Found a double hit in IT. Removing from track LHCbID of strip with less charge!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID2 );
+            }
+            else if ( charge ( aLHCbID2 ) > charge ( aLHCbID ) ) {
+              Warning("Found a double hit in IT. Removing from track LHCbID of strip with less charge!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID );
+            }
+            else {
+              Warning("Found a double hit in IT. None with higher charge. Removing both LHCbIDs from track!!!",
+                      StatusCode::SUCCESS, 1);
+              lhcbIDsToRemove.push_back( aLHCbID );
+              lhcbIDsToRemove.push_back( aLHCbID2 );
+            }
+          }
+          else {
+            Warning("Found a double hit in IT. Removing both LHCbIDs from track!!!",
+                    StatusCode::SUCCESS, 1);
+            lhcbIDsToRemove.push_back( aLHCbID );
+            lhcbIDsToRemove.push_back( aLHCbID2 );
+          }
           break;
         }
         //**********************************************************************
@@ -137,6 +217,38 @@ StatusCode TrackRemoveDoubleITHits::finalize ( ) {
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize ( );   // Must be called after all other actions  
+  return GaudiAlgorithm::finalize ( );   // Must be called after all other actions
+};
+//===========================================================================
+
+
+//===========================================================================
+// Get the high threshold bit of the lite cluster associated to an LHCbID
+//===========================================================================
+bool TrackRemoveDoubleITHits::isHighThreshold ( const LHCb::LHCbID& theLHCbID ) {
+
+  STLiteClusters::const_iterator iLiteClus =
+    m_itLiteClusters->find<LHCb::STLiteCluster::findPolicy>( theLHCbID.stID() );
+
+  if ( iLiteClus != m_itLiteClusters->end() )
+    return (*iLiteClus).highThreshold();
+
+  return false;
+};
+//===========================================================================
+
+
+//===========================================================================
+// Get the charge of the cluster associated to an LHCbID
+//===========================================================================
+double TrackRemoveDoubleITHits::charge ( const LHCb::LHCbID& theLHCbID ) {
+
+  LHCb::STCluster* theClus =
+    m_itClusters->object ( theLHCbID.stID() );
+
+  if ( theClus != 0 )
+    return theClus->totalCharge();
+
+  return 0.0;
 };
 //===========================================================================

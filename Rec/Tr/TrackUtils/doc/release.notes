@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== TrackUtils v1r14 2007-09-20 ======================
+! 2007-09-20 - Louis Nicolas
+ - TrackRemoveDoubleITHits: add possibility to keep the hit with highest charge
+   of the two or to keep the hit with high threshold (if only one of the
+   two). Otherwise, remove both hits from the track.
+
 ! 2007-09-14 - Louis Nicolas
  - new algorithm TrackRemoveDoubleITHits: when two hits are found in the same IT
 	 ladder, remove both lhcbIDs from the track's lhcbIDs. Probably useful for
