@@ -4,6 +4,7 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r14 2007-09-20 ======================
 ! 2007-09-14 - Louis Nicolas
  - new algorithm TrackRemoveDoubleITHits: when two hits are found in the same IT
 	 ladder, remove both lhcbIDs from the track's lhcbIDs. Probably useful for
@@ -21,7 +22,6 @@
 ! 2007-08-28 M Needham
  - Add clone killing algorithms based on relative entropy
  
-
 ! 2007-08-28 M Needham 
  - Add selection possibility to TrackContainer copy
 
