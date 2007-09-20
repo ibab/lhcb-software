@@ -1,4 +1,4 @@
-// $Id: ISolid.h,v 1.13 2007-01-17 12:10:12 cattanem Exp $ 
+// $Id: ISolid.h,v 1.14 2007-09-20 15:15:18 wouter Exp $ 
 // ===========================================================================
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1
@@ -10,6 +10,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+/// local
+#include "DetDesc/StaticArray.h"
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
 static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
@@ -30,9 +32,9 @@ public:
   /** useful type definition for dealing 
    *  with intersections of the solid and the line 
    */
-  typedef double             Tick  ;
-  typedef std::vector<Tick>  Ticks ;
-  
+  typedef double               Tick  ;
+  typedef StaticArray<Tick,64> Ticks ;
+
 public:
   
   /** retrieve the uninque interface identifier 
@@ -175,6 +177,11 @@ public:
     const Tick       & tickMax ,
     Ticks            & ticks   ) const = 0 ;
 
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  virtual Ticks::size_type maxNumberOfTicks() const = 0 ;
   
   /** virtual destructor
    *  @see ISolid::reset()
