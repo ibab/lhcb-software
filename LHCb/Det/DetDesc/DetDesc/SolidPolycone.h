@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.11 2007-03-16 15:57:09 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.12 2007-09-20 15:44:50 wouter Exp $ 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
@@ -191,6 +191,23 @@ public:
   inline const double deltaPhiAngle() const { return m_deltaPhiAngle;}
   
   
+  /** find the index from the z position
+   *  @param z z-position
+   *  @return index -- return 'number()-1' if not in z-range
+   */
+  inline const Triplets::size_type index( const double thisz ) const 
+  { 
+    Triplets::size_type i = thisz < z(0) || thisz > z(number()-1) ? number()-1 : 0 ;
+    for(; i<number()-1 && z(i+1) <= thisz; ++i) {}
+    return i ;
+  }
+
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const { return (number()+1)*2 ; }
+
 protected:
   
   /** @class CmpZ
@@ -204,7 +221,21 @@ protected:
     inline bool operator() ( const Triplet& triplet , const double&  Z ) const
     { return triplet.first >= Z ; }
   };
-  
+
+protected:
+  /** static function to generate triplets for a cone */
+  static Triplets makeTriplets(double ZHalfLength        , 
+			       double OuterRadiusMinusZ  ,
+			       double OuterRadiusPlusZ   ,
+			       double InnerRadiusMinusZ  , 
+			       double InnerRadiusPlusZ ) ;
+
+  /** static function to generate triplets for a tubs */
+  static Triplets makeTriplets(double ZHalfLength        , 
+			       double OuterRadius,
+			       double InnerRadius) {
+    return makeTriplets(ZHalfLength,OuterRadius,OuterRadius,InnerRadius,InnerRadius) ; }
+
 protected:
   
   /** default protected  constructor 
@@ -233,6 +264,19 @@ private:
   unsigned int intersectionTicksImpl( const aPoint  & Point,
                                       const aVector & Vector,
                                       ISolid::Ticks& ticks ) const;
+
+  /// check if phi is in phi range
+  inline bool insidePhi ( const double phi /* [-pi,pi] */ ) const {
+    return 
+      noPhiGap() ||
+      ( startPhiAngle ()                   <= phi &&
+	startPhiAngle () + deltaPhiAngle() >= phi     ) ||
+      ( startPhiAngle ()                   <= phi + 2*M_PI &&
+	startPhiAngle () + deltaPhiAngle() >= phi + 2*M_PI ) ;
+  }
+
+  /// gap in phi ?
+  const bool noPhiGap() const { return m_deltaPhiAngle == 360 * Gaudi::Units::degree ; }
 
 private:
   

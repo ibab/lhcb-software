@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.16 2007-03-16 15:57:23 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.17 2007-09-20 15:44:50 wouter Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 
@@ -225,44 +225,28 @@ bool SolidPolycone::isInside( const Gaudi::RhoZPhiPoint   & point ) const
 template <class aPoint>
 bool SolidPolycone::isInsideImpl (  const aPoint& point ) const
 {
-  /// look for concrete z-segment
-  if( point.z() > triplets().back().first ) { return false; }
-  Iterator it = 
-    std::find_if( begin () , 
-                  end   () ,
-                  std::bind2nd( CmpZ() , point.z() ) ) ;
+  /// check z
+  if( point.z() < triplets().front().first ||
+      point.z() > triplets().back().first ) { return false; }
+
+  /// check phi
+  if( !insidePhi( point.phi() ) ) { return false ; }
+
+  /// check radius
+  Iterator it = std::find_if( begin() , end() , std::bind2nd( CmpZ() , point.z() ) ) ;
+
   /// outside!
-  if( begin() == it || end() == it        ) { return false; }
-  /// check for phi
-  bool   phiok = false ;
-  double phi = point.phi(); ///  [-180, 180]
-  if( startPhiAngle ()                    <= phi && 
-      startPhiAngle () + deltaPhiAngle () >= phi     ) { phiok = true ;}
-  else 
-    {
-      phi += 360 * Gaudi::Units::degree ;
-      if( startPhiAngle ()                    <= phi && 
-          startPhiAngle () + deltaPhiAngle () >= phi ) { phiok = true ; }
-    }
-  if( !phiok ) { return false ; }
-  /// check for radius
-  const double       rho  = std::sqrt( point.perp2() );
+  if( begin() == it || end() == it ) { return false; }
+
+  const double rho  = std::sqrt( point.perp2() );
+
   const unsigned int i2   = it - begin();
   const unsigned int i1   = i2 - 1 ;
-  ///
-  const double       dzi  = 1.0 / ( z( i2 ) - z ( i1 ) ) ;
-  /// check for outer radius 
-  if(  rho > RMax( i1 )  +  
-       ( point.z() - z( i1 ) ) * ( RMax( i2 ) - RMax( i1 ) ) * dzi ) 
-    { return false; }
-  /// check for inner radius  
-  if( 0 < RMin( i1 )  &&  0 < RMin( i2 ) )
-    {
-      if(  rho < RMin( i1 )  +  
-           ( point.z() - z( i1 ) ) * ( RMin( i2 ) - RMin( i1 ) ) * dzi ) 
-        { return false; }
-    }
-  ///
+  const double zfrac = (point.z() - z(i1))/(z(i2) - z(i1)) ;
+  const double rmax  = (1-zfrac)*RMax( i1 ) + zfrac*RMax( i2 ) ;
+  const double rmin  = (1-zfrac)*RMin( i1 ) + zfrac*RMin( i2 ) ;
+  if( rho > rmax || rho < rmin ) return false ;
+  
   return true;
 };
 
@@ -419,61 +403,123 @@ unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
                                                     const aVector& Vector,
                                                     ISolid::Ticks& ticks  
                                                     ) const 
-{
-  /// line with null direction vector is not able to intersect any solid!
+{ 
+  /// clear the container 
+  ticks.clear() ;
+  
+/// line with null direction vector is not able to intersect any solid!
   if( Vector.mag2() <= 0 ) { return 0 ; }
-  /// intersect with phi 
-  if( ( 0            != startPhiAngle() ) || 
-      ( 360 * Gaudi::Units::degree != deltaPhiAngle() ) )
-    {
-      SolidTicks::LineIntersectsThePhi( Point                             , 
-                                        Vector                            , 
-                                        startPhiAngle()                   , 
-                                        std::back_inserter( ticks )       ); 
-      SolidTicks::LineIntersectsThePhi( Point                             ,
-                                        Vector                            , 
-                                        startPhiAngle() + deltaPhiAngle() , 
-                                        std::back_inserter( ticks )       ); 
+
+  // bail out if we don't cross the envelope
+  if(!crossBCylinder( Point , Vector )) { return 0 ; }
+
+  // intersect with first z-planes
+  ISolid::Ticks tmpticks ;
+  tmpticks.clear() ; 
+  if(SolidTicks::LineIntersectsTheZ( Point, Vector, z(0), std::back_inserter( tmpticks ))) {
+    double tick = tmpticks.front() ;
+    double x = Point.x() + tick * Vector.x() ;
+    double y = Point.y() + tick  * Vector.y() ;
+    double r = sqrt(x*x+y*y) ;
+    if(RMin(0)<=r && r<=RMax(0) && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
+      ticks.push_back(tick) ;
+  }
+
+  // intersect with last z-plane
+  tmpticks.clear() ; 
+  if(SolidTicks::LineIntersectsTheZ( Point, Vector, z(number()-1), std::back_inserter( tmpticks ))) {
+    double tick = tmpticks.front() ;
+    double x = Point.x() + tick * Vector.x() ;
+    double y = Point.y() + tick  * Vector.y() ;
+    double r = sqrt(x*x+y*y) ;
+    if(RMin(number()-1)<=r && r<=RMax(number()-1) && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
+      ticks.push_back(tick) ;
+  }
+  
+  if( !noPhiGap() ) {
+    // intersect with phi planes
+    tmpticks.clear() ; 
+    SolidTicks::LineIntersectsThePhi( Point,Vector,startPhiAngle(), std::back_inserter( tmpticks ) );  
+    //if( deltaPhiAngle() != M_PI )
+    SolidTicks::LineIntersectsThePhi( Point,Vector,startPhiAngle() + deltaPhiAngle(), std::back_inserter( tmpticks ));
+    
+    // check that we are anywhere inside this cylinder
+    for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
+      double thisz = Point.z() + *it * Vector.z() ;
+      if( z(0) <=thisz && thisz<= z(number()-1) ) {
+	Triplets::size_type i = index(thisz) ;
+	//std::cout << "in phi: " << thisz << " " << z(i) << " " << z(i+1) << std::endl ;
+	assert(i < number() - 1 ) ;
+	double zfrac = (thisz - z(i))/(z(i+1) - z(i)) ;
+	double x = Point.x() + *it * Vector.x() ;
+	double y = Point.y() + *it * Vector.y() ;
+	double r = sqrt(x*x+y*y) ;
+	if( r >= ((1-zfrac)*RMin(i) + zfrac*RMin(i+1)) && 
+	    r <= ((1-zfrac)*RMax(i) + zfrac*RMax(i+1)) )
+	  ticks.push_back(*it) ;
+      }
     }
-  /// intersect with first z-plane 
-  SolidTicks::LineIntersectsTheZ( Point        , 
-                                  Vector       , 
-                                  z( 0 )       , 
-                                  std::back_inserter( ticks ) ); 
-  /// loop over all other surfaces 
-  for( unsigned int i = 1 ; i < number() ; ++i )
-    {
-      /// intersect with outer conical surface 
-      SolidTicks::LineIntersectsTheCone( Point                       , 
-                                         Vector                      , 
-                                         RMax ( i - 1 )              , 
-                                         RMax ( i     )              , 
-                                         z    ( i - 1 )              , 
-                                         z    ( i     )              , 
-                                         std::back_inserter( ticks ) );   
-      /// intersect with inner conical surface 
+  }
+  
+  for( unsigned int i = 1 ; i < number() ; ++i ) 
+    if( z(i) > z (i-1) ) {
+      // intersect with the cones
+      tmpticks.clear() ;
+      // intersect with outer conical surface 
+      SolidTicks::LineIntersectsTheCone( Point , Vector, 
+					 RMax ( i - 1 ), RMax ( i ), 
+					 z    ( i - 1 ), z    ( i ), 
+					 std::back_inserter( tmpticks ) );   
+      // intersect with inner conical surface 
       if( ( 0 < RMin( i - 1 ) ) || ( 0 < RMin ( i ) ) ) 
-        {
-          SolidTicks::LineIntersectsTheCone( Point                       , 
-                                             Vector                      , 
-                                             RMin ( i - 1 )              , 
-                                             RMin ( i     )              , 
-                                             z    ( i - 1 )              , 
-                                             z    ( i     )              , 
-                                             std::back_inserter( ticks ) );   
-          
-        }      
-      /// intersect with z-plane 
-      SolidTicks::LineIntersectsTheZ( Point        , 
-                                      Vector       , 
-                                      z( i )       , 
-                                      std::back_inserter( ticks ) ); 
+	SolidTicks::LineIntersectsTheCone( Point, Vector, 
+					   RMin ( i - 1 ), RMin ( i ), 
+					   z    ( i - 1 ), z    ( i ), 
+					   std::back_inserter( tmpticks ) );   
+      // check that we are in the right z and phi range
+      for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
+	double thisz = Point.z() + *it * Vector.z() ;
+	if( z(i-1) <= thisz && thisz <= z(i) &&
+	    (noPhiGap() ||
+	     insidePhi(atan2( Point.y() + *it * Vector.y(), Point.x() + *it * Vector.x())) ) )
+	  ticks.push_back(*it) ;
+      }
+    } else {
+      // double z-plane: intersect with this z-plane
+      tmpticks.clear() ; 
+      if(SolidTicks::LineIntersectsTheZ( Point, Vector, z(i), std::back_inserter( tmpticks ))) {
+	double tick = tmpticks.front() ;
+	double x = Point.x() + tick * Vector.x() ;
+	double y = Point.y() + tick  * Vector.y() ;
+	double r = sqrt(x*x+y*y) ;
+	if( noPhiGap() || insidePhi( atan2(y,x) ) ) {
+	  // take an excusive-OR
+	  bool insideFirst  = RMin(i-1)<=r && r<=RMax(i-1) ;
+	  bool insideSecond = RMin(i)<=r && r<=RMax(i) ;
+	  if( (insideFirst && !insideSecond) || (insideSecond && !insideFirst) )
+	    ticks.push_back(tick) ;
+	}
+      }
     }
-  ///
-  /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , Point , Vector , *this );  
-  ///  
+  
+  // sort the ticks and solve eventual problems
+  std::sort(ticks.begin(),ticks.end()) ;
+  return SolidTicks::RemoveAdjacentTicksFast(ticks , Point, Vector, *this );
 };
+
+//=============================================================================
+/** static function to generate triplets for a cone */
+SolidPolycone::Triplets SolidPolycone::makeTriplets(double ZHalfLength        , 
+						    double OuterRadiusMinusZ  ,
+						    double OuterRadiusPlusZ   ,
+						    double InnerRadiusMinusZ  , 
+						    double InnerRadiusPlusZ )
+{
+  Triplets triplets ;
+  triplets.push_back( std::make_pair(-ZHalfLength, std::make_pair(InnerRadiusMinusZ,OuterRadiusMinusZ) ) ) ;
+  triplets.push_back( std::make_pair( ZHalfLength, std::make_pair(InnerRadiusPlusZ, OuterRadiusPlusZ)  ) ) ;
+  return triplets ;
+}
 
 //=============================================================================
 // The end 

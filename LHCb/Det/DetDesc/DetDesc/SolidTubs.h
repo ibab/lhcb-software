@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.17 2007-09-17 08:44:53 wouter Exp $
+// $Id: SolidTubs.h,v 1.18 2007-09-20 15:44:50 wouter Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -199,7 +199,13 @@ public:
   inline double endPhiAngle     () const 
   { return m_tubs_startPhiAngle + m_tubs_deltaPhiAngle ; }; 
   ///@}
-  
+
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const { return 4 ; }
+
 protected:
   
   /** check for R 
@@ -304,8 +310,8 @@ inline bool SolidTubs::insidePhi ( const double phi /* [-pi,pi] */ ) const
     noPhiGap() ||
     ( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) ||
-    ( startPhiAngle ()                   <= phi + M_PI &&
-      startPhiAngle () + deltaPhiAngle() >= phi + M_PI ) ;
+    ( startPhiAngle ()                   <= phi + 2*M_PI &&
+      startPhiAngle () + deltaPhiAngle() >= phi + 2*M_PI ) ;
 };
 
 // ===========================================================================

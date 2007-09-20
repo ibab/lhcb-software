@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.19 2007-05-03 12:06:30 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.20 2007-09-20 15:44:50 wouter Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -278,13 +278,22 @@ protected:
   /// gap in phi ?
   const bool noPhiGap() const { return m_noPhiGap ; }
   
+  /// check if phi is in phi range
+  inline bool insidePhi ( const double phi /* [-pi,pi] */ ) const ;
+
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
   template <class aPoint>
   inline const bool insidePhi ( const aPoint& point ) const ;
-    
+
+  /** Calculate the maximum number of ticks that a straight line could
+      make with this solid
+  *  @return maximum number of ticks
+  */
+  Ticks::size_type maxNumberOfTicks() const { return 4 ; }
+
 protected:
   
   /** default protected constructor 
@@ -375,18 +384,26 @@ inline double SolidCons::oR_z( const double z ) const
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
-template <class aPoint>
+inline bool SolidCons::insidePhi ( const double phi /* [-pi,pi] */ ) const
+{
+  return 
+    noPhiGap() ||
+    ( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) ||
+    ( startPhiAngle ()                   <= phi + 2*M_PI &&
+      startPhiAngle () + deltaPhiAngle() >= phi + 2*M_PI ) ;
+};
+
+// ===========================================================================
+/** check for phi 
+ *  @param point to be checked 
+ *  @return true if point is "inside phi" 
+ */
+// ===========================================================================
+template< class aPoint>
 inline const bool SolidCons::insidePhi ( const aPoint& point ) const 
 {
-  if( noPhiGap()                                    ) { return true ; }
-  double phi = point.phi() ;   // [-180,180] 
-  if( startPhiAngle ()                   <= phi &&
-      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  phi += 360 * Gaudi::Units::degree ;
-  if( startPhiAngle ()                   <= phi &&
-      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  // 
-  return false ;
+  return noPhiGap() || insidePhi( point.phi() ) ;
 };
 // ===========================================================================
 #endif ///<  DETDESC_SOLIDCONS_H

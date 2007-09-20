@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.17 2007-01-09 16:01:21 cattanem Exp $
+// $Id: SolidBase.cpp,v 1.18 2007-09-20 15:44:50 wouter Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -219,16 +219,11 @@ unsigned int SolidBase::intersectionTicksImpl( const aPoint  & Point,
                                                ISolid::Ticks&  ticks) const 
 {
   // check for bounding box 
-  if( isOutBBox( Point , Vector , tickMin , tickMax ) ) { return 0; }
-  //
+  if( isOutBBox( Point , Vector , tickMin , tickMax ) ) { ticks.clear(); return 0; }
+  // get the ticks (these should all be valid intervals now)
   intersectionTicks( Point , Vector , ticks ); 
-  // sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks   , 
-                                           Point   , 
-                                           Vector  , 
-                                           tickMin , 
-                                           tickMax , 
-                                           *this   );
+  // just adjust the out-of-range intervals
+  return SolidTicks::adjustToTickRange( ticks, tickMin, tickMax ) ;
 };
 
 // ============================================================================

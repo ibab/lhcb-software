@@ -1,4 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.19 2007-09-14 15:41:02 wouter Exp $ 
+// $Id: SolidTubs.cpp,v 1.20 2007-09-20 15:44:50 wouter Exp $ 
 // ============================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -356,7 +356,7 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
   if( vect.mag2() == 0  )                 { return 0 ; } ///< RETURN!
   
   // need to optimize these
-  if( !crossBSphere  ( point , vect ) )   { return 0 ; }
+  //if( !crossBSphere  ( point , vect ) )   { return 0 ; }
   if( !crossBCylinder( point , vect ) )   { return 0 ; }
   
   // first the cylinders
@@ -367,11 +367,11 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
   
   // check that ticks are actually inside z-range and phi-range
   for( ISolid::Ticks::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it)
-    if( fabs(point.z() + *it * vect.z()) < zHalfLength() &&
+    if( fabs(point.z() + *it * vect.z()) <= zHalfLength() &&
 	(noPhiGap() ||
 	 insidePhi(atan2( point.y() + *it * vect.y(), point.x() + *it * vect.x())) ) )
       ticks.push_back(*it) ;
-  
+
   // find intersection points("ticks") with z-planes 
   tmpticks.clear() ;
   SolidTicks::LineIntersectsTheZ( point , vect  , -1.0 * zHalfLength() , std::back_inserter( tmpticks ) ); 
@@ -392,6 +392,7 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
 				      vect                        , 
 				      startPhiAngle()             , 
 				      std::back_inserter( tmpticks ) );
+    //if( deltaPhiAngle() != M_PI )
     SolidTicks::LineIntersectsThePhi( point                             , 
 				      vect                              , 
 				      startPhiAngle() + deltaPhiAngle() , 
@@ -406,11 +407,11 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
 	if(innerRadius()<=r && r<=outerRadius() )
 	  ticks.push_back(*it) ;
       }
-    }
+    } 
   }
 
   std::sort(ticks.begin(),ticks.end()) ;
-  return ticks.size() ;
+  return SolidTicks::RemoveAdjacentTicksFast(ticks , point , vect , *this );
 };
 
 // ============================================================================
@@ -528,7 +529,7 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint & Point,
 {
   // don't call down to SolidBase because it performs more complicated
   // tick operations than we need
-  if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }
+  if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { ticks.clear() ; return 0 ; }
   SolidTubs::intersectionTicksImpl( Point,Vector,ticks );
   return SolidTicks::adjustToTickRange( ticks, tickMin, tickMax ) ;
 }

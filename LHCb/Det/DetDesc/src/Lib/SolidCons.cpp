@@ -1,4 +1,4 @@
-// $Id: SolidCons.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidCons.cpp,v 1.21 2007-09-20 15:44:50 wouter Exp $ 
 // ===========================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -380,60 +380,78 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
                                                const aVector& vect,
                                                ISolid::Ticks& ticks  ) const
 {
+  // Clear the tick vector
+  ticks.clear();
+  
   // line with null direction vector is not able to intersect any solid 
   if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
   
   // cross bounding cylinder ?
   if( !crossBCylinder( point , vect ) ) { return 0 ; }
 
-  ticks.clear();
+  // intersect with first z-plane
+  typedef StaticArray<ISolid::Tick,6> LocalTickContainer ;
+  LocalTickContainer tmpticks ;
+  tmpticks.clear() ; 
+  if(SolidTicks::LineIntersectsTheZ( point, vect, -zHalfLength(), std::back_inserter( tmpticks ))) {
+    double tick = tmpticks.front() ;
+    double x = point.x() + tick * vect.x() ;
+    double y = point.y() + tick  * vect.y() ;
+    double r = sqrt(x*x+y*y) ;
+    if(innerRadiusAtMinusZ()<=r && r<=outerRadiusAtMinusZ() && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
+      ticks.push_back(tick) ;
+  }
+
+  // intersect with 2nd z-plane
+  tmpticks.clear() ; 
+  if(SolidTicks::LineIntersectsTheZ( point, vect, zHalfLength(), std::back_inserter( tmpticks ))) {
+    double tick = tmpticks.front() ;
+    double x = point.x() + tick * vect.x() ;
+    double y = point.y() + tick  * vect.y() ;
+    double r = sqrt(x*x+y*y) ;
+    if(innerRadiusAtPlusZ()<=r && r<=outerRadiusAtPlusZ() && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
+      ticks.push_back(tick) ;
+  }
   
-  // intersect with z-planes 
-  SolidTicks::LineIntersectsTheZ( point                       , 
-                                  vect                        , 
-                                  -1.0 * zHalfLength()        , 
-                                  std::back_inserter( ticks ) ); 
-  SolidTicks::LineIntersectsTheZ( point                       , 
-                                  vect                        ,     
-                                  zHalfLength()               , 
-                                  std::back_inserter( ticks ) );   
-
-  // intersect with phi 
-  if( ( 0 != startPhiAngle() ) || ( 360*Gaudi::Units::degree != deltaPhiAngle() ) )
-    {
-      SolidTicks::LineIntersectsThePhi( point                             , 
-                                        vect                              , 
-                                        startPhiAngle()                   , 
-                                        std::back_inserter( ticks )       ); 
-      SolidTicks::LineIntersectsThePhi( point                             , 
-                                        vect                              , 
-                                        startPhiAngle() + deltaPhiAngle() , 
-                                        std::back_inserter( ticks )       ); 
-    }   
-
-  /// intersect with outer conical surface
-  SolidTicks::LineIntersectsTheCone( point                           , 
-                                     vect                            , 
-                                     outerRadiusAtMinusZ()           , 
-                                     outerRadiusAtPlusZ ()           , 
-                                     -1.0 * zHalfLength ()           , 
-                                     zHalfLength        ()           , 
-                                     std::back_inserter( ticks )     );   
-
-  /// intersect with inner conical surface
-  if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
-    {
-      SolidTicks::LineIntersectsTheCone( point                       , 
-                                         vect                        , 
-                                         innerRadiusAtMinusZ()       , 
-                                         innerRadiusAtPlusZ ()       , 
-                                         -1.0 * zHalfLength ()       , 
-                                         zHalfLength        ()       , 
-                                         std::back_inserter( ticks ) );     
+  if( !noPhiGap() ) {
+    // intersect with phi planes
+    tmpticks.clear() ; 
+    SolidTicks::LineIntersectsThePhi( point,vect,startPhiAngle(), std::back_inserter( tmpticks ) );  
+    //if( deltaPhiAngle() != M_PI )
+    SolidTicks::LineIntersectsThePhi( point,vect,startPhiAngle() + deltaPhiAngle(), std::back_inserter( tmpticks ));
+    
+    // check that we are anywhere inside this cylinder
+    for( LocalTickContainer::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
+      double zfrac = (point.z() + *it * vect.z())/zHalfLength() ;
+      if( fabs(zfrac) <= 1 ) {
+	double x = point.x() + *it * vect.x() ;
+	double y = point.y() + *it * vect.y() ;
+	double r = sqrt(x*x+y*y) ;
+	if( r >= 0.5*( (1-zfrac)*innerRadiusAtMinusZ() + (1+zfrac)*innerRadiusAtMinusZ()) && 
+	    r<=  0.5*( (1-zfrac)*outerRadiusAtMinusZ() + (1+zfrac)*outerRadiusAtMinusZ()) )
+	  ticks.push_back(*it) ;
+      }
     }
+  }
   
-  /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
+  // intersect with outer conical surface
+  tmpticks.clear() ;
+  SolidTicks::LineIntersectsTheCone( point, vect, outerRadiusAtMinusZ(), outerRadiusAtPlusZ (), 
+				     -zHalfLength(), zHalfLength(), std::back_inserter( tmpticks ));
+  // intersect with inner conical surface
+  if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
+    SolidTicks::LineIntersectsTheCone( point, vect, innerRadiusAtMinusZ(), innerRadiusAtPlusZ (), 
+				       -zHalfLength(), zHalfLength(), std::back_inserter( tmpticks ) ); 
+    
+  // check that we are in the right z and phi range
+  for( LocalTickContainer::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it)
+    if( fabs(point.z() + *it * vect.z()) <= zHalfLength() &&
+	(noPhiGap() ||
+	 insidePhi(atan2( point.y() + *it * vect.y(), point.x() + *it * vect.x())) ) )
+      ticks.push_back(*it) ;
+
+  std::sort(ticks.begin(),ticks.end()) ;
+  return SolidTicks::RemoveAdjacentTicksFast(ticks , point , vect , *this );
 };
 
 // ============================================================================
@@ -558,10 +576,6 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
                                                const Tick&    tickMax ,
                                                Ticks&         ticks) const  
 {
-  
-  if( !crossBCylinder( Point , Vector                )  ) { return 0 ; }
-  if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }
-  
   return SolidBase::intersectionTicks ( Point   , 
                                         Vector  ,
                                         tickMin , 
