@@ -159,6 +159,7 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     of localDeltaFromGlobalTransform methods
   . Modifications to SolidBox and SolidTubs to speed things up
   . Improve doxygen documentation
+  . Make log() in GeometryInfoPlus.h return MsgStream by reference not value
 
 - In DetDescSvc v1r13, MuonDet v6r4, RichDet v10r7, DetCondExample v11r2
   . Adapt to DetDesc interface changes
