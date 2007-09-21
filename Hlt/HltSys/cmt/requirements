@@ -15,7 +15,6 @@ use HltMuonAlley        v1r4    Hlt   # Alessia Satta
 use HltCaloAlley        v1r3    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r2	Hlt   # Jose Angel Hernando-Morata
-
 use HltL0Conf           v1r3    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r1    Hlt   # Alessia Satta
 use HltHadL0Conf        v1r1    Hlt   # Jose Angel Hernando-Morata
@@ -29,17 +28,7 @@ use HltSelChecker       v5r0    Hlt   # Patrick Koppenburg
 
 use HltBase             v2r5   Hlt    # Jose Angel Hernando-Morata
 
-use LoKiCore            v*     Phys   # Vanya Belyaev
-use LoKiGen             v*     Phys   # Vanya Belyaev
-use LoKiMC              v*     Phys   # Vanya Belyaev
-use LoKiGenMC           v*     Phys   # Vanya Belyaev
-use LoKiPhys            v*     Phys   # Vanya Belyaev
-use LoKiPhysMC          v*     Phys   # Vanya Belyaev
-use LoKiAlgo            v*     Phys   # Vanya Belyaev
-use LoKiAlgoMC          v*     Phys   # Vanya Belyaev
-use LoKiArrayFunctors   v*     Phys   # Vanya Belyaev
 use LoKiTrigger         v*     Phys   # Vanya Belyaev
-use LoKi                v*     Phys   # Vanya Belyaev
 use LoKiExample         v*     Ex     # Vanya Belyaev (should go to Analysis)
 
 use TisTosTobbing       v*     Phys   # Tomasz Skwarnicki  

@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-09-22 - Patrick Koppenburg
+ - requirements: Remove all LoKi packages moved to LHCb
+
 ! 2007-09-21 Tomasz Skwarnicki
  - comment out duplicate initialization of HltSelectionEntry/HltAlleys in HltSelections.opts
    since it is already set-up in Hlt.opts
