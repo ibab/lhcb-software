@@ -1,10 +1,11 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += {"LHCb::MEPManager/MEPManager"};
 ApplicationMgr.SvcOptMapping        += {"LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.ExtSvc               += {"IncidentSvc"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::SocketDataSender/Sender" };
-Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+Runable.MEPManager                   = "MEPManager";
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;

@@ -25,7 +25,7 @@ $MINITERM MBMInit@${HOST} -e "setenv UTGID MEPInit   ; $gaudi_exe -main=$OPTS/ME
 # $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
 $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff   ; $gaudi_exe -main=$OPTS/MBMinit.opts -opt=$OPTS/Daemon.opts " &
 #
-$MINITERM TanServer@${HOST} -e "setenv UTGID TANServer; $test_exe tan_nameserver -a -tcp -d" &
+#$MINITERM TanServer@${HOST} -e "setenv UTGID TANServer; $test_exe tan_nameserver -a -tcp -d" &
 #
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
@@ -44,14 +44,14 @@ sleep 2
 $MINITERM EvtProd@${HOST}   -e "setenv UTGID EvtProd  ; $gaudi_exe -opt=$OPTS/MEPConverter.opts -main=$OPTS/Main.opts "&
 $MINITERM EvtHolder@${HOST} -e "setenv UTGID EvtHolder; $gaudi_exe -opt=$OPTS/MEPHolder.opts -main=$OPTS/Main.opts "&
 $MINITERM Moore_0@${HOST}   -e "setenv UTGID Moore_0  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
-$MINITERM Moore_1@${HOST}   -e "setenv UTGID Moore_1  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
-$MINITERM Moore_2@${HOST}   -e "setenv UTGID Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+#$MINITERM Moore_1@${HOST}   -e "setenv UTGID Moore_1  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+#$MINITERM Moore_2@${HOST}   -e "setenv UTGID Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 # $MINITERM Moore_3@${HOST}   -e "setenv UTGID Moore_3  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
-#
-$MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
-sleep 2
 $MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
-$MINITERM DiskWR@${HOST}    -e "setenv UTGID DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&
+#
+#$MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
+#$MINITERM MDFWriterNet@${HOST}    -e "
+setenv UTGID MDFWriterNet  ; $gaudi_exe -opt=$OPTS/MDFWriterNet.opts -main=$OPTS/Main.opts &
 #
 #
 # For debugging enable this and disable any other
