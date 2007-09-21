@@ -247,7 +247,10 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
   . DVAlgorithm: use WriteSelResult Tool, remove IAlgorithm2ID usage
   . Remove IAlgorithm2ID.h
   . Added TisTosTobbing interfaces
-  . Changed a doxygen comment in IMassVertexFit.h 
+  . Fix some doxygen comments 
+  . In src/Lib/DVAlgorithm.cpp: add ParticleAdder to list of VertexFitters,
+    ParticleCombiners and ParticleReFitters.
+  . Add a method to GeomDispCalculator 
 
 - In DaVinciMCKernel v2r3
   . IP2VVMCPartAngleCalculator.h:
