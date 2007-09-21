@@ -34,7 +34,7 @@ else
   shift
 endif
 #   
-set Bversion = "v31r8"
+set Bversion = "v31r9"
 echo "Executing valgrind for Brunel $Bversion using options file $Dver.opts"
 #
 

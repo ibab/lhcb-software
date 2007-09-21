@@ -3,17 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-Stephanie Hansmann-Menzemer 17/09/2007
-- added more track collections to the PatChecker in the Tf framework in
-  BrunelCheck.opts. This is commented out by default, no change in default behaviour.
-  
-
-Kurt Rinnert 17/09/2007
- - added section for pattern recognition check in Tf framework to
-   BrunelCheck.opts.  This is commented out by default, no change in default
-   behaviour.
-
-Chris Jones 11/09/2007
+</PRE><H1><A NAME=v31r9>2007-09-20 Brunel v31r9</A></H1><PRE>
+ - Use ParamFiles v7r0
+ - Added section for pattern recognition check in Tf framework to
+   BrunelCheck.opts. Commented out by default, no change in default behaviour.
  - Update example ganga job to remove warnings about missing features (now 
    available) and to add examples of job merging.
 
