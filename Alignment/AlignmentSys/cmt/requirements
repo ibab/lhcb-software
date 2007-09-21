@@ -1,5 +1,5 @@
 package AlignmentSys
-version v2r0
+version v2r1
 
 branches cmt doc
  
@@ -8,11 +8,11 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use AlignmentInterfaces	v2r1	Alignment # Johan Blouw
-use AlignmentTools      v2r6    Alignment # Sebastien Viret
-use AlignTrTools	v3r1	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use AlignmentInterfaces	v2r2	Alignment # Johan Blouw
+use AlignmentTools      v2r8    Alignment # Sebastien Viret
+use AlignTrTools	v3r2	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
 use SolvKernel		v1r1    Alignment # Adlene Hicheur
-use AlignSolvTools      v2r0    Alignment # Adlene Hicheur
-use TAlignment		v3r1	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
-#use AlignT2Velo         v1r0    Alignment # Steve Blusk
-use Escher		v2r1	Alignment # Johan Blouw
+use AlignSolvTools      v2r1    Alignment # Adlene Hicheur
+use TAlignment		v3r2	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignT2Velo         v1r1    Alignment # Steve Blusk
+use Escher		v2r2	Alignment # Johan Blouw

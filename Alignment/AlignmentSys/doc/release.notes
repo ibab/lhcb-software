@@ -5,6 +5,73 @@ Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+</PRE><H1><A NAME=v2r1>2007-09-18 AlignmentSys v2r1</A></H1><PRE>
+- Packages added: AlignT2Velo
+- Packages update: AlignmentInterfaces 	v2r2
+ 		   AlignmentTools      	v2r8
+		   AlignTrTools		v3r2
+		   SolvKernel		v1r1
+		   AlignSolvTools	v2r1
+		   TAlignment		v3r2
+		   AlignT2Velo		v1r1
+		   Escher		v2r2
+
+- in AlignmentInterfaces  v2r2
+	- added Centipede interface which inherits from Millepede,
+          to accomodate different use of it by IT/OT from Velo.
+        - added ITAConfig interface, which is used to configure the
+	  alignment problem for the IT/OT closed form alignment
+	- added methods in IAlignDetectorSelector for Lagrangian constraints
+- in AlignmentTools v2r8
+       	- added implementation of Centipede class, see AlignmentInterfaces for a descrpition.
+	- reconstituted original call to InitMillepede in Millepede class
+
+- in AlignTrTools v3r2
+	- added implementation of TAConfig class. This class allows for a better split
+	  between the tool (TAConfig) and the algorithm (GAlign)
+	- updated Derivatives class
+
+- in SolvKernel v1r1
+	- nothing
+
+- in AlignSolvTools v2r1
+	- added ntuple with eigenvector information for monitoring
+        - tools split into subtools with common interface
+	- tools can be configured by user
+- in TAlignment v3r2
+	- 2007-08-30 - Johan Blouw
+	 - re-organizing GAlign class by moving tool-related code to TAConfig class.
+	 - added a linker library so that methods from GAlign can be called from
+	   python
+	 - added dictionaries for the above purpose
+	 - added modifications to the requirements file accordingly
+	 NOTE: this is not intended as a "best solution"; in a next release I'd
+	 prefer to remove the linker library and the dictionaries.
+	- 2007-08-16 - Gerhard Raven
+	 - make sure the same pivot points are used consistently  in AlignAlgorithm
+	 - add some more monitoring
+	-  2007-08-16 - Jan Amoraal
+	 - Add the option to strip hits from a track before re-fitting it.
+	 - Move common code from AlignOTDetector to AlignmentFunctions
+	 - Add support for (linear) Lagrange multipliers
+	 - If no pivot points defined, use the 'local' (0,0,0) in global coordinates as default
+	- 2007-07-20 - Jan Amoraal
+	 - Added a small treack filter algorithm which filters tracks by type
+	 - Update and corretly apply DetElem alignment deltas using Juan's geometry free functions
+	 - Added a small alignment python script
+	 - Made AlignOTDetector more generic by using templates
+	 - Minor speed improvements and cleaning up
+	 - Removed src/IAlignDetectorSelector.h since it has been moved to AlignmentInterfaces
+	- 2007-05-15 Johan Blouw 
+	  - removed *_load.cpp as it is not needed anymore
+
+- in AlignT2Velo v1r1
+	- removed unnecessary dependencies
+
+- in Escher v2r2
+	- redefined the calling sequence to reflect changes made by J. Amoraal
+
+
 
 </PRE><H1><A NAME=v2r0>2007-05-23 AlignmentSys v2r0</A></H1><PRE>
 - Packages added: AlignmentTools v2r6
