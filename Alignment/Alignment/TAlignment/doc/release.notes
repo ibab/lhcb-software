@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-09-21 - Johan Blouw
+ - modified requirements file such that only GAlign is
+   visible to python through a linker library
+
 ! 2007-09-01 - Jan Amoraal
  - Added AlignmentElement and FindAlignment (Framework++)
  - Added a small testing algorithm

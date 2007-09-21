@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           TAlignment
-version           v3r1
+version           v3r2
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -34,11 +34,12 @@ apply_pattern	install_more_includes	more=TAlignment
 #============================================================================
 public
 library		TAlignment	../src/*.cpp -import=AIDA
+library		TAlignmentL	../src/GAlign.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library		library=TAlignment
-apply_pattern    linker_library		library=TAlignment
+apply_pattern    component_library	library=TAlignment
+apply_pattern    linker_library		library=TAlignmentL
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
                   dictionary=TAlignment                         \
@@ -49,5 +50,3 @@ apply_pattern     reflex_dictionary                            \
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro TAlignmentDict_use_linkopts $(use_linkopts)
 macro TAlignment_linkopts $(Boost_linkopts_regex)
-
-
