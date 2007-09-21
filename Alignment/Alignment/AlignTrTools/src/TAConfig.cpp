@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.9 2007-09-03 12:53:34 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.10 2007-09-21 12:17:53 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -930,10 +930,6 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   referenceZ = ptraj.position(alongWire).z();
   return StatusCode::SUCCESS;
 }
-
-
-
-
 
 StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
   std::string name;

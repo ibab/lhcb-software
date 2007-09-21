@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.8 2007-09-03 12:53:34 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.9 2007-09-21 12:17:53 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -127,6 +127,8 @@ class TAConfig : public GaudiTupleTool,
      StatusCode sc = m_Centipede->FitLoc(tr_cnt, trpar, 0, estimated, chi2, residual);
      if ( sc.isFailure() )
        info() << "Millepede local fit returns " << sc.getCode() << endreq;
+     //     chi2 = tr_par[trpar.size()+1]; //decode chi2 from tracking parameters variable
+     //     residual = tr_par[trpar.size()+2]; //decode residual
      return StatusCode::SUCCESS;
    };
 
