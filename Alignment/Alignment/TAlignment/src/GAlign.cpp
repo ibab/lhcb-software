@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.6 2007-08-31 09:56:53 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.7 2007-09-21 11:49:02 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -20,7 +20,7 @@
 // Event
 #include "Event/StateTraj.h"
 #include "Event/Track.h"
-#include "GAlign.h"
+#include "TAlignment/GAlign.h"
 
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeITLayer.h"

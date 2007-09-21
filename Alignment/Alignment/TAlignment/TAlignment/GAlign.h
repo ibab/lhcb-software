@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.3 2007-08-31 09:56:53 jblouw Exp $
+ *  $Id: GAlign.h,v 1.1 2007-09-21 11:49:02 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
