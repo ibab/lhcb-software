@@ -6,7 +6,7 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r9>2007-09-19 LbcomSys v6r9</A></H1><PRE>
+</PRE><H1><A NAME=v6r9>2007-09-21 LbcomSys v6r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r9
 
 - Packages modified: CaloAssociators v6r4, L0Muon v7r3, L0DU v7r7, STTools v3r3,
@@ -67,7 +67,7 @@ This version uses Gaudi v19r4 and LHCb v22r9
     a sensor number. Now an error message is issued and the source ID is skipped.
   . Introduced new version 3 of VELO raw buffer.  The only difference to
     version 2 is the treatment of interstrip positions.  These are now computed
-    and rounded exactly like on the TELL1 board. This now the default for Boole
+    and rounded exactly like on the TELL1 board. Default is still version 2
   . Added proper bank version management to decoder.  The correct decoding is
     determined from the raw bank's version.  The version can also be enforced
     via the ForceBankVersion property (useful for testbeam data).
