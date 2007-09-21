@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.9 2007-03-02 17:31:27 cattanem Exp $
+// $Id: TrajOTProjector.h,v 1.10 2007-09-21 11:00:41 graven Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -57,6 +57,7 @@ private:
   // job options
   std::string        m_otTrackerPath; ///< Name of the OT XML geom path
   double             m_tolerance;     ///< Required accuracy of the projection
+  bool               m_useDrift;      ///< Use measured drift distance
 
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

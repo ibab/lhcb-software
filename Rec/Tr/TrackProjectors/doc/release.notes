@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2007-09-21 - Gerhard Raven
+ - Add an option to ignore the drift distance in TrajOTProjector
+   Default is to use it, so by default the behaviour remains the same
+
 !====================== TrackProjectors v2r15 2007-09-20 ======================
 ! 2007-08-16 - Gerhard Raven
  - Fix misunderstanding on the sign in the alignmentDerivative methods of the

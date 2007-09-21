@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.27 2007-08-16 13:24:06 graven Exp $
+// $Id: TrajOTProjector.cpp,v 1.28 2007-09-21 11:00:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -120,12 +120,19 @@ StatusCode TrajOTProjector::project( const State& state,
   // Add the first order correction
   double distToWire = distToWireRef + Vector1( m_H * ( state.stateVector() - refVec ) )(0);
 
-  // Calculate the residual: 
-  m_residual = -( distToWire - meas.ambiguity()*driftDistance( meas, s2 ) );
+  double errMeasure2;
+  if (m_useDrift) {
+      // Calculate the residual: 
+      m_residual = -( distToWire - meas.ambiguity()*driftDistance( meas, s2 ) );
 
-  // Set the error on the measurement so that it can be used in the fit
-  double errMeasure2 = meas.resolution2( refTraj.position(s1), 
-                                         refTraj.direction(s1) );
+      // Set the error on the measurement so that it can be used in the fit
+      errMeasure2 = meas.resolution2( refTraj.position(s1), 
+                                      refTraj.direction(s1) );
+  } else {
+      m_residual = -distToWire;
+      DeOTModule *mod = m_det->findModule(meas.lhcbID().otID()); assert(mod!=0);
+      errMeasure2 = mod->cellRadius()/sqrt(12.0);
+  }
   m_errMeasure = sqrt(errMeasure2);
 
   // Calculate the error on the residual
@@ -187,7 +194,6 @@ StatusCode TrajOTProjector::initialize()
   m_det = getDet<DeOTDetector>(m_otTrackerPath);
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
   m_poca = tool<ITrajPoca>( "TrajPoca" );
-
   return sc;
 }
 
@@ -205,6 +211,7 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
 		   m_otTrackerPath = DeOTDetectorLocation::Default );
   declareProperty( "Tolerance", m_tolerance = 0.01 );
   declareProperty( "UseBField", m_useBField = false );
+  declareProperty( "UseDrift", m_useDrift = true );
 }
 
 //-----------------------------------------------------------------------------
