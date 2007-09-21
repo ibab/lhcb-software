@@ -4,8 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r0 2007-03-14 =============================
+!========================== DDDB v1r1 2007-09-21 =============================
+! 2007-09-21 - Marco Cattaneo
+ - Change DC06.opts to pick up DC06-repro0710 tag, for DC06 reprocessing.
+   Needs SQLDDDB v2r3 or greater
 
+!========================== DDDB v1r0 2007-03-14 =============================
 ! 2007-03-14 - Marco Cattaneo
  - New package to interface to the Geometry and Conditions DB. Contains:
    . cmt/requirements:  dependencies to SQLDDDB database and packages needed to
