@@ -3,6 +3,35 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r5>2007-09-21 Boole v14r5</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r9, Lbcom v6r9
+ and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r9 or greater
+
+- Persistency changes
+  . Change in L0Muon raw bank format
+
+- New functionality
+  . Major change in L0Muon emulation to match the hardware (ProcessorKernel v6r0,
+    L0MuonKernel v7r1, L0Event v16r5, L0Muon v7r3, L0DU v7r7, ParamFiles v7r0)
+  . Implement Selection Board-> FEB connection in CardParam.h (CaloDet v8r4)
+
+- New tuning
+  . Minor clean-ups and optimisations in MCOTDepositCreator and MCOTTimeCreator
+    (OTSimulation v3r13)
+  . Optimisations in detector description
+    (DetDesc v18r0, OTDet v7r6, STDet v3r6, VeloDet v12r1) 
+
+- Bug fixes
+  . Modified the treatment of the timing of particle arrivals to correctly 
+    implement spillover with the right fractions in each Velo sensor
+    (VeloSimulation v7r6)
+  . Fix untested StatusCodes (VeloSimulation v7r6, CaloAssociators v6r4,
+    CaloDet v8r4, CaloUtils v7r5, CaloDAQ v4r0, Relations v5r2)
+  . Fix bugs related to 'lazy connection' feature (DetCond v11r6)
+
 </PRE><H1><A NAME=v14r4>2007-07-23 Boole v14r4</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r8, Lbcom v6r8
  and DDDB v1r* (SQLDDDB v2r2 or greater), ParamFiles v6r1, FieldMap v4r7
