@@ -16,7 +16,6 @@ Brunel v31r9 or greater
 - New functionality
   . Major change in L0Muon emulation to match the hardware (ProcessorKernel v6r0,
     L0MuonKernel v7r1, L0Event v16r5, L0Muon v7r3, L0DU v7r7, ParamFiles v7r0)
-  . Implement Selection Board-> FEB connection in CardParam.h (CaloDet v8r4)
 
 - New tuning
   . Minor clean-ups and optimisations in MCOTDepositCreator and MCOTTimeCreator
