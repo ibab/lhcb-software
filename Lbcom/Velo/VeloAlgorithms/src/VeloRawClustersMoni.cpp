@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.3 2007-09-21 16:20:47 szumlat Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.4 2007-09-21 17:51:43 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode VeloRawClustersMoni::initialize() {
 //=============================================================================
 StatusCode VeloRawClustersMoni::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  info() << "==> Execute" << endmsg;
   //
   m_numberOfEvents++;
   debug()<< " number of evts: " << m_numberOfEvents <<endmsg;
@@ -182,6 +182,10 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
   debug()<< " ==> rawVeloClusterMonitor() " <<endmsg;
   //
   int contSize=m_rawClusters->size();
+  if(!contSize){
+    Warning("Empty cluster container! - Skiping monitor");
+    return ( StatusCode::SUCCESS );
+  }
   m_nRawClusters+=double(contSize);
   m_nRawClusters2+=double(contSize*contSize);
   plot(contSize, 100,
@@ -227,6 +231,10 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     LHCb::VeloChannelID channel=cluster->channelID();
     unsigned int sensNumber=channel.sensor();
     const DeVeloSensor* sensor=m_veloDet->sensor(sensNumber);
+    if(sensor==0){
+      Error("==> No valid pointer to sensor - Check your CondDB!!");
+      return ( StatusCode::FAILURE );
+    }
     plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 101,
            "Z position and sensor number of the cluster",
            -50., 100., 0, 135, 150, 135);
@@ -339,7 +347,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     }
   }
   //
-  return ( StatusCode::FAILURE );
+  return ( StatusCode::SUCCESS );
 }
 //=============================================================================
 StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
