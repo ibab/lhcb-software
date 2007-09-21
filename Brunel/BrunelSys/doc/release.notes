@@ -7,6 +7,31 @@ Purpose: LHCb reconstruction programs
 This version uses projects Gaudi v19r4, LHCb v22r9, Lbcom v6r9, Rec v4r9
  and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7
 
+This is a pre-production version for validation of the DC06 reprocessing
+
+- New features
+  . Added options for running the Tf version of tracking pattern recognition,
+    off by default 
+    (BrunelCheck.opts, Reco.opts, RecoTracking_Tf.opts, Fitting_Tf.opts)
+  . Update example ganga job to remove warnings about missing features (now
+    available) and to add examples of job merging.
+  . Added options for reprocessing from DST (Brunel.opts, v200601.opts)
+  . Uses new SQLDDDB tag DC06-repro0710 (DDDB v1r1, SQLDDDB v2r3 or greater)
+
+- New tuning
+  . Many improvements to tracking, including optimisations suggested by A-team
+    code reviews
+    (See details in talk at </PRE><a href="http://indico.cern.ch/getFile.py/access?contribId=1&amp;resId=0&amp;materialId=slides&amp;confId=10171">T-Rec on 2007-09-17</a><PRE>)
+  . Many improvements to Rich PID.
+    (See details in talk at </PRE><a href="http://indico.cern.ch/getFile.py/access?contribId=1&resId=1&materialId=slides&confId=10168">T-Rec on 2007-08-28</a><PRE>)
+- Bug fixes
+  . Many fixes to tracking, including most differences in 
+    win32/slc4_ia32/slc4_amd64 behaviour
+    (See details in talk at </PRE><a href="http://indico.cern.ch/getFile.py/access?contribId=1&amp;resId=0&amp;materialId=slides&amp;confId=10171">T-Rec on 2007-09-17</a><PRE>)
+  . Fix untested StatusCodes in Calorimeter 
+  . Fix bugs related to 'lazy connection' feature (CondDB v11r6)
+
+
 </PRE><H1><A NAME=v31r8>2007-07-23 Brunel v31r8</A></H1><PRE>
 This version uses projects Gaudi v19r4, LHCb v22r8, Lbcom v6r8, Rec v4r8
  and DDDB v1r* (SQLDDDB v2r2 or greater), ParamFiles v6r1, FieldMap v4r7
