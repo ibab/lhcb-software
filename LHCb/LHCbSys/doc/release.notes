@@ -25,7 +25,11 @@ This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
     DaVinciMCKernel v2r3,  RichRecBase v3r7, LinkerInstances v3r3, LoKiAlgo v6r0,
     LoKiAlgoMC v6r0, LoKiCore v6r0, LoKiGen v6r0, LoKiGenMC v6r0, LoKiMC v6r0,
     LoKiPhys v6r0, LoKiPhysMC v6r0, PatTools v3r2, IOExample v2r1,
-    DetCondExample v11r2
+    DetCondExample v11r2, DDDB v1r1
+
+- In DDDB v1r1
+  . Change DC06.opts to pick up DC06-repro0710 tag, for DC06 reprocessing.
+    Needs SQLDDDB v2r3 or greater
 
 - In GaudiObjDesc v10r4
   . New feature for string to type conversion for enums and vice versa
