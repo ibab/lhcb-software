@@ -26,14 +26,18 @@ HltSelections.Members += {"HltSelectionEntry/HltAlleys",
                           "GaudiSequencer/HltRecoSequence"
 };
 
-HltAlleys.Selections = {"MuonTriggerSingle",
-                        "MuonTriggerDiMuon",
-                        "MuonTriggerIPDiMuon",
-                        "MuonTriggerPureDiMuon",
-                        "MuonTriggerPureIPDiMuon",
-                        "HadTrigger"
-} ;
-HltAlleys.SelectionName = "HltAlleys" ;
+//    HltAlleys is set-up in Hlt.opts
+//HltAlleys.Selections = {"MuonTriggerSingle",
+//                        "MuonTriggerDiMuon",
+//                        "MuonTriggerIPDiMuon",
+//                        "MuonTriggerPureDiMuon",
+//                        "MuonTriggerPureIPDiMuon",
+//                        "HadTrigger"
+//                        ,"ELeTriggerEleTrk"
+//                        ,"ELeTriggerSingle"
+//                        ,"PhoTriggerPhoTrk"
+//} ;
+//HltAlleys.SelectionName = "HltAlleys" ;
 
 //---------------------------------------------------------------------
 // ProtoParticles and Particles

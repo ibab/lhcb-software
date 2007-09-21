@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-09-21 Tomasz Skwarnicki
+ - comment out duplicate initialization of HltSelectionEntry/HltAlleys in HltSelections.opts
+   since it is already set-up in Hlt.opts
+
 ! 2007-09-20 Tomasz Skwarnicki
  - add HltEleAlleyConfSequence and HltPhoAlleySequence (new Ecal trigger prototypes)
  - change HltMuonAlleyConfSequence to properly initialize L0 tracks in Single Muon Alley 
