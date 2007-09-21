@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.28 2007-09-21 11:00:41 graven Exp $
+
 // Include files 
 
 // from Gaudi
@@ -131,7 +131,8 @@ StatusCode TrajOTProjector::project( const State& state,
   } else {
       m_residual = -distToWire;
       DeOTModule *mod = m_det->findModule(meas.lhcbID().otID()); assert(mod!=0);
-      errMeasure2 = mod->cellRadius()/sqrt(12.0);
+      double radius = mod->cellRadius();
+      errMeasure2 = radius*radius/3;
   }
   m_errMeasure = sqrt(errMeasure2);
 
