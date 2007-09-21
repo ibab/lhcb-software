@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.336 2007-09-20 16:56:18 jonrob Exp $ 
+! $Id: release.notes,v 1.337 2007-09-21 05:26:48 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r0 2007-09-20 ==============================
 ! 2007-09-20 - Chris Jones
  - Make log() in GeometryInfoPlus.h return MsgStream by reference not value
 
-!====================== DetDesc v18r0 2007-09-20 ==============================
 ! 2007-09-20 - Wouter Hulsbergen
  - changed tick container to a fixed capacity array
  - optimizations in calculations of intersections in cone and polycone
