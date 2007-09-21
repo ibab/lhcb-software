@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.28 2007-09-18 08:44:18 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.29 2007-09-21 07:01:03 cattanem Exp $
 // Include files 
 
 // GaudiKernel
@@ -1186,7 +1186,7 @@ GeometryInfoPlus::~GeometryInfoPlus()
     delete m_log; 
     m_log = 0; 
   }
-  m_ums->unregister(this);
+  //  m_ums->unregister(this); causes crash after DetDescSvc finalisation
   m_ums->release();
   m_services->release();
 }
