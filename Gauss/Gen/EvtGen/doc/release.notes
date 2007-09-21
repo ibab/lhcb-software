@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-09-21 - Patrick Robbe
+ - EvtBtoXsgammaKagan.cpp: modifications by Peter Richardson, see
+    https://savannah.cern.ch/bugs/index.php?28421
+
 !======================== EvtGen v8r15 2007-02-08 =========================
 ! 2007-01-24 - Patrick Robbe
  - Add new class EvtDiLog to replace di-logarithm function DDILOG from

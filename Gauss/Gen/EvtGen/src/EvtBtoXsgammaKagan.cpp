@@ -473,9 +473,8 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
 }
 
 double EvtBtoXsgammaKagan::GetMass( int /*Xscode*/ ){
- 
-//  Get hadronic mass for the event according to 
-// the hadronic mass spectra computed in computeHadronicMass
+  //  Get hadronic mass for the event according to 
+  // the hadronic mass spectra computed in computeHadronicMass
   double mass=0.0;
   //  double min=0.6373; //  usually just above K pi threshold for Xsd/u
   double min=_mHmin;
@@ -486,26 +485,37 @@ double EvtBtoXsgammaKagan::GetMass( int /*Xscode*/ ){
   double boxheight(0);
   double trueHeight(0);
   double boxwidth=max-min;
+  double wgt(0.);
 
   for (int i=0;i<int(intervalMH+1.0);i++) {
     if(brHad[i]>boxheight)boxheight=brHad[i];
   }
+
   while ((mass > max) || (mass < min)){
     xbox = EvtRandom::Flat(boxwidth)+min;
     ybox=EvtRandom::Flat(boxheight);
     trueHeight=0.0;
-    for (int i=0;i<int(intervalMH+1.0);i++) {
-      if(massHad[i]>=xbox&& trueHeight==0.0){
-	trueHeight=(brHad[i]+brHad[i+1])/2.;
+    // Original BaBar
+    //    for (int i=0;i<int(intervalMH+1.0);i++) {
+    //      if(massHad[i]>=xbox&& trueHeight==0.0){
+    //        trueHeight=(brHad[i]+brHad[i+1])/2.;
+    //      }
+    // }
+    // Correction by Peter Richardson
+    for( int i = 1 ; i < int( intervalMH + 1.0 ) ; ++i ) {
+      if ( ( massHad[i] >= xbox ) && ( 0.0 == trueHeight ) ) {
+        wgt=(xbox-massHad[i-1])/(massHad[i]-massHad[i-1]);
+        trueHeight=brHad[i-1]+wgt*(brHad[i]-brHad[i-1]);
       }
     }
+
     if (ybox>trueHeight) {
       mass=0.0;
     } else {
       mass=xbox;
     }
   }
- 
+  
   return mass;
 }
 
