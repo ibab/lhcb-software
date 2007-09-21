@@ -1,22 +1,31 @@
-// $Id: AlignSelTool.h,v 1.3 2007-09-03 13:23:32 jblouw Exp $
+// $Id: AlignSelTool.h,v 1.4 2007-09-21 15:45:52 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
-// Include files
+//===========================================================================
+// Includes
+//===========================================================================
 // from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 // Interface
-#include "AlignmentInterfaces/IAlignSelTool.h"
-
+#include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
+// Event
 #include "Event/Track.h"
 #include "Event/OTTime.h"
 #include "Event/STLiteCluster.h"
+//===========================================================================
 
-// Other
-#include "gsl/gsl_cdf.h"
+//===========================================================================
+// Forward declarations
+class DeOTDetector;
+class DeSTDetector;
+class DeITDetector;
+//===========================================================================
 
 /** @class AlignSelTool AlignSelTool.h
  *  
@@ -24,7 +33,10 @@
  *  @author Louis Nicolas
  *  @date   2006-12-01
  */
-class AlignSelTool : public GaudiTool, virtual public IAlignSelTool {
+class AlignSelTool : public GaudiTool, 
+                     virtual public ITrackSelector,
+                     virtual public IIncidentListener {
+
 public: 
   /// Standard constructor
   AlignSelTool( const std::string& type, 
@@ -35,84 +47,110 @@ public:
 
   StatusCode AlignSelTool::initialize();
 
-  virtual bool AlignSelTool::selectTrack(LHCb::Track* aTrack);
-
+  virtual bool accept(const LHCb::Track& aTrack) const;
+  
+  /** Implement the handle method for the Incident service.
+   *  This is used to inform the tool of software incidents.
+   *
+   *  @param incident The incident identifier
+   **/
+  void handle( const Incident& incident );
+  
 protected:
-
+  
 private:
 
-  typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
+  static const int defValue = -999999;
 
-  const int m_nStations;
-  const int m_nLayers;
-  const int m_nStrips;
+  //===========================================================================
+  // Constants picked up from the geometry
+  //===========================================================================
+  int m_nStations;
 
-  const int m_nSubLayers;
-  const int m_nModules;
-  const int m_nStraws;
+  int m_nQuarters;
+  int m_nModules;
+  int m_nStraws;
 
+  int m_nBoxes;
+  int m_nLadders;
+  int m_nStrips;
+  //===========================================================================
+
+  //===========================================================================
+  // More Properties
+  //===========================================================================
   bool m_fieldOn;
-
   double m_nStrawsTol;
   double m_nStripsTol;
+  int alignSelectedModules;
+  mutable bool m_configured;
+  void initEvent() const;
+  ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
+  //===========================================================================
 
   //=============================================================================
   // Defining the cuts
   //=============================================================================
+  std::string c_trackType;
+  int c_modulesToAlign;
+  int c_maxMulti;
   double c_minP;
   double c_maxChi2PerDoF;
   double c_minChi2Prob;
   int c_maxNHoles;
   int c_maxNSharedHits;
   int c_maxNCloseHits;
-  std::string c_trackType;
   //=============================================================================
 
-  ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
-
-  std::string m_tracksPath;
+  //===========================================================================
+  //  The objects in use
+  //===========================================================================
   LHCb::Track theTrack;
-
+  std::string m_tracksPath;
+  mutable const LHCb::Tracks* m_tracks;
   std::string m_itClustersPath;
-  STLiteClusters* m_itClusters;
+  typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
+  mutable STLiteClusters* m_itClusters;
   std::string m_otTimesPath;
-  const LHCb::OTTimes* m_otTimes;
+  mutable const LHCb::OTTimes* m_otTimes;
+  //===========================================================================
 
-  double m_trP;
-  double m_trChi2PerDoF;
-  double m_trChi2Prob;
-  int m_nHoles;
-  int m_nSharedHits;
-  int m_nCloseHits;
-
-  int m_nITDoubleHits;
-  int m_nOTDoubleHits;
-  int m_nLadOverlaps;
-  int m_nBoxOverlaps;
-
-  static const int defValue = -999999;
-
-  //=============================================================================
-  // Getting some important variables
-  //=============================================================================
-  int AlignSelTool::getAllVariables ( LHCb::Track* aTrack );
-  bool AlignSelTool::isSharedHit ( const LHCb::Track* aTrack,
-                                   const LHCb::Node* aNode );
-  int AlignSelTool::nNeighbouringHits ( const LHCb::Track* aTrack );
-  bool AlignSelTool::isNeighbouringHit ( LHCb::OTChannelID timeID,
-                                         LHCb::OTChannelID hitID,
-                                         unsigned int hitStraw );  
-  //=============================================================================
+  //===========================================================================
+  // Declaring the tracks variables
+  //===========================================================================
+  mutable int m_multiplicity;
+  mutable double m_trP;
+  mutable double m_trChi2PerDoF;
+  mutable double m_trChi2Prob;
+  mutable int m_nHoles;
+  mutable int m_nSharedHits;
+  mutable int m_nCloseHits;
+  //===========================================================================
 
   //=============================================================================
-  // Cutting on some variables
+  // Getting the tracks variables
   //=============================================================================
-  bool AlignSelTool::cutTrackP ( );
-  bool AlignSelTool::cutTrackChi2PerDoF ( );
-  bool AlignSelTool::cutTrackChi2Prob ( );
-  bool AlignSelTool::cutNHoles ( );
-  bool AlignSelTool::cutNSharedHits ( );
-  bool AlignSelTool::cutNCloseHits ( );
+  int getAllVariables ( const LHCb::Track& aTrack ) const;
+  bool isSharedHit ( const LHCb::Track& aTrack,
+                     const LHCb::Node* aNode ) const;
+  int nNeighbouringHits ( const LHCb::Track& aTrack ) const;
+  bool isNeighbouringHit ( LHCb::OTChannelID timeID,
+                           LHCb::OTChannelID hitID,
+                           unsigned int hitStraw ) const;  
+  //=============================================================================
+
+  //=============================================================================
+  // Cutting on the variables
+  //=============================================================================
+  bool selectDefinedModules ( const LHCb::Track& aTrack ) const;
+  bool selectBoxOverlaps ( const LHCb::Track& aTrack ) const;
+  bool cutMultiplicity ( ) const;
+  bool cutTrackP ( ) const;
+  bool cutTrackChi2PerDoF ( ) const;
+  bool cutTrackChi2Prob ( ) const;
+  bool cutNHoles ( ) const;
+  bool cutNSharedHits ( ) const;
+  bool cutNCloseHits ( ) const;
   //=============================================================================
 };
 #endif // ALIGNTRTOOLS_ALIGNSELTOOL_H
