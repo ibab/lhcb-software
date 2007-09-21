@@ -4,13 +4,41 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2007-09-20 - Louis Nicolas
+
+ In AlignSelTool:
+	- Removed obsolete parts
+	- Removed hard-coded constants and defined them using the geometry
+	- Added incident listener for not getting tracks and clusters containers for
+	  each track
+	- Added cut on multiplicity
+	- Added possibility to select tracks going through:
+		- IT only
+		- OT only
+		- IT / OT overlap region
+		- Any IT box overlap
+		- A defined IT box overlap
+		- The same IT box in all stations
+		- The same ladder of the same IT box in all stations
+		- The same OT quarter in all stations
+		- The same module of the same OT quarter in all stations
+	- Now uses nExpectedIT/OT track info to get the number of missing hits (holes)
+
+ In AlignTrackMonitor:
+	- Removed obsolete parts
+	- Added ghost classification
+	- Removed hard-coded constants and defined them using the geometry
+	- Greatly simplified the calculation of the number of missing hits (holes) by
+	  using the nExpectedIT/OT track info
+	- Changed a few variables in the ntuple
+
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r2 </A></H1><PRE>
 - J. Blouw 
   -> updated Derivatives class
   -> updated TAConfig class
 - L. Nicolas
-  => updated AlignSelTool class
-  => updated AlignTrackMonitor class
+  => updated AlignSelTool
+  => updated AlignTrackMonitor
 
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>
 - J. Blouw modified requirements file to remove explict version dependency
