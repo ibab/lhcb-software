@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.361 2007-09-15 13:58:57 pkoppenb Exp $
+# $Id: requirements,v 1.362 2007-09-21 15:15:40 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -21,7 +21,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v6r1                 -no_auto_imports
+use ParamFiles         v7r0                -no_auto_imports
 use FieldMap           v4r7                 -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
