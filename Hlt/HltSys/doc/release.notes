@@ -6,6 +6,9 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 ! 2007-09-22 - Patrick Koppenburg
+ - remove L0MuonCandidatesFromRaw from all sequences following changes in L0Muon.
+
+! 2007-09-22 - Patrick Koppenburg
  - requirements: Remove all LoKi packages moved to LHCb
 
 ! 2007-09-21 Tomasz Skwarnicki

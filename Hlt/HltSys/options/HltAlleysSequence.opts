@@ -42,7 +42,7 @@ HltHadPreTriggerDiHadron.OutputLevel = 2;
 
 
 HltMuonAlley.Members += {   "L0Entry/L0MuonEntry",
-                            "L0MuonCandidatesFromRaw",
+                            //                            "L0MuonCandidatesFromRaw", // removed following a change in L0Muon v7r3
                             "GaudiSequencer/HltRecoVeloRZSeq",
                             "MatchPatVeloRL0",
                             "HltMuonRec",
