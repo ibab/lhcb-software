@@ -3,8 +3,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r6 2007-09-21 ====================
 ! 2007-09-19 - Juan PALACIOS
-
  - src/Lib/DVAlgorithm.cpp
    . Add ParticleAdder to list of VertexFitters, ParticleCombiners, and
      ParticleReFitters.
@@ -21,7 +21,6 @@
    . Give reasonable names to method arguments!
    . Improve doxygen comments.
 
-!========================= DaVinciKernel v6r6 2007-09-18 ====================
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - IP2VV(Part)AngleCalculator.h
    . Two new interfaces for tools calculating angles in e.g. B->mumuK*
