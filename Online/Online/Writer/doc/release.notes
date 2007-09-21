@@ -1,4 +1,8 @@
 |---------------------------------------------------
+| 2007-10-21 : Suman
+|    Working commit for handling events from several runs
+|    Does not clean older runs yet
+|---------------------------------------------------
 | 2007-04-21 : Suman
 |    Fixed finalize problem
 |    Tested new XMLRPC Client

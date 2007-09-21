@@ -125,7 +125,7 @@ int SendThread::processSends(void)
       if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
         return 0;
       } else {
-        cmd_to_send = 0;
+        cmd_to_send = NULL;
         delete bif;
         bif = NULL;
         continue;

@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <ctime>
+#include <map>
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -21,26 +22,24 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
 
 using namespace LHCb;
 
-static inline unsigned long adler32(unsigned long adler,
-    const char *buf,
-    unsigned int len);
-
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler32, md5) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, rno) { \
   (h)->cmd = CMD_CLOSE_FILE; \
     (md5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.adler32_sum = (adler32); \
+    (h)->run_no = rno;	\
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
  * Macro for initialising a write command.
  */
-#define INIT_WRITE_COMMAND(h, len, off, fname) { \
+#define INIT_WRITE_COMMAND(h, len, off, fname, rno) { \
   (h)->cmd = CMD_WRITE_CHUNK; \
     (h)->data.chunk_data.size = (len); \
+    (h)->run_no = rno;	\
     (h)->data.chunk_data.offset = (off); \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
@@ -48,10 +47,10 @@ static inline unsigned long adler32(unsigned long adler,
 /**
  * Macro for initialising an open command.
  */
-#define INIT_OPEN_COMMAND(h, fname, r_num) { \
+#define INIT_OPEN_COMMAND(h, fname, rno) { \
   (h)->cmd = CMD_OPEN_FILE; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
-    (h)->data.start_data.run_num = r_num; \
+    (h)->run_no = rno;	\
 }
 
 
@@ -97,8 +96,6 @@ StatusCode MDFWriterNet::initialize(void)
   *m_log << MSG::INFO << " Writer " << getpid() <<
     " Initializing." << endmsg;
 
-  m_fileOpen = 0;
-  m_bytesWritten = 0;
   m_connection = new Connection(m_serverAddr, m_serverPort,
       m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
@@ -124,14 +121,23 @@ StatusCode MDFWriterNet::finalize(void)
   *m_log << MSG::INFO << " Writer " << getpid() <<
     " Finalizing." << endmsg;
 
-  if(m_fileOpen) {
-    struct cmd_header header;
-    INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
+  FileIterator fi = m_openFiles.begin();
+  File *currFile;
 
-    delete m_md5;
-    m_connection->sendCommand(&header);
-    m_bytesWritten = 0;
-    m_fileOpen = 0;
+  for(; fi != m_openFiles.end(); fi++) {
+	currFile = fi->second;
+	if(currFile->isOpen()) {
+	    struct cmd_header header;
+	    *m_log << MSG:: INFO << "Closing file " << currFile->getFileName()
+	    	<< " with run number " << currFile->getRunNumber() << endmsg;
+		INIT_CLOSE_COMMAND(&header,
+				currFile->getFileName()->c_str(),
+				currFile->getAdlerChecksum(),
+				currFile->getMD5Checksum(),
+				currFile->getRunNumber());
+		m_connection->sendCommand(&header);
+		delete currFile;
+	}
   }
 
   // closeConnection() blocks till everything is flushed.
@@ -167,36 +173,53 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
      return StatusCode::SUCCESS;
   }
 
-  //Is a file already open?
-  if(!m_fileOpen) {
-    unsigned int runNumber = getRunNumber(data, len);
+  //Try to see if there is a file open for the specific run number in this chunk.
+  unsigned int runNumber = getRunNumber(data, len);
 
-    getNewFileName(m_fileName, data, len);
-    INIT_OPEN_COMMAND(&header, m_fileName.c_str(), runNumber);
-    m_connection->sendCommand(&header);
-    m_fileOpen = 1;
-
-    m_md5 = new TMD5();
-    m_adler32 = adler32(0, NULL, 0);
+  FileIterator fi = m_openFiles.find(runNumber);
+  File *currFile;
+  if(fi == m_openFiles.end()) {
+     /// A file is not open for this run number. So open a new file.
+    currFile = new File(getNewFileName(runNumber), runNumber);
+    *m_log << MSG::INFO << "No file exists for run " << runNumber << " Creating a new one." << endmsg;
+    m_openFiles.insert(std::make_pair(runNumber, currFile));
+  } else {
+    /// Already exists. Get its information.
+    currFile = fi->second;
   }
 
-  INIT_WRITE_COMMAND(&header, len, m_bytesWritten, m_fileName.c_str());
+
+  //Is the current file open, or just created?
+  if(!currFile->isOpen()) {
+	//Just created. Send the open command.
+    INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), runNumber);
+    m_connection->sendCommand(&header);
+    currFile->open();
+  }
+
+  INIT_WRITE_COMMAND(&header, len,
+		  currFile->getBytesWritten(),
+		  currFile->getFileName()->c_str(),
+		  runNumber);
   m_connection->sendCommand(&header, (void*)data);
-  m_md5->Update((UChar_t*)data, (UInt_t)len);
-  m_adler32 = adler32(m_adler32, (const char*)data, len);
+  size_t totalBytesWritten = currFile->updateWrite(data, len);
 
   //How much have we written?
-  m_bytesWritten += len;
-  if(m_bytesWritten > (m_maxFileSizeMB << 20)) {
+  if(totalBytesWritten > (m_maxFileSizeMB << 20)) {
 
     //Write out close command; runDB record created upon receiving ack.
     struct cmd_header header;
-    INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
+    INIT_CLOSE_COMMAND(&header,
+    		currFile->getFileName()->c_str(),
+    		currFile->getAdlerChecksum(),
+    		currFile->getMD5Checksum(),
+    		runNumber);
 
-    delete m_md5;
     m_connection->sendCommand(&header);
-    m_bytesWritten = 0;
-    m_fileOpen = 0;
+
+    //Remove file from map.
+    m_openFiles.erase(runNumber);
+    delete currFile;
   }
 
   //Close it, reset counter.
@@ -218,22 +241,20 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 
 
 /** Generates a new file name from the MDF information.
- * @param newFileName A string to put the new file name in.
- * @param data        The data from which MDF information may be retrieved.
- * @param len         The length of the data buffer supplied.
+ * @param runNumber  The current run number, to be included in the file name.
  */
-void MDFWriterNet::getNewFileName(std::string &newFileName,
-    const void * /*data*/, size_t /*len*/)
+std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
 {
   char buf[MAX_FILE_NAME];
   static unsigned long random;
   random++;
-  sprintf(buf, "%s/%s.%lu.%lu",
+  sprintf(buf, "%s/%s.%u.%lu.%lu",
       m_directory.c_str(),
       m_filePrefix.c_str(),
+      runNumber,
       random,
       time(NULL));
-  newFileName = buf;
+  return std::string(buf);
 }
 
 /** Destructor.
@@ -253,12 +274,12 @@ MDFWriterNet::~MDFWriterNet()
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
   try {
-    m_rpcObj->createFile(cmd->file_name, cmd->data.start_data.run_num);
+    m_rpcObj->createFile(cmd->file_name, cmd->run_no);
   } catch(std::exception& e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record ";
     *m_log << "Cause: " << e.what() << std::endl;
     *m_log << "Record is: FileName=" << cmd->file_name;
-    *m_log << " Run Number=" << cmd->data.start_data.run_num << endmsg;
+    *m_log << " Run Number=" << cmd->run_no << endmsg;
   }
 }
 
@@ -293,47 +314,4 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 {
   /* Not Used Yet. */
 }
-
-/* The standard Adler32 algorithm taken from the Linux kernel.*/
-
-#define BASE 65521L /* largest prime smaller than 65536 */
-#define NMAX 5552
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
-
-#define DO1(buf,i)  {s1 += buf[i]; s2 += s1;}
-#define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);
-#define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
-#define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
-#define DO16(buf)   DO8(buf,0); DO8(buf,8);
-#define NMAX 5552
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
-
-static inline unsigned long adler32(unsigned long adler,
-    const char *buf,
-    unsigned int len)
-{
-  unsigned long s1 = adler & 0xffff;
-  unsigned long s2 = (adler >> 16) & 0xffff;
-  int k;
-
-  if (buf == NULL) return 1L;
-
-  while (len > 0) {
-    k = len < NMAX ? len : NMAX;
-    len -= k;
-    while (k >= 16) {
-      DO16(buf);
-      buf += 16;
-      k -= 16;
-    }
-    if (k != 0) do {
-      s1 += *buf++;
-      s2 += s1;
-    } while (--k);
-    s1 %= BASE;
-    s2 %= BASE;
-  }
-  return (s2 << 16) | s1;
-}
-
 #endif /* _WIN32 */
