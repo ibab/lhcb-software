@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.2 2006-05-17 16:14:47 cattanem Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.3 2007-09-21 16:20:47 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -68,8 +68,17 @@ StatusCode VeloRawClustersMoni::execute() {
   //
   m_numberOfEvents++;
   debug()<< " number of evts: " << m_numberOfEvents <<endmsg;
-  StatusCode sc=getData();
-  if(sc) rawVeloClusterMonitor();
+  StatusCode dataStatus=getData();
+  StatusCode moniStatus;
+  if(dataStatus.isSuccess()){
+    moniStatus=rawVeloClusterMonitor();
+  }else{
+    return ( dataStatus );
+  }
+  if(moniStatus.isFailure()){
+    Error("Raw cluster monitoring failed!");
+    return ( moniStatus );
+  }
   //
   return ( StatusCode::SUCCESS );
 }
