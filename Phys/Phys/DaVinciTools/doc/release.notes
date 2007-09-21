@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.284 2007-09-19 12:51:55 jpalac Exp $
+! $Id: release.notes,v 1.285 2007-09-21 07:57:34 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-09-21- Juan PALACIOS
+ - src/CombineParticles.h
+  . Fix doxygen to reflect new hybrid filter critecion name:
+    LoKi::HybridFilterCriterion is now LoKi::Hybrid::FilterCriterion
+
+! 2007-09-210 Juan PALACIOS
+ - Import src/CombineParticles{.h, .cpp} from Hlt/HltSelections. 
+   CombineParticles is a LoKi::Hybrid::FilterCriterion-based 
+   re-implementation of MakeResonances.
+
 
 ! 2007-09-19 - Juan PALACIOS
  - src/GeomDispCalculator.cpp, src/TrgDispCalculator.cpp
