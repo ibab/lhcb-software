@@ -10,6 +10,7 @@
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
 //Init.DetectorList += { "L0" }; // Uncomment to reconstruct only L0-yes events
+//InitReprocSeq.Members += { "TESCheck", "EventNodeKiller" }; // Uncomment for DST input
 
 //---------------------------------------------------------------------------
 // Set up DC06 geometry, conditions, magnetic field

@@ -34,7 +34,7 @@ BrunelSequencer.Members = { "ProcessPhase/Init",
                             "ProcessPhase/Output" };
 
 // Initialisation phase
-Init.DetectorList += { "Etc", "Brunel", "Calo" };
+Init.DetectorList += { "Reproc", "Etc", "Brunel", "Calo" };
 InitBrunelSeq.Members += { "RecInit/Brunel" };
 
 // Convert Calo 'packed' banks to 'short' banks if needed
@@ -44,6 +44,11 @@ InitCaloSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
 // Setup L0 filtering. Has no effect unless "L0" is added to Init.DetectorList
 #include "$L0DUROOT/options/L0Sequence.opts"
 InitL0Seq.Members += { "GaudiSequencer/L0", "L0Filter"}; // run L0 before Reco
+
+// Setup reprocessing from DST.
+// Enable by adding TESCheck and EventNodeKiller to InitReprocSeq
+TESCheck.Inputs       = { "Link/Rec/Track/Best" } ;
+EventNodeKiller.Nodes = { "Rec", "Raw", "Link/Rec" };
 
 // Reconstruction phase
 #include "$RECSYSROOT/options/Reco.opts"
