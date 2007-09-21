@@ -4,6 +4,9 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-21 - Patrick Koppenburg
+ - everywhere: setBank -> getBanks to compile on LHCb v22r9
+
 ! 2007-09-03 - Johannes Albrecht
 	- src/TsaConfirmTool
 			- fixed memory leak in execute: return statement in case of more than

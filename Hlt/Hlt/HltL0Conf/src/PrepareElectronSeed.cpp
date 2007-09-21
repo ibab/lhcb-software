@@ -90,7 +90,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   if(msgLevel(MSG::DEBUG)) debug()<<"execute!"<<endmsg;
 
   //initialize Calo decoding for this event
-  m_caloDaq->setBank();
+  m_caloDaq->getBanks();
   
   int ecalRegion = 0;
   

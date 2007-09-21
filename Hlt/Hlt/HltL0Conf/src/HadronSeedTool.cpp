@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.2 2007-08-16 17:39:44 hernando Exp $
+// $Id: HadronSeedTool.cpp,v 1.3 2007-09-21 14:52:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -95,8 +95,8 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   if(msgLevel(MSG::DEBUG)) debug()<<"HadronSeedTool::execute!"<<endmsg;
  
   //initialize caloDAQ for this event
-  m_ecalDaq->setBank();
-  m_hcalDaq->setBank();
+  m_ecalDaq->getBanks();
+  m_hcalDaq->getBanks();
 
   /* 
    *   calculate barycenter of HCal cluster around seed

@@ -94,7 +94,7 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
   if(msgLevel(MSG::DEBUG)) debug()<<"execute!"<<endmsg;
 
   //initialize Calo decoding for this event
-  m_caloDaq->setBank();
+  m_caloDaq->getBanks();
   
   int ecalRegion = 0;
   
