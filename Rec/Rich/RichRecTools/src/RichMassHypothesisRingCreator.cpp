@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.18 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.19 2007-09-21 09:47:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -151,11 +151,19 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
     else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
     //debug() << id << " " << ckTheta << " using " << nPoints << " points" << endreq;
-    m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
-
-    // save to container
-    massHypoRings()->insert( newRing );
-
+    const StatusCode sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
+    if ( sc.isSuccess() ) 
+    {
+      // save to container
+      massHypoRings()->insert( newRing );
+    }
+    else
+    {
+      Warning( "Some problem occured during CK cone ray-tracing" );
+      delete newRing;
+      newRing = NULL;
+    }
+    
   }
 
   // set data in segment
