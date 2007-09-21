@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.10 2007-09-19 12:51:26 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.11 2007-09-21 07:57:10 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -44,10 +44,11 @@ DECLARE_TOOL_FACTORY( TrgDispCalculator );
 // Standard Constructor
 //==================================================================
 TrgDispCalculator::TrgDispCalculator(const std::string& type, 
-                                     const std::string& name, const IInterface* parent) 
-  : GaudiTool( type, name, parent)
+                                     const std::string& name, 
+                                     const IInterface* parent) 
+  : 
+  GaudiTool( type, name, parent)
 {
-
   declareInterface<IGeomDispCalculator>(this);
 }
 
