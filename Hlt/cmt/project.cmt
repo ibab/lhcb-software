@@ -1,6 +1,7 @@
 project HLT
 
-use LHCB	LHCB_v22r8
+use LHCB	LHCB_v22r9
+
 
 build_strategy with_installarea
 setup_strategy root
