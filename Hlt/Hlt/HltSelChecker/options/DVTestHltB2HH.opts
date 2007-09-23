@@ -61,3 +61,6 @@ PionsOffChecker.PhysDesktop.InputLocations = { "Phys/StdLoosePions" } ;
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
 
+// ApplicationMgr.TopAlg += { "PrintTree" };
+PrintTree.PhysDesktop.InputLocations = { "Phys/HltSelB2HH" };
+

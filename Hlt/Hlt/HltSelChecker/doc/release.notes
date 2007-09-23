@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-09-23 - Patrick Koppenburg
+ - TrueB2LLK.opts : bug fix.
+
 ! 2007-08-28 - Patrick Koppenburg
  - FilterTrueTracks : temporary algorithm to filter true tracks.
  - options: Use it everywhere.
