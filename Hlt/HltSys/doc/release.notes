@@ -5,6 +5,15 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r9>2007-09-23 HltSys v1r9</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r9
+
+  - Developments in alleys. See individual packages. Not yet complete.
+  - New prototypes for e and gamma alleys.
+  - Most benchmark channels are in selections. No e and gamma yet. All muons duplicated. HltSelectionDecision now writes out trigger decision.
+  - First version of TisTosTobbing is there. See Tomasz' tutorial at software week.
+
+!========================== HltSys v1r9 2007-09-23 ===================
 ! 2007-09-22 - Patrick Koppenburg
  - remove L0MuonCandidatesFromRaw from all sequences following changes in L0Muon.
 
