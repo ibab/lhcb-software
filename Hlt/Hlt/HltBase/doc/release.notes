@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltBase
 ! Responsible : Jose Angel Hernando Morata
-! Purpose     : 
+! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+!========================== HltBase v2r6 2007-09-23 ===================
 ! 2007-09-20 Tomasz Skwarnicki
   - HltAlgorith : add special flag m_consider1
 
