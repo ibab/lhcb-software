@@ -1,5 +1,5 @@
 package		HltL0MuonConf
-version 	v1r1
+version 	v1r2
 
 # ================ structure =============================================
 branches	src cmt doc options

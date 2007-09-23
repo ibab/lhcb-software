@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
-! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
+! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+
+!========================== HltL0MuonConf v1r2 2007-09-23 ===================
 ! 2007-09-08 - Sandra Amato
  - SpaceMuonMatch: added Tdist info to the track 
  - L0MuonAndTConf: added Tdist info to the track
