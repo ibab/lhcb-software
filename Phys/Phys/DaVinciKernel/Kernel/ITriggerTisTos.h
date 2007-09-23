@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.1 2007-09-03 15:22:30 pkoppenb Exp $
+// $Id: ITriggerTisTos.h,v 1.2 2007-09-23 13:57:05 pkoppenb Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "TisTosTobbing/ITriggerSelectionTisTos.h"
+#include "Kernel/ITriggerSelectionTisTos.h"
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
