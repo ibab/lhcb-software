@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.105 2007-08-22 12:53:05 jpalac Exp $
+! $Id: release.notes,v 1.106 2007-09-24 09:31:10 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v4r3 2007-09-24 =====================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r3
 
 ! 2007-08-22 - Juan Palacios
  - src/OfflineVertexFitter.h
