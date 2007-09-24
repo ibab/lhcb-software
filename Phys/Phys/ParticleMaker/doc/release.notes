@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.71 2007-08-30 12:14:54 pkoppenb Exp $ 
+! $Id: release.notes,v 1.72 2007-09-24 09:28:17 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+!======================== ParticleMaker v3r3 2007-09-24 =====================
 
 ! 2007-08-30 - Patrick Koppenburg
  - src/CombinedPM: protect verbose and debug
