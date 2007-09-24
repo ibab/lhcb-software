@@ -4,6 +4,8 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r5 2007-09-24 ===================
+
 ! 2007-09-11 - Chris Jones
  - Update example ganga job to remove warnings about missing features (now 
    available) and to add examples of job merging.
