@@ -89,11 +89,11 @@ private:
 	unsigned int m_nEvents;
 	DeCalorimeter *m_detSpd;
 	DeCalorimeter *m_detEcal;
-  CaloVector<int> m_cellHit;
-  CaloVector<int> m_neighHit;
-  CaloVector<int> m_neighHitEcal;
-  CaloVector<int> m_neighN;
-  unsigned int n_cells;
+	CaloVector<int> m_cellHit;
+	CaloVector<int> m_neighHit;
+	CaloVector<int> m_neighHitEcal;
+	CaloVector<int> m_neighN;
+	unsigned int n_cells;
 	/// ECAL
 	double m_ecalThres;
 	
@@ -196,9 +196,9 @@ StatusCode SpdMonitor::execute()
   debug() << "... processing Event " << ++m_nEvents << endreq;
 
 
-	int mult[3];	
-	int multEcal[3];
-	int nclus[3];  
+  int mult[3]={0};	
+  int multEcal[3]={0};
+  int nclus[3]={0};  
   
   
 // -------------------------------SPD Standalone Histograms---------------------------------------  
@@ -273,7 +273,6 @@ StatusCode SpdMonitor::execute()
       CaloCellID seedCell = (*iClus)->seed();
       double seedE=(*iClus)->e();
       debug() <<"Seed cell: "<<seedCell<<" with energy "<<seedE/GeV<<" GeV"<<endreq;
-      
 /*		Histograms for plotting the cluster energy and choosig the threshold
 			
 		plot(seedE/GeV,"clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
@@ -305,7 +304,8 @@ StatusCode SpdMonitor::execute()
         }
         else if( 1 == seedCell.area()){
 					hFill2("m_occcupancyEcal",seedCell.row(), seedCell.col()); 
-					nclus[1]++;
+				debug()<<"1: "<<nclus[1]<<endreq;
+				nclus[1]++;
 					if (m_cellHit[seedCell]){
 						multEcal[1]++;
 						hFill2("m_ecal+spd",seedCell.row(), seedCell.col());
@@ -360,7 +360,7 @@ StatusCode SpdMonitor::execute()
     hFill1("nclus",nclus[0]+nclus[1]+nclus[2]);
     
     
-    if (nclus[0]!=0 && nclus[2]!=0 && nclus[1]!=0){  //Just to avoid ugly surprises
+    if (nclus[0]!=0 && nclus[2]!=0 && nclus[1]!=0){  // Just to avoid ugly surprises
       hFill1("o_elec",float(multEcal[0])/float(nclus[0]));  
       hFill1("m_elec",float(multEcal[1])/float(nclus[1]));  
       hFill1("i_elec",float(multEcal[2])/float(nclus[2]));

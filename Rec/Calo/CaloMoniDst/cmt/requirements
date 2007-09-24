@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.6 2007-07-25 19:49:11 odescham Exp $ 
+# $Id: requirements,v 1.7 2007-09-24 14:48:54 odescham Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
@@ -22,7 +22,8 @@ use TrackEvent      v*    Event
 use TrackInterfaces v*    Tr
 #
 use MCEvent         v*    Event
-use CaloAssociators v*    Calo 
+use DaVinciMCKernel v*    Phys
+
 # =============== constituents ===============================================
 library           CaloMoniDst   -import=AIDA *.cpp
 

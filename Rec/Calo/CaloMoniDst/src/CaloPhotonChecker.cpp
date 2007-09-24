@@ -365,7 +365,7 @@ StatusCode CaloPhotonChecker::execute()
   for(MCParticles::const_iterator iter = mcParts->begin() ;
                                   mcParts->end()!=iter ; ++iter ){
     SmartRef<LHCb::MCParticle> part=*iter;
-    if ( !(m_gammaID == part->particleID().pid()) )continue; // select MC-gamma
+    if ( !(m_gammaID == part->particleID()) )continue; // select MC-gamma
     if(part->momentum().pz() < 0.)continue;         // Pz Acceptance 
     if( part->momentum().pt() < m_etmin )continue;  // Et acceptance
     // Origin vertex
@@ -586,7 +586,7 @@ StatusCode CaloPhotonChecker::execute()
      for( MCTable::iterator mc = grange.begin() ; grange.end() != mc ; ++mc ) {
      	 if( 0 == mc->to() )  continue ; 
 	     debug()<<"mctruth : --> pid="<<mc->to()->particleID().pid() <<" weight="<<mc->weight()<<endreq;
-       if( !(m_gammaID == mc->to()->particleID().pid())  )continue;
+       if( !(m_gammaID == mc->to()->particleID())  )continue;
 	     if( mc->weight()<wmax ) continue;
        wmax=mc->weight();
        SmartRef<LHCb::MCParticle> mcpart=mc->to();

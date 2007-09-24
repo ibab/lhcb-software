@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.12 2007-08-24 11:14:20 odescham Exp $ 
+! $Id: release.notes,v 1.13 2007-09-24 14:48:54 odescham Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2007-09-24 - Olivier Deschamps
+ - fix against the  PatricleID constructor from int made explicit
+ - fix SpdMonitor.cpp (Albert Puig)
+ - remove dependency on CaloAssociator in requirements
+ - add dependency on DaVinciMCKernel in requirements
+
 
 ! 2007-08-24 - Olivier Deschamps
  - fix unchecked StatusCodes 
