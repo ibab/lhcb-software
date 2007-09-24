@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2007-09-24 - Marco Cattaneo
+ - Clean up usage of Warning() and Error() in VeloRawClustersMoni.cpp
+
 !===================== VeloAlgorithms v4r6p1 2007-09-21 ===================
 ! 2007-09-21 - Marco Cattaneo
  - Remove obsolete file VeloAlgorithms_load.cpp

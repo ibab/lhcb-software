@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.4 2007-09-21 17:51:43 szumlat Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.5 2007-09-24 06:12:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode VeloRawClustersMoni::initialize() {
 //=============================================================================
 StatusCode VeloRawClustersMoni::execute() {
 
-  info() << "==> Execute" << endmsg;
+  debug() << "==> Execute" << endmsg;
   //
   m_numberOfEvents++;
   debug()<< " number of evts: " << m_numberOfEvents <<endmsg;
@@ -76,8 +76,7 @@ StatusCode VeloRawClustersMoni::execute() {
     return ( dataStatus );
   }
   if(moniStatus.isFailure()){
-    Error("Raw cluster monitoring failed!");
-    return ( moniStatus );
+    return Error("Raw cluster monitoring failed!", moniStatus );
   }
   //
   return ( StatusCode::SUCCESS );
@@ -153,15 +152,13 @@ StatusCode VeloRawClustersMoni::getData()
   debug()<< " ==> getData() " <<endmsg;
   //
   if(!exist<LHCb::MCVeloFEs>(m_VeloFECont)){
-    error()<< " ==> There is no VeloFEs in TES " <<endmsg;
-    return ( StatusCode::FAILURE );
+    return Error( " ==> There is no VeloFEs in TES " );
   }else{
     m_VeloFEs=get<LHCb::MCVeloFEs>(m_VeloFECont);
   }
   //
   if(!exist<LHCb::VeloClusters>(m_clusterCont)){
-    error()<< " ==> There is no VeloClusters in TES " <<endmsg;
-    return ( StatusCode::FAILURE );
+    return Error( " ==> There is no VeloClusters in TES " );
   }else{
     m_rawClusters=get<LHCb::VeloClusters>(m_clusterCont);
   }
@@ -183,8 +180,8 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
   //
   int contSize=m_rawClusters->size();
   if(!contSize){
-    Warning("Empty cluster container! - Skiping monitor");
-    return ( StatusCode::SUCCESS );
+    return Warning( "Empty cluster container! - Skiping monitor",
+                    StatusCode::SUCCESS );
   }
   m_nRawClusters+=double(contSize);
   m_nRawClusters2+=double(contSize*contSize);
@@ -232,8 +229,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     unsigned int sensNumber=channel.sensor();
     const DeVeloSensor* sensor=m_veloDet->sensor(sensNumber);
     if(sensor==0){
-      Error("==> No valid pointer to sensor - Check your CondDB!!");
-      return ( StatusCode::FAILURE );
+      return Error("==> No valid pointer to sensor - Check your CondDB!!");
     }
     plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 101,
            "Z position and sensor number of the cluster",
@@ -384,8 +380,7 @@ StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
   case 0: s=true; break;
   case 1: n=true; break;
   case 2: o=true; break;
-  default : error()<< " ==> Wrong FE type flag! " <<endmsg;
-            return (StatusCode::FAILURE );
+  default : return Error( " ==> Wrong FE type flag! " );
   }
   //
   return ( StatusCode::SUCCESS );
