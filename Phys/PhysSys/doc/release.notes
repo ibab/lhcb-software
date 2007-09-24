@@ -3,13 +3,151 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r6>2007-09-24 Phys v6r6 - Possibly the DC06 stripping version</A></H1><PRE>
+
+- Based on LHCb v22r9
+  
+###############################################################################
+#                                  PHYS v6r6                                  #
+###############################################################################
+
+!========================== DaVinciFilter v6r5 2007-07-30 ===================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v6r5
+
+! 2007-09-19 - Juan PALACIOS
+ - Added src/HybridParticleArrayFilter{.cpp, .h}
+   . An implementation of IParticleArrayFilter using a 
+     LoKi hybrid IFilterCriteria
+   . This is TOTALLY UNTESTED and UNDER DEVELOPMENT.
+
+! 2007-08-29 - Patrick Koppenburg
+ - ByPIDFilterCriterion: remove initialisation of a std::vector. Hope that 
+   helps on windows.
+ - Increment to v6r4p3
+
+!===================== ProtoParticleFilter v1r3 2006-09-24 =================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r3
+
+! 2007-08-10 - Chris Jones
+ - Update ProtoParticleDLLFilter::createDetReq to support 'MustNotHaveDet' 
+   detector requirement
+ - Remove flawed logic that tried to check for consisency (need to think how 
+   to do this properly).
+
+!========================== DaVinciTools v15r5 2007-09-24== =================
+
+! 2007-09-21- Juan PALACIOS
+ - src/CombineParticles.h
+  . Fix doxygen to reflect new hybrid filter critecion name:
+    LoKi::HybridFilterCriterion is now LoKi::Hybrid::FilterCriterion
+
+! 2007-09-210 Juan PALACIOS
+ - Import src/CombineParticles{.h, .cpp} from Hlt/HltSelections. 
+   CombineParticles is a LoKi::Hybrid::FilterCriterion-based 
+   re-implementation of MakeResonances.
+
+
+! 2007-09-19 - Juan PALACIOS
+ - src/GeomDispCalculator.cpp, src/TrgDispCalculator.cpp
+  . Add implementations for calcSignedFlightDistance method.
+
+
+! 2007-09-18 - Juan PALACIOS
+ - src/GeomDispCalculator{.h, .cpp}, src/TrgDispCalculator{.h, .cpp}
+   . Add empry implementaitons for new method
+      StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
+                                           const LHCb::Particle& particle, 
+                                           double& distance, 
+                                           double& distanceError) const
+
+
+! 2007-09-18 - Patrick Koppenburg for Tom Blake
+ - New tool Bd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
+   Assumes there are tow leptons, a K and a pi in the decay chain.
+ - New tool P2VVAngleCalculator used internally. Uses 4-vectors.
+
+! 2007-09-07 - Patrick Koppenburg
+ - CheckSelResult: use WriteSelResult Tool
+ - Algorithm2ID: Removed.
+
+! 2007-08-30 - Patrick Koppenburg
+ - Small changed in printouf of MakeResonances
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/NeutralCCChangePIDTool.cpp
+   Replace all by particle -> setParticleID( m_Id ); by 
+   particle -> setParticleID( LHCb::ParticleID (m_Id) );
+
+! 2007-08-22 - Juan PALACIOS
+ - src/GeomDispCalculator.cpp
+   . Add const for temporary variables where possible.
+
+! 2007-08-03 - Patrick Koppenburg
+ - CheckSelResult.*
+   . Create SelResult container if needed (AvoidSelResult=false)
+   . Restructure code.
+ - Increment to v15r5
+
+!====================== DaVinciTransporter v3r7 2007-09-24== =================
+
+! 2007-08-07 - Patrick Koppenburg
+ - Remove extrapolators for neutrals and composites which are not used 
+	 anymore after Juan's changes of 2006-09-29.
+ - Change extrapolator to TrackParabolicExtrapolator
+ - Increment to v3r7
+
+!======================== ParticleMaker v3r3 2007-09-24 =====================
+
+! 2007-08-30 - Patrick Koppenburg
+ - src/CombinedPM: protect verbose and debug
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/MergedPi0Maker.cpp, src/PhotonMaker.cpp, src/ResolvedPi0Maker.cpp:
+	 Replace all by particle -> setParticleID( m_Id ); by 
+   particle -> setParticleID( LHCb::ParticleID (m_Id) );
+
+! 2007-08-15 - Patrick Koppenburg
+ - CombinedPM: Issue Warning, not exception when protos are not there.
+ - Increment to v3r3
+
+!========================== VertexFit v4r3 2007-09-24 =====================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r3
+
+! 2007-08-22 - Juan Palacios
+ - src/OfflineVertexFitter.h
+   . Make all protected member functions private.
+ - src/PVReFitter.h
+   . Make all protected member functions private.
+   . Use LHCb::Track::Vector and ConstVector typedefs instead of std::vector<...>
+ 
+ - src/ParticleAdder{.h, .cpp}, src/TrgVertexFitter{.cpp, .h}
+   . Remove unused protected methods isResonance and isVertexed
+   . Minor clean up and move implementaitons of virtual functions to .cpp
+
+! 2007-08-21 - Juan PALACIOS
+ - src/OfflineVertexFitter{.cpp, .h}
+   . Remove use of pow(10, N) and replace with definitions in Gaudi::Units or literals.
+   . Add const wherever possible.
+ - cmt/requirements
+   . Increase version to v4r2p4
+
+###############################################################################
 </PRE><H1><A NAME=v6r5>2007-07-31 Phys v6r5 - updated DC06 stripping version</A></H1><PRE>
 
 - Based on LHCb v22r8
   
-################################################################################
-#                                  PHYS v6r5                                   #
-################################################################################
+###############################################################################
+#                                  PHYS v6r5                                  #
+###############################################################################
 !========================== DaVinciFilter v6r4p2 2007-07-30 =================
 
 ! 2007-07-20 - Patrick Koppenburg
