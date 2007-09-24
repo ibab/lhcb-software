@@ -1,4 +1,4 @@
-// $Id: DecayChainNTuple.cpp,v 1.25 2007-09-16 17:15:59 sposs Exp $
+// $Id: DecayChainNTuple.cpp,v 1.26 2007-09-24 15:52:32 sposs Exp $
 // ============================================================================
 // Always define MCCheck
 #define MCCheck 1
@@ -352,8 +352,9 @@ StatusCode DecayChainNTuple::finalize() {
   // Call destructor
   m_pCompositeAsct->~Particle2MCLinker();
   m_pAsctLinks->~Particle2MCLinker();
-  delete m_pAsctLinks;
-  delete m_pCompositeAsct;
+  //delete m_pAsctLinks;
+  //delete m_pCompositeAsct;
+
   if (adddau) delete adddau;
   if (add)    delete add;
 
