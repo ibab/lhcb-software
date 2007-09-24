@@ -20,6 +20,10 @@ Purpose     : LHCb analysis packages
 
 !========================== DaVinciMCTools v9r5 2007-09-24 ===================
 
+! 2007-09-24 - Juan PALACIOS for Stephane POSS
+ - src/DecayChainNTuple.cpp
+  . Fix bug that was causing crash in finalize (deletion of pointers).
+
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - New tool MCBd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
    Assumes there are tow leptons, a K and a pi in the decay chain.
