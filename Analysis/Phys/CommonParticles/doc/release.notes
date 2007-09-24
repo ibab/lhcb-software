@@ -4,6 +4,8 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v3r9 2007-09-24 ===================
+
 ! 2007-09-03 - Patrick Koppenburg
  - Moved dilepton for K*MuuMu into StandardJpsi as StdLoosePenguinDimuon
  - increment to v3r9
