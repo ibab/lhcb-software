@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.8 2007-08-22 17:01:00 pkoppenb Exp $ 
+! $Id: release.notes,v 1.9 2007-09-24 12:37:19 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiJets v2r4 2007-09-24 =====================
 
 ! 2007-08-22 - Patrick Koppenburg
  - LoKiKtJetMaker.cpp
@@ -137,6 +139,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.8  2007/08/22 17:01:00  pkoppenb
+! Explicit particle ID constructor
+!
 ! Revision 1.7  2007/07/17 12:56:39  pkoppenb
 ! removed _load file
 !
