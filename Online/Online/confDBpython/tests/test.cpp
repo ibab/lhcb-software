@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
   string user("lhcb_configuration_dev");
   string passw("T_75_op_LbDB009");
 	cdb = new DBContainer((char*)db.c_str(),(char*)user.c_str(),(char*)passw.c_str());
-  cdb->Connect();
+//  cdb->Connect();
   eConnectivityCache *ecache;
   iConnectivityCache *icache;
   ecache  = new eConnectivityCache(cdb);

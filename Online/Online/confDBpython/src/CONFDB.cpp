@@ -4171,7 +4171,7 @@ if(first!=0 && first!=1)
 }
 char* ErrorMess=new char[1000];
 
-c=InsertMultiplePorts((char*)devname.c_str(),(char*)ptnb.c_str(),admin_status,port_way,speed,pxi_booting,(char*) port_type.c_str(),(char*) bia.c_str(),(char*) ipadd.c_str(),(char*) ipname.c_str(),(char*) macadd.c_str(),(char*)subnet.c_str(),(char*) phy.c_str(),first,last,ErrorMess);
+c=InsertMultiplePorts((char*)devname.c_str(),(char*)ptnb.c_str(),admin_status,port_way,speed,pxi_booting,(char*) port_type.c_str(),(char*) bia.c_str(),(char*) ipadd.c_str(),(char*) ipname.c_str(),(char*)subnet.c_str(),(char*) macadd.c_str(),(char*) phy.c_str(),first,last,ErrorMess);
 if(c==0)
 	res_code="Successful insertion"; 
 else
