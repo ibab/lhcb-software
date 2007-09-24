@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.49 2007-08-07 15:55:55 pkoppenb Exp $
+! $Id: release.notes,v 1.50 2007-09-24 09:26:10 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r7 2007-09-24== =================
 
 ! 2007-08-07 - Patrick Koppenburg
  - Remove extrapolators for neutrals and composites which are not used 
