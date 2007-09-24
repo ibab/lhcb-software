@@ -8,38 +8,39 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  CommonParticles            v3r8     Phys   # Juan Palacios, WGs
-use  FlavourTagging             v7r3   Phys   # Marco Musy
+use  CommonParticles            v3r9     Phys   # Juan Palacios, WGs
+use  FlavourTagging             v7r3     Phys   # Marco Musy
 
 ####################################################################
 use  DaVinciMCTools     	v9r5     Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p1   Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r4     Phys   # Marco Musy
-use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
+use  DaVinciUser      	        v8r2     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1     Phys   # Chris Jones
+use  LoKiUser                   v6r0     Phys   # Vanya Belyaev
 ####################################################################
 use  PhysSelSys      	v10r4   PhysSel
 #===================================================================
 use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r4	PhysSel # Rare Decays Working Group
 use B2D0X		v1r10	PhysSel # WGs
-use B2DplusX		v1r0	PhysSel # WGs
+use B2DplusX		v1r1	PhysSel # WGs
 use B2DsX		v1r5	PhysSel # WGs
 use B2DstarX		v1r5	PhysSel # WGs
-use B2uds	        v2r3    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
-use JetsSel	        v1r4    PhysSel # Jest WG
-use Radiative           v2r2    PhysSel # Vanya BELYAEV
+use B2uds	        v2r4    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use JetsSel	        v1r4p1  PhysSel # Jets WG
+use Radiative           v2r3    PhysSel # Vanya BELYAEV
 
 # temporary packages
 use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
-use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
+use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 
 ####################################################################
-use               LoKiJets         v2r3p1   Phys
+use LoKiJets            v2r4    Phys    # Vanya Belyaev
 
 ####################################################################
-use  Stripping          v6r1p3  Tools             # Juan Palacios
+use  Stripping          v6r2    Tools   # Juan Palacios
 
 ####################################################################
 use  MicroDSTAlgorithm  v1r1    MicroDST          # Ulrich Kerzel
@@ -47,5 +48,8 @@ use  MicroDSTAlgorithm  v1r1    MicroDST          # Ulrich Kerzel
 ####################################################################
 use  KtJet              v2r1    External          # I. Belyaev
 ####################################################################
-
 use Analysis            v6r4    Tutorial         # P. Koppenburg
+
+####################################################################
+use LoKiExample         v6r0    Ex       # Vanya Belyaev
+

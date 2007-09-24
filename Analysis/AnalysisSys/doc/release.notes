@@ -3,6 +3,429 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r6>2007-09-24 Analysis v1r6 - DC06 Stripping version</A></H1><PRE>
+ - Uses LHCb v22r9
+
+#######################################MM######################################
+#                                  ANALYSIS v1r6                              #
+###############################################################################
+
+##################################### PHYS ####################################
+
+!========================== CommonParticles v3r9 2007-09-24 ===================
+
+! 2007-09-03 - Patrick Koppenburg
+ - Moved dilepton for K*MuuMu into StandardJpsi as StdLoosePenguinDimuon
+ - increment to v3r9
+
+!========================== DaVinciMCTools v9r5 2007-09-24 ===================
+
+! 2007-09-18 - Patrick Koppenburg for Tom Blake
+ - New tool MCBd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
+   Assumes there are tow leptons, a K and a pi in the decay chain.
+
+! 2007-09-16 - Stephane Poss
+ - Restore L0 decision in Ntuple
+ - Restore MCparticle-Particle association for non composite particles
+
+! 2007-09-07 - Patrick Koppenburg
+ - IsBEvent: use WriteSelResult Tool
+
+! 2007-08-23 - Juan PALACIOS
+ - src/MCParticleMaker.cpp
+   . No setKeyedObjectKey(int ley) anymore, use Particle constructor
+     Particle(const ParticleID&, const int key).
+
+! 2007-08-22 - Patrick Koppenburg
+ - src/MCParticleMaker.cpp
+   . No Particle constructor from key anymore. Use setKeyedObjectKey(key)
+
+! 2007-08-20 - Patrick Koppenburg
+ - TrueMCFilterCriterion, FilterMCParticleArrayByDecay, DecayChainNTuple:
+   Adapt to new interface of MCDecayFinder: replace all 
+   LHCb::MCParticle::Vector by ConstVector.
+ - DecayChainNTuple: Comment out (in blocks of #ifdef MCCheckWRONG #endif) 
+   all calls to updateMCMomentum() I changes the momentum of MCParticles
+   on the TES.
+ - Increment to v9r5
+
+!======================== ParticleMakerChecker v1r1p1 2007-09-24 =============
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1p1
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file. Release when needed.
+
+!============================== LoKiUser v6r0 2007-09-24 ======================
+
+! 2005-09-22 - Vanya Belyaev
+ - cmt/requirements 
+   version increment to v6r0
+ 
+! 2005-07-22 - Vanya Belyaev
+ - redesign the package just to be a 
+	 placeholder for development of user algorithm
+
+   It currently contains  almost empty library LoKiUser, which 
+   only one algorithm LoKiEmpty.
+ 
+   The file templates/TEMPLATE.cpp is just a template for the 
+   development of LoKi-based algorithms
+
+ - cmt/requirements 
+   version increment to v5r0 
+
+
+#################################### PHYSSEL ##################################
+
+!========================== B2Dilepton v1r5 2007-09-24 ===================
+
+! 2007-09-20 - Patrick Koppenburg
+ - Remove Bs2MuMuGamma preselection that is an obsolete version of
+   Bs2GammaMuMu.
+
+! 2007-09-19 - Juan PALACIOS for Jose Helder Lopes
+ - options/PreselBd2Kstaree.opts
+   . Change some cuts and mass window to reduce selection rate.
+
+! 2007-09-07 - Ulrik Egede
+ - New preselection B -> e mu (from Cagliari group)
+ - New preselection Bs -> gamma mu mu (from Cagliari group)
+
+! 2007-09-03 - Patrick Koppenburg
+ - New preselection Bu2KMuMu applying the same suts as K*MuMu.
+ - Moved dimuon for K*MuMu to commonparticles
+ - Adapt dilepton stripping options
+ - Increment to v1r5
+
+!========================== B2DplusX v1r1 2007-09-24 ===================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1
+
+! 2007-09-14 - Vladimir Gligorov
+ - updated cuts to comply with 1/1000 rejection requirement in DC06
+
+!========================== B2DstarX v1r6 2007-09-24 ===================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r6
+
+! 2007-09-14 - Vava Gligorov
+ - Presel B->D*pi
+   . Tightened pointing cut from 0.995 to 0.9995 to comply with 1/1000
+   . rejection requirement in DC06
+
+!========================== B2uds v2r4 2007-09-24 ===================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+   . Increase version to v2r4
+
+! 2007-09-22 - Yuehong Xie
+  - options/PreselBd2PhiKs.opts
+    . relax some preselection cuts
+
+
+! 2007-09-12 - P. Spradlin for A. Carbone
+  - options/DVPreselB2HH.opts
+    . Change in cuts to match the Bs -> mumu preselection requirements.
+
+! 2007-07-31 - D. Martinez, P. Spradlin
+  - options/DVPreselBs2Kst0Kst0.opts
+    . New selection file
+
+!========================== JetsSel v1r4p1 2007-09-24 =================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r4p1
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file. Release when needed.
+
+!========================== Radiative v2r3 2007-09-24 --=================
+
+! 2007-09-04 - Juan PALACIOS
+ - cmt/requirements
+   . Increase version to v2r3
+
+! 2007-09-04 - Juan PALACIOS for Lesya Shchutska
+ - src/PreselXb2GammaX.cpp
+   . Remove IP chi squared cut for B candidate.
+   . Change cut on DLL(k-pi) for kaons from -5. to -2.
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file. Release when needed.
+
+!========================== Bd2PiPiPi0 v4r3 2007-09-24 ===================
+
+! 2007-08-22 - Patrick Koppenburg
+ - PreselBd2PiPiPi0.cpp
+   Replace all by particle -> setParticleID( m_Id ); by
+   particle -> setParticleID( LHCb::ParticleID (m_Id) );
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file.
+
+####################################### TOOLS #################################
+!======================== Stripping v6r2 2007-09-24 =====================
+
+! 2007-09-24 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v6r2
+
+! 2007-09-19 - Patrick Koppenburg
+ - Correlations: some more algos
+
+############################ EXAMPLES AND TUTORIALS ###########################
+
+!========================== LoKiExample v6r0 2007-09-24 =====================
+
+!========================== LoKiExample v5r2p1 2007-04-20 ===================
+! 2007-04-20 - Marco Cattaneo
+ - Add a missing include "GaudiAlg/GaudiTool.h" to all .cpp files, for 
+   compilation on Windows. Should be removed when LoKi.h has been fixed
+
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
+
+! ========================== LoKiExample v5r2 2007-04-03 ===================
+
+! 2007-04-03 - Vanya BELYAEV
+
+  - src/LoKi_Phi_Makers.cpp, options/LoKi_Phi_Makers.opts
+    the trivial aglorithm LoKi_Phi_Makers to be able to compare the various 
+    particle makers 
+ 
+  - src/LoKi_PhiK_Dalitz.cpp, options/LoKi_PhiK_Dalitz.opts
+    the simple algorithm to make a dalitz-plot for B-> phi K gamma decay
+    (useful for study of photon polarization).
+    The exmaple illustrate the usage of 
+    THE SAME code for "real" particles
+    and for generator HepMC-particles...
+
+ - retag as v5r2 
+
+
+! 2007-03-22 - Vanya BELYAEV
+
+ - remove almost all algorithms and configuration files 
+   prepare the examples for DC06-compatible versions, 
+   includind the exmaples with hybrid C++/Python solutions 
+ - cmt/requirements 
+   version increment to v5r2 
+
+
+! 2005-06-02 - Vanya BELYAEV
+
+ - src/LoKi_BtoPV.cpp
+   options/DV_LoKi_BtoPV.opts
+
+     new example for usage of relations 
+     between B-candidate and its primary vertex
+
+
+ - cmt/requirements 
+   version increment to v3r12p1 
+ 
+! 2005-05-08 - Vanya BELYAEV
+
+  - src/LoKi_VeloCLusterMC.cpp,
+    src/LoKi_Higgs1.cpp 
+
+     fix compilation errors for Windows platform 
+
+  - cmt/requirements
+     version increment to v3r12 (to be synchronized with Tools/LoKi) 
+
+! 2005-03-29 - Vanya BELYAEV
+
+ - no new code, just add code metrics report from SLOCCount 
+
+Categorizing files.
+Computing results.
+
+SLOC    Directory       SLOC-by-Language (Sorted)
+1435    src_top_dir     cpp=1435
+229     jobs            python=210,sh=19
+36      cmt             csh=20,sh=16
+0       CVS             (none)
+0       doc             (none)
+0       options         (none)
+0       src_CVS         (none)
+
+Totals grouped by language (dominant language first):
+cpp:           1435 (84.41%)
+python:         210 (12.35%)
+sh:              35 (2.06%)
+csh:             20 (1.18%)
+
+Total Physical Source Lines of Code (SLOC)                = 1,700
+Development Effort Estimate, Person-Years (Person-Months) = 0.35 (4.19)
+ (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
+Schedule Estimate, Years (Months)                         = 0.36 (4.31)
+ (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
+Estimated Average Number of Developers (Effort/Schedule)  = 0.97
+Total Estimated Cost to Develop                           = $ 47,164
+ (average salary = $56,286/year, overhead = 2.40).
+SLOCCount is Open Source Software/Free Software, licensed under the FSF GPL.
+Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
+
+
+! 2005-03-24 - Vanya BELYAEV
+ - src/LoKi_Higgs1.cpp 
+   add N-Tuples for Jets 
+ - options/DV_LoKi_Higgs1.cpp 
+   add Jets from KtJet algorithm 
+ - cmt/requirements 
+   1) add Tools/LoKiJets 
+   2) increment the version to v3r10 
+
+! 2005-03-05 - Vanya BELYAEV
+ - src/LoKi_Higgs1.cpp
+   make a new structure for N-Tuples:
+    - add trigger information, 
+    - eliminate explicit loops, 
+    - make N-Tuples much more compact 
+ - cmt/requiremnts 
+    version increment to v3r9p2 
+
+! 2005-02-18 - Vanya Belyaev
+
+ - few minor and stupid fixes
+
+! 2005-02-16 - Vanya BELYAEV
+ - new examples: 
+
+   src/LoKi_Bs2PhiMM.cpp 
+      simple algorithm to study the kinematical property of Bs-> phi mu+ mu- decay 
+
+   src/LoKi_Higgs1.cpp  
+      simple algorithm to study the energy flows , suitable for 
+       Higgs->bb analysis with tagging muon from W or Z 
+
+
+! 2005-02-12 - Vanya BELYAEV
+
+ - technical update for LoKi v3r9 
+ - cmt/requirements 
+
+   version increment to v3r9 
+
+
+! 2005-02-08 - Vanya BELYAEV
+  
+ -resurrect the example LoKi_VeloClusterMC
+      - update DV_LoKi_VeloClusterMC.opts file 
+      - eliminate all ugly "associators" 
+
+! 2005-02-08 - Vanya BELYAEV
+ - add new example LoKi_Pi0.cpp 
+
+
+! 2004-10-21 - Vanya BELYAEV 
+   - src/K0S_Creator.cpp 
+    fix compiler ambuguity for Windows 
+   - cmt/requirements 
+    increment the version to v3r3p2 
+
+! 2004-08-17 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bs2PhiGamma_DecayChain.opts
+     new example to run LoKiDecayTruth algorithm from recent LoKi version
+ - cmt/requirements 
+     increment the version to v3r3 (the same as LoKi) 
+
+
+! 2004-08-15 - Vanya BELYAEV
+	update for usage with DaVinci v11r12 
+ - jobs/LoKiExJob.py 
+   new script to run examples and to submit them as batch jobs 
+
+    Usage:
+   interactive work:
+        LoKiExJob.py -o MyOptions.opts -n 1000
+   submit in batch:
+   bsub LoKiExJob.py -o MyOptions.opts -n 1000
+
+    Important: This script DOES not require all CMT/LHCB/DAVINCI/etc to be set. 
+
+ - jobs/jobpy
+   trivial script to submit all bartch jobs using LoKiExJob.py script 
+ 
+ - cmt/requirements  increment version to v3r2
+
+
+! 2004-08-11 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bd2KStarGamma.opts
+   fix a typo (problem has been originally reported by Andreas Wenger)
+
+ - cmt/requiremens 
+   increment the version to v3r1 
+
+! 2004-04-09 - Vanya Belyaev
+ - 3 new exampels are added 
+
+  src/LoKi_MCEvent.cpp 
+    which fills N-tuple to determine the event type and 
+    presence of beauty/charmed particles in the event (e.g. the presence of 
+    charmed particled in min-bias event)
+
+  src/LoKi_MCMuon.cpp 
+    example  with MC matching 
+
+  src/LoKi_VeloCLusterMC.cpp 
+    try to use LoKi not only for Physics analysis :-)
+
+    
+
+! 2003-03-27 - Vanya BELYAEV
+ - src/LoKi_Bs2PhiPhi.cpp      new algorithm 
+
+! 2003-03-26 - Vanya BELYAEV
+ - src/LoKi_Bd2KStarGamma.cpp  new "realistic" algorithms 
+                               (based on Galina Pakhlova's code) with 
+                               "analysis" N-Tuple and Event Tag Collection.
+ - src/LoKiExamples_load.cpp   add new algorithm
+ - cmt/requirements            increase the version 
+
+
+! 2003-03-21 - Vanya BELYAEV
+    new examples 
+ - src/LoKi_EventTagTuple.cpp   
+ - src/LoKi_Histos.cpp
+ - src/LoKi_Tuple.cpp
+[
+! 2003-03-12 - Vanya BELYAEV
+ - the first import 
+
+!========================== LoKiTutor v6r0 2007-09-24 =========================
+
+! 2007-09-24 - Juan PALACIOS
+ - Remove solutions/HelloWorld/LoKiTutor_load.cpp, LoKiTutor_dll.cpp
+ - Copy solutions/HelloWorld/*.cpp to src directory.
+ - cmt/requirements
+  . Remove dependency on Phys/DaVinci. Use Phys/LoKi.
+
+! 2007-08-20 - Vanya Belyaev
+ - update for new LoKi (v6)
+ - version increment to v6r0 
+
+! 2005-07-21 - Vanya BELYAEV
+ - small polishing:
+   1) introduce the directory "solutions" with tutorial solutions
+   2) introduce the directory "templates" with tutorial templates 
+ 
+! 2005-07-20 - Vanya Belyaev
+ - the first import in CVS 
+
+###############################################################################
 </PRE><H1><A NAME=v1r5>2007-07-31 Analysis v1r5 - Potential DC06 Stripping version</A></H1><PRE>
  - Uses LHCB_v22r8
 
