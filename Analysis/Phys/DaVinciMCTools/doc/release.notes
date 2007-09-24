@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.180 2007-09-18 14:01:55 pkoppenb Exp $
+! $Id: release.notes,v 1.181 2007-09-24 11:45:46 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r5 2007-09-24 ===================
 
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
  - New tool MCBd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
