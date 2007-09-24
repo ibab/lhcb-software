@@ -3,6 +3,11 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v19r5>2007-09-24 DaVinci v19r5. New DC06 stripping version</A></H1><PRE>
+Based on Phys v6r6, Analysis v1r6, Rec v4r9, HLT v1r9, Lbcom v6r9, LHCb v22r9, Gaudi v19r4, LCGCMT 52a.
+
+Improvements, bug fixes, added functionality. See release notes for Phys, Analysis and Hlt. Mayor differences are in much improved tracking and PID from REC.
+
 </PRE><H1><A NAME=v19r4>2007-07-31 DaVinci v19r4. DC06 analysis version</A></H1><PRE>
 Based on Phys v6r5, Analysis v1r5, Rec v4r8, HLT v1r8, Lbcom v6r8, LHCb v22r8, Gaudi v19r4, LCGCMT 52a.
 
