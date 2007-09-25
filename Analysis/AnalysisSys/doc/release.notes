@@ -84,6 +84,11 @@ Purpose     : LHCb analysis packages
 
 #################################### PHYSSEL ##################################
 
+!========================== PhysSelSys v10r5 2007-09-25 ===================
+! 2007-09-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase versions of some packages.
+
 !========================== B2Dilepton v1r5 2007-09-24 ===================
 
 ! 2007-09-20 - Patrick Koppenburg
