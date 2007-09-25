@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.19 2007-09-04 08:34:59 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.20 2007-09-25 11:51:32 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -54,7 +54,10 @@ protected:
                                 LHCb::State& aState ) const;
 
   //! predict the state at this node for the reverse fit
-  StatusCode project( LHCb::FitNode& aNode, const LHCb::State& aState ) const;
+  StatusCode projectReference( LHCb::FitNode& aNode ) const;
+
+  //! predict the state at this node for the reverse fit
+  //StatusCode project( LHCb::FitNode& aNode, const LHCb::State& aState ) const;
 
   //! filter this node
   StatusCode filter( LHCb::FitNode& node, LHCb::State& state ) const;

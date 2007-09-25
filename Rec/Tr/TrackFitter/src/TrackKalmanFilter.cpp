@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.44 2007-09-05 14:19:23 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.45 2007-09-25 11:51:32 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -10,6 +10,7 @@
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/TrackUnitsConverters.h"
+#include "Event/StateVector.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjector.h"
@@ -124,6 +125,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     refVec = state.stateVector();
 
     if ( node.hasMeasurement() ) {
+      // Project the reference (only in the forward filter)
+      projectReference( node );
+
       // Filter step
       sc = filter( node, state );
       if ( sc.isFailure() ) return failure( "unable to filter node" );
@@ -328,25 +332,21 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState) const
+StatusCode TrackKalmanFilter::projectReference(FitNode& aNode) const
 {
-  // project the state into the measurement
+  // project the reference state
   Measurement& meas = aNode.measurement();
   ITrackProjector *proj = m_projectorSelector->projector(meas);
   if ( proj==0 )
     return failure( "could not get projector for measurement" );
-
-  StatusCode sc = proj -> project( aState, meas );
+  
+  StatusCode sc = proj -> project(LHCb::StateVector(meas.refVector(),meas.z()), meas );
   if ( sc.isFailure() ) 
     return failure( "unable to project a state into a measurement" );
-  const TrackProjectionMatrix& H = proj -> projectionMatrix();
-  const double res                     = proj -> residual();
-  
-  aNode.setProjectionMatrix( H );
-  aNode.setResidual( res ) ;
-  aNode.setErrResidual( proj -> errResidual() ) ;
+   
+  aNode.setProjectionMatrix( proj->projectionMatrix() );
+  aNode.setRefResidual( proj -> residual() ) ;
   aNode.setErrMeasure( proj -> errMeasure() ) ;
-  aNode.setProjectionTerm( res + Vector1(H*aState.stateVector())(0) );
   
   return StatusCode::SUCCESS;
 }
@@ -356,13 +356,8 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState) const
 //=========================================================================
 StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 {
-  // Projection step
-  StatusCode sc = project( node, state );
-  if ( sc.isFailure() ) return sc;
-
-  Measurement& meas = node.measurement();
-
   // check z position
+  Measurement& meas = node.measurement();
   if ( fabs(meas.z() - state.z()) > TrackParameters::propagationTolerance ) {
     Warning( "Z positions of State and Measurement are not equal", 0, 1 );
     debug() << "State at z=" << state.z() 
@@ -373,13 +368,13 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   TrackVector&    X = state.stateVector();
   TrackSymMatrix& C = state.covariance();
 
-  // get the predicted residuals
-  double res        = node.residual();
-  double errorRes2  = node.errResidual2();
+  // calculate the linearized residual of the prediction and its error
+  const TrackProjectionMatrix& H = node.projectionMatrix();
   double errorMeas2 = node.errMeasure2();
+  double res        = node.refResidual() + ( H * (meas.refVector() - X) ) (0) ;
+  double errorRes2  = errorMeas2 + Similarity(H,C)(0,0) ;  
 
   // calculate gain matrix K
-  const TrackProjectionMatrix& H = node.projectionMatrix();
   SMatrix<double,5,1> K = (C * Transpose(H)) / errorRes2;
 
   // update the state vector
@@ -519,7 +514,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
   // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    const double res = thisNode.projectionTerm() - Vector1(H*smoothedX)(0) ;
+    const TrackVector& refX = thisNode.measurement().refVector() ;
+    const double res = thisNode.refResidual() + ( H*(refX - smoothedX) )(0) ;
     thisNode.setResidual( res );
     const double errRes2 = thisNode.errMeasure2() - 
       Matrix1x1(Similarity( H, smoothedC ))(0,0);
