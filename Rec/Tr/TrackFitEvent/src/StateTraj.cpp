@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.16 2007-07-23 13:34:22 cattanem Exp $
+// $Id: StateTraj.cpp,v 1.17 2007-09-25 11:47:37 wouter Exp $
 // Include files
 
 // Units
@@ -19,6 +19,16 @@ StateTraj::StateTraj( const State& state,
     // True when approximating the trajectory as a straight line
     m_dir( state.slopes().unit() ),
     m_qOverP( state.qOverP() ),
+    m_bField(bField),
+    m_curv( Units::c_light*m_qOverP*( m_dir.Cross(bField) ) ) {}
+
+// Constructor
+StateTraj::StateTraj( const LHCb::StateVector& stateVector,
+                      const Gaudi::XYZVector& bField )
+  : DifTraj<kSize>( 10.*Units::km, 10.*Units::km ),
+    m_pos( stateVector.position() ),
+    m_dir( stateVector.slopes().unit() ),
+    m_qOverP( stateVector.qOverP() ),
     m_bField(bField),
     m_curv( Units::c_light*m_qOverP*( m_dir.Cross(bField) ) ) {}
 

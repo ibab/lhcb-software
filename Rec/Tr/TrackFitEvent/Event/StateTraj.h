@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.14 2007-08-28 13:04:28 jonrob Exp $
+// $Id: StateTraj.h,v 1.15 2007-09-25 11:47:37 wouter Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -12,6 +12,7 @@
 // from TrackEvent
 #include "Event/TrackParameters.h"
 #include "Event/State.h"
+#include "Event/StateVector.h"
 
 namespace LHCb
 {
@@ -41,6 +42,10 @@ namespace LHCb
     StateTraj( const LHCb::State& state,
                const Gaudi::XYZVector& bField );
 
+    /// Constructor from a StateVector and the magnetic field at the State position
+    StateTraj( const LHCb::StateVector& state,
+               const Gaudi::XYZVector& bField );
+    
     /// Constructor from a StateVector and the magnetic field at State position
     StateTraj( const Gaudi::TrackVector& stateVector,
                double z,
