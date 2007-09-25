@@ -16,6 +16,7 @@
 // Forward declarations
 namespace LHCb {
   class State;
+  class StateVector;
   class Measurement;
 };
 
@@ -34,10 +35,13 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackProjector; }
 
+  /// Project the reference vector
+  virtual StatusCode project( const LHCb::StateVector& state,
+                              const LHCb::Measurement& meas ) = 0;
+
   /// Project a state onto a measurement.
-  /// It returns the chi squared of the projection
   virtual StatusCode project( const LHCb::State& state,
-                              LHCb::Measurement& meas ) = 0;
+                              const LHCb::Measurement& meas ) = 0;
 
   /// Retrieve the projection matrix H of the (last) projection
   virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const = 0;
