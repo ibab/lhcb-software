@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-09-25 Wouter Hulsbergen
+ - Added method to TrackProjector interface
+
 !====================== TrackInterfaces v3r8 2007-09-17 ======================
 ! 2007-09-17 - Marco Cattaneo for Stephanie Menzemer
  - Add IPatSeedingTool interface, also to dictionary
