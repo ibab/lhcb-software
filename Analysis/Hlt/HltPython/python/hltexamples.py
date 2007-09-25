@@ -21,8 +21,8 @@ L0TOOL = gaudi.toolsvc().create("L0Value",interface="IL0Value")
 HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
 HLTFAC = gaudi.toolsvc().create("HltFunctionFactory",interface="IHltFunctionFactory")
 
-STDVectorVertices = gaudimodule.gbl.std.vector("LHCb::RecVertex *")
-STDVectorTrack = gaudimodule.gbl.std.vector("LHCb::Track *") 
+# STDVectorVertices = gaudimodule.gbl.std.vector("LHCb::RecVertex *")
+# STDVectorTrack = gaudimodule.gbl.std.vector("LHCb::Track *") 
 
 TES = gaudi.evtsvc()
 
