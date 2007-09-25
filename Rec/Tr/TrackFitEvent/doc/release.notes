@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-25 - Wouter Hulsbergen
+- added constructor from StateVector to StateTraj
+- replaced 'projectionTerm' by residual of reference in FitNode
+
 !========================== TrackFitEvent v3r8 2007-09-18 ====================
 ! 2007-09-04 - Wouter Hulsbergen
 - changes to FitNode

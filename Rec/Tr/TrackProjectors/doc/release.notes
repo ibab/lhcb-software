@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2007-09-25 Wouter Hulsbergen
+ - add method to project StateVector
+ - remove the use of the reference vector in the projection
+
 ! 2007-09-21 - Gerhard Raven
  - Add an option to ignore the drift distance in TrajOTProjector
    Default is to use it, so by default the behaviour remains the same

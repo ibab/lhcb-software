@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-25 Wouter Hulsbergen
+ - KalmanFilter: reference state now only projected in forward filter
+
 !=========================== TrackFitter v2r18 2007-09-20 ===================
 ! 2007-09-13 M Needham
  - ensure error q/p is not zero for infinite momentum tracks  
