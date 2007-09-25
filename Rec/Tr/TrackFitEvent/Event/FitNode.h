@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.20 2007-09-04 08:34:22 wouter Exp $
+// $Id: FitNode.h,v 1.21 2007-09-25 11:48:09 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -88,11 +88,8 @@ namespace LHCb
       return m_transportIsSet;
     }
 
-    /// Retrieve the projection term
-    double projectionTerm() const { return m_projectionTerm; };
-
-    /// Update the projection term
-    void setProjectionTerm(double value) { m_projectionTerm = value; };
+    /// Retrieve the projection term (obsolete)
+    double projectionTerm() const { return m_refResidual + (projectionMatrix()*measurement().refVector())(0) ; }
 
     /// retrieve state predicted by the kalman filter step
     State& predictedStateUp()
@@ -131,21 +128,27 @@ namespace LHCb
     void setDeltaChi2Upstream(double dchi2) { m_deltaChi2Up = dchi2 ; }
 
     /// retrieve chisq contribution in upstream filter
-    float deltaChi2Upstream() const { return m_deltaChi2Up ; }
+    double deltaChi2Upstream() const { return m_deltaChi2Up ; }
 
     /// set chisq contribution in downstream filter
     void setDeltaChi2Downstream(double dchi2) { m_deltaChi2Down = dchi2 ; }
 
     /// retrieve chisq contribution in downstream filter
-    float deltaChi2Downstream() const { return m_deltaChi2Down ; }
+    double deltaChi2Downstream() const { return m_deltaChi2Down ; }
 
+    /// set the residual of the reference
+    void setRefResidual( double res ) { m_refResidual = res ; }
+    
+    /// retrieve the residual of the reference
+    double refResidual() const { return m_refResidual ; }
+    
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix
     Gaudi::TrackVector    m_transportVector;    ///< transport vector
     Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise matrix
     bool                  m_transportIsSet;     ///< Flag for transport params
-    double                m_projectionTerm;     ///< Constant term in projection
+    double                m_refResidual;        ///< residual of the reference    
     State                 m_predictedStateUp;   ///< predicted state upstream
     State                 m_predictedStateDown; ///< predicted state downstream
     double                m_deltaChi2Up;        ///< chisq contribution in upstream filter

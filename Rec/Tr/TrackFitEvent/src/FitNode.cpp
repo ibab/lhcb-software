@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.18 2007-09-04 08:34:22 wouter Exp $
+// $Id: FitNode.cpp,v 1.19 2007-09-25 11:48:09 wouter Exp $
 // Include files
 
 // local
@@ -30,7 +30,7 @@ using namespace LHCb;
 FitNode::FitNode():
   Node(),
   m_transportIsSet(false),
-  m_projectionTerm(0),
+  m_refResidual(0),
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
@@ -41,7 +41,7 @@ FitNode::FitNode():
 FitNode::FitNode( double zPos ):
   Node(),
   m_transportIsSet(false),
-  m_projectionTerm(0),
+  m_refResidual(0),
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
@@ -55,7 +55,7 @@ FitNode::FitNode( double zPos ):
 FitNode::FitNode(Measurement& aMeas):
   Node(),
   m_transportIsSet(false),
-  m_projectionTerm(0),
+  m_refResidual(0),
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
@@ -72,7 +72,7 @@ FitNode::FitNode( const FitNode& rhs ) :
   m_transportVector   (rhs.m_transportVector),
   m_noiseMatrix       (rhs.m_noiseMatrix),
   m_transportIsSet    (rhs.m_transportIsSet),
-  m_projectionTerm    (rhs.m_projectionTerm),
+  m_refResidual       (rhs.m_refResidual),
   m_predictedStateUp  (rhs. m_predictedStateUp),
   m_predictedStateDown(rhs. m_predictedStateDown),
   m_deltaChi2Up       (rhs.m_deltaChi2Up),
