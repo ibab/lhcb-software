@@ -48,11 +48,11 @@ namespace
   }
 }
 
-StatusCode TrajOTProjector::project( const State& state,
-                                     Measurement& meas )
+StatusCode TrajOTProjector::project( const StateVector& statevector,
+                                     const Measurement& meas )
 {
   return meas.checkType( Measurement::OT ) ?
-    project( state, dynamic_cast<OTMeasurement&>(meas) ) :
+    project(statevector, dynamic_cast<const OTMeasurement&>(meas) ) :
     StatusCode::FAILURE;
 }
 
@@ -71,25 +71,15 @@ double TrajOTProjector::driftDistance( const OTMeasurement& meas,
 /// Project a state onto a measurement
 /// It returns the chi squared of the projection
 //-----------------------------------------------------------------------------
-StatusCode TrajOTProjector::project( const State& state,
-                                     OTMeasurement& meas )
+StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector, 
+                                     const OTMeasurement& meas )
 {
-  // Set refVector in case it was not set before
-  if( !meas.refIsSet() ) { meas.setRefVector( state.stateVector() ); }
-
-  // Create reference trajectory
-  static XYZVector bfield; // avoid constructing this every call to project...
-  const TrackVector& refVec = meas.refVector();
-  // Create StateTraj with or without BField information.
-  if( m_useBField )
-    {
-      m_pIMF -> fieldVector( XYZPoint( refVec[0],
-				       refVec[1], meas.z() ), bfield ).ignore();
-    }
-  else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateTraj refTraj( refVec, meas.z(), bfield );
-
-  // Get the measurement trajectory
+  // Project onto the reference. First create the StateTraj with or without BField information.
+  XYZVector bfield(0,0,0) ;
+  if( m_useBField) m_pIMF -> fieldVector( statevector.position(), bfield ).ignore();
+  const StateTraj refTraj( statevector, bfield );
+  
+  // Get the measurement trajectory representing the centre of gravity
   const Trajectory& measTraj = meas.trajectory();
 
   // Determine initial estimates of s1 and s2
@@ -97,7 +87,7 @@ StatusCode TrajOTProjector::project( const State& state,
   double s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  XYZVector dist;
+  static XYZVector dist; // avoid constructing this every call to project...
   StatusCode sc = m_poca -> minimize( refTraj, s1,
 				      measTraj, s2, dist, m_tolerance );
   if( sc.isFailure() ) { return sc; }
@@ -114,12 +104,9 @@ StatusCode TrajOTProjector::project( const State& state,
   m_H = unit*refTraj.derivative(s1);
 
   // Calculate the reference distance and set the ambiguity "on the fly"
-  double distToWireRef = dot( unit, dist ) ;
-  meas.setAmbiguity( distToWireRef > 0 ? 1 : -1 ) ;
+  double distToWire = dot( unit, dist ) ;
+  (const_cast<OTMeasurement&>(meas)).setAmbiguity( distToWire > 0 ? 1 : -1 ) ;
   
-  // Add the first order correction
-  double distToWire = distToWireRef + Vector1( m_H * ( state.stateVector() - refVec ) )(0);
-
   double errMeasure2;
   if (m_useDrift) {
       // Calculate the residual: 
@@ -134,13 +121,25 @@ StatusCode TrajOTProjector::project( const State& state,
       double radius = mod->cellRadius();
       errMeasure2 = radius*radius/3;
   }
-  m_errMeasure = sqrt(errMeasure2);
-
-  // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 +
-			Similarity( m_H, state.covariance() )(0,0) );
+  m_errResidual = m_errMeasure = sqrt(errMeasure2);
 
   return StatusCode::SUCCESS;
+}
+
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement
+//-----------------------------------------------------------------------------
+StatusCode TrajOTProjector::project( const State& state,
+                                     const Measurement& meas )
+{
+  // Project onto the reference (prevent the virtual function call)
+  StatusCode sc = project(LHCb::StateVector(state.stateVector(), state.z()), meas ) ;
+  
+  if(sc.isSuccess())
+    // Calculate the error on the residual
+    m_errResidual = sqrt( m_errMeasure*m_errMeasure + Similarity( m_H, state.covariance() )(0,0) );
+  
+  return sc ;
 }
 
 //-----------------------------------------------------------------------------

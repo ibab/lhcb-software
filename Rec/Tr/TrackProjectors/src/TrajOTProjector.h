@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.10 2007-09-21 11:00:41 graven Exp $
+// $Id: TrajOTProjector.h,v 1.11 2007-09-25 11:50:24 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -26,13 +26,12 @@ class TrajOTProjector : public TrackProjector {
 
 public:
 
-  /// Project a state onto a measurement.
-  /// It returns the chi squared of the projection
-  virtual StatusCode project( const LHCb::State& state,
-                              LHCb::Measurement& meas );
-  StatusCode project( const LHCb::State& state,
-                      LHCb::OTMeasurement& meas );
+  /// Project a state-vector onto a measurement
+  StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas );
 
+  /// Project a state onto a measurement.
+  StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas );
+  
   typedef Gaudi::Matrix1x6 Derivatives;
   Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
 
@@ -46,6 +45,9 @@ public:
 
   /// Deestructor
   virtual ~TrajOTProjector();
+
+private:
+  StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
 
 private:
   double driftDistance(const LHCb::OTMeasurement& meas, double arclen ) const;

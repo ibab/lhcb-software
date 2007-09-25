@@ -1,4 +1,4 @@
-// $Id: TrajProjector.h,v 1.3 2007-08-16 13:38:17 graven Exp $
+// $Id: TrajProjector.h,v 1.4 2007-09-25 11:50:24 wouter Exp $
 #ifndef TRAJPROJECTOR_H 
 #define TRAJPROJECTOR_H 1
 
@@ -28,10 +28,11 @@ class TrajProjector : public TrackProjector {
 public: 
     /// FIXME/TODO: project given a traj instead of a state
 
-  /// Project a state onto a measurement.
-  /// It returns the chi squared of the projection
-  virtual StatusCode project( const LHCb::State& state,
-                              LHCb::Measurement& meas );
+  /// Project a state-vector onto a measurement
+  StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas );
+
+  /// Project a state onto a measurement
+  StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas );
 
   ITrackProjector::Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
 

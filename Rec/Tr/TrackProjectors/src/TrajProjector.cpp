@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.8 2007-08-16 13:24:06 graven Exp $
+// $Id: TrajProjector.cpp,v 1.9 2007-09-25 11:50:24 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -42,27 +42,17 @@ namespace
 }
 
 //-----------------------------------------------------------------------------
-/// Project a state onto a measurement
+/// Project a statevector onto a measurement
 /// It returns the chi squared of the projection
 //-----------------------------------------------------------------------------
 template <typename T>
-StatusCode TrajProjector<T>::project( const State& state,
-                                      Measurement& meas )
+StatusCode TrajProjector<T>::project( const StateVector& statevector,
+                                      const Measurement& meas )
 {
-  // Set refVector in case it was not set before
-  if( !meas.refIsSet() ) { meas.setRefVector( state.stateVector() ); }
-
-  // create reference trajectory
-  static XYZVector bfield; // avoid constructing this every call to project...
-  const TrackVector& refVec = meas.refVector();
-  // Create StateTraj with or without BField information.
-  if( m_useBField )
-    {
-      m_pIMF -> fieldVector( XYZPoint( refVec[0],
-				       refVec[1], meas.z()), bfield ).ignore();
-    }
-  else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateTraj refTraj( refVec, meas.z(), bfield );
+  // Project onto the reference. First create the StateTraj with or without BField information.
+  XYZVector bfield(0,0,0) ;
+  if( m_useBField) m_pIMF -> fieldVector( statevector.position(), bfield ).ignore();
+  const StateTraj refTraj( statevector, bfield );
 
   // Get the measurement trajectory representing the centre of gravity
   const Trajectory& measTraj = meas.trajectory();
@@ -82,23 +72,32 @@ StatusCode TrajProjector<T>::project( const State& state,
 
   // compute the projection matrix from parameter space onto the (signed!) unit
   m_H = unit*refTraj.derivative(s1);
-
-  // Calculate the residual by projecting the distance onto unit, 
-  //    correcting to 1st order for the difference between state and reference
-  //    note that this is just - Dot(unit, dist+refTraj.derivative()*delta)
-  m_residual = -( dot( unit, dist ) +
-		  Vector1( m_H * ( state.stateVector() - refVec ) )(0) );
-
+  
+  // Calculate the residual by projecting the distance onto unit
+  m_residual = - dot( unit, dist ) ;
+  
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(s1), 
                                          refTraj.direction(s1) );
-  m_errMeasure = sqrt(errMeasure2);
-
-  // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 +
-			Similarity( m_H, state.covariance() )(0,0) );
+  m_errResidual = m_errMeasure = sqrt(errMeasure2);
 
   return StatusCode::SUCCESS;
+}
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement
+//-----------------------------------------------------------------------------
+template <typename T>
+StatusCode TrajProjector<T>::project( const State& state,
+                                      const Measurement& meas )
+{
+  // Project onto the reference (prevent the virtual function call)
+  StatusCode sc = TrajProjector<T>::project(LHCb::StateVector(state.stateVector(), state.z()), meas ) ;
+  
+  if(sc.isSuccess())
+    // Calculate the error on the residual
+    m_errResidual = sqrt( m_errMeasure*m_errMeasure + Similarity( m_H, state.covariance() )(0,0) );
+  
+  return sc ;
 }
 
 //-----------------------------------------------------------------------------
