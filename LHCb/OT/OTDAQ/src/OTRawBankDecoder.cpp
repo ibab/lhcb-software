@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.1 2007-09-07 13:19:21 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.2 2007-09-26 13:07:54 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -94,12 +94,18 @@ DECLARE_TOOL_FACTORY( OTRawBankDecoder );
 OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_countsPerBX(64),
+    m_numberOfBX(3),
+    m_timePerBX(25*Gaudi::Units::ns),
+    m_tracker(0),
+    m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
+    m_detectordata(0)
 {
   declareInterface<OTRawBankDecoder>(this);
-  declareProperty("countsPerBX", m_countsPerBX = 64);
-  declareProperty("numberOfBX", m_numberOfBX = 3);
-  declareProperty("timePerBX", m_timePerBX = 25.0*Gaudi::Units::ns);
+  declareProperty("countsPerBX", m_countsPerBX );
+  declareProperty("numberOfBX", m_numberOfBX );
+  declareProperty("timePerBX", m_timePerBX );
   
 }
 //=============================================================================
@@ -112,7 +118,8 @@ OTRawBankDecoder::~OTRawBankDecoder() {}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode OTRawBankDecoder::initialize() {
+StatusCode OTRawBankDecoder::initialize()
+{
   
   debug()<<"initializing OTRawBankDecoder"<<endmsg;
   
@@ -136,6 +143,18 @@ StatusCode OTRawBankDecoder::initialize() {
   
   return StatusCode::SUCCESS;
 };
+
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode OTRawBankDecoder::finalize()
+{
+  if( m_detectordata ) {
+    delete m_detectordata ;
+    m_detectordata=0;
+  }
+  return GaudiTool::finalize() ;
+}
 
 //=============================================================================
 // Handle for incident service

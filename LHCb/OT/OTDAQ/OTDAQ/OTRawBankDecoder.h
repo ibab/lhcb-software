@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.1 2007-09-07 13:19:20 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.2 2007-09-26 13:07:54 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -58,7 +58,10 @@ public:
   virtual ~OTRawBankDecoder( ) ; ///< Destructor
   
   /// Tool initialization
-  virtual StatusCode initialize(); 
+  virtual StatusCode initialize();
+ 
+  /// Tool finalize
+  virtual StatusCode finalize(); 
   
   /// Decode data for a single module
   virtual LHCb::OTLiteTimeRange decodeModule( const LHCb::OTChannelID& moduleId ) const ;
