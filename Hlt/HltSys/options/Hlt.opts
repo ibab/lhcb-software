@@ -46,8 +46,8 @@ HltAlleys.Selections = {"MuonTriggerSingle",
                         "MuonTriggerPureDiMuon",
                         "MuonTriggerPureIPDiMuon",
                         "HadTrigger"
-                        ,"ELeTriggerEleTrk"
-                        ,"ELeTriggerSingle"
+                        ,"EleTriggerEleTrk"
+                        ,"EleTriggerSingle"
                         ,"PhoTriggerPhoTrk"
 };
 HltAlleys.SelectionName = "HltAlleys";
