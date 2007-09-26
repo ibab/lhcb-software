@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.50 2007-09-24 09:26:10 jpalac Exp $
+! $Id: release.notes,v 1.51 2007-09-26 13:49:22 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-09-26 - Juan PALACIOS
+ - src/TransportFunctions.h
+  . fix the doxygen
 
 !====================== DaVinciTransporter v3r7 2007-09-24== =================
 
