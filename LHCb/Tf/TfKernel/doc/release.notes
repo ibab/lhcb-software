@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-09-26 Wouter Hulsbergen
+ - added accessor to hits by station to IOTHitCreator
+
 !============================ TfKernel v1r0 2007-09-19 =======================
 ! 2007-09-19 - Kurt Rinnert
  - Fixed windows warnings in VELO related classes and HitBase
