@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.10 2007-09-21 12:17:53 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.11 2007-09-26 13:20:43 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -275,16 +275,17 @@ StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
   // First define the 'map': this is a vector with
   // positions in 3d of the alignable detector elements
   // =========================
-  m_dett->geometry()->matrixInv().GetDecomposition( Rotation, position);
+  //m_dett->geometry()->matrixInv().GetDecomposition( Rotation, position);
+  m_dett->geometry()->toLocalMatrix().GetDecomposition( Rotation, position);
   info() << "TT system name & position: " << m_dett->name() << " "
          << position.x() << ", "
          << position.y() << ", "
          << position.z() << endreq;
   if ( m_ttSys && ! m_ttStation && ! m_ttLayer ) {
-    TTmap.push_back( m_dett->geometry()->matrixInv() );
+    TTmap.push_back( m_dett->geometry()->toLocalMatrix() );
     AlignmentCondition *tt_cond = const_cast<AlignmentCondition*>
       (m_dett->geometry()->alignmentCondition());
-    m_ALImap.push_back( tt_cond->matrix() ); // save the alignment conditions of the tt sys
+    m_ALImap.push_back( tt_cond->offNominalMatrix() ); // save the alignment conditions of the tt sys
   }
 
   m_zmoy_tt = 0;
@@ -313,7 +314,7 @@ StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
   for ( unsigned int i = 0; i < m_TTStations.size(); i++ ) {
     m_TTLayers = m_TTStations[i]->childIDetectorElements();
     for ( unsigned int j = 0; j < m_TTLayers.size(); j++ ) {
-      (m_TTLayers[j]->geometry()->matrixInv()).GetDecomposition(Rotation, position);
+      (m_TTLayers[j]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
       s_zmoy_tt += (position.z()-m_zmoy_tt)*(position.z()-m_zmoy_tt);
     }
   }
@@ -326,16 +327,16 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap ) {
   //  ot = OTmap.size();
   Gaudi::Rotation3D Rotation;
   Gaudi::XYZVector position;
-  m_deot->geometry()->matrixInv().GetDecomposition( Rotation, position );
+  m_deot->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
   info() << "OT system name & position: " << m_deot->name() << " "
          << position.x() << " " 
          << position.y() << " "
          << position.z() << endreq;
   if ( m_otSys && ! m_otStation && ! m_otLayer && ! m_otQuadrant && ! m_otModule ) {
-    OTmap.push_back( m_deot->geometry()->matrixInv() );
+    OTmap.push_back( m_deot->geometry()->toLocalMatrix() );
     AlignmentCondition *ot_cond = const_cast<AlignmentCondition*>
       (m_deot->geometry()->alignmentCondition() );
-    m_ALImap.push_back( ot_cond->matrixInv() );
+    m_ALImap.push_back( ot_cond->offNominalMatrix() );
   }
   
   m_zmoy_ot = 0;
@@ -404,22 +405,22 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap ) {
         m_OTModules = m_OTQuadrants[k]->childIDetectorElements();
         for ( unsigned int l = 0; l < m_OTModules.size(); l++ ) {
           if ( m_otModule ) {
-            m_OTModules[l]->geometry()->matrixInv().GetDecomposition( Rotation, position );
+            m_OTModules[l]->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
             s_zmoy_tt += (position.z()-m_zmoy_ot)*(position.z()-m_zmoy_ot);
           }
         }
         if ( m_otQuadrant && ! m_otModule ) {
-          m_OTQuadrants[k]->geometry()->matrixInv().GetDecomposition( Rotation, position );
+          m_OTQuadrants[k]->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
           s_zmoy_tt += (position.z()-m_zmoy_ot)*(position.z()-m_zmoy_ot);
         }
       }
       if ( m_otLayer && ! m_otQuadrant && ! m_otModule ) {
-        m_OTLayers[j]->geometry()->matrixInv().GetDecomposition( Rotation, position );
+        m_OTLayers[j]->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
         s_zmoy_tt += (position.z()-m_zmoy_ot)*(position.z()-m_zmoy_ot);
       }
     }
     if ( m_otStation && ! m_otLayer && ! m_otQuadrant && ! m_otModule ) {
-      m_OTStations[i]->geometry()->matrixInv().GetDecomposition( Rotation, position );
+      m_OTStations[i]->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
       s_zmoy_tt += (position.z()-m_zmoy_ot)*(position.z()-m_zmoy_ot);
     }
   }
@@ -432,16 +433,16 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
   //  it = ITmap.size();
   Gaudi::Rotation3D Rotation;
   Gaudi::XYZVector position;
-  m_deit->geometry()->matrixInv().GetDecomposition( Rotation, position );
+  m_deit->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
   info() << "IT system name & position: " << m_deit->name() << " "
          << position.x() << ", "
          << position.y() << ", "
          << position.z() << endreq;
   if ( m_itSys && ! m_itStation && ! m_itLayer && ! m_itBox ) {
-    ITmap.push_back( m_deit->geometry()->matrixInv() );
+    ITmap.push_back( m_deit->geometry()->toLocalMatrix() );
     AlignmentCondition *it_cond = const_cast<AlignmentCondition*>
       (m_deit->geometry()->alignmentCondition() );
-    m_ALImap.push_back( it_cond->matrixInv() );
+    m_ALImap.push_back( it_cond->offNominalMatrix() );
   }
 
   m_zmoy_it = 0.0;
@@ -507,17 +508,17 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
       m_ITLayers = m_ITBoxes[j]->childIDetectorElements();
       for ( unsigned int k = 0; k < m_ITLayers.size(); k++ ) {
         if ( m_itLayer ) {
-          (m_ITLayers[k]->geometry()->matrixInv()).GetDecomposition(Rotation, position);
+          (m_ITLayers[k]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
           s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
         }
       }
       if ( m_itBox && ! m_itLayer ) {
-        (m_ITBoxes[j]->geometry()->matrixInv()).GetDecomposition(Rotation, position);
+        (m_ITBoxes[j]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
         s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
       }
     }
     if ( m_itStation && ! m_itBox && ! m_itLayer ) {
-      (m_ITStations[i]->geometry()->matrixInv()).GetDecomposition(Rotation, position);
+      (m_ITStations[i]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
       s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
     }
   }
@@ -563,10 +564,10 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   //  info() << "Name of object = " << id->name() << endreq;
   m_C_pos.insert(make_pair(id->name(),r ));
   m_rank.push_back( r );
-  m_ALImap.push_back( id->geometry()->alignmentCondition()->matrixInv() );
-  m_DETmap.push_back( id->geometry()->matrixInv() );
-  info() << "Z-position" << id->geometry()->matrixInv() << endreq;
-  id->geometry()->matrixInv().GetDecomposition( R, T );
+  m_ALImap.push_back( id->geometry()->alignmentCondition()->offNominalMatrix() );
+  m_DETmap.push_back( id->geometry()->toLocalMatrix() );
+  info() << "Z-position" << id->geometry()->toLocalMatrix() << endreq;
+  id->geometry()->toLocalMatrix().GetDecomposition( R, T );
   m_zmoy += T.z();
 }
 
