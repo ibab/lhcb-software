@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.5 2007-09-07 13:32:10 wouter Exp $
+ *  $Id: OTHitCreator.h,v 1.6 2007-09-26 07:35:05 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -72,6 +72,9 @@ namespace Tf
 
     // Load all the OT hits
     virtual OTHitRange hits() const ;
+
+    // Load the hits for a given region of interest
+    virtual OTHitRange hits(const TStationID iStation) const ;
 
     // Load the hits for a given region of interest
     virtual OTHitRange hits(const TStationID iStation,

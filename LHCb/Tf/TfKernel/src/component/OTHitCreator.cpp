@@ -265,6 +265,12 @@ namespace Tf
     return m_detectordata->stations()[iStation]->layers[iLayer]->hits() ;
   }
 
+  Tf::OTHitRange OTHitCreator::hits(const TStationID iStation) const
+  {
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    return m_detectordata->stations()[iStation]->hits() ;
+  }
+
   Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,
                                     const TLayerID iLayer,
                                     const OTRegionID iRegion ) const

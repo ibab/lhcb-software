@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.7 2007-08-21 22:44:51 jonrob Exp $
+ *  $Id: IOTHitCreator.h,v 1.8 2007-09-26 07:35:04 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -94,6 +94,17 @@ namespace Tf
      *  @return Range object for the hits ion the selected region of interest
      */
     virtual OTHitRange hits() const = 0 ;
+
+    /** Load the hits for a given region of interest
+     *
+     * @attention This call may lead to loading on demand and
+     *            may invalidate iterators returned by a previous call.
+     *
+     *  @param[in] iStation Station ID
+     *
+     *  @return Range object for the hits in the selected region of interest
+     */
+    virtual OTHitRange hits(const TStationID iStation) const = 0 ;
 
     /** Load the hits for a given region of interest
      *
