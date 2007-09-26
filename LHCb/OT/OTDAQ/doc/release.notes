@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2007-09-26 - Wouter Hulsbergen
+ -  added OTRawBankDecoder::finalize
+
 !======================= OTDAQ v5r4 2007-09-18 ======================
 ! 2007-09-18 - Marco Cattaneo
  - Undo change of 06-15 since it needs also changes to the encoding that
