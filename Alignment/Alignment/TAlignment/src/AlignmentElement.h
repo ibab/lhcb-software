@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.1 2007-09-01 17:34:20 janos Exp $
+// $Id: AlignmentElement.h,v 1.2 2007-09-26 13:29:41 jblouw Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H 
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -107,7 +107,7 @@ inline const std::vector<double> AlignmentElement::pivot() const {
 
 inline StatusCode AlignmentElement::setLocalDeltaParams(const std::vector<double>& localDeltaT, 
                                                         const std::vector<double>& localDeltaR) const {  
-  StatusCode sc = const_cast<IGeometryInfo*>(m_element->geometry())->localDeltaParams(localDeltaT, localDeltaR, pivot());
+  StatusCode sc = const_cast<IGeometryInfo*>(m_element->geometry())->ownToOffNominalParams(localDeltaT, localDeltaR, pivot());
   
   return sc;
 }
@@ -121,7 +121,7 @@ inline StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double
   /// Transform global deltas to local deltas
   const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix(m_element, globalDeltaMatrix);
   /// Update position of detector elements
-  StatusCode sc = const_cast<IGeometryInfo*>(m_element->geometry())->localDeltaMatrix(localDeltaMatrix);
+  StatusCode sc = const_cast<IGeometryInfo*>(m_element->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
   
   return sc;
 }

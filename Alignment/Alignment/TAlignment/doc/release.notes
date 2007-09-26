@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-09-25 - Johan Blouw
+ - removed several inconsistencies in AlignAlgorithm.cpp and AlignmentElement.h due to
+   use of LHCB_v22r9
+   - notably: calls to IGeometry used localDeltaParams changed to ownToOffNominalParams
+              calls to IGeometry used localDeltaMatrix changed to ownToOffNominalMatrix
+- NOTE: the package has been retagged for the soft project release.
+
 ! 2007-09-21 - Johan Blouw
  - modified requirements file such that only GAlign is
    visible to python through a linker library

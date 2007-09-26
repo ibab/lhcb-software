@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.6 2007-08-16 13:52:41 graven Exp $
+// $Id: AlignAlgorithm.cpp,v 1.7 2007-09-26 13:29:41 jblouw Exp $
 // Include files
 // from std
 #include <utility>
@@ -379,7 +379,7 @@ StatusCode AlignAlgorithm::putAlignmentConstants(const Elements& elements, const
     /// Transform global deltas to local deltas
     const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*iE), globalDeltaMatrix);
     /// Update position of detector elements
-    StatusCode sc = (*iE)->geometry()->localDeltaMatrix(localDeltaMatrix); 
+    StatusCode sc = (*iE)->geometry()->ownToOffNominalMatrix(localDeltaMatrix); 
     if (sc.isFailure()) return Error("Failed to set alignment conditions", StatusCode::FAILURE);
   }
   return StatusCode::SUCCESS;
