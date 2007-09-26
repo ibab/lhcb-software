@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.8 2007-09-26 16:25:06 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.9 2007-09-26 16:31:21 jpalac Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
@@ -52,9 +52,9 @@ namespace DaVinciTransporter {
    *   
    *   @code      
    *
-   *   dz/Pz * /  1  0  -dz*Px/Pz  0  \
-   *           |  0  1  -dz*Py/Pz  0  |
-   *           \  0  0       0     0  /
+   *   dz/Pz * /  1  0  -Px/Pz  0  \
+   *           |  0  1  -Py/Pz  0  |
+   *           \  0  0    0     0  /
    *
    *  @endcode
    *  A is
