@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.6 2007-03-05 10:09:19 pkoppenb Exp $
+// $Id: TransporterFunctions.h,v 1.7 2007-09-26 13:48:27 jpalac Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
@@ -21,7 +21,7 @@ namespace DaVinciTransporter {
    *  Transport a composite Particle to specified z position, using linear
    *  extrapolation.
    *  The transformation on the state vector, v_0 -> v_1, is
-   *
+   *  @code
    *  x_1  = x_0 + dZ*pX_0/pZ_0
    *  y_1  = y_0 + dZ*pY_0/pZ_0
    *  z_1  = z_0 + dZ
@@ -29,9 +29,10 @@ namespace DaVinciTransporter {
    *  pY_1 = pY_0
    *  pZ_1 = pZ_0
    *  E_1  = E_old
-
+   *  @endcode
+   *
    *  The transport matrix D is [dv_1/dv_0], or
-   *  
+   *  @code  
    *   1  0  0 dz/Pz   0    -dz*Px/Pz/Pz  0
    *   0  1  0   0   dz/Pz  -dz*Py/Pz/Pz  0
    *   0  0  1   0     0          0       0
@@ -39,34 +40,38 @@ namespace DaVinciTransporter {
    *   0  0  0   0     1          0       0
    *   0  0  0   0     0          1       0
    *   0  0  0   0     0          0       1
+   *  @endcode
    *
-   * Or, in block structure,
-   *
+   *  Or, in block structure,
+   *  @code
    *   I(3x3)   Dxp(3x4)
    *   0(4x3)    I(4x4)
+   *  @endcode
    *
    *  Where Dxp is
-   *         
+   *   
+   *   @code      
    *         /  1    0 -Px/Pz  0  \
    *  1/Pz * |  0    1 -Py/Pz  0  |
    *         \  0    0    0    0  /
-   *
+   *  @endcode
    * The transformation on the Particle's 7x7 covariance matrix C_0 is given by
    *
    *   C_1 = D*C_0*D^T
    * 
    * or, in block form,
-   *
+   *  @code
    *  /  I  Dxp  \   /  Cx_0  Cpx_0^T  \   /  I      0  \    
    *  |          | * |                 | * |            |
    *  \  0   I   /   \  Cpx_0   Cp_0   /   \  Dxp^T  I  /
-   *  
+   *  @endcode
    * 
    *  resulting in the expressions
-   *
+   *  @code
    *  Cx_1  = Cx_0 + Cpx_0^T*Dxp^T + Dxp*Cpx_0 + Dxp*Cp_0*Dxp^T
    *  Cpx_1 = Cpx_0 + Cp*Dxp^T
    *  Cp_1  = Cp_0 
+   *  @endcode
    *
    *  @author Juan PALACIOS
    *  @date   2006-09-22
