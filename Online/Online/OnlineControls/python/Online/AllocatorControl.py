@@ -1,31 +1,45 @@
-import Online.PVSS    as PVSS
+import sys
+import Online.PVSS as PVSS
+import Online.Utils as Utils
 error          = PVSS.error
 PVSS.logPrefix = 'PVSS Control '
 
 
 # =============================================================================
 class AllocatorClient:
+  """
+  Base class with default implementations for standard callbacks.
+
+  @author M.Frank
+  """
   # ===========================================================================
   def __init__(self,manager,name):
+    "Object constructor"
     self.manager = manager
     self.name = name
   # ===========================================================================
   def configure(self,rundp_name, partition):
+    "Default client callback on the command 'configure'"
     return self
 
   # ===========================================================================
   def allocate(self,rundp_name, partition):
+    "Default client callback on the command 'allocate'"
     return 'SUCCESS'
 
   # ===========================================================================
   def free(self,rundp_name, partition):
+    "Default client callback on the command 'free'"
     return 'SUCCESS'
+
   # ===========================================================================
   def recover(self,rundp_name, partition):
+    "Default client callback on the command 'recover'"
     return 'SUCCESS'
 
   # ===========================================================================
   def recover_slice(self,rundp_name, partition):
+    "Default client callback on the command 'recover_slice'"
     return 'SUCCESS'
 
     
@@ -36,6 +50,9 @@ class AllocatorClient:
 # =============================================================================
 class Control(PVSS.PyDeviceListener):
   """ @class Control
+
+      Generic device listener object to serve PVSS requests.
+      Requests are forwarded to registered clients.
 
       @author  M.Frank
       @version 1.0
@@ -52,12 +69,13 @@ class Control(PVSS.PyDeviceListener):
     self.manager = manager
     self.name    = name
     self.postfix = postfix
+    self.do_sleep= 1
     PVSS.PyDeviceListener.__init__(self,self,manager)
     self.writer  = manager.devWriter()
     self.control = self.objects[0].get('Command')
     self.state   = self.objects[0].get('State')
-    PVSS.info(name+': Listen to '+self.control.name(),1)
-    PVSS.info(name+': Answer to '+self.state.name(),1)
+    PVSS.info(name+': Listen to '+self.control.name(),timestamp=1,type=PVSS.CONNECTED)
+    PVSS.info(name+': Answer to '+self.state.name(),timestamp=1,type=PVSS.CONNECTED)
     self.sensor = PVSS.DeviceSensor(manager,self.control)
     
   # ===========================================================================
@@ -78,14 +96,45 @@ class Control(PVSS.PyDeviceListener):
 
   # ===========================================================================
   def doExecute(self,function,runDpName,partition):
+    """
+    Execute service request.
+    The request is forwarded to each controlled client object.
+    The callback name is given as a string.
+
+    Parameters:
+    @param  function   Callback name of the client
+    @param  runDpName  Name of the RunInfo datapoint
+    @param  partition  Partition name
+    """
     result = None
     r0 = None
     for i in self.objects:
-      result = getattr(i,function)(runDpName, partition)
-      if r0 is None: r0 = result
-      if result is None:
-        return result
+      if hasattr(i,function):
+        result = getattr(i,function)(runDpName, partition)
+        if r0 is None: r0 = result
+        if result is None:
+          return result
     return r0
+
+  # ===========================================================================
+  def handleInvalidDevice(self):
+    "Callback once per item in the device sensor list on datapoint change."
+    import traceback
+    cmd = ''
+    try:
+      nam = self.dp().name()
+      error('The device '+nam+' is dead.....\n'+\
+            'This should never occur and is a serious error condition\n'+\
+            'We will exit the system.',timestamp=1,type=PVSS.DPNOTEXISTENT)
+      self.do_sleep = 0
+    except Exception,X:
+      error(str(X),timestamp=1,type=PVSS.DPNOTEXISTENT)
+      traceback.print_exc()
+      return 0
+    except:
+      error('(Unknown exception)',timestamp=1,type=PVSS.DPNOTEXISTENT)
+      traceback.print_exc()
+    return 0      
 
   # ===========================================================================
   def handleDevice(self):
@@ -106,32 +155,40 @@ class Control(PVSS.PyDeviceListener):
         answer = '/'+itms[1]+'/'+partition+"/"+str(partID)
         result = None
         if storage == self.name:
-          try:
-            if command == "CONFIGURE":
-              dp = itms[5]
-              ok = itms[6]
-              err = itms[7]
-              data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
-              data.data = err
+          if command == "CONFIGURE":
+            dp = itms[5]
+            ok = itms[6]
+            err = itms[7]
+            data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
+            data.data = ok
+            try:
               result = self.doExecute('configure',runDpName,partition)
-              if result is not None:
-                data.data = ok
-              self.writer.add(data)
-              self.writer.execute()
-              return self
-            elif command == "RECOVER_SLICE":
-              dp = itms[5]
-              ok = itms[6]
-              err = itms[7]
-              data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
+              if result is None: data.data = err
+            except Exception, X:
+              error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
+              traceback.print_exc()
               data.data = err
+            self.writer.add(data)
+            self.writer.execute()
+            return self
+          elif command == "RECOVER_SLICE":
+            dp = itms[5]
+            ok = itms[6]
+            err = itms[7]
+            data = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(dp))
+            data.data = ok
+            try:
               result = self.doExecute('recover_slice',runDpName,partition)
-              if result is not None:
-                data.data = ok
-              self.writer.add(data)
-              self.writer.execute()
-              return self
-            elif command == "ALLOCATE":
+              if result is None: data.data = err
+            except Exception, X:
+              error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
+              traceback.print_exc()
+              data.data = err
+            self.writer.add(data)
+            self.writer.execute()
+            return self
+          try:
+            if command == "ALLOCATE":
               result = self.doExecute('allocate',runDpName,partition)
               if result is not None:
                 return self.makeAnswer(command,answer+'/'+result)
@@ -173,16 +230,20 @@ class Control(PVSS.PyDeviceListener):
  
   # ===========================================================================
   def run(self):
+    "Start the controls task by activating the listening devices."
     self.sensor.addListener(self)
     self.sensor.run(1)
+    return self
 
   # ===========================================================================
   def sleep(self):
+    "Serve controls requests in daemon mode"
     import sys, time
-    print 'Sleeping ....'
+    if PVSS.batchMode(): Utils.log('Sleeping ....',timestamp=1)
+    else:                print 'Sleeping ....'
     sys.stdout.flush()
     try:
-      while(1):
+      while(self.do_sleep):
         time.sleep(1)
     except Exception,X:
       print 'Exception:',str(X)

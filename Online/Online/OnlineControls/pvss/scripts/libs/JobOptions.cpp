@@ -2,7 +2,6 @@
 // Names to datapoints
 string jo_dpPartitionName;
 string JobOptionsVersion     = "1.0";
-string JobOptionsSystem      = "LBECS";
 string JobOptionsPartition_t = "JobOptionsPartition";
 string JobOptionsActivity_t  = "JobOptionsActivity";
 string JobOptionsTaskType_t  = "JobOptionsTaskType";
@@ -20,8 +19,15 @@ string jo_partitionID;
 string jo_activityName;
 string jo_tell1Boards;
 
+
+
 string JobOptions_sysName()  {
   return JobOptionsSystem+":";
+  //return "BBB"+JobOptionsSystem+":";
+}
+/// Access system ID of the job options system
+int JobOptions_sysID()  {
+  return getSystemId(JobOptions_sysName());
 }
 
 // Print setup parameters with prefix tag
@@ -86,7 +92,7 @@ int JobOptions_write(string fname, string defs, string tell1, string opts)  {
   * @author M.Frank
   */
 int JobOptions_config(string partitionName)  {
-  string base = JobOptionsPartition_t + "_" + partitionName;
+  string base = JobOptions_sysName()+JobOptionsPartition_t + "_" + partitionName;
   jo_dpPartitionName = base;
   int rc = dpGet(base + ".PartitionID", jo_partitionID,
     base + ".Activity",    jo_activityName,
@@ -288,6 +294,16 @@ void JobOptions_typeDelete(string typ)  {
     DebugN (typ+" datapoint type does not exists ... Nothing to do.");
   }
 }
+/// Install manager
+int JobOptions_installManager(int num, string name, string script)  {
+  string path = PROJ_PATH+"/bin/"+name;
+  file f = fopen(path,"w");
+  fprintf(f,"#!/bin/bash\n. `dirname $0`/PVSS00api.sh -NAME "+name+" -DLL PVSSInterface -FUN pvss_pymain $*\n\n");
+  fclose(f);  
+  system("/bin/chmod +x "+path);
+  fwInstallation_addManager(name,"always", 30, 3, 3, "-num "+num+" -SCRIPT "+script);
+}
+
 /// Install types
 void JobOptions_install() {
   JobOptions_installOptions();
@@ -342,18 +358,53 @@ void JobOptions_installOptions() {
   JobOptions_typeCreate(names,types);
 }
 /// Uninstall types
-void JobOptions_uninstall() {
-  JobOptions_typeDelete("JobOptionsControl");
+void JobOptions_uninstallOptions() {
   JobOptions_typeDelete(JobOptionsPartition_t);
   JobOptions_typeDelete(JobOptionsActivity_t);
   JobOptions_typeDelete(JobOptionsTaskType_t);
 }
+void JobOptions_uninstallControl() {
+  JobOptions_typeDelete("JobOptionsControl");
+}
+/// Uninstall types for options editor
+void JobOptions_uninstall() {
+  JobOptions_uninstallControl();
+  JobOptions_uninstallOptions();
+}
+int JobOptionsEditor_isInstalled()  {
+  if ( dynlen(dpTypes(JobOptionsTaskType_t,JobOptions_sysID())) == 0 )  {
+    return 0;
+  }
+  return 1;
+}
+/// Flip between systems
+int JobOptionsEditor_setSystem(string name)  {
+  JobOptionsSystem = name;
+  JobOptionsEditor_init();
+}
+
 /// Editor: Initialize widget
 int JobOptionsEditor_init()  {
   bool isChild = isDollarDefined("$1") || isDollarDefined("$2");
-  DebugN("--------------------------------------------------------------------------------"+isChild);
+  //DebugN("--------------------------------------------------------------------------------"+isChild);
   //JobOptions_uninstall();
   //JobOptions_install();
+  setValue("m_systemName","text","System:"+JobOptionsSystem);
+  setValue("m_systemName","visible",1);
+  if ( !JobOptionsEditor_isInstalled() )  {
+    DebugN("Not connected to job options system.");
+    LayerOff(2);
+    LayerOff(3);
+    LayerOff(4);
+    LayerOff(5);
+    LayerOn(6);
+    return 1;
+  }  
+  LayerOn(2);
+  LayerOn(3);
+  LayerOn(4);
+  LayerOff(5);
+  LayerOff(6);
   setValue("m_textEditor","visible",true);
   setValue("m_needDefaults","visible",true);
   setValue("m_needTell1Setup","visible",true);
@@ -395,14 +446,13 @@ void JobOptionsEditor_setToolTips()  {
 int JobOptionsEditor_createObject(string name,string typ) {
   if ( strlen(name) > 0 )  {
     string n = typ+"_"+name;
-    int id = getSystemId(JobOptions_sysName());
     dyn_string names;
     dyn_uint ids;
     getSystemNames(names,ids);
     DebugN(names,ids);
     if ( 0 == nameCheck(n) )  {
       if ( !dpExists(n) )  {
-        int rc = dpCreate(n,typ,id);
+        int rc = dpCreate(n,typ,JobOptions_sysID());
         if ( 0 == rc )  {
           return 0;
         }
@@ -619,12 +669,12 @@ int JobOptionsEditor_showNodeTypes()  {
       return jo_PARTITION_EDIT;
     }
   }
-  return JobOptions_error(rc,"Cannot access partition information of:"+m_list.selectedText);
+  return JobOptions_error(rc,"Cannot access partition information of:"+m_list.selectedText+"["+typ+"]");
 }
 /// Editor: Show options for one task type in edit control
 int JobOptionsEditor_showTaskType(string text)  {
   string nam = JobOptionsTaskType_t+"_"+text, opts;
-  string dp = JobOptions_sysName()+nam+".";
+  string dp  = JobOptions_sysName()+nam+".";
   bool   tell1, defs;
   int rc = dpGet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
   if ( 0 == rc )  {
@@ -799,6 +849,8 @@ int JobOptionsEditor_listPopup(int panel_type) {
 main()   {
   string partitionName = "LHCb";
   jo_doExit = 0;
+  addGlobal("JobOptionsSystem",STRING_VAR);
+  JobOptionsSystem = "STORAGE";
   if ( 0 == JobOptions_config(partitionName) )  {
     if ( 0 == JobOptions_listen() )  {
       DebugN("JobOptions writer active and listening to commands.");

@@ -13,8 +13,9 @@ def controlsMgr(name):
         return _systems[name][1]
       # Hack for now ....
       if name[:3]=='ECS':
-        print 'PVSS System switch:',name[:3],name,'--> LBECS'
-        name = 'LBECS'        
+        if name[:3]!=name:
+          print 'PVSS System switch:',name[:3],name,'--> LBECS'
+          name = 'LBECS'        
       id,nam = PVSS.system(name)
       if _sysIds.has_key(id):
         ctrl = _sysIds[id][1]

@@ -1,11 +1,36 @@
 V 10
 1
 LANG:1 11 Job Options
-PANEL,-1 -1 635 357 N "_3DFace" 0
-"main() {  jo_edit1=jo_editType=JobOptionsEditor_init();                        }" 0
+PANEL,-1 -1 636 357 N "_3DFace" 0
+"main() {
+  dyn_string names;
+  dyn_uint ids;
+  DebugN(\"UI:\"+myUiDpName());
+  addGlobal(\"JobOptionsSystem\",STRING_VAR);
+  getSystemNames(names,ids);
+  if ( dynlen(names)>0 ) JobOptionsSystem = names[1];
+  for(int i=1; i<dynlen(names); ++i)  {
+    if (names[i] == \"ECS\")  {
+      JobOptionsSystem = names[i];
+      break;
+    }
+  }
+  m_hltOptsNumber.text = 57;
+  m_hltOptsName.text = \"PVSS00HLTOptions\";
+  m_hltOptsScript.text = \"../python/\"+m_hltOptsName.text+\".py\";
+  m_storageOptsNumber.text = 58;
+  m_storageOptsName.text = \"PVSS00Storage\";
+  m_storageOptsScript.text = \"../python/\"+m_storageOptsName.text+\".py\";
+  m_monitoringOptsNumber.text = 59;
+  m_monitoringOptsName.text = \"PVSS00Monitoring\";
+  m_monitoringOptsScript.text = \"../python/\"+m_monitoringOptsName.text+\".py\";
+  jo_edit1=jo_editType=JobOptionsEditor_init();                        
+}" 0
  E E E E 1 0 0 0  0 0
 ""0  1
-E "#uses \"JobOptions.cpp\"
+E "#uses \"pmon.ctl\"
+#uses \"JobOptions.cpp\"
+#uses \"fwInstallation.ctl\"
 int jo_editType = 0;
 int jo_edit1 = 0;
 void _p0()  {}// DebugN(\"Panel EditType before call:\"+jo_editType);            }
@@ -20,6 +45,186 @@ DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
 1
 LANG:1 6 Layer1
+2 53
+"m_systemName"
+""
+1 12 239 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+69 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E "main()
+{
+  LayerOff(2);
+  LayerOff(3);
+  LayerOff(4);
+  LayerOff(6);
+  LayerOn(5);
+}
+" 0
+ 0 1 1 2 1 E U  1 E 12 239 130 259
+0 2 2 "0s" 0 0 0 64 0 0  12 239 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 11 System Name
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+20 21
+"m_needTell1Setup"
+""
+1 160 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 158 318 402 342
+1
+T 
+1
+LANG:1 19 Require Tell1 Setup
+
+1 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE20 22
+"m_needDefaults"
+""
+1 399 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 397 318 621 342
+1
+T 
+1
+LANG:1 22 Require partition info
+
+1 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE29 23
+"m_textEditor"
+""
+1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 160 120 621 321
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+14 20
+"m_newName"
+""
+1 290 320 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 288 318 622 345
+3 "0s" 0 0 0 0 0 -1  E E E
+13 19
+"m_create"
+""
+1 160 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 158 318 282 345
+
+T 
+1
+LANG:1 6 Create
+"main()  {  JobOptionsEditor_create(jo_edit1,m_newName.text);                          }" 0
+ E E E
+30 5
+"m_createFrame"
+""
+1 150 350 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+18 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 150 300 630 350
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 6 Frame1
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
 17 10
 "m_list"
 ""
@@ -203,7 +408,7 @@ LANG:1 0
 E E 0 3 1 0 1 E 1.247191011235955 0 1 -2.471910112359551 0 0 E 12 167 97 216
 0 2 0 "0s" 0 0 0 192 0 0  12 167 1
 1
-LANG:1 112 -*-Bitstream Charter-bold-i-normal-*-*-280-100-100-*-*-iso8859-1|-40,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 111 -*-Bitstream Charter-bold-i-normal-*-40-*-100-100-*-*-iso8859-1|-40,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Charter
 0 ""
 1
 LANG:1 4 Logo
@@ -371,23 +576,32 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E 1.064516129032258 0 1 -0.7096774193548381 0 1 E 13 210 133 230
+E "main()
+{
+  LayerOff(2);
+  LayerOff(3);
+  LayerOff(4);
+  LayerOff(6);
+  LayerOn(5);
+}
+" 0
+ 0 1 1 2 1 E 1.064516129032258 0 1 -0.7096774193548381 0 1 E 13 210 133 230
 0 2 2 "0s" 0 0 0 64 0 0  13 210 1
 1
-LANG:1 126 -*-Bitstream Vera Sans Mono-bold-i-normal-*-*-140-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans Mono
+LANG:1 125 -*-Bitstream Vera Sans Mono-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans Mono
 0 ""
 1
 LANG:1 5 Logo2
 0
-LAYER, 1 
+LAYER, 4 
 1
-LANG:1 6 Layer2
-20 21
-"m_needTell1Setup"
+LANG:1 6 Layer5
+13 36
+"PUSH_BUTTON8"
 ""
-1 160 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 384.1658536585367 149 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
-21 0 0 0 0 0
+46 0 0 0 0 0
 E E E
 0
 1
@@ -395,123 +609,444 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 158 318 402 342
-1
-T 
-1
-LANG:1 19 Require Tell1 Setup
-
-1 
-1
-LANG:1 0 
-E E
-0 0 0 0 0
-1
-E E
-EE20 22
-"m_needDefaults"
-""
-1 400 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
- E E
-22 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 398 318 622 342
-1
-T 
-1
-LANG:1 22 Require partition info
-
-1 
-1
-LANG:1 0 
-E E
-0 0 0 0 0
-1
-E E
-EE29 23
-"m_textEditor"
-""
-1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-22 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
- 160 120 621 321
-15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
-E0
-LAYER, 2 
-1
-LANG:1 6 Layer3
-14 20
-"m_newName"
-""
-1 290 320 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-7 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 288 318 622 345
-3 "0s" 0 0 0 0 0 -1  E E E
-13 19
-"m_create"
-""
-1 160 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
- E E
-8 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 158 318 282 345
+ 382.1658536585367 147 621.1769456538327 174
 
 T 
 1
-LANG:1 6 Create
-"main()  {  JobOptionsEditor_create(jo_edit1,m_newName.text);                          }" 0
+LANG:1 30 Install STORAGE Stream Manager
+"main()   {  
+  JobOptions_installManager(m_storageOptsNumber.text,
+                            m_storageOptsName.text,
+                            m_storageOptsScript.text); 
+}
+" 0
  E E E
-30 5
-"m_createFrame"
+2 37
+"PRIMITIVE_TEXT3"
 ""
-1 150 350 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+1 349 102 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
-18 0 0 0 0 0
+39 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 387.0717979389032 96 439.0717979389032 116
+0 2 2 "0s" 0 0 0 64 0 0  387.0717979389032 96 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 7 Script:
+14 38
+"m_hltOptsScript"
+""
+1 424.1622740940061 92 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+40 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 422.1622740940061 90 620.1622740940061 114
+3 "0s" 0 0 0 0 0 -1  E E E
+2 39
+"PRIMITIVE_TEXT4"
+""
+1 349 102 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+41 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 387.0717979389032 119 439.0717979389032 139
+0 2 2 "0s" 0 0 0 64 0 0  387.0717979389032 119 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 5 Name:
+14 40
+"m_hltOptsName"
+""
+1 424.1672928804186 115 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+43 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 422.1672928804186 113 559.0839595470852 137
+3 "0s" 0 0 0 0 0 -1  E E E
+21 41
+"m_hltOptsNumber"
+""
+1 571 116 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+45 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 569 114 619.952380952381 135
+0
+
+E
+E
+E
+
+N 0 500 1 0 1 1
+2 42
+"PRIMITIVE_TEXT5"
+""
+1 377.013986013986 86 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+48 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 -16 1 E 359 200 411 220
+0 2 2 "0s" 0 0 0 64 0 0  359 200 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 7 Script:
+14 43
+"m_storageOptsScript"
+""
+1 425 179 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+50 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 423 177 620.2712775029848 201
+3 "0s" 0 0 0 0 0 -1  E E E
+2 44
+"PRIMITIVE_TEXT6"
+""
+1 377.013986013986 86 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+52 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 -16 1 E 359 223 411 243
+0 2 2 "0s" 0 0 0 64 0 0  359 223 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 5 Name:
+14 45
+"m_storageOptsName"
+""
+1 424.0189174568274 203 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+54 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 422.0189174568274 201 562.6937174375485 225
+3 "0s" 0 0 0 0 0 -1  E E E
+21 46
+"m_storageOptsNumber"
+""
+1 571.1708988380042 204 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+56 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 569.1708988380042 202 620.0411952083005 223
+0
+
+E
+E
+E
+
+N 0 500 1 0 1 1
+13 47
+"PUSH_BUTTON9"
+""
+1 386.4975609756098 235 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+58 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 384.4975609756098 233 623.5086529709059 260
+
+T 
+1
+LANG:1 33 Install MONITORING Stream Manager
+"main()   {  
+  JobOptions_installManager(m_monitoringOptsNumber.text,
+                            m_monitoringOptsName.text,
+                            m_monitoringOptsScript.text); 
+}
+" 0
+ E E E
+2 48
+"PRIMITIVE_TEXT7"
+""
+1 377.013986013986 172 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+60 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 70 1 E 359 200 411 220
+0 2 2 "0s" 0 0 0 64 0 0  359 200 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 7 Script:
+14 49
+"m_monitoringOptsScript"
+""
+1 424.390243902439 266 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+62 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 422.390243902439 264 619.6615214054239 288
+3 "0s" 0 0 0 0 0 -1  E E E
+2 50
+"PRIMITIVE_TEXT8"
+""
+1 377.013986013986 172 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+64 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 70 1 E 359 223 411 243
+0 2 2 "0s" 0 0 0 64 0 0  359 223 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 5 Name:
+14 51
+"m_monitoringOptsName"
+""
+1 424.0403773565768 289 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+66 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 422.0403773565768 287 562.7151773372979 311
+3 "0s" 0 0 0 0 0 -1  E E E
+21 52
+"m_monitoringOptsNumber"
+""
+1 570.7899464570518 290 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+68 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 568.7899464570518 288 619.6602428273482 309
+0
+
+E
+E
+E
+
+N 0 500 1 0 1 1
+13 27
+"m_installLocal"
+""
+1 184 194.9999999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+29 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 182 192.9999999999999 375 219.9999999999999
+
+T 
+1
+LANG:1 31 Install Local JobOptions Editor
+"main()   {
+  JobOptions_installOptions();
+  JobOptionsEditor_init();
+}" 0
+ E E E
+2 26
+"PRIMITIVE_TEXT2"
+""
+1 49 189 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+23 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 15.99999999999997 77.99999999999994 337 119.9999999999999
+0 2 2 "0s" 0 0 0 64 0 0  15.99999999999997 77.99999999999994 7
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 48 You are not connected to the job options editor.
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 52 This is not necessary for execution on the HLT farm.
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 40 You can however install a local editor. 
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 37 Note that there is more to installing
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 45 a options writer system than only the editor.
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+13 28
+"m_uninstallLocal"
+""
+1 184 224.9999999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+31 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 182 222.9999999999999 375 249.9999999999999
+
+T 
+1
+LANG:1 33 Uninstall Local JobOptions Editor
+"main()   {
+  JobOptions_uninstallOptions();
+  JobOptionsEditor_init();
+}" 0
+ E E E
+30 30
+"FRAME1"
+""
+1 31 182 E E E 1 E 1 E N "red" E N {0,0,0} E E
+ E E
+24 0 0 0 0 0
 E E E
 1
 1
@@ -519,20 +1054,135 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 150 300 630 350
+E E 0 0 1 0 1 E 2.217857142857143 0 3.04 -62.75357142857142 -507.2800000000001 0 E 31 182 312 283
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 6 Frame1
+LANG:1 24 Be careful: EXPERTS ONLY
+13 34
+"PUSH_BUTTON6"
+""
+1 183 284.9999999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+35 0 0 0 0 0
+E E E
 0
-LAYER, 3 
 1
-LANG:1 6 Layer4
+LANG:1 0 
+
 0
-LAYER, 4 
 1
-LANG:1 6 Layer5
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 181 282.9999999999999 374 309.9999999999999
+
+T 
+1
+LANG:1 32 Uninstall JobOptionsControl type
+"main()   {  JobOptions_uninstallControl();  }" 0
+ E E E
+13 33
+"PUSH_BUTTON5"
+""
+1 184 254 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+33 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 182 252 375 279
+
+T 
+1
+LANG:1 30 Install JobOptionsControl type
+"main()   {  JobOptions_installControl();   }" 0
+ E E E
+13 35
+"PUSH_BUTTON7"
+""
+1 383 65 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+37 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 381 63 620.4226700898588 90
+
+T 
+1
+LANG:1 27 Install HLT Options Manager
+"main()   {  
+  JobOptions_installManager(m_hltOptsNumber.text,
+                            m_hltOptsName.text,
+                            m_hltOptsScript.text); 
+}
+" 0
+ E E E
+13 32
+"PUSH_BUTTON4"
+""
+1 10 15 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+28 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 8 13 132 45
+
+T 
+1
+LANG:1 11 Hide / Back
+"main()  {  JobOptionsEditor_init();   }" 0
+ E E E
+22 54
+"m_allSystemNames"
+""
+1 13 261 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+70 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 11 259 172 281
+0
+
+"main()   {
+   dyn_string names;
+   dyn_uint ids;
+   getSystemNames(names,ids);
+   for(int i=1; i<=dynlen(names);++i)
+     m_allSystemNames.appendItem(names[i]); 
+}" 0
+
+"main()  {  JobOptionsEditor_setSystem(m_allSystemNames.selectedText);   }" 0
+
+E
+ 1 0
 0
 LAYER, 5 
 1

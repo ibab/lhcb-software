@@ -10,15 +10,18 @@ main()  {
   if ( s1 != \"\" )  {
     strm = substr(s1,0,strpos(s1,\"_\"));
     dpGet(s1+\".Name\",partition);
-    DebugN(\"+++++> Stream:\"+strm+\" Partition:\"+partition);
     setValue(\"m_Ok\",\"visible\",0);
     setValue(\"m_Cancel\",\"visible\",0);
+    setValue(\"m_runInfoDP\",\"visible\",0);
+    setValue(\"m_runInfoDP\",\"text\",s1 + \".RunInfo\");
+    DebugN(\"+++++> \"+s1+\"> Stream:\"+strm+\" Partition:\"+partition+\" RunInfo:\"+m_runInfoDP.text);
     StreamControlPanel_initAllocPanel(strm,partition);
   }
   else  {
     //if ( isDollarDefined(\"$stream\") ) strm = $stream;
     //if ( isDollarDefined(\"$partition\") ) partition = $partition;
     DebugN(\"-----> Stream:\"+strm+\" Partition:\"+partition);
+    m_runInfoDP.text = \"LBECS:\"+partition+\"_RunInfo\";
     StreamControlPanel_initAllocPanel(strm,partition);
   }
 }
@@ -552,7 +555,27 @@ LANG:1 0
 ""
 0 "CursorPositionChanged" "(int para, int pos)"
 ""
-E0
+E2 80
+"m_runInfoDP"
+""
+1 340 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+113 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 144 24 254 34
+0 2 2 "0s" 0 0 0 64 0 0  144 24 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 0 
+0
 LAYER, 1 
 1
 LANG:1 0 

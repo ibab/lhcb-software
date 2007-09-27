@@ -1,6 +1,7 @@
 #!/bin/bash
+installation=/home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
+cd $installation
 export HOME=/home/frankm
-echo "Home is: $HOME"
 . ./PVSS.setup
 PVSS_system=`python <<EOF
 args = '$*'.split(' ')

@@ -1,4 +1,2 @@
 #!/bin/bash
-installation=/home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-cd $installation
-. ../pvss/PVSS00api.sh -NAME PVSS00Streaming -DLL PVSSInterface -FUN pvss_pymain $*
+. `dirname $0`/PVSS00api.sh -NAME PVSS00Streaming -DLL PVSSInterface -FUN pvss_pymain $*

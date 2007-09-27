@@ -6,8 +6,8 @@ jobopts_system_name = 'LBECS'
 storage_system_name = 'STORAGE'
 monitor_system_name = 'MONITORING'
 
-def jobOptionsSystemName():
-  return "TEST";
+def jobOptionsSystemName():  return jobopts_system_name
+#def jobOptionsSystemName():  return "TEST";
 
 # Subdetector definitions
 detectors = {}

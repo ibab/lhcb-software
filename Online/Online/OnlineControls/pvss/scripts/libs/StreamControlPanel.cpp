@@ -277,25 +277,35 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
   dyn_string recv_infra, strm_infra, strm_types;
   int res = -1;
   if ( strpos(stream,"Storage") >= 0 )  {
-    res = dpGet(info+"HLTFarm.nSubFarms",recv_slots,
-                info+"Storage.recvInfrastructure", recv_infra,
-                info+"Storage.streamInfrastructure", strm_infra,
-                info+"Storage.streamMultiplicity", strm_mult,
-                info+"Storage.streamTypes", strm_types,
-                info+"Storage.recvStrategy", recv_strategy,
-                info+"Storage.strmStrategy", strm_strategy);
+    res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+    if ( 0 == res )  {
+      res = dpGet(info+".HLTFarm.nSubFarms",recv_slots,
+                  info+".Storage.recvInfrastructure", recv_infra,
+                  info+".Storage.streamInfrastructure", strm_infra,
+                  info+".Storage.streamMultiplicity", strm_mult,
+                  info+".Storage.streamTypes", strm_types,
+                  info+".Storage.recvStrategy", recv_strategy,
+                  info+".Storage.strmStrategy", strm_strategy);
+    }
   }
   else if ( strpos(stream,"Monitoring") >= 0 )  {
-    res = dpGet(info+"MonFarm.relayInfrastructure", recv_infra,
-                info+"MonFarm.monInfrastructure", strm_infra,
-                info+"MonFarm.monMultiplicity", strm_mult,
-                info+"MonFarm.monTypes", strm_types,
-                info+"MonFarm.recvStrategy", recv_strategy,
-                info+"MonFarm.strmStrategy", strm_strategy);
+    res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+    if ( 0 == res )  {
+      res = dpGet(info+".MonFarm.relayInfrastructure", recv_infra,
+                  info+".MonFarm.monInfrastructure", strm_infra,
+                  info+".MonFarm.monMultiplicity", strm_mult,
+                  info+".MonFarm.monTypes", strm_types,
+                  info+".MonFarm.recvStrategy", recv_strategy,
+                  info+".MonFarm.strmStrategy", strm_strategy);
+    }
     recv_slots = 0;
     if ( 0 == res )  {
       for(int i=1, n=dynlen(strm_mult); i<n; ++i) 
         recv_slots = recv_slots + strm_mult[i];   
+    }
+    else  {
+      StreamControlPanel_checkErrors(res);
+      return;
     }
   }
   string s= "";
@@ -339,7 +349,7 @@ void StreamControlPanel_checkStrmAllocation()  {
 //=============================================================================
 int StreamControlPanel_AllocSave(string stream, string partition)  {
   // Are you sure ....
-  string info = "LBECS:"+partition+"_RunInfo.";
+  string info;
   dyn_float df;
   dyn_string ds;
   string msg = "Are you sure you want to save the parameters ?";
@@ -371,20 +381,26 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
     }
     int res = -1;
     if ( strpos(stream,"Storage") >= 0 )  {
-      res = dpSet(info+"Storage.recvInfrastructure", recv_infra,
-                  info+"Storage.streamInfrastructure", strm_infra,
-                  info+"Storage.streamMultiplicity", mult,
-                  info+"Storage.streamTypes", types,
-                  info+"Storage.recvStrategy", recv_strategy,
-                  info+"Storage.strmStrategy", strm_strategy);
+      res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+      if ( 0 == res )  {
+        res = dpSet(info+".Storage.recvInfrastructure", recv_infra,
+                    info+".Storage.streamInfrastructure", strm_infra,
+                    info+".Storage.streamMultiplicity", mult,
+                    info+".Storage.streamTypes", types,
+                    info+".Storage.recvStrategy", recv_strategy,
+                    info+".Storage.strmStrategy", strm_strategy);
+      }
     }
     else if ( strpos(stream,"Monitoring") >= 0 )  {
-      res = dpSet(info+"MonFarm.relayInfrastructure", strm_infra,
-                  info+"MonFarm.monInfrastructure", recv_infra,
-                  info+"MonFarm.monMultiplicity", mult,
-                  info+"MonFarm.monTypes", types,
-                  info+"MonFarm.recvStrategy", recv_strategy,
-                  info+"MonFarm.strmStrategy", strm_strategy);
+      res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+      if ( 0 == res )  {
+        res = dpSet(info+".MonFarm.relayInfrastructure", strm_infra,
+                    info+".MonFarm.monInfrastructure", recv_infra,
+                    info+".MonFarm.monMultiplicity", mult,
+                    info+".MonFarm.monTypes", types,
+                    info+".MonFarm.recvStrategy", recv_strategy,
+                    info+".MonFarm.strmStrategy", strm_strategy);
+      }
     }
     StreamControlPanel_checkErrors(res);
     StreamControlPanel_initAllocData(stream,partition);

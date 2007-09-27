@@ -7,7 +7,10 @@ if platform.system()=='Linux':
 
 gbl  = Utils.gbl
 PVSS = PyLCGDict.makeNamespace('PVSS')
-  
+
+def batchMode():
+  return not os.isatty(sys.stdout.fileno())
+
 # == External class definitions ===============================================
 Sensor            = gbl.Sensor
 Event             = gbl.Event
@@ -58,6 +61,7 @@ IntVector         = gbl.std.vector('int')
 #
 #
 DataPoint         = PVSS.DataPoint
+DP                = PVSS.DataPoint
 #
 def DataPoint_get(self):
   return self.value().data()
@@ -141,22 +145,21 @@ class APIManager:
   # ===========================================================================
   def __init__(self,dll='',function=''):
     "Create PVSS API manager for python."
-    atty = os.isatty(sys.stdout.fileno())
-    if atty and platform.system()=='Linux':
+    interactive = not batchMode()
+    if interactive and platform.system()=='Linux':
       name_stdout = os.ttyname(sys.stdout.fileno())
       name_stderr = os.ttyname(sys.stdout.fileno())
     
     apiManager = PVSS.pvss_create_manager('Python'+str(os.getpid()),dll, function)
     result = apiManager.start()
-    if atty and platform.system()=='Linux':
-      print 'Online.PVSS> Running in interactive mode....'
+    if interactive and platform.system()=='Linux':
       fd_stdout = os.open(name_stdout,os.O_WRONLY)
       fd_stderr = os.open(name_stderr,os.O_WRONLY)
       os.dup2(fd_stdout,sys.stdout.fileno())
-      #os.dup2(sys.stderr.fileno(),fd_stderr)
       os.dup2(fd_stderr,sys.stderr.fileno())
+      print 'PVSS> Running in interactive mode....'
     elif platform.system()=='Linux':
-      print 'Online.PVSS> Running in batch mode....'
+      print 'PVSS> Running in batch mode....'
     return result
 
 # Instantiate API manager. Should never be called by user directly

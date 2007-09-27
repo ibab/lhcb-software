@@ -1,3 +1,8 @@
-"""Visual Studio Package
+"""
+
+Online PVSS module
+
+@author M.Frank
+
 """
 

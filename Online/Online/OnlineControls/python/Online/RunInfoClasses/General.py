@@ -43,7 +43,7 @@ class General:
     self.monInfra   = self.dp('MonFarm.monInfrastructure')
     self.relayInfra = self.dp('MonFarm.relayInfrastructure')
 
-    self.tell1Boards= self.dp('SubDeterctors.tell1List')
+    self.tell1Boards= self.dp('SubDetectors.tell1List')
 
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
