@@ -2,9 +2,11 @@
 ! Package manager: T.Ruf
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
-
+! 2007-09-27 - Thomas Ruf
+ - adapted eventassoc.py to latest changes in linkedfrom
+!
 !==================== LinkerInstances v3r3 2007-09-05 =========================
-! 2007-09-05 - Marco Cattaneo
+ 2007-09-05 - Marco Cattaneo
  - Remove std::vector<std::pair<int,unsigned int> >, now in libSTLRflx.so
 
 ! 2007-08-15 - Juan Palacios

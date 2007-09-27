@@ -2,12 +2,12 @@ import gaudimodule
 
 def linkedTo( t1, t2, location ):
   appMgr = gaudimodule.AppMgr()
-  cl = gaudimodule.gbl.LinkedTo( t1, t2 )
+  cl = gaudimodule.gbl.LinkedTo( t1, t2)
   lt = cl( appMgr.evtsvc()._idp, None, location )
   return lt
 
 def linkedFrom( t1, t2, location ):
   appMgr = gaudimodule.AppMgr()
-  cl = gaudimodule.gbl.LinkedFrom( t1, t2 )
+  cl = gaudimodule.gbl.LinkedFrom( t1, t2, int)
   lt = cl( appMgr.evtsvc()._idp, None, location )
   return lt
