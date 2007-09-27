@@ -46,6 +46,7 @@ Track.DetectorList  = { "ForwardPat", "ForwardPreFit", "ForwardFit"
                       //, "KShortPat",  "KShortPreFit",  "KShortFit"
                       , "VeloTTPat",  "VeloTTPreFit",  "VeloTTFit"
                       , "PostFit",    "VeloPreFit",    "VeloFit"
+                      ,"AddExtraInfo"
                       };
 
 // Forward pattern
@@ -119,7 +120,11 @@ CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
 // Set of standard fitting options
 #include "$TRACKSYSROOT/options/Fitting_Tf.opts"
 
+// add the likelihood
+TrackAddExtraInfoSeq.Members += { "TrackAddLikelihood" };
+
 // Clone finding and flagging
-RecoTrSeq.Members += { "GaudiSequencer/TrackClonesSeq" };
+TrackAddExtraInfoSeq.Members += { "GaudiSequencer/TrackClonesSeq" };
 TrackClonesSeq.MeasureTime = true;
 #include "$TRACKSYSROOT/options/TrackClones.opts"
+
