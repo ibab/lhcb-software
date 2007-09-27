@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.30 2007-09-17 09:21:36 jonrob Exp $
+// $Id: State.cpp,v 1.31 2007-09-27 19:16:56 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -238,11 +238,15 @@ void State::setState( double x, double y, double z,
 //=============================================================================
 std::ostream& LHCb::State::fillStream(std::ostream& os) const 
 {
-  return os << "State :" << std::endl
-            << " flags       =" << flags() << std::endl
-            << " stateVector =" << stateVector() << std::endl
-            << " covariance  =" << covariance() << std::endl
-            << " z           =" << z() << std::endl;
+  os << "*** State ***" << std::endl
+     << " z        : " << z() << std::endl
+     << " location : " << location() << std::endl
+     << " p               : " << (float) p() <<std::endl
+     << " pt              : " << (float) pt() <<std::endl
+     << " (x,y,tx,ty,q/p) : " << stateVector() << std::endl
+     << " covariance      : " << covariance() << std::endl;
+
+  return os;
 }
 
 //=============================================================================

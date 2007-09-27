@@ -1,14 +1,14 @@
 // $: Track.cpp,v 1.39 2007/05/15 06:57:34 wouter Exp $ // Include files
 
-// local
-#include "Event/Track.h"
-#include "Event/TrackFunctor.h"
 #include <functional>
 #include <string>
 
 // from gsl
 #include "gsl/gsl_cdf.h"
 
+// local
+#include "Event/Track.h"
+#include "Event/TrackFunctor.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -501,37 +501,45 @@ LHCb::Track::eraseInfo( const int key )
 //=============================================================================
 std::ostream& LHCb::Track::fillStream(std::ostream& os) const
 {
-  os << "Track : key =" << key() << std::endl
-     << " #ids       =" << nLHCbIDs() << std::endl
-     << " type       =" << type() << std::endl
-     << " history    =" << history() << std::endl
-     << " p          =" << p() << std::endl
-     << " pt         =" << pt() << std::endl
-     << " chi2PerDoF =" << chi2PerDoF() << std::endl
-     << " nDoF       =" << nDoF() << std::endl;
+  os << "*** Track ***" << std::endl
+     << " key     : " << key() << std::endl
+     << " type    : " << type() << std::endl
+     << " history : " << history() << std::endl
+     << " # ids    : " << nLHCbIDs() << std::endl
+     << " # meas   : " << nMeasurements() << std::endl
+     << " chi2PerDoF : " << (float)m_chi2PerDoF << std::endl
+     << " nDoF       : " << m_nDoF << std::endl;
 
-  os << states().size() << " States at z =";
-  for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
-        iS != states().end(); ++iS )
-  {
-    if (*iS) os << " " << (*iS)->z();
-  }
-  os << " :-" << std::endl;
-  for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
-        iS != states().end(); ++iS )
-  {
-    os << **iS;
-  }
-
-  os << " extraInfo [";
+  os << " extraInfo : [";
   for ( ExtraInfo::const_iterator i = extraInfo().begin();
         i != extraInfo().end(); ++i )
   {
     const LHCb::Track::AdditionalInfo info =
       static_cast<LHCb::Track::AdditionalInfo>(i->first);
-    os << " " << info << "=" << i->second;
+    os << " " << info << "=" << i->second << " ";
   }
-  os << " ]" << std::endl;
+  os << "]" << std::endl;
+
+  if ( !m_states.empty() ) {
+    os << " p  : " << (float) firstState().p() <<std::endl
+       << " pt : " << (float) firstState().pt() <<std::endl
+       << " " << nStates() << " states at z =";
+    for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
+          iS != states().end(); ++iS )
+    {
+      if (*iS) os << " " << (*iS)->z();
+    }
+    os << "  :-" << std::endl;
+    for ( std::vector<LHCb::State*>::const_iterator iS = states().begin();
+          iS != states().end(); ++iS )
+    {
+      os << " " << **iS;
+    }
+    os << std::endl;
+  }
+  else {
+    os << " # states : " << nStates() << std::endl;
+  }
 
   return os;
 }

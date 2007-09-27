@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-09-27 - Eduardo Rodrigues
+ - more improvements to fillStream method
+ - re-corrected a bug re-introduced with latest additions to fillStream method
+
 ! 2007-09-28 M. Needham
  - Add TsaLikelihood flag to extraInfo  
 
