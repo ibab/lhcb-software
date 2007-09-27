@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.34 2007-07-04 10:50:41 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.35 2007-09-27 14:21:23 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -541,7 +541,7 @@ bool TrackMatchVeloSeed::goodSeed(const LHCb::Track* aTrack) const{
   if (aTrack->chi2PerDoF() > m_chi2SeedCut ) return false;
 
   // remove seeds with bad likelihood
-  if (aTrack->info(Track::Likelihood, -9999.) < m_likCut ) return false;
+  if (aTrack->info(Track::TsaLikelihood, -9999.) < m_likCut ) return false;
 
   return true;
 }

@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.9 2007-01-17 17:47:55 cattanem Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.10 2007-09-27 14:22:19 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -128,7 +128,7 @@ LHCb::Track* TsaSeedTrackCnv::convert(const SeedTrack* aTrack) const{
   fitTrack->setHistory(LHCb::Track::TsaTrack);
   fitTrack->setType(LHCb::Track::Ttrack);
   fitTrack ->setPatRecStatus( LHCb::Track::PatRecIDs );
-  fitTrack->addInfo(LHCb::Track::Likelihood, aTrack->lik());
+  fitTrack->addInfo(LHCb::Track::TsaLikelihood, aTrack->lik());
 
   return fitTrack;
 }

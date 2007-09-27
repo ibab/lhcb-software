@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-9-28 M. Needham
+ - Change extraInfo flag to TsaLikelihood
+
 !======================= TsaAlgorithms v2r6 2007-07-23 ======================
 ! 2007-07-22 M Needham
  - Bug fix in selection routine fixed
