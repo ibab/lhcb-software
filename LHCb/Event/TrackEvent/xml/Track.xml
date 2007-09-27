@@ -129,7 +129,7 @@
         desc   = "Additional information assigned to this Track by pattern recognition"
         name   = "AdditionalInfo"
         access = "PUBLIC" >
-        <enumval name = "Likelihood" value = "1" desc=""/>
+        <enumval name = "Likelihood" value = "1" desc="The Likelihood the track is real"/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
         <enumval name = "nExpectedVelo" value = "10" desc="number of expected Velo hits"/>
         <enumval name = "nExpectedTT" value = "11" desc="number of expected TT hits"/>
@@ -141,6 +141,7 @@
         <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFit)"/>
         <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
+        <enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
        </enum>
 
