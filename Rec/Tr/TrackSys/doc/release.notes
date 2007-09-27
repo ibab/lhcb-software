@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-09-27 Eduardo Rodrigues
+- Tidy-up of options
+
 ! 2007-09-28 M Needham
  - Add TrackLikelihood calculation to the running sequence
 

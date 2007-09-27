@@ -49,7 +49,8 @@ Track.DetectorList  = { "ForwardPat", "ForwardPreFit", "ForwardFit"
                       , "MatchPat",   "MatchPreFit",   "MatchFit"
                       , "KShortPat",  "KShortPreFit",  "KShortFit"
                       , "VeloTTPat",  "VeloTTPreFit",  "VeloTTFit"
-                      , "PostFit",    "VeloPreFit",    "VeloFit"
+                      , "PostFit"
+                      , "VeloPreFit", "VeloFit"
                       , "AddExtraInfo"
                       };
 
@@ -101,21 +102,21 @@ TrackVeloTTFitSeq.Members += { "TrackEventFitter/FitVeloTT" };
 // Clone tracks killer: output is "best" container
 TrackPostFitSeq.Members += { "TrackEventCloneKiller" };
 
-// Prepare and fit velo tracks
+// Prepare the velo tracks for the fit
 TrackVeloPreFitSeq.Members += { "TrackPrepareVelo" };
-TrackVeloFitSeq.Members    += { "TrackEventFitter/FitVelo" };
 
-// Copy fitted velo tracks to Track/Best container
-TrackVeloFitSeq.Members += { "TrackContainerCopy/CopyVelo" };
+// Fit the velo tracks and copy them to the "best" container
+TrackVeloFitSeq.Members += { "TrackEventFitter/FitVelo",
+                             "TrackContainerCopy/CopyVelo" };
 CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
 
-// Set of standard fitting options
-#include "$TRACKSYSROOT/options/Fitting.opts"
-
-// add the likelihood
+// Add the likelihood information
 TrackAddExtraInfoSeq.Members += { "TrackAddLikelihood" };
 
 // Clone finding and flagging
 TrackAddExtraInfoSeq.Members += { "GaudiSequencer/TrackClonesSeq" };
 TrackClonesSeq.MeasureTime = true;
 #include "$TRACKSYSROOT/options/TrackClones.opts"
+
+// Set of standard fitting options
+#include "$TRACKSYSROOT/options/Fitting.opts"

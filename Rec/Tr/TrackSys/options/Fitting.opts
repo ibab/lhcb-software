@@ -16,6 +16,8 @@
 
 // Forward fit
 FitForward.TracksInContainer = "Rec/Track/Forward";
+// temp increase number of fit iterations to get better convergence
+FitForward.Fitter.NumberFitIterations = 5;
 
 // Seed fit
 FitTsa.TracksInContainer          = "Rec/Track/Tsa";
@@ -29,6 +31,8 @@ FitTsa.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
 
 // Match fit
 FitMatch.TracksInContainer = "Rec/Track/Match";
+// temp increase number of fit iterations to get better convergence
+FitMatch.Fitter.NumberFitIterations  = 5;
 
 // KShort fit
 FitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
@@ -56,8 +60,3 @@ FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVelo.Fitter.TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitVelo.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
-
-
-// temp increase number of fit iterations to get better convergence
-FitForward.Fitter.NumberFitIterations = 5;
-FitMatch.Fitter.NumberFitIterations  = 5;
