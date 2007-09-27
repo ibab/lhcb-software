@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-09-28 M Needham
+ - Fill extraInfo word with TsaLikelihood
+
 ! 2007-09-16 - Kurt Rinnert
  - fixed TsaSeedAddHits include (TfKernel was accidently changed to
    TfKernel_Tf)
