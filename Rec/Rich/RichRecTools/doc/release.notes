@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-09-28 M Needham
+ - Change to TsaLikelihood flag in seed track selection
+
 !===================== RichRecTools v3r13 2007-09-20 ==========================
 ! 2007-09-14 - Chris Jones
  - Add new tool to randomly reject a given fraction of tracks

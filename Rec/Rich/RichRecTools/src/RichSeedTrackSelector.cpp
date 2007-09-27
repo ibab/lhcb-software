@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.7 2007-02-06 16:18:34 cattanem Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.8 2007-09-27 14:23:05 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -67,7 +67,7 @@ SeedTrackSelector::trackSelected( const LHCb::Track * track ) const
   }
 
   // seed likelihood cuts
-  LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::Likelihood );
+  LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::TsaLikelihood );
   if ( i == track->extraInfo().end() )
   {
     Warning( "Seed track does not have Likelihood info");
