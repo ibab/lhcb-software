@@ -4,9 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-09-30 M. Needham
+ - Change cut on match chi^2
+
 ! 2007-09-28 M Needham
  - Change Likelihood flag to TsaLikelihood
-
 
 !======================= TrackMatching v2r15 2007-07-05 ======================
 ! 2007-07-05 - Marco Cattaneo
