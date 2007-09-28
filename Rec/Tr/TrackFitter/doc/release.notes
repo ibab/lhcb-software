@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-28 Wouter Hulsbergen
+ - KalmanFilter: 'bug' fix: set reference vector from prediction in case it is not set before.
+   we don't want this, but this is exactly how it used to be and the better solution is more work.
+
 ! 2007-09-25 Wouter Hulsbergen
  - KalmanFilter: reference state now only projected in forward filter
 
