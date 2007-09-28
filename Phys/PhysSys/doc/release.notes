@@ -11,6 +11,14 @@ Purpose     : LHCb physics packages
 #                                  PHYS v6r6                                  #
 ###############################################################################
 
+!====================== DaVinciTransporter v3r7p1 2007-09-28 ==================
+
+! 2007-09-26 - Juan PALACIOS
+ - src/TransportFunctions.h
+  . Fix maths and bug in transportComposite method.
+ - cmt/requirements
+  . Increase version to v3r7p1
+
 !========================== DaVinciFilter v6r5 2007-07-30 ===================
 
 ! 2007-09-24 - Juan PALACIOS
