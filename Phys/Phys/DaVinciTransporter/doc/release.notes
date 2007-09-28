@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.52 2007-09-26 16:25:06 jpalac Exp $
+! $Id: release.notes,v 1.53 2007-09-28 11:36:13 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r7p1 2007-09-28 ==================
 
 ! 2007-09-26 - Juan PALACIOS
  - src/TransportFunctions.h
@@ -9,7 +11,7 @@
  - cmt/requirements
   . Increase version to v3r7p1
 
-!====================== DaVinciTransporter v3r7 2007-09-24== =================
+!====================== DaVinciTransporter v3r7 2007-09-24 ===================
 
 ! 2007-08-07 - Patrick Koppenburg
  - Remove extrapolators for neutrals and composites which are not used 
