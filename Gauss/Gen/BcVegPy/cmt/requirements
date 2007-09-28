@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.6 2007-08-21 16:55:40 gcorti Exp $
+# $Id: requirements,v 1.7 2007-09-28 14:26:36 gcorti Exp $
 # =============================================================================
 package       BcVegPy
-version       v1r1p1
+version       v1r1p2
 
 # =========== structure =======================================================
 branches      cmt src include doc

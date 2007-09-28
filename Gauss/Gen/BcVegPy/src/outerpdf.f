@@ -137,7 +137,7 @@ C                             ********************
       Data Isetmin2,Isetmax2 /200,240/
       save
 
-      CHARACTER*100 BASENAME
+      CHARACTER*472 BASENAME
 
 C             If data file not initialized, do so.
 

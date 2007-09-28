@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.6 2007-08-21 16:55:40 gcorti Exp $
+! $Id: release.notes,v 1.7 2007-09-28 14:26:36 gcorti Exp $
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
-! ====================== BcVegPy v1r1p1 2007-06-22 ===========================
+! ====================== BcVegPy v1r1p2 2007-09-28 ===========================
+! 2007-09-28 - Gloria Corti
+ - Really fix problem in production on the grid due to character lenght: also
+   directory name has to be increased from CHARACTER*100 to CHARACTER*472
+   . src/outerpdf.f
+
+! ====================== BcVegPy v1r1p1 2007-08-21 ===========================
 ! 2007-08-21 - Gloria Corti
  - Fix problem in production on the grid due to character lenght of pdf file
    too short. Increase from CHARACTER*100 to CHARACTER*512
