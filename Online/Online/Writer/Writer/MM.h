@@ -80,7 +80,7 @@ namespace LHCb {
       void enqueueCommand(struct cmd_header *cmd);
 
       /// Dequeues a command.
-      struct cmd_header* dequeueCommand(unsigned int sequenceNum);
+      struct cmd_header* dequeueCommand(unsigned int sequenceNum, unsigned int run_no);
 
       /// Moves the send pointer ahead, returns old value at send pointer.
       struct cmd_header* moveSendPointer(void);

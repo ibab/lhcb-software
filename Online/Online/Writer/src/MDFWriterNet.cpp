@@ -25,31 +25,34 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, rno) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, seqno, rno) { \
   (h)->cmd = CMD_CLOSE_FILE; \
     (md5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.adler32_sum = (adler32); \
     (h)->run_no = rno;	\
+    (h)->data.chunk_data.seq_num = seqno; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
  * Macro for initialising a write command.
  */
-#define INIT_WRITE_COMMAND(h, len, off, fname, rno) { \
+#define INIT_WRITE_COMMAND(h, len, off, fname, seqno, rno) { \
   (h)->cmd = CMD_WRITE_CHUNK; \
     (h)->data.chunk_data.size = (len); \
     (h)->run_no = rno;	\
     (h)->data.chunk_data.offset = (off); \
+    (h)->data.chunk_data.seq_num = seqno; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
  * Macro for initialising an open command.
  */
-#define INIT_OPEN_COMMAND(h, fname, rno) { \
+#define INIT_OPEN_COMMAND(h, fname, seqno, rno) { \
   (h)->cmd = CMD_OPEN_FILE; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    (h)->data.chunk_data.seq_num = seqno; \
     (h)->run_no = rno;	\
 }
 
@@ -85,6 +88,7 @@ void MDFWriterNet::constructNet()
   declareProperty("SndRcvSizes",        m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",          m_directory=".");
+  declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
 
   m_log = new MsgStream(msgSvc(), name());
 }
@@ -96,8 +100,9 @@ StatusCode MDFWriterNet::initialize(void)
   *m_log << MSG::INFO << " Writer " << getpid() <<
     " Initializing." << endmsg;
 
+  m_currFile = NULL;
   m_connection = new Connection(m_serverAddr, m_serverPort,
-      m_sndRcvSizes, m_log, this);
+				m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   try {
 
@@ -121,23 +126,21 @@ StatusCode MDFWriterNet::finalize(void)
   *m_log << MSG::INFO << " Writer " << getpid() <<
     " Finalizing." << endmsg;
 
-  FileIterator fi = m_openFiles.begin();
-  File *currFile;
+  File *tmpFile;
+  tmpFile = m_openFiles.getFirstFile();
 
-  for(; fi != m_openFiles.end(); fi++) {
-	currFile = fi->second;
-	if(currFile->isOpen()) {
-	    struct cmd_header header;
-	    *m_log << MSG:: INFO << "Closing file " << currFile->getFileName()
-	    	<< " with run number " << currFile->getRunNumber() << endmsg;
-		INIT_CLOSE_COMMAND(&header,
-				currFile->getFileName()->c_str(),
-				currFile->getAdlerChecksum(),
-				currFile->getMD5Checksum(),
-				currFile->getRunNumber());
-		m_connection->sendCommand(&header);
-		delete currFile;
-	}
+  while(tmpFile) {
+
+    if(tmpFile->isOpen()) {
+      *m_log << MSG:: INFO << "Closing file " << tmpFile->getFileName()
+	     << " with run number " << tmpFile->getRunNumber() << endmsg;
+      closeFile(tmpFile);
+      File *toDelete = tmpFile;
+      tmpFile = m_openFiles.removeFile(tmpFile);
+      delete toDelete;
+      continue;
+    }
+    tmpFile = tmpFile->getNext();
   }
 
   // closeConnection() blocks till everything is flushed.
@@ -145,6 +148,7 @@ StatusCode MDFWriterNet::finalize(void)
   delete m_connection;
   delete m_rpcObj;
 
+  m_currFile = NULL;
   m_connection = NULL;
   m_rpcObj = NULL;
 
@@ -154,72 +158,118 @@ StatusCode MDFWriterNet::finalize(void)
 }
 
 
+/**
+ * Queues a command that creates a file.
+ */
+File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
+{
+  File *currFile;
+  struct cmd_header header;
+  memset(&header, 0, sizeof(struct cmd_header));
 
-/** Overrides MDFWriter::writeBuffer().
- * Writes out the buffer to the socket through the Connection object.
+  currFile = new File(getNewFileName(runNumber), runNumber);
+  INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), currFile->getSeqNum(), runNumber);
+  m_connection->sendCommand(&header);
+  currFile->open();
+  currFile->incSeqNum();
+  return currFile;
+}
+
+/**
+ * Queues a command that closes a file.
+ */
+void MDFWriterNet::closeFile(File *currFile)
+{
+  struct cmd_header header;
+  memset(&header, 0, sizeof(struct cmd_header));
+
+  INIT_CLOSE_COMMAND(&header,
+		     currFile->getFileName()->c_str(),
+		     currFile->getAdlerChecksum(),
+		     currFile->getMD5Checksum(),
+		     currFile->getSeqNum(),
+		     currFile->getRunNumber());
+  m_connection->sendCommand(&header);
+}
+
+/* Writes out the buffer to the socket through the Connection object.
  * This function first checks if a new file needs to be created. After
  * that, it writes data out to the new file. The MD5 and Adler32 checksums
  * are computed incrementally for the current file. In case the file is above
  * the maximum size limit, then a RunDB call is executed, to which the
  * file name, MD5 sum, and the Adler32 sum are supplied.
- */
+  */
 StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_t len)
 {
   struct cmd_header header;
 
+  /*DEBUGGING ONLY - To inject run numbers into the events by reading the run number
+   * off a file.
+   */
+  /*FILE *fil;
+   *int myRun;
+   *fil = fopen("/tmp/runno", "r");
+   *if(fil)
+   *fscanf(fil, "%d", &myRun);
+   *fclose(fil);
+   *((MDFHeader*)data)->subHeader().H1->m_runNumber = myRun;
+   */
+
   if ( len < 10 ) {
     *m_log << MSG::FATAL << "Writer " << getpid() <<
       "Very small message received, not forwarding." << len << endmsg;
-     return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
   }
 
-  //Try to see if there is a file open for the specific run number in this chunk.
   unsigned int runNumber = getRunNumber(data, len);
+  if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
+    m_currFile = m_openFiles.getFile(runNumber);
+    if(!m_currFile) {
+      m_currFile = createAndOpenFile(runNumber);
+      m_openFiles.addFile(m_currFile);
+      *m_log << MSG::INFO << "No file exists for run " << runNumber << " Creating a new one." << endmsg;
+    }
 
-  FileIterator fi = m_openFiles.find(runNumber);
-  File *currFile;
-  if(fi == m_openFiles.end()) {
-     /// A file is not open for this run number. So open a new file.
-    currFile = new File(getNewFileName(runNumber), runNumber);
-    *m_log << MSG::INFO << "No file exists for run " << runNumber << " Creating a new one." << endmsg;
-    m_openFiles.insert(std::make_pair(runNumber, currFile));
-  } else {
-    /// Already exists. Get its information.
-    currFile = fi->second;
+    // This block is entered only in case an event from a previous run
+    // appears after a run has started. This should be relatively infrequent,
+    // and therefore, a good place to check if there are files that have been
+    // lying open since a very long time.
+    //
+
+    File *tmpFile =  m_openFiles.getFirstFile();
+    // Loop over all the files except the one for whom the event just came in.
+    while(tmpFile) {
+      if(tmpFile->getRunNumber() != runNumber && 
+	 tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
+	// This file hasn't been written to in a loong time. Close it.
+	*m_log << MSG::INFO << "Writer " << getpid() << 
+	  "Closing a file that did not get events for a long time now." << endmsg;
+	File *toDelete = tmpFile;
+	closeFile(tmpFile);
+	// removeFile() returns the next element after the removed one.
+	tmpFile = m_openFiles.removeFile(tmpFile);
+	delete toDelete;
+	continue;
+      }
+      tmpFile = tmpFile->getNext();
+    }
   }
-
-
-  //Is the current file open, or just created?
-  if(!currFile->isOpen()) {
-	//Just created. Send the open command.
-    INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), runNumber);
-    m_connection->sendCommand(&header);
-    currFile->open();
-  }
-
+   
   INIT_WRITE_COMMAND(&header, len,
-		  currFile->getBytesWritten(),
-		  currFile->getFileName()->c_str(),
-		  runNumber);
+		     m_currFile->getBytesWritten(),
+		     m_currFile->getFileName()->c_str(),
+		     m_currFile->getSeqNum(),
+		     runNumber);
   m_connection->sendCommand(&header, (void*)data);
-  size_t totalBytesWritten = currFile->updateWrite(data, len);
+  size_t totalBytesWritten = m_currFile->updateWrite(data, len);
+  m_currFile->incSeqNum();
 
   //How much have we written?
   if(totalBytesWritten > (m_maxFileSizeMB << 20)) {
-
-    //Write out close command; runDB record created upon receiving ack.
-    struct cmd_header header;
-    INIT_CLOSE_COMMAND(&header,
-    		currFile->getFileName()->c_str(),
-    		currFile->getAdlerChecksum(),
-    		currFile->getMD5Checksum(),
-    		runNumber);
-
-    m_connection->sendCommand(&header);
-
-    //Remove file from map.
-    m_openFiles.erase(runNumber);
-    delete currFile;
+    closeFile(m_currFile);
+    m_openFiles.removeFile(m_currFile);
+    delete(m_currFile);
+    m_currFile = NULL;
   }
 
   //Close it, reset counter.
@@ -249,11 +299,11 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
   static unsigned long random;
   random++;
   sprintf(buf, "%s/%s.%u.%lu.%lu",
-      m_directory.c_str(),
-      m_filePrefix.c_str(),
-      runNumber,
-      random,
-      time(NULL));
+	  m_directory.c_str(),
+	  m_filePrefix.c_str(),
+	  runNumber,
+	  random,
+	  time(NULL));
   return std::string(buf);
 }
 
@@ -289,16 +339,16 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   try {
     m_rpcObj->confirmFile(cmd->file_name,
-        cmd->data.stop_data.adler32_sum,
-        cmd->data.stop_data.md5_sum);
+			  cmd->data.stop_data.adler32_sum,
+			  cmd->data.stop_data.md5_sum);
   } catch(std::exception& rte) {
     char md5buf[33];
     unsigned char *md5sum = cmd->data.stop_data.md5_sum;
     sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+	    md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	    md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	    md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	    md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
     *m_log << MSG::ERROR << "Could not update Run Database Record ";
     *m_log << "Cause: " << rte.what() << std::endl;

@@ -155,8 +155,9 @@ start:
         i++,seqNum++) {
 
       struct cmd_header *cmd;
-      if((cmd = m_mmObj->dequeueCommand(seqNum)) == NULL) {
-        *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack." << endmsg;
+      if((cmd = m_mmObj->dequeueCommand(seqNum, ackHeaderBuf.run_no)) == NULL) {
+        *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack, run = " <<
+	       ackHeaderBuf.run_no << endmsg;
       } else {
         notify(cmd);
         m_mmObj->freeCommand(cmd);

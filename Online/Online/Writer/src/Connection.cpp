@@ -37,7 +37,6 @@ using namespace LHCb;
 Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
     MsgStream * log, INotifyClient *nClient) {
 
-  m_seqCounter = 0;
   m_state = Connection::STATE_CONN_CLOSED;
   m_serverAddr = serverAddr;
   m_serverPort = serverPort;
@@ -244,7 +243,6 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       break;
   }
 
-  header->data.chunk_data.seq_num = m_seqCounter++;
   newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
 
   m_mmObj.enqueueCommand(newHeader);

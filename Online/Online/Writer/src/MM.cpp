@@ -237,7 +237,7 @@ void MM::resetSendPointer(void)
  * @param sequenceNum The sequence number of the command to be
  * dequeued.
  */
-struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
+struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum, unsigned int run_no)
 {
   struct list_head *tmp, *prev;
   struct cmd_header *retCmd;
@@ -247,7 +247,8 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
   pthread_mutex_lock(&m_listLock);
   tmp = m_head;
   while(tmp != NULL) {
-    if(tmp->cmd->data.chunk_data.seq_num == sequenceNum) {
+    if(tmp->cmd->data.chunk_data.seq_num == sequenceNum &&
+       tmp->cmd->run_no == run_no) {
       if(!prev) {
         m_head = tmp->next;
         if(!m_head) {

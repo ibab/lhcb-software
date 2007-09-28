@@ -59,6 +59,7 @@ struct cmd_header {
  * the range of sequence numbers has been processed.
  */
 struct ack_header {
+	uint32_t run_no;
 	uint32_t min_seq_num;
 	uint32_t max_seq_num;
 } __attribute__((__packed__));

@@ -84,9 +84,6 @@ namespace LHCb {
       /// The destination address in a struct.
       struct sockaddr_in m_destAddr;
 
-      /// A counter to assign sequence numbers to messages.
-      unsigned int m_seqCounter;
-
       /// An MM object to manage memory.
       MM m_mmObj;
 
