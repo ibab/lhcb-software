@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.11 2007-08-16 17:40:29 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.12 2007-09-28 13:31:27 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -72,9 +72,11 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     debug() << " created function IP " << name << endreq;
   } else if (name == "IPKey") {
     if (!m_vertices) error() << " vertices not set in factory " << endreq;
-    Estd::binder_function<Track,RecVertex> bfun(Hlt::IP(), *m_vertices,
-                                                Estd::abs_min());
-    fun = new Hlt::BinderKey<Track,RecVertex>(bfun);
+    Estd::binder_function<Track,RecVertex>* bfun =
+      new Estd::binder_function<Track,RecVertex>(Hlt::IP(), *m_vertices,
+                                                 Estd::abs_min());
+    fun = new Hlt::BinderKey<Track,RecVertex>(*bfun);
+    delete bfun;
     debug() << " created function IPKey " << name << endreq;
   } else if (name == "PT") {
     fun = new Hlt::PT();
@@ -86,9 +88,11 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     debug() << " created function DOCA " << name << endreq;
   } else if (name == "DOCAKey") {
     if (!m_vertices) error() << " tracks not set in factory " << endreq;
-    Estd::binder_function<Track,Track> bfun(Hlt::DOCA(),*m_tracks,
-                                            Estd::abs_min());
-    fun = new Hlt::BinderKey<Track,Track>(bfun);
+    Estd::binder_function<Track,Track>* bfun = 
+      new  Estd::binder_function<Track,Track> (Hlt::DOCA(),*m_tracks,
+                                               Estd::abs_min());
+    fun = new Hlt::BinderKey<Track,Track> (*bfun) ;
+    delete bfun;
     debug() << " created function DOCAKey " << name << endreq;
   } else if (name == "IDsFraction") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
@@ -97,9 +101,11 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     debug() << " created function IDsFrunction " << name << endreq;
   } else if (name == "IDsFractionKey") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
-    Estd::binder_function<Track,Track> bfun(Hlt::MatchIDsFraction(), 
-                                            *m_tracks, Estd::abs_max());
-    fun = new Hlt::BinderKey<Track,Track>(bfun);
+    Estd::binder_function<Track,Track>* bfun = 
+      new Estd::binder_function<Track,Track> (Hlt::MatchIDsFraction(),
+                                              *m_tracks, Estd::abs_max());
+    fun = new Hlt::BinderKey<Track,Track>(*bfun);
+    delete bfun;
     debug() << " created function IDsFrunction Key " << name << endreq;
   } else if (name == "Calo2DChi2") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
@@ -109,9 +115,11 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
   } else if (name == "Calo2DChi2Key") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltRZVeloTCaloMatch");
-    Estd::binder_function<Track,Track> bfun(Hlt::TrackMatch(*imatch), 
-                                            *m_tracks, Estd::abs_min());
-    fun = new Hlt::BinderKey<Track,Track>(bfun);
+    Estd::binder_function<Track,Track>* bfun = 
+      new Estd::binder_function<Track,Track> (Hlt::TrackMatch(*imatch), 
+                                              *m_tracks, Estd::abs_min());
+    fun = new Hlt::BinderKey<Track,Track>(*bfun);
+    delete bfun;
   } else if (name == "Calo3DChi2") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
@@ -121,15 +129,19 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
   } else if (name == "Calo3DChi2ETCalo") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
-    Estd::binder_function<Track,Track> bfun(Hlt::TrackMatch(*imatch), 
-                                            *m_tracks, Estd::abs_min());
-    fun = new Hlt::BinderValue<Track,Track>(bfun, &Track::p);
+    Estd::binder_function<Track,Track>*  bfun = 
+      new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
+                                             *m_tracks, Estd::abs_min());
+    fun = new Hlt::BinderValue<Track,Track>(*bfun, &Track::p);
+    delete bfun;
   } else if (name == "Calo3DChi2Key") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
-    Estd::binder_function<Track,Track> bfun(Hlt::TrackMatch(*imatch), 
-                                            *m_tracks, Estd::abs_min());
-    fun = new Hlt::BinderKey<Track,Track>(bfun);
+    Estd::binder_function<Track,Track>* bfun = 
+      new Estd::binder_function<Track,Track>(Hlt::TrackMatch(*imatch), 
+                                             *m_tracks, Estd::abs_min());
+    fun = new Hlt::BinderKey<Track,Track>(*bfun);
+    delete bfun;
   } else if (name == "MatchOffTrack2OnCaloKey") {
     if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
     ITrackMatch* imatch = tool<ITrackMatch>("HltMatchOffTrack2OnCalo");
