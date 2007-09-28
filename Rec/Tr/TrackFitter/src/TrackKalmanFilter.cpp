@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.45 2007-09-25 11:51:32 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.46 2007-09-28 13:58:18 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -125,6 +125,10 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     refVec = state.stateVector();
 
     if ( node.hasMeasurement() ) {
+      // if the reference is not set, set it to the prediction.
+      if( !node.measurement().refIsSet() )
+        node.measurement().setRefVector( refVec ) ;
+      
       // Project the reference (only in the forward filter)
       projectReference( node );
 
@@ -192,10 +196,10 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         // update the reference vector and the chisquare
         refVec = node.measurement().refVector();
 
-	// add the chisquare
-	chisqreverse += node.chi2() ;
-	if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
-	else             node.setDeltaChi2Downstream( node.chi2() ) ;
+        // add the chisquare
+        chisqreverse += node.chi2() ;
+        if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
+        else             node.setDeltaChi2Downstream( node.chi2() ) ;
       }
 
       // save filtered state
