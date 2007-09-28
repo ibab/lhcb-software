@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.64 2007-09-28 09:58:52 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.65 2007-09-28 10:11:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -251,7 +251,7 @@ StatusCode PIDQC::execute()
   }
 
   // format for numbers
-  boost::format sF ( "%7.3f" );
+  const std::string & sF ( "%7.3f" );
 
   // apply track multiplicity cuts
   if ( m_multiplicity < m_minMultCut ||
@@ -346,7 +346,7 @@ StatusCode PIDQC::execute()
       {
         verbose() << "RichPID " << iPID->key() << " ("
                   << iPID->pidType() << "), '"
-                  << tkType << "' track, Ptot " << sF%tkPtot << " GeV/c," << endreq
+                  << tkType << "' track, Ptot " << boost::format(sF)%tkPtot << " GeV/c," << endreq
                   << "  Active rads =";
         if ( iPID->usedAerogel()  ) { verbose() << " " << Rich::Aerogel;  }
         if ( iPID->usedRich1Gas() ) { verbose() << " " << Rich::Rich1Gas; }
@@ -360,17 +360,17 @@ StatusCode PIDQC::execute()
         }}
         verbose() << endreq
                   << "  Dlls        = " 
-                  << sF%(iPID->particleDeltaLL(Rich::Electron)) << " "
-                  << sF%(iPID->particleDeltaLL(Rich::Muon)) << " " 
-                  << sF%(iPID->particleDeltaLL(Rich::Pion)) << " "
-                  << sF%(iPID->particleDeltaLL(Rich::Kaon)) << " "
-                  << sF%(iPID->particleDeltaLL(Rich::Proton)) 
+                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Electron)) << " "
+                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Muon)) << " " 
+                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Pion)) << " "
+                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Kaon)) << " "
+                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Proton)) 
                   << endreq
                   << "  Prob(r/n)   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
           const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          verbose() << sF%(iPID->particleRawProb(pid)) 
-                    << "/" << sF%(iPID->particleNormProb(pid)) << " ";
+          verbose() << boost::format(sF)%(iPID->particleRawProb(pid)) 
+                    << "/" << boost::format(sF)%(iPID->particleNormProb(pid)) << " ";
         }}
         verbose() << endreq << "  RecoPID     = " << pid << endreq;
       }
