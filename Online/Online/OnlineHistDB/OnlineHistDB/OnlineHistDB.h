@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.10 2007-07-17 15:54:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -9,14 +9,13 @@
  */
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistogram.h"
-#include "OnlineHistDB/OnlineRootHist.h"
 #include "OnlineHistDB/OnlineHistPage.h"
 #include "OnlineHistDB/OnlineHistTask.h"
 
 
 class  OnlineHistDB : public OnlineHistDBEnv, 
     public OnlineTaskStorage, public OnlineHistogramStorage, 
-    public OnlinePageStorage, public OnlineRootHistStorage
+    public OnlinePageStorage
 {
  public:
   /// constructor
@@ -80,10 +79,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 
   // deleting methods (handle with care!)
 
-  /// removes an histogram, and optionally its full set. 
-  /// ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
-  virtual bool removeHistogram(OnlineHistogram* h,
-			       bool RemoveWholeSet = false);	
   /// removes Page Folder only if it doesn't have pages (useful for cleanup)
   bool removePageFolder(std::string Folder);
 
@@ -99,51 +94,43 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   // query functions
   /// gets the full list of histograms. Returns the number of histograms found. Vectors with pointers
   /// to OnlineHistogram objects, histogram identifiers, histogram types can optionally created  by the user
-  /// and filled if not null. Set useRootHist = true to get OnlineRootHist objects.
+  /// and filled if not null
   int getAllHistograms(std::vector<OnlineHistogram*>* list = NULL,
 		       std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL,
-		       bool useRootHist = false);
+		       std::vector<string>* types = NULL);
   /// gets the list of histograms on which some check analysis has to be performed 
   int getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list = NULL,
 				std::vector<string>* ids = NULL,
-				std::vector<string>* types = NULL,
-				bool useRootHist = false);
+				std::vector<string>* types = NULL);
   /// gets the list of histograms that have to be produced by analysis task
   int getAnalysisHistograms(std::vector<OnlineHistogram*>* list = NULL,
 			    std::vector<string>* ids = NULL,
-			    std::vector<string>* types = NULL,
-			    bool useRootHist = false);
+			    std::vector<string>* types = NULL);
   /// gets the list of histograms related to subsystem SubSys
   int getHistogramsBySubsystem(std::string SubSys,
 			       std::vector<OnlineHistogram*>* list = NULL,
 			       std::vector<string>* ids = NULL,
-			       std::vector<string>* types = NULL,
-			       bool useRootHist = false);
+			       std::vector<string>* types = NULL);
   /// gets the list of histograms related to task Task
   int getHistogramsByTask(std::string Task,
 			  std::vector<OnlineHistogram*>* list = NULL,
 			  std::vector<string>* ids = NULL,
-			  std::vector<string>* types = NULL,
-			  bool useRootHist = false);
+			  std::vector<string>* types = NULL);
   /// gets the list of histograms displayed on page Page
   int getHistogramsByPage(std::string Page,
 			  std::vector<OnlineHistogram*>* list = NULL,
 			  std::vector<string>* ids = NULL,
-			  std::vector<string>* types = NULL,
-			  bool useRootHist = false);
+			  std::vector<string>* types = NULL);
   /// gets the list of histograms in a Set
   int getHistogramsBySet(std::string SetName,
 			 std::vector<OnlineHistogram*>* list = NULL,
 			 std::vector<string>* ids = NULL,
-			 std::vector<string>* types = NULL,
-			 bool useRootHist = false);
+			 std::vector<string>* types = NULL);
   int getHistogramsBySet(const OnlineHistogram& Set,
 			 std::vector<OnlineHistogram*>* list,
 			 std::vector<string>* ids = NULL,
-			 std::vector<string>* types = NULL,
-			 bool useRootHist = false);
-  /// gets the list of page folders, Parent can be "ROOT", a page folder name or "_ALL_" for all folders  
+			 std::vector<string>* types = NULL);
+  /// gets the list of page folders, Parent can be "/", a page folder name or "_ALL_" for all folders  
   int getPageFolderNames(std::vector<string>& list, std::string Parent="_ALL_");
   /// gets the list of pages in a folder
   int getPageNamesByFolder(std::string Folder,
@@ -159,8 +146,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
  private:
   // private dummy copy constructor and assignment operator
   OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"), 
-    OnlineTaskStorage(this), OnlineHistogramStorage(this), OnlinePageStorage(this,this),
-    OnlineRootHistStorage(this) {}
+    OnlineTaskStorage(this), OnlineHistogramStorage(this), OnlinePageStorage(this,this) {}
   OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;}
   int m_DBschema;
   Statement *m_stmt;
@@ -170,8 +156,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,
 		    std::vector<string>* ids = NULL,
-		    std::vector<string>* types = NULL,
-		    bool useRootHist = false);
+		    std::vector<string>* types = NULL);
 };
 
 #endif // ONLINEHISTDB_H

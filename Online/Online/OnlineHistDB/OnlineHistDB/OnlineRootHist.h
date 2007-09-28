@@ -1,25 +1,46 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.7 2007-07-17 15:54:13 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.8 2007-09-28 15:46:06 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
+#include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "TH1.h"
 #include "TStyle.h"
 
-class OnlineRootHist : public OnlineHistogram,  public TH1
+class OnlineRootHist 
 {
  public:
-  OnlineRootHist(OnlineHistDBEnv& Env,
-		 std::string Identifier,
+  /// constructor using identifier and possibly DB session
+  OnlineRootHist(std::string Identifier,
+		 OnlineHistDB *Session = NULL,
 		 std::string Page="_NONE_",
 		 int Instance=1);
+  /// constructor from existing OnlineHistogram object
+  OnlineRootHist(OnlineHistogram*  oh);
+  virtual ~OnlineRootHist() {};
+  /// histogram identifier
+  std::string identifier()  { return m_identifier;}
+  /// corresponding OnlineHistogram object
+  OnlineHistogram* dbHist() {return m_dbHist;}
+  /// corresponding ROOT TH1 object
+  TH1* rootHist() {return m_rootHist;}
+  /// link to an existing OnlineHistogram object, returns true on success
+  bool setdbHist(OnlineHistogram*  oh);
+  /// link to an existing ROOT TH1 object, returns true on success
+  bool setrootHist(TH1*  rh);
+  /// true if object knows an existing DB session
+  bool connected() {return (m_session != NULL);}
+  /// connect to DB session, returns true if the corresponding DB histogram entry is found
+  bool connectToDB(OnlineHistDB* Session,
+		   std::string Page="_NONE_",
+		   int Instance=1);
   /// updates ROOT TH1 display properties from Histogram DB (via OnlineHistogram object) 
-  /// called by constructor
-  void setFromDB();
+  /// (normally called when connecting)
+  void setTH1FromDB();
   /// updates current drawing options from Histogram DB (via OnlineHistogram object)
-  void setDrawOptions();
+  void setDrawOptionsFromDB();
   /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
-  bool saveToDB();
-  // overloaded OnlineHistogram methods for setting display options  
+  bool saveTH1ToDB();
+  // OnlineHistogram methods for setting display options  
   virtual bool setHistoSetDisplayOption(std::string ParameterName, 
 					void* value);
   virtual bool setHistDisplayOption(std::string ParameterName, 
@@ -31,40 +52,20 @@ class OnlineRootHist : public OnlineHistogram,  public TH1
   virtual bool setDisplayOption(std::string ParameterName, 
 				void* value);
 
-  // overloaded TH1 drawing methods
-  /// overloaded TH1 Draw method, calls setDrawOptions()
+  // TH1 drawing methods
+  /// calls TH1 Draw method, calls setDrawOptions()
   virtual void Draw(Option_t* option="");
-  /// overloaded TH1 DrawPanel method, calls setDrawOptions()
+  /// calls TH1 DrawPanel method, calls setDrawOptions()
   virtual void DrawPanel();
   /// calls TH1 DrawCopy method and setDrawOptions()
   virtual TH1* myDrawCopy(Option_t* option="");
 
-};
-
-
-class OnlineRootHistStorage
-{
- public:
-  OnlineRootHistStorage(OnlineHistDBEnv* Env);
-  virtual ~OnlineRootHistStorage();
-  /// gets a pointer to an OnlineRootHist object that can be used to view/edit an histogram record. If Page
-  /// is specified, the default display options for the histogram are those associated to the page (if available).
-  /// Uses cached histogram objects if available
-  OnlineRootHist* getRootHist(std::string Identifier,
-			       std::string Page="_NONE_",
-			       int Instance = 1);
-  /// same as getRootHist, but a new object is always created (no caching)
-  OnlineRootHist* getNewRootHist(std::string Identifier,
-				 std::string Page="_NONE_",
-				 int Instance = 1);
-  virtual bool removeHistogram(OnlineRootHist* h,
-			       bool RemoveWholeSet = false);
- protected:
-  void updateRootHistograms();  
  private:
-  OnlineHistDBEnv* m_Histenv;
-  std::vector<OnlineRootHist*> m_myHist;
-  bool m_avoid_dup;
+  std::string m_identifier;
+  OnlineHistDB *m_session;
+  OnlineHistogram* m_dbHist;
+  TH1* m_rootHist;
 };
+
 
 #endif // ONLINEROOTHIST_H

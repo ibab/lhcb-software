@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.12 2007-09-04 15:20:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.13 2007-09-28 15:46:07 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -14,8 +14,8 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 			   std::string db) : 
   OnlineHistDBEnv(user),
   OnlineTaskStorage(this), OnlineHistogramStorage(this),
-  OnlinePageStorage(this, this), OnlineRootHistStorage(this),
-  m_DBschema(3), m_stmt(0), m_nit(0), m_maxNit(1000)
+  OnlinePageStorage(this, this), 
+  m_DBschema(4), m_stmt(0), m_nit(0), m_maxNit(1000)
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
@@ -58,16 +58,6 @@ void OnlineHistDB::setHistogramBufferDepth(int N) {
 }
 
 
-bool OnlineHistDB::removeHistogram(OnlineHistogram* h,
-				   bool RemoveWholeSet) {
-  bool out=false;
-  OnlineRootHist *rh = dynamic_cast<OnlineRootHist*> (h);
-  if(rh)
-    out = OnlineRootHistStorage::removeHistogram(rh,RemoveWholeSet);
-  else if(h)
-    out = OnlineHistogramStorage::removeHistogram(h,RemoveWholeSet);
-  return out;
-}
 
 bool OnlineHistDB::removePageFolder(std::string Folder) {
   bool out=true;
@@ -398,18 +388,14 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
 int OnlineHistDB::getHistograms(std::string query,
 				std::vector<OnlineHistogram*>* list, 
 				std::vector<string>* ids,
-				std::vector<string>* types,
-				bool useRootHist)
+				std::vector<string>* types)
 {
   int nout=0;
   string command="select VH.NAME,VH.HSTYPE from VIEWHISTOGRAM VH "+query;
   Statement *qst=m_conn->createStatement(command);
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
-    if(list) list->push_back( useRootHist ?
-			      getRootHist(rset->getString(1)) :
-			      getHistogram(rset->getString(1))
-			      );
+    if(list) list->push_back(getHistogram(rset->getString(1)));
     if(ids) ids->push_back(rset->getString(1));
     if(types) types->push_back(rset->getString(2));
     nout++;
@@ -420,71 +406,65 @@ int OnlineHistDB::getHistograms(std::string query,
 
 int OnlineHistDB::getAllHistograms(std::vector<OnlineHistogram*>* list ,
 				   std::vector<string>* ids,
-				   std::vector<string>* types,
-				   bool useRootHist) {
-  return getHistograms("",list,ids,types,useRootHist);
+				   std::vector<string>* types) {
+  return getHistograms("",list,ids,types);
 }
 
 
 int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list ,
 					    std::vector<string>* ids,
-					    std::vector<string>* types,
-					    bool useRootHist)
+					    std::vector<string>* types)
 {
   return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",
-		       list,ids,types,useRootHist);
+		       list,ids,types);
 }
 
 int OnlineHistDB::getAnalysisHistograms(std::vector<OnlineHistogram*>* list ,
 					std::vector<string>* ids,
-					std::vector<string>* types,
-					bool useRootHist)
+					std::vector<string>* types)
 {
   return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",
-		       list,ids,types,useRootHist);
+		       list,ids,types);
 }
 
 int OnlineHistDB::getHistogramsBySubsystem(std::string SubSys,
 					   std::vector<OnlineHistogram*>* list ,
 					   std::vector<string>* ids,
-					   std::vector<string>* types,
-					   bool useRootHist)
+					   std::vector<string>* types)
 {  
   stringstream ss;
   ss << ", TASK T WHERE VH.TASK=T.TASKNAME AND (T.SUBSYS1 ='" << SubSys <<
     "' OR  T.SUBSYS2 ='"  << SubSys << "' OR  T.SUBSYS3 ='" << SubSys <<
     "')";
-  return getHistograms( ss.str() , list, ids,types,useRootHist);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsByTask(std::string Task,
 				      std::vector<OnlineHistogram*>* list ,
 				      std::vector<string>* ids,
-				      std::vector<string>* types,
-				      bool useRootHist)
+				      std::vector<string>* types)
 {  
   stringstream ss;
   ss << " WHERE VH.TASK='" << Task << "'";
-  return getHistograms( ss.str() , list, ids,types,useRootHist);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsByPage(std::string Page,
 				      std::vector<OnlineHistogram*>* list ,
 				      std::vector<string>* ids,
-				      std::vector<string>* types,
-				      bool useRootHist)
+				      std::vector<string>* types)
 {  
+  std::string folder;
   int nout=0;
   stringstream ss;
+  Page = PagenameSyntax(Page, folder);
   ss << "select VH.NAME,VH.HSTYPE,SH.INSTANCE from VIEWHISTOGRAM VH, SHOWHISTO SH "
-     << "WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
+     << "WHERE SH.HISTO = VH.HID AND PAGEFULLNAME(SH.PAGE,SH.PAGEFOLDER)='" << Page 
+     << "' ORDER BY SH.INSTANCE";
   Statement *qst=m_conn->createStatement(ss.str());
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
-    if(list) list->push_back( useRootHist ?
-			      getRootHist(rset->getString(1),Page,rset->getInt(3)) :
-			      getHistogram(rset->getString(1),Page,rset->getInt(3))
-			      );
+    if(list) list->push_back(getHistogram(rset->getString(1),Page,rset->getInt(3)));
     if(ids) ids->push_back(rset->getString(1));
     if(types) types->push_back(rset->getString(2));
     nout++;
@@ -494,31 +474,26 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
 }
 int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>* list ,
 				     std::vector<string>* ids,
-				     std::vector<string>* types,
-				     bool useRootHist)
+				     std::vector<string>* types)
 {
   stringstream ss;
   ss << " WHERE VH.TASK||'/'||VH.ALGO||'/'||VH.TITLE='" << SetName << "'";
-  return getHistograms( ss.str() , list, ids,types,useRootHist);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>* list ,
 				     std::vector<string>* ids,
-				     std::vector<string>* types,
-				     bool useRootHist)
+				     std::vector<string>* types)
 {
   stringstream ss;
   ss << " WHERE VH.HSID=" << Set.hsid() ;
-  return getHistograms( ss.str() , list, ids, types,useRootHist);
+  return getHistograms( ss.str() , list, ids, types);
 }
 
 int OnlineHistDB::getPageFolderNames(std::vector<string>& list, std::string Parent )
 {
   std::string command = "SELECT PAGEFOLDERNAME from PAGEFOLDER";
-  if (Parent == "ROOT") {
-    command += " WHERE PARENT is NULL";
-  }
-  else if (Parent != "_ALL_") {
+  if (Parent != "_ALL_") {
     command += " WHERE PARENT='"+Parent+"'";    
   }
   return genericStringQuery(command,list);

@@ -31,7 +31,7 @@ create or replace package OnlineHistDB as
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
 			KDRAWOPTS IN varchar2 := NULL,reset IN int :=0) return number;
- function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, TheInstance IN int := 1, 
+ function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         KLABEL_X varchar2 := NULL,KLABEL_Y varchar2 := NULL,KLABEL_Z varchar2 := NULL,
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
@@ -40,7 +40,7 @@ create or replace package OnlineHistDB as
 			KYMIN OUT float ,KYMAX OUT float ,KSTATS OUT smallint , KFILLSTYLE OUT smallint ,
 		        KFILLCOLOR  OUT smallint , KLINESTYLE OUT smallint ,KLINECOLOR OUT smallint ,KLINEWIDTH OUT smallint ,
 			KDRAWOPTS OUT varchar2 )   return number;	
- function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL,TheInstance IN int := 1) return number;
+ function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
 
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
@@ -50,11 +50,13 @@ create or replace package OnlineHistDB as
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
                                   theSources sourceh := NULL, thePars IN thresholds := thresholds());
- procedure DeclarePageFolder(theFolder IN varchar2);
- procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
-			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist);
- function GetPage(theName IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
- function DeletePage(theName IN varchar2) return number;
+ function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2;
+ function DeclarePageFolder(theFolder IN varchar2) return varchar2;
+ function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist,
+                        theName OUT varchar2, theFolder OUT varchar2) return varchar2;
+ function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
+ function DeletePage(thePage IN varchar2) return number;
  function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
 	theHid OUT varchar2,theHsid OUT int,
 	theIhs OUT int,theNhs OUT int, theHstype OUT string, theHstitle OUT string, theSubtitle OUT string,
@@ -185,8 +187,8 @@ end UpdateDimServiceName;
 
 function HistogramPages(theHID IN HISTOGRAM.HID%TYPE, PageNames OUT varchar2) return number is
  npages int :=0;
- cursor vsh is SELECT PAGE from SHOWHISTO where showhisto.HISTO =theHID;
- mypage PAGE.PAGENAME%TYPE;
+ cursor vsh is SELECT PAGEFULLNAME(PAGE,PAGEFOLDER) from SHOWHISTO where showhisto.HISTO =theHID;
+ mypage varchar2(351);
 begin
  PageNames := ' ';
  open vsh;
@@ -194,8 +196,8 @@ begin
   fetch vsh into mypage;
   EXIT WHEN vsh%NOTFOUND;
   npages := npages+1;
-  if (LENGTH(PageNames) < 448) then
-    PageNames := PageNames || mypage || ' ';
+  if (LENGTH(PageNames) < (800-351)) then
+    PageNames := PageNames || mypage || ' , ';
   end if;
  end LOOP;
  close vsh;
@@ -644,12 +646,12 @@ end DeclareHistDisplayOptions;
 
 -----------------------
 
-function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, TheInstance IN int := 1, 
+function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         KLABEL_X varchar2 := NULL,KLABEL_Y varchar2 := NULL,KLABEL_Z varchar2 := NULL,
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
 			KDRAWOPTS IN varchar2 := NULL, reset IN int :=0) return number is
- cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
+ cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage and INSTANCE=TheInstance; 
  myDisp HISTOGRAM.DISPLAY%TYPE := NULL;
  mydoid DISPLAYOPTIONS.DOID%TYPE;
 begin
@@ -662,7 +664,7 @@ begin
  mydoid := DeclareDisplayOptions(KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
 		KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS,myDisp,reset);
  if (myDisp is NULL) then
-   update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance;
+   update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage and INSTANCE=TheInstance;
  end if;
  close checko;
  return mydoid;
@@ -706,9 +708,9 @@ begin
 end GetDisplayOptions;
 -----------------------
 
-function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL,
+function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,
 	TheInstance IN int := 1) return number is
- cursor checkp is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
+ cursor checkp is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage and INSTANCE=TheInstance; 
  cursor checkh is select H.DISPLAY,HS.HSDISPLAY from HISTOGRAMSET HS,HISTOGRAM H where H.HID=theHID and H.HSET=HS.HSID; 
  doid int := NULL;
  disp int;
@@ -938,32 +940,59 @@ exception
 end DeclareAnalysisHistogram;
 
 -----------------------
+function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2 is
+outName varchar2(350) := theName;
+begin
+ Folder := '';
+ if (outName != '/') then 
+  outName := REGEXP_REPLACE(outName,'^ *([^ ]+) *$','\1'); -- remove spaces
+  outName := REGEXP_REPLACE(outName,'/+$',''); -- remove trailing slashes
+  outName := REGEXP_REPLACE(outName,'/+','/'); -- remove multiple slashes
+  if (SUBSTR(outName,1,1) != '/') then -- check the root
+   outName := '/'||outName;
+  end if;
+  -- extract folder name
+  Folder := REGEXP_REPLACE(outName,'^(/.+)/[^/]+$','\1');
+  if (Folder = outName) then
+   Folder := '/';
+  end if;
+ end if;
+ return outName;
+end PagenameSyntax;
 
-procedure DeclarePageFolder(theFolder IN varchar2) is 
+-----------------------
+
+function DeclarePageFolder(theFolder IN varchar2) return varchar2 is 
 cursor mypf(xFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE) is select PAGEFOLDERNAME from PAGEFOLDER where PAGEFOLDERNAME=xFolder;
 theSon PAGEFOLDER.PAGEFOLDERNAME%TYPE;
 theFather PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+outFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE;
 conti int := 1;
 begin
-savepoint beforePFOwrite;
-theSon := theFolder;
-while ( conti = 1 ) LOOP -- there is a parent
- open mypf(theSon);
- fetch mypf into theFather;
- if (mypf%NOTFOUND) then
-  insert into PAGEFOLDER(PAGEFOLDERNAME) VALUES(theSon);
-  theFather := REGEXP_REPLACE(theSon,'^(.+)/[^/]+$','\1');
-  if (theFather != theSon) then
-    update PAGEFOLDER set Parent=theFather where PAGEFOLDERNAME=theSon;
-    theSon := theFather;
+ savepoint beforePFOwrite;
+ outFolder := PagenameSyntax(theFolder,theFather);
+ theSon := outFolder;
+ while ( conti = 1 ) LOOP -- there is a folder to check
+  open mypf(theSon);
+  fetch mypf into theFather;
+  if (mypf%NOTFOUND) then
+   insert into PAGEFOLDER(PAGEFOLDERNAME) VALUES(theSon);
+   theFather := REGEXP_REPLACE(theSon,'^(/.+)/[^/]+$','\1');
+   if (theFather != theSon) then -- there is a parent
+     update PAGEFOLDER set Parent=theFather where PAGEFOLDERNAME=theSon;
+     theSon := theFather; 
+   else
+    if (theSon != '/') then
+     update PAGEFOLDER set Parent='/' where PAGEFOLDERNAME=theSon;
+    end if;
+    conti := 0;
+   end if;
   else
-   conti := 0;
+   conti := 0; -- pagefolder already in DB
   end if;
- else
-  conti := 0;
- end if;
- close mypf;
-end LOOP;
+  close mypf;
+ end LOOP;
+ return outFolder;
 EXCEPTION
  when others then
   ROLLBACK TO beforePFOwrite;
@@ -972,23 +1001,29 @@ end DeclarePageFolder;
 
 
 -----------------------
-procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
-			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist) is
- CURSOR cpg is select PAGENAME from PAGE where PAGENAME=theName;
+function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+		      Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist,
+                      theName OUT varchar2, theFolder OUT varchar2) return varchar2 is
+ CURSOR cpg(Xpage PAGE.PAGENAME%TYPE,Xfolder PAGE.FOLDER%TYPE) is select PAGENAME from PAGE where PAGENAME=Xpage and FOLDER=Xfolder;
  myPName  PAGE.PAGENAME%TYPE;
+ outName varchar2(350);
  Nin int;
  condition varchar2(5000);
- CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xhisto SHOWHISTO.HISTO%TYPE,Xinstance SHOWHISTO.INSTANCE%TYPE) is 
-	select PAGE from SHOWHISTO where PAGE=Xpage and HISTO=Xhisto and INSTANCE=Xinstance;
+ CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xfolder PAGE.FOLDER%TYPE,Xhisto SHOWHISTO.HISTO%TYPE,Xinstance SHOWHISTO.INSTANCE%TYPE) is 
+	select PAGE from SHOWHISTO where PAGE=Xpage and PAGEFOLDER=Xfolder and HISTO=Xhisto and INSTANCE=Xinstance;
  inst int;
  instlist inttlist := inttlist();
+ xFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE;
 begin
  savepoint beforeDPwrite;
+ outName := PagenameSyntax(theFullName,xFolder);
+ xFolder := DeclarePageFolder(xFolder);
+ theFolder := xFolder;
+ theName := REGEXP_REPLACE(outName,'^.*/([^/]+)$','\1');
  Nin := hlist.COUNT;
  if (Cx.COUNT != Nin or Cy.COUNT != Nin or Sx.COUNT != Nin or Sy.COUNT != Nin) then
    raise_application_error(-20003,'incomplete input variables');
  end if;
- DeclarePageFolder(theFolder);
  -- see if some histogram is present more than once and assign "instance" order parameter 
  instlist.EXTEND(Nin);
  for i IN 1..Nin LOOP
@@ -1001,14 +1036,14 @@ begin
   instlist(i) := inst;
  end LOOP;
 
- open cpg;
+ open cpg(theName,theFolder);
  fetch cpg into myPName;
  if (cpg%NOTFOUND) then -- new page
   INSERT INTO PAGE(PAGENAME,FOLDER,NHISTO,PAGEDOC) VALUES(theName,theFolder,Nin,theDoc);
  else  -- update PAGE entry
-  UPDATE PAGE SET  NHISTO=Nin,PAGEDOC=theDoc,FOLDER=theFolder where PAGENAME=theName;
+  UPDATE PAGE SET  NHISTO=Nin,PAGEDOC=theDoc,FOLDER=theFolder where PAGENAME=theName and FOLDER=theFolder;
   -- remove all showhisto entry related to this page that are no more in the definition
-  condition := ' WHERE PAGE='''||theName||'''';
+  condition := ' WHERE PAGE='''||theName||''''||' AND PAGEFOLDER='''||theFolder||'''';
   for i IN 1..Nin LOOP
    condition := condition||' AND ( HISTO != '''||hlist(i)||''' OR INSTANCE != '||instlist(i)||' )';
   end LOOP; 
@@ -1021,17 +1056,19 @@ begin
  close cpg;
  -- now create/update SHOWHISTO entries
  for i IN 1..Nin LOOP
-   open sh(theName,hlist(i),instlist(i));
+   open sh(theName,theFolder,hlist(i),instlist(i));
    fetch sh into myPName;
    if (sh%NOTFOUND) then
-    INSERT INTO SHOWHISTO(PAGE,HISTO,INSTANCE,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y) 
-	VALUES(theName,hlist(i),instlist(i),Cx(i),Cy(i),Sx(i),Sy(i)); 
+   -- DBMS_OUTPUT.PUT_LINE('inserting '||theName||' '||theFolder||' '||hlist(i)||' '||instlist(i));
+    INSERT INTO SHOWHISTO(PAGE,PAGEFOLDER,HISTO,INSTANCE,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y) 
+	VALUES(theName,theFolder,hlist(i),instlist(i),Cx(i),Cy(i),Sx(i),Sy(i)); 
    else
     UPDATE SHOWHISTO SET CENTER_X=Cx(i),CENTER_Y=Cy(i),SIZE_X=Sx(i),SIZE_Y=Sy(i) WHERE 
-	PAGE=theName AND HISTO=hlist(i) AND INSTANCE=instlist(i);
+	PAGE=theName AND PAGEFOLDER=theFolder AND HISTO=hlist(i) AND INSTANCE=instlist(i);
    end if;
    close sh;
  end LOOP;
+ return outName;
 EXCEPTION
  when OTHERS then
   ROLLBACK TO beforeDPwrite;
@@ -1039,8 +1076,8 @@ EXCEPTION
 end DeclarePage;
 -----------------------
 
-function GetPage(theName IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number is
- CURSOR cpg is select NHISTO,FOLDER,PAGEDOC from PAGE where PAGENAME=theName;
+function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number is
+ CURSOR cpg is select NHISTO,FOLDER,PAGEDOC from PAGE where PAGEFULLNAME(PAGENAME,FOLDER)=thePage;
  myNh  PAGE.NHISTO%TYPE;
 begin
  open cpg;
@@ -1053,12 +1090,12 @@ begin
 end GetPage;
 -----------------------
 
-function DeletePage(theName IN varchar2) return number is
+function DeletePage(thePage IN varchar2) return number is
 begin
  savepoint beforePAGEdelete;
- delete from displayoptions where doid in (select sdisplay from showhisto where page=theName);
- delete from showhisto where page=theName;
- delete from page where PAGENAME=theName;
+ delete from displayoptions where doid in (select sdisplay from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage);
+ delete from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage;
+ delete from page where PAGEFULLNAME(PAGENAME,FOLDER)=thePage;
  return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)	
 EXCEPTION
  when OTHERS then
@@ -1082,7 +1119,7 @@ cursor myh(Xhid HISTOGRAM.HID%TYPE) is SELECT HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HS
 	(NEW_TIME(H.OBSOLETENESS,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
 	H.DISPLAY FROM HISTOGRAMSET HS,HISTOGRAM H WHERE H.HID=Xhid AND H.HSET=HS.HSID;
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
-	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
+	WHERE PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
 cursor mysn(Xhid HISTOGRAM.HID%TYPE) is SELECT SN from DIMSERVICENAME where PUBHISTO=Xhid;
 out number := 1;
 begin
@@ -1115,7 +1152,7 @@ end GetHistogramData;
 function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
  cursor vh is SELECT HID from HISTOGRAM where HSET=theSet;
  myhid HISTOGRAM.HID%TYPE;
- pagenames varchar2(500);
+ pagenames varchar2(800);
  np int;
 begin
  savepoint beforeDHSdelete;
@@ -1143,7 +1180,7 @@ end DeleteHistogramSet;
 function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number is
  cursor vh is SELECT HSID,NHS,IHS from VIEWHISTOGRAM WHERE HID=theHID;
  np int;
- pagenames varchar2(500);
+ pagenames varchar2(800);
  myhsid HISTOGRAMSET.HSID%TYPE;
  mynhs HISTOGRAMSET.NHS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;

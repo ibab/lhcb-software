@@ -1,20 +1,29 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.11 2007-07-17 15:54:14 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.12 2007-09-28 15:46:07 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
 OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
 			       OnlineHistogramStorage* Storage,
-			       std::string Name, 
-			       std::string Folder) :
-  OnlineHistDBEnv(Env), m_Hstorage(Storage), m_name(Name), m_folder(Folder)
+			       std::string Name) :
+  OnlineHistDBEnv(Env), m_Hstorage(Storage), m_name(Name), 
+  m_folder(""), m_doc(""), m_syncWithDB(false)
 {
+  std::string outname;
+  // check page name syntax
+  outname = PagenameSyntax(m_name, m_folder);
+  if (outname != m_name) {
+    errorMessage("Page name was changed from "+m_name+" to "+outname);
+    m_name = outname;
+  }
+
   // check if page exists already in DB
   int out=0;
+  m_h.clear();
   Statement *astmt=m_conn->createStatement 
-    ("begin :out := OnlineHistDB.GetPage(theName => :2, theFolder => :3, theDoc => :4); end;");
+    ("begin :out := OnlineHistDB.GetPage(thePage => :2, theFolder => :3, theDoc => :4); end;");
   try{
     astmt->registerOutParam(1, OCCIINT); 
-    astmt->setString(2, Name);
+    astmt->setString(2, m_name);
     astmt->registerOutParam(3,OCCISTRING,300);
     astmt->registerOutParam(4,OCCISTRING,100);
     astmt->execute();
@@ -24,20 +33,15 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
       dumpError(ex,"OnlineHistPage::OnlineHistPage");
     }
   if (out>=0) { // page already exists
-    m_folder=astmt->getString(3);
-    if (Folder != "_DEFAULT_" &&  Folder != m_folder) {
-      cout << "warning from OnlineHistPage::OnlineHistPage:" <<
-	" page "<< Name <<" already exists in folder "<<m_folder << 
-	endl ;
-    }
+    m_folder = astmt->getString(3);
     m_doc = astmt->getString(4);
     m_conn->terminateStatement (astmt); 
 
     ResultSet *rset=0;
     astmt=m_conn->createStatement
-      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,INSTANCE FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE SH.PAGE=:1 and VH.HID= SH.HISTO ORDER BY SH.INSTANCE");
+      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,INSTANCE FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE PAGEFULLNAME(SH.PAGE,SH.PAGEFOLDER)=:1 and VH.HID= SH.HISTO ORDER BY SH.INSTANCE");
     try{
-      astmt->setString(1, Name);
+      astmt->setString(1, m_name);
       rset =  astmt->executeQuery ();
     }catch(SQLException ex)
       {
@@ -45,7 +49,7 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
       }
     while ( rset->next () ) {
       OnlineHistogram* newh= m_Hstorage->getHistogram(rset->getString(1),
-						      Name,
+						      m_name,
 						      rset->getInt(6));
       newh->setDebug(debug());
       newh->setExcLevel(excLevel());
@@ -56,16 +60,9 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
       m_sy.push_back(rset->getFloat(5));
     }
     astmt->closeResultSet (rset);
-    m_conn->terminateStatement (astmt);
+    m_syncWithDB = true;
   }
-  else {
-    if (m_folder == "_DEFAULT_") {
-      std::string mes = "No folder set for page " + m_name +
-	".  Please use the setFolder method";
-      errorMessage(mes);
-    }
-    m_conn->terminateStatement (astmt); 
-  }
+  m_conn->terminateStatement (astmt);
 }
 
 
@@ -100,21 +97,14 @@ OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
       m_sx[ih] = Sx;
       m_sy[ih] = Sy;
     }
-    if (save()) {
-      if(knownHisto) {
-	// object has been already used in a previous instance: create new object with proper instance
-	outh = m_Hstorage->getHistogram(h->identifier(), m_name, instance);
-	m_h[ih] = outh;
-      }
-      else 
-	outh=h;
-      bool setp = outh->setPage(m_name,instance);
-      if (!setp) 
-	errorMessage("Could not setting page "+m_name+" on histogram "+outh->identifier());
+    if(knownHisto) {
+      // object has been already used in a previous instance: create new object 
+      outh = m_Hstorage->getNewHistogram(h->identifier());
+      m_h[ih] = outh;
     }
-    else {
-      outh=0;
-    }
+    else 
+      outh=h;
+    m_syncWithDB = false;
   }
   return outh;
 }
@@ -150,7 +140,7 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 
 bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
 				     unsigned int instance) {
-  bool out=false;
+  bool out=true;
   bool known;
   int jh=findHistogram(h,instance,known);
   if (-1 != jh) {
@@ -159,7 +149,7 @@ bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
     m_cy.erase(m_cy.begin()+jh);
     m_sx.erase(m_sx.begin()+jh);
     m_sy.erase(m_sy.begin()+jh);
-    out = save();
+    m_syncWithDB = false;
   }
   return out;
 }
@@ -170,7 +160,8 @@ bool OnlineHistPage::removeAllHistograms() {
   m_cy.clear();
   m_sx.clear();
   m_sy.clear();
-  bool out = save();
+  m_syncWithDB = false;
+  bool out = true;
   return out;
 }
 
@@ -183,11 +174,14 @@ bool OnlineHistPage::remove() {
     dst->setString(2,m_name);
     dst->execute();
     out = (dst->getInt(1) == 1);
+    removeAllHistograms();
+    m_syncWithDB = false;
   }catch(SQLException ex) {
     dumpError(ex,"OnlineHistPage::remove for Page "+m_name);
     out=false;
   }
   m_conn->terminateStatement (dst);
+  
   return out;  
 }
 
@@ -218,60 +212,94 @@ unsigned int OnlineHistPage::newHistogramInstance(OnlineHistogram* h) const {
   return ih;
 }
 
+unsigned int OnlineHistPage:: HistogramInstance(unsigned int xh) const {
+  int ih=1;
+  if (xh>= m_h.size())
+    ih=0;
+  else {
+    for (unsigned int jh=0; jh<xh ; jh++) {
+      if ((m_h[jh])->hid() == (m_h[xh])->hid()) 
+	ih++;
+    }
+  }
+  return ih;
+}
+
 bool OnlineHistPage::save() {
   bool out=true;
-  if (m_folder == "_DEFAULT_") {
-    errorMessage("Page "+m_name+" has no folder and cannot be saved");
-    out = false;
+  stringstream hlist,cx,cy,sx,sy;
+  std::string outname;
+
+  hlist << "OnlineHistDB.histotlist(";
+  cx << "OnlineHistDB.floattlist(";
+  cy << "OnlineHistDB.floattlist(";
+  sx << "OnlineHistDB.floattlist(";
+  sy << "OnlineHistDB.floattlist(";
+  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
+    hlist << "'" << m_h[jh]->hid() << "'"; 
+    cx << m_cx[jh] ;
+    cy << m_cy[jh] ;
+    sx << m_sx[jh] ;
+    sy << m_sy[jh] ;
+    if (jh < m_h.size()-1) {
+      hlist << ",";
+      cx <<  ",";
+      cy <<  ",";
+      sx <<  ",";
+      sy <<  ",";
+    }
   }
-  else {
-    stringstream hlist,cx,cy,sx,sy;
-    hlist << "OnlineHistDB.histotlist(";
-    cx << "OnlineHistDB.floattlist(";
-    cy << "OnlineHistDB.floattlist(";
-    sx << "OnlineHistDB.floattlist(";
-    sy << "OnlineHistDB.floattlist(";
+  hlist << ")";
+  cx <<  ")";
+  cy <<  ")";
+  sx <<  ")";
+  sy <<  ")";
+  stringstream command;
+  command << "begin :1 := OnlineHistDB.DeclarePage(theFullName => '"<< m_name<<
+    "',theDoc => '"<< m_doc <<
+    "',hlist => " << hlist.str() <<
+    ",Cx => " << cx.str() <<
+    ",Cy => " << cy.str() <<
+    ",Sx => " << sx.str() <<
+    ",Sy => " << sy.str() << 
+    ",theName => :2 "<< 
+    ",theFolder => :3"<< 
+    "); end;";
+  Statement *astmt=m_conn->createStatement(command.str()); 
+  try{
+    astmt->registerOutParam(1,OCCISTRING,350);
+    astmt->registerOutParam(2,OCCISTRING,50);
+    astmt->registerOutParam(3,OCCISTRING,300);
+    astmt->execute();
+    if (astmt->getString(1) != m_name)
+      errorMessage("pagename "+m_name+" becomes "+astmt->getString(1)+
+		   " in DeclarePage... something wrong?");
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistPage::save for page "+m_name);
+      out=false;
+    }
+  m_conn->terminateStatement (astmt); 
+  
+  if (out) {
+    m_syncWithDB = true;
+    // attach histogram objects to this page
     for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-      hlist << "'" << m_h[jh]->hid() << "'"; 
-      cx << m_cx[jh] ;
-      cy << m_cy[jh] ;
-      sx << m_sx[jh] ;
-      sy << m_sy[jh] ;
-      if (jh < m_h.size()-1) {
-	hlist << ",";
-	cx <<  ",";
-	cy <<  ",";
-	sx <<  ",";
-	sy <<  ",";
-      }
+      out &= (m_h[jh])->setPage(m_name , HistogramInstance(jh));
     }
-    hlist << ")";
-    cx <<  ")";
-    cy <<  ")";
-    sx <<  ")";
-    sy <<  ")";
-    stringstream command;
-    command << "begin OnlineHistDB.DeclarePage(theName => '"<< m_name <<
-      "',theFolder => '"<< m_folder <<
-      "',theDoc => '"<< m_doc <<
-      "',hlist => " << hlist.str() <<
-      ",Cx => " << cx.str() <<
-      ",Cy => " << cy.str() <<
-      ",Sx => " << sx.str() <<
-      ",Sy => " << sy.str() << "); end;";
-    
-    Statement *astmt=m_conn->createStatement(command.str()); 
-    try{
-      astmt->execute();
-    }catch(SQLException ex)
-      {
-	dumpError(ex,"OnlineHistPage::save for page "+m_name);
-	out=false;
-    }
-    m_conn->terminateStatement (astmt); 
   }
   return out;
 }
+
+// std::string OnlineHistPage::fullName(std::string simplename, std::string folder) {
+//   std::string outname=folder;
+//   if (folder != "/") outname+= "/";
+//   outname += simplename;
+//   return outname;
+// }
+
+
+
 
 OnlinePageStorage::OnlinePageStorage(OnlineHistDBEnv* Env, OnlineHistogramStorage* Hstorage) :
   m_Pagenv(Env), m_Hstorage(Hstorage) {}
@@ -285,12 +313,13 @@ OnlinePageStorage::~OnlinePageStorage()
     delete *ip; 
 }
 
-OnlineHistPage* OnlinePageStorage::getPage(std::string Name, 
-					   std::string Folder) {
+OnlineHistPage* OnlinePageStorage::getPage(std::string Name) {
+  std::string folder="_NONE_";
   OnlineHistPage* page = 0;
   // see if page object exists already
   std::vector<OnlineHistPage*>::iterator ip;
   for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) {
+    if (folder=="_NONE_") Name = (*ip)->PagenameSyntax(Name, folder);
     if ((*ip)->name() == Name) {
       page = *ip;
       break;
@@ -298,7 +327,7 @@ OnlineHistPage* OnlinePageStorage::getPage(std::string Name,
   }
   // otherwise create new one
   if ( 0 == page) {
-    page = new OnlineHistPage(*m_Pagenv, m_Hstorage, Name, Folder);
+    page = new OnlineHistPage(*m_Pagenv, m_Hstorage, Name);
     m_myPage.push_back(page);
   }
   return page;

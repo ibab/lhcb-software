@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.12 2007-09-04 15:20:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.13 2007-09-28 15:46:07 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -15,9 +15,11 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
   OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance),
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
-    if (!verifyPage(Page,Instance)) {
-      m_page = "_NONE_";
-      m_instance =1;
+    if (m_page  != "_NONE_") {
+      if (!verifyPage(m_page,Instance)) {
+	m_page = "_NONE_";
+	m_instance =1;
+      }
     }
     load();
   }
@@ -44,8 +46,8 @@ bool OnlineHistogram::setPage(std::string Page,
 			      int Instance) {
   bool out=true;
   if ( Page != m_page || Instance != m_instance) {
-    out=verifyPage(Page,Instance);
-    if (out) {
+    out=verifyPage(Page,Instance); // Page may change
+    if (out && (Page != m_page || Instance != m_instance)) {
       m_page = Page;
       m_instance = Instance;
       load();
@@ -81,13 +83,15 @@ bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
   return out;
 }
 
-bool OnlineHistogram::verifyPage(std::string Page, int Instance) {
+bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
   // check that page exists and histogram is on it
   bool out=true;
+  std::string fold;
+  Page = PagenameSyntax(Page, fold);
   if (m_page != "_NONE_") {
     ResultSet *rset;
     Statement *query = 
-      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO SH ,VIEWHISTOGRAM VH WHERE VH.NAME=:1 AND SH.PAGE=:2 AND SH.INSTANCE=:3");
+      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO SH ,VIEWHISTOGRAM VH WHERE VH.NAME=:1 AND SH.PAGEFOLDER||'/'||SH.PAGE=:2 AND SH.INSTANCE=:3");
     query->setString(1,m_identifier);
     query->setString(2,Page);
     query->setInt(3,Instance);
@@ -395,7 +399,7 @@ int OnlineHistogram::nThisPageInstances() {
   int out=0;
   ResultSet *rset;
   Statement *query = 
-    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2");
+    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1 AND PAGEFOLDER||'/'||PAGE=:2");
   query->setString(1,m_hid);
   query->setString(2,m_page);
   try{
@@ -477,11 +481,12 @@ bool OnlineHistogram::initHistDisplayOptionsFromSet() {
 bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
 							 int Instance) {
   bool out=true;
+  
   if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
-  if (PageName == "_NONE_") {
+  if (!verifyPage(PageName,Instance)) {
     cout << "OnlineHistogram::initHistoPageDisplayOptionsFromSet aborted:" <<
-	" no page specified"<<endl;
+	" page/instance specified are not correct"<<endl;
       out = false;
   }
   else {
@@ -521,9 +526,9 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
   bool out=true;
   if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
-  if (PageName == "_NONE_") {
+  if (!verifyPage(PageName,Instance)) {
     cout << "OnlineHistogram::initHistoPageDisplayOptionsFromHist aborted:" <<
-      " no page specified"<<endl;
+      " page/instance specified are not correct"<<endl;
     out = false;
   }
   else {
@@ -682,8 +687,8 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
   bool out = true;
   if (Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
-  if (PageName == "_NONE_") {
-    errorMessage("OnlineHistogram::setHistoPageDisplayOption aborted: no page specified");
+  if (!verifyPage(PageName,Instance)) {
+    errorMessage("OnlineHistogram::setHistoPageDisplayOption aborted: bad page/instance");
     out = false;
   }				 
   else {
@@ -1234,9 +1239,11 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
 					    int Instance) {
   OnlineHistogram* h=0;
   if (m_avoid_hdup) {
+    std::string folder="_NONE_";
     // see if the histogram object exists already
     std::vector<OnlineHistogram*>::iterator ih;
     for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+      if (folder=="_NONE_") Page = (*ih)->PagenameSyntax(Page, folder);
       if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
 	  (*ih)->instance() == Instance ) {
 	h = *ih;

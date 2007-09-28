@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.8 2007-09-04 15:20:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.9 2007-09-28 15:46:06 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -48,46 +48,26 @@ class OnlineHistDBEnv {
   int excLevel() const {return m_excLevel;}
   ///
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
+  /// check the syntax of the page full name, returning the correct syntax and the folder name 
+  std::string PagenameSyntax(std::string fullname, std::string &folder);
+  /// standard way to dump error message
+  void errorMessage(std::string Error) const; 
+
  protected:
-  OnlineHistDBEnv(std::string User) 
-    : m_user(toUpper(User)), m_debug(0), m_excLevel(1) {}
+  OnlineHistDBEnv(std::string User); 
   OnlineHistDBEnv(Connection* Conn, 
 		  std::string User, 
-		  int ExcLevel) 
-    : m_conn(Conn), m_user(toUpper(User)), m_debug(0), m_excLevel(ExcLevel) {}
-  OnlineHistDBEnv(OnlineHistDBEnv &m) {
-    m_env = m.m_env; m_conn= m.m_conn; m_user=m.m_user;
-    m_debug = m.debug(); m_excLevel = m.excLevel();
-  }
+		  int ExcLevel);
+  OnlineHistDBEnv(OnlineHistDBEnv &m);
   virtual ~OnlineHistDBEnv() {};
-  //Connection* conn() const {return m_conn;}
   
-  void dumpError(SQLException& ex,std::string MethodName) const {
-    if (m_debug > -1) {
-      cout << ( (ex.getErrorCode() < -20500) ? "------- FATAL ERROR: ----------" :
-		"------- WARNING: ----------" ) <<endl;
-      cout<<"Exception thrown from "<< MethodName <<endl;
-      cout<<"Error number: "<<  ex.getErrorCode() << endl;
-      cout<<ex.getMessage() << endl;
-    }     
-    if(m_excLevel >1  || (m_excLevel == 1 && ex.getErrorCode() < -20500))
-      throw(ex);
-  }
-  void errorMessage(std::string Error) const {
-    if (m_debug > -1) {
-      cout << "------- WARNING: ----------"  <<endl;
-      cout<< Error <<endl;
-    }     
-  }
+  void dumpError(SQLException& ex,std::string MethodName) const; 
   Environment* m_env;
   Connection* m_conn;
   std::string m_user;
+  
  private: 
-  std::string toUpper(string str) {
-    for(unsigned int i=0;i<str.length();i++)
-      str[i] = toupper(str[i]);
-    return str;
-  }
+  std::string toUpper(string str);
   int m_debug;
   int m_excLevel;
 };

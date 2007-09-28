@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.13 2007-07-17 15:54:13 ggiacomo Exp $
+! $Id: release.notes,v 1.14 2007-09-28 15:46:06 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
-
+! 20070928  - OnlineHistDB v3r0
+	- new syntax for page names, identified by filesystem-like path 
+	  (this change is not backward-compatible)
+	- new strategy for OnlineRootHist, that is now an independent class
+          with optional links to OnlineHistDB, OnlineHistogram, TH1
 
 ! 20070717  - OnlineHistDB v2r4
 	- a few more methods: OnlineHistogram::hname(), 

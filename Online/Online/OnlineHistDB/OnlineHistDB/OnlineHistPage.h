@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.10 2007-09-04 15:20:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -10,8 +10,6 @@
 
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistogram.h"
-#include "OnlineHistDB/OnlineRootHist.h"
-
 
 
 class OnlineHistPage : public OnlineHistDBEnv
@@ -19,22 +17,22 @@ class OnlineHistPage : public OnlineHistDBEnv
  public:
   OnlineHistPage(OnlineHistDBEnv& Env,
 		 OnlineHistogramStorage* Storage,
-		 std::string Name, 
-		 std::string Folder);
+		 std::string Name);
   virtual ~OnlineHistPage();
   /// number of histograms on page
   int nh() const {return m_h.size();}
-  /// page name
+  /// page name (with full path)
   const std::string& name() const { return m_name;}
   /// page folder name
   const std::string& folder() const { return m_folder;}
   /// short page description
   const std::string& doc() const { return m_doc;}
+  /// check if the page object is in sync with the DB
+  const bool syncWithDB() const { return  m_syncWithDB;}
+
 
   /// set short page description
   bool setDoc(std::string Doc) {m_doc=Doc;return save();}
-  /// set page folder name. If not existing, page folder is created.
-  bool setFolder(std::string Folder) {m_folder=Folder;return save();}
   /// adds or updates an histogram on the page. Use instance > 1 to use the
   /// same histogram more than once. Returns the object attached to page (the input
   /// one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
@@ -69,6 +67,8 @@ class OnlineHistPage : public OnlineHistDBEnv
 		     float &Sx,
 		     float &Sy,
 		     unsigned int instance=1) const;
+  /// save the current page layout to the DB
+  bool save();
 
  private:
   // private dummy copy constructor and assignment operator 
@@ -79,6 +79,7 @@ class OnlineHistPage : public OnlineHistDBEnv
   std::string m_name;
   std::string m_folder;
   std::string m_doc;
+  bool m_syncWithDB;
   std::vector<OnlineHistogram*> m_h;
   std::vector<float> m_cx;
   std::vector<float> m_cy;
@@ -88,7 +89,7 @@ class OnlineHistPage : public OnlineHistDBEnv
 		    unsigned int instance,
 		    bool &knownHisto) const;
   unsigned int newHistogramInstance(OnlineHistogram* h) const;
-  bool save();
+  unsigned int HistogramInstance(unsigned int xh) const;
 };
 
 class OnlinePageStorage
@@ -97,7 +98,7 @@ class OnlinePageStorage
   OnlinePageStorage(OnlineHistDBEnv* Env, OnlineHistogramStorage* Hstorage);
   virtual ~OnlinePageStorage();
   /// get an OnlineHistPage object, to create a new page or view/edit an existing one
-  OnlineHistPage* getPage(std::string Name, std::string Folder="_DEFAULT_");
+  OnlineHistPage* getPage(std::string Name);
   /// removes completely the page, and all associated options (HANDLE WITH CARE!)
   bool removePage(OnlineHistPage* Page);
  private:

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.10 2007-09-04 15:20:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -15,14 +15,14 @@ class  OnlineHistogram : public OnlineHistDBEnv
  public:
   OnlineHistogram(OnlineHistDBEnv &env,
 		  std::string Identifier,
-		  std::string Page="_NONE_",
+		  std::string FullPathPageName="_NONE_",
 		  int Instance=1);
   virtual ~OnlineHistogram();
   void checkServiceName();
   bool isAbort() const {return m_isAbort;}
   /// full histogram unique identifier Taskname/AlgorithmName/HistogramName
   std::string identifier() const {return m_identifier;}
-  /// page to which this histogram object is attached
+  /// full path name of the page to which this histogram object is attached
   std::string page() const {return m_page;}
   /// counter (starting from 1) to distinguish several instances of the same histogram on the same page
   int instance() const {return m_instance;}
@@ -60,7 +60,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int obsoleteness() const {return m_obsoleteness;}
   /// sets page on which histogram is displayed (reload display options if needed). Histogram has to be already
   /// been attached to the page through OnlineHistPage::declareHistogram()
-  bool setPage(std::string Page,
+  bool setPage(std::string FullPathPageName,
 	       int Instance=1);
   /// unsets page associated to histogram object
   void unsetPage();
@@ -93,10 +93,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// sets a display option for the present histogram.
   virtual bool setHistDisplayOption(std::string ParameterName, 
 				void* value);
-  /// sets a display option for the present histogram on page PageName (default is {\it page()})
+  /// sets a display option for the present histogram on page FullPathPageName (default is {\it page()})
   virtual bool setHistoPageDisplayOption(std::string ParameterName, 
 					 void* value,
-					 std::string PageName = "_DEFAULT_",
+					 std::string FullPathPageName = "_DEFAULT_",
 					 int Instance=-1);
   /// unsets a display option in the current display mode
   virtual bool unsetDisplayOption(std::string ParameterName);
@@ -120,16 +120,16 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// success.
   bool initHistDisplayOptionsFromSet(); 
   /// initializes display options associated to this histogram on page
-  /// PageName (default is {\it page()}) with the
+  /// FullPathPageName (default is {\it page()}) with the
   /// options defined for the histogram set (if available). Returns true on
   /// success.
-  bool initHistoPageDisplayOptionsFromSet(std::string PageName = "_DEFAULT_",
+  bool initHistoPageDisplayOptionsFromSet(std::string FullPathPageName = "_DEFAULT_",
 					  int Instance=-1);
   /// initializes display options associated to this histogram on page
-  /// PageName (default is {\it page()}) with the
+  /// FullPathPageName (default is {\it page()}) with the
   /// options defined for the histogram (if available). Returns true on
   /// success.
-  bool initHistoPageDisplayOptionsFromHist(std::string PageName = "_DEFAULT_",
+  bool initHistoPageDisplayOptionsFromHist(std::string FullPathPageName = "_DEFAULT_",
 					   int Instance=-1); 
 
   // ANALYSIS OPTIONS
@@ -224,7 +224,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int m_hdisp;
   int m_shdisp;
   std::vector<OnlineDisplayOption*> m_do;
-  bool verifyPage(std::string Page, int Instance);
+  bool verifyPage(std::string &Page, int Instance);
   void load();
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();
@@ -257,16 +257,18 @@ class OnlineHistogramStorage
   OnlineHistogramStorage(OnlineHistDBEnv* Env);
   virtual ~OnlineHistogramStorage();
   void updateHistograms();
-  /// gets a pointer to an OnlineHistogram object that can be used to view/edit an histogram record. If Page
+  /// gets a pointer to an OnlineHistogram object that can be used to view/edit an histogram record. If FullPathPageName
   /// is specified, the default display options for the histogram are those associated to the page (if available).
   /// Uses cached histogram objects if available
   OnlineHistogram* getHistogram(std::string Identifier,
-				std::string Page="_NONE_",
+				std::string FullPathPageName="_NONE_",
 				int Instance = 1);
   /// same as getHistogram, but a new object is always created (no caching)
   OnlineHistogram* getNewHistogram(std::string Identifier,
-				   std::string Page="_NONE_",
+				   std::string FullPathPageName="_NONE_",
 				   int Instance = 1);
+  /// removes an histogram, and optionally its full set. 
+  /// ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
   virtual bool removeHistogram(OnlineHistogram* h,
 			       bool RemoveWholeSet = false);		 
 private: 
