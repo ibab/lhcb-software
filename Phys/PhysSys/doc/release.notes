@@ -19,6 +19,14 @@ Purpose     : LHCb physics packages
  - cmt/requirements
   . Increase version to v3r7p1
 
+!========================== DaVinciFilter v6r5p1 2007-09-28 =================
+
+! 2007-09-28 - Juan PALACIOS
+ - src/HybridParticleArrayFilter.cpp
+  . Change variable names OUT and IN to something MS visual studio likes.
+ - cmt/requirements
+  . Increase version to v6r5p1
+
 !========================== DaVinciFilter v6r5 2007-07-30 ===================
 
 ! 2007-09-24 - Juan PALACIOS
