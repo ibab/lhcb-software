@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.5 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.6 2007-09-29 21:16:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -68,7 +68,6 @@ private: // utility classes
   //-----------------------------------------------------------------------------
   class CombinedLL
   {
-
   public:
     /// Standard constructor with initialisation value
     CombinedLL( const double init = 0 )
@@ -78,6 +77,14 @@ private: // utility classes
     double piDLL; ///< Pion Log Likelihood
     double kaDLL; ///< Kaon Log Likelihood
     double prDLL; ///< Proton Log Likelihood
+  public:
+    /// Implement ostream << method
+    friend inline std::ostream& operator << ( std::ostream& s,
+                                              const CombinedLL& dlls )
+    {
+      return s << "[ " << dlls.elDLL << " " << dlls.muDLL << " " 
+               << dlls.piDLL << " " << dlls.kaDLL << " " << dlls.prDLL << " ]";
+    }
   };
 
 private: // methods

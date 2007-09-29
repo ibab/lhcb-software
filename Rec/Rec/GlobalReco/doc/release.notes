@@ -6,7 +6,9 @@
 
 ! 2007-09-29 - Chris Jones
  - Update ChargedProtoCombineDLLsAlg to produce better combined DLL values
- - Update ntuple algorithm ChargedProtoParticleTupleAlg
+ - Update ntuple algorithm ChargedProtoParticleTupleAlg with better default
+   values and also to not require RichPIDs or MuonPIDs to be in the TES - i.e.
+   to take all information from the ProtoParticles.
 
 !========================== GlobalReco v6r12 2007-09-20 ======================
 ! 2007-08-19 - Patrick Koppenburg

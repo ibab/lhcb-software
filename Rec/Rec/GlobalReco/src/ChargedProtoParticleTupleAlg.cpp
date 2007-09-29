@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.2 2007-03-02 10:07:42 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.3 2007-09-29 21:16:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -87,26 +87,28 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     tuple->column( "TrackHistory",    track->history()    );
 
     // rich
-    const LHCb::RichPID * rpid = proto->richPID();
-    tuple->column( "RichDLLe",      proto->info ( LHCb::ProtoParticle::RichDLLe,  99999 ) );
-    tuple->column( "RichDLLmu",     proto->info ( LHCb::ProtoParticle::RichDLLmu, 99999 ) );
-    tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 99999 ) );
-    tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  99999 ) );
-    tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  99999 ) );
-    tuple->column( "RichUsedAero",  rpid ? rpid->usedAerogel()  : false );
-    tuple->column( "RichUsedR1Gas", rpid ? rpid->usedRich1Gas() : false );
-    tuple->column( "RichUsedR2Gas", rpid ? rpid->usedRich2Gas() : false );
-    tuple->column( "RichAboveElThres", rpid ? rpid->electronHypoAboveThres() : false );
-    tuple->column( "RichAboveMuThres", rpid ? rpid->muonHypoAboveThres() : false );
-    tuple->column( "RichAbovePiThres", rpid ? rpid->pionHypoAboveThres() : false );
-    tuple->column( "RichAboveKaThres", rpid ? rpid->kaonHypoAboveThres() : false );
-    tuple->column( "RichAbovePrThres", rpid ? rpid->protonHypoAboveThres() : false );
+    //const LHCb::RichPID * rpid = proto->richPID();
+    LHCb::RichPID tmpRPID;
+    tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
+    tuple->column( "RichDLLe",      proto->info ( LHCb::ProtoParticle::RichDLLe,  0 ) );
+    tuple->column( "RichDLLmu",     proto->info ( LHCb::ProtoParticle::RichDLLmu, 0 ) );
+    tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 0 ) );
+    tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
+    tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
+    tuple->column( "RichUsedAero",  tmpRPID.usedAerogel()  );
+    tuple->column( "RichUsedR1Gas", tmpRPID.usedRich1Gas() );
+    tuple->column( "RichUsedR2Gas", tmpRPID.usedRich2Gas() );
+    tuple->column( "RichAboveElThres", tmpRPID.electronHypoAboveThres() );
+    tuple->column( "RichAboveMuThres", tmpRPID.muonHypoAboveThres() );
+    tuple->column( "RichAbovePiThres", tmpRPID.pionHypoAboveThres() );
+    tuple->column( "RichAboveKaThres", tmpRPID.kaonHypoAboveThres() );
+    tuple->column( "RichAbovePrThres", tmpRPID.protonHypoAboveThres() );
 
     // muon
     //const LHCb::MuonPID * mpid = proto->muonPID();
-    tuple->column( "MuonBkgLL",    proto->info ( LHCb::ProtoParticle::MuonBkgLL, 99999 ) );
-    tuple->column( "MuonMuLL",     proto->info ( LHCb::ProtoParticle::MuonMuLL,  99999 ) );
-    tuple->column( "MuonNShared",  proto->info ( LHCb::ProtoParticle::MuonNShared, 99999 ) );
+    tuple->column( "MuonBkgLL",    proto->info ( LHCb::ProtoParticle::MuonBkgLL, 0 ) );
+    tuple->column( "MuonMuLL",     proto->info ( LHCb::ProtoParticle::MuonMuLL,  0 ) );
+    tuple->column( "MuonNShared",  proto->info ( LHCb::ProtoParticle::MuonNShared, 0 ) );
     tuple->column( "MuonIsMuon",   proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) );
     tuple->column( "MuonInAcc",    proto->info ( LHCb::ProtoParticle::InAccMuon, false ) );
 
@@ -116,33 +118,33 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     tuple->column( "InAccEcal",  proto->info ( LHCb::ProtoParticle::InAccEcal, false ) );
     tuple->column( "InAccHcal",  proto->info ( LHCb::ProtoParticle::InAccHcal, false ) );
     tuple->column( "InAccBrem",  proto->info ( LHCb::ProtoParticle::InAccBrem, false ) );
-    tuple->column( "CaloTrMatch",       proto->info ( LHCb::ProtoParticle::CaloTrMatch,  99999 ) );
-    tuple->column( "CaloElectronMatch", proto->info ( LHCb::ProtoParticle::CaloElectronMatch,  99999 ) );
-    tuple->column( "CaloBremMatch",     proto->info ( LHCb::ProtoParticle::CaloBremMatch, 99999 ) );
-    tuple->column( "CaloChargedSpd",    proto->info ( LHCb::ProtoParticle::CaloChargedSpd, 99999 ) );
-    tuple->column( "CaloChargedPrs",    proto->info ( LHCb::ProtoParticle::CaloChargedPrs, 99999 ) );
-    tuple->column( "CaloChargedEcal",   proto->info ( LHCb::ProtoParticle::CaloChargedEcal, 99999 ) );
-    tuple->column( "CaloSpdE",   proto->info ( LHCb::ProtoParticle::CaloSpdE,   99999 ) );
-    tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE,   99999 ) );
-    tuple->column( "CaloEcalE",  proto->info ( LHCb::ProtoParticle::CaloEcalE,  99999 ) );
-    tuple->column( "CaloHcalE",  proto->info ( LHCb::ProtoParticle::CaloHcalE,  99999 ) );
-    tuple->column( "CaloTrajectoryL", proto->info ( LHCb::ProtoParticle::CaloTrajectoryL,  99999 ) );
-    tuple->column( "EcalPIDe",   proto->info ( LHCb::ProtoParticle::EcalPIDe,  99999 ) );
-    tuple->column( "HcalPIDe",   proto->info ( LHCb::ProtoParticle::HcalPIDe,  99999 ) );
-    tuple->column( "PrsPIDe",    proto->info ( LHCb::ProtoParticle::PrsPIDe,   99999 ) );
-    tuple->column( "BremPIDe",   proto->info ( LHCb::ProtoParticle::BremPIDe,  99999 ) );
-    tuple->column( "EcalPIDmu",  proto->info ( LHCb::ProtoParticle::EcalPIDmu, 99999 ) );
-    tuple->column( "HcalPIDmu",  proto->info ( LHCb::ProtoParticle::HcalPIDmu, 99999 ) );
+    tuple->column( "CaloTrMatch",       proto->info ( LHCb::ProtoParticle::CaloTrMatch, 0 ) );
+    tuple->column( "CaloElectronMatch", proto->info ( LHCb::ProtoParticle::CaloElectronMatch, 0 ) );
+    tuple->column( "CaloBremMatch",     proto->info ( LHCb::ProtoParticle::CaloBremMatch, 0 ) );
+    tuple->column( "CaloChargedSpd",    proto->info ( LHCb::ProtoParticle::CaloChargedSpd, 0 ) );
+    tuple->column( "CaloChargedPrs",    proto->info ( LHCb::ProtoParticle::CaloChargedPrs, 0 ) );
+    tuple->column( "CaloChargedEcal",   proto->info ( LHCb::ProtoParticle::CaloChargedEcal, 0 ) );
+    tuple->column( "CaloSpdE",   proto->info ( LHCb::ProtoParticle::CaloSpdE,   0 ) );
+    tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE,   0 ) );
+    tuple->column( "CaloEcalE",  proto->info ( LHCb::ProtoParticle::CaloEcalE,  0 ) );
+    tuple->column( "CaloHcalE",  proto->info ( LHCb::ProtoParticle::CaloHcalE,  0 ) );
+    tuple->column( "CaloTrajectoryL", proto->info ( LHCb::ProtoParticle::CaloTrajectoryL,  0 ) );
+    tuple->column( "EcalPIDe",   proto->info ( LHCb::ProtoParticle::EcalPIDe,  0 ) );
+    tuple->column( "HcalPIDe",   proto->info ( LHCb::ProtoParticle::HcalPIDe,  0 ) );
+    tuple->column( "PrsPIDe",    proto->info ( LHCb::ProtoParticle::PrsPIDe,   0 ) );
+    tuple->column( "BremPIDe",   proto->info ( LHCb::ProtoParticle::BremPIDe,  0 ) );
+    tuple->column( "EcalPIDmu",  proto->info ( LHCb::ProtoParticle::EcalPIDmu, 0 ) );
+    tuple->column( "HcalPIDmu",  proto->info ( LHCb::ProtoParticle::HcalPIDmu, 0 ) );
 
     // combined DLLs
-    tuple->column( "CombDLLe",   proto->info ( LHCb::ProtoParticle::CombDLLe,  99999 ) );
-    tuple->column( "CombDLLmu",  proto->info ( LHCb::ProtoParticle::CombDLLmu, 99999 ) );
-    tuple->column( "CombDLLpi",  proto->info ( LHCb::ProtoParticle::CombDLLpi, 99999 ) );
-    tuple->column( "CombDLLk",   proto->info ( LHCb::ProtoParticle::CombDLLk,  99999 ) );
-    tuple->column( "CombDLLp",   proto->info ( LHCb::ProtoParticle::CombDLLp,  99999 ) );
+    tuple->column( "CombDLLe",   proto->info ( LHCb::ProtoParticle::CombDLLe,  0 ) );
+    tuple->column( "CombDLLmu",  proto->info ( LHCb::ProtoParticle::CombDLLmu, 0 ) );
+    tuple->column( "CombDLLpi",  proto->info ( LHCb::ProtoParticle::CombDLLpi, 0 ) );
+    tuple->column( "CombDLLk",   proto->info ( LHCb::ProtoParticle::CombDLLk,  0 ) );
+    tuple->column( "CombDLLp",   proto->info ( LHCb::ProtoParticle::CombDLLp,  0 ) );
 
     // VeloCharge
-    tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge,  99999 ) );
+    tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge,  0 ) );
 
     // MCParticle information
     const LHCb::MCParticle * mcPart = m_truth->mcParticle( track );
