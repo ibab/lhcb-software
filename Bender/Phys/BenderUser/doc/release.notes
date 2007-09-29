@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.1.1.1 2004-02-10 11:22:45 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.2 2007-09-29 13:59:53 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/BenderUser
 ! Responsible : Vanya BELYAEV  Ivan.Belyaev@itep.ru
 ! Purpose     : Template Package for Bender-based analysis algorithms 
 ! -----------------------------------------------------------------------------
+
+! ====================== Phys/BenderUser v8r0 2007-09-29 ====================== 
+
+! 2007-09-29 - Vanya BELYAEV
+
+  - template/TEMPLATE.py 
+      add the template script/module 
+ 
+
 
 ! 2004-02-10 - Vanya BELYAEV
  - new (empty) package 

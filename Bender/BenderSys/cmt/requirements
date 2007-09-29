@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.88 2007-08-20 13:06:16 ibelyaev Exp $ 
+# $Id: requirements,v 1.89 2007-09-29 14:03:43 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.88 $	
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.89 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -14,6 +14,12 @@ use           Bender         v8r0   Phys
   
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v8r0   Ex
+
+# =========== Bender tutorial =================================================
+use           BenderTutor    v8r0   Tutorial
+
+# =========== template of user module/scriot ==================================
+use           BenderUser     v8r0   Phys 
 
 # =============================================================================
 # The END 

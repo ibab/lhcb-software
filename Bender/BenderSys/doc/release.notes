@@ -1,13 +1,18 @@
-! $Id: release.notes,v 1.11 2007-08-20 13:06:16 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ 
+! $Id: release.notes,v 1.12 2007-09-29 14:03:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 
-! ==================== BenderSys v8r0 2007-08-20 ===========================
+! ==================== BenderSys v8r0 2007-09-29 ==============================
+
+! 2007-09-29 - Vanya BELYAEV
+
+ - retag as v8r0 : 
+
+     New version:  *ONLY PYTHON* 
+
 
 ! 2007-08-20 - Vanya BELYAEV
  - prepare the release of v8r0 
@@ -16,7 +21,7 @@
     new LoKi 
 
 
-! ==================== BenderSys v7r0 2007-05-07 ===========================
+! ==================== BenderSys v7r0 2007-05-07 ==============================
 
 ! 2007-05-07 - Vanya BELYAEV
 
@@ -28,7 +33,7 @@
    lines are removed.
 
 
-! ==================== BenderSys v6r2 2007-01-16 ===========================
+! ==================== BenderSys v6r2 2007-01-16 ==============================
 
 ! 2007-01-16 - Vanya BELYAEV
  - cmt/requirements
@@ -47,11 +52,11 @@
  - cmt/requiremens 
     version increment for v6r1 
 
-!======================= Bender v5r3 =====================================
+! ======================= Bender v5r3 =========================================
 ! 2006-02-02 - Florence Ranjard
  - recompile Bender v5r2 with DaVinci v14r5
 
-#==========================================================================
+! =============================================================================
 ! 2005-02-05 - Vanya BELYAEV
  - add new package Tools/BenderRels to make available all C++ 
    relation tables in Python/Bender
