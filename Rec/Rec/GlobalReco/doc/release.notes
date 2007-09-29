@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-09-29 - Chris Jones
+ - Update ChargedProtoCombineDLLsAlg to produce better combined DLL values
+ - Update ntuple algorithm ChargedProtoParticleTupleAlg
+
 !========================== GlobalReco v6r12 2007-09-20 ======================
 ! 2007-08-19 - Patrick Koppenburg
  - Do not depend on MC
