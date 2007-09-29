@@ -144,11 +144,12 @@ public:
   // Core root stuff
   //-------------------------------------------------------------
   GlobalPID ( );
-  GlobalPID ( TTree *tree );
   GlobalPID ( const std::string & filename );
   virtual ~GlobalPID();
 
   void loadTTree( const std::string & filename );
+
+  void resetFile();
 
   //virtual Int_t    Cut(Long64_t entry);
   virtual Int_t    GetEntry(Long64_t entry);
@@ -348,6 +349,7 @@ private: // data
 
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
   Int_t           fCurrent; //!current Tree number in a TChain
+  TFile *         m_file;
 
   // Declaration of leave types
   Float_t         TrackP;

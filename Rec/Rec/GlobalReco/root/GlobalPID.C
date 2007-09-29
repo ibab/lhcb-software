@@ -11,6 +11,7 @@
 
 GlobalPID::PIDType GlobalPID::getMcType() const
 {
+  //std::cout << "MCtype = " << MCParticleType << std::endl;
   if      ( 0    == MCParticleType ) { return NoMCInfo; }
   else if ( 11   == MCParticleType || 11    == MCParticleType ) { return Electron; }
   else if ( 13   == MCParticleType || -13   == MCParticleType ) { return Muon; }
@@ -215,101 +216,127 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     XYpad->SetFrameFillStyle(0);
     XYpad->SetLogx( config.logX );
     XYpad->SetLogy( config.logY );
-    XYpad->Draw(); 
+    XYpad->Draw();
     XYpad->cd();
     TH1F* temp = XYpad->DrawFrame(config.minGraphX, config.minGraphY, config.maxGraphX, config.maxGraphY);
     temp->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()    );
-    temp->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() ); 
+    temp->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
   }
 
-  // make a graph
-  TGraphErrors * g = new TGraphErrors( ideff.size(),
-                                       &*ideff.begin(), &*misideff.begin(),
-                                       &*idefferr.begin(), &*misidefferr.begin() );
-  g->SetMarkerStyle(21);
-  g->SetMarkerSize(0.5);
-  g->SetMarkerColor(config.color);
-  g->SetLineColor(config.color);
+  if ( !ideff.empty() )
+  {
 
-  if ( config.useFixedGraphRange )
-  {
-    g->Draw("LP");
-  }
-  else
-  {
-    if ( !config.superImpose )
+    // make a graph
+    TGraphErrors * g = new TGraphErrors( ideff.size(),
+                                         &*ideff.begin(), &*misideff.begin(),
+                                         &*idefferr.begin(), &*misidefferr.begin() );
+    g->SetMarkerStyle(21);
+    g->SetMarkerSize(0.5);
+    g->SetMarkerColor(config.color);
+    g->SetLineColor(config.color);
+
+    if ( config.useFixedGraphRange )
     {
-      g->SetTitle( config.title.c_str() );
-      g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
-      g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
-      g->Draw("ALP");
+      g->Draw("LP");
     }
     else
     {
-      g->SetTitle( "" );
-      g->GetXaxis()->SetTitle( "" );
-      g->GetYaxis()->SetTitle( "" );
-      g->Draw("LP");
+      if ( !config.superImpose )
+      {
+        g->SetTitle( config.title.c_str() );
+        g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
+        g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
+        g->Draw("ALP");
+      }
+      else
+      {
+        g->SetTitle( "" );
+        g->GetXaxis()->SetTitle( "" );
+        g->GetYaxis()->SetTitle( "" );
+        g->Draw("LP");
+      }
     }
-  }
 
-  // labels
-  for ( Labels::const_iterator iL = labels.begin(); iL != labels.end(); ++iL )
+    // labels
+    for ( Labels::const_iterator iL = labels.begin(); iL != labels.end(); ++iL )
+    {
+      const double xScale(1.00), yScale(0.96);
+      TText * text = new TText();
+      text->SetTextSize(0.03);
+      text->SetTextColor(config.color);
+      text->DrawText( xScale*(iL->x), yScale*(iL->y), iL->label.c_str() );
+      //TArrow * arrow = new TArrow( xScale*(iL->x), yScale*(iL->y), iL->x, iL->y, 0.02, "|>" );
+      //arrow->SetLineColor(config.color);
+      //arrow->SetFillColor(config.color);
+      //arrow->Draw();
+    }
+
+
+    // Fill a label box
+    fillLabelBox();
+
+  }
+  else
   {
-    const double xScale(1.00), yScale(0.96);
-    TText * text = new TText();
-    text->SetTextSize(0.03);
-    text->SetTextColor(config.color);
-    text->DrawText( xScale*(iL->x), yScale*(iL->y), iL->label.c_str() );
-    //TArrow * arrow = new TArrow( xScale*(iL->x), yScale*(iL->y), iL->x, iL->y, 0.02, "|>" );
-    //arrow->SetLineColor(config.color);
-    //arrow->SetFillColor(config.color);
-    //arrow->Draw();
+    std::cout << "WARNING : Zero data points found for "
+              << name(config.idType) << " v " << name(config.misidType) 
+              << " -> No graph created"
+              << std::endl;
   }
-
-  // Fill a label box
-  fillLabelBox();
 
 }
 
 void GlobalPID::recreateCombinedDLL()
 {
   // reset combined DLLS
-  CombDLLe = CombDLLmu = CombDLLpi = CombDLLk = CombDLLp = 0;
+  double NewCombDLLe  = 0;
+  double NewCombDLLmu = 0;
+  double NewCombDLLpi = 0;
+  double NewCombDLLk  = 0;
+  double NewCombDLLp  = 0;
   // RICH
   if ( hasRichInfo() )
   {
-    CombDLLe  += 7.0*tanh(RichDLLe/40.0);
-    CombDLLmu += 7.0*tanh(RichDLLmu/5.0);
-    //CombDLLpi += RichDLLpi;
-    //CombDLLk  += RichDLLk;
-    //CombDLLp  += RichDLLp;
-    CombDLLpi += 7.0*tanh(RichDLLpi/40.0);
-    CombDLLk  += 7.0*tanh(RichDLLk/40.0);
-    CombDLLp  += 7.0*tanh(RichDLLp/40.0);
+    NewCombDLLe  += 7.0*tanh(RichDLLe/40.0);
+    NewCombDLLmu += 7.0*tanh(RichDLLmu/5.0);
+    NewCombDLLpi += RichDLLpi;
+    NewCombDLLk  += RichDLLk;
+    NewCombDLLp  += RichDLLp;
+    //NewCombDLLpi += 7.0*tanh(RichDLLpi/40.0);
+    //NewCombDLLk  += 7.0*tanh(RichDLLk/40.0);
+    //NewCombDLLp  += 7.0*tanh(RichDLLp/40.0);
   }
   // CALO
   if ( hasEcalInfo() )
   {
-    CombDLLe  += EcalPIDe;
-    CombDLLmu += EcalPIDmu;
+    NewCombDLLe  += EcalPIDe;
+    NewCombDLLmu += EcalPIDmu;
   }
   if ( hasHcalInfo() )
   {
-    CombDLLe  += HcalPIDe;
-    CombDLLmu += HcalPIDmu;
+    NewCombDLLe  += HcalPIDe;
+    NewCombDLLmu += HcalPIDmu;
   }
-  if ( hasPrsInfo()  ) { CombDLLe += PrsPIDe;  }
-  if ( hasBremInfo() ) { CombDLLe += BremPIDe; }
+  if ( hasPrsInfo()  ) { NewCombDLLe += PrsPIDe;  }
+  if ( hasBremInfo() ) { NewCombDLLe += BremPIDe; }
   // Muon
   if ( hasMuonInfo() )
   {
-    CombDLLe  += MuonBkgLL;
-    CombDLLmu += MuonMuLL;
-    CombDLLpi += MuonBkgLL;
-    CombDLLk  += MuonBkgLL;
-    CombDLLp  += MuonBkgLL;
+    NewCombDLLe  += MuonBkgLL;
+    NewCombDLLmu += MuonMuLL;
+    NewCombDLLpi += MuonBkgLL;
+    NewCombDLLk  += MuonBkgLL;
+    NewCombDLLp  += MuonBkgLL;
   }
+  std::cout << "Old CombDLLs = " << CombDLLe << " " << CombDLLmu << " " 
+            << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
+  std::cout << "New CombDLLs = " << NewCombDLLe << " " << NewCombDLLmu << " " 
+            << NewCombDLLpi << " " << NewCombDLLk << " " << NewCombDLLp << std::endl;
+  CombDLLe=NewCombDLLe;
+  CombDLLmu=NewCombDLLmu;
+  CombDLLpi=NewCombDLLpi;
+  CombDLLk=NewCombDLLk;
+  CombDLLp=NewCombDLLp;
 }
 
 std::string GlobalPID::name( const GlobalPID::PIDType type ) const
@@ -519,37 +546,30 @@ void GlobalPID::saveFigures( const std::string & type )
 
 void GlobalPID::loadTTree( const std::string & filename )
 {
-  if (fChain) delete fChain->GetCurrentFile();
-  TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename.c_str());
-  if (!f)
-  {
-    std::cout << "Opening file : " << filename << std::endl;
-    f = new TFile(filename.c_str());
-    f->cd((filename+":/ChargedProtoParticleTupleAlg").c_str());
-  }
+  resetFile();
+  std::cout << "Opening file : " << filename << std::endl;
+  m_file = new TFile(filename.c_str());
+  m_file->cd((filename+":/ChargedProtoParticleTupleAlg").c_str());
   fChain = (TTree*)gDirectory->Get("protoPtuple");
   Init( fChain );
 }
 
-GlobalPID::GlobalPID()
-{
-  fChain = NULL;
+void GlobalPID::resetFile()
+{ 
+  if ( m_file ) { m_file->Close(); delete m_file; }
 }
 
+GlobalPID::GlobalPID() : fChain(NULL), m_file(NULL) { }
+
 GlobalPID::GlobalPID(const std::string & filename)
+  : fChain(NULL), m_file(NULL)
 {
   loadTTree(filename);
 }
 
-GlobalPID::GlobalPID(TTree *tree)
-{
-  if ( tree ) Init( tree );
-}
-
 GlobalPID::~GlobalPID()
 {
-  if (fChain) delete fChain->GetCurrentFile();
-  //reset();
+  resetFile();
 }
 
 Int_t GlobalPID::GetEntry(Long64_t entry)
