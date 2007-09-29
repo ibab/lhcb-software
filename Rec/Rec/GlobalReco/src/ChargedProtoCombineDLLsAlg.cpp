@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.11 2007-09-29 21:16:13 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.12 2007-09-29 22:49:10 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -65,10 +65,9 @@ ChargedProtoCombineDLLsAlg::~ChargedProtoCombineDLLsAlg() {}
 //=============================================================================
 StatusCode ChargedProtoCombineDLLsAlg::initialize()
 {
-  const StatusCode sc = GaudiAlgorithm::initialize();
-  if ( sc.isFailure() ) return sc;
+  StatusCode scc = GaudiAlgorithm::initialize();
+  if ( scc.isFailure() ) return sc;
 
-  StatusCode scc = StatusCode::SUCCESS;
   for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
       error() << " PID technique " << *itech << " unknown"<< endreq;
