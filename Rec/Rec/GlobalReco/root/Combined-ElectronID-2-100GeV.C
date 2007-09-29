@@ -32,8 +32,8 @@
 
   // All RICH
   pid->configReset();
-  pid->config.minCut    = -40;
-  pid->config.maxCut    = 40;
+  pid->config.minCut    = -30;
+  pid->config.maxCut    = 30;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0   * GeV;
@@ -53,8 +53,8 @@
   // Combined DLL
   pid->configReset();
   pid->config.recreateCombinedDLLs = false;
-  pid->config.minCut    = -40;
-  pid->config.maxCut    = 40;
+  pid->config.minCut    = -15;
+  pid->config.maxCut    = 15;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0   * GeV;

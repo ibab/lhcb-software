@@ -1,17 +1,19 @@
 
 {
-  const Long64_t nTracks = 100;
+  const Long64_t nTracks = -1;
 
   // Out-the-box v30r14
   //const std::string dataFile = "/usera/jonesc/RICH/RootFiles/Brv30r14-PIDCheck.tuples.root";
   // Out-the-box v31r8
   //const std::string dataFile = "/usera/jonesc/RICH/RootFiles/Brv31r8-PIDCheck.tuples.root";
   // Out-the-box v31r9
-  const std::string dataFile = "/usera/jonesc/RICH/RootFiles/Brv31r9-PIDCheck.tuples.root";
+  //const std::string dataFile = "/usera/jonesc/RICH/RootFiles/Brv31r9-PIDCheck.tuples.root";
+
+  const std::string dataFile = "/usera/jonesc/cmtuser/Brunel_v31r9/Rec/Brunel/v31r9/cmt/flibble.root";
 
   //gROOT->ProcessLine(".x Calo-ElectronID.C");
   gROOT->ProcessLine(".x Combined-ElectronID-2-100GeV.C");
-  //gROOT->ProcessLine(".x Combined-ElectronID-2-10GeV.C");
+  gROOT->ProcessLine(".x Combined-ElectronID-2-10GeV.C");
   //gROOT->ProcessLine(".x Combined-ElectronID-10-50GeV.C");
 
   //gROOT->ProcessLine(".x Rich-KaonID.C");

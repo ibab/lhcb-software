@@ -328,15 +328,17 @@ void GlobalPID::recreateCombinedDLL()
     NewCombDLLk  += MuonBkgLL;
     NewCombDLLp  += MuonBkgLL;
   }
-  std::cout << "Old CombDLLs = " << CombDLLe << " " << CombDLLmu << " " 
-            << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
-  std::cout << "New CombDLLs = " << NewCombDLLe << " " << NewCombDLLmu << " " 
-            << NewCombDLLpi << " " << NewCombDLLk << " " << NewCombDLLp << std::endl;
+  //std::cout << "Old CombDLLs     = " << CombDLLe << " " << CombDLLmu << " " 
+  //          << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
+  //std::cout << "New CombDLLs     = " << NewCombDLLe << " " << NewCombDLLmu << " " 
+  //          << NewCombDLLpi << " " << NewCombDLLk << " " << NewCombDLLp << std::endl;
   CombDLLe=NewCombDLLe;
   CombDLLmu=NewCombDLLmu;
   CombDLLpi=NewCombDLLpi;
   CombDLLk=NewCombDLLk;
   CombDLLp=NewCombDLLp;
+  //std::cout << "Updated CombDLLs = " << CombDLLe << " " << CombDLLmu << " " 
+  //          << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
 }
 
 std::string GlobalPID::name( const GlobalPID::PIDType type ) const
