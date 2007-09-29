@@ -7,7 +7,7 @@
   GlobalPID * pid = new GlobalPID();
 
   //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-AllRads-AllTracks.tuples.root");
-  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-GasRads-AllTracks.tuples.root");
+  pid->loadTTree("/var/work/pcgs/jonesc/RootFiles/Offline-AllRads-LongTracks.tuples.root");
 
   // K-pi RICH
   pid->configReset();
@@ -60,12 +60,12 @@
   pid->makeCurve(nTracks);
 
   //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.tuples.root");
-  pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-GasRads-LongTracks.tuples.root");
+  pid->loadTTree("/var/work/pcgs/jonesc/RootFiles/Offline-AllRads-LongTracks-90pcInEff.tuples.root");
 
   // K-pi RICH
   pid->configReset();
   pid->config.useFixedGraphRange = true;
-  pid->config.subtitle  = "Fast Offline";
+  pid->config.subtitle  = "Full Offline 90% Inefficiency";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
   pid->config.minPt     = 0.0 * GeV;
@@ -87,7 +87,7 @@
   // K-pi RICH
   pid->configReset();
   pid->config.useFixedGraphRange = true;
-  pid->config.subtitle  = "Fast Offline";
+  pid->config.subtitle  = "Full Offline 90% Inefficiency";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
   pid->config.minPt     = 0.5 * GeV;

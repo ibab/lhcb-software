@@ -4,7 +4,7 @@
   const double GeV(1000);
 
   // make a new pid object
-  GlobalPID * pid = new GlobalPID();
+  GlobalPID * pid = new GlobalPID(dataFile);
 
   // Ecal Only PID
   pid->configReset();
@@ -170,5 +170,8 @@
 
   // save the figures
   pid->saveFigures();
+
+  // cleanup
+  delete pid;
 
 }

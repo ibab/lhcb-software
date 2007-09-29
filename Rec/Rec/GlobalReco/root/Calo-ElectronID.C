@@ -4,7 +4,7 @@
   const double GeV(1000);
 
   // make a new pid object
-  GlobalPID * pid = new GlobalPID();
+  GlobalPID * pid = new GlobalPID(dataFile);
 
   // First make a CALO only plot
   //----------------------------------------------------------------------
@@ -113,5 +113,8 @@
 
   // save the figures
   pid->saveFigures();
+
+  // cleanup
+  delete pid;
 
 }

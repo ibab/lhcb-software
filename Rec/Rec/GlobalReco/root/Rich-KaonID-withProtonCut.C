@@ -98,4 +98,7 @@
   // save the figures
   pid->saveFigures();
 
+  // cleanup
+  delete pid;
+
 }
