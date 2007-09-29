@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: MCTrees.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
-# =============================================================================
-""" 'Solution'-file for 'MCTrees.py' example (Bender Tutorial) """
+"""
+'Solution'-file for 'MCTrees.py' example (Bender Tutorial)
+"""
 # =============================================================================
 # @file
 #
@@ -16,18 +14,24 @@
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
+# =============================================================================
 ## @class MCTrees
 #  The algorthmm itself 
 class MCTrees( AlgoMC ) :
-    """  The algorthmm itself """
+    """
+    The algorthmm itself
+    """
 
     ## the main analysis method 
     def analyse( self ) :
-        """ the main analysis method """
-    
+        """
+        The main analysis method
+        """
+        
         ## get the MCDecayFinder wrapper
         finder = self.mcFinder()
         
@@ -71,10 +75,13 @@ class MCTrees( AlgoMC ) :
 # =============================================================================
 ## configure the job
 def configure() :
-    """ configure the job """
+    """
+    Configure the job
+    """
     
-    gaudi.config (
-        files = ['$DAVINCIROOT/options/DaVinciCommon.opts'] )
+    import data_tutorial as data
+    
+    gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts'] )
     
     # 1) create the algorithm
     alg = MCTrees( 'McTree' )
@@ -82,7 +89,7 @@ def configure() :
     # 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms ( [ alg ] ) 
 
-    if 'HbookCnv' not in gaudi.DLLs : gaudi.DLLs += ['HbookCnv']
+    # configure the histograms 
     gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
     hps.OutputFile = 'MTrees_histos.hbook'
@@ -96,17 +103,16 @@ def configure() :
     ntsvc.Output = [ "MC DATAFILE='MCTrees.hbook' OPT='NEW' TYP='HBOOK'" ]     
     
     # configure my own algorithm
-    myAlg = gaudi.algorithm('McTree')
-    myAlg.NTupleLUN = 'MC'
-    myAlg.PP2MCs = []
+    alg = gaudi.algorithm('McTree')
+    alg.NTupleLUN = 'MC'
+    alg.PP2MCs = []
     
     
     ## redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
-
+    evtSel.open( data.FILEs ) 
+    
     return SUCCESS
 # =============================================================================
 
@@ -120,9 +126,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(100)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

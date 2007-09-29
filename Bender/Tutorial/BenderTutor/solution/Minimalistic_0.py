@@ -1,17 +1,18 @@
-# $Id: Minimalistic_0.py,v 1.5 2007-05-31 11:29:46 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.5 $
+# $Id: Minimalistic_0.py,v 1.6 2007-09-29 13:46:18 ibelyaev Exp $
 # =============================================================================
 
-from bendermodule import *
+
+# =============================================================================
+from Bender.Main import *
+
+import data_tutorial as data 
 
 gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
 
 ## define input files 
 evtSel = gaudi.evtSel()
 
-import data_tutorial as data 
-evtSel.open( data.FILES ) 
+evtSel.open( data.FILEs ) 
 
 ## run DaVinci 
 gaudi.run(100)
@@ -19,9 +20,6 @@ gaudi.run(100)
 gaudi.exit()
 
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: RCSelect.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
-# =============================================================================
-""" 'Solution'-file for 'RCselect.py' example (Bender Tutorial) """ 
+"""
+'Solution'-file for 'RCselect.py' example (Bender Tutorial)
+""" 
 # =============================================================================
 # @file
 #
@@ -16,19 +14,23 @@
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
 
-
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.Main import *
 
 # =============================================================================
 ## @class RCselect
 #  simple demo-algorithm 
 class RCSelect(Algo):
-    """  simple demo-algorithm """
+    """
+    The simple demo-algorithm
+    """
 
     ## the main analysis algorithm 
     def analyse( self ) :
-        """ the main analysis algorithm """
+        """
+        The main analysis algorithm
+        """
         
         ## select muons for J/Psi reconstruction 
         muons = self.select( "mu" , ( "mu+" == ABSID ) & ( PT > 500  ) )
@@ -98,18 +100,20 @@ class RCSelect(Algo):
 # =============================================================================
 ## Job configuration:
 def configure() :
-    """ Job configuration: """ 
+    """
+    The Job configuration
+    """ 
     
+    import data_tutorial as data 
+
     gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts' ,
+        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' 
-        ] )
+        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
     
     # modify/update the configuration:
     
-
-    
+        
     # 1) create the algorithm
     alg = RCSelect( 'RCSelect' )
     
@@ -120,15 +124,13 @@ def configure() :
     desktop = gaudi.tool('RCSelect.PhysDesktop')
     desktop.InputLocations = [
         'Phys/StdLooseKaons' , 
-        'Phys/StdLooseMuons'
-        ]
+        'Phys/StdLooseMuons' ]
     
     ## configure the histograms:
-    if 'HbookCnv' not in gaudi.DLLs : gaudi.DLLs += ['HbookCnv']
     gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
     hps.OutputFile = 'RCselect_histos.hbook'
-
+    
     # add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
@@ -138,8 +140,7 @@ def configure() :
     # redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 20
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
     
     return SUCCESS
 # =============================================================================
@@ -152,11 +153,8 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(500)
+    gaudi.run(1000)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# 
 # =============================================================================
 # The END 
 # =============================================================================

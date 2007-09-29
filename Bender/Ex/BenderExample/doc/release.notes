@@ -1,12 +1,24 @@
-! $Id: release.notes,v 1.17 2007-08-20 13:08:13 ibelyaev Exp $
+! $Id: release.notes,v 1.18 2007-09-29 13:42:46 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.17 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.18 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v8r0 2007-09-29 ====================
+
+ 2007-09-29 - Vanya BELYAEV
+
+ - final polishing for the version v8r0 
+ - provide the coherent access to the data-files
+    - input files are in a form of python lits of LFNs
+    - for CMTSITE==CERNm thew corresponding catalogue is loaded
+    - for access to AFS, the files are subsituted with the existing files on disk
+    - for local Win32, the files are susbstituted with exsiting files on disk  
+
 
 ! 2007-08-20 - Vanya Belyaev
 

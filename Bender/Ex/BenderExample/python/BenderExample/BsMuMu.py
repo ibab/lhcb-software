@@ -449,10 +449,7 @@ def configure():
     import os 
     import data_Bs2Jpsiphi_mm as input
     JOBOPTS = os.environ['BENDEREXAMPLEOPTS']+"/DaVinciBs2MuMurun.opts"
-    gaudi.config(
-        files   = [ JOBOPTS ],
-        options = [ "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+    gaudi.config( files   = [ JOBOPTS ] )
     
     alg = Bs2MuMu_Run('Bs2MuMu_Run')
     

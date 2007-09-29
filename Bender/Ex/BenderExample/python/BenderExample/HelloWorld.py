@@ -1,7 +1,5 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.1 2007-08-17 15:19:59 ibelyaev Exp $
-# =============================================================================
 ## The most trivial Bender-based : HelloWorld example
 #
 #  This file is a part of 
@@ -59,10 +57,7 @@ def configure ( **args ) :
     gaudi.config (
         files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
-        '$DAVINCIROOT/options/DaVinciTestData.opts' ] ,
-        options = [
-        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+        '$DAVINCIROOT/options/DaVinciTestData.opts' ] )
     
     ## create local algorithm:
     hello = HelloWorld('Hello')
@@ -73,7 +68,7 @@ def configure ( **args ) :
     
     ## get input data 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.PFNs ) 
+    evtSel.open ( input.FILEs ) 
     evtSel.PrintFreq = 1
     
 

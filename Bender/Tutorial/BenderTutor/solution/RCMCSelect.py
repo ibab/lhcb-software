@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: RCMCSelect.py,v 1.9 2007-05-31 11:29:46 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
-# =============================================================================
-""" 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial) """
+"""
+'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
+"""
 # =============================================================================
 ## @file
 #  "Solution"-file for 'RCMCselect.py' example (Bender Tutorial)
@@ -13,16 +11,24 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
+
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
+
 # =============================================================================
 ## @class RCSelect
 #  my analysis algorithm 
-class RCSelect(AlgoMC):
-    """  my analysis algorithm """
+class RCMCSelect(AlgoMC):
+    """
+    My analysis algorithm
+    """
+    
     ## the main analysis method 
     def analyse( self ) :
-        """ the main analysis method """
+        """
+        The main analysis method
+        """
         ## get MCDecayFinder wrapper: 
         finder = self.mcFinder()
         ## find all MC trees  
@@ -109,7 +115,12 @@ class RCSelect(AlgoMC):
 # =============================================================================
 ## Job configuration:
 def configure() :
-    """ Job configuration """    
+    """
+    Job configuration
+    """
+    
+    import data_tutorial as data 
+
     gaudi.config ( files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' , 
@@ -118,36 +129,36 @@ def configure() :
     
     # modify/update the configuration:
     # 1) create the algorithm
-    alg = RCSelect( 'RCSelect' )
+    alg = RCMCSelect( 'RCMCSelect' )
     # 2) add the algorithm
     gaudi.addAlgorithm( alg ) 
     # 3) configure algorithm
-    desktop = gaudi.tool('RCSelect.PhysDesktop')
+    desktop = gaudi.tool('RCMCSelect.PhysDesktop')
     desktop.InputLocations = [
         'Phys/StdLooseKaons' , 
         'Phys/StdLooseMuons'
         ]
+    
     ## configure the histograms: 
-    if 'HbookCnv' not in gaudi.DLLs : gaudi.DLLs += ['HbookCnv']
     gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
     hps.OutputFile = 'RCMCselect_histos.hbook'
+    
     ## configure the N-Tuples:
     ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "RCMC DATAFILE='HandsOn3.hbook' OPT='NEW' TYP='HBOOK'" ]     
+    ntsvc.Output = [ "RCMC DATAFILE='RCMCselect_tuples.hbook' OPT='NEW' TYP='HBOOK'" ]
+    
     ## add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
-    ## condigure the desktop:
-    myAlg = gaudi.algorithm('RCSelect')
-    myAlg.PP2MCs = ['Relations/Rec/ProtoP/Charged']
-    myAlg.NTupleLUN = 'RCMC'
+    ## configure the desktop:
+    alg.PP2MCs = ['Relations/Rec/ProtoP/Charged']
+    alg.NTupleLUN = 'RCMC'
      
     ## define the proper input data:
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 20
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
     
     return SUCCESS
 # =============================================================================
@@ -161,9 +172,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(1000)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HandsOn3.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
-# =============================================================================
-""" 'Solution'-file for 'HandsOn3.py' example (Bender Tutorial) """
+"""
+'Solution'-file for 'HandsOn3.py' example (Bender Tutorial)
+"""
 # =============================================================================
 ## @file
 #
@@ -16,18 +14,23 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
 # =============================================================================
 ## @class MCKaons
 #  the solution for the third excersize 
 class MCKaons(AlgoMC) :
-    """  the solution for the third excersize """
-
+    """
+    The solution for the third excersize
+    """
+    
     ## the main analysus method 
     def analyse( self ) :
-        """ the main analysus method """
+        """
+        The main analysis method
+        """
         
         ## get the helper object 
         finder = self.mcFinder()
@@ -38,9 +41,9 @@ class MCKaons(AlgoMC) :
         ## retrive (book-on-demand) N-tuple objects 
         tup = self.nTuple( 'My N-Tuple' )
         for K in kaons :            
-            print ' Kaon: %s PT=%s MeV' % ( nameFromPID( K.particleID() ) ,
-                                            K.momentum().pt() ) 
-
+            print ' Kaon: %s PT=%s MeV' % (
+                LoKi.Particles.nameFromPID( K.particleID() ) , K.momentum().pt() ) 
+            
             tup.column ( 'P'  , MCP ( K ) / 1000 )
             tup.column ( 'PT' , MCPT( K ) / 1000 )
             tup.column ( 'ID' , MCID( K )       )
@@ -63,7 +66,10 @@ class MCKaons(AlgoMC) :
 # =============================================================================
 ## configure the job
 def configure() :
-    """ configure the job """ 
+    """
+    Configure the job
+    """ 
+    import data_tutorial as data 
     
     gaudi.config ( files =
                    [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -100,8 +106,7 @@ def configure() :
     ## redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
 
     return SUCCESS
 # =============================================================================
@@ -118,10 +123,7 @@ if __name__ == '__main__' :
     gaudi.run(500)
 # =============================================================================
 
-    
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
+
 # =============================================================================
 # The END 
 # =============================================================================

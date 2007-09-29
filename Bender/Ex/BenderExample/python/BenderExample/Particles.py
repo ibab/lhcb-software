@@ -93,10 +93,7 @@ def configure ( **args ) :
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
         '$COMMONPARTICLESROOT/options/StandardPions.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] ,
-        options = [
-        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
     
     ## StagerSvc at CERN
     if 'CERN' == os.environ.get('CMTSITE',None) and \
@@ -104,7 +101,6 @@ def configure ( **args ) :
         stager = gaudi.service('StagerSvc')
         stager.BlockSize    =  20
         stager.InitialStage =   5 
-        if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
         if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]    
         
     ## create local algorithm:

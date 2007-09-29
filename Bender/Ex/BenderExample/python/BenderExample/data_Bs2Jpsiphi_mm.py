@@ -217,11 +217,16 @@ LFNs = [
         ]
 
 
+catalog = []
 catalog_CERN  = [ 
-        "xmlcatalog_file:NewCatalog.xml" ,
+	"xmlcatalog_file:NewCatalog.xml" ,
         "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"
         ]
 
+import os 
+if 'CERN' == os.environ.get('CMTSITE',None) : 
+	catalog = catalog_CERN
+	
 FILEs = LFNs
 
 ## just for local tests:
@@ -239,9 +244,9 @@ for f in LFNs :
         win = windir + f[i+1]
         if os.path.exists ( win ) : wins += [ win ]
 
+	
 if   afss :
-   
-        #pass
+	
         FILEs = afss
         print "Use local AFS-files #%s at '%s'"%(len(FILEs),afsdir)
         
@@ -250,8 +255,13 @@ elif wins :
         print "Use local WIN-files #%s at '%s'"%(len(FILEs),windir)
 else :
         print "Use local LFN-files #%s "%len(FILEs)
-        
-
+	if catalog :
+		import gaudimodule
+		gaudi = gaudimodule.gaudi 
+		if not gaudi : gaudi = gaudimodule.AppMgr()
+		opts =  "PoolDbCacheSvc.Catalog = %s "% catalog_CERN  
+		gaudi.config ( options = [ opts ] ) 
+		
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,10 +1,9 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-# =============================================================================
-""" Standard 'Hello, world!' example. No way to avoid it! """
+"""
+Standard 'Hello, world!' example.
+No way to avoid it!
+"""
 # =============================================================================
 # @file
 #
@@ -16,18 +15,23 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.Main import *
 
 # =============================================================================
 ## @class HelloWorld
 #  simple Python/Bender class for classical 'Hello,World!' example
 class HelloWorld(Algo):
-    """ the most trivial algorithm """
+    """
+    The most trivial algorithm
+    """
 
     ## the main 'analysis' method 
     def analyse( self ) :
-        """ the main 'analysis' method """
+        """
+        The main 'analysis' method
+        """
         
         ## use Python printout:
         print 'Hello, world!'
@@ -42,6 +46,8 @@ class HelloWorld(Algo):
 ## The configuration of the job
 def configure() :
     
+    import data_tutorial as data 
+
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     
     # modify/update the configuration:
@@ -55,8 +61,7 @@ def configure() :
     
     ## redefine input files 
     evtSel = gaudi.evtSel()
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
     
     return SUCCESS 
 # =============================================================================
@@ -71,9 +76,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(50)
         
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END
 # =============================================================================

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2007-08-20 13:08:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.37 2007-09-29 13:42:46 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -19,38 +19,8 @@ set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs
 use              Bender       v* Phys 
 use              HbookCnv     v* 
 use              GaudiSiteSvc v*  
-use              LoKiExample  v* Ex 
-
-macro ROOT_config_version "5.14.00f"
-macro ROOT_native_version "5.14.00f" 
-
-# ============== temporary ===================================================
-
-path_remove  PYTHONPATH "LoKiCore/" 
-path_prepend PYTHONPATH $LOKICOREROOT/python
-path_remove  PYTHONPATH "LoKiPhys/" 
-path_prepend PYTHONPATH $LOKIPHYSROOT/python
-path_remove  PYTHONPATH "LoKiTrigger/" 
-path_prepend PYTHONPATH $LOKITRIGGERROOT/python
-path_remove  PYTHONPATH "LoKiAlgo/" 
-path_prepend PYTHONPATH $LOKIALGOROOT/python
-path_remove  PYTHONPATH "LoKiArrayFunctors/" 
-path_prepend PYTHONPATH $LOKIARRAYFUNCTORSROOT/python
-path_remove  PYTHONPATH "LoKiGen/" 
-path_prepend PYTHONPATH $LOKIGENROOT/python
-path_remove  PYTHONPATH "LoKiMC/" 
-path_prepend PYTHONPATH $LOKIMCROOT/python
-path_remove  PYTHONPATH "LoKiGenMC/" 
-path_prepend PYTHONPATH $LOKIGENMCROOT/python
-path_remove  PYTHONPATH "LoKiPhysMC/" 
-path_prepend PYTHONPATH $LOKIPHYSMCROOT/python
-path_remove  PYTHONPATH "LoKiAlgoMC/" 
-path_prepend PYTHONPATH $LOKIALGOMCROOT/python
-
 
 # ============== nesessary paths =============================================
-
-
 path_remove      PYTHONPATH       "BenderExample" 
 path_prepend     PYTHONPATH       "$(BENDEREXAMPLEPYTHON)"
 

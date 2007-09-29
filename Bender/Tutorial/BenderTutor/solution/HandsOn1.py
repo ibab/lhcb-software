@@ -1,9 +1,5 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HandsOn1.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-# =============================================================================
 """ 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial) """
 # =============================================================================
 # @file
@@ -17,17 +13,21 @@ __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
 
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
 # =============================================================================
 ## @class GetData
 #  solution for the first excersize 
 class GetData(Algo):
-    """ solution for the first excersize  """
+    """
+    It is a solution algorothm for the first excersize
+    """
 
     ## the main method for analysis 
     def analyse( self ) :
-        """ the main method for analysis """
+        """
+        The main method for analysis
+        """
         
         ## get all MC vertices 
         mcvs = self.get( 'MC/Vertices' )
@@ -46,7 +46,11 @@ class GetData(Algo):
 # =============================================================================
 ## The configuration of the job
 def configure() :
-    """ The configurtaion of the job """ 
+    """
+    The configurtaion of the job
+    """
+    
+    import data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -63,8 +67,7 @@ def configure() :
     #    1) get the Event Selector from Gaudi
     evtSel = gaudi.evtSel()
     #    2) configure Event Selector
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
     
     return SUCCESS
 # =============================================================================
@@ -78,13 +81,7 @@ if __name__ == '__main__' :
     
     ## event loop 
     gaudi.run(10)
-# =============================================================================
 
-
-
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END
 # =============================================================================

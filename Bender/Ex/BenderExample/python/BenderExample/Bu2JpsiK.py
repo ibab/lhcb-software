@@ -184,10 +184,7 @@ def configure():
     import os 
     import data_Bs2Jpsiphi_mm as input 
     JOBOPTS = os.environ['BENDEREXAMPLEOPTS']+"/DVPreselBu2JPsiK_DC06.opts"
-    gaudi.config(
-        files   = [ JOBOPTS ],
-        options = [ "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+    gaudi.config( files   = [ JOBOPTS ] )
     
     alg = Bu2JpsiK('Bu2JPsiK')
     

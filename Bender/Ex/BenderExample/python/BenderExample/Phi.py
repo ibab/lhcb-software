@@ -35,11 +35,15 @@ from Bender.Main import *
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class Phi(Algo) :
-    """ simple class to plot dikaon mass peak """
+    """
+    Simple class to plot dikaon mass peak
+    """
     
     ## standard constructor
     def __init__ ( self , name = 'Phi' ) :
-        """ standard constructor """ 
+        """
+        Standard constructor
+        """ 
         return Algo.__init__ ( self , name )
 
     ## standard mehtod for analysis
@@ -80,14 +84,10 @@ def configure ( **args ) :
     gaudi.config (
         files   = [ 
         '$DAVINCIROOT/options/DaVinciCommon.opts'           ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] ,
-        options = [
-        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] ) 
     
     ## I am very old-fashioned person - I like HBOOK
     if os.environ.has_key('HBOOKCNVROOT') :
-        if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
         gaudi.HistogramPersistency = "HBOOK"
         hps = gaudi.service('HistogramPersistencySvc')
         hps.OutputFile = args.get('histos','PhiMC.hbook')
@@ -101,7 +101,6 @@ def configure ( **args ) :
         stager = gaudi.service('StagerSvc')
         stager.BlockSize    =  20
         stager.InitialStage =   5 
-        if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
         if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]    
         
     ## create local algorithm:

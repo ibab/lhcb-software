@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: DataAccess.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-# =============================================================================
-""" 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial) """
+"""
+'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
+"""
 # =============================================================================
 ## @file
 #
@@ -16,19 +14,25 @@
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
+# =============================================================================
 ## @class GetData
 #  Simple algotithm to access the data 
 class GetData(Algo):
 
+    # =========================================================================
     ## standard constructor 
     def __init__ ( self , name = 'GetData' ) :
-        """ standard construictor """
+        """
+        Standard constructor
+        """
         ## construct the base class 
         return Algo.__init__ ( self , name )
 
+    # =========================================================================
     ## the main method: analyse the event
     def analyse( self ) :
         """ the main method: analyse the event """
@@ -51,16 +55,21 @@ class GetData(Algo):
         i = 0
         for mcp in mcps :
             if i >= 5 : break
-            print ' MCParticle name is ', nameFromPID( mcp.particleID() ) 
+            print " MCParticle name is '%s' " % LoKi.Particles.nameFromPID( mcp.particleID() ) 
             print ' MCParticle:', `mcp`
             i +=1 
             
         return SUCCESS
 # =============================================================================
 
+# =============================================================================
 ## The configuration of the job
 def configure( **args ) :
-    """ The configuration of the job """
+    """
+    The configuration of the job
+    """
+    
+    import data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -79,8 +88,7 @@ def configure( **args ) :
     evtSel = gaudi.evtSel()
     
     ## configure Event Selector
-    import data_tutorial as data 
-    evtSel.open( data.FILES[0:5] ) 
+    evtSel.open( data.FILEs[0:5] ) 
     
     return SUCCESS 
 # =============================================================================
@@ -88,7 +96,9 @@ def configure( **args ) :
 # =============================================================================
 ## Job steering 
 if __name__ == '__main__' :
-    """ Job steering """
+    """
+    Job steering
+    """
     
     ## job configuration
     configure()
@@ -96,9 +106,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(5)
     
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END
 # =============================================================================

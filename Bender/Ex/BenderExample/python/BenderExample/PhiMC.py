@@ -34,17 +34,23 @@ from Bender.MainMC import *
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class PhiMC(AlgoMC) :
-    """ simple class to plot dikaon mass peak """
+    """
+    Simple class to plot dikaon mass peak
+    """
     
     ## standard constructor
     def __init__ ( self , name = 'PhiMC' ) :
-        """ standard constructor """ 
+        """
+        Standard constructor
+        """ 
         return AlgoMC.__init__ ( self , name )
 
     ## standard mehtod for analyses
     def analyse( self ) :
-        """ standard method for analyses """
-
+        """
+        Standard method for analyses
+        """
+        
         finder  = self.mcFinder()
         mcphi   = finder.find ( ' phi(1020) -> K+ K- ')
         
@@ -93,13 +99,9 @@ def configure ( **args ) :
     gaudi.config (
         files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] ,
-        options = [
-        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
   
     ## I am old-fashioned person - I like HBOOK 
-    if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
     gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
     hps.OutputFile = args.get('histos','PhiMC.hbook')
@@ -110,7 +112,6 @@ def configure ( **args ) :
         stager = gaudi.service('StagerSvc')
         stager.BlockSize    = 20
         stager.InitialStage =  5 
-        if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
         if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
         
     ## create local algorithm:

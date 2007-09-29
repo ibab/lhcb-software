@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: MCmuons.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
-# =============================================================================
-""" 'Solution'-file for 'MCmuons.py' example (Bender Tutorial) """
+"""
+'Solution'-file for 'MCmuons.py' example (Bender Tutorial)
+"""
 # =============================================================================
 # @file
 #
@@ -16,18 +14,23 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
 # =============================================================================
 ## @class MCMuons  
 #  the primitive algorithm
 class MCMuons(AlgoMC):
-    """  the primitive algorithm """
+    """
+    The primitive algorithm
+    """
 
     ## the main "analysis" mehtod 
     def analyse( self ) :
-        """ the main 'analysis' mehtod """
+        """
+        The main 'analysis' mehtod
+        """
         
         ## get *ALL* Monte Carlo muons 
         mcmu   = self.mcselect  ( 'mcmu'   , 'mu+' == MCABSID )
@@ -56,7 +59,10 @@ class MCMuons(AlgoMC):
 # =============================================================================
 ## The configuration of the job 
 def configure() :
-    """ The configuration of the job """
+    """
+    The configuration of the job
+    """
+    import data_tutorial as data 
     
     gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     
@@ -70,8 +76,7 @@ def configure() :
     
     ## redefine input files 
     evtSel = gaudi.evtSel()
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
     evtSel.PrintFreq = 10
 
     
@@ -80,8 +85,7 @@ def configure() :
 
 # =============================================================================
 ## Job steering
-if __name__ == '__main__' :
- 
+if __name__ == '__main__' : 
 
     ## job configuration
     configure()
@@ -89,9 +93,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(100)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HandsOn2.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-# =============================================================================
-""" 'Solution'-file for 'Hands-On 2' example (Bender Tutorial) """
+"""
+'Solution'-file for 'Hands-On 2' example (Bender Tutorial)
+"""
 # =============================================================================
 # @file
 #
@@ -16,28 +14,33 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-# import everything from BENDER
-from bendermodule import *
+# =============================================================================
+## import everything from BENDER
+from Bender.MainMC import *
 
 # =============================================================================
 ## @class HandOn2
 #   solution for the second excersize 
 class HandsOn2(AlgoMC):
-    """ solution for the second excersize """
-
+    """
+    Solution for the second excersize
+    """
+    
     ## the main analysis method 
     def analyse( self ) :
-        """ the main analysis method """
+        """
+        The main analysis method
+        """
         
         ## get *ALL* Monte Carlo B_s0 and B_s~0
         Bs   = self.mcselect ( 'Bs'  ,'B_s0' == MCABSID )
         if Bs.empty()   :
-            self.Warning ( 'No Bs is found!') 
+            self.Warning ( 'No B_s0 are found!') 
         
         ## get all beauty baryions 
         lamb  = self.mcselect( 'beauty' , BARYON & BEAUTY )
         if lamb.empty() :
-            self.Warning ( 'No beutry baryon are found!')
+            self.Warning ( 'No beuty baryons are found!')
         
         nBs = self.counter("#Bs")
         nBs += Bs.size()
@@ -51,7 +54,10 @@ class HandsOn2(AlgoMC):
 # =============================================================================
 ## configure the job
 def configure() :
-    """ configure the job """
+    """
+    Configure the job
+    """
+    import data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -70,8 +76,7 @@ def configure() :
     evtSel = gaudi.evtSel()
     ##    2) configure Event Selector
     evtSel.PrintFreq = 50 
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
 
         
     return SUCCESS
@@ -87,9 +92,6 @@ if __name__ == '__main__' :
     ## event loop 
     gaudi.run(500)
 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-#
 # =============================================================================
 # The END 
 # =============================================================================

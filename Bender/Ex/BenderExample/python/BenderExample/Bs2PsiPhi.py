@@ -179,19 +179,14 @@ def configure ( **args ) :
     
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
-
-    ## read external configruation files
-    gaudi.config (
-        files = [
+    
+    ## read external configuration files
+    gaudi.config ( files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] ,
-        options = [
-        "PoolDbCacheSvc.Catalog = %s "%input.catalog_CERN ]
-        )
+        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
     
     ## I am old-fashioned person - I like HBOOK 
-    if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
     gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
     hps.OutputFile = args.get('histos','Bs2PsiPhi.hbook')
@@ -218,13 +213,11 @@ def configure ( **args ) :
         stager = gaudi.service('StagerSvc')
         stager.BlockSize    = 20
         stager.InitialStage =  5 
-        if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
         if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
             
     # add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
-
     
     ## get input data 
     evtSel = gaudi.evtSel()    

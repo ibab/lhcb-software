@@ -1,10 +1,8 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HandsOn4.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
-# =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
-# =============================================================================
-""" 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial) """ 
+"""
+'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
+""" 
 # =============================================================================
 # @file
 #
@@ -16,18 +14,23 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
+# =============================================================================
 ## import everything from BENDER
-from bendermodule import *
+from Bender.MainMC import *
 
 # =============================================================================
 ## @class RCKaons
 #  solution for the fourth exersize 
 class RCKaons(AlgoMC):
-    """  solution for the fourth exersize """
-
+    """
+    The solution for the fourth exersize
+    """
+    
     ## the main analysis method 
     def analyse( self ) :
-        """ the main analysis method """
+        """
+        The main analysis method
+        """
 
         ## helper MC object 
         finder = self.mcFinder()
@@ -94,7 +97,11 @@ class RCKaons(AlgoMC):
 # =============================================================================
 ## configure the job
 def configure() :
-    """ configure the job """
+    """
+    configure the job
+    """
+
+    import data_tutorial as data 
 
     line = 'NTupleSvc.Output += { "RC DATAFILE=\'%s\' TYP=\'%s\' OPT=\'NEW\'" }'
     line = line % ( 'HandsOn4.hbook' , 'HBOOK' )
@@ -130,23 +137,21 @@ def configure() :
     hsvc.PrintHistos = True
     
     ## configure own algorithm 
-    myAlg = gaudi.algorithm('RCKaons')
-    myAlg.PP2MCs = ['Relations/Rec/ProtoP/Charged'] # only charged 
-    myAlg.NTupleLUN = 'RC'
+    alg.PP2MCs = ['Relations/Rec/ProtoP/Charged'] # only charged 
+    alg.NTupleLUN = 'RC'
     
     # redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
     
     ## redefine input files 
-    import data_tutorial as data 
-    evtSel.open( data.FILES ) 
+    evtSel.open( data.FILEs ) 
 
     return SUCCESS
 # =============================================================================
 
 # =============================================================================
-# The control flow 
+# The job steering 
 # =============================================================================
 if __name__ == '__main__' :
     
