@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.12 2007-09-29 22:49:10 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.13 2007-09-29 22:53:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -70,35 +70,35 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
 
   for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << " PID technique " << *itech << " unknown"<< endreq;
+      error() << "Electron PID technique " << *itech << " unknown"<< endreq;
       scc = StatusCode::FAILURE;
     }
     m_elCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_muDisable.begin(); itech != m_muDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << " PID technique " << *itech << " unknown"<< endreq;
+      error() << "Muon PID technique " << *itech << " unknown"<< endreq;
       scc = StatusCode::FAILURE;
     }
     m_muCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_prDisable.begin(); itech != m_prDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << " PID technique " << *itech << " unknown"<< endreq;
+      error() << "Proton PID technique " << *itech << " unknown"<< endreq;
       scc = StatusCode::FAILURE;
     }
     m_prCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_piDisable.begin(); itech != m_piDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << " PID technique " << *itech << " unknown"<< endreq;
+      error() << "Pion PID technique " << *itech << " unknown"<< endreq;
       scc = StatusCode::FAILURE;
     }
     m_piCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_kaDisable.begin(); itech != m_kaDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << " PID technique " << *itech << " unknown"<< endreq;
+      error() << "Kaon PID technique " << *itech << " unknown"<< endreq;
       scc = StatusCode::FAILURE;
     }
     m_kaCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
