@@ -1,31 +1,28 @@
-! $Id: release.notes,v 1.12 2007-09-29 14:03:43 ibelyaev Exp $ 
+<PRE>
+! $Id: release.notes,v 1.13 2007-09-30 13:50:44 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+</PRE>
 
-! ==================== BenderSys v8r0 2007-09-29 ==============================
+<H1>
+<A NAME=v8r0>2007-09-29 Bender v8r0. New DC06 version </A>
+</H1>	
+<PRE>	
+	
+Based on DaVinci v19r5, Phys v6r6, Analysis v1r6, Rec v4r9, HLT v1r9, Lbcom v6r9, LHCb v22r9, Gaudi v19r4, LCGCMT 52a.
 
-! 2007-09-29 - Vanya BELYAEV
+It is the first "ONLY PYTHON" version.
 
- - retag as v8r0 : 
+</PRE>
 
-     New version:  *ONLY PYTHON* 
-
-
-! 2007-08-20 - Vanya BELYAEV
- - prepare the release of v8r0 
-   New version: 
-    only python 
-    new LoKi 
-
-
-! ==================== BenderSys v7r0 2007-05-07 ==============================
-
-! 2007-05-07 - Vanya BELYAEV
-
- - New version v7r0 
+<H1>
+<A NAME=v7r0>2007-05-07 Bender v7r0. New DC06 version </A>
+</H1>	
+<PRE>	
+	
    It is based on DaVinci v19r1
    It is the first version with resurrected and tested LoKiHybrid package, 
    which provided hybrid C++/Python solution for physics analysis.
@@ -33,42 +30,23 @@
    lines are removed.
 
 
-! ==================== BenderSys v6r2 2007-01-16 ==============================
+</PRE>
 
-! 2007-01-16 - Vanya BELYAEV
- - cmt/requirements
-    increment the versions for Bender, BenderLibs and BenderExample
- - cmt/requirements 
-    incement version to v6r2 
+<H1>
+<A NAME=v6r2>2007-01-16 Bender v6r2. New DC06 version </A>
+</H1>	
+<PRE>	
 
+The regular update for DC06 	
 
-! 2006-11-28 - Vanya BELYAEV
- - doc/* 
-   blindly copy the files form DaVinciSys/doc directory
-   slighly update them 
+</PRE>
 
-! 2006-11-27 - Vanya BELYAEV
- - prepare for v6r1 
- - cmt/requiremens 
-    version increment for v6r1 
+<H1>
+<A NAME=v5r3>2006-02-02 Bender v5r3</A>
+</H1>	
+<PRE>	
 
-! ======================= Bender v5r3 =========================================
-! 2006-02-02 - Florence Ranjard
- - recompile Bender v5r2 with DaVinci v14r5
+ Recompile Bender v5r2 with DaVinci v14r5
 
-! =============================================================================
-! 2005-02-05 - Vanya BELYAEV
- - add new package Tools/BenderRels to make available all C++ 
-   relation tables in Python/Bender
+</PRE>
 
-! 2005-01-21 - Vanya BELYAEV
- - preparation for release v4r5 
-   minor update for all packages, 
-   large update for testing suites 
-
-! 2003-12-07 - Vanya BELYAEV
- - convert Bender package into Bender application and Bender project
-
-! -----------------------------------------------------------------------------
-! The END 
-! -----------------------------------------------------------------------------
