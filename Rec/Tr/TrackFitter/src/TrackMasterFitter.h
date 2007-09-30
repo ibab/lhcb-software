@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.9 2007-09-13 12:59:31 mneedham Exp $
+// $Id: TrackMasterFitter.h,v 1.10 2007-09-30 11:30:43 ebos Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -115,6 +115,7 @@ private:
   double m_errorTy2;                ///< Error^2 on slope y
   std::vector<double> m_errorP;                  ///< Error on dp/p
   bool m_setRefInfo;
+  bool m_makeNodes;
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
 

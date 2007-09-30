@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.36 2007-09-13 12:59:31 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.37 2007-09-30 11:30:40 ebos Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -83,6 +83,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "SetRefInfo"     , m_setRefInfo = true                 );
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator"        );
+  declareProperty( "MakeNodes"      , m_makeNodes = true                  );
 }
 
 //=========================================================================
@@ -153,10 +154,11 @@ StatusCode TrackMasterFitter::fit( Track& track )
   StatusCode sc;
 
   // Make the nodes from the measurements
-  sc = makeNodes( track );
-  if ( sc.isFailure() )
-    return failure( "unable to make nodes from the measurements" );
-
+  if(m_makeNodes == true) {
+    sc = makeNodes( track );
+    if ( sc.isFailure() )
+      return failure( "unable to make nodes from the measurements" );
+  }
   
   // Get the seed state
   if ( track.nStates() == 0 )

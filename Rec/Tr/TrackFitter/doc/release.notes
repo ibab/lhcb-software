@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-09-30 - Edwin Bos
+ - Added jobOption to switch on/off the invocation of the 'makeNodes' method
+ - when off, nodes and references are not (re)made, for fitting after prefitting
+
+=======
 ! 2007-09-28 Wouter Hulsbergen
  - KalmanFilter: 'bug' fix: set reference vector from prediction in case it is not set before.
    we don't want this, but this is exactly how it used to be and the better solution is more work.
