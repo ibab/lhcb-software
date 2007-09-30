@@ -16,8 +16,8 @@
 
 // Forward fit
 FitForward.TracksInContainer = "Rec/Track/Forward";
-// temp increase number of fit iterations to get better convergence
-FitForward.Fitter.NumberFitIterations = 5;
+FitForward.Fitter.NumberFitIterations = 1;
+FitForward.Fitter.MakeNodes = false;
 
 // Seed fit
 FitTsa.TracksInContainer          = "Rec/Track/Tsa";
@@ -31,14 +31,16 @@ FitTsa.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
 
 // Match fit
 FitMatch.TracksInContainer = "Rec/Track/Match";
-// temp increase number of fit iterations to get better convergence
-FitMatch.Fitter.NumberFitIterations  = 5;
+FitMatch.Fitter.NumberFitIterations = 1;
+FitMatch.Fitter.MakeNodes = false;
 
 // KShort fit
 FitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
 FitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
 FitKsTrack.Fitter.StateAtBeamLine = false;
 FitKsTrack.Fitter.SetRefInfo      = false;
+FitKsTrack.Fitter.NumberFitIterations = 1;
+FitKsTrack.Fitter.MakeNodes = false;
 
 // Velo-TT fit
 FitVeloTT.TracksInContainer = "Rec/Track/VeloTT";
