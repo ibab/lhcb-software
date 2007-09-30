@@ -58,6 +58,17 @@ Track.DetectorList  = { "ForwardPat", "ForwardPreFit", "ForwardFit"
 TrackForwardPatSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
+// Forward prefit
+TrackForwardPreFitSeq.Members += { "TrackEventFitter/PreFitForward" };
+PreFitForward.TracksInContainer = "Rec/Track/Forward";
+PreFitForward.Fitter.NumberFitIterations = 2;
+PreFitForward.Fitter.MaxNumberOutliers = 0;
+PreFitForward.Fitter.ErrorX2 = 40.0;
+PreFitForward.Fitter.ErrorTx2 = 1e-3;
+PreFitForward.Fitter.ErrorTy2 = 2e-3;
+PreFitForward.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
+
 // Forward fit
 TrackForwardFitSeq.Members += { "TrackEventFitter/FitForward" };
 
@@ -83,11 +94,33 @@ TrackSeedFitSeq.Members += { "TrackEventFitter/FitTsa" };
 // Match pattern
 TrackMatchPatSeq.Members +={ "TrackMatchVeloSeed/TrackMatch" };
 
+// Match prefit
+TrackMatchPreFitSeq.Members += { "TrackEventFitter/PreFitMatch" };
+PreFitMatch.TracksInContainer = "Rec/Track/Match";
+PreFitMatch.Fitter.NumberFitIterations = 2;
+PreFitMatch.Fitter.MaxNumberOutliers = 0;
+PreFitMatch.Fitter.ErrorX2 = 40.0;
+PreFitMatch.Fitter.ErrorTx2 = 1e-3;
+PreFitMatch.Fitter.ErrorTy2 = 2e-3;
+PreFitMatch.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
+
 // Match fit
 TrackMatchFitSeq.Members += { "TrackEventFitter/FitMatch" };
 
 // KShort pattern
 TrackKShortPatSeq.Members += { "PatKShort" };
+
+// KShort prefit
+TrackKShortPreFitSeq.Members += { "TrackEventFitter/PreFitKShort" };
+PreFitKShort.TracksInContainer = "Rec/Track/KsTrack";
+PreFitKShort.Fitter.NumberFitIterations = 2;
+PreFitKShort.Fitter.MaxNumberOutliers = 0;
+PreFitKShort.Fitter.ErrorX2 = 40.0;
+PreFitKShort.Fitter.ErrorTx2 = 1e-3;
+PreFitKShort.Fitter.ErrorTy2 = 2e-3;
+PreFitKShort.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
 
 // KShort fit
 TrackKShortFitSeq.Members += { "TrackEventFitter/FitKsTrack" };
