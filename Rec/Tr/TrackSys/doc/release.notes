@@ -4,6 +4,14 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-10-01 - Edwin Bos
+ - changed 1 fit iteration to 2 fit iterations for better results
+
+! 2007-09-30 - Edwin Bos
+ - Added jobOptions for track prefitting with OT projections without drifttimes.
+ - 2 prefit iterations are followed by 1 fit iteration using drifttimes
+ - changes apply for Forward, KShort and Match only
+
 ! 2007-09-27 Eduardo Rodrigues
 - Tidy-up of options
 

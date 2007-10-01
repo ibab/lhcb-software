@@ -16,7 +16,7 @@
 
 // Forward fit
 FitForward.TracksInContainer = "Rec/Track/Forward";
-FitForward.Fitter.NumberFitIterations = 1;
+FitForward.Fitter.NumberFitIterations = 2;
 FitForward.Fitter.MakeNodes = false;
 
 // Seed fit
@@ -31,7 +31,7 @@ FitTsa.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
 
 // Match fit
 FitMatch.TracksInContainer = "Rec/Track/Match";
-FitMatch.Fitter.NumberFitIterations = 1;
+FitMatch.Fitter.NumberFitIterations = 2;
 FitMatch.Fitter.MakeNodes = false;
 
 // KShort fit
@@ -39,7 +39,7 @@ FitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
 FitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
 FitKsTrack.Fitter.StateAtBeamLine = false;
 FitKsTrack.Fitter.SetRefInfo      = false;
-FitKsTrack.Fitter.NumberFitIterations = 1;
+FitKsTrack.Fitter.NumberFitIterations = 2;
 FitKsTrack.Fitter.MakeNodes = false;
 
 // Velo-TT fit
