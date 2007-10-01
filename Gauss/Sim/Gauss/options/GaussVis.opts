@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.9 2007-03-26 11:38:33 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.10 2007-10-01 13:43:53 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -11,7 +11,7 @@
 
 #include "$GAUSSOPTS/Gauss.opts"
 
-#include "$DECFILESROOT/options/ParticleGun.opts"
+#include "$PARTICLEGUNSROOT/options/ParticleGun.opts"
 
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
 GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;

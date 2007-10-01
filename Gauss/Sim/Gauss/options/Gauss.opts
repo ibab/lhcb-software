@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.101 2007-07-04 08:33:06 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.102 2007-10-01 13:45:30 gcorti Exp $ 
 
 /** @file 
  * 
@@ -128,5 +128,5 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Particle gun example for private generation
 // Does not require uncommenting <evttype> options
 //---------------------------------------------------------------------------
-//#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
+//#include "$PARTICLEGUNSROOT/options/ParticleGun.opts"  // ParticleGun example
  
