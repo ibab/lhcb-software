@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.26 2007-09-03 19:50:35 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.27 2007-10-01 13:58:18 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -343,7 +343,7 @@ private:
 
 /// fast cast to R sensor, returns 0 for wrong type
 inline const DeVeloRType* DeVeloSensor::rType() const { 
-  return (m_isR ? static_cast<const DeVeloRType*>(this) : 0); 
+  return (m_isR || m_isPileUp ? static_cast<const DeVeloRType*>(this) : 0); 
 }
 
 
