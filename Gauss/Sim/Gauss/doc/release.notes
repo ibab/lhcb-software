@@ -4,6 +4,21 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-10-01 - Gloria Corti
+ - Add default cuts for gamma and positrons into special RICh aerogel cuts,
+   otherwise zero is taken.
+   . Simulation.xml
+ - Fix wrong path for particle option
+   . GaussVis.opts
+   . Gauss.opts
+ - Add options for MIB in FixedLumi-5.opts
+ - Add as optional generators AlpGen (LbAlpGen v1r0) and Pythia8 
+   (LbPythia8 v1r0)
+   . requirements
+ - Remove alias to executable with options
+   . requirements
+ - New event types via DecFiles v13r13
+ 
 ! 2007-09-11 - Chris Jones
  - Update example ganga job to remove warnings about missing features (now 
    available) and to add examples of job merging and GaussSplitter.

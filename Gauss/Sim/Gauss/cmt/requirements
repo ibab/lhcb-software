@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v30r3
+version v30r4
 
 #============================================================================
 #-- Structure
@@ -14,11 +14,11 @@ branches src doc options cmt job
 #============================================================================
 
 #-- Databases
-use XmlDDDB             v40r0   Det   -no_auto_imports
+#use XmlDDDB             v40r0   Det   -no_auto_imports
 use DDDB                v1r*    Det   -no_auto_imports
 use ParamFiles          v6r1          -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r10  Gen   -no_auto_imports
+use DecFiles            v13r13  Gen   -no_auto_imports
 use Geant4Files		v82r0	      -no_auto_imports
 
 #===========================================================================
@@ -32,14 +32,13 @@ use Python             v*    LCG_Interfaces -no_auto_imports
 use HepMC              v*    LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
-use GaudiSvc           v*              -no_auto_imports
-#use GaudiAud           v8r1                 -no_auto_imports
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiAud           v*                   -no_auto_imports
 use GaudiPoolDb        v*                   -no_auto_imports
 use GaudiPython        v*                   -no_auto_imports 
 use RootHistCnv        v*                   -no_auto_imports
  
 # From LHCB project
-#use GaudiObjDesc     v9r9           -no_auto_imports
 use KernelSys          v*     Kernel         -no_auto_imports
 use DetSys             v*     Det            -no_auto_imports
 use LHCbAlgs           v*     Kernel         -no_auto_imports
@@ -64,6 +63,14 @@ use $(LbBcVegPy_use)
 #-- Optional Hidden Valley
 macro LbHidValley_use "" Linux&HidValley "LbHidValley v* Gen"
 use $(LbHidValley_use)
+
+#-- Optional AlpGen
+macro LbAlpGen_use "" Linux&AlpGen "LbAlpGen v* Gen"
+use $(LbAlpGen_use)
+
+#-- Optional Pythia8
+macro LbPythia8_use "" Linux&Pythia8 "LbPyhia8 v* Gen"
+use $(LbPythia8_use) 
 
 #-- Generator
 use ParticleGuns         v*    Gen
@@ -112,11 +119,15 @@ application GaussHijing    $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussHerwig    $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussBcVegPy   $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussHidValley $(GAUDICONFROOT)/src/GaudiMain.cpp
+application GaussAlpGen    $(GAUDICONFROOT)/src/GaudiMain.cpp
+application GaussPythia8   $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-macro_remove constituents "GaussHijing" Linux&Hijing "Gauss"
-macro_remove constituents "GaussHerwig" Linux&Herwig "Gauss"
-macro_remove constituents "GaussBcVegPy" Linux&BcVegPy "Gauss"
+macro_remove constituents "GaussHijing"    Linux&Hijing "Gauss"
+macro_remove constituents "GaussHerwig"    Linux&Herwig "Gauss"
+macro_remove constituents "GaussBcVegPy"   Linux&BcVegPy "Gauss"
 macro_remove constituents "GaussHidValley" Linux&HidValley "Gauss"
+macro_remove constituents "GaussAlpGen"    Linux&AlpGen "Gauss"
+macro_remove constituents "GaussPythia8"   Linux&Pythia8 "Gauss"
 
 #===========================================================================
 #-- Set macros
@@ -138,11 +149,7 @@ path_remove    PATH  "" Linux&Vis "/DAWN/"
 path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
 
 #===========================================================================
-#-- Set usefull alias : for tests only - use vXXXXXX.opts for geometry
-#                       dependent options
-alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
-alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
-alias gausshijing " ${GAUSSROOT}/${BINDIR}/GaussHijing.exe ${GAUSSOPTS}/Gauss.opts "
-alias gaussherwig " ${GAUSSROOT}/${BINDIR}/GaussHerwig.exe ${GAUSSOPTS}/Gauss.opts "
-alias gaussbcvegy " ${GAUSSROOT}/${BINDIR}/GaussBcVeqPy.exe ${GAUSSOPTS}/Gauss.opts "
-alias gausshidvalley " ${GAUSSROOT}/${BINDIR}/GaussHidValley.exe ${GAUSSOPTS}/Gauss.opts "
+#-- Alias for exacutable have been removed: use instead script
+#    SetupProject Gauss <version>
+#   that includes the binary directory in the PATH so that you can type
+#    Gauss.exe (GaussHerwig.exe) 
