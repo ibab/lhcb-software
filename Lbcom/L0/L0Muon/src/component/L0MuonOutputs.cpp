@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.3 2007-09-06 19:46:19 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.4 2007-10-01 08:52:13 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -57,6 +57,10 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   m_nTriggeredEvt = 0;
   
   m_bankEventCounter  = 0;
+
+  m_averagePt =0.;
+  m_averageCh=0.;
+
 }
 //=============================================================================
 // Destructor
