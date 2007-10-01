@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.6 2007-08-09 20:03:47 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.6 2007-08-09 20:03:47 frankm Exp $
+// $Id: DpHelpers.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -94,11 +94,11 @@ int PVSS::pvss_load_configurations(CfgManager* m, int id,
     const char* n = ConfigsMapper::getConfigName(cfg);
     const DpAttributeNrType *attrs = ConfigsMapper::getAttributeIds(cfg,attrNum);
     addCfg(m,cfg,n);
-    // ::printf("Adding Config [%d]:%s\n",cfg,n);
+    if ( pvss_debug() ) ::printf("PVSS> Adding Config [%d]:%s\n",cfg,n);
     for(size_t j=0; j<attrNum; ++j)  {
       const DpAttributeNrType att = attrs[j];
       n = ConfigsMapper::getAttributeName(cfg,att);
-      // ::printf("        Adding attribute [%d]:%s\n",att,n);
+      if ( pvss_debug() ) ::printf("PVSS>         Adding attribute [%d]:%s\n",att,n);
       addAttr(m, att, n);
     }
     // Forget about details....only very few configs have named details.
@@ -116,11 +116,11 @@ int PVSS::pvss_load_device_types(PVSS::DevTypeManager* mgr, int id,
   s_addDevTypeElem = addElem;
   DpTypeContainer* cont = 0;
   if ( DpIdentification::getDefaultSystem() == s_system )  {
-    printf("Using default system....\n");
+    if ( pvss_debug() ) ::printf("PVSS> Using default system....\n");
     cont = Manager::getTypeContainerPtr();
   }
   else {
-    printf("Using other system:%d....\n",id);
+    if ( pvss_debug() ) ::printf("PVSS> Using other system:%d....\n",id);
     cont = Manager::getTypeContainerPtr(s_system);
   }
   cont->visitEveryType(visitDpType);
@@ -129,10 +129,12 @@ int PVSS::pvss_load_device_types(PVSS::DevTypeManager* mgr, int id,
 
 void PVSS::pvss_setup_null_dp(const DpID* /* data */, size_t len)   {
   if ( len == sizeof(DpIdentifier) )  {
-    printf("Internal DP length:%d bytes, DpIdentifier size:%d bytes\n",len,sizeof(DpIdentifier));
+    ::printf("PVSS> Internal DP length:%d bytes, DpIdentifier size:%d bytes\n",
+	     len,sizeof(DpIdentifier));
     return;
   }
-  printf("ERROR: Internal DP length:%d bytes, DpIdentifier size:%d bytes\n",len,sizeof(DpIdentifier));
+  ::printf("PVSS> ERROR: Internal DP length:%d bytes, DpIdentifier size:%d bytes\n",
+	   len,sizeof(DpIdentifier));
   throw "Error in size comparison of PVSS DpIdentifier structure";
 }
 

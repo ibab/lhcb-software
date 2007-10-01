@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.9 2007-09-10 09:39:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.10 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.9 2007-09-10 09:39:50 frankm Exp $
+// $Id: DeviceIO.cpp,v 1.10 2007-10-01 14:46:55 frankm Exp $
 
 // Framework include files
 #include "PVSS/ControlsManager.h"
@@ -78,24 +78,20 @@ bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
   if ( !m_context )  {
     pvss_val_list_create(m_context);
   }
-  // std::cout << "Writing to " << p.size() << " datapoints." << std::endl;
   for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)  {
     if ( (*i).second ) {
       const Value* val = (*i).second->value();
-      // std::cout << "--->" << (*i).second->name();
-      // if ( val ) std::cout << " Typ:" << val->type();
-      // std::cout << std::endl;
       if ( !val )  {
 	std::string err = "All datapoints must be set to perform a write action. ";
 	err +=  " Missing is:"+(*i).second->name();
-	std::cout << err << std::endl;
+	::printf("PVSS> %s\n",err.c_str());
 	throw std::runtime_error(err);
       }
       (*i).second->setFlag(1,2);
       setGenWriteIO(m_context,listCtxt,(*i).first,val);
     }
     else {
-      std::cout << "Invalid datapoint in transaction!!!!!" << std::endl;
+      ::printf("PVSS> Invalid datapoint in transaction!!!!!\n");
     }
   }
   pvss_exec_dpset(m_context,a,keep_list);
@@ -149,7 +145,7 @@ void DeviceIO::setValue(const DpID& dpid, int typ, const Variable* val)  {
     dp->setFlag(1,3);
   }
   else  {
-    printf("Attempt to set datapoint, which is not contained in the transaction.\n");
+    ::printf("PVSS> Attempt to set datapoint, which is not contained in the transaction.\n");
   }
 }
 
@@ -183,8 +179,6 @@ void DeviceIO::clear()   {
 void DeviceIO::i_add(const DpID& id, DataPoint& dp) {
   if ( m_devIO->context() ) m_devIO->dropList();
   m_points.insert(std::make_pair(id,&dp));
-  // std::cout << (void*)this << ": DeviceIO: Add datapoint[" 
-  //           << m_points.size() << "]:" << dp.name() << std::endl;
   dp.setFlag(1,1);
 }
 

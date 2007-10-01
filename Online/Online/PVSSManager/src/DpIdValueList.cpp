@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.6 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DpIdValueList.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdValueList.cpp,v 1.6 2007-04-11 17:45:47 frankb Exp $
+// $Id: DpIdValueList.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
 #include <memory>
 #include <iostream.h>
 
@@ -88,7 +88,7 @@ std::auto_ptr<DynVar> get_dyn_var_text(const PVSS::Array* arr)  {
   for(int i=0; i<arr->size; ++i)  {
     TextVar* v = new TextVar((const char*)arr->load(arr,i));
     if ( !(var->append(v) == PVSS_TRUE) )  {
-      printf("Variables do not match type TextVar!\n");
+      ::printf("PVSS> Variables do not match type TextVar!\n");
     }
   }
   return var;

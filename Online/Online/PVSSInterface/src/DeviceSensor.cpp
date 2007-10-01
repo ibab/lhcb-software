@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.5 2007-04-20 09:34:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.6 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceSensor.cpp,v 1.5 2007-04-20 09:34:19 frankb Exp $
+// $Id: DeviceSensor.cpp,v 1.6 2007-10-01 14:46:55 frankm Exp $
 
 // Framework include files
 #include "PVSS/DeviceSensor.h"
@@ -19,6 +19,7 @@
 #include "WT/wt_facilities.h"
 #include "RTL/rtl.h"
 #include <set>
+
 using namespace PVSS;
 
 struct DevSensor : public Sensor {
@@ -48,7 +49,7 @@ struct DevSensor : public Sensor {
   }
   static int s_runSensor(void* arg)  {
     DevSensor* s = (DevSensor*)arg;
-    ::printf("All current and future PVSS Device sensors are now active.\n");
+    ::printf("PVSS> All current and future PVSS Device sensors are now active.\n");
     s->run();
     return 1;
   }
@@ -56,7 +57,7 @@ struct DevSensor : public Sensor {
     if ( seperate_thread && m_threadH == 0 )  {
       int sc = ::lib_rtl_start_thread(s_runSensor,this,&m_threadH);
       if ( !lib_rtl_is_success(sc) )  {
-        ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to start device sensor thread.");
+        ::lib_rtl_signal_message(LIB_RTL_OS,"PVSS> Failed to start device sensor thread.");
       }
       return 1;
     }
@@ -107,17 +108,16 @@ DeviceSensor::~DeviceSensor()  {
 /// Disconnect from data points
 void DeviceSensor::disconnect()  {
   bool res = pvss_list_disconnect(m_context,m_hotlink);
-  if ( res )  {
-    // std::cout << "Successfully disconnected from device list." << std::endl;
-  }
-  else  {
-    std::cout << "Failed to disconnected from device list." << std::endl;
+  if ( !res )  {
+    ::printf("PVSS> Failed to disconnected from device list.\n");
   }
   m_hotlink = 0;
+  m_invalid.clear();
 }
 
 /// Connect from data points
 void DeviceSensor::connect()  {
+  m_invalid.clear();
   pvss_list_create(m_context);
   for(DataPoints::const_iterator i=m_datapoints.begin(); i!=m_datapoints.end(); ++i)
     pvss_list_add(m_context, (*i).first);
@@ -138,12 +138,23 @@ void DeviceSensor::handle()  {
     // Handle each listener
     (*i)->handle(ev);
   }
+  m_invalid.clear();
 }
 
 void DeviceSensor::setValue(const DpID& id, int typ, const Variable* val) {
   DataPoints::iterator i = m_datapoints.find(id);
   if ( i != m_datapoints.end() )  {
-    (*i).second->setValue(typ,val);
+    if ( val ) {
+      (*i).second->setValue(typ,val);
+      return;
+    }
+    char* nam = 0;
+    if ( !pvss_lookup_name(id,nam) )  {
+      ::printf("PVSS> The datapoint %s does no longer exist. Entry removed.\n",
+	       (*i).second->name().c_str());
+      m_invalid.insert(std::make_pair(id,(*i).second));
+      m_datapoints.erase(i);
+    }
   }
 }
 

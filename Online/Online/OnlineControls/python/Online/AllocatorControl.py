@@ -1,9 +1,5 @@
-import sys
+import sys, Online.Utils
 import Online.PVSS as PVSS
-import Online.Utils as Utils
-error          = PVSS.error
-PVSS.logPrefix = 'PVSS Control '
-
 
 # =============================================================================
 class AllocatorClient:
@@ -14,9 +10,15 @@ class AllocatorClient:
   """
   # ===========================================================================
   def __init__(self,manager,name):
-    "Object constructor"
+    """
+    Object constructor
+
+    @param  manager     PVSS Controls manager for this client
+    @param  name        Client name
+    """
     self.manager = manager
     self.name = name
+
   # ===========================================================================
   def configure(self,rundp_name, partition):
     "Default client callback on the command 'configure'"
@@ -59,9 +61,12 @@ class Control(PVSS.PyDeviceListener):
   """
   # ===========================================================================
   def __init__(self, manager, name, postfix, objects=[]):
-    """ Default constructor
+    """ Object constructor
+    
         @param  manager       Reference to PVSS ControlManager
         @param  name          Name of the Streaming control datapoint
+        @param  postfix       Modifier for reply datapoint name
+        @param  objects       List of clients to be managed
 
         @return reference to initialized object
     """
@@ -123,16 +128,16 @@ class Control(PVSS.PyDeviceListener):
     cmd = ''
     try:
       nam = self.dp().name()
-      error('The device '+nam+' is dead.....\n'+\
+      PVSS.error('The device '+nam+' is dead.....\n'+\
             'This should never occur and is a serious error condition\n'+\
             'We will exit the system.',timestamp=1,type=PVSS.DPNOTEXISTENT)
       self.do_sleep = 0
     except Exception,X:
-      error(str(X),timestamp=1,type=PVSS.DPNOTEXISTENT)
+      PVSS.error(str(X),timestamp=1,type=PVSS.DPNOTEXISTENT)
       traceback.print_exc()
       return 0
     except:
-      error('(Unknown exception)',timestamp=1,type=PVSS.DPNOTEXISTENT)
+      PVSS.error('(Unknown exception)',timestamp=1,type=PVSS.DPNOTEXISTENT)
       traceback.print_exc()
     return 0      
 
@@ -165,7 +170,7 @@ class Control(PVSS.PyDeviceListener):
               result = self.doExecute('configure',runDpName,partition)
               if result is None: data.data = err
             except Exception, X:
-              error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
+              PVSS.error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
               traceback.print_exc()
               data.data = err
             self.writer.add(data)
@@ -181,7 +186,7 @@ class Control(PVSS.PyDeviceListener):
               result = self.doExecute('recover_slice',runDpName,partition)
               if result is None: data.data = err
             except Exception, X:
-              error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
+              PVSS.error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
               traceback.print_exc()
               data.data = err
             self.writer.add(data)
@@ -203,28 +208,28 @@ class Control(PVSS.PyDeviceListener):
               #print answer+'/'+result
               return self.makeAnswer('READY',answer+'/'+result)
             msg = 'The command:"'+cmd+'" failed. [Internal Error] '
-            error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+            PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
             return self.makeAnswer('ERROR',answer)
           except Exception,X:
-            error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
+            PVSS.error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
           except:
-            error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.ILLEGAL_ARG)
+            PVSS.error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.ILLEGAL_ARG)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
         msg = 'The command:"'+cmd+'" failed. [Bad Streaming System] '+storage+' should be:['+self.name+']'
-        error(msg,timestamp=1,type=PVSS.ILLEGAL_ARG)
+        PVSS.error(msg,timestamp=1,type=PVSS.ILLEGAL_ARG)
         return self.makeAnswer('ERROR',answer)
       print 'Parameters are:',str(itms)
-      error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1,type=PVSS.ARG_MISSING)
+      PVSS.error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1,type=PVSS.ARG_MISSING)
       return self.makeAnswer('ERROR','/'+self.name+'/UNKNOWN/0/Insufficient parameters')
     except Exception,X:
-      error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.UNDEFD_FUNC)
+      PVSS.error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.UNDEFD_FUNC)
       traceback.print_exc()
       return 0
     except:
-      error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.UNDEFD_FUNC)
+      PVSS.error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.UNDEFD_FUNC)
       traceback.print_exc()
     return 0
  
@@ -239,7 +244,7 @@ class Control(PVSS.PyDeviceListener):
   def sleep(self):
     "Serve controls requests in daemon mode"
     import sys, time
-    if PVSS.batchMode(): Utils.log('Sleeping ....',timestamp=1)
+    if PVSS.batchMode(): Online.Utils.log('Sleeping ....',timestamp=1)
     else:                print 'Sleeping ....'
     sys.stdout.flush()
     try:

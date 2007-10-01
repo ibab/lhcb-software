@@ -8,6 +8,8 @@ PANEL,-1 -1 805 2000 N "_3DFace" 2
 main()  {
   string stream  = isDollarDefined(\"$stream\")  ? $stream : \"Monitoring\";
   int    offset  = isDollarDefined(\"$offset\")   ? $offset  : 100;
+  m_displayedPartitions.visible = 0;
+  m_partition.visible = 0;
   StreamControlPanel_initDisplay(stream, \"\", offset);
   DebugN(\"Module:\",myModuleName(),\"Panel:\",myPanelName(),\"Stream:\",stream,\"Offset:\",offset);
 }
@@ -15,8 +17,8 @@ main()  {
  E E E E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 

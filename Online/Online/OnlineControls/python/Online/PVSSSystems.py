@@ -34,10 +34,15 @@ def controlsMgr(name):
 
 # =============================================================================
 def reload():
-  pass
+  "Reload all known PVSS controls managers."
+  newSystems = _systems
+  clear()
+  for nam, ctrl in _systems:
+    controlsMgr(nam)
 
 # =============================================================================
 def clear():
+  "Clear containers with known PVSS controls managers."
   _systems = {}
   _sysIds = {}
   

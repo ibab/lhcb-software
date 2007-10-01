@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/SyncWaitForAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/SyncWaitForAnswer.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  SyncWaitForAnswer.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: SyncWaitForAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: SyncWaitForAnswer.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/DevAnswer.h"
@@ -27,7 +27,7 @@ void SyncWaitForAnswer::addError(const char* txt)  const  {
   if ( m_answer )
     m_answer->addError(txt);
   else 
-    printf("----------Error:%s\n",txt);
+    ::printf("PVSS> ----------Error:%s\n",txt);
 }
 
 /// Collect possible errors

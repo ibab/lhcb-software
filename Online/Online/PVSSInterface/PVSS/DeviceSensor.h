@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceSensor.h,v 1.2 2007-03-12 09:04:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceSensor.h,v 1.3 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DeviceSensor.h
 //  --------------------------------------------------------------------
@@ -58,6 +58,8 @@ namespace PVSS {
     ControlsManager*  m_manager;
     /// Device datapoints
     DataPoints        m_datapoints;
+    /// Datapoint array containing invalid entries
+    DataPoints        m_invalid;
     /// Datapoint array
     DataPointArray    m_pointArray;
     /// Device listeners
@@ -91,6 +93,10 @@ namespace PVSS {
     DataPoints& devices()                     {  return m_datapoints; }
     /// Access to the device map (CONST)
     const DataPoints& devices() const         {  return m_datapoints; }
+    /// Access to the device map of invalid devices
+    DataPoints& invalidDevices()              {  return m_invalid;    }
+    /// Access to the device map of invalid devices (CONST)
+    const DataPoints& invalidDevices() const  {  return m_invalid;    }
     /// Access to the device array
     DataPointArray& deviceArray()             {  return m_pointArray; }
     /// Access to the device array (CONST)

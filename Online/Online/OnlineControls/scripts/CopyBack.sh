@@ -49,6 +49,8 @@ cd ${ONLINECONTROLSROOT}/pvss
 checkFiles ${PVSS_PROJECT_BASE} scripts/libs *.cpp
 checkFiles ${PVSS_PROJECT_BASE} panels/JobOptions *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/StreamControl *.pnl
+checkFiles ${PVSS_PROJECT_BASE} panels/fwFSMuser *.pnl
+checkFiles ${PVSS_PROJECT_BASE} panels/fwFSM/ui *.pnl
 #
 if test "${PVSS_INSTALL_NAME}" = JOBOPTIONS;
     then

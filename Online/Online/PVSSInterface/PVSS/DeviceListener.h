@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceListener.h,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceListener.h,v 1.2 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DeviceSensor.h
 //  --------------------------------------------------------------------
@@ -70,6 +70,8 @@ namespace PVSS {
     virtual void handleDevices();
     /// Interface callback to handle single devices one by one
     virtual void handleDevice();
+    /// Interface callback to handle single invalid devices one by one
+    virtual void handleInvalidDevice();
   };
 }      // End namespace PVSS
 #endif // ONLINE_PVSS_DEVICELISTENER_H

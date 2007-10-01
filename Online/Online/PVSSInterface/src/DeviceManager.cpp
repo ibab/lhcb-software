@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceManager.cpp,v 1.4 2007-09-10 09:39:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceManager.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DeviceManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceManager.cpp,v 1.4 2007-09-10 09:39:50 frankm Exp $
+// $Id: DeviceManager.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 
 // Framework include files
 #include "PVSS/ControlsManager.h"
@@ -62,7 +62,8 @@ DeviceManager::createDevice(const std::string& nam, const DevType* typ, bool wai
       DevAnswer a;
       std::string dev = ControlsManager::dpName(nam);
       if ( pvss_debug() > 0 ) {
-	::printf("DeviceManager::createDevice> '%s' of type '%s'\n",dev.c_str(),typ->name().c_str());
+	::printf("PVSS> DeviceManager::createDevice> '%s' of type '%s'\n",
+		 dev.c_str(),typ->name().c_str());
       }
       bool ret = pvss_create_device(dev.c_str(),typ->id(),id(),wait ? &a : 0);
       if ( ret )  {

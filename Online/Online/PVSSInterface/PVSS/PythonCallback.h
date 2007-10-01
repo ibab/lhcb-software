@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.2 2007-04-11 17:45:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.3 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -47,6 +47,8 @@ namespace PVSS {
     virtual void handleDevices();
     /// DIM overloaded callback calling python itself.
     virtual void handleDevice();
+    /// Interface callback to handle single invalid devices one by one
+    virtual void handleInvalidDevice();
   };
 
   class PyCallbackTest  {

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.7 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.8 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.7 2007-03-12 09:04:13 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.8 2007-10-01 14:46:55 frankm Exp $
 
 // Framework include files
 #include "PVSS/HotLinkCallback.h"
@@ -49,7 +49,7 @@ namespace PVSS { namespace {
       if ( i != m_points.end() )
         genReadIO(val, typ, (*i).second.second);
       else
-        printf("Attempt to set datapoint, which is not contained in the transaction.\n");
+        ::printf("PVSS> Attempt to set datapoint, which is not contained in the transaction.\n");
     }
     /// Clear list after end of reading
     virtual void handleDataUpdate()  {

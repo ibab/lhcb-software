@@ -9,7 +9,7 @@ static PVSS::IAPIManager* create_manager(int argc,const char** argv)
   if ( 0 == s_mgr )  {
     s_mgr = new PVSS::APIManager(argc, argv);
     if ( 0 == s_mgr->initialize() )  {
-      ::printf("Failed to initialize API manager.\n");
+      ::printf("PVSS> Failed to initialize API manager.\n");
       return 0;
     }
   }

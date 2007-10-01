@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.4 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DpSet.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpSet.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Id: DpSet.cpp,v 1.4 2007-10-01 14:46:55 frankm Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/Environment.h"
 #include "PVSS/Internals.h"
@@ -48,7 +48,7 @@ bool PVSS::pvss_exec_dpset(void*& context,DevAnswer* a, bool keep_list)  {
     res = a ? pvss_exec_dpset_W(list,a) : pvss_exec_dpset_A(list,a);
   }
   catch(const char* err)  {
-    printf("Exception:%s\n",err);
+    ::printf("PVSS> Exception:%s\n",err);
   }
   catch(...) {
   }

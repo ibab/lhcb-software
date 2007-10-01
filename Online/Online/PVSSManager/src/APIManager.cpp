@@ -18,16 +18,11 @@ static void pvss_exit_manager(int)  {
 }
 
 static void log(const std::string& msg) {
-#ifdef _WIN32
-  printf("----------------> %s\n",msg.c_str());
-#else
-  std::cout << "----------------> " << msg << std::endl;
-#endif
+  ::printf("PVSS> ----------------> %s\n",msg.c_str());
 }
 
 static void get_args(int argc,const char** argv,std::string& dll,std::string& fun) {
   for(int i=0; i<argc; ++i) {
-    // std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
     if ( strncmp(argv[i],"-DLL",4)==0    ) dll = argv[++i];
     if ( strncmp(argv[i],"-FUN",4)==0    ) fun = argv[++i];
   }

@@ -1,23 +1,22 @@
-import Online.PVSS    as PVSS
-import Online.Utils   as Utils
-std = PVSS.gbl.std
-PVSS.logPrefix = 'PVSS Control '
-log            = Utils.log
-error          = Utils.error
-warning        = Utils.warning
+import Online.PVSS, Online.Utils
 
 # =============================================================================
 class InstallerBase:
+  """
+  Generic base class for installers.
+
+  @author M.Frank
+  """
   # ===========================================================================
   def __init__(self, mgr, dev):
     "Default constructor"
-    self.name = dev
+    self.name    = dev
     self.manager = mgr
-    self.dps = PVSS.DataPointVector()
+    self.dps     = Online.PVSS.DataPointVector()
   # ===========================================================================
   def set(self, dp, value):
     "Set datapoint value in storage definition"
-    self.dps.push_back(PVSS.DataPoint(self.manager,PVSS.DataPoint.original(self.name+'.'+dp)))
+    self.dps.push_back(Online.PVSS.DataPoint(self.manager,Online.PVSS.DataPoint.original(self.name+'.'+dp)))
     self.dps.back().data = value
     return self
   # ===========================================================================
@@ -26,8 +25,8 @@ class InstallerBase:
     wr = self.manager.devWriter()
     for i in self.dps: wr.add(i)
     if wr.execute(1,1):
-      log(prefix+'All DPs successfully created.')
+      Online.Utils.log(prefix+'All DPs successfully created.')
     else:
-      error(prefix+'Failed to set DP values.')
+      Online.Utils.error(prefix+'Failed to set DP values.')
     self.dps.clear()
     return self

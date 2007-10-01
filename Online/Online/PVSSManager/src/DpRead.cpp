@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DpRead.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpRead.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Id: DpRead.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
@@ -84,7 +84,7 @@ bool PVSS::pvss_exec_read(void*& context,DevAnswer* a,HotLinkCallback* b,bool ke
     res =  a ? pvss_exec_readW(list,a,b) : pvss_exec_readA(list,a,b);
   }
   catch(const char* err)  {
-    printf("Exception:%s\n",err);
+    ::printf("PVSS> Exception:%s\n",err);
   }
   catch(...) {
   }

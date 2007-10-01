@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.28 2007-09-10 09:39:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.29 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.28 2007-09-10 09:39:50 frankm Exp $
+// $Id: DataPoint.cpp,v 1.29 2007-10-01 14:46:55 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -509,13 +509,17 @@ VECTOR_SPECIALIZATIONS(DPTime)
 /// Set value data
 void DataPoint::setValue(int typ, const Variable* variable)  {
   try {
-    if ( !m_val ) m_val = createValue(typ);
-    genReadIO(variable,typ,m_val->ptr());
-    if ( pvss_debug() > 0 )  {
-      const char* val_typ = pvss_type_name(m_val->type());
-      const char* true_typ = pvss_type_name(typ);
-      std::cout << "DataPoint::setValue> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
+    if ( variable ) {
+      if ( !m_val ) m_val = createValue(typ);
+      genReadIO(variable,typ,m_val->ptr());
+      if ( pvss_debug() > 0 )  {
+        const char* val_typ = pvss_type_name(m_val->type());
+        const char* true_typ = pvss_type_name(typ);
+        std::cout << "DataPoint::setValue> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
+      }
+      return;
     }
+    std::cout << "DataPoint::setValue> " << name() << " No Variable pointer. Action ignored." << std::endl;    
   }
   catch(const std::exception& e)  {
     throw e;

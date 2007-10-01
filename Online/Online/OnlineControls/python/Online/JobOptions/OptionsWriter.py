@@ -221,25 +221,6 @@ class HLTOptionsWriter(OptionsWriter):
   def _configure(self, partition):
     if self.run:
       run_type = self.run.runType()
-      opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
-      opts.add('//\n// ---------------- General partition information:  ')
-      opts.add('PartitionID',    self.run.partitionID())
-      opts.add('PartitionIDName','%04X'%self.run.partitionID())
-      opts.add('PartitionName',  partition)
-      opts.add('Activity',       run_type);
-      fname = partition+'_Info'
-      if self.writeOptionsFile(partition, fname, opts.value) is None:
-        return None
-
-      opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
-      opts.add('//\n// ---------------- Tell1 board information:')
-      opts.add('OnlineEnv.Tell1Boards         = {\n')
-      for b in self.run.tell1Boards.data: opts.add('  "%s", \"%s", "",\n'%(b,b))
-      opts.value = opts.value[:-2] + '\n};\n'
-      fname = partition+'_Tell1Boards'
-      if self.writeOptionsFile(partition, fname, opts.value) is None:
-        return None
-
       info = self.getStreamInfo(self.storageMgr,'Storage')
       if info is not None:
         farms = self.run.subFarms.data
@@ -249,10 +230,12 @@ class HLTOptionsWriter(OptionsWriter):
           return None
         num = len(farms)
         run_type = self.run.runType()
+        farm_names = []
         for i in xrange(num):
           node = slots[i].split(':')[0]
           name = '%s_%s_SF%02d_HLT'%(partition,node,i)
           farm = farms[i]
+          farm_names.append(farm)
           opts = '// Auto generated options for partition:'+partition+' activity:'+run_type+'\n//\n'+\
                  '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
                  'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
@@ -263,6 +246,28 @@ class HLTOptionsWriter(OptionsWriter):
           if self.writeOptionsFile(partition, fname, opts) is None:
             return None
           log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
+          
+        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
+        opts.add('//\n// ---------------- General partition information:  ')
+        opts.add('PartitionID',    self.run.partitionID())
+        opts.add('PartitionIDName','%04X'%self.run.partitionID())
+        opts.add('PartitionName',  partition)
+        opts.add('Activity',       run_type)
+        opts.add('SubFarms',       farm_names)
+        
+        fname = partition+'_Info'
+        if self.writeOptionsFile(partition, fname, opts.value) is None:
+          return None
+
+        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
+        opts.add('//\n// ---------------- Tell1 board information:')
+        opts.add('OnlineEnv.Tell1Boards         = {\n')
+        for b in self.run.tell1Boards.data: opts.add('  "%s", \"%s", "",\n'%(b,b))
+        opts.value = opts.value[:-2] + '\n};\n'
+        fname = partition+'_Tell1Boards'
+        if self.writeOptionsFile(partition, fname, opts.value) is None:
+          return None
+
         return self.run
     return None
 

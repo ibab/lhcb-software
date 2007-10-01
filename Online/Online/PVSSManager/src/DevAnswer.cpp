@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DevAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DevAnswer.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  CfgDetail.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DevAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DevAnswer.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 
 #include "PVSS/DevAnswer.h"
 
@@ -24,7 +24,7 @@ void DevAnswer::clear()  {
 /// Print errors
 void DevAnswer::print() const   {
   for(size_t i=0; i<m_nerrs; ++i)  {
-    printf("%s\n",m_errs[i]);
+    ::printf("PVSS> %s\n",m_errs[i]);
   }
 }
 

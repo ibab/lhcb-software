@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.4 2007-05-02 14:46:28 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  Platform.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Platform.cpp,v 1.4 2007-05-02 14:46:28 frankm Exp $
+// $Id: Platform.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 
 #include "PVSS/Internals.h"
 #include <string>
@@ -49,11 +49,11 @@ int PVSS::pvss_sleep(int millisecs)  {
 PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)  {
   std::string dll = lib;
   dll += ".dll";
-  // printf("--------> Loading DLL:%s\n",dll.c_str());
+  // printf("PVSS> --------> Loading DLL:%s\n",dll.c_str());
   void* handle = ::LoadLibrary(dll.c_str());
   if ( 0 == handle )  {
-    ::printf("Failed to load library:%s\n",dll.c_str());
-    ::printf("Error: %s\n",pvss_load_error());
+    ::printf("PVSS> Failed to load library:%s\n",dll.c_str());
+    ::printf("PVSS> Error: %s\n",pvss_load_error());
     return pvss_function_t(0);
   }
   return (pvss_function_t)::GetProcAddress(HMODULE(handle),fun);
@@ -143,11 +143,11 @@ PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)
   std::string dll = "lib";
   dll += lib;
   dll += ".so";
-  printf("--------> Loading DLL:%s\n",dll.c_str());
+  printf("PVSS> --------> Loading DLL:%s\n",dll.c_str());
   void* handle = ::dlopen(dll.c_str(),RTLD_NOW);
   if ( 0 == handle )  {
-    ::printf("Failed to load library:%s\n",dll.c_str());
-    ::printf("Error: %s\n",pvss_load_error());
+    ::printf("PVSS> Failed to load library:%s\n",dll.c_str());
+    ::printf("PVSS> Error: %s\n",pvss_load_error());
     return pvss_function_t(0);
   }
   return (pvss_function_t)::dlsym(handle,fun);

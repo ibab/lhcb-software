@@ -10,8 +10,8 @@ main()  {  StreamControlPanel_initPartitionDisplay($stream, $partition);    }
  E E E E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -119,7 +119,7 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 280 20 410 130
 0 2 2 "0s" 0 0 0 64 0 0  280 20 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
@@ -139,7 +139,7 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 410 20 790 130
 0 2 2 "0s" 0 0 0 64 0 0  410 20 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 

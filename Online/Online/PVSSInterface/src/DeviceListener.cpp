@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceListener.cpp,v 1.2 2007-03-12 19:30:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceListener.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceListener.cpp,v 1.2 2007-03-12 19:30:17 frankb Exp $
+// $Id: DeviceListener.cpp,v 1.3 2007-10-01 14:46:55 frankm Exp $
 
 // Framework include files
 #include "PVSS/DeviceListener.h"
@@ -50,19 +50,24 @@ void DeviceListener::handle(const Event& ev)  {
   try {
     if ( ev.type == PVSSEvent )  {
       m_sensor = (DeviceSensor*)ev.data;
-      DevDesc& d = m_sensor->devices();
-      handleDevices();
-      for(DevDesc::iterator i=d.begin(); i!=d.end();++i)  {
+      DevDesc& devices = m_sensor->devices();
+      DevDesc& invalid = m_sensor->invalidDevices();
+      for(DevDesc::iterator i=invalid.begin(); i!=invalid.end();++i)  {
         m_dp = (*i).second;
+        handleInvalidDevice();
+      }
+      for(DevDesc::iterator j=devices.begin(); j!=devices.end();++j)  {
+        m_dp = (*j).second;
         handleDevice();
       }
+      handleDevices();
     }
   }
   catch(std::exception& e) {
-    ::printf("Exception occurred while executing DeviceListener callbacks:\n%s\n",e.what());
+    ::printf("PVSS> Exception occurred while executing DeviceListener callbacks:\n%s\n",e.what());
   }
   catch(...) {
-    ::printf("Unknown exception occurred while executing DeviceListener callbacks.\n");
+    ::printf("PVSS> Unknown exception occurred while executing DeviceListener callbacks.\n");
   }
   m_sensor = 0;
   m_dp = 0;
@@ -74,4 +79,8 @@ void DeviceListener::handleDevices()  {
 
 /// Interface callback to handle single devices one by one
 void DeviceListener::handleDevice()  {
+}
+
+/// Interface callback to handle single devices one by one
+void DeviceListener::handleInvalidDevice()  {
 }

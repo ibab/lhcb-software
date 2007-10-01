@@ -9,6 +9,10 @@ gbl  = Utils.gbl
 PVSS = PyLCGDict.makeNamespace('PVSS')
 
 def batchMode():
+  """
+  Helper function to determine if the process executes in batch mode or interactive mode.
+  The distinction is done by checking the availability of a terminal as output device.
+  """
   return not os.isatty(sys.stdout.fileno())
 
 # == External class definitions ===============================================
@@ -64,8 +68,10 @@ DataPoint         = PVSS.DataPoint
 DP                = PVSS.DataPoint
 #
 def DataPoint_get(self):
+  "Datapoint property function: get"
   return self.value().data()
 def DataPoint_set(self,value):
+  "Datapoint property function: set"
   import traceback
   #print 'DataPoint_set:',value.__class__
   try:
@@ -116,14 +122,17 @@ DataPoint.data = property(DataPoint_get,DataPoint_set)
 
 # =============================================================================
 def debug():
+  "Access PVSS debug flag"
   return PVSS.pvss_debug()
 
 # =============================================================================
 def setDebug(val):
+  "Set PVSS debug flag"
   PVSS.pvss_set_debug(val)
 
 # =============================================================================
 def system(name=None):
+  "Access PVSS System name and identifier"
   if name is not None:
     id = PVSS.systemID(name)
     if id != 0:
@@ -133,7 +142,9 @@ def system(name=None):
 
 # =============================================================================
 def defaultSystem():
+  "Access PVSS default system"
   return (PVSS.defaultSystemID(),PVSS.defaultSystemName())
+
 # =============================================================================
 class APIManager:
   """
@@ -191,31 +202,38 @@ ILLEGAL_OP          = 88        # Operation not permitted with these arguments
 ILLEGAL_KEYWORD     = 95        # Unknown keyword in resource
 default_error_type  = ILLEGAL_VALUE
 
+# =============================================================================
 def printErrorCodes():
+  "Print all PVSS error codes."
   for i in xrange(110):
     logger.info(i, 'Test message')
 
-# Printout to logger window
+# =============================================================================
 def log(severity, type, message):
+  "Print message to PVSS logger device."
   logger.log(severity, type, message)
 
-# Informational printout to logger window
+# =============================================================================
 def info(message,timestamp=None,type=default_error_type):
+  "Informational printout to PVSS logger window"
   Utils.log(message,timestamp=timestamp)
   logger.info(type, message)
 
-# Warning printout to logger window
+# =============================================================================
 def warning(message,timestamp=None,type=default_error_type):
+  "Warning printout to PVSS logger window"
   Utils.warning(message,timestamp=timestamp)
   logger.warning(type, message)
 
-# Sever error printout to logger window
+# =============================================================================
 def error(message,timestamp=None,type=default_error_type):
+  "Sever error printout to logger window"
   Utils.error(message,timestamp=timestamp)
   logger.error(type, message)
 
-# Fatal printout to logger window. kill the program instance!
+# =============================================================================
 def fatal(message,timestamp=None,type=default_error_type):
+  "Fatal printout to logger window. kill the program instance!"
   Utils.error(message,timestamp=timestamp)
   logger.fatal(type, message)
 

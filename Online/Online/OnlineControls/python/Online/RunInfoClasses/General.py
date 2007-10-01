@@ -24,29 +24,31 @@ class General:
 
         @return reference to initialized object
     """
-    self.manager  = manager
-    self.name     = name
-    self.reader   = self.manager.devReader()
-    self.runTyp     = self.dp('general.runType')
-    self.partID     = self.dp('general.partId')
-    self.nSubFarm   = self.dp('HLTFarm.nSubFarms')
-    self.storeFlag  = self.dp('Storage.storeFlag')
-    self.rcvInfra   = self.dp('Storage.recvInfrastructure')
-    self.strInfra   = self.dp('Storage.streamInfrastructure')
-    self.streams    = self.dp('Storage.streamTypes')
-    self.strMult    = self.dp('Storage.streamMultiplicity')
+    self.manager     = manager
+    self.name        = name
+    self.reader      = self.manager.devReader()
+    self.runTyp      = self.dp('general.runType')
+    self.partID      = self.dp('general.partId')
+    self.partition   = self.dp('general.partName')
+    self.nSubFarm    = self.dp('HLTFarm.nSubFarms')
+    self.storeFlag   = self.dp('Storage.storeFlag')
+    self.rcvInfra    = self.dp('Storage.recvInfrastructure')
+    self.strInfra    = self.dp('Storage.streamInfrastructure')
+    self.streams     = self.dp('Storage.streamTypes')
+    self.strMult     = self.dp('Storage.streamMultiplicity')
 
-    self.monFlag    = self.dp('MonFarm.monFlag')
-    self.monTypes   = self.dp('MonFarm.monTypes')
-    self.monStreams = self.dp('MonFarm.monStreams')
-    self.monMult    = self.dp('MonFarm.monMultiplicity')
-    self.monInfra   = self.dp('MonFarm.monInfrastructure')
-    self.relayInfra = self.dp('MonFarm.relayInfrastructure')
+    self.monFlag     = self.dp('MonFarm.monFlag')
+    self.monTypes    = self.dp('MonFarm.monTypes')
+    self.monStreams  = self.dp('MonFarm.monStreams')
+    self.monMult     = self.dp('MonFarm.monMultiplicity')
+    self.monInfra    = self.dp('MonFarm.monInfrastructure')
+    self.relayInfra  = self.dp('MonFarm.relayInfrastructure')
 
-    self.tell1Boards= self.dp('SubDetectors.tell1List')
+    self.tell1Boards = self.dp('SubDetectors.tell1List')
 
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
+    self.reader.add(self.partition)
     self.reader.add(self.nSubFarm)
     # Storage information
     self.reader.add(self.storeFlag)

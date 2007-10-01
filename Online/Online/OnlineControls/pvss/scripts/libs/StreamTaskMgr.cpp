@@ -53,31 +53,48 @@ int StreamTaskMgr_installTaskType()  {
   else  {
     DebugN("Data type "+type+" are already defined....Nothing to do.");
   }
+  type="StreamTaskCreator";
+  if ( dynlen(dpTypes(type)) ==0 ) {
+    dyn_dyn_string names;
+    dyn_dyn_int types;
+    names[1]  = makeDynString (type,"","","");
+    names[2]  = makeDynString ("","Name","","");
+    names[3]  = makeDynString ("","Start","","");
+    names[4]  = makeDynString ("","Stop","","");
+    names[5]  = makeDynString ("","Kill","","");
+    types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
+    types[2]  = makeDynInt (0,DPEL_STRING,0,0);
+    types[3]  = makeDynInt (0,DPEL_STRING,0,0);
+    types[4]  = makeDynInt (0,DPEL_STRING,0,0);
+    types[5]  = makeDynInt (0,DPEL_STRING,0,0);
+    int result = dpTypeCreate(names,types);
+    StreamTaskMgr_checkErrors(result);
+    DebugN("Installation of data type "+type+" finished.");
+  }
+  else  {
+    DebugN("Data type "+type+" are already defined....Nothing to do.");
+  }
 }
 //=============================================================================
 int StreamTaskMgr_connectTaskManager(string stream)  {
   dyn_string recvNodes, strmNodes;
   string cfg = "DimStorage";
   fwDim_createConfig(cfg);
-  int res = dpGet(stream+".RecvNodes",recvNodes,
-                  stream+".StreamNodes",strmNodes);
+  StreamTaskMgr_installTaskType();
+  int res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
   if ( 0 == res )  {
+    dynAppend(recvNodes,strmNodes);
     for(int i=1; i<=dynlen(recvNodes); ++i)  {
-      string name = recvNodes[i];
-      string dp_name = "fwFMC_"+name;
-      string svc_name = "/" + strtoupper(name) + "/task_manager/start";
-      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StNode");
-      dp_name = dp_name+".StTaskManager.settings.start";
-      fwDim_subscribeCommand(cfg,svc_name,dp_name);
-      DebugN("Connect "+svc_name+" to "+dp_name);
-    }
-    for(int i=1; i<=dynlen(strmNodes); ++i)  {
-      string name = strmNodes[i];
-      string dp_name = "fwFMC_"+name;
-      string svc_name = "/" + strtoupper(name) + "/task_manager/start";
-      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StNode");
-      dp_name = dp_name+".StTaskManager.settings.start";
-      fwDim_subscribeCommand(cfg,svc_name,dp_name);
+      string name = strtoupper(recvNodes[i]);
+      string dp_name = name+"_StreamTaskCreator";
+      string svc_name = "/" + name + "/task_manager";
+      fwDim_unSubscribeCommandsByDp("DimStorage",dp_name+"*");
+      fwDim_unSubscribeServicesByDp("DimStorage",dp_name+"*");
+      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
+      dpSet(dp_name+".Name",name);
+      fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
+      fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
+      fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill");
       DebugN("Connect "+svc_name+" to "+dp_name);
     }
     DebugN("All Done.");

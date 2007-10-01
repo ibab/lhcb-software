@@ -101,7 +101,7 @@ void StreamControlPanel_initTasksPanel(string stream, string partition, string n
 }
 //=============================================================================
 void StreamControl_trace(string msg)  {
-  DebugN(msg);
+  // DebugN(msg);
 }
 //=============================================================================
 //
@@ -218,13 +218,42 @@ void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
   m_params.backCol = "_Button";
   m_desc.backCol   = "_Transparent";
   m_params.backCol = "_Transparent";
-  m_displayedPartitions.visible = 0;
-  m_partition.visible = 0;
 }
 //=============================================================================
 //
 //  ALLOCATION DISPLAY
 //
+//=============================================================================
+void StreamControlPanel_CheckAllocPanel(string dp, string value)  {
+  string partition = "";
+  string stream = m_streamName.text;
+  if ( dpExists(value+".general.partName") )  {
+    LayerOn(2);
+    setValue("m_sliceNotInUse","visible",0);
+    dpGet(value+".general.partName",partition);
+    StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value);
+    StreamControlPanel_initAllocPanel(stream,partition);
+    return;
+  }
+  LayerOff(2);
+  setValue("m_sliceNotInUse","visible",1);
+}
+//=============================================================================
+void StreamControlPanel_startAllocPanel(string slice, string stream)  {
+  string run_info;
+  string sys = getSystemName();
+  sys = substr(sys,0,strlen(sys)-1);
+  m_streamName.text = stream;
+  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system "+sys+"\nis currently not used.");
+  setValue("m_sliceNotInUse","backCol","_Transparent");
+  setValue("m_sliceNotInUse","foreCol","red");
+  if (dpExists(slice+".RunInfo"))  {
+    dpConnect("StreamControlPanel_CheckAllocPanel",slice+".RunInfo");
+    return;
+  }
+  LayerOff(2);
+  setValue("m_sliceNotInUse","visible",1);  
+}
 //=============================================================================
 void StreamControlPanel_initAllocPanel(string name, string partition)  {
   string font = "Arial,8,-1,5,50,0,0,0,0,0";
@@ -238,6 +267,8 @@ void StreamControlPanel_initAllocPanel(string name, string partition)  {
   m_partition.backCol = "yellow";
   m_partitionName.visible = 1;
   m_partitionName.text = "Partition:"+partition;
+  m_runInfoText.visible = 1;
+  m_runInfoText.text = "Run info:"+partition;
   m_recvSlots.enabled = 0;
   m_strmSlots.enabled = 0;
   m_recvCheck.visible = 0;
@@ -272,12 +303,15 @@ void StreamControlPanel_setupAllocWidgets()  {
 //=============================================================================
 void StreamControlPanel_initAllocData(string stream, string partition)  {
   int recv_slots = 1, strm_slots = 0, recv_strategy = 2, strm_strategy = 2;
-  string info = "LBECS:"+partition+"_RunInfo.";
+  string dp, info = "LBECS:"+partition+"_RunInfo";
   dyn_int strm_mult;
   dyn_string recv_infra, strm_infra, strm_types;
-  int res = -1;
+  int res = 0;
   if ( strpos(stream,"Storage") >= 0 )  {
-    res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+    dp = strtoupper(stream)+":"+m_runInfoDP.text;
+    if ( !dpExists(dp) ) res = -1;
+    if ( 0 == res ) res = dpGet(dp,info);
+    if ( !dpExists(info) ) res = -1;
     if ( 0 == res )  {
       res = dpGet(info+".HLTFarm.nSubFarms",recv_slots,
                   info+".Storage.recvInfrastructure", recv_infra,
@@ -289,7 +323,10 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
     }
   }
   else if ( strpos(stream,"Monitoring") >= 0 )  {
-    res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+    dp = strtoupper(stream)+":"+m_runInfoDP.text;
+    if ( !dpExists(dp) ) res = -1;
+    if ( 0 == res ) res = dpGet(dp,info);
+    if ( !dpExists(info) ) res = -1;
     if ( 0 == res )  {
       res = dpGet(info+".MonFarm.relayInfrastructure", recv_infra,
                   info+".MonFarm.monInfrastructure", strm_infra,
@@ -298,15 +335,15 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
                   info+".MonFarm.recvStrategy", recv_strategy,
                   info+".MonFarm.strmStrategy", strm_strategy);
     }
-    recv_slots = 0;
-    if ( 0 == res )  {
-      for(int i=1, n=dynlen(strm_mult); i<n; ++i) 
-        recv_slots = recv_slots + strm_mult[i];   
-    }
-    else  {
-      StreamControlPanel_checkErrors(res);
-      return;
-    }
+  }
+  else  {
+    StreamControlPanel_checkErrors(res);
+    return;
+  }
+  recv_slots = 0;
+  if ( 0 == res )  {
+    for(int i=1, n=dynlen(strm_mult); i<n; ++i) 
+      recv_slots = recv_slots + strm_mult[i];   
   }
   string s= "";
   for(int i=1, n=dynlen(strm_mult); i<=n; ++i)  {
@@ -320,14 +357,15 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
     s = s + strm_infra[i];
     if ( i < n ) s = s+ "\n";
   }
-  m_recvInfraTaskTypes.text = s;
+  m_strmInfraTaskTypes.text = s;
   s = "";
   for(int i=1, n=dynlen(recv_infra); i<=n; ++i)  {
     s = s + recv_infra[i];
     if ( i < n ) s = s+ "\n";
   }
-  m_strmInfraTaskTypes.text = s;
+  m_recvInfraTaskTypes.text = s;
   m_partitionName.text = "Partition:"+partition;
+  m_runInfoText.text = "Run info:"+info;
   m_recvSlots.text = recv_slots;
   m_recvStrategy.sbMinimum = 1;
   m_recvStrategy.sbMaximum = 50;
@@ -382,6 +420,7 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
     int res = -1;
     if ( strpos(stream,"Storage") >= 0 )  {
       res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+      if ( !dpExists(info) ) res = -1;
       if ( 0 == res )  {
         res = dpSet(info+".Storage.recvInfrastructure", recv_infra,
                     info+".Storage.streamInfrastructure", strm_infra,
@@ -393,6 +432,7 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
     }
     else if ( strpos(stream,"Monitoring") >= 0 )  {
       res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
+      if ( !dpExists(info) ) res = -1;
       if ( 0 == res )  {
         res = dpSet(info+".MonFarm.relayInfrastructure", strm_infra,
                     info+".MonFarm.monInfrastructure", recv_infra,
