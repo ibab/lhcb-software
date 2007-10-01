@@ -88,7 +88,9 @@
 -->
 
   <ProductionCut name="RichAerogelDeltaElectronCut"
-      electronCut="1.5*mm"/>
+      electronCut="1.5*mm"
+      positronCut="5.0*mm"
+      gammaCut="10.0*mm"/>
   </ProductionCuts>
 
   <Regions>
