@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.5 2007-10-01 11:40:19 marcocle Exp $ 
+// $Id: Services.cpp,v 1.6 2007-10-01 11:42:33 marcocle Exp $ 
 
 // Include files
 #include "DetDesc/Services.h"
@@ -17,7 +17,7 @@ DetDesc::Services::Services() : m_svcLocator(0),
                                 m_msgSvc(0),
                                 m_updMgrSvc(0),
                                 m_refCount(0) {
-};
+}
 
 /// a static instance of the Services class
 DetDesc::Services* DetDesc::Services::s_services = 0 ;
@@ -35,7 +35,7 @@ DetDesc::Services::~Services() {
   if (0 != m_detSvc) m_detSvc->release();
   if (0 != m_msgSvc) m_msgSvc->release();
   if (0 != m_updMgrSvc) m_updMgrSvc->release();
-};
+}
 
 /**
  * the accessor to Detector data provider 
@@ -55,7 +55,7 @@ IDataProviderSvc* DetDesc::Services::detSvc() {
   }
   // If already there, return the cached service
   return m_detSvc ;
-};
+}
 
 /**
  * the accessor to Service Locator
@@ -75,7 +75,7 @@ ISvcLocator* DetDesc::Services::svcLocator() {
   }
   // If already there, return the cached service
   return m_svcLocator ;
-};
+}
 
 /**
  * the accessor to Message Service 
@@ -94,7 +94,7 @@ IMessageSvc* DetDesc::Services::msgSvc() {
     return m_msgSvc;
   }
   return m_msgSvc ;
-};
+}
 
 /**
  * the accessor to Update Manager Service
@@ -112,7 +112,7 @@ IUpdateManagerSvc* DetDesc::Services::updMgrSvc(bool create) {
     }
   }
   return m_updMgrSvc ;
-};
+}
 
 /**
  * Gets an instance of Services
@@ -134,11 +134,11 @@ unsigned long DetDesc::Services::release() {
     return 0;
   }
   return m_refCount;
-};
+}
 
 /// Increment the reference count of this instance.
 unsigned long DetDesc::Services::addRef() 
 {
   m_refCount++;
   return m_refCount;
-};
+}
