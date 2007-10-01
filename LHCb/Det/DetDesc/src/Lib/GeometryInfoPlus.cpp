@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.29 2007-09-21 07:01:03 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.30 2007-10-01 11:40:48 marcocle Exp $
 // Include files 
 
 // GaudiKernel
@@ -196,8 +196,8 @@ StatusCode GeometryInfoPlus::initialize()
 {
 
   m_services = DetDesc::services();
-  if ( (svcLocator()->service("UpdateManagerSvc",m_ums,true) ).isFailure() )
-  { throw GeometryInfoException("Could not load UpdateManagerSvc");  }
+  const bool create = true;
+  IUpdateManagerSvc *ums = updMgrSvc(create);
   
   m_hasAlignmentPath=!m_alignmentPath.empty();
 
@@ -208,7 +208,7 @@ StatusCode GeometryInfoPlus::initialize()
 
   //  return ( getAlignmentCondition() ) ? cache() : StatusCode::FAILURE;  
   return ( getAlignmentCondition() ) ? 
-    m_ums->update(this) : StatusCode::FAILURE;  
+    ums->update(this) : StatusCode::FAILURE;
 }
 //=============================================================================
 bool GeometryInfoPlus::hasLVolume() const
@@ -447,8 +447,9 @@ StatusCode GeometryInfoPlus::setLocalOffNominalDeltaMatrix(const Gaudi::Transfor
                              deltaEnd(), 
                              idealBegin()) ) return StatusCode::FAILURE;
 
-  m_ums->invalidate(this);
-  return m_ums->newEvent();    
+  IUpdateManagerSvc *ums = updMgrSvc();
+  ums->invalidate(this);
+  return ums->newEvent();    
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::updateChildren() 
@@ -494,8 +495,6 @@ void GeometryInfoPlus::clearMatrices()
     m_idealMatrixInv = 0; 
   }
 
-
-
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::getAlignmentCondition() 
@@ -537,9 +536,9 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
 StatusCode GeometryInfoPlus::registerCondition() 
 {
   log() << MSG::VERBOSE << "registerCondition" << endmsg;
-  m_ums->registerCondition(this, 
-                           m_alignmentPath, 
-                           &GeometryInfoPlus::cache);
+  updMgrSvc()->registerCondition(this, 
+                                 m_alignmentPath, 
+                                 &GeometryInfoPlus::cache);
   return StatusCode::SUCCESS;  
 }
 //=============================================================================
@@ -552,7 +551,7 @@ StatusCode GeometryInfoPlus::registerSupportGI()
 //     StatusCode::SUCCESS;
   if (gi) {
     log() << MSG::VERBOSE << "register parent GI!" << endmsg;
-    m_ums->registerCondition(this, gi, &IGeometryInfo::cache);
+    updMgrSvc()->registerCondition(this, gi, &IGeometryInfo::cache);
     log() << MSG::VERBOSE << "Registered" << endmsg;
   } else {
     log() << MSG::VERBOSE << "No parent " << endmsg;
@@ -1186,21 +1185,8 @@ GeometryInfoPlus::~GeometryInfoPlus()
     delete m_log; 
     m_log = 0; 
   }
-  //  m_ums->unregister(this); causes crash after DetDescSvc finalisation
-  m_ums->release();
+  
+  updMgrSvc()->unregister(this);
   m_services->release();
 }
-//=============================================================================
-ISvcLocator* GeometryInfoPlus::svcLocator() const 
-{
-  return m_services->svcLocator();
-}
-
-//=============================================================================
-IMessageSvc* GeometryInfoPlus::msgSvc() const {
-  return m_services->msgSvc();
-}
-//=============================================================================
-IDataProviderSvc* GeometryInfoPlus::dataSvc() const { 
-  return m_services->detSvc(); }
 //=============================================================================

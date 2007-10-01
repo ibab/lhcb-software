@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.10 2007-09-20 16:56:18 jonrob Exp $
+// $Id: GeometryInfoPlus.h,v 1.11 2007-10-01 11:40:48 marcocle Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -324,11 +324,18 @@ protected:
 
 private:
 
-  IMessageSvc*       msgSvc() const;
-  IDataProviderSvc* dataSvc() const;
-  ISvcLocator*      svcLocator() const;
-  IUpdateManagerSvc* m_ums;
-  
+  inline IMessageSvc*       msgSvc() const {
+    return m_services->msgSvc();
+  }
+  inline IDataProviderSvc*  dataSvc() const {
+    return m_services->detSvc();
+  }
+  inline ISvcLocator*       svcLocator() const {
+    return m_services->svcLocator();
+  }
+  inline IUpdateManagerSvc* updMgrSvc(bool create = false) const {
+    return m_services->updMgrSvc(create);
+  }
 
   inline MsgStream& log() const  { return *m_log; }
 
