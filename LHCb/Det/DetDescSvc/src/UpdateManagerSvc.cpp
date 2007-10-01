@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.15 2007-08-02 17:04:38 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.16 2007-10-01 11:41:36 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -223,6 +223,10 @@ IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 }
 void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf,
                                            BasePtrSetter *ptr_dest){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
+  }
+
   MsgStream log(msgSvc(),name());
 
   std::string cond_copy(condition);
@@ -309,6 +313,9 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
   m_head_until = 0;
 }
 void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
+  }
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
       << " for object of type " << mf->type().name() << " at " << std::hex << mf->castToVoid() << endmsg;
@@ -347,6 +354,10 @@ StatusCode UpdateManagerSvc::newEvent(){
   return StatusCode::FAILURE;
 }
 StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::newEvent",StatusCode::FAILURE);
+  }
+
   StatusCode sc = StatusCode::SUCCESS;
 
 #ifndef WIN32
@@ -416,6 +427,10 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   return sc;
 }
 StatusCode UpdateManagerSvc::i_update(void *instance){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::update",StatusCode::FAILURE);
+  }
+
   if ( m_outputLevel <= MSG::DEBUG ) {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Update specific object at " << instance << endmsg;
@@ -447,6 +462,10 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
   return StatusCode::FAILURE;
 }
 void UpdateManagerSvc::i_invalidate(void *instance){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::invalidate",StatusCode::FAILURE);
+  }
+
   if ( m_outputLevel <= MSG::DEBUG ) {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Invalidate object at " << instance << endmsg;
@@ -538,6 +557,16 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
 }
 
 void UpdateManagerSvc::i_unregister(void *instance){
+  if ( state() != INITIALIZED ){
+    // un-registration is allowed after service finalize (no-op).
+    if ( m_outputLevel <= MSG::VERBOSE ) {
+      MsgStream log(msgSvc(),name());
+      log << MSG::VERBOSE << "Trying to unregister object at " << instance
+          << ", with the service OFFLINE"<< endmsg;
+    }
+    return;
+  }
+
   if ( m_outputLevel <= MSG::DEBUG ) {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
@@ -570,6 +599,10 @@ void UpdateManagerSvc::i_unregister(void *instance){
 }
 
 void UpdateManagerSvc::dump(){
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::dump",StatusCode::FAILURE);
+  }
+  
   MsgStream log(msgSvc(),name());
 
   std::auto_ptr<std::ofstream> dia_file;
@@ -668,6 +701,10 @@ void UpdateManagerSvc::dump(){
 
 
 void UpdateManagerSvc::purge() {
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::purge",StatusCode::FAILURE);
+  }
+
   MsgStream log(msgSvc(),name());
   
   log << MSG::INFO << "Purging dependencies network" << endmsg;
@@ -704,6 +741,10 @@ void UpdateManagerSvc::purge() {
 //=========================================================================
 bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, Gaudi::Time &until,
                                    bool path_to_db) {
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
+  }
+
   // search
   Item *item = findItem(path,path_to_db);
   if (item) {
@@ -719,6 +760,10 @@ bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, G
 //=========================================================================
 void UpdateManagerSvc::setValidity(const std::string path, const Gaudi::Time& since, const Gaudi::Time &until,
                                    bool path_to_db) {
+  if ( state() != INITIALIZED ){
+    throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
+  }
+
   if (!path_to_db) { // the DDS path is unique
     // search
     Item *item = findItem(path,path_to_db);
