@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.4 2006-01-20 16:35:53 cattanem Exp $ 
+// $Id: Services.cpp,v 1.5 2007-10-01 11:40:19 marcocle Exp $ 
 
 // Include files
 #include "DetDesc/Services.h"
@@ -101,13 +101,13 @@ IMessageSvc* DetDesc::Services::msgSvc() {
  * @exception GaudiException the service could not be located 
  * @return pointer to UpdateManagerSvc instance
  */
-IUpdateManagerSvc* DetDesc::Services::updMgrSvc() {
+IUpdateManagerSvc* DetDesc::Services::updMgrSvc(bool create) {
   // locate the service if necessary
   if (0 == m_updMgrSvc) {
-    StatusCode sc = svcLocator()->service("UpdateManagerSvc" , m_updMgrSvc);
+    StatusCode sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc, create);
     if (!sc.isSuccess()) {
       throw GaudiException
-        ("DetDesc::Could not locate IIUpdateManagerSvc='UpdateManagerSvc'",
+        ("DetDesc::Could not locate IUpdateManagerSvc='UpdateManagerSvc'",
          "*DetDescException*" , StatusCode::FAILURE);
     }
   }

@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.5 2007-03-16 15:57:09 cattanem Exp $
+// $Id: Services.h,v 1.6 2007-10-01 11:40:19 marcocle Exp $
 #ifndef DETDESC_SERVICES_H 
 #define DETDESC_SERVICES_H 1
 
@@ -53,7 +53,7 @@ namespace DetDesc {
      * @exception GaudiException the service could not be located 
      * @return pointer to UpdateManagerSvc instance
      */
-    IUpdateManagerSvc* updMgrSvc();
+    IUpdateManagerSvc* updMgrSvc(bool create = false);
     
     /// reset the static pointer 
     static void setServices ( DetDesc::Services* val );
