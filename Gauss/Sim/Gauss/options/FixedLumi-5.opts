@@ -17,3 +17,6 @@ Generation.FixedLuminosity.Luminosity =  5*LumiUnit;
 // For rare events a special tool is specified in EventType
 Generation.FixedLuminosityForRareProcess.Luminosity =  5*LumiUnit;
 
+// For Machine Induced background events, not used but to store in Header
+MIBackground.Luminosity = 5*LumiUnit;
+
