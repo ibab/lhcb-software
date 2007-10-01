@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.13 2007-02-23 14:00:50 jonrob Exp $
+// $Id: StandardD0.opts,v 1.14 2007-10-01 17:13:58 spradlin Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 
 // ============================================================================
 
@@ -31,6 +31,9 @@ DataOnDemandSvc.Algorithms += {
   // Loose D0->KsKK by Cristina Lazzeroni
   "DATA='/Event/Phys/StdLooseD02KsKK/Particles'    TYPE='GaudiSequencer/StdLooseD02KsKKSeq'",
   "DATA='/Event/Phys/StdLooseD02KsKK/Vertices'     TYPE='GaudiSequencer/StdLooseD02KsKKSeq'",
+  // Loose D0->KsKPi by Jim Libby
+  "DATA='/Event/Phys/StdLooseD02KsKPi/Particles'    TYPE='GaudiSequencer/StdLooseD02KsKPiSeq'",
+  "DATA='/Event/Phys/StdLooseD02KsKPi/Vertices'     TYPE='GaudiSequencer/StdLooseD02KsKPiSeq'",
   // Loose D0 -> 2K2Pi (No cc) by Andy Powell
   "DATA='/Event/Phys/StdLooseD02KKPiPiNoCC/Particles'   TYPE='GaudiSequencer/StdLooseD02KKPiPiNoCCSeq'",
   "DATA='/Event/Phys/StdLooseD02KKPiPiNoCC/Vertices'    TYPE='GaudiSequencer/StdLooseD02KKPiPiNoCCSeq'",
@@ -48,6 +51,8 @@ StdLooseD02KsPiPiSeq.Members += { "MakeResonances/StdLooseD02KsPiPi" };
 StdLooseD02KsPiPiSeq.MeasureTime = true;
 StdLooseD02KsKKSeq.Members += { "MakeResonances/StdLooseD02KsKK" };
 StdLooseD02KsKKSeq.MeasureTime = true;
+StdLooseD02KsKPiSeq.Members += { "MakeResonances/StdLooseD02KsKPi" };
+StdLooseD02KsKPiSeq.MeasureTime = true;
 StdLooseD02KKPiPiNoCCSeq.Members += { "MakeResonances/StdLooseD02KKPiPiNoCC" };
 StdLooseD02KKPiPiNoCCSeq.MeasureTime = true;
 StdLooseD02KPiPiPiCASeq.Members += { "MakeResonances/StdLooseD02KPiPiPiCA" };
@@ -152,6 +157,32 @@ StdLooseD02KsKK.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
 StdLooseD02KsKK.MotherFilter.DaughterVertexFilterCriterion.DaughterName = "KS0";
 StdLooseD02KsKK.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*mm; //NEW
 /*************************************************************************
+ *  Standard Loose D0->KsKPi
+ *  @author J. Libby
+ */
+StdLooseD02KsKPi.PhysDesktop.InputLocations = {"Phys/StdLooseKaons","Phys/StdLoosePions"};
+StdLooseD02KsKPi.PhysDesktop.InputLocations += {"Phys/StdLooseKsLL","Phys/StdLooseKsDD"};
+StdLooseD02KsKPi.DecayDescriptor = "[D0 -> KS0 K+ pi-]cc"; // or D* gets confused
+StdLooseD02KsKPi.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
+                                              "pi+ :    KinFilterCriterion/PiKin",  
+                                             "KS0 :     KinFilterCriterion/KS0Kin"};
+
+StdLooseD02KsKPi.DaughterFilter.KKin.MinPt = 0.3*GeV;
+StdLooseD02KsKPi.DaughterFilter.PiKin.MinPt = 0.4*GeV;
+StdLooseD02KsKPi.DaughterFilter.KS0Kin.MinPt = 0.8*GeV;
+StdLooseD02KsKPi.KillOverlap = true;
+//StdLooseD02KsKK.Window = 120.*MeV ; //
+StdLooseD02KsKPi.Window = 80.*MeV ; //
+StdLooseD02KsKPi.MinPt = 1.5*GeV; // MeV
+StdLooseD02KsKPi.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
+                                             PVIPFilterCriterion,
+                                             DaughterVertexFilterCriterion" };
+StdLooseD02KsKPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 40.0;
+StdLooseD02KsKPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
+StdLooseD02KsKPi.MotherFilter.DaughterVertexFilterCriterion.DaughterName = "KS0";
+StdLooseD02KsKPi.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*mm; //NEW
+/*************************************************************************
+
  *  Standard Loose D0->KKPiPi No CC
  *  @author A.Powell
  *
