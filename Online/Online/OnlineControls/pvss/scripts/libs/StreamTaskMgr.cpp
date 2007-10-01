@@ -225,15 +225,16 @@ int StreamTaskMgr_createTree(string stream,
   }
   if ( 0 == res )  {
     string name, node = stream+"_"+slice_name;
-    string stream_node = fwFsmTree_addNode("FSM", node, "FSM_Slice", 1);
+    //string slice_node = fwFsmTree_addNode("Data"+stream, stream+"_Slices", "FSM_Holder", 1);
+    string slice_node = fwFsmTree_addNode("FSM", stream+"_Slices", "FSM_Holder", 1);
+    string stream_node = fwFsmTree_addNode(stream+"_Slices", node, "FSM_Slice", 1);
+    DebugN("Slices:"+slice_node+" Stream:"+stream_node);
     if ( stream_node != "" )   {
       fwFsmTree_addNode(stream_node, node+"_Config", "StreamConfigurator", 0);
       fwFsmTree_setNodeLabel(node+"_Config","Configurator");
       for(int i=1; i<=dynlen(sendNodes); ++i)  {
-        //name = node+"_"+sendNodes[i]+"_MON";
         name = node+"_"+sendNodes[i];
         StreamTaskMgr_createNode(stream_node,name,"FSM_Tasks",num_monTasks);
-        //fwFsmTree_setNodeLabel(name,"Monitor:"+sendNodes[i]);
         fwFsmTree_setNodeLabel(name,sendNodes[i]);
       }
       for(int i=1; i<=dynlen(recvNodes); ++i)  {
@@ -264,7 +265,7 @@ int StreamTaskMgr_createAllTree(string stream,
 {
   for(int i=0; i<16; ++i)  {    
     string node;
-    sprintf(node,"Slice%02d",i);
+    sprintf(node,"Slice%02X",i);
     StreamTaskMgr_createTree(stream,node,
                              num_recvClass0,num_recvClass1,
                              num_strmClass0,num_strmClass1,
@@ -289,7 +290,7 @@ int StreamTaskMgr_deleteTree(string stream, string slice_name, int refresh=1)  {
 int StreamTaskMgr_deleteAllTree(string stream)  {
   for(int i=0; i<16; ++i)  {    
     string node;
-    sprintf(node,"Slice%02d",i);
+    sprintf(node,"Slice%02X",i);
     StreamTaskMgr_deleteTree(stream,node,0);
   }
   fwFsmTree_refreshTree();
