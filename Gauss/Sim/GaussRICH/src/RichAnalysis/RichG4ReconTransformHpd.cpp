@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.7 2006-03-01 10:01:58 seaso Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.8 2007-10-02 12:54:51 gcorti Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -25,9 +25,6 @@
 // RichDet
 #include "RichDet/DeRich.h"
 
-//#include <CLHEP/Geometry/Point3D.h>
-//#include <CLHEP/Geometry/Vector3D.h>
-//#include <CLHEP/Geometry/Transform3D.h>
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
@@ -110,9 +107,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
       const ILVolume* aRich1MasterLogVol=
         Rich1DE->geometry()->lvolume();
       const Gaudi::Transform3D & aRich1MasterTrans =
-        Rich1DE->geometry()->matrix();
+        Rich1DE->geometry()->toLocalMatrix();
       const Gaudi::Transform3D & aRich1MasterTransInv =
-        Rich1DE->geometry()->matrixInv();
+        Rich1DE->geometry()->toGlobalMatrix();
 
 
       const IPVolume* apva =
@@ -285,9 +282,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
       const ILVolume* aRich2MasterLogVol=
         Rich2DE->geometry()->lvolume();
       const Gaudi::Transform3D & aRich2MasterTrans =
-        Rich2DE->geometry()->matrix();
+        Rich2DE->geometry()->toLocalMatrix();
       const Gaudi::Transform3D & aRich2MasterTransInv =
-        Rich2DE->geometry()->matrixInv();
+        Rich2DE->geometry()->toGlobalMatrix();
 
       //        const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
       //  aRich2MasterLogVol->

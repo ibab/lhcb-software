@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.cpp,v 1.1 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4TransformPhDet.cpp,v 1.2 2007-10-02 12:54:51 gcorti Exp $
 // Include files 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -96,9 +96,9 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
       const ILVolume* aRich1MasterLogVol=
         Rich1DE->geometry()->lvolume();
       const Gaudi::Transform3D & aRich1MasterTrans =
-        Rich1DE->geometry()->matrix();
+        Rich1DE->geometry()->toLocalMatrix();
       const Gaudi::Transform3D & aRich1MasterTransInv =
-        Rich1DE->geometry()->matrixInv();
+        Rich1DE->geometry()->toGlobalMatrix();
 
 
       const IPVolume* apva =
@@ -218,9 +218,9 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
       const ILVolume* aRich2MasterLogVol=
         Rich2DE->geometry()->lvolume();
       const Gaudi::Transform3D & aRich2MasterTrans =
-        Rich2DE->geometry()->matrix();
+        Rich2DE->geometry()->toLocalMatrix();
       const Gaudi::Transform3D & aRich2MasterTransInv =
-        Rich2DE->geometry()->matrixInv();
+        Rich2DE->geometry()->toGlobalMatrix();
 
       if( aSectorNum ==2 || aSectorNum == 3 ) {
         
