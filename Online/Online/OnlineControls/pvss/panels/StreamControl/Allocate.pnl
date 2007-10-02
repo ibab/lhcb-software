@@ -6,22 +6,19 @@ PANEL,-1 -1 375 411 N "_3DFace" 1
 "#uses \"StreamControlPanel.cpp\"
 main()  {
   string strm = \"Monitoring\", partition = \"LHCb\";
-  string s1 = $1;
-  if ( s1 != \"\" )  {
-    strm = substr(s1,0,strpos(s1,\"_\"));
+  string slice = $1;
+  if ( slice != \"\" )  {
     setValue(\"m_Ok\",\"visible\",0);
     setValue(\"m_Cancel\",\"visible\",0);
     setValue(\"m_runInfoDP\",\"visible\",0);
-    setValue(\"m_runInfoDP\",\"text\",s1 + \".RunInfo\");
-    DebugN(\"+++++> \"+s1+\"> Stream:\"+strm+\" RunInfo:\"+m_runInfoDP.text);
-    StreamControlPanel_startAllocPanel(s1,strm);
-  }
-  else  {
-    //if ( isDollarDefined(\"$stream\") ) strm = $stream;
-    //if ( isDollarDefined(\"$partition\") ) partition = $partition;
-    DebugN(\"-----> Stream:\"+strm+\" Partition:\"+partition);
-    m_runInfoDP.text = \"LBECS:\"+partition+\"_RunInfo\";
-    StreamControlPanel_initAllocPanel(strm,partition);
+    int idy, idx = strpos(slice,\"_\");
+    DebugN(idx,slice);
+    if ( idx > 0 )  {
+      strm = substr(slice,0,idx);
+      setValue(\"m_runInfoDP\",\"text\",slice + \".RunInfo\");
+      DebugN(\"1: +++++> \"+slice+\"> Stream:\"+strm+\" RunInfo:\"+m_runInfoDP.text);
+      StreamControlPanel_startAllocPanel(slice,strm);
+    }
   }
 }
 " 0
@@ -40,8 +37,8 @@ StreamControlPanel_showFSM_Control()  {
 }
 " 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -181,31 +178,6 @@ LANG:1 4 Save
 "main()  {  StreamControlPanel_AllocSave(m_streamName.text,m_partition.text);  }
 " 0
  E E E
-2 61
-"m_strmTypesText"
-""
-1 20 143 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-96 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 14 316 174 336
-0 2 2 "0s" 0 0 0 64 0 0  14 316 2
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 27 OutputStreams/Multiplicity:
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 29 [Example: B2pipi/2,BBincl/5 ]
 29 73
 "m_strmTypes"
 ""
@@ -653,6 +625,26 @@ LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11
 0 ""
 1
 LANG:1 9 Run info:
+2 85
+"m_strmTypesText"
+""
+1 10 300 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+119 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 10 300 191 365
+0 2 2 "0s" 0 0 0 64 0 0  10 300 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 19 Stream Description:
 0
 LAYER, 2 
 1
