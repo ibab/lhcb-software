@@ -1,18 +1,13 @@
-// $Id: GiGaKineRefTable.h,v 1.6 2002-12-07 14:36:25 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2002/05/04 20:39:35  ibelyaev
-//  see $GIGACNVROOT/release.notes (4 May 2002)
-//
-// ============================================================================
+// $Id: GiGaKineRefTable.h,v 1.7 2007-10-02 13:14:50 gcorti Exp $ 
 #ifndef GIGACNV_GIGAKINEREFTABLE_H
 #define GIGACNV_GIGAKINEREFTABLE_H 1
-// ============================================================================
+
+// Include files
+
 // STD & STL
 #include "GiGa/GiGaHashMap.h"
 #include <functional>
+
 // GiGaCnv
 #include "GiGaCnv/GiGaKineRefTableEntry.h"
 
@@ -97,6 +92,4 @@ private:
 
 };
 
-// ============================================================================
 #endif ///< GIGACNV_GIGAKINEREFTABLE_H
-// ============================================================================

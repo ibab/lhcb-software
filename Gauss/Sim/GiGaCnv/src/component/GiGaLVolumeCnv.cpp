@@ -1,4 +1,4 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.16 2007-08-02 15:03:24 gcorti Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.17 2007-10-02 13:14:51 gcorti Exp $ 
 // Include files 
 
 // from Gaudi
@@ -275,7 +275,7 @@ StatusCode GiGaLVolumeCnv::transformWithAlignment( const IPVolume* pv,
     
     if( numDetElemAfterNpathSearch <= 1 ) {
       const Gaudi::Transform3D& aDeltaMatrix = 
-        foundDe[ aDetElemIndex ]->geometry()->localDeltaMatrix();
+        foundDe[ aDetElemIndex ]->geometry()->ownToNominalMatrix();
 
       resultMatrix = aDeltaMatrix * (pv->matrix());
 

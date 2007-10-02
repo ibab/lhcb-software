@@ -4,6 +4,19 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GiGaCnv v18r3 2007-10-02 ==========================
+! 2007-10-02 - Gloria Corti
+ - Adapt to changes in method names in IGeometryInfo.h (as from DetDesc v18r0
+   in LHCB v22r9)
+   . src/component/GiGaDetectorElementCnv.cpp
+   . src/component/GiGaLVolumeCnv.cpp
+ - Adapt to modification of constructor from int made explicit in ParticleID 
+   . src/component/Trajectory2Particle.cpp
+ - Remove cvs log and names
+   . GiGaCnv/GiGaKineRefTable.h
+   . src/Lib/GiGaKineRefTable.cpp
+   . src/component/GiGaDetectorElementCnv.h
+
 !========================= GiGaCnv v18r2 2007-08-02 ==========================
 ! 2007-08-02 - Gloria Corti, Sajan Easo, Vanya Belyaev, Marco Clemencic
  - Introduce (with some modification) what provided by Sajan Easo

@@ -1,100 +1,80 @@
-// $Id: GiGaDetectorElementCnv.cpp,v 1.11 2007-01-12 15:45:55 ranjard Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/12/07 14:36:26  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.9  2002/07/09 20:33:54  ibelyaev
-//  move GiGaVolumeUtils into public location
-//
-// Revision 1.8  2002/05/04 20:53:17  ibelyaev
-//  reduce the verbosity of printout
-//
-//  ===========================================================================
-#define GIGACNV_GIGADETECTORELEMENTCNV_CPP
-// ============================================================================
-/// STL
+// $Id: GiGaDetectorElementCnv.cpp,v 1.12 2007-10-02 13:14:50 gcorti Exp $ 
+
+// Include files 
+
+// from STL
 #include <string>
 #include <vector>
-/// Gaudi 
+
+// from Gaudi
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/DataObject.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataSelector.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IRegistry.h" 
-/// DetDesc 
+
+// from LHCb 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/CLIDDetectorElement.h" 
-/// Geant4
+
+// from Geant4
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
-/// GiGa & GiGaCnv 
+
+// from GiGa & GiGaCnv 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
 #include "GiGaCnv/GiGaVolumeUtils.h"
-/// local 
+
+// local 
 #include "GiGaInstall.h"
 #include "GiGaDetectorElementCnv.h"
 
-// ============================================================================
-/** @file GiGaDetectorElementcnv.cpp
- * 
- *  Implementation of class GiGaDetectorElementCnv
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaDetectorElementcnv
+//
+// 2002-05-04 : Ivan Belyaev
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/// factory 
-// ============================================================================
+// Declaration of the Converter Factory
 DECLARE_CONVERTER_FACTORY( GiGaDetectorElementCnv );
 
-// ============================================================================
-/** standard constructor 
- *  @param svc pointer to Service Locator 
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaDetectorElementCnv::GiGaDetectorElementCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf ( "" , classID() )
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaDECnv"              ) ;
-}; 
+}
 
-// ============================================================================
-/// destructor 
-// ============================================================================
-GiGaDetectorElementCnv::~GiGaDetectorElementCnv(){}; 
+//=============================================================================
+// destructor 
+//=============================================================================
+GiGaDetectorElementCnv::~GiGaDetectorElementCnv(){} 
 
-// ============================================================================
-/// Class ID
-// ============================================================================
+//=============================================================================
+// Class ID
+//=============================================================================
 const CLID&         GiGaDetectorElementCnv::classID     () 
 { return CLID_DetectorElement ; }
 
-// ============================================================================
-/// StorageType 
-// ============================================================================
+//=============================================================================
+// StorageType 
+//=============================================================================
 const unsigned char GiGaDetectorElementCnv::storageType () 
 { return GiGaGeom_StorageType ; } 
 
-// ============================================================================
-/** create the representation
- *  @param Object  pointer to data object 
- *  @param Address address 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-GiGaDetectorElementCnv::createRep
-( DataObject*     Object  , 
-  IOpaqueAddress*& Address ) 
+//=============================================================================
+// create the representation
+//=============================================================================
+StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , 
+                                              IOpaqueAddress*& Address ) 
 {
   ///
   Address = 0 ; 
@@ -151,19 +131,13 @@ GiGaDetectorElementCnv::createRep
   ///
   return updateRep( Object , Address ) ; 
   /// 
-};
+}
 
-// ============================================================================
-/** update the  representation
- *  @param Object  pointer to data object 
- *  @param Address address 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-GiGaDetectorElementCnv::updateRep
-( DataObject*     Object  , 
-  IOpaqueAddress* /* Address */ ) 
+//=============================================================================
+// Update the  representation
+//=============================================================================
+StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , 
+                                              IOpaqueAddress* /* Address */ ) 
 {
   ///
   MsgStream log( msgSvc() , name() ); 
@@ -224,12 +198,11 @@ GiGaDetectorElementCnv::updateRep
   if( 0 == PV )
     { return Error("updateRep:: G4WorldPV is not available!" ) ; }
   /// install detector element into world volume 
-  StatusCode sc = 
-    GiGaInstall::installVolume( volume                  , 
-                                de->name             () , 
-                                gi->matrix           () , 
-                                PV->GetLogicalVolume () , 
-                                log                     ) ;
+  StatusCode sc = GiGaInstall::installVolume( volume, 
+                                              de->name(), 
+                                              gi->toLocalMatrix(), 
+                                              PV->GetLogicalVolume(), 
+                                              log);
   if( sc.isFailure() )
     { return Error("updateRep:: could not place PhysVolume!", sc) ; }
   /// look again in the store 
@@ -238,12 +211,10 @@ GiGaDetectorElementCnv::updateRep
   ///
   return StatusCode::SUCCESS ;
   ///
-};
-// ============================================================================
+}
 
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================
+
 
 
 
