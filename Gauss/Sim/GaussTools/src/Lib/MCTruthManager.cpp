@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.5 2006-05-02 18:56:03 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.6 2007-10-02 16:33:25 gcorti Exp $
 // Include files 
 
 // local
@@ -259,7 +259,7 @@ void MCTruthManager::printTree(HepMC::GenParticle* particle, std::string offset)
   {
     std::string deltaoffset = "";
 
-    if( fmod((*it)->barcode(),10000000) != fmod(particle->barcode(),10000000) )
+    if( fmod(double((*it)->barcode()),10000000) != fmod(double(particle->barcode()),10000000) )
       {
         deltaoffset = " | ";
       }
