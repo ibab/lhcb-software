@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.24 2007-08-21 14:10:30 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.25 2007-10-02 15:32:23 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -512,7 +512,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
     D(0,9) =  - (z2-vfit[2]);
     D(0,10) = 0.0;
     D(0,11) = (vfit[7]-vfit[0]);
-    D(0,11) = 0.0;
+    D(0,12) = 0.0;
     D(1,0) = 0.0;
     D(1,1) = - vfit[11];
     D(1,2) = vfit[10];

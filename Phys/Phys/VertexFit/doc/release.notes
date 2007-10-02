@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.106 2007-09-24 09:31:10 jpalac Exp $
+! $Id: release.notes,v 1.107 2007-10-02 15:32:23 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-10-02 - Juan PALACIOS
+  - src/OfflineVertexFitter.cpp
+   . fix a typo in addFlying method
+
 
 !========================== VertexFit v4r3 2007-09-24 =====================
 
