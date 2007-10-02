@@ -6,11 +6,12 @@
 <?php 
 include '../util.php';
 $conn=HistDBconnect(1);
-$page=RemoveSpaces($_POST["PAGENAME"]);
 $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
+$page=RemoveSpaces($_POST["PAGENAME"]);
+$fullpage="$folder/$page";
 
 $nh=0;
-for ($i=1;$i<=15;$i++) {
+for ($i=1;$i<=150;$i++) {
   if  ($_POST["HISTO_SH${i}"] && $_POST["REMOVE${i}"] != 1 ) {
     $nh++;
     foreach (array("HISTO","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY")
@@ -19,36 +20,44 @@ for ($i=1;$i<=15;$i++) {
   }
 }
 if ($nh == 0)
-  $command="begin OnlineHistDB.DeclarePage(theName => '${page}',theFolder => '${folder}',theDoc => '".$_POST["PAGEDOC"]."',".
+  $command="begin :fn := OnlineHistDB.DeclarePage(theFullName => '${fullpage}' ,theDoc => '".$_POST["PAGEDOC"]."',".
     "hlist => OnlineHistDB.histotlist(),".
     "Cx => OnlineHistDB.floattlist(),".
     "Cy => OnlineHistDB.floattlist(),".
     "Sx => OnlineHistDB.floattlist(),".
-    "Sy => OnlineHistDB.floattlist()); end;";
+    "Sy => OnlineHistDB.floattlist(),theName => :pn,theFolder => :pf); end;";
 else {
-  $command="begin OnlineHistDB.DeclarePage(theName => '${page}',theFolder => '${folder}',theDoc => '".$_POST["PAGEDOC"]."',".
+  $command="begin :fn := OnlineHistDB.DeclarePage(theFullName => '${fullpage}',theDoc => '".$_POST["PAGEDOC"]."',".
     "hlist => OnlineHistDB.histotlist('".implode("','",SingleHist($data["HISTO"]))."'),".
     "Cx => OnlineHistDB.floattlist(".implode(",",$data["CENTER_X"])."),".
     "Cy => OnlineHistDB.floattlist(".implode(",",$data["CENTER_Y"])."),".
     "Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"])."),".
-    "Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"]).")); end;";
+    "Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"])."),theName => :pn,theFolder => :pf); end;";
 }
-echo "command is $command <br>";
+//echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
+ocibindbyname($stid,":fn",$outpage,500);
+ocibindbyname($stid,":pn",$out_pn,500);
+ocibindbyname($stid,":pf",$out_pf,500);
 $r=OCIExecute($stid,OCI_DEFAULT);
 if ($r) {
   ocicommit($conn);
   ocifreestatement($stid);
-  echo "Page $page successfully defined<br>";
+  if ($outpage !=$fullpage) {
+    echo "<font color=magenta> Warning: page name has been changed from <br> $fullpage to <br>$outpage<br>\n";
+    $fullpage = $outpage;
+  }
+  echo "Page $fullpage successfully defined<br>";
 }
 else
   echo "<font color=red> <B>Got errors from page.php </B></font><br>Writing aborted<br>\n";
 
 
 
+
 ocilogoff($conn);
-$gpage=toGet($page);
-echo "<br> <a href='../Viewpage.php?page=${gpage}> Back to Page Record ${page} </a><br>";
+$gpage=toGet($fullpage);
+echo "<br> <a href='../Viewpage.php?page=${gpage}> Back to Page Record ${fullpage} </a><br>";
 ?>
 
 </body>

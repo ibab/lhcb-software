@@ -30,7 +30,7 @@ function showhisto_display($hid,$doid,$instance)
       $act= $canwrite ? 'Specify' : 0;
       echo "Using Histogram Default Display Options<br>";
     }
-    $page=$_POST["PAGENAME"];
+    $page=PageFullName($_POST["PAGENAME"],$_POST["FOLDER"]);
     if ($act) {
       $getp=toGet($page);
       echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}>$act special Display Options for Histogram in this page </a>\n";
@@ -40,28 +40,35 @@ function showhisto_display($hid,$doid,$instance)
   ocifreestatement($hstid);
 }
 
-
 function page_form($page) {
   global $canwrite;
   global $conn;
   echo "<form method='post' action='write/page.php'>\n";
   $readonly=$canwrite ? "" : "readonly";
+  $epreadonly= ($page=="new__") ? $readonly :  "readonly";
   echo "<table align=\"center\" border=0><tr><td>\n";
-  printf("Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' $readonly ><br>\n",$_POST["PAGENAME"]);
-  echo "</td><td> &nbsp&nbsp Folder <select name='FOLDER'>\n";
+  
 
-  $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER");
-  OCIExecute($stid);
-  while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) 
-    printf("<option class='normal' %s> %s </option>\n",($_POST["FOLDER"] == $pagef["PAGEFOLDERNAME"]) ? "selected" : "",
-	   $pagef["PAGEFOLDERNAME"]);
-  ocifreestatement($stid);
 
-  echo "</select> </td></tr>";
   if ($page=="new__") {
-    echo "<tr><td> &nbsp </td><td> &nbsp&nbsp or \n";
-    printf("New Folder <input class='normal' type='text' size=20 name='NEWFOLDER' value='%s' $readonly ><br>\n",$_POST["NEWFOLDER"]);
+    echo "Folder <select name='FOLDER'>\n";
+    
+    $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER");
+    OCIExecute($stid);
+    while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) 
+      printf("<option class='normal' %s> %s </option>\n",($_POST["FOLDER"] == $pagef["PAGEFOLDERNAME"]) ? "selected" : "",
+	     $pagef["PAGEFOLDERNAME"]);
+    ocifreestatement($stid);
+
+    echo "</select> <br>";
+    //    echo "<tr><td> &nbsp </td><td> &nbsp&nbsp or \n";
+    printf("or New Folder <input class='normal' type='text' size=40 name='NEWFOLDER' value='%s' $readonly ><br>\n",$_POST["NEWFOLDER"]);
   }
+  else {
+     printf("Folder <input class='normal' type='text' size=40 name='FOLDER' value='%s' READONLY>\n",$_POST["FOLDER"]);
+  }
+  printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' $epreadonly ><br>\n",$_POST["PAGENAME"]);
+
   echo "</td></tr></table>\n";
   echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='2' name='PAGEDOC'".
     " $readonly >".$_POST["PAGEDOC"]."</textarea></tr></table><br>\n";
@@ -69,7 +76,7 @@ function page_form($page) {
   echo "<table border=0 >\n";
   echo"<tr><td colspan=6><hr></tr>\n";
   if ($canwrite) {
-    for ($i=1;$i<=16;$i++) {
+    for ($i=1;$i<=max(16,$_POST["NHISTO"]+5);$i++) {
       printf("<tr><td>Histogram ID <input type='text' size=7 name='HISTO_SH${i}' value='%s'>".
 	     "<td>X position <input type='text' size=5 name='CENTER_X_SH${i}' value='%.2f'></td>".
 	     "<td>Y position <input type='text' size=5 name='CENTER_Y_SH${i}' value='%.2f'></td>".
@@ -119,7 +126,7 @@ function show_pagefolder($sel='') {
     OCIExecute($pstid);
     while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
       $p=$page["PAGENAME"];
-      $getp=toGet($p);
+      $getp=toGet(PageFullName($p,$pagef["PAGEFOLDERNAME"]));
       echo "<a class=normal href=$PHP_SELF?page=${getp}> $p</a><br>\n";
     }  
     ocifreestatement($pstid);
@@ -139,13 +146,13 @@ $conn=HistDBconnect(1);
 if (array_key_exists("page",$_GET)) {
   $page=fromGet($_GET["page"]);
   if ($page != "new__") {
-    $stid = OCIParse($conn,"SELECT * from PAGE where PAGENAME='${page}'");
+    $stid = OCIParse($conn,"SELECT * from PAGE where PAGEFULLNAME(PAGENAME,FOLDER)='${page}'");
     OCIExecute($stid);
     OCIFetchInto($stid, $mypage, OCI_ASSOC ) or die ("Don't know this page: $page <br>");
     foreach (array("PAGENAME","NHISTO","PAGEDOC","FOLDER")
              as $field)
       $_POST[$field]=$mypage[$field];
-    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGE='${page}' order by HISTO,INSTANCE");
+    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGEFULLNAME(PAGE,PAGEFOLDER)='${page}' order by HISTO,INSTANCE");
     OCIExecute($shtid);
     $i=0;
     while( OCIFetchInto($shtid, $showhisto, OCI_ASSOC )) {
@@ -159,12 +166,12 @@ if (array_key_exists("page",$_GET)) {
     ocifreestatement($stid);
   }
   if (!$canwrite && $page == "new__") 
-    echo "sorry, you don't have permission to write in the DB";
+    echo "sorry, you don't have permission to write on the DB";
   else 
     page_form($page);
 }
 else {
-  show_pagefolder('WHERE PARENT IS NULL');
+  show_pagefolder('WHERE PARENT is NULL');
 }
 ocilogoff($conn);
 

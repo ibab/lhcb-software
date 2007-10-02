@@ -52,7 +52,7 @@ else {
     // list by viewer page
     if(array_key_exists("page",$_GET)) $specs=
       " , SHOWHISTO SH, PAGE P $onlyset AND REGEXP_SUBSTR(SH.HISTO,'^(\d+)') = VH.HSID AND SH.PAGE = P.PAGENAME ".
-      "AND SH.PAGE='".fromGet($_GET["page"])."'";
+      "AND SH.PAGEFOLDER = P.FOLDER AND SH.PAGEFOLDER||'/'||SH.PAGE='".fromGet($_GET["page"])."'";
     // list alphabetically
     if(array_key_exists("letter",$_GET)) $specs=
       " $onlyset AND UPPER(SUBSTR(VH.TITLE,1,1))=UPPER('".$_GET["letter"]."') ";
@@ -80,7 +80,7 @@ else {
 	if($_POST["searchpage"] != "any") {
 	  $specs=",TASK T,SHOWHISTO SH, PAGE P $onlyset AND VH.TASK=T.TASKNAME ".
 	    "AND REGEXP_SUBSTR(SH.HISTO,'^(\d+)') = VH.HSID AND SH.PAGE = P.PAGENAME ".
-	    "AND SH.PAGE='".$_POST["searchpage"]."'";
+	    "AND SH.PAGEFOLDER = P.FOLDER AND SH.PAGEFOLDER||'/'||SH.PAGE='".$_POST["searchpage"]."'";
 	} else {
 	  $specs=",TASK T $onlyset AND VH.TASK=T.TASKNAME ";
 	}

@@ -48,8 +48,10 @@ Subsystem <select name="searchsubsys"> <option> any
 </select><br>
 Page <select name="searchpage"> <option> any
 <?
-   foreach ($page as $p) 
-     echo "<option value=\"${p}\">".$folder[$p]."/$p";
+    foreach ($page as $p) {
+     $fullp=$folder[$p]."/$p";
+     echo "<option value=\"${fullp}\">$fullp";
+    }
 ?>
 </select> <br>
 or HID <input type="Text" name="searchHID" size=10> <br>

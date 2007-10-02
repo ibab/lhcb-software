@@ -74,7 +74,7 @@ foreach  ($items as $it) {
     OCIExecute($stid2, OCI_DEFAULT);
     echo "<td><table>";
     while( OCIFetchInto($stid2, $row, OCI_NUM)) 
-      echo "<tr><td> <a href='HistogramList.php?page=$row[0]'> $row[0] </a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </td></tr> ";
+      echo "<tr><td> <a href='HistogramList.php?page=$it/$row[0]'> $row[0] </a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </td></tr> ";
     echo "</table></td>";
     ocifreestatement($stid2);
   }

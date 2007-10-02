@@ -5,7 +5,7 @@
 
 \item    std::string {\bf page}() const ;
 
- page to which this histogram object is attached
+ full path name of the page to which this histogram object is attached
 
 
 \item    int {\bf instance}() const ;
@@ -89,7 +89,7 @@
  as a unix timestamp, otherwise returns 0.
 
 
-\item    bool {\bf setPage}(std::string Page,\\\mbox{}~~~~~~~~~
+\item    bool {\bf setPage}(std::string FullPathPageName,\\\mbox{}~~~~~~~~~
 	       int Instance=1);
 
  sets page on which histogram is displayed (reload display options if needed). Histogram has to be already
@@ -162,10 +162,10 @@
 
 \item    virtual bool {\bf setHistoPageDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
 					 void* value,\\\mbox{}~~~~~~~~~
-					 std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+					 std::string FullPathPageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
 					 int Instance=-1);
 
- sets a display option for the present histogram on page PageName (default is {\it page()})
+ sets a display option for the present histogram on page FullPathPageName (default is {\it page()})
 
 
 \item    virtual bool {\bf unsetDisplayOption}(std::string ParameterName);
@@ -209,20 +209,20 @@
  success.
 
 
-\item    bool {\bf initHistoPageDisplayOptionsFromSet}(std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+\item    bool {\bf initHistoPageDisplayOptionsFromSet}(std::string FullPathPageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
 					  int Instance=-1);
 
  initializes display options associated to this histogram on page
- PageName (default is {\it page()}) with the
+ FullPathPageName (default is {\it page()}) with the
  options defined for the histogram set (if available). Returns true on
  success.
 
 
-\item    bool {\bf initHistoPageDisplayOptionsFromHist}(std::string PageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+\item    bool {\bf initHistoPageDisplayOptionsFromHist}(std::string FullPathPageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
 					   int Instance=-1);
 
  initializes display options associated to this histogram on page
- PageName (default is {\it page()}) with the
+ FullPathPageName (default is {\it page()}) with the
  options defined for the histogram (if available). Returns true on
  success.
 

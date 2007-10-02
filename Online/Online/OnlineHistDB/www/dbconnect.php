@@ -1,7 +1,7 @@
 <?
 $Installation="Pit";
 $Reference_home="";
-function HistDBconnect($exitonfailure=0,$user="nobody",$password="nobody",$db="lbora01:1528/HISTOGRAMDB") 
+function HistDBconnect($exitonfailure=0,$user="nobody",$password="nobody",$db="ora01:1528/HISTOGRAMDB") 
 {  
   global $canwrite;
 

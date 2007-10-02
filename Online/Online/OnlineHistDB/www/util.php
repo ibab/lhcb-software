@@ -100,4 +100,12 @@ function getPages($conn) {
   return $page;
 }
 
+function PageFullName($p,$f) {
+  if ($f == "/")
+    return "/$p";
+  else
+    return "$f/$p";
+}
+
+
 ?>

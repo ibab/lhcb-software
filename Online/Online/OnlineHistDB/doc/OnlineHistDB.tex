@@ -39,38 +39,29 @@
 
 
 \item    OnlineHistogram* {\bf getHistogram}(std::string Identifier,\\\mbox{}~~~~~~~~~
-				std::string Page="\_NONE\_",\\\mbox{}~~~~~~~~~
+				std::string FullPathPageName="\_NONE\_",\\\mbox{}~~~~~~~~~
 				int Instance = 1);
 
- gets a pointer to an OnlineHistogram object that can be used to view/edit an histogram record. If Page
+ gets a pointer to an OnlineHistogram object that can be used to view/edit an histogram record. If FullPathPageName
  is specified, the default display options for the histogram are those associated to the page (if available).
  Uses cached histogram objects if available
 
 
 \item    OnlineHistogram* {\bf getNewHistogram}(std::string Identifier,\\\mbox{}~~~~~~~~~
-				   std::string Page="\_NONE\_",\\\mbox{}~~~~~~~~~
+				   std::string FullPathPageName="\_NONE\_",\\\mbox{}~~~~~~~~~
 				   int Instance = 1);
 
  same as getHistogram, but a new object is always created (no caching)
 
 
-\item    OnlineRootHist* {\bf getRootHist}(std::string Identifier,\\\mbox{}~~~~~~~~~
-			       std::string Page="\_NONE\_",\\\mbox{}~~~~~~~~~
-			       int Instance = 1);
+\item    virtual bool {\bf removeHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+			       bool RemoveWholeSet = false);
 
- gets a pointer to an OnlineRootHist object that can be used to view/edit an histogram record. If Page
- is specified, the default display options for the histogram are those associated to the page (if available).
- Uses cached histogram objects if available
+ removes an histogram, and optionally its full set. 
+ ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
 
 
-\item    OnlineRootHist* {\bf getNewRootHist}(std::string Identifier,\\\mbox{}~~~~~~~~~
-				 std::string Page="\_NONE\_",\\\mbox{}~~~~~~~~~
-				 int Instance = 1);
-
- same as getRootHist, but a new object is always created (no caching)
-
-
-\item    OnlineHistPage* {\bf getPage}(std::string Name,\\\mbox{}~~~~~~~~~ std::string Folder="\_DEFAULT\_");
+\item    OnlineHistPage* {\bf getPage}(std::string Name);
 
 
  get an OnlineHistPage object, to create a new page or view/edit an existing one
@@ -149,13 +140,6 @@
  description of the algorithm.
 
 
-\item    virtual bool {\bf removeHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-			       bool RemoveWholeSet = false);
-
- removes an histogram, and optionally its full set. 
- ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
-
-
 \item    bool {\bf removePageFolder}(std::string Folder);
 
 
@@ -176,26 +160,23 @@
 
 \item    int {\bf getAllHistograms}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 		       std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-		       std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-		       bool useRootHist = false);
+		       std::vector$<$string$>$* types = NULL);
 
  gets the full list of histograms. Returns the number of histograms found. Vectors with pointers
  to OnlineHistogram objects, histogram identifiers, histogram types can optionally created  by the user
- and filled if not null. Set useRootHist = true to get OnlineRootHist objects.
+ and filled if not null
 
 
 \item    int {\bf getHistogramsWithAnalysis}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 				std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-				std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-				bool useRootHist = false);
+				std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms on which some check analysis has to be performed 
 
 
 \item    int {\bf getAnalysisHistograms}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 			    std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			    std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-			    bool useRootHist = false);
+			    std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms that have to be produced by analysis task
 
@@ -203,8 +184,7 @@
 \item    int {\bf getHistogramsBySubsystem}(std::string SubSys,\\\mbox{}~~~~~~~~~
 			       std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 			       std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			       std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-			       bool useRootHist = false);
+			       std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms related to subsystem SubSys
 
@@ -212,8 +192,7 @@
 \item    int {\bf getHistogramsByTask}(std::string Task,\\\mbox{}~~~~~~~~~
 			  std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 			  std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-			  bool useRootHist = false);
+			  std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms related to task Task
 
@@ -221,8 +200,7 @@
 \item    int {\bf getHistogramsByPage}(std::string Page,\\\mbox{}~~~~~~~~~
 			  std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 			  std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-			  bool useRootHist = false);
+			  std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms displayed on page Page
 
@@ -230,8 +208,7 @@
 \item    int {\bf getHistogramsBySet}(std::string SetName,\\\mbox{}~~~~~~~~~
 			 std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
 			 std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			 std::vector$<$string$>$* types = NULL,\\\mbox{}~~~~~~~~~
-			 bool useRootHist = false);
+			 std::vector$<$string$>$* types = NULL);
 
  gets the list of histograms in a Set
 
@@ -239,7 +216,7 @@
 \item    int {\bf getPageFolderNames}(std::vector$<$string$>$\& list,\\\mbox{}~~~~~~~~~ std::string Parent="\_ALL\_");
 
 
- gets the list of page folders, Parent can be "ROOT", a page folder name or "\_ALL\_" for all folders  
+ gets the list of page folders, Parent can be "/", a page folder name or "\_ALL\_" for all folders  
 
 
 \item    int {\bf getPageNamesByFolder}(std::string Folder,\\\mbox{}~~~~~~~~~

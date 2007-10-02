@@ -5,7 +5,7 @@
 
 \item    const std::string\& {\bf name}() const ;
 
- page name
+ page name (with full path)
 
 
 \item    const std::string\& {\bf folder}() const ;
@@ -18,14 +18,14 @@
  short page description
 
 
+\item    const bool {\bf syncWithDB}() const ;
+
+ check if the page object is in sync with the DB
+
+
 \item    bool {\bf setDoc}(std::string Doc) ;
 
  set short page description
-
-
-\item    bool {\bf setFolder}(std::string Folder) ;
-
- set page folder name. If not existing, page folder is created.
 
 
 \item    OnlineHistogram* {\bf declareHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
@@ -63,7 +63,7 @@
 
 \item    void {\bf getHistogramList}(std::vector$<$OnlineHistogram*$>$ *hlist) ;
 
- fills the hlist vector with pointers to teh histograms attached to this page
+ fills the hlist vector with pointers to the histograms attached to this page
 
 
 \item    bool {\bf getHistLayout}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
@@ -74,5 +74,11 @@
 		     unsigned int instance=1) const;
 
  get the layout of given histogram. returns false if histogram is not found
+
+
+\item    bool {\bf save}();
+
+
+ save the current page layout to the DB
 
 

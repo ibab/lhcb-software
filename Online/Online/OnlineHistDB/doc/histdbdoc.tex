@@ -4,8 +4,8 @@
 \usepackage{epsfig}
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
-\dociss{2}
-\docrev{4}
+\dociss{3}
+\docrev{0}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -96,11 +96,14 @@ identifier of display option set associated to Histogram
 \end{description}
 
 \subsection{Definition of Pages and Display Options}
-Pages and Page Folders are uniquely identified by their name. Page
-folders can have a hierarchical structure, for example:\\
-{\it Folder1}\\
-{\it Folder1/Folder2}\\
-{\it Folder1/Folder2/Folder3}\\
+Pages are organized in folders (with the syntax of a unix filesystem)
+and are uniquely identified by their full path name that starting with
+``/''. For example:\\
+{\it /Folder1/page1}\\
+{\it /Folder1/SubFolder2/page1}\\
+{\it /Folder1/SubFolder2/page2}\\
+are all valid page names.
+
 Pages are associated to a list of valid histograms through the SHOWHISTO
 table, containing the layout of each histogram on the page.
 
@@ -249,7 +252,7 @@ precompiled on the Oracle server.
 \section{Web interface}
 
 It is available for test at the address\\
-{\it https://webafs3.cern.ch/ggrazian/lhcb/OnlineHistDB/index.php}
+{\it https://www.cern.ch/ggrazian/lhcb/OnlineHistDB/index.php}
 
 while the production address (visible only from the CERN network)
 will be \\
@@ -298,8 +301,8 @@ Histograms, tasks and pages can be manipulated using the corresponding
 classes described in the next sections. For each DB entry, an object can be
 instantiated through the {\it getHistogram},  {\it getTask} and {\it
 getPage} methods. Such objects make sense only within the transaction
-and should never be deleted by the user (they are destroyed by the
-OnlineHistDB destructor). 
+and should never be deleted by the user (they are owned by the
+OnlineHistDB object and deleted by its destructor). 
 
 Changes are committed to the DB only by an explicit call to the {\it
 commit} method.
@@ -338,9 +341,15 @@ getHistogram} method.
 
 \subsection{OnlineRootHist class}
 
-This class inherits from OnlineHistogram and ROOT's TH1 classes. It
-can be used as an interface between the histogram DB and ROOT, in
+This class is intended to be used as an interface between ROOT and the
+Histogram DB, in
 order to load or save display parameters trasparently.
+ The user can instantiate objects that can be optionally 
+linked to existing OnlineHistogram and/or TH1 objects.
+
+The identifier must be the DB histogram identifier\\
+{\it Taskname}/{\it Algorithmname}/{\it HistogramName}
+
 
 \begin{list}{$\bullet$}{}
 \input{OnlineRootHist}
@@ -363,6 +372,9 @@ OnlineHistPage objects are instantiated within an
 OnlineHistDB object, i.e. a DB transaction, through the {\it
 getPage} method.
 
+The page layout is saved to the DB only through an explicit call of
+the {\it save()} method.
+
 \begin{list}{$\bullet$}{}
 \input{OnlineHistPage}
 \end{list}
@@ -384,27 +396,22 @@ propagated to all new objects created through the {\it getPage} and
 \section{Code Example}
 
 \begin{verbatim}
+#include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
+
 int main ()
 {
-\end{verbatim}
-Open DB transaction:
-\begin{verbatim}
  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
-				OnlineHistDBEnv_constants::ACCOUNT,
-			 	OnlineHistDBEnv_constants::DB);
+					  OnlineHistDBEnv_constants::ACCOUNT,
+					  OnlineHistDBEnv_constants::DB);
+  
  bool ok=true;
-\end{verbatim}
-Declare the features of your task 
-\begin{verbatim}
+  
  ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
  OnlineHistTask* mytask = HistDB->getTask("EXAMPLE");
  if (mytask)
    mytask->setSavingFrequency(3.5);
-\end{verbatim}
-Declare some histograms (this is not normally needed for histograms
-handled by the Online system)
-\begin{verbatim}
+  
  if (ok) {
    string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
    HistDB->declareHistByServiceName(ServiceName);
@@ -417,16 +424,14 @@ handled by the Online system)
    ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit_Map_$Region_M3R1";
    HistDB->declareHistByServiceName(ServiceName);
    
-   // alternative declaration not using DIM Service Name
    HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
    HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
-   // DIM Service Name can be specified afterwards
-   OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
-    if(thisH)
-     thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
-    
+   
    ok &= HistDB->sendHistBuffer(); // needed to send histogram buffer to DB
  }
+ OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
+ if(thisH)
+   thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
 \end{verbatim}
 Now declare an histogram to be produced at analysis level by some
 algorithm, and an automatic check to be performed on it (the
@@ -437,15 +442,16 @@ library)
 				 "bin-by-bin subtraction");
 
  OnlineHistogram* s1=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips");
- OnlineHistogram* s2=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
+ OnlineHistogram* s2=HistDB->getHistogram(
+                       "EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
  OnlineHistogram* htrips=0;
  std::vector<OnlineHistogram*> sources;
  if(s1 && s2) {
    sources.push_back(s1);
    sources.push_back(s2);
    htrips=HistDB->declareAnalysisHistogram("Subtraction",
-					   "Trips_due_to_CRack",
-					   sources);
+                                           "Trips_due_to_CRack",
+                                           sources);
  }
 
  std::string mypar[1]={"Max"};
@@ -486,11 +492,12 @@ histograms.
 					      sources,
 					      &weights);
 
-   OnlineHistPage* pg=HistDB->getPage("My Example Page","Examples/My examples");
+   OnlineHistPage* pg=HistDB->getPage("/Examples/My Example Page");
    if(pg) {
      pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
      pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
      pg->declareHistogram(h3,0.5,0.5,0.5,0.4);
+     pg->save(); // needed to sync pg object with DB
    
      int lc=2, fs=7, fc=3;
      float ymax=20000.;
@@ -503,11 +510,21 @@ histograms.
 
      // second instance of h1
      OnlineHistogram* newh = pg->declareHistogram(h1,0.5,0. ,0.5,0.4,2);
+     pg->save();
      ymax=200000.;
      newh->setDisplayOption("YMAX",(void*) &ymax); 
-     newh->unsetDisplayOption("LINECOLOR");
-
+     newh->unsetDisplayOption("FILLCOLOR");
+     lc=4;
+     newh->setDisplayOption("LINECOLOR",(void*) &lc);
      newh->dump();
+
+     // link a DB histogram with a ROOT histogram
+     TH1F* rh = new TH1F("root histogram",
+                         "EXAMPLE/OccupancyMap/Hit_Map Region_M1R1",100,0,1);
+     OnlineRootHist* orh=new OnlineRootHist(newh);
+     orh->setrootHist(rh);
+     // display options are passed to the ROOT object
+     cout << "Line color of ROOT histo is  "<< orh->rootHist()->GetLineColor() <<endl;
    }
  }
 \end{verbatim}
@@ -516,10 +533,9 @@ Now display the list of pages with their histograms
 \begin{verbatim}
  std::vector<string> folders;
  std::vector<string> pages;
- std::vector<OnlineHistogram*> histos; 
+ std::vector<OnlineHistogram*> histos;  
  int nfold=HistDB->getPageFolderNames(folders);
  int i,j,k;
-
  for (i=0;i<nfold;i++) {
    cout << "Folder " << folders[i] <<endl;
    pages.clear();
@@ -527,9 +543,12 @@ Now display the list of pages with their histograms
    for (j=0;j<np;j++) {
      cout << "     Page " << pages[j] <<endl;
      histos.clear();
-     int nh=HistDB->getHistogramsByPage(pages[j],histos);
+     int nh=HistDB->getHistogramsByPage(pages[j],&histos);
      for (k=0;k<nh;k++) {
-       cout << "           Histogram " << histos[k]->name() <<endl;
+       cout << "           Histogram " << histos[k]->identifier() ;
+       if (histos[k]->instance()>1)
+	 cout << " (Instance "<<histos[k]->instance()<<")";
+       cout <<endl;
      }    
    }
  }
@@ -558,7 +577,6 @@ and the lists of subsystems, tasks, and algorithms:
 
 finally commit changes to the DB if there were no errors
 \begin{verbatim}
- ok &= HistDB->sendHistBuffer();
  if (ok) 
    HistDB->commit();
  else 

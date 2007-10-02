@@ -1,6 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.5 2007-07-17 15:54:13 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.6 2007-10-02 15:28:45 ggiacomo Exp $
 #include <stdio.h>
+#include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
+
 int main ()
 {
  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
@@ -89,11 +91,12 @@ int main ()
 					      sources,
 					      &weights);
 
-   OnlineHistPage* pg=HistDB->getPage("My Example Page","Examples/My examples");
+   OnlineHistPage* pg=HistDB->getPage("/Examples/My Example Page");
    if(pg) {
      pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
      pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
      pg->declareHistogram(h3,0.5,0.5,0.5,0.4);
+     pg->save(); // needed to sync pg object with DB
    
      int lc=2, fs=7, fc=3;
      float ymax=20000.;
@@ -106,27 +109,28 @@ int main ()
 
      // second instance of h1
      OnlineHistogram* newh = pg->declareHistogram(h1,0.5,0. ,0.5,0.4,2);
+     pg->save();
      ymax=200000.;
      newh->setDisplayOption("YMAX",(void*) &ymax); 
-     newh->unsetDisplayOption("LINECOLOR");
-
+     newh->unsetDisplayOption("FILLCOLOR");
+     lc=4;
+     newh->setDisplayOption("LINECOLOR",(void*) &lc);
      newh->dump();
+
+     // link a DB histogram with a ROOT histogram
+     TH1F* rh = new TH1F("root histogram",
+                         "EXAMPLE/OccupancyMap/Hit_Map Region_M1R1",100,0,1);
+     OnlineRootHist* orh=new OnlineRootHist(newh);
+     orh->setrootHist(rh);
+     // display options are passed to the ROOT object
+     cout << "Line color of ROOT histo is  "<< orh->rootHist()->GetLineColor() <<endl;
    }
  }
 
 
-
- // commit all changes only if there are no errors from histogram declarations
- ok &= HistDB->sendHistBuffer();
- if (ok) 
-   HistDB->commit();
- else 
-   cout << "commit aborted because of previous errors" <<endl;
-
-
  std::vector<string> folders;
  std::vector<string> pages;
- std::vector<OnlineHistogram*> histos; 
+ std::vector<OnlineHistogram*> histos;  
  int nfold=HistDB->getPageFolderNames(folders);
  int i,j,k;
  for (i=0;i<nfold;i++) {
@@ -138,7 +142,10 @@ int main ()
      histos.clear();
      int nh=HistDB->getHistogramsByPage(pages[j],&histos);
      for (k=0;k<nh;k++) {
-       cout << "           Histogram " << histos[k]->identifier() <<endl;
+       cout << "           Histogram " << histos[k]->identifier() ;
+       if (histos[k]->instance()>1)
+	 cout << " (Instance "<<histos[k]->instance()<<")";
+       cout <<endl;
      }    
    }
  }
@@ -162,6 +169,12 @@ std::vector<string> mylist;
  for (i=0;i<nss;i++) {
    cout << "Algorithm "<<mylist[i]<<endl;
  }
+
+ // commit all changes only if there are no errors from histogram declarations
+ if (ok) 
+   HistDB->commit();
+ else 
+   cout << "commit aborted because of previous errors" <<endl;
 
  HistDB->setDebug(3);
  delete HistDB;

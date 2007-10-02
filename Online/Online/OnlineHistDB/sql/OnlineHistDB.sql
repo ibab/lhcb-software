@@ -1126,6 +1126,7 @@ begin
  open vh;
  fetch vh into theHid,theHsid,theIhs,theNhs,theHstype,theSubtitle,theHstitle,theAlgo,theTask;
  if (vh%NOTFOUND) then
+  close vh;
   raise_application_error(-20050,'Histogram '||theName||' not found');
   out := 0;
  end if;
