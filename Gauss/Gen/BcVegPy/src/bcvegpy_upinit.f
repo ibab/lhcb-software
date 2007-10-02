@@ -15,7 +15,7 @@ C...Three Pythia functions return integers, so need declaring.
 C...EXTERNAL statement.
       EXTERNAL PYDATA,TOTFUN
 
-      CHARACTER*100 BASENAME
+      CHARACTER*472 BASENAME
 
 C...PYTHIA common block.
       COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)

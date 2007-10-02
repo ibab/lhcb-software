@@ -23,7 +23,7 @@ C...User process event common block.
      &LPRUP(MAXPUP)
       SAVE /HEPRUP/
 
-      CHARACTER*100 BASENAME
+      CHARACTER*472 BASENAME
 
       COMMON/GRADE/XI(50,10)
       COMMON/COUNTER/IBCSTATE,NEV
