@@ -5,6 +5,15 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v2r1 2007-10-02 ===========================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix compilation problem on Win32 casting to double
+   . CollimatorSource.cpp
+
+! 2007-10-02 - Gloria Corti
+ - Remove double section in example options
+   . MIB-Example.opts
+
 !=========================== LbMIB v2r0 2007-08-22 ===========================
 ! 2007-08-22 - Gloria Corti for Magnus Lieng
  - Book "XXXInput" histogram only when ascii file is read to create binary

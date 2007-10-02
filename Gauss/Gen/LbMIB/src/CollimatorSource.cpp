@@ -1,4 +1,4 @@
-// $Id: CollimatorSource.cpp,v 1.2 2007-08-22 17:34:07 gcorti Exp $
+// $Id: CollimatorSource.cpp,v 1.3 2007-10-02 09:26:04 gcorti Exp $
 // Include files
  
 // from Gaudi
@@ -438,7 +438,7 @@ StatusCode CollimatorSource::createEnvelopes() {
          << " particles. The sum of particle weights is " 
          << m_sumOfWeights << endmsg;
   info() << "Envelopes will consume " 
-         << floor(sizeof(double)*m_envelopeHolders.size()/1024) 
+         << floor(double(sizeof(double)*m_envelopeHolders.size()/1024)) 
          << "kB memory" << endmsg;
 
   inFile.clear();
