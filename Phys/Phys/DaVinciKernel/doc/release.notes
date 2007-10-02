@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-10-02 - Patrick Koppenburg for Vanya Belyaev
+ - DVAlgorithm.cpp: small change to get correct statistics of 
+   setFilterPassed(bool)
+
 !========================= DaVinciKernel v6r6 2007-09-21 ====================
 ! 2007-09-23 - Patrick Koppenburg
  - Bug fix in TisTos interface.

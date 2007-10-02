@@ -186,6 +186,9 @@ StatusCode DVAlgorithm::sysExecute ()
   if ( !m_setFilterCalled ) 
   { Warning ( "SetFilterPassed not called for this event!" ) ; }
   
+  /// count number of "effective filters"  
+  counter("#accept") += filterPassed() ;
+
   if (!m_avoidSelResult) 
   { sc = fillSelResult () ; }
   else 
@@ -205,8 +208,6 @@ StatusCode DVAlgorithm::sysExecute ()
 //=============================================================================
 void DVAlgorithm::setFilterPassed  (  bool    state  ) 
 {
-  /// count number of "effective filters"  
-  if ( state && !filterPassed() ) { counter ( "#accepted" ) += 1 ; }
   ///
   this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
@@ -215,7 +216,7 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 //=============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
 
-   // Create and fill selection result object
+  // Create and fill selection result object
   LHCb::SelResult myResult;
   myResult.setFound(filterPassed());
   myResult.setLocation( ("/Event/Phys/"+name()));
