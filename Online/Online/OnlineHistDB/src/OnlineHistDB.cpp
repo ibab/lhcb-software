@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.13 2007-09-28 15:46:07 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.14 2007-10-02 15:27:28 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -505,7 +505,7 @@ int OnlineHistDB::getPageNames(std::vector<string>& list) {
 
 int OnlineHistDB::getPageNamesByFolder(std::string Folder,
 				       std::vector<string>& list) {
-  std::string command = "SELECT PAGENAME from PAGE";
+  std::string command = "SELECT PAGEFULLNAME(PAGENAME,FOLDER) from PAGE";
   if (Folder != "_ALL_") 
     command += " WHERE FOLDER='" + Folder + "'";
   return genericStringQuery(command,list);

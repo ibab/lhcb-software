@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.1 2007-09-28 15:46:07 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.2 2007-10-02 15:27:28 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 
 OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
@@ -54,6 +54,6 @@ std::string OnlineHistDBEnv::PagenameSyntax(std::string fullname, std::string &f
     {
       dumpError(ex,"OnlineHistPage::PagenameSyntax");
     }
-  m_conn->terminateStatement (astmt); 
+  m_conn->terminateStatement(astmt); 
   return outname;
 }

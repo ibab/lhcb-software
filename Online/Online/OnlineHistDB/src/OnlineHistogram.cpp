@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.13 2007-09-28 15:46:07 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.14 2007-10-02 15:27:28 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -104,6 +104,7 @@ bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
       dumpError(ex,"OnlineHistogram::verifyPage");
       out=false;
     }
+    m_conn->terminateStatement(query);
   }
   return out;
 }
@@ -142,8 +143,10 @@ void OnlineHistogram::load() {
       dumpError(ex,"OnlineHistogram:: OnlineHistogram");
       m_isAbort=true;
     }
-  if (!(query->getInt(1))) 
+  if (!(query->getInt(1))) {
     m_isAbort=true;
+    m_conn->terminateStatement (query);
+  }
   else {
     int ip=5;
     m_hid=query->getString(ip++);
@@ -1243,7 +1246,7 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
     // see if the histogram object exists already
     std::vector<OnlineHistogram*>::iterator ih;
     for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-      if (folder=="_NONE_") Page = (*ih)->PagenameSyntax(Page, folder);
+      if (Page != "_NONE_" && folder=="_NONE_") Page = (*ih)->PagenameSyntax(Page, folder);
       if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
 	  (*ih)->instance() == Instance ) {
 	h = *ih;
