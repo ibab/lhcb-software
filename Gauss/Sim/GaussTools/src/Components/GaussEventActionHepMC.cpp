@@ -1,39 +1,29 @@
-/// GaudiKernel
+/// $Id: GaussEventActionHepMC.cpp,v 1.4 2007-10-02 16:33:53 gcorti Exp $
+// Include files 
+
+// from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-/// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 
-/// Local 
+// local 
 #include "GaussEventActionHepMC.h"
 
-// ============================================================================
-/**  @file 
- *
- *   Implementation file for class : GaussEventActionHepMC
- *
- *   @author Witek Pokorski
- *   @date 06/09/2005 
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GaussEventActionHepMC
+//
+// 2005-09-06 : Witek Pokorski
+// 2007-09-03 : Gloria Corti
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-// Factory business
-// ============================================================================
+// Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( GaussEventActionHepMC );
 
-// ============================================================================
-/** standard constructor 
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GaussEventActionHepMC::GaussEventActionHepMC
 ( const std::string& type   ,
   const std::string& name   ,
@@ -42,19 +32,16 @@ GaussEventActionHepMC::GaussEventActionHepMC
   , m_ppSvc( NULL )
 {  
   m_mcManager = MCTruthManager::GetInstance();
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// destructor 
-// ============================================================================
-GaussEventActionHepMC::~GaussEventActionHepMC()
-{
-};
+//=============================================================================
+// Destructor
+//=============================================================================
+GaussEventActionHepMC::~GaussEventActionHepMC() {}
 
-// ============================================================================
+//=============================================================================
 // initialize
-// ============================================================================
+//=============================================================================
 StatusCode GaussEventActionHepMC::initialize() 
 {
 
@@ -67,9 +54,9 @@ StatusCode GaussEventActionHepMC::initialize()
 
 }
 
-// ============================================================================
+//=============================================================================
 // finalize
-// ============================================================================
+//=============================================================================
 StatusCode GaussEventActionHepMC::finalize() 
 {
 
@@ -78,23 +65,18 @@ StatusCode GaussEventActionHepMC::finalize()
 
 }
 
-// ============================================================================
-/** performs the action at the begin of each event 
- *  @param event pointer to Geant4 event object 
- */
-// ============================================================================
+//=============================================================================
+// performs the action at the begin of each G4 event 
+//=============================================================================
 void GaussEventActionHepMC::BeginOfEventAction( const G4Event* /* event */ )
 {
   m_mcManager->NewEvent();
-};
+}
 
-// ============================================================================
 
-// ============================================================================
-/** performs the action at the end of each event 
- *  @param event pointer to Geant4 event object 
- */
-// ============================================================================
+//=============================================================================
+// performs the action at the end of each G4 event
+//=============================================================================
 void GaussEventActionHepMC::EndOfEventAction( const G4Event* /* event */) {
 
   debug() << "Current event: " << endmsg;
@@ -117,13 +99,13 @@ void GaussEventActionHepMC::EndOfEventAction( const G4Event* /* event */) {
     }    
   }  
   
-};
+}
 
-// ============================================================================
+//=============================================================================
 // DumpTree
-// ============================================================================
-
-void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle, std::string offset) {
+//=============================================================================
+void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle, 
+                                     std::string offset) {
 
   ParticleProperty* p = m_ppSvc->findByStdHepID( particle->pdg_id() );
   
@@ -135,7 +117,8 @@ void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle, std::string o
   }
 
   std::cout << offset << "--- " << name << " barcode: " << particle->barcode() 
-            << " pdg: " << particle->pdg_id() << " energy: " << particle->momentum().e()
+            << " pdg: " << particle->pdg_id() 
+            << " energy: " << particle->momentum().e()
             << " ProdVtx " << particle->production_vertex()->position()
             << " EndVtx " << particle->end_vertex()->position() << std::endl;
 
@@ -146,8 +129,9 @@ void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle, std::string o
 
     std::string deltaoffset = "";
     
-    if( fmod((*it)->barcode(),10000000) != fmod(particle->barcode(),10000000) ) {
-        deltaoffset = " | ";
+    if( fmod(double((*it)->barcode()),10000000) != 
+        fmod(double(particle->barcode()),10000000) ) {
+      deltaoffset = " | ";
     }
     
     DumpTree((*it), offset + deltaoffset);

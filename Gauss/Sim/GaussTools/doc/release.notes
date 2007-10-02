@@ -4,6 +4,17 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v13r1 2007-10-02 ========================
+! 2007-10-02 - Gloria Corti
+ - Adapt to modification of constructor from int made explicit in ParticleID
+   (as from LHCbKernel v7r7 in LHCB v22r9) 
+   . src/Components/GaussEventActionHepMC.cpp
+
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix problems of compilation on Win32 casting to double
+   . src/Lib/MCTruthManager.cpp
+   . src/Components/GaussEventActionHepMC.cpp
+
 !======================== GaussTools v13r0 2007-03-18 ========================
 ! 2007-03-18 - Gloria Corti
  - Clean up of left over commented lines of code

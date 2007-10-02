@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTools
-version v13r0
+version v13r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
