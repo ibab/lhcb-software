@@ -29,6 +29,7 @@ EE_EOF
 `
 echo $vals
 eval $vals
+. ../cmt/setup.sh
 #
 if test -z "$PVSS_PROJECT_NAME";
     then
@@ -52,7 +53,6 @@ else
     export PVSS_COMPONENTS_DIR=${PVSS_PROJECT_BASE}
 fi;
 
-. ../cmt/setup.sh
 #
 echo "Copy files from ${ONLINECONTROLSROOT}/pvss to ${PVSS_COMPONENTS_DIR} ..."
 cp --recursive --force --symbolic-link ${ONLINECONTROLSROOT}/pvss/* ${PVSS_COMPONENTS_DIR}

@@ -527,7 +527,7 @@ class Allocator(StreamingDescriptor):
     if part_info is not None:   # Allocation was successful: Now update Info table+tasks
       return part_info.name
     self.free(rundp_name,partition)
-    error('Failed to allocate slots for partition:'+self.name)
+    error('Failed to allocate slots of type:'+self.name+' for partition:'+partition)
     return None
 
   # ===========================================================================
@@ -556,7 +556,7 @@ class Allocator(StreamingDescriptor):
         return None
       self.infoInterface.showPartition(partition=part_info,extended=1)
       return part_info.name
-    error('Failed to allocate slots for partition:'+self.name)
+    error('Failed to allocate slots of type:'+self.name+' for partition:'+partition)
     return None
   
   # ===========================================================================

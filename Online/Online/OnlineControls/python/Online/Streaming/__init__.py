@@ -53,11 +53,10 @@ def runHLTopts(name='HLT',sim=None):
   import Online.RunInfoClasses.HLTFarm as RI
   import Online.JobOptions.OptionsWriter as JobOptions
 
-  nam    = name+'JobOptions'
   info   = RI.HLTFarmInfoCreator()
   mgr    = _mgr(PVSS.defaultSystemName())
-  writer = JobOptions.HLTOptionsWriter(mgr,nam,info)
-  ctrl   = Control.Control(mgr,nam,'Writer',[writer]).run()
+  writer = JobOptions.HLTOptionsWriter(mgr,name,info)
+  ctrl   = Control.Control(mgr,name+'JobOptions','Writer',[writer]).run()
   return (ctrl,run(name,mgr,sim))
   
 def runStorage(name='Storage',sim=None):
@@ -80,7 +79,7 @@ def runStorage(name='Storage',sim=None):
   info     = RI.StorageInfoCreator()
   mgr      = _mgr(Params.storage_system_name)
   streamer = StreamAllocator.Allocator(mgr,name,info)
-  writer   = JobOptions.StorageOptionsWriter(mgr,name+'JobOptions',info)
+  writer   = JobOptions.StorageOptionsWriter(mgr,name,info)
   ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
   return (ctrl,run(name,mgr,sim))
 
@@ -104,7 +103,7 @@ def runMonitoring(name='Monitoring',sim=None):
   info     = RI.MonitoringInfoCreator('Storage')
   mgr      = _mgr(Params.monitor_system_name)
   streamer = StreamAllocator.Allocator(mgr,name,info)
-  writer   = JobOptions.MonitoringOptionsWriter(mgr,name+'JobOptions',info)
+  writer   = JobOptions.MonitoringOptionsWriter(mgr,name,info)
   ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
   return (ctrl,run(name,mgr,sim))
 

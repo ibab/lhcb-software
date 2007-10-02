@@ -69,7 +69,7 @@ void StreamControlPanel_addTasks(dyn_string tasks,string node,string& val)  {
 //=============================================================================
 void StreamControlPanel_initTasksPanel(string stream, string partition, string name, string node)
 {
-  StreamControl_trace("StreamControlPanel_initMonitoringTasksPanel:"+stream+" "+partition+" "+name+" "+node);
+  StreamControl_trace("StreamControlPanel_initTasksPanel:"+stream+" "+partition+" "+name+" "+node);
   string font = "Arial,8,-1,5,50,0,0,0,0,0";
   string val, dp = dpSubStr(name,DPSUB_DP);
   dyn_string dataSenders, recvInfrastructure, recvReceivers, recvSenders;
@@ -163,22 +163,15 @@ void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
   string     rundp_name, val, dp = dpSubStr(name,DPSUB_DP);
   dyn_int    strmMult;
   dyn_string rcvInfra, recvTasks, recvInfraTasks, recvSenderTasks, recvReceiverTasks;
-  dyn_string strmInfra, strmTypes, strmTasks, strmInfraTasks, strmReceiverTasks, strmWriterTasks;
+  dyn_string strmInfra, strmTypes, strmTasks, strmInfraTasks, strmReceiverTasks, strmWriterTasks, monStreams;
   dyn_string recv_slices = StreamControlPanel_getStringVectors(dp+".RecvSlices","StreamPartition");
   dyn_string strm_slices = StreamControlPanel_getStringVectors(dp+".StreamSlices","StreamPartition");
+  bool isMonitoring = strtoupper(stream) == "MONITORING";
   m_frame.text     = "Partition: "+partition;
   StreamControlPanel_setListItems("m_recvSlots",recv_slices);
   StreamControlPanel_setListItems("m_strmSlots",strm_slices);
-  rundp_name = "LBECS:"+partition;
   int res = dpGet(
-    rundp_name+"_RunInfo.Storage.recvInfrastructure",rcvInfra,
-    rundp_name+"_RunInfo.Storage.streamInfrastructure",strmInfra,
-    rundp_name+"_RunInfo.Storage.streamTypes",strmTypes,
-    rundp_name+"_RunInfo.Storage.streamMultiplicity",strmMult,
-    rundp_name+"_RunInfo.Storage.storeFlag",flag
-    );
-  StreamControlPanel_checkErrors(res);
-  res = dpGet(
+    dp+".RunInfo",rundp_name,
     dp+".RecvReceivers",recvReceiverTasks,
     dp+".RecvSenders",recvSenderTasks,
     dp+".RecvInfrastructure",recvInfraTasks,
@@ -187,7 +180,29 @@ void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
     dp+".StreamSenders",strmWriterTasks
     );
   StreamControlPanel_checkErrors(res);
-  string val = "Flag:\nReceive infrastructure:\nStream infrastructure:\nOutput streams:\t\t";
+  if ( strtoupper(stream) == "STORAGE" )  {
+    res = dpGet(
+      rundp_name+".Storage.recvInfrastructure",rcvInfra,
+      rundp_name+".Storage.streamInfrastructure",strmInfra,
+      rundp_name+".Storage.streamTypes",strmTypes,
+      rundp_name+".Storage.streamMultiplicity",strmMult,
+      rundp_name+".Storage.storeFlag",flag
+      );
+  }
+  else   if ( isMonitoring )  {
+    res = dpGet(
+      rundp_name+".MonFarm.relayInfrastructure",rcvInfra,
+      rundp_name+".MonFarm.monInfrastructure",strmInfra,
+      rundp_name+".MonFarm.monTypes",strmTypes,
+      rundp_name+".MonFarm.monStreams",monStreams,
+      rundp_name+".MonFarm.monMultiplicity",strmMult,
+      rundp_name+".MonFarm.monFlag",flag
+      );
+  }
+  StreamControlPanel_checkErrors(res);
+  string val = stream+" Flag:\nReceive infrastructure:\nStream infrastructure:\nOutput streams:\t\t";
+  for(int i=1; i<=dynlen(strmTypes); ++i)
+    if ( i%3 == 0 ) val = val + "\n";
   val = val + "\nReceiving layer:\t\nStreaming layer:\t";
   m_desc.text = val;
   val = flag+"\n";
@@ -197,18 +212,22 @@ void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
   for(int i=1; i<=dynlen(strmInfra); ++i)  
     val = val + strmInfra[i] + "  ";
   val = val + "\n";
-  for(int i=1; i<=dynlen(strmTypes); ++i)
-    val = val + strmTypes[i] + " ["+strmMult[i]+"]  ";
-  val = val + "\n" + dynlen(recv_slices) + " slots used with ";
+  for(int i=1; i<=dynlen(strmTypes); ++i)  {
+    val = val + strmTypes[i] + "/"+strmMult[i];
+    if ( isMonitoring ) val = val + "/" + monStreams[i];
+    val = val + " ";
+    if ( i%3 == 0 ) val = val + "\n";
+  }
+  val = val + "\n" + dynlen(recv_slices) + " slots used";
   if ( dynlen(recvInfraTasks) > 0 )
-    val = val +dynlen(recvInfraTasks) + " infrastructure task(s) ";
+    val = val + " with " + dynlen(recvInfraTasks) + " infrastructure task(s) ";
   if ( dynlen(recvReceiverTasks) > 0 )
     val = val + dynlen(recvReceiverTasks) + " receiver(s) ";
   if ( dynlen(recvSenderTasks) > 0 )
     val = val + dynlen(recvSenderTasks) + " sender(s) ";
-  val = val + "\n" + dynlen(strm_slices) + " slots used with ";
+  val = val + "\n" + dynlen(strm_slices) + " slots used";
   if ( dynlen(strmInfraTasks) > 0 )
-    val = val + dynlen(strmInfraTasks) + " infra task(s) ";
+    val = val + " with " + dynlen(strmInfraTasks) + " infra task(s) ";
   if ( dynlen(strmReceiverTasks) > 0 )
     val = val + dynlen(strmReceiverTasks) + " receiver(s) ";
   if ( dynlen(strmWriterTasks) > 0 )
@@ -309,9 +328,11 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
   int recv_slots = 1, strm_slots = 0, recv_strategy = 2, strm_strategy = 2;
   string dp, info = "LBECS:"+partition+"_RunInfo";
   dyn_int strm_mult;
-  dyn_string recv_infra, strm_infra, strm_types;
+  dyn_string recv_infra, strm_infra, strm_types, streams;
+  bool isStorage = strpos(stream,"Storage") >= 0;
+  bool isMonitoring = strpos(stream,"Monitoring") >= 0;
   int res = 0;
-  if ( strpos(stream,"Storage") >= 0 )  {
+  if ( isStorage )  {
     dp = strtoupper(stream)+":"+m_runInfoDP.text;
     if ( !dpExists(dp) ) {
       res = -1;
@@ -334,7 +355,7 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
     m_strmTypesText.text = "OutputStreams/Multiplicity:\n[Example: B2pipi/2,BBincl/5]";
     m_strmTypesText.visible = 1;
   }
-  else if ( strpos(stream,"Monitoring") >= 0 )  {
+  else if ( isMonitoring )  {
     dp = strtoupper(stream)+":"+m_runInfoDP.text;
     dp = strtoupper(stream)+":"+m_runInfoDP.text;
     if ( !dpExists(dp) ) {
@@ -351,6 +372,7 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
                   info+".MonFarm.monInfrastructure", strm_infra,
                   info+".MonFarm.monMultiplicity", strm_mult,
                   info+".MonFarm.monTypes", strm_types,
+                  info+".MonFarm.monStreams", streams,
                   info+".MonFarm.recvStrategy", recv_strategy,
                   info+".MonFarm.strmStrategy", strm_strategy);
     }
@@ -371,6 +393,7 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
   for(int i=1, n=dynlen(strm_mult); i<=n; ++i)  {
     strm_slots = strm_slots + strm_mult[i];
     s = s + strm_types[i] + "/" + strm_mult[i];
+    if ( isMonitoring ) s = s +"/" + streams[i];
     if ( i < n ) s = s+ "\n";
   }
   m_strmTypes.text = s;
@@ -418,31 +441,42 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
   ChildPanelOnReturn("vision/MessageInfo","Please Confirm",
                      makeDynString("$1:"+msg,"$2:Cancel","$3:Ok"),50,50,ds,df);
   if ( ds[1] == 0 )   {
+    
+    bool isStorage = strpos(stream,"Storage") >= 0;
+    bool isMonitoring = strpos(stream,"Monitoring") >= 0;
     string s0 = m_strmTypes.text, s1 = m_recvInfraTaskTypes.text, s2 = m_strmInfraTaskTypes.text;
     int recv_strategy = m_recvStrategy.text;
     int strm_strategy = m_strmStrategy.text;
-    strreplace(s0,"\n"," ");
-    while ( strpos(s0,"  ")>0 ) strreplace(s0,"  "," ");
-    strreplace(s0,"/"," ");
+    //strreplace(s0,"\n"," ");
+    //while ( strpos(s0,"  ")>0 ) strreplace(s0,"  "," ");
     strreplace(s1,"\n"," ");
     while ( strpos(s1,"  ")>0 ) strreplace(s1,"  "," ");
     strreplace(s2,"\n"," ");
     while ( strpos(s2,"  ")>0 ) strreplace(s2,"  "," ");
-    dyn_string strm_typs  = strsplit(s0," ");
+    dyn_string strm_typs  = strsplit(s0,"\n");
     dyn_string recv_infra = strsplit(s1," ");
     dyn_string strm_infra = strsplit(s2," ");
-    if ( dynlen(strm_typs)%2 != 0 )  {
-      ChildPanelOn("vision/MessageInfo1","Bad input",makeDynString("Parameter 'Stream Types' is incorrect"),50,50);
-      return 1;
-    }
     dyn_int mult;
-    dyn_string types;
-    for(int i=1, n=dynlen(strm_typs); i<=n; i=i+2)  {
-      dynAppend(types,strm_typs[i]);
-      dynAppend(mult,strm_typs[i+1]);
+    dyn_string items, types, strm;
+    
+    // DebugN("Length:",dynlen(strm_typs),strm_typs);
+    
+    for(int i=1, n=dynlen(strm_typs); i<=n; ++i)  {
+      items = strsplit(strm_typs[i],"/");
+      if ( isStorage && dynlen(items) != 2 )  {
+        ChildPanelOn("vision/MessageInfo1","Bad input",makeDynString("Parameter 'Stream Types' is incorrect"),50,50);
+        return 1;
+      }
+      if ( isMonitoring && dynlen(items) != 3 )  {
+        ChildPanelOn("vision/MessageInfo1","Bad input",makeDynString("Parameter 'Stream Types' is incorrect"),50,50);
+        return 1;
+      }
+      dynAppend(types,items[1]);
+      dynAppend(mult,items[2]);
+      if ( isMonitoring ) dynAppend(strm,items[3]);
     }
     int res = -1;
-    if ( strpos(stream,"Storage") >= 0 )  {
+    if ( isStorage )  {
       res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
       if ( !dpExists(info) ) res = -1;
       if ( 0 == res )  {
@@ -462,6 +496,7 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
                     info+".MonFarm.monInfrastructure", strm_infra,
                     info+".MonFarm.monMultiplicity", mult,
                     info+".MonFarm.monTypes", types,
+                    info+".MonFarm.monStreams", strm,
                     info+".MonFarm.recvStrategy", recv_strategy,
                     info+".MonFarm.strmStrategy", strm_strategy);
       }

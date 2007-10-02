@@ -91,6 +91,7 @@ class Monitoring(General):
     res = StreamDescriptor(self.streamManager,self.storage).getPartition(self.name)
     if not res:
       error('Failed to access stream information for partition '+self.name+' ['+str(self.storage)+']')
+      error('Are you sure the storage slice is allocated for partition '+self.name+' ?')
       return None
 
     dp, part_name, slot = res

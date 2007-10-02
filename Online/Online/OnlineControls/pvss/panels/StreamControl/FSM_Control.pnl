@@ -1,7 +1,7 @@
 V 10
 1
 LANG:1 18 StreamControlPanel
-PANEL,-1 -1 570 267 N "_3DFace" 1
+PANEL,-1 -1 570 298 N "_3DFace" 1
 "$1"
 "#uses \"StreamControlPanel.cpp\"
 main()  {
@@ -10,6 +10,7 @@ main()  {
   string stream = substr(dunit,0,pos);
   string stream_partition = stream + \"_Partition_\" + substr(dunit,pos+strlen(\"_Slice\"),2);
   string partition = StreamControlPanel_getPartitionNameFromSlice(stream,dunit);
+  DebugN(\"StreamControlPanel:\",stream,stream_partition,partition);
   StreamControlPanel_initPartitionDisplay(stream, partition,stream_partition);
 }
 " 0
@@ -18,8 +19,8 @@ main()  {
  E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -90,7 +91,7 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 0 1 0 1 E 0.999999999999999 0 2.68041237113405 -10 -115.257731958764 0 E 10 43 581 141
+ 0 0 1 0 1 E 0.999999999999999 0 3.020618556701064 -10 -129.8865979381456 0 E 10 43 581 141
 1
 LANG:1 101 -*-MS Shell Dlg-bold-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,758,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
@@ -140,13 +141,13 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 0 ""
 1
 LANG:1 16 Streaming Layer:
-2 13
+2 15
 "m_desc"
 ""
-1 240 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 13 142 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  "main()    {  PanelOff();    }" 0
  E
-22 0 0 0 0 0
+25 0 0 0 0 0
 E E E
 0
 1
@@ -155,20 +156,20 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 10 143 160 243
-0 2 2 "0s" 0 0 0 64 0 0  10 143 1
+ 0 1 1 2 1 E U  1 E 13 142 165 289
+0 2 2 "0s" 0 0 0 64 0 0  13 142 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
-2 14
+2 16
 "m_params"
 ""
-1 400 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 168 142 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  "main()    {  PanelOff();    }" 0
  E
-24 0 0 0 0 0
+26 0 0 0 0 0
 E E E
 0
 1
@@ -177,10 +178,10 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 171 150 561 250
-0 2 2 "0s" 0 0 0 64 0 0  171 150 1
+ 0 1 1 2 1 E U  1 E 168 142 564 291
+0 2 2 "0s" 0 0 0 64 0 0  168 142 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 

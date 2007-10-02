@@ -56,14 +56,14 @@ class OptionsWriter(Control.AllocatorClient):
     self.optionsMgr = None
     self.infoCreator = info
     self.optionsDir = Params.jobopts_optsdir
+    self.dp_name = self.manager.name()+':'+name+'JobOptions'
     devMgr = self.manager.deviceMgr()
-    dp_name = self.manager.name()+':'+name
-    if not devMgr.exists(dp_name):
+    if not devMgr.exists(self.dp_name):
       typ = self.manager.typeMgr().type('JobOptionsControl')
-      if not devMgr.createDevice(dp_name,typ,1).release():
-        error('Failed to create the datapoint:"'+dp_name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
+      if not devMgr.createDevice(self.dp_name,typ,1).release():
+        error('Failed to create the datapoint:"'+self.dp_name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
       else:
-        log('Created the datapoint:"'+dp_name+'"',timestamp=1)
+        log('Created the datapoint:"'+self.dp_name+'"',timestamp=1)
 
   # ===========================================================================
   def optionsManager(self):
@@ -73,7 +73,7 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def get(self,name):
-    nam = DataPoint.original(self.name+'.'+name)
+    nam = DataPoint.original(self.dp_name+'.'+name)
     # log('Access datapoint:'+nam,timestamp=1)
     return DataPoint(self.manager,nam)
 
@@ -84,12 +84,13 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def getStreamInfo(self,mgr,name):
+    info = None
     res = StreamingDescriptor.findPartition(mgr,name,self.run.name)
     if res is not None:
       dp, nam, id = res
       info = PartitionInfo.PartitionInfo(mgr,nam).load()
     if info is None:
-      error('###\n###   Cannot access Stream Slice for partition:'+self.run.name+'\n###',
+      error('###\n###   Cannot access Stream Slice for partition:'+self.run.name+' ['+mgr.name()+']\n###',
             timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return info
   
@@ -193,6 +194,7 @@ class OptionsWriter(Control.AllocatorClient):
         if not self.writeOptions(opts,activity,task):
           return None
       return self.run
+    error('No tasks found for activity:'+activity)
     return None
 
 # =============================================================================
@@ -278,10 +280,10 @@ class StreamingOptionsWriter(OptionsWriter):
       @author  M.Frank
   """
   # ===========================================================================
-  def __init__(self, manager, type, name, info, layers):
+  def __init__(self, manager, type, name, info, streamMgr, layers):
     "Object constructor."
     OptionsWriter.__init__(self, manager, type, name, info)
-    self.storageMgr = Systems.controlsMgr(Params.storage_system_name)
+    self.streamMgr = streamMgr
     self.streamingLayers = layers
 
   # ===========================================================================
@@ -362,16 +364,20 @@ class StreamingOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _configure(self, partition):
-    self.streamInfo = self.getStreamInfo(self.storageMgr,'Storage')
+    self.streamInfo = self.getStreamInfo(self.streamMgr,self.name)
     if self.streamInfo:
       result = self
+      info = self.streamInfo
+      #print info.tasks[PartitionInfo.RECVINFRA].name(),len(info.tasks[PartitionInfo.RECVINFRA].data)
       for layer in self.streamingLayers:
         self.hostType  = layer
         self.taskList  = self.setupLayer(layer)
         res = OptionsWriter._configure(self,partition)
-        if res is None: result = None
+        if res is None:
+          result = None
       self.taskList = None
       return result
+    error('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)
     return None
   
 # =============================================================================
@@ -382,7 +388,8 @@ class StorageOptionsWriter(StreamingOptionsWriter):
   """
   # ===========================================================================
   def __init__(self, manager, name, info):
-    StreamingOptionsWriter.__init__(self, manager, 'RECV', name, info, ['RECV','STREAM']) 
+    streamMgr = Systems.controlsMgr(Params.storage_system_name)
+    StreamingOptionsWriter.__init__(self, manager, 'RECV', name, info, streamMgr, ['RECV','STREAM'])
   # ===========================================================================
   def setupLayer(self, layer):
     i = self.streamInfo
@@ -400,7 +407,8 @@ class MonitoringOptionsWriter(StreamingOptionsWriter):
   """
   # ===========================================================================
   def __init__(self, manager, name, info):
-    StreamingOptionsWriter.__init__(self, manager, 'MONRELAY', name, info, ['MONRELAY','MONI'])
+    streamMgr = Systems.controlsMgr(Params.monitor_system_name)
+    StreamingOptionsWriter.__init__(self, manager, 'MONRELAY', name, info, streamMgr, ['MONRELAY','MONI'])
   # ===========================================================================
   def setupLayer(self, layer):
     i = self.streamInfo

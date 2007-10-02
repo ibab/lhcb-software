@@ -1,8 +1,9 @@
 V 10
 1
 LANG:1 26 Stream Allocation Overview
-PANEL,-1 -1 472 304 N "_3DFace" 1
+PANEL,-1 -1 472 304 N "_3DFace" 2
 "$1"
+"$2"
 "#uses \"StreamControlPanel.cpp\"
 
 void StreamControlPanel_CheckPartitionDisplay(string dp, string value)  {
@@ -69,7 +70,7 @@ void StreamControlPanel_initPartitionDisplay(string stream)  {
 }
 
 main()  {
-  //DebugN($1,$2,substr($1,4),myPanelName(),myModuleName());
+  DebugN($1,$2,substr($1,4),myPanelName(),myModuleName());
   string stream = substr($1,4);
   m_sysName.text = stream;
   m_sysName.backCol = \"_Transparent\";
@@ -85,8 +86,8 @@ main()  {
  E E E E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
