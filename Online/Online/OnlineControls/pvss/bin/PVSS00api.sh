@@ -2,8 +2,8 @@
 installation=/group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
 cd $installation
 echo $0 `dirname $0`
-exit
-. ./PVSS.setup
+#
+. ./PVSS.setup.sh
 PVSS_system=`python <<EOF
 args = '$*'.split(' ')
 for i in xrange(len(args)):

@@ -103,6 +103,15 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
   return 1;
 }
 //=============================================================================
+string StreamTaskMgr_addTreeNode(string parent, string node, string type, int isCU) {
+  if ( 0 == fwFsmTree_isNode(node) ) {
+    DebugN("Create Node:"+parent+"::"+node+" ["+type+"]");
+    return fwFsmTree_addNode(parent, node, type, isCU);
+  }
+  DebugN("Node "+parent+"::"+node+" Exists already....");
+  return node;
+}
+//=============================================================================
 int StreamTaskMgr_uninstallTaskType()  {
   string type="FSM_DimTask";
   if ( dynlen(dpTypes(type)) > 0 ) {
@@ -131,20 +140,13 @@ int StreamTaskMgr_uninstall()  {
 }
 //=============================================================================
 int StreamTaskMgr_installStream(string stream)  {
-    string stream_node = fwFsmTree_addNode("FSM", "Data"+stream, "StreamCluster", 1);
+    string stream_node = StreamTaskMgr_addTreeNode("FSM", "Data"+stream, "StreamCluster", 1);
     string stream_alloc = stream+"Alloc";
     if ( !dpExists(stream_alloc) )  {
       dpCreate(stream_alloc,"StreamControl");
     }
     string pref = stream;
-    //if ( substr(stream,0,4)=="Test")  {
-    //  pref = "Test";
-    //}
-    if ( !dpExists(pref+"JobOptions") )  {
-      //dpCreate(pref+"JobOptions","JobOptionsControl");
-    }
-    string st = fwFsmTree_addNode(stream_node,stream_alloc,"StreamControl",0);
-    //string st = fwFsmTree_addNode(stream_node,pref+"JobOptions","JobOptionsControl",0);
+    string st = StreamTaskMgr_addTreeNode(stream_node,stream_alloc,"StreamControl",0);
     fwFsmTree_refreshTree();
 }
 //=============================================================================
@@ -190,15 +192,13 @@ int StreamTaskMgr_createNodeTasks(string node, string name, int howmany, int fir
     if ( !dpExists(dev_name) )  {
       dpCreate(dev_name,"FSM_DimTask");
     }
-    string task = fwFsmTree_addNode(node, dev_name, "FSM_DimTask", 0);
-    DebugN("Create Node:"+dev_name+ " -> " + task);
+    string task = StreamTaskMgr_addTreeNode(node, dev_name, "FSM_DimTask", 0);
   }
   return 1;
 }
 //=============================================================================
 int StreamTaskMgr_createNode(string stream_node,string name,string type,int num)  {
-  string node = fwFsmTree_addNode(stream_node, name, type, 0);
-  DebugN("    Create Node:"+name+"_Tasks -> " + node,num,node);
+  string node = StreamTaskMgr_addTreeNode(stream_node, name, type, 0);
   if ( num > 0 && node != "" )  {
     StreamTaskMgr_createNodeTasks(node,name,num,0);
   }
@@ -225,12 +225,12 @@ int StreamTaskMgr_createTree(string stream,
   }
   if ( 0 == res )  {
     string name, node = stream+"_"+slice_name;
-    //string slice_node = fwFsmTree_addNode("Data"+stream, stream+"_Slices", "FSM_Holder", 1);
-    string slice_node = fwFsmTree_addNode("FSM", stream+"_Slices", "FSM_Holder", 1);
-    string stream_node = fwFsmTree_addNode(stream+"_Slices", node, "FSM_Slice", 1);
+    //string slice_node = StreamTaskMgr_addTreeNode("Data"+stream, stream+"_Slices", "FSM_Holder", 1);
+    string slice_node = StreamTaskMgr_addTreeNode("FSM", stream+"_Slices", "FSM_Holder", 1);
+    string stream_node = StreamTaskMgr_addTreeNode(stream+"_Slices", node, "FSM_Slice", 1);
     DebugN("Slices:"+slice_node+" Stream:"+stream_node);
     if ( stream_node != "" )   {
-      fwFsmTree_addNode(stream_node, node+"_Config", "StreamConfigurator", 0);
+      StreamTaskMgr_addTreeNode(stream_node, node+"_Config", "StreamConfigurator", 0);
       fwFsmTree_setNodeLabel(node+"_Config","Configurator");
       for(int i=1; i<=dynlen(sendNodes); ++i)  {
         name = node+"_"+sendNodes[i];

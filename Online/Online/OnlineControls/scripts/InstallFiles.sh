@@ -33,7 +33,7 @@ eval $vals
 if test -z "$PVSS_PROJECT_NAME";
     then
     echo "No Project name given!";
-    echo "usage: Install.sh <project-name> <install_name>"
+    echo "usage: Install.sh -project <project-name> <install_name>"
     echo "  -project <name>: Choose one of: STORAGE MONITORING LBECS"
     echo "  -install <name>: Choose one of: JOBOPTIONS"
     exit 0;
@@ -55,5 +55,11 @@ fi;
 . ../cmt/setup.sh
 #
 echo "Copy files from ${ONLINECONTROLSROOT}/pvss to ${PVSS_COMPONENTS_DIR} ..."
-#
 cp --recursive --force --symbolic-link ${ONLINECONTROLSROOT}/pvss/* ${PVSS_COMPONENTS_DIR}
+#
+if test "${PVSS_PROJECT_BASE}" != "${PVSS_COMPONENTS_DIR}"; 
+  then
+  echo "Copy files from ${ONLINECONTROLSROOT}/pvss to ${PVSS_PROJECT_BASE} ..."
+  cp --recursive --force --symbolic-link ${ONLINECONTROLSROOT}/pvss/* ${PVSS_PROJECT_BASE}
+fi;
+
