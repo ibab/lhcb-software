@@ -5,6 +5,12 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v6r0p1 2007-10-02 ======================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix problem of compilation on Win32 reverving space only when number of
+   hits greater than zero
+   . GetTrackerHitsAlg.cpp
+
 !======================== GaussTracker v6r0 2007-03-18 =======================
 ! 2007-03-18 - Gloria Corti
  - Clean up, removing commented lines of code

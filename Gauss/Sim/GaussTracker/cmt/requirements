@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTracker
-version v6r0
+version v6r0p1
 
 #============================================================================
 # Structure, i.e. directories to process. 

@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.12 2007-01-12 15:41:23 ranjard Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.13 2007-10-02 16:22:00 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -136,7 +136,9 @@ StatusCode GetTrackerHitsAlg::execute() {
   
   // reserve elements on output container
   int numOfHits = hitCollection->entries();
-  hits->reserve( numOfHits );
+  if( numOfHits > 0 ) {
+    hits->reserve( numOfHits );
+  }
 
   // tranform G4Hit into MCHit and insert it in container
   for( int iG4Hit = 0; iG4Hit < numOfHits; ++iG4Hit ) { 
