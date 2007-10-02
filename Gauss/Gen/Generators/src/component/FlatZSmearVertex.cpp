@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.8 2007-05-03 14:21:32 gcorti Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.9 2007-10-02 15:56:42 gcorti Exp $
 // Include files 
 
 // local
@@ -16,13 +16,12 @@
 #include "Event/HepMCEvent.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : LHCbAcceptance
+// Implementation file for class : FlatZSmearVertex
 //
 // 2005-08-17 : Patrick Robbe
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-
 DECLARE_TOOL_FACTORY( FlatZSmearVertex );
 
 

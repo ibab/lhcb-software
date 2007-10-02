@@ -1,12 +1,21 @@
-! $Id: release.notes,v 1.108 2007-09-11 17:48:32 robbep Exp $
+! $Id: release.notes,v 1.109 2007-10-02 15:56:42 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v7r4 2007-09-27 ===========================
+! 2007-09-27 - Gloria Corti for Massimiliano Ferro-Luzzi
+ - Add new tool for uniform distribution in z and xy (within max radius)
+   of primary vertex
+   . src/component/UniformSmearVertex.{h,cpp} - NEW
+   . src/component/Generators_load.cpp - add factory also for other vertex
+                                         smearing tools that were missing
+                                         (Necessary for DC06 compatibility)
+
 ! 2007-09-11 - Patrick Robbe
- - src/Lib/GenCouters.cpp: fix problem with D counters
+ - src/Lib/GenCounters.cpp: fix problem with D counters
 
 ! 2007-09-09 - Patrick Robbe
  - src/component/SignalForcedFragmentation: fix problem with particles
@@ -16,7 +25,9 @@
    compilation.
  - src/Lib/LHAPDFCommonBlocks.cpp, LHAPDFUtils.F: rename routine whose names
    are used in the new LHAPDF version
- - Various fixes for Windows compilation
+ - Various fixes for Windows compilation:
+   . StandAloneDecayTool.h
+   . EvtGenDecay.{h,cpp}
 
 !====================== Generators v7r3 2007-08-22 ===========================
 ! 2007-07-17 - Patrick Robbe

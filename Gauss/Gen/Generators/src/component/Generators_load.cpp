@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.10 2007-04-01 21:27:45 robbep Exp $
+// $Id: Generators_load.cpp,v 1.11 2007-10-02 15:56:42 gcorti Exp $
 // Include files 
 
 //
@@ -45,10 +45,15 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( Special ) ;
   DECLARE_TOOL( StandAloneDecayTool ) ;
   DECLARE_TOOL( RepeatDecay ) ;
-                                                                                                                 
+
   // Beam Tools
   DECLARE_TOOL( CollidingBeams ) ;
   DECLARE_TOOL( FixedTarget ) ;
+
+  // Primary Vertex Tools
+  DECLARE_TOOL( BeamSpotSmearVertex );
+  DECLARE_TOOL( FlatZSmearVertex );
+  DECLARE_TOOL( UniformSmearVertex );
  
   // Decay Tools
   DECLARE_TOOL( EvtGenDecay ) ;
