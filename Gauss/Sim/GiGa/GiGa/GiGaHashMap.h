@@ -1,8 +1,11 @@
-// $Id: GiGaHashMap.h,v 1.3 2003-07-07 16:48:09 ranjard Exp $
+// $Id: GiGaHashMap.h,v 1.4 2007-10-03 15:21:09 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/07 16:48:09  ranjard
+// v14r2 - fix for gcc 3.2
+//
 // Revision 1.2  2002/12/03 21:46:59  ibelyaev
 //  small upgrade to improve CaloSim code
 //
@@ -14,7 +17,7 @@
 #define GIGA_GIGAHASHMAP_H 1
 // Include files
 #ifdef WIN32
-#include "GaudiKernel/HashTable.h" // GaudiKernel (only for Visual-C Win32)
+#include "GaudiKernel/HashMap.h" // GaudiKernel (only for Visual-C Win32)
 #include <vector>            
 #else 
 #if defined (__GNUC__) && ( __GNUC__ <= 2 )
@@ -53,8 +56,7 @@ public:
   /** the  map itself
    *  @warning the actual type is platform-dependent!
    */
-  typedef  HashTable<Key,Value,GiGaHash<Key> > Map  ; 
-  typedef  std::vector<Key>                    Keys ;
+  typedef  GaudiUtils::HashMap<Key,Value,GiGaHash<Key> > Map  ; 
 #else 
   /** the  map itself
    *  @warning the actual type is platform-dependent!
@@ -77,9 +79,6 @@ public:
   /// Standard constructor
   GiGaHashMap () 
     : m_map   () 
-#ifdef WIN32 
-    , m_keys  () 
-#endif 
   {}
   
   /// destructor (virtual)
@@ -97,19 +96,7 @@ public:
    *  @return reference to the value
    */
   inline Value& operator() ( const Key& key )
-#ifdef WIN32 
-  {
-    // find the key 
-    Map::value_type* value = m_map.find( key ) ;
-    if( 0 != value ) { return value->second ; }    // RETURN ! 
-    // insert the key 
-    m_map.insert( key , Value() );
-    value = m_map.find( key ) ;
-    return value->second ;
-  };
-#else 
   { return m_map[key]; };
-#endif
 
   /** access to elements by the key    (non-const!)
    *  for Linux the implementation is trivial
@@ -132,16 +119,7 @@ public:
   void erase( iterator first , 
               iterator last  )
   {
-#ifndef WIN32 
     m_map.erase( first , last ); 
-#else 
-    if( !m_keys.empty() ) { m_keys.clear() ; }
-    for( ; first != last ; ++first ) 
-      { m_keys.push_back( first->first ); }
-    for( Keys::const_iterator ikey = m_keys.begin() ; 
-         m_keys.end() != ikey ; ++ikey ) { m_map.remove( *ikey  ) ; }
-    m_keys.clear();
-#endif
   };
   
   /** erase the sequence from the map
@@ -151,11 +129,7 @@ public:
    */
   void erase( iterator it )
   {
-#ifndef WIN32 
     m_map.erase  ( it        ); 
-#else 
-    m_map.remove ( it->first );
-#endif
   };
   
   /** remove/erase element from the map (by key) 
@@ -165,11 +139,7 @@ public:
    */
   void erase( const Key& key ) 
   { 
-#ifndef WIN32
     m_map.erase ( key ) ;
-#else
-    m_map.remove( key ) ;
-#endif 
   };
 
   /// clear the content of all containers 
@@ -207,11 +177,6 @@ private:
   // the map iteself 
   Map  m_map  ; ///< the map itself 
 
-#ifdef WIN32
-  // helper container of keys to be removed, see "erase" method 
-  Keys m_keys ; ///< helper conatiner to keep the keys to be removed 
-#endif 
-  
 };
 
 // ============================================================================

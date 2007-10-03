@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.119 2007-03-26 09:02:33 gcorti Exp $
+! $Id: release.notes,v 1.120 2007-10-03 15:21:09 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+!======================= GiGa v19r1 2007-10-02 ===============================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Replace GaussKernel HashTable.h with HashMap.h, adapting to modifications
+   in GaudiKernel to avoid hacks of #ifdef when compiling on Win32
+   . GiGa/GiGaHashMap.h
+   . GiGa/GiGaMap.h
 
 !======================= GiGa v19r0 2007-03-26 ===============================
 ! 2007-03-26 - Gloria Corti

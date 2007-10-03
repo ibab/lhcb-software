@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetBase.h,v 1.11 2007-03-18 18:25:05 gcorti Exp $
+// $Id: GiGaSensDetBase.h,v 1.12 2007-10-03 15:21:09 gcorti Exp $
 #ifndef GIGA_GIGASENSDETBASE_H
 #define GIGA_GIGASENSDETBASE_H 1 
 
@@ -20,7 +20,7 @@ class G4TouchableHistory;
  */
 
 class GiGaSensDetBase: virtual public IGiGaSensDet ,
-                       public          GiGaBase
+                       public GiGaBase
 {
 
 public:
