@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-10-3 M Needham
+ - Changes in TrackAddLikelihood to allow different values for different
+   track types
+
 !========================== TrackUtils v1r14 2007-09-20 ======================
 ! 2007-09-20 - Louis Nicolas
  - TrackRemoveDoubleITHits: add possibility to keep the hit with highest charge

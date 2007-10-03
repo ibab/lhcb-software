@@ -1,4 +1,4 @@
-// $Id: TrackAddLikelihood.h,v 1.1 2007-09-11 14:49:46 mneedham Exp $
+// $Id: TrackAddLikelihood.h,v 1.2 2007-10-03 14:01:37 mneedham Exp $
 #ifndef _TrackAddLikelihood_H_
 #define _TrackAddLikelihood_H_
 
@@ -12,6 +12,8 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include <string>
+#include <vector>
+#include <map>
 
 class ITrackManipulator;
 
@@ -31,8 +33,10 @@ public:
 private:
 
   std::string m_inputLocation;
-  ITrackManipulator* m_likelihood;
+  std::vector<unsigned int> m_types;
   std::string  m_likelihoodToolName;
+  std::map<unsigned int, ITrackManipulator*> m_toolMap;
+
 };
 
 #endif
