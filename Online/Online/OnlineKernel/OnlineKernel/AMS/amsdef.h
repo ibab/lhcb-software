@@ -80,7 +80,7 @@ enum AddressStyles   {
   /** Spy on next message entry without removing from the queue   */
   int amsc_spy_next_message ( void*, size_t*, char*, unsigned int*, size_t*);
   /** Spy on next message entry without copying the data and without removing from the queue   */
-  int amsc_spy_next_msg_ptr ( void**, size_t*, char*, unsigned int*, unsigned int*);
+  //Not implemented: int amsc_spy_next_msg_ptr ( void**, size_t*, char*, unsigned int*, unsigned int*);
   /** Blocking reading of the next message entry                  */
   int amsc_get_message (void* buffer, size_t* size, char* from, char* r_source_in,
                         int timeout, unsigned int* facility, unsigned int r_facility, char* dest);
@@ -100,8 +100,8 @@ enum AddressStyles   {
   /** Spy on the last message received (not necessarily the one to be read next)  */
   int amsc_spy_last_message ( void*, size_t*, char*, unsigned int*, size_t*);
   /** Optional user mode AST on message reception                  */
-  int amsc_declare_user_ast ( void (*astadd)(), int );
-  int amsc_declare_alias    ( char* );
+  int amsc_declare_user_ast ( int (*astadd)(void*), void* astpar );
+  int amsc_declare_alias( __CXX_CONSTANT char* );
   int amsc_stack_next_message();
   int amsc_restore_stack(int *cnt);
   void amsc_flush_message_queue (void);
@@ -110,7 +110,17 @@ enum AddressStyles   {
 
   typedef int (*amsuc_callback_t)(__CXX_CONSTANT amsuc_info*, void*);
   /** Initialize AMSU                                                */
-  int amsuc_init          ();  /** Subscribe to AMSU by facility code to receive callbacks on message receival     */  int amsuc_subscribe     ( unsigned int facility, amsuc_callback_t action, amsuc_callback_t broadcast, void* param);  /** Internal message dispatcher                                    */  int amsuc_dispatch      ( unsigned int, void* );  /** Unsubscribe specified facility from AMSU                       */  int amsuc_remove        ( unsigned int facility );  /** Subscribe to IAMDEAD messages from a given source              */  int amsuc_subscribe_death   ( __CXX_CONSTANT char*, unsigned int, void* param );  /** Unsubscribe from IAMDEAD messages from a given source          */  int amsuc_remove_death      ( __CXX_CONSTANT char* );
+  int amsuc_init          ();
+  /** Subscribe to AMSU by facility code to receive callbacks on message receival     */
+  int amsuc_subscribe     ( unsigned int facility, amsuc_callback_t action, amsuc_callback_t broadcast, void* param);
+  /** Internal message dispatcher                                    */
+  int amsuc_dispatch      ( unsigned int, void* );
+  /** Unsubscribe specified facility from AMSU                       */
+  int amsuc_remove        ( unsigned int facility );
+  /** Subscribe to IAMDEAD messages from a given source              */
+  int amsuc_subscribe_death   ( __CXX_CONSTANT char*, unsigned int, void* param );
+  /** Unsubscribe from IAMDEAD messages from a given source          */
+  int amsuc_remove_death      ( __CXX_CONSTANT char* );
 #ifdef __cplusplus
 }
 #endif

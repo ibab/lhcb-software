@@ -1,0 +1,42 @@
+<lcgdict>
+  <selection>
+    <class pattern="Bits::*"/>
+    <class pattern="RTL::*"/>
+    <function pattern="lib_rtl_*"/>
+    <function pattern="RTL::*"/>
+    <function name="insqti"/>
+    <function name="insqhi"/>
+    <function name="remqti"/>
+    <function name="remqhi"/>
+    <function name="remqent"/>
+    <function name="remqhead"/>
+    <class name="qentry"/>
+
+    <function pattern="wtc_*"/>
+
+    <function pattern="amsc_*"/>
+
+    <function pattern="DataTransfer::_*"/>
+    <class pattern="DataTransfer::_*"/>
+    <class name="IOPortManager"/>
+    <class name="NetworkChannel"/>
+    <class name="NetworkConnection"/>
+    <class name="TcpNetworkChannel"/>
+    <class name="TcpConnection"/>
+    <class name="UdpNetworkChannel"/>
+    <class name="UdpConnection"/>
+
+    <function pattern="MBM::*"/>
+    <class pattern="MBM::*"/>
+    <function pattern="mbm_*"/>
+    <class pattern="bm_iterator*"/>
+    <class name="REQ"/>
+    <class name="BUFFERS"/>
+    <class name="BUFFERS::BUFF"/>
+    <class name="CONTROL"/>
+    <class name="USER"/>
+    <class name="USERDesc"/>
+    <class name="EVENT"/>
+    <class name="EVENTDesc"/>
+  </selection>
+</lcgdict>

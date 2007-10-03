@@ -43,7 +43,7 @@ public:
   /// Queue receive call
   int _unqueueIO ( Port port );
   /// Standard constructor with given service name
-  static int servicePort(const char* service = "UserService");
+  //static int servicePort(const char* service = "UserService");
 };
 #endif   /*   __cplusplus               */
 #endif   /*   __UdpNetworkChannel_H__   */

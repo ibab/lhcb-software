@@ -48,7 +48,7 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
-  int  mbm_buffer_address(BMID);
+  // Not implemented: int  mbm_buffer_address(BMID);
   /// Register optional callback on _mbm_efree
   int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
   /// Register optional callback on _mbm_ealloc
@@ -61,7 +61,7 @@ extern "C"  {
   int  mbm_free_event (BMID bm);
   int  mbm_pause      (BMID bm);
 
-  int  mbm_get_space  (BMID bm, int size, int** ptr);
+  // Not implemented: int  mbm_get_space  (BMID bm, int size, int** ptr);
   int  mbm_get_space_a(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
   int  mbm_declare_event(BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask, const char* dest,
     void** free_add, int* free_size, int part_id);
