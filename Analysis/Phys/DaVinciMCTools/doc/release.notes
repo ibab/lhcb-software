@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.182 2007-09-24 16:15:38 jpalac Exp $
+! $Id: release.notes,v 1.183 2007-10-03 06:58:08 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-10-03 - Patrick Koppenburg
+ - TrueMCFilterCriterion : new option AssociationMethod allowing to change
+   asociator type. Default is 2 (chi2). For neutrals, 3 is needed.
+
+FilterTrueBu.Members += { "FilterDesktop/TrueGammas" };
+TrueGammas.PhysDesktop.InputLocations = { "Phys/StdLoosePhotons" } ;
+TrueGammas.Filter.Selections = { "gamma : TrueMCFilterCriterion" };
+TrueGammas.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  
+   "[B+ -> (K*(1680)+ -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) ^K+ {,gamma}{,gamma}) ^gamma {,gamma}{,gamma}]cc" ;
+TrueGammas.Filter.TrueMCFilterCriterion.AssociationMethod = 3 ;
+ 
+ - increment to v9r6
 
 !========================== DaVinciMCTools v9r5 2007-09-24 ===================
 

@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.22 2007-08-20 09:17:00 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.23 2007-10-03 06:58:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -39,6 +39,8 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   declareProperty( "ParticlePath", m_particlePaths );
   declareProperty( "MCParticlePath", m_mcParticlePath = LHCb::MCParticleLocation::Default);
   declareProperty( "ExpectSignal", m_complain = false );
+  declareProperty( "AssociationMethod", m_method = Particle2MCMethod::Chi2 );
+  
   m_decayMembers.clear();
 }
 //=============================================================================
@@ -61,9 +63,11 @@ StatusCode TrueMCFilterCriterion::initialize( ){
     return StatusCode::FAILURE;
   } else info() << "MC decay is " << MCDecay << endmsg ;
 
+  info() << "Associating using method " << m_method << endmsg ;
+
   // For Particle -> MCParticle association  
   m_pLinker = new Particle2MCLinker(this,
-                                    Particle2MCMethod::Chi2,
+                                    m_method,
                                     m_particlePaths);
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Initialised happily" << endmsg ;

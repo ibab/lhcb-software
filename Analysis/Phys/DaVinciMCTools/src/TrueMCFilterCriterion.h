@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.h,v 1.13 2007-08-20 09:17:00 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.14 2007-10-03 06:58:08 pkoppenb Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
@@ -55,6 +55,8 @@ private:
   int m_eventCount ; ///< Count the number of new events
   int m_foundDecay ; ///< Count number of times the decay has been found per event
   bool m_complain ;  ///< Complain about events without MC truth (i.e. for signal)
+  int m_method ; ///< method to associate
   
+
 };
 #endif // TRUEMCFILTERCRITERION_H
