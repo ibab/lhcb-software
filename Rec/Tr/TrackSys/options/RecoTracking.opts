@@ -153,3 +153,7 @@ TrackClonesSeq.MeasureTime = true;
 
 // Set of standard fitting options
 #include "$TRACKSYSROOT/options/Fitting.opts"
+
+TrackAddLikelihood.TrackMatching_likTool.otEff = 0.9;
+TrackAddLikelihood.PatKShort_likTool.otEff = 0.9;
+
