@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.6 2007-08-17 09:07:16 gcorti Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.7 2007-10-03 17:46:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -221,7 +221,7 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
     partcont->insert( mcpart );
     
     mcpart->setMomentum     ( Gaudi::LorentzVector(part->momentum()) );
-    mcpart->setParticleID   ( part->pdg_id() );
+    mcpart->setParticleID   ( LHCb::ParticleID(part->pdg_id()) );
     mcpart->setOriginVertex ( prodvertex );
 
     prodvertex->addToProducts( mcpart );

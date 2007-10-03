@@ -4,6 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-10-03 - Gloria Corti
+ - Adapt to change in contructor of ParticleID from int being explicit
+   (as in LHCbKernel v7r7 in LHCb v22r9)
+   . G4HepMCToMCTruth.cpp
+
 !========================= GaussKine v1r6 2007-08-17 ========================= 
 ! 2007-08-17 - Gloria Corti
  - Introduce protection as to pass an empty event to G4 when the 
