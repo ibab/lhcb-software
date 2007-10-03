@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.14 2007-09-29 22:54:04 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.15 2007-10-03 14:54:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -228,7 +228,7 @@ ChargedProtoCombineDLLsAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & c
   if ( m_maskTechnique["BREM"] && proto->hasInfo(LHCb::ProtoParticle::BremPIDe) )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::BremPIDe, 0  );
-    verbose() << " -> Adding PRS info " << combDLL << endreq;
+    verbose() << " -> Adding BREM info " << combDLL << endreq;
   }
 }
 
