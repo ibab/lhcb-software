@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.1.1.1 2007-07-31 17:02:19 robbep Exp $
-! Package     : LbPythia8
-! Responsible : 
+!-----------------------------------------------------------------------------
+! Package     : Gen/LbPythia8
+! Responsible : Patrick Robbe
+! Purpose     : Integration package for Pythia 8 
+!-----------------------------------------------------------------------------
+
+!=========================== LbPythia8 2007-10-04 ============================
+! 2007-10-04 - Gloria Corti
+ - Introduce use of pythia8 in this package rather than in GENSER where
+   version is fixed
+   . requirements
 
 ! 2007-07-31 - Patrick Robbe
   - new package: interface package between Gauss and Pythia8
     Initial version by Arthur de Gromard
-! ====================================================================
+!=============================================================================
