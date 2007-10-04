@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.107 2007-10-02 15:32:23 xieyu Exp $
+! $Id: release.notes,v 1.108 2007-10-04 16:16:11 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
-! 2007-10-02 - Juan PALACIOS
+! 2007-10-02 - Yuehong Xie
   - src/OfflineVertexFitter.cpp
    . fix a typo in addFlying method
 
