@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.6 2007-08-29 08:22:12 apuignav Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.7 2007-10-04 13:57:07 frankb Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
@@ -56,7 +56,7 @@ void LHCb::MDFWriterLite::construct()   {
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
   declareProperty("MaxFileSizeKB",  m_maxFileSizeKB=2000000);
   declareProperty("MaxFileEvents",  m_maxFileEvents=1000000);
-	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
+	declareProperty("BankLocation",		m_bankLocation=LHCb::RawEventLocation::Default);  // Location of the banks in the TES
 }
 
 LHCb::MDFWriterLite::~MDFWriterLite()   {

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.7 2007-08-29 08:22:12 apuignav Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.8 2007-10-04 13:57:07 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -11,6 +11,7 @@
 #include "MDF/StreamDescriptor.h"
 #include "MDF/RawDataWriter.h"
 #include "MDF/MDFHeader.h"
+#include "Event/RawEvent.h"
 #include "TMD5.h"
 #include <ctime>
 #include <limits>
@@ -89,7 +90,7 @@ void LHCb::RawDataFile::setLastOrbit(unsigned int orbit)   {
 LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
 : Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam), m_bytesWritten(0), m_fileNo(0)
 {
-  declareProperty("MbytesPerFile",  m_MbytesPerFile);            // kBytes to be written per file
+  declareProperty("MbytesPerFile",  m_MbytesPerFile);               // kBytes to be written per file
   declareProperty("Volume",         m_volume="/tmp");
   declareProperty("Stream",         m_stream="MDF");
   declareProperty("Connection",     m_connect="Unknown");
@@ -97,8 +98,8 @@ LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
   declareProperty("ChecksumType",   m_genChecksum=1);               // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=false);                // Generate MD5 checksum
   declareProperty("CloseTimeout",   m_closeTMO=0);                  // Timeout before really closing the file
-  declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
-	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
+  declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS); // Input data type
+	declareProperty("BankLocation",		m_bankLocation=LHCb::RawEventLocation::Default);  // Location of the banks in the TES
 }
 
 /// Initialize the algorithm.

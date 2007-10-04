@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.13 2006-10-16 11:40:06 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.14 2007-10-04 13:57:07 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -19,7 +19,7 @@
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-//#include "GaudiKernel/IFileCatalogSvc.h"
+// #include "FileCatalog/IFileCatalog.h"
 
 enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
 
@@ -66,9 +66,9 @@ void LHCb::RawDataSelector::LoopContext::close()    {
 }
 
 LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
-: Service( nam, svcloc), m_rootCLID(CLID_NULL)
+: Service( nam, svcloc), m_rootCLID(CLID_NULL), m_catalog(0)
 {
-  declareProperty("Catalog",m_catalogName="FileCatalog");
+  declareProperty("Catalog",m_catalogName="");
   declareProperty("NSkip", m_skipEvents=0);
 }
 
@@ -91,6 +91,13 @@ StatusCode LHCb::RawDataSelector::initialize()  {
   if ( !status.isSuccess() )    {
     log << MSG::ERROR << "Error initializing base class Service!" << endreq;
     return status;
+  }
+  if ( !m_catalogName.empty() )  {
+    //status = serviceLocator()->service(m_catalogName, m_catalog);
+    if( !status.isSuccess() ) {
+      log << MSG::ERROR << "Cannot get Filecatalog:" << m_catalog << endmsg;
+      return status;
+    }
   }
   // Get DataSvc
   IDataManagerSvc* eds = 0;

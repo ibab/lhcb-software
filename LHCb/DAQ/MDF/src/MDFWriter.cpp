@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.8 2007-08-29 08:22:12 apuignav Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.9 2007-10-04 13:57:07 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -42,7 +42,7 @@ void LHCb::MDFWriter::construct()   {
   declareProperty("ChecksumType",   m_genChecksum=1);     // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=false);      // Generate MD5 checksum
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
-	declareProperty("BankLocation",		m_bankLocation="/Event/DAQ/RawEvent");  // Location of the banks in the TES
+	declareProperty("BankLocation",		m_bankLocation=LHCb::RawEventLocation::Default);  // Location of the banks in the TES
 }
 
 LHCb::MDFWriter::~MDFWriter()   {

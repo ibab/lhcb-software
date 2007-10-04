@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.12 2007-08-29 08:22:12 apuignav Exp $
+// $Id: MDFIO.h,v 1.13 2007-10-04 13:57:07 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -148,13 +148,14 @@ namespace LHCb {
       * @param[in] compTyp   Compression type
       * @param[in] chksumTyp Checksum type
       * @param[in] ioDesc    Output IO descriptor       
+      * @param[in] location  Location of the raw event in the transient data store
       *
       * @return  Status code indicating success or failure.
       */
-    virtual StatusCode commitRawBanks(int               compTyp,
-                                      int               chksumTyp,
-                                      void* const       ioDesc,
-																			std::string 			m_bankLocation);
+    virtual StatusCode commitRawBanks(int                compTyp,
+                                      int                chksumTyp,
+                                      void* const        ioDesc,
+																			const std::string& location);
 
     /** Commit raw banks to IO stream. -- Main entry point --
       * @param[in] raw       Pointer to RawEvent

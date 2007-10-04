@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.16 2007-08-29 08:22:12 apuignav Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.17 2007-10-04 13:57:07 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -97,9 +97,9 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, std::string m_bankLocation)
+StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, const std::string& location)
 {
-  SmartDataPtr<RawEvent> raw(m_evtSvc,m_bankLocation);
+  SmartDataPtr<RawEvent> raw(m_evtSvc,location);
   if ( raw )  {
     typedef std::vector<RawBank*> _V;
     const _V& bnks = raw->banks(RawBank::DAQ);
@@ -277,6 +277,7 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
     b->setType(RawBank::DAQ);
     b->setSize(rawSize+hdrSize);
     b->setVersion(DAQ_STATUS_BANK);
+    b->setSourceID(0);
     int bnkSize = b->totalSize();
     ::memcpy(b->data(), &h, rawSize);
     char* bptr = (char*)b->data();
@@ -382,6 +383,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
     b->setType(RawBank::DAQ);
     b->setSize(rawSize+hdrSize);
     b->setVersion(DAQ_STATUS_BANK);
+    b->setSourceID(0);
     int bnkSize = b->totalSize();
     ::memcpy(b->data(), &h, rawSize);
     char* bptr = (char*)b->data();
