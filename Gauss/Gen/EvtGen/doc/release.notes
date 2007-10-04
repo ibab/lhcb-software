@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================== EvtGen v8r16 2007-10-04 =========================
 ! 2007-09-21 - Patrick Robbe
  - EvtBtoXsgammaKagan.cpp: modifications by Peter Richardson, see
     https://savannah.cern.ch/bugs/index.php?28421
