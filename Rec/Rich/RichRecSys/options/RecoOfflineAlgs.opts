@@ -105,6 +105,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack" }; // uncomment to all MC tracks to be used by GPID
 RichGloPIDTrSel.MaxUsedTracks             = 400;
 RichGloPIDTrSel.MaxInputTracks            = 99999;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;

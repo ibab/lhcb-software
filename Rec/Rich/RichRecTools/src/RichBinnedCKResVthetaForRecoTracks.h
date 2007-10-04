@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.6 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.7 2007-10-04 15:27:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -90,8 +90,9 @@ namespace Rich
       const IParticleProperties * m_richPartProp;
 
       typedef std::vector<double> BinData;
+      typedef std::map< Rich::Rec::Track::Type, BinData > BinDataMap;
       /// The averged resolutions in each bin, for each track type
-      BinData m_theerr[Rich::NRadiatorTypes][Rich::Rec::Track::NTrTypes];
+      mutable BinDataMap m_theerr[Rich::NRadiatorTypes];
 
       typedef std::vector<std::pair<double,double> > BinEdges;
       /// The boundaries for the resolution bins

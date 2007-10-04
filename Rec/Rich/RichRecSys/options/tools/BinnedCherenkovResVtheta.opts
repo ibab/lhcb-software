@@ -36,3 +36,8 @@ ToolSvc.Offline.RichCherenkovResolution.VeloTTRich1GasRes = { 0.00245855, 0.0033
 ToolSvc.Offline.RichCherenkovResolution.SeedAerogelRes    = { 0.00233702, 0.00111318, 0.000935434, 0.000935434 };
 ToolSvc.Offline.RichCherenkovResolution.SeedRich1GasRes   = { 0.00233702, 0.00111318, 0.000935434 };
 ToolSvc.Offline.RichCherenkovResolution.VeloTTRich2GasRes = { 0.00245855, 0.00339135, 0.00169416  };
+
+// MCRichTrack options
+ToolSvc.Offline.RichCherenkovResolution.MCRichTrackAerogelRes = { 0.00524541, 0.0038708, 0.00267393, 0.0023797 };
+ToolSvc.Offline.RichCherenkovResolution.MCRichTrackRich1GasRes = { 0.00172102, 0.00150918, 0.00138705 };
+ToolSvc.Offline.RichCherenkovResolution.MCRichTrackRich2GasRes = { 0.000977774, 0.0008275, 0.000685761 };

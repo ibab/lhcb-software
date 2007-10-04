@@ -6,11 +6,9 @@
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrackCreatorFromMCRichTracks/RichTrackCreator" };
 
 // track selection
-ToolSvc.Offline.RichTrackCreator.TrackSelection =
-  {
-    "unique","positive","negative","MCRichTrack"
-  };
-ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "MCRichTrack/5/1e10" };
+ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "MCRichTrack" };
+//ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "MCRichTrack/5/1e10" };
+ToolSvc.Offline.RichTrackCreator.MCRichTrack.MinPCut  = 1;
 
 // define the RichTrackSegment nickname to use
 ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";

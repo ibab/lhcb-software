@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.9 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.10 2007-10-04 15:27:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -42,6 +42,7 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
   declareProperty( "KsTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Rec::Track::KsTrack] );
   declareProperty( "VeloTTAerogelRes",  m_theerr[Rich::Aerogel][Rich::Rec::Track::VeloTT] );
   declareProperty( "SeedAerogelRes",    m_theerr[Rich::Aerogel][Rich::Rec::Track::Seed] );
+  declareProperty( "MCRichTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Rec::Track::MCRichTrack] );
 
   declareProperty( "NRich1GasResBins",   m_binEdges[Rich::Rich1Gas] );
   declareProperty( "ForwardRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Forward] );
@@ -49,6 +50,7 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
   declareProperty( "KsTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::KsTrack] );
   declareProperty( "VeloTTRich1GasRes",  m_theerr[Rich::Rich1Gas][Rich::Rec::Track::VeloTT] );
   declareProperty( "SeedRich1GasRes",    m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Seed] );
+  declareProperty( "MCRichTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::MCRichTrack] );
 
   declareProperty( "NRich2GasResBins",   m_binEdges[Rich::Rich2Gas] );
   declareProperty( "ForwardRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Forward] );
@@ -56,6 +58,7 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
   declareProperty( "KsTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::KsTrack] );
   declareProperty( "VeloTTRich2GasRes",  m_theerr[Rich::Rich2Gas][Rich::Rec::Track::VeloTT] );
   declareProperty( "SeedRich2GasRes",    m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Seed] );
+  declareProperty( "MCRichTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::MCRichTrack] );
 
   // Normalise the resolutions
   declareProperty( "NormaliseRes", m_normalise = true );
@@ -163,10 +166,10 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
   const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
   // Check track parent type is Track
-  if ( Rich::Rec::TrackParent::Track != tkID.parentType() )
-  {
-    Exception( "Track parent type is not 'Track'" );
-  }
+  //if ( Rich::Rec::TrackParent::Track != tkID.parentType() )
+  // {
+  //  Exception( "Track parent type is not 'Track'" );
+  // }
 
   res = 0;
   bool OK(false);
@@ -182,17 +185,24 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     // track type
     const Rich::Rec::Track::Type type = tkID.trackType();
 
+    // error data
+    const BinData & theerr = m_theerr[rad][type];
+    if ( theerr.empty() )
+    {
+      Exception( "Track parent type "+Rich::Rec::text(type)+" not known" );
+    }
+
     // check data is OK
     if ( m_binEdges[rad].empty() ||
-         (m_binEdges[rad].size() != m_theerr[rad][type].size()) )
+         (m_binEdges[rad].size() != theerr.size()) )
     {
       Exception( "Mis-match in binned CK data for : " + Rich::text(rad) + " " + Rich::text(type) );
     }
 
     // search the bins
     BinEdges::const_reverse_iterator iBins = (m_binEdges[rad]).rbegin();
-    BinData::const_reverse_iterator  iData = (m_theerr[rad][type]).rbegin();
-    for ( ; iBins != (m_binEdges[rad]).rend() && iData != (m_theerr[rad][type]).rend();
+    BinData::const_reverse_iterator  iData = theerr.rbegin();
+    for ( ; iBins != (m_binEdges[rad]).rend() && iData != theerr.rend();
           ++iBins, ++iData )
     {
       if ( thetaExp >= iBins->first && thetaExp < iBins->second )

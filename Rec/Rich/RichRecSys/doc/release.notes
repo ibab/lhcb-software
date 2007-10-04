@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-10-04 - Chris Jones
+ - Fixes to get MCRichTracks working again
+
 !====================== RichRecSys v3r6 2007-09-20 =====================
 ! 2007-08-09 - Chris Jones
  - Add options to run new 'Fast' configuration of the RICH reconstruction
