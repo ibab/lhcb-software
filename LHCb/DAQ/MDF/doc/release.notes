@@ -6,7 +6,8 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-! 2007-10-05 - Markus Frank
+!======================= MDF v2r4p2 2007-10-04 ===============================
+! 2007-10-04 - Markus Frank
   - Set source ID to MDF bank in MDFio to 0
   - Fix handling of default RawEventLocation::Default in RawDataCnvSvc
     (leftover from GaudiSerialize development)

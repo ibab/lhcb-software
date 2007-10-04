@@ -92,6 +92,8 @@ namespace LHCb
                    L0MuonProcData,  //41
                    L0MuonRaw,       //42
 		               L0MuonError,     //43
+                   GaudiSerialize,  //44
+                   GaudiHeader,     //45
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
@@ -121,19 +123,19 @@ namespace LHCb
     /// Return bankType of this bank 
     BankType type() const           {    return BankType(int(m_type));         }
 
-    /// Set data size of the bank in bytes
+    /// Set the bank type
     void setType(BankType val)      {    m_type = (int(val)&0xFF);  }
 
     /// Return version of this bank 
     int version() const             {    return m_version;          }
 
-    /// Set data size of the bank in bytes
+    /// Set the version information of this bank
     void setVersion(int val)        {    m_version = (val&0xFF);    }
 
-    /// Return SourceID of this bank 
+    /// Return SourceID of this bank  (TELL1 borad ID)
     int sourceID() const            {    return m_sourceID;         }
 
-    /// Set data size of the bank in bytes
+    /// Set the source ID of this bank (TELL1 borad ID)
     void setSourceID(int val)       {    m_sourceID = (val&0xFFFF); }
 
     /// Return pointer to begining of data body of the bank
