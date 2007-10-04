@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.1 2007-09-11 14:41:26 mneedham Exp $
+// $Id: TrackLikelihood.cpp,v 1.2 2007-10-04 16:39:44 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -60,7 +60,7 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
   declareProperty("useIT", m_useIT = true);
   declareProperty("useOT", m_useOT = true);
   declareProperty("addExpectedFlags", m_addExpectedFlags = true);
-  declareProperty("chiWeight", m_chiWeight = 3.0);  
+  declareProperty("chiWeight", m_chiWeight = 2.0);  
 
   declareInterface<ITrackManipulator>(this);
 

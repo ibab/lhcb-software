@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2007-10-03 M Needham
+ - Change deweighting to 2 in likelihood
+
 !======================== TrackTools v2r18 2007-09-20 ========================
 ! 2007-09-14 M Needham
  - Update hit expectation tools
