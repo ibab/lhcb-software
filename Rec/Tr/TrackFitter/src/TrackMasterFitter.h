@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.10 2007-09-30 11:30:43 ebos Exp $
+// $Id: TrackMasterFitter.h,v 1.11 2007-10-05 20:40:54 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -104,10 +104,6 @@ private:
   int m_numFitIter;                 ///< number of fit iterations to perform
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
   int m_numOutlierIter;             ///< max number of outliers to be removed
-  double m_zBegRich1;               ///< z position begin of RICH1
-  double m_zEndRich1;               ///< z position end of RICH1
-  double m_zBegRich2;               ///< z position begin of RICH2
-  double m_zEndRich2;               ///< z position end of RICH2
   bool   m_increaseErrors;          ///< Increase errors on the initial cov. 
   double m_errorX2;                 ///< Error^2 on x
   double m_errorY2;                 ///< Error^2 on y
@@ -116,6 +112,7 @@ private:
   std::vector<double> m_errorP;                  ///< Error on dp/p
   bool m_setRefInfo;
   bool m_makeNodes;
+  bool m_makeNodesAtAllReferencePositions ; ///< Temporary flag to disable creating nodes before first or after last hit
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
 

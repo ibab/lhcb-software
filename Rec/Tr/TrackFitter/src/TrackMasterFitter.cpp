@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.37 2007-09-30 11:30:40 ebos Exp $
+// $Id: TrackMasterFitter.cpp,v 1.38 2007-10-05 20:40:54 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -66,14 +66,6 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                                         (StateParameters::ZEndRich1)
                                                         (StateParameters::ZBegRich2)
                                                         (StateParameters::ZEndRich2));
-  declareProperty( "ZBegRich1"           ,
-                   m_zBegRich1 = StateParameters::ZBegRich1               );
-  declareProperty( "ZEndRich1"           ,
-                   m_zEndRich1 = StateParameters::ZEndRich1               );
-  declareProperty( "ZBegRich2"           ,
-                   m_zBegRich2 = StateParameters::ZBegRich2               );
-  declareProperty( "ZEndRich2"           ,
-                   m_zEndRich2 = StateParameters::ZEndRich2               );
   declareProperty( "IncreaseErrors" , m_increaseErrors =   true           );
   declareProperty( "ErrorX2"        , m_errorX2 = 4.0*Gaudi::Units::mm2   );
   declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
@@ -84,6 +76,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator"        );
   declareProperty( "MakeNodes"      , m_makeNodes = true                  );
+  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=true) ;
 }
 
 //=========================================================================
@@ -154,7 +147,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   StatusCode sc;
 
   // Make the nodes from the measurements
-  if(m_makeNodes == true) {
+  if( track.nodes().empty() || m_makeNodes ) {
     sc = makeNodes( track );
     if ( sc.isFailure() )
       return failure( "unable to make nodes from the measurements" );
@@ -275,6 +268,8 @@ StatusCode TrackMasterFitter::fit( Track& track )
 //=============================================================================
 StatusCode TrackMasterFitter::determineStates( Track& track ) const
 {
+  StatusCode sc = StatusCode::SUCCESS ;
+
   // clean the non-fitted states in the track!
   track.clearStates();
   
@@ -285,11 +280,10 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
     State closeState = track.closestState( 0. );
     // Get the z-position of the "intersection" with the beam line
     double z = closestToBeamLine( closeState );    
-    StatusCode sc = m_extrapolator -> propagate( closeState , z );
+    sc = m_extrapolator -> propagate( closeState , z );
     if ( sc.isFailure() ) {
       debug() << "Extrapolating to z = " << z << endmsg;
-      return Warning( "State closest to beam line not added, extrapolation failed",
-                      StatusCode::FAILURE, 1 );
+      Warning("State closest to beam line not added, extrapolation failed",StatusCode::FAILURE,1).ignore() ;
     } else {
       // add the state at the position closest to the beam line
       closeState.setLocation( State::ClosestToBeam );
@@ -317,21 +311,47 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
     if ( !m_statesAtMeasZPos ) track.addToStates( state );
   }
 
-  // Add the states at the predefined positions
-  // or at all nodes if requested
+  // Add the states at measurement locations, if requested
   // ------------------------------------------
-  std::vector<Node*>::const_iterator it;
-  for ( it = nodes.begin(); it < nodes.end(); ++it ) {
-    State& state = (*it)->state();
-    if ( m_statesAtMeasZPos && (*it)->hasMeasurement() ) {
-      track.addToStates( state );
+  if( m_statesAtMeasZPos ) 
+    for ( std::vector<Node*>::const_iterator it = nodes.begin(); it < nodes.end(); ++it ) 
+      if ( (*it)->hasMeasurement() ) track.addToStates( (*it)->state() ) ;
+    
+  // Add the states at the predefined positions
+  // ------------------------------------------
+  for( std::vector<double>::const_iterator iz = m_zPositions.begin(); 
+       iz != m_zPositions.end(); ++iz ) {
+    double z = *iz ;
+    // find the closest node
+    std::vector<Node*>::const_iterator inode = nodes.begin();
+    const Node* closestnode = *inode ;
+    for (++inode;inode != nodes.end(); ++inode ) 
+      if( fabs((*inode)->z() - z) < fabs(closestnode->z() - z) ) closestnode = *inode ;
+    // copy the state
+    LHCb::State state = closestnode->state() ; 
+    // extrapolate if necessary
+    StatusCode thissc = StatusCode::SUCCESS ;
+    if( fabs(closestnode->z() - z) > TrackParameters::propagationTolerance ) {
+      // this is wrong for interpolations. we need to work on that, 
+      // but we anyway plan to remove filling states from the fit.
+      thissc = m_extrapolator -> propagate(state,z);
+      state.setLocation( State::LocationUnknown ) ;
     }
-    else {
-      std::vector<double>::const_iterator zPos;
-      for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
-        if ( fabs(*zPos - state.z()) < TrackParameters::looseTolerance )
-          track.addToStates( state );
-      }
+    if ( thissc.isFailure() ) {
+      warning() << "Extrapolating to z = " << z << " failed. Will not add state at reference position" << endreq ;
+      sc = StatusCode::FAILURE ;
+    } else {
+      // set the location (must find a better way to do this!)
+      if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
+        state.setLocation( State::BegRich1 );
+      else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::EndRich1 );
+      else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::BegRich2 );
+      else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::EndRich2 );
+      // add to the track
+      track.addToStates( state );
     }
   }
 
@@ -346,19 +366,8 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
             << " measurements used for the fit (out of " 
             << track.nLHCbIDs() << ")." << endmsg;
   }
-
-  unsigned int numStates = 0;
-  if ( m_statesAtMeasZPos )
-    numStates += nNodesWithMeasurement( track );
-  else
-    numStates += m_zPositions.size() + 1; // state at 1st meas. also saved
-  if ( m_stateAtBeamLine ) ++numStates;
-
-  if ( numStates != track.nStates() )
-    return Warning( "Failed to determine all the requested states!",
-                    StatusCode::FAILURE, 1 );
-  else
-    return StatusCode::SUCCESS;
+  
+  return sc;
 }
 
 //=========================================================================
@@ -526,27 +535,34 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
   nodes.reserve( measures.size() + m_zPositions.size() );
 
   // Create the nodes and add them to the private copy
+  double zmin(99999*Gaudi::Units::m),zmax(-99999*Gaudi::Units::m) ;
   for ( std::vector<Measurement*>::const_reverse_iterator it =
           measures.rbegin(); it != measures.rend(); ++it ) {
-    //Measurement& meas = *(*it);
     FitNode* node = new FitNode( **it );
     nodes.push_back( node );
+    zmin = std::min( zmin, node->z()) ;
+    zmax = std::max( zmax, node->z()) ;
   }
 
-  // Loop over the predefined z positions and add them to the nodes
-  std::vector<double>::const_iterator zPos = m_zPositions.begin() ;
-  for ( ; zPos != m_zPositions.end(); ++zPos ) {
-      FitNode* node = new FitNode( *zPos );
-      State& locState = node->state();
-      if ( fabs(*zPos - m_zBegRich1) < TrackParameters::lowTolerance )
-        locState.setLocation( State::BegRich1 );
-      else if ( fabs(*zPos - m_zEndRich1 ) < TrackParameters::lowTolerance )
-        locState.setLocation( State::EndRich1 );
-      else if ( fabs(*zPos - m_zBegRich2 ) < TrackParameters::lowTolerance )
-        locState.setLocation( State::BegRich2 );
-      else if ( fabs(*zPos - m_zEndRich2 ) < TrackParameters::lowTolerance )
-        locState.setLocation( State::EndRich2 );
-      nodes.push_back( node );
+  // Loop over the predefined z positions and add them to the nodes only if they are 
+  // between the first and last measurement.
+  for (std::vector<double>::const_iterator izpos = m_zPositions.begin() ; 
+       izpos != m_zPositions.end(); ++izpos ) {
+    double z = *izpos;
+    if( m_makeNodesAtAllReferencePositions || (zmin < z && z < zmax ) ) {
+      FitNode* node = new FitNode( z );
+      State& state = node->state();
+      // set the location (must find a better way to do this!)
+      if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
+        state.setLocation( State::BegRich1 );
+      else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::EndRich1 );
+      else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::BegRich2 );
+      else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
+        state.setLocation( State::EndRich2 );
+      nodes.push_back( node ) ;
+    }
   }
 
   // Sort the nodes in z
