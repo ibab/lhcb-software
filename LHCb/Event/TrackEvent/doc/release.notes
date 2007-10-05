@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-10-05 - Wouter Hulsbergen
- - fix bug in Track::copy
+ - fixed bug in Track::copy
+ - added zpos for beginning of T-region to StateParameters.h
 
 !======================= TrackEvent v4r7 2007-10-04 ==========================
 ! 2007-09-27 - Eduardo Rodrigues
