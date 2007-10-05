@@ -1,0 +1,26 @@
+#pragma print off
+#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-200601.opts (DC06) and magnetic field off
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+
+// Magnetic Field Off
+MagneticFieldSvc.UseConstantField = true;
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 13*s;
+ 
