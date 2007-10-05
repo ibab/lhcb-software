@@ -1,11 +1,15 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.25 2007-05-29 16:32:59 marcocle Exp $ 
+! $Id: release.notes,v 1.26 2007-10-05 14:12:26 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+!======================= DetDescChecks v4r4 2007-10-05 ========================
+! 2007-10-05 - Marco Cattaneo
+ - Remove unneccessary SEAL dependency
 
 ! 2007-05-29 - Marco Clemencic
  - Print the database name and tags in the algorithm LoadDDDB.
