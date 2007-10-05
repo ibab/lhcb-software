@@ -1,12 +1,10 @@
 V 10
 1
 LANG:1 26 Stream Allocation Overview
-PANEL,-1 -1 472 304 N "_3DFace" 2
+PANEL,-1 -1 472 339 N "_3DFace" 2
 "$1"
 "$2"
-"#uses \"StreamControlPanel.cpp\"
-
-void StreamControlPanel_CheckPartitionDisplay(string dp, string value)  {
+"void StreamControlPanel_CheckPartitionDisplay(string dp, string value)  {
   StreamControlPanel_updatePartitionDisplay(m_sysName.text);
 }
 void StreamControlPanel_updatePartitionDisplay(string stream)  {
@@ -14,6 +12,7 @@ void StreamControlPanel_updatePartitionDisplay(string stream)  {
   dyn_dyn_string rcvSlots, strmSlots, rcvNodes, strmNodes;
   dyn_string names;
   dyn_int    used;
+  DebugN(\"StreamControlPanel_updatePartitionDisplay> Read data from \"+stream);
   int res = res = dpGet(dpNames(stream+\"_Slice*.InUse\",\"StreamPartition\"),used);
   if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.Name\",\"StreamPartition\"),names);
   if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.RecvNodes\",\"StreamPartition\"),rcvNodes);
@@ -43,7 +42,9 @@ void StreamControlPanel_updatePartitionDisplay(string stream)  {
         m_table.cellForeColRC(i-1,cols[2],\"{255,255,255}\");
       }
     }
+    return;
   }
+  DebugN(\"StreamControlPanel_updatePartitionDisplay> Cannot read data from \"+stream);
 }
 
 void StreamControlPanel_initPartitionDisplay(string stream)  {
@@ -66,28 +67,47 @@ void StreamControlPanel_initPartitionDisplay(string stream)  {
   for(int j=0; j<dynlen(cols); ++j)  {
     m_table.adjustColumn(j);
   }
-  // StreamControlPanel_updatePartitionDisplay(stream);
 }
 
 main()  {
-  DebugN($1,$2,substr($1,4),myPanelName(),myModuleName());
   string stream = substr($1,4);
+  string dp = stream+\"Alloc.State\";
+  string sysdp = strtoupper(stream)+\":\"+dp;
+  //DebugN(\"1:\",$1,\"2:\",$2,\"Stream:\",stream,\"DP:\",dp,\"SysDP:\",sysdp);
   m_sysName.text = stream;
   m_sysName.backCol = \"_Transparent\";
   m_sysText.backCol = \"_Transparent\";
   m_sysText.text = \"System:\";
-  m_close.visible = 0;
-  StreamControlPanel_initPartitionDisplay(m_sysName.text);
-  int res = dpConnect(\"StreamControlPanel_CheckPartitionDisplay\",stream+\"Alloc.State\");
-  if ( 0 == res )  {
+  m_close.visible = isPanelOpen(\"StreamOverview\");
+  m_streamEditor.visible = !m_close.visible;
+  if ( dpExists(dp) )  {
+    DebugN(\"Exists:\"+dp);
+    StreamControlPanel_initPartitionDisplay(m_sysName.text);
+    dpConnect(\"StreamControlPanel_CheckPartitionDisplay\",dp);
+  }
+  else if ( dpExists(sysdp) )  {
+    DebugN(\"Exists:\"+sysdp);
+    m_sysName.text = strtoupper(stream)+\":\"+stream;
+    StreamControlPanel_initPartitionDisplay(m_sysName.text);
+    dpConnect(\"StreamControlPanel_CheckPartitionDisplay\",sysdp);
+  }
+  else  {
+    StreamControlPanel_initPartitionDisplay(m_sysName.text);
   }
 }
 " 0
- E E E E 1 -1 -1 0  0 0
+ E E "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E 1 -1 -1 0  0 0
 ""0  1
-E E 2
-"CBRef" "1"
-"EClose" E
+E "#uses \"StreamControlPanel.cpp\"
+#uses \"JobOptions.cpp\"" 0
+ 2
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -96,7 +116,7 @@ LANG:1 0
 25 13
 "m_table"
 ""
-1 0 29 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 2.99999999999997 4 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  "main(int row, string column)    {
   string typ = m_table.cellValueRC(row,\"Used\");
   if ( isPanelOpen(\"StreamOverview\")  )  {
@@ -117,7 +137,10 @@ LANG:1 0
     PanelOffPanel(\"StreamOverview\");
   }
   else if ( typ == \"FREE\" )    {
-    ChildPanelOn(\"vision/MessageInfo1\",\"Unused streaming slice\",makeDynString(\"This slice is not in use.\"),50,50);
+    string slice = m_table.cellValueRC(row,\"Slice\");
+    ChildPanelOn(\"vision/MessageInfo1\",
+                 \"Unused streaming slice\",
+                 makeDynString(\"The slice '\"+slice+\"' is not in use.\"),50,50);
   }
   else  {
     typ = m_table.cellValueRC(row,\"Slice\");
@@ -136,7 +159,7 @@ LANG:1 0
 1
 LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
 0 ""
- -2 27 470 302
+ 0.9999999999999702 2 470 277
 EE 1 0 1 3 0 "#3" 4 1 0 "s" 1
 LANG:1 4 Used
 E
@@ -175,37 +198,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 5 1 195 28
-0 2 2 "0s" 0 0 0 64 0 0  5 1 1
+E E 0 1 1 2 1 E U  1 E 2 302 192 329
+0 2 2 "0s" 0 0 0 64 0 0  2 302 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-23-*-100-100-*-*-iso8859-1|-23,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 0 
-2 16
-"m_sysName"
-""
-1 161 12 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-21 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 146 2 409 28
-0 2 2 "0s" 0 0 0 64 0 0  146 2 1
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-23-*-100-100-*-*-iso8859-1|-23,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
 13 17
 "m_close"
 ""
-1 419 -2.220446049250313e-16 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 388 313 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -217,13 +220,94 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 417 -2 467 24
+ 386 311 470 335
 
 T 
 1
 LANG:1 5 Close
 "main()    {  PanelOff();      }" 0
  E E E
+13 18
+"PUSH_BUTTON1"
+""
+1 388 289 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 386 287 470.2658911508102 312
+
+T 
+1
+LANG:1 11 Job options
+"main()   {   ChildPanelOn(\"JobOptions/JobOptions\",\"JobOptions\",makeDynString(),100,100);  }
+" 0
+ E E E
+13 19
+"m_streamEditor"
+""
+1 388.2658911508101 313 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+23 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 386.2658911508101 311 470.2658911508101 336
+
+T 
+1
+LANG:1 13 Stream editor
+"main()   {   ChildPanelOn(\"StreamControl/StreamConfigurationPanel\",\"StreamConfiguration\",makeDynString($1,$2),100,100);  }
+" 0
+ E E E
+2 16
+"m_sysName"
+""
+1 161 12 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 117 303 380 329
+0 2 2 "0s" 0 0 0 64 0 0  117 303 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
 0
 LAYER, 1 
 1

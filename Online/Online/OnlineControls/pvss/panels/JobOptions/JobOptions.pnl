@@ -3,16 +3,18 @@ V 10
 LANG:1 11 Job Options
 PANEL,-1 -1 636 357 N "_3DFace" 0
 "main() {
+  string default_sys = \"LBECS\";
   dyn_string names;
   dyn_uint ids;
-  DebugN(\"UI:\"+myUiDpName());
   addGlobal(\"JobOptionsSystem\",STRING_VAR);
   getSystemNames(names,ids);
   if ( dynlen(names)>0 ) JobOptionsSystem = names[1];
-  for(int i=1; i<dynlen(names); ++i)  {
-    if (names[i] == \"ECS\")  {
+  for(int i=1; i<=dynlen(names); ++i)  {
+    m_allSystemNames.appendItem(names[i]); 
+    if ( names[i] == default_sys )  {
       JobOptionsSystem = names[i];
-      break;
+      m_allSystemNames.selectedPos(i);
+      m_allSystemNames.text = names[i];
     }
   }
   m_hltOptsNumber.text = 57;
@@ -24,7 +26,8 @@ PANEL,-1 -1 636 357 N "_3DFace" 0
   m_monitoringOptsNumber.text = 59;
   m_monitoringOptsName.text = \"PVSS00Monitoring\";
   m_monitoringOptsScript.text = \"../python/\"+m_monitoringOptsName.text+\".py\";
-  jo_edit1=jo_editType=JobOptionsEditor_init();                        
+  jo_edit1=jo_editType=JobOptionsEditor_init();  
+  JobOptionsEditor_setSystem(default_sys);
 }" 0
  E E E E 1 0 0 0  0 0
 ""0  1
@@ -560,7 +563,7 @@ LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0
 
 T 
 1
-LANG:1 2 Ok
+LANG:1 4 Quit
 "main()  {	PanelOff(); /* Closes the panel */                                   }" 0
  E E E
 2 24
@@ -1171,14 +1174,7 @@ LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,
  11 259 172 281
 0
 
-"main()   {
-   dyn_string names;
-   dyn_uint ids;
-   getSystemNames(names,ids);
-   for(int i=1; i<=dynlen(names);++i)
-     m_allSystemNames.appendItem(names[i]); 
-}" 0
-
+E
 "main()  {  JobOptionsEditor_setSystem(m_allSystemNames.selectedText);   }" 0
 
 E

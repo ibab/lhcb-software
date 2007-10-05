@@ -1,7 +1,7 @@
 V 10
 1
 LANG:1 19 StreamConfiguration
-PANEL,-1 -1 375 411 N "_3DFace" 1
+PANEL,-1 -1 383 430 N "_3DFace" 1
 "$1"
 "#uses \"StreamControlPanel.cpp\"
 main()  {
@@ -25,20 +25,29 @@ main()  {
  E E E E 1 -1 -1 0  0 0
 ""0  1
 E "StreamControlPanel_showStreamControl()  {
-  string txt;
-  getValue(\"m_streamName\",\"text\",txt);
-  ChildPanelOn(\"StreamControl/StreamControl\",\"StreamOverview\",makeDynString(\"Data\"+txt,\"Data\"+txt),100,100);
+  string slice;
+  getValue(\"m_streamName\",\"text\",slice);
+  DebugN(\"StreamControlPanel_showStreamControl> \"+slice);
+  ChildPanelOn(\"StreamControl/StreamControl\",\"StreamOverview\",makeDynString(\"Data\"+slice,\"Data\"+slice),100,100);
 }
 StreamControlPanel_showFSM_Control()  {
   string txt;
   getValue(\"m_runInfoDP\",\"text\",txt);
-  DebugN(txt);
-  ChildPanelOn(\"StreamControl/FSM_Control\",\"StreamOverview\",makeDynString(substr(txt,0,strpos(txt,\".\"))),100,100);
+  string slice = substr(txt,0,strpos(txt,\".\"));
+  DebugN(\"StreamControlPanel_showFSM_Control> \"+slice);
+  if ( strpos(slice,\"PartitionEditor\")>0 )  {
+    return;
+  }
+  else if ( !dpExists(slice) )  {
+    ChildPanelOn(\"vision/MessageInfo1\",\"No Stream Allocated\",makeDynString(\"No slice assigned. [\"+slice+\"]\"),50,50);
+    return;
+  }
+  ChildPanelOn(\"StreamControl/FSM_Control\",\"StreamOverview\",makeDynString(slice),100,100);
 }
 " 0
  2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -61,7 +70,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 0.6491228070175434 0 1.309278350515469 -4.491228070175435 -13.2989690721652 0 E 10 43 581 141
+E E 0 0 1 0 1 E 0.6491228070175434 0 1.309278350515469 0.5087719298245652 6.701030927834832 0 E 10 43 581 141
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -80,7 +89,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 0.649122807017543 0 2.030927835051553 -4.491228070175428 87.67010309278322 0 E 10 43 581 141
+E E 0 0 1 0 1 E 0.649122807017543 0 2.020618556701038 0.5087719298245794 108.1134020618554 0 E 10 43 581 141
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -89,7 +98,7 @@ LANG:1 31 Steaming Layer Input Parameters
 13 67
 "m_Cancel"
 ""
-1 9.999999999999995 382 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 14 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 99 0 0 0 0 0
 E E E
@@ -101,7 +110,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 7.999999999999995 380 91.99999999999999 404
+ 12 396 95.99999999999999 420
 
 T 
 1
@@ -112,7 +121,7 @@ LANG:1 6 Cancel
 13 68
 "m_Ok"
 ""
-1 280 382 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 284 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 103 0 0 0 0 0
 E E E
@@ -124,7 +133,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 278 380 362 404
+ 282 396 366 420
 
 T 
 1
@@ -135,7 +144,7 @@ LANG:1 2 Ok
 13 74
 "m_Reset"
 ""
-1 99.99999999999999 382 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 104 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 100 0 0 0 0 0
 E E E
@@ -147,7 +156,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 97.99999999999999 380 182 404
+ 102 396 186 420
 
 T 
 1
@@ -158,7 +167,7 @@ LANG:1 5 Reset
 13 75
 "m_Save"
 ""
-1 190 382 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 194 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 101 0 0 0 0 0
 E E E
@@ -170,7 +179,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 188 380 272 404
+ 192 396 276 420
 
 T 
 1
@@ -181,7 +190,7 @@ LANG:1 4 Save
 29 73
 "m_strmTypes"
 ""
-1 194 299.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 198 319.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 97 0 0 0 0 0
 E E E
@@ -190,7 +199,7 @@ E E E
 LANG:1 0 
 
 0
- 194 299.0000000000001 364.9999999999999 367.0000000000001
+ 198 319.0000000000002 368.9999999999999 387.0000000000002
 15 PVSS.TextEdit.1
 5
 0 "TextChanged" "()"
@@ -206,7 +215,7 @@ LANG:1 0
 E29 72
 "m_strmInfraTaskTypes"
 ""
-1 194 243.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 198 263.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 94 0 0 0 0 0
 E E E
@@ -215,7 +224,7 @@ E E E
 LANG:1 0 
 
 0
- 194 243.0000000000001 364.9999999999999 294.0000000000001
+ 198 263.0000000000002 368.9999999999999 314.0000000000002
 15 PVSS.TextEdit.1
 5
 0 "TextChanged" "()"
@@ -231,7 +240,7 @@ LANG:1 0
 E21 60
 "m_strmStrategy"
 ""
-1 194 219 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 198 239 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 89 0 0 0 0 0
 E E E
@@ -243,30 +252,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 192 217 236 241
-0
-
-E
-E
-E
-
-N 0 100 1 0 1 1
-21 55
-"m_strmSlots"
-""
-1 194 195 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-84 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 192 193 236 217
+ 196 237 240 261.0000000000001
 0
 
 E
@@ -287,13 +273,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 12 197 172 217
-0 2 2 "0s" 0 0 0 64 0 0  12 197 1
+E E 0 1 1 2 1 E U  1 E 16 217 176 237
+0 2 2 "0s" 0 0 0 64 0 0  16 217 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 Number of Slots:
+LANG:1 21 Number of slots used:
 2 57
 "m_strmStrategyText"
 ""
@@ -307,8 +293,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 12 221 172 241
-0 2 2 "0s" 0 0 0 64 0 0  12 221 1
+E E 0 1 1 2 1 E U  1 E 16 241 176 261
+0 2 2 "0s" 0 0 0 64 0 0  16 241 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -327,8 +313,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 12 253 172 273
-0 2 2 "0s" 0 0 0 64 0 0  12 253 2
+E E 0 1 1 2 1 E U  1 E 16 273 176 293
+0 2 2 "0s" 0 0 0 64 0 0  16 273 2
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -342,7 +328,7 @@ LANG:1 0
 13 63
 "m_strmCheck"
 ""
-1 261.9999999999999 197 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 265.9999999999999 217 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 98 0 0 0 0 0
 E E E
@@ -354,7 +340,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 259.9999999999999 195 363.9999999999999 219
+ 263.9999999999999 215 367.9999999999999 239
 
 T 
 1
@@ -365,7 +351,7 @@ LANG:1 5 Check
 29 77
 "m_recvInfraTaskTypes"
 ""
-1 194 109 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 198 129 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 76 0 0 0 0 0
 E E E
@@ -374,7 +360,7 @@ E E E
 LANG:1 0 
 
 0
- 194 109 365 160
+ 198 129 369 180
 15 PVSS.TextEdit.1
 5
 0 "TextChanged" "()"
@@ -400,8 +386,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 12 121 172 141
-0 2 2 "0s" 0 0 0 64 0 0  12 121 2
+E E 0 1 1 2 1 E U  1 E 16 141 176 161
+0 2 2 "0s" 0 0 0 64 0 0  16 141 2
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -425,8 +411,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 12 87 172 107
-0 2 2 "0s" 0 0 0 64 0 0  12 87 1
+E E 0 1 1 2 1 E U  1 E 16 107 176 127
+0 2 2 "0s" 0 0 0 64 0 0  16 107 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -445,17 +431,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 14 63 174 83
-0 2 2 "0s" 0 0 0 64 0 0  14 63 1
+E E 0 1 1 2 1 E U  1 E 18 83.00000000000003 178 103
+0 2 2 "0s" 0 0 0 64 0 0  18 83.00000000000003 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 Number of Slots:
+LANG:1 21 Number of slots used:
 21 53
 "m_recvStrategy"
 ""
-1 194 85 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 198 105 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 68 0 0 0 0 0
 E E E
@@ -467,30 +453,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 192 83 236 107
-0
-
-E
-E
-E
-
-N 0 100 1 0 1 1
-21 47
-"m_recvSlots"
-""
-1 194 61 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-64 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 192 59 236 83
+ 196 103 240 127
 0
 
 E
@@ -501,7 +464,7 @@ N 0 100 1 0 1 1
 13 64
 "m_recvCheck"
 ""
-1 262 61 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 266 81.00000000000003 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 78 0 0 0 0 0
 E E E
@@ -513,7 +476,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 260 59 364 83
+ 264 79.00000000000003 368 103
 
 T 
 1
@@ -524,7 +487,7 @@ LANG:1 5 Check
 2 70
 "m_partition"
 ""
-1 340 38.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 340 58.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 107 0 0 0 0 0
 E E E
@@ -536,7 +499,7 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E "main()    {   StreamControlPanel_showFSM_Control();   }
 " 0
- 0 1 1 2 1 E 1 0 0.9999999999999998 4.884981308350689e-15 9 1 E 264 24 374 34
+ 0 1 1 2 1 E 1 0 0.9999999999999998 5.329070518200751e-15 20 1 E 264 24 374 34
 0 2 2 "0s" 0 0 0 64 0 0  264 24 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
@@ -556,8 +519,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 146 33 256 43
-0 2 2 "0s" 0 0 0 64 0 0  146 33 1
+E E 0 1 1 2 1 E U  1 E 146 44 256 54
+0 2 2 "0s" 0 0 0 64 0 0  146 44 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -578,8 +541,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E "main()    {  StreamControlPanel_showStreamControl();  }
 " 0
- 0 1 1 2 1 E U  1 E 263 13 373 23
-0 2 2 "0s" 0 0 0 64 0 0  263 13 1
+ 0 1 1 2 1 E U  1 E 263 24 373 34
+0 2 2 "0s" 0 0 0 64 0 0  263 24 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -598,8 +561,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 5 6 115 16
-0 2 2 "0s" 0 0 0 64 0 0  5 6 1
+E E 0 1 1 2 1 E U  1 E 11 17 121 27
+0 2 2 "0s" 0 0 0 64 0 0  11 17 1
 1
 LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -618,8 +581,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 6.000000000000002 27 239 41
-0 2 2 "0s" 0 0 0 64 0 0  6.000000000000002 27 1
+E E 0 1 1 2 1 E U  1 E 12 38 245 52
+0 2 2 "0s" 0 0 0 64 0 0  12 38 1
 1
 LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -638,40 +601,96 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 10 300 191 365
-0 2 2 "0s" 0 0 0 64 0 0  10 300 1
+E E 0 1 1 2 1 E U  1 E 14 320 195 385
+0 2 2 "0s" 0 0 0 64 0 0  14 320 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 19 Stream Description:
-0
-LAYER, 2 
+30 88
+"FRAME2"
+""
+1 3 51 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+122 0 0 0 0 0
+E E E
+1
 1
 LANG:1 0 
-2 81
-"m_sliceNotInUse"
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 1.005305039787798 0 1.299694189602446 -1.015915119363356 -64.28440366972468 0 E 3 51 381 379
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 16 Parameter Editor
+2 92
+"m_strmSlots"
 ""
-1 19 40 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 200 81 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
-114 0 0 0 0 0
+127 0 0 0 0 0
 E E E
 0
 1
 LANG:1 0 
 
-2
-"hoverbclr" "N \"_Transparent\""
+1
 "dashclr"N "_Transparent"
-E "main()    {  StreamControlPanel_showStreamControl();  }
-" 0
- 0 1 1 2 1 E U  1 E 18 49 358 120
-0 2 2 "0s" 0 0 0 64 0 0  18 49 1
+E E 0 1 1 2 1 E U  1 E 200 216 222 234
+0 2 2 "0s" 0 0 0 64 0 0  200 216 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 2 ##
+2 91
+"m_recvSlots"
+""
+1 200 81 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+125 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 200 81 222 99
+0 2 2 "0s" 0 0 0 64 0 0  200 81 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 2 ##
+0
+LAYER, 2 
+1
+LANG:1 0 
+2 86
+"m_sliceNotInUse"
+""
+1 11 41 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+120 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 11 41 370 327
+0 2 2 "0s" 0 0 0 64 0 0  11 41 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-28-*-100-100-*-*-iso8859-1|-28,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 0 
+LANG:1 8 Not Used
 0
 LAYER, 3 
 1

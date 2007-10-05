@@ -19,8 +19,8 @@ main()  {
  E 1 -1 -1 0  0 0
 ""0  1
 E E 2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -159,7 +159,7 @@ E "main()    {  PanelOff();    }" 0
  0 1 1 2 1 E U  1 E 13 142 165 289
 0 2 2 "0s" 0 0 0 64 0 0  13 142 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
@@ -181,10 +181,32 @@ E "main()    {  PanelOff();    }" 0
  0 1 1 2 1 E U  1 E 168 142 564 291
 0 2 2 "0s" 0 0 0 64 0 0  168 142 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
+13 17
+"m_close"
+""
+1 516 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+26 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 83 -*-Sans-*-r-normal-*-*-100-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 514 268 567 290
+
+T 
+1
+LANG:1 5 Close
+"main()    {  PanelOff();    }" 0
+ E E E
 0
 LAYER, 1 
 1

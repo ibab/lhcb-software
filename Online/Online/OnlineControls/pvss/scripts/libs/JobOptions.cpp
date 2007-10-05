@@ -408,7 +408,7 @@ int JobOptionsEditor_init()  {
   setValue("m_textEditor","visible",true);
   setValue("m_needDefaults","visible",true);
   setValue("m_needTell1Setup","visible",true);
-  setValue("m_OK","visible",isChild);
+  setValue("m_OK","visible",1);//isChild);
   JobOptionsEditor_setToolTips();
   JobOptionsEditor_closeEditors();
   JobOptionsEditor_showCreator(0);
@@ -427,6 +427,7 @@ void JobOptionsEditor_setToolTips()  {
   m_OK.toolTipText             = "Exit and close panel";
   m_close.toolTipText	       = "Close text editor without saving possible changes.";
   m_save.toolTipText	       = "Close text editor WITH saving possible changes.";
+  m_systemName.toolTipText     = "Click here to change the system for accessing job options.";
 
   m_list.toolTipText           = "List of found objects. Double click for further expansion.";
   m_listEditor.toolTipText     = "List of found objects. Double click for further expansion.";

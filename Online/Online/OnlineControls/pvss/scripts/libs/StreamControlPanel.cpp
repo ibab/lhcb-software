@@ -124,8 +124,13 @@ string StreamControlPanel_initDisplay(string stream, string partition, int offse
   m_command.text           = "Refresh";
   m_partition.visible      = 0;
   m_displayedPartitions.visible = 0;
-  int res = dpConnect("StreamControlPanel_CheckDisplay",stream+"Alloc.State");
-  StreamControlPanel_checkErrors(res);
+  string dp = stream+"Alloc.State";
+  if ( dpExists(dp) )  {
+    int res = dpConnect("StreamControlPanel_CheckDisplay",dp);
+    StreamControlPanel_checkErrors(res);
+    return;
+  }
+  StreamControlPanel_CheckDisplay("","");
 }
 //=============================================================================
 string StreamControlPanel_showDisplay(string stream, int offset=130)  {
@@ -247,15 +252,20 @@ void StreamControlPanel_CheckAllocPanel(string dp, string value)  {
   string partition = "";
   string stream = m_streamName.text;
   if ( dpExists(value+".general.partName") )  {
-    LayerOn(2);
-    setValue("m_sliceNotInUse","visible",0);
+    m_sliceNotInUse.visible = 0;
     dpGet(value+".general.partName",partition);
     StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value+ "Partition:"+value);
     StreamControlPanel_initAllocPanel(stream,partition);
     return;
   }
+  string sys = dpSubStr(dp,DPSUB_SYS);
+  string slice = dpSubStr(dp,DPSUB_DP_EL);
+  sys = substr(sys,0,strlen(sys)-1);
+  slice = substr(slice,0,strpos(slice,"."));
+  m_sliceNotInUse.visible = 1;
+  setValue("m_sliceNotInUse","foreCol","red");
+  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system "+sys+"\nis currently not used.");
   LayerOff(2);
-  setValue("m_sliceNotInUse","visible",1);
 }
 //=============================================================================
 void StreamControlPanel_startAllocPanel(string slice, string stream)  {
@@ -264,16 +274,16 @@ void StreamControlPanel_startAllocPanel(string slice, string stream)  {
   string sysId = getSystemId(sys+":");
   string dp = sys+":"+slice+".RunInfo";
   m_streamName.text = stream;
-  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system "+sys+"\nis currently not used.");
-  setValue("m_sliceNotInUse","backCol","_Transparent");
-  setValue("m_sliceNotInUse","foreCol","red");
   if ( dpExists(dp) )  {
     dpConnect("StreamControlPanel_CheckAllocPanel",dp);
     return;
   }
   StreamControl_trace("StreamControlPanel_startAllocPanel> The Datapoint:"+dp+" does not exist.");
+  setValue("m_sliceNotInUse","backCol","_Transparent");
+  setValue("m_sliceNotInUse","foreCol","red");
+  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system "+sys+"\nis currently not used.");
   LayerOff(2);
-  setValue("m_sliceNotInUse","visible",1);  
+  m_sliceNotInUse.visible = 1;
 }
 //=============================================================================
 void StreamControlPanel_initAllocPanel(string name, string partition)  {
@@ -290,17 +300,15 @@ void StreamControlPanel_initAllocPanel(string name, string partition)  {
   m_partitionName.text = "Partition:"+partition;
   m_runInfoText.visible = 1;
   m_runInfoText.text = "Run info:"+partition;
-  m_recvSlots.enabled = 0;
-  m_strmSlots.enabled = 0;
   m_recvCheck.visible = 0;
   m_strmCheck.visible = 0;
-  setValue("m_sliceNotInUse","visible",0);
-  m_strmSlots.font = font;
+  m_sliceNotInUse.visible = 0;
   m_recvInfraTaskTypes.font = font;
   m_strmInfraTaskTypes.font = font;
   m_strmTypes.font = font;
-  m_strmTypesText.visible = 0;
+  m_strmTypesText.visible = 1;
   StreamControlPanel_initAllocData(name,partition);
+  LayerOn(2);
 }
 //=============================================================================
 void StreamControlPanel_setupAllocWidgets()  {
@@ -353,7 +361,6 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
                   info+".Storage.strmStrategy", strm_strategy);
     }
     m_strmTypesText.text = "OutputStreams/Multiplicity:\n[Example: B2pipi/2,BBincl/5]";
-    m_strmTypesText.visible = 1;
   }
   else if ( isMonitoring )  {
     dp = strtoupper(stream)+":"+m_runInfoDP.text;
@@ -377,7 +384,6 @@ void StreamControlPanel_initAllocData(string stream, string partition)  {
                   info+".MonFarm.strmStrategy", strm_strategy);
     }
     m_strmTypesText.text = "Mon Type/Multiplicity/Input:\n[Example: BBincl/5/Stream2]";
-    m_strmTypesText.visible = 1;
   }
   StreamControl_trace("StreamControlPanel_initAllocData > RunInfo:"+info+" Stream:"+stream+" Partition:"+partition);
   if ( 0 != res )  {

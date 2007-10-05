@@ -1,34 +1,42 @@
 V 10
 1
-LANG:1 24 StreamConfigurationPanel
-PANEL,-1 -1 383 513 N "_3DFace" 0
+LANG:1 26 Setup Stream Configuration
+PANEL,-1 -1 395 539 N "_3DFace" 0
 "#uses \"StreamControlPanel.cpp\"
 main()  {
+  dyn_string dpn;
   string slice = \"\";
-  dyn_string dpn = dpNames(\"*:*\",\"RunInfo\");
+  int num_slices = 0, num_rundps = 0;
+  dpn = dpNames(\"*:*_Slice*\",\"StreamPartition\");
+  num_slices = dynlen(dpn);
+  m_streamSelector.deleteAllItems();
+  for(int i=1; i<=num_slices; ++i)
+    m_streamSelector.appendItem(dpn[i]);
+  if ( num_slices >= 1 ) {
+    m_streamSelector.selectedPos(1);
+    m_streamSelector.text = dpn[1];
+    slice = dpn[1];
+  }
+
+  dpn = dpNames(\"*:*\",\"RunInfo\");
+  num_rundps = dynlen(dpn);
   m_runInfoSelector.deleteAllItems();
-  for(int i=1; i<=dynlen(dpn); ++i)
+  for(int i=1; i<=num_rundps; ++i)
     m_runInfoSelector.appendItem(dpn[i]);
-  if ( dynlen(dpn)>=1 ) {
+  if ( num_rundps>=1 ) {
     m_runInfoSelector.selectedPos(1);
     m_runInfoSelector.text = dpn[1];
     slice = dpn[1];
   }
   
-  dpn = dpNames(\"*:*_Slice*\",\"StreamPartition\");
-  m_streamSelector.deleteAllItems();
-  for(int i=1; i<=dynlen(dpn); ++i)
-    m_streamSelector.appendItem(dpn[i]);
-  if ( dynlen(dpn)>=1 ) {
-    m_streamSelector.selectedPos(1);
-    m_streamSelector.text = dpn[1];
-    slice = dpn[1];
-  }
   setValue(\"m_Cancel\",\"visible\",0);
   setValue(\"m_Cancel\",\"text\",\"Cancel\");
   setValue(\"m_Ok\",\"visible\",1);
   setValue(\"m_Ok\",\"text\",\"Quit\");
-  createAllocPanelBySlice(slice);  
+  if ( num_rundps > 0 ) 
+    createAllocPanelByRunInfo(m_runInfoSelector.text,m_streamType.text(m_streamType.number));   
+  else
+    createAllocPanelBySlice(slice);  
 }
 " 0
  E E E E 1 -1 -1 0  0 0
@@ -38,8 +46,10 @@ E "createAllocPanelBySlice(string slice)  {
   DebugN(\"createAllocPanelBySlice> Building panel using:\"+slice+\" \"+slice_name);
   addSymbol(myModuleName(),myPanelName(),\"StreamControl/Allocate.pnl\",\"m_configPanel\",
             makeDynString(\"$1:\"+slice_name),5,105,0,0,0);
-  setValue(\"m_configPanel.m_Ok\",\"visible\",1);
-  setValue(\"m_configPanel.m_Cancel\",\"visible\",1);
+  setValue(\"m_configPanel.m_Ok\",\"visible\",0);
+  setValue(\"m_configPanel.m_Cancel\",\"visible\",0);
+  LayerOff(5);
+  LayerOn(6);
 }
 
 createAllocPanelByRunInfo(string runInfoDP, string stream)  {
@@ -48,7 +58,7 @@ createAllocPanelByRunInfo(string runInfoDP, string stream)  {
   if ( !dpExists(dp,\"StreamPartition\") )  {
     int res = dpCreate(dpname,\"StreamPartition\",getSystemId(strtoupper(stream)+\":\"));
     if ( res != 0 )  {
-      DebugN(\"Failed to create editro datapoint:\"+dp);
+      DebugN(\"Failed to create editor datapoint:\"+dp);
       return;
     }
   }
@@ -56,69 +66,24 @@ createAllocPanelByRunInfo(string runInfoDP, string stream)  {
   DebugN(\"createAllocPanelByRunInfo> Building Panel using:\"+runInfoDP+\" Stream:\"+stream);
   addSymbol(myModuleName(),myPanelName(),\"StreamControl/Allocate.pnl\",\"m_configPanel\",
             makeDynString(\"$1:\"+dpname),5,105,0,0,0);
-  setValue(\"m_configPanel.m_Ok\",\"visible\",1);
+  setValue(\"m_configPanel.m_Ok\",\"visible\",0);
   setValue(\"m_configPanel.m_Cancel\",\"visible\",0);
+  LayerOff(6);
+  LayerOn(5);
 }
 " 0
  2
-"CBRef" "1"
-"EClose" E
+"CBRef""1"
+"EClose"E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
 1
 LANG:1 0 
-22 28
-"m_streamSelector"
-""
-1 128 29 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-4 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 126 27 340 51
-0
-
-E
-"main() {  
-  removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
-  createAllocPanelBySlice(m_streamSelector.text);   
-}
-" 0
-
-E
- 1 0
-2 29
-"m_streamSelectorText"
-""
-1 20 10 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-0 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 6 31 146 51
-0 2 2 "0s" 0 0 0 64 0 0  6 31 1
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 13 Select Slice:
 13 31
 "m_Cancel"
 ""
-1 6 484 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 6 501 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 8 0 0 0 0 0
 E E E
@@ -130,7 +95,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 4 482 98 506
+ 4 499 98 523
 
 T 
 1
@@ -161,7 +126,7 @@ LANG:1 19 Stream Slice Editor
 13 60
 "m_Ok"
 ""
-1 286 487 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 286 503 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 12 0 0 0 0 0
 E E E
@@ -173,20 +138,36 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 284 485 378 509
+ 284 501 378 525
 
 T 
 1
-LANG:1 2 Ok
+LANG:1 4 Quit
 "main()  {  PanelOff();  }
 " 0
  E E E
-22 61
-"m_runInfoSelector"
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+13 65
+"m_selectBySlice"
 ""
-1 129 56 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 8 52 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
-14 0 0 0 0 0
+20 0 0 0 0 0
 E E E
 0
 1
@@ -196,18 +177,19 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 127 54 341 78
-0
+ 6 50 119 74
 
-E
-"main() {  
+T 
+1
+LANG:1 18 Select by Slice...
+"main()
+{
+  LayerOff(5);
+  LayerOn(6);
   removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
-  createAllocPanelByRunInfo(m_runInfoSelector.text,m_streamType.text(m_streamType.number));   
-}
-" 0
-
-E
- 1 0
+  createAllocPanelBySlice(m_streamSelector.text);   
+}" 0
+ E E E
 2 62
 "m_runInfoSelectorText"
 ""
@@ -221,17 +203,44 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 6 59 146 79
-0 2 2 "0s" 0 0 0 64 0 0  6 59 1
+E E 0 1 1 2 1 E U  1 E 6 32 146 52
+0 2 2 "0s" 0 0 0 64 0 0  6 32 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 19 Connect to RunInfo:
+22 61
+"m_runInfoSelector"
+""
+1 129 29 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 127 27 341 51
+0
+
+E
+"main() {  
+  removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
+  createAllocPanelByRunInfo(m_runInfoSelector.text,m_streamType.text(m_streamType.number));   
+}
+" 0
+
+E
+ 1 0
 19 64
 "m_streamType"
 ""
-1 130 79 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 130 52 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 19 0 0 0 0 0
 E E E
@@ -243,7 +252,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 128 77 252 115
+ 128 50 252 88
 2
 T 
 1
@@ -271,25 +280,84 @@ E "main(int button)
 }" 0
 
 0
-LAYER, 1 
-1
-LANG:1 0 
-0
-LAYER, 2 
-1
-LANG:1 0 
-0
-LAYER, 3 
-1
-LANG:1 0 
-0
-LAYER, 4 
-1
-LANG:1 0 
-0
 LAYER, 5 
 1
 LANG:1 0 
+2 29
+"m_streamSelectorText"
+""
+1 20 10 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+0 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 6 31 146 51
+0 2 2 "0s" 0 0 0 64 0 0  6 31 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 13 Select Slice:
+13 66
+"m_ru"
+""
+1 6 51 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 4 49 117 73
+
+T 
+1
+LANG:1 20 Select by RunInfo...
+"main()    {
+  LayerOff(6);
+  LayerOn(5);
+  removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
+  createAllocPanelByRunInfo(m_runInfoSelector.text,m_streamType.text(m_streamType.number));   
+}
+" 0
+ E E E
+22 28
+"m_streamSelector"
+""
+1 128 29 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 126 27 340 51
+0
+
+E
+"main() {  
+  removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
+  createAllocPanelBySlice(m_streamSelector.text);   
+}
+" 0
+
+E
+ 1 0
 0
 LAYER, 6 
 1
