@@ -377,15 +377,29 @@ void Track::copy( const Track& track )
   setFlags( track.flags() );
   setLhcbIDs( track.lhcbIDs() );
   setExtraInfo( track.extraInfo() );
-  const std::vector<State*>& states = track.states();
-  for (std::vector<State*>::const_iterator it = states.begin();
-       it != states.end(); ++it) addToStates( *(*it));
-  const std::vector<Measurement*>& measurements = track.measurements();
-  for (std::vector<Measurement*>::const_iterator it2 = measurements.begin();
-       it2 != measurements.end(); ++it2) addToMeasurements( *(*it2) );
-  const std::vector<Node*>& nodes = track.nodes();
-  for (std::vector<Node*>::const_iterator it3 = nodes.begin();
-       it3 != nodes.end(); ++it3) addToNodes( (*it3)->clone() );
+  
+  // copy the states
+  m_states.reserve( track.states().size() ) ;
+  for( std::vector<State*>::const_iterator istate = track.states().begin() ;
+       istate != track.states().end(); ++istate)
+    m_states.push_back( (*istate)->clone() ) ;
+  
+  // copy the measurements
+  m_measurements.reserve(track.measurements().size()) ;
+  for( std::vector<Measurement*>::const_iterator imeas = track.measurements().begin() ;
+       imeas != track.measurements().end(); ++imeas)
+    m_measurements.push_back( (*imeas)->clone() ) ;
+  
+  // copy the nodes. be sure to remap the measurement.
+  m_nodes.reserve(track.nodes().size()) ;
+  for (std::vector<Node*>::const_iterator inode = track.nodes().begin();
+       inode != track.nodes().end(); ++inode) {
+    m_nodes.push_back((*inode)->clone()) ;
+    if( (*inode)->hasMeasurement() )
+      m_nodes.back()->setMeasurement(const_cast<Measurement&>(measurement((*inode)->measurement().lhcbID()))) ;
+  }
+  
+  // copy the ancestors
   const SmartRefVector<Track>& ancestors = track.ancestors();
   for (SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
        it4 != ancestors.end();  ++it4) addToAncestors(*(*it4));
