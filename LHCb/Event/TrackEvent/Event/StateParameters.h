@@ -23,7 +23,7 @@ namespace StateParameters
   static const double ZAtT      =  9410. * Gaudi::Units::mm;
   static const double ZBegRich2 =  9450. * Gaudi::Units::mm;
   static const double ZEndRich2 = 11900. * Gaudi::Units::mm;
-  
+  static const double ZBegT     =  7620. * Gaudi::Units::mm;
 };
 
 // ----------------------------------------------------------------------------
