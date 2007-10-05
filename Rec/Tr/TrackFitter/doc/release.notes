@@ -3,6 +3,12 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-10-03 - Wouter Hulsbergen
+ - make sure first measurement state still added to track even if extrapolation to beam line fails
+ - add logic to create only nodes for reference z-positions that are between the
+ first and the last measurement. this will become the default after effects in
+ matching are under control.
+
 ! 2007-09-30 - Edwin Bos
  - Added jobOption to switch on/off the invocation of the 'makeNodes' method
  - when off, nodes and references are not (re)made, for fitting after prefitting
