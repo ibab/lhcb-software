@@ -4,6 +4,10 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v6r9 2007-10-02 ==========================
+! 2007-10-02 - Marco Cattaneo
+ - Use LHCbMath v2r3
+
 !======================== KernelSys v6r8 2007-09-17 ==========================
 ! 2007-09-17 - Marco Cattaneo
  - Use LHCbKernel v7r7, CaloKernel v5r1, Relations v5r2, ProcessorKernel v5r0,
