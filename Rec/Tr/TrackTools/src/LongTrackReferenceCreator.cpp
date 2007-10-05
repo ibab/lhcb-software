@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.14 2007-05-24 06:56:59 mneedham Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.15 2007-10-05 16:51:54 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -88,11 +88,11 @@ StatusCode LongTrackReferenceCreator::execute(LHCb::Track& aTrack) const{
     tState = aTrack.stateAt(LHCb::State::AtT);
   }
   else {
-    tState = aTrack.closestState( StateParameters::ZAtT );    
+    tState = aTrack.closestState( StateParameters::ZAtT );
+    if( tState.z() < StateParameters::ZBegT || tState.z() > StateParameters::ZBegRich2 ) 
+      return Warning( "No T State retrieved!", StatusCode::FAILURE );
   }
-  if ( fabs( tState.z() - StateParameters::ZAtT ) > 1.0*Gaudi::Units::meter )
-    return Warning( "No T State retrieved!", StatusCode::FAILURE );
-
+    
   // reset velo Q/p to T one
   vState.setQOverP(tState.qOverP());
 
