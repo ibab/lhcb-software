@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v1r7 2007-10-05 ========================= 
 ! 2007-10-03 - Gloria Corti
  - Adapt to change in contructor of ParticleID from int being explicit
    (as in LHCbKernel v7r7 in LHCb v22r9)
