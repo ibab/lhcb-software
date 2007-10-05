@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r9 2007-10-05 ======================
+! 2007-10-03 - Marco Cattaneo
+ - Add dependency on DetDesc, needed for IMaterialLocator dictionary
+
 ! 2007-09-25 Wouter Hulsbergen
  - Added method to TrackProjector interface
 

@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackInterfaces
-version           v3r8
+version           v3r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,6 +12,7 @@ branches          cmt doc TrackInterfaces
 # =============== dependencies ==============================================
 use TrackEvent       v* Event
 use LHCbKernel       v* Kernel
+use DetDesc          v* Det
 use GaudiKernel      v*
 
 # =============== include directories =======================================
