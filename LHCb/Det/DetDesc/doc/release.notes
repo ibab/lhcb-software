@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.339 2007-10-01 11:40:48 marcocle Exp $ 
+! $Id: release.notes,v 1.340 2007-10-05 13:01:59 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v18r1 2007-10-02 ==============================
+! 2007-10-02 - Marco Cattaneo
+ - Use new GaudiKernel/cbrt.h implementation in Element.cpp, and remove
+   LHCbMath dependency from requirements
 
 ! 2007-10-01 - Marco Clemencic
  - Change in DetDesc::Services to allow the creation of the UpdateManagerSvc if
