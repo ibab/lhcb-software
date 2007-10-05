@@ -4,6 +4,10 @@
 ! Purpose     : Hat package for packages encoding and decoding DAQ buffers
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v3r5 2007-10-05 ===========================
+! 2007-10-05 - Marco Cattaneo
+ - Use OTDAQ v5r5
+
 !========================= DAQSys v3r4 2007-09-18 ===========================
 ! 2007-09-18 - Marco Cattaneo
  - Use CaloDAQ v4r0, OTDAQ v5r4
