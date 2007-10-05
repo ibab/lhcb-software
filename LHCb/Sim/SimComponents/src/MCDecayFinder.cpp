@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.4 2007-08-20 09:12:12 pkoppenb Exp $
+// $Id: MCDecayFinder.cpp,v 1.5 2007-10-05 13:12:33 cattanem Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -31,15 +31,6 @@ MCDecayFinder::MCDecayFinder( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0)
 {
-  if( serviceLocator() ) {
-    StatusCode sc = StatusCode::FAILURE;
-    sc = serviceLocator()->service("ParticlePropertySvc",m_ppSvc);
-  }
-  if( !m_ppSvc ) {
-    throw GaudiException( "ParticlePropertySvc not found",
-                          "MCDecayFinderException",
-                          StatusCode::FAILURE );
-  }
 
   declareInterface<IMCDecayFinder>(this);
 
@@ -67,6 +58,8 @@ StatusCode MCDecayFinder::initialize(){
   if (!sc) return sc;
   
   debug() << "==> Initializing" << endreq;
+
+  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
   if( m_source.length() == 0 ){
     warning() << "No decay specified!" << endreq;
