@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os, sys
 
 def pvssDir():         return os.environ['PVSS_SYSTEM_ROOT']
@@ -10,9 +11,11 @@ def pvssCTRL():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ctrl -p
 def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ascii -proj '+projectName()+' '
 
 def usage():
-  print "usage: Install.py -project <project-name> [-opt [-opt]]"
-  print "  -project <name>: Choose one of: STORAGE MONITORING LBECS"
-  print "  -install <name>: Choose one of: JOBOPTIONS"
+  print "usage: Install.py <action> -project <project-name> [-opt [-opt]]"
+  print "  <action>:              Choose one of INSTALL INSTALLFILES COPYBACK"
+  print "  -project       <name>: Choose one of: STORAGE MONITORING LBECS"
+  print "  -install       <name>: Choose one of: JOBOPTIONS"
+  print "  -componentsdir <name>: Installation directory of components"
   sys.exit(1)
   
 def parseOpts():
@@ -48,13 +51,64 @@ def execCmd(cmd):
   print '......... --> '+cmd
   os.system(cmd)
   
+def installDirectory(source_path,target_path,sub_path='',relative_path_up=None,rel_install_path=None):
+  if rel_install_path is None:
+    target_path = os.path.realpath(target_path)
+    source_path = os.path.realpath(source_path)
+    os.stat(target_path)  # Check if pathes exist
+    os.stat(source_path)
+    rel_install_path=''
+    other = ''
+    for i in xrange(len(source_path)):
+      if source_path[i] != target_path[i]:
+        rel_install_path = source_path[i:]
+        break
+      other = other + target_path[i]
+
+    other = target_path[len(other):].split('/')
+    relative_path_up = ''
+    for i in other: relative_path_up = relative_path_up+'..'+os.sep
+    print 'Target path:',target_path
+    print 'Source path:',source_path
+    print 'Relative difference:',relative_path_up
+
+  dir = source_path+os.sep+sub_path
+  dirs = os.listdir(dir)
+  os.system('mkdir -p '+target_path+os.sep+sub_path)
+  os.chdir(target_path+os.sep+sub_path)
+  print '\n-----> %s'%os.getcwd()
+  for d in dirs:
+    if os.path.isdir(dir+os.sep+d):
+      if d != 'CVS':
+        installDirectory(source_path,target_path,sub_path+os.sep+d,relative_path_up+'..'+os.sep,rel_install_path)
+    else:
+      src = relative_path_up+rel_install_path+sub_path
+      cmd = 'ln -fs '+src+os.sep+d+' '+d
+      print '[Link] %-24s in %s'%(d,src)
+      os.stat(src+os.sep+d)
+      os.system(cmd)
+      os.stat(d)
+
 def installFiles():
   print 'Install files to directory: '+componentsDir()
-  print 'Copy files from '+sourceDir()+'/pvss to '+componentsDir()+' ...'
-  execCmd('cp --recursive --force --symbolic-link '+sourceDir()+'/pvss/* '+componentsDir())
+  print 'Copy files from '+sourceDir()+os.sep+'pvss to '+projectBaseDir()+' ...'
+  curr = os.getcwd()
+  try:
+    installDirectory(sourceDir()+os.sep+'pvss',projectBaseDir())
+  except Exception,X:
+    print X
+  os.chdir(curr)
+  #execCmd('cp --recursive --force --symbolic-link '+sourceDir()+'/pvss/* '+projectBaseDir())
   if projectBaseDir() != componentsDir():
-    print 'Copy files from '+sourceDir()+'/pvss to '+projectBaseDir()+' ...'
-    execCmd('cp --recursive --force --symbolic-link '+sourceDir()+'/pvss/* '+projectBaseDir())
+    print 'Copy files from '+sourceDir()+'/pvss to '+componentsDir()+' ...'
+    try:
+      installDirectory(sourceDir()+os.sep+'pvss',componentsDir())
+      #execCmd('cp --recursive --remove-destination '+sourceDir()+'/pvss/* '+componentsDir())
+    except Exception,X:
+      print X
+    os.chdir(curr)
+  print 'Now in:',os.getcwd()
+
 
 def install():
   print 'Installing ....'
@@ -91,6 +145,7 @@ def install():
     execCmd(pvssCTRL()+'InstallJobOptionsControl.cpp')
 
 if __name__ == "__main__":
+  os.chdir(sourceDir()+'/cmt')
   parseOpts()
   if sys.argv[1].upper()=='INSTALL':
     install()

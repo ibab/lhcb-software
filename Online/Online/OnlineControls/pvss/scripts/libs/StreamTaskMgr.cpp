@@ -88,8 +88,8 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
       string name = strtoupper(recvNodes[i]);
       string dp_name = name+"_StreamTaskCreator";
       string svc_name = "/" + name + "/task_manager";
-      fwDim_unSubscribeCommandsByDp("DimStorage",dp_name+"*");
-      fwDim_unSubscribeServicesByDp("DimStorage",dp_name+"*");
+      fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
+      fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
       if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
       dpSet(dp_name+".Name",name);
       fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
