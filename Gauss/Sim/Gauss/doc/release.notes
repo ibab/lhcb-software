@@ -4,8 +4,24 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-10-05 - Gloria Corti
+ - Modify requirements with -no_auto_imports everywhere
+ - Temporarly remove Pythia8 since the external library was compiled with
+   HepMC 2.00.2
+ - Update options for various conditions (VeloOpen, VeloSemiOpen) to adapt
+   to new features in GiGaGeo for picking up information from CondDB.
+   Long list of DetectorElements not necessary in most case (see caveat in 
+   GiGaCnv).
+   . v200601-450GeV-{Open,SemiOpen,Close}Velo-B{On,Off}.opts
+ - NEW utility/example steering options for generating event with magnetic
+   field off and Velo Open
+   . v200601-BOff.opts
+   . v200601-OpenVelo-BOff.opts 
+ - Use new DC06 settings with DDDB
+   . v200601-SimPhase.opts 
+
 ! 2007-10-01 - Gloria Corti
- - Add default cuts for gamma and positrons into special RICh aerogel cuts,
+ - Add default cuts for gamma and positrons into special RICH aerogel cuts,
    otherwise zero is taken.
    . Simulation.xml
  - Fix wrong path for particle option

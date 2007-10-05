@@ -14,7 +14,6 @@ branches src doc options cmt job
 #============================================================================
 
 #-- Databases
-#use XmlDDDB             v40r0   Det   -no_auto_imports
 use DDDB                v1r*    Det   -no_auto_imports
 use ParamFiles          v6r1          -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
@@ -39,10 +38,10 @@ use GaudiPython        v*                   -no_auto_imports
 use RootHistCnv        v*                   -no_auto_imports
  
 # From LHCB project
-use KernelSys          v*     Kernel         -no_auto_imports
-use DetSys             v*     Det            -no_auto_imports
-use LHCbAlgs           v*     Kernel         -no_auto_imports
-use SimComponents      v*     Sim            -no_auto_imports
+use KernelSys          v*     Kernel        -no_auto_imports
+use DetSys             v*     Det           -no_auto_imports
+use LHCbAlgs           v*     Kernel        -no_auto_imports
+use SimComponents      v*     Sim           -no_auto_imports
  
 #===========================================================================
 
@@ -68,25 +67,21 @@ use $(LbHidValley_use)
 macro LbAlpGen_use "" Linux&AlpGen "LbAlpGen v* Gen"
 use $(LbAlpGen_use)
 
-#-- Optional Pythia8
-macro LbPythia8_use "" Linux&Pythia8 "LbPyhia8 v* Gen"
-use $(LbPythia8_use) 
-
 #-- Generator
-use ParticleGuns         v*    Gen
-use LbMIB                v*    Gen
-use LbPythia             v*    Gen
-use Generators           v*    Gen
+use ParticleGuns         v*    Gen  -no_auto_imports 
+use LbMIB                v*    Gen  -no_auto_imports
+use LbPythia             v*    Gen  -no_auto_imports
+use Generators           v*    Gen  -no_auto_imports
 
 #-- Simulation
-use GiGaCnv              v*    Sim
-use GaussTools           v*    Sim
-use GaussAlgs		 v*    Sim
-use GaussKine            v*    Sim
-use GaussPhysics         v*    Sim
-use GaussTracker         v*    Sim
-use GaussRICH            v*    Sim
-use GaussCalo            v*    Sim
+use GiGaCnv              v*    Sim  -no_auto_imports
+use GaussTools           v*    Sim  -no_auto_imports
+use GaussAlgs		 v*    Sim  -no_auto_imports
+use GaussKine            v*    Sim  -no_auto_imports
+use GaussPhysics         v*    Sim  -no_auto_imports
+use GaussTracker         v*    Sim  -no_auto_imports
+use GaussRICH            v*    Sim  -no_auto_imports
+use GaussCalo            v*    Sim  -no_auto_imports
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
@@ -97,10 +92,10 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v* Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v*    Sim
-use CaloMoniSim         v*    Calo
-use VeloGauss           v*    Velo
-use MuonMoniSim         v*    Muon
+use GaussMonitor        v*    Sim   -no_auto_imports
+use CaloMoniSim         v*    Calo  -no_auto_imports
+use VeloGauss           v*    Velo  -no_auto_imports
+use MuonMoniSim         v*    Muon  -no_auto_imports
 
 #===========================================================================
 #== Necessary enviroment variables
