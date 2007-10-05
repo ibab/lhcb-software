@@ -132,10 +132,10 @@ namespace LHCb
     /// Set the version information of this bank
     void setVersion(int val)        {    m_version = (val&0xFF);    }
 
-    /// Return SourceID of this bank  (TELL1 borad ID)
+    /// Return SourceID of this bank  (TELL1 board ID)
     int sourceID() const            {    return m_sourceID;         }
 
-    /// Set the source ID of this bank (TELL1 borad ID)
+    /// Set the source ID of this bank (TELL1 board ID)
     void setSourceID(int val)       {    m_sourceID = (val&0xFFFF); }
 
     /// Return pointer to begining of data body of the bank

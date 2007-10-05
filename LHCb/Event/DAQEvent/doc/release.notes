@@ -4,8 +4,8 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-
-! 2007-09-03 - Marksu Frank
+!================ DAQEvent v7r6 2007-10-05 ============================
+! 2007-10-03 - Markus Frank
  - Add bank types GaudiSerialize and GaudiHeader
  - Fix wrong documentation entries in RawEvent.h
 
