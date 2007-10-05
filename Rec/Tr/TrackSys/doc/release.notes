@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-10-05 Wouter Hulsbergen
+ - moved configuration of prefitters to Fitting.opts
+ - fixed configuration of PreFitKsTrack
+
 ! 2007-10-01 - Edwin Bos
  - changed 1 fit iteration to 2 fit iterations for better results
 

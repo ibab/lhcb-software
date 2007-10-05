@@ -19,6 +19,15 @@ FitForward.TracksInContainer = "Rec/Track/Forward";
 FitForward.Fitter.NumberFitIterations = 2;
 FitForward.Fitter.MakeNodes = false;
 
+PreFitForward.TracksInContainer = "Rec/Track/Forward";
+PreFitForward.Fitter.NumberFitIterations = 2;
+PreFitForward.Fitter.MaxNumberOutliers = 0;
+PreFitForward.Fitter.ErrorX2 = 40.0;
+PreFitForward.Fitter.ErrorTx2 = 1e-3;
+PreFitForward.Fitter.ErrorTy2 = 2e-3;
+PreFitForward.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
+
 // Seed fit
 FitTsa.TracksInContainer          = "Rec/Track/Tsa";
 FitTsa.Fitter.ZPositions          = { 7500., 9450., 11900. };
@@ -34,6 +43,15 @@ FitMatch.TracksInContainer = "Rec/Track/Match";
 FitMatch.Fitter.NumberFitIterations = 2;
 FitMatch.Fitter.MakeNodes = false;
 
+PreFitMatch.TracksInContainer = "Rec/Track/Match";
+PreFitMatch.Fitter.NumberFitIterations = 2;
+PreFitMatch.Fitter.MaxNumberOutliers = 0;
+PreFitMatch.Fitter.ErrorX2 = 40.0;
+PreFitMatch.Fitter.ErrorTx2 = 1e-3;
+PreFitMatch.Fitter.ErrorTy2 = 2e-3;
+PreFitMatch.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
+
 // KShort fit
 FitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
 FitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
@@ -41,6 +59,18 @@ FitKsTrack.Fitter.StateAtBeamLine = false;
 FitKsTrack.Fitter.SetRefInfo      = false;
 FitKsTrack.Fitter.NumberFitIterations = 2;
 FitKsTrack.Fitter.MakeNodes = false;
+
+PreFitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
+PreFitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
+PreFitKsTrack.Fitter.StateAtBeamLine = false;
+PreFitKsTrack.Fitter.SetRefInfo      = false;
+PreFitKsTrack.Fitter.NumberFitIterations = 2;
+PreFitKsTrack.Fitter.MaxNumberOutliers = 0;
+PreFitKsTrack.Fitter.ErrorX2 = 40.0;
+PreFitKsTrack.Fitter.ErrorTx2 = 1e-3;
+PreFitKsTrack.Fitter.ErrorTy2 = 2e-3;
+PreFitKsTrack.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
 
 // Velo-TT fit
 FitVeloTT.TracksInContainer = "Rec/Track/VeloTT";
