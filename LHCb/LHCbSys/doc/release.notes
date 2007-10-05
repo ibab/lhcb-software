@@ -5,6 +5,88 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r10>2007-10-05 LHCbSys v22r10</A></H1><PRE>
+This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
+
+- Packages modified: KernelSys v6r9, LHCbMath v2r3, DetSys v10r1, DetDesc v18r1,
+    DetDescSvc v1r14, Magnet v3r6p1, VeloDet v12r2, DetDescChecks v4r4,
+    EventSys v23r9, TrackEvent v4r7, DAQEvent v7r6, DAQSys v3r5, OTDAQ v5r5,
+    LoKiCore v6r1, TrackInterfaces v3r9, SimComponents v2r6, DaVinciKernel v6r7,
+    TfKernel v1r1, MDF v2r5
+
+- In LHCbMath v2r3:
+  . Remove implementations of cbrt from Power.h, now available in GaudiKernel
+
+- In DetDesc v18r1
+  . Use GaudiKernel/cbrt.h and remove LHCbMath dependency
+  . Change in DetDesc::Services to allow the creation of the UpdateManagerSvc if
+    not already present.
+  . Change in GeometryInfoPlus: use DetDesc::Services also for the
+    UpdateManagerSvc.
+
+- In DetDescSvc v1r14
+  . Change UpdateManagerSvc: check the state of the service (OFFLINE/INITIALIZED)
+    before any operation. If OFFLINE, the call to "unregister" results in a
+    no-operation, while all other calls throw an exception.
+    Fixes the bug causing segfault during DetDataSvc finalization.
+
+- In Magnet v3r6p1
+  . In BdlTool, objects created in initialize now deleted in finalize, not in
+    destructor (needed when generating configurables)
+
+- In VeloDet v12r2
+  . Bugfix in fast casting method for r type sensors: pile up sensors were not
+    treated properly.
+
+- In DetDescChecks v4r4
+  . Remove unneccessary SEAL dependency
+  . Print the database name and tags in the algorithm LoadDDDB.
+
+- In TrackEvent v4r7
+  . more improvements to fillStream method
+  . re-corrected a bug re-introduced with latest additions to fillStream method
+  . Add TsaLikelihood flag to extraInfo  
+
+- In DAQEvent v7r6
+  . Add bank types GaudiSerialize and GaudiHeader
+  . Fix wrong documentation entries in RawEvent.h
+
+- In OTDAQ v5r5
+  . Provided OTDAQ/IOTRawBankDecoder.h interface and moved OTRawBankDecoder.h
+    into src directory.
+  . Modified OTTimeCreator to propertly use IOTRawBankDecoder interface
+  . Added OTRawBankDecoder::finalize
+  . Added dictionaries for the tool interfaces
+
+- In LoKiCore v6r1
+  . Adapt to removal of Gaudi::Math::cbrt
+
+- In TrackInterfaces v3r9
+  . Add dependency on DetDesc
+  . Added method to TrackProjector interface
+
+- In SimComponents v2r6
+  . MCDecayFinder: get the ParticlePropertySvc in initialize, not the constructor
+
+- In DaVinciKernel v6r7
+  . DVAlgorithm.cpp: small change to get correct statistics of 
+    setFilterPassed(bool)
+
+- TfKernel v1r1
+  . Adapted to standard usage of IOTRawBankDecoder interface
+  . Added accessor to hits by station to IOTHitCreator
+
+- In MDF v2r5
+  . Set source ID to MDF bank in MDFio to 0
+  . Fix handling of default RawEventLocation::Default in RawDataCnvSvc
+    (leftover from GaudiSerialize development)
+  . Remove hard coded strings from /Event/Raw/... to RawEventLocation::Default
+  . Modified commitRawBanks in order to allow a different location of the 
+    raw banks in the TES.
+  . Bugfix in RawDataAddress.h.
+  . Fix structure of RawEventDescriptor to match memory layout
+    of MEP_SINGLE_EVT in MEP buffer for amd64 (int->long)
+
 </PRE><H1><A NAME=v22r9>2007-09-19 LHCbSys v22r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
