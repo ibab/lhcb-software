@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v1r1 2007-10-05 =======================
+! 2007-10-05 - Marco Cattaneo
+ - Adapted to standard usage of IOTRawBankDecoder interface
+
 ! 2007-09-26 Wouter Hulsbergen
  - added accessor to hits by station to IOTHitCreator
 

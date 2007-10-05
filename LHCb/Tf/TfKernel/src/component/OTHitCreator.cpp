@@ -52,7 +52,7 @@ namespace Tf
       void print(std::ostream& os) const ;
 
       // loading and clearing event
-      size_t loadHits(const OTRawBankDecoder& decoder, float tmin, float tmax) ;
+      size_t loadHits(const IOTRawBankDecoder& decoder, float tmin, float tmax) ;
       void clearEvent() { m_ownedhits.clear() ;  m_sortedhits.clear() ; m_isloaded = false ;}
       void setRange( OTHits::const_iterator begin, OTHits::const_iterator end ) { m_hitrange = OTHitRange(begin,end) ; }
       static size_t moduleIndexInRegion( LHCb::OTChannelID id ) { return id.module() + (id.quarter()%2) * 9 ; }
@@ -75,7 +75,7 @@ namespace Tf
     inline bool compareHitX( const Tf::OTHit* lhs, const Tf::OTHit* rhs) { return lhs->xT() < rhs->xT() ; }
 
     /// Decode this module
-    size_t OTModule::loadHits(const OTRawBankDecoder& decoder,
+    size_t OTModule::loadHits(const IOTRawBankDecoder& decoder,
                               float tmin, float tmax)
     {
       if( !m_isloaded ) {
@@ -199,7 +199,7 @@ namespace Tf
                              const std::string& name,
                              const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_otdecoder("OTRawBankDecoder"),
+    m_otdecoder( (IOTRawBankDecoder*)0 ),
     m_rejectOutOfTime(false),
     m_tmin(-8*Gaudi::Units::ns),
     m_tmax(56*Gaudi::Units::ns),
@@ -228,7 +228,7 @@ namespace Tf
     incSvc()->addListener(this, IncidentType::EndEvent);
 
     // tool handle to the otlitetimedecoder
-    sc = m_otdecoder.retrieve() ;
+    m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
 
     // get geometry and copy the hierarchy y to navigate hits. do we
     // want to delay this till the first event?
