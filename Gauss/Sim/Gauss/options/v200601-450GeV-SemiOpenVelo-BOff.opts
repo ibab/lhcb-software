@@ -18,8 +18,8 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-#include "$STDOPTS/DC06Conditions.opts"
-
+#include "$DDDBROOT/options/DC06.opts"
+ 
 // Set generator settings
 #include "$GAUSSOPTS/PilotRun.opts"
 
@@ -27,8 +27,12 @@
 EventClockSvc.FakeEventTime.StartTime   = 2*s;
 
 // VELO SemiOpen 
-#include "$GAUSSOPTS/SimVeloGeometry.opts"
-ApplicationMgr.Environment = { "CONDITIONS_PATH" : "$XMLCONDITIONSROOT/DDDB/Conditions/MainCatalog_SemiOpenVelo.xml" };
+GiGaGeo.UseAlignment = true;
+GiGaGeo.AlignAllDetectors = true;
+UpdateManagerSvc.ConditionsOverride += {
+  "Conditions/Alignment/Velo/VeloRight := double_v dPosXYZ = -15 0 0;",
+  "Conditions/Alignment/Velo/VeloLeft := double_v dPosXYZ = 15 0 0;"
+};
 
 // Magnetic Field Off, no crossing angle
 MagneticFieldSvc.UseConstantField = true;

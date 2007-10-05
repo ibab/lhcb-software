@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.24 2007-03-26 11:38:58 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.25 2007-10-05 15:20:32 gcorti Exp $
 
 /** @file
  *
@@ -40,8 +40,6 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 // Geometry to be simulated Detector by detector
 //----------------------------------------------------------------------------
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
-// Uncomment following line to enable misaligneable VELO
-//#include "$GAUSSOPTS/SimVeloGeometry.opts"
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};

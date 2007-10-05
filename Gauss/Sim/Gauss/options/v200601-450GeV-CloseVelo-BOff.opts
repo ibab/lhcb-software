@@ -18,7 +18,7 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 // Set generator settings
 #include "$GAUSSOPTS/PilotRun.opts"
@@ -27,8 +27,6 @@
 EventClockSvc.FakeEventTime.StartTime   = 3*s;
 
 // VELO Close is default
-#include "$GAUSSOPTS/SimVeloGeometry.opts"
-ApplicationMgr.Environment = { "CONDITIONS_PATH" : "$XMLCONDITIONSROOT/DDDB/Conditions/MainCatalog.xml" };
 
 // Magnetic Field Off, no crossing angle
 MagneticFieldSvc.UseConstantField = true;

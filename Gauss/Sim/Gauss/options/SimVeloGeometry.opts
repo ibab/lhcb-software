@@ -1,7 +1,15 @@
-// $Id: SimVeloGeometry.opts,v 1.4 2006-11-13 16:07:57 gcorti Exp $
+// $Id: SimVeloGeometry.opts,v 1.5 2007-10-05 15:20:32 gcorti Exp $
 
 /** @file
  *
+ *  WARNING::WARNING:: This file is NO LONGER NECESSARY!
+ *
+ *  IT IS NO LONGER NECESSARY TO EXPLICITELY PASS EACH DETECTOR ELEMENT
+ *  WITH MISALIGNED VALUES IN CONDDB (RESPECT TO WHAT IN THE GEOMETRY) IF
+ *  THE ASSOCIATED PVOLUME BELONGS TO A UNIQUE LVOLUME
+ * 
+ *  THIS IS THE CASE FOR THE VELO!!! Look at example in v2006-OpenVelo...
+ *  
  *  File containing the list of detector element to explicitely set
  *  to have misalignement in the VELO.
  *  Should be included from SimGeometry.opts instead of line
