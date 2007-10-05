@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.108 2007-10-04 16:16:11 xieyu Exp $
+! $Id: release.notes,v 1.109 2007-10-05 02:09:08 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-10-05 - Yuehong Xie
+  - src/OfflineVertexFitter.cpp
+   . change the chi2 definition so that when "useResonanceVertex" is true,
+     the chi2 and NDoF of no resonance are included for the mother. The 
+     chi2 and NDoF of the first resonance were included by mistake.
 
 ! 2007-10-02 - Yuehong Xie
   - src/OfflineVertexFitter.cpp
