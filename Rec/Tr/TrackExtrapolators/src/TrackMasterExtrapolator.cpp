@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.27 2007-09-05 13:15:06 wouter Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.28 2007-10-05 16:45:57 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -95,6 +95,12 @@ StatusCode TrackMasterExtrapolator::initialize()
   m_debugLevel = msgLevel( MSG::DEBUG );
   
   return StatusCode::SUCCESS;
+}
+
+StatusCode TrackMasterExtrapolator::finalize()
+{
+  m_materialLocator.release() ;
+  return TrackExtrapolator::finalize() ;
 }
 
 //=========================================================================

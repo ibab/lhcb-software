@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.h,v 1.15 2007-07-05 08:29:46 ebos Exp $
+// $Id: TrackMasterExtrapolator.h,v 1.16 2007-10-05 16:45:57 wouter Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H
 #define TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H 1
 
@@ -50,6 +50,9 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
   /// intialize
   virtual StatusCode initialize();
+
+  /// finalize
+  virtual StatusCode finalize();
 
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL
