@@ -1,4 +1,4 @@
-// $Id: BdlTool.h,v 1.2 2005-12-08 15:16:44 cattanem Exp $
+// $Id: BdlTool.h,v 1.3 2007-10-05 11:50:50 cattanem Exp $
 #ifndef MAGNET_BDLTOOL_H
 #define MAGNET_BDLTOOL_H 1
 
@@ -34,6 +34,9 @@ public:
 
   /// Initialize
   StatusCode initialize();
+
+  /// Finalize()
+  StatusCode finalize();
 
   /// Actual operator function
   double bdlIntegral(double ySlopeVelo,double zOrigin,double zVelo);

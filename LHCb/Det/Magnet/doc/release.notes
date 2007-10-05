@@ -4,18 +4,26 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-!====================== Magnet v3r5 2007-07-27 ===============================
+! 2007-10-05 - Marco Cattaneo
+ - In BdlTool, objects created in initialize now deleted in finalize, not in
+   destructor (needed when generating configurables)
+
 ! 2007-08-28 - Adlene Hicheur
-- AnalyticFieldSvc: fixed derivation of B field values from odd/even symmetries
+ - AnalyticFieldSvc: fixed derivation of B field values from odd/even symmetries
+
 ! 2007-07-27 - Adlene Hicheur
  - AnalyticFieldSvc: modified GetParam and Bcalculation to read new param.
  - Added Bdl testing method in MagFieldReader
  - Added some commented lines for new MagFieldReader use in job.opts
-!====================== Magnet v3r5 2007-06-14 ===============================
+
 ! 2007-06-14 - Adlene Hicheur
  - First import of AnalyticFieldSvc
  - Added Helper classes as well
  - Edited MagFieldReader and job options for the tests
+
+!====================== Magnet v3r6 2007-03-19 ===============================
+! 2007-03-19 - Marco Cattaneo
+ - Cleaned up StatusCodes
 
 !====================== Magnet v3r5 2007-03-05 ===============================
 ! 2007-03-05 - Marco Cattaneo

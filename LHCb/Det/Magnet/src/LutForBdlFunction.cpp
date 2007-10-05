@@ -4,8 +4,19 @@
 
 LutForBdlFunction::LutForBdlFunction(int nVar, int* nBinVar, double* minVar, double* maxVar) {
 
+    m_nVar = 0;
+    m_nPointVar = NULL;
+    m_minVar    = NULL;
+    m_maxVar    = NULL;
+    m_deltaVar  = NULL;
+    m_table     = NULL;
+
+    m_indexVector    = NULL;
+    m_variableVector = NULL;
+
   int i;
   int good_input = 1;
+
   // check arguments 
   if(nVar<1 || nVar>100) {
     good_input=0;

@@ -1,4 +1,4 @@
-// $Id: BdlTool.cpp,v 1.5 2007-02-26 14:50:47 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.6 2007-10-05 11:50:50 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -82,9 +82,15 @@ StatusCode BdlTool::initialize() {
 //=========================================================================
 //  Destructor
 //=========================================================================
-BdlTool::~BdlTool() {  
+BdlTool::~BdlTool() {};
+
+//=========================================================================
+//  Finalization
+//=========================================================================
+StatusCode BdlTool::finalize() {  
   delete m_lutBdl;
   delete m_lutZHalfBdl;
+  return GaudiTool::finalize();
 };
 //****************************************************************************
 double BdlTool::bdlIntegral(double ySlopeVelo, double zOrigin, double zVelo) {
