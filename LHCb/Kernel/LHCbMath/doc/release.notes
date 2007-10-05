@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r3 2007-10-02 ===========================
+! 2007-10-02 - Marco Cattaneo
+ - Remove implementations of cbrt from Power.h, now available in GaudiKernel
+
 !========================= LHCbMath v2r2 2007-07-10 ===========================
 ! 2007-07-10 - Juan Palacios
  - LHCbMath/GeomFun.icpp
