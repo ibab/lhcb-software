@@ -1,4 +1,4 @@
-// $Id: GetCaloHitsAlg.cpp,v 1.4 2007-01-12 15:24:49 ranjard Exp $
+// $Id: GetCaloHitsAlg.cpp,v 1.5 2007-10-05 07:24:42 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -100,7 +100,9 @@ StatusCode GetCaloHitsAlg::execute() {
   const GiGaKineRefTable & table = m_gigaKineCnvSvc -> table() ;
 
   const size_t numOfHits = hitCollection -> entries() ;
-  // Maybe add a hits -> reserve here ?
+  if ( numOfHits > 0 ) {
+    hits->reserve( numOfHits );
+  }
   
   // transform G4Hit in MCHits:
   // Loop over all hits in collection

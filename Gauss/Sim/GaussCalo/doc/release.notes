@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.68 2007-03-18 21:33:47 gcorti Exp $
+! $Id: release.notes,v 1.69 2007-10-05 07:24:42 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -7,6 +7,11 @@
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
+
+!===================== GaussCalo v9r0p1 2007-10-02 ============================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Introduce modification for Win32
+   . GetCaloHitsAlg.cpp
 
 !===================== GaussCalo v9r0 2007-03-18 ============================
 ! 2007-03-18 - Gloria Corti
