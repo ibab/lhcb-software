@@ -121,6 +121,15 @@
       </method>
 
       <method
+        type    = 'void'
+        name    = 'setMeasurement'
+        desc    = 'Set the measurement' 
+        const   = 'FALSE'>
+        <arg type = 'LHCb::Measurement' name='meas' />
+        <code> m_measurement = &amp;meas ; </code>
+      </method>
+
+      <method
         type    = 'LHCb::State &amp;'
         name    = 'state'
         desc    = 'Retrieve the reference to the state'>
