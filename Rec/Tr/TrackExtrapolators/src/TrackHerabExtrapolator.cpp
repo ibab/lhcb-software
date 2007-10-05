@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.21 2007-09-05 13:15:05 wouter Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.22 2007-10-05 16:46:35 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -73,7 +73,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               double zOld,
                                               double zNew,
                                               Gaudi::TrackMatrix* transMat,
-                                              LHCb::ParticleID pid )
+                                              LHCb::ParticleID /*pid*/ )
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;

@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.24 2007-08-22 11:38:24 ebos Exp $
+// $Id: TrackExtrapolator.cpp,v 1.25 2007-10-05 16:46:35 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -34,10 +34,10 @@ StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
 //=============================================================================
-StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
+StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& /* stateVec */,
                                          double zOld,
                                          double zNew,
-                                         Gaudi::TrackMatrix* transMat,
+                                         Gaudi::TrackMatrix* /* transMat */,
                                          LHCb::ParticleID pid )
 {
   StatusCode sc = StatusCode::FAILURE;

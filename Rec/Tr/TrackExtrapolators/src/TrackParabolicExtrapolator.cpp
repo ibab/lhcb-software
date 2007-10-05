@@ -66,7 +66,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                   double zOld,
                                                   double zNew,
                                                   Gaudi::TrackMatrix* transMat,
-                                                  LHCb::ParticleID pid )
+                                                  LHCb::ParticleID /*pid*/ )
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;

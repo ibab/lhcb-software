@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.21 2007-09-05 13:15:06 wouter Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.22 2007-10-05 16:46:35 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -23,7 +23,7 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                double zOld,
                                                double zNew,
                                                Gaudi::TrackMatrix* transMat,
-                                               LHCb::ParticleID pid )
+                                               LHCb::ParticleID /*pid*/ )
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
