@@ -1,5 +1,5 @@
 package EventSys
-version v23r8
+version v23r9
 
 branches doc cmt
 
@@ -11,11 +11,11 @@ use DigiEvent   v2r2    Event
 use RecEvent    v2r6    Event
 use L0Event     v16r5   Event
 use PhysEvent   v11r3   Event
-use DAQEvent    v7r5    Event
+use DAQEvent    v7r6    Event
 use GenEvent    v5r1    Event
 use EventAssoc  v4r2    Event
 use LinkerEvent v3r2    Event
-use TrackEvent  v4r6    Event
+use TrackEvent  v4r7    Event
 use PackedEvent v3r2    Event
 use VeloEvent   v16r0   Event
 use HltEvent    v8r4    Event
