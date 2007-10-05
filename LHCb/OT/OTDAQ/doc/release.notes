@@ -8,6 +8,7 @@ Package manager : J. Nardulli
    src directory.
  - Modified OTTimeCreator to propertly use IOTRawBankDecoder interface
  - Add dictionary generation for the tool interfaces
+ - Redo change of 06-15
 
 ! 2007-09-26 - Wouter Hulsbergen
  -  added OTRawBankDecoder::finalize
