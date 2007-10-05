@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2007-10-05 Wouter Hulsbergen
+ - make sensible check on t-station range in LongTrackReferenceCreator
+
 ! 2007-10-03 M Needham
  - Change deweighting to 2 in likelihood
 
