@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.1 2007-10-05 11:54:39 cattanem Exp $
+// $Id: OTRawBankDecoder.h,v 1.2 2007-10-05 22:48:23 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -29,8 +29,7 @@ namespace OTRawBankDecoderHelpers
  *
  *  Based on old OTTimeCreator by Jacopo Nardulli
  *
- *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
- *  @author Jacopo Nardulli
+ *  @author Jacopo Nardulli, Jan Amoraal, Wouter Hulsbergen
  *
  *  @date   2007-05-30
  */

@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.3 2007-10-05 11:54:38 cattanem Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.4 2007-10-05 22:48:23 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -183,10 +183,10 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   // Loop over vector of banks (The Buffer)
   size_t numgolheaders(0) ;
   bool decodingerror(false) ;
-  
   for (std::vector<RawBank*>::const_iterator  ibank = OTBanks.begin();
-       ibank != OTBanks.end() && !decodingerror ; ++ibank) {
+       ibank != OTBanks.end() ; ++ibank) {
     // get bank version
+    bool bankdecodingerror(false) ;
     int bVersion = (*ibank)->version();
     unsigned int nTell1 = 0u;
     if (bVersion == OTBankVersion::v1) {
@@ -199,10 +199,10 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
     } else {
       error() << "Cannot decode OT raw buffer bank version "
 	      << bVersion << " with this version of OTDAQ" << endmsg;
-      decodingerror = true ;
+      bankdecodingerror = true ;
     }
     
-    if( !decodingerror ) {
+    if( !bankdecodingerror ) {
       
       if (msgLevel(MSG::DEBUG))
 	debug() << " Bank Nr " << (*ibank)->sourceID() << " with Size "
@@ -211,23 +211,31 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
       const unsigned int* begin = (*ibank)->data() + nTell1 ;
       const unsigned int* end   = (*ibank)->data() + (*ibank)->size()/4 ;
       const unsigned int* idata ;
-      for( idata = begin ; idata < end; ++idata ) {
+      for( idata = begin ; idata < end && !bankdecodingerror; ++idata ) {
 	LHCb::GolHeader golHeader(*idata) ;
 	unsigned int size = golHeader.size();
 	unsigned int station = golHeader.station();
 	unsigned int layer = golHeader.layer();
 	unsigned int quarter = golHeader.quarter();
 	unsigned int module = golHeader.module();
-	m_detectordata->module(station,layer,quarter,module).setGolHeader(golHeader,idata+1) ;
+	if(*idata==0 || station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
+	  error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
+		  << station << "," << layer << "," << quarter << "," << module << "). " 
+		  << "skipping bank nr = " <<(*ibank)->sourceID() << " with size = "
+		  << (*ibank)->size()/4 << "." << endmsg ;
+	  bankdecodingerror = true ;
+	} else {
+	  m_detectordata->module(station,layer,quarter,module).setGolHeader(golHeader,idata+1) ;
+	  ++numgolheaders ;
+	}
 	idata += size ;
-	++numgolheaders ;
-	
       }
-      if(idata != end) {
-	error() << "OTRawBankDecoder: data pointer mismatch: " << idata << " " << end << endreq ;
-	decodingerror = true ;
+      if(!bankdecodingerror && idata != end) {
+	error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
+	bankdecodingerror = true ;
       }
     }
+    decodingerror |= bankdecodingerror ;
   }
   
   // make sure we don't call this until the next event
@@ -308,10 +316,10 @@ size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduleda
 	
 	// format statement is always evaluated so check msg level
 	if (msgLevel(MSG::DEBUG)) {
-	  debug() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, "
-					  "nextOtisID %d, nextStrawID %d, nextTime %d",
-					  firstOtisID, firstChannelID, firstTime,
-					  nextOtisID, nextChannelID, nextTime) << endmsg;
+	  verbose() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, "
+					    "nextOtisID %d, nextStrawID %d, nextTime %d",
+					    firstOtisID, firstChannelID, firstTime,
+					    nextOtisID, nextChannelID, nextTime) << endmsg;
 	}
 	
 	//Get First ChannelID
