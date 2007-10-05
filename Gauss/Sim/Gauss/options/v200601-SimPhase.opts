@@ -16,12 +16,6 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
-//--------------------------------------------------------------------------
-// Switch off monitors of detectors in production
-//--------------------------------------------------------------------------
-// SimMonitor.Members  -= { "GaudiSequencer/DetectorsMonitor" };
-// GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
-// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
  
