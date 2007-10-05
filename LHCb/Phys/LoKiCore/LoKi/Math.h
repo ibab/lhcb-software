@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.7 2007-07-30 09:54:35 ibelyaev Exp $
+// $Id: Math.h,v 1.8 2007-10-05 13:03:03 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -14,6 +14,7 @@
 #include "LoKi/Functions.h"
 #include "LoKi/Primitives.h"
 #include "LoKi/Power.h"
+#include "GaudiKernel/cbrt.h"
 // ============================================================================
 /** @file
  *
@@ -113,7 +114,7 @@ namespace LoKi
   template <class TYPE> 
   inline LoKi::ComposeFunction<TYPE>
   cbrt ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( Gaudi::Math::cbrt , fun , "cbrt" ) ; }
+  { return LoKi::ComposeFunction<TYPE>( ::cbrt , fun , "cbrt" ) ; }
   // ==========================================================================
   /*  asine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
