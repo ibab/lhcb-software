@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r7 2007-10-04 ==========================
 ! 2007-09-27 - Eduardo Rodrigues
  - more improvements to fillStream method
  - re-corrected a bug re-introduced with latest additions to fillStream method
