@@ -1,7 +1,7 @@
 package OTDAQ
 version v5r3
 
-branches OTDAQ cmt doc src options xml Event
+branches OTDAQ cmt dict doc src options xml Event
 
 use GaudiAlg    v*
 use DAQEvent	v*      Event
@@ -23,3 +23,13 @@ apply_pattern component_library library=OTDAQ
 #================== linker library =======================
 library OTDAQLib   ../src/OTLiteTime.cpp 
 apply_pattern linker_library library=OTDAQLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                             \
+                  dictionary=OTDAQ                              \
+                  headerfiles=$(OTDAQROOT)/dict/OTDAQDict.h     \
+                  selectionfile=$(OTDAQROOT)/dict/OTDAQDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro OTDAQDict_use_linkopts $(use_linkopts)

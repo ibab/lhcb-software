@@ -1,12 +1,11 @@
-// $Id: OTRawBankDecoder.cpp,v 1.2 2007-09-26 13:07:54 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.3 2007-10-05 11:54:38 cattanem Exp $
 // Include files
 #include <algorithm>
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Detector
 #include "OTDet/DeOTDetector.h"
@@ -28,9 +27,7 @@
 #include "OTDAQ/IOTReadOutWindow.h"
 
 // local
-#include "OTDAQ/OTRawBankDecoder.h"
-
-#include "GaudiKernel/ChronoEntity.h"
+#include "OTRawBankDecoder.h"
 
 namespace OTRawBankDecoderHelpers
 {
@@ -102,7 +99,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
     m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
     m_detectordata(0)
 {
-  declareInterface<OTRawBankDecoder>(this);
+  declareInterface<IOTRawBankDecoder>(this);
   declareProperty("countsPerBX", m_countsPerBX );
   declareProperty("numberOfBX", m_numberOfBX );
   declareProperty("timePerBX", m_timePerBX );
@@ -136,7 +133,6 @@ StatusCode OTRawBankDecoder::initialize()
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
-  release( aReadOutWindow );
   
   m_nsPerTdcCount = m_timePerBX/ double(m_countsPerBX);
   OTLiteTime::setNsPerTdcCount( m_nsPerTdcCount ) ;

@@ -1,22 +1,16 @@
-// $Id: OTTimeCreator.h,v 1.11 2007-09-07 13:19:21 wouter Exp $
+// $Id: OTTimeCreator.h,v 1.12 2007-10-05 11:54:39 cattanem Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/ToolHandle.h"
 
 // Kernel
 #include "Kernel/OTChannelID.h"
-#include "OTDAQ/OTRawBankDecoder.h"
-
 
 // forward declarations
+class IOTRawBankDecoder;
 class DeOTDetector;
-namespace LHCb 
-{
-  class OTTime;
-}
 
 /** @class OTTimeCreator OTTimeCreator.h OTDAQ/OTTimeCreator.h
  *  
@@ -43,8 +37,7 @@ private:
   std::string m_timeLocation;
   bool m_tofCorrection;                     ///< Time of Flight Correction
   DeOTDetector* m_tracker;                  ///< Pointer to XML geometry 
-  ToolHandle<OTRawBankDecoder> m_rawbankdecoder ;
+  IOTRawBankDecoder* m_rawBankDecoder ;     ///< Pointer to OTRawBankDecoder tool
 };
 
 #endif // OTDAQ_OTTIMECREATOR_H
-

@@ -1,12 +1,11 @@
-// $Id: OTRawBankDecoder.h,v 1.2 2007-09-26 13:07:54 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.1 2007-10-05 11:54:39 cattanem Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-//#include "OTDAQ/IDecodeOTTimeOnDemand.h"            // Interface
-#include "GaudiKernel/ChronoEntity.h"
+#include "OTDAQ/IOTRawBankDecoder.h"            // Interface
 #include "GaudiKernel/IIncidentListener.h"
 
 // Kernel
@@ -15,11 +14,6 @@
 
 // forward declarations
 class DeOTDetector;
-
-/// Interface ID
-
-static const InterfaceID IID_OTRawBankDecoder( "OTRawBankDecoder", 1, 0 );
-
 
 namespace OTRawBankDecoderHelpers
 {
@@ -42,12 +36,11 @@ namespace OTRawBankDecoderHelpers
  */
 
 class OTRawBankDecoder : public GaudiTool,
+       virtual public IOTRawBankDecoder,
 			 virtual public IIncidentListener
 {
   
 public: 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_OTRawBankDecoder ; }
   
   /// Standard constructor
   OTRawBankDecoder( const std::string& type,
@@ -71,11 +64,6 @@ public:
   
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
-  
-  /// Release a tool of this type. Necessary because of a bug in
-  /// GaudiTools, which will be fixed soon.
-  virtual long unsigned int release() { return AlgTool::release() ; }
-  virtual StatusCode release( const IInterface* interface) const { return GaudiCommon<AlgTool>::release(interface) ; }
   
 private:
   virtual void handle ( const Incident& incident );
