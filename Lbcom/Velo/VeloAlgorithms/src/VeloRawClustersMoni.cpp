@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.6 2007-10-06 16:56:37 szumlat Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.7 2007-10-06 17:11:10 szumlat Exp $
 
 // Include files 
 
@@ -183,6 +183,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
   if(!contSize){
     return Warning( "Empty cluster container! - Skiping monitor",
                     StatusCode::SUCCESS );
+  }
   m_nRawClusters+=double(contSize);
   m_nRawClusters2+=double(contSize*contSize);
   plot(contSize, 100,
@@ -389,8 +390,4 @@ StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
   //
   return ( StatusCode::SUCCESS );
 }
-
-    
-  
-    
-    
+//--
