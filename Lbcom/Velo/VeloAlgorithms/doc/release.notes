@@ -1,7 +1,8 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
-
+! 2007-10-06 - Tomasz Szumlak
+ - ultimate unchecked StatusCode fix
 ! 2007-09-24 - Marco Cattaneo
  - Clean up usage of Warning() and Error() in VeloRawClustersMoni.cpp
 

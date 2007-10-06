@@ -1,4 +1,5 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.5 2007-09-24 06:12:58 cattanem Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.6 2007-10-06 16:56:37 szumlat Exp $
+
 // Include files 
 
 // from Gaudi
@@ -182,7 +183,6 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
   if(!contSize){
     return Warning( "Empty cluster container! - Skiping monitor",
                     StatusCode::SUCCESS );
-  }
   m_nRawClusters+=double(contSize);
   m_nRawClusters2+=double(contSize*contSize);
   plot(contSize, 100,
@@ -210,7 +210,11 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     }
     // find type of given cluster
     bool signal=false, noise=false, other=false;
-    clusterType(cluster, signal, noise, other);
+    StatusCode typeStatus=clusterType(cluster, signal, noise, other);
+    if(typeStatus.isFailure()){
+      Warning(" ==> Unknown cluster type! ");
+      return ( typeStatus );
+    }
     //
     // method adcValue(stripNumber) returns value of the ADC count
     // from given strip, adcValue() calls stripValues() method which
