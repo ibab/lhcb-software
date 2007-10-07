@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.58 2007-10-05 13:03:03 cattanem Exp $ 
+! $Id: release.notes,v 1.59 2007-10-07 13:45:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-10-07 - Vanya BELYAEV
+
+ - cmt/requirements 
+     use new pattern for python modules 
+
 
 !=========================== LoKiCore v6r1 2007-10-02 ======================
 ! 2007-10-02 - Marco Cattaneo
@@ -379,6 +385,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.58  2007/10/05 13:03:03  cattanem
+! use GaudiKernel implementation of cbrt
+!
 ! Revision 1.57  2007/09/04 12:11:25  cattanem
 ! v6r0
 !
