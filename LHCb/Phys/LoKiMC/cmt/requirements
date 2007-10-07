@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.17 2007-08-20 13:20:12 ibelyaev Exp $ 
+# $Id: requirements,v 1.18 2007-10-07 13:46:09 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiMC
-version           v6r0
+version           v6r1
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -15,8 +15,9 @@ use               MCInterfaces  v*    Kernel
 use               LoKiCore      v*    Phys 
 
 # =============== own includes ===============================================
-apply_pattern install_more_includes more=LoKi
-      
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules 
+   
 # =============== constituents ===============================================
 library           LoKiMCLib ../src/*.cpp 
 library           LoKiMC    ../src/Components/*.cpp 
