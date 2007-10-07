@@ -1,4 +1,4 @@
-// $Id: OTFillEventFromOTTime.cpp,v 1.7 2007-10-07 20:51:29 wouter Exp $
+// $Id: OTFillEventFromOTTime.cpp,v 1.8 2007-10-07 20:53:30 wouter Exp $
 // Include files
 
 // Gaudi
@@ -94,8 +94,7 @@ StatusCode OTFillEventFromOTTime::execute()
 
     dataBank* aBank = new dataBank();
     // Empty Bank -- Still sending all the Headers
-    //(aTime->empty())?convertToRAWEmptyBank(aBank):
-    convertToRAWDataBank(aTime, aBank);
+    (aTime->empty())?convertToRAWEmptyBank(aBank):convertToRAWDataBank(aTime, aBank);
        
     // put converted vOTime into final buffer container
     finalBuf->push_back(aBank);
