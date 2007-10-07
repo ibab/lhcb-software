@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.4 2007-10-05 22:48:23 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.5 2007-10-07 20:51:29 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -62,7 +62,8 @@ namespace OTRawBankDecoderHelpers
       for(iterator imod = begin(); imod!= end(); ++imod)
 	imod->clearevent() ;
     }
-    Module& module(int station, int layer, int quarter, int module) {
+    Module& module(const unsigned int station, const unsigned int layer, 
+		   const unsigned int quarter, const unsigned int module) {
       return m_modules[station-1][layer][quarter][module-1] ;
     }
     bool golHeadersLoaded() const { return m_golHeadersLoaded ; }
@@ -213,22 +214,24 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
       const unsigned int* idata ;
       for( idata = begin ; idata < end && !bankdecodingerror; ++idata ) {
 	LHCb::GolHeader golHeader(*idata) ;
-	unsigned int size = golHeader.size();
-	unsigned int station = golHeader.station();
-	unsigned int layer = golHeader.layer();
-	unsigned int quarter = golHeader.quarter();
-	unsigned int module = golHeader.module();
-	if(*idata==0 || station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
-	  error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
-		  << station << "," << layer << "," << quarter << "," << module << "). " 
-		  << "skipping bank nr = " <<(*ibank)->sourceID() << " with size = "
-		  << (*ibank)->size()/4 << "." << endmsg ;
-	  bankdecodingerror = true ;
-	} else {
-	  m_detectordata->module(station,layer,quarter,module).setGolHeader(golHeader,idata+1) ;
-	  ++numgolheaders ;
+	const unsigned int size = golHeader.size();
+	if(size != 0 ) {
+	  const unsigned int station = golHeader.station();
+	  const unsigned int layer = golHeader.layer();
+	  const unsigned int quarter = golHeader.quarter();
+	  const unsigned int module = golHeader.module();
+	  if(station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
+	    error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
+		    << station << "," << layer << "," << quarter << "," << module << "). " 
+		    << "skipping bank nr = " <<(*ibank)->sourceID() << " with size = "
+		    << (*ibank)->size()/4 << "." << endmsg ;
+	    bankdecodingerror = true ;
+	  } else {
+	    m_detectordata->module(station,layer,quarter,module).setGolHeader(golHeader,idata+1) ;
+	    ++numgolheaders ;
+	  }
+	  idata += size ;
 	}
-	idata += size ;
       }
       if(!bankdecodingerror && idata != end) {
 	error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
