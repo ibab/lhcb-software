@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.22 2007-08-20 13:33:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2007-10-07 13:46:39 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v6r0
+version           v6r1
 
 # =============== structure ==================================================
 branches          cmt doc src options dict python LoKi
@@ -23,8 +23,9 @@ use               LinkerEvent        v* Event
 use               DaVinciMCKernel    v* Phys   
 
 # =============== own includes ===============================================
-apply_pattern install_more_includes more=LoKi
-      
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules 
+
 # =============== constituents ===============================================
 library           LoKiPhysMCLib ../src/*.cpp 
 library           LoKiPhysMC    ../src/Components/*.cpp 

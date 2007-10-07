@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.32 2007-09-04 13:35:52 cattanem Exp $ 
+! $Id: release.notes,v 1.33 2007-10-07 13:46:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-10-07 - Vanya BELYAEV
+
+ - cmt/requirements 
+    increment version to v6r1 
+    use new pattern for python modules 
 
 !========================== LoKiPhysMC v6r0 2007-09-04 ========================
 ! 2007-08-20 - Vanya BELYAEV

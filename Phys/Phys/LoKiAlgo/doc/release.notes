@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.22 2007-09-04 13:39:58 cattanem Exp $ 
+! $Id: release.notes,v 1.23 2007-10-07 13:47:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2007-10-07 - Vanya BELYAEV
+
+ - cmt/requirements 
+    increment version to v6r1 
+    use new pattern for python modules 
 
 !========================== LoKiAlgo v6r0 2007-09-04 ==========================
 ! 2007-08-20 - Vanya BELYAEV

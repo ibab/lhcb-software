@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.5 2007-08-20 13:26:09 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2007-10-07 13:46:51 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiArrayFunctors
-version           v6r0
+version           v6r1
 
 # ============================================================================
 branches          cmt doc src dict python LoKi 
@@ -13,8 +13,9 @@ branches          cmt doc src dict python LoKi
 use               LoKiPhys     v*    Phys 
 
 # ================ own includes ===============================================
-apply_pattern install_more_includes more=LoKi
-
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules
+ 
 # =============== constituents ===============================================
 library           LoKiArrayFunctorsLib ../src/*.cpp 
 library           LoKiArrayFunctors    ../src/Components/*.cpp 
