@@ -1,11 +1,12 @@
-$Id: release.notes,v 1.8 2007-10-07 13:46:51 ibelyaev Exp $ 
+$Id: release.notes,v 1.9 2007-10-08 06:50:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
-! 2007-10-07 - Vanya BELYAEV
 
+!======================== LoKiArrayFunctors v6r1 2007-10-07 ===================
+! 2007-10-07 - Vanya BELYAEV
  - cmt/requirements 
     increment version to v6r1 
     use new pattern for python modules 

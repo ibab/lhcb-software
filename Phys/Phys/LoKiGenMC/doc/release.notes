@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.23 2007-10-07 13:46:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.24 2007-10-08 06:52:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,8 +15,8 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiGenMC v6r1 2007-10-08 =========================
 ! 2007-10-07 - Vanya BELYAEV
-
  - cmt/requirements 
     increment version to v6r1 
     use new pattern for python modules 
@@ -382,6 +382,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.23  2007/10/07 13:46:01  ibelyaev
+!  v6r1: add install_python_modules pattern
+!
 ! Revision 1.22  2007/09/04 13:17:55  cattanem
 ! v6r0
 !
