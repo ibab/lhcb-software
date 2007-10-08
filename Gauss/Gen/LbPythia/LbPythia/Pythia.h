@@ -1,4 +1,4 @@
-// $Id: Pythia.h,v 1.4 2006-10-04 14:16:51 ibelyaev Exp $
+// $Id: Pythia.h,v 1.5 2007-10-08 16:52:00 gcorti Exp $
 #ifndef LBPYTHIA_PYTHIA_H 
 #define LBPYTHIA_PYTHIA_H 1
 // =====================================================================
@@ -51,6 +51,7 @@ public:
   static void PyStat( int val ) ;
   static void PyEdit( int val ) ;
   static void PyExec( ) ;
+  static void PyAddp(int ip, int kf, double energy, double theta, double phi);
   /** interface to FORTRAN program PYGIVE, which allows to 
    *  set/modify the variables from Pythia common block in a safe way
    */

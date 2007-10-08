@@ -4,6 +4,24 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v5r3 2007-10-08 ==========================
+! 2007-10-08 - Gloria Corti for Neal Guiessaz
+ - Introduce new code to generate specific particle decays related to Jet
+   production. The code uses pythia6 and for this a new fortran subroutine
+   has been made (PyAddp) to add information to Pythia regarding the 
+   event before processing it. A new IProductionTool called JetProduction
+   has been introduced. 
+ - A description on how to use the JetProduction tool and why can be found
+   in 
+   <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/JetProduction">this
+   web page</a>
+ - Code affected
+   . src/component/JetProduction.{h,cpp} - NEW production tool
+   . src/component/LbPythia_load.cpp     - Add new tool declaration (DC06 comp)
+   . src/Lib/pyaddp.F                    - NEW routine to use with pythia6
+   . {LbPythia,src/Lib}/Pythia.{h,cpp}   - Add declaration to use new fortran
+                                           routine
+
 !========================= LbPythia v5r2 2007-08-22 ==========================
 ! 2007-07-31 - Vanya BELYAEV 
  - Couple of tiny fixes to allow to read ALPGEN partonic events:

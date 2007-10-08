@@ -1,4 +1,4 @@
-// $Id: Pythia.cpp,v 1.4 2006-10-04 14:16:51 ibelyaev Exp $
+// $Id: Pythia.cpp,v 1.5 2007-10-08 16:52:00 gcorti Exp $
 // Include files
 
 // local
@@ -216,6 +216,24 @@ void Pythia::PyExec( ) {
   pyexec_ ( ) ;
 #endif
 }
+
+//PYADDP Fortran function
+extern "C" {
+#ifdef WIN32
+  void __stdcall PYADDP( int *, int *, double *, double *, double * ) ;
+#else
+  void pyaddp_ ( int *, int *, double *, double *, double * ) ;
+#endif
+}
+
+void Pythia::PyAddp( int ip, int kf, double energy, double theta, double phi ) {
+#ifdef WIN32
+  PYADDP( &ip, &kf, &energy, &theta, &phi ) ;
+#else
+  pyaddp_ ( &ip, &kf, &energy, &theta, &phi ) ;
+#endif
+}
+
 
 // ============================================================================
 /// PYGIVE Fortran function
