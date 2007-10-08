@@ -1,9 +1,12 @@
-// $Id: Pythia8Production.cpp,v 1.1.1.1 2007-07-31 17:02:19 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.2 2007-10-08 10:13:30 robbep Exp $
 
 // Include files
 
 // local
 #include "Pythia8Production.h"
+
+// from SEAL
+#include "SealBase/ShellEnvironment.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -134,9 +137,14 @@ StatusCode Pythia8Production::initialize( ) {
   //Initializing the beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
   
+  // Get XMLDOC path
+  std::string xmlpath = "" ;
+  if ( seal::ShellEnvironment().has("PYTHIA8XML") ) 
+    xmlpath  = seal::ShellEnvironment().get( "PYTHIA8XML" ) ;
+
   //Initializing the pythia object
   m_pythia = 
-    new Pythia8::Pythia("/users/babar/aquentin/cmtuser/Gauss_v30r3/pythia8080/xmldoc/");
+    new Pythia8::Pythia( xmlpath );
   
   //Setting the random generator
   IRndmGenSvc * randSvc( 0 ) ;
