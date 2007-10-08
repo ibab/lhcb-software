@@ -4,6 +4,12 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2007-10-08 - Patrick Robbe
+ - cmt/requirements: add new environment variable to point to xmldoc repository
+   of Pythia8/GENSER distribution
+ - src/component/Pythia8Production.cpp: use new PYTHIA8XML variable to declare
+   Pythia8 engine.
+
 !=========================== LbPythia8 2007-10-04 ============================
 ! 2007-10-04 - Gloria Corti
  - Introduce use of pythia8 in this package rather than in GENSER where
