@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r1 2007-10-04 =======================
+! 2007-10-04 - Marco Cattaneo
+ - Remove unneccessary (and wrong!) release() of UMS from TT/ITReadoutTool.cpp
+
 !=============================== STDAQ v3r0 2007-04-19 =======================
 ! 2007-04-19 - Marco Cattaneo
  - Removed obsolete STDAQ_load.cpp file

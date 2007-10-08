@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.4 2006-12-18 10:49:45 cattanem Exp $
+// $Id: ITReadoutTool.cpp,v 1.5 2007-10-08 14:57:31 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -50,7 +50,6 @@ StatusCode ITReadoutTool::initialize() {
 
   // force first updates
   sc = ums->update(this);
-  ums->release();
   if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
 
   if (m_printMapping == true){
