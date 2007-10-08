@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r7 2007-10-05 ====================
 ! 2007-10-02 - Patrick Koppenburg for Vanya Belyaev
  - DVAlgorithm.cpp: small change to get correct statistics of 
    setFilterPassed(bool)
