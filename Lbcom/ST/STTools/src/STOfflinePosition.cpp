@@ -1,9 +1,8 @@
-// $Id: STOfflinePosition.cpp,v 1.12 2007-07-05 12:22:16 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.13 2007-10-08 14:55:22 cattanem Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
-
-#include "LHCbMath/Power.h"
+#include "GaudiKernel/cbrt.h"  // for cbrt on Windows
  
 // Event
 #include "Event/STDigit.h"
@@ -110,10 +109,10 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const
 
   if (m_sharingCorr > 0.0) {
     if (newDist<0.) {
-      newDist = -Gaudi::Math::cbrt(-newDist/m_sharingCorr);
+      newDist = -cbrt(-newDist/m_sharingCorr);
     }
     else {
-      newDist = Gaudi::Math::cbrt(newDist/m_sharingCorr);
+      newDist = cbrt(newDist/m_sharingCorr);
     }
   } // apply corr
 

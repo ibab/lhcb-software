@@ -2,6 +2,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r4 2007-10-03 ==========================
+! 2007-10-03 - Marco Cattaneo
+ - Get cbrt from GaudiKernel/cbrt.h rather than LHCbMath/Power.h
+ - Remove LHCbMath dependency
+
 !=========================== STTools v3r3 2007-09-18 ==========================
 ! 2007-09-05 Wouter Hulsbergen
  - Added double->int cast in STFun::position to remove strange optimization
