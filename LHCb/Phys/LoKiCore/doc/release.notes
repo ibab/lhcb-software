@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.59 2007-10-07 13:45:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.60 2007-10-08 06:44:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,13 +15,11 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v6r1 2007-10-08 ======================
 ! 2007-10-07 - Vanya BELYAEV
-
  - cmt/requirements 
      use new pattern for python modules 
 
-
-!=========================== LoKiCore v6r1 2007-10-02 ======================
 ! 2007-10-02 - Marco Cattaneo
  - In LoKi/Math.h, interface to GaudiKernel/cbrt.h rather Gaudi::Math::cbrt
 
@@ -385,6 +383,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.59  2007/10/07 13:45:33  ibelyaev
+!  add install_python_modules pattern
+!
 ! Revision 1.58  2007/10/05 13:03:03  cattanem
 ! use GaudiKernel implementation of cbrt
 !
