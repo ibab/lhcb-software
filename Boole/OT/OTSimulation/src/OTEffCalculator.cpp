@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.12 2007-06-27 15:22:24 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.13 2007-10-08 14:46:20 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -31,7 +31,7 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
                                  const std::string& name, 
                                  const IInterface* parent) : 
   GaudiTool( type, name, parent ),
-  m_genEff(0),
+  m_genEff( (IRndmGen*)0 ),
   m_cellRadius(2.5*Gaudi::Units::mm) 
 { 
   // constructor
