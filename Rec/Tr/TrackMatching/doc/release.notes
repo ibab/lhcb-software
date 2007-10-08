@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2007-10-08 Stephanie Hansmann-Menzemer (for Adrian Perieanu)
+ - add variable to track for NN ghost ID
 
 ! 2007-09-30 M. Needham
  - Change cut on match chi^2
