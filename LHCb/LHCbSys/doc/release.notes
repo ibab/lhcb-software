@@ -5,14 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r10>2007-10-05 LHCbSys v22r10</A></H1><PRE>
+</PRE><H1><A NAME=v22r10>2007-10-08 LHCbSys v22r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r9, LHCbMath v2r3, DetSys v10r1, DetDesc v18r1,
     DetDescSvc v1r14, Magnet v3r6p1, VeloDet v12r2, DetDescChecks v4r4,
     EventSys v23r9, TrackEvent v4r7, DAQEvent v7r6, DAQSys v3r5, OTDAQ v5r5,
-    LoKiCore v6r1, TrackInterfaces v3r9, SimComponents v2r6, DaVinciKernel v6r7,
-    TfKernel v1r1, MDF v2r5
+    TrackInterfaces v3r9, SimComponents v2r6, DaVinciKernel v6r7, TfKernel v1r1,
+    MDF v2r5, LoKi v6r1, LoKiAlgoMC v6r1, LoKiCore v6r1, LoKiGenMC v6r1, 
+    LoKiPhys v6r1, LoKiAlgo v6r1, LoKiArrayFunctors v6r1, LoKiGen v6r1,
+    LoKiMC v6r1, LoKiPhysMC v6r1
 
 - In LHCbMath v2r3:
   . Remove implementations of cbrt from Power.h, now available in GaudiKernel
@@ -58,9 +60,6 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
   . Added OTRawBankDecoder::finalize
   . Added dictionaries for the tool interfaces
 
-- In LoKiCore v6r1
-  . Adapt to removal of Gaudi::Math::cbrt
-
 - In TrackInterfaces v3r9
   . Add dependency on DetDesc
   . Added method to TrackProjector interface
@@ -86,6 +85,13 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
   . Bugfix in RawDataAddress.h.
   . Fix structure of RawEventDescriptor to match memory layout
     of MEP_SINGLE_EVT in MEP buffer for amd64 (int->long)
+
+- In LoKiCore v6r1
+  . Adapt to removal of Gaudi::Math::cbrt
+
+- In LoKiAlgoMC v6r1, LoKiCore v6r1, LoKiGenMC v6r1, LoKiPhys v6r1, LoKiMC v6r1,
+     LoKiAlgo v6r1, LoKiArrayFunctors v6r1, LoKiGen v6r1, LoKiPhysMC v6r1
+  . Use new pattern for python modules
 
 </PRE><H1><A NAME=v22r9>2007-09-19 LHCbSys v22r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
