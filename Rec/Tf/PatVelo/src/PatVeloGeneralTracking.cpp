@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.5 2007-09-17 17:40:54 krinnert Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.6 2007-10-08 17:06:05 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -140,7 +140,8 @@ buildAll3DClusters( PointsContainer & createdPoints ) {
     if( (*phiStationIter)->empty(0) && 
         (*phiStationIter)->empty(1) ) continue; // no Phi clusters here!
 
-    for ( unsigned int zone = 0 ; (*rStationReverseIter)->nZones() > zone ; ++zone ) {
+    for ( unsigned int zone = 0 ; 
+	  (*rStationReverseIter)->nZones() > zone ; ++zone ) {
       if( (*rStationReverseIter)->empty(zone) ) continue; // no R clusters
       build3DClusters(zone,(*rStationReverseIter),(*phiStationIter),
           createdPoints);
@@ -163,7 +164,9 @@ build3DClusters(int zone,
       iRHit != rHits.end() ; ++iRHit ) {
 
     // if cluster already used by something optionally skip
-    if ( !m_allCoords && (*iRHit)->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ) ) continue; 
+    if ( !m_allCoords && 
+	 (*iRHit)->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ) ) 
+      continue; 
 
     double r = (*iRHit)->coordHalfBox();
 
@@ -517,7 +520,8 @@ extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
       if( ! m_angleUtils.contains(phiRange,trackPhi) ) continue;
       PatVeloRHit* rHit = 
         rStation->closestHitHalfBox(sector, trackR, m_singleClusTol);
-      if(rHit && !rHit->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ)) {
+      if(rHit && 
+	 !rHit->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ)) {
         newTrack->addRCoord(rHit);
         rHit->hit()->setUsed(true);
       }
@@ -589,7 +593,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
         (*iTr)->point().z() > (*iTr)->meanZ() ) (*iTr)->setBackward(true);
 
     // check if spillover
-    if (m_PatVeloTrackTool->isSpilloverTrack(*iTr) == true) {
+    if (m_PatVeloTrackTool->isSpilloverTrack(*iTr)) {
       if(m_isVerbose) verbose() << "Spillover track removed" << endmsg;
       continue;
     }

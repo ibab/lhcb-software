@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.6 2007-09-17 17:40:54 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.7 2007-10-08 17:06:05 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -48,6 +48,7 @@ namespace Tf {
       declareProperty( "forwardStepError", m_forwardStepError = 0.00035   );
       declareProperty( "MaxChiSqDof"     , m_chiSqDofMax      = 4.0       );
       declareProperty( "CleanOverlaps"   , m_cleanOverlaps    = true      );
+      declareProperty( "NMissedFirst"    , m_NMissedFirst     = 4         );
 
     }
   //=============================================================================
@@ -77,6 +78,7 @@ namespace Tf {
       << "AdjacentSectors      = " << (m_adjacentSectors ? "True" : "False")
       << endreq
       << "FractionPhiMerge     = " << m_fractionPhiMerge    << endreq
+      << "NMissedFirst         = " << m_NMissedFirst        << endreq
       << "MaxChiSqDof          = " << m_chiSqDofMax         << endreq
       << "StepError            = " << m_stepError           << endreq
       << "ForwardStepError     = " << m_forwardStepError    << endreq
@@ -363,7 +365,7 @@ namespace Tf {
 
       //=== Second or third pair of sensors and a matching phi cluster
       //    Create a new phiList, if not used in existing phiList
-      if ( !found && nStationsTried <= 3 ) {
+      if ( !found && nStationsTried <= m_NMissedFirst ) {
         if ( (*itP)->hit()->isUsed() ) continue;
         m_phiPt.addEntry(phi, *itP);
         if ( msgLevel(MSG::VERBOSE) ) {

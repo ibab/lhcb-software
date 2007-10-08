@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.3 2007-09-17 14:13:10 krinnert Exp $
+// $Id: PatRZTrack.cpp,v 1.4 2007-10-08 17:06:04 dhcroft Exp $
 // Include files 
 
 // local
@@ -21,6 +21,7 @@ namespace Tf {
     m_sr(0.),
     m_sz(0.),
     m_srz(0.),
+    m_sr2(0.),
     m_sz2(0.),
     m_valid(true),
     m_zone(0),  
@@ -45,6 +46,7 @@ namespace Tf {
     m_sr  = m_sr  + w * r;
     m_sz  = m_sz  + w * z;
     m_srz = m_srz + w * r * z;
+    m_sr2 = m_sr2 + w * r * r;
     m_sz2 = m_sz2 + w * z * z;
 
     double den = ( m_sz2 * m_s0 - m_sz * m_sz );

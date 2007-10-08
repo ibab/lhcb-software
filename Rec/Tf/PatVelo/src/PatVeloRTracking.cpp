@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloRTracking.cpp,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -294,6 +294,8 @@ namespace Tf {
         cov(0,0) =  tr->errR2();// set 0,0 to errR2
         cov(2,2) = tr->errSl2();// set 2,2 to errSl2
         track->addToStates( temp );
+	// set chi2 per dof from RZ fit
+	track->setChi2AndDoF(tr->chi2(),tr->nbCoords()-2);
 
         // store details of hits on track
         for ( VeloRHits::iterator itC = tr->coords()->begin();

@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatRZTrack.h,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
 #ifndef TF_PATRZTRACK_H 
 #define TF_PATRZTRACK_H 1
 
@@ -53,6 +53,13 @@ namespace Tf {
       void tagUsedCoords();   ///< Label coords in PatVeloDataHolder as used
 
       double rInterpolated( double z ); ///< get expected r at given Z
+
+      /// get the chi2 of the track
+      inline double chi2() const{
+	return (m_sz2 - 2.*m_sz*m_pos0 - 2.*m_srz*m_slope + m_pos0*m_pos0 +
+		2.*m_pos0*m_slope*m_sr + m_sr2);
+      }
+
     protected:
 
     private:
@@ -60,7 +67,7 @@ namespace Tf {
       double m_sr;
       double m_sz;
       double m_srz;
-      double m_srz2;
+      double m_sr2;
       double m_sz2;
       bool   m_valid;
       unsigned int    m_zone;

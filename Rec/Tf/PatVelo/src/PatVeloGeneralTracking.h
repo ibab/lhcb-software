@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.1 2007-09-14 13:20:29 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -115,8 +115,8 @@ namespace Tf {
       // inline getters
       inline std::vector<PatVeloLocalPoint*> & points() { return m_points; }
       inline double chi2() const { return m_chi2; }
-      inline double vaild() const { return m_valid; }
-      inline double isLeft() const { return m_isLeft; }
+      inline bool vaild() const { return m_valid; }
+      inline bool isLeft() const { return m_isLeft; }
       // setter
       inline void setValid(bool valid) { m_valid = valid; }
 

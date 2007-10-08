@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.h,v 1.2 2007-09-14 13:20:29 dhcroft Exp $
+// $Id: PatVeloSpaceTool.h,v 1.3 2007-10-08 17:06:05 dhcroft Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
 
@@ -87,6 +87,9 @@ namespace Tf {
       bool m_adjacentSectors; 
       /// Fraction of phi clusters in common before merging lists
       double m_fractionPhiMerge;
+      /// Number of stations from the end of the RZ track in which to allow 
+      /// a phi list to start [Note: Also counts station beyond RZ track]
+      int m_NMissedFirst;
 
       double           m_chiSqDofMax;  ///< Maximum chiSq/ndf for an offline track
       /// MS error between two Velo points
@@ -96,7 +99,8 @@ namespace Tf {
       /// when fitting away from z=0 to minimise error on slopes at Velo exit
       double           m_forwardStepError; ///< MS error between two Velo points
       /// Remove otherside R clusters from non-overlap tracks
-      bool m_cleanOverlaps;               
+      bool m_cleanOverlaps;                   
+    
 
       DeVelo * m_velo; ///< Ponter to DeVelo object to get sensor numbers
 
@@ -108,7 +112,6 @@ namespace Tf {
       PatVeloTrackTool* m_trackTool;
 
       CircularRangeUtils<double> m_angleUtils;
-
   };
 }
 #endif // TF_PATVELOSPACETOOL_H
