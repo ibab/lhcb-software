@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.26 2007-10-05 02:09:08 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.27 2007-10-08 12:21:30 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -360,9 +360,9 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
       sc=constrainMass(V7, C7, nominalMass);
       if(sc.isFailure()) return StatusCode::FAILURE;
     }
-    //don't include resonance veretx chi2 and NDoF!
-    chi2 = 0.;
-    NDoF = 0;
+//     //don't include resonance veretx chi2 and NDoF!
+//     chi2 = 0.;
+//     NDoF = 0;
     sc = updateParticle(part, V7, C7, chi2, NDoF);
 
   } else if (FlyingParticles.size()>1) {
