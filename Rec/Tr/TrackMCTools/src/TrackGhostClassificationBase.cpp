@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.3 2007-05-31 15:21:39 cattanem Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.4 2007-10-08 11:27:36 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -167,17 +167,18 @@ bool TrackGhostClassificationBase::spillover(const LHCb::GhostTrackInfo::LinkPai
 bool TrackGhostClassificationBase::ghostParent(const LHCb::Track& aTrack) const{
 
   // is it a ghost parent ?
+  bool parentGhost = false;
   const SmartRefVector<LHCb::Track>& parents = aTrack.ancestors();
- 
-  if (parents.empty() == true) return false;
+  for (unsigned int iTrack = 0; iTrack != parents.size() && parentGhost == false ; ++iTrack){
+    const Track* aTrack = parents[iTrack];
+    if (aTrack != 0) {
+      ILHCbIDsToMCParticles::LinkMap testMap;
+      m_linkTool->link(*aTrack,testMap);
+      parentGhost = isGhost(testMap);
+    }
+  }  // for
 
-  // take the first track in the list as the parent
-  ILHCbIDsToMCParticles::LinkMap testMap;  
-  const Track& pTrack = *(parents.front());
-  m_linkTool->link(pTrack,testMap);
-
-  // see if it is a ghost
-  return (isGhost(testMap));
+  return parentGhost;
 }
 
 bool TrackGhostClassificationBase::isGhost(const ILHCbIDsToMCParticles::LinkMap& lMap) const{

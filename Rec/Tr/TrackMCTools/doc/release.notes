@@ -4,7 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
-!======================= TrackMCTools v2r12 2007-06-27 =======================
+! 2007-10-08 M Needham
+ - Fix problem in DaVinci with ghost classification tool
+
+======================= TrackMCTools v2r12 2007-06-27 =======================
 ! 2007-06-27 M. Needham
   - Remove obsolete files TrackAcceptance.h/cpp TrackCriteriaSelector
 
