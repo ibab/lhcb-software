@@ -1,4 +1,4 @@
-// $Id: STEffCalculator.cpp,v 1.5 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: STEffCalculator.cpp,v 1.6 2007-10-08 14:56:24 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -18,7 +18,7 @@ STEffCalculator::STEffCalculator(const std::string& type,
                                  const std::string& name, 
                                  const IInterface* parent): 
   GaudiTool( type, name, parent ),  
-  m_GenEff(0)
+  m_GenEff( (IRndmGen*)0 )
 { 
   declareProperty("Efficiency", m_eff = 0.99); 
  

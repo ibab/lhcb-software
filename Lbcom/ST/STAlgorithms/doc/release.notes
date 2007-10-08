@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v2r3 2007-10-03 ========================
+! 2007-10-03 - Marco Cattaneo
+ - Adapt to SmartIF changes in Gaudi v19r5
+
 !======================= STAlgorithms v2r2 2007-05-29 ========================
 ! 2007-05-29 - Marco Cattaneo
  - Adapt to new location of MCInterfaces
