@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.178 2007-10-01 13:58:18 krinnert Exp $
+! $Id: release.notes,v 1.179 2007-10-08 15:10:53 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r2 2007-10-05 ===========================
 ! 2007-10-01 - Kurt Rinnert
  - bugfix in fast casting method for r type sensors: pile up sensors were not
    treated properly.
