@@ -3,9 +3,11 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+!2007-10-08 - Stephanie Hansmann-Menzemer (for Adrian Perieanu)
+- Add Cand2ndQPat, NCandCommonHits, Cand2ndChi2Mat, GhosProbability flag to extra Info
 
 !======================= TrackEvent v4r7 2007-10-08 ==========================
-! 2009-10-05 - Wouter Hulsbergen
+! 2007-10-05 - Wouter Hulsbergen
  - fixed bug in Track::copy
  - added zpos for beginning of T-region to StateParameters.h
 
