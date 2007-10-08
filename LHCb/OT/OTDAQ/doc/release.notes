@@ -2,10 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r5 2007-10-08 ======================
 ! 2007-10-06 - Wouter Hulsbergen
  - Added some protection against corrupted banks
 
-!======================= OTDAQ v5r5 2007-10-05 ======================
 ! 2007-10-05 - Marco Cattaneo
  - Provided OTDAQ/IOTRawBankDecoder.h interface and moved OTRawBankDecoder.h into
    src directory.
