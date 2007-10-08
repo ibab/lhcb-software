@@ -4,6 +4,20 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2007-10-08 - Louis Nicolas
+ 	In AlignTrackMonitor:
+	- Got rid of useless variables (or variables that don't make sense in histos)
+	- Moved to GaudiHistoAlg: now save all the variables in histos. For residuals,
+	  a sub-folder is created for IT and one for OT. Also, one sub-folder is
+	  created for the ladder overlaps and a last one for the box overlaps.
+
+	In AlignSelTool:
+	- Now count numbers of LHCbIDs and not measurements to compute number of
+	  missing hits (holes)
+	- Added possibility to select tracks "randomly" in order to get a constant
+	  illumination of the whole detector surface (based on the variable:
+	  sqrt(tx**2+ty**2)).
+
 </PRE><H1><A NAME=v3r2>2007-04-25 AlignTrTools v3r2 </A></H1><PRE>
 - J. Blouw, 2007-09-26
   -> made TAConfig consistent with IGeometry & IAlignment interface of DetDesc v18r0
