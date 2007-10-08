@@ -47,7 +47,8 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 - In TrackEvent v4r7
   . more improvements to fillStream method
   . re-corrected a bug re-introduced with latest additions to fillStream method
-  . Add TsaLikelihood flag to extraInfo  
+  . Add TsaLikelihood, Cand2ndQPat, NCandCommonHits, Cand2ndChi2Mat, 
+    GhostProbability flags to extraInfo  
   . Fixed bug in Track::copy
   . Added zpos for beginning of T-region to StateParameters.h
 
