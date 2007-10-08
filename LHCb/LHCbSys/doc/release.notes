@@ -48,6 +48,8 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
   . more improvements to fillStream method
   . re-corrected a bug re-introduced with latest additions to fillStream method
   . Add TsaLikelihood flag to extraInfo  
+  . Fixed bug in Track::copy
+  . Added zpos for beginning of T-region to StateParameters.h
 
 - In DAQEvent v7r6
   . Add bank types GaudiSerialize and GaudiHeader
