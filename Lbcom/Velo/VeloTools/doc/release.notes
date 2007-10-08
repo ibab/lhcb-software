@@ -4,6 +4,10 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== VeloTools v2r3 2007-10-03 ========================
+! 2007-10-03 - Marco Cattaneo
+ - Do not access detector element in constructor, do it in initialize
+
 !========================== VeloTools v2r2 2007-07-23 ========================
 ! 2007-07-23 - Marco Cattaneo
  - Remove obsolete options file (uses options names inconsistent with code)

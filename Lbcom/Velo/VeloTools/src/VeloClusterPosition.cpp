@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.13 2007-07-19 15:53:21 truf Exp $
+// $Id: VeloClusterPosition.cpp,v 1.14 2007-10-08 14:53:29 cattanem Exp $
 // Include files
 
 // stl
@@ -46,9 +46,8 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
   : GaudiTool(type, name, parent),
-    m_isOutsideSensor ( false )
+    m_isOutsideSensor ( false ), m_veloDet(0)
 {
-  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   // default paramertrizations are of form error=slope*pitch+const
   // the first value represents const and is given in um
   // the second value is slope and is dimensionless
@@ -91,6 +90,9 @@ StatusCode VeloClusterPosition::initialize()
   //
   StatusCode sc=GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
+
+  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
+
   // build table with resolution paramettrizations
   StatusCode paraStatus=createResParaTable();
   if(paraStatus.isFailure()) return ( paraStatus );
