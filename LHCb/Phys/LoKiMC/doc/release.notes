@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2007-10-07 13:46:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.32 2007-10-08 06:55:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,8 +15,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v6r1 2007-10-08 ============================
 ! 2007-10-07 - Vanya BELYAEV
-
  - cmt/requirements 
     increment version to v6r1 
     use new pattern for python modules 
@@ -359,98 +359,6 @@
 ! 2006-01-24 - Vanya BELYAEV  
  - New import: the basic functors and cuts for MCParticles/MCVertices 
 
-! -----------------------------------------------------------------------------
-! $Log: not supported by cvs2svn $
-! Revision 1.30  2007/09/04 12:22:57  cattanem
-! v6r0
-!
-! Revision 1.29  2007/08/20 13:20:12  ibelyaev
-!  increment the version to v6r0
-!
-! Revision 1.28  2007/08/20 09:21:27  pkoppenb
-! No Vector of MCParticles
-!
-! Revision 1.27  2007/07/26 14:28:45  ibelyaev
-!  add LoKi::Hybrid::MCParticleArrayFilter
-!
-! Revision 1.26  2007/07/23 17:27:31  ibelyaev
-!  speed-up compilation, reduce dictionaries and improve doxygen
-!
-! Revision 1.25  2007/06/11 09:17:01  cattanem
-! move tag
-!
-! Revision 1.24  2007/06/10 19:59:05  ibelyaev
-!  prepare for v3r0
-!
-! Revision 1.23  2007/06/04 09:57:30  cattanem
-! adapt to MCInterfaces
-!
-! Revision 1.22  2007/06/04 09:22:56  ibelyaev
-!  make a coherent interface for LoKi::Child&LoKi::Algs
-!
-! Revision 1.21  2007/06/04 08:27:28  cattanem
-! v3r0
-!
-! Revision 1.20  2007/06/01 15:44:20  ibelyaev
-!  add MCREC and MCRECAS functors
-!
-! Revision 1.19  2007/06/01 11:57:36  ibelyaev
-!  prepare for v3r0
-!
-! Revision 1.18  2007/04/19 13:51:00  pkoppenb
-! tagged as v2r2p1
-!
-! Revision 1.17  2007/03/04 16:47:19  ibelyaev
-!  add DelatPhi/DelatEta/DeltaR2 for jet studies
-!
-! Revision 1.16  2007/02/23 09:01:51  ibelyaev
-!  minor fix with struct/class
-!
-! Revision 1.15  2007/01/23 13:27:18  ibelyaev
-!  add MCVALID/MCVVALID
-!
-! Revision 1.14  2007/01/12 14:10:23  ranjard
-! v2r0 - use Gaudi v19r0
-!
-! Revision 1.13  2006/11/29 14:27:49  ibelyaev
-!  add BuildMCTrees
-!
-! Revision 1.12  2006/11/27 11:58:37  ibelyaev
-!  prepare for LoKi v4r3
-!
-! Revision 1.11  2006/11/09 16:35:00  ibelyaev
-!  v1r4: improve the printout functions
-!
-! Revision 1.10  2006/10/26 12:01:04  ibelyaev
-!  retag as v1r3
-!
-! Revision 1.9  2006/10/26 11:57:41  ibelyaev
-!  SLC4: fix error and many warnings
-!
-! Revision 1.8  2006/10/11 12:39:14  ibelyaev
-!  v1r3
-!
-! Revision 1.7  2006/10/10 09:14:06  ibelyaev
-!  tiny fixes needed for good&valid dictionaries
-!
-! Revision 1.6  2006/09/06 10:37:18  ibelyaev
-!  make aproper use of LHCb::<XXX>::Vector/ConstVector types
-!
-! Revision 1.5  2006/05/29 12:30:14  jpalac
-! tagged as v1r1
-!
-! Revision 1.4  2006/05/29 12:29:26  jpalac
-! tagged as v1r0
-!
-! Revision 1.3  2006/05/27 11:40:51  ibelyaev
-!  add PrintMCDecay utilities
-!
-! Revision 1.2  2006/02/09 15:42:06  ibelyaev
-!  add LoKi::MCAlgs namespace with algorithms
-!
-! Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-! New Packaage: MC-dependent part of LoKi project 
-! 
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------

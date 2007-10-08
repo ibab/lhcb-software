@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2007-10-07 13:45:53 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2007-10-08 06:51:34 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,8 +14,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiGen v6r1 2007-10-08 ==========================
 ! 2007-10-07 - Vanya BELYAEV
-
  - cmt/requirements 
     increment version to v6r1 
     use new pattern for python modules 
