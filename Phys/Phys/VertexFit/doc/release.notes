@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.109 2007-10-05 02:09:08 xieyu Exp $
+! $Id: release.notes,v 1.110 2007-10-08 12:22:10 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-10-08 - Juan PALACIOS
+ - src/OfflineVertexFitter.cpp
+  . Remove last changes as they affect some pre-selections. Behaviour should
+    now be the same as in revision 1.25. Revert to that version once 
+    pre-selections have been adapted accordingly.
+ - cmt/requirements
+  . Increase version to v4r3p1
 
 ! 2007-10-05 - Yuehong Xie
   - src/OfflineVertexFitter.cpp
