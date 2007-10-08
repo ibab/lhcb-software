@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.4 2007-09-21 15:45:52 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.5 2007-10-08 13:55:37 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -8,7 +8,11 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/GaudiTool.h"
+
 #include "GaudiKernel/IIncidentListener.h"
+
+#include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // Interface
 #include "TrackInterfaces/ITrackSelector.h"
@@ -41,36 +45,44 @@ public:
   /// Standard constructor
   AlignSelTool( const std::string& type, 
                 const std::string& name,
-                const IInterface* parent);
+                const IInterface* parent );
 
   virtual ~AlignSelTool( ); ///< Destructor
 
-  StatusCode AlignSelTool::initialize();
+  StatusCode AlignSelTool::initialize ( );
+  StatusCode AlignSelTool::finalize ( );
 
   virtual bool accept(const LHCb::Track& aTrack) const;
-  
-  /** Implement the handle method for the Incident service.
-   *  This is used to inform the tool of software incidents.
-   *
-   *  @param incident The incident identifier
-   **/
-  void handle( const Incident& incident );
   
 protected:
   
 private:
 
+  typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
+
   static const int defValue = -999999;
+
+  mutable Rndm::Numbers m_uniformDist; // Random numbers generator
+
+  ITrackExtrapolator* m_extrapolator; // Interface to track extrapolator
+
+  int alignSelectedModules;
+
+  //===========================================================================
+  // Incident listener
+  //===========================================================================
+  mutable bool m_configured;
+  void handle( const Incident& incident );
+  void initEvent ( ) const;
+  //===========================================================================
 
   //===========================================================================
   // Constants picked up from the geometry
   //===========================================================================
   int m_nStations;
-
   int m_nQuarters;
   int m_nModules;
   int m_nStraws;
-
   int m_nBoxes;
   int m_nLadders;
   int m_nStrips;
@@ -79,13 +91,12 @@ private:
   //===========================================================================
   // More Properties
   //===========================================================================
+  std::string m_tracksPath;
+  std::string m_itClustersPath;
+  std::string m_otTimesPath;
   bool m_fieldOn;
   double m_nStrawsTol;
   double m_nStripsTol;
-  int alignSelectedModules;
-  mutable bool m_configured;
-  void initEvent() const;
-  ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
   //===========================================================================
 
   //=============================================================================
@@ -93,6 +104,7 @@ private:
   //=============================================================================
   std::string c_trackType;
   int c_modulesToAlign;
+  bool c_flatIllum;
   int c_maxMulti;
   double c_minP;
   double c_maxChi2PerDoF;
@@ -103,23 +115,21 @@ private:
   //=============================================================================
 
   //===========================================================================
-  //  The objects in use
+  //  Various containers
   //===========================================================================
-  LHCb::Track theTrack;
-  std::string m_tracksPath;
   mutable const LHCb::Tracks* m_tracks;
-  std::string m_itClustersPath;
-  typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
-  mutable STLiteClusters* m_itClusters;
-  std::string m_otTimesPath;
+  mutable const STLiteClusters* m_itClusters;
   mutable const LHCb::OTTimes* m_otTimes;
   //===========================================================================
 
   //===========================================================================
   // Declaring the tracks variables
   //===========================================================================
+  LHCb::Track theTrack;
   mutable int m_multiplicity;
   mutable double m_trP;
+  mutable double m_entryTX;
+  mutable double m_entryTY;
   mutable double m_trChi2PerDoF;
   mutable double m_trChi2Prob;
   mutable int m_nHoles;
@@ -137,6 +147,7 @@ private:
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,
                            LHCb::OTChannelID hitID,
                            unsigned int hitStraw ) const;  
+  double flatIllum_distri ( double flatIllum_var ) const;
   //=============================================================================
 
   //=============================================================================
@@ -144,6 +155,7 @@ private:
   //=============================================================================
   bool selectDefinedModules ( const LHCb::Track& aTrack ) const;
   bool selectBoxOverlaps ( const LHCb::Track& aTrack ) const;
+  bool cutFlatIllum ( ) const;
   bool cutMultiplicity ( ) const;
   bool cutTrackP ( ) const;
   bool cutTrackChi2PerDoF ( ) const;

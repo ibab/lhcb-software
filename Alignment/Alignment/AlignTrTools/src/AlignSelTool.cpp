@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.4 2007-09-21 15:45:52 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.5 2007-10-08 13:55:37 lnicolas Exp $
 // Include files 
 
 // local
@@ -10,8 +10,10 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
 
-// Other
-#include "gsl/gsl_cdf.h"
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+using namespace boost::lambda;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignSelTool
@@ -43,8 +45,9 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   declareProperty ( "IsolatedTrackNStrawsTolerance", m_nStrawsTol = 1       );
   declareProperty ( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2       );
 
-  declareProperty ( "TrackType",         c_trackType      = "ALL" );
+  declareProperty ( "TrackType",         c_trackType      = "ALL"           );
   declareProperty ( "ModulesToAlign",    c_modulesToAlign = defValue        );
+  declareProperty ( "FlatIllumination",  c_flatIllum      = false           );
 
   declareProperty ( "MultiplicityCut",   c_maxMulti       = abs(defValue)   );
   declareProperty ( "MinMomentumCut",    c_minP           = defValue        );
@@ -69,9 +72,15 @@ AlignSelTool::~AlignSelTool ( ) { }
 //=============================================================================
 StatusCode AlignSelTool::initialize ( ) {
 
-  StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()) return sc;  // error already reported by base class
+  StatusCode sc = GaudiTool::initialize( );
+  if ( sc.isFailure( ) ) return sc;  // error already reported by base class
 
+  // Get random numbers generator (flat)
+  IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
+  if ( !m_uniformDist.initialize( randSvc, Rndm::Flat(0.,0.5) ) )
+    return Error ( "Failed to initialize Flat Random distribution!" );
+
+  // Get parabolic extrapolator
   m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
 
   // Get OT geometry
@@ -186,6 +195,22 @@ StatusCode AlignSelTool::initialize ( ) {
 
 
 //=============================================================================
+// Finalization
+//=============================================================================
+StatusCode AlignSelTool::finalize ( ) {
+  
+  m_uniformDist.finalize( );
+
+  GaudiTool::finalize( );
+
+  debug() << "AlignSelTool finalized successfully" << endmsg;
+  
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+
+
+//=============================================================================
 // Incident Listener ==> Get the containers only once per event
 //=============================================================================
 void AlignSelTool::handle ( const Incident& incident ) {
@@ -208,14 +233,21 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
 
   debug() << "AlignSelTool starting selectTrack" << endmsg;
 
+  // Get the containers for first track of event
   if (!m_configured) initEvent();
 
+  // Get all the variables
   if ( getAllVariables ( aTrack ) == defValue )
     return false;
 
+  // Cut on some variables
   if ( cutMultiplicity( ) || cutTrackP( ) || cutNHoles( ) ||
        cutNSharedHits( ) || cutNCloseHits( ) ||
        cutTrackChi2Prob( ) ) return false;
+
+  // Cut tracks "randomly" to get "flat" illumination of detector
+  if ( c_flatIllum == true )
+    if ( cutFlatIllum( ) ) return false;
 
   return true;
 }
@@ -230,7 +262,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   if ( c_maxMulti < abs(defValue) )
     m_multiplicity = m_tracks->size();
 
-  // Get the nodes for this track
+  // Get the nunmber of IT and OT hits
   int nITHits = 0;
   int nOTHits = 0;
   // Do we want to fill the nodes vector even if we don't cut on anything?
@@ -238,15 +270,9 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
        (c_maxNSharedHits < abs(defValue)) ||
        (c_maxNCloseHits < abs(defValue)) ||
        c_trackType.compare( "ALL" ) ) {
-    std::vector<LHCb::Node*>::const_iterator iAllNodes = aTrack.nodes().begin();
-    for ( ; iAllNodes != aTrack.nodes().end(); ++iAllNodes ) {
-      const LHCb::Node& aNode = *(*iAllNodes);
-      if ( aNode.hasMeasurement() )
-        if ( aNode.measurement().type() == LHCb::Measurement::IT )
-          ++nITHits;
-        else if ( aNode.measurement().type() == LHCb::Measurement::OT )
-          ++nOTHits;
-    }
+    const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
+    nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isIT,_1));
+    nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isOT,_1));
   }
 
   // Selecting only tracks of defined track type
@@ -281,6 +307,8 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
 
   // Initialization of tracks variables
   m_trP = 0;
+  m_entryTX = aTrack.closestState( 7500. ).tx();
+  m_entryTY = aTrack.closestState( 7500. ).ty();
   m_trChi2PerDoF = 0;
   m_trChi2Prob = 0;
   m_nHoles = 0;
@@ -292,7 +320,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   if ( c_maxChi2PerDoF < abs(defValue) )
     m_trChi2PerDoF = aTrack.chi2PerDoF();
   if ( c_minChi2Prob > defValue )
-    m_trChi2Prob = gsl_cdf_chisq_Q(aTrack.chi2(),aTrack.nDoF());
+    m_trChi2Prob = aTrack.probChi2();
 
   std::vector<LHCb::Node*>::const_iterator iNodes = aTrack.nodes().begin();
   for ( ; (iNodes != aTrack.nodes().end()) &&
@@ -315,7 +343,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
         m_nSharedHits++; 
   }
   
-// Holes
+  // Holes
   int itExpHits = (int)aTrack.info(LHCb::Track::nExpectedIT, 0);
   int otExpHits = (int)aTrack.info(LHCb::Track::nExpectedOT, 0);
   int expHits = itExpHits + otExpHits;
@@ -330,6 +358,22 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
 }
 //=============================================================================
 
+//=============================================================================
+// Cutting on the event multiplicity
+//=============================================================================
+bool AlignSelTool::cutFlatIllum ( ) const {
+  double flatIllum_var = sqrt( gsl_pow_2( m_entryTX ) + gsl_pow_2( m_entryTY ) );
+
+  // If variable larger than 0.5, keep track anyways
+  if ( flatIllum_var > 0.5 ) return false;
+
+  // If prob of track larger than prob of random number, kill track
+  if ( flatIllum_distri ( flatIllum_var ) >
+       flatIllum_distri ( m_uniformDist( ) ) ) return true;
+
+  return false;
+}
+//=============================================================================
 
 //=============================================================================
 // Cutting on the event multiplicity
@@ -635,5 +679,67 @@ bool AlignSelTool::selectBoxOverlaps ( const LHCb::Track& aTrack ) const {
         return true;
   
   return false;
+}
+//===========================================================================
+
+//===========================================================================
+// Get the probability of the given value
+// out of the distribution of sqrt( tx2 + ty2 )
+//===========================================================================
+double AlignSelTool::flatIllum_distri ( double flatIllum_var ) const {
+
+  std::vector<double> probArray;
+  int numBin;
+
+  if ( !c_trackType.compare( "IT" ) && (c_modulesToAlign == defValue) ) {
+    double tempProbArray[] =
+      { 0.00045, 0.00148, 0.00239, 0.00334, 0.00425,
+        0.00530, 0.00809, 0.01108, 0.01337, 0.01534,
+        0.01693, 0.01903, 0.01994, 0.02107, 0.02243,
+        0.02356, 0.02420, 0.02528, 0.02529, 0.02515,
+        0.02520, 0.02484, 0.02451, 0.02380, 0.02312,
+        0.02280, 0.02172, 0.02102, 0.02028, 0.01953,
+        0.01856, 0.01739, 0.01733, 0.01661, 0.01559,
+        0.01487, 0.01462, 0.01410, 0.01306, 0.01272,
+        0.01236, 0.01163, 0.01143, 0.01100, 0.01064,
+        0.01026, 0.00999, 0.00959, 0.00917, 0.00905 };
+    probArray.assign( tempProbArray, tempProbArray + 50 );
+    numBin = int( flatIllum_var / ( 0.1 / 50 ) );
+    return probArray[numBin];
+  }
+  else if ( !c_trackType.compare( "OT" ) && (c_modulesToAlign == defValue) ) {
+    double tempProbArray[] = 
+      { 0.00053, 0.00210, 0.00581, 0.01179, 0.01548,
+        0.01823, 0.02019, 0.02207, 0.02353, 0.02456,
+        0.02549, 0.02587, 0.02575, 0.02600, 0.02584,
+        0.02565, 0.02531, 0.02478, 0.02447, 0.02424,
+        0.02356, 0.02313, 0.02302, 0.02225, 0.02220,
+        0.02171, 0.02095, 0.02039, 0.01973, 0.01927,
+        0.01870, 0.01810, 0.01754, 0.01699, 0.01639,
+        0.01594, 0.01543, 0.01487, 0.01434, 0.01417,
+        0.01354, 0.01310, 0.01272, 0.01212, 0.01178,
+        0.01140, 0.01074, 0.01051, 0.00985, 0.00953 };
+    probArray.assign( tempProbArray, tempProbArray + 50 );
+    numBin = int( flatIllum_var / ( 0.5 / 50 ) );
+    return probArray[numBin];
+  }
+  else if ( !c_trackType.compare( "ALL" ) && (c_modulesToAlign == defValue) ) {
+    double tempProbArray[] =
+      { 0.00331, 0.01456, 0.02902, 0.03924, 0.04164,
+        0.04042, 0.03781, 0.03571, 0.03373, 0.03196,
+        0.03052, 0.02919, 0.02768, 0.02667, 0.02548,
+        0.02453, 0.02340, 0.02239, 0.02138, 0.02068,
+        0.01966, 0.01890, 0.01834, 0.01738, 0.01706,
+        0.01645, 0.01570, 0.01515, 0.01454, 0.01414,
+        0.01365, 0.01315, 0.01264, 0.01217, 0.01169,
+        0.01132, 0.01095, 0.01052, 0.01010, 0.00997,
+        0.00952, 0.00921, 0.00895, 0.00852, 0.00828,
+        0.00801, 0.00755, 0.00738, 0.00692, 0.00670 };
+    probArray.assign( tempProbArray, tempProbArray + 50 );
+    numBin = int( flatIllum_var / ( 0.5 / 50 ) );
+    return probArray[numBin];
+  }
+
+  return 0;
 }
 //===========================================================================
