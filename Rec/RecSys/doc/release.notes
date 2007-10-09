@@ -5,6 +5,78 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r10>2007-10-10 RecSys v4r10</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r10.
+
+- Packages added:    CaloMoniDst v3r0 - Updated for DC06
+                     NNTools     v1r0 - Calculate the Ghost Probability of a
+                                        Track with NeuralNetworks
+- Packages modified: PatVelo v2r19, PatForward v2r16, TrackFitEvent v3r9,
+    TrackMatching v2r16, TrackProjectors v2r16, TrackFitter v2r19,
+    TrackTools v2r19, TrackUtils v1r15, TsaAlgorithms v2r7, TrackSys v4r10,
+    RichRecTools v3r14, GlobalReco v6r13
+
+- In PatVelo v2r19
+  . Change to more closely replicate old kinked track behaviour
+
+- In PatForward v2r16, TrackMatching v2r16
+  . Add variables to track for NN ghost ID
+
+- In TrackFitEvent v3r9
+  . added constructor from StateVector to StateTraj
+  . replaced 'projectionTerm' by residual of reference in FitNode
+
+- In TrackMatching v2r16
+  . Change cut on match chi^2
+  . Change Likelihood flag to TsaLikelihood
+
+- In TrackProjectors v2r16
+  . add method to project StateVector
+  . remove the use of the reference vector in the projection
+  . Add an option to ignore the drift distance in TrajOTProjector
+    Default is to use it, so by default the behaviour remains the same
+
+- In TrackFitter v2r19
+  . Added jobOption to switch on/off the invocation of the 'makeNodes' method
+    When off, nodes and references are not (re)made, for fitting after prefitting
+  . KalmanFilter:
+    o 'bug' fix: set reference vector from prediction in case not set before
+    o Reference state now only projected in forward filter
+  . make sure first measurement state still added to track even if extrapolation
+    to beam line fails
+  . Add logic to create only nodes for reference z-positions that are between the
+    first and the last measurement. This will become the default after effects in
+    matching are under control.
+
+- In TrackTools v2r19
+  . Change deweighting to 1 in likelihood, as it's no longer needed
+  . Make sensible check on t-station range in LongTrackReferenceCreator
+
+- In TrackUtils v1r15
+  . Changes in TrackAddLikelihood to allow different values for different
+    track types
+
+- In TsaAlgorithms v2r7
+  . Change extraInfo flag to TsaLikelihood
+
+- In TrackSys v4r10
+  . Added jobOptions for track prefitting with OT projections without drifttimes.
+    2 prefit iterations are followed by 2 fit iterations using drifttimes.
+    Changes apply for Forward, KShort and Match only
+  . Tidy-up of options
+  . Add TrackLikelihood calculation to the running sequence
+
+- In RichRecTools v3r14
+  . Take cbrt from GaudiKernel rather than LHCbMath
+  . Change to TsaLikelihood flag in seed track selection
+  . Small change to Binned CK theta tool to also handle MCRichTracks
+
+- In GlobalReco v6r13
+  . Update ChargedProtoCombineDLLsAlg to produce better combined DLL values
+  . Update ntuple algorithm ChargedProtoParticleTupleAlg with better default
+    values and also to not require RichPIDs or MuonPIDs to be in the TES - i.e.
+    to take all information from the ProtoParticles.
+
 </PRE><H1><A NAME=v4r9>2007-09-20 RecSys v4r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r9.
 
