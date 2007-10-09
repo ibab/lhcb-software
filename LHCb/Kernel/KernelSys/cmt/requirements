@@ -10,4 +10,4 @@ use CaloKernel       v5r1   Calo
 use MuonKernel       v4r0   Muon
 use RichKernel       v7r8   Rich
 use L0MuonKernel     v7r1   L0
-use ProcessorKernel  v5r0   L0
+use ProcessorKernel  v5r1   L0
