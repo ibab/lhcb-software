@@ -14,13 +14,16 @@ This version uses Gaudi v19r4 and LHCb v22r10.
 - Packages modified: PatVelo v2r19, PatForward v2r16, TrackFitEvent v3r9,
     TrackMatching v2r16, TrackProjectors v2r16, TrackFitter v2r19,
     TrackTools v2r19, TrackUtils v1r15, TsaAlgorithms v2r7, TrackSys v4r10,
-    RichRecTools v3r14, GlobalReco v6r13
+    RichRecTools v3r14, GlobalReco v6r13, PatVeloTT v2r15
 
 - In PatVelo v2r19
   . Change to more closely replicate old kinked track behaviour
 
 - In PatForward v2r16, TrackMatching v2r16
   . Add variables to track for NN ghost ID
+
+- In PatVeloTT v2r15
+  . Adjust some jobOptions for more stable fitting
 
 - In TrackFitEvent v3r9
   . added constructor from StateVector to StateTraj
