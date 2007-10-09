@@ -20,7 +20,7 @@ use CaloKernel            v5r1    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use RichKernel            v7r8    Rich    # Chris Jones
 use L0MuonKernel          v7r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
-use ProcessorKernel       v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
+use ProcessorKernel       v5r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v10r1   Det     # Marco Cattaneo
