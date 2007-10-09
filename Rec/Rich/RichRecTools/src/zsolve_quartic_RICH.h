@@ -13,7 +13,7 @@
  *  @see gsl_poly_complex_solve_quartic
  *
  *  CVS Log :-
- *  $Id: zsolve_quartic_RICH.h,v 1.5 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: zsolve_quartic_RICH.h,v 1.6 2007-10-09 16:24:17 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-14
@@ -29,8 +29,8 @@
 #include <gsl/gsl_complex_math.h>
 #include <gsl/gsl_poly.h>
 
-// for cbrt
-#include "LHCbMath/Power.h"
+// for cbrt on Windows
+#include "GaudiKernel/cbrt.h"
 
 //----------------------------------------------------------------------
 /** Solves the quartic equation x^4 + a x^3 + b x^2 + c x + d = 0
@@ -69,7 +69,7 @@ inline double solve_quartic_RICH ( const double a,
   const double R2 = R * R;
 
   const double sgnR = ( R >= 0 ? 1 : -1 );
-  const double A = -sgnR * Gaudi::Math::cbrt( fabs(R) + sqrt(R2 - Q3) );
+  const double A = -sgnR * cbrt( fabs(R) + sqrt(R2 - Q3) );
   const double B = Q / A;
 
   const double u1 = -0.5 * (A + B) - rc / 3;

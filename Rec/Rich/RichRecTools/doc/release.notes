@@ -4,8 +4,12 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r14 2007-10-09 ==========================
 ! 2007-10-04 - Chris Jones
  - Small change to Binned CK theta tool to also handle MCRichTracks
+
+! 2007-10-03 - Marco Cattaneo
+ - Take cbrt from GaudiKernel rather than LHCbMath
 
 ! 2007-09-28 M Needham
  - Change to TsaLikelihood flag in seed track selection
