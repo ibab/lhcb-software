@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.2 2007-10-09 17:55:48 smenzeme Exp $
+// $Id: SeedHit.h,v 1.4 2007-10-09 18:03:39 smenzeme Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
