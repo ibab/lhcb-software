@@ -1,0 +1,10 @@
+
+// Options to find clone pairs
+TrackClonesSeq.Members += { "TrackBuildCloneTable/FindTrackClones" };
+FindTrackClones.zStates = { 0*mm, 990*mm, 9450*mm };
+FindTrackClones.maxDz   = 500*mm;
+FindTrackClones.klCut   = 5e3;
+
+// For each set of clones, flag the ones to reject
+TrackClonesSeq.Members += { "TrackCloneCleaner/FlagTrackClones" };
+FlagTrackClones.CloneCut = 5e3;

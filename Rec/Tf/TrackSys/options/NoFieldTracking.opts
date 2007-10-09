@@ -1,0 +1,138 @@
+// ====================================================================
+//  Additional tracking reconstruction phase options in no-field case
+//  Include this file AFTER the standard RecoTracking.opts
+// ====================================================================
+
+MagneticFieldSvc.UseConstantField = true;
+
+
+// ====================================================================
+// Switch off some track types
+// ====================================================================
+
+// K Short
+Track.DetectorList -= { "KShortPat" };
+Track.DetectorList -= { "KShortPreFit" };
+Track.DetectorList -= { "KShortFit" };
+
+// Set up clone killer without removed track types
+TrackEventCloneKiller.TracksInContainers  = {
+                                              "Rec/Track/VeloTT"
+                                            , "Rec/Track/Forward"
+                                            , "Rec/Track/Match"
+                                            , "Rec/Track/Tsa" };
+
+
+// ====================================================================
+// Adjust pattern options
+// ====================================================================
+
+// Tsa pattern
+TsaSeedTrackCnv.pFromCurvature = true;
+
+TsaSeed.xSearchS3.sxCut = 0.40;
+TsaSeed.xSearchS4.sxCut = 0.40;
+TsaSeed.xSearchS3.collectPolicy = "Linear";
+TsaSeed.xSearchS4.collectPolicy = "Linear";
+TsaSeed.xSearchS3.sx2Cut = 0.330;
+TsaSeed.xSearchS4.sx2Cut = 0.330;
+
+TsaSeed.xSearchS0.dthCut = 0.08;
+TsaSeed.xSearchS1.dthCut = 0.08;
+TsaSeed.xSearchS2.dthCut = 0.08;
+TsaSeed.xSearchS3.dthCut = 0.08;
+TsaSeed.xSearchS4.dthCut = 0.08;
+
+TsaSeed.xSearchS0.x0Cut = 400.;
+TsaSeed.xSearchS1.x0Cut = 400.;
+TsaSeed.xSearchS2.x0Cut = 400.;
+TsaSeed.xSearchS3.x0Cut = 400.;
+TsaSeed.xSearchS4.x0Cut = 400.;
+
+TsaSeed.xSearchS0.sxCut = 0.10;
+TsaSeed.xSearchS1.sxCut = 0.10;
+TsaSeed.xSearchS2.sxCut = 0.10;
+TsaSeed.xSearchS0.sx2Cut = 0.08;
+TsaSeed.xSearchS1.sx2Cut = 0.08;
+TsaSeed.xSearchS2.sx2Cut = 0.08;
+
+TsaSeed.stubFinder.sxCut = 0.1;
+TsaSeed.stubFinder.dAngle = 0.08;
+TsaSeed.stubExtender.y0Cut1 = 100.;
+TsaSeed.stubExtender.txCut = 0.1;
+TsaSeed.stubExtender.tyCut = 0.1;
+
+// Match pattern
+TrackMatch.Chi2MatchingCut = 4000;
+TrackMatch.MomentumCut = 0.;
+TrackMatch.pt2Cut = 0;
+TrackMatch.maxStepSize = 10000.;
+TrackMatch.yTParams = {2.5e7};
+TrackMatch.tyTParams = {5e-4};
+TrackMatch.chi2TCut = 1000;
+TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
+//TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
+
+
+// Forward pattern
+ToolSvc.PatForwardTool.WithoutBField = true;
+ToolSvc.PatFwdTool.WithoutBField     = true;
+
+// VeloTT pattern
+#include "$PATVELOTTROOT/options/VeloTT_noB.opts"
+
+
+// ====================================================================
+// Add pre-fit algorithms
+// ====================================================================
+TrackForwardPreFitSeq.Members += { "TrackPrepareForFit/PrepareFitForward" };
+PrepareFitForward.inputLocation = "Rec/Track/Forward";
+TrackSeedPreFitSeq.Members    += { "TrackPrepareForFit/PrepareFitTsa" };
+PrepareFitTsa.inputLocation     = "Rec/Track/Tsa";
+TrackMatchPreFitSeq.Members   += { "TrackPrepareForFit/PrepareFitMatch" };
+PrepareFitMatch.inputLocation   = "Rec/Track/Match";
+TrackVeloTTPreFitSeq.Members  += { "TrackPrepareForFit/PrepareFitVeloTT" };
+PrepareVeloTT.inputLocation     = "Rec/Track/VeloTT";
+
+
+// ====================================================================
+// Adjust fitting options
+// ====================================================================
+
+// Forward fit
+FitForward.Fitter.ErrorP              = {1e-3,1e-8};
+FitForward.Fitter.NumberFitIterations = 2;
+FitForward.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitForward.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitForward.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitForward.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+
+// Tsa fit
+FitTsaSeed.Fitter.ErrorP              = {1e-3,5e-8};
+FitTsaSeed.Fitter.NumberFitIterations = 2;
+FitTsaSeed.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitTsaSeed.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitTsaSeed.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitTsaSeed.Fitter.RefInfoTool.SetLRAmbiguities = true;
+
+// Match fit
+FitMatch.Fitter.ZPositions          = { 990., 2165., 2400., 9450., 11900. };
+FitMatch.Fitter.ErrorP              = {1e-3,5e-8};
+FitMatch.Fitter.NumberFitIterations = 1;
+FitMatch.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitMatch.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitMatch.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitMatch.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+
+// VeloTT fit
+FitVeloTT.Fitter.ErrorP              = {1e-3,5e-8};
+FitVeloTT.Fitter.NumberFitIterations = 2;
+FitVeloTT.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitVeloTT.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";

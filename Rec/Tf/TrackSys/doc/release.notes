@@ -1,0 +1,7 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/TrackSys
+! Responsible : Eduardo Rodrigues
+! Purpose     : Defines the global Track set of packages, for tracking.
+!-----------------------------------------------------------------------------
+! 2007-10-09 - Stephanie Hansmann-Menzemer
+  - import Tf/TrackSys from Tr/TrackSys, for former release notes see Tr/TrackSys
