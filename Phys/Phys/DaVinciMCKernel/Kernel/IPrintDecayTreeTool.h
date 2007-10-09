@@ -1,4 +1,4 @@
-// $Id: IPrintDecayTreeTool.h,v 1.1 2007-10-09 16:37:00 jpalac Exp $
+// $Id: IPrintDecayTreeTool.h,v 1.2 2007-10-09 17:14:03 jpalac Exp $
 #ifndef DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H
 #define DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H 1
 
@@ -19,7 +19,7 @@
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IPrintDecayTreeTool("IPrintDecayTreeTool", 1, 0);
 
-/** @class IPrintDecayTreeTool IPrintDecayTreeTool.h DaVinciMCTools/IPrintDecayTreeTool.h
+/** @class IPrintDecayTreeTool IPrintDecayTreeTool.h Kernel/IPrintDecayTreeTool.h
  *  
  *
  *  @author Juan Palacios juancho@nikhef.nl
@@ -35,38 +35,121 @@ public:
   virtual void printTree( const LHCb::Particle* mother, 
                           int maxDepth = -1 ) = 0;
 
-  /// Print side by side decay tree for a given MC particle and it's
-  /// reconstructed items
+  /**
+   * Print side by side a decay tree for an MCParticle 
+   * and it's associated particles
+   *
+   * @param mother The MCParticle who's tree is to be printed
+   * @param assoc Associator linking mother to reconstructed LHCb::Particles
+   * @param maxDepth maximum depth of printing in daughter-space. Default 
+   *                 value of -1 is there to allow trickery in the 
+   *                 implementations.
+   * @todo Does this print two side-=by side trees, or a tree
+   * of side-by side items?
+  */
   virtual void printTree( const LHCb::MCParticle* mother, 
                           Particle2MCLinker* assoc,
                           int maxDepth = -1) = 0;
 
-  /// Print side by side decay tree for a given particle and it's
-  /// associated MC particle.
+  /**
+   * Print side by side a decay tree for a Particle 
+   * and it's associated MCParticles
+   *
+   * @param mother The Particle who's tree is to be printed
+   * @param assoc Associator linking mother to LHCb::MCParticles
+   * @param maxDepth maximum depth of printing in daughter-space. Default 
+   *                 value of -1 is there to allow trickery in the 
+   *                 implementations.
+   * @todo Does this print two side-=by side trees, or a tree
+   * of side-by side items?
+  */
   virtual void printTree( const LHCb::Particle* mother, 
                           Particle2MCLinker* assoc, 
                           int maxDepth = -1 ) = 0;
 
-  /// Also print the reconstructed info if available.
-  virtual void printAsTree( const LHCb::MCParticle::ConstVector& event,
+  /**
+   * Print the contents of an MCParticle::ConstVector as a decay tree.
+   * Print the associated reconstructed Particles if available.
+   *
+   * @param particles The container of MCParticles to be printed.
+   * @param assoc Associator linking mother to LHCb::MCParticles
+   *
+  */
+  virtual void printAsTree( const LHCb::MCParticle::ConstVector& particles,
                             Particle2MCLinker* assoc ) = 0;
-  /// Same from a keyed container.
-  virtual void printAsTree( const LHCb::MCParticles& event ) = 0;
-  virtual void printAsTree( const LHCb::MCParticles& event,
+  /**
+   * Print the contents of an MCParticle keyed container as a decay tree.
+   * @param particles The keyed container of MCParticles to be printed.
+   *
+   */
+  virtual void printAsTree( const LHCb::MCParticles& particles ) = 0;
+  /**
+   * Print the contents of an MCParticle keyed container as a decay tree.
+   * Print the associated reconstructed Particles if available.
+   *
+   * @param particles The keyed container of MCParticles to be printed.
+   * @param assoc Associator linking mother to LHCb::MCParticles
+   *
+  */
+  virtual void printAsTree( const LHCb::MCParticles& particles,
                             Particle2MCLinker* assoc ) = 0;
 
-  /// Print all the Particles in the event as a flat list.
-  virtual void printAsList( const LHCb::Particle::ConstVector &event ) = 0;
-  /// Also print the truth/reconstructed info if available.
-  virtual void printAsList( const LHCb::Particle::ConstVector &event,
+  /**
+   * Print the contents of an Particle::ConstVector as a flat list.
+   * @param particles The vector of Particles to be printed.
+   *
+   */
+  virtual void printAsList( const LHCb::Particle::ConstVector& particles ) = 0;
+
+  /**
+   * Print the contents of an Particle::ConstVector as a flat list.
+   * Print the associated MCParticles if available.
+   *
+   * @param particles The vector of Particles to be printed.
+   * @param assoc Associator linking mother to LHCb::MCParticles
+   *
+  */
+  virtual void printAsList( const LHCb::Particle::ConstVector& particles,
                             Particle2MCLinker* assoc ) = 0;
-  virtual void printAsList( const LHCb::MCParticle::ConstVector &event,
+
+  /**
+   * Print the contents of an MCParticle::ConstVector as a flat list.
+   * Print the associated recunstructed Particles if available.
+   *
+   * @param particles The vector of MCParticles to be printed.
+   * @param assoc Associator linking mother to LHCb::Particles
+   *
+  */
+  virtual void printAsList( const LHCb::MCParticle::ConstVector& particles,
                             Particle2MCLinker* assoc ) = 0;
-  /// Same from a keyed container.
-  virtual void printAsList( const LHCb::Particles &event ) = 0;
-  virtual void printAsList( const LHCb::Particles &event,
+
+  /**
+   * Print the contents of a Particle keyed container as a flat list.
+   * @param particles The keyed container of Particles to be printed.
+   *
+   */
+  virtual void printAsList( const LHCb::Particles& particles ) = 0;
+
+  /**
+   * Print the contents of an Particle keyed container as a flat list.
+   * Print the associated MCParticles if available.
+   *
+   * @param particles The keyed container of Particles to be printed.
+   * @param assoc Associator linking mother to LHCb::MCParticles
+   *
+  */
+  virtual void printAsList( const LHCb::Particles& particles,
                             Particle2MCLinker* assoc ) = 0;
-  virtual void printAsList( const LHCb::MCParticles &event,
+
+  /**
+   * Print the contents of an MCParticle keyed container as a flat list.
+   * Print the associated reconstructed Particles if available.
+   *
+   * @param particles The keyed container of MCParticles to be printed.
+   * @param assoc Associator linking mother to LHCb::Particles
+   *
+  */
+  virtual void printAsList( const LHCb::MCParticles& particles,
                             Particle2MCLinker* assoc ) = 0;
 };
 #endif // DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H
