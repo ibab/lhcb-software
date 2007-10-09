@@ -1,7 +1,7 @@
 #ifndef _TsaParabola_H
 #define _TsaParabola_H
 
-#include "TsaKernel_Tf/Line.h"
+#include "TsaKernel/Line.h"
 
 namespace Tf
 {

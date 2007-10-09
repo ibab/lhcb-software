@@ -1,4 +1,4 @@
-// $Id: SeedPnt.h,v 1.1 2007-09-16 09:44:45 mneedham Exp $
+// $Id: SeedPnt.h,v 1.2 2007-10-09 17:55:48 smenzeme Exp $
 #ifndef SEEDPNT_H
 #define SEEDPNT_H 1
 
@@ -14,7 +14,7 @@
 #include "Kernel/OTChannelID.h"
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbID.h"
-#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel/SeedHit.h"
 
 namespace Tf
 {

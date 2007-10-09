@@ -1,4 +1,4 @@
-// $Id: SeedStub.h,v 1.1 2007-09-16 09:44:45 mneedham Exp $
+// $Id: SeedStub.h,v 1.2 2007-10-09 17:55:48 smenzeme Exp $
 #ifndef SEEDSTUB_H
 #define SEEDSTUB_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiKernel/boost_allocator.h"
 
 //class SeedHit;
-#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel/SeedHit.h"
 
 // Class ID definition
 static const CLID CLID_TsaSeedStub = 19113;

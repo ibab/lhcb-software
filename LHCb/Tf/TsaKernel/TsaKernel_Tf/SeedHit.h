@@ -1,8 +1,8 @@
-// $Id: SeedHit.h,v 1.1 2007-09-16 09:44:45 mneedham Exp $
+// $Id: SeedHit.h,v 1.2 2007-10-09 17:55:48 smenzeme Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
-#include "TsaKernel_Tf/TsaSeedingHit.h"
+#include "TsaKernel/TsaSeedingHit.h"
 
 #include "Kernel/OTChannelID.h"
 
