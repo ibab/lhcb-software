@@ -46,7 +46,9 @@ private:
   
   // Algorithm's properties
   std::string m_extension;            // Extension to the location of the L0MuonCandidates
-  bool m_storeFlag;                   // Flag to enable/disable event storage in raw banks
+  bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
+  bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
+  bool m_storeBank;                   // Flag to enable/disable event storage in raw banks
   int  m_inputSource;                 // Specify where to take the input data for the processing
                                       //  - 0: from Muon output
                                       //  - 1: from the input of the processor (extracted form L0Muon itself) 

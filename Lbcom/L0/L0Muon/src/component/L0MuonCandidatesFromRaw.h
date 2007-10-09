@@ -22,6 +22,10 @@ private:
   int m_procVersion;                  // Emulator version
   std::vector<double> m_ptParameters; // Pt calculation parameters
   std::string  m_configfile;          // Config file name
+  bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
+  bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
+  int m_mode;                         // Output mode (defin the bank to be decoded)
+  
 
   // For output to RawEvent, TES or L0ProcessorDatas
   L0MuonOutputs* m_outputTool;

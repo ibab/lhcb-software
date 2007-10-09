@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.4 2007-09-06 19:46:19 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.5 2007-10-09 23:37:24 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -64,7 +64,9 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("FoiXSize"       , m_foiXSize);
   declareProperty("FoiYSize"       , m_foiYSize);
 
-  declareProperty("StoreInBuffer"  , m_storeFlag = true);  
+  declareProperty("StoreInBuffer"  , m_storeBank  = true);  
+  declareProperty("WriteOnTES"     , m_writeOnTES = false);  
+  declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
 
   declareProperty("InputSource"    , m_inputSource = 0);  
 
@@ -159,22 +161,27 @@ StatusCode L0MuonAlg::execute()
   debug() << "Execution of MuonKernel units ..." << endreq;
   m_muontriggerunit->execute();
 
-  // Fill the Raw Event container or write on TES
-  if ( m_storeFlag ) {
+  // Fill the Raw Event container 
+  if ( m_storeBank ) {
     debug() << "Fill RawEvent ..." << endreq;
     sc = m_outputTool->writeRawBanks(m_outputMode,m_bankVersion);
     if ( sc.isFailure() ) return sc;  
-  } else {
+  } 
+  
+  // Write on TES
+  if ( m_writeOnTES) {
     debug() << "Write on TES ..." << endreq;
     sc = m_outputTool->writeOnTES(m_procVersion, m_extension);
     if ( sc.isFailure() ) return sc;  
   }
 
   // Fill the container for the L0DU (L0ProcessorData)
-  debug() << "Fill L0ProcessorData ..." << endreq;
-  sc = m_outputTool->writeL0ProcessorData();
-  if ( sc.isFailure() ) return sc;  
-
+  if ( m_writeL0ProcData) {
+    debug() << "Fill L0ProcessorData ..." << endreq;
+    sc = m_outputTool->writeL0ProcessorData(m_extension);
+    if ( sc.isFailure() ) return sc;  
+  }
+  
   // Postexecution phase: reset registers
   debug() << "Postexecution of MuonKernel units ..." << endreq;
   m_muontriggerunit->postexecute();

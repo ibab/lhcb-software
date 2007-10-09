@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.2 2007-09-06 19:46:19 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.3 2007-10-09 23:37:24 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -36,14 +36,14 @@ public:
   virtual ~L0MuonOutputs( ); ///< Destructor
 
   /// Decode the L0Muon banks and fill the registers of the converters
-  StatusCode decodeRawBanks();
+  StatusCode decodeRawBanks(int mode=0);
   /// From the registers of the converters, fill the L0Muon banks
   StatusCode writeRawBanks(int mode, int bankVersion);
   /// From the registers of the converters, fill the L0MuonCandidates
   /// and L0MuonData containers on the TES
   StatusCode writeOnTES(int procVersion, std::string extension);
   /// From the registers of the converters, fill the L0ProcessorDatas
-  StatusCode writeL0ProcessorData();
+  StatusCode writeL0ProcessorData(std::string extension);
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
   /// Monitor the L0Muon Banks

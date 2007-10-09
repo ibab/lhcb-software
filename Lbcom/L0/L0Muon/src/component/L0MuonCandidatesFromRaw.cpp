@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.6 2007-09-06 19:46:19 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.7 2007-10-09 23:37:24 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -31,10 +31,13 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   m_ptParameters.push_back(40.);   // Precision on PT (MeV)
   m_ptParameters.push_back(7.);    // Number of bins in PT
   
-  declareProperty( "ConfigFile"    , m_configfile      );
-  declareProperty( "PtParameters"  , m_ptParameters    ); 
-  declareProperty( "ProcVersion"   , m_procVersion = 0 );
-  declareProperty( "Extension"     , m_extension = ""  );
+  declareProperty( "ConfigFile"     , m_configfile      );
+  declareProperty( "PtParameters"   , m_ptParameters    ); 
+  declareProperty( "ProcVersion"    , m_procVersion = 0 );
+  declareProperty( "Extension"      , m_extension = ""  );
+  declareProperty( "WriteOnTES"     , m_writeOnTES = true);  
+  declareProperty( "WriteL0ProcData", m_writeL0ProcData  = false);  
+  declareProperty( "OutputMode"     , m_mode = 0 );
 }
 
 
@@ -88,16 +91,27 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   // Decode Raw banks
   debug() << "Write on TES ..." << endreq;
-  sc = m_outputTool->decodeRawBanks();
+  sc = m_outputTool->decodeRawBanks(m_mode);
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // Write on TES
-  debug() << "Write on TES ..." << endreq;
-  sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( m_writeOnTES) {
+    debug() << "Write on TES ..." << endreq;
+    sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
+    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  }
+
+  // Fill the container for the L0DU (L0ProcessorData)
+  if ( m_writeL0ProcData) {
+    debug() << "Fill L0ProcessorData ..." << endreq;
+    sc = m_outputTool->writeL0ProcessorData(m_extension);
+    if ( sc.isFailure() ) return sc;  
+  }
 
   // If compare
-  if ( ("" != m_extension) && (exist<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default )) ) {
+  if ( m_writeOnTES  
+       && ("" != m_extension) 
+       && (exist<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default )) ) {
 
     //== Compare 
     

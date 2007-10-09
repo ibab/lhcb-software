@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.4 2007-10-01 08:52:13 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.5 2007-10-09 23:37:24 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ L0MuonOutputs::~L0MuonOutputs() {}
 
 //=============================================================================
  
-StatusCode L0MuonOutputs::decodeRawBanks(){
+StatusCode L0MuonOutputs::decodeRawBanks(int mode){
 
   int rawBankSize = 0;
 
@@ -104,62 +104,68 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
     }
   }
 
-  // L0MuonCtrlAll Banks
-  const std::vector<LHCb::RawBank*>& ctrlallbanks = rawEvt->banks( LHCb::RawBank::L0MuonCtrlAll );
-  if (ctrlallbanks.size()!=0) {
-    for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = ctrlallbanks.begin(); ctrlallbanks.end() != itBnk; ++itBnk ) {
-      int srcID = (*itBnk)->sourceID();
-      int bankVersion  = (*itBnk)->version();
-      std::vector<unsigned int> data;
-      unsigned int* body = (*itBnk)->data();
-      int size = (*itBnk)->size()/4;
-      debug() << "decodeRawBanks: L0MuonCtrlAll bank (version "<< bankVersion <<" ) found"
-              <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-      rawBankSize+=size;
-      for ( int k = 0; size > k; ++k ) {
-        data.push_back( *body++ );
+  if (mode>1) {
+    // L0MuonCtrlAll Banks
+    const std::vector<LHCb::RawBank*>& ctrlallbanks = rawEvt->banks( LHCb::RawBank::L0MuonCtrlAll );
+    if (ctrlallbanks.size()!=0) {
+      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = ctrlallbanks.begin(); ctrlallbanks.end() != itBnk; ++itBnk ) {
+        int srcID = (*itBnk)->sourceID();
+        int bankVersion  = (*itBnk)->version();
+        std::vector<unsigned int> data;
+        unsigned int* body = (*itBnk)->data();
+        int size = (*itBnk)->size()/4;
+        debug() << "decodeRawBanks: L0MuonCtrlAll bank (version "<< bankVersion <<" ) found"
+                <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
+        rawBankSize+=size;
+        for ( int k = 0; size > k; ++k ) {
+          data.push_back( *body++ );
+        }
+        m_ctrlAll[srcID].decodeBank(data,bankVersion);
       }
-      m_ctrlAll[srcID].decodeBank(data,bankVersion);
     }
   }
-
-  // L0MuonProcCand Banks
-  const std::vector<LHCb::RawBank*>& proccandbanks = rawEvt->banks( LHCb::RawBank::L0MuonProcCand );
-  if (proccandbanks.size()!=0) {
-    for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = proccandbanks.begin(); proccandbanks.end() != itBnk; ++itBnk ) {
-      int srcID = (*itBnk)->sourceID();
-      int bankVersion  = (*itBnk)->version();
-      std::vector<unsigned int> data;
-      unsigned int* body = (*itBnk)->data();
-      int size = (*itBnk)->size()/4;
-      debug() << "decodeRawBanks: L0MuonProcCand bank (version "<< bankVersion <<" ) found"
-              <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-      rawBankSize+=size;
-      for ( int k = 0; size > k; ++k ) {
-        data.push_back( *body++ );
-      }
-      m_procCand[srcID].decodeBank(data,bankVersion);
-    }    
+  
+  if (mode>0) {
+    // L0MuonProcCand Banks
+    const std::vector<LHCb::RawBank*>& proccandbanks = rawEvt->banks( LHCb::RawBank::L0MuonProcCand );
+    if (proccandbanks.size()!=0) {
+      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = proccandbanks.begin(); proccandbanks.end() != itBnk; ++itBnk ) {
+        int srcID = (*itBnk)->sourceID();
+        int bankVersion  = (*itBnk)->version();
+        std::vector<unsigned int> data;
+        unsigned int* body = (*itBnk)->data();
+        int size = (*itBnk)->size()/4;
+        debug() << "decodeRawBanks: L0MuonProcCand bank (version "<< bankVersion <<" ) found"
+                <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
+        rawBankSize+=size;
+        for ( int k = 0; size > k; ++k ) {
+          data.push_back( *body++ );
+        }
+        m_procCand[srcID].decodeBank(data,bankVersion);
+      }    
+    }
   }
-
-  // L0MuonProcData Banks
-  const std::vector<LHCb::RawBank*>& procdatabanks = rawEvt->banks( LHCb::RawBank::L0MuonProcData );
-  if (procdatabanks.size()!=0) {
-    for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = procdatabanks.begin(); procdatabanks.end() != itBnk; ++itBnk ) {
-      int srcID = (*itBnk)->sourceID();
-      int bankVersion  = (*itBnk)->version();
-      std::vector<unsigned int> data;
-      unsigned int* body = (*itBnk)->data();
-      int size = (*itBnk)->size()/4;
-      debug() << "decodeRawBanks: L0MuonProcData bank (version "<< bankVersion <<" ) found"
-              <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-      rawBankSize+=size;
-      for ( int k = 0; size > k; ++k ) {
-        data.push_back( *body++ );
-      }
-      debug() << "decodeRawBanks: L0MuonProcData bank calling decoding of "<< data.size()<<" words"<<endreq;
-      m_procData[srcID].decodeBank(data,bankVersion);
-    }    
+  
+  if (mode>0) {
+    // L0MuonProcData Banks
+    const std::vector<LHCb::RawBank*>& procdatabanks = rawEvt->banks( LHCb::RawBank::L0MuonProcData );
+    if (procdatabanks.size()!=0) {
+      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = procdatabanks.begin(); procdatabanks.end() != itBnk; ++itBnk ) {
+        int srcID = (*itBnk)->sourceID();
+        int bankVersion  = (*itBnk)->version();
+        std::vector<unsigned int> data;
+        unsigned int* body = (*itBnk)->data();
+        int size = (*itBnk)->size()/4;
+        debug() << "decodeRawBanks: L0MuonProcData bank (version "<< bankVersion <<" ) found"
+                <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
+        rawBankSize+=size;
+        for ( int k = 0; size > k; ++k ) {
+          data.push_back( *body++ );
+        }
+        debug() << "decodeRawBanks: L0MuonProcData bank calling decoding of "<< data.size()<<" words"<<endreq;
+        m_procData[srcID].decodeBank(data,bankVersion);
+      }    
+    }
   }
 
   ++m_rawBankNorm;
@@ -408,7 +414,7 @@ StatusCode L0MuonOutputs::monitorBanks(){
 }
 
 
-StatusCode L0MuonOutputs::writeL0ProcessorData(){
+StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
 
   unsigned long cu[4],su[4];
   unsigned long  index[4];
@@ -471,7 +477,7 @@ StatusCode L0MuonOutputs::writeL0ProcessorData(){
   l0MuonDatas->insert( l0SU2 ) ; 
   l0MuonDatas->insert( l0CU3 ) ;
   l0MuonDatas->insert( l0SU3 ) ; 
-  put(  l0MuonDatas ,  LHCb::L0ProcessorDataLocation::Muon );
+  put(  l0MuonDatas ,  LHCb::L0ProcessorDataLocation::Muon + extension );
 
   return StatusCode::SUCCESS;
 }
