@@ -1,8 +1,8 @@
-// $Id: SeedPnt.cpp,v 1.2 2007-09-16 09:44:46 mneedham Exp $
+// $Id: SeedPnt.cpp,v 1.3 2007-10-09 17:56:26 smenzeme Exp $
 // Include files 
 
 // local
-#include "TsaKernel_Tf/SeedPnt.h"
+#include "TsaKernel/SeedPnt.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SeedPnt
