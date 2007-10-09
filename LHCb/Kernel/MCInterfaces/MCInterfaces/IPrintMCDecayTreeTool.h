@@ -1,4 +1,4 @@
-// $Id:
+// $Id: IPrintMCDecayTreeTool.h,v 1.2 2007-10-09 16:28:54 jpalac Exp $
 #ifndef MCINTERFACES_IMCPRINTDECAYTREETOOL_H
 #define MCINTERFACES_IMCPRINTDECAYTREETOOL_H 1
 
@@ -42,18 +42,18 @@ public:
 
   /// Print all the MCParticles in a vector as a tree.
   /// Top level particles are those without parent.
-  virtual void printEventAsTree( const LHCb::MCParticle::ConstVector& event ) = 0;
+  virtual void printAsTree( const LHCb::MCParticle::ConstVector& event ) = 0;
   /// Print all the MCParticles in a keyed container as a tree.
   /// Top level particles are those without parent.
-  virtual void printEventAsTree( const LHCb::MCParticles& event ) = 0;
+  virtual void printAsTree( const LHCb::MCParticles& event ) = 0;
 
   /// Print all the MCParticles in a vector as a flat list.
   /// Top level particles are those without parent.
-  virtual void printEventAsList( const LHCb::MCParticle::ConstVector& event ) = 0;
+  virtual void printAsList( const LHCb::MCParticle::ConstVector& event ) = 0;
 
   /// Print all the MCParticles in a keyed container as a flat list.
   /// Top level particles are those without parent.
-  virtual void printEventAsList( const LHCb::MCParticles& event ) = 0;
+  virtual void printAsList( const LHCb::MCParticles& event ) = 0;
 
 };
 #endif // MCINTERFACES_IPRINTDECAYTREETOOL_H
