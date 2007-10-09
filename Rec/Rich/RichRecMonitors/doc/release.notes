@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-10-09 - Chris Jones
+ - Add plots for fake photons to photon angle monitor
+
 !====================== RichRecMonitors v2r12 2007-09-20 =====================
 ! 2007-08-13 - Chris Jones
  - Adapt to changes in RichKernel + monitoring improvements

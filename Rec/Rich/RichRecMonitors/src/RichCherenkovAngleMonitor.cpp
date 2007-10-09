@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.10 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.11 2007-10-09 15:35:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -216,17 +216,30 @@ StatusCode CherenkovAngleMonitor::execute()
             // make a tuple
 
           Tuple tuple = nTuple( hid(rad,"ckResTuple"), "CKTuple" ) ;
-
           tuple->column( "RecoPtot", pTot );
           tuple->column( "RecoCKtheta" , thetaRec );
           tuple->column( "RecoCKphi" ,   phiRec );
           tuple->column( "McCKtheta" , thetaMC );
           tuple->column( "McCKphi" ,  phiMC );
           tuple->column( "ExpCKtheta", thetaExpTrue );
-
           tuple->write();
 
-        } // true photon
+        }
+        else // fake photon
+        {
+          
+          // CK angles for fake photons
+          plot1D( thetaRec, hid(rad,mcType,"ckThetaFake"), "Cherenkov theta : fake",
+                  minCkTheta[rad], maxCkTheta[rad] );
+          plot1D( thetaExpTrue, hid(rad,"ckThetaExpFake"), "Expected Cherenkov theta : fake",
+                  minCkTheta[rad], maxCkTheta[rad] );
+          plot1D( phiRec,   hid(rad,mcType,"ckPhiFake"), "Cherenkov phi : fake", 0, 2*M_PI );
+          plot1D( delTheta, hid(rad,"ckDiffFake"), "Rec-Exp CK theta all : fake",
+                  -ckRange[rad],ckRange[rad]);
+          profile1D( delTheta, pTot, hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
+                     minP, maxP, 50 ); 
+
+        }
 
       } // mc type known
 

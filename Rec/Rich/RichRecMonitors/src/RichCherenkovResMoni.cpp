@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.13 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.14 2007-10-09 15:35:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -176,6 +176,9 @@ StatusCode CherenkovResMoni::execute()
         }
 
       }
+      //else // fake photons
+      //{        
+      //}
 
     }
 
