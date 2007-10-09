@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-10-09 - Chris Jones
+ - Add MC-fake and inclusive CK theta resolution plots to RichRecoQC
+
 ! 2007-09-28 - Chris Jones
  - Add some formatting to verbose printout to aid comparisons between 
    different platforms.

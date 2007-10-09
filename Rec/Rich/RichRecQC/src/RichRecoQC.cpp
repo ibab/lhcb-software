@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.33 2007-08-09 16:20:32 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.34 2007-10-09 17:20:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -169,6 +169,8 @@ StatusCode RecoQC::execute()
       plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta",
               m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad], 50 );
       plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi", 0.0, 2*Gaudi::Units::pi, 50 );
+      plot1D( thetaRec-thetaExpTrue,
+              hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad], 50 );
 
       if ( mcTrackOK && mcRICHOK )
       {
@@ -180,14 +182,19 @@ StatusCode RecoQC::execute()
           avRecTrueTheta += thetaRec;
           // resolution plot
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad], 50 );
+                  hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1 : MC true photons", -ckResRange[rad], ckResRange[rad], 50 );
           if ( resExpTrue>0 )
           {
             // pull plot
             const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
             plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -4, 4, 50 );
           }
-        } // true CK photon
+        }
+        else // fake photon
+        {
+          plot1D( thetaRec-thetaExpTrue,
+                  hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1 : MC fake photons", -ckResRange[rad], ckResRange[rad], 50 );
+        }
       } // MC is available
 
     } // photon loop
