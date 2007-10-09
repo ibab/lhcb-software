@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+  <File ID="F877D92E-B8CA-DA11-9D8A-0011257568D2">
+    <physical>
+      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001276/SIM/00001276_00000002_1.sim"/>
+    </physical>
+    <logical/>
+  </File>
+
+
+</POOLFILECATALOG>

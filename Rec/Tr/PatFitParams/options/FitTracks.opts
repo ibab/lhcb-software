@@ -1,0 +1,58 @@
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts" 
+#include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
+#include "$STDOPTS/DC06Conditions.opts"
+InitCaloSeq.Members = {};
+CheckRICHSeq.Members = { };
+RecoRICHSeq.Members = {};
+RecoCALOSeq.Members = {};
+RecoPROTOSeq.Members = {};
+RecoMUONSeq.Members = {};
+OutputDSTSeq.Members = {};
+MCLinksTrSeq.Members = {};
+PoolDbCacheSvc.AgeLimit = 1;
+#pragma print on
+
+NTupleSvc.Output = { "FILE1 DATAFILE='track.root' TYP='ROOT' OPT='NEW'"};
+
+EventSelector.Input   = {
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001276/DIGI/00001276_00000002_5.digi' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:$PATFITPARAMSROOT/options/NewCatalog.xml"
+};
+RecoTrSeq.Members = { "PatInitEvent",
+                      "UnpackMCParticle",
+                      "UnpackMCVertex",
+                      "DecodeVeloRawBuffer",
+                      "PatVeloLoadClusters",
+                      "PatVeloRTracking",
+                      "PatVeloSpaceTracking", 
+                      "PatLHCbID2MCParticle",
+                      "PatTrack2MCParticle",
+                      "PatChecker",
+                      "FwdFitParams",
+                      "SeedFitParams",
+                      "KsFitParams"
+                       };
+
+ApplicationMgr.EvtMax    = 1000;
+EventSelector.PrintFreq  = 10;
+//KsFitParams.OutputLevel = 2;
+
+KsFitParams.zMagnetParams = { 5372.42, -3372.25, 370.484 };
+KsFitParams.momentumParams = { 1226.32, 479.859, 2859.75 };
+
+
+SeedFitParams.sagitaParams = { -0.00204497, 0.0426763 };
+SeedFitParams.momentumParams = { 0.0241056, -0.520262, 680.082 };
+SeedFitParams.zMagnetParams = { 5373.86, -3283.82, 379.141 };
+
+
+FwdFitParams.ZVelo      = 1640 ;
+FwdFitParams.ZReference = 8520 ;
+FwdFitParams.zMagnetParams = { 5199.31, 334.725, -1283.86, 9.59486e-06, -413.281 };
+FwdFitParams.xParams = { 16.8238, -6.35556 };
+FwdFitParams.yParams = { -970.89 };
+FwdFitParams.y1Params = { -0.686028 };
+FwdFitParams.momentumParams = { 1.21909, 0.627841, -0.235216, 0.433811, 2.92798, -21.3909 };
