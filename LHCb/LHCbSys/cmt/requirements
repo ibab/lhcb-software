@@ -92,7 +92,7 @@ use LoKiAlgoMC            v6r1   Phys    # Ivan Belyaev
 use LoKiArrayFunctors     v6r1   Phys    # Ivan Belyaev
 use Tell1Kernel           v1r0   DAQ     # Tomasz Szumlak
 use TfKernel              v1r1   Tf      # "A-team"
-use PatKernel             v1r0   Tf      # Stephanie Hansmann-Menzemer
+use PatKernel             v1r1   Tf      # Stephanie Hansmann-Menzemer
 #use TsaKernel             v3r0   Tf      # Chris Jones, Matt Needham
 
 # LHCb  Examples
