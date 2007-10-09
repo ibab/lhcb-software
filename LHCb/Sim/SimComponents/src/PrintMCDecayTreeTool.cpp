@@ -11,7 +11,6 @@
 // from Event
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-#include "Event/Particle.h"
 
 // from LHCb
 #include "GaudiKernel/PhysicalConstants.h"

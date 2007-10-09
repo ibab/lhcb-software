@@ -5,13 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r6 2007-10-09 ========================
 ! 2007-10-09 - Juan PALACIOS
- - Add src//PrintMCDecayTreeTool{.cpp, .h}
+ - Add src/PrintMCDecayTreeTool{.cpp, .h}
   . Implementation of MCInterfaces/IPrintMCDecayTreeTool.h
- - cmt/requirements
-  . Increase version to v2r7
 
-!====================== SimComponents v2r6 2007-10-03 ========================
 ! 2007-10-03 - Marco Cattaneo
  - MCDecayFinder: get the ParticlePropertySvc in initialize, not the constructor
 
