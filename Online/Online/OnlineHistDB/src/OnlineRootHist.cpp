@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.7 2007-09-28 15:46:07 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.8 2007-10-09 08:51:53 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(std::string Identifier,
@@ -21,10 +21,11 @@ OnlineRootHist::OnlineRootHist(OnlineHistogram*  oh) :
 
 bool OnlineRootHist::setdbHist(OnlineHistogram*  oh) {
   bool out=false;
+  bool isInit = (NULL == m_dbHist);
   if(oh) {
     if (oh->identifier() == m_identifier && false == oh->isAbort()) {
       m_dbHist = oh;
-      if (m_rootHist) setTH1FromDB();
+      if (m_rootHist && isInit) setTH1FromDB();
       out=true;
     }
     else {
@@ -37,9 +38,10 @@ bool OnlineRootHist::setdbHist(OnlineHistogram*  oh) {
 
 bool OnlineRootHist::setrootHist(TH1*  rh) {
   bool out=false;
+  bool isInit = (NULL == m_rootHist);
   if(rh) {
     m_rootHist = rh;
-    if (m_dbHist) setTH1FromDB();
+    if (m_dbHist && isInit) setTH1FromDB();
     out=true;
   }
   return out;
