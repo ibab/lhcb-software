@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2007-10-09 - Stephanie Hansmann-Menzemer
+ - Move header files back to  TsaKernel
 
 !======================= TsaKernel v3r0 2007-09-18 ==========================
 ! 2007-09-16 - Kurt Rinnert
