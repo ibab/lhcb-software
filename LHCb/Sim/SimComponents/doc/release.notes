@@ -5,6 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2007-10-09 - Juan PALACIOS
+ - src/PrintMCDecayTreeTool{.cpp, .h}
+  . Change names of some methods from "printEventAsXXX" to "printAsXXX"
+
+
 !====================== SimComponents v2r6 2007-10-09 ========================
 ! 2007-10-09 - Juan PALACIOS
  - Add src/PrintMCDecayTreeTool{.cpp, .h}
