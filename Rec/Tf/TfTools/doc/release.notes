@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/TfTools
+! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
+! Purpose     : Core classes for the Tf framework
+!-----------------------------------------------------------------------------
+
+
+! 2007-10-09  Stephanie Hansmann-Menzemer
+  - split off component libaries of Tf/TfKernel in different package
