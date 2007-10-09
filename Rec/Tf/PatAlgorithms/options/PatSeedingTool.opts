@@ -1,0 +1,3 @@
+//== Options obtained by the fit of the MC track parameters 
+
+ToolSvc.PatSeedingTool.momentumParams = {-6.3453, -4.77725, -14.9039, 3.13647e-08};

@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/PatAlgorithms
+! Responsible : Stephanie-Hansmann-Menzemer
+! Purpose     : track finding
+!-----------------------------------------------------------------------------
+! 2007-10-09 - Stephanie Hansmann-Mwnzemer
+  - import PatForward to PatAlgorithms
+ 
+!-----------------------------------------------------------------------------
+All previous release notes can be found in Tf/PatForward package, package was
+ported by the A team
