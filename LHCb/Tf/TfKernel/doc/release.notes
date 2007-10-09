@@ -2,7 +2,10 @@
 ! Package     : Tf/TfKernel
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
+
 !-----------------------------------------------------------------------------
+! 2007-10-059- Stephanie Hansmann-Menzemer
+ - split up component libary, now in Rec/Tf/TfTools
 
 !============================ TfKernel v1r1 2007-10-05 =======================
 ! 2007-10-05 - Marco Cattaneo
