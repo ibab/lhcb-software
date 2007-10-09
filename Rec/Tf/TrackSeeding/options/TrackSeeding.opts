@@ -1,0 +1,23 @@
+// --------------------
+// TrackSeeding options
+// --------------------
+RecoTrSeq.Members += { "TrackSeedFind" };
+//TrackSeedFind.Outputlevel=2;
+//TrackSeedFind.maxXSlope = 0.6;
+//TrackSeedFind.sigmaOutlierX = 3;
+//TrackSeedFind.sigmaOutlierY = 4;
+//TrackSeedFind.YSlopeDevMax = 0.01;
+//TrackSeedFind.maxOThits = 10000;
+//TrackSeedFind.OTTimeAv = 29;
+//TrackSeedFind.minXplane = 2;
+//TrackSeedFind.minYplane = 2;
+//TrackSeedFind.minT1T3 = 5;
+//TrackSeedFind.minUV13 = 1;
+//TrackSeedFind.minUV123 = 2;
+//TrackSeedFind.minT123 = 16;
+//TrackSeedFind.minY123 = 7;
+//TrackSeedFind.minX123 = 7;
+//TrackSeedFind.maxChi2 = 6;
+//TrackSeedFind.useSpilloverKiller = false;
+//TrackSeedFind.useIT = false;
+//TrackSeedFind.outputtracklocation = "Rec/Track/Seed";

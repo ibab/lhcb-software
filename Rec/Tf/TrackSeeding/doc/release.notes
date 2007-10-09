@@ -1,0 +1,37 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackSeeding
+! Responsible : Henk Jan Bulten
+! Purpose     : Package for the Seeding Pattern Recognition algorithm
+!-----------------------------------------------------------------------------
+
+!========================= TrackSeeding v1r2 2007-09-20 ======================
+! 2007-09-17 - Juan PALACIOS
+ - src/SeedHit.cpp
+   . Adapt to new IGeometryInfo interface. Replace IGeometryInfo::matrix()
+     calls by IGeometryInfo::toLocalMatrix(). Needs DetDesc v18r0 or higher.
+ - cmt/requirements
+   . Increase version to v1r2
+
+!========================= TrackSeeding v1r1 2007-03-02 ======================
+! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove obsolete TrackSeeding_load.cpp file
+ - Remove obsolete ApplicationMgr.DLLs option
+
+!========================= TrackSeeding v1r0 2006-08-04 ======================
+! 2006-08-04 - Marco Cattaneo
+ - Remove TrackSeeding directory. All includes are in src
+
+! 2006-08-03 - Eduardo Rodrigues
+ - several code speed improvements
+ - removal of some compilation warning messages
+
+! 2006-08-01 - Eduardo Rodrigues
+ - replaced opts directory by the standard name options
+
+! 2006-07-31 - Eduardo Rodrigues
+ - added missing flags on output tracks
+ - corrected addition of LHCbIDs and measurements on the track
+
+! 2006-07-28 - Henk Jan Bulten
+ - first release of the seeding pattern recognition algorithm
