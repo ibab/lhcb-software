@@ -1,4 +1,4 @@
-// $Id:
+// $Id: PrintMCDecayTreeTool.cpp,v 1.3 2007-10-09 16:26:23 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -345,9 +345,9 @@ void PrintMCDecayTreeTool::printAncestor( const LHCb::MCParticle *child )
   log << MSG::INFO << decay << endreq;
 }
 //=============================================================================
-// printEventAsTree (MCParticle)
+// printAsTree (MCParticle)
 //=============================================================================
-void PrintMCDecayTreeTool::printEventAsTree( const LHCb::MCParticle::ConstVector &event)
+void PrintMCDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &event)
 {
   MsgStream log(msgSvc(), name());
 
@@ -364,9 +364,9 @@ void PrintMCDecayTreeTool::printEventAsTree( const LHCb::MCParticle::ConstVector
   log << endreq;
 }
 //=============================================================================
-// printEventAsTree (MCParticle) (KeyedContainer)
+// printAsTree (MCParticle) (KeyedContainer)
 //=============================================================================
-void PrintMCDecayTreeTool::printEventAsTree( const LHCb::MCParticles& event )
+void PrintMCDecayTreeTool::printAsTree( const LHCb::MCParticles& event )
 {
   MsgStream log(msgSvc(), name());
 
@@ -409,9 +409,9 @@ void PrintMCDecayTreeTool::printDecayTree( const LHCb::MCParticle *mother,
   }
 }
 //=============================================================================
-// printEventAsList (MCParticle)
+// printAsList (MCParticle)
 //=============================================================================
-void PrintMCDecayTreeTool::printEventAsList( const LHCb::MCParticle::ConstVector &event)
+void PrintMCDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector &event)
 {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << std::endl;
@@ -424,9 +424,9 @@ void PrintMCDecayTreeTool::printEventAsList( const LHCb::MCParticle::ConstVector
   log << endreq;
 }
 //=============================================================================
-// printEventAsList (MCParticle) (KeyedContainer)
+// printAsList (MCParticle) (KeyedContainer)
 //=============================================================================
-void PrintMCDecayTreeTool::printEventAsList( const LHCb::MCParticles &event)
+void PrintMCDecayTreeTool::printAsList( const LHCb::MCParticles &event)
 {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << std::endl;

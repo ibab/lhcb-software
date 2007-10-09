@@ -1,4 +1,4 @@
-// $Id:
+// $Id: PrintMCDecayTreeTool.h,v 1.2 2007-10-09 16:26:23 jpalac Exp $
 #ifndef PRINTMCDECAYTREETOOL_H 
 #define PRINTMCDECAYTREETOOL_H 1
 
@@ -41,13 +41,13 @@ public:
   /// Print all the MC particles leading to this one.
   virtual void printAncestor( const LHCb::MCParticle *child );
 
-  virtual void printEventAsTree( const LHCb::MCParticle::ConstVector& event );
+  virtual void printAsTree( const LHCb::MCParticle::ConstVector& event );
 
-  virtual void printEventAsTree( const LHCb::MCParticles &event );
+  virtual void printAsTree( const LHCb::MCParticles &event );
 
-  virtual void printEventAsList( const LHCb::MCParticle::ConstVector &event );
+  virtual void printAsList( const LHCb::MCParticle::ConstVector &event );
 
-  virtual void printEventAsList( const LHCb::MCParticles &event );
+  virtual void printAsList( const LHCb::MCParticles &event );
 
 private:
 
