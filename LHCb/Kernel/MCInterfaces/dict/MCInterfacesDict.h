@@ -25,5 +25,8 @@
 // Previously in LHCbKernel
 #include "MCInterfaces/IMCParticleSelector.h"
 
+// Previously in DaVinciMCTools
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
+
 #endif // DICT_MCINTERFACESDICT_H
 
