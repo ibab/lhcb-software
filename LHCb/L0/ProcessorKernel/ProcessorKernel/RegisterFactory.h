@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.9 2007-10-09 06:11:38 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.10 2007-10-09 09:23:08 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -103,12 +103,8 @@ namespace L0Muon {
 
   private:
 
-    static RegisterFactory* m_instance_0;
-    static RegisterFactory* m_instance_1;
     std::map<std::string,Register*> m_registers;    // registers repository    
     bool m_found;
-    static int m_sel;
-    
   };
 
 };  // namespace L0Muon
