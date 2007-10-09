@@ -1,0 +1,24 @@
+#============================================================================
+# Created    : 2005-06-22
+# Maintainer : Mariusz Witek
+#============================================================================
+package           PatPV
+version           v3r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+include_path      none
+
+# Used packages
+#============================================================================
+use VeloDet             v*  Det
+use TrackInterfaces     v*  Tr
+
+# Component library building rule
+#============================================================================
+library          PatPV    ../src/*.cpp 
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PatPV

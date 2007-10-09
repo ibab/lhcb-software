@@ -1,0 +1,7 @@
+// Options for PV offline reconstruction
+ApplicationMgr.TopAlg += { "PatPVOffline" };
+
+// Temporary specification of input tracks
+PatPVOffline.InputTracks = {"Rec/Track/Best"};
+
+
