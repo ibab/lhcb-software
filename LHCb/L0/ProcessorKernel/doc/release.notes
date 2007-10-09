@@ -4,6 +4,10 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!======================== ProcessorKernel v5r1 2007-10-09 ===================
+! 2007-10-09 - Julien Cogan
+ - Move implementation of static selectInstance to .cpp to avoid a problem on
+   Windows 
 
 !======================== ProcessorKernel v5r0 2007-08-27 ===================
 ! 2007-08-27 - Julien Cogan
@@ -12,6 +16,7 @@
  - Unit : delete the sub units in the destructor
  - TileRegister: handle register with duplicated tiles (yields a new attribute
    stored in the XML). 
+
 !======================== ProcessorKernel v4r0 2006-12-14 ===================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
