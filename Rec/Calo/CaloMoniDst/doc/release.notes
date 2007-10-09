@@ -1,25 +1,24 @@
-! $Id: release.notes,v 1.13 2007-09-24 14:48:54 odescham Exp $ 
+! $Id: release.notes,v 1.14 2007-10-09 16:20:54 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v3r0 2007-10-08 ===================
 ! 2007-09-24 - Olivier Deschamps
  - fix against the  PatricleID constructor from int made explicit
  - fix SpdMonitor.cpp (Albert Puig)
  - remove dependency on CaloAssociator in requirements
  - add dependency on DaVinciMCKernel in requirements
 
-
 ! 2007-08-24 - Olivier Deschamps
  - fix unchecked StatusCodes 
 
 ! 2007-08-22 - Albert Puig & Olivier Deschamps
  - new SpdMonitor algorithm
-
 
 ! 2007-07-25 - Konstantin Beloous & Olivier Deschamps
  - Major release 
@@ -32,7 +31,6 @@
           - driven by option/CaloMonitor.opts
     - Checkers : CaloCluster, Photon, ResolvedPi0, CaloPIDs
           - driven by option/CaloChecker.opts
-
 
 !========================== CaloMoniDst v2r1 2005-12-08 ===================
 ! 2005-12-08 - Olivier Deschamps
