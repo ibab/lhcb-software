@@ -63,7 +63,7 @@ use SiDAQ                 v2r0    Si      # Matt Needham
 
 # Other stuff
 use LHCbAlgs              v2r10  Kernel  # Marco Cattaneo
-use MCInterfaces          v1r2   Kernel  # Marco Cattaneo et al.
+use MCInterfaces          v1r3   Kernel  # Marco Cattaneo et al.
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use CaloInterfaces        v7r4   Calo    # Olivier Deschamps
 use CaloUtils             v7r5   Calo    # Olivier Deschamps
