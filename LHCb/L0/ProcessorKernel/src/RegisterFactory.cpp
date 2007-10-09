@@ -12,6 +12,10 @@ L0Muon::RegisterFactory::RegisterFactory() {
 
 L0Muon::RegisterFactory::~RegisterFactory() {}
 
+void L0Muon::RegisterFactory::selectInstance(int i){ 
+  m_sel= i<2 ? i : 1; 
+}
+
 L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
   
   if (m_sel==0) {
@@ -27,6 +31,8 @@ L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
     } 
     return m_instance_1;
   }
+
+  return m_instance_1;
   
 }
 
