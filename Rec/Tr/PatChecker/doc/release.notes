@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/PatChecker
+! Responsible : Olivier Callot
+! Purpose     : Checker for pattern recognition
+!-----------------------------------------------------------------------------
+
+
+! 2007-10-09 - Stephanie Hansmann-Menzemer
+ - import from Tf/PatChecker, for release note see Tf/PatChecker
+
