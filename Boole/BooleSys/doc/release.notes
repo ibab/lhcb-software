@@ -10,6 +10,9 @@ This version uses projects Gaudi v19r5, LHCb v22r10, Lbcom v6r10
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v31r9 or greater
 
+- New features
+  . Add options/v200601.py, to execute Boole from Python shell
+
 - Bug fixes
   . Fix L0Muon options to not run RawBank decoder (Boole.opts)
   . Remove unneccessary release() of UMS from TT/ITReadoutTool (STDAQ v3r1)

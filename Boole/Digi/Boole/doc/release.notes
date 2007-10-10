@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v14r6>2007-10-10 Boole v14r6</A></H1><PRE>
  - Fix L0Muon options to not run RawBank decoder
+ - Add options/v200601.py, to execute Boole from Python shell
 
 </PRE><H1><A NAME=v14r5>2007-09-19 Boole v14r5</A></H1><PRE>
  - Use ParamFiles v7r0
