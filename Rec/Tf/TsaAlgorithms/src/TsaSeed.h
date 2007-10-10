@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.2 2007-09-16 10:01:50 mneedham Exp $
+// $Id: TsaSeed.h,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -11,13 +11,13 @@
 #include "Event/OTTime.h"
 
 //#include "TsaKernel/TimeSummary.h"
-#include "TsaKernel_Tf/ITsaSeedStep.h"
-#include "TsaKernel_Tf/ITsaStubFind.h"
-#include "TsaKernel_Tf/ITsaStubLinker.h"
-#include "TsaKernel_Tf/ITsaStubExtender.h"
-#include "TsaKernel_Tf/SeedStub.h"
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel/ITsaSeedStep.h"
+#include "TsaKernel/ITsaStubFind.h"
+#include "TsaKernel/ITsaStubLinker.h"
+#include "TsaKernel/ITsaStubExtender.h"
+#include "TsaKernel/SeedStub.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/SeedHit.h"
 
 #include "ITsaSeedAddHits.h"
 

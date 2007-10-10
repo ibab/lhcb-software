@@ -17,14 +17,15 @@ use     VeloDet         v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
 use     TfKernel        v*      Tf
+use     TfTools         v*      Tf
 use     LHCbMath        v*      Kernel
 use     GaudiAlg        v*
 
 # Component library building rule
 #============================================================================
-library          PatVelo_Tf    ../src/*.cpp 
+library          PatVelo    ../src/*.cpp 
 
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=PatVelo_Tf
+apply_pattern    component_library library=PatVelo
 

@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.h,v 1.3 2007-08-25 14:27:37 jonrob Exp $ 
+// $Id: PatTTMagnetTool.h,v 1.4 2007-10-10 18:42:24 smenzeme Exp $ 
 #ifndef PATTTMAGNETTOOL_H
 #define PATTTMAGNETTOOL_H 1
 
@@ -15,7 +15,6 @@ class PatTableForFunction;
 static const InterfaceID IID_PatTTMagnetTool ( "PatTTMagnetTool", 1, 0 );
 
 
-namespace Tf {
 
   /** @class PatTTMagnetTool PatTTMagnetTool.h newtool/PatTTMagnetTool.h
    *
@@ -89,6 +88,6 @@ namespace Tf {
     double m_averageDist2mom_NoB;
 
   };
-}
+
 
 #endif // PATTTMAGNETTOOL_H

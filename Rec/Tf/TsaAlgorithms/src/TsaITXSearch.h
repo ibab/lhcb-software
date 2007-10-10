@@ -1,4 +1,4 @@
-// $Id: TsaITXSearch.h,v 1.3 2007-09-16 10:01:50 mneedham Exp $
+// $Id: TsaITXSearch.h,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef _TsaITXSearch_H
 #define _TsaITXSearch_H
 
@@ -6,7 +6,7 @@
 
 #include "TsaXSearchBase.h"
 #include "TsaTStationHitManager.h"
-#include "TsaKernel_Tf/TsaSeedingHit.h"
+#include "TsaKernel/TsaSeedingHit.h"
 #include "TfTsHitNumMap.h"
 
 namespace Tf

@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.2 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.3 2007-10-10 18:42:24 smenzeme Exp $
 
 // Include files
 
@@ -25,7 +25,6 @@
 // 2006-09-25 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-using namespace Tf;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PatTTMagnetTool );

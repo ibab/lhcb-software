@@ -1,4 +1,4 @@
-// $Id: PatVTTTrack.h,v 1.4 2007-09-06 16:17:16 smenzeme Exp $
+// $Id: PatVTTTrack.h,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -9,7 +9,6 @@
 
 #include "PatKernel/PatTTHit.h"
 
-namespace Tf {
 
   /** @class PatVTTTrack PatVTTTrack.h
    *  Holds the candidate track while building it.
@@ -416,6 +415,6 @@ namespace Tf {
     std::vector<int> m_LUT;
 
   };
-}
+
 #endif // PATVTTTRACK_H
 

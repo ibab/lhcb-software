@@ -11,11 +11,11 @@
 
 #include "GaudiAlg/GaudiTool.h"
 
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/TsaSeedingHit.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/TsaSeedingHit.h"
 //#include "TsaKernel/SeedFunctor.h"
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/TsaConstants.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/TsaConstants.h"
 
 #include "TsaTStationHitManager.h"
 #include "TfKernel/RecoFuncs.h"

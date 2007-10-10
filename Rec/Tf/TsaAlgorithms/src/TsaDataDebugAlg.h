@@ -1,4 +1,4 @@
-// $Id: TsaDataDebugAlg.h,v 1.2 2007-09-16 10:01:50 mneedham Exp $
+// $Id: TsaDataDebugAlg.h,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef TSADATADEBUGALG_H
 #define TSADATADEBUGALG_H 1
 
@@ -6,9 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-#include "TsaKernel_Tf/SeedStub.h"
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel/SeedStub.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/SeedHit.h"
 
 namespace Tf
 {

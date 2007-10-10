@@ -15,20 +15,17 @@ include_path      none
 # Used packages.
 #============================================================================
 use	TfKernel	v*	Tf
+use     PatKernel       v*      Tf
 use     TrackInterfaces	v*	Tr
 use     STDet           v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
 
-#-- Temporary, for debug with MC truth
-use     LinkerEvent     v*      Event
-use     MCEvent         v*      Event
-
 #============================================================================
 # Component library building rule
 #============================================================================
-library          PatVeloTT_Tf    ../src/*.cpp 
+library          PatVeloTT    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=PatVeloTT_Tf
+apply_pattern    component_library library=PatVeloTT

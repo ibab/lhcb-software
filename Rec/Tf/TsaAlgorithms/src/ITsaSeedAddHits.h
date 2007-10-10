@@ -1,11 +1,11 @@
-// $Id: ITsaSeedAddHits.h,v 1.2 2007-09-16 10:01:50 mneedham Exp $
+// $Id: ITsaSeedAddHits.h,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef _ITsaSeedAddHits_H
 #define _ITsaSeedAddHits_H
 
 #include "GaudiKernel/IAlgTool.h"
 
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/SeedHit.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/SeedHit.h"
 
 static const InterfaceID IID_ITsaSeedAddHits( "ITsaSeedAddHits", 0, 0 );
 

@@ -18,18 +18,13 @@ use TsaKernel       v* Tf
 use TrackInterfaces v* Tr
 use TrackFitEvent   v* Tr
 
-# Note : we are appending _Tf to the library name simply to 
-#        prevent conflicts with the original in Tr/ - When these are no
-#        longer these can be removed
-#        Remember to change the library name in TsaAlgorithms_dll.cpp
-
 include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          TsaAlgorithms_Tf    ../src/*.cpp 
+library          TsaAlgorithms    ../src/*.cpp 
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=TsaAlgorithms_Tf
+apply_pattern    component_library library=TsaAlgorithms

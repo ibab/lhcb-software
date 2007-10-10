@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.3 2007-09-16 10:01:50 mneedham Exp $
+// $Id: OTExpectedHits.h,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -8,10 +8,10 @@
 #include "GaudiKernel/Plane3DTypes.h"
 
 // Tsa Kernel
-#include "TsaKernel_Tf/IOTExpectedHits.h"
-#include "TsaKernel_Tf/Parabola.h"
-#include "TsaKernel_Tf/Line.h"
-#include "TsaKernel_Tf/Line3D.h"
+#include "TsaKernel/IOTExpectedHits.h"
+#include "TsaKernel/Parabola.h"
+#include "TsaKernel/Line.h"
+#include "TsaKernel/Line3D.h"
 
 // Geometry
 #include "OTDet/DeOTDetector.h"

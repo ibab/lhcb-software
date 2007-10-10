@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2007-10-10 Stephanie Hansmann-Menzemer
+  - remove temp fix, move back headerfiles from TsaKernel_Tf to TsaKernel
 
 ! 2007-09-28 M Needham
  - Fill extraInfo word with TsaLikelihood

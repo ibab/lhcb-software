@@ -2,12 +2,12 @@
 #ifndef _TsaStereoBase_H
 #define _TsaStereoBase_H
 
-#include "TsaKernel_Tf/ITsaSeedStep.h"
+#include "TsaKernel/ITsaSeedStep.h"
 #include "GaudiAlg/GaudiTool.h"
 #include <algorithm>
 
-#include "TsaKernel_Tf/SeedHit.h"
-#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel/SeedHit.h"
+#include "TsaKernel/SeedTrack.h"
 
 namespace Tf
 {

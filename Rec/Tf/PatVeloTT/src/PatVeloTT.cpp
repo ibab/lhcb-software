@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.cpp,v 1.3 2007-09-06 16:17:16 smenzeme Exp $
+// $Id: PatVeloTT.cpp,v 1.4 2007-10-10 18:42:24 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -15,8 +15,6 @@
 // 2007-05-08 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-
-using namespace Tf;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PatVeloTT );
@@ -61,7 +59,7 @@ StatusCode PatVeloTT::initialize() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  m_veloTTTool = tool<PatVeloTTTool>("Tf::PatVeloTTTool", "Tf::PatVeloTTTool", this);
+  m_veloTTTool = tool<PatVeloTTTool>("PatVeloTTTool", "PatVeloTTTool", this);
   
   m_trackSelector = NULL;
   if (m_trackSelectorName != "None")
@@ -69,7 +67,7 @@ StatusCode PatVeloTT::initialize() {
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
-  m_ttHitManager   = tool<TTStationHitManager <PatTTHit> >("Tf::PatTTStationHitManager");
+  m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
   
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;

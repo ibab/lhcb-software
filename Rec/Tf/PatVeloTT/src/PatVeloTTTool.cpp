@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.4 2007-09-10 08:55:10 wouter Exp $
+// $Id: PatVeloTTTool.cpp,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -15,7 +15,6 @@
 // 2007-05-08 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-using namespace Tf;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PatVeloTTTool );
@@ -107,7 +106,7 @@ StatusCode PatVeloTTTool::initialize ( ) {
   }
 
 
-  m_ttHitManager   = tool<TTStationHitManager <PatTTHit> >("Tf::PatTTStationHitManager");
+  m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
   return StatusCode::SUCCESS;
 }
@@ -178,12 +177,12 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   // Loop on regions
   //--------------------------------------------------------------------------
 
-  for (TTStationID sta=0; sta<m_ttHitManager->maxStations(); sta++){
-    for (TTLayerID lay=0; lay<m_ttHitManager->maxLayers(); lay++){
-      for (TTRegionID reg=0; reg<m_ttHitManager->maxRegions(); reg++){
+  for (Tf::TTStationID sta=0; sta<m_ttHitManager->maxStations(); sta++){
+    for (Tf::TTLayerID lay=0; lay<m_ttHitManager->maxLayers(); lay++){
+      for (Tf::TTRegionID reg=0; reg<m_ttHitManager->maxRegions(); reg++){
         if( 0 == m_ttHitManager->hits(sta,lay,reg).size()) continue;
 
-        const ITTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
+        const Tf::ITTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
 
         double zTTReg = regionB->z();
         double x = cand.xAtZ(zTTReg);
@@ -206,7 +205,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
         //--------------------------------------------------------------------------
         // Loop on hits
         //--------------------------------------------------------------------------
-        TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
+        Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
 
         for ( PatTTHits::const_iterator itH = range.begin();
               range.end() != itH; ++itH ) {

@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.h,v 1.2 2007-09-16 10:01:51 mneedham Exp $
+// $Id: TsaSeedTrackCnv.h,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
 #ifndef _TsaSeedTrackCnv_H_
 #define _TsaSeedTrackCnv_H_
 
@@ -10,10 +10,10 @@
 #include "TrackInterfaces/ITrackPtKick.h"
 
 // TsaKernel
-#include "TsaKernel_Tf/SeedTrack.h"
-#include "TsaKernel_Tf/SeedPnt.h"
-#include "TsaKernel_Tf/TsaConstants.h"
-#include "TsaKernel_Tf/TsaFun.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/SeedPnt.h"
+#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel/TsaFun.h"
 
 //  Event
 #include "Event/State.h"

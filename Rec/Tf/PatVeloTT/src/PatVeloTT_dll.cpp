@@ -1,8 +1,8 @@
-// $Id: PatVeloTT_dll.cpp,v 1.1.1.1 2007-08-22 15:30:38 smenzeme Exp $
+// $Id: PatVeloTT_dll.cpp,v 1.2 2007-10-10 18:42:24 smenzeme Exp $
 // Include files 
 
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 
-LOAD_FACTORY_ENTRIES(PatVeloTT_Tf)
+LOAD_FACTORY_ENTRIES(PatVeloTT)
 

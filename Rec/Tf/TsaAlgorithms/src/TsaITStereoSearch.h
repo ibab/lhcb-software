@@ -6,7 +6,7 @@
 
 #include "TsaStereoBase.h"
 #include "TsaTStationHitManager.h"
-#include "TsaKernel_Tf/TsaSeedingHit.h"
+#include "TsaKernel/TsaSeedingHit.h"
 #include "TfTsHitNumMap.h"
 
 namespace Tf

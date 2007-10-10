@@ -10,11 +10,11 @@
 
 #include "TsaTStationHitManager.h"
 
-#include "TsaKernel_Tf/SeedFunctor.h"
-#include "TsaKernel_Tf/SeedFun.h"
-#include "TsaKernel_Tf/TsaConstants.h"
-#include "TsaKernel_Tf/TsaSeedingHit.h"
-#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel/SeedFunctor.h"
+#include "TsaKernel/SeedFun.h"
+#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel/TsaSeedingHit.h"
+#include "TsaKernel/SeedTrack.h"
 
 #include "TfTsHitNumMap.h"
 

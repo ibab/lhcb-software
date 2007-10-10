@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.4 2007-09-16 10:01:50 mneedham Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.5 2007-10-10 18:48:10 smenzeme Exp $
 
 #include <algorithm>
 
@@ -8,8 +8,8 @@
 #include "TsaITStereoSearch.h"
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
-#include "TsaKernel_Tf/SeedFunctor.h"
-#include "TsaKernel_Tf/SeedFun.h"
+#include "TsaKernel/SeedFunctor.h"
+#include "TsaKernel/SeedFun.h"
 
 // BOOST !
 #include <boost/assign/std/vector.hpp>

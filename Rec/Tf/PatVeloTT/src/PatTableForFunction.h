@@ -1,4 +1,4 @@
-// $Id: PatTableForFunction.h,v 1.1 2007-08-25 14:27:37 jonrob Exp $
+// $Id: PatTableForFunction.h,v 1.2 2007-10-10 18:42:24 smenzeme Exp $
 #ifndef PATTABLEFORFUNCTION_H
 #define PATTABLEFORFUNCTION_H 1
 
@@ -8,7 +8,6 @@
 
 static const InterfaceID IID_PatTableForFunction ( "PatTableForFunction", 1, 0 );
 
-namespace Tf {
 
   /** @class PatTableForFunction PatTableForFunction.h
    *
@@ -92,5 +91,5 @@ namespace Tf {
     std::vector<double> m_variableVector;
 
   };
-}
+
 #endif // TABLEFORFUNCTION_H

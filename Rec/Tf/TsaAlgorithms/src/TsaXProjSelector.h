@@ -2,9 +2,9 @@
 #ifndef _TsaXProjSelector_H
 #define _TsaXProjSelector_H
 
-#include "TsaKernel_Tf/ITsaSeedStep.h"
-#include "TsaKernel_Tf/SeedFunctor.h"
-#include "TsaKernel_Tf/SeedTrack.h"
+#include "TsaKernel/ITsaSeedStep.h"
+#include "TsaKernel/SeedFunctor.h"
+#include "TsaKernel/SeedTrack.h"
 
 #include "GaudiAlg/GaudiTool.h"
 

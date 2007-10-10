@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+! 2007-10-10 - Stephanie Hansmann-Menzemer
+  - Remove _Tf in libary name
 
 ! 2007-10-08 - David Hutchcroft
  - Changed RZ track sorting to length then chi2

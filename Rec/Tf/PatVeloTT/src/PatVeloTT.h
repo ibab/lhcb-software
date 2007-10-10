@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.h,v 1.4 2007-09-06 16:17:16 smenzeme Exp $
+// $Id: PatVeloTT.h,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
 #ifndef PATVELOTT_H
 #define PATVELOTT_H 1
 
@@ -13,7 +13,6 @@
 // local
 #include "PatKernel/PatTTHit.h"
 
-namespace Tf {
 
   /** @class PatVeloTT PatVeloTT.h
    *
@@ -51,7 +50,7 @@ namespace Tf {
 
     ITrackSelector* m_trackSelector; // tool to accept a track
 
-    TTStationHitManager<PatTTHit> *      m_ttHitManager;
+    Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager;
 
     std::string m_inputTracksName;    ///< input container name
     std::string m_outputTracksName;   ///< output container name
@@ -66,5 +65,5 @@ namespace Tf {
     bool m_fitTracks;
 
   };
-}
+
 #endif // PATVELOTT_H

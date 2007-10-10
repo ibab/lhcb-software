@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.h,v 1.4 2007-09-06 16:17:17 smenzeme Exp $
+// $Id: PatVeloTTTool.h,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -16,7 +16,6 @@
 
 static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
-namespace Tf {
 
   /** @class PatVeloTTTool PatVeloTTTool.h
    *
@@ -81,12 +80,12 @@ namespace Tf {
     double m_dxGroupFactor;
     double m_zMidTT;
 
-    TTStationHitManager<PatTTHit> *      m_ttHitManager;
+    Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager;
 
     PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
     bool m_verbose;
 
   };
-}
+
 #endif // PATVELOTTTOOL_H

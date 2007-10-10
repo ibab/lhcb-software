@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2007-10-10 - Stephanie Hansmann-Menzemer
+ - remove Tf::, add TfTools in requirement file
 
 ! 2007-09-17 - Kurt Rinnert
  - adapted fitter configuration in options file to new master fitter interface
