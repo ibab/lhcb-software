@@ -4,6 +4,7 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r4 2007-10-10 =====================
 ! 2007-10-09 - Juan PALACIOS
  - Add Kernel/IPrintDecayTreeTool.h
  - dict/DaVinciMCKernel{.h, .xml}
