@@ -1,10 +1,9 @@
-// $Id: EvtReport.cpp,v 1.2 2006-02-17 13:23:35 robbep Exp $
+// $Id: EvtReport.cpp,v 1.3 2007-10-10 20:07:24 robbep Exp $
 // Overwrite EvtGen output messages
 
-#include "GaudiKernel/MsgStream.h" 
+#include "Generators/StreamForGenerator.h" 
 #include "EvtGenBase/EvtReport.hh"
 
-MsgStream * evtgenStream ;
 std::ostringstream dummyStr ;
 
 //=============================================================================
@@ -15,22 +14,22 @@ std::ostream & report( Severity severity , const char * facility )
   dummyStr.str("") ;
   if ( severity < WARNING ) {
     if ( 0 != facility[0] ) { 
-      (*evtgenStream) << MSG::ERROR << facility << " Error from EvtGen" 
+      (*StreamForGenerator::getStream()) << MSG::ERROR << facility << " Error from EvtGen" 
                       << endmsg ; 
     }
-    else (*evtgenStream) << MSG::ERROR << "Error from EvtGen" 
+    else (*StreamForGenerator::getStream()) << MSG::ERROR << "Error from EvtGen" 
                          << endmsg ;
   } else if ( severity < INFO ) {
     if ( 0 != facility[0] ) {
-      (*evtgenStream) << MSG::INFO ; 
-      if ( evtgenStream -> isActive() ) std::cout << facility << ":" ;
-    } else (*evtgenStream) << MSG::INFO ;
+      (*StreamForGenerator::getStream()) << MSG::INFO ; 
+      if ( StreamForGenerator::getStream()->isActive() ) std::cout << facility << ":" ;
+    } else (*StreamForGenerator::getStream()) << MSG::INFO ;
   } else {
     if ( 0 != facility[0] ) {
-      (*evtgenStream) << MSG::DEBUG ;
-      if ( evtgenStream -> isActive() ) std::cout << facility << ":" ;
-    } else (*evtgenStream) << MSG::DEBUG ;
+      (*StreamForGenerator::getStream()) << MSG::DEBUG ;
+      if ( StreamForGenerator::getStream()->isActive() ) std::cout << facility << ":" ;
+    } else ( *StreamForGenerator::getStream() ) << MSG::DEBUG ;
   }
-  if ( evtgenStream -> isActive() ) return std::cout ;
+  if ( StreamForGenerator::getStream()->isActive() ) return std::cout ;
   else return dummyStr ;
 }

@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.109 2007-10-02 15:56:42 gcorti Exp $
+! $Id: release.notes,v 1.110 2007-10-10 20:07:24 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-10-10 - Patrick Robbe
+ - Add static class to hold external Gaudi random generator and message 
+   stream to interface with Pythia and EvtGen
+   . src/Lib/StreamForGenerator
+   . src/Lib/RandomForGenerator 
 
 !====================== Generators v7r4 2007-09-27 ===========================
 ! 2007-09-27 - Gloria Corti for Massimiliano Ferro-Luzzi

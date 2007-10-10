@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.26 2007-07-03 16:31:36 gcorti Exp $
+// $Id: Generation.cpp,v 1.27 2007-10-10 20:07:24 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +22,7 @@
 #include "Generators/HepMCUtils.h"
 
 // Gaudi Common Flat Random Number generator
-extern Rndm::Numbers randgaudi ;
+#include "Generators/RandomForGenerator.h"
 
 // local
 #include "Generation.h"
@@ -115,8 +115,9 @@ StatusCode Generation::initialize() {
 
   // Initialization of the Common Flat Random generator if not already done
   // This generator must be used by all external MC Generator
-  if ( ! ( randgaudi ) ) {
-    sc = randgaudi.initialize( randSvc( ) , Rndm::Flat( 0 , 1 ) ) ;
+  if ( ! ( RandomForGenerator::getNumbers() ) ) {
+    sc = RandomForGenerator::getNumbers().initialize( randSvc( ) , 
+                                                      Rndm::Flat( 0 , 1 ) ) ;
     if ( ! sc.isSuccess( ) )
       return Error( "Could not initialize Rndm::Flat" , sc ) ;
   }
