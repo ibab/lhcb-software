@@ -5,10 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r6 2007-10-10 ========================
 ! 2007-10-10 - Juan PALACIOS
  - Import src/PrintMCTree{.cpp, .h} from Phys/DaVinciMCTools.
 
-!====================== SimComponents v2r6 2007-10-09 ========================
 ! 2007-10-09 - Juan PALACIOS
  - Add src/PrintMCDecayTreeTool{.cpp, .h}
   . Implementation of MCInterfaces/IPrintMCDecayTreeTool.h
