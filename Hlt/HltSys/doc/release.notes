@@ -6,6 +6,9 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+! 2007-10-10 - Jose A. Hernando
+ - HltRecoSequence.opts: make PatVeloRTracking and PatPV2D a separate instance of HLT
+
 ! 2007-09-26 - Tomasz Skwarnicki
  - fix typo for electron triggers in HltAlleys exit selection names in Hlt.opts
 

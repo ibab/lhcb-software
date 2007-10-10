@@ -5,7 +5,7 @@
 HltRecoSequence.Members = {
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTracking/HltRecoVelo",
-  "PatPV3D",
+  "PatPV3D/PatHltPV3D",
   "GaudiSequencer/HltDecodeTT",
   "HltTracking/HltRecoVeloTT",
   "GaudiSequencer/HltDecodeT",
@@ -17,7 +17,8 @@ HltRecoVelo.RecoName = "Velo";
 HltRecoVelo.HistogramUpdatePeriod = 0;
 HltRecoVelo.OutputLevel = 3;
 
-PatPV3D.InputTracksName = "Hlt/Track/Velo" ;
+PatHltPV3D.InputTracksName = "Hlt/Track/Velo" ;
+// TODO: PatHltPV3D.OutputVerticesName = "Hlt/Vertex/PV3D" ;
 
 //HltRecoVeloTT.InputTracksName = "Hlt/Track/Velo";
 HltRecoVeloTT.OutputTracksName = "Hlt/Track/VeloTT";
@@ -48,17 +49,18 @@ PatHltRecoForward.DoCleanUp = false;
 
 HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
                               "PatVeloLoadClusters",
-                              "PatVeloRTracking",
-                              "PatPV2D",
+                              "PatVeloRTracking/PatHltVeloRTracking",
+                              "PatPV2D/PatHltPV2D",
                               "HltPrepareTracks/HltPrepareRZVelo",
                               "HltPrepareVertices/HltPreparePrimaryVertices"
 };
 
-PatVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
-PatVeloRTracking.OutputLevel = 3;
-PatPV2D.InputTracksName = "Hlt/Track/RZVelo";
-PatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
-PatPV2D.OutputLevel = 3;
+PatHltVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
+PatHltVeloRTracking.OutputLevel = 3;
+
+PatHltPV2D.InputTracksName = "Hlt/Track/RZVelo";
+PatHltPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
+PatHltPV2D.OutputLevel = 3;
 
 HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
