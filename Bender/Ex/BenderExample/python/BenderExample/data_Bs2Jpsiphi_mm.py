@@ -243,8 +243,8 @@ for f in LFNs :
         i = f.rfind("/")
         if -1 == i : continue
         afs = afsdir + f[i+1:]
-        win = windir + f[i+1]
-        syr = syrdir + f[i+1]
+        win = windir + f[i+1:]
+        syr = syrdir + f[i+1:]
         if   os.path.exists ( syr ) : syrs += [ syr ]
         elif os.path.exists ( afs ) : afss += [ afs ]
         elif os.path.exists ( win ) : wins += [ win ]
