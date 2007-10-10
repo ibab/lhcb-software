@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
+// $Id: ITHitExpectation.cpp,v 1.3 2007-10-10 18:32:17 smenzeme Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -66,7 +66,7 @@ StatusCode ITHitExpectation::initialize()
     return Error("Failed to initialize", sc);
   }
 
-  m_expectedITHits = tool<IITExpectedHits>("ITExpectedHits");
+  m_expectedITHits = tool<Tf::Tsa::IITExpectedHits>("Tf::Tsa::ITExpectedHits");
 
   // need to know the z of T stations....
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::location("IT"));
@@ -86,8 +86,8 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
   std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
   LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
 
-  Tsa::Parabola aParab(0.,0.,0.);
-  Tsa::Line aLine(0.,0.);
+  Tf::Tsa::Parabola aParab(0.,0.,0.);
+  Tf::Tsa::Line aLine(0.,0.);
 
   const DeSTDetector::Layers& layers = m_itDet->layers();
   std::vector<unsigned int> expected;
@@ -100,7 +100,7 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
     aParab = xParabola(aTrack,(*iterL)->globalCentre().z());
     aLine = yLine(aTrack,(*iterL)->globalCentre().z());
 
-    typedef std::vector<IITExpectedHits::ITPair> ITPairs;
+    typedef std::vector<Tf::Tsa::IITExpectedHits::ITPair> ITPairs;
     ITPairs output;
     
     // convert box to sector

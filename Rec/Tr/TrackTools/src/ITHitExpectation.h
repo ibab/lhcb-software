@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.h,v 1.1 2007-09-11 14:40:48 mneedham Exp $
+// $Id: ITHitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
 #ifndef _ITHitExpectation_H
 #define _ITHitExpectation_H
 
@@ -21,7 +21,7 @@ namespace LHCb{
 }
 
 class DeSTDetector;
-class IITExpectedHits;
+class Tf::Tsa::IITExpectedHits;
 
 class ITHitExpectation: public THitExpectation {
 
@@ -59,7 +59,7 @@ private:
 
 
   DeSTDetector* m_itDet;
-  IITExpectedHits* m_expectedITHits;
+  Tf::Tsa::IITExpectedHits* m_expectedITHits;
 
 };
 

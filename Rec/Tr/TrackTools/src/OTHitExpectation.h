@@ -1,4 +1,4 @@
-// $Id: OTHitExpectation.h,v 1.1 2007-09-11 14:41:23 mneedham Exp $
+// $Id: OTHitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
 #ifndef _OTHitExpectation_H
 #define _OTHitExpectation_H
 
@@ -64,7 +64,7 @@ private:
                                 const std::vector<LHCb::LHCbID>& ids) const;
 
   DeOTDetector* m_otDet;
-  IOTExpectedHits* m_expectedOTHits;
+  Tf::Tsa::IOTExpectedHits* m_expectedOTHits;
   std::vector<double> m_likPar;
 
 };

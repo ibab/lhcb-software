@@ -1,4 +1,4 @@
-//  $Id: VeloExpectation.h,v 1.3 2007-05-29 13:43:06 mneedham Exp $
+//  $Id: VeloExpectation.h,v 1.4 2007-10-10 18:32:17 smenzeme Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
@@ -18,13 +18,10 @@
 #include <string>
 
 #include "Event/Track.h"
+#include "TsaKernel/Line.h"
 
 class DeVelo;
 class DeVeloSensor;
-
-namespace Tsa{
- class Line;
-}
 
 class VeloExpectation : public GaudiTool,
                       virtual public IVeloExpectation
@@ -111,8 +108,8 @@ private:
   IVeloExpectation::Info scan(const LHCb::Track& aTrack, 
                               const double zStart, const double zStop) const;
 
-  bool isInside(const DeVeloSensor* sensor, const Tsa::Line& xLine, 
-                const Tsa::Line& yLine, const double z) const;
+  bool isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine, 
+                const Tf::Tsa::Line& yLine, const double z) const;
 
   double zMin(const LHCb::Track& aTrack) const;
 
@@ -122,7 +119,7 @@ private:
              const double zStart, const double zStop) const;
 
   void param(const LHCb::Track& aTrack, const double z, 
-             Tsa::Line& xLine, Tsa::Line& yLine) const;
+             Tf::Tsa::Line& xLine, Tf::Tsa::Line& yLine) const;
 
   double zBeamLine(const LHCb::Track& aTrack) const;
  

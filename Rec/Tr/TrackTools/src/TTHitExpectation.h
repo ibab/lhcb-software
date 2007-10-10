@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.1 2007-09-11 14:41:25 mneedham Exp $
+// $Id: TTHitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -86,7 +86,7 @@ inline bool TTHitExpectation::insideSector(const DeSTSector* sector,
 
   bool isIn = false;
   Gaudi::XYZPoint point;
-  Tsa::Line3D line(stateVec.position(), stateVec.slopes());
+  Tf::Tsa::Line3D line(stateVec.position(), stateVec.slopes());
   double mu;
   if (Gaudi::Math::intersection(line, sector->plane() ,point, mu) == true){
     isIn = sector->globalInActive(point);

@@ -1,4 +1,4 @@
-// $Id: THitExpectation.h,v 1.1 2007-09-11 14:41:24 mneedham Exp $
+// $Id: THitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
 #ifndef _THitExpectation_H
 #define _THitExpectation_H
 
@@ -21,10 +21,7 @@ namespace LHCb{
   class State;
 }
 
-namespace Tsa{
-  class Parabola;
-  class Line;
-}
+
 
 class ITrackExtrapolator;
 class IMagneticFieldSvc;
@@ -45,11 +42,11 @@ public:
 
 protected:
 
-  Tsa::Parabola xParabola(const LHCb::Track& aTrack, const double z) const;
+  Tf::Tsa::Parabola xParabola(const LHCb::Track& aTrack, const double z) const;
 
-  Tsa::Line xLine(const LHCb::Track& aTrack, const double z) const;
+  Tf::Tsa::Line xLine(const LHCb::Track& aTrack, const double z) const;
 
-  Tsa::Line yLine(const LHCb::Track& aTrack, const double z) const;
+  Tf::Tsa::Line yLine(const LHCb::Track& aTrack, const double z) const;
 
   ITrackExtrapolator* m_extrapolator;
 

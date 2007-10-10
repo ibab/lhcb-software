@@ -1,4 +1,4 @@
-// $Id: THitExpectation.cpp,v 1.1 2007-09-11 14:41:23 mneedham Exp $
+// $Id: THitExpectation.cpp,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
@@ -53,7 +53,7 @@ StatusCode THitExpectation::initialize()
   return StatusCode::SUCCESS;
 }
 
-Tsa::Parabola THitExpectation::xParabola(const Track& aTrack, const double z) const{
+Tf::Tsa::Parabola THitExpectation::xParabola(const Track& aTrack, const double z) const{
   
   // find the closest state
   const State& aState = aTrack.closestState(z);
@@ -66,7 +66,7 @@ Tsa::Parabola THitExpectation::xParabola(const Track& aTrack, const double z) co
   //const double a = aState.qOverP()/m_curvFactor;
   const double b = aState.tx() -2*zS*a;  
   const double c = aState.x() - zS*(b + a*zS); 
-  return Tsa::Parabola(a,b,c);
+  return Tf::Tsa::Parabola(a,b,c);
 }
 
 double THitExpectation::curvature(const State& aState) const{
@@ -83,12 +83,12 @@ double THitExpectation::curvature(const State& aState) const{
   return a;
 }
 
-Tsa::Line THitExpectation::yLine(const LHCb::Track& aTrack, const double z)const{
+Tf::Tsa::Line THitExpectation::yLine(const LHCb::Track& aTrack, const double z)const{
 
   // find the closest state
   State aState = aTrack.closestState(z);
 
   const double m = aState.ty();
   const double c = aState.y() - m*aState.z();
-  return Tsa::Line(m,c);
+  return Tf::Tsa::Line(m,c);
 }

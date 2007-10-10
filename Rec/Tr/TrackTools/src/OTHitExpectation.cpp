@@ -1,4 +1,4 @@
-// $Id: OTHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
+// $Id: OTHitExpectation.cpp,v 1.3 2007-10-10 18:32:17 smenzeme Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -74,7 +74,7 @@ StatusCode OTHitExpectation::initialize()
     return Error("Failed to initialize", sc);
   }
 
-  m_expectedOTHits = tool<IOTExpectedHits>("OTExpectedHits");
+  m_expectedOTHits = tool<Tf::Tsa::IOTExpectedHits>("Tf::Tsa::OTExpectedHits");
 
   m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
 
@@ -95,8 +95,8 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
   std::vector<LHCb::LHCbID> otHits; otHits.reserve(ids.size());
   LoKi::select(ids.begin(), ids.end(), std::back_inserter(otHits), bind(&LHCbID::isOT,_1));
   
-  Tsa::Parabola aParab(0.,0.,0.);
-  Tsa::Line aLine(0.,0.);
+  Tf::Tsa::Parabola aParab(0.,0.,0.);
+  Tf::Tsa::Line aLine(0.,0.);
 
   const DeOTDetector::Layers& layers = m_otDet->layers();
   for (DeOTDetector::Layers::const_iterator iterL = layers.begin(); 
@@ -109,7 +109,7 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
     aLine = yLine(aTrack,module->centerOfModule().z());
   
     LHCb::OTChannelID testChan = channelHint(chan,ids);
-    typedef std::vector<IOTExpectedHits::OTPair> OTPairs;
+    typedef std::vector<Tf::Tsa::IOTExpectedHits::OTPair> OTPairs;
     OTPairs output;
 
     // try both sectors...

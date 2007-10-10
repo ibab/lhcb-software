@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.4 2007-09-06 12:01:55 mneedham Exp $
+ *  $Id: VeloExpectation.cpp,v 1.5 2007-10-10 18:32:17 smenzeme Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -100,8 +100,8 @@ bool VeloExpectation::isInside(const LHCb::Track& aTrack,
 
   // make a line representing the track
   const State& state = aTrack.firstState();
-  Tsa::Line xLine(state.tx(), state.x(),state.z());
-  Tsa::Line yLine(state.ty(), state.y(),state.z());
+  Tf::Tsa::Line xLine(state.tx(), state.x(),state.z());
+  Tf::Tsa::Line yLine(state.ty(), state.y(),state.z());
   const DeVeloSensor* sensor = m_veloDet->sensor(sensorNum);
   const double z = sensor->z();  
 
@@ -156,7 +156,7 @@ IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack,
   IVeloExpectation::Info nHits;
   nHits.nR = 0; nHits.nPhi = 0;
 
-  Tsa::Line xLine(0.,0.); Tsa::Line yLine(0.,0.);
+  Tf::Tsa::Line xLine(0.,0.); Tf::Tsa::Line yLine(0.,0.);
   std::vector<DeVeloSensor*>::const_iterator iterV = m_veloDet->rPhiSensorsBegin();
   for (; iterV != m_veloDet->rPhiSensorsEnd(); ++iterV){
     // only sensors the track could see
@@ -172,8 +172,8 @@ IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack,
   return nHits;
 }
 
-bool VeloExpectation::isInside(const DeVeloSensor* sensor, const Tsa::Line& xLine, 
-                               const Tsa::Line& yLine, const double z) const{
+bool VeloExpectation::isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine, 
+                               const Tf::Tsa::Line& yLine, const double z) const{
 
   // check inside active area of velo sensor
   Gaudi::XYZPoint global(xLine.value(z),yLine.value(z),z);  
@@ -235,11 +235,11 @@ int VeloExpectation::nFound(const Track& aTrack,
 }
 
 void VeloExpectation::param(const LHCb::Track& aTrack, const double z, 
-                            Tsa::Line& xLine, Tsa::Line& yLine) const{
+                            Tf::Tsa::Line& xLine, Tf::Tsa::Line& yLine) const{
 
   const LHCb::State& state = aTrack.closestState(z);
-  xLine = Tsa::Line(state.tx(), state.x(), state.z());
-  yLine = Tsa::Line(state.ty(), state.y(), state.z());
+  xLine = Tf::Tsa::Line(state.tx(), state.x(), state.z());
+  yLine = Tf::Tsa::Line(state.ty(), state.y(), state.z());
 }
 
 double VeloExpectation::zBeamLine(const Track& aTrack) const{
