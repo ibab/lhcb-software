@@ -1,4 +1,4 @@
-// $Id: IPrintDecayTreeTool.h,v 1.2 2007-10-09 17:14:03 jpalac Exp $
+// $Id: IPrintDecayTreeTool.h,v 1.3 2007-10-10 13:04:43 jpalac Exp $
 #ifndef DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H
 #define DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H 1
 
@@ -77,12 +77,7 @@ public:
   */
   virtual void printAsTree( const LHCb::MCParticle::ConstVector& particles,
                             Particle2MCLinker* assoc ) = 0;
-  /**
-   * Print the contents of an MCParticle keyed container as a decay tree.
-   * @param particles The keyed container of MCParticles to be printed.
-   *
-   */
-  virtual void printAsTree( const LHCb::MCParticles& particles ) = 0;
+
   /**
    * Print the contents of an MCParticle keyed container as a decay tree.
    * Print the associated reconstructed Particles if available.
