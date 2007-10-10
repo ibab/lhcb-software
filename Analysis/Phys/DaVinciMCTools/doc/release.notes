@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.184 2007-10-10 10:20:21 pkoppenb Exp $
+! $Id: release.notes,v 1.185 2007-10-10 12:04:21 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r6 2007-10-10 ===================
 
 ! 2007-10-10 - Patrick Koppenburg
  - Use PrintMCDecayTree in PrintMCTree. 
