@@ -1,4 +1,4 @@
-// $Id: PrintMCTree.h,v 1.2 2006-03-15 13:37:22 pkoppenb Exp $
+// $Id: PrintMCTree.h,v 1.3 2007-10-10 10:20:21 pkoppenb Exp $
 #ifndef PRINTMCTREE_H 
 #define PRINTMCTREE_H 1
 
@@ -29,7 +29,7 @@ public:
 protected:
 
 private:
-  IDebugTool *m_debug;
+  IPrintMCDecayTreeTool *m_printMCTree;
   std::vector<std::string> m_particleNames ; ///< particle names
   int m_depth ;  ///< depth of tree
   std::vector<int> m_particleIDs ;

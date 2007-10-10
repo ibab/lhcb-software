@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.183 2007-10-03 06:58:08 pkoppenb Exp $
+! $Id: release.notes,v 1.184 2007-10-10 10:20:21 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-10-10 - Patrick Koppenburg
+ - Use PrintMCDecayTree in PrintMCTree. 
 
 ! 2007-10-03 - Patrick Koppenburg
  - TrueMCFilterCriterion : new option AssociationMethod allowing to change

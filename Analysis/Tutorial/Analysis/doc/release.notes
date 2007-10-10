@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-10-10 - Patrick Koppenburg
+ - solutions/DaVinci6 : use new PrintMCDecayTreeTool tool
+ - increment to v6r5
+
+!===================== Tutorial/Analysis v6r4 2007-10-01 ======================
 ! 2007-06-16 - Patrick Koppenburg
  - Remove .ignore() from setFilterPassed()
 

@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.h,v 1.15 2007-06-15 16:18:39 jpalac Exp $
+// $Id: MCParticleMaker.h,v 1.16 2007-10-10 10:20:21 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2007/06/15 16:18:39  jpalac
+// Fix includes for interfaces formerly coming from Kernel, now in MCInterfaces.
+//
 // Revision 1.14  2006/10/11 14:19:19  jpalac
 // Major restructuring, increase version to v8r0
 //
@@ -30,7 +33,6 @@
 // ============================================================================
 #include "Kernel/IParticleMaker.h"
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Kernel/IDebugTool.h"
 // ============================================================================
 // local 
 // ============================================================================

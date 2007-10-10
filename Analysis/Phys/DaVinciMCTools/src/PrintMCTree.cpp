@@ -1,12 +1,12 @@
-// $Id: PrintMCTree.cpp,v 1.5 2007-01-12 14:03:53 ranjard Exp $
+// $Id: PrintMCTree.cpp,v 1.6 2007-10-10 10:20:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-// from DaVinci
-#include "Kernel/IDebugTool.h"
+// from LHCb
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
 // local
 #include "PrintMCTree.h"
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( PrintMCTree );
 PrintMCTree::PrintMCTree( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-    ,  m_debug(0)
+    ,  m_printMCTree(0)
     ,  m_particleNames()
     ,  m_particleIDs()
 {
@@ -54,7 +54,7 @@ StatusCode PrintMCTree::initialize() {
     return StatusCode::FAILURE ;
   }
   
-  m_debug = tool<IDebugTool>( "DebugTool", this );
+  m_printMCTree = tool<IPrintMCDecayTreeTool>( "PrintMCDecayTreeTool", this );
 
   IParticlePropertySvc *ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   if( !ppSvc ) {
@@ -104,7 +104,7 @@ StatusCode PrintMCTree::execute() {
     for (PID=m_particleIDs.begin() ; PID!=m_particleIDs.end() ; ++PID ){
       if ( pid==(*PID)) {
         info() << "Printing MC tree for particle with ID " << pid << endreq ;
-        m_debug->printTree( (*MCP), m_depth ) ;
+        m_printMCTree->printTree( (*MCP), m_depth ) ;
         printed = true ;
         break ;
       }  
@@ -123,7 +123,7 @@ StatusCode PrintMCTree::execute() {
 StatusCode PrintMCTree::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  StatusCode sc = toolSvc()->releaseTool( m_debug );
+  StatusCode sc = toolSvc()->releaseTool( m_printMCTree );
   if (!sc) return sc ;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions

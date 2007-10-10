@@ -76,7 +76,7 @@ PrintFoundBs.OutputLevel = 3 ;
 
 // Print true Bs
 TutorialSeq.Members += { "PrintMCTree/PrintTrueBs" };
-PrintTrueBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueBs.PrintMCDecayTreeTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
