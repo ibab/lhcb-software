@@ -149,13 +149,13 @@ L0TriggerMuonNoGlob.OutputLevel = 3;
 
 // Muon specific options
 
-L0TriggerDiMuon.OutputL0MuonVerticesName="Rec/Vertex/L0Dimuon";
+L0TriggerDiMuon.OutputL0MuonVerticesName="Hlt/Vertex/L0Dimuon";
 
 //   this is storage for L0MuonCandidates->tracks without Pt cuts
 //   sharing will speed things up
-L0TriggerMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
-L0TriggerDiMuon.OutputL0MuonTracksName="Rec/Track/L0Muons";
-L0TriggerMuonNoGlob.OutputL0MuonTracksName="Rec/Track/L0Muons";
+L0TriggerMuon.OutputL0MuonTracksName="Hlt/Track/L0Muons";
+L0TriggerDiMuon.OutputL0MuonTracksName="Hlt/Track/L0Muons";
+L0TriggerMuonNoGlob.OutputL0MuonTracksName="Hlt/Track/L0Muons";
 
 
 
