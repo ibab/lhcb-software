@@ -74,7 +74,8 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 - In SimComponents v2r6
   . MCDecayFinder: get the ParticlePropertySvc in initialize, not the constructor
   . Add PrintMCDecayTreeTool implementing MCInterfaces/IPrintMCDecayTreeTool.h
- 
+  . Import src/PrintMCTree{.cpp, .h} from Phys/DaVinciMCTools.
+
 - In DaVinciKernel v6r7
   . DVAlgorithm.cpp: small change to get correct statistics of 
     setFilterPassed(bool)
