@@ -1,4 +1,4 @@
-// $Id: JetProduction.h,v 1.1 2007-10-08 16:52:00 gcorti Exp $
+// $Id: JetProduction.h,v 1.2 2007-10-10 14:37:55 gcorti Exp $
 #ifndef LBPYTHIA_JETPRODUCTION_H 
 #define LBPYTHIA_JETPRODUCTION_H 1
 
@@ -25,7 +25,7 @@ class IBeamTool ;
  * 
  *  @author Gueissaz Neal
  *  @date   2005-08-16
- *  @date   2007-09-27 (last modified)
+ *  @date   2007-10-09 (last modified)
  */
 
 namespace GenMode {
@@ -140,10 +140,10 @@ private:
   int m_njets;
   int m_index;
   
-  int m_flavourmin; int m_flavourmax;
-  int m_flavourmean; double m_flavoursigma;
-  std::vector<int> m_flavour;
-  int m_flavourgenmode; int m_flavourdiff;
+  int m_particlesmin; int m_particlesmax;
+  int m_particlesmean; double m_particlessigma;
+  std::vector<int> m_particles;
+  int m_particlesgenmode; int m_particlesdiff;
 
   double m_energymin; double m_energymax;
   double m_energymean; double m_energysigma;

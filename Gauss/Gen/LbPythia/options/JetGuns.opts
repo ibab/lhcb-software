@@ -1,0 +1,65 @@
+// $Id: JetGuns.opts,v 1.1 2007-10-10 14:37:55 gcorti Exp $
+ 
+/** @file
+ *
+ *  Options to run a special generator (makine use of Pythia) to 
+ *  produced jet particles only, as a jet-gun.
+ *
+ *  @author N.Gueissaz
+ *  @date 2007-10-09
+ *
+ */
+ 
+//Choose Sample Generation Tool and Production Tools
+//Generation.SampleGenerationTool="Special";
+//Generation.Special.ProductionTool="JetProduction";
+Generation.SampleGenerationTool="MinimumBias";
+Generation.MinimumBias.ProductionTool="JetProduction";
+
+//All tools from Generation are available. The Beam tool is dummy.
+//The PileUpTool should be set as the following :
+Generation.PileUpTool = "FixedNInteractions";
+Generation.FixedNInteractions.NInteractions=1;
+
+//Set the number of Jets to be generated. Default (D) = 1
+Generation.MinimumBias.JetProduction.NJets=3;
+
+//Set the particles,energy, theta and phi parameters for each jets
+//If not enough parameters are provided, random values will be used.
+//Pay attention that the energy is suffisant
+//Units are Gaudi::Units, default is MeV and radians.
+Generation.MinimumBias.JetProduction.Particles={ 25 };
+Generation.MinimumBias.JetProduction.Energy={ 300*GeV };
+//Generation.MinimumBias.JetProduction.Theta={ 0.0 };
+//Generation.MinimumBias.JetProduction.Phi={ 0.0 };
+
+//The random generator may be choosen setting 
+//Mode=1 for gaussian, Mode=2 for a flat generator. 
+Generation.MinimumBias.JetProduction.ParticlesMode=1;    //d=2
+//Generation.MinimumBias.JetProduction.EnergyMode=1;     //d=2
+//Generation.MinimumBias.JetProduction.ThetaMode=2;      //d=1
+//Generation.MinimumBias.JetProduction.PhiMode=1;        //d=2
+
+//Eventually set the min, max, mean, sigma values for the random generation
+//of the flavour,energy, theta and phi parameters
+Generation.MinimumBias.JetProduction.ParticlesMean=3;        //d=5
+Generation.MinimumBias.JetProduction.ParticlesSigma=2;     //d=0.01
+Generation.MinimumBias.JetProduction.ParticlesMin=1;         //d=5
+Generation.MinimumBias.JetProduction.ParticlesMax=5;         //d=5
+//Generation.MinimumBias.JetProduction.EnergyMean=200;       //d=20*GeV
+//Generation.MinimumBias.JetProduction.EnergySigma=10;        //d=5*GeV
+Generation.MinimumBias.JetProduction.EnergyMin=250*GeV;        //d=10*GeV
+Generation.MinimumBias.JetProduction.EnergyMax=300*GeV;        //d=50*GeV
+//Generation.MinimumBias.JetProduction.ThetaMean=;           //d=0.1575
+//Generation.MinimumBias.JetProduction.ThetaSigma=;          //d=0.1
+//Generation.MinimumBias.JetProduction.ThetaMin=;            //d=0.015
+//Generation.MinimumBias.JetProduction.ThetaMax=;            //d=0.33
+//Generation.MinimumBias.JetProduction.PhiMean=;           //d=3.1415
+//Generation.MinimumBias.JetProduction.PhiSigma=;          //d=1.
+//Generation.MinimumBias.JetProduction.PhiMin=;            //d=0.0
+//Generation.MinimumBias.JetProduction.PhiMax=;            //d=6.283185
+
+//Note that jets can be made from any particle, giving it PDG ID in Particles and provided the energy is sufficient.
+
+
+

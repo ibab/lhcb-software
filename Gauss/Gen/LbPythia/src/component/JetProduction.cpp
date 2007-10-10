@@ -1,4 +1,4 @@
-// $Id: JetProduction.cpp,v 1.1 2007-10-08 16:52:00 gcorti Exp $
+// $Id: JetProduction.cpp,v 1.2 2007-10-10 14:37:55 gcorti Exp $
 // Include files 
 
 // local
@@ -78,16 +78,16 @@ JetProduction::JetProduction( const std::string& type,
   declareProperty( "PygiveCommands" , m_pygive  ) ;
   declareProperty( "PDTList"        , m_pdtlist ) ;
   declareProperty( "NJets" , m_njets = 1 );
-  declareProperty( "FlavourMin" , m_flavourmin = 5 );
-  declareProperty( "FlavourMax" , m_flavourmax = 5 );
-  declareProperty( "FlavourMean" , m_flavourmean = 5 );
-  declareProperty( "FlavourSigma" , m_flavoursigma = 0.01 );
-  declareProperty( "Flavour" , m_flavour );
-  declareProperty( "FlavourMode" , m_flavourgenmode = GenMode::FlatMode );
-  declareProperty( "EnergyMin" , m_energymin = 10. );
-  declareProperty( "EnergyMax" , m_energymax = 50. );
-  declareProperty( "EnergyMean" , m_energymean = 20. );
-  declareProperty( "EnergySigma" , m_energysigma = 5. );
+  declareProperty( "ParticlesMin" , m_particlesmin = 5 );
+  declareProperty( "ParticlesMax" , m_particlesmax = 5 );
+  declareProperty( "ParticlesMean" , m_particlesmean = 5 );
+  declareProperty( "ParticlesSigma" , m_particlessigma = 0.01 );
+  declareProperty( "Particles" , m_particles );
+  declareProperty( "ParticlesMode" , m_particlesgenmode = GenMode::FlatMode );
+  declareProperty( "EnergyMin" , m_energymin = 10.*GeV );
+  declareProperty( "EnergyMax" , m_energymax = 50.*GeV );
+  declareProperty( "EnergyMean" , m_energymean = 20.*GeV );
+  declareProperty( "EnergySigma" , m_energysigma = 5.*GeV );
   declareProperty( "Energy" , m_energy );
   declareProperty( "EnergyMode" , m_energygenmode = GenMode::FlatMode );
   declareProperty( "ThetaMin" , m_thetamin = 0.015 );
@@ -182,20 +182,20 @@ StatusCode JetProduction::initialize( ) {
 
 
   //Store the number of objects that will be added to the containers
-  m_flavourdiff = m_njets - (int)(m_flavour.size());
+  m_particlesdiff = m_njets - (int)(m_particles.size());
   m_energydiff = m_njets - (int)(m_energy.size());
   m_thetadiff =  m_njets - (int)(m_theta.size());
   m_phidiff =  m_njets - (int)(m_phi.size());
 
 
   //sanity check
-  if ( m_flavourmin > m_flavourmax ) {
-    int m_temp = m_flavourmin;
-    m_flavourmin=m_flavourmax;
-    m_flavourmax=m_temp;
-    info() << " FlavourMin <-> FlavourMax " << endmsg;
-    info() << "New values : FlavourMin = "<< m_flavourmin << 
-      ", FlavourMax = " << m_flavourmax << endmsg;
+  if ( m_particlesmin > m_particlesmax ) {
+    int m_temp = m_particlesmin;
+    m_particlesmin=m_particlesmax;
+    m_particlesmax=m_temp;
+    info() << " ParticlesMin <-> ParticlesMax " << endmsg;
+    info() << "New values : ParticlesMin = "<< m_particlesmin << 
+      ", ParticlesMax = " << m_particlesmax << endmsg;
   }
 
   if ( m_thetamin > m_thetamax ) {
@@ -224,10 +224,10 @@ StatusCode JetProduction::initialize( ) {
       ", EnergyMax = " << m_energymax << endmsg;  
   }
 
-  if ( (m_flavoursigma == 0) || (m_thetasigma == 0) || 
+  if ( (m_particlessigma == 0) || (m_thetasigma == 0) || 
        (m_phisigma == 0) || (m_energysigma == 0) ){
-    error() << "One of the rms value has been set to zero : FlavourSigma=" 
-            << m_flavoursigma << " ThetaSigma="<< m_thetasigma << " PhiSigma="
+    error() << "One of the rms value has been set to zero : ParticlesSigma=" 
+            << m_particlessigma << " ThetaSigma="<< m_thetasigma << " PhiSigma="
             << m_phisigma << " EnergySigma=" << m_energysigma << "\n"
             << "Please set it to a non-zero value" << endreq;
   }
@@ -333,12 +333,14 @@ StatusCode JetProduction::generateEvent( HepMC::GenEvent * theEvent ,
   //set m_index and empty containers
   m_index=-1;
 
-  if ( m_flavourdiff > 0 ) {
-    //generate m_flavourdiff random values for the flavour
-    for ( int i=0 ; i<m_flavourdiff ; i++ ){
-      m_flavour.push_back((int)(generateValue(m_flavourgenmode,m_flavourmean+0.5,
-                                          m_flavoursigma, m_flavourmin,
-                                          m_flavourmax+1.0 ) ) );
+  if ( m_particlesdiff > 0 ) {
+    //generate m_particlesdiff random values for the particles
+    for ( int i=0 ; i<m_particlesdiff ; i++ ){
+      m_particles.push_back((int)(generateValue(m_particlesgenmode,
+                                                m_particlesmean+0.5,
+                                                m_particlessigma, 
+                                                m_particlesmin,
+                                                m_particlesmax+1.0 ) ) );
     }      
   }
   
@@ -373,15 +375,20 @@ StatusCode JetProduction::generateEvent( HepMC::GenEvent * theEvent ,
   }
   
   //add particles in the event record
+  //Beware, pythia works in GeV !
   for ( int i=0 ; i<m_njets ; ++i ) {
-    Pythia::PyAddp(m_index,m_flavour.at(i),m_energy.at(i),
+    verbose() << "Particle " << m_particles.at(i)
+              << " will be added to the pyjets commonblock and processed, energy [MeV]: "
+              << m_energy.at(i) << " MeV, theta: " << m_theta.at(i) << " [rad], phi: "
+              << m_phi.at(i) << " [rad]" << endmsg;
+    Pythia::PyAddp(m_index,m_particles.at(i),m_energy.at(i)/GeV,
                    m_theta.at(i),m_phi.at(i)) ;      
     m_index--;
   }
 
 
   //Erase added objects in the containers
-  for ( int i=0 ; i<m_flavourdiff ; i++ ) m_flavour.pop_back();
+  for ( int i=0 ; i<m_particlesdiff ; i++ ) m_particles.pop_back();
   for ( int i=0 ; i<m_energydiff ; i++ ) m_energy.pop_back();  
   for ( int i=0 ; i<m_thetadiff ; i++ ) m_theta.pop_back();
   for ( int i=0 ; i<m_phidiff ; i++ ) m_phi.pop_back();

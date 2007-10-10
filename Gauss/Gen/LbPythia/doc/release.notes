@@ -4,7 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= LbPythia v5r3 2007-10-08 ==========================
+!========================= LbPythia v5r3 2007-10-10 ==========================
+! 2007-10-10 - Gloria Corti for Neal Guiessaz
+ - Replace flavour with particles in both code and options, use Gaudi units
+   in options (GeV) and covert them when passing them to Pythia (MeV).
+   . src/component/JetProduction.{h,cpp}
+ - Introduce example file for the JetProduction tool (jets as "guns") 
+   . JetGuns.opts
+
 ! 2007-10-08 - Gloria Corti for Neal Guiessaz
  - Introduce new code to generate specific particle decays related to Jet
    production. The code uses pythia6 and for this a new fortran subroutine
