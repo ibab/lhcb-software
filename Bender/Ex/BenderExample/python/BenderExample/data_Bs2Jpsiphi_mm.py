@@ -234,23 +234,34 @@ import os
 
 afss = []
 wins = []
+syrs = []
 afsdir = '/afs/cern.ch/user/i/ibelyaev/vol10/DATA/'
 windir = 'C:\\data\\JpsiPhi\\'
+syrdir = '/auto/data01/user/belyaev/JpsiPhi/'
+
 for f in LFNs :
         i = f.rfind("/")
         if -1 == i : continue
         afs = afsdir + f[i+1:]
-        if os.path.exists ( afs ) : afss += [ afs ]
         win = windir + f[i+1]
-        if os.path.exists ( win ) : wins += [ win ]
+        syr = syrdir + f[i+1]
+        if   os.path.exists ( syr ) : syrs += [ syr ]
+        elif os.path.exists ( afs ) : afss += [ afs ]
+        elif os.path.exists ( win ) : wins += [ win ]
 
 	
-if   afss :
+if   syrs :
+	
+        FILEs = syrs
+        print "Use local files #%s from '%s'"%(len(FILEs),syrdir)
+        
+elif afss :
 	
         FILEs = afss
         print "Use local AFS-files #%s at '%s'"%(len(FILEs),afsdir)
         
 elif wins :
+
         FILEs = afss
         print "Use local WIN-files #%s at '%s'"%(len(FILEs),windir)
 else :
