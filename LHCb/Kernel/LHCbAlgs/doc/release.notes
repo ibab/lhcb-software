@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-10-10 - Wouter Hulsbergen
+ - TrajPoca: Added a line that was by mistake removed when this was imported from
+ babar: previous version just didn't work for non-linear trajectories.
+
 !======================== LHCbAlgs v2r10 2007-07-05 ==========================
 ! 2007-07-05 - Patrick Koppenburg
  - PrintHeader: print header in info(). Avoids other useless printout
