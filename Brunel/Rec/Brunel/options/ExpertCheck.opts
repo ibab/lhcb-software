@@ -54,4 +54,5 @@ Check.DetectorList  += { "Tr" };
 
 // Calorimeters
 Check.DetectorList += { "CALO" };
-//#include "$CALOMONIDSTOPTS/Brunel.opts"
+#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
+#include "$CALOMONIDSTOPTS/CaloChecker.opts"

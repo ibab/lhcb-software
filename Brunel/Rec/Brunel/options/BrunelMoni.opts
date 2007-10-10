@@ -14,15 +14,17 @@ ToolSvc.SequencerTimerTool.OutputLevel = 4;
 
 
 //--------------------------------------------------------------
-// Detectors to monitor
+// Detectors to monitor (uncomment to use)
 //--------------------------------------------------------------
 Moni.DetectorList += {
-//                     "MUON"
+//                     "CALO"
+//                    ,"MUON"
                      };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
+#include "$CALOMONIDSTOPTS/CaloMonitor.opts"
 
 // Muon reconstruction
 MoniMUONSeq.Members += { "MuonRecChecker" };
