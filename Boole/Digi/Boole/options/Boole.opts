@@ -86,7 +86,7 @@ InitMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
 //--------------------------------------------------------------
 // L0 trigger
 DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
-#include "$L0MUONROOT/options/l0muon.opts"
+#include "$L0MUONROOT/options/l0muonAlg.opts"
 DigiL0Seq.Members += { "L0MuonAlg/L0Muon" };
 DigiL0Seq.Members += { "PuVetoFillRawBuffer", "PuVetoAlg" };
 DigiL0Seq.Members += { "L0DU" };
