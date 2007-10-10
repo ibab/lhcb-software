@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.4 2007-03-02 08:49:27 cattanem Exp $
+// $Id: TrajPoca.cpp,v 1.5 2007-10-10 12:33:31 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
     double prevflt1      = arclength1;
     double prevflt2      = arclength2;
     double prevprevdelta = prevdelta;
+    prevdelta = delta ;
     status = stepTowardPoca( traj1, arclength1, restrictRange1,
                              traj2, arclength2, restrictRange2, precision );
     if( !status ) break; // Parallel Trajectories in stepTowardPoca
