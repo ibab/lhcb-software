@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v30r4 2007-10-10 =============================
+! 2007-10-10 - Gloria Corti
+ - Remove Gauss.job that is obsolete: Gauss_Ganga.py should instead be
+   used to submit jobs.
+ - New options to be included at the end of steering options to generate
+   in a bunch crossing min bias (pp collisions dsitributed) events in 
+   addition to whatever is generated as signal (for example beam-gas).
+   It should be included AFTER the "signal" event type
+   . MergeWithMinBias.opts
+
 ! 2007-10-05 - Gloria Corti
  - Modify requirements with -no_auto_imports everywhere
  - Temporarly remove Pythia8 since the external library was compiled with
