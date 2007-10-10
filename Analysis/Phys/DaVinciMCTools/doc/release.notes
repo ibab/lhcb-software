@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.186 2007-10-10 12:14:54 jpalac Exp $
+! $Id: release.notes,v 1.187 2007-10-10 13:41:04 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
 ! 2007-10-10 - Juan PALACIOS
+ - Add src/PrintDecayTreeTool{.cpp, .h}
+  . New implementation of Kernel/IPrintDecayTreeTool. really contains 
+    a subset of the old DebutTool methods.
  - Move src/PrintMCTree{.cpp, .h} to Sim/SimComponents.
  - cmt/requirements
   . Increase version to v9r7.
