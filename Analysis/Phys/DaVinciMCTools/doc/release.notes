@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.185 2007-10-10 12:04:21 jpalac Exp $
+! $Id: release.notes,v 1.186 2007-10-10 12:14:54 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-10-10 - Juan PALACIOS
+ - Move src/PrintMCTree{.cpp, .h} to Sim/SimComponents.
+ - cmt/requirements
+  . Increase version to v9r7.
 
 !========================== DaVinciMCTools v9r6 2007-10-10 ===================
 
