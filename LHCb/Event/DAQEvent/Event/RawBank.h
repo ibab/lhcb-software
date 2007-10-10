@@ -94,6 +94,8 @@ namespace LHCb
 		               L0MuonError,     //43
                    GaudiSerialize,  //44
                    GaudiHeader,     //45
+                   ITProcFull,
+                   TTProcFull,
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
