@@ -15,7 +15,7 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
     MDF v2r5, LoKi v6r1, LoKiAlgoMC v6r1, LoKiCore v6r1, LoKiGenMC v6r1, 
     LoKiPhys v6r1, LoKiAlgo v6r1, LoKiArrayFunctors v6r1, LoKiGen v6r1,
     LoKiMC v6r1, LoKiPhysMC v6r1, PatKernel v1r1, ProcessorKernel v5r1,
-    MCInterfaces v1r3
+    MCInterfaces v1r3, DaVinciMCKernel v2r4
 
 - In LHCbMath v2r3:
   . Remove implementations of cbrt from Power.h, now available in GaudiKernel
@@ -69,7 +69,7 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
   . Added method to TrackProjector interface
 
 - In MCInterfaces v1r3
-  . Add IPrintMCDecayTreeTool
+  . Add IPrintMCDecayTreeTool inteface
 
 - In SimComponents v2r6
   . MCDecayFinder: get the ParticlePropertySvc in initialize, not the constructor
@@ -78,6 +78,9 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 - In DaVinciKernel v6r7
   . DVAlgorithm.cpp: small change to get correct statistics of 
     setFilterPassed(bool)
+
+- In DaVinciMCKernel v2r4
+  . Add IPrintDecayTreeTool interface
 
 - TfKernel v1r1
   . Adapted to standard usage of IOTRawBankDecoder interface
