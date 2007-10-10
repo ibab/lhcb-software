@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.1 2007-09-03 15:22:29 pkoppenb Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.2 2007-10-10 20:22:21 tskwarni Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -21,7 +21,7 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos", 1, 0 );
+static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos", 1, 1 );
 
 /** @class ITriggerSelectionTisTos ITriggerSelectionTisTos.h
  *  
@@ -88,6 +88,8 @@ static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos"
  * 
  * @par Outputs of @c selectionTisTos. 
  *   @c decision, @c tis, @c tos - are all of @c bool type.
+ *   They can be retrived either via parameters passed via reference or via @c TisTosDecision
+ *   helper class (the latter is easier in python).
  * @par
  *   @c decision is true if the trigger selection was satisfied 
  *  (false if it failed or was not run). This output is independent of the Offline Input!
@@ -130,6 +132,30 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITriggerSelectionTisTos; }
 
+
+  class TisTosDecision 
+  {
+  public:
+
+    TisTosDecision():m_decision(false),m_tis(false),m_tos(false){}
+    TisTosDecision(bool dec,bool tis,bool tos):m_decision(dec),m_tis(tis),m_tos(tos){}
+    virtual ~TisTosDecision(){};
+  
+    bool decision() const {return m_decision;}
+    bool tis() const {return m_tis;}
+    bool tos() const {return m_tos;}
+
+    void set_decision(bool decision){m_decision=decision;}
+    void set_tis(bool tis){m_tis=tis;}
+    void set_tos(bool tos){m_tos=tos;}
+
+  private:
+
+    bool m_decision;
+    bool m_tis;
+    bool m_tos;
+  };
+  
 
   // -------------------------------------------------
   // ------------ basic interface (must be implemented)
@@ -175,6 +201,16 @@ public:
   // -------------------------------------------------
   // ------------ inlined shortcuts for user convenience
   // -------------------------------------------------
+
+
+  /// python friendly -  single Trigger Selection Summary TisTos  (define Offline Input before calling)
+  TisTosDecision selectionTisTos( const std::string & selectionName )
+  { bool decision,tis,tos; selectionTisTos(selectionName,decision,tis,tos);return TisTosDecision(decision,tis,tos);}
+  
+  /// python friendly - multiple Trigger Selection Summaries TisTos (set selectionOR=false for an AND) 
+  TisTosDecision selectionTisTos( const std::vector< std::string > & selectionNames,
+                                bool selectionOR = kSelectionDefaultLogic )
+  { bool decision,tis,tos; selectionTisTos(selectionNames,decision,tis,tos,selectionOR);return TisTosDecision(decision,tis,tos);}
 
   // ------------  various ways to define off-line input ------------------------------
 

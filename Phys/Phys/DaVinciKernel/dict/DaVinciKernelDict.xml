@@ -42,6 +42,9 @@
   <class name = "IRelatedPV"/>
   <class name = "ISecondaryVertexTool"/> 
   <class name = "ITagger"/>
+  <class name = "ITriggerSelectionTisTos"/>
+  <class name = "ITriggerSelectionTisTos::TisTosDecision"/>
+  <class name = "ITriggerTisTos"/>
   <class name = "IVertexFit"/>
 
 </lcgdict>

@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.2 2007-09-23 13:57:05 pkoppenb Exp $
+// $Id: ITriggerTisTos.h,v 1.3 2007-10-10 20:22:21 tskwarni Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -22,7 +22,7 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 1, 0 );
+static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 1, 1 );
 
 /** @class ITriggerTisTos ITriggerTisTos.h
  *  
@@ -108,7 +108,9 @@ static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 1, 0 );
  * 
  * @par Outputs of @c triggerTisTos 
  *   @c decision, @c TIS, @c TOS - are all of @c bool type. 
- * @par
+ *   They can be retrived either via parameters passed via reference or via @c TisTosDecision
+ *   helper class (the latter is easier in python).
+* @par
  *   @c decision is true if any selection corresponding to the Trigger Input was satisfied. 
  *   This output is independent of the Offline Input!
  * @par
@@ -136,7 +138,7 @@ static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 1, 0 );
  * @par Simple Example:
  *     @code
  *      // obtain Tis,Tos calssification of the Hlt Alleys with respect to selected B candidate 
- *      ITriggerTisTos* triggerTisTosTool = tool<ITriggerTisTos>("TriggerTisTos","TriggerTisTos",this);
+ *      ITriggerTisTos* triggerTisTosTool = tool<ITriggerTisTos>("TriggerTisTos",this);
  *      LHCb::Particle signalB =...;
  *      bool decision,tis,tos;
  *      triggerTisTosTool->triggerTisTos( signalB, "*", decision, tis, tos);
@@ -227,6 +229,10 @@ public:
   // ------------ inlined shortcuts for user convenience
   // -------------------------------------------------
 
+  /// python friendly - calculate decision,Tis,Tos  (for previously defined Trigger and Offline Inputs) 
+  TisTosDecision triggerTisTos( bool checkInputSelections = kDefaultInputSelectionsChecking )
+  { bool decision,tis,tos; triggerTisTos(decision,tis,tos,checkInputSelections);return TisTosDecision(decision,tis,tos);}
+
   // ------------  various ways to define trigger input ------------------------------
 
   /// shortcut to add initialize Trigger Input and add Trigger Name Pattern to it
@@ -254,6 +260,13 @@ public:
                       bool checkInputSelections = kDefaultInputSelectionsChecking )
   { setTriggerInput(selectionNameWithWildChar,alleyExitsOnly);
     triggerTisTos(decision,tis,tos,checkInputSelections); }
+
+  /// python friendly - define Trigger Input and return decision,tis,tos with respect to previously set Offline Input
+  TisTosDecision triggerTisTos( const std::string & selectionNameWithWildChar,
+                       bool alleyExitsOnly = kDefaultTriggerRestrictions,
+                       bool checkInputSelections = kDefaultInputSelectionsChecking )
+  { bool decision,tis,tos; triggerTisTos(selectionNameWithWildChar,decision,tis,tos,alleyExitsOnly,checkInputSelections);
+    return TisTosDecision(decision,tis,tos);}
 
   /// shortcut to define Trigger Input via name patterns and return decision,tis,tos with respect to previously set Offline Input
   void triggerTisTos( const std::vector< std::string > & selectionNamesWithWildChar,
@@ -298,6 +311,14 @@ public:
                        bool checkInputSelections = kDefaultInputSelectionsChecking )
   { setOfflineInput(particle); setTriggerInput(selectionNameWithWildChar,alleyExitsOnly); 
     triggerTisTos(decision,tis,tos,checkInputSelections); }
+
+  /// python friendly - shortcut to define Offline Input and Trigger Input via trigger name pattern and calculate decision,tis,tos
+  TisTosDecision triggerTisTos( const LHCb::Particle & particle,
+                       const std::string & selectionNameWithWildChar,
+                       bool alleyExitsOnly = kDefaultTriggerRestrictions,
+                       bool checkInputSelections = kDefaultInputSelectionsChecking )
+  { bool decision,tis,tos; triggerTisTos(particle,selectionNameWithWildChar,decision,tis,tos,alleyExitsOnly,checkInputSelections);
+    return TisTosDecision(decision,tis,tos);}
 
   /// shortcut to define Offline Input and Trigger Input via trigger name pattern and calculate decision,tis,tos 
    void triggerTisTos( const LHCb::ProtoParticle & protoParticle,
@@ -395,7 +416,7 @@ public:
                                                     unsigned int tisRequirement = kAnything,
                                                     unsigned int tosRequirement = kAnything,
                                                     bool checkInputSelections = kDefaultInputSelectionsChecking )
-  { setTriggerInput(selectionNameWithWildChar,alleyExitsOnly);
+  { setOfflineInput(particle); setTriggerInput(selectionNameWithWildChar,alleyExitsOnly);
     return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement,checkInputSelections); }
   
   /// shortcut to set Offline and Trigger Input and return Trigger Sel. names matching dec.,tis,tos pattern 
@@ -406,7 +427,7 @@ public:
                                                     unsigned int tisRequirement = kAnything,
                                                     unsigned int tosRequirement = kAnything,
                                                     bool checkInputSelections = kDefaultInputSelectionsChecking )
-  { setTriggerInput(selectionNamesWithWildChar,alleyExitsOnly);
+  { setOfflineInput(particle); setTriggerInput(selectionNamesWithWildChar,alleyExitsOnly);
     return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement,checkInputSelections); }
 
 
