@@ -3,6 +3,454 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v30r4">2007-10-08 - GaussSys v30r4</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v22r9 (and Gaudi v19r4)
+   pythia6 411.2, photos 215.2, lhapdf 5.3.0 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r1 (based on geant4.8.3.patch01)
+   DecFiles v13r14, ParamFiles v7r0 
+   DDDB v1r1, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   alpgen 2.1.2 (via LCG_GeneratorsInterfaces)</A></H3>
+<H3><A NAME="Details">
+   Post-DC06 version.
+   Partially built on Win32.
+   Port various generators fixes from DC06. Introduce new generators and
+   event type.
+   Allow some misalignement without full specification of DetElement to
+   convert to be passed in options files.
+</A></H3>
+
+!======================== Gauss v30r4 2007-10-10 =============================
+! 2007-10-10 - Gloria Corti
+ - Remove Gauss.job that is obsolete: Gauss_Ganga.py should instead be
+   used to submit jobs.
+ - New options to be included at the end of steering options to generate
+   in a bunch crossing min bias (pp collisions dsitributed) events in
+   addition to whatever is generated as signal (for example beam-gas).
+   It should be included AFTER the "signal" event type
+   . MergeWithMinBias.opts
+ 
+! 2007-10-05 - Gloria Corti
+ - Modify requirements with -no_auto_imports everywhere
+ - Temporarly remove Pythia8 since the external library was compiled with
+   HepMC 2.00.2
+ - Update options for various conditions (VeloOpen, VeloSemiOpen) to adapt
+   to new features in GiGaGeo for picking up information from CondDB.
+   Long list of DetectorElements not necessary in most case (see caveat in
+   GiGaCnv).
+   . v200601-450GeV-{Open,SemiOpen,Close}Velo-B{On,Off}.opts
+ - NEW utility/example steering options for generating event with magnetic
+   field off and Velo Open
+   . v200601-BOff.opts
+   . v200601-OpenVelo-BOff.opts
+ - Use new DC06 settings with DDDB
+   . v200601-SimPhase.opts
+ 
+! 2007-10-01 - Gloria Corti
+ - Add default cuts for gamma and positrons into special RICH aerogel cuts,
+   otherwise zero is taken.
+   . Simulation.xml
+ - Fix wrong path for particle option
+   . GaussVis.opts
+   . Gauss.opts
+ - Add options for MIB in FixedLumi-5.opts
+ - Add as optional generators AlpGen (LbAlpGen v1r0) and Pythia8
+   (LbPythia8 v1r0)
+   . requirements
+ - Remove alias to executable with options
+   . requirements
+ - New event types via DecFiles v13r13
+  
+! 2007-09-11 - Chris Jones
+ - Update example ganga job to remove warnings about missing features (now
+   available) and to add examples of job merging and GaussSplitter.
+ 
+!========================= LbPythia v5r3 2007-10-10 ==========================
+! 2007-10-10 - Gloria Corti for Neal Guiessaz
+ - Replace flavour with particles in both code and options, use Gaudi units
+   in options (GeV) and covert them when passing them to Pythia (MeV).
+   . src/component/JetProduction.{h,cpp}
+ - Introduce example file for the JetProduction tool (jets as "guns")
+   . JetGuns.opts
+ 
+! 2007-10-08 - Gloria Corti for Neal Guiessaz
+ - Introduce new code to generate specific particle decays related to Jet
+   production. The code uses pythia6 and for this a new fortran subroutine
+   has been made (PyAddp) to add information to Pythia regarding the
+   event before processing it. A new IProductionTool called JetProduction
+   has been introduced.
+ - A description on how to use the JetProduction tool and why can be found
+   in
+   <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/JetProduction">this
+   web page</a>
+ - Code affected
+   . src/component/JetProduction.{h,cpp} - NEW production tool
+   . src/component/LbPythia_load.cpp     - Add new tool declaration (DC06 comp)
+   . src/Lib/pyaddp.F                    - NEW routine to use with pythia6
+   . {LbPythia,src/Lib}/Pythia.{h,cpp}   - Add declaration to use new fortran
+                                           routine
+!========================= LbPythia v5r2 2007-08-22 ==========================
+! 2007-07-31 - Vanya BELYAEV
+ - Couple of tiny fixes to allow to read ALPGEN partonic events:
+   src/component/ReadAlpGen.cpp
+   src/component/ReadFile.cpp
+   src/component/ReadLHE.cpp
+   src/component/ReadLHE.h
+ 
+! 2007-07-27 - Gloria Corti
+ - Temporarly use setting of properties without explanation third argument
+   to keep compatibility for Gauss v25rX series
+         . src/component/ReadFile.cpp
+   . src/component/ReadAlpGen.cpp
+ 
+! 2007-06-29 - Vanya BELYAEV
+ - Put few modificationto be able to read ALPGEN partonic events
+   and process them through Pythia for showering
+ 
+  src/Lib/GaussUserProcess.inc
+     define new "process type": ALPGENREADPROCESS
+  src/Lib/upevnt.F,src/Lib/upinit.F
+     add a branches for ALPGENREADPROCESS to call
+     (dummy) routines ALPGEN_UPINIT and ALPGEN_UPEVNT
+ 
+  Split the concrete tool ReadLHEfileProduction into several pieces
+  to allow flexible manipulation with various input files/generators
+ 
+  src/component/ReadFile.h,src/component/ReadFile.cpp
+     new base class LbPythia::ReadFile for reading of
+     partonic events from arbitrary geenrator
+  src/component/ReadLHE.cpp, src/component/ReadLHE.h
+     concrete tool LbPythia::ReadLHE to read "Les Houches  Events" (xml-format)
+  src/component/ReadLHEfileProduction.cpp
+     concrete tool ReadLHEfileProduction to read "Les Houches  Events" (xml-format)
+  src/component/ReadAlpGen.cpp, src/component/ReadAlpGen.h
+     concrete tool LbPythia::ReadAlpGen to read ALPGEN partonic files
+  
+!====================== Generators v7r4 2007-09-27 ===========================
+! 2007-09-27 - Gloria Corti for Massimiliano Ferro-Luzzi
+ - Add new tool for uniform distribution in z and xy (within max radius)
+   of primary vertex
+   . src/component/UniformSmearVertex.{h,cpp} - NEW
+   . src/component/Generators_load.cpp - add factory also for other vertex
+                                         smearing tools that were missing
+                                         (Necessary for DC06 compatibility)
+ 
+! 2007-09-11 - Patrick Robbe
+ - src/Lib/GenCounters.cpp: fix problem with D counters
+ 
+! 2007-09-09 - Patrick Robbe
+ - src/component/SignalForcedFragmentation: fix problem with particles
+   already decayed (bug introduced when fixing CP violation with other
+   generation methods).
+ - src/Lib/Signal.cpp: change name of iterators in nested loops for Windows
+   compilation.
+ - src/Lib/LHAPDFCommonBlocks.cpp, LHAPDFUtils.F: rename routine whose names
+   are used in the new LHAPDF version
+ - Various fixes for Windows compilation:
+   . StandAloneDecayTool.h
+   . EvtGenDecay.{h,cpp}
+!====================== Generators v7r3 2007-08-22 ===========================
+! 2007-07-17 - Patrick Robbe
+ - src/Lib/Signal.cpp: fix generation of clean events
+ 
+!======================== EvtGen v8r16 2007-10-04 =========================
+! 2007-09-21 - Patrick Robbe
+ - EvtBtoXsgammaKagan.cpp: modifications by Peter Richardson, see
+    https://savannah.cern.ch/bugs/index.php?28421
+ 
+! ====================== BcVegPy v1r1p2 2007-10-02 ===========================
+! 2007-10-02 - Gloria Corti
+ - Fix problem in production on the grid due to character lenght:
+   directory name has to be increased from CHARACTER*100 to CHARACTER*472
+   in two more files:
+   . src/bcvegpy_upinit.f
+   . src/bcvegpy_upevnt.f
+ 
+! 2007-09-28 - Gloria Corti
+ - Fix problem in production on the grid due to character lenght: also
+   directory name has to be increased from CHARACTER*100 to CHARACTER*472
+   . src/outerpdf.f
+! ====================== BcVegPy v1r1p1 2007-08-21 ===========================
+! 2007-08-21 - Gloria Corti
+ - Fix problem in production on the grid due to character lenght of pdf file
+   too short. Increase from CHARACTER*100 to CHARACTER*512
+   . src/outerpdf.f
+ 
+!========================== LbAlpGen v1r0 2007-08-10 ==========================
+! 2007-07-31 - Vanya BELYAEV
+ - Couple of minor fixes for ALPGEN generator
+ - add the configuration file to read ALPGEN events
+ 
+! 2007-07-02 - Vanya BELYAEV
+ - New package
+   essentially the executable is just a restructurized "pyuser" example
+   form ALPGEN distribution
+   Library contains the code for ocnvertion of ALPGEN structures into
+   pythia partonic events to perform PYTHIA fragmentation
+   The concrete production tool is in Gen/LbPythia
+ 
+!========================== GENSER v3r2 2007-08-31 ===========================
+! 2007-08-31 - Gloria Corti
+ - Move use of Pythia8 to LbPythia package
+ - Re-insert lhapdf_dummy in linking macro otherwise some unresolved external
+   symbols when making executable
+ 
+! 2007-08-01 - Gloria Corti
+ - Modify LHAPATH to be set without using relative path in the name
+ 
+! 2007-07-31 - Patrick Robbe
+ - Add macros for Pythia8 usage
+ - Use latest LHAPDF 5.3.0 (needed for Pythia8)
+ - Remove lhapdf_dummy from link
+ 
+! 2007-07-11 - Gloria Corti
+ - Add macros for alpgen. To be removed when the interface package will be
+   available in LCGCMT/LCG_GeneratorsInterfaces.
+   Take the latest available version 2.1.2
+ 
+!=========================== LbMIB v2r1 2007-10-02 ===========================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix compilation problem on Win32 casting to double
+   . CollimatorSource.cpp
+ 
+! 2007-10-02 - Gloria Corti
+ - Remove double section in example options
+   . MIB-Example.opts
+!=========================== LbMIB v2r0 2007-08-22 ===========================
+! 2007-08-22 - Gloria Corti for Magnus Lieng
+ - Book "XXXInput" histogram only when ascii file is read to create binary
+   since the filling is done at that moment
+   . CollimatorSource.cpp
+ 
+! 2007-08-22 - Gloria Corti
+ - Fix checking of variable values for printout (it was '=' insted of "==")
+   . CollimatorSource.cpp
+ 
+! 2007-08-21 - Gloria Corti for Magnus Lieng
+ - Fix bug in MIB-Example.opts
+   . the option "MIBackground.MIBSource" should be "MIBackground.MIBSources"
+
+! 2007-08-17 - Gloria Corti
+ - Modify code as not to process empty events, i.e. the generation of an
+   "event" (or bunch) is repeated until at least one track from any MIB source
+   is found. This allows to increase the significant sample that can be
+   generated and processed in the simulation.
+   In orded to do that the original algorithm has been split in a steering
+   algorithm and a tool where the actual generation of the "event" is done.
+   The algorithm, MIBackground, handles the communication with the TES and
+   filling of information in the GenHeader (i.e. luminosity and even type
+   when the events are generated in stand-alone) and of the creation of the
+   various tools for the different sources (TCTH, TCTV, hadrons, muons).
+   The list of tools to use must be specified in job options,
+   MIBackground.MIBSource = {"CollimatorSource/TCTVShieldMuons"}, for example.
+   At least one instance of the CollimatorSource tool has to be passed in
+   the MIBSource list.
+   The tool, CollimatorSource, handles the actual generation of one "event"
+   based on its configuration, via the method generateEvent(). In fact this
+   method is almost identical to the execute() of the original
+   CollimatorSourceAlg.
+   Since we want to be able to produce files with only one given source or
+   with many source mixed togheter to account for the possibility of having
+   two particles from differnt sources in the same event, the MIBackground
+   algortihm calls sequencially the generateEvent() method of all its instances
+   of the source tool and check the presence of at least one particle only
+   at the end. The procedure is repeated until one non-empty "event" is
+   generated at which point MIBackground::execute() returns succesfully.
+   Counters are kept in both the tool and the algorithm to account for the
+   amount of empty/non-empty events that have been generated. This counters
+   are essential to a posteriori normalize the rates.
+   As for the previous version of the code this generation can be stand-alone
+   or merged with other type of events, i.e. pp collisions.
+ - Code changes:
+   . CollimatorSourceAlg.{h,cpp} - REMOVED and split into
+   . MIBackground.{h,cpp}        - NEW steering algorithm
+   . CollimatorSource.{h,cpp}    - NEW generation tools
+   . IMIBSource.h                - NEW interface for the MIB tools
+   . LbMIB_load.cpp              - replace declaration of old algorithm with
+                                   that of new one and declare new tool. This
+                                   is done to keep the package compatible with
+                                   Gauss v25rX series
+ - All steering options listed in the previous release notes exist and have
+   the same effect, but they belong to either the MIBackground algorithm or
+   the CollimatorSource tool.
+   . Options for MIBackground originally in CollimatorSourceAlg:
+      HepMCEvents, GenHeader, GenCollisions, EventType, Luminosity
+   . Options for CollimatorSource originally in CollimatorSourceAlg
+      ParticleSourceFile, FileIsBinary, SaveTempBinFile, TempBinFileName,
+      ScalingFactor, BunchFrequency, GenerationHist, ForcePartPerEvt,
+      ReadFileFromOffset, EnvelopeSize, ZParticleOrigin, ZDirection
+   See in previous version of release notes for explanation.
+ - A new option has introduced in MIBackground to pass the mandatory list of
+   source tool instances:
+   . MIBSource : def = {""}, must be provided in options
+ - The options have been modified to reflect the change in name of
+   the algorithm and tool and their instanciations.
+   . MIB-Example.opts      - modified, example and explanation of options
+   . MIB-Shield.opts       - modified, default options to generate event with
+                             all sources added to pp collisions for the case
+                             of full shield in tunnel
+   . MIB-StagedShield.opts - modified, default options to generate event with
+                             all sources added to pp collisions for the case
+                             of staged shield in tunnel (initial configuration)
+   NOTE that events types have been defined in DecFiles v13r1 (see explanation
+   in its release notes and should be used for the stand-alone generation of
+   the MIB events.
+   For merging all sources with pp collisions in your main Gauss options
+   include after those of the chosen EventType either
+    "$include $LBMIBROOT/options/MIB-Shield.opts"
+   or
+    "$include $LBMIBROOT/options/MIB-StagedShield.opts"
+ 
+!======================= ParticleGuns v3r3 2007-08-24 =======================
+! 2007-08-24 - Gloria CORTI
+ - Introduce in "MaterialEvalGun" uniform production in eta-phi and regular
+   grid in both eta-phi and on a plane at given distance (default at 10*m).
+   New properties have been introduce to chose eta-phi or x-y plane, randomly
+   uniform or regular grid, and min/max in eta-phi, plus steps in x-y and
+   eta-phi.
+ - Introduce example options for both ParticleGun (moved from Gauss) and
+   MaterialEvalGrid. Look there for specific list of available properties
+   and default values.
+ - Code changes
+   . MaterialEvalGun.{h,cpp}      - modified
+   . options/MaterialEvalGun.opts - NEW
+   . options/ParticleGun.opts     - NEW
+ - Change default of ParticleGun to uniform distributions in abs(P), theta,
+   phi instead of fiex px,py,pz values.
+   . ParticleGun.cpp              - modified
+
+!======================= GaussTracker v6r0p1 2007-10-02 ======================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix problem of compilation on Win32 reverving space only when number of
+   hits greater than zero
+   . GetTrackerHitsAlg.cpp
+ 
+!===================== GaussCalo v9r0p1 2007-10-02 ============================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Introduce modification for Win32
+   . GetCaloHitsAlg.cpp
+ 
+!========================= GaussRICH v7r2 2007-10-02 =========================
+! 2007-10-02 - Gloria Corti
+ - Adapt to changes in method names in IGeometryInfo.h as in DetDesc v18r0
+   (LHCb v22r9)
+   . src/RichAnalysis/RichG4ReconTransformHpd.cpp
+   . src/RichAnalysis/RichG4TransformPhDet.cpp
+ 
+!========================= GaussRICH v7r1p1 2007-09-18 =======================
+! 2007-09-04 - Sajan Easo
+ - Modified a line in GetMCRichHitsAlg.cpp to compile on Windows.
+ 
+!========================= GaussKine v1r7 2007-10-05 =========================
+! 2007-10-03 - Gloria Corti
+ - Adapt to change in contructor of ParticleID from int being explicit
+   (as in LHCbKernel v7r7 in LHCb v22r9)
+   . G4HepMCToMCTruth.cpp
+!========================= GaussKine v1r6 2007-08-17 =========================
+! 2007-08-17 - Gloria Corti
+ - Introduce protection as to pass an empty event to G4 when the
+   LHCb::HepMCEvents container is empty. This will reset the internal
+   G4Event.
+   . GeneratorToG4.cpp
+ - Introduce protection as not to retrieve MCTruth info for empty events
+   since it cannot be cleared if G4 does not call User Event Action
+   . G4HepMCToMCTruth.cpp
+ 
+!======================== GaussTools v13r1 2007-10-02 ========================
+! 2007-10-02 - Gloria Corti
+ - Adapt to modification of constructor from int made explicit in ParticleID
+   (as from LHCbKernel v7r7 in LHCB v22r9)
+   . src/Components/GaussEventActionHepMC.cpp
+ 
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Fix problems of compilation on Win32 casting to double
+   . src/Lib/MCTruthManager.cpp
+   . src/Components/GaussEventActionHepMC.cpp
+ 
+!========================= GiGaCnv v18r3 2007-10-02 ==========================
+! 2007-10-02 - Gloria Corti
+ - Adapt to changes in method names in IGeometryInfo.h (as from DetDesc v18r0
+   in LHCB v22r9)
+   . src/component/GiGaDetectorElementCnv.cpp
+   . src/component/GiGaLVolumeCnv.cpp
+ - Adapt to modification of constructor from int made explicit in ParticleID
+   . src/component/Trajectory2Particle.cpp
+ - Remove cvs log and names
+   . GiGaCnv/GiGaKineRefTable.h
+   . src/Lib/GiGaKineRefTable.cpp
+   . src/component/GiGaDetectorElementCnv.h
+!========================= GiGaCnv v18r2 2007-08-02 ==========================
+! 2007-08-02 - Gloria Corti, Sajan Easo, Vanya Belyaev, Marco Clemencic
+ - Introduce (with some modification) what provided by Sajan Easo
+   to apply some detector misalignments on parents and childrens as long as
+   the children belong to a unique parent logical volume. It is no longer
+   necessary to specify the full list of all detector elements in
+   GiGaGeo.InputStreams to apply misalignment. See below on options to
+   use to activate it.
+   It includes code from V.Belyaev and M.Clemencic.
+   Modification with respect to what provided are simplification of names
+   of methods and following coding conventions, replacing long list of
+   options to switch on misalignment for subdetectors with list of detector
+   elements to which to apply misalignment.
+   Details of functionality and modifications are:
+   . Activated the capability to simulate some detector misalignments.
+     This is done through the updateRep method of the LogicalVolume converters.
+     It searches for the list of det elem for each phys vol, using the
+     logical volume names. When multiple det elem are found, a second
+     search is launched from the result of the first search. In the second
+     search, the physical volume  name is compared with the npath string of
+     the detector elements in the list and the matching one is taken.
+     If it still finds multiple matches, a warning is printed and
+     the default ideal geometry is used.
+     This means that misalignemnt CANNOT be applied to both parent and children
+     if the parent is a multiple copy of a single detector element.
+     When a proper match is found, the misalignment is accessed from
+     IGeometryInfo class and applied by using the resulting matrix to
+     create the G4Physical volume.
+   . The activation of the use of the CondDB values for alignment is
+     controllable from options of the GiGaGeo service.
+     By default the options are set to false as to reproduce the
+     "old behaviour" of Gauss, i.e. passing full list in GiGaGeo.InputStream.
+     It is possible to activate the use of CondDB values for all subdetectors
+     or for some selectively.
+     To activate it for all detector set the options:
+       GiGaGeo.UseAlignment = true;
+       GiGaGeo.AlignAllDetectors = true;
+     while for example only for the VELO set the options:
+       GiGaGeo.UseAlignment = true;
+       GiGaGeo.AlignDetectors =
+          {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight"};
+   . Code modified:
+     - src/component/GiGaLVolumeCnv.{h,cpp}
+       New methods added (look at doxygen for details):
+       . transformWithAlignment
+       . detElementByLVNameWithAlignment
+       . findBestDetElemFromPVName
+       . detector_element_support_path
+     - GiGaCnv/IGiGaGeomCnvSvc.h
+       src/component/GiGaGeo.{h,cpp}
+       New methods added (look at doxygen for details):
+       . useAlignment
+       . alignAll
+       . alignDets
+       New properties (default values listed)
+       . GiGaGeo.UseAlignment = false;
+       . GiGaGeo.AlignAllDetectors = false;
+       . GiGaGeo.AlignDetectors = { };
+
+!======================= GiGa v19r1 2007-10-02 ===============================
+! 2007-10-02 - Gloria Corti for Karl Harrison
+ - Replace GaussKernel HashTable.h with HashMap.h, adapting to modifications
+   in GaudiKernel to avoid hacks of #ifdef when compiling on Win32
+   . GiGa/GiGaHashMap.h
+   . GiGa/GiGaMap.h
+ 
+!=============================================================================
 </PRE><H1><A NAME="v30r3">2007-07-03 - GaussSys v30r3</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
 <H3><A NAME="Use">This version uses:
