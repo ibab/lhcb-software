@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-10-10 Eduardo Rodrigues
+ - synchronised fitting options of "Tf" framework with the standard ones 
+ - fixed typo in DSTRefitting.opts
+
 !============================ TrackSys v4r10 2007-10-08 ======================
 ! 2007-10-05 Wouter Hulsbergen
  - moved configuration of prefitters to Fitting.opts
@@ -50,14 +54,14 @@
  - Increase number of fit iterations to 2 --> better safe than sorry ! 
 
 ! 2007-08-13 Eduardo Rodrigues
-- Added Fitting.opts: file with all fitting options
-- Added DSTRefitting.opts: file to be able to refit tracks from DST
-- Removed obsolete TrackSeeding.opts file
-- Reoved obsolete TsaSeeding.opts file
-- Modified and cleaned up RecoTracking.opts accordingly:
-  - cleaned up options for obsolete TrackSeeding.opts file
-  - included necessary options from TsaSeeding
-  - all fitting options now taken from Fitting.opts
+ - Added Fitting.opts: file with all fitting options
+ - Added DSTRefitting.opts: file to be able to refit tracks from DST
+ - Removed obsolete TrackSeeding.opts file
+ - Reoved obsolete TsaSeeding.opts file
+ - Modified and cleaned up RecoTracking.opts accordingly:
+   - cleaned up options for obsolete TrackSeeding.opts file
+   - included necessary options from TsaSeeding
+   - all fitting options now taken from Fitting.opts
 
 !============================ TrackSys v4r8 2007-07-20 ======================
 ! 2007-07-20 - Marco Cattaneo
