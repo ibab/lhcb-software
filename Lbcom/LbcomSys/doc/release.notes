@@ -6,6 +6,33 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r10>2007-10-10 LbcomSys v6r10</A></H1><PRE>
+This version uses Gaudi v19r5 and LHCb v22r10
+
+- Packages modified: STAlgorithms v2r3, STDAQ v3r1, STTools v3r4, VeloTools v2r3,
+                     VeloAlgoriths v4r6p1, L0Muon v7r4
+
+- In STAlgorithms v2r3
+  . Adapt to SmartIF change in Gaudi v19r5
+
+- In STDAQ v3r1
+  . Remove unneccessary (and wrong!) release() of UMS from TT/ITReadoutTool.cpp
+
+- In STTools v3r4
+  . Get cbrt from GaudiKernel/cbrt.h rather than LHCbMath/Power.h
+  . Remove LHCbMath dependency
+
+- In VeloTools v2r3
+  . Do not access detector element in constructor, do it in initialize
+
+- In VeloAlgorithms v4r6p1
+  . Fix unchecked StatusCode
+  . Remove obsolete file VeloAlgorithms_load.cpp
+
+- In L0Muon v7r4
+  . Add job options to allow more flexible steering of the algorithms
+  . Add missing variable initialization 
+
 </PRE><H1><A NAME=v6r9>2007-09-21 LbcomSys v6r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r9
 

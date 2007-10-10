@@ -10,7 +10,7 @@ branches doc cmt
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r9  L0          # Olivier Deschamps, Patrick Robbe
 use L0DU              v7r7  L0          # Olivier Deschamps   
-use L0Muon            v7r3  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use L0Muon            v7r4  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
@@ -27,9 +27,9 @@ use RichMCMonitors    v1r4  Rich        # Chris Jones
 use SiTools           v1r3  Si          # Matt Needham
 
 # Silicon Tracker
-use STDAQ             v3r0  ST          # Jeroen van Tilburg
-use STTools           v3r3  ST          # Jeroen van Tilburg
-use STAlgorithms      v2r2  ST          # Jeroen van Tilburg
+use STDAQ             v3r1  ST          # Jeroen van Tilburg
+use STTools           v3r4  ST          # Jeroen van Tilburg
+use STAlgorithms      v2r3  ST          # Jeroen van Tilburg
 use STAssociators     v1r4  ST          # Jeroen van Tilburg
 use STCheckers        v2r2  ST          # Jeroen van Tilburg
 
@@ -39,9 +39,9 @@ use CaloAssociators   v6r4  Calo        # Olivier Deschamps
 # Velo
 use VeloDAQ           v4r0  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
-use VeloAlgorithms    v4r6  Velo        # Tomasz Szumlak
+use VeloAlgorithms    v4r6p1 Velo       # Tomasz Szumlak
 use VeloSimulation    v2r6  Velo        # Tomasz Szumlak
-use VeloTools         v2r2  Velo        # Tomasz Szumlak
+use VeloTools         v2r3  Velo        # Tomasz Szumlak
 
 # Muon
 use MuonAssociators   v3r1  Muon        # Alessia Satta
