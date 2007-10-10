@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+- load Tf libaries 
+
 </PRE><H1><A NAME=v4r10>2007-10-10 RecSys v4r10</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r10.
 

@@ -16,8 +16,7 @@ use CaloMoniDst         v3r0    Calo  # Olivier Deschamps
 use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r9    Calo  # Olivier Deschamps
 
-# Track Fit
-use TrackSys            v4r10   Tr    # Eduardo Rodrigues
+# Track Fit & Pattern Reco Validation (MC)
 use TrackExtrapolators  v2r14   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r12   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r9    Tr    # Eduardo Rodrigues
@@ -26,23 +25,26 @@ use TrackFitter         v2r19   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r16   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r13   Tr    # Eduardo Rodrigues
 use TrackUtils          v1r15   Tr    # Eduardo Rodrigues
-use TrackMatching       v2r16   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
+use PatChecker          v3r0    Tr    # Olivier Callot, David Hutchcroft
+use PatFitParams        v3r0    Tr    # Olivier Callo
 use TrackCheckers       v3r1    Tr    # Eduardo Rodrigues
-use TrackSeeding        v1r2    Tr    # Eduardo Rodrigues, Henk Jan Bulten
+use NNTools             v1r0    Tr    # Adrian Perieanu
 
 # Track Pattern Recognition
-use PatUtils            v1r3    Pat   # Olivier Callot
-use PatVelo             v2r19   Pat   # David Hutchcroft
-use PatVeloTT           v2r15   Pat   # Mariusz Witek
-use PatForward          v2r16   Pat   # Stephanie Hansmann-Menzemer
-use PatPV               v2r9    Pat   # Mariusz Witek
-use PatChecker          v2r14   Pat   # Olivier Callot, David Hutchcroft
-use PatFitParams        v2r5    Pat   # Olivier Callot
-use TsaAlgorithms       v2r7    Tr    # Matt Needham
-use PatKShort           v1r7    Pat   # Olivier Callot
-use NNTools             v1r0    Tr    # Adrien Perieanu, Stephanie H.-Menzemer
+use TrackSys            v4r10   Tf    # Eduardo Rodrigues
+use PatVelo             v3r0    Tf    # David Hutchcroft
+use PatVeloTT           v3r0    Tf    # Mariusz Witek
+use PatAlgorithms       v3r0    Tf    # Stephanie Hansmann-Menzemer
+use TsaAlgorithms       v3r0    Tf    # Matt Needham
+use TrackSeeding        v1r2    Tf    # Eduardo Rodrigues, Henk Jan Bulten
+use TrackMatching       v2r16   Tf    # Eduardo Rodrigues
+use TfTools             v1r0    Tf    # Stephanie Hansmann-Menzemer
+
+# Primary Vertex Finder
+use PatPV               v3r0    Tr   # Mariusz Witek
+
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
@@ -57,7 +59,7 @@ use RichLocalPID        v3r5    Rich  # Chris Jones
 use RichGlobalPID       v3r5    Rich  # Chris Jones
 use RichPIDMerge	v2r5    Rich  # Chris Jones
 use RichRecAlgorithms   v2r9    Rich  # Chris Jones
-use RichRecTools        v3r14   Rich  # Chris Jones
+use RichRecTools        v3r13   Rich  # Chris Jones
 use RichRecMCTools      v2r13   Rich  # Chris Jones
 use RichRecMonitors     v2r12   Rich  # Chris Jones
 use RichRecQC           v2r14   Rich  # Chris Jones
@@ -66,4 +68,4 @@ use RichHLTLocalPID     v1r0    Rich  # Chris Jones
 use RichHLTSys          v3r1    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r13   Rec   # Chris Jones
+use GlobalReco          v6r12   Rec   # Chris Jones
