@@ -7,8 +7,6 @@
 #include "TfKernel/STHit.h"
 #include "Kernel/MemPoolAlloc.h"
 
-namespace Tf
-{
 
   /** @class PatForwardHit
    *  Extended hit class for PatForward and PatSeed algorithms
@@ -16,15 +14,15 @@ namespace Tf
    *  @date   2007-06-01
    **/
 
-  class PatForwardHit : public HitExtension<LineHit>,
-                        public LHCb::MemPoolAlloc<Tf::PatForwardHit>
+  class PatForwardHit : public Tf::HitExtension<Tf::LineHit>,
+                        public LHCb::MemPoolAlloc<PatForwardHit>
   {
 
   public:
 
     // Default constructor
     PatForwardHit ( ) :
-      HitExtension<LineHit>(),
+      Tf::HitExtension<Tf::LineHit>(),
       m_rlAmb(0),
       m_isUsed(false),
       m_isIgnored(false),
@@ -39,8 +37,8 @@ namespace Tf
     };
 
       /// Constructor from an OT hit
-    PatForwardHit ( const OTHit & otHit ) :
-      HitExtension<LineHit>(otHit),
+    PatForwardHit ( const Tf::OTHit & otHit ) :
+      Tf::HitExtension<Tf::LineHit>(otHit),
       m_rlAmb(0),
       m_isUsed(false),
       m_isIgnored(false),
@@ -55,8 +53,8 @@ namespace Tf
     };
 
     /// Constructor from an ST hit
-    PatForwardHit ( const STHit & stHit ) :
-      HitExtension<LineHit>(stHit),
+    PatForwardHit ( const Tf::STHit & stHit ) :
+      Tf::HitExtension<Tf::LineHit>(stHit),
       m_rlAmb(0),
       m_isUsed(false),
       m_isIgnored(false),
@@ -116,6 +114,6 @@ namespace Tf
   typedef PatForwardHit               PatFwdHit;
   typedef std::vector<PatForwardHit*> PatFwdHits;
 
-}
+
 #endif // PATFORWARD_PatForwardHit_H
 

@@ -1,8 +1,8 @@
-// $Id: PatKernel_dll.cpp,v 1.1 2007-09-19 14:24:37 krinnert Exp $
+// $Id: PatKernel_dll.cpp,v 1.2 2007-10-10 18:38:32 smenzeme Exp $
 // Include files 
 
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 
-LOAD_FACTORY_ENTRIES(PatKernel_Tf)
+LOAD_FACTORY_ENTRIES(PatKernel)
 

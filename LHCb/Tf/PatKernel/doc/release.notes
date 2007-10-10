@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2007-10-10 - Stephanie Hansmann-Menzemer
+  - remove Tf:: from classes
 
 !============================= PatKernel v1r1 2007-10-09 =====================
 ! 2007-09-19 - Kurt Rinnert

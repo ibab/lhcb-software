@@ -8,7 +8,6 @@
 
 #include "TfKernel/TStationHitManager.h"
 
-namespace Tf {
 
   /** @class PatTStationHitManager PatTStationHitManager.h
    *
@@ -18,7 +17,7 @@ namespace Tf {
    *  @date   2007-06-01
    */
 
-  class PatTStationHitManager : public TStationHitManager<PatForwardHit>
+  class PatTStationHitManager : public Tf::TStationHitManager<PatForwardHit>
   {
 
   public:
@@ -31,11 +30,11 @@ namespace Tf {
 
     virtual void prepareHits() const;  
     
-    virtual void prepareHitsInWindow(const IStationSelector & selector);
+    virtual void prepareHitsInWindow(const Tf::IStationSelector & selector);
 
     void sortMyHits() const;
 
   };
-}
+
 
 #endif // PATTSTATIONHITMANAGER_H

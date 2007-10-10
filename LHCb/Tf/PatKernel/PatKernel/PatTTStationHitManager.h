@@ -8,8 +8,6 @@
 
 #include "TfKernel/TTStationHitManager.h"
 
-namespace Tf {
-
   /** @class PatTTStationHitManager PatTTStationHitManager.h
    *
    *  TT station hit manager for Pat.
@@ -18,7 +16,7 @@ namespace Tf {
    *  @date   2007-06-01 Initial version
    */
 
-  class PatTTStationHitManager : public TTStationHitManager <PatTTHit>
+  class PatTTStationHitManager : public Tf::TTStationHitManager <PatTTHit>
   {
 
   public:
@@ -30,6 +28,6 @@ namespace Tf {
     virtual ~PatTTStationHitManager( );
 
   };
-}
+
 
 #endif // PATTSTATIONHITMANAGER_H

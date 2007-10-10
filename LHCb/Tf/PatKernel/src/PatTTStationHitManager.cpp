@@ -13,7 +13,6 @@
 // local
 #include "PatKernel/PatTTStationHitManager.h"
 
-using namespace Tf;
 
 DECLARE_TOOL_FACTORY( PatTTStationHitManager );
 
@@ -23,7 +22,7 @@ DECLARE_TOOL_FACTORY( PatTTStationHitManager );
 PatTTStationHitManager::PatTTStationHitManager( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : Tf::TTStationHitManager<Tf::PatTTHit> ( type, name , parent )
+  : Tf::TTStationHitManager<PatTTHit> ( type, name , parent )
 {
 }
 

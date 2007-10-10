@@ -6,7 +6,6 @@
 #include "TfKernel/STHit.h"
 #include "Kernel/MemPoolAlloc.h"
 
-namespace Tf {
 
   /** @class PatTTHit
    *  Extended hit class for PatAddTT algorithms
@@ -14,15 +13,15 @@ namespace Tf {
    *  @date   2007-06-019
    **/
 
-  class PatTTHit : public HitExtension<LineHit>,
-                   public LHCb::MemPoolAlloc<Tf::PatTTHit>
+  class PatTTHit : public Tf::HitExtension<Tf::LineHit>,
+                   public LHCb::MemPoolAlloc<PatTTHit>
   {
 
   public:
 
     /// Constructor from an ST hit
-    PatTTHit ( const STHit & stHit ) :
-      HitExtension<LineHit>(stHit),
+    PatTTHit ( const Tf::STHit & stHit ) :
+      Tf::HitExtension<Tf::LineHit>(stHit),
       m_x(stHit.xMid()),
       m_z(stHit.zMid()),
       m_projection(-999),
@@ -48,10 +47,10 @@ namespace Tf {
     double  m_z;
     double  m_projection;
     int     m_planeCode;
+ 
   };
-
+ 
   typedef std::vector<PatTTHit*> PatTTHits;
-
-}
+ 
 
 #endif // PATFORWARD_PATTTHit_H

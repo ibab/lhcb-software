@@ -17,11 +17,7 @@ branches          cmt doc src PatKernel
 use  OTDet       v*  Det  
 use  STDet       v*  Det
 use  TfKernel    v*  Tf
-
-
-# Note : we are appending _Tf to the library name simply to 
-#        prevent conflicts with the original in Tr/ - When these are no
-#        longer these can be removed
+use  TfTools     v* Tf
 
 #============================================================================
 # Install includes
@@ -31,9 +27,9 @@ apply_pattern install_more_includes more=PatKernel
 #============================================================================
 # Component library building rule
 #============================================================================
-library PatKernel_Tf ../src/*.cpp 
+library PatKernel ../src/*.cpp 
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern component_library    library=PatKernel_Tf
+apply_pattern component_library    library=PatKernel
