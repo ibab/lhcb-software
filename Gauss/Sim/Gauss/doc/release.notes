@@ -6,6 +6,7 @@
 
 !======================== Gauss v30r4 2007-10-10 =============================
 ! 2007-10-10 - Gloria Corti
+ - Use latest available DecFiles v13r14
  - Remove Gauss.job that is obsolete: Gauss_Ganga.py should instead be
    used to submit jobs.
  - New options to be included at the end of steering options to generate
