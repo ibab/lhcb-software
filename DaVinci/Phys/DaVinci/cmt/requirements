@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.363 2007-10-05 07:04:17 pkoppenb Exp $
+# $Id: requirements,v 1.364 2007-10-10 08:52:06 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -21,7 +21,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v7r0                -no_auto_imports
+use ParamFiles         v7r0                 -no_auto_imports
 use FieldMap           v4r7                 -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
@@ -34,6 +34,7 @@ use GaudiPython        v*                   -no_auto_imports
 # From LHCB project
 use CaloDAQ            v*    Calo           -no_auto_imports
 use LinkerInstances    v*    Event
+use SimComponents      v*    Sim            -no_auto_imports
 
 #-- Lbcom
 use LbcomSys    v*
