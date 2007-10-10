@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+2007-10-10 Stephanie Hansmann-Menzemer
+ - adapt to Tf framework
 
 !======================== TrackTools v2r19 2007-10-08 ========================
 ! 2007-10-06 M Needham
