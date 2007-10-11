@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.7 2007-06-26 13:36:44 hernando Exp $
+// $Id: HltInit.cpp,v 1.8 2007-10-11 16:43:51 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,8 @@ HltInit::~HltInit() {}
 StatusCode HltInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  evtSvc();
   
   // create the Hlt Data Svc
   m_hltSvc = NULL;

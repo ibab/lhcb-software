@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.5 2007-09-19 17:15:58 pkoppenb Exp $
+// $Id: HltSummaryWriter.cpp,v 1.6 2007-10-11 16:43:51 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -105,8 +105,11 @@ StatusCode HltSummaryWriter::execute() {
     if (m_datasummary->hasSelectionSummary(id)) {
       bool ok = m_datasummary->selectionSummary(id).decision();
       if (ok) writeSelection(id);
-    } else 
-      Warning("No selection in summary Data!",1);
+    } else {
+      std::string comment = "No selection in summary Data " + 
+        HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
+      Warning(comment,1);
+    }
   }
 
 

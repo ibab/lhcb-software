@@ -4,7 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
-! 2007-10-28 Jose A. Hernando
+! 2007-10-11 Jose A. Hernando
+  - TOREPLACE: temporally fix bug in create HltDataSvc calling evtSvc()
   - minor change in the name of the monitoring histogram to use the funtion name and not the filter name
 
 ! 2007-09-28 Jose A. Hernando
