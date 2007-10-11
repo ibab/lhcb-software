@@ -21,7 +21,6 @@ use STDet       v*  Det
 use GSL         v*  LCG_Interfaces
 use LHCbMath    v*  Kernel
 use TfKernel    v*  Tf
-use TfTools     v*  Tf
 
 #============================================================================
 # Install includes

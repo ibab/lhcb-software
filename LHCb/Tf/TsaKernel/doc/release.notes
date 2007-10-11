@@ -3,10 +3,11 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!======================= TsaKernel v3r0 2007-10-11 ==========================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
  - Move header files back to  TsaKernel
 
-!======================= TsaKernel v3r0 2007-09-18 ==========================
 ! 2007-09-16 - Kurt Rinnert
  - fixed requirements file to install the headers in TsaKernel_Tf
  - fixed SeedHit to use temporary TsaKernel_Tf include directory
