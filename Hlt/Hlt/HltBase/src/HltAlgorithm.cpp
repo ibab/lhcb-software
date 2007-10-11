@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.16 2007-09-20 19:20:54 tskwarni Exp $
+// $Id: HltAlgorithm.cpp,v 1.17 2007-10-11 10:12:38 hernando Exp $
 // Include files 
 
 // from boost
@@ -68,7 +68,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 // Destructor
 //=============================================================================
 HltAlgorithm::~HltAlgorithm() {
-  delete m_outputHolder;
+  if (m_outputHolder) delete m_outputHolder;
   if (m_outputTracks) delete m_outputTracks;
   if (m_outputVertices) delete m_outputVertices;
 } 
