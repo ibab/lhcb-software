@@ -16,7 +16,7 @@ use LHCbDefinitions     v2r0      Kernel
 use GENSER              v3r2      Gen
 #
 macro EvtGen_use      "EvtGen       v8r16   Gen"  WIN32 "" 
-macro Generators_use  "Generators   v7r4    Gen"  WIN32 ""
+macro Generators_use  "Generators   v7r5    Gen"  WIN32 ""
 macro LbPythia_use    "LbPythia     v5r3    Gen"  WIN32 ""
 macro LbAlpGen_use    "LbAlpGen     v1r0    Gen"  WIN32 ""
 macro BcVegPy_use     "BcVegPy      v1r1p2  Gen"  WIN32 ""

@@ -3,7 +3,7 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-</PRE><H1><A NAME="v30r4">2007-10-08 - GaussSys v30r4</A></H1><PRE>
+</PRE><H1><A NAME="v30r4">2007-10-11 - GaussSys v30r4</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
 <H3><A NAME="Use">This version uses:
    LHCb v22r9 (and Gaudi v19r4)
@@ -131,6 +131,18 @@ Purpose: LHCb Simulation program
   src/component/ReadAlpGen.cpp, src/component/ReadAlpGen.h
      concrete tool LbPythia::ReadAlpGen to read ALPGEN partonic files
   
+!====================== Generators v7r5 2007-10-11 ===========================
+! 2007-10-11 - Gloria Corti
+ - Really add src/component/UniforSmearVertex.{h,cpp}
+
+! 2007-10-10 - Patrick Robbe
+ - Add static class to hold external Gaudi random generator and message
+   stream to interface with Pythia and EvtGen
+   . Generators/StreamForGenerator.h, src/Lib/StreamForGenerator.cpp
+   . Generators/RandomForGenerator.h, src/Lib/RandomForGenerator.cpp
+   . src/Lib/EvtReport.cpp
+   . src/component/EvtGenDecay.cpp
+   . src/component/Generation.cpp
 !====================== Generators v7r4 2007-09-27 ===========================
 ! 2007-09-27 - Gloria Corti for Massimiliano Ferro-Luzzi
  - Add new tool for uniform distribution in z and xy (within max radius)
