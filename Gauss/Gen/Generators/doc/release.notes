@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.111 2007-10-11 11:55:20 gcorti Exp $
+! $Id: release.notes,v 1.112 2007-10-11 13:23:26 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-10-11 - Patrick Robbe
+ - Move inline functions in StreamForGenerator and RandomForGenerator in 
+   the .cpp files
 
 !====================== Generators v7r5 2007-10-11 ===========================
 ! 2007-10-11 - Gloria Corti

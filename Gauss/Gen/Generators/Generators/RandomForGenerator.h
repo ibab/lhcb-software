@@ -1,4 +1,4 @@
-// $Id: RandomForGenerator.h,v 1.1 2007-10-10 20:06:47 robbep Exp $
+// $Id: RandomForGenerator.h,v 1.2 2007-10-11 13:23:26 robbep Exp $
 #ifndef GENERATORS_RANDOMFORGENERATOR_H 
 #define GENERATORS_RANDOMFORGENERATOR_H 1
 
@@ -18,7 +18,7 @@ public:
 
   //  virtual ~RandomForGenerator( ) {} ; ///< Destructor
 
-  static Rndm::Numbers & getNumbers() { return s_randgaudi ; }
+  static Rndm::Numbers & getNumbers() ;
 
 protected:
 

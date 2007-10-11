@@ -1,4 +1,4 @@
-// $Id: StreamForGenerator.h,v 1.1 2007-10-10 20:06:47 robbep Exp $
+// $Id: StreamForGenerator.h,v 1.2 2007-10-11 13:23:26 robbep Exp $
 #ifndef GENERATORS_STREAMFORGENERATOR_H 
 #define GENERATORS_STREAMFORGENERATOR_H 1
 
@@ -14,7 +14,7 @@
 class StreamForGenerator {
 public:
 
-  static MsgStream *& getStream() { return s_gaudiStream ; }
+  static MsgStream *& getStream() ;
 
 protected:
 
