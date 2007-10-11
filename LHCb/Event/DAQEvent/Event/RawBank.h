@@ -85,6 +85,9 @@ namespace LHCb
                    EcalPackedError, //34
                    HcalPackedError, //35  
                    PrsPackedError,  //36
+<<<<<<< RawBank.h
+									 GaudiSerialize,
+=======
                    L0CaloFull,      //37
                    L0CaloError,     //38
                    L0MuonCtrlAll,   //39
@@ -96,6 +99,7 @@ namespace LHCb
                    GaudiHeader,     //45
                    TTProcFull,      //46
                    ITProcFull,      //47
+>>>>>>> 1.22
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
