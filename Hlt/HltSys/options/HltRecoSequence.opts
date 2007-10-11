@@ -47,8 +47,10 @@ PatHltRecoForward.DoCleanUp = false;
 // HLT Common reconstruction
 //-----------------------------
 
-HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
-                              "PatVeloLoadClusters",
+// TODO: If unique decoding REC/HLT use same algo name
+//       or both REC/HLT use DecodeOnDemand
+HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer", 
+                              "PatVeloLoadClusters/PatHltVeloLoadClusters",
                               "PatVeloRTracking/PatHltVeloRTracking",
                               "PatPV2D/PatHltPV2D",
                               "HltPrepareTracks/HltPrepareRZVelo",
@@ -82,13 +84,13 @@ PatPV3D.InputTracksName = "Hlt/Track/Velo";
 // Decode TT
 //-------------
 HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters",
-                         "PatTTCoordFromRaw"
+                         "PatTTCoordFromRaw/PatHltTTCoordFromRaw"
 };
 
 // Decode T
 //--------------
 HltDecodeT.Members += { "RawBankToSTLiteClusterAlg/createITLiteClusters",
-                        "PatTCoordFromRaw"
+                        "PatTCoordFromRaw/PatHltTCoordFromRaw"
 };
 createITLiteClusters.detType = "IT";
 

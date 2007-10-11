@@ -6,6 +6,10 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+! 2007-10-11 - Jose A. Hernando
+ - HltRecoSequence.opts: have a HLT instace of Pat Decoding to avoid interferences with Brunel
+ - Remove many obsolete opts files!
+
 ! 2007-10-10 - Tomasz Skwarnicki
  - HltMuonAlleyConfSequence.opts, HltL0TriggerSequence.opts: rename all "Rec/..." to "Hlt/..." for track & vertex locations  
 
