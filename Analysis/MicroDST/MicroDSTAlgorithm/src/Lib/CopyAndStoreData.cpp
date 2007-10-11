@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.1 2007-10-11 17:56:56 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.2 2007-10-11 18:01:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -96,6 +96,7 @@ T* CopyAndStoreData::getContainer(std::string locTES)
   
   // do some string manipulaitons
   getNiceLocationName(locTES);
+
   // Check if the container is already there
   if ( containerMap().find(locTES) !=  containerMap().end() ) {
     verbose() << "return existing container" << endmsg;
