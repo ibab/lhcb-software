@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.2 2007-08-16 13:46:37 graven Exp $
+// $Id: TrackFilterAlg.cpp,v 1.3 2007-10-11 17:22:46 hmdegaud Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -55,8 +55,12 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
                                       (Track::Ttrack    , "Ttrack"    )
                                       (Track::Muon      , "Muon"      );
   
-  m_lhcbDetChecks = map_list_of("Velo", bind(&LHCbID::isVelo, _1))
-                               ("OT"  , bind(&LHCbID::isOT  , _1));
+  boost::function<bool (LHCb::LHCbID)> veloCheck = bind<bool>(&LHCb::LHCbID::isVelo,_1); 
+  boost::function<bool (LHCb::LHCbID)> otCheck   = bind<bool>(&LHCb::LHCbID::isOT,_1);
+ 
+  
+  m_lhcbDetChecks = map_list_of("Velo", veloCheck)
+                               ("OT"  , otCheck  );
 
   declareProperty("TracksInputContainer" , m_tracksInputContainer  = TrackLocation::Default    );
   declareProperty("TracksOutputContainer"        , m_tracksOutputContainer = "Alignment/FilteredTracks");
