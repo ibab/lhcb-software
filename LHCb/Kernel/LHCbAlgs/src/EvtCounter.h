@@ -1,6 +1,6 @@
-// $Id: EventCounter.h,v 1.1 2007-03-02 08:49:26 cattanem Exp $
-#ifndef EVENTCOUNTER_H 
-#define EVENTCOUNTER_H 1
+// $Id: EvtCounter.h,v 1.1 2007-10-11 08:47:29 cattanem Exp $
+#ifndef EVTCOUNTER_H 
+#define EVTCOUNTER_H 1
 
 // Include files
 // from Gaudi
@@ -8,28 +8,22 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "IEventCounter.h"
 
-//static const InterfaceID IID_EventCounter ( "EventCounter", 1, 0 );
-
-/** @class EventCounter EventCounter.h
+/** @class EvtCounter EvtCounter.h
  *  
- *
  *  @author Patrick KOPPENBURG
  *  @date   2004-06-15
  */
-class EventCounter : public GaudiTool,
-                     virtual public IEventCounter,
-                     virtual public IIncidentListener {
+class EvtCounter : public GaudiTool,
+                   virtual public IEventCounter,
+                   virtual public IIncidentListener {
 public: 
 
-  // Return the interface ID
-  //  static const InterfaceID& interfaceID() { return IID_EventCounter; }
-
   /// Standard constructor
-  EventCounter( const std::string& type, 
-                const std::string& name,
-                const IInterface* parent);
+  EvtCounter( const std::string& type, 
+              const std::string& name,
+              const IInterface* parent);
 
-  virtual ~EventCounter( ){}; ///< Destructor
+  virtual ~EvtCounter( ){}; ///< Destructor
 
   /// IListener interface to be triggered at begin of event
   virtual void handle(const Incident&) { this->incrementEventCounter(); }
@@ -51,4 +45,4 @@ protected:
 private:
   long m_eventCounter; ///< number of events processed
 };
-#endif // EVENTCOUNTER_H
+#endif // EVTCOUNTER_H

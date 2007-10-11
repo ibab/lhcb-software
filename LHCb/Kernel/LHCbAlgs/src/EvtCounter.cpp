@@ -1,4 +1,4 @@
-// $Id: EventCounter.cpp,v 1.1 2007-03-02 08:49:26 cattanem Exp $
+// $Id: EvtCounter.cpp,v 1.1 2007-10-11 08:47:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,25 +6,25 @@
 #include "GaudiKernel/IIncidentSvc.h"
 
 // local
-#include "EventCounter.h"
+#include "EvtCounter.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : EventCounter
+// Implementation file for class : EvtCounter
 //
 // 2004-06-15 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( EventCounter );
+DECLARE_TOOL_FACTORY( EvtCounter );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-EventCounter::EventCounter( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent )
+EvtCounter::EvtCounter( const std::string& type,
+                        const std::string& name,
+                        const IInterface* parent )
   : GaudiTool ( type, name , parent ),
   m_eventCounter(0){
   declareInterface<IEventCounter>(this);
@@ -34,7 +34,7 @@ EventCounter::EventCounter( const std::string& type,
 //=============================================================================
 // Initialize method, retrieve necessary services 
 //=============================================================================
-StatusCode EventCounter::initialize() {
+StatusCode EvtCounter::initialize() {
 
   // Mandatory initialization of GaudiTool
   StatusCode sc = GaudiTool::initialize();

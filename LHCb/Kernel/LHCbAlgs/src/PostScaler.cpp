@@ -1,4 +1,4 @@
-// $Id: PostScaler.cpp,v 1.1 2007-03-02 08:49:26 cattanem Exp $
+// $Id: PostScaler.cpp,v 1.2 2007-10-11 08:47:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode PostScaler::execute() {
   
   // Event number fraction method
   if (m_forcedReduction > 1.){
-    m_eventNumber = tool<IEventCounter>( "EventCounter" );
+    m_eventNumber = tool<IEventCounter>( "EvtCounter" );
     long m_event = m_eventNumber->getEventCounter() ;
     verbose() << "event number is now " << m_event << endmsg;
   
