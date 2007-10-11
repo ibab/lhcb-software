@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.5 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.6 2007-10-11 09:41:18 hernando Exp $
 // Include files 
 
 
@@ -114,7 +114,7 @@ StatusCode HltVertexMaker::initialize() {
 
     if (m_histogramUpdatePeriod>0) {
       HltHisto histo = NULL;
-      initializeHisto(histo,filtername,0.,100.,100);
+      initializeHisto(histo,funname,0.,100.,100);
       m_histos.push_back(histo);
     }
 

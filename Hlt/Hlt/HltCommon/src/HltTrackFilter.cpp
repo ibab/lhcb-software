@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.6 2007-08-17 16:30:15 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.7 2007-10-11 09:41:18 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -88,11 +88,11 @@ StatusCode HltTrackFilter::initialize() {
 
     if (m_histogramUpdatePeriod>0) {
       HltHisto histo = NULL;
-      initializeHisto(histo,filtername,0.,100.,100);
+      initializeHisto(histo,funname,0.,100.,100);
       m_histos.push_back(histo);
 
       HltHisto histo1 = NULL;
-      initializeHisto(histo1,filtername+"Best",0.,100.,100);
+      initializeHisto(histo1,funname+"Best",0.,100.,100);
       m_histos1.push_back(histo1);
     }
 
