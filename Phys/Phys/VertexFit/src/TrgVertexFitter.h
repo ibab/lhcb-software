@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.6 2007-08-22 12:51:13 jpalac Exp $
+// $Id: TrgVertexFitter.h,v 1.7 2007-10-11 17:11:40 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -86,6 +86,8 @@ private:
   int m_photonID; ///< Photon particle ID
 
   IParticleStuffer* m_stuffer ; ///< Particle stuffer
+
+  double m_epsilon ; ///< smallest acceptable value for doubles
 
 };
 #endif // TRGVERTEXFITTER_H

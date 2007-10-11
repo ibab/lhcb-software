@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.18 2007-08-22 12:51:13 jpalac Exp $
+// $Id: TrgVertexFitter.cpp,v 1.19 2007-10-11 17:11:40 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,7 @@ TrgVertexFitter::TrgVertexFitter( const std::string& type,
 {
   declareInterface<IVertexFit>(this);
   declareProperty("useDaughters", m_useDaughters = true);
+  declareProperty("Epsilon", m_epsilon = 1.e-16 );
 }
 //=============================================================================
 // Destructor
@@ -82,6 +83,7 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   
   // Vector of particles to use in fit, can contain daughters of input particles
   LHCb::Particle::ConstVector partsToFit;
+  if (msgLevel(MSG::DEBUG)) debug() << "Hello from TrgVertexFitter vertexing " << parts.size() << " particles" << endmsg ;
 
   // Vector of input photons
   Particle::ConstVector inputPhotons;
@@ -90,50 +92,52 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   
   // Main loop on input particles
   for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
-    
-    const Particle* parPointer = *iPart;
-    if ( !parPointer) {
-      fatal() << "Pointer to particle failed: " << parPointer->particleID().pid() << endmsg;
+
+    const Particle* par = *iPart;
+    if ( !par) {
+      fatal() << "Pointer to particle failed: "  << endmsg;
       return StatusCode::FAILURE;
     }
-    const Particle& par = *(parPointer);
-    const Vertex* endVertexPointer = par.endVertex();
+    if (msgLevel(MSG::DEBUG)){
+      debug() << " VERTEXING Particle " << par->key() << " " << par->particleID().pid() << " " << par->momentum() << endmsg ;
+    }
+    
+    const Vertex* endVertex = par->endVertex();
 
     // Take actions 1) 2) 3) or 4) according to particle type
 
     // 2) For resonances, use daughter particles for fit if m_useDaughters is set to true
-    if ( m_useDaughters && endVertexPointer && isResonance(par) ){
-      const Vertex& endvert =  *(endVertexPointer);
-      const SmartRefVector<Particle>& daughters= endvert.outgoingParticles();
+    if ( m_useDaughters && endVertex && isResonance(*par) ){
+      const SmartRefVector<Particle>& daughters= endVertex->outgoingParticles();
       for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();
             iDaught!=daughters.end();++iDaught) {
-        const Particle* daughtPointer = *iDaught;
-        if ( !daughtPointer) {
-          fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID().pid() << endmsg;
+        const Particle* daught = *iDaught;
+        if ( !daught) {
+          fatal() << "Pointer to daughter particle failed: " << daught->particleID().pid() << endmsg;
           return StatusCode::FAILURE;
         }
         if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter particle added to list for fit: " 
-                                              << daughtPointer->particleID().pid() << endmsg;
-        partsToFit.push_back(daughtPointer);
+                                              << daught->particleID().pid() << endmsg;
+        partsToFit.push_back(daught);
       }
       
     }
     // 3) FL: Long lived composite
-    else if ( m_useDaughters && endVertexPointer && !(isResonance(par)) ){
+    else if ( m_useDaughters && endVertex && !(isResonance(*par)) ){
       if (msgLevel(MSG::VERBOSE)) verbose() << "Long lived particle added to list for fit: " 
-                                            << par.particleID().pid() << endmsg;
-      partsToFit.push_back(parPointer);
+                                            << par->particleID().pid() << endmsg;
+      partsToFit.push_back(par);
 		  nLongLived++;
     }
 
     // 4) In any other case, particle will be used directly in the fit
     else {
-      partsToFit.push_back(parPointer);
+      partsToFit.push_back(par);
       if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle added to list for fit: " 
-                                            << parPointer->particleID().pid() << endmsg;
+                                            << par->particleID().pid() << endmsg;
       if (msgLevel(MSG::VERBOSE)) verbose() << "Point on particle: " 
-                                            << parPointer->referencePoint() 
-                                            << ", Error:\n " << parPointer->covMatrix() << endmsg;
+                                            << par->referencePoint() 
+                                            << ", Error:\n " << par->covMatrix() << endmsg;
     }
   }
 
@@ -199,11 +203,8 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   
     StatusCode scFit = doFit( partsToFit, V );
     if ( !scFit) {
-      fatal() << "doFit failed" << endmsg;
-      return StatusCode::FAILURE;
-
+      return Warning("doFit failed",StatusCode::FAILURE,1);
     }
-  
   }
   
   // Add daugthers
@@ -238,18 +239,19 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
   int i=0;
   for ( std::vector<const Particle*>::const_iterator iPartIt=partsToFit.begin(); 
         iPartIt!=partsToFit.end(); ++iPartIt ) {
-    const Particle* parPointer = *iPartIt;
-    const Particle& par = *(parPointer);
-    const Gaudi::XYZPoint& point = par.referencePoint();
-    const Gaudi::SymMatrix7x7& cov = par.covMatrix();
+    const Particle* par = *iPartIt;
+    const Gaudi::XYZPoint& point = par->referencePoint();
+    const Gaudi::SymMatrix7x7& cov = par->covMatrix();
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "cov\n " << cov << endmsg ;
-    if (msgLevel(MSG::DEBUG)) debug() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
+    else if (msgLevel(MSG::DEBUG)) debug() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
     
 
-    const Gaudi::XYZVector slopes = par.slopes();
+    const Gaudi::XYZVector slopes = par->slopes();
     iMX = slopes.X();
     iMY = slopes.Y();
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Slopes  " << iMX << " " << iMY << endmsg ;
+
     iX0 = point.x() - slopes.X() * point.z();
     iY0 = point.y() - slopes.Y() * point.z();
     iInvSig2X = 1/cov(0,0);
@@ -282,11 +284,15 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
   StatusCode stPosAndErr = vertexPositionAndError(AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, 
                                                   vX, vY, vZ, V);
   if (!stPosAndErr){
-    fatal() << "vertexPositionAndError failed" << endmsg;
-    return StatusCode::FAILURE;
-  };
-
-  // Chi2
+    return Warning("vertexPositionAndError failed", StatusCode::FAILURE, 1);
+  }
+  if (msgLevel(MSG::VERBOSE)){
+    verbose() << "Got from VPAE X A " << AX << " B " << BX << " C " << CX << " D " << DX << " E " << EX << endmsg ;
+    verbose() << "              Y A " << AY << " B " << BY << " C " << CY << " D " << DY << " E " << EY << endmsg ;
+    verbose() << "              v " << vX << " " << vY << " " << vZ << "\n" << V << endmsg ;
+  }
+  
+   // Chi2
   double chi2 = 0;
   for (int i=0; i!=nPartsToFit; i++){
     if (msgLevel(MSG::VERBOSE)) { 
@@ -329,15 +335,47 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
                                                    double& vZ, 
                                                    Vertex& V) const
 {
-          
-  if (msgLevel(MSG::VERBOSE)) verbose() << "X : " << AX << " " << BX << " " << CX << " " << DX << " " << EX << " " << endmsg ;
-  if (msgLevel(MSG::VERBOSE)) verbose()  << "Y : " << AY << " " << BY << " " << CY << " " << DY << " " << EY << " " << endmsg ;
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "X : " << std::setprecision(10) 
+              << AX << " "<< BX << " "<< CX << " " << DX << " " << EX << endmsg ;
+    verbose() << "Y : "  << AY << " "<< BY << " "<< CY << " "<< DY << " "<< EY << " " << endmsg ;
+  }
+  
+  double R1 = CX*AX/BX + CY*AY/BY - EX - EY ;
+  double R2 = DX + DY - CX*CX/BX - CY*CY/BY ;
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "CX*AX/BX + CY*AY/BY - EX - EY = " << CX << " * " << AX << " / " << BX << " + "  
+              << CY << " * "  << AY << " / " << BY << "  - " << EX  
+              << " - "  << EY << endmsg;
+    verbose() << " = "  << CX*AX/BX << " + " << CY*AY/BY << " - " 
+              << EX - EY << endmsg;
+    verbose() << " = " << R1 << endmsg ;
+    verbose() << "DX + DY - CX*CX/BX - CY*CY/BY = "
+              << DX << " + " << DY << " - "  << CX << " * " 
+              << CX << " / "  << BX << " - " << CY << " * "  
+              << CY  << " / "  << BY   << endmsg;
+    verbose() << " = "  << DX + DY << " - " 
+              << CX*CX/BX << " - " << CY*CY/BY << endmsg;
+    verbose() << " = " << R2 << endmsg ;
+  }
+
+  if ( R2 < m_epsilon ) {
+    Warning("R2 is too small, leaving.", StatusCode::FAILURE, 1);
+    debug() << " R1 " << R1 << " R2 " << R2 << endmsg ;
+    return StatusCode::FAILURE;
+  }   
 
   // Vertex position
-  vZ = ( CX*AX/BX + CY*AY/BY - EX - EY ) / (DX +DY - CX*CX/BX - CY*CY/BY);
+  vZ = R1 / R2 ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << " => vZ = " << vZ << endmsg ;
+
   vY = CY*vZ/BY + AY/BY;
   vX = CX*vZ/BX + AX/BX;
   const Gaudi::XYZPoint vPos(vX, vY, vZ);
+  if (msgLevel(MSG::VERBOSE)) verbose() << " => v = " << vPos << endmsg ;
+  
   V.setPosition(vPos);
   
   Gaudi::SymMatrix3x3 fastCov;
