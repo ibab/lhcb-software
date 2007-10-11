@@ -5,6 +5,8 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-10-11 - Chris Jones
+ - Get rich options working again after recent rearrangements of options
 
 ! 2007-10-11 - Jose A. Hernando
  - HltRecoSequence.opts: have a HLT instace of Pat Decoding to avoid interferences with Brunel

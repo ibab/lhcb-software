@@ -30,6 +30,7 @@ SeqHltCharged.Members += { "GaudiSequencer/SeqTrueSignalTracks" }; // debug
  */
 SeqHltCharged.Members += { "HltInsertTrackErrParam"} ;
 HltInsertTrackErrParam.InputLocation = "Hlt/Track/ForwardCLEANED" ;
+
 //---------------------------------------------------------------------
 // MuonID
 //---------------------------------------------------------------------
@@ -39,6 +40,21 @@ HltMuonIDSeq.Members += { "MuonRec", "MuonID/HltMuonID" };
 HltMuonID.TrackLocation = "Hlt/Track/ForwardCLEANED" ;
 HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" ;
 HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
+
+//----------------------------------------------------------------------------------------------------
+// C.Jones : RICH options
+// Disabled by default. To enable uncomment the lines below
+//----------------------------------------------------------------------------------------------------
+#include "$RICHHLTSYSOPTS/RecoHLTToolPara.opts"
+#include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
+// temporary, to use the cleaned forward tracks
+ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
+// Explicitly run the RICH reco sequence
+//SeqHltCharged.Members += { "GaudiSequencer/HltRICHReco" };
+// ... or on-demand only when really needed
+//DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' TYPE='GaudiSequencer/HltRICHReco'"};
+//----------------------------------------------------------------------------------------------------
+
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
 //---------------------------------------------------------------------
@@ -50,9 +66,9 @@ SeqHltCharged.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" }
 HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 
 //---------------------------------------------------------------------
-// RICH
+// ProtoParticles
 //---------------------------------------------------------------------
-HltChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
+//HltChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
 HltChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID";
 // no calo yet
 HltChargedProtoPAlg.UseCaloSpdPID = false ;
@@ -60,10 +76,10 @@ HltChargedProtoPAlg.UseCaloPrsPID = false ;
 HltChargedProtoPAlg.UseCaloEcalPID = false ;
 HltChargedProtoPAlg.UseCaloHcalPID = false ;
 HltChargedProtoPAlg.UseCaloBremPID = false ;
-HltChargedProtoPAlg.UseRichPID = false ;
+//HltChargedProtoPAlg.UseRichPID = false ; // Protos will NOT have any RICH information - HltRichPIDsKaons will not work
+HltChargedProtoPAlg.UseRichPID = true ;    // Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
 HltChargedProtoPAlg.UseMuonPID = true ;
 HltChargedProtoPAlg.UseVeloPID = false ;
-HltChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID" ;
 
 //---------------------------------------------------------------------
 // Charged Particles - Here make all to Pi and K
@@ -120,9 +136,8 @@ HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
 HltMuonForTES.OutputLevel =3;
 // ToolSvc.CloneFinderTool.CompareAtLHCbIDsLevel=true;
 HltMuonForTES.CloneFinderTool.CompareAtLHCbIDsLevel=true;
-/*
- * Hacking of errors
- */
+
+// Hacking of errors
 SeqHltMuons.Members += { "HltInsertTrackErrParam/HltInsertTrackErrParamMuons"} ;
 HltInsertTrackErrParamMuons.InputLocation = "Hlt/Track/MuonsFromAlley" ;
 
