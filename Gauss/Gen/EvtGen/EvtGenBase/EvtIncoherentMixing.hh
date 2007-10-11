@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.hh,v 1.3 2004-03-08 14:32:32 robbep Exp $
+// $Id: EvtIncoherentMixing.hh,v 1.4 2007-10-11 13:17:31 robbep Exp $
 #ifndef EVTINCOHERENTMIXING_HH 
 #define EVTINCOHERENTMIXING_HH 1
 
@@ -20,28 +20,28 @@ public:
   ~EvtIncoherentMixing( ) ; ///< Destructor
 
   // activate or desactivate the Bs mixing
-  static void setB0Mixing()   { _doB0Mixing = true ; }
-  static void unsetB0Mixing() { _doB0Mixing = false ; } 
+  static void setB0Mixing() ;
+  static void unsetB0Mixing() ;
 
   // activate or desactivate the B0 mixing
-  static void setBsMixing()   { _doBsMixing = true ; } 
-  static void unsetBsMixing() { _doBsMixing = false ; } 
+  static void setBsMixing() ;
+  static void unsetBsMixing() ;
 
   // is mixing activated ? 
-  static bool doB0Mixing()  { return _doB0Mixing ; }
-  static bool doBsMixing()  { return _doBsMixing ; }
+  static bool doB0Mixing() ;
+  static bool doBsMixing() ;
 
   // set values for the mixing
-  static void setdGammad( double value )  { _dGammad = value ; } 
-  static void setdeltamd( double value )  { _deltamd = value ; } 
-  static void setdGammas( double value )  { _dGammas = value ; } 
-  static void setdeltams( double value )  { _deltams = value ; } 
+  static void setdGammad( double value ) ;
+  static void setdeltamd( double value ) ;
+  static void setdGammas( double value ) ;
+  static void setdeltams( double value ) ;
 
   // get parameters for mixing
-  static double getdGammad() { return _dGammad ; } 
-  static double getdeltamd() { return _deltamd ; }
-  static double getdGammas() { return _dGammas ; } 
-  static double getdeltams() { return _deltams ; }
+  static double getdGammad() ;
+  static double getdeltamd() ;
+  static double getdGammas() ;
+  static double getdeltams() ;
 
   // Functions to obtain time and type of the mixing ( 1 mix, 0 unmix )
   static void incoherentB0Mix( const EvtId id, double &t, int &mix ) ;
@@ -59,9 +59,9 @@ public:
                       double probB ) ;
   static void OtherB( EvtParticle * p , double & t , EvtId & otherb ) ;
 
-  static bool flipIsEnabled() { return _enableFlip ; } 
-  static void enableFlip() { _enableFlip = true ; } 
-  static void disableFlip() { _enableFlip = false ; }  
+  static bool flipIsEnabled() ;
+  static void enableFlip() ;
+  static void disableFlip() ;
 
 protected:
 

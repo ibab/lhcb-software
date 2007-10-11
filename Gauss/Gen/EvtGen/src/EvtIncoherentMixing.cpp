@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.9 2004-07-12 16:13:30 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.10 2007-10-11 13:17:32 robbep Exp $
 // Include files 
 
 
@@ -231,3 +231,31 @@ void EvtIncoherentMixing::OtherB( EvtParticle * p ,
   return ;
 }
 
+
+// activate or desactivate the Bs mixing
+void EvtIncoherentMixing::setB0Mixing()   { _doB0Mixing = true ; }
+void EvtIncoherentMixing::unsetB0Mixing() { _doB0Mixing = false ; } 
+
+// activate or desactivate the B0 mixing
+void EvtIncoherentMixing::setBsMixing()   { _doBsMixing = true ; } 
+void EvtIncoherentMixing::unsetBsMixing() { _doBsMixing = false ; } 
+
+// is mixing activated ? 
+bool EvtIncoherentMixing::doB0Mixing()  { return _doB0Mixing ; }
+bool EvtIncoherentMixing::doBsMixing()  { return _doBsMixing ; }
+
+// set values for the mixing
+void EvtIncoherentMixing::setdGammad( double value )  { _dGammad = value ; } 
+void EvtIncoherentMixing::setdeltamd( double value )  { _deltamd = value ; } 
+void EvtIncoherentMixing::setdGammas( double value )  { _dGammas = value ; } 
+void EvtIncoherentMixing::setdeltams( double value )  { _deltams = value ; } 
+
+// get parameters for mixing
+double EvtIncoherentMixing::getdGammad() { return _dGammad ; } 
+double EvtIncoherentMixing::getdeltamd() { return _deltamd ; }
+double EvtIncoherentMixing::getdGammas() { return _dGammas ; } 
+double EvtIncoherentMixing::getdeltams() { return _deltams ; }
+
+bool EvtIncoherentMixing::flipIsEnabled() { return _enableFlip ; } 
+void EvtIncoherentMixing::enableFlip() { _enableFlip = true ; } 
+void EvtIncoherentMixing::disableFlip() { _enableFlip = false ; } 
