@@ -1,10 +1,10 @@
 package MicroDST
-version v1r1
+version v2r0
 
 #############################################################
 # BRANCHES
 #############################################################
-branches component src cmt doc
+branches component MicroDST src cmt doc
 
 #############################################################
 # USE
@@ -17,10 +17,16 @@ use LinkerEvent        v*  Event
 use   DAQEvent        v*    Event
 
 #############################################################
+apply_pattern install_more_includes more=MicroDST
+
+#############################################################
 # BUILD
 #############################################################
 # build a component library
 library MicroDST ../src/*.cpp
+
+# build a link kibrary
+library MicroDSTLib ../src/Lib/*.cpp
 
 apply_pattern component_library library=MicroDST
 
