@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.21 2007-06-18 16:21:53 jpalac Exp $
+! $Id: release.notes,v 1.22 2007-10-11 17:58:43 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-11 - Juan PALACIOS
+ - cmt/requirements
+  . Add branch MicroDST
+  . Add pattern for linker library
+  . Increase version to v2r0
+ - Add base class MicroDST/CopyAndStoreData.h, src/Lib/CopyAndStoreData.cpp
+
 
 !======================== MicroDST v1r1 2007-06-18 ====================
 
