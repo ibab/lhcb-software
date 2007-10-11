@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r10>2007-10-10 LHCbSys v22r10</A></H1><PRE>
+</PRE><H1><A NAME=v22r10>2007-10-11 LHCbSys v22r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r9, LHCbMath v2r3, DetSys v10r1, DetDesc v18r1,
@@ -15,7 +15,7 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
     MDF v2r5, LoKi v6r1, LoKiAlgoMC v6r1, LoKiCore v6r1, LoKiGenMC v6r1, 
     LoKiPhys v6r1, LoKiAlgo v6r1, LoKiArrayFunctors v6r1, LoKiGen v6r1,
     LoKiMC v6r1, LoKiPhysMC v6r1, PatKernel v1r1, ProcessorKernel v5r1,
-    MCInterfaces v1r3, DaVinciMCKernel v2r4
+    MCInterfaces v1r3, DaVinciMCKernel v2r4, LHCbAlgs v2r11
 
 - In LHCbMath v2r3:
   . Remove implementations of cbrt from Power.h, now available in GaudiKernel
@@ -110,6 +110,12 @@ This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 
 - In ProcessorKernel v5r1
   . Move implementation of a static function to .cpp to avoid a problem on Win32 
+
+- In LHCbAlgs v2r11
+  . Rename EventCounter tool to EvtCounter, to avoid clash with GaudiAlg class 
+    of same name
+  . TrajPoca: Added a line that was by mistake removed when this was imported 
+    from babar: previous version just didn't work for non-linear trajectories.
 
 </PRE><H1><A NAME=v22r9>2007-09-19 LHCbSys v22r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
