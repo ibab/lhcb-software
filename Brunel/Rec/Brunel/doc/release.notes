@@ -3,8 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v31r10>2007-10-08 Brunel v31r10</A></H1><PRE>
+</PRE><H1><A NAME=v31r11>2007-10-08 Brunel v31r10</A></H1><PRE>
  - Update options to include CALO monitoring (disabled by default)
+ - Add options/v200601.py, to execute Brunel from Python shell
 
 </PRE><H1><A NAME=v31r9>2007-09-21 Brunel v31r9</A></H1><PRE>
  - Use ParamFiles v7r0
