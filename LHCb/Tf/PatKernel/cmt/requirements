@@ -3,7 +3,7 @@
 # Maintainer : Stephanie Hansmann-Menzemer 
 #============================================================================
 package           PatKernel
-version           v1r1
+version           v2r0
 
 #============================================================================
 # Structure
@@ -17,7 +17,6 @@ branches          cmt doc src PatKernel
 use  OTDet       v*  Det  
 use  STDet       v*  Det
 use  TfKernel    v*  Tf
-use  TfTools     v* Tf
 
 #============================================================================
 # Install includes

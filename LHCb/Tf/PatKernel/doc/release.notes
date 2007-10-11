@@ -3,8 +3,14 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!============================= PatKernel v2r0 2007-10-11 =====================
+! 2007-10-11 - Marco Cattaneo
+ - Change major version to v2r0
+ - Remove TfTools dependency
+
 ! 2007-10-10 - Stephanie Hansmann-Menzemer
-  - remove Tf:: from classes
+ - remove Tf:: from classes
 
 !============================= PatKernel v1r1 2007-10-09 =====================
 ! 2007-09-19 - Kurt Rinnert
