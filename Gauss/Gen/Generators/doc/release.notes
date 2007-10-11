@@ -1,15 +1,22 @@
-! $Id: release.notes,v 1.110 2007-10-10 20:07:24 robbep Exp $
+! $Id: release.notes,v 1.111 2007-10-11 11:55:20 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v7r5 2007-10-11 ===========================
+! 2007-10-11 - Gloria Corti
+ - Really add src/component/UniforSmearVertex.{h,cpp}
+
 ! 2007-10-10 - Patrick Robbe
  - Add static class to hold external Gaudi random generator and message 
    stream to interface with Pythia and EvtGen
-   . src/Lib/StreamForGenerator
-   . src/Lib/RandomForGenerator 
+   . Generators/StreamForGenerator.h, src/Lib/StreamForGenerator.cpp
+   . Generators/RandomForGenerator.h, src/Lib/RandomForGenerator.cpp
+   . src/Lib/EvtReport.cpp
+   . src/component/EvtGenDecay.cpp
+   . src/component/Generation.cpp
 
 !====================== Generators v7r4 2007-09-27 ===========================
 ! 2007-09-27 - Gloria Corti for Massimiliano Ferro-Luzzi
