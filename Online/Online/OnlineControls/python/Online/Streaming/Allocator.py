@@ -353,6 +353,7 @@ class Allocator(StreamingDescriptor):
     self.recvAllocationPolicy = policy[0]
     self.strmAllocationPolicy = policy[1]
     self.infoInterface        = info_interface
+    log('Now WITH sleeping enabled after "configure"....',timestamp=1)
 
   # ===========================================================================
   def _selectSlices(self, slices, all_slices):
@@ -555,6 +556,8 @@ class Allocator(StreamingDescriptor):
         #self.free(rundp_name,partition)
         return None
       self.infoInterface.showPartition(partition=part_info,extended=1)
+      log('Now sleeping....',timestamp=1)
+      time.sleep(10)
       return part_info.name
     error('Failed to allocate slots of type:'+self.name+' for partition:'+partition)
     return None
