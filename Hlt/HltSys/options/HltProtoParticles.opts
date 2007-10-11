@@ -49,8 +49,11 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 #include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
 // temporary, to use the cleaned forward tracks
 ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
+// uncomment to use aerogel as well as gas radiators (low P ID)
+//                                                       Aero  C4F10 CF4
+ToolSvc.HLT.RichTrackCreator.TrSegMaker.UseRadiators = { true, true, true };
 // Explicitly run the RICH reco sequence
-//SeqHltCharged.Members += { "GaudiSequencer/HltRICHReco" };
+SeqHltCharged.Members += { "GaudiSequencer/HltRICHReco" };
 // ... or on-demand only when really needed
 //DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' TYPE='GaudiSequencer/HltRICHReco'"};
 //----------------------------------------------------------------------------------------------------
