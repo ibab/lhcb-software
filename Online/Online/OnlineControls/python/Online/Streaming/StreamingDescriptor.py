@@ -7,6 +7,26 @@ DataPoint   = PVSS.DataPoint
 printSlots  = Utils.printSlots
 
 # =============================================================================
+def resetTaskStates(manager=None,match=None,state='UNKNOWN'):
+  "Change the state pf FSM_DImTask objects."
+  if manager is None: manager = PVSS.controlsMgr()
+  if match:
+    actor = PVSS.DpVectorActor(manager)
+    typ   = manager.typeMgr().type('FSM_DimTask')
+    wr    = manager.devWriter()
+    actor.lookup(DataPoint.original(match+'.State'),typ)
+    for i in actor.container:
+      i.data = state
+    wr.add(actor.container)      
+    if wr.execute():
+      log('Resetted the state of %d tasks to %s.'%(len(actor.container),state),timestamp=1)
+      return 1
+    log('Failed to write task states...',timestamp=1)
+    return None
+  log('You need to supply a match variable',timestamp=1)
+  return None
+
+# =============================================================================
 def findPartition(manager,name,partition):
   "Select partition by allocation name."
   actor = PVSS.DpVectorActor(manager)
