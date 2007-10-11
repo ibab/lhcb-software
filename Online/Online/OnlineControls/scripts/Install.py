@@ -110,9 +110,8 @@ def installFiles():
   print 'Now in:',os.getcwd()
 
 
-def install():
-  print 'Installing ....'
-  installFiles()
+def installDpList():
+  print 'Installing datapoint list...'
   try:
     dplist = sourceDir()+'/pvss/dplist/'+projectName()+'.dpl'
     os.stat(dplist)
@@ -120,6 +119,10 @@ def install():
   except:
     print 'No datapoints to be imported ....'
   
+def install():
+  print 'Installing...'
+  installFiles()
+  installDpList()
   if projectName()=="MONITORING":
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
@@ -151,5 +154,7 @@ if __name__ == "__main__":
     install()
   if sys.argv[1].upper()=='INSTALLFILES':
     installFiles()
+  if sys.argv[1].upper()=='DPLIST':
+    installDpList()
   if sys.argv[1].upper()=='COPYBACK':
     pass
