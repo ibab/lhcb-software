@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.9 2007-05-17 16:23:03 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.10 2007-10-12 07:49:58 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -560,7 +560,7 @@ StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle) {
   //
   // define linker
   //
-  Part2Vertex* p2VLinker = new Part2Vertex(evtSvc(), msgSvc(), linkerLocation);
+  Part2Vertex p2VLinker(evtSvc(), msgSvc(), linkerLocation);
 
   //
   // get primary vertex related to original particle
@@ -590,7 +590,7 @@ StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle) {
         // relate particle-clone to PV-clone with same weight
         // first  argument: source
         // second         : target
-        p2VLinker->link(particleClone, pvClone, weight);
+        p2VLinker.link(particleClone, pvClone, weight);
 
       } // if pvClone
     } // if pvContainer    
