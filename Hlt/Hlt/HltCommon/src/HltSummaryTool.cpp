@@ -47,7 +47,7 @@ HltSummaryTool::~HltSummaryTool() {}
 StatusCode HltSummaryTool::initialize() {
 
  IDataProviderSvc* hltsvc = NULL;
-  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
   if (!hltsvc) fatal() << " not able to create Hlt Svc provider " << endreq;
 
   m_conf = NULL;

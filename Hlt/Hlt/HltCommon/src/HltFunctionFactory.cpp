@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.12 2007-09-28 13:31:27 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.13 2007-10-12 12:21:20 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -40,7 +40,7 @@ HltFunctionFactory::HltFunctionFactory( const std::string& type,
 StatusCode HltFunctionFactory::initialize() {
   
   IDataProviderSvc* hltsvc = NULL;
-  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
   if (!hltsvc) fatal() << " not able to create Hlt Svc provider " << endreq;
 
   m_conf = NULL;

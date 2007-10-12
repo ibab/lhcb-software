@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.8 2007-10-11 16:43:51 hernando Exp $
+// $Id: HltInit.cpp,v 1.9 2007-10-12 12:21:20 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -11,6 +11,8 @@
 // #include "HltBase/ESequences.h"
 #include "Event/HltNames.h"
 
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/DataSvc.h"
 
 using namespace LHCb;
 
@@ -21,6 +23,9 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
+DECLARE_SERVICE_FACTORY( DataSvc );
+
+// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltInit );
 
 
@@ -28,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( HltInit );
 // Standard constructor, initializes variables
 //=============================================================================
 HltInit::HltInit( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // location of the summary and the summary box name
@@ -50,12 +55,11 @@ HltInit::~HltInit() {}
 StatusCode HltInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  evtSvc();
   
   // create the Hlt Data Svc
   m_hltSvc = NULL;
-  std::string name = "HltDataSvc/EventDataSvc";
+  std::string name = "DataSvc/HltDataSvc";
+  info() << " trying to create " << name << endreq;
   sc = serviceLocator()->service(name,m_hltSvc,true);
   // m_hltSvc = svc<IDataManagerSvc>("HltDataSvc",true);  
   if (!m_hltSvc) fatal() << " not able to create Hlt Svc " << endreq;
@@ -63,9 +67,10 @@ StatusCode HltInit::initialize() {
   m_hltSvc->setRoot("/Event", new DataObject());
 
   IDataProviderSvc* hltsvc = NULL;
-  sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  sc = serviceLocator()->service(name,hltsvc);
   if (!hltsvc) error() << " not able to create Hlt Svc provider " << endreq;
   else debug() << " SUCCESSFULLY CREATED provider!! " << endreq;
+
 
   std::string loca = m_dataSummaryLocation;
   put(hltsvc, new Hlt::DataHolder<LHCb::HltSummary>(m_datasummary),loca);  
@@ -75,7 +80,6 @@ StatusCode HltInit::initialize() {
   put(hltsvc,new Hlt::DataHolder<Estd::dictionary>(m_hltConfiguration),loca);
   m_hltConfiguration.add("TCKName",m_TCKName);
   info() << " stored hlt configuration " << m_TCKName << endreq;
-
 
   // this two services should be different
   debug() << " hlt data svc " << (int) m_hltSvc << endreq;

@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.cpp,v 1.3 2007-07-18 14:04:22 hernando Exp $
+// $Id: HltSelectionDataToTes.cpp,v 1.4 2007-10-12 12:21:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode HltSelectionDataToTes::initialize() {
 
   // get the Hlt Data Svc
   m_hltSvc = NULL;
-  sc = serviceLocator()->service("HltDataSvc/EventDataSvc",m_hltSvc);
+  sc = serviceLocator()->service("HltDataSvc",m_hltSvc);
   if (!m_hltSvc) fatal() << " not able to create Hlt Svc provider " << endreq;
   info() << " hltsvc " << (int) m_hltSvc << endreq;
   

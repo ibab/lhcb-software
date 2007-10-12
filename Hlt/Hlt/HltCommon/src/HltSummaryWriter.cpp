@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.6 2007-10-11 16:43:51 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.7 2007-10-12 12:21:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ StatusCode HltSummaryWriter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  sc = serviceLocator()->service("HltDataSvc/EventDataSvc",m_hltSvc);
+  sc = serviceLocator()->service("HltDataSvc",m_hltSvc);
   if (!m_hltSvc) fatal() << " not able to create Hlt Svc provider " << endreq;
   info() << " hltsvc " << (int) m_hltSvc << endreq;
   

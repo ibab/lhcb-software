@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.13 2007-06-25 21:35:43 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.14 2007-10-12 12:21:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -118,7 +118,7 @@ StatusCode HltSequencer::initialize() {
 void HltSequencer::saveConfiguration() {
 
   IDataProviderSvc* hltsvc = NULL;
-  StatusCode sc = serviceLocator()->service("HltDataSvc/EventDataSvc",hltsvc);
+  StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
   if (!hltsvc) error() << " not able to retrieve Hlt Svc provider " 
                        << endreq;
   

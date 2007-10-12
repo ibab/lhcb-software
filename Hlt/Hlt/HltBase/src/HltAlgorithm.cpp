@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.17 2007-10-11 10:12:38 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.18 2007-10-12 12:20:27 hernando Exp $
 // Include files 
 
 // from boost
@@ -81,7 +81,7 @@ StatusCode HltAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_hltSvc = NULL;
-  sc = serviceLocator()->service("HltDataSvc/EventDataSvc", m_hltSvc);
+  sc = serviceLocator()->service("HltDataSvc", m_hltSvc);
   if (sc.isFailure() || !m_hltSvc) 
     error() << " not able to create HltData Provider " << endreq;
 

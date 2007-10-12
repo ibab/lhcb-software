@@ -20,6 +20,7 @@
 
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/HltReco.opts"
 #include "$HLTSYSROOT/options/HltSelections.opts"
 
 //
@@ -31,7 +32,6 @@ HistogramPersistencySvc.OutputFile = "hltjob.root";
 
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='hltjob.root' TYP='ROOT' OPT='NEW'"};
-
 
 //
 //  Message level
