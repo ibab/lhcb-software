@@ -4,7 +4,11 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatChecker v3r0 2007-10-12 =======================
+! 2007-10-12 - Marco Cattaneo
+ - Propagate Pat/PatChecker change of 2007-09-21
 
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
- - import from Tf/PatChecker, for release note see Tf/PatChecker
+ - import from Tf/PatChecker, for release note see Tf/PatChecker 
+   and Pat/PatChecker
 

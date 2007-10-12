@@ -1,4 +1,4 @@
-// $Id: PatCounter.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatCounter.cpp,v 1.2 2007-10-12 06:39:58 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -63,7 +63,7 @@ void PatCounter::initEvent ( ) {
   m_validData = false;
   if ( !exist<LHCb::Tracks>( m_container ) ) 
   {
-    Warning( "Track container '" + m_container + "' does not exist" );
+    debug() << "Track container '" << m_container << "' does not exist" <<endmsg;
     return;
   }
   if ( NULL == m_link ) m_link = new MyAsct( evtSvc(), m_container );
