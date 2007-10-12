@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.cpp,v 1.3 2007-10-12 12:53:46 hernando Exp $
+// $Id: HltPrepareTracks.cpp,v 1.4 2007-10-12 14:33:01 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -80,7 +80,9 @@ StatusCode HltPrepareTracks::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return HltAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc =  HltAlgorithm::finalize();
+  delete _nobackwards;
+  return sc;
 }
 
 //=============================================================================

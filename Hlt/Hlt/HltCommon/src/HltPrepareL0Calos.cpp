@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.9 2007-10-12 12:53:46 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.10 2007-10-12 14:33:01 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -143,7 +143,13 @@ StatusCode HltPrepareL0Calos::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return HltAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc =  HltAlgorithm::finalize();  
+
+  delete _typeFilter;
+  delete _etFun;
+  delete _etFilter;
+
+  return sc;
 }
 
 void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,
