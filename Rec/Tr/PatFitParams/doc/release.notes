@@ -3,5 +3,7 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
+
+!======================== PatFitParams v3r0 2007-10-12 =======================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
   - import from Pat/PatFitParams, for older release note see there
