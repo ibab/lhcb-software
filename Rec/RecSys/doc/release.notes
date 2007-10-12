@@ -5,10 +5,37 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-- load Tf libaries 
+</PRE><H1><A NAME=v4r10>2007-10-12 RecSys v4r10</A></H1><PRE>
+This version uses Gaudi v19r5 and LHCb v23r0. Introduces Tf framework
 
-</PRE><H1><A NAME=v4r10>2007-10-10 RecSys v4r10</A></H1><PRE>
-This version uses Gaudi v19r4 and LHCb v22r10.
+- Packages removed: Pat/PatUtils     - obsolete
+                    Pat/PatVelo      - Now Tf/PatVelo
+                    Pat/PatVeloTT    - Now Tf/PatVeloTT
+                    Pat/PatForward   - Now Tf/PatAlgorithms
+                    Pat/PatPV        - Now Tf/PatPV
+                    Pat/PatChecker   - Now Tr/PatChecker
+                    Pat/PatFitParams - Now Tr/PatFitParams
+                    Tr/TsaAlgorithms - Now Tf/TsaAlgorithms
+                    Pat/PatKShort    - Not yet migrated to Tf framework
+                    Tr/TrackMatching - Now Tf/TrackMatching
+                    Tr/TrackSeeding  - Now Tf/TrackSeeding
+                    Tr/TrackSys      - Now Tf/TrackSys
+- Packages added:   Tr/PatFitParams  - Was Pat/PatFitParams
+                    Tr/PatChecker    - Was Pat/PatChecker then Tf/PatChecker
+                    Tr/PatPV         - Was Pat/PatPV
+                    Tf/PatVelo       - Tf migration of Pat/PatVelo 
+                    Tf/PatVeloTT     - Tf migration of Pat/PatVeloTT 
+                    Tf/PatAlgorithms - Tf migration of Pat/PatForward
+                    Tf/TsaAlgorithms - Tf migration of Tr/TsaAlgorithms
+                    Tf/TrackSeeding  - Tf migration of Tr/TrackSeeding
+                    Tf/TrackMatching - Tf migration of Tr/TrackMatching
+                    Tf/TfTools       - Component library previously in TfKernel
+                    Tf/TrackSys      - Tf migration of Tr/TrackSys
+
+</PRE><H1><A NAME=v4r10>2007-10-12 RecSys v4r10</A></H1><PRE>
+This version uses Gaudi v19r5 and LHCb v22r10.
+
+Further changes to RecSys v4r* package should from now on be on v4b CVS branch
 
 - Packages added:    CaloMoniDst v3r0 - Updated for DC06
                      NNTools     v1r0 - Calculate the Ghost Probability of a
