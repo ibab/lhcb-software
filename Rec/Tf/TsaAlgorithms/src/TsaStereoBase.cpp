@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaStereoBase.cpp,v 1.4 2007-10-12 09:55:14 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,8 @@ using namespace Tf::Tsa;
 StereoBase::StereoBase(const std::string& type,
                        const std::string& name,
                        const IInterface* parent):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_fitLine(NULL)
 {
   declareProperty("sector", m_sector = -1);
 }
@@ -32,9 +33,15 @@ StereoBase::StereoBase(const std::string& type,
 
 StereoBase::~StereoBase()
 {
-  // destructer
-  delete m_fitLine;
+  // destructor
 }
+
+StatusCode StereoBase::finalize() 
+{
+  if ( NULL != m_fitLine ) { delete m_fitLine; m_fitLine = NULL; }
+  return GaudiTool::finalize();
+}
+
 
 StatusCode StereoBase::initialize()
 {

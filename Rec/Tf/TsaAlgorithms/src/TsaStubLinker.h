@@ -45,6 +45,7 @@ namespace Tf
       virtual ~StubLinker();
 
       virtual StatusCode initialize();
+      virtual StatusCode finalize();
 
       virtual StatusCode execute(std::vector<SeedStub*> stubs[], std::vector<SeedTrack*>& seeds)  ;
 

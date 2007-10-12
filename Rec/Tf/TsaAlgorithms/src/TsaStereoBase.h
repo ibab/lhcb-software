@@ -27,15 +27,16 @@ namespace Tf
 
     public:
 
-      /// constructer
+      /// constructor
       StereoBase(const std::string& type,
                  const std::string& name,
                  const IInterface* parent);
 
-      // destructer
+      /// destructor
       virtual ~StereoBase();
 
       StatusCode initialize();
+      StatusCode finalize();
 
       virtual StatusCode execute(LHCb::State& hint, std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0 ) ;
 
