@@ -15,24 +15,19 @@ Check.DetectorList += {
 //--------------------------------------------------------------
 
 // Pattern recognition
-CheckPatSeq.Members += {
-                         "PatLHCbID2MCParticle"
-                       , "PatTrack2MCParticle"
-                       , "PatChecker"
-                       };
 
-// Pattern recognition in Tf framework
-//CheckPatSeq.Members += {
-//                          "Tf::PatLHCbID2MCParticle/PatLHCbID2MCParticle"
-//                        , "Tf::PatTrack2MCParticle/PatTrack2MCParticle"
-//                        , "Tf::PatChecker/PatChecker"
-//                        };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/RZVelo" };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Velo" };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/VeloTT" };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Forward" };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Seed" };
-//PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Match" };
+CheckPatSeq.Members += {
+                          "PatLHCbID2MCParticle"
+                        , "PatTrack2MCParticle"
+                        , "PatChecker"
+                        };
+
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/RZVelo" };
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Velo" };
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/VeloTT" };
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Forward" };
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Tsa" };
+PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Match" };
 
 
 
