@@ -14,7 +14,13 @@ ClassImp(LoginDialog)
 
 LoginDialog::LoginDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height) : 
   TGTransientFrame(gClient->GetRoot(), gui, Width, Height),
-  m_mainFrame(gui)
+  m_mainFrame(gui),
+  m_dbPasswdInput(NULL),
+  m_dbPasswd(NULL),
+  m_histogramDB(NULL),
+  m_dbUsername(NULL),
+  m_loginButton(NULL),
+  m_cancelButton(NULL)  
 {
   SetCleanup(kDeepCleanup);
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
@@ -25,6 +31,13 @@ LoginDialog::LoginDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height) :
 
 LoginDialog::~LoginDialog()
 {
+  if (IsZombie()) return;
+//  delete m_dbPasswdInput;
+//  delete m_dbPasswd;
+//  delete m_histogramDB;
+//  delete m_dbUsername;
+//  delete m_loginButton;
+//  delete m_cancelButton;
   Cleanup();
 }
 

@@ -21,12 +21,12 @@ class PageSaveDialog : public TGTransientFrame
   public:
     PageSaveDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height, MsgLevel v);    
     virtual ~PageSaveDialog();
-    
+
     void build();
     void ok();
     void updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t);
     void setOkButton();
-    
+
   private:
     PresenterMainFrame* m_mainFrame;
     TGListTree* m_pageFolderListTree;
@@ -35,11 +35,11 @@ class PageSaveDialog : public TGTransientFrame
     TGTextEntry *pageNameTextEntry;
     MsgLevel            m_verbosity;
     int                 m_msgBoxReturnCode;
-    
+
     std::vector<DbRootHist*>      m_DbHistosOnPage;
     std::vector<DbRootHist*>::const_iterator m_DbHistosOnPageIt;
-    
-  ClassDef(PageSaveDialog, 0)
+
+    ClassDef(PageSaveDialog, 0)
 };
 
 #endif /*PAGESAVEDIALOG_H_*/

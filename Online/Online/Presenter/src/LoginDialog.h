@@ -27,6 +27,7 @@ class LoginDialog : public TGTransientFrame
     //void connectToDatabase(int intp); //*SIGNAL*
     
   private:
+    PresenterMainFrame* m_mainFrame;  
     TGTextEntry*  m_dbPasswdInput;
     TGTextBuffer* m_dbPasswd;
     TGComboBox*   m_histogramDB;
@@ -34,7 +35,6 @@ class LoginDialog : public TGTransientFrame
     char*         m_input;
     TGTextButton* m_loginButton;
     TGTextButton* m_cancelButton;
-    PresenterMainFrame* m_mainFrame;
     
   ClassDef(LoginDialog, 0)
 };
