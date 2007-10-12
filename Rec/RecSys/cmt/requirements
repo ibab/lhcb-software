@@ -20,7 +20,7 @@ use CaloReco            v4r9    Calo  # Olivier Deschamps
 use TrackExtrapolators  v2r14   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r12   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r9    Tr    # Eduardo Rodrigues
-use TrackTools          v2r19   Tr    # Eduardo Rodrigues
+use TrackTools          v3r0    Tr    # Eduardo Rodrigues
 use TrackFitter         v2r19   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r16   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r13   Tr    # Eduardo Rodrigues
@@ -49,7 +49,7 @@ use PatPV               v3r0    Tr   # Mariusz Witek
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker      v2r1    Muon  # Erica Polycarpo, Miriam Gandelman
-use MuonTrackAlign      v1r0    Muon  # Silvia Pozzi
+#use MuonTrackAlign      v1r0    Muon  # Silvia Pozzi - not migrated to Tf
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich

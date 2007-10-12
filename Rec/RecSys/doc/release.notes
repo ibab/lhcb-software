@@ -8,29 +8,34 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v4r10>2007-10-12 RecSys v4r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0. Introduces Tf framework
 
-- Packages removed: Pat/PatUtils     - obsolete
-                    Pat/PatVelo      - Now Tf/PatVelo
-                    Pat/PatVeloTT    - Now Tf/PatVeloTT
-                    Pat/PatForward   - Now Tf/PatAlgorithms
-                    Pat/PatPV        - Now Tf/PatPV
-                    Pat/PatChecker   - Now Tr/PatChecker
-                    Pat/PatFitParams - Now Tr/PatFitParams
-                    Tr/TsaAlgorithms - Now Tf/TsaAlgorithms
-                    Pat/PatKShort    - Not yet migrated to Tf framework
-                    Tr/TrackMatching - Now Tf/TrackMatching
-                    Tr/TrackSeeding  - Now Tf/TrackSeeding
-                    Tr/TrackSys      - Now Tf/TrackSys
-- Packages added:   Tr/PatFitParams  - Was Pat/PatFitParams
-                    Tr/PatChecker    - Was Pat/PatChecker then Tf/PatChecker
-                    Tr/PatPV         - Was Pat/PatPV
-                    Tf/PatVelo       - Tf migration of Pat/PatVelo 
-                    Tf/PatVeloTT     - Tf migration of Pat/PatVeloTT 
-                    Tf/PatAlgorithms - Tf migration of Pat/PatForward
-                    Tf/TsaAlgorithms - Tf migration of Tr/TsaAlgorithms
-                    Tf/TrackSeeding  - Tf migration of Tr/TrackSeeding
-                    Tf/TrackMatching - Tf migration of Tr/TrackMatching
-                    Tf/TfTools       - Component library previously in TfKernel
-                    Tf/TrackSys      - Tf migration of Tr/TrackSys
+- Packages removed: Pat/PatUtils        - obsolete
+                    Pat/PatVelo         - Now Tf/PatVelo
+                    Pat/PatVeloTT       - Now Tf/PatVeloTT
+                    Pat/PatForward      - Now Tf/PatAlgorithms
+                    Pat/PatPV           - Now Tf/PatPV
+                    Pat/PatChecker      - Now Tr/PatChecker
+                    Pat/PatFitParams    - Now Tr/PatFitParams
+                    Tr/TsaAlgorithms    - Now Tf/TsaAlgorithms
+                    Tr/TrackMatching    - Now Tf/TrackMatching
+                    Tr/TrackSeeding     - Now Tf/TrackSeeding
+                    Tr/TrackSys         - Now Tf/TrackSys
+                    Pat/PatKShort       - Not yet migrated to Tf framework
+                    Muon/MuonTrackAlign - Not yet migrated to Tf framework
+- Packages added: Tr/PatFitParams  - Was Pat/PatFitParams
+                  Tr/PatChecker    - Was Pat/PatChecker then Tf/PatChecker
+                  Tr/PatPV         - Was Pat/PatPV
+                  Tf/PatVelo       - Tf migration of Pat/PatVelo 
+                  Tf/PatVeloTT     - Tf migration of Pat/PatVeloTT 
+                  Tf/PatAlgorithms - Tf migration of Pat/PatForward
+                  Tf/TsaAlgorithms - Tf migration of Tr/TsaAlgorithms
+                  Tf/TrackSeeding  - Tf migration of Tr/TrackSeeding
+                  Tf/TrackMatching - Tf migration of Tr/TrackMatching
+                  Tf/TrackSys      - Tf migration of Tr/TrackSys
+                  Tf/TfTools       - Component library previously in TfKernel
+- Packages modified: TrackTools v3r0
+
+- In TrackTools v3r0
+  . Migrate to Tf framework
 
 </PRE><H1><A NAME=v4r10>2007-10-12 RecSys v4r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v22r10.
