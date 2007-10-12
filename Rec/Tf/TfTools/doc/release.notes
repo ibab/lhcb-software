@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r0 2007-10-12 ========================
+! 2007-10-12 - Marco Cattaneo
+ - Include changes released in Tf/TfKernel v1r1
+ - Clean up unneccessary includes and dependencies
 
 ! 2007-10-09  Stephanie Hansmann-Menzemer
   - split off component libaries of Tf/TfKernel in different package

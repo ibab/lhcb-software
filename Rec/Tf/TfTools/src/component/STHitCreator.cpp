@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.1.1.1 2007-10-09 17:30:06 smenzeme Exp $
+ *  $Id: STHitCreator.cpp,v 1.2 2007-10-12 08:16:37 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -22,7 +22,6 @@
 
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
-#include "Event/STCluster.h"
 
 #include "STHitCreator.h"
 #include "HitCreatorGeom.h"

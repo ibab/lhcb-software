@@ -15,15 +15,14 @@ branches          cmt doc src
 #============================================================================
 # Used packages.
 #============================================================================
-use     DAQEvent        v*      Event
-use     RecEvent        v*      Event
 use     OTDet           v*      Det
 use     STDet           v*      Det
-use     VeloDet         v*      Det
+use     LHCbKernel      v*      Kernel
 use     GaudiAlg        v*
-use     LoKiCore        v*      Phys
+use     GaudiKernel     v*
 use     OTDAQ           v*      OT
 use     TfKernel        v*      Tf
+use     Boost           v*      LCG_Interfaces
 
 #============================================================================
 # Component library building rule

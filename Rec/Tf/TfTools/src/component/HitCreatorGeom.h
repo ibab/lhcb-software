@@ -6,10 +6,6 @@
 #include <boost/checked_delete.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
-#include "LoKi/Range.h"
-
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/SolidBox.h"
 
 #include "TfKernel/Region.h"
 
