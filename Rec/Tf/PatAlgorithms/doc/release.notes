@@ -3,9 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
-! 2007-10-10 - Stephanie Hansmann-Menzemer
-   - add TfTools to requirement file
 
+!========================== PatAlgorithms v3r0 2007-10-12 ====================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
   - import PatForward to PatAlgorithms  
 -----------------------------------------------------------------------

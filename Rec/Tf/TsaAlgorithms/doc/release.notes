@@ -1,8 +1,10 @@
 -----------------------------------------------------------------------------
-! Package     : Tr/TsaAlgorithms
+! Package     : Tf/TsaAlgorithms
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!======================= TsaAlgorithms v3r0 2007-10-12 ======================
 ! 2007-10-10 Stephanie Hansmann-Menzemer
   - remove temp fix, move back headerfiles from TsaKernel_Tf to TsaKernel
 
