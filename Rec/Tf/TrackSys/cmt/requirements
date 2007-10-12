@@ -20,7 +20,7 @@ use   TrackInterfaces      v3r*    Tr
 use   TrackExtrapolators   v2r*    Tr
 use   TrackProjectors      v2r*    Tr
 use   TrackMCTools         v2r*    Tr
-use   TrackTools           v2r*    Tr
+use   TrackTools           v3r*    Tr
 
 use   TrackFitter          v2r*    Tr
 
