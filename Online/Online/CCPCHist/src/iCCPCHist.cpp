@@ -533,7 +533,7 @@ void CCPCHisto::makedimname(char *name, char **outp)
   }
   else if (_type == H_PROFILE)
   {
-    strcpy(out,"HPD/");
+    strcpy(out,"P1D/");
   }
   strcat(out,CCPCHSys::m_instance().m_name);
   strcat(out,"/");

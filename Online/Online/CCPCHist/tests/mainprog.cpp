@@ -13,11 +13,11 @@ int main(int , char** )
   PHisto *p;
   float x,y,d;
   hccpc_init("CC-PC_HSys");
-  h[0] = new Histo("Hist1","1-dim Histogram 1",100,0.0,100.0);
-  h[1] = new Histo("Hist2","1-dim Histogram 2",100,0.0,200.0);
-  h[2] = new Histo("Hist3","1-dim Histogram 3",100,0.0,300.0);
-  h[3] = new Histo("Hist7","2-dim Histogram", 100,0.0,10.0,10,0.0,100.0);
-  p    = new PHisto("Phist1","Profile 1",100,0.0,10.0);
+  h[0] = new Histo("TELL1Mult1_$T3/L2/Q0/myTell","1-dim Histogram 1",100,0.0,100.0);
+  h[1] = new Histo("TELL1Mult2_$T3/L1/Q0/myTell","1-dim Histogram 2",100,0.0,200.0);
+  h[2] = new Histo("TELL1Mult3_$T3/L2/Q1/myTell","1-dim Histogram 3",100,0.0,300.0);  
+	h[3] = new Histo("TELL1Mult4_$T3/L2/Q1/myTell","2-dim Histogram", 100,0.0,10.0,10,0.0,100.0);
+  p    = new PHisto("TELL1Mult5_$T3/L2/Q1/myTell","Profile 1",100,0.0,10.0);
   while (1)
   {
     x=(float)rand()/RAND_MAX;

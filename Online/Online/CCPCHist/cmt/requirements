@@ -3,19 +3,20 @@ package CCPCHist
 branches  cmt doc src
 use GaudiPolicy v*
 use DIM v* Online
+use BOOSt v* LCG_Interfaces
 
 apply_pattern install_more_includes more=CCPCHist
 library       CCPCHist *.cpp
 include_dirs  ../CCPCHist
 macro_append CCPCHist_cflags "" \
-          Linux " -m486 "
+          Linux " -march=i486 "
 macro_append cflags "" \
-          Linux " -m486 "
+          Linux " -march=i486 "
 
 macro_append CCPCHist_cppflags "" \
-          Linux " -m486 "
+          Linux " -march=i486 "
 macro_append cppflags "" \
-          Linux " -m486 "
+          Linux " -march=i486 "
 
 application   CCPCtest ../tests/mainprog.cpp
 application   Ctest ../ctests/ctest.cpp
