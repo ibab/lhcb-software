@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.3 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.4 2007-10-12 17:58:22 witekma Exp $
 
 // Include files
 
@@ -50,6 +50,12 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize" << endmsg;
 
+  // set parameters for no field run
+  m_bdlIntegral_NoB = 0.1;
+  m_zBdlMiddle_NoB  = 1900.;
+  m_zMidField_NoB   = 1900.;
+  m_averageDist2mom_NoB = 0.00004;  
+
   // retrieve pointer to magnetic field service
   m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true ); 
 
@@ -73,8 +79,6 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   prepareBdlTables();
   prepareDeflectionTables();
 
-  m_zMidField = zBdlMiddle(0.05, 0.0, 0.0);
-
   m_noField = false;
   // check whether B=0
   f_bdl(0.,0.,400.*Gaudi::Units::mm, m_zCenterTT);
@@ -83,15 +87,11 @@ StatusCode PatTTMagnetTool::initialize ( ) {
     m_noField = true;
   }
 
+  m_zMidField = zBdlMiddle(0.05, 0.0, 0.0);
+
   if(m_noField) {
     info() << " No B field detected." << endreq;    
   }
-
-  m_bdlIntegral_NoB = 0.1;
-  m_zBdlMiddle_NoB  = 1900.;
-  m_zMidField_NoB   = 1900.;
-  m_averageDist2mom_NoB = 0.00004;  
-
   return StatusCode::SUCCESS;
 }
 

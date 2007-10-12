@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.cpp,v 1.4 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatVeloTT.cpp,v 1.5 2007-10-12 17:58:22 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -38,9 +38,9 @@ PatVeloTT::PatVeloTT( const std::string& name,
 
   declareProperty("InputTracksName"    , m_inputTracksName);
   declareProperty("OutputTracksName"   , m_outputTracksName);
-  declareProperty("removeUsedTracks"   , m_removeUsedTracks = false); 
+  declareProperty("removeUsedTracks"   , m_removeUsedTracks = true); 
   declareProperty("InputUsedTracksNames"    , m_inputUsedTracksNames);
-  declareProperty("fitTracks"          , m_fitTracks = false);
+  declareProperty("fitTracks"          , m_fitTracks = true);
   declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
   declareProperty("maxChi2"            , m_maxChi2          = 5.); 
   declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
