@@ -44,10 +44,10 @@ HltTrackIPSelection::HltTrackIPSelection( const std::string& name,
 //=============================================================================
 HltTrackIPSelection::~HltTrackIPSelection() {
 
-  delete _nobackwards;
-  delete _kvertex;
-  delete _ipWindow;
-  delete _ipFun;
+  // delete _nobackwards;
+  // delete _kvertex;
+  // delete _ipWindow;
+  // delete _ipFun;
 }; 
 
 //=============================================================================

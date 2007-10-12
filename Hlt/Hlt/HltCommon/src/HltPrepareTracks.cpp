@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.cpp,v 1.2 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltPrepareTracks.cpp,v 1.3 2007-10-12 12:53:46 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ HltPrepareTracks::HltPrepareTracks( const std::string& name,
 // Destructor
 //=============================================================================
 HltPrepareTracks::~HltPrepareTracks() {
-  delete _nobackwards;
+  // delete _nobackwards;
 } 
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.8 2007-08-17 16:30:15 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.9 2007-10-12 12:53:46 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -47,9 +47,9 @@ HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
 // Destructor
 //=============================================================================
 HltPrepareL0Calos::~HltPrepareL0Calos() {
-  delete _typeFilter;
-  delete _etFun;
-  delete _etFilter;
+  // delete _typeFilter;
+  // delete _etFun;
+  // delete _etFilter;
 } 
 
 //=============================================================================

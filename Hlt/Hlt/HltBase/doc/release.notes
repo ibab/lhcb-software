@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-10-12 Jose A. Hernando 
+   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
    - HltAlgorithm: using HltDataSvc from DataSvc
 
 ! 2007-10-11 Jose A. Hernando 
