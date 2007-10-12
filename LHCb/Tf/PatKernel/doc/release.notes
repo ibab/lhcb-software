@@ -4,10 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!============================= PatKernel v2r0 2007-10-11 =====================
-! 2007-10-11 - Marco Cattaneo
+!============================= PatKernel v2r0 2007-10-12 =====================
+! 2007-10-12 - Marco Cattaneo
  - Change major version to v2r0
  - Remove TfTools dependency
+ - Remove ridiculous "holla" message printed at "always()" at every event
 
 ! 2007-10-10 - Stephanie Hansmann-Menzemer
  - remove Tf:: from classes

@@ -32,8 +32,6 @@ PatTStationHitManager::~PatTStationHitManager() { }
 
 void PatTStationHitManager::prepareHits() const
 {
-  always()<<"holla"<<endmsg;
-
   if ( !allHitsPrepared() )   
     sortMyHits();
 }
