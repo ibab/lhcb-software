@@ -3,5 +3,7 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+
+!============================= PatPV v3r0 2007-10-12 =========================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
   - import code from Pat/PatPV, for older release notes check there
