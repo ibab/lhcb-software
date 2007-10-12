@@ -1,10 +1,13 @@
 !-----------------------------------------------------------------------------
-! Package     : Tr/TrackSeeding
+! Package     : Tf/TrackSeeding
 ! Responsible : Henk Jan Bulten
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
-!========================= TrackSeeding v1r2 2007-09-20 ======================
+!========================= TrackSeeding v1r2 2007-10-12 ======================
+! 2007-10-12 - Stephanie Hansmann-Menzemer
+ - Package moved to Tf hat
+
 ! 2007-09-17 - Juan PALACIOS
  - src/SeedHit.cpp
    . Adapt to new IGeometryInfo interface. Replace IGeometryInfo::matrix()
