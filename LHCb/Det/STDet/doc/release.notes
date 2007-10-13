@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.111 2007-09-17 09:29:26 cattanem Exp $
+!$Id: release.notes,v 1.112 2007-10-13 11:21:34 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2007-10-13 M Needham
+ - Add find box methods to DeITDetector
 
 !======================== STDet v3r6 2007-09-17 ==========================
 ! 2007-09-12 M Needham

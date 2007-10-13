@@ -1,4 +1,4 @@
-// $Id: DeITDetector.h,v 1.8 2007-09-12 09:19:08 mneedham Exp $
+// $Id: DeITDetector.h,v 1.9 2007-10-13 11:21:34 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
@@ -61,7 +61,15 @@ public:
   */
   const Boxes& boxes() const;
 
-  /** get the number of layers **/
+  /**  locate the layer based on a channel id
+  @return  box */
+  DeITBox* findBox(const LHCb::STChannelID aChannel);     
+
+  /** locate layer based on a point 
+   *return layer */
+  DeITBox* findBox(const Gaudi::XYZPoint& point);
+
+  /** get the number of boxes **/
   unsigned int nBox() const;
 
   /** get the number of readout sectors **/

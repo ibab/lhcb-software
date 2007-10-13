@@ -95,4 +95,19 @@ void DeITDetector::flatten(){
 }
 
 
+DeITBox* DeITDetector::findBox(const STChannelID aChannel)
+{
+  // return pointer to the layer from channel
+  std::vector<DeITBox*>::iterator iter = std::find_if(m_boxes.begin() , 
+                                                      m_boxes.end(), bind(&DeITBox::contains, _1, aChannel));
+  return (iter != m_boxes.end() ? *iter: 0);
+}
+
+DeITBox* DeITDetector::findBox(const Gaudi::XYZPoint& point){
+  // return pointer to a box from point
+  std::vector<DeITBox*>::iterator iter = 
+    std::find_if( m_boxes.begin(), m_boxes.end(), 
+                 bind(&DeITBox::isInside, _1, point));
+  return (iter != m_boxes.end() ? *iter: 0);
+}
 
