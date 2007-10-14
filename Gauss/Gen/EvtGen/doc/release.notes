@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-10-14 - Patrick Robbe
+ - Adapt static classes to windows compilation
+
 ! 2007-10-11 - Patrick Robbe
  - EvtIncoherentMixing: move inline access functions to static member 
    variables to .cpp files

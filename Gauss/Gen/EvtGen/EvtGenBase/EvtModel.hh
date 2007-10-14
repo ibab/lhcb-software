@@ -58,14 +58,6 @@ private:
 
 
 };
-
-
-inline EvtModel& EvtModel::instance() {
-  if ( _instance == 0 )  _instance=new EvtModel;
-  return *_instance;
-}
-
-
 #endif
 
 

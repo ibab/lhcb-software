@@ -109,6 +109,9 @@ void EvtModel::storeCommand(std::string cmd,std::string cnfgstr){
 
 }
 
-
+EvtModel& EvtModel::instance() {
+  if ( _instance == 0 )  _instance=new EvtModel;
+  return *_instance;
+}
 
 

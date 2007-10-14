@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPartPropDb.hh,v 1.1 2003-10-02 17:25:54 robbep Exp $
+ *    File: $Id: EvtPartPropDb.hh,v 1.2 2007-10-14 18:50:07 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -29,7 +29,7 @@ public:
   static int getStdHepID(const char* name);
 
   static void readPDT(const char* fname);
-  static bool initialized() { return _init; }
+  static bool initialized() ;
 
 private:
 

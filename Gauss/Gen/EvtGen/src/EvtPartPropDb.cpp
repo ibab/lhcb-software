@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPartPropDb.cpp,v 1.2 2004-07-12 16:13:31 robbep Exp $
+ *    File: $Id: EvtPartPropDb.cpp,v 1.3 2007-10-14 18:50:08 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -116,4 +116,8 @@ double EvtPartPropDb::getWidth(const char* name)
   
   printf("No particle %s found in table\n",name);
   assert(0);
+}
+
+bool EvtPartPropDb::initialized() { 
+  return _init; 
 }

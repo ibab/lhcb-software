@@ -315,6 +315,105 @@ void EvtPDL::setUpConstsPdt(){
 
 }
 
+double EvtPDL::getMeanMass(EvtId i ) { 
+  return _partlist[i.getId()].getMass(); 
+}
+
+double EvtPDL::getMass(EvtId i ) {
+  return _partlist[i.getId()].rollMass();
+}
+
+double EvtPDL::getRandMass(EvtId i, EvtId *parId, int nDaug, EvtId *dauId, 
+                           EvtId *othDaugId,double maxMass, 
+                           double *dauMasses ) {
+  return _partlist[i.getId()].getRandMass(parId,nDaug,dauId,
+                                          othDaugId,maxMass,dauMasses);
+}
+
+double EvtPDL::getMassProb(EvtId i, double mass, double massPar, int nDaug, 
+                           double *massDau) { 
+  return _partlist[i.getId()].getMassProb(mass,massPar,nDaug,massDau);
+}
+
+double EvtPDL::getMaxMass(EvtId i ) {
+  return _partlist[i.getId()].getMassMax();
+}
+
+double EvtPDL::getMinMass(EvtId i ) { 
+  return _partlist[i.getId()].getMassMin();
+}
+
+double EvtPDL::getMaxRange(EvtId i ) {
+  return _partlist[i.getId()].getMaxRange();
+}
+
+double EvtPDL::getWidth(EvtId i ) { 
+  return _partlist[i.getId()].getWidth();
+}
+
+double EvtPDL::getctau(EvtId i ) {
+  return _partlist[i.getId()].getctau();
+}
+
+int EvtPDL::getStdHep(EvtId id ) {
+  return _partlist[id.getId()].getStdHep();
+}
+
+int EvtPDL::getLundKC(EvtId id ) {
+  return _partlist[id.getId()].getLundKC();
+}
+
+int EvtPDL::chg3(EvtId i ) {
+  return _partlist[i.getId()].getChg3();
+}
+
+EvtSpinType::spintype EvtPDL::getSpinType(EvtId i ) {
+  return _partlist[i.getId()].getSpinType();
+}
+
+std::string EvtPDL::name(EvtId i) { 
+  return _partlist[i.getAlias()].getName();
+}
+
+int EvtPDL::entries() { 
+  return _partlist.size();
+}
+
+void EvtPDL::reSetMass(EvtId i, double mass) {
+  _partlist[i.getId()].reSetMass(mass);
+}
+
+void EvtPDL::reSetWidth(EvtId i, double width) { 
+  _partlist[i.getId()].reSetWidth(width);
+}
+
+void EvtPDL::reSetMassMin(EvtId i, double mass) { 
+  _partlist[i.getId()].reSetMassMin(mass);
+}
+
+void EvtPDL::reSetMassMax(EvtId i,double mass) { 
+  _partlist[i.getId()].reSetMassMax(mass);
+}
+
+void EvtPDL::reSetBlatt(EvtId i,double blatt) {
+  _partlist[i.getId()].reSetBlatt(blatt);
+}
+
+void EvtPDL::includeBirthFactor(EvtId i,bool yesno) {
+  _partlist[i.getId()].includeBirthFactor(yesno);
+}
+
+void EvtPDL::includeDecayFactor(EvtId i,bool yesno) {
+  _partlist[i.getId()].includeDecayFactor(yesno);
+}
+
+void EvtPDL::changeLS(EvtId i, std::string &newLS ) { 
+  _partlist[i.getId()].newLineShape(newLS);
+}
+
+void EvtPDL::setPWForDecay(EvtId i, int spin, EvtId d1, EvtId d2) {  
+  _partlist[i.getId()].setPWForDecay(spin,d1,d2);
+}
 
 
 
