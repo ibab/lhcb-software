@@ -1,11 +1,20 @@
-! $Id: release.notes,v 1.9 2007-09-24 12:37:19 jpalac Exp $ 
+! $Id: release.notes,v 1.10 2007-10-15 22:06:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-10-16 - Vanya BELYAEV
+ - add new tool LoKi::KtJetyMaker - the simplest implementation
+   of IJetMaker interface using KtJet algorithm
+ - redesigne the algorithm to invoke th eJEt-Making tool
+ - add LoKi::JetPArticleMaker - the implementation of "particle maker" 
+ - cmt/requirements
+   increment the version to v3r0 
+ 
 
 !========================== LoKiJets v2r4 2007-09-24 =====================
 
@@ -139,6 +148,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.9  2007/09/24 12:37:19  jpalac
+! Tag as v2r4
+!
 ! Revision 1.8  2007/08/22 17:01:00  pkoppenb
 ! Explicit particle ID constructor
 !

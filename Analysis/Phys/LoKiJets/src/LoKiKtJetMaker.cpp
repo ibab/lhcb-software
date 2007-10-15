@@ -1,164 +1,191 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.7 2007-08-22 17:01:00 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2007/04/16 16:16:44  pkoppenb
-// removed polemic comment
-//
-// Revision 1.5  2007/03/27 11:21:18  ibelyaev
-//  v2r3:  ugly patch to solve the proplem with copy constructor
-//
-// Revision 1.4  2007/03/04 16:50:53  ibelyaev
-//  v2r2: improve selection of particles
-//
-// Revision 1.3  2006/11/12 15:13:36  ibelyaev
-//  fix many bugs + add configuration files for 'standard jets'
-//
-// Revision 1.2  2006/10/18 12:03:31  ibelyaev
-//  fix a bug, RE-tag!
-//
+// $Id: LoKiKtJetMaker.cpp,v 1.8 2007-10-15 22:06:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-// ============================================================================
-// LoKiAlgo
-// ============================================================================
-#include "LoKi/Algo.h"
-#include "LoKi/ParticleCuts.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiAlg/GaudiTool.h"
 // ============================================================================
 // DaVinci Kernel 
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
+#include "Kernel/IJetMaker.h"
 // ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "LoKi/Kinematics.h"
+#include "LoKi/Geometry.h"
 // ============================================================================
 // KtJet
 // ============================================================================
 #include "KtJet/KtLorentzVector.h"
 #include "KtJet/KtEvent.h"
 // ============================================================================
-/** @class LoKiKtJetMaker KtJetMaker.cpp
- *  
- *  This file is a part of LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
- *
- *  The package has been designed with the kind help from
- *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
- *  contributions and advices from G.Raven, J.van Tilburg, 
- *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
- *  @date   2005-03-21
- */
-// ============================================================================
-class LoKiKtJetMaker : public LoKi::Algo  
-{
-  friend class AlgFactory<LoKiKtJetMaker> ;
-protected:  
-  /** Standard constructor
-   * 
-   *  @todo The defautl values for configuration parameters 
-   *        (especially for R-parameter) need to be adjusted 
-   *        according Victor Coco's studies. 
+namespace LoKi 
+{ 
+  // ==========================================================================
+  /** @class KtJetMaker
    *
-   *  @param name instance name 
-   *  @param pSvc pointer to Service Locator 
+   *  The most trivial, Kt-Jet based  implementtaion of interface IJetMaker 
+   *  @see IJetMaker 
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+   *  @date   2005-03-21
    */
-  LoKiKtJetMaker
-  ( const std::string& name ,
-    ISvcLocator*       pSvc ) 
-    : LoKi::Algo( name , pSvc )
-    // 
-    , m_jetID    ( 98 )
-    //
-    , m_type     ( 4   )  
-    , m_angle    ( 1   )
-    , m_recom    ( 1   )
-    , m_r        ( 0.7 )
-    //
-    , m_sort     ( 2   )
-    // 
-    , m_combiner ( 0   )
-  { 
-    declareProperty ( "JetID"          , m_jetID  ) ;
-    //
-    declareProperty ( "Type"           , m_type   ) ;
-    declareProperty ( "AngularScheme"  , m_angle  ) ;
-    declareProperty ( "Recombination"  , m_recom  ) ;
-    declareProperty ( "RParameter"     , m_r      ) ;
-    //
-    declareProperty ( "Sort"           , m_sort   ) ;
-    // define momentum combiner
-    setProperty     ( "ParticleCombiners", "{ '' : 'MomentumCombiner'}" ) ;
-  } ;
-  /// destructor
-  virtual ~LoKiKtJetMaker( ){};
-public:
-  /** standard initialization of the algorithm 
-   *  @see LoKi::Algo
-   *  @return status code 
-   */
-  virtual StatusCode initialize () 
+  class KtJetMaker 
+    : public virtual IJetMaker
+    , public         GaudiTool
   {
-    StatusCode sc = LoKi::Algo::initialize() ;
-    if ( sc.isFailure() ) { return sc ; }
-    //
-    if ( 4 != m_type      ) 
-    { Warning ( "The 'type' is different from 'PP' [4] "  ) ; }
-    if ( 0 >= m_angle || 3 < m_angle ) 
-    { Warning ( "Unknown angular distance scheme   [1-3]" ) ; }
-    if ( 0 >= m_recom || 5 < m_recom ) 
-    { Warning ( "Unknown recombination scheme      [1-5]" ) ; }
-    if ( 0 >  m_sort  || 5 < m_sort ) 
-    { Warning ( "Unknown sorting  scheme           [0-5]" ) ; }
-    //
-    m_combiner = particleCombiner() ;
-    if ( 0 == m_combiner ) 
-    { return Error ( "No particle combiner is defined!" );  }
-    else 
+    // the friend factory fo instantiation 
+    friend class ToolFactory<LoKi::KtJetMaker> ;
+  public:
+    /** The main method: jet-finding procedure 
+     * 
+     *  @code 
+     *
+     *  // get the tool
+     *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+     *
+     *  // input particles 
+     *  IJetMaker::Inputs input = ... 
+     *  // 1) 
+     *  // const Particles* particles = .... ;
+     *  // // create the input container 
+     *  // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
+     *  // 2) 
+     *  // LHCb::Particle::ConstVector particles = .... ;
+     *  // // create the input container 
+     *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+     *  // 3) 
+     *  // LoKi::Range particles = .... ;
+     *  // // create the input container 
+     *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+     *
+     *  // placeholder for "output" jets 
+     *  IJetMaker::Jets   jets ;
+     *
+     *  // find the jets! 
+     *  StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+     *
+     *  // make  a loop over jets:
+     *  for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+     *        jets.end() != iJet ; ++iJet ) 
+     *    {
+     *        // get the jet 
+     *        LHCb::Particle* jet = *iJet ;
+     *    }
+     *
+     *  @endcode 
+     *
+     *  @attention It is a responsibility of users (e.g. the algorithm) 
+     *             to take care about the ownership of jets *AND* their 
+     *             vertices). The tool is not intended to do it! 
+     *  
+     *  @param input contaainer of input particles 
+     *  @param jets  container of  output jets 
+     *  @return status code 
+     */
+    virtual StatusCode makeJets 
+    ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    // ========================================================================
+  protected:  
+    /** the standard constructor
+     * 
+     *  @todo The default values for configuration parameters 
+     *        (especially for R-parameter) need to be adjusted 
+     *        according Victor Coco's studies. 
+     *
+     */
+    KtJetMaker
+    ( const std::string& type   ,
+      const std::string& name   ,
+      const IInterface*  parent ) 
+      : GaudiTool ( type , name , parent )
+        // 
+      , m_jetID        ( 98 )
+        //
+      , m_type         ( 4   )  
+      , m_angle        ( 1   )
+      , m_recom        ( 1   )
+      , m_r            ( 0.7 )
+        //
+      , m_sort         ( 2   )
+        // 
+      , m_combinerName ( 0   )
+      , m_combiner     ( 0   )
+    { 
+      //
+      declareInterface <IJetMaker> ( this ) ;
+      //
+      
+      declareProperty ( "JetID"          , m_jetID  ) ;
+      //
+      declareProperty ( "Type"           , m_type   ) ;
+      declareProperty ( "AngularScheme"  , m_angle  ) ;
+      declareProperty ( "Recombination"  , m_recom  ) ;
+      declareProperty ( "RParameter"     , m_r      ) ;
+      //
+      declareProperty ( "Sort"           , m_sort   ) ;
+      // define momentum combiner
+      declareProperty ( "ParticleCombiner", m_combinerName ) ;
+    } ;
+    /// destructor
+    virtual ~KtJetMaker( ){};
+  public:
+    /** standard initialization of the tool
+     *  @return status code 
+     */
+    virtual StatusCode initialize () 
     {
-      info()
-        << " IParticleCombiner tobe used: "
-        << "'" << m_combiner->type() << "'/'" 
-        << m_combiner->name() <<"'" << endreq;
-    }
-    //
-    return StatusCode::SUCCESS ;
-  } ;
-  /** standard execution of the algorithm 
-   *  @see LoKi::Algo 
-   *  @return status code 
-   */
-  virtual StatusCode analyse   () ;
-private:
-  // the default constructor is disabled 
-  LoKiKtJetMaker () ;
-  // the copy constructor is disabled 
-  LoKiKtJetMaker ( const  LoKiKtJetMaker& )  ;
-  // the assignement operator is disabled 
-  LoKiKtJetMaker& operator=( const  LoKiKtJetMaker& )  ;
-private:  
-  // proposed jet ID 
-  int    m_jetID     ; ///< proposed jet ID
-  // KtEvent flag 
-  int    m_type      ; ///< KtEvent flag/mode
-  // Angular distance scheme  
-  int    m_angle     ; ///< angular distance scheme
-  // Recombination scheme  
-  int    m_recom     ; ///< recombination scheme
-  // R-parameter 
-  double m_r         ; ///< R-parameters
-  // jet sorting criteria 
-  int    m_sort      ; ///< jet sorting criteria
-  // combiner 
-  const IParticleCombiner* m_combiner ; ///< combiner to be used 
-};
+      StatusCode sc = GaudiTool::initialize() ;
+      if ( sc.isFailure() ) { return sc ; }
+      //
+      if ( 4 != m_type      ) 
+      { Warning ( "The 'type' is different from 'PP' [4] "  ) ; }
+      if ( 0 >= m_angle || 3 < m_angle ) 
+      { Warning ( "Unknown angular distance scheme   [1-3]" ) ; }
+      if ( 0 >= m_recom || 5 < m_recom ) 
+      { Warning ( "Unknown recombination scheme      [1-5]" ) ; }
+      if ( 0 >  m_sort  || 5 < m_sort ) 
+      { Warning ( "Unknown sorting  scheme           [0-5]" ) ; }
+      //
+      return StatusCode::SUCCESS ;
+    } ;
+  private:
+    // the default constructor is disabled 
+    KtJetMaker () ;
+    // the copy constructor is disabled 
+    KtJetMaker ( const  KtJetMaker& )  ;
+    // the assignement operator is disabled
+    KtJetMaker& operator=( const  KtJetMaker& )  ;
+  private:  
+    // proposed jet ID 
+    int    m_jetID     ; ///< proposed jet ID
+    // KtEvent flag 
+    int    m_type      ; ///< KtEvent flag/mode
+    // Angular distance scheme  
+    int    m_angle     ; ///< angular distance scheme
+    // Recombination scheme  
+    int    m_recom     ; ///< recombination scheme
+    // R-parameter 
+    double m_r         ; ///< R-parameters
+    // jet sorting criteria 
+    int    m_sort      ; ///< jet sorting criteria
+    // combiner 
+    std::string                m_combinerName ;
+    mutable IParticleCombiner* m_combiner ; ///< combiner to be used 
+  };
+} // End of namespace LoKi
 // ============================================================================
 /** @file 
  *  Implementation file for class  LoKiKtJetMaker
@@ -166,12 +193,10 @@ private:
  *  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
  */
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( LoKiKtJetMaker );
-// ============================================================================
 namespace 
 {  
   typedef KtJet::KtLorentzVector   Jet          ;
-  typedef std::vector<Jet>         Jets         ;
+  typedef std::vector<Jet>         Jets_        ;
   typedef std::vector<const Jet*>  Constituents ;
   /// trivial function which "converts" particle into the "jet"
   inline Jet makeJet ( const LHCb::Particle* p ) 
@@ -202,7 +227,7 @@ namespace
     {
       if ( &v1 == &v2 ) { return true ; }
       const double  value = m_cut * std::min ( m_norm ( v1 )  , m_norm ( v2 ) )  ;
-      return  m_norm ( v1 - v2 ) <= value ;
+      return  m_norm ( v1 - v2 ) <= value  ;
     } ;
   private:
     SmallEuclidianNorm2 ( ) ;
@@ -225,25 +250,18 @@ namespace
   private:
     EuclidianNorm2 m_norm ;
     const Jet*     m_v    ;
-  } ;
-  
-}
+  } ; 
+} // end of anonymous namespace 
 // ===========================================================================
-/** standard execution of the algorithm 
- *  @see LoKi::Algo 
- *  @return status code 
- */
+/// find the jets 
 // ===========================================================================
-StatusCode LoKiKtJetMaker::analyse   () 
+StatusCode LoKi::KtJetMaker::makeJets 
+( const IJetMaker::Input& input_ , IJetMaker::Jets& jets_ ) const 
 {
-  using namespace LoKi        ;
-  using namespace LoKi::Types ;
-  // select all input particles
-  Range all = select ( "all" , LoKi::Cuts::PALL ) ;
   // input container of "particles"
-  Jets inputs ;
-  inputs.reserve( all.size() ) ;
-  for ( Range::iterator ip = all.begin() ; all.end() != ip ; ++ip ) 
+  Jets_ inputs ;
+  inputs.reserve( input_.size() ) ;
+  for ( IJetMaker::Input::const_iterator ip = input_.begin() ; input_.end() != ip ; ++ip ) 
   {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) 
@@ -255,7 +273,7 @@ StatusCode LoKiKtJetMaker::analyse   ()
   } ;
   
   // Jets found 
-  Jets jets ;
+  Jets_ jets ;
   
   if ( inputs.empty() ) 
   { Warning ( "No particles are available for jet-finding algorithm!") ; } 
@@ -309,13 +327,18 @@ StatusCode LoKiKtJetMaker::analyse   ()
   }
   
   if ( jets.empty() ) {  Warning ( "No jets from KtEvent" ) ; }
-
-  // 
+  
+  //
+  if ( 0 == m_combiner ) 
+  { m_combiner = tool<IParticleCombiner> ( m_combinerName , this ) ; }
+  
   const       SmallEuclidianNorm2 ok ( 1.e-5 ) ;
   typedef CompareByEuclidianNorm2 CMP ;
+  IJetMaker::Jets ktjets ;
+  ktjets.reserve( jets.size() ) ;
   
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
-  for ( Jets::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
+  for ( Jets_::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
   {
     const Jet& jet = *ijet ;
     const Constituents& constituents = jet.getConstituents() ;
@@ -335,17 +358,17 @@ StatusCode LoKiKtJetMaker::analyse   ()
       const Jet* c = *ic ;
       if ( 0 == c ) { continue ; }
       // find an appropriate input particle 
-      Jets::const_iterator input = 
+      Jets_::const_iterator input = 
         std::min_element ( inputs.begin() , inputs.end() , CMP ( c ) ) ;
       if ( inputs.end() == input ) 
       { Warning ( "Constituent is not found (1)" ) ; continue ; } ;
       if ( !ok ( *input , *c ) ) 
       { Warning ( "Constituent is not found (2)" ) ; continue ; } ;
       const size_t index = input - inputs.begin() ;
-      if ( index >= all.size() ) 
+      if ( index >= input_.size() ) 
       { Warning ( "Illegal Constituent is found" ) ; continue ; };
       // get the particle 
-      const LHCb::Particle* p = all[index] ;
+      const LHCb::Particle* p = input_[index] ;
       // add the particle into the vertex 
       daughters.push_back ( p ) ;
     }
@@ -364,20 +387,18 @@ StatusCode LoKiKtJetMaker::analyse   ()
     // redefine the momentum 
     pJet.setMomentum        ( Gaudi::LorentzVector ( jet )  ) ;
     //
-    save ( "jet" , &pJet ) ;  
-  };  
-  // some decoration 
-  Range ktjets = selected("jet") ;
-  if ( ktjets.empty() ) { Warning ( "No Kt-Jets are found!" ) ; }
+    ktjets.push_back( pJet.clone() ) ;
+  }  
+  
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   { counter ( "#jets" ) += ktjets.size() ; }
   
-  setFilterPassed ( true ) ;
+  jets_ = ktjets;
   
   return StatusCode::SUCCESS ;
-};
-// ===========================================================================
-
+}
+// ============================================================================
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,KtJetMaker);
 // ============================================================================
 // The END 
 // ============================================================================

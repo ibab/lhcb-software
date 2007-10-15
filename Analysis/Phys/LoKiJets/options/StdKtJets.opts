@@ -1,6 +1,6 @@
-// $Id: StdKtJets.opts,v 1.1 2006-11-12 15:13:36 ibelyaev Exp $ 
+// $Id: StdKtJets.opts,v 1.2 2007-10-15 22:06:35 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,8 +26,8 @@ ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
 /// configure Data-On-Demans service 
 // ============================================================================
 DataOnDemandSvc.AlgMap +=  {
-  'Phys/StdKtJets/Particles' : 'LoKiKtJetMaker/StdKtJets' ,
-  'Phys/StdKtJets/Vertices'  : 'LoKiKtJetMaker/StdKtJets'  
+  'Phys/StdKtJets/Particles' : 'LoKi::JetMakerAlg/StdKtJets' ,
+  'Phys/StdKtJets/Vertices'  : 'LoKi::JetMakerAlg/StdKtJets'  
 } ;
 // ============================================================================
 /// configure the algorithm
@@ -36,17 +36,6 @@ StdKtJets.PhysDesktop.InputLocations =  {
   "Phys/StdNoPIDsPions"     ,
   "Phys/StdLooseAllPhotons"   
 } ;
-// ============================================================================
-//StdKtJets.JetID         = 98   ; ///<default 
-//StdKtJets.Type          =  4   ; ///<default 
-//StdKtJets.AngularScheme =  1   ; ///<default 
-//StdKtJets.Recombination =  1   ; ///<default 
-//StdKtJets.RParameter    =  1.0 ; ///<default 
-//StdKtJets.Sort          =  2   ; ///<default 
-// ============================================================================
-
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // The END  
 // ============================================================================
