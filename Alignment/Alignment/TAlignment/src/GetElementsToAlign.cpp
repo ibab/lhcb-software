@@ -1,4 +1,4 @@
-// $Id: GetElementsToAlign.cpp,v 1.1 2007-09-01 17:36:08 janos Exp $
+// $Id: GetElementsToAlign.cpp,v 1.2 2007-10-15 16:12:27 lnicolas Exp $
 // Include files 
 // from STD
 #include <iomanip>
@@ -34,6 +34,14 @@
 #include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTLayer.h"
 #include "OTDet/DeOTModule.h"
+
+// STDet
+#include "STDet/DeITDetector.h"
+#include "STDet/DeITStation.h"
+#include "STDet/DeITLayer.h"
+#include "STDet/DeITBox.h"
+#include "STDet/DeITSector.h"
+#include "STDet/DeITLadder.h"
 
 // local
 #include "GetElementsToAlign.h"
@@ -97,7 +105,7 @@ StatusCode GetElementsToAlign::initialize() {
   Separator sep("/");
   /// Tokens of regular expressions
   Tokenizer regexs(m_elementsToAlign,sep);
- 
+
   for (Tokenizer::iterator i = regexs.begin(), iEnd = regexs.end(); 
        i != iEnd; ++i) {
     boost::regex ex;
@@ -112,7 +120,7 @@ StatusCode GetElementsToAlign::initialize() {
     /// If valid add expression to list of expressions.
     m_regexs.push_back(ex);
   }
-  
+
   /// Depth is equal to the number regular expressions in the regex list.
   m_depth = m_regexs.size();
   
@@ -123,10 +131,9 @@ StatusCode GetElementsToAlign::initialize() {
     info() << std::left << std::setw(3) << (*i) <<"\n";
   }
   info() << endmsg;
-  
+
   /// Traverse LHCb detector in transient store and get alignable elements
   getElements(lhcb);
-  
 
   /// Functions to find to-be-aligned detector element
   std::string name = m_elementsToAlign;
@@ -137,25 +144,49 @@ StatusCode GetElementsToAlign::initialize() {
     if (boost::regex_match(name, boost::regex(".*Velo/VeloRight/Module.{2,4}$"))) { ///< Velo right modules
       typedef const DeVeloSensor* (DeVelo::*memberFunctionP) (LHCb::VeloChannelID) const;
       memberFunctionP fp = &DeVelo::sensor;
-      m_detElemFromLHCbID = bind<const DetectorElement*>(&GetElementsToAlign::veloModule, this, 
-                                                         bind<const DeVeloSensor*>(fp, velo, bind<LHCb::VeloChannelID>(&LHCb::LHCbID::veloID, _1)));
+      m_detElemFromLHCbID =
+        bind<const DetectorElement*>(&GetElementsToAlign::veloModule, this, 
+                                     bind<const DeVeloSensor*>(fp, velo, bind<LHCb::VeloChannelID>(&LHCb::LHCbID::veloID, _1)));
     }
   } else if (boost::regex_match(name, boost::regex(".*T/OT/.*"))) {  ///< All OT elements
     DeOTDetector* ot = getDet<DeOTDetector>(DeOTDetectorLocation::Default); ///< Get pointer to OT detector
     if (!ot) return Error("Failed to retrieve OT detector element", StatusCode::FAILURE);
     m_isDet = bind<bool>(&LHCb::LHCbID::isOT,_1);
+
     if (boost::regex_match(name, boost::regex(".*OT/T.$"))) { ///< OT Stations
-      /// DeOTDetector::findStation is overloaded. So we need a function pointer to the function we want to use
+      /// DeOTDetector::findStation is overloaded. So we need a function pointer to the function we want to use.
       info() << "Setting find functions for OT stations" << endmsg;
       typedef const DeOTStation* (DeOTDetector::*memberFunctionP) (const LHCb::OTChannelID&) const;
       memberFunctionP fp = &DeOTDetector::findStation;
       m_detElemFromLHCbID = bind<const DetectorElement*>(fp, ot, bind<LHCb::OTChannelID>(&LHCb::LHCbID::otID,_1));
     } else if (boost::regex_match(name, boost::regex(".*OT/T./.{1,2}layer$"))) { ///< OT Layers
-      /// DeOTDetector::findLayer is overloaded. So we need a function pointer to the function we want to use
+      /// DeOTDetector::findLayer is overloaded. So we need a function pointer to the function we want to use.
       typedef const DeOTLayer* (DeOTDetector::*memberFunctionP) (const LHCb::OTChannelID&) const;
       memberFunctionP fp = &DeOTDetector::findLayer;
       m_detElemFromLHCbID = bind<const DetectorElement*>(fp, ot, bind<LHCb::OTChannelID>(&LHCb::LHCbID::otID,_1));
     } 
+  } else if (boost::regex_match(name, boost::regex(".*T/IT/.*"))) {  ///< All IT elements
+    DeITDetector* it = getDet<DeITDetector>(DeSTDetLocation::IT); ///< Get pointer to IT detector
+    if (!it) return Error("Failed to retrieve IT detector element", StatusCode::FAILURE);
+    m_isDet = bind<bool>(&LHCb::LHCbID::isIT,_1);
+
+    if (boost::regex_match(name, boost::regex(".*IT/Station.$"))) { ///< IT Stations
+      /// DeSTDetector::findStation is overloaded. So we need a function pointer to the function we want to use.
+      info() << "Setting find functions for IT stations" << endmsg;
+      typedef DeSTStation* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
+      memberFunctionP fp = &DeSTDetector::findStation;
+      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, it, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
+    } else if (boost::regex_match(name, boost::regex(".*IT/T./.+Box$"))) { ///< IT Boxes
+      /// DeITDetector::findBox is overloaded. So we need a function pointer to the function we want to use.
+      typedef DeITBox* (DeITDetector::*memberFunctionP) (const LHCb::STChannelID);
+      memberFunctionP fp = &DeITDetector::findBox;
+      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, it, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
+    } else if (boost::regex_match(name, boost::regex(".*IT/T./.+Box/Layer.{1,2}$"))) { ///< IT Layers
+      /// DeSTDetector::findLayer is overloaded. So we need a function pointer to the function we want to use.
+      typedef DeSTLayer* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
+      memberFunctionP fp = &DeSTDetector::findLayer;
+      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, it, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
+    }
   }
 
   m_findAlignElement = FindAlignmentElement(elementsToAlignBegin(), elementsToAlignEnd(), m_isDet, m_detElemFromLHCbID);
