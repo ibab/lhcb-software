@@ -22,13 +22,15 @@ apply_pattern install_more_includes more=MicroDST
 #############################################################
 # BUILD
 #############################################################
+# build a link kibrary
+library MicroDSTLib ../src/Lib/*.cpp
+apply_pattern linker_library library=MicroDSTLib
 # build a component library
 library MicroDST ../src/*.cpp
 
-# build a link kibrary
-library MicroDSTLib ../src/Lib/*.cpp
-
 apply_pattern component_library library=MicroDST
+
+#===============================================================
 
 #===============================================================
 
