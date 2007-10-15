@@ -10,14 +10,14 @@
 void presenter()
 {
   // SILENT, VERBOSE, DEBUG
-  new PresenterMainFrame("LHCb Online Presenter", 10, 10, 800, 600, SILENT);     
+  new PresenterMainFrame("LHCb Online Presenter", 10, 10, 800, 600, Silent);     
 }
 
 #ifdef STANDALONE
 int main(int argc, char** argv)
 {
   //TODO: Put cli param parser here: w/h/verbosity
-  
+
   TApplication* presenterApp = new TApplication("Presenter", &argc, argv);
   gROOT->Reset("a");
   TH1::AddDirectory(kFALSE);

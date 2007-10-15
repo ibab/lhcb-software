@@ -4,45 +4,47 @@
 // slots/signals cint hates namespaces
 enum FilterCriteria
 {
-  byFolderAndPage = 0,
-  byTask = 1,
-  bySubsystem = 2,
-  byHistogramsWithAnalysis = 3,
-  byAnalysisHistograms = 4,
-  allHistos = 5
+  ByFolderAndPage = 0,
+  ByTask = 1,
+  BySubsystem = 2,
+  ByHistogramsWithAnalysis = 3,
+  ByAnalysisHistograms = 4,
+  AllHistos = 5
 };
 
 namespace pres
 {  
   enum MsgLevel
   { 
-    SILENT  = 0,
-    VERBOSE = 1,
-    DEBUG   = 2           
+    Silent  = 0,
+    Verbose = 1,
+    Debug   = 2           
   };
-  
+
   enum ExceptionLevel {
-    NO_EXCEPTIONS     = 0,
-    SEVERE_EXCEPTIONS = 1,
-    ALL_EXCEPTIONS    = 2    
+    NoExceptions     = 0,
+    SevereExceptions = 1,
+    AllExceptions    = 2    
   };
-  
+
   enum MouseButton {
-    LEFT = 1, 
-    RIGHT = 3           
+    LeftMouseButton = 1,
+    MiddleMouseButton = 2,
+    RightMouseButton = 3           
   };
+
+  static const bool WithHistograms    = true;
+  static const bool WithoutHistograms = false;
   
-  static const bool withHistograms    = true;
-  static const bool withoutHistograms = false;
-
-  enum HistoServiceType {
-    Unknown,
-    H1D,
-    H2D,
-    P1D,
-    P2D,
-    CNT
-  };
-
+  static const bool CheckTreeItems    = true;
+  static const bool UncheckTreeItems  = false;
+  
+  static const std::string H1D = "H1D";
+  static const std::string H2D = "H2D";
+  static const std::string P1D = "P1D";
+  static const std::string HPD = "HPD"; // legacy compat == P1D
+  static const std::string P2D = "P2D";
+  static const std::string CNT = "CNT";
+  
 }
 #endif /*PRESENTER_H_*/
