@@ -1,10 +1,12 @@
 V 10
 1
 LANG:1 8 RecoFarm
-PANEL,-1 -1 500 400 N "_3DFace" 0
+PANEL,-1 -1 441 368 N "_3DFace" 0
 E E E E E 1 -1 -1 0  28 19
 ""0  1
-E "#uses \"RecoFarm.cpp\"
+E "#uses \"StreamTaskMgr.cpp\"
+#uses \"RecoFarm.cpp\"
+#uses \"ctrlUtils.cpp\"
 " 0
  2
 "CBRef" "1"
@@ -17,7 +19,7 @@ LANG:1 0
 13 0
 "PUSH_BUTTON1"
 ""
-1 28 19 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 130 110 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 0 0 0 0 0 0
 E E E
@@ -27,20 +29,20 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 26 17 168 39
+ 128 108 202 132
 
 T 
 1
-LANG:1 17 Install Datatypes
+LANG:1 7 Install
 "main()  {  RecoFarm_installDataTypes();  }
 " 0
  E E E
 13 1
 "PUSH_BUTTON2"
 ""
-1 28 48 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 210 110 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 2 0 0 0 0 0
 E E E
@@ -50,16 +52,616 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 26 46 168 68
+ 208 108 282 132
 
 T 
 1
-LANG:1 19 Uninstall Datatypes
+LANG:1 9 Uninstall
 "main()  {  RecoFarm_uninstallDataTypes();  }
 " 0
  E E E
+30 2
+"m_sliceFrame"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+3 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.359550561797753 22 -17.52808988764048 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 9 Rec Slice
+22 4
+"m_sliceName"
+""
+1 39.99999999999999 180 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 37.99999999999999 178 142 202
+0
+
+E
+E
+E
+ 1 0
+13 5
+"m_createSlice"
+""
+1 40.00000000000001 210 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 38.00000000000001 208 142 232
+
+T 
+1
+LANG:1 6 Create
+E E E E
+13 6
+"m_deleteSlice"
+""
+1 40.00000000000001 240 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 38.00000000000001 238 142 262
+
+T 
+1
+LANG:1 6 Delete
+E E E E
+13 7
+"m_generateSlice"
+""
+1 40.00000000000001 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 38.00000000000001 268 142 292
+
+T 
+1
+LANG:1 12 Generate FSM
+E E E E
+13 8
+"m_createAll"
+""
+1 320 210 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 318 208 422 232
+
+T 
+1
+LANG:1 10 Create All
+E E E E
+13 9
+"m_deleteAll"
+""
+1 320 240 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 318 238 422 262
+
+T 
+1
+LANG:1 10 Delete All
+E E E E
+13 10
+"m_generateAll"
+""
+1 320 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+16 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 318 268 422 292
+
+T 
+1
+LANG:1 12 Generate All
+E E E E
+13 11
+"m_startSlice"
+""
+1 40.00000000000001 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 38.00000000000001 298 142 322
+
+T 
+1
+LANG:1 5 Start
+E E E E
+13 12
+"m_stopSlice"
+""
+1 40.00000000000001 330 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 38.00000000000001 328 142 352
+
+T 
+1
+LANG:1 4 Stop
+E E E E
+13 13
+"m_startAll"
+""
+1 320 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 318 298 422 322
+
+T 
+1
+LANG:1 9 Start All
+E E E E
+13 14
+"m_stopAll"
+""
+1 320 330 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+24 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 318 328 421.9999999999999 352
+
+T 
+1
+LANG:1 8 Stop All
+E E E E
+22 15
+"m_ioName"
+""
+1 180 180 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+26 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 178 282 202
+0
+
+E
+E
+E
+ 1 0
+13 16
+"m_createIO"
+""
+1 180 210 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+28 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 208 282 232
+
+T 
+1
+LANG:1 6 Create
+E E E E
+13 17
+"m_deleteIO"
+""
+1 180 240 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+30 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 238 282 262
+
+T 
+1
+LANG:1 6 Delete
+E E E E
+13 18
+"m_genIO"
+""
+1 180 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+32 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 268 282 292
+
+T 
+1
+LANG:1 12 Generate FSM
+E E E E
+13 19
+"m_startIO"
+""
+1 180 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+34 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 298 282 322
+
+T 
+1
+LANG:1 5 Start
+E E E E
+13 20
+"m_stopIO"
+""
+1 180 330 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+36 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 178 328 282 352
+
+T 
+1
+LANG:1 4 Stop
+E E E E
+30 21
+"FRAME2"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+38 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.359550561797753 162 -17.52808988764048 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 9 I/O Slice
+30 22
+"FRAME3"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+40 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.359550561797753 302 -17.52808988764048 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 10 All Slices
+6 23
+"m_logo"
+""
+1 -2 70 E E E 1 E 1 E N {0,0,0} E N {255,255,255} E E
+ E "main(int x, int y)    {   closeFSMPanel(); }
+" 0
+
+42 0 0 0 0 0
+E E E
+0
+1
+LANG:1 47 Yeah - that's us! Double click to close window.
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E 1 0 1 20 0 2  0 3  "pictures/logo_lhcb.bmp" 13434828 E 10 10 95 70
+2 24
+"m_online"
+""
+1 32.07114186851211 78 E E E 1 E 1 E N "white" E N "red" E E
+ E E
+44 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1.023529411764706 0 1 21.81176470588235 7 1 E 8 63 93 84
+1 0 2 "0s" 0 0 0 65 0 0  8 63 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 6 Online
+22 25
+"COMBO_BOX3"
+""
+1 292 22 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+46 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 290 20 394 44
+0
+
+E
+E
+E
+ 1 0
+2 26
+"PRIMITIVE_TEXT1"
+""
+1 142 22 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+47 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 142 22 282 42
+0 2 2 "0s" 0 0 0 64 0 0  142 22 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 12 System Name:
+21 28
+"SPIN_BUTTON1"
+""
+1 292 50 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+49 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 290 48 334 72
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+21 30
+"SPIN_BUTTON2"
+""
+1 294 80 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+53 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 292 78 336 102
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+2 31
+"PRIMITIVE_TEXT4"
+""
+1 142 52 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+55 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 142 52 282 72
+0 2 2 "0s" 0 0 0 64 0 0  142 52 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 16 No. of Tasksets:
+2 32
+"PRIMITIVE_TEXT5"
+""
+1 142 82 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+57 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 142 82 282 102
+0 2 2 "0s" 0 0 0 64 0 0  142 82 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 21 No. of Tasks per set:
+2 33
+"PRIMITIVE_TEXT6"
+""
+1 50 110 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+59 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 50 110 190 130
+0 2 2 "0s" 0 0 0 64 0 0  50 110 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 11 Data types:
 0
 LAYER, 1 
 1
