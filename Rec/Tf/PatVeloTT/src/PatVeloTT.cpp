@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.cpp,v 1.5 2007-10-12 17:58:22 witekma Exp $
+// $Id: PatVeloTT.cpp,v 1.6 2007-10-15 06:55:18 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -146,19 +146,19 @@ StatusCode PatVeloTT::execute() {
       bestTrack = *(fittracks.begin());
       tracks = fittracks.begin();
        
-      if(bestTrack) 
-	if(bestTrack->chi2PerDoF() < m_maxChi2) {
-	  outputTracks->insert(bestTrack);
-	  tracks++;
-	}
-      
-      for (; tracks != fittracks.end(); tracks++){
-	delete (*tracks);
+      if(bestTrack) {
+        if(bestTrack->chi2PerDoF() < m_maxChi2) {
+          outputTracks->insert(bestTrack);
+          tracks++;
+        }
       }
       
-      tmptracks.clear();
-      fittracks.clear();
+      for (; tracks != fittracks.end(); tracks++){
+        delete (*tracks);
+      }
     }
+    tmptracks.clear();
+    fittracks.clear();
   }
 
   return StatusCode::SUCCESS;

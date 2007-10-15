@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================== PatVeloTT v3r0 2007-10-12 =======================
+!========================== PatVeloTT v3r0 2007-10-15 =======================
+! 2007-10-15 - Marco Cattaneo for Stephanie Hansmann-Menzemer
+ - Fix a bug introduced during migration
+
 ! 2007-10-12 - Mariusz Witek
 - put modifications from paraller development in Pat
 
