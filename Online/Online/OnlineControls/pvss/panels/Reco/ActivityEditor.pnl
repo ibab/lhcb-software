@@ -1,0 +1,556 @@
+V 10
+1
+LANG:1 30 Reconstruction Activity Editor
+PANEL,-1 -1 377 383 N "_3DFace" 0
+"main()  {
+  string activity = \"REPRO_1\";// = $1;
+  RecoFarm_initEditor(activity);
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "#uses \"RecoFarm.cpp\"" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+0
+LAYER, 1 
+1
+LANG:1 0 
+30 54
+"m_processingFrame"
+""
+1 10 43 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+80 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.649122807017543 0 1.989690721649491 -4.491228070175429 63.4432989690719 0 E 10 43 581 141
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 32 Data Processing Input Parameters
+13 67
+"m_Cancel"
+""
+1 10 350 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+99 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 8 348 92 372
+
+T 
+1
+LANG:1 6 Cancel
+"main()  {  RecoFarm_editorCancel(m_activityName.text);  }" 0
+ E E E
+13 68
+"m_Ok"
+""
+1 279.9999999999999 352 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+103 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 277.9999999999999 350 361.9999999999999 374
+
+T 
+1
+LANG:1 2 Ok
+"main()  {  RecoFarm_editorOk(m_activityName.text);  }" 0
+ E E E
+13 74
+"m_Reset"
+""
+1 99.99999999999996 352 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+100 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 97.99999999999996 350 182 374
+
+T 
+1
+LANG:1 5 Reset
+"main()  {  RecoFarm_editorReset(m_activityName.text);  }" 0
+ E E E
+13 75
+"m_Save"
+""
+1 190 352 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+101 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 188 350 271.9999999999999 374
+
+T 
+1
+LANG:1 4 Save
+"main()  {  RecoFarm_editorSave(m_activityName.text);  }" 0
+ E E E
+29 73
+"m_farmTasks"
+""
+1 194 269.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+97 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 194 269.0000000000001 364.9999999999998 337.0000000000001
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E29 72
+"m_farmInfrastructure"
+""
+1 194 213.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+94 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 194 213.0000000000001 364.9999999999998 264.0000000000001
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E21 55
+"m_numSubFarms"
+""
+1 194 9 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+84 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 7 236 31
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+2 56
+"m_numSubFarmsText"
+""
+1 20 -110 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+82 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 12 11 172 31
+0 2 2 "0s" 0 0 0 64 0 0  12 11 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 19 Number of SubFarms:
+2 58
+"m_farmInfrastructureText"
+""
+1 18 92.00000000000003 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+93 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 223 170 243
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 223 2
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 26 Infrastructure Task Types:
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+2 70
+"m_activityName"
+""
+1 330 27.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+107 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1 0 0.9999999999999998 -9.999999999999996 -10.99999999999999 1 E 264 24 374 34
+0 2 2 "0s" 0 0 0 64 0 0  264 24 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+2 85
+"m_farmTasksText"
+""
+1 9.999999999999998 270 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+119 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 270 191 335
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 270 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 27 Data processing task types:
+30 86
+"m_ioFrame"
+""
+1 10 43 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+121 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.649122807017543 0 1.123711340206189 -3.49122807017545 -20.31958762886613 0 E 10 43 581 141
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 14 I/O Parameters
+2 87
+"m_farmReceiverText"
+""
+1 18 50.00000000000006 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+123 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 171 170 191
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 171 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 24 Farm receiver task type:
+2 88
+"m_farmSenderText"
+""
+1 18 72.00000000000006 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+125 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 193 170 213
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 193 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 22 Farm sender task type:
+14 89
+"m_farmReceiver"
+""
+1 194 169 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+126 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 167 366 191
+3 "0s" 0 0 0 0 0 -1  E E E
+14 90
+"m_farmSender"
+""
+1 194 191 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+128 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 189 366 213
+3 "0s" 0 0 0 0 0 -1  E E E
+2 91
+"m_storageSenderText"
+""
+1 18 -27.99999999999996 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+130 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 93 170 113
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 93 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 25 Storage sender task type:
+14 92
+"m_storageSender"
+""
+1 194 91 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+132 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 89 366 113
+3 "0s" 0 0 0 0 0 -1  E E E
+2 93
+"m_storageReceiverText"
+""
+1 18 -6.999999999999957 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+134 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 114 170 134
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 114 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 27 Storage receiver task type:
+14 94
+"m_storageReceiver"
+""
+1 194 112 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+136 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 110 366 134
+3 "0s" 0 0 0 0 0 -1  E E E
+2 95
+"m_storageWriterText"
+""
+1 18 -48.99999999999996 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+138 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 72 170 92
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 72 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 25 Storage writer task type:
+14 96
+"m_storageWriter"
+""
+1 194 70 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+140 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 68 366 92
+3 "0s" 0 0 0 0 0 -1  E E E
+2 97
+"m_storageReaderText"
+""
+1 18 -69.99999999999996 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+142 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 9.999999999999998 51 170 71
+0 2 2 "0s" 0 0 0 64 0 0  9.999999999999998 51 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 25 Storage reader task type:
+14 98
+"m_storageReader"
+""
+1 194 49 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+144 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 192 47 366 71
+3 "0s" 0 0 0 0 0 -1  E E E
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0
