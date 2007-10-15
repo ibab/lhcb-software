@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-10-15 - Johan Blouw
+ - remove old tag, update package and retag TAlignment so that it can be part of ALIGNMENT_v2r1
+ - NOTE: sometimes being practical supersedes being principal... (JB)
+
+! 2007-10-12 - Jan Amoraal/H. Degaudenzi
+ - Define boost functions explicitly in TrackFilterAlg.cpp (Jan Amoraal) to solve compiling problem on Windows OS.
+
 ! 2007-09-25 - Johan Blouw
  - removed several inconsistencies in AlignAlgorithm.cpp and AlignmentElement.h due to
    use of LHCB_v22r9
