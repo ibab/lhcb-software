@@ -1,11 +1,9 @@
-// $Id: CopyAndStoreData.cpp,v 1.2 2007-10-11 18:01:25 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.3 2007-10-15 13:54:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include <GaudiKernel/AlgFactory.h>
 #include <GaudiKernel/KeyedContainer.h>
-// fromLHCb
-//#include "Event/ODIN.h"
 // local
 #include "MicroDST/CopyAndStoreData.h"
 
@@ -42,7 +40,8 @@ StatusCode CopyAndStoreData::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-
+  // Remove any leading "/Event" in input TES location.
+  getNiceLocationName( this->inputTESLocation() );
   this->fullOutputTESLocation() = "/Event/"+ this->outputPrefix() + 
     "/" + this->inputTESLocation();
 
@@ -70,52 +69,74 @@ StatusCode CopyAndStoreData::finalize() {
 
 //=============================================================================
 template <class T>
-StatusCode CopyAndStoreData::copyAndStoreData( const std::string& fromLocation,
-                                               const std::string& toLocation   )
+StatusCode CopyAndStoreData::copyAndStoreObject( const std::string& from,
+                                                 const std::string& to    )
 
 {
   verbose() << "try to get data container" << endmsg;
 
-  if (exist<T>( fromLocation ) ) {
-    const T* data = get<T>( fromLocation );
+  if (exist<T>( from ) ) {
+    const T* data = get<T>( from );
     verbose() << "now copy information" << endmsg;
     T* newData = new T(*data);
-    put (newData, toLocation );
+    put (newData, to );
     verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
   } else {
-    Warning("No data container found at "+ fromLocation, 
-            StatusCode::SUCCESS);
+    Warning("No data container found at "+ from, StatusCode::SUCCESS);
   } // if exist
 
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-template<class T> 
-T* CopyAndStoreData::getContainer(std::string locTES)
+template <class T>
+StatusCode CopyAndStoreData::copyAndStoreContainer( const std::string& from,
+                                                    const std::string& to   )
 {
-  
-  // do some string manipulaitons
-  getNiceLocationName(locTES);
+  debug() << "now store container for location " << from << endmsg;
 
-  // Check if the container is already there
-  if ( containerMap().find(locTES) !=  containerMap().end() ) {
-    verbose() << "return existing container" << endmsg;
-    return dynamic_cast<T*>(containerMap()[locTES]);
+  if (!exist<T>(from)) {
+    debug() << "Container location does not exist" << endmsg;
+    return StatusCode::FAILURE;    
   } else {
-    verbose() << "container does not exisit yet, create" << endmsg;
-    std::string containerLocation =  locTES;
-    // now insert identifier for microDST after "/Event/"
-    containerLocation.insert(0,"/Event/"+ outputPrefix() + "/");
-    verbose() << "location of container in TES " 
-              << containerLocation << endmsg;
-    // create new container and store into TES
-    T* container = new T();
-    put (container, containerLocation);     
-    containerMap()[locTES] = dynamic_cast<ObjectContainerBase*>(container);
-    return dynamic_cast<T*>( containerMap()[locTES] );
-  }
-  
+    const T* data = get<T>( from );
+    // do stuff here!
+    if (!data) {
+      return StatusCode::FAILURE;
+    }
+    verbose() << "got # elements in container: " << data->size() << endmsg;
+    T* clones = getOutputContainer<T>();
+    return cloneContainer<T>(data, clones);
+  } // if !exist
+}
+//=============================================================================
+template <class T> 
+StatusCode CopyAndStoreData::cloneContainer(const T* data, T* clones) 
+{
 
+  for (typename T::const_iterator i = data->begin(); 
+       i != data->end(); 
+       ++i) {
+    typename T::value_type item = clones->object( (*i)->key() );
+    if (!item) {
+      item = (*i)->clone();
+      clones->insert(item, (*i)->key());
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+template<class T> 
+T* CopyAndStoreData::getOutputContainer()
+{
+  const std::string& location = fullOutputTESLocation();
+  
+  if ( !exist<T>( location ) ) {
+    T* container = new T();
+    put(container, location);
+  }
+
+  return get<T>( location );      
+  
 }
 //=============================================================================
 void CopyAndStoreData::getNiceLocationName(std::string& location)
@@ -125,6 +146,6 @@ void CopyAndStoreData::getNiceLocationName(std::string& location)
   if ( loc != std::string::npos) {
     location.replace(loc, tmpString.length(), "");
     verbose() << "TES location ID is now " << location << endmsg;
-  } //if loc
+  }
 }
 //=============================================================================
