@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.2 2007-10-15 13:54:39 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.3 2007-10-15 16:23:33 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -46,11 +46,48 @@ protected:
    */
   template <class T>
   StatusCode copyAndStoreObject( const std::string& from,
-                                 const std::string& to   );
+                                 const std::string& to   ) 
+  {
+    verbose() << "try to get data container" << endmsg;
 
+    if (exist<T>( from ) ) {
+      const T* data = get<T>( from );
+      verbose() << "now copy information" << endmsg;
+      T* newData = new T(*data);
+      put (newData, to );
+      verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
+    } else {
+      Warning("No data container found at "+ from, StatusCode::SUCCESS);
+    } // if exist
+
+    return StatusCode::SUCCESS;
+  }
+  //===========================================================================
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
   template <class T>
   StatusCode copyAndStoreContainer( const std::string& from,
-                                    const std::string& to   );
+                                    const std::string& to   ) 
+  {
+    debug() << "now store container for location " << from << endmsg;
+
+    if (!exist<T>(from)) {
+      debug() << "Container location does not exist" << endmsg;
+      return StatusCode::FAILURE;    
+    } else {
+      const T* data = get<T>( from );
+      if (!data) {
+        return StatusCode::FAILURE;
+      }
+      verbose() << "got # elements in container: " << data->size() << endmsg;
+      T* clones = getOutputContainer<T>();
+      return cloneContainer<T>(data, clones);
+    } // if !exist
+  }
+  //===========================================================================
 
   /**
    * Clone the contents of a container and put into another one.
@@ -65,7 +102,20 @@ protected:
    * @date 15-10-2007
    */
   template <class T> 
-  StatusCode cloneContainer(const T* data, T* clones);
+  StatusCode cloneContainer(const T* data, T* clones) 
+  {
+    for (typename T::const_iterator i = data->begin(); 
+         i != data->end(); 
+         ++i) {
+      typename T::value_type item = clones->object( (*i)->key() );
+      if (!item) {
+        item = (*i)->clone();
+        clones->insert(item, (*i)->key());
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+  //===========================================================================
 
   /**
    * Get the TES container in the TES location to be stored on the
@@ -76,7 +126,18 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getOutputContainer();
+  T* getOutputContainer() 
+  {
+    const std::string& location = fullOutputTESLocation();
+  
+    if ( !exist<T>( location ) ) {
+      T* container = new T();
+      put(container, location);
+    }
+
+    return get<T>( location );     
+  }
+  //=========================================================================  
 
   /**
    * Get the TES location of an object.
@@ -116,6 +177,18 @@ protected:
   inline std::string& fullOutputTESLocation() 
   {
     return m_fullOutputTESLocation;
+  }
+
+  inline void setInputTESLocation(const std::string& newLocation) 
+  {
+    this->inputTESLocation() = newLocation;
+    setFullOutputTESLocation();
+  }
+
+  inline void setFullOutputTESLocation() 
+  {
+    this->fullOutputTESLocation() = "/Event/"+ this->outputPrefix() + 
+      "/" + this->inputTESLocation();
   }
   
 private:
