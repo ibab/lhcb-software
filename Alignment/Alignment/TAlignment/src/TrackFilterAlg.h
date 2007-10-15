@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.2 2007-08-16 13:46:37 graven Exp $
+// $Id: TrackFilterAlg.h,v 1.3 2007-10-15 16:11:51 lnicolas Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -18,7 +18,7 @@
 #include "Event/Track.h"
 
 // from AlignmentInterfaces
-#include "AlignmentInterfaces/IAlignSelTool.h"
+#include "TrackInterfaces/ITrackSelector.h"
 
 // from BOOST
 #include "boost/function.hpp"
@@ -69,7 +69,7 @@ private:
   std::string                               m_detector;              ///< Sub-detector
   unsigned int                              m_nMinHits;              ///< Min number of hits 
   LHCbDetChecks                             m_lhcbDetChecks;         ///< Map LHCb id det checks methods  
-  IAlignSelTool*                            m_trackSelector;         ///< Pointer to track selector tool for alignment
+  ITrackSelector*                            m_trackSelector;         ///< Pointer to track selector tool for alignment
 };
 
 #endif // TALIGNMENT_TRACKFILTERALG_H

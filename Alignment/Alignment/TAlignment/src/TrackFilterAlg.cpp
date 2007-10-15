@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.3 2007-10-11 17:22:46 hmdegaud Exp $
+// $Id: TrackFilterAlg.cpp,v 1.4 2007-10-15 16:11:51 lnicolas Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -57,7 +57,7 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
   
   boost::function<bool (LHCb::LHCbID)> veloCheck = bind<bool>(&LHCb::LHCbID::isVelo,_1); 
   boost::function<bool (LHCb::LHCbID)> otCheck   = bind<bool>(&LHCb::LHCbID::isOT,_1);
- 
+  
   
   m_lhcbDetChecks = map_list_of("Velo", veloCheck)
                                ("OT"  , otCheck  );
@@ -89,7 +89,7 @@ StatusCode TrackFilterAlg::initialize() {
                                                     StatusCode::FAILURE);
     
   /// Get track selector tool
-  m_trackSelector = tool<IAlignSelTool>(m_trackSelectorName, "Selector", this);
+  m_trackSelector = tool<ITrackSelector>(m_trackSelectorName, "Selector", this);
   if (!m_trackSelector) return Error("==> Failed to retrieve track selector tool", StatusCode::FAILURE);
 
   return StatusCode::SUCCESS;
@@ -111,7 +111,7 @@ StatusCode TrackFilterAlg::execute() {
 //=============================================================================
 
 void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
-  if ((track->checkType(m_stringToTrackTypeMap[m_trackType])) && (m_trackSelector->selectTrack(track))) { 
+  if ((track->checkType(m_stringToTrackTypeMap[m_trackType])) && (m_trackSelector->accept(*track))) { 
     /// Clone track. It's mine
     std::auto_ptr<Track> clonedTrack( track->cloneWithKey() );
     /// let's strip unwanted nodes. This should be a seperate algorithm
