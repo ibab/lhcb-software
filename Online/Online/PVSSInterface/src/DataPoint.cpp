@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.29 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.30 2007-10-15 20:03:51 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.29 2007-10-01 14:46:55 frankm Exp $
+// $Id: DataPoint.cpp,v 1.30 2007-10-15 20:03:51 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -620,3 +620,9 @@ bool DPListActor::lookup(const std::string& nam, const DevType* typ)  {
   }
   throw std::runtime_error("Cannot load datapoint identifiers for type:"+dp_name);
 }
+
+bool DPListActor::lookupOriginal(const std::string& nam, const DevType* typ)  {
+  return this->lookup(DataPoint::original(nam),typ);
+}
+
+

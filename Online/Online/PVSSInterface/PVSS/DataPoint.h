@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.8 2007-08-09 20:03:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.9 2007-10-15 20:03:51 frankm Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -340,6 +340,8 @@ namespace PVSS {
     virtual ~DPListActor();
     /// Lookup datapoint items
     bool lookup(const std::string& typ_nam, const DevType* typ);
+    /// Lookup datapoint items
+    bool lookupOriginal(const std::string& typ_nam, const DevType* typ);
     /// Callback function to operate on datapoints
     virtual void operator()(const DpID& dpid) = 0;
   };
@@ -363,7 +365,7 @@ namespace PVSS {
     /// Initializing constructor
     DataPointMapActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
-    void operator()(const DpID& dpid)  {
+    void operator()(const DpID& dpid) {
       std::string dpn = DataPoint::dpname(dpid);
       this->container.insert(std::make_pair(dpn,DataPoint(this->m_manager,dpn)));
     }
