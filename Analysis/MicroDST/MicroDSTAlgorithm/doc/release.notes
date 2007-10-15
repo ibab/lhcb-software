@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.23 2007-10-12 07:49:58 jonrob Exp $
+! $Id: release.notes,v 1.24 2007-10-15 13:56:47 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-15 - Juan PALACIOS
+ - src/Lib/CopyAndStoreData.cpp, MicroDST/CopyAndStoreData.h
+  . Add new functionality and doxygen comments.
 
 ! 2007-10-12 - Chris Jones
  - Fix possible cause of memory leak in CreateMicroDSTAlg
