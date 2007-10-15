@@ -72,7 +72,7 @@ class General:
     return DataPoint(self.manager,DataPoint.original(self.name+'_RunInfo.'+name))
 
   # ===========================================================================
-  def _setDataItem(self, datapoint):
+  def _setDataItem(self, datapoint, save=None):
     datapoint.data = partID
     if save: return self._save(datapoint)
     return self
@@ -85,7 +85,7 @@ class General:
 
   # ===========================================================================
   def load(self):
-    "Load the RunInfo structure datapoint."
+    "Load the datapoints assigned to the reader."
     if self.reader.execute(1,1):
       return self
     error('Failed to load run information for:'+self.name)

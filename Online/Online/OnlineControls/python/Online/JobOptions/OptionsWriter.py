@@ -1,3 +1,4 @@
+import socket
 import Online.Utils
 import Online.PVSS as PVSS
 import Online.SetupParams as Params
@@ -183,9 +184,21 @@ class OptionsWriter(Control.AllocatorClient):
         else: opts.add('// ---------------- NO additional options')
         if task.tell1s.data:
           opts.add('//\n// ---------------- Tell1 board information:')
-          opts.add('OnlineEnv.Tell1Boards         = {\n')
-          for b in self.run.tell1Boards.data: opts.add('  "%s", \"%s", "",\n'%(b,b))
+          opts.add('OnlineEnv.Tell1Boards         = {')
+          err = None
+          for b in self.run.tell1Boards.data:
+            itms = b.split(':')
+            try:
+              board = itms[0]
+              if len(itms)>1: board = itms[1]
+              ip = socket.gethostbyname(board+"-d1.data");
+              opts.add('  "%s", "%s", "",'%(ip,board))
+            except Exception,X:
+              error('Failed to retrieve TELL1 specs for '+str(b))
+              err = self
           opts.value = opts.value[:-2] + '\n};\n'
+          if err:
+            return None
         else: opts.add('// ---------------- NO tell1 board information') 
         if task.options.data:
           opts.add('//\n// ---------------- Task specific information:')
@@ -263,13 +276,42 @@ class HLTOptionsWriter(OptionsWriter):
 
         opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
         opts.add('//\n// ---------------- Tell1 board information:')
-        opts.add('OnlineEnv.Tell1Boards         = {\n')
-        for b in self.run.tell1Boards.data: opts.add('  "%s", \"%s", "",\n'%(b,b))
+        opts.add('OnlineEnv.Tell1Boards         = {')
+        err = None
+        for b in self.run.tell1Boards.data:
+          itms = b.split(':')
+          try:
+            board = itms[0]
+            if len(itms)>1: board = itms[1]
+            ip = socket.gethostbyname(board+"-d1.data");
+            opts.add('  "%s", "%s", "",'%(ip,board))
+          except Exception,X:
+            error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
+            error('Error '+str(X),timestamp=1)
+            err = self
         opts.value = opts.value[:-2] + '\n};\n'
+        if err:
+          return None
+        odin = 'Unknown'
+        itms = ''
+        try:
+          odin  = self.run.odin.data
+          itms  = odin.split(':')
+          board = itms[0]
+          if len(itms)>1: board = itms[1]
+          ip    = socket.gethostbyname(board+"-d1.data");
+          opts.add('ODIN_Name',   board)
+          opts.add('ODIN_IP',     ip)
+        except Exception,X:
+          error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
+          error('Error [IGNORED for NOW] '+str(X),timestamp=1)
+          err = None
+        if err:
+          return None
+
         fname = partition+'_Tell1Boards'
         if self.writeOptionsFile(partition, fname, opts.value) is None:
           return None
-
         return self.run
     return None
 

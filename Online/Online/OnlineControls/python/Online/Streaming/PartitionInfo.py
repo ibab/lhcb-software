@@ -52,7 +52,7 @@ def showPartition(partition,extended=None):
     log('------------------------------- '+name+' -------------------------------',1)
     log('-> Partition:'+name+' is used by '+partName)
     printSlots(recvNodes,'   1st. layer nodes in use['+str(len(recvNodes))+']:',99,10)
-    log('   1st layer slices allocated:%d'%len(partition.recvSlices().data))
+    log('   1st layer slices allocated:%d'%len(partition.recvSlices()))
     printSlots(partition.recvSlices(),'           ',5)
 
     log('')
@@ -156,23 +156,23 @@ def create(manager, name, cfg_name):
   typ = tm.type('StreamPartition')
   device = dm.createDevice(name,typ,1)
   if device.get() is None:
-    warning('Failed to create device "'+name+'"')
+    warning('Failed to create device "'+name+'"',timestamp=1)
   device = dm.device(name)
   if device.get() is None:
-    error('Failed to access device "'+name+'"')
+    error('Failed to access device "'+name+'"',timestamp=1)
     return None
-  log('Successfully accessed device:'+name)
+  log('Successfully accessed device:'+name,timestamp=1)
   info = PartitionInfo(manager,name)
   info.clear()
   typ = tm.type('StreamConfigurator')
   cfg = dm.createDevice(cfg_name,typ,1)
   if cfg.get() is None:
-    warning('Failed to create device "'+cfg_name+'"')
+    warning('Failed to create device "'+cfg_name+'"',timestamp=1)
   cfg = dm.device(cfg_name)
   if cfg.get() is None:
-    error('Failed to access device "'+cfg_name+'"')
+    error('Failed to access device "'+cfg_name+'"',timestamp=1)
     return None
-  log('Successfully accessed device:'+cfg_name)
+  log('Successfully accessed device:'+cfg_name,timestamp=1)
   dp = DataPoint(manager,DataPoint.original(cfg_name+'.Command'))
   dp.data = "UNKNOWN"
   info.datapoints.push_back(dp)
@@ -318,6 +318,9 @@ class PartitionInfo:
   # ===========================================================================
   def streamSlices(self):
     return self.datapoints[STRMSLICES].data
+  # ===========================================================================
+  def streamSlice(self,which):
+    return self.datapoints[STRMSLICES].data[which]
   # ===========================================================================  
   def dataSources(self):
     return self.tasks[DATASENDERS].data    
@@ -340,8 +343,14 @@ class PartitionInfo:
   def streamReceivers(self):
     return self.tasks[STRMRECV].data
   # ===========================================================================
+  def streamReceiver(self,which):
+    return self.tasks[STRMRECV].data[which]
+  # ===========================================================================
   def streamSenders(self):
     return self.tasks[STRMSENDERS].data
+  # ===========================================================================
+  def streamSender(self,which):
+    return self.tasks[STRMSENDERS].data[which]
   # ===========================================================================  
   def setDataSources(self, dataSources):
     self.tasks[DATASENDERS].data.clear()    

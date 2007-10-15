@@ -26,7 +26,7 @@ def timeStamp():
   "Return current time as string"
   return time.ctime(time.time())
 # =============================================================================
-def log(msg, with_header=0, with_trailer=0,timestamp=0):
+def log(msg, with_header=None, with_trailer=None,timestamp=0):
   """
   Log normal message to output device.
 
@@ -38,14 +38,14 @@ def log(msg, with_header=0, with_trailer=0,timestamp=0):
   stamp = ''
   if len(logPrefix)>0: stamp = logPrefix + ' '
   if timestamp:        stamp = timeStamp() + ' '
-  if ( with_header != 0 ):
+  if ( with_header ):
     print stamp + logHeader
   if msg.__class__ == str().__class__:
     print stamp + '|  ' + msg
   else:
     for line in msg:
       print stamp + '|  ' + line
-  if ( with_trailer != 0 ):
+  if ( with_trailer ):
     print stamp + logTrailer
   sys.stdout.flush()
 # =============================================================================

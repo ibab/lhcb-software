@@ -13,7 +13,7 @@ def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ascii -
 def usage():
   print "usage: Install.py <action> -project <project-name> [-opt [-opt]]"
   print "  <action>:              Choose one of INSTALL INSTALLFILES COPYBACK"
-  print "  -project       <name>: Choose one of: STORAGE MONITORING LBECS"
+  print "  -project       <name>: Choose one of: STORAGE MONITORING LBECS RECO RECOTEST"
   print "  -install       <name>: Choose one of: JOBOPTIONS"
   print "  -componentsdir <name>: Installation directory of components"
   sys.exit(1)
@@ -72,22 +72,24 @@ def installDirectory(source_path,target_path,sub_path='',relative_path_up=None,r
     print 'Source path:',source_path
     print 'Relative difference:',relative_path_up
 
-  dir = source_path+os.sep+sub_path
+  dir = (source_path+os.sep+sub_path).replace(os.sep+os.sep,os.sep)
   dirs = os.listdir(dir)
   os.system('mkdir -p '+target_path+os.sep+sub_path)
   os.chdir(target_path+os.sep+sub_path)
-  print '\n-----> %s'%os.getcwd()
+  #print '\n-----> %s'%os.getcwd()
+  print '\n-----> %s'%dir
   for d in dirs:
-    if os.path.isdir(dir+os.sep+d):
-      if d != 'CVS':
-        installDirectory(source_path,target_path,sub_path+os.sep+d,relative_path_up+'..'+os.sep,rel_install_path)
-    else:
+    if not os.path.isdir(dir+os.sep+d):
       src = relative_path_up+rel_install_path+sub_path
       cmd = 'ln -fs '+src+os.sep+d+' '+d
       print '[Link] %-24s in %s'%(d,src)
       os.stat(src+os.sep+d)
       os.system(cmd)
       os.stat(d)
+  for d in dirs:
+    if os.path.isdir(dir+os.sep+d):
+      if d != 'CVS':
+        installDirectory(source_path,target_path,sub_path+os.sep+d,relative_path_up+'..'+os.sep,rel_install_path)
 
 def installFiles():
   print 'Install files to directory: '+componentsDir()
@@ -127,16 +129,23 @@ def install():
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring')";""")
+    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring','"""+projectName()+"""')";""")
     print 'Executing final PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
   elif projectName()=="STORAGE":
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallStorage.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage')";""")
+    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+projectName()+"""')";""")
     print 'Executing final PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
+  elif projectName()[:4]=='RECO':
+    print 'Executing PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'InstallReco.cpp')
+    print 'Executing python setup....'
+    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Reco','"""+projectName()+"""')";""")
+    print 'Executing final PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'InstallReco2.cpp')
   elif projectName()=="LBECS":
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallJobOptions.cpp')

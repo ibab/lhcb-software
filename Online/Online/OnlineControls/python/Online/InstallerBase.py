@@ -25,8 +25,8 @@ class InstallerBase:
     wr = self.manager.devWriter()
     for i in self.dps: wr.add(i)
     if wr.execute(1,1):
-      Online.Utils.log(prefix+'All DPs successfully created.')
+      Online.Utils.log(prefix+'All DPs successfully created.',timestamp=1)
     else:
-      Online.Utils.error(prefix+'Failed to set DP values.')
+      Online.Utils.error(prefix+'Failed to set DP values.',timestamp=1)
     self.dps.clear()
     return self

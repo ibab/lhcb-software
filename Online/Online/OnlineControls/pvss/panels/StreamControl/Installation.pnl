@@ -3,10 +3,11 @@ V 10
 LANG:1 15 StreamInstaller
 PANEL,-1 -1 501 609 N "_3DFace" 0
 "main()  {
-  m_streamSelect.appendItem(\"TestStorage\");
   m_streamSelect.appendItem(\"Storage\");
-  m_streamSelect.appendItem(\"TestMonitoring\");
   m_streamSelect.appendItem(\"Monitoring\");
+  m_streamSelect.appendItem(\"RecoIO\");
+  m_streamSelect.appendItem(\"TestStorage\");
+  m_streamSelect.appendItem(\"TestMonitoring\");
   m_streamSelect.selectedPos(1);
 
   m_monitoringInput.appendItem(\"TestStorage\");
@@ -23,10 +24,11 @@ PANEL,-1 -1 501 609 N "_3DFace" 0
 ""0  1
 E "#uses \"StreamControlPanel.cpp\"
 #uses \"StreamTaskMgr.cpp\"
+#uses \"ctrlUtils.cpp\"
 " 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -71,7 +73,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 23 Install datapoint types
-"main()  {  StreamControlPanel_install();  }" 0
+"main()  {  StreamTaskMgr_install();  }" 0
  E E E
 13 2
 "m_uninstallStreamControlTypes"
@@ -93,7 +95,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 22 Delete datapoint types
-"main()  {  StreamControlPanel_uninstall();    }" 0
+"main()  {  StreamTaskMgr_uninstall();    }" 0
  E E E
 30 9
 "FRAME2"
@@ -114,50 +116,6 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 0 ""
 1
 LANG:1 29 StreamTask Manager Data Types
-13 10
-"m_installStreamTaskMgrTypes"
-""
-1 19.99999999999974 269.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
- E E
-15 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 17.99999999999974 267.9999999999998 152 291.9999999999998
-
-T 
-1
-LANG:1 23 Install datapoint types
-"main()  {  StreamTaskMgr_install();  }" 0
- E E E
-13 11
-"m_uninstallStreamTaskMgrTypes"
-""
-1 19.99999999999974 299.9999999999998 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
- E E
-17 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 17.99999999999974 297.9999999999998 152 321.9999999999998
-
-T 
-1
-LANG:1 22 Delete datapoint types
-"main()  {  StreamTaskMgr_uninstall();    }" 0
- E E E
 13 12
 "m_streamTaskMgrDeleteTree"
 ""
@@ -206,10 +164,8 @@ LANG:1 11 Create Tree
     DebugN(\"Monitoring:\"+isMonitoring+\" Input:\"+m_monitoringInput.selectedText+\" \"+m_monitoringClass1.text);
     StreamTaskMgr_createTree(m_streamSelect.selectedText,
                              m_streamTaskMgrTreeName.text,
-                             m_num_recvClass0.text,
-                             m_num_recvClass1.text,
-                             m_num_strmClass0.text,
-                             m_num_strmClass1.text,
+                             m_num_recvTasks.text,
+                             m_num_strmTasks.text,
                              m_monitoringInput.selectedText,
                              m_monitoringClass1.text
                              );  
@@ -217,10 +173,8 @@ LANG:1 11 Create Tree
   else {
     StreamTaskMgr_createTree(m_streamSelect.selectedText,
                              m_streamTaskMgrTreeName.text,
-                             m_num_recvClass0.text,
-                             m_num_recvClass1.text,
-                             m_num_strmClass0.text,
-                             m_num_strmClass1.text,
+                             m_num_recvTasks.text,
+                             m_num_strmTasks.text,
                              \"\",0
                              );  
   }
@@ -421,20 +375,16 @@ LANG:1 17 Create All Slices
   if ( isMonitoring )  {
     DebugN(\"Monitoring:\"+isMonitoring+\" Input:\"+m_monitoringInput.selectedText+\" \"+m_monitoringClass1.text);
     StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
-                                m_num_recvClass0.text,
-                                m_num_recvClass1.text,
-                                m_num_strmClass0.text,
-                                m_num_strmClass1.text,
+                                m_num_recvTasks.text,
+                                m_num_strmTasks.text,
                                 m_monitoringInput.selectedText,
                                 m_monitoringClass1.text
                              );  
   }
   else {
     StreamTaskMgr_createAllTree(m_streamSelect.selectedText,
-                                m_num_recvClass0.text,
-                                m_num_recvClass1.text,
-                                m_num_strmClass0.text,
-                                m_num_strmClass1.text,
+                                m_num_recvTasks.text,
+                                m_num_strmTasks.text,
                                 \"\",0
                                 );  
   }
@@ -460,7 +410,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 16 Generate All FSM
-"main() {  StreamTaskMgr_genAllFSM(m_streamSelect.selectedText);  }" 0
+"main() {  ctrlUtils_genAllFSM(m_streamSelect.selectedText);  }" 0
  E E E
 13 26
 "PUSH_BUTTON11"
@@ -482,7 +432,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 12 Start Slices
-"main() {  StreamTaskMgr_startAllTree(m_streamSelect.selectedText);  }" 0
+"main() {  ctrlUtils_startAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 27
 "PUSH_BUTTON12"
@@ -504,12 +454,12 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 11 Stop Slices
-"main() {  StreamTaskMgr_stopAllTree(m_streamSelect.selectedText);  }" 0
+"main() {  ctrlUtils_stopAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 28
 "PUSH_BUTTON13"
 ""
-1 160 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 45 0 0 0 0 0
 E E E
@@ -521,7 +471,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 158 268 252 292
+ 18 268 112 292
 
 T 
 1
@@ -531,7 +481,7 @@ LANG:1 14 Install Stream
 13 29
 "PUSH_BUTTON14"
 ""
-1 160 300.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 20 300.0000000000002 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 47 0 0 0 0 0
 E E E
@@ -543,7 +493,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 158 298.0000000000002 252 322.0000000000002
+ 18 298.0000000000002 112 322.0000000000002
 
 T 
 1
@@ -570,7 +520,7 @@ LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,
 T 
 1
 LANG:1 17 Delete All Slices
-"main() {  StreamTaskMgr_deleteAllTree(m_streamSelect.selectedText);  }" 0
+"main() {  ctrlUtils_deleteAllTree(m_streamSelect.selectedText);  }" 0
  E E E
 13 31
 "PUSH_BUTTON16"
@@ -607,17 +557,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 20 150 119 168
+E E 0 1 1 2 1 E U  1 E 20 150 118 165
 0 2 2 "0s" 0 0 0 192 0 0  20 150 1
 1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 16 Receiving Layer:
 2 35
 "PRIMITIVE_TEXT4"
 ""
-1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 260 0 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 57 0 0 0 0 0
 E E E
@@ -627,60 +577,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 20 210 122 228
-0 2 2 "0s" 0 0 0 192 0 0  20 210 1
+E E 0 1 1 2 1 E U  1 E 20 180 121 195
+0 2 2 "0s" 0 0 0 192 0 0  20 180 1
 1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 16 Streaming Layer:
-21 36
-"m_num_recvClass0"
-""
-1 294 141 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-59 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 292 139 336 163
-0
-
-E
-E
-E
-
-N 0 100 1 5 1 1
-2 37
-"PRIMITIVE_TEXT5"
-""
-1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-61 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 184 142 282 160
-0 2 2 "0s" 0 0 0 192 0 0  184 142 1
-1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
-0 ""
-1
-LANG:1 16 # Class 0 Tasks:
 21 38
-"m_num_recvClass1"
+"m_num_recvTasks"
 ""
-1 294 171 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 222 152 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 63 0 0 0 0 0
 E E E
@@ -690,9 +597,9 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 292 169 336 193
+ 220 150 264 174
 0
 
 E
@@ -703,7 +610,7 @@ N 0 100 1 40 1 1
 2 39
 "PRIMITIVE_TEXT6"
 ""
-1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 218 12 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 65 0 0 0 0 0
 E E E
@@ -713,60 +620,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 184 170 282 188
-0 2 2 "0s" 0 0 0 192 0 0  184 170 1
+E E 0 1 1 2 1 E U  1 E 142 152 209 167
+0 2 2 "0s" 0 0 0 192 0 0  142 152 1
 1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 # Class 1 Tasks:
-21 40
-"m_num_strmClass0"
-""
-1 294 201 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-67 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 292 199 336 223
-0
-
-E
-E
-E
-
-N 0 100 1 5 1 1
-2 41
-"PRIMITIVE_TEXT7"
-""
-1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-69 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 182 202 280 220
-0 2 2 "0s" 0 0 0 192 0 0  182 202 1
-1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
-0 ""
-1
-LANG:1 16 # Class 0 Tasks:
+LANG:1 11 # of Tasks:
 21 42
-"m_num_strmClass1"
+"m_num_strmTasks"
 ""
-1 294 230 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 222 182 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 71 0 0 0 0 0
 E E E
@@ -776,9 +640,9 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 292 228 336 252
+ 220 180 264 204
 0
 
 E
@@ -789,7 +653,7 @@ N 0 100 1 15 1 1
 2 43
 "PRIMITIVE_TEXT8"
 ""
-1 260 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 222 -16 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 73 0 0 0 0 0
 E E E
@@ -799,13 +663,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 182 230 280 248
-0 2 2 "0s" 0 0 0 192 0 0  182 230 1
+E E 0 1 1 2 1 E U  1 E 144 184 211 199
+0 2 2 "0s" 0 0 0 192 0 0  144 184 1
 1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 # Class 1 Tasks:
+LANG:1 11 # of Tasks:
 20 44
 "m_isMonitoring"
 ""
@@ -912,17 +776,17 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 172 402.0000000000002 270 420
+E E 0 1 1 2 1 E U  1 E 172 402.0000000000002 239 417
 0 2 2 "0s" 0 0 0 192 0 0  172 402.0000000000002 1
 1
-LANG:1 108 -*-Bitstream Charter-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Charter
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 # Class 1 Tasks:
+LANG:1 11 # of Tasks:
 13 50
 "PUSH_BUTTON17"
 ""
-1 260 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 120 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 85 0 0 0 0 0
 E E E
@@ -934,7 +798,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 258 268 352 292
+ 118 268 212 292
 
 T 
 1
@@ -944,7 +808,7 @@ LANG:1 12 Generate FSM
 13 51
 "PUSH_BUTTON18"
 ""
-1 260 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 120 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 87 0 0 0 0 0
 E E E
@@ -956,7 +820,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 258 298 302 322
+ 118 298 162 322
 
 T 
 1
@@ -966,7 +830,7 @@ LANG:1 5 Start
 13 52
 "PUSH_BUTTON19"
 ""
-1 310 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 170 300 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 89 0 0 0 0 0
 E E E
@@ -978,7 +842,7 @@ LANG:1 0
 1
 LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
 0 ""
- 308 298 352 322
+ 168 298 212 322
 
 T 
 1

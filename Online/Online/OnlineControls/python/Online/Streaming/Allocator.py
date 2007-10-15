@@ -70,7 +70,7 @@ class FSMmanip:
     self.cmds    = self._tskLookup('FMC_Start',tsk_typ)
     self.slots = {}
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'_'+match),tsk_typ)
+    obj.lookupOriginal(self.name+'_'+match,tsk_typ)
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]
@@ -89,13 +89,13 @@ class FSMmanip:
   # ===========================================================================
   def _fsmLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'|'+self.name+'_'+self.match+'.'+dp),type)
+    obj.lookupOriginal(self.name+'|'+self.name+'_'+self.match+'.'+dp,type)
     return obj
   
   # ===========================================================================
   def _tskLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
-    obj.lookup(DataPoint.original(self.name+'_'+self.match+'.'+dp),type)
+    obj.lookupOriginal(self.name+'_'+self.match+'.'+dp,type)
     return obj
   
   # ===========================================================================
@@ -353,6 +353,7 @@ class Allocator(StreamingDescriptor):
     self.recvAllocationPolicy = policy[0]
     self.strmAllocationPolicy = policy[1]
     self.infoInterface        = info_interface
+    self.fsmManip             = FSMmanip
     log('Now WITH sleeping enabled after "configure"....',timestamp=1)
 
   # ===========================================================================
@@ -493,6 +494,7 @@ class Allocator(StreamingDescriptor):
       self.writer.add(part_info.datapoints[PartitionInfo.STRMSLICES])
       if self.writer.execute():
         return part_info
+    error('Failed to allocate partition:'+partition+' RunDP:'+rundp_name,timestamp=1)
     return None
   
   # ===========================================================================
@@ -528,7 +530,7 @@ class Allocator(StreamingDescriptor):
     if part_info is not None:   # Allocation was successful: Now update Info table+tasks
       return part_info.name
     self.free(rundp_name,partition)
-    error('Failed to allocate slots of type:'+self.name+' for partition:'+partition)
+    error('Failed to allocate slots of type:'+self.name+' for partition:'+partition,timestamp=1)
     return None
 
   # ===========================================================================
@@ -546,7 +548,7 @@ class Allocator(StreamingDescriptor):
     part_info = PartitionInfo.PartitionInfo(self.manager,slice).load()
     tasks = info_obj.defineTasks(part_info)
     if tasks:
-      fsm_manip = FSMmanip(part_info,'_FwFsmDevice',match='*')
+      fsm_manip = self.fsmManip(part_info,'_FwFsmDevice',match='*')
       fsm_manip.collectTaskSlots()
       fsm_manip.reset()
       if fsm_manip.allocateProcesses(tasks) is None:
@@ -559,7 +561,7 @@ class Allocator(StreamingDescriptor):
       log('Now sleeping....',timestamp=1)
       time.sleep(10)
       return part_info.name
-    error('Failed to allocate slots of type:'+self.name+' for partition:'+partition)
+    error('Failed to configure slots of type:'+self.name+' for partition:'+partition,timestamp=1)
     return None
   
   # ===========================================================================
@@ -604,7 +606,7 @@ class Allocator(StreamingDescriptor):
   def showSummary(self, extended=None):
     actor = PVSS.DpVectorActor(self.manager)
     typ   = self.manager.typeMgr().type('StreamPartition')
-    actor.lookup(DataPoint.original(self.name+'_Slice*.Name'),typ)
+    actor.lookupOriginal(self.name+'_Slice*.Name',typ)
     partitions = []
     log('Stream Control contains a total of '+str(len(actor.container))+' partitions',timestamp=1)
     for i in xrange(len(actor.container)):

@@ -80,6 +80,7 @@ cd ${ONLINECONTROLSROOT}/pvss
 #
 checkFiles ${PVSS_PROJECT_BASE} scripts *.cpp
 checkFiles ${PVSS_PROJECT_BASE} scripts/libs *.cpp
+checkFiles ${PVSS_PROJECT_BASE} panels/Reco *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/JobOptions *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/StreamControl *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/fwFSMuser *.pnl

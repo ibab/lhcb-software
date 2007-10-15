@@ -32,6 +32,7 @@ PANEL,-1 -1 636 357 N "_3DFace" 0
  E E E E 1 0 0 0  0 0
 ""0  1
 E "#uses \"pmon.ctl\"
+#uses \"ctrlUtils.cpp\"
 #uses \"JobOptions.cpp\"
 #uses \"fwInstallation.ctl\"
 int jo_editType = 0;
@@ -41,8 +42,8 @@ void _p1()  {}// DebugN(\"Panel EditType after call:\"+jo_editType);            
 void __t() {}
 " 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -620,9 +621,9 @@ T
 1
 LANG:1 30 Install STORAGE Stream Manager
 "main()   {  
-  JobOptions_installManager(m_storageOptsNumber.text,
-                            m_storageOptsName.text,
-                            m_storageOptsScript.text); 
+  ctrlUtils_installPythonManager(m_storageOptsNumber.text,
+                                 m_storageOptsName.text,
+                                 m_storageOptsScript.text); 
 }
 " 0
  E E E
@@ -841,9 +842,9 @@ T
 1
 LANG:1 33 Install MONITORING Stream Manager
 "main()   {  
-  JobOptions_installManager(m_monitoringOptsNumber.text,
-                            m_monitoringOptsName.text,
-                            m_monitoringOptsScript.text); 
+  ctrlUtils_installPythonManager(m_monitoringOptsNumber.text,
+                                 m_monitoringOptsName.text,
+                                 m_monitoringOptsScript.text); 
 }
 " 0
  E E E
@@ -1128,9 +1129,9 @@ T
 1
 LANG:1 27 Install HLT Options Manager
 "main()   {  
-  JobOptions_installManager(m_hltOptsNumber.text,
-                            m_hltOptsName.text,
-                            m_hltOptsScript.text); 
+  ctrlUtils_installPythonManager(m_hltOptsNumber.text,
+                                 m_hltOptsName.text,
+                                 m_hltOptsScript.text); 
 }
 " 0
  E E E

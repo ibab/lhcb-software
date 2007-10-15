@@ -77,8 +77,8 @@ def DataPoint_set(self,value):
   try:
     if isinstance(value,list) or isinstance(value,tuple):
       if len(value) > 0:
-        traceback.print_stack()
-        print 'DataPoint_set_item:',value.__class__,value[0].__class__
+        #traceback.print_stack()
+        #print 'DataPoint_set_item:',value.__class__,value[0].__class__
         if isinstance(value[0],int):
           v = gbl.std.vector('int')()
           for i in value: v.push_back(i)
@@ -386,3 +386,27 @@ class CommandListener(PyDeviceListener):
       error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
       traceback.print_exc()
     return 0
+
+# =============================================================================
+class Container:
+  # ===========================================================================
+  def __init__(self,manager,name):
+    self.name       = name
+    self.manager    = manager
+    self.datapoints = Online.PVSS.DataPointVector()
+    
+  # ===========================================================================
+  def dp(self,name):
+    return DataPoint(self.manager,DataPoint.original(self.name+'.'+name))
+
+  # ===========================================================================
+  def clear(self):
+    "Clear internal datapoint cache"
+    self.datapoints.clear()
+    
+  # ===========================================================================
+  def set(self, dp, value):
+    "Set datapoint value in storage definition"
+    self.datapoints.push_back(self.dp(dp))
+    self.datapoints.back().data = value
+    return self

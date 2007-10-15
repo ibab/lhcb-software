@@ -32,13 +32,14 @@ def findPartition(manager,name,partition):
   actor = PVSS.DpVectorActor(manager)
   typ   = manager.typeMgr().type('StreamPartition')
   rdr   = manager.devReader()
-  actor.lookup(DataPoint.original(name+'_Slice*.Name'),typ)
+  actor.lookupOriginal(name+'_Slice*.Name',typ)
   for i in actor.container: rdr.add(i)
   if rdr.execute():
     for i in actor.container:
       nam = i.name()
       nam = nam[nam.find(':')+1:nam.find('.')]
       id  = int(nam[len(nam)-2:],16)
+      # print i.data,partition
       if i.data == partition:
         return (i.name(), nam, id)
     return None

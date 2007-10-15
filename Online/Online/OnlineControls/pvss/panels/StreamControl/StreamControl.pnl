@@ -10,25 +10,37 @@ PANEL,-1 -1 472 339 N "_3DFace" 2
 void StreamControlPanel_updatePartitionDisplay(string stream)  {
   dyn_string cols = makeDynString(\"Slice\",\"Used\",\"RNodes,\",\"RSlots\",\"SNodes\",\"SSlots\");
   dyn_dyn_string rcvSlots, strmSlots, rcvNodes, strmNodes;
-  dyn_string names;
+  dyn_string items, names;
   dyn_int    used;
+  int stat = -1, res = -1;
+  items = dpNames(stream+\"_Slice??.InUse\",\"StreamPartition\");
   DebugN(\"StreamControlPanel_updatePartitionDisplay> Read data from \"+stream);
-  int res = res = dpGet(dpNames(stream+\"_Slice*.InUse\",\"StreamPartition\"),used);
-  if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.Name\",\"StreamPartition\"),names);
-  if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.RecvNodes\",\"StreamPartition\"),rcvNodes);
-  if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.StreamNodes\",\"StreamPartition\"),strmNodes);
-  if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.RecvSlices\",\"StreamPartition\"),rcvSlots);
-  if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice*.StreamSlices\",\"StreamPartition\"),strmSlots);
+  if ( dynlen(items)<=0 )   {
+    res = dpGet(dpNames(stream+\"_Slice??.InUse\"),used);
+    if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice??.Name\"),names);
+  }
+  else {
+    res = dpGet(items,used);
+    if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice??.Name\",\"StreamPartition\"),names);
+    if ( 0 == res ) stat = dpGet(dpNames(stream+\"_Slice??.RecvNodes\",\"StreamPartition\"),rcvNodes);
+    if ( 0 == stat ) stat = dpGet(dpNames(stream+\"_Slice??.StreamNodes\",\"StreamPartition\"),strmNodes);
+    if ( 0 == stat ) stat = dpGet(dpNames(stream+\"_Slice??.RecvSlices\",\"StreamPartition\"),rcvSlots);
+    if ( 0 == stat ) stat = dpGet(dpNames(stream+\"_Slice??.StreamSlices\",\"StreamPartition\"),strmSlots);
+  }
+  DebugN(\"StreamControlPanel_updatePartitionDisplay> Read data from \"+stream);
   if ( 0 == res )  {
     for(int i=1; i<=dynlen(used); i++) {
       if ( used[i] == 1 )  {
         m_table.cellValueRC(i-1,cols[2],names[i]);
-        m_table.cellValueRC(i-1,cols[3],dynlen(rcvNodes[i]));
-        m_table.cellValueRC(i-1,cols[4],dynlen(rcvSlots[i]));
-        m_table.cellValueRC(i-1,cols[5],dynlen(strmNodes[i]));
-        m_table.cellValueRC(i-1,cols[6],dynlen(strmSlots[i]));
+        if ( 0 == stat ) {
+          m_table.cellValueRC(i-1,cols[3],dynlen(rcvNodes[i]));
+          m_table.cellValueRC(i-1,cols[4],dynlen(rcvSlots[i]));
+          m_table.cellValueRC(i-1,cols[5],dynlen(strmNodes[i]));
+          m_table.cellValueRC(i-1,cols[6],dynlen(strmSlots[i]));
+        }
         m_table.cellBackColRC(i-1,cols[1],\"{255,255,0}\");
         m_table.cellBackColRC(i-1,cols[2],\"{255,255,0}\");
+        m_table.cellForeColRC(i-1,cols[1],\"{0,0,0}\");
         m_table.cellForeColRC(i-1,cols[2],\"{0,0,0}\");
       }
       else  {
@@ -39,6 +51,7 @@ void StreamControlPanel_updatePartitionDisplay(string stream)  {
         m_table.cellValueRC(i-1,cols[6],\"\");
         m_table.cellBackColRC(i-1,cols[1],\"{255,255,255}\");
         m_table.cellBackColRC(i-1,cols[2],\"{0,150,50}\");
+        m_table.cellForeColRC(i-1,cols[1],\"{0,0,0}\");
         m_table.cellForeColRC(i-1,cols[2],\"{255,255,255}\");
       }
     }
@@ -49,8 +62,12 @@ void StreamControlPanel_updatePartitionDisplay(string stream)  {
 
 void StreamControlPanel_initPartitionDisplay(string stream)  {
   dyn_string cols = makeDynString(\"Slice\",\"Used\",\"RNodes,\",\"RSlots\",\"SNodes\",\"SSlots\");
-  dyn_string values = dpNames(stream+\"_Slice*.InUse\",\"StreamPartition\");
+  dyn_string values = dpNames(stream+\"_Slice??.InUse\",\"StreamPartition\");
   string font = \"Arial,8,-1,5,50,0,0,0,0,0\";
+  if ( dynlen(values)<=0 )   {
+    values = dpNames(stream+\"_Slice??.InUse\");
+    m_table.enabled = 0;
+  }
   m_table.font = font;
   m_table.rowHeight = 15;
   m_table.deleteAllLines();
@@ -106,8 +123,8 @@ main()  {
 E "#uses \"StreamControlPanel.cpp\"
 #uses \"JobOptions.cpp\"" 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 

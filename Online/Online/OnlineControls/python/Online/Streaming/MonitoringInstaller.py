@@ -85,8 +85,8 @@ class Installer(InstallerBase):
     return self.write(prefix='StreamControl('+self.name+'): ')
 
 # =============================================================================
-def install(name):
-  c = Systems.controlsMgr(Params.monitor_system_name)
+def install(name,system=Params.monitor_system_name):
+  c = Systems.controlsMgr(system)
   inst = Installer(c,name).create()
   return c
 
