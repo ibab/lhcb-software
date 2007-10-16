@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.8 2007-10-09 08:51:53 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.9 2007-10-16 12:16:10 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(std::string Identifier,
@@ -121,6 +121,8 @@ bool OnlineRootHist::saveTH1ToDB() {
     out &=m_dbHist->setDisplayOption("LINECOLOR", &iopt);
     iopt=(int) m_rootHist->GetLineWidth();
     out &=m_dbHist->setDisplayOption("LINEWIDTH", &iopt);
+    sopt = m_rootHist->GetDrawOption();
+    out &=m_dbHist->setDisplayOption("DRAWOPTS",  &sopt);
   }
   return out;
 }
@@ -166,25 +168,15 @@ bool OnlineRootHist::setDisplayOption(std::string ParameterName,
 }
 
 
-void OnlineRootHist::Draw(Option_t* option) {
+void OnlineRootHist::Draw() {
   if(m_rootHist) {
+    std::string option="";
+    if(m_dbHist){
+      m_dbHist->getDisplayOption("DRAWOPTS",     &option);
+     }
     setDrawOptionsFromDB();
-    m_rootHist->Draw(option);
+    m_rootHist->Draw(option.c_str());
   }
-}
-void OnlineRootHist::DrawPanel() {
-  if(m_rootHist) {
-    setDrawOptionsFromDB();
-    m_rootHist->DrawPanel();
-  }
-}
-TH1* OnlineRootHist::myDrawCopy(Option_t* option) {
-  TH1* outh=NULL;
-  if(m_rootHist) {
-    setDrawOptionsFromDB();
-    outh= m_rootHist->DrawCopy(option);
-  }
-  return outh;
 }
 
 

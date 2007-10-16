@@ -43,6 +43,7 @@ create or replace package OnlineHistDB as
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
 
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
+ function GetName(theHID IN varchar2) return varchar2;
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
@@ -50,6 +51,7 @@ create or replace package OnlineHistDB as
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
                                   theSources sourceh := NULL, thePars IN thresholds := thresholds());
+ procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist);
  function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2;
  function DeclarePageFolder(theFolder IN varchar2) return varchar2;
  function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotlist,
@@ -67,7 +69,8 @@ create or replace package OnlineHistDB as
 	return number;
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
- procedure CheckSchema(dbschema int := 0);
+ procedure CheckSchema(dbschema IN int := 0); 
+ procedure CheckSchema(dbschema IN int := 0, algListID OUT int);
  procedure mycommit(dbschema int := 0);
 end OnlineHistDB;
 /
@@ -227,8 +230,20 @@ begin
  close myh;
  return out;
 end GetHID;
+-----------------------
+
+function GetName(theHID IN varchar2) return varchar2 is
+ cursor myn is select NAME from VIEWHISTOGRAM where HID=theHID;
+ out varchar2(500);
+begin
+ open myn;
+ fetch myn into out;
+ close myn;
+ return out;
+end GetName;
 
 -----------------------
+
 procedure DeclareSubSystem(subsys varchar2) is
  cursor cs is  select SSName from SUBSYSTEM where SSName=subsys;
  myssname SUBSYSTEM.SSNAME%TYPE;
@@ -895,23 +910,33 @@ begin
    raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
  end if;
  close al;
+ -- check that input histograms and parameters are correct
+ if (algonh = 0) then
+   if (theSet = 0) then
+     raise_application_error(-20012,'Algorithm '||TheAlg||' requires an Histogram Set as input');
+   end if;
+ else
+   if (theSources.COUNT != algonh) then
+      raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonh||' input histograms and you provided '||theSources.COUNT);
+   end if;
+ end if;
+ if (algonp != thePars.COUNT) then
+   raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters');
+ end if;
+ if (myhctype = 'SAM') then -- take type from source
+  if (algonh >0) then
+    select HSTYPE into myhctype from VIEWHISTOGRAM where HID=theSources(1);
+  else
+    select HSTYPE into myhctype from VIEWHISTOGRAM where HID=theSet||'/1';
+  end if;
+ end if;
+
+
+
  -- CHECK IF THE HISTOGRAM IS ALREADY DEFINED
  open histo;
  fetch histo into myhsid;
  if (histo%NOTFOUND) then
-  -- check that input histograms and parameters are correct
-  if (algonh = 0) then
-    if (theSet = 0) then
-      raise_application_error(-20012,'Algorithm '||TheAlg||' requires an Histogram Set as input');
-    end if;
-  else
-    if (theSources.COUNT != algonh) then
-       raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonh||' input histograms and you provided '||theSources.COUNT);
-    end if;
-  end if;
-  if (algonp != thePars.COUNT) then
-    raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters');
-  end if;
   -- create histogram entry
   INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) VALUES(HistogramSet_ID.NEXTVAL,1,'ANALYSIS',theAlg,theTitle,myhctype);
   INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION,ISANALYSISHIST) VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,'',SYSTIMESTAMP,1);
@@ -938,6 +963,60 @@ exception
   ROLLBACK TO beforeHCwrite;
   raise_application_error(-20050,SQLERRM);
 end DeclareAnalysisHistogram;
+
+-----------------------
+procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist) is
+ cursor myHC is select ALGORITHM,SOURCEH1,SOURCEH2,SOURCEH3,SOURCEH4,SOURCEH5,SOURCEH6,SOURCEH7,SOURCEH8,SOURCESET,HCPARS
+    from HCREATOR where HCID=theHCID;
+ cursor myhh(Xset int) is select NAME from VIEWHISTOGRAM where HSID=Xset;
+ Npar int;
+ Ninp int;
+ myalg HCREATOR.ALGORITHM%TYPE;
+ sh sourceh := sourceh();
+ mypars thresholds ;
+ i int;
+begin
+ sh.EXTEND(8);
+ open myHC;
+ fetch myHC into myalg,sh(1),sh(2),sh(3),sh(4),sh(5),sh(6),sh(7),sh(8),Sset,mypars;
+ if(myHC%NOTFOUND) then
+  Alg := '';
+  Sset := 0;
+  Sources := hnalist();
+  Pars := flolist();
+   raise_application_error(-20005,'Histogram '||theHCID||' not an analysis histogram');
+ else
+  Alg := myalg;
+  GetAlgoNpar(myalg, Npar, Ninp);
+  Sources := hnalist();
+  if (Ninp = 0) then -- get sources from set
+   if (Sset >0) then
+    select count(*) into Ninp from VIEWHISTOGRAM where HSID=Sset;
+    Sources.EXTEND(Ninp);
+    i := 1;
+    for hset in myhh(Sset) LOOP
+     if (i <= 100) then 
+       Sources(i) := hset.NAME ;
+       i := i+1;
+     end if;
+    end LOOP; 
+   end if;
+  else
+   Sources.EXTEND(Ninp);
+   for i IN 1..Ninp LOOP
+    Sources(i) := GetName(sh(i));
+   end LOOP; 
+  end if;
+
+  Pars := flolist();
+  Pars.EXTEND(Npar);
+  for i IN 1..Npar LOOP
+   Pars(i) := mypars(i);
+  end LOOP; 
+ end if;
+ close myHC;
+end GetAnaHistDirections;
+
 
 -----------------------
 function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2 is
@@ -1091,11 +1170,14 @@ end GetPage;
 -----------------------
 
 function DeletePage(thePage IN varchar2) return number is
+ myFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+ myPage PAGE.PAGENAME%TYPE;
 begin
  savepoint beforePAGEdelete;
- delete from displayoptions where doid in (select sdisplay from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage);
- delete from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=thePage;
- delete from page where PAGEFULLNAME(PAGENAME,FOLDER)=thePage;
+ myPage := PagenameSyntax(thePage, myFolder);
+ delete from displayoptions where doid in (select sdisplay from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=myPage);
+ delete from showhisto where PAGEFULLNAME(PAGE,PAGEFOLDER)=myPage;
+ delete from page where PAGEFULLNAME(PAGENAME,FOLDER)=myPage;
  return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)	
 EXCEPTION
  when OTHERS then
@@ -1163,7 +1245,7 @@ begin
   EXIT WHEN vh%NOTFOUND;
   np := HistogramPages(myhid, PageNames); -- check if histogram is on a page
   if (np > 0) then
-   raise_application_error(-20005,'Histogram '||myhid||' is on pages --'||PageNames||'-- and cannot be removed');
+   raise_application_error(-20005,'Histogram '||GetName(myhid)||' is on pages --'||PageNames||'-- and cannot be removed');
   end if;
  end LOOP;
  close vh;
@@ -1195,7 +1277,7 @@ begin
  else
   np := HistogramPages(theHID, PageNames); -- check if histogram is on a page
   if (np > 0) then
-   raise_application_error(-20005,'Histogram '||theHID||' is on pages --'||PageNames||'-- and cannot be removed');
+   raise_application_error(-20005,'Histogram '||GetName(theHID)||' is on pages --'||PageNames||'-- and cannot be removed');
   end if;
   delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HID=theHID);
   if (mynhs = 1) then
@@ -1213,12 +1295,20 @@ EXCEPTION
   raise_application_error(-20050,SQLERRM); 
 end DeleteHistogram;
 -----------------------------------
+procedure CheckSchema(dbschema IN int := 0) is -- for backward compatibility
+ algListID int;
+begin
+ CheckSchema(dbschema, algListID);
+end CheckSchema;
 
-procedure CheckSchema(dbschema int := 0) is
+-----------------------
+procedure CheckSchema(dbschema IN int := 0, algListID OUT int) is
  curschema ERGOSUM.version%TYPE;
  curapi ERGOSUM.apiversion%TYPE;
+ curalglist ERGOSUM.ALGLIST%TYPE;
 begin
- SELECT version,apiversion into curschema,curapi  from ERGOSUM;
+ SELECT version,apiversion,alglist into curschema,curapi,curalglist  from ERGOSUM;
+ algListID := curalglist;
  if (dbschema != curschema) then
    rollback;
    raise_application_error(-20999,'
@@ -1232,8 +1322,9 @@ end CheckSchema;
 
 -----------------------
 procedure mycommit(dbschema int := 0) is
+alglist ERGOSUM.ALGLIST%TYPE;
 begin
- CheckSchema(dbschema);
+ CheckSchema(dbschema,alglist);
  commit;
 end mycommit;
 

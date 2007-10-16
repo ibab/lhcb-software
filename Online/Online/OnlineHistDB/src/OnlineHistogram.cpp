@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.14 2007-10-02 15:27:28 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -13,8 +13,9 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
 				 std::string Page,
 				 int Instance) :
   OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
-  m_page(Page), m_instance(Instance),
+  m_page(Page), m_instance(Instance), SourceSet(0),
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
+    
     if (m_page  != "_NONE_") {
       if (!verifyPage(m_page,Instance)) {
 	m_page = "_NONE_";
@@ -189,10 +190,15 @@ void OnlineHistogram::load() {
       m_conn->terminateStatement (query);
     } // end of analysis part
     
+    
+
     // display options
     createDisplayOptions();
   }
 }
+
+
+
 
 void OnlineHistogram::createDisplayOptions() {
   if(!m_DOinit) {
@@ -223,6 +229,33 @@ void OnlineHistogram::createDisplayOptions() {
   }
   if(!m_DOinit) m_InitDOmode=m_domode;
   m_DOinit=true;
+}
+
+
+bool OnlineHistogram::loadCreationDirections() {
+  bool out = false;
+  if(m_isAnaHist) { 
+    Statement *query = m_conn->createStatement
+      ("begin OnlineHistDB.GetAnaHistDirections(theHCID=> :1,Alg => :2,Sset => :3, Sources => :4, Pars =>:5 ); end;");
+    try{
+      query->setString(1, m_hid);
+      query->registerOutParam(2, OCCISTRING,30);
+      query->registerOutParam(3, OCCIINT);
+      query->registerOutParam(4, OCCIVECTOR, 0,m_user+".HNALIST");
+      query->registerOutParam(5, OCCIVECTOR, 0,m_user+".FLOLIST");
+      query->execute();
+      CreationAlgorithm=query->getString(2);
+      SourceSet=query->getInt(3);
+      getVector(query, 4, Sources);
+      getVector(query, 5, SourcePar);
+    }catch(SQLException ex)
+      {
+	dumpError(ex,"OnlineHistogram::loadCreationDirections");
+      }
+    m_conn->terminateStatement (query);
+    out = true;    
+  }
+  return out;
 }
 
 
@@ -1080,6 +1113,29 @@ int OnlineHistogram::formatThresholds(std::string* Algorithm,
   return Np;
 }
 
+bool OnlineHistogram::getCreationDirections(std::string &Algorithm,
+					    std::vector<std::string> &source_list,
+					    std::vector<float> &parameters) {
+  bool out = false;
+  if (m_isAnaHist) { 
+    if (loadCreationDirections()) {
+      Algorithm = CreationAlgorithm;
+      source_list.clear();
+      if (Sources.size() > 0) 
+	source_list.insert( source_list.begin(),  
+			    Sources.begin(), Sources.end() );
+      parameters.clear();
+      if(SourcePar.size() > 0) 
+	parameters.insert( parameters.begin(),  
+			   SourcePar.begin(), SourcePar.end() );
+	
+      out = true;
+    }
+  }
+  return out;
+}
+
+
 int OnlineHistogram::declareAnalysis(std::string Algorithm, 
 				     std::vector<float>* warningThr, 
 				     std::vector<float>* alarmThr, 
@@ -1163,15 +1219,18 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
   bool out=true;
   int Np=algNpars(0,&AnaID);
   if (Np>0) { 
-    if (0 == warn || 0 == alarm || 
-	warn->size() != (unsigned int)Np || 
-	alarm->size() != (unsigned int)Np) {
+    if (0 == warn || 0 == alarm) {
       cout<<"Error in OnlineHistogram::getAnaSettings : Analysis " << AnaID;
       cout << " requires "<<Np<<" parameters"<<endl;
       Np=-1;
       out=false;
     }
+    else {
+      warn->clear();
+      alarm->clear();
+    }
   }
+  
   if (out) {
     stringstream statement;
     statement << "begin OnlineHistDB.GetAnaSettings("<<AnaID << ",'" <<
@@ -1183,8 +1242,8 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
 	astmt->registerOutParam(2, OCCIFLOAT); 
 	astmt->registerOutParam(3, OCCIFLOAT); 
 	astmt->execute();
-	warn->at(jp)=astmt->getFloat(2);
-	alarm->at(jp)=astmt->getFloat(3);
+	warn->push_back(astmt->getFloat(2));
+	alarm->push_back(astmt->getFloat(3));
       }catch(SQLException ex)
 	{
 	  dumpError(ex,"OnlineHistogram::getAnaSettings");

@@ -19,9 +19,24 @@ drop sequence Analysis_ID;
 drop sequence Displayoptions_ID;
 
 
+CREATE OR REPLACE TYPE thresholds as TABLE OF FLOAT;
+/
+CREATE OR REPLACE TYPE parameters as TABLE OF VARCHAR2(15);
+/
+CREATE OR REPLACE TYPE intlist as VARRAY(20) OF int;
+/
+CREATE OR REPLACE TYPE analist is VARRAY(20) OF varchar2(30);
+/
+CREATE OR REPLACE TYPE flolist is VARRAY(20) OF float;
+/
+CREATE OR REPLACE TYPE hnalist is VARRAY(100) OF varchar2(400);
+/
+
+
 create table ERGOSUM (
  version number(5),
- apiversion varchar2(10)
+ apiversion varchar2(10),
+ alglist number(8)
 );
 
 create table SUBSYSTEM (
@@ -123,10 +138,6 @@ create table DIMSERVICENAME (
 CREATE INDEX DSN_PHIX on DIMSERVICENAME(PUBHISTO) TABLESPACE INDX01;
 
 
-CREATE OR REPLACE TYPE thresholds as TABLE OF FLOAT;
-/
-CREATE OR REPLACE TYPE parameters as TABLE OF VARCHAR2(15);
-/
 
 create table ALGORITHM (
  ALGNAME varchar2(30) constraint AL_PK primary key 
@@ -139,10 +150,6 @@ create table ALGORITHM (
  HCTYPE varchar2(3) default NULL
 )NESTED TABLE ALGPARS STORE AS ALGPARS_STORE ;
 
-CREATE OR REPLACE TYPE intlist as VARRAY(20) OF int;
-/
-CREATE OR REPLACE TYPE analist is VARRAY(20) OF varchar2(30);
-/
 
 create table HCREATOR (
  HCID varchar2(12)  NOT NULL constraint HC_ID references HISTOGRAM(HID) ON DELETE CASCADE,

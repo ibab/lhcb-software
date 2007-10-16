@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.12 2007-10-16 12:16:09 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -64,7 +64,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// description of the algorithm.
   bool declareCheckAlgorithm(std::string Name, 
 			     int Npars, 
-			     std::string* pars=NULL, 
+			     std::vector<std::string> *pars=NULL, 
 			     std::string doc="NONE");
   /// declares to the DB an available algorithm to produce histograms at
   /// analysis time. Ninput is the number of input histograms, Npars the
@@ -74,7 +74,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			       int Ninput=0, 
 			       HistType OutputType = H1D,
 			       int Npars=0, 
-			       std::string* pars=NULL,
+			       std::vector<std::string> *pars=NULL,
 			       std::string doc="NONE");
 
   // deleting methods (handle with care!)
@@ -83,6 +83,10 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   bool removePageFolder(std::string Folder);
 
   // access methods
+  /// gets the algorithm list version
+  int getAlgListID() const {return m_AlgListID;}
+  /// sets the algorithm list version (works only for DB admin account)
+  bool setAlgListID(int algListID);
   /// gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
   int getAlgorithmNpar(std::string AlgName,
 		       int* Ninput = NULL) const;
@@ -149,6 +153,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
     OnlineTaskStorage(this), OnlineHistogramStorage(this), OnlinePageStorage(this,this) {}
   OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;}
   int m_DBschema;
+  int m_AlgListID;
   Statement *m_stmt;
   int m_nit;
   int m_maxNit;

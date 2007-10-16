@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.14 2007-10-02 15:27:28 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -15,14 +15,21 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   OnlineHistDBEnv(user),
   OnlineTaskStorage(this), OnlineHistogramStorage(this),
   OnlinePageStorage(this, this), 
-  m_DBschema(4), m_stmt(0), m_nit(0), m_maxNit(1000)
+  m_DBschema(4), m_AlgListID(-1), m_stmt(0), m_nit(0), m_maxNit(1000)
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
   // check that this API version is in sync with DB current schema
-  Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.CheckSchema(:x1); end;");
-  fstmt->setInt(1,m_DBschema);
-  fstmt->executeUpdate ();
+  Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.CheckSchema(:x1,:x2); end;");
+  try{  
+    fstmt->setInt(1,m_DBschema);
+    fstmt->registerOutParam(2, OCCIINT);
+    fstmt->execute();
+    m_AlgListID=fstmt->getInt(2); 
+  }catch(SQLException ex) {
+    dumpError(ex,"OnlineHistDB::OnlineHistDB");
+  }
+  m_conn->terminateStatement(fstmt); 
 }
 
 OnlineHistDB::~OnlineHistDB () {  
@@ -186,7 +193,7 @@ bool OnlineHistDB::sendHistBuffer() {
 
 bool OnlineHistDB::declareCheckAlgorithm(std::string Name, 
 					 int Npars, 
-					 std::string* pars, 
+					 std::vector<std::string> *pars,
 					 std::string doc) {
   bool out=true;
   stringstream statement;
@@ -205,9 +212,9 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
   try{
     astmt->setString(1, Name);
     ipar=0;
-    while (ipar++<Npars) {
-      astmt->setString(1+ipar, *pars);
-      pars++;
+    while (ipar<Npars) {
+      astmt->setString(2+ipar, pars->at(ipar) );
+      ipar++;
     }
     if (doc != "NONE") {
       astmt->setString(2+Npars,doc);
@@ -227,7 +234,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
 					   int Ninput, 
 					   OnlineHistDBEnv::HistType OutputType,
 					   int Npars, 
-					   std::string* pars, 
+					   std::vector<std::string> *pars, 
 					   std::string doc) {
   bool out=true;
   stringstream statement;
@@ -246,9 +253,9 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     astmt->setString(1, Name);
     astmt->setInt(2, Ninput);
     ipar=0;
-    while (ipar++<Npars) {
-      astmt->setString(2+ipar, *pars);
-      pars++;
+    while (ipar<Npars) {
+      astmt->setString(3+ipar, pars->at(ipar) );
+      ipar++;
     }
     astmt->setString(3+Npars, OnlineHistDBEnv_constants::HistTypeName[(int)OutputType]);
     if (doc != "NONE")
@@ -265,7 +272,21 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
 
 
 
-
+bool OnlineHistDB::setAlgListID(int algListID) {
+  bool out=true;
+  Statement *astmt=m_conn->createStatement("update ERGOSUM set ALGLIST=:1");
+  try{
+    astmt->setInt(1,algListID);
+    astmt->executeUpdate();
+    m_AlgListID = algListID;
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistDB::setAlgListID");
+      out=false;
+    }
+  m_conn->terminateStatement (astmt); 
+  return out;
+}
 
 
 

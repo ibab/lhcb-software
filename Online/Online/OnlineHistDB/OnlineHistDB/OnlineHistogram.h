@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.12 2007-10-16 12:16:10 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -41,6 +41,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// histogram name
   std::string hname() const {return (m_subname == "" && m_nhs == 1) ? 
       m_hsname : m_hsname + OnlineHistDBEnv_constants::m_SetSeparator + m_subname;}
+  /// standard DB histogram title (not necessarly equal to the published ROOT title)
+  std::string htitle() const {return (m_subname == "" && m_nhs == 1) ? 
+      m_hsname : m_hsname + " " + m_subname;} 
   /// histogram set name
   std::string hsname() const {return m_hsname;}
   /// subname
@@ -133,12 +136,21 @@ class  OnlineHistogram : public OnlineHistDBEnv
 					   int Instance=-1); 
 
   // ANALYSIS OPTIONS
+  /// for analysis histogram, get the directions for creating histogram
+  bool getCreationDirections(std::string &Algorithm,
+			     std::vector<std::string> &source_list,
+			     std::vector<float> &parameters);
   /// number of analysis to be performed on the histogram set
   int nanalysis() const {return m_nanalysis;}
-  /// vector of length {\it  nanalysis}() containing the analysis internal IDs
-  const std::vector<int>& anaId() const {return m_anaId;}
-  /// vector of length {\it  nanalysis}() containing the analysis algorithm names
-  const std::vector<std::string>& anaName() const {return m_anaName;}
+  /// get analysy description as vectors of length {\it  nanalysis}() containing 
+  /// the analysis internal IDs and the analysis algorithm names
+  void getAnalyses(std::vector<int>& anaIDs,
+		   std::vector<std::string>& anaAlgs) const {
+    anaIDs.clear();    
+    anaAlgs.clear();    
+    anaIDs.insert(anaIDs.begin(),m_anaId.begin(),m_anaId.end());
+    anaAlgs.insert(anaAlgs.begin(),m_anaName.begin(),m_anaName.end());
+  }
   /// true if the histogram is produced at analysis level
   boolean isAnaHist() const {return m_isAnaHist;}
   /// declare an analysis to be performed on the histogram set. If the algorithm
@@ -167,6 +179,12 @@ class  OnlineHistogram : public OnlineHistDBEnv
 		    bool Mask=true); 
 
 
+ protected:
+  std::string CreationAlgorithm;
+  std::vector<std::string> Sources;
+  int SourceSet;
+  std::vector<float> SourcePar;
+
  private:
   // private dummy copy constructor and assignment operator 
   OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv("dummy") {}
@@ -188,6 +206,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
     void set(float value);
     void unset();
     bool isSet() { return (m_value != NULL);}     
+
   private:
     std::string m_name;
     DisplayOptionType m_type;
@@ -214,6 +233,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   std::vector<int> m_anaId;
   std::vector<std::string> m_anaName;
   boolean m_isAnaHist;
+  
   int m_creation;
   int m_obsoleteness;
   //display options
@@ -248,6 +268,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   void createDisplayOptions();
   int findAnalysis(std::string Algorithm,
 		   int instance=1);
+  bool loadCreationDirections();
 };
 
 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.12 2007-09-28 15:46:07 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.13 2007-10-16 12:16:10 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -48,9 +48,12 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
 	dumpError(ex,"OnlineHistPage::OnlineHistPage");
       }
     while ( rset->next () ) {
+      cout << "calling getHistogram "<<rset->getString(1)<< " in page "<<m_name<<
+	" ("<<rset->getInt(6)<<")"<<endl;
       OnlineHistogram* newh= m_Hstorage->getHistogram(rset->getString(1),
 						      m_name,
 						      rset->getInt(6));
+      cout<< " histogram is on page "<< newh->page() <<endl;
       newh->setDebug(debug());
       newh->setExcLevel(excLevel());
       m_h.push_back(newh);

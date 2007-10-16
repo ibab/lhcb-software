@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.8 2007-09-28 15:46:06 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.9 2007-10-16 12:16:10 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -24,11 +24,13 @@ class OnlineRootHist
   /// corresponding ROOT TH1 object
   TH1* rootHist() {return m_rootHist;}
   /// link to an existing OnlineHistogram object, returns true on success
-  bool setdbHist(OnlineHistogram*  oh);
+  virtual bool setdbHist(OnlineHistogram*  oh);
   /// link to an existing ROOT TH1 object, returns true on success
   bool setrootHist(TH1*  rh);
   /// true if object knows an existing DB session
   bool connected() {return (m_session != NULL);}
+  /// returns link to DB session
+  OnlineHistDB* dbSession() {return m_session;}
   /// connect to DB session, returns true if the corresponding DB histogram entry is found
   bool connectToDB(OnlineHistDB* Session,
 		   std::string Page="_NONE_",
@@ -54,11 +56,7 @@ class OnlineRootHist
 
   // TH1 drawing methods
   /// calls TH1 Draw method, calls setDrawOptions()
-  virtual void Draw(Option_t* option="");
-  /// calls TH1 DrawPanel method, calls setDrawOptions()
-  virtual void DrawPanel();
-  /// calls TH1 DrawCopy method and setDrawOptions()
-  virtual TH1* myDrawCopy(Option_t* option="");
+  virtual void Draw();
 
  private:
   std::string m_identifier;

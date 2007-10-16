@@ -402,8 +402,8 @@ propagated to all new objects created through the {\it getPage} and
 int main ()
 {
  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
-					  OnlineHistDBEnv_constants::ACCOUNT,
-					  OnlineHistDBEnv_constants::DB);
+                                        OnlineHistDBEnv_constants::ACCOUNT,
+                                        OnlineHistDBEnv_constants::DB);
   
  bool ok=true;
   
@@ -439,7 +439,7 @@ declaration of algorithms should be normally done by the developers of analysis
 library)  
 \begin{verbatim}
  HistDB->declareCreatorAlgorithm("Subtraction",2,OnlineHistDBEnv::H1D,0,NULL,
-				 "bin-by-bin subtraction");
+                                 "bin-by-bin subtraction");
 
  OnlineHistogram* s1=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips");
  OnlineHistogram* s2=HistDB->getHistogram(
@@ -456,7 +456,7 @@ library)
 
  std::string mypar[1]={"Max"};
  bool algok=HistDB->declareCheckAlgorithm("CheckMax",1,mypar,
-			       "Checks all bins to be smaller than Max");
+                        "Checks all bins to be smaller than Max");
  
  if (htrips && algok) {
    std::vector<float> warn(1,100.);
@@ -477,20 +477,20 @@ histograms.
  if (h1 && h2 && h3) {
    std::string hcpar[2]={"w1","w2"};
    algok = HistDB->declareCreatorAlgorithm("Weighted mean",
-					   2,
-					   OnlineHistDBEnv::H1D,
-					   2,
-					   hcpar,
-				"weighted mean of two histograms with weights w1 and w2");
+                                           2,
+                                           OnlineHistDBEnv::H1D,
+                                           2,
+                                           hcpar,
+                  "weighted mean of two histograms with weights w1 and w2");
    sources.clear();
    sources.push_back(h1);
    sources.push_back(h2);
    std::vector<float> weights(2,1.);
    weights[1]=0.5;
    if(algok) HistDB->declareAnalysisHistogram("Weighted mean",
-					      "Silly plot",
-					      sources,
-					      &weights);
+                                              "Silly plot",
+                                              sources,
+                                              &weights);
 
    OnlineHistPage* pg=HistDB->getPage("/Examples/My Example Page");
    if(pg) {
@@ -547,7 +547,7 @@ Now display the list of pages with their histograms
      for (k=0;k<nh;k++) {
        cout << "           Histogram " << histos[k]->identifier() ;
        if (histos[k]->instance()>1)
-	 cout << " (Instance "<<histos[k]->instance()<<")";
+         cout << " (Instance "<<histos[k]->instance()<<")";
        cout <<endl;
      }    
    }

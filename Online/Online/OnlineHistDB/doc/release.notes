@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.14 2007-09-28 15:46:06 ggiacomo Exp $
+! $Id: release.notes,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
+
+! 20071016  - OnlineHistDB v3r1
+	- improved support of display options
+	- some additional methods for analysis/histogram creation (this version
+	  is needed for use with OMAlib v0r0)
 
 ! 20070928  - OnlineHistDB v3r0
 	- new syntax for page names, identified by filesystem-like path 

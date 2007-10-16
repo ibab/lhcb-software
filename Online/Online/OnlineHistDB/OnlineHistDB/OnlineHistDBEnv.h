@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.9 2007-09-28 15:46:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.10 2007-10-16 12:16:10 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -17,7 +17,7 @@ using namespace std;
 
 namespace OnlineHistDBEnv_constants {
   static const char HistTypeName[][4] = {
-    "H1D", "H2D", "P1D", "P2D", "CNT"
+    "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
   static const unsigned int maxSNsize = 130; 
   static const unsigned int maxANsize = 100;
@@ -34,7 +34,7 @@ namespace OnlineHistDBEnv_constants {
 class OnlineHistDBEnv {
  public:
   /// get verbosity level (0 for no debug messages, up to 3)
-  typedef enum { H1D, H2D, P1D, P2D, CNT} HistType;
+  typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;
   int debug() const { return m_debug;}
   /// set verbosity level
   void setDebug(int DebugLevel) { m_debug=DebugLevel;}
