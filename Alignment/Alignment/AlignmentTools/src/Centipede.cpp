@@ -382,8 +382,8 @@ StatusCode Centipede::ZerLoc( std::vector<double> &dergb,
   VectortoArray( dergb, m_derGB );
   VectortoArray( derlc, m_derLC );
   
-  double dernl[dergb.size()];
-  double dernl_i[dergb.size()];
+  double *dernl= new double[dergb.size()];
+  double *dernl_i = new double[dergb.size()];
   StatusCode sc = Millepede::ZerLoc( m_derGB, m_derLC, dernl, dernl_i );
   ArraytoVector( m_derGB, dergb);
   ArraytoVector( m_derLC, derlc);
