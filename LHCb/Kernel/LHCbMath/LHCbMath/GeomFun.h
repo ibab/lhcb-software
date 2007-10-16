@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.6 2007-07-09 17:35:41 jpalac Exp $
+// $Id: GeomFun.h,v 1.7 2007-10-16 12:07:25 wouter Exp $
 #ifndef LHCBMATH_GEOMFUN_H
 #define LHCBMATH_GEOMFUN_H 1
 
@@ -91,24 +91,22 @@ namespace Gaudi{
 
     /** Compute the distance between two lines
      *
-     *  aLine must satisfy point = line.beginPoint() + scalar*line.direction()
-     *  and export its vector and point types as aLine::Vector and Line::Point
+     *  aLine and bLine must satisfy point = line.beginPoint() + scalar*line.direction()
+     *  and export its vector and point types as Line::Vector and Line::Point
      *  respectively
-     *
-     *  aPoint must be constructible from object with x(), y(), z() methods.
      *
      *  @author  Juan Palacios Juan.Palacios@cern.ch
      *  @date    01/05/2006
-     *  @param   line0: first aLine in distance calculation
-     *  @param   line1: second aLine in distance calculation
+     *  @param   line0: aLine in distance calculation
+     *  @param   line1: bLine in distance calculation
      *  @return  distance between lines (double)
      */
-    template <typename aLine>
+    template <typename aLine, typename bLine>
     double distance(const aLine& line0,
-                    const aLine& line1);
+                    const bLine& line1);
 
 
-    /** Get nearest aPoints p0 and p1 between aLines line0 and line2 such that 
+    /** Get nearest aPoints p0 and p1 between aLines line0 and abd bLine line2 such that 
      *  p0 = line0.beginPoint() + mu0 * line0.direction()
      *  p1 = line1.beginPoint() + mu1 * line1.direction()
      *
@@ -117,15 +115,15 @@ namespace Gaudi{
      *  aPoint must be constructible from object with x(), y(), z() methods.
      *  @author  Juan Palacios Juan.Palacios@cern.ch
      *  @date    01/05/2006
-     *  @param   line0: first aLine in distance calculation
-     *  @param   line1: second aLine in distance calculation
+     *  @param   line0: aLine in distance calculation
+     *  @param   line1: bLine in distance calculation
      *  @param   p0: closest point line0.beginPoint() + mu0 * line0.direction()
      *  @param   p1: closest point line1.beginPoint() + mu1 * line1.direction()
      *  @return  false if not numerically calculable
      */
-    template <typename aLine, typename aPoint>
+    template <typename aLine, typename bLine, typename aPoint>
     bool closestPoints(const aLine& line0,
-                       const aLine& line1,
+                       const bLine& line1,
                        aPoint& p0,
                        aPoint& p1);
 
@@ -167,7 +165,7 @@ namespace Gaudi{
                         const aLine& line);
 
     /** Calculate scalar parameters defining points of nearest approach 
-     *  between aLines line0, line1. If p0 and p1 are the points of closest
+     *  between aLine line0 and bLine line1. If p0 and p1 are the points of closest
      *  approach, mu0 and mu1 satisfy
      *  p0 = line0.beginPoint() + mu0 * line0.direction()
      *  p0 = line1.beginPoint() + mu1 * line1.direction()
@@ -180,9 +178,9 @@ namespace Gaudi{
      *  @param   mu1: scalar parameter defining point on line1 closest to line0
      *  @return  true
      */
-    template <typename aLine>
+    template <typename aLine, typename bLine>
     bool closestPointParams(const aLine& line0,
-                            const aLine& line1,
+                            const bLine& line1,
                             double& mu0, double& mu1);
 
     /** Estimate whether two lines are parallel
@@ -195,9 +193,9 @@ namespace Gaudi{
      *  @return  true if lines parallel
     */
 
-    template <typename aLine>
+    template <typename aLine, typename bLine>
     bool parallel(const aLine& line0,
-                  const aLine& line1);
+                  const bLine& line1);
 
 
 

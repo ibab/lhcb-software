@@ -100,16 +100,16 @@ double Gaudi::Math::impactParameter(const aPoint&  point ,
   return sqrt( v0.mag2() );
 }
 
-template <typename aLine>
+template <typename aLine, typename bLine>
 bool Gaudi::Math::closestPointParams(const aLine& line0,
-                                     const aLine& line1,
+                                     const bLine& line1,
                                      double& mu0, double& mu1) {
 
   if ( parallel(line0, line1) ) return false;
   const typename aLine::Point&  p0 = line0.beginPoint();
   const typename aLine::Vector  v0 = line0.direction();
-  const typename aLine::Point&  p1 = line1.beginPoint();
-  const typename aLine::Vector  v1 = line1.direction();
+  const typename bLine::Point&  p1 = line1.beginPoint();
+  const typename bLine::Vector  v1 = line1.direction();
 
   const double v0Dotv1 = v0.Dot(v1);
   const double v0mag2  = v0.Mag2();
@@ -122,9 +122,9 @@ bool Gaudi::Math::closestPointParams(const aLine& line0,
   return true;
 }
 
-template <typename aLine, typename aPoint>
+template <typename aLine, typename bLine, typename aPoint>
 bool Gaudi::Math::closestPoints(const aLine& line0,
-                                const aLine& line1,
+                                const bLine& line1,
                                 aPoint& p0,
                                 aPoint& p1)
 {
@@ -140,13 +140,13 @@ bool Gaudi::Math::closestPoints(const aLine& line0,
   
 }
 
-template <typename aLine>
+template <typename aLine, typename bLine>
 double Gaudi::Math::distance(const aLine& line0,
-                             const aLine& line1)
+                             const bLine& line1)
 {
   
   typename aLine::Point p0;
-  typename aLine::Point p1;
+  typename bLine::Point p1;
   const bool goodLines = Gaudi::Math::closestPoints(line0, line1, p0, p1);
   if (!goodLines) {
     // lines are parallel
@@ -155,13 +155,13 @@ double Gaudi::Math::distance(const aLine& line0,
   return sqrt( typename aLine::Vector(p1-p0).mag2() );
 }
 
-template <typename aLine>
+template <typename aLine, typename bLine>
 bool Gaudi::Math::parallel(const aLine& line0,
-                           const aLine& line1)
+                           const bLine& line1)
 {
 
   const typename aLine::Vector& v0 = line0.direction();
-  const typename aLine::Vector& v1 = line1.direction();
+  const typename bLine::Vector& v1 = line1.direction();
   const double cosTheta= v0.Dot(v1)/(v0.r()*v1.r());
   return 1. - fabs(cosTheta) < 1e-10;
 }

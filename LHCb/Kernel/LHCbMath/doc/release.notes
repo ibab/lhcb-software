@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2007-10-16 Wouter Hulsbergen
+ - changed templates for line-to-line calculations to allow for lines of different types
+
 !========================= LHCbMath v2r3 2007-10-02 ===========================
 ! 2007-10-02 - Marco Cattaneo
  - Remove implementations of cbrt from Power.h, now available in GaudiKernel
