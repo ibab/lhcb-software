@@ -6,6 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r11>2007-10-16 LbcomSys v6r11</A></H1><PRE>
+This version uses Gaudi v19r5 and LHCb v23r0
+
+Identical to v6r10 but built against LHCb v23r0
+
 </PRE><H1><A NAME=v6r10>2007-10-10 LbcomSys v6r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v22r10
 
