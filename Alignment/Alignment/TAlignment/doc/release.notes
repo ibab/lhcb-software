@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-10-16 - Gerhard Raven
+ - add treatment of hit-hit correlations to AlignAlgorithm using Wouter's ResidualCovarianceTool
+ - add ResidualCovarianceTool
+
 ! 2007-10-15 - Louis Nicolas
  - Added AlignITDetector: IT specific part in old framework
 

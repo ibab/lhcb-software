@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.8 2007-08-16 13:52:41 graven Exp $
+// $Id: AlignAlgorithm.h,v 1.9 2007-10-16 14:12:24 graven Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H 
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -40,6 +40,10 @@ namespace AIDA
   class IHistogram1D;
 };
 
+
+namespace {
+    class Equations;
+}
 /** @class AlignAlgorithm AlignAlgorithm.h
  *  
  *
@@ -57,7 +61,6 @@ public:
   typedef std::vector<LHCb::Node*> Nodes;
   typedef Gaudi::Matrix1x6 Derivatives;
   typedef Gaudi::Matrix6x6 HMatrix;
-  typedef std::map<unsigned int, std::pair<HMatrix, Derivatives> > Equations; 
 
   /// Standard constructor
   AlignAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
@@ -110,7 +113,6 @@ private:
   size_t                   m_nIterations;          ///< Number of iterations
   Elements                 m_elements;             ///< Detector elements
   size_t                   m_nDetElements;         ///< Number of detector elements
-  size_t                   m_nAlignConstants;      ///< Number of align parameters
   size_t                   m_nTracks;              ///< Number of tracks
   std::vector<double>      m_initAlignConstants;   ///< Initial alignment constants
   PivotPoints              m_pivotPoints;          ///< pivot points
@@ -121,8 +123,9 @@ private:
   ITrackProjectorSelector* m_projSelector;         ///< Pointer to projector selector tool
   std::string              m_matrixSolverToolName; ///< Name of linear algebra solver tool
   IAlignSolvTool*          m_matrixSolverTool;     ///< Pointer to linear algebra solver tool
-  Equations                m_equations;            ///< Equations to solve 
+  Equations*               m_equations;            ///< Equations to solve 
   std::vector<std::vector<double> > m_constraints;
+  bool                     m_correlation ;       ///< do we take into account correlations between residuals?
   
 /*   AlVec                    m_derivatives;          ///< Alignment vector of derivatives */
 /*   AlSymMat                 m_hMatrix;              ///< Alignment H matrix */
@@ -131,6 +134,8 @@ private:
   std::map<unsigned int, IHistogram2D*> m_resHistos;
   std::map<unsigned int, IHistogram2D*> m_pullHistos;
   std::map<unsigned int, IHistogram1D*> m_nhitHistos;
+  std::map<unsigned int, IHistogram2D*> m_autoCorrHistos;
+  std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H

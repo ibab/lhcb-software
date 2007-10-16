@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.7 2007-09-26 13:29:41 jblouw Exp $
+// $Id: AlignAlgorithm.cpp,v 1.8 2007-10-16 14:12:24 graven Exp $
 // Include files
 // from std
 #include <utility>
@@ -44,12 +44,83 @@
 
 // local
 #include "AlignAlgorithm.h"
+#include "ResidualCovarianceTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
 //
 // 2007-03-05 : Jan Amoraal
 //-----------------------------------------------------------------------------
+
+namespace {
+
+   class Equations {
+   public:
+       Equations(size_t nElem) : m_nElem(nElem), m_v(nElem) {}
+       size_t nElem() const { return m_nElem; }
+       Gaudi::Vector6&   V(int i) { return m_v[i]; }
+       const Gaudi::Vector6&   V(int i) const { return m_v[i]; }
+       Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
+       //FIXME: return proxy that fixes i<j...
+       const Gaudi::Matrix6x6& M(int i, int j) const { assert(i<=j); return const_cast<Equations*>(this)->m_m[std::make_pair(i,j)]; }
+       void clear() { m_v.clear(); m_v.resize(m_nElem); m_m.clear(); }
+   private:
+       size_t m_nElem ;
+       std::vector<Gaudi::Vector6>                   m_v;
+       std::map<std::pair<int,int>,Gaudi::Matrix6x6> m_m;
+   };
+
+   Gaudi::Vector6 convert(const Gaudi::Matrix1x6& m) {
+        Gaudi::Vector6 v;
+        for (int i=0;i<6;++i) v(i)=m(0,i);
+        return v;
+   };
+
+
+   class Data {
+   public:
+        Data(LHCb::LHCbID id,unsigned index, double r, const Gaudi::Matrix1x6& d) 
+        : m_id(id),m_index(index),m_r(r),m_d(d) {}
+        LHCb::LHCbID id() const { return m_id ; }
+        unsigned index() const { return m_index; }
+        double r() const { return m_r; }
+        const Gaudi::Matrix1x6& d() const { return m_d; }
+   private:
+        LHCb::LHCbID m_id;
+        unsigned m_index;
+        double m_r;
+        Gaudi::Matrix1x6 m_d;
+   };
+
+
+   //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
+   template <typename T>
+   void ass(AlVec& lhs, unsigned row, const T& rhs) {
+        for (unsigned i=0;i<T::kSize;++i) lhs[row+i] = rhs(i);
+   }
+
+   template <typename T>
+   void ass(AlSymMat& lhs, unsigned col, unsigned row, const T& rhs) {
+        for (unsigned i=0;i<T::kCols;++i) 
+            for (unsigned j=0;j<T::kRows;++j) 
+                lhs[col+i][row+j] = rhs(i,j);
+   }
+   
+   std::string label(const DetectorElement& elem) {
+        using std::vector;
+        using std::string;
+        using boost::assign::list_of;
+        vector<string> prefixes = list_of( string("/dd/Structure/LHCb/") )
+                                         ( string("AfterMagnetRegion/")  )
+                                         ( string("BeforeMagnetRegion/") );
+        string n = elem.name();
+        for (vector<string>::const_iterator i= prefixes.begin();i!=prefixes.end();++i) {
+           string::size_type m = n.find(*i);
+           if (m!=string::npos) n.erase(m,m+i->size());
+        }
+        return n;
+   }
+};
 
 using namespace LHCb;
 using namespace boost;
@@ -65,26 +136,19 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
                                 ISvcLocator* pSvcLocator)
                                 : GaudiHistoAlg( name , pSvcLocator ),
                                 m_iteration(0u),
-                                m_nIterations(0u),
                                 m_elements(),
-                                m_nDetElements(0u),
-                                m_nAlignConstants(0u),
                                 m_nTracks(0u),
-                                m_initAlignConstants(),
-                                m_pivotPoints(),
-                                m_alignDetectorName(""),
                                 m_alignDetector(0),
-                                m_tracksLocation(""),
-                                m_projSelectorName(""),
                                 m_projSelector(0),
-                                m_matrixSolverToolName(""),               
-                                m_matrixSolverTool(0)
+                                m_matrixSolverTool(0),
+                                m_equations(0)
 {
   declareProperty("NumberOfIterations"   , m_nIterations          = 10u                     );
   declareProperty("AlignDetectorSelector", m_alignDetectorName    = "AlignOTDetector"       );
   declareProperty("TracksLocation"       , m_tracksLocation       = TrackLocation::Default  );
   declareProperty("ProjectorSelector"    , m_projSelectorName     = "TrackProjectorSelector");
   declareProperty("MatrixSolverTool"     , m_matrixSolverToolName = "SpmInvTool"            ); 
+  declareProperty("UseCorrelations"      , m_correlation = true            ); 
 } 
 //=============================================================================
 // Destructor
@@ -112,11 +176,12 @@ StatusCode AlignAlgorithm::initialize() {
   
   /// Get detector elements
   m_elements = m_alignDetector->getDetectorElements();
-  debug() << "Got " << m_elements.size() << " elements" << endmsg;
-  /// Get number of elements
-  m_nDetElements = m_alignDetector->nElements();
-  m_nAlignConstants = Derivatives::kCols;
-  debug() << "Number of elements to align = " << m_nDetElements << endmsg;
+  debug() << "Got " << m_elements.size() << " elements to align" << endmsg;
+  for (Elements::const_iterator i=m_elements.begin(); i!=m_elements.end();++i) {
+          info() << "==> " << (i-m_elements.begin()) << " : " << (*i)->name() << endmsg;
+  }
+
+  m_equations = new Equations(m_elements.size());
 
   // get constraints
   m_constraints = m_alignDetector->constraints();
@@ -148,17 +213,28 @@ StatusCode AlignAlgorithm::initialize() {
   /// Book residual histograms
   /// Residuals
   //unsigned int nE = 0u; 
+  info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
   unsigned(nE) = 0u;
   for (ElemIter i = m_elements.begin(), end = m_elements.end(); 
        i != end; ++nE, ++i) {
-    m_resHistos[nE] = book2D(1000u+nE, "residual vs iteration for " + (*i)->name(),
+    m_resHistos[nE] = book2D(1000u+nE, "residual vs iteration for " + label(**i),
                            -0.5, m_nIterations-0.5, m_nIterations, 
                            -1.00 , +1.00, 100); 
-    m_pullHistos[nE] = book2D(2000u+nE, "pull vs iteration for " + (*i)->name(),
+    m_pullHistos[nE] = book2D(2000u+nE, "pull vs iteration for " + label(**i),
                            -0.5, m_nIterations-0.5, m_nIterations, 
                            -5.00 , +5.00, 100); 
-    m_nhitHistos[nE] = book1D(3000u+nE, "number of hits vs iteration for " + (*i)->name(),
+    m_nhitHistos[nE] = book1D(3000u+nE, "number of hits vs iteration for " + label(**i),
                            -0.5, m_nIterations-0.5, m_nIterations);
+
+    m_autoCorrHistos[nE] = book2D(4000u+nE, "hit autocorrelation in " + label(**i) + "  vs iteration ",
+                           -0.5, m_nIterations-0.5, m_nIterations,
+                           -0.5,+0.5,250);
+    unsigned(nj) = nE;
+    for (ElemIter j=i;j!=end;++j,++nj) {
+        m_corrHistos[std::make_pair(nE,nj)] = book2D(10000+nE*100+nj,"hit correlation of " + label(**i) + " with " + label(**j) + " vs iteration " + ( i==j?"(excluding autocorrelations!)":"" ) ,
+                                            -0.5, m_nIterations-0.5, m_nIterations,
+                                            -1.0,+1.0,250);
+    }
   }
   
   return StatusCode::SUCCESS;
@@ -168,25 +244,28 @@ StatusCode AlignAlgorithm::initialize() {
 // Main execution
 //=============================================================================
 StatusCode AlignAlgorithm::execute() {
+
   // Get tracks 
   Tracks* tracks = get<Tracks>(m_tracksLocation);
-  if (printDebug()) debug() << "Number of tracks in container " + m_tracksLocation + " " << tracks->size() << endmsg;
+  if (printDebug()) debug() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
   m_nTracks += tracks->size();
   /// Loop over tracks
   typedef Tracks::const_iterator TrackIter; 
   for (TrackIter iT = tracks->begin(), iTend = tracks->end(); iT != iTend; ++iT) {
+    std::vector<Data> data;
     // Get nodes. Need them for measurements, residuals and errors
     const Nodes& nodes = (*iT)->nodes();
     if (printDebug()) debug() << "==> Found " << nodes.size() << " nodes"<< endmsg;
+
     // Loop over nodes and get measurements, residuals and errors
     typedef Nodes::const_iterator NodeIter;
-    for (NodeIter iN = nodes.begin(), iNend = nodes.end(); iN != iNend; ++iN) {
-      if (!(*iN)->hasMeasurement()) {
+    for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
+      if (!(*node)->hasMeasurement()) {
         debug() << "==> Node has no measurement" << endmsg;
         continue;
       }
       /// Get measurement
-      const Measurement& meas = (*iN)->measurement();
+      const Measurement& meas = (*node)->measurement();
       /// Check if LHCb is valid and get index associated to DetElem
       bool valid(false); unsigned int index(0);
       tie(valid,index) = m_alignDetector->index(meas.lhcbID());
@@ -194,27 +273,53 @@ StatusCode AlignAlgorithm::execute() {
         debug() << "==> Measurement not on a to-be-aligned DetElem" << endmsg;
         continue;
       }
-//      std::cout << "==> " << meas.lhcbID() << " -> index = " << index << " -> " << m_alignDetector->getDetectorElements()[index]->name() << std::endl;
       if (printDebug()) {
-          debug() << "==> " << meas.lhcbID() << " -> index = " << index << " -> " << m_alignDetector->getDetectorElements()[index]->name() << endmsg;
+          debug() << "==> " << meas.lhcbID() << " -> index = " << index << " -> " <<  m_elements[index]->name() << endmsg;
       }
       ITrackProjector* proj = m_projSelector->projector(meas);
       if (!proj) {
-        debug() << "==> Could not get pojector for measurement!" << endmsg;
+        debug() << "==> Could not get projector for selected measurement!" << endmsg;
         continue;
       }
-      double res  = (*iN)->residual();
-      double err2 = (*iN)->errResidual2();
+      double res  = (*node)->residual();
+      double err  = (*node)->errMeasure();
+
       m_nhitHistos[index]->fill(m_iteration); 
       m_resHistos[index]->fill(m_iteration, res); 
-      m_pullHistos[index]->fill(m_iteration, res/sqrt(err2)); 
+      m_pullHistos[index]->fill(m_iteration, res/err); 
       // Get projector for this measurement
       Derivatives der = proj->alignmentDerivatives(meas, m_pivotPoints[index]);
-//      std::cout << "got H=" << der << " res = " << res << " err = " << sqrt(err2) << std::endl;
-      /// Map index to H matrix and derivatives 
-      m_equations[index].first  += (Transpose(der)*der)/err2; 
-      m_equations[index].second += -1.0*((res*der)/err2); 
+      // push back normalized residuals & derivatives;
+      res/=err;
+      der/=err;
+      data.push_back( Data(meas.lhcbID(),index,res,der) );
     }
+
+    ResidualCovarianceTool cov;
+    cov.compute(**iT);
+
+
+    for (std::vector<Data>::const_iterator id=data.begin();id!=data.end();++id) {
+        m_equations->V(id->index())             -= convert(id->r()*id->d()) ; 
+        m_equations->M(id->index(),id->index()) += (Transpose(id->d())*id->d());
+
+        for (std::vector<Data>::const_iterator jd=id;jd!=data.end();++jd) {
+           if ( m_correlation || jd==id) {
+               // make sure we go for the upper triangle...
+               std::vector<Data>::const_iterator i(id),j(jd);
+               if (i->index()>j->index()) std::swap(i,j);
+               double c = cov.HCH_norm(i->id(),j->id());
+               m_equations->M(i->index(),j->index()) -= c * Transpose(i->d())*j->d();
+
+               if ( !( i->id()==j->id())) {
+                    m_corrHistos[std::make_pair(i->index(),j->index())]->fill(m_iteration,c/sqrt(cov.HCH_norm(i->id(),i->id())*cov.HCH_norm(j->id(),j->id())));
+               } else {
+                    m_autoCorrHistos[i->index()]->fill(m_iteration,c);
+               }
+           }
+        }
+    }
+
   }
   
   return StatusCode::SUCCESS;
@@ -225,38 +330,30 @@ StatusCode AlignAlgorithm::execute() {
 //=============================================================================
 void AlignAlgorithm::update() {
   
-  info() << "==> Updating constants" << endmsg;
-  info() << "==> Used " << m_nTracks << " tracks for alignment" << endmsg;
+  info() <<   "==> Updating constants" 
+         << "\n==> Used " << m_nTracks << " tracks for alignment" << endmsg;
   
-  typedef Equations::const_iterator EqIter;
-  for (EqIter iEq = m_equations.begin(), iEqEnd = m_equations.end(); iEq != iEqEnd; ++iEq) {
-    info() << "==> Element: " << iEq->first << endmsg;
-    info() << "==> H = " << (iEq->second).first << endmsg;
-    info() << "==> rho = " << (iEq->second).second << endmsg;
+  for (size_t i = 0; i < m_equations->nElem(); ++i) {
+    for (size_t j = i; j < m_equations->nElem(); ++j) {
+       info() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
+    }
+    info() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
   }  
     
 
-  AlVec    derivatives(m_nAlignConstants*m_nDetElements + m_constraints.size());
-  AlSymMat matrix(m_nAlignConstants*m_nDetElements + m_constraints.size());
+  AlVec    derivatives(Derivatives::kCols*m_elements.size() + m_constraints.size());
+  AlSymMat      matrix(Derivatives::kCols*m_elements.size() + m_constraints.size());
 
-  debug() << "AlSymMat size = " << derivatives.size() << endmsg;
-  debug() << "AlSymMat size = " << matrix.size() << endmsg;
-
-  /// Loop over map of index to H matrix and derivatives 
-  for (unsigned(i) = 0u, iEnd = m_equations.size(); i < iEnd ; ++i) {                                           
-    for (unsigned(j) = 0u; j < m_nAlignConstants; ++j) {
-      /// Fill AlVec
-      derivatives[i*m_nAlignConstants+j] = (m_equations[i].second)(0,j);
-      /// Fill AlSymMat
-      for (unsigned(k) = 0u; k < m_nAlignConstants; ++k) {
-        matrix[i*m_nAlignConstants+j][i*m_nAlignConstants+k] = (m_equations[i].first)(j,k);
-      }
-    }
+  /// Loop over map of index to 2nd derivative matrix and 1st derivative vector 
+  for (unsigned(i) = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {                                           
+    ass(derivatives,i*Derivatives::kCols,m_equations->V(i));
+    /// (assume upper triangular input!)
+    for (unsigned(j) = i ; j < iEnd ; ++j) ass(matrix,i*Derivatives::kCols,j*Derivatives::kCols,m_equations->M(i,j));
   }
 
   /// Add constraints
   if (!m_constraints.empty()) {
-    for (unsigned(i) = m_nAlignConstants*m_nDetElements, iEnd = m_nAlignConstants*m_nDetElements + m_constraints.size(), nC=0u;  
+    for (unsigned(i) = Derivatives::kCols*m_elements.size(), iEnd = Derivatives::kCols*m_elements.size() + m_constraints.size(), nC=0u;  
          i != iEnd; ++i, ++nC) {
       const std::vector<double>& constraint = m_constraints.at(nC);
       derivatives[i] = constraint.back();
@@ -267,14 +364,13 @@ void AlignAlgorithm::update() {
     }
   }
 
-  debug() << "AlVec Vector = " << derivatives << endmsg;
-  debug() << "AlSymMat Matrix = " << matrix << endmsg;
+  info() << "AlVec Vector = " << derivatives << endmsg;
+  info() << "AlSymMat Matrix = " << matrix << endmsg;
   
   /// Tool returns H^-1 and alignment constants 
   bool solved = m_matrixSolverTool->compute(matrix, derivatives);  
   if (solved) {
-    info() << "solved it" << endmsg;
-    info() << "Constants Element = " << derivatives << endmsg;
+    info() << "Solution = " << derivatives << endmsg;
     /// Update alignment iff we've solved Ax=b 
     debug() << "==> Putting alignment constants" << endmsg;
     StatusCode sc = putAlignmentConstants(m_elements, derivatives);
@@ -291,7 +387,7 @@ void AlignAlgorithm::reset() {
   /// reset track counters
   m_nTracks = 0u;
   // clear derivatives and H maps
-  m_equations.clear();
+  m_equations->clear();
 }
 
 StatusCode AlignAlgorithm::queryInterface(const InterfaceID& id, void** ppI) {
@@ -327,13 +423,12 @@ StatusCode AlignAlgorithm::getPivotPoints(const Elements& elements, PivotPoints&
       std::vector<double> pivot = alignCond->paramVect<double>("pivotXYZ");
       pivotPoint = Gaudi::XYZPoint(pivot[0], pivot[1], pivot[2]);
       info() << "==> Pivot point explicity defined for " << (*iE)->name() 
-             << ". Using " << pivotPoint << " as pivot point" << endmsg; 
+             << ". Using " << pivotPoint << " as pivot" << endmsg; 
     } catch (ParamException& p) { /// Print info and use default
       info() << "==> Pivot point not explicity defined for " << (*iE)->name() 
              << ". Using global centre of element, " << pivotPoint << ", as pivot point" << endmsg; 
     }
     /// Insert pivot point
-    std::cout<< "using pivot " << pivotPoint << " for " << (*iE)->name() << std::endl;
     pivotPoints.push_back(pivotPoint);
 
   }
@@ -364,20 +459,28 @@ StatusCode AlignAlgorithm::putAlignmentConstants(const Elements& elements, const
   if (printDebug()) debug() << "Size of alignment constants vector is " << alignConstants.size() << endmsg;
   unsigned(nE) = 0u;
   for (ElemIter iE = elements.begin(), iEend = elements.end(); iE != iEend; ++nE, ++iE) {
-    if (printDebug()) debug() << (*iE)->name() << endmsg;
+    if (printDebug()) { debug() << (*iE)->name() 
+                                << "\n current local delta : \n" << (*iE)->geometry()->localDeltaMatrix()
+                                << " current local 0,0,0 in global coordinates: " 
+                                << (*iE)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0)) << endmsg;
+    }
     /// 3 translations
     std::vector<double> translations;
-    for (unsigned(i) = 0u; i < 3u; ++i) translations.push_back(alignConstants[nE*m_nAlignConstants + i]);
+    for (unsigned(i) = 0u; i < 3u; ++i) translations.push_back(alignConstants[nE*Derivatives::kCols + i]);
     /// 3 rotations
     std::vector<double> rotations;
-    for (unsigned(i) = 3u; i < 6u; ++i) rotations.push_back(alignConstants[nE*m_nAlignConstants + i]);
+    for (unsigned(i) = 3u; i < 6u; ++i) rotations.push_back(alignConstants[nE*Derivatives::kCols + i]);
     /// Pivot point
     Gaudi::XYZPoint p = m_pivotPoints[nE];
     std::vector<double> pivot = boost::assign::list_of(p.x())(p.y())(p.z());
     /// Get transformation matrix to go from old delta to new delta
-    const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(translations, rotations, pivot);
-    /// Transform global deltas to local deltas
-    const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*iE), globalDeltaMatrix);
+    Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(translations, rotations, pivot);
+    /// Transform global deltas to new local deltas (takes into account current local delta!!)
+    Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*iE), globalDeltaMatrix);
+    if (printDebug()) {
+       debug() << " align transform in global frame: \n" << globalDeltaMatrix
+               << "\n updated delta: \n" << localDeltaMatrix << endmsg;
+    }
     /// Update position of detector elements
     StatusCode sc = (*iE)->geometry()->ownToOffNominalMatrix(localDeltaMatrix); 
     if (sc.isFailure()) return Error("Failed to set alignment conditions", StatusCode::FAILURE);
