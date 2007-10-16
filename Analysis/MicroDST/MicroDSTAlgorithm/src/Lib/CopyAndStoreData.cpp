@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.4 2007-10-15 16:23:33 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.5 2007-10-16 14:08:54 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +20,6 @@ CopyAndStoreData::CopyAndStoreData( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
-  //  m_inputTESLocation(LHCb::ODINLocation::Default),
   m_inputTESLocation(""),
   m_outputPrefix("microDST")
 {

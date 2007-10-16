@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.3 2007-10-15 16:23:33 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.4 2007-10-16 14:08:54 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -68,9 +68,10 @@ protected:
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
-  template <class T>
+  template <class T, class containerCloner >
   StatusCode copyAndStoreContainer( const std::string& from,
-                                    const std::string& to   ) 
+                                    const std::string& to,
+                                    const containerCloner& cloner) 
   {
     debug() << "now store container for location " << from << endmsg;
 
@@ -83,9 +84,27 @@ protected:
         return StatusCode::FAILURE;
       }
       verbose() << "got # elements in container: " << data->size() << endmsg;
-      T* clones = getOutputContainer<T>();
-      return cloneContainer<T>(data, clones);
+      T* clones = getOutputContainer<T>(to);
+      return cloner.clone(data, clones);
     } // if !exist
+  }
+  //===========================================================================
+  /**
+   *
+   * @author Juan Palaicos juancho@nikhef.nl
+   * @date 16-10-2007
+   */
+  template <class T, class itemCloner>
+  StatusCode cloneItemIntoContainer(const T* item,
+                                    const std::string& to,
+                                    const itemCloner& cloner) 
+  {
+    typename T::Container* container = getOutputContainer<T::Container>(to);
+    if ( !container->object( item->key() ) ) {
+      T* clonedItem = cloner.clone(item);
+      container->insert( clonedItem, item->key()) ;
+    }
+    return StatusCode::SUCCESS;
   }
   //===========================================================================
 
@@ -95,26 +114,63 @@ protected:
    * Contained types must have a clone() method.
    * Container must have an object(key), an insert and a 
    * value_type typedef.
-   * The method checks if an object of type T::value_type already
+   * The functor checks if an object of type T::value_type already
    * exists in "clones". If not, the object is cloned and inserted.
    *
-   * @author Juan Palaicos juanch@nikhef.nl
+   * @author Juan Palacios juanch@nikhef.nl
    * @date 15-10-2007
    */
-  template <class T> 
-  StatusCode cloneContainer(const T* data, T* clones) 
+  template <class T, class itemCloner> 
+  struct ContainerCloner 
   {
-    for (typename T::const_iterator i = data->begin(); 
-         i != data->end(); 
-         ++i) {
-      typename T::value_type item = clones->object( (*i)->key() );
-      if (!item) {
-        item = (*i)->clone();
-        clones->insert(item, (*i)->key());
-      }
+  public:
+    explicit ContainerCloner(const itemCloner& cloner)
+      : m_cloner(cloner)
+    {
     }
-    return StatusCode::SUCCESS;
-  }
+    
+    StatusCode clone(const T* data, T* clones) const
+      {
+        for (typename T::const_iterator i = data->begin(); 
+             i != data->end(); 
+             ++i) {
+          //          typename T::value_type item = clones->object( (*i)->key() );
+          if ( !clones->object( (*i)->key() ) ) {
+             typename T::value_type item = cloner().clone(*i);
+            clones->insert(item, (*i)->key());
+          }
+        }
+        return StatusCode::SUCCESS;
+      }
+
+    inline const itemCloner& cloner() const
+    {
+      return m_cloner;
+    }
+    inline itemCloner& cloner()
+    {
+      return m_cloner;
+    }
+
+  private:
+    itemCloner m_cloner;
+    
+  };
+  
+  //===========================================================================
+
+  /**
+   */
+  template <class T>
+  class BasicItemCloner 
+  {
+  public:
+    T* clone(const T* item) 
+    {
+      return item->clone();
+    }
+  };
+  
   //===========================================================================
 
   /**
@@ -126,15 +182,12 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getOutputContainer() 
+  T* getOutputContainer( const std::string& location ) 
   {
-    const std::string& location = fullOutputTESLocation();
-  
     if ( !exist<T>( location ) ) {
       T* container = new T();
       put(container, location);
     }
-
     return get<T>( location );     
   }
   //=========================================================================  
@@ -189,6 +242,12 @@ protected:
   {
     this->fullOutputTESLocation() = "/Event/"+ this->outputPrefix() + 
       "/" + this->inputTESLocation();
+  }
+
+  inline const std::string outputTESLocation(std::string& inputLocation) 
+  {
+    getNiceLocationName(inputLocation);
+    return "/Event/"+ this->outputPrefix() + inputLocation;
   }
   
 private:
