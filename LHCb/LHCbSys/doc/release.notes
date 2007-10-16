@@ -5,6 +5,23 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r0>2007-10-11 LHCbSys v23r0</A></H1><PRE>
+This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
+
+This version introduces the base classes for the Tf tracking framework, and
+removes the base classes for the previous framework
+
+- Packages added:    Tf/TsaKernel v3r0 - adaptation of Tr/TsaKernel to Tf
+- Packages removed:  Tr/TsaKernel      - replaced by Tf/TsaKernel
+                     Pat/PatTools      - replaced be Tf framework
+- Packages modified: TfKernel v2r0, PatKernel v2r0
+
+- In TfKernel v2r0
+  . Remove component library, moved to Tf/TfTools (REC project)
+
+- In PatKernel v2r0
+  . Remove Tf:: from classes
+
 </PRE><H1><A NAME=v22r10>2007-10-11 LHCbSys v22r10</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
 

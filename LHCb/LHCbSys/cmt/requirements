@@ -1,5 +1,5 @@
 package LHCbSys
-version v22r9
+version v23r0
 
 branches doc cmt
 
@@ -68,9 +68,7 @@ use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use CaloInterfaces        v7r4   Calo    # Olivier Deschamps
 use CaloUtils             v7r5   Calo    # Olivier Deschamps
 use RichRecBase           v3r7   Rich    # Chris Jones
-use PatTools              v3r2   Pat     # Olivier Callot
 use TrackInterfaces       v3r9   Tr      # Matt Needham
-use TsaKernel             v2r5   Tr      # Matt Needham
 use LinkerInstances       v3r3   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v11r6  Det     # Marco Clemencic
 use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
@@ -91,9 +89,9 @@ use LoKiAlgo              v6r1   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v6r1   Phys    # Ivan Belyaev
 use LoKiArrayFunctors     v6r1   Phys    # Ivan Belyaev
 use Tell1Kernel           v1r0   DAQ     # Tomasz Szumlak
-use TfKernel              v1r1   Tf      # "A-team"
-use PatKernel             v1r1   Tf      # Stephanie Hansmann-Menzemer
-#use TsaKernel             v3r0   Tf      # Chris Jones, Matt Needham
+use TfKernel              v2r0   Tf      # Stephanie Hansmann-Menzemer
+use PatKernel             v2r0   Tf      # Stephanie Hansmann-Menzemer
+use TsaKernel             v3r0   Tf      # Matt Needham
 
 # LHCb  Examples
 use DetDescChecks         v4r4   Det     # Ivan Belyaev
