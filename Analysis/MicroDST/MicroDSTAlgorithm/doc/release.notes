@@ -1,11 +1,24 @@
-! $Id: release.notes,v 1.24 2007-10-15 13:56:47 jpalac Exp $
+! $Id: release.notes,v 1.25 2007-10-16 14:08:18 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
 
+! 2007-10-16 - Juan PALACIOS
+ - Add algorithm CopyPrimaryVertices to components library. 
+ - Modifications to CopyAndStoreData base class.
+
+
+! 2007-10-15 - Juan PALACIOS
+ - Add algorithms CopyODIN and CopyRecHeader to components library.
+   The algorithms are specializations of CopyAndStoreData and do
+   what their name indicates.
+
 ! 2007-10-15 - Juan PALACIOS
  - src/Lib/CopyAndStoreData.cpp, MicroDST/CopyAndStoreData.h
   . Add new functionality and doxygen comments.
+ - Add src/CopyODIN{.cpp, .h}
+  . Very simple algorithm to copy the ODIN header to the microDST TES.
+    Inherits from CopyAndStoreData and simply calls two of its methods.
 
 ! 2007-10-12 - Chris Jones
  - Fix possible cause of memory leak in CreateMicroDSTAlg
