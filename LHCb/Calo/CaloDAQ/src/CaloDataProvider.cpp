@@ -388,7 +388,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
     checkCards(nCards,feCards);    
   } //== versions
 
-  return false;
+  return true;
 }
 
 

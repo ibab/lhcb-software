@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2007-10-16 - Olivier Deschamps
+ - Fix bug in CaloDataProvider.cpp
+
+
 !========================== CaloDAQ v4r0 2007-09-04 ==========================
 ! 2007-08-27 - Olivier Deschamps
  - clean unchecked StatusCode
