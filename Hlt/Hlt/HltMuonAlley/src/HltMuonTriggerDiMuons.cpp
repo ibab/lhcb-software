@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.cpp,v 1.7 2007-06-25 21:02:12 hernando Exp $
+// $Id: HltMuonTriggerDiMuons.cpp,v 1.8 2007-10-16 08:31:53 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -48,14 +48,14 @@ HltMuonTriggerDiMuons::HltMuonTriggerDiMuons( const std::string& name,
 // Destructor
 //=============================================================================
 HltMuonTriggerDiMuons::~HltMuonTriggerDiMuons() {
-  delete _negMuonFil;
-  delete _posMuonFil;
+ //  delete _negMuonFil;
+//   delete _posMuonFil;
 
-  delete _massAndDOCACut;
-  delete _massAndDOCAAndIPCut;
-  delete _chargeFun;
-  delete _ipFun ;
-  delete _docaFun;
+//   delete _massAndDOCACut;
+//   delete _massAndDOCAAndIPCut;
+//   delete _chargeFun;
+//   delete _ipFun ;
+//   delete _docaFun;
 
 
   
@@ -233,7 +233,18 @@ StatusCode HltMuonTriggerDiMuons::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return HltAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc =  HltAlgorithm::finalize();  // must be called after all other actions
+
+  delete _negMuonFil;
+  delete _posMuonFil;
+
+  delete _massAndDOCACut;
+  delete _massAndDOCAAndIPCut;
+  delete _chargeFun;
+  delete _ipFun ;
+  delete _docaFun;
+
+  return sc;
 }
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerSingle.cpp,v 1.5 2007-06-25 21:02:12 hernando Exp $
+// $Id: HltMuonPreTriggerSingle.cpp,v 1.6 2007-10-16 08:31:53 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -37,8 +37,8 @@ HltMuonPreTriggerSingle::HltMuonPreTriggerSingle( const std::string& name,
 // Destructor
 //=============================================================================
 HltMuonPreTriggerSingle::~HltMuonPreTriggerSingle() {
-  delete _ptFun;
-  delete _ptCut;
+  // delete _ptFun;
+//   delete _ptCut;
 } 
 
 //=============================================================================

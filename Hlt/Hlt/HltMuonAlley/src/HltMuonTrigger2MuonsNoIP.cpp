@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.2 2007-07-26 07:19:12 asatta Exp $
+// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.3 2007-10-16 08:31:53 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -54,22 +54,22 @@ HltMuonTrigger2MuonsNoIP::HltMuonTrigger2MuonsNoIP( const std::string& name,
 // Destructor
 //=============================================================================
 HltMuonTrigger2MuonsNoIP::~HltMuonTrigger2MuonsNoIP() {
-  delete _negMuonFil;
-  delete _posMuonFil;
+  // delete _negMuonFil;
+//   delete _posMuonFil;
 
-  delete _massCut;
-  //  delete _massAndIPCut;
-  delete _massAndL0Cut;
-  // delete _massAndIPAndL0Cut;
-  delete _massAndDOCACut;
-  //delete _massAndDOCAAndIPCut;
+//   delete _massCut;
+//   //  delete _massAndIPCut;
+//   delete _massAndL0Cut;
+//   // delete _massAndIPAndL0Cut;
+//   delete _massAndDOCACut;
+//   //delete _massAndDOCAAndIPCut;
 
-  delete _triggerMassCut;
-  //  delete _triggerMassAndIPCut;
+//   delete _triggerMassCut;
+//   //  delete _triggerMassAndIPCut;
 
-  delete _chargeFun;
-  delete _ipFun ;
-  delete _docaFun;
+//   delete _chargeFun;
+//   delete _ipFun ;
+//   delete _docaFun;
 }
 
 

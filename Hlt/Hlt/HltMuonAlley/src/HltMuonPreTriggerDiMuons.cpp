@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.7 2007-07-02 21:06:21 hernando Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.8 2007-10-16 08:31:53 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -46,13 +46,13 @@ HltMuonPreTriggerDiMuons::HltMuonPreTriggerDiMuons( const std::string& name,
 // Destructor
 //=============================================================================
 HltMuonPreTriggerDiMuons::~HltMuonPreTriggerDiMuons() {
-  delete _negMuonFil;
-  delete _posMuonFil;
+ //  delete _negMuonFil;
+//   delete _posMuonFil;
 
-  delete _massCut;
-  delete _massAndIPCut;
-  delete _chargeFun;
-  delete _ipFun ;
+//   delete _massCut;
+//   delete _massAndIPCut;
+//   delete _chargeFun;
+//   delete _ipFun ;
   
 } 
 
