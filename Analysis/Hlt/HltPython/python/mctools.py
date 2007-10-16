@@ -10,6 +10,62 @@ State = gaudimodule.gbl.LHCb.State
 
 DEBUG = False
 
+class IDLinker:
+
+    def __init__(self,TES):
+        """ create a user friendly kinker table ID->MCParticle
+        requires that in TES the link at 'Link/Pat/LHCbID' and mcparticles at 'MC/Particles'
+        """
+        self._link = TES["Link/Pat/LHCbID"]
+        self._ref = gaudimodule.gbl.LHCb.LinkReference()
+        self._mcpars = TES["MC/Particles"]
+        self._Null = None
+        if ((not self._link) or (not self._mcpars)):
+            print " ERROR! no container in TES for linker with IDs or MCParticles"
+        
+
+    def linkKey(self,id):
+        """ return the key of the MCParticle associated to this LHCbID
+        """
+        ok = self._link.firstReference(id.lhcbID(),self._Null,self._ref)
+        if (not ok): return -1
+        else:
+            return self._ref.objectKey()
+        
+    def mcparticle(self,id):
+        """ return the MCParticle associated to this LHCbID (none if none)
+        """
+        key = self.linkKey(id)
+        if (key<0): return none
+        par = self._mcpars[key]
+        return par
+
+    def linkKeys(self,ids):
+        """ return a list of mcparticles keys associated to this list of LHCbIDs
+        """
+        keys = map(lambda x: self.linkKey(x),ids)
+        return keys
+        
+    def mcparticles(self,ids):
+        """ return a list of (mcparticle,weight) of the mcparticles associated (with weight) to
+        this list of LHCbIDs
+        """
+        keys = self.linkKeys(ids)
+        counts = map(lambda x: (keys.count(x),x),keys)
+        counts.sort()
+        mykeys = []
+        mypars = []
+        n0 = len(keys)
+        for c in counts:
+            key = c[1]
+            if (key not in mykeys):
+                mykeys.append(key)
+                w = (1.*c[0])/(1.*n0)
+                if (key>=0): mypars.append([self._mcpars[key],w])
+                else: mypars.append([none,w])
+                if (DEBUG): print " key ",key," w ",w
+        return mypars
+
 def decayName(pars):
     """ providing a list of particles [pars], return a string with the decay
     the first particle should be the mother
@@ -55,7 +111,7 @@ def roots(mcpars,pid=531):
     if (DEBUG): print " roots: ",broot
     return broot
 
-def rootMother(mcpar,i=0):
+def eve(mcpar,i=0):
     """Returns the mother of the MC particle mcpar
     and the number of generations to the mother
     """
@@ -76,10 +132,10 @@ def findDecay(mcpars,ngenerations = 1, pid=531):
         bsons = []
         for mcpar in mcpars:
             i = 0
-            (mom,i) = rootMother(mcpar,i)
+            (mom,i) = eve(mcpar,i)
             if ((mom.key() == iroot.key()) and (i <= ngenerations)):
                 bsons.append(mcpar)
-        bsignal.append(bsons)
+                bsignal.append(bsons)
     if (DEBUG): print " findDecay: size ",len(bsignal)    
     return bsignal
 
