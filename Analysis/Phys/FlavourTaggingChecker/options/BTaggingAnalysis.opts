@@ -1,0 +1,31 @@
+///---------------------------------------------------------------
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
+
+///---------------------------------------------------------------
+///               OUTPUT LEVELS
+///---------------------------------------------------------------
+BTaggingAnalysis.DebugTool.OutputLevel= 4;
+BTaggingAnalysis.OutputLevel          = 3;
+
+///---------------------------------------------------------------
+///               Particle Maker
+///---------------------------------------------------------------
+BTaggingAnalysis.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
+BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Muon.Selection = {
+  "RequiresDet='MUON' CombDLL(mu-pi)>'-5.0'" } ;
+BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Electron.Selection = {
+  "RequiresDet='CALO' CombDLL(e-pi)>'2.0'" } ;
+BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {
+  "RequiresDet='RICH' CombDLL(k-pi)>'3.0' CombDLL(k-p)>'-4.0'" };
+
+BTaggingAnalysis.DecayDescriptor = { "not specified" };
+BTaggingAnalysis.PhysDesktop.OutputLevel = 5;
+BTaggingAnalysis.GeomDispCalculator.OutputLevel=4;
+
+//-----------------------------------------------------------------------
+//new associators
+BTaggingAnalysis.AssociatorInputData = { "Phys/BTaggingAnalysis/Particles" };
+BTaggingAnalysis.Particle2MCChi2.Chi2Cut = 75.; // Default is 100.
+

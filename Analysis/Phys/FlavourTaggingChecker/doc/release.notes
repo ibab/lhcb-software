@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.22 2007-07-31 09:31:41 jpalac Exp $
+! $Id: release.notes,v 1.23 2007-10-16 10:35:42 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-10-16 - Marco Musy
+- many improvements in BTaggingAnalysis (Hlt, tistos, bkgcategory..)
+- added BTaggingAnalysis.opts
+- revised DVBTagging_for_B2JpsiKs.opts to produce both a DecayChainNtp and
+  a specific tagging ntp for tuning
+
 
 !===================== FlavourTaggingChecker v2r4 2007-07-31 =================
 ! 2007-06-21 - Marco Musy

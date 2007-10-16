@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.11 2007-06-21 10:40:15 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.12 2007-10-16 10:35:43 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -10,14 +10,18 @@
 #include "Event/GenHeader.h"
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"
+#include "Event/HltSummary.h"
 
-//#include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IDebugTool.h"
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IParticleDescendants.h"
+#include "Kernel/IBackgroundCategory.h"
+#include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IHltSummaryTool.h"
+#include "Kernel/ITriggerTisTos.h"
 
 #include "MCInterfaces/IForcedBDecayTool.h"
 
@@ -45,20 +49,24 @@ class BTaggingAnalysis : public DVAlgorithm {
  private:
 
   std::string m_SVtype, m_veloChargeName, m_TagLocation;
-  ISecondaryVertexTool* m_vtxtool;
-  IDebugTool* m_debug;
-  IGeomDispCalculator *m_Geom;
-  Particle2MCLinker* m_linkLinks;    ///< Pointer to associator using links
-  ICaloElectron*  m_electron;
-  IForcedBDecayTool* m_forcedBtool;
+  IDebugTool*           m_debug;
+  IGeomDispCalculator*  m_Geom;
+  Particle2MCLinker*    m_linkLinks; 
+  ICaloElectron*        m_electron;
+  IForcedBDecayTool*    m_forcedBtool;
+  IBackgroundCategory*  m_bkgCategory;
+  ILifetimeFitter*      m_pLifetimeFitter;
   ITaggingUtilsChecker* m_util;
+  ISecondaryVertexTool* m_vtxtool;
   IParticleDescendants* m_descend;
+  IHltSummaryTool*      m_hltSummaryTool;
+  ITriggerTisTos*       m_TriggerTisTosTool;
 
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
   std::vector<std::string> m_setInputData;
 
   //properties ----------------
-  bool m_RequireL0, m_RequireL1, m_RequireHLT;
+  bool m_requireTrigger, m_UseMCTrueFlavour;
 
   //NTuple
   NTuple::Item<long>      m_Run;
@@ -69,8 +77,13 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<long>      m_TagCat;
   NTuple::Item<long>      m_type;
   NTuple::Item<long>      m_trigger;
-  NTuple::Item<long>      m_tamper;
+  NTuple::Item<long>      m_L0TisTos;
+  NTuple::Item<long>      m_HltTisTos;
+  NTuple::Item<long>      m_bkgCat;
   NTuple::Item<long>      m_BSosc;
+  NTuple::Item<float>     m_tau;
+  NTuple::Item<float>     m_tauErr;
+  NTuple::Item<float>     m_ctChi2;
 
   //signal
   NTuple::Item<long>      m_M;
@@ -97,6 +110,9 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<float>      m_BOx;
   NTuple::Item<float>      m_BOy;
   NTuple::Item<float>      m_BOz;
+  NTuple::Item<float>      m_BSx;
+  NTuple::Item<float>      m_BSy;
+  NTuple::Item<float>      m_BSz;
 
   NTuple::Item<float>     m_kx;
   NTuple::Item<float>     m_ky;

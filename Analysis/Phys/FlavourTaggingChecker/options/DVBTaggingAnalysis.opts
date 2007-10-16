@@ -5,44 +5,43 @@
 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
-ApplicationMgr.TopAlg += { "L0MuonCandidatesFromRaw"};
-ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
-#include "$L0DUROOT/options/L0Sequence.opts"
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/HltSelections.opts"
 
 ///example Bd Channel Selection ----------------------------------
-// #include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
-// Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2KPi" };
+//#include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2KPi" };
 
 //#include "$BD2DSTARMUROOT/options/DoPreselBd2DstarMu.opts"
-//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/PreselBd2DstarMu" };
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/PreselBd2DstarMu" };
 
 //#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2PiPi" };
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2PiPi" };
 
 //#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
-//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Ks2PiPi"};
+//BTaggingAnalysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Ks2PiPi"};
 
 //#include "$BD2JPSIKSTARROOT/options/DVTDRselBd2Jpsi2MuMu_Kstar2KPi.opts"
-//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Kstar2KPi"};
+//BTaggingAnalysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Kstar2KPi"};
 
 //Bu->JPsiK+
 //ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
 //#include "$BU2JPSIKROOT/options/DoDC04selBu2JpsiK.opts"
-//Analysis.PhysDesktop.InputLocations={"/Event/Phys/DC04selBu2JpsiK"};
+//BTaggingAnalysis.PhysDesktop.InputLocations={"/Event/Phys/DC04selBu2JpsiK"};
 
 ///example Bs Channel Selection ----------------------------------
 //#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
-//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2KK" };
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2KK" };
 
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
 
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
-//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsPi" };
+//BTaggingAnalysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsPi" };
 
 //#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
-//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBs2Jpsi2MuMu_Phi2KK"};
+//BTaggingAnalysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBs2Jpsi2MuMu_Phi2KK"};
 
 ///or Cheated Selection ------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
@@ -51,38 +50,7 @@ BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
 ///---------------------------------------------------------------
 ///               BTaggingAnalysis
 ///---------------------------------------------------------------
-#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
-//ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
-
-///---------------------------------------------------------------
-///               OUTPUT LEVELS
-///---------------------------------------------------------------
-CheatedSelection.OutputLevel          = 3;
-CheatedSelection.DebugTool.OutputLevel= 4;
-BTaggingAnalysis.DebugTool.OutputLevel= 4;
-BTaggingAnalysis.OutputLevel          = 3;
-ToolSvc.BTaggingTool.OutputLevel      = 3;
-
-///---------------------------------------------------------------
-///               Particle Maker
-///---------------------------------------------------------------
-BTaggingAnalysis.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
-BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Muon.Selection = {
-  "RequiresDet='MUON' CombDLL(mu-pi)>'-5.0'" } ;
-BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Electron.Selection = {
-  "RequiresDet='CALO' CombDLL(e-pi)>'2.0'" } ;
-BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {
-  "RequiresDet='RICH' CombDLL(k-pi)>'3.0' CombDLL(k-p)>'-4.0'" };
-
-BTaggingAnalysis.DecayDescriptor = { "not specified" };
-BTaggingAnalysis.PhysDesktop.OutputLevel = 5;
-BTaggingAnalysis.GeomDispCalculator.OutputLevel=4;
-
-//-----------------------------------------------------------------------
-//new associators
-BTaggingAnalysis.AssociatorInputData = { "Phys/BTaggingAnalysis/Particles" };
-BTaggingAnalysis.Particle2MCChi2.Chi2Cut = 75.; // Default is 100.
+#include "$FLAVOURTAGGINGOPTS/BTaggingAnalysis.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
@@ -103,7 +71,5 @@ HistogramPersistencySvc.OutputFile = "histos.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='analysis.root' TYP='ROOT' OPT='NEW'"};
 
-//-----------
-//EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001513/DST/0000/00001513_00000012_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" }; //bskk
 //##############################################################

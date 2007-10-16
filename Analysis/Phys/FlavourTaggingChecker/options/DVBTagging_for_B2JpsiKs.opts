@@ -4,8 +4,13 @@
 //================================================================
 
 // Require DaVinci options:
+#pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+//--- Uncomment for running HLT
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/HltSelections.opts"
 
 //Include Common Particles:
 #include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
@@ -13,6 +18,7 @@
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKs.opts"
 #include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
+#pragma print on
 
 /// The Main sequence; Instantiate GaudiSequencer and give it a name
 ApplicationMgr.TopAlg += { "GaudiSequencer/SeqB2Jpsihh" } ;
@@ -62,54 +68,48 @@ Bd2JpsiKsDD.MotherFilter.Selections = { "B0 : VtxFilterCriterion/bdVertex" } ;
 Bd2JpsiKsDD.MotherFilter.bdVertex.MaxChi2  = 500.0 ;
 
 //======================================================
-//Add Trigger
-//======================================================
-#include "$HLTSYSROOT/options/L0.opts"
-
-
-//======================================================
 //          FLAVOUR TAGGING
 //======================================================
+// #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
+// BTagging.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
 
-#include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-BTagging.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
-BTagging.OutputLevel = 2;
+#include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingAnalysis.opts"
+BTaggingAnalysis.PhysDesktop.InputLocations= {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
 
 //======================================================
 //Add DecayChainNtuple
 //======================================================
 ApplicationMgr.TopAlg += { "DecayChainNTuple/B2JpsihhTree" };
 B2JpsihhTree.OutputLevel = 3;
-
-B2JpsihhTree.RequireTagging = true;
-B2JpsihhTree.RequireTrigger = true;
-
+B2JpsihhTree.PhysDesktop.OutputLevel = 5;
 B2JpsihhTree.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
 B2JpsihhTree.LinkAsct.Location = {"Phys/Relations/Particle2MCLinksB2JpsihhTree"};
 B2JpsihhTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 B2JpsihhTree.LinkAsct.AlgorithmName = "Particle2MCLinksB2JpsihhTree";
-B2JpsihhTree.LinkAsct.OutputLevel = 4;
-Particle2MCLinksB2JpsihhTree.InputData = {
-                                         "Phys/StandardMuons/Particles",
-                                         "Phys/StandardPions/Particles",
-                                         "Phys/Bd2JpsiKsLL/Particles",
-                                         "Phys/Bd2JpsiKsDD/Particles" };
-
+B2JpsihhTree.LinkAsct.OutputLevel   = 4;
 Particle2MCLinksB2JpsihhTree.OutputLevel = 4;
+Particle2MCLinksB2JpsihhTree.InputData = {"Phys/StandardMuons/Particles",
+                                          "Phys/StandardPions/Particles",
+                                          "Phys/Bd2JpsiKsLL/Particles",
+					  "Phys/Bd2JpsiKsDD/Particles" };
 
 B2JpsihhTree.DecayDescriptor ="[B0 -> J/psi(1S) KS0]cc" ;
 B2JpsihhTree.Decay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
 B2JpsihhTree.FillMCDecay = true;
 B2JpsihhTree.MCDecay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
 
+B2JpsihhTree.RequireTagging = true;
 
 //======================================================
+#include "$STDOPTS/RootHist.opts"
+HistogramPersistencySvc.OutputFile = "histos.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='B2JpsiKS.root' TYP='ROOT' OPT='NEW'"};
 
-// Number of events to process:
+MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = -1;
-EventSelector.FirstEvent = 1;
+EventSelector.FirstEvent =  1;
+EventSelector.PrintFreq  =  1;
 
-// Insert Datasets:
+//Example Dataset:
 EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
