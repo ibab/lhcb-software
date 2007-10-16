@@ -8,4 +8,4 @@ from Gaudi.Configuration import *
 importOptions('$BRUNELOPTS/v200601.opts')
 
 ApplicationMgr( AppName    = 'Brunel',
-                AppVersion = 'v31r10' )
+                AppVersion = 'v32r0' )
