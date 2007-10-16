@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.17 2007-09-25 11:47:37 wouter Exp $
+// $Id: StateTraj.cpp,v 1.18 2007-10-16 12:16:30 wouter Exp $
 // Include files
 
 // Units
@@ -20,7 +20,7 @@ StateTraj::StateTraj( const State& state,
     m_dir( state.slopes().unit() ),
     m_qOverP( state.qOverP() ),
     m_bField(bField),
-    m_curv( Units::c_light*m_qOverP*( m_dir.Cross(bField) ) ) {}
+    m_curv( (Units::c_light*m_qOverP)*( m_dir.Cross(bField) ) ) {}
 
 // Constructor
 StateTraj::StateTraj( const LHCb::StateVector& stateVector,
@@ -30,7 +30,7 @@ StateTraj::StateTraj( const LHCb::StateVector& stateVector,
     m_dir( stateVector.slopes().unit() ),
     m_qOverP( stateVector.qOverP() ),
     m_bField(bField),
-    m_curv( Units::c_light*m_qOverP*( m_dir.Cross(bField) ) ) {}
+    m_curv( (Units::c_light*m_qOverP)*( m_dir.Cross(bField) ) ) {}
 
 // Constructor
 StateTraj::StateTraj( const Gaudi::TrackVector& stateVector,
@@ -44,7 +44,7 @@ StateTraj::StateTraj( const Gaudi::TrackVector& stateVector,
   XYZVector slopes = XYZVector( stateVector(2), stateVector(3), 1. );
   // True when approximating the trajectory as a straight line
   m_dir  = slopes.unit();
-  m_curv = Units::c_light*m_qOverP*( m_dir.Cross(m_bField) );   
+  m_curv = (Units::c_light*m_qOverP)*( m_dir.Cross(m_bField) );   
 }
 
 // StateTraj clone method
@@ -55,7 +55,7 @@ std::auto_ptr<Trajectory> StateTraj::clone() const
 
 XYZPoint StateTraj::position( double arclength ) const
 {
-  return m_pos + arclength*( m_dir + 0.5 * arclength*curvature(arclength) );
+  return m_pos + arclength* m_dir + (0.5*arclength*arclength)*curvature(arclength) ;
 }
     
 XYZVector StateTraj::direction( double arclength ) const
@@ -125,7 +125,7 @@ StateTraj::Derivative StateTraj::derivative( double arclength ) const
   return deriv;        
 }
 
-double StateTraj::arclength( const Gaudi::XYZPoint& point ) const
+double StateTraj::muEstimate( const Gaudi::XYZPoint& point ) const
 {
   // for now assume we're a straight line, i.e. |m_curve|<<|m_dir|
   // and return our zeroth order approximation..

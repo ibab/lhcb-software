@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.15 2007-09-25 11:47:37 wouter Exp $
+// $Id: StateTraj.h,v 1.16 2007-10-16 12:16:31 wouter Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -80,7 +80,7 @@ namespace LHCb
 
     /// give arclength where this trajectory is closest to the
     /// specified point
-    virtual double arclength( const Gaudi::XYZPoint& point) const;
+    virtual double muEstimate( const Gaudi::XYZPoint& point) const;
 
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance (does not account for the curvature).
@@ -94,6 +94,12 @@ namespace LHCb
                                    double tolerance,
                                    int pathDirection = +1 ) const;
 
+
+    /// Distance, along the Trajectory, between position(mu1) and
+    /// position(mu2). Trivial because StateTraj is parameterized in
+    /// arclength.
+    virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
+    
 #ifndef _WIN32
     /// operator new
     static void* operator new ( size_t size )

@@ -1,4 +1,4 @@
-// $Id: LineDifTraj.cpp,v 1.1 2007-04-17 15:19:36 graven Exp $
+// $Id: LineDifTraj.cpp,v 1.2 2007-10-16 12:16:30 wouter Exp $
 // Include files
 
 // local
@@ -67,7 +67,7 @@ void LineDifTraj::expansion( double arclength,
 
 /// Determine the distance in arclenghts to the
 /// closest point on the trajectory to a given point
-double LineDifTraj::arclength( const Point& point ) const
+double LineDifTraj::muEstimate( const Point& point ) const
 {
   return m_dir.Dot(point-m_pos);
 };

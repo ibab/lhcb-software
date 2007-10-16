@@ -1,4 +1,4 @@
-// $Id: LineDifTraj.h,v 1.1 2007-04-17 15:19:36 graven Exp $
+// $Id: LineDifTraj.h,v 1.2 2007-10-16 12:16:31 wouter Exp $
 #ifndef LineDifTraj_H
 #define LineDifTraj_H 1
 
@@ -45,7 +45,7 @@ namespace LHCb
       
       /// Determine the distance in arclenghts to the
       /// closest point on the trajectory to a given point
-      virtual double arclength( const Point& point ) const;
+      virtual double muEstimate( const Point& point ) const;
       
       /// Number of arclengths until deviation of the trajectory from the
       /// expansion reaches the given tolerance.
@@ -58,6 +58,11 @@ namespace LHCb
       virtual double distTo2ndError( double arclength,
                                      double tolerance, 
                                      int pathDirection = +1 ) const;
+
+      /// Distance, along the Trajectory, between position(mu1) and
+      /// position(mu2). Trivial because LineDifTraj is parameterized in
+      /// arclength.
+      virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
       typedef LHCb::DifTraj<4>::Parameters Parameters; 
       typedef LHCb::DifTraj<4>::Derivative Derivative; 
