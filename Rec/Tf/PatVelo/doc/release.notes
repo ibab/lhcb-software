@@ -4,11 +4,11 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r0 2007-10-16 ==========================
 ! 2007-10-16 - David Hutchcroft
  - Fix to PatVeloSpaceTool to flag both R and Phi clusters as used on tracks
  - Fix to PatVeloGeneralTracking to correctly average number of created points 
 
-!========================== PatVelo v3r0 2007-10-12 ==========================
 ! 2007-10-10 - Stephanie Hansmann-Menzemer
  - Remove _Tf in libary name
 
