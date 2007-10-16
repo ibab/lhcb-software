@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.16 2007-10-16 12:23:10 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -12,8 +12,9 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
 				 std::string Identifier,
 				 std::string Page,
 				 int Instance) :
-  OnlineHistDBEnv(env), m_isAbort(false), m_identifier(Identifier), 
-  m_page(Page), m_instance(Instance), SourceSet(0),
+  OnlineHistDBEnv(env), SourceSet(0),
+  m_isAbort(false), m_identifier(Identifier), 
+  m_page(Page), m_instance(Instance), 
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
     
     if (m_page  != "_NONE_") {
