@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.2 2007-09-17 14:13:10 krinnert Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.3 2007-10-16 08:56:39 dhcroft Exp $
 // Include files 
 
 // local
@@ -306,4 +306,20 @@ namespace Tf {
 
     m_chiSqDof = chi2/nFree;
   }
+
+  void PatVeloSpaceTrack::tagClustersAsUsed( HitBase::EStatus status){
+    
+    for ( std::vector<PatVeloRHit*>::iterator iR = m_rCoord.begin();
+	  iR != m_rCoord.end() ; ++iR ){
+      (*iR)->hit()->setStatus(status,true);
+    }
+    
+    for ( std::vector<PatVeloPhiHit*>::iterator iPhi = m_phiCoord.begin();
+	  iPhi != m_phiCoord.end() ; ++iPhi ){
+      (*iPhi)->hit()->setStatus(status,true);
+    }
+  }
+
 }
+
+  

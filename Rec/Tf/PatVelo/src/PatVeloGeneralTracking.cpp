@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.6 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.7 2007-10-16 08:56:39 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -208,7 +208,7 @@ build3DClusters(int zone,
       << " # points " 
       << createdPoints[rStation->sensor()->sensorNumber()].size() 
       << endreq;
-  m_Num3DCreated += createdPoints[rStation->stationNumber()].size();
+  m_Num3DCreated += createdPoints[rStation->sensor()->sensorNumber()].size();
   return;
 }
 

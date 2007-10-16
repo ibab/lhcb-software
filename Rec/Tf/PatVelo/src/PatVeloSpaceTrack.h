@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.2 2007-09-17 14:13:10 krinnert Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.3 2007-10-16 08:56:39 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -54,6 +54,9 @@ namespace Tf {
 
       /// set the tracks ancestor (RZ track normally)
       void setAncestor( const LHCb::Track* tr )      { m_ancestor = tr; }
+
+    /// set the used type flag for all cluster on the track
+    void tagClustersAsUsed( HitBase::EStatus );
 
     public:
       // inline getters
