@@ -1,4 +1,4 @@
-// $Id: AlignTraj.h,v 1.2 2007-04-17 06:30:13 graven Exp $
+// $Id: AlignTraj.h,v 1.3 2007-10-16 11:50:59 wouter Exp $
 #ifndef KERNEL_ALIGNTRAJ_H 
 #define KERNEL_ALIGNTRAJ_H 1
 
@@ -91,7 +91,9 @@ namespace LHCb
                               Point& p,
                               Vector& dp,
                               Vector& ddp ) const ;
-    virtual double arclength( const Point& ) const ;
+    
+    virtual double muEstimate( const Point& ) const ;
+
     virtual double distTo1stError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const ;
@@ -99,6 +101,11 @@ namespace LHCb
                                    double tolerance, 
                                    int pathDirection = +1 ) const ;
     
+    /// Distance, along the Trajectory, between position(mu1) and
+    /// position(mu2). Trivial because AlignTraj is parameterized in
+    /// arclength.
+    virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
+
   private:
     template <typename T> T rotate(const T& t) const 
     { return m_rx(m_ry(m_rz(t))); };

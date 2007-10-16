@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.11 2006-12-06 15:35:21 graven Exp $
+// $Id: ParabolaTraj.cpp,v 1.12 2007-10-16 11:50:59 wouter Exp $
 // Include files
 
 // local
@@ -56,7 +56,7 @@ void ParabolaTraj::expansion( double arclength,
 
   /// Determine the arclenghts of the
   /// closest point on this trajectory to a given point
-double ParabolaTraj::arclength( const Point& point ) const
+double ParabolaTraj::muEstimate( const Point& point ) const
 {
   Vector r = point - m_pos;
   if (m_curv.R()<0.01*m_dir.R()) { // small curvature limit: neglect curvature

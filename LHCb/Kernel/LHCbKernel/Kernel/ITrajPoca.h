@@ -27,40 +27,54 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrajPoca; }
 
-  // Find arclengths along trajectories
-  // having a distance smaller than tolerance
+  
+
+  /// Find points along trajectories at which the distance between the
+  /// trajectories is at its minimum. The precision parameter is the desired
+  /// numerical accuracy of mu1 and mu2. If the restrictrange flag is true, mu
+  /// is restricted to the range of the trajectory.
   virtual StatusCode minimize( const LHCb::Trajectory& traj1,
-                               double& arclength1, 
+                               double& mu1, 
                                bool restrictRange1,
                                const LHCb::Trajectory& traj2,
-                               double& arclength2, 
-                               bool restrictRange2,
+                               double& mu2, 
+                               bool restrictRange2, 
                                Gaudi::XYZVector& distance,
-                               double precision ) = 0;
-  
+                               double precision ) const = 0 ;
+
+  /// Find point along trajectory at which the distance to point 'p'
+  /// is minimum. The precision parameter is the desired numerical accuracy of
+  /// the expansion parameter mu. If the restrictrange flag is true, mu is
+  /// restricted to the range of the trajectory.
   virtual StatusCode minimize( const LHCb::Trajectory& traj,
-                               double& arclength,
+                               double& mu,
                                bool restrictRange,
                                const Gaudi::XYZPoint& pt,
                                Gaudi::XYZVector& distance,
-                               double precision ) = 0;
-
-  StatusCode minimize( const LHCb::Trajectory& traj1,
-                       double& arclength1, 
-                       const LHCb::Trajectory& traj2,
-                       double& arclength2,
-                       Gaudi::XYZVector& distance,
-                       double precision )  
-  { return minimize( traj1, arclength1, false,
-                     traj2, arclength2, false,
-                     distance, precision); }
+                               double precision ) const = 0;
   
+  /// Find points along trajectories at which the distance between the
+  /// trajectories is at its minimum. The precision parameter is the desired
+  /// numerical accuracy of the expansion parameters mu1 and mu2.
+  StatusCode minimize( const LHCb::Trajectory& traj1,
+                       double& mu1, 
+                       const LHCb::Trajectory& traj2,
+                       double& mu2,
+                       Gaudi::XYZVector& distance,
+                       double precision ) const {
+    return minimize( traj1, mu1, false, traj2, mu2, false,distance, precision); 
+  }
+  
+  
+  /// Find point along trajectory at which the distance to point 'p'
+  /// is minimum. The precision parameter is the desired 
+  /// numerical accuracy of the expansion parameter mu.
   StatusCode minimize( const LHCb::Trajectory& traj,
-                       double& arclength,
+                       double& mu,
                        const Gaudi::XYZPoint& pt,
                        Gaudi::XYZVector& distance, 
-                       double precision )
-  { return minimize( traj, arclength, false, pt, distance, precision); }
-
+                       double precision ) const {
+    return minimize( traj, mu, false, pt, distance, precision); 
+  }
 };
 #endif // KERNEL_ITRAJPOCA_H

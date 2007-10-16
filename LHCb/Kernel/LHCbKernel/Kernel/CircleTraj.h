@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.10 2007-08-28 13:04:59 jonrob Exp $
+// $Id: CircleTraj.h,v 1.11 2007-10-16 11:50:59 wouter Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -68,7 +68,7 @@ namespace LHCb
 
     /// Return arclen at which the trajectory is
     /// closest to the specified point
-    virtual double arclength( const Point& point ) const;
+    virtual double muEstimate( const Point& point ) const;
 
     /// distance along the trajectory until deviation from the
     /// 1st order expansion reaches the given tolerance.
@@ -81,6 +81,11 @@ namespace LHCb
     virtual double distTo2ndError( double arclength,
                                    double tolerance,
                                    int pathDirection = +1 ) const;
+
+    /// Distance, along the Trajectory, between position(mu1) and
+    /// position(mu2). Trivial because CircleTraj is parameterized in
+    /// arclength.
+    virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
 #ifndef _WIN32
     /// operator new

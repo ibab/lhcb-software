@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.15 2006-12-15 14:21:10 cattanem Exp $
+// $Id: Trajectory.h,v 1.16 2007-10-16 11:50:59 wouter Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -17,7 +17,8 @@ namespace LHCb
 
   /** @class Trajectory Trajectory.h
    *
-   * This is the base class for the trajectory classes. 
+   * This is the base class for the trajectory classes. 'mu' is the expansion
+   * parameter. For the existing trajectories it is either the arclength or z.
    *
    * @author Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
    * @date   01/12/2005
@@ -34,23 +35,17 @@ namespace LHCb
     /// Clone a trajectory...
     virtual std::auto_ptr<Trajectory> clone() const = 0;
 
-    /// Constructor taking the values of arclength
-    /// at the begin and at the end of the trajectory
-    Trajectory( double begin, double end ): m_range(Range(begin,end))
-    {
-    }
-
-    /// constructer taking a range
-    Trajectory( const Range& range ): m_range(range) 
-    {      
-    }
+    /// Constructor taking the values of mu that defined the valid range of the trajectory
+    Trajectory( double begin, double end ): m_range(Range(begin,end)) {}
     
+    /// constructer taking a range
+    Trajectory( const Range& range ): m_range(range) {}
 
-    /// destructer
-    virtual ~Trajectory(){}
+    /// destructor
+    virtual ~Trajectory() {}
 
-    /// Point on the trajectory at arclength from the starting point
-    virtual Point position( double arclength ) const = 0;
+    /// Point on the trajectory at position mu from the starting point
+    virtual Point position( double mu ) const = 0;
 
     /// Beginpoint of the Trajectory
     Point beginPoint() const { return position( beginRange() ); }
@@ -58,55 +53,56 @@ namespace LHCb
     /// Endpoint of the Trajectory
     Point endPoint() const { return position( endRange() ); }
     
-    /// First derivative of the trajectory at arclength from the starting point
-    virtual Vector direction( double arclength ) const = 0;
+    /// First derivative of the position to mu. Note: not normalized!
+    virtual Vector direction( double mu ) const = 0;
     
-    /// Second derivative of the trajectory at arclength from the starting point
-    virtual Vector curvature( double arclength ) const = 0;
+    /// Second derivative of the position to mu. Note: not normalized!
+    virtual Vector curvature( double mu ) const = 0;
     
-    /// Create a parabolic approximation to the trajectory
-    /// at arclength from the starting point
-    virtual void expansion( double arclength,
-                            Point& p,
-                            Vector& dp,
-                            Vector& ddp ) const = 0;
+    /// Create a parabolic approximation to the trajectory at position mu
+    virtual void expansion( double mu, Point& p, Vector& dp, Vector& ddp ) const = 0;
     
-    /// Determine the distance in arclenghts to the
-    /// closest point on the trajectory to a given point
-    virtual double arclength( const Point& ) const = 0;
+    /// Estimate the value mu that corresponds to the closest point on the
+    /// trajectory to a given point. The position corresponding to mu may differ
+    /// from the exact point of closest approach for trajectories with non-zero
+    /// curvature.
+    virtual double muEstimate( const Point& ) const = 0;
     
-    /// Number of arclengths until deviation of the trajectory from the expansion
-    /// reaches the given tolerance.
-    virtual double distTo1stError( double arclength,
-                                   double tolerance, 
-                                   int pathDirection = +1 ) const = 0;
+    /// Distance in mu until the deviation from the linear approximation differs
+    /// from this trajectory by a given tolerance.
+    virtual double distTo1stError( double mu, double tolerance, int pathDirection = +1 ) const = 0;
     
-    /// Number of arclengths until deviation of the trajectory from the expansion
-    /// reaches the given tolerance.
-    virtual double distTo2ndError( double arclength,
-                                   double tolerance, 
-                                   int pathDirection = +1 ) const = 0;
+    /// Distance in mu until the deviation from the quadratic approximation differs
+    /// from this trajectory by a given tolerance.
+    virtual double distTo2ndError( double mu, double tolerance, int pathDirection = +1 ) const = 0;
     
-    /// Range in arclength w.r.t. the starting point
-    /// over which the trajectory is valid
+    /// Range of expansion parameter over which the trajectory is defined
     Range range() const { return m_range; }
     
-    /// Maximal valid value of arclength according to range()
+    /// Maximum value of mu for which the trajectory is defined
     double endRange() const { return range().second; }
     
-    /// Minimal valid value of arclength according to range()
+    /// Minimum value of mu for which the trajectory is defined
     double beginRange() const { return range().first; }
     
-    /// Restrict arclength to the valid range of the trajectory
-    double restrictToRange( double arclength ) const 
-    {
-      Range r = range(); 
-      return std::max( r.first, std::min(arclength, r.second ) );
+    /// Distance, along the Trajectory, between Trajectory::position(mu1) and
+    /// Trajectory::position(mu2)
+    virtual double arclength(double mu1, double mu2) const = 0 ;
+    
+    // Arclength of valid range
+    virtual double arclength() const { return arclength(beginRange(),endRange()) ; }
+    
+    /// Set the range
+    void setRange( double begin, double end ) {
+      m_range.first  = begin ;
+      m_range.second = end ;
     }
     
-    /// Length of trajectory
-    double length() const { Range r = range(); return r.second-r.first; };
-
+    /// obsolete, must be removed/renamed in inherited classes/clients
+    double length() const { return arclength() ; };
+    /// obsolete, must be removed/renamed in inherited classes/clients
+    double arclength(const Point& point) const { return muEstimate(point) ; }
+    
   private:
 
     Range m_range;

@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-10-12 - Wouter Hulsbergen
+ - Adapted interface of trajectories for 'generic' expansion parameter
+
 !===================== LHCbKernel v7r7 2007-09-07 ========================
 ! 2007-09-07 - Marco Cattaneo
  - Add MuonLayout to dictionary

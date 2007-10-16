@@ -1,4 +1,4 @@
-// $Id: AlignTraj.cpp,v 1.3 2007-04-17 06:30:13 graven Exp $
+// $Id: AlignTraj.cpp,v 1.4 2007-10-16 11:50:59 wouter Exp $
 
 #include "Kernel/AlignTraj.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
@@ -109,7 +109,7 @@ AlignTraj::expansion( double s,
 }
 
 double 
-AlignTraj::arclength( const Point& p) const 
+AlignTraj::muEstimate( const Point& p) const 
 {
     // apply inverse transformation to Point, and forward...
     return m_traj.arclength( m_pivot + invRotate(p - m_pivot - m_trans) );

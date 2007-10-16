@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.11 2006-12-06 15:35:21 graven Exp $
+// $Id: CircleTraj.cpp,v 1.12 2007-10-16 11:50:59 wouter Exp $
 // Include files
 
 // local
@@ -73,7 +73,7 @@ void CircleTraj::expansion( double s,
 
 /// Determine the closest point on the circle to a
 /// given point, and return the corresponding arclength
-double CircleTraj::arclength( const Point& point ) const
+double CircleTraj::muEstimate( const Point& point ) const
 {
   // get vector from origin, to point after projecting it 
   // into the plane of the circle. (i.e. this vector is normal

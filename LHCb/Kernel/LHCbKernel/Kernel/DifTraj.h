@@ -1,4 +1,4 @@
-// $Id: DifTraj.h,v 1.9 2007-04-17 06:30:13 graven Exp $
+// $Id: DifTraj.h,v 1.10 2007-10-16 11:50:59 wouter Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
@@ -40,9 +40,9 @@ namespace LHCb
     typedef ROOT::Math::SMatrix<double,3,N> Derivative;
     typedef ROOT::Math::SVector<double,N>   Parameters;
     
-    /// Retrieve the derivative of the point at fixed arclength 'arclength' 
-    /// with respect to the parameters used to descrive the trajectory
-    virtual Derivative derivative( double arclength ) const = 0;
+    /// Retrieve the derivative of the point at fixed expansion parameter 'mu'
+    /// with respect to the parameters used to describe the trajectory
+    virtual Derivative derivative( double mu ) const = 0;
     
     /// Retrieve the parameters of the DifTraj -- these should be
     /// the values of the parameters with respect to which 'derivative' 

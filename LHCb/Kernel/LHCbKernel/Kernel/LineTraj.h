@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.16 2007-08-28 13:04:59 jonrob Exp $
+// $Id: LineTraj.h,v 1.17 2007-10-16 11:50:59 wouter Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -73,7 +73,7 @@ namespace LHCb
 
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double arclength( const Point& point ) const;
+    virtual double muEstimate( const Point& point ) const;
 
     /// Number of arclengths until deviation of the trajectory from the
     /// expansion reaches the given tolerance.
@@ -87,7 +87,11 @@ namespace LHCb
                                    double tolerance,
                                    int pathDirection = +1 ) const;
 
-
+    /// Distance, along the Trajectory, between position(mu1) and
+    /// position(mu2). Trivial because LineTraj is parameterized in
+    /// arclength.
+    virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
+    
 #ifndef _WIN32
     /// operator new
     static void* operator new ( size_t size )
