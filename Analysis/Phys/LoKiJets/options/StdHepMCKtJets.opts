@@ -1,6 +1,6 @@
-// $Id: StdHepMCKtJets.opts,v 1.1 2006-11-12 15:13:36 ibelyaev Exp $ 
+// $Id: StdHepMCKtJets.opts,v 1.2 2007-10-16 14:14:57 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,8 +32,8 @@ ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
 /// configure Data-On-Demans service 
 // ============================================================================
 DataOnDemandSvc.AlgMap +=  {
-  'Phys/StdHepMCKtJets/Particles' : 'LoKiKtJetMaker/StdHepMCKtJets' ,
-  'Phys/StdHepMCKtJets/Vertices'  : 'LoKiKtJetMaker/StdHepMCKtJets'  
+  'Phys/StdHepMCKtJets/Particles' : 'LoKi::JetMakerAlg/StdHepMCKtJets' ,
+  'Phys/StdHepMCKtJets/Vertices'  : 'LoKi::JetMakerAlg/StdHepMCKtJets'  
 } ;
 // ============================================================================
 /// configure the algorithm
@@ -46,17 +46,6 @@ StdHepMCKtJets.PhysDesktop.InputLocations =  {
   "Phys/StdHepMCProtons"   ,  
   "Phys/StdHepMCPhotons"   
 } ;
-// ============================================================================
-//StdHepMCKtJets.JetID         = 98   ; ///<default 
-//StdHepMCKtJets.Type          =  4   ; ///<default 
-//StdHepMCKtJets.AngularScheme =  1   ; ///<default 
-//StdHepMCKtJets.Recombination =  1   ; ///<default 
-//StdHepMCKtJets.RParameter    =  1.0 ; ///<default 
-//StdHepMCKtJets.Sort          =  2   ; ///<default 
-// ============================================================================
-
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // The END  
 // ============================================================================
