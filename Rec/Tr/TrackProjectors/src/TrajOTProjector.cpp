@@ -12,7 +12,8 @@
 
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
-#include "Event/StateTraj.h"
+#include "Event/StateVector.h"
+#include "Event/StateZTraj.h"
 
 // from TrackInterfaces
 #include "Kernel/ITrajPoca.h"
@@ -77,14 +78,14 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   // Project onto the reference. First create the StateTraj with or without BField information.
   XYZVector bfield(0,0,0) ;
   if( m_useBField) m_pIMF -> fieldVector( statevector.position(), bfield ).ignore();
-  const StateTraj refTraj( statevector, bfield );
+  const StateZTraj refTraj( statevector, bfield );
   
   // Get the measurement trajectory representing the centre of gravity
   const Trajectory& measTraj = meas.trajectory();
 
   // Determine initial estimates of s1 and s2
-  double s1 = 0.; // Assume state is already close to the minimum
-  double s2 = measTraj.arclength( refTraj.position(s1) );
+  double s1 = statevector.z() ; // Assume state is already close to the minimum
+  double s2 = measTraj.muEstimate( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
   static XYZVector dist; // avoid constructing this every call to project...
@@ -159,14 +160,14 @@ TrajOTProjector::alignmentDerivatives( const Measurement& meas,
 				       refVec[1], meas.z() ), bfield ).ignore();
     }
   else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateTraj refTraj( refVec, meas.z(), bfield );
+  const StateZTraj refTraj( LHCb::StateVector(refVec,meas.z()), bfield );
 
   // Get the measurement trajectory
   const Trajectory& measTraj = meas.trajectory();  
 
   // Determine initial estimates of s1 and s2
-  double s1 = 0.; // Assume state is already close to the minimum
-  double s2 = measTraj.arclength( refTraj.position(s1) );
+  double s1 = meas.z() ; // Assume state is already close to the minimum
+  double s2 = measTraj.muEstimate( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
   static XYZVector dist;
