@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.5 2007-10-10 12:33:31 wouter Exp $
+// $Id: TrajPoca.cpp,v 1.6 2007-10-16 11:53:20 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 // Math Definitions
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "TrajPoca.h"
@@ -28,6 +29,7 @@ TrajPoca::TrajPoca( const std::string& type,
   declareProperty( "MaxnStuck",         m_maxnStuck = 3         );
   declareProperty( "MaxnTry",           m_maxnTry = 100         );
   declareProperty( "MaxDist",           m_maxDist = 100000000   );
+  declareProperty( "MaxExtrapTolerance", m_maxExtrapTolerance = 1*Gaudi::Units::cm) ;
 };
 
 //=============================================================================
@@ -37,16 +39,16 @@ TrajPoca::~TrajPoca() {};
 
 
 //=============================================================================
-// Find arclengths along trajectories having a distance smaller than tolerance
+// Find mus along trajectories having a distance smaller than tolerance
 //=============================================================================
 StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
-                               double& arclength1, 
+                               double& mu1, 
                                bool restrictRange1,
                                const LHCb::Trajectory& traj2,
-                               double& arclength2, 
+                               double& mu2, 
                                bool restrictRange2, 
                                Gaudi::XYZVector& distance,
-                               double precision )
+                               double precision ) const
 {
   StatusCode status = StatusCode::SUCCESS;
 
@@ -58,20 +60,20 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
   bool finished = false;
 
   for( int istep = 0; istep < m_maxnTry && !finished; ++istep ) {
-    double prevflt1      = arclength1;
-    double prevflt2      = arclength2;
+    double prevflt1      = mu1;
+    double prevflt2      = mu2;
     double prevprevdelta = prevdelta;
     prevdelta = delta ;
-    status = stepTowardPoca( traj1, arclength1, restrictRange1,
-                             traj2, arclength2, restrictRange2, precision );
+    status = stepTowardPoca( traj1, mu1, restrictRange1,
+                             traj2, mu2, restrictRange2, precision );
     if( !status ) break; // Parallel Trajectories in stepTowardPoca
 
-    newPos1  = traj1.position( arclength1 );
-    newPos2  = traj2.position( arclength2 );
+    newPos1  = traj1.position( mu1 );
+    newPos2  = traj2.position( mu2 );
     distance = ( newPos1 - newPos2 );
     delta    = distance.R();
-    double step1 = arclength1 - prevflt1;
-    double step2 = arclength2 - prevflt2;
+    double step1 = mu1 - prevflt1;
+    double step2 = mu2 - prevflt2;
     int pathDir1 = ( step1 > 0. ) ? 1 : -1;
     int pathDir2 = ( step2 > 0. ) ? 1 : -1;
     // Can we stop stepping?
@@ -88,8 +90,8 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
           // downgrade to a point poca
           Gaudi::XYZVector dist = Gaudi::XYZVector( 0., 0., 0. );
           restrictRange2 ? 
-            minimize( traj1, arclength1, restrictRange1, newPos2, dist, precision )
-            : minimize( traj2, arclength2, restrictRange2, newPos1, dist, precision );
+            minimize( traj1, mu1, restrictRange1, newPos2, dist, precision )
+            : minimize( traj2, mu2, restrictRange2, newPos1, dist, precision );
           if( msgLevel( MSG::DEBUG ) ) {
             debug() << "Minimization got stuck." << endmsg;
           }
@@ -111,8 +113,8 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
         if( ++nOscillStep > m_maxnOscillStep ) {
           // bail out of oscillation. since the previous step was
           // better, use that one.
-          arclength1 = prevflt1;
-          arclength2 = prevflt2;
+          mu1 = prevflt1;
+          mu2 = prevflt2;
           if( msgLevel( MSG::DEBUG ) ) {
             debug() << "Minimization bailed out of oscillation." << endmsg;
           }
@@ -123,10 +125,12 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
           // we might be oscillating, but we could also just have
           // stepped over the minimum. choose a solution `in
           // between'.
-          arclength1 = restrictLen( prevflt1 + 0.5 * step1, traj1, restrictRange1 );
-          arclength2 = restrictLen( prevflt2 + 0.5 * step2, traj2, restrictRange2 );
-          newPos1    = traj1.position( arclength1 );
-          newPos2    = traj2.position( arclength2 );
+          mu1 = prevflt1 + 0.5 * step1 ;
+          if( restrictRange1 ) restrictToRange(mu1,traj1) ;
+          mu1 = prevflt2 + 0.5 * step2 ;
+          if( restrictRange2 ) restrictToRange(mu2,traj2) ;
+          newPos1    = traj1.position( mu1 );
+          newPos2    = traj2.position( mu2 );
           distance   = ( newPos1 - newPos2 ); 
           delta      = distance.R();
         }
@@ -146,15 +150,16 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
 // 
 //=============================================================================
 StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj,
-                               double& arclength,
+                               double& mu,
                                bool restrictRange,
                                const Gaudi::XYZPoint& pt,
                                Gaudi::XYZVector& distance,
-                               double /*precision*/ )
+                               double /*precision*/ ) const
 {
-  arclength = restrictLen( traj.arclength( pt ), traj, restrictRange );
-  distance = traj.position( arclength ) - pt;
-
+  // this does not work for non-linear Trajectories!
+  mu = traj.muEstimate( pt ) ;
+  if(restrictRange) restrictToRange( mu, traj ) ;
+  distance = traj.position( mu ) - pt;
   return StatusCode::SUCCESS;
 };
 
@@ -162,10 +167,10 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj,
 // 
 //=============================================================================
 StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
-                                     double& arclength1,
+                                     double& mu1,
                                      bool restrictRange1,
                                      const LHCb::Trajectory& traj2,
-                                     double& arclength2,
+                                     double& mu2,
                                      bool restrictRange2,
                                      double tolerance ) const
 {
@@ -176,8 +181,8 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
   static Gaudi::XYZVector delDir1, delDir2;
   static Gaudi::XYZPoint  pos1, pos2;
 
-  traj1.expansion( arclength1, pos1, dir1, delDir1 );
-  traj2.expansion( arclength2, pos2, dir2, delDir2 );
+  traj1.expansion( mu1, pos1, dir1, delDir1 );
+  traj2.expansion( mu2, pos2, dir2, delDir2 );
   Gaudi::XYZVector delta( pos1 - pos2 );
   double ua  = -delta.Dot( dir1 );
   double ub  =  delta.Dot( dir2 );
@@ -206,38 +211,44 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
   int pathDir2 = ( df2 > 0 ) ? 1 : -1;
     
   // Don't try going further than worst parabolic approximation will
-  // allow: Since `tolerance' is large, this cut effectively only
-  // takes care that we don't make large jumps past the kink in a
-  // piecewise trajectory.
-
-  double distToErr1 = traj1.distTo2ndError( arclength1, tolerance, pathDir1 );
-  double distToErr2 = traj2.distTo2ndError( arclength2, tolerance, pathDir2 );
+  // allow. The tolerance is set by 'deltadoca', the expected
+  // improvement in the doca. We bound this by tolerance from below
+  // and maxExtrapTolerance from above.
+  double deltadoca = sqrt( fabs(ua * df1) + fabs(ub * df2) ) ; // fabs only because of machine precision issues.
+  double extraptolerance = std::min(std::max(deltadoca,tolerance),m_maxExtrapTolerance) ;
+  const double smudge = 1.01; // Factor to push just over border of piecewise traj (essential!)
+  double distToErr1 = smudge * traj1.distTo2ndError( mu1, extraptolerance, pathDir1 );
+  double distToErr2 = smudge * traj2.distTo2ndError( mu2, extraptolerance, pathDir2 );
 
   // Factor to push just over border of piecewise traj (essential!)
-  const double smudge = 1.01;
-  if( fabs( df1 ) > smudge * distToErr1 ) {
+  if( fabs( df1 ) > distToErr1 ) {
     // choose solution for which df1 steps just over border
-    df1 = smudge * distToErr1 * pathDir1;
+    df1 = distToErr1 * pathDir1;
     // now recalculate df2, given df1:
     df2 = ( ub - df1 * cab ) / cbb;
   }
 
-  if( fabs( df2 ) > smudge * distToErr2 ) {
+  if( fabs( df2 ) > distToErr2 ) {
     // choose solution for which df2 steps just over border
-    df2 = smudge * distToErr2 * pathDir2;
+    df2 = distToErr2 * pathDir2;
     // now recalculate df1, given df2:
     df1 = ( ua - df2 * cab ) / cbb;
     // if still not okay,
-    if( fabs( df1 ) > smudge * distToErr1 ) {
-      df1 = smudge * distToErr1 * pathDir1;
+    if( fabs( df1 ) > distToErr1 ) {
+      df1 = distToErr1 * pathDir1;
     }
   }
 
-  arclength1 = restrictLen( arclength1 + df1, traj1, restrictRange1 );
-  arclength2 = restrictLen( arclength2 + df2, traj2, restrictRange2 );
+  mu1 += df1 ;
+  mu2 += df2 ;
 
+  // these do not make any sense here. either we need to merge them with the lines above that restrict to the validity of the
+  // expansion, or we need to move them out of here entirely.
+  if( restrictRange1 ) restrictToRange(mu1,traj1) ;
+  if( restrictRange2 ) restrictToRange(mu2, traj2) ;
+  
   // another check for parallel trajectories
-  if( fabs( arclength1 ) > m_maxDist && fabs( arclength2 ) > m_maxDist ) {
+  if( fabs( mu1 ) > m_maxDist && fabs( mu2 ) > m_maxDist ) {
     if( msgLevel( MSG::DEBUG ) ) {
       debug() << "Stepped further than MaxDist." << endmsg;    
     }
@@ -250,11 +261,19 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
 //=============================================================================
 // 
 //=============================================================================
-double TrajPoca::restrictLen( double l,
-                              const LHCb::Trajectory& t,
-                              bool restrictRange ) const
+bool TrajPoca::restrictToRange( double& l, const LHCb::Trajectory& t ) const
 {
-  return ( restrictRange ? t.restrictToRange(l) : l );
+  double lmax = std::max(t.beginRange(),t.endRange()) ;
+  double lmin = std::min(t.beginRange(),t.endRange()) ;
+  bool rc = false ;
+  if( l > lmax) {
+    rc = true ;
+    l = lmax ;
+  } else if( l < lmin) {
+    rc = true ;
+    l = lmin ;
+  }
+  return rc ;
 };
 
 //=============================================================================

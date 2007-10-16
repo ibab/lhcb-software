@@ -1,4 +1,4 @@
-// $Id: TrajPoca.h,v 1.3 2007-03-02 08:49:27 cattanem Exp $
+// $Id: TrajPoca.h,v 1.4 2007-10-16 11:53:20 wouter Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
@@ -18,6 +18,7 @@
  *  Calculates points of closest approach
  *  between two trajectories
  *
+ *  @author Steve Schaffner (babar implementation)
  *  @author Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  *  @date   2005-11-23
  */
@@ -35,35 +36,39 @@ public:
   /// Default destructor
   virtual ~TrajPoca();
 
-  /// Find arclengths along trajectories
-  /// having a distance smaller than tolerance
-  virtual StatusCode minimize( const LHCb::Trajectory& traj1,
-                               double& arclength1, 
-                               bool restrictRange1,
-                               const LHCb::Trajectory& traj2,
-                               double& arclength2, 
-                               bool restrictRange2, 
-                               Gaudi::XYZVector& distance,
-                               double precision );
+  /// Find points along trajectories at which the distance between the
+  /// trajectories is at its minimum. The precision parameter is the desired
+  /// numerical accuracy of mu1 and mu2. If the restrictrange flag is true, mu
+  /// is restricted to the range of the trajectory.
+  StatusCode minimize( const LHCb::Trajectory& traj1,
+                       double& mu1, 
+                       bool restrictRange1,
+                       const LHCb::Trajectory& traj2,
+                       double& mu2, 
+                       bool restrictRange2, 
+                       Gaudi::XYZVector& distance,
+                       double precision ) const ;
 
-  /// Find the minimum distance between a point and a Trajectory
-  virtual StatusCode minimize( const LHCb::Trajectory& traj,
-                               double& arclength,
-                               bool restrictRange,
-                               const Gaudi::XYZPoint& pt,
-                               Gaudi::XYZVector& distance,
-                               double precision );
-
+  /// Find point along trajectory at which the distance to point 'p'
+  /// is minimum. The precision parameter is the desired numerical accuracy of
+  /// the expansion parameter mu. If the restrictrange flag is true, mu is
+  /// restricted to the range of the trajectory.
+  StatusCode minimize( const LHCb::Trajectory& traj,
+                       double& mu,
+                       bool restrictRange,
+                       const Gaudi::XYZPoint& pt,
+                       Gaudi::XYZVector& distance,
+                       double precision ) const ;
 private:
   StatusCode stepTowardPoca( const LHCb::Trajectory& traj1,
-                             double& arclength1,
+                             double& mu1,
                              bool restrictRange1,
                              const LHCb::Trajectory& traj2,
-                             double& arclength2, 
+                             double& mu2, 
                              bool restrictRange2,
                              double precision ) const;
 
-  double restrictLen( double l, const LHCb::Trajectory& t, bool restrictRange ) const;
+  bool restrictToRange( double& l, const LHCb::Trajectory& t ) const;
 
 private:
 
@@ -73,9 +78,7 @@ private:
   int m_maxnStuck;
   int m_maxnTry;
   double m_maxDist;
- 
-  double m_tolerance;
-
+  double m_maxExtrapTolerance;
 };
 
 #endif // TRACKTOOLS_TRAJPOCA_H
