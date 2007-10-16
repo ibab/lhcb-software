@@ -21,6 +21,8 @@ Purpose: LHCb Alignment Tools
 </PRE><H1><A NAME=v3r2>2007-04-25 AlignTrTools v3r2 </A></H1><PRE>
 - J. Blouw, 2007-09-26
   -> made TAConfig consistent with IGeometry & IAlignment interface of DetDesc v18r0
+  -> changed "double blahblah[n]" type of instantiations to "double *blahblah = new double[n]" to
+     remain consistent with windows compiler.
   -> NOTE!!!!!!!!!!!
 ===> RETAG of this package, due to inconsistencies with LHCB_v22r9
 

@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.11 2007-09-26 13:20:43 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.12 2007-10-16 08:24:44 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -742,8 +742,8 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
   int i, j, jj, k;
   double vkk, *temp;
   double eps = 0.0000000000001;
-  bool flag[n]; //MD 15-11
-  double diag[n];//MD 15-11
+  bool *flag = new  bool[n];
+  double *diag = new double[n];
   
   temp = new double[n];
   
