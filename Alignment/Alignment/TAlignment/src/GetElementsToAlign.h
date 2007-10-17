@@ -1,4 +1,4 @@
-// $Id: GetElementsToAlign.h,v 1.1 2007-09-01 17:36:08 janos Exp $
+// $Id: GetElementsToAlign.h,v 1.2 2007-10-17 12:08:23 lnicolas Exp $
 #ifndef TALIGNMNET_GETELEMENTSTOALIGN_H 
 #define TALIGNMENT_GETELEMENTSTOALIGN_H 1
 
@@ -78,6 +78,12 @@ class GetElementsToAlign : public GaudiAlgorithm {
     IDetectorElement* mod   = (dynamic_cast<const DetectorElement*>(iElem))->parentIDetectorElement();
     
     return dynamic_cast<const DetectorElement*>(mod);
+  }
+
+  const DetectorElement* itLadder(const DeSTSector* sensor) const {
+    IDetectorElement* lad = sensor->parentIDetectorElement();
+
+    return dynamic_cast<const DetectorElement*>(lad);
   }
   
   StatusCode setLocalDeltaParams(const Translations& translations,

@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-10-17 - Louis Nicolas
+ - bug fix in AlignAlgorithm.cpp
+ - GetElementsToAlign.cpp deals with OT modules and IT ladders
+ - fixes in GetElementsToAlign.cpp
+
 ! 2007-10-16 - Gerhard Raven
  - add treatment of hit-hit correlations to AlignAlgorithm using Wouter's ResidualCovarianceTool
  - add ResidualCovarianceTool

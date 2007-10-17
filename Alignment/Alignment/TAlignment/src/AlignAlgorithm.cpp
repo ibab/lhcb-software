@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.8 2007-10-16 14:12:24 graven Exp $
+// $Id: AlignAlgorithm.cpp,v 1.9 2007-10-17 12:08:23 lnicolas Exp $
 // Include files
 // from std
 #include <utility>
@@ -460,8 +460,8 @@ StatusCode AlignAlgorithm::putAlignmentConstants(const Elements& elements, const
   unsigned(nE) = 0u;
   for (ElemIter iE = elements.begin(), iEend = elements.end(); iE != iEend; ++nE, ++iE) {
     if (printDebug()) { debug() << (*iE)->name() 
-                                << "\n current local delta : \n" << (*iE)->geometry()->localDeltaMatrix()
-                                << " current local 0,0,0 in global coordinates: " 
+                                << "\n current local delta : \n" << (*iE)->geometry()->ownToOffNominalMatrix()
+                                << " current local centre (0,0,0) in global coordinates: " 
                                 << (*iE)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0)) << endmsg;
     }
     /// 3 translations
