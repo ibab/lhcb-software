@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.35 2007-06-08 15:34:00 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.36 2007-10-17 11:24:04 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -231,38 +231,45 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
     //Getting stations
     IDetectorElement::IDEContainer::const_iterator itSt;
     for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-      if(msta == station) {
+      if(msta == station) { 
         //Getting regions
-        mreg = 0;
-        IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-        for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-          //Getting chambers
-          mchm = 0;
-          IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-          for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-            IGeometryInfo* geoAllChm = (*itCh)->geometry();  
-            
-            //For calls not providing hit z take the z of chamber center
-            if(!z) {myPoint.SetZ(geoAllChm->toGlobal(Gaudi::XYZPoint(0,0,0)).z());}
-            
-            isIn = geoAllChm->isInside(myPoint);
-            if(isIn) {
-              sc = StatusCode::SUCCESS;
-              //Returns the correct region and chamber number
-              chamberNumber = mchm;  regNum = mreg;
-              msg << MSG::DEBUG << "Hit found in chamber C: " <<
-                chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endreq;
-              return sc;
+        IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
+        for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
+          mreg = 0;
+          IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
+          for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
+            //Getting chambers
+            mchm = 0;
+            IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+            for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+              IGeometryInfo* geoAllChm = (*itCh)->geometry();  
+              
+              //For calls not providing hit z take the z of chamber center
+              if(!z) {myPoint.SetZ(geoAllChm->toGlobal(Gaudi::XYZPoint(0,0,0)).z());}
+              
+              isIn = geoAllChm->isInside(myPoint);
+              if(isIn) {
+                sc = StatusCode::SUCCESS;
+                //Returns the correct region and chamber number
+                DeMuonChamber* pCh=dynamic_cast<DeMuonChamber*>(*itCh);
+                chamberNumber = pCh->chamberNumber();
+                //mchm;  
+                regNum = mreg;
+                msg << MSG::DEBUG << "Hit found in chamber C: " <<
+                  chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endreq;
+                return sc;
+              }
+              mchm++;
             }
-            mchm++;
-          }//Chamber Loop
-          mreg++;
-        }//Region Loop
-      }
+            //Chamber Loop
+            mreg++;
+          }//Region Loop
+        }//side loop
+      }      
       msta++;
     }//Stations Loop
   }
-
+  
   return sc;
 }
 
@@ -362,7 +369,7 @@ StatusCode DeMuonDetector::Pos2ChamberTile(const double x,
   return sc;
 }
 
-IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg, 
+/*IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg, 
                                                     int lchm) {
   
   IDetectorElement* myDet = (IDetectorElement*)0;
@@ -402,7 +409,7 @@ IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg,
   return myDet;
   
 }
-
+*/
 void DeMuonDetector::CountDetEls() {
   
   IDetectorElement* myDet = (IDetectorElement*)0;
@@ -411,15 +418,15 @@ void DeMuonDetector::CountDetEls() {
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-
+    IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
     myDet = *itSt;
     if(myDet) msta++;
 
     //Getting regions
     mreg = 0;
-    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-      
+    IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
+    for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
+
       myDet = *itRg;
       if(myDet) {
         mreg++;
@@ -452,7 +459,7 @@ DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
   return myPtr;
 }
 
-void DeMuonDetector::fillChmbPtr() {
+/*void DeMuonDetector::fillChmbPtr() {
   
   int encode(0);
   bool debug = false;
@@ -481,7 +488,7 @@ void DeMuonDetector::fillChmbPtr() {
   if(debug)  std::cout<<" Filled the chamber pointer "<<std::endl;
   return;
 }
-
+*/
 
 std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
 DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit, 
@@ -517,33 +524,45 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
-
+  
   bool isIn = false;
   //Getting a gap [gaps in same chamber have same dimensions]
   DeMuonGasGap*  myGap = (DeMuonGasGap*) 0; int gapCnt(0);
   IDetectorElement::IDEContainer::iterator itGap=myChPtr->childBegin();
   for(itGap=myChPtr->childBegin(); itGap<myChPtr->childEnd(); itGap++){
     myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
-
-
+    Gaudi::XYZPoint aleq = myGap->geometry()->toGlobal(Gaudi::XYZPoint(0.0,0.0,0.0));
+    //    msg<<MSG::INFO<<" test "<<aleq.x()<<" "<<aleq.y()<<" "<<aleq.z()<<endreq;
+    
     //Check the Gas Volume
     IDetectorElement::IDEContainer::iterator itGVol= (*itGap)->childBegin();
     for(itGVol=(*itGap)->childBegin(); itGVol<(*itGap)->childEnd(); itGVol++){
       IGeometryInfo* geoGVol = (*itGVol)->geometry();  
       
-      isIn = geoGVol->isInside(my_entry);
+      
+      Gaudi::XYZPoint mid(((my_entry.x()+my_exit.x())/2),((my_entry.y()+my_exit.y())/2),((my_entry.z()+my_exit.z())/2));
+      
+      
+      isIn = geoGVol->isInside(mid);
+      
+      Gaudi::XYZPoint aleqq = geoGVol->toGlobal(Gaudi::XYZPoint(0.0,0.0,0.0));
+      //      msg<<MSG::INFO<<" test "<<aleqq.x()<<" "<<aleqq.y()<<" "<<aleqq.z()
+      //     <<endreq;    
       if(isIn) break;
+      //      msg<<MSG::INFO<<" is in "<<isIn<<endreq;
     }
     if(isIn) break;
     
     gapCnt++;
   }
+  
 
-  if(!myGap) {
+  //  if(!myGap) {
+  if(!isIn) {
     msg << MSG::ERROR <<"Could not find the gap. Returning a void list."<<endreq; 
     return tmpPair;
   }
-
+  
   //Gap Geometry info 
   //This is OK ONLY if you want to access x and y informations.
   //Otherwise you need to go down to the volume of gas gap inside 
@@ -554,9 +573,20 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     (geoCh->lvolume()->solid());
   float dx = box->xHalfLength();  float dy = box->yHalfLength();
 
+
+  //  msg<<MSG::INFO<<" pre gap "<<gapCnt<<" "<<my_entry.x()<<" "<<
+  //  my_entry.y()<<" "<<my_entry.z()<<endreq;
+  //msg<<MSG::INFO<<" pre gap "<<gapCnt<<" "<<my_exit.x()<<" "<<
+  //  my_exit.y()<<" "<<my_exit.z()<<endreq;
+
   //Refer the distances to Local system [should be the gap]
   Gaudi::XYZPoint new_entry = geoCh->toLocal(my_entry);
   Gaudi::XYZPoint new_exit  = geoCh->toLocal(my_exit);
+
+  //msg<<MSG::INFO<<" gap "<<gapCnt<<" "<<new_entry.x()<<" "<<
+  //  new_entry.y()<<" "<<new_entry.z()<<endreq;
+  //msg<<MSG::INFO<<" gap "<<gapCnt<<" "<<new_exit.x()<<" "<<
+  //  new_exit.y()<<" "<<new_exit.z()<<endreq;
 
   Gaudi::XYZPoint LL(-dx,-dy,0);
   Gaudi::XYZPoint LR(dx,-dy,0);
@@ -704,111 +734,112 @@ void DeMuonDetector::fillGeoInfo()
   bool debug=false;
   
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
-  int station=0;
+  int station=0; 
+  int Side=0;
   int region=0;
-
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-
+    
     IGeometryInfo*  geoSt=(*itSt)->geometry();
     Gaudi::XYZPoint globSt= geoSt->toGlobal(Gaudi::XYZPoint(0,0,0));
     m_stationZ[station] = globSt.z();    
-    
-    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-    region=0;      
-    if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
-    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-      if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
-      IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-      //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
-      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-        DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
-        IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
-        int gaps=0;          
-        double area=0;          
-        DeMuonGasGap* 
-          myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
-        //Gap Geometry info  
-        IGeometryInfo*  geoCh=myGap->geometry();
-        
-        //Retrieve the chamber box dimensions  
-        const SolidBox *box = dynamic_cast<const SolidBox *>
-          (geoCh->lvolume()->solid());
-        float dx = box->xHalfLength();
-        float dy = box->yHalfLength();
-        float dz = box->zHalfLength();
-        m_sensitiveAreaX[station*4+region]=2*dx;
-        m_sensitiveAreaY[station*4+region]=2*dy;
-        m_sensitiveAreaZ[station*4+region]=2*dz;
-        area=4*dx*dy;
-        m_areaChamber[station*4+region]=area;          
-        for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
-          gaps++;            
-        }
-        m_gapPerRegion[station*4+region]=gaps;
-        m_gapPerFE[station*4+region]=gaps/2; 
-        
-        Condition* bGrid = (chPt)->condition(chPt->getGridName());
-        MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
-        
-        int nreadout=1;
-        if(theGrid->getGrid2SizeY()>1)nreadout=2;
-        m_readoutNumber[station*4+region]=nreadout;
-        for( int i = 0; i<nreadout;i++){
-          if(i==0){
-            m_phChannelNX[i][station*4+region]=theGrid->getGrid1SizeX();
-            m_phChannelNY[i][station*4+region]=theGrid->getGrid1SizeY();
-            m_readoutType[i][station*4+region]=
-              (theGrid->getReadoutGrid())[i];             
-          }            
-          if(i==1){
-            m_phChannelNX[i][station*4+region]=theGrid->getGrid2SizeX();
-            m_phChannelNY[i][station*4+region]=theGrid->getGrid2SizeY();
-            m_readoutType[i][station*4+region]=
-              (theGrid->getReadoutGrid())[i];
+    IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
+    Side=0;
+    for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
+      
+      IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
+      region=0;      
+      if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
+      for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
+        if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
+        IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+        //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
+        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+          DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
+          IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
+          int gaps=0;          
+          double area=0;          
+          DeMuonGasGap* 
+            myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
+          //Gap Geometry info  
+          IGeometryInfo*  geoCh=myGap->geometry();
+          
+          //Retrieve the chamber box dimensions  
+          const SolidBox *box = dynamic_cast<const SolidBox *>
+            (geoCh->lvolume()->solid());
+          float dx = box->xHalfLength();
+          float dy = box->yHalfLength();
+          float dz = box->zHalfLength();
+          m_sensitiveAreaX[station*4+region]=2*dx;
+          m_sensitiveAreaY[station*4+region]=2*dy;
+          m_sensitiveAreaZ[station*4+region]=2*dz;
+          area=4*dx*dy;
+          m_areaChamber[station*4+region]=area;          
+          for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
+            gaps++;            
           }
-        }
-        int maps=(theGrid->getMapGrid()).size()/2;
-        m_LogMapPerRegion[station*4+region]=maps;
-        if(debug)msg<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endreq;    
-        if(nreadout==1)
-        {
-          for( int i = 0; i<maps;i++){
-            m_LogMapRType[i][station*4+region]=
-              m_readoutType[0][station*4+region];
-            m_LogMapMergex[i][station*4+region]=
-              (theGrid->getMapGrid())[i*2];
-            m_LogMapMergey[i][station*4+region]=
-                (theGrid->getMapGrid())[i*2+1];
-            if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                       m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;    
-          }            
-        }else if(nreadout==2){ 
-          for( int i = 0; i<maps;i++){
-            m_LogMapRType[i][station*4+region]=
-              m_readoutType[i][station*4+region];
-            m_LogMapMergex[i][station*4+region]=
+          m_gapPerRegion[station*4+region]=gaps;
+          m_gapPerFE[station*4+region]=gaps/2; 
+          
+          
+        
+          Condition* bGrid = (chPt)->condition(chPt->getGridName());
+          MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
+          
+          int nreadout=1;
+          if(theGrid->getGrid2SizeY()>1)nreadout=2;
+          m_readoutNumber[station*4+region]=nreadout;
+          for( int i = 0; i<nreadout;i++){
+            if(i==0){
+              m_phChannelNX[i][station*4+region]=theGrid->getGrid1SizeX();
+              m_phChannelNY[i][station*4+region]=theGrid->getGrid1SizeY();
+              m_readoutType[i][station*4+region]=
+                (theGrid->getReadoutGrid())[i];             
+            }            
+            if(i==1){
+              m_phChannelNX[i][station*4+region]=theGrid->getGrid2SizeX();
+              m_phChannelNY[i][station*4+region]=theGrid->getGrid2SizeY();
+              m_readoutType[i][station*4+region]=
+                (theGrid->getReadoutGrid())[i];
+            }
+          }
+          int maps=(theGrid->getMapGrid()).size()/2;
+          m_LogMapPerRegion[station*4+region]=maps;
+          if(debug)msg<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endreq;    
+          if(nreadout==1)
+          {
+            for( int i = 0; i<maps;i++){
+              m_LogMapRType[i][station*4+region]=
+                m_readoutType[0][station*4+region];
+              m_LogMapMergex[i][station*4+region]=
                 (theGrid->getMapGrid())[i*2];
-            m_LogMapMergey[i][station*4+region]=
+              m_LogMapMergey[i][station*4+region]=
                 (theGrid->getMapGrid())[i*2+1];
-             if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                       m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;  
-          }            
-        }
-        
-        break;
-        
+              if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+                         m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;    
+            }            
+          }else if(nreadout==2){ 
+            for( int i = 0; i<maps;i++){
+              m_LogMapRType[i][station*4+region]=
+                m_readoutType[i][station*4+region];
+              m_LogMapMergex[i][station*4+region]=
+                (theGrid->getMapGrid())[i*2];
+              m_LogMapMergey[i][station*4+region]=
+                (theGrid->getMapGrid())[i*2+1];
+              if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+                         m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;  
+            }            
+          }
+          
+          break;          
+        }        
+        int chamber=0;        
+        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+          chamber++;          
+        }m_chamberPerRegion[station*4+region]=chamber*2;        
+        region++;
       }
-      
-      
-        
-      int chamber=0;        
-      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-        chamber++;          
-      }m_chamberPerRegion[station*4+region]=chamber;        
-      region++;
-    }
-    
-    
+      Side++;
+    }    
     station++;      
   }
       
@@ -979,7 +1010,7 @@ void DeMuonDetector::fillGeoInfo()
 void DeMuonDetector::fillGeoArray()
 {
   MsgStream msg( msgSvc(), name() );
-
+  bool debug=false;
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   
   MuonLayout layoutInner=m_chamberLayout->layout(0);
@@ -993,7 +1024,7 @@ void DeMuonDetector::fillGeoArray()
   
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
       //get the dimensions of the inner rectangular 
-
+    if(debug)msg<<MSG::INFO<<" inside loop "<<endreq;
     double minX=100000;
     double minY=100000;
     for(unsigned int nx=0;nx<layoutInner.xGrid();nx++){
@@ -1050,14 +1081,15 @@ void DeMuonDetector::fillGeoArray()
     m_stationBox[station][0]=minX;
     m_stationBox[station][1]=minY;
     //now the dimsnion of the outer parr...
-  
+    if(debug)msg<<MSG::INFO<<" min size "<<minX<<" "<<minY<<endreq;
     double maxX=0;
     double maxY=0;
     for(unsigned int nx=0;nx<2*layoutOuter.xGrid();nx++){
       for(int qua=0;qua<4;qua++){          
         LHCb::MuonTileID chTile(station,layoutOuter,3,qua,nx,
                                 2*layoutOuter.yGrid()-1);
-        int chNumber=m_chamberLayout->getChamberNumber(chTile);
+        int chNumber=m_chamberLayout->getChamberNumber(chTile);   
+        if(debug)msg<<MSG::INFO<<" chNumber "<<chNumber <<endreq;
         DeMuonChamber* chP=getChmbPtr(station,3,chNumber);
         DeMuonGasGap* myGap= dynamic_cast<DeMuonGasGap*>
           (*(chP->childBegin()));

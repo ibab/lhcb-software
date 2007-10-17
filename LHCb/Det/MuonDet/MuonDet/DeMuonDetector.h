@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.21 2007-06-08 15:34:00 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.22 2007-10-17 11:24:04 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -134,14 +134,14 @@ public:
   int getStation(const double z) const;
   
   //Returns a detector element identified by chmb, reg, num
-  IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
+  //IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
   
   // Return the chamber pointer from m_ChmbPtr
   DeMuonChamber* getChmbPtr(const int station, const int region,
 			    const int chmb) const;
 
   //Fills the vector of chamber pointers  
-  void fillChmbPtr();
+  //void fillChmbPtr();
 
   //Fills various geometry related info
   void fillGeoInfo();

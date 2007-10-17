@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.12 2007-06-08 15:34:00 asatta Exp $
+// $Id: DeMuonGasGap.cpp,v 1.13 2007-10-17 11:24:04 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -46,15 +46,25 @@ StatusCode DeMuonGasGap::initialize()
     return sc ; 
   }
 
-  int sta(0),reg(0),chm(0),gap(0);  
+  int sta(0),reg(0),chm(0),gap(0);   
   std::string name=(this->name()).c_str();  
   int len=name.size();
   int start=(DeMuonLocation::Default).size();  
   std::string substring;
   substring.assign(name,start,len);
   char patt[400]; 
-  sprintf(patt,"%s",substring.c_str());
-  sscanf(patt,"/M%d/R%d/Cham%d/Gap%d",&sta,&reg,&chm,&gap);
+  std::string stanum;
+  stanum.assign(name,start,3);
+  sscanf(stanum.c_str(),"/M%d",&sta);
+  std::string regnum;
+  regnum.assign(name,start+11,3);
+  sscanf(regnum.c_str(),"/R%d",&reg);
+  std::string chnum;
+  chnum.assign(name,start+19,10);
+  sscanf(chnum.c_str(),"/Cham%d",&chm);
+  std::string gapnum;
+  gapnum.assign(name,start+27,10);
+  sscanf(gapnum.c_str(),"/Gap%d",&gap);
 
   this->setStationNumber(sta-1);
   this->setRegionNumber(reg-1);

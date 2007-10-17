@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.27 2007-09-13 09:44:21 jpalac Exp $
+// $Id: MuonChamberLayout.cpp,v 1.28 2007-10-17 11:24:04 asatta Exp $
 // Include files 
 
 // Gaudi
@@ -401,18 +401,21 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
 
 //Returns the Tile for a given chamber number
 LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum)const{
-  
+    
 
-  char pt[200]; 
+
+  int  encode = 276*sta+chmbNum;
+  if(reg==1)encode=encode+12;
+  if(reg==2)encode=encode+12+24;
+  if(reg==3)encode=encode+12+24+48;
   LHCb::MuonTileID myTile;
-  sprintf(pt,"/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);  
-  std::string namech =DeMuonLocation::Default+pt;
-  
-  SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,namech);
+
+  DeMuonChamber* deChmb=m_ChVec[encode];
   if(deChmb) {
     myTile = tileChamber(deChmb);
-  } else {
-    std::cout<<" Could not find the chamber "<<namech<<" in the TES. Check the configuration!"<<std::endl;
+  }   else {
+    std::cout<<" Could not find the chamber "<<chmbNum<<
+      " in the TES. Check the configuration!"<<std::endl;
   }
   return myTile;
 }
@@ -467,10 +470,10 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   
   int idx(-1),idy(-1),reg(-1);
   bool debug = false;
-
+  
   int MaxRegions[4] = {12,24,48,192};
   m_ChVec.resize(1380);
-
+  
   StatusCode sc = StatusCode::SUCCESS;
   
   SmartDataPtr<DetectorElement> muonSys (detSvc,DeMuonLocation::Default); 
@@ -493,92 +496,123 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   int vIdx(-1),myvIdx(-1);
   int iS(0),obtIS(0); int encode(0);
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
-
+    
     //Are there any void Stations?
     std::string name=((*itSt)->name()).c_str();  
     int len=name.size();
     int start=(DeMuonLocation::Default).size();  
     std::string substring;
     substring.assign(name,start,len);
-
+    
     sscanf(substring.c_str(),"/M%d",&obtIS);
     if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;
     while(iS != obtIS-1) {
       std::cout<<"There is/are void stations. "<<std::endl;
       for(int ire = 0; ire<4; ire++) {
-	for(int ich = 0; ich<MaxRegions[ire]; ich++) {
-	  m_ChVec.at(encode) = (DeMuonChamber*)0;
-	  encode++;	  
-	}
-      }
-      iS++;
-    }
-    
-    //Getting regions
-    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-    int iR(0),obtIR(0);
-    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-
-      //Are there any void Regions?
-      std::string name=((*itRg)->name()).c_str();  
-      int len=name.size();
-      int start=(DeMuonLocation::Default).size();  
-      std::string substring;
-      substring.assign(name,start,len);
-      
-      //sscanf(substring.c_str(),"/M%d",&obtIS);
-      
-      sscanf(substring.c_str(),"/M%d/R%d",&obtIS,&obtIR);
-      if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<" ::  "<<obtIR<<std::endl;    
-      while(iR != obtIR-1) {
-        std::cout<<"There is/are void regions. "<<std::endl;
-        for(int ich = 0; ich<MaxRegions[iR]; ich++) {
+        for(int ich = 0; ich<MaxRegions[ire]; ich++) {
           m_ChVec.at(encode) = (DeMuonChamber*)0;
           encode++;	  
         }
+      }
+      iS++;
+    }    
+    //getting station side (A or C)
+    IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
+    int iSide=0;
+    for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
+      
+      //Getting regions
+      IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
+      int iR(0),obtIR(0);
+      for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); 
+          itRg++){
+        
+        //Are there any void Regions?
+        std::string name=((*itRg)->name()).c_str();  
+        int len=name.size();
+        int start=(DeMuonLocation::Default).size();  
+        std::string substringSta;
+        substringSta.assign(name,start,3);
+        std::string substringReg;
+        substringReg.assign(name,start+11,3);
+        if(debug)std::cout<<" station path "<<substringSta<<std::endl;
+        if(debug)std::cout<<" reg path "<<substringReg<<std::endl;
+        sscanf(substringSta.c_str(),"/M%d",&obtIS);
+        
+        sscanf(substringReg.c_str(),"/R%d",&obtIR);
+        if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<
+                    " ::  "<<obtIR<<std::endl;    
+        while(iR != obtIR-1) {
+          std::cout<<"There is/are void regions. "<<std::endl;
+          for(int ich = 0+iSide*MaxRegions[iR]/2; 
+              ich<(iSide+1)*MaxRegions[iR]/2; ich++) {
+            //int countCh=276*iS+m_offSet[iR]+
+            m_ChVec.at(encode) = (DeMuonChamber*)0;
+            encode++;	  
+          }
+          iR++;
+        }
+        
+        //Index needed to fill the cache information
+        //There are 4 regions per station: this is not going to change!
+        vIdx = iR+iS*4;
+        reg=iR;
+        //Getting chambers
+        int chamCnt = 0;
+        IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+          
+          DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh 
+                                                                  ) ;
+          int countCh=276*iS+deChmb->chamberNumber();
+          if(iR==1)countCh=countCh+12;
+          if(iR==2)countCh=countCh+12+24;
+          if(iR==3)countCh=countCh+12+24+48;
+          if(debug)std::cout<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "<<deChmb->chamberNumber()<<std::endl;
+          //	  if(deChmb->chamberNumber()==4)std::cout<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "<<deChmb->chamberNumber()<<std::endl;
+          // 	  if(deChmb) {
+          // 	    m_ChVec.at(encode) = deChmb;
+          // 	  } else {
+          // 	    m_ChVec.at(encode) = (DeMuonChamber*)0;
+          // 	  }
+          if(deChmb) {
+            m_ChVec.at(countCh) = deChmb;
+          } else {
+            m_ChVec.at(countCh) = (DeMuonChamber*)0;
+          }
+
+          encode++;
+
+          float myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
+          float myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
+          gridPosition(myX,myY,iS,idx,idy,reg);
+          
+          int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
+          m_chamberGrid.at(enc) = deChmb->chamberNumber();
+          
+          if(debug)  std::cout<<"Chamber initialization: "<<enc<<
+                       " "<<deChmb->chamberNumber()<<" "<<idx<<" "<<idy<<
+                       " "<<m_cgX.at(reg)<<" "<<m_offSet.at(reg)<<" "<<myX<<" "<<myY<<std::endl;
+          
+          //Try to fill also the other relevant quantities
+          //Only when the region changes
+          if(vIdx != myvIdx) {
+            myvIdx = vIdx;
+            sc = fillSystemGrids(deChmb,vIdx,reg);
+            if(sc.isFailure()) {std::cout<<
+                                  "Failed to fill the system grid for chamber "
+                                         <<deChmb->chamberNumber()<<
+                                  " in region "<<reg<<std::endl;}
+          }
+          chamCnt++;
+
+        }
+        //next region
         iR++;
       }
-
-      //Index needed to fill the cache information
-      //There are 4 regions per station: this is not going to change!
-      vIdx = iR+iS*4;
-      
-      //Getting chambers
-      int chamCnt = 0;
-      IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-
-	DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh ) ;
-
-	if(deChmb) {
-	  m_ChVec.at(encode) = deChmb;
-	} else {
-	  m_ChVec.at(encode) = (DeMuonChamber*)0;
-	}
-	encode++;
-
-	float myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
-	float myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
-	gridPosition(myX,myY,iS,idx,idy,reg);
-	
-	int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
-	m_chamberGrid.at(enc) = deChmb->chamberNumber();
-
-	if(debug)  std::cout<<"Chamber initialization: "<<enc<<" "<<deChmb->chamberNumber()<<" "<<idx<<" "<<idy<<" "<<m_cgX.at(reg)<<" "<<m_offSet.at(reg)<<std::endl;
-
-	//Try to fill also the other relevant quantities
-	//Only when the region changes
-	if(vIdx != myvIdx) {
-	  myvIdx = vIdx;
-	  sc = fillSystemGrids(deChmb,vIdx,reg);
-	  if(sc.isFailure()) {std::cout<<"Failed to fill the system grid for chamber "<<deChmb->chamberNumber()<<" in region "<<reg<<std::endl;}
-	}
-	chamCnt++;
-
-      }
-      //next region
-      iR++;
+      //next side
     }
+    
     //next station
     iS++;
   }
