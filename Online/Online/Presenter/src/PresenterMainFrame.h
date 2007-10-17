@@ -28,6 +28,7 @@ class TList;
 
 class DimBrowser;
 class OnlineHistDB;
+class OMAlib;
 class EditorFrame;
 
 using namespace pres;
@@ -35,23 +36,24 @@ using namespace pres;
 class PresenterMainFrame : public TGMainFrame
 {
   public:
-  
-    PresenterMainFrame(const char* name, UInt_t x = 10, UInt_t y = 10,
-                       UInt_t w = 800, UInt_t h = 600, MsgLevel v = SILENT);
-//  PresenterMainFrame() {};                       
+
+    PresenterMainFrame(const char* name, UInt_t x, UInt_t y,
+        UInt_t w, UInt_t h, MsgLevel v);
+    //  PresenterMainFrame() {};                       
     virtual ~PresenterMainFrame();
-    
+
     // Add button, menu etc. commands to this list (do not define elsewhere:
     // typesafety...) 
     enum Command
     {
       X_ENIGMA_COMMAND,
       EXIT_COMMAND,
-//    M_FILE_CLOSE_COMMAND,
+      //    M_FILE_CLOSE_COMMAND,
       LOGOUT_COMMAND,
       LOGIN_COMMAND,
       CLEAR_PAGE_COMMAND,
       SAVE_PAGE_COMMAND,
+      DELETE_HISTO_FROM_CANVAS_COMMAND,
       CLEAR_HISTOS_COMMAND,
       EDIT_HISTO_COMMAND,
       FIT_PANEL_COMMAND,
@@ -60,7 +62,7 @@ class PresenterMainFrame : public TGMainFrame
       STOP_COMMAND,
       AUTO_LAYOUT_COMMAND
     };
-    
+
     struct BulkHistoOptions {
       TString m_genericRootDrawOption;
       TString m_1DRootDrawOption;
@@ -75,7 +77,7 @@ class PresenterMainFrame : public TGMainFrame
       int m_lineStyle;
 
     };
-    
+
     //slots
     void buildGUI();
     void CloseWindow();
@@ -84,8 +86,10 @@ class PresenterMainFrame : public TGMainFrame
     void clearPage();
     void savePage();
     void autoCanvasLayout();
+    void deleteHistoFromCanvas();
     void loginOnlineHistDB();
     bool connectToDatabase(std::string, std::string, std::string);
+    OMAlib* getAnalib();
     bool isConnectedToDatabase();
     OnlineHistDB* getDatabase();
     void logoutOnlineHistDB();
@@ -102,18 +106,26 @@ class PresenterMainFrame : public TGMainFrame
     void zoomHistogram();
     void fitPanel();
     TH1* getSelectedHisto();
+
     void checkedTreeItems(TGListTree* selected, TGListTree* treeList);
-    void checkedTreeItemsChildren(TGListTreeItem *item, TGListTree* selected);
-   
+    void checkedTreeItemsChildren(TGListTreeItem* node, TGListTree* selected);
+    
+    void checkTreeChildrenItems(TGListTreeItem* node, bool check);
+    void checkTreeChildrenItemsChildren(TGListTreeItem* node, bool check);
+    
+    void collapseTreeChildrenItems(TGListTree* treeList, TGListTreeItem* node);
+    void collapseTreeChildrenItemsChildren(TGListTree* treeList, TGListTreeItem* node);    
+    
+
     void enableAutoCanvasLayoutBtn();
     void disableAutoCanvasLayoutBtn();
-    
+
     TRootEmbeddedCanvas* mainEmbCanvas;
     TCanvas*             mainCanvas;
     EditorFrame*         editorFrame;
 
     BulkHistoOptions   m_bulkHistoOptions;
-    
+
   private:
 
     MsgLevel            m_verbosity;
@@ -122,30 +134,31 @@ class PresenterMainFrame : public TGMainFrame
     TTimer*             m_refreshTimer;
     bool                m_refreshing;
     bool                m_clearedHistos;
+    OnlineHistDB*       m_histogramDB;    
+    OMAlib*             m_analib;
     bool                m_connectedToHistogramDatabase;
-    OnlineHistDB*       m_histogramDB;
     int                 m_msgBoxReturnCode;
     std::string         m_dbName;
     std::string         m_message;
-    
+
     int m_mainCanvasWidth;
     int m_mainCanvasHeight;
-    
+
     TGStatusBar*        m_statusBar;
-    
+
     // icons
     const TGPicture*    m_icon1;
-    
+
     // File menu
     TGFrame*            m_runMode;
-      TGToolBar*        m_toolBar;
-      TGMenuBar*        m_menuBar;
-        TGPopupMenu*    m_fileMenu;
-          TGHotString*  m_fileText;
-          TGHotString*  m_fileNew;
-          TGHotString*  m_fileLoginText;
-          TGHotString*  m_fileLogoutText;
-          TGHotString*  m_fileQuitText;
+    TGToolBar*        m_toolBar;
+    TGMenuBar*        m_menuBar;
+    TGPopupMenu*    m_fileMenu;
+    TGHotString*  m_fileText;
+    TGHotString*  m_fileNew;
+    TGHotString*  m_fileLoginText;
+    TGHotString*  m_fileLogoutText;
+    TGHotString*  m_fileQuitText;
 
     // Toolbar
     ToolBarData_t*      m_toolbarElement;
@@ -159,13 +172,14 @@ class PresenterMainFrame : public TGMainFrame
     TGButton*           m_editHistoButton;
     TGButton*           m_fitPanelButton;
     TGButton*           m_autoCanvasLayoutButton;
+    TGButton*           m_deleteHistoFromCanvasButton;
 
-    
-//  TGButton*           m_quitButton;
-//  TGPicturePool*    m_picturePool;
+
+    //  TGButton*           m_quitButton;
+    //  TGPicturePool*    m_picturePool;
     const TGPicture*  m_openedFolderIcon;
     const TGPicture*  m_closedFolderIcon;
-    
+
     const TGPicture*  m_iconH1D;
     const TGPicture*  m_iconH2D;
     const TGPicture*  m_iconProfile;
@@ -173,9 +187,9 @@ class PresenterMainFrame : public TGMainFrame
     const TGPicture*  m_iconPage;
     const TGPicture*  m_fitIcon;
     const TGPicture*  m_iconQuestion;
-   
+
     std::vector<TColor*>          m_RootColourVector;         // vector of colours defined for own colour palette -
-   
+
     ClassDef(PresenterMainFrame, 0) // main editor window        
 };
 
