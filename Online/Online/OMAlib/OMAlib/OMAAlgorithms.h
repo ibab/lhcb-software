@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.1.1.1 2007-10-16 13:03:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.2 2007-10-17 13:01:19 ggiacomo Exp $
 #ifndef OMAALGORITHMS_H
 #define OMAALGORITHMS_H 1
 
@@ -33,7 +33,7 @@ class OMACheckXMinMax : public OMACheckAlg
   virtual void exec(TH1 &Histo,
 		    float warn_min,
 		    float warn_max,
-		    float warn_max,
+		    float alarm_min,
 		    float alarm_max,
 		    std::ostream &outstream);
  private:
