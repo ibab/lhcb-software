@@ -1,10 +1,13 @@
 package Presenter
-version v0r2
+version v0r3
 
 branches cmt doc src test
 
 use DIM           v16r* Online
-use OnlineHistDB  v3r0  Online
+
+use OnlineHistDB  v3r1  Online
+use OMAlib        v0r0  Online
+
 use ROOT          v5r*  LCG_Interfaces
 use Python        v2r*  LCG_Interfaces
 #use GaudiOnline   v*    Online
