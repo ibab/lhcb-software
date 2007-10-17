@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.39 2007-06-08 15:35:41 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.40 2007-10-17 11:28:52 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -809,7 +809,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         sc=StatusCode::FAILURE;
         //check n ot only that hit is inside chamber but also gap...
          pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
-           ReturnADetElement(station,regNumber,chNumber));       
+           getChmbPtr(station,regNumber,chNumber));       
          DeMuonGasGap*  p_Gap=NULL;     
          IDetectorElement* ptemp= *(pChamber->childBegin());     
          p_Gap=dynamic_cast<DeMuonGasGap*>(*(ptemp->childBegin()));         
@@ -826,7 +826,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
       }else{      
       
         pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
-           ReturnADetElement(station,regNumber,chNumber));
+           getChmbPtr(station,regNumber,chNumber));
         chamberIndex=(unsigned int)pChamber->chamberNumber();
         regionIndex=(unsigned int)pChamber->regionNumber();
         
@@ -905,11 +905,11 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
                                 ySlope,averageZ,entryGlobal,
                                 exitGlobal,p_Gap);
-        verbose()<<"status code of calhitpos "<<sc<<endreq;
+        debug()<<"status code of calhitpos "<<sc<<endreq;
         if(sc.isSuccess()){
           unsigned int chamberTmp=(unsigned int)p_Gap->chamberNumber();
           unsigned int regionTmp=(unsigned int)p_Gap->regionNumber();
-          verbose()<<chamberTmp<<" "<<regionTmp<<endmsg;
+          debug()<<chamberTmp<<" "<<regionTmp<<endmsg;
         }else{
           allHitsInsideCha=false;            
         }          
@@ -957,6 +957,9 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         } else{
           pHit->setTime(timeBest+tofOfLight);  
         }
+        debug()<<" mid point "<<x<<" "<<y<<" "<<z<<endreq;
+        debug()<<p_Gap<<endreq;
+        
         int sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
         debug()<<" the volume ID is "<<sen<<endreq;     
         pHit->setSensDetID(sen);
@@ -1044,8 +1047,15 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     float zhalfgap= gapBox->zHalfLength() ;
     float xhalfgap= gapBox->xHalfLength() ;
     float yhalfgap= gapBox->yHalfLength() ;
-    //verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
-    //       <<endmsg;    
+    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
+           <<endmsg;    
+    Gaudi::XYZPoint gapcc=(p_Gap->geometry())->
+      toGlobal(Gaudi::XYZPoint(0,0,0));
+    
+    verbose()<<"glob gap pos "<<gapcc.x()<<" "<<gapcc.y()<<" "
+                <<gapcc.z()<<endreq;
+                
+    
     Gaudi::XYZPoint poslocal= 
       (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
     float zcenter=poslocal.z();
@@ -1115,6 +1125,9 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
         toGlobal(Gaudi::XYZPoint(xentry,yentry,zmin));
       exitGlobal=(p_Gap->geometry())->
         toGlobal(Gaudi::XYZPoint(xexit,yexit,zmax));
+      verbose()<<"global "<<entryGlobal.x()<<" "<<entryGlobal.y()<<" "<<entryGlobal.z()<<endreq;
+      verbose()<<"global "<<exitGlobal.x()<<" "<<exitGlobal.y()<<" "<<exitGlobal.z()<<endreq;
+      
       return StatusCode::SUCCESS;
     }else return StatusCode::FAILURE;    
   }else return sc;  
