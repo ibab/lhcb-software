@@ -1,4 +1,4 @@
-// $Id: StateZTraj.cpp,v 1.1 2007-10-16 12:17:35 wouter Exp $
+// $Id: StateZTraj.cpp,v 1.2 2007-10-17 07:47:54 wouter Exp $
 // Include files
 
 // local
@@ -44,26 +44,31 @@ namespace LHCb
 
   StateZTraj::Derivative StateZTraj::derivative( double z ) const
   {
-    double tx = m_cx[1] ;
-    double ty = m_cy[1] ;
-    double omegax = m_cx[2] ;
-    double omegay = m_cy[2] ;
-    double n  = std::sqrt(1 + tx*tx + ty*ty ) ;
-    double dndtx = tx/n ;
-    double dndty = ty/n ;
-    double dz = z - m_z ;
-
     Derivative deriv;
-    deriv(0,0) = 1;
-    deriv(0,2) = dz + 0.5 * dz * dz * omegax/n * dndtx ;
-    deriv(0,3) = 0.5 * dz * dz * (omegax/n * dndty + n * m_qOverP * Gaudi::Units::c_light * m_Bz ) ;
-    deriv(0,4) = 0.5 * dz * dz * omegax/m_qOverP ;
+    double dz = z - m_z ;
+    deriv(0,0) = deriv(1,1) = 1;
+    deriv(0,2) = deriv(1,3) = dz ;
     
-    deriv(1,1) = 1;
-    deriv(1,2) = 0.5 * dz * dz * (omegax/n * dndtx - n * m_qOverP * Gaudi::Units::c_light * m_Bz ) ;
-    deriv(1,3) = dz + 0.5 * dz * dz * omegax/n * dndty ;
-    deriv(1,4) = 0.5 * dz * dz * omegay/m_qOverP ;
-
+    // to speed this up, we only calculate the rest if the trajectory is indeed curved.
+    bool isnonlinear = fabs(m_cx[2]) > 1e-10 || fabs(m_cy[2]) > 1e-10 ;
+    if( isnonlinear ) {
+      double tx = m_cx[1] ;
+      double ty = m_cy[1] ;
+      double omegax = m_cx[2] ;
+      double omegay = m_cy[2] ;
+      double n  = std::sqrt(1 + tx*tx + ty*ty ) ;
+      double dndtx = tx/n ;
+      double dndty = ty/n ;
+      
+      deriv(0,2) += 0.5 * dz * dz * omegax/n * dndtx ;
+      deriv(0,3) += 0.5 * dz * dz * (omegax/n * dndty + n * m_qOverP * Gaudi::Units::c_light * m_Bz ) ;
+      deriv(0,4) += 0.5 * dz * dz * omegax/m_qOverP ;
+      
+      deriv(1,2) += 0.5 * dz * dz * (omegax/n * dndtx - n * m_qOverP * Gaudi::Units::c_light * m_Bz ) ;
+      deriv(1,3) += 0.5 * dz * dz * omegax/n * dndty ;
+      deriv(1,4) += 0.5 * dz * dz * omegay/m_qOverP ;
+    }
+    
     return deriv;        
   }
 }
