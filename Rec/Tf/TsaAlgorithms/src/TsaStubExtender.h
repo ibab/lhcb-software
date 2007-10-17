@@ -47,6 +47,7 @@ namespace Tf
       virtual ~StubExtender();
 
       virtual StatusCode initialize();
+      virtual StatusCode finalize();
 
       virtual StatusCode execute(int& sect, std::vector<SeedStub*> stubs[], std::vector<SeedHit*> hits[],
                                  std::vector<SeedHit*> sHits[], std::vector<SeedTrack*>& seeds ) ;

@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaStubExtender.cpp,v 1.2 2007-10-17 12:32:21 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -20,7 +20,8 @@ DECLARE_TOOL_FACTORY( StubExtender );
 StubExtender::StubExtender(const std::string& type,
                            const std::string& name,
                            const IInterface* parent):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_fitLine(NULL), m_parabolaFit(NULL)
 {
 
   // constructer
@@ -46,9 +47,14 @@ StubExtender::StubExtender(const std::string& type,
 
 StubExtender::~StubExtender()
 {
-  // destructer
-  delete m_parabolaFit;
-  delete m_fitLine;
+  // destructor
+}
+
+StatusCode StubExtender::finalize() 
+{
+  if( NULL != m_parabolaFit ) { delete m_parabolaFit; m_parabolaFit = NULL; }
+  if( NULL != m_fitLine     ) { delete m_fitLine;     m_fitLine     = NULL; }
+  return GaudiTool::finalize();
 }
 
 StatusCode StubExtender::initialize()
