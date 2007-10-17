@@ -1,0 +1,30 @@
+
+ApplicationMgr.TopAlg +=  { "MakeResonances/PreselBs2PhiGamma" };
+
+PreselBs2PhiGamma.PhysDesktop.InputLocations  = {
+  "Phys/StdLoosePhi2KK",
+  "Phys/StdLooseAllPhotons"
+};
+
+PreselBs2PhiGamma.DecayDescriptor =  " B_s0 -> phi(1020) gamma ";
+
+//daughter
+PreselBs2PhiGamma.DaughterFilter.Selections = {"gamma: KinFilterCriterion/GammaKinFilterCriterion",
+                                               "phi(1020) : MassFilterCriterion/PhiMassFilterCriterion,
+                                                            VtxFilterCriterion/PhiVtxFilterCriterion, 
+                                                    DaughterPVIPFilterCriterion/PhiDaughterPVIPFilterCriterion"
+};
+PreselBs2PhiGamma.DaughterFilter.GammaKinFilterCriterion.MinPt = 2600.0 * MeV;
+PreselBs2PhiGamma.DaughterFilter.PhiVtxFilterCriterion.MaxChi2 = 25.0;
+PreselBs2PhiGamma.DaughterFilter.PhiDaughterPVIPFilterCriterion.MinIpsignif = 4.0;
+PreselBs2PhiGamma.DaughterFilter.PhiMassFilterCriterion.Window = 0.04*GeV;
+
+//Bs cuts
+PreselBs2PhiGamma.Window = 1.4 * GeV;
+PreselBs2PhiGamma.MotherFilter.Selections = {"B_s0 : MassFilterCriterion,
+                                                     Momentum2FlightAngleFilterCriterion"}; 
+PreselBs2PhiGamma.MotherFilter.MassFilterCriterion.Window = 1.0*GeV;
+//PreselBs2PhiGamma.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle = 0.9998555;
+
+EventSelector.PrintFreq  =  100 ;  // make a print only each 10th event 
+

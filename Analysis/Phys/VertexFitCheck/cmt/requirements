@@ -1,0 +1,27 @@
+# Created    : 09/10/2007
+# Maintainer : Yuehong Xie
+#
+
+package           VertexFitCheck
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+
+# Used packages. 
+#============================================================================
+# use  DaVinciTransporter  v*  Phys
+use  DaVinciKernel         v*  Phys
+use  MCEvent               v*  Event
+use  DaVinciAssociators    v*  Phys
+use  LinkerEvent           v*  Event
+
+# Component library building rule
+#============================================================================
+library          VertexFitCheck    ../src/*.cpp
+
+# standard patterns (order is essential!)
+#============================================================================
+apply_pattern component_library library=VertexFitCheck
+	     

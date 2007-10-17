@@ -1,0 +1,9 @@
+!===========================================================================
+! Package     : VertexFitCheck
+! Responsible : Yuehong Xie
+! Puspose     : A set of tests for components in the Phys/VertexFit package.
+!===========================================================================
+
+! 2007-10-09 - Y. Xie
+  . New package to check vertex fit and propertime fit performance
+  . Examples of option files that can be run in DaVinci v19r5
