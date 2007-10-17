@@ -10,7 +10,7 @@
       
       <base name="DataObject"/>
       &DataObject;
-      <location name = "Default"  place = "/Event/Trig/L0/L0DU"  />
+      <location name = "Default"  place = "Trig/L0/L0DU"  />
       <import name="sstream" std="TRUE"/>
 
       <constructor 

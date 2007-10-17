@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.70 2007-09-07 09:50:49 cattanem Exp $
+! $Id: release.notes,v 1.71 2007-10-17 12:54:10 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+!======================== L0Event v16r5p1 2007-10-17 =========================
+! 2007-10-17 - Marco Cattaneo
+ - Remove leading "/Event/" from L0DUReportLocation
 
 !======================== L0Event v16r5 2007-09-07 ===========================
 ! 2007-07-11 - Julien Cogan	
