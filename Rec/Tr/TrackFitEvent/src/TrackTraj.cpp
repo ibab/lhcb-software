@@ -1,6 +1,7 @@
 
 #include "Event/TrackTraj.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
+#include <algorithm>
 
 namespace LHCb
 {
@@ -18,13 +19,14 @@ namespace LHCb
   TrackTraj::TrackTraj(const Track& track, const IMagneticFieldSvc* magfieldsvc)
     : Trajectory(0,0), m_bfield(0,0,0)
   {
-    // the sorting takes a lot of time. one solution is to assume
-    // things are sorted and then use 'std::merge' to merge the sorted
-    // vectors. I'll htink about that another time.
-
-    // first add the states from the nodes. make sure these are sorted
-    // in increasing z
-    m_states.reserve( track.nodes().size() + track.states().size() ) ;
+    // the sorting takes a lot of time. therefore, we rely on the fact
+    // that nodes and states in a track are already sorted. we use
+    // 'std::merge' to merge the sorted ranges.
+    
+    // first add the states from the track.nodes(). make sure these
+    // are ordered in increasing z.
+    TrackTraj::StateContainer statesfromnodes ;
+    statesfromnodes.reserve( track.nodes().size() ) ;
     if(!track.nodes().empty()) {
       if( track.nodes().front()->z() < track.nodes().back()->z() ) {
 	//nodes in right order
@@ -39,11 +41,13 @@ namespace LHCb
       }
     }
     
-    // then add remaining states (doing it in this order, makes the
-    // ordering best). the best thing is to use 'std::merge' now.
-    for(std::vector<State*>::const_iterator it = track.states().begin() ;
-        it != track.states().end(); ++it) 
-      m_states.push_back( *it ) ;
+    // now use std::merge to add track.states(). we could also use
+    // inplace_merge: then we don't need to create a vector for the
+    // nodes first. I don't know what is faster.
+    m_states.resize( statesfromnodes.size() + track.states().size() ) ;
+    std::merge( statesfromnodes.begin(), statesfromnodes.end(),
+		track.states().begin(), track.states().end(),
+		m_states.begin(), compareStateZ ) ;
     
     // check states and initialize cache
     init(magfieldsvc) ;
@@ -52,16 +56,16 @@ namespace LHCb
   TrackTraj::TrackTraj(const TrackTraj::StateContainer& states, const IMagneticFieldSvc* magfieldsvc)
     : Trajectory(0,0),m_states(states), m_bfield(0,0,0)
   {
+    // sort
+    std::sort(m_states.begin(), m_states.end(),compareStateZ) ;
     // check states and initialize cache
     init(magfieldsvc) ;
   }
   
   void TrackTraj::init(const IMagneticFieldSvc* magfieldsvc)
   {
-    // sort the states
-    std::sort(m_states.begin(), m_states.end(),compareStateZ) ;
-    
-    // remove any states with equal z (requires sorted vector!)
+    // add this points the vector of states must be sorted!  remove
+    // any states with equal z
     m_states.erase(std::unique( m_states.begin(), m_states.end(), equalStateZ ), m_states.end()) ;
     
     // test that there are sufficient states left
