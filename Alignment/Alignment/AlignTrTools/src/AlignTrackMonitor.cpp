@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.6 2007-10-08 13:54:39 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.7 2007-10-17 09:28:58 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -20,15 +20,11 @@
 // Interfaces
 #include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "MCInterfaces/ITrackGhostClassification.h"
 
 // Det
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
-
-// Event
-#include "Event/GhostTrackInfo.h"
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -57,10 +53,6 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   this -> declareProperty ( "CloneFinderTool",
                             m_cloneFinderName = "TrackCloneFinder" );
 
-  // Ghost classification
-  this -> declareProperty( "GhostClassification",
-                           m_ghostToolName = "TTrackGhostClassification" );
-
   // Location of the IT/OT geometries
   this -> declareProperty ( "OTGeometryPath",
                             m_otTrackerPath = DeOTDetectorLocation::Default );
@@ -82,8 +74,6 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
                             m_nStripsTol = 2 );
   this -> declareProperty ( "IsolatedTrackNStrawsTolerance",
                             m_nStrawsTol = 1 );
-
-  this -> declareProperty ( "MaxNHits", m_maxNHits = 40 );
 }
 //===========================================================================
 
@@ -114,10 +104,6 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
                                            "CloneFinderTool", this );
 
-  // Retrieve the ghost classification tool
-  m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
-                                                           "GhostTool", this );
-  
   // Get The Magnetic Field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
@@ -135,13 +121,6 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_nLayers = m_itTracker->nLayerPerBox();
   m_nStrips = m_itTracker->nStrip()/m_itTracker->nReadoutSector()/3;
   
-  // Max possible number of hits:
-  // In OT: = nLayers * 2 (two layers of straws per layer)
-  // In IT: counted wrong: nLayers = 3 stations * 4 boxes/station * 4 layers/box
-  //        shouldn't count 4 boxes
-  //        but compensates possible box (*2) and ladder (*2) overlaps
-//   m_maxNHits = m_otTracker->layers().size()*2 + m_itTracker->nLayer();
-
   debug() << "AlignTrackMonitor initialized successfully" << endmsg;    
 
   return StatusCode::SUCCESS;
@@ -317,6 +296,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   for ( ; iNodes!=aTrack->nodes().end(); ++iNodes ) {
 
     const LHCb::Node& aNode = *(*iNodes);
+    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
     // Only loop on hits with measurement
     if ( !aNode.hasMeasurement() ) continue;
@@ -357,24 +337,19 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     // Residuals and Residual Errors
     //**********************************************************************
     if ( aNode.measurement().type() == LHCb::Measurement::IT ) {
-//       int id = aNode.measurement().lhcbID().stID().uniqueSector();
       int id = 100*theSTID.layer() + 10*theSTID.detRegion() + theSTID.sector();
-      std::string resPlotName = "IT Residual ";
-      resPlotName.append( Gaudi::Utils::toString( id ) );
       std::string resPlotID = "ITResiduals/";
       resPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
       resPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-      plot (aNode.residual(), resPlotID, resPlotName, -0.2, 0.2, 50);
+//       plot (aNode.residual(), resPlotID, resPlotID, -0.2, 0.2, 50);
+      plot (fNode->unbiasedResidual(), resPlotID, resPlotID, -0.2, 0.2, 50);
     }
-    else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {    
-//       int id = aNode.measurement().lhcbID().otID().uniqueModule();
+    else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
       int id = 100*theOTID.layer() + 10*theOTID.quarter() + theOTID.module();
-      std::string resPlotName = "OT Residual ";
-      resPlotName.append( Gaudi::Utils::toString( id ) );
       std::string resPlotID = "OTResiduals/";
       resPlotID.append( Gaudi::Utils::toString( theOTID.station() ) );
       resPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-      plot (aNode.residual(), resPlotID, resPlotName, -1., 1., 50);
+      plot (fNode->unbiasedResidual(), resPlotID, resPlotID, -1., 1., 50);
     }
     //**********************************************************************
 
@@ -385,6 +360,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     for ( ; iNodes2 != aTrack->nodes().end(); ++iNodes2 ) {
 
       const LHCb::Node& aNode2 = *(*iNodes2);
+      LHCb::FitNode* fNode2 = dynamic_cast<LHCb::FitNode*>(*iNodes2);
 
       // Only loop on hits with measurement
       if ( !aNode2.hasMeasurement() ) continue;
@@ -407,18 +383,18 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
           // Convention: define overlap residual as
           // residual(at bigger z) - residual (at smaller z)
           double lOResidual = 0;
+//             lOResidual = aNode.residual() - aNode2.residual();
           if ( aNode.z() > aNode2.z() )
-            lOResidual = aNode.residual() - aNode2.residual();
+            lOResidual = fNode->unbiasedResidual() - fNode2->unbiasedResidual();
           else
-            lOResidual = aNode2.residual() - aNode.residual();
+            lOResidual = fNode2->unbiasedResidual() - fNode->unbiasedResidual();
+//             lOResidual = aNode2.residual() - aNode.residual();
           int id = 1000*theSTID.layer() + 100*theSTID.detRegion() + 
             10*theSTID.sector() + theSTID2.sector();
-          std::string lOResPlotName = "Lad Overlap ";
-          lOResPlotName.append( Gaudi::Utils::toString( id ) );
           std::string lOResPlotID = "LadOverlaps/";
           lOResPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
           lOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-          plot (lOResidual, lOResPlotID, lOResPlotName, -0.5, 0.5, 50);
+          plot (lOResidual, lOResPlotID, lOResPlotID, -0.5, 0.5, 50);
           if ( msgLevel( MSG::DEBUG ) )
             debug() << "Found IT ladder overlap: ladOverlap = " 
                     << lOResidual << " in layer " << theSTID.uniqueDetRegion()
@@ -439,13 +415,11 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
             overlapStation = theSTID.station();
             // Get the average of box overlap residuals
             double bOResidual = boxOverlap( aTrack, theSTID, theSTID2 );
-            int id = 100*theSTID.station() + 10*theSTID.detRegion() +
-              theSTID2.detRegion();
-            std::string bOResPlotName = "Box Overlaps ";
-            bOResPlotName.append( Gaudi::Utils::toString( id ) );
+            int id = 10*theSTID.detRegion() + theSTID2.detRegion();
             std::string bOResPlotID = "BoxOverlaps/";
-            bOResPlotID.append( Gaudi::Utils::toString( id ) );
-            plot (bOResidual, bOResPlotID, bOResPlotName, -150., 150., 50);
+            bOResPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
+            bOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
+            plot (bOResidual, bOResPlotID, bOResPlotID, -150., 150., 50);
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Station " << overlapStation 
                       << ": Found IT box overlap: boxOverlap = "
@@ -745,6 +719,7 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
   std::vector<LHCb::Node*>::const_iterator iNodes = hitsOverlapBox.begin();
   for ( ; iNodes != hitsOverlapBox.end(); ++iNodes ) {
     const LHCb::Node& aNode = *(*iNodes);
+    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
     LHCb::State hitState;
     sc = m_extrapolator->propagate( *aTrack, aNode.z(), hitState );
@@ -769,7 +744,8 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
 
     bFieldPoint = hitState.position();
 
-    double sig2_res = gsl_pow_2(aNode.errResidual());
+    double sig2_res = gsl_pow_2(fNode->errUnbiasedResidual());
+//     double sig2_res = gsl_pow_2(aNode.errResidual());
 
 //     xPar[0] += gsl_pow_4(aNode.z())/sig2_res;
     xPar[1] += gsl_pow_3(aNode.z())/sig2_res;

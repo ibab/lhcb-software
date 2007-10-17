@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.4 2007-10-08 13:54:39 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.5 2007-10-17 09:28:58 lnicolas Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -26,6 +26,7 @@
 #include "Event/Track.h"
 #include "Event/STLiteCluster.h"
 #include "Event/OTTime.h"
+#include "Event/FitNode.h"
 //===========================================================================
 
 //===========================================================================
@@ -34,8 +35,6 @@
 class ITrackExtrapolator;
 class IMagneticFieldSvc;
 class ITrackCloneFinder;
-class ITrackGhostClassification;
-class GhostTrackInfo;
 
 class DeOTDetector;
 class DeSTDetector;
@@ -105,7 +104,6 @@ private:
   // Properties
   //======================================================================
   std::string m_cloneFinderName;
-  std::string m_ghostToolName;
 
   std::string m_otTrackerPath;       ///< Name of the OT XML geom path
   std::string m_itTrackerPath;       ///< Name of the IT XML geom path
@@ -118,8 +116,6 @@ private:
 
   double m_nStripsTol;
   double m_nStrawsTol;
-
-  int m_maxNHits;
   //======================================================================
 
   //======================================================================
@@ -135,7 +131,6 @@ private:
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
   ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
-  ITrackGhostClassification* m_ghostClassification;  ///< Pointer to ghost tool 
   DirectTable* m_directTable;
   DeOTDetector* m_otTracker;           ///< Pointer to the OT XML geom
   DeITDetector* m_itTracker;           ///< Pointer to the IT XML geom

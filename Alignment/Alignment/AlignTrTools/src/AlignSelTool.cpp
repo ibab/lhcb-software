@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.5 2007-10-08 13:55:37 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.6 2007-10-17 09:28:58 lnicolas Exp $
 // Include files 
 
 // local
@@ -262,7 +262,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   if ( c_maxMulti < abs(defValue) )
     m_multiplicity = m_tracks->size();
 
-  // Get the nunmber of IT and OT hits
+  // Get the number of IT and OT hits
   int nITHits = 0;
   int nOTHits = 0;
   // Do we want to fill the nodes vector even if we don't cut on anything?
