@@ -32,7 +32,8 @@ This is the production version for the DC06 reprocessing
     to beam line fails (TrackFitter v2r19)
 
 - New tuning
-  . Change to more closely replicate old kinked track behaviour (PatVelo v2r19)
+  . Change to more closely replicate old kinked track behaviour (PatVelo v2r19).
+    See talk at <a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10174">T-Rec on 2007-10-08</a>
   . Adjust some jobOptions for more stable fitting (PatVeloTT v2r15)
   . Change cut on match chi^2 (TrackMatching v2r16)
   . Remove the use of reference vector in the projection (TrackProjectors v2r16)
