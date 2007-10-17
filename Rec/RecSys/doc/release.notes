@@ -51,7 +51,7 @@ Further changes to RecSys v4r* package should from now on be on v4b CVS branch
     RichRecTools v3r14, GlobalReco v6r13, PatVeloTT v2r15
 
 - In PatVelo v2r19
-  . Change to more closely replicate old kinked track behaviour
+  . Change to more closely replicate old kinked track behaviour. See talk at <a href="http://indico.cern.ch/materialDisplay.py?contribId=4&amp;materialId=slides&amp;confId=10174">T-Rec on 2007-10-08</a>
 
 - In PatForward v2r16, TrackMatching v2r16
   . Add variables to track for NN ghost ID
