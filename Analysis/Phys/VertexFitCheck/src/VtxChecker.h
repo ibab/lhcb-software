@@ -1,3 +1,4 @@
+// $Id: VtxChecker.h,v 1.2 2007-10-17 07:27:55 jpalac Exp $
 #ifndef VTXCHECKER_H 
 #define VTXCHECKER_H 1
 

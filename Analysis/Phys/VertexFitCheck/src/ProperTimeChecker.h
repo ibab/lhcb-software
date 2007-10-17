@@ -1,3 +1,4 @@
+// $Id: ProperTimeChecker.h,v 1.2 2007-10-17 07:27:55 jpalac Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
