@@ -4,6 +4,9 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 ! 2007-10-17 - Louis Nicolas
+ - GetElementsToAlign: added TT specific part to get TT stations, layers and half-modules
+
+! 2007-10-17 - Louis Nicolas
  - bug fix in AlignAlgorithm.cpp
  - GetElementsToAlign.cpp deals with OT modules and IT ladders
  - fixes in GetElementsToAlign.cpp
