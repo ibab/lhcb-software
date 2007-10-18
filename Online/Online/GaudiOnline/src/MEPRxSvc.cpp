@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.51 2007-09-18 09:19:23 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.52 2007-10-18 13:54:01 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -358,6 +358,16 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
+void MEPRQCommand::commandHandler(void) {
+  MsgStream log(m_msgSvc,getName());
+  int numMEPs = getInt();
+  log << MSG::INFO << "Received command, sending " << numMEPs << " MEP requests....";
+  if(m_mepRxObj->sendMEPReq(numMEPs).isSuccess())
+    log << MSG::INFO << "OK." << endmsg;
+  else
+    log << MSG::INFO << "FAILED." << endmsg;
+}
+
 // Standard Constructor
 MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_receiveEvents(false), m_incidentSvc(0)
@@ -384,9 +394,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
 
-  std::string serviceName(RTL::processName());
-  serviceName = serviceName + "/send_meprq";
-  m_mepRQCommand = new MEPRQCommand(this, new MsgStream(msgSvc(), "MEPRx"));
+  m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
 }
 
 // Standard Destructor

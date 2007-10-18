@@ -191,26 +191,19 @@ namespace LHCb  {
   class MEPRQCommand : public DimCommand {
 
     MEPRxSvc *m_mepRxObj;
-    MsgStream *m_log;
+    IMessageSvc* m_msgSvc;
 
     public:
 
     // Constructor
-    MEPRQCommand(MEPRxSvc *mepRxObj, MsgStream *log) : DimCommand("sendMEPRQ", "I") {
-      m_mepRxObj = mepRxObj;
-      m_log = log;
+    MEPRQCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name) 
+   : DimCommand(std::string(cmd_name + "/sendMEPRQ").c_str(), "I"),
+      m_mepRxObj(mepRxObj),m_msgSvc(log) {
     }
 
-    ~MEPRQCommand() { delete m_log; }
+    ~MEPRQCommand() { }
 
-    virtual void commandHandler(void) {
-      int numMEPs = getInt();
-        *m_log << MSG::INFO << "Received command, sending " << numMEPs << " MEP requests....";
-      if(m_mepRxObj->sendMEPReq(numMEPs).isSuccess())
-        *m_log << MSG::INFO << "OK." << endmsg;
-      else
-        *m_log << MSG::INFO << "FAILED." << endmsg;
-    }
+    virtual void commandHandler(void);
   };
 
 
