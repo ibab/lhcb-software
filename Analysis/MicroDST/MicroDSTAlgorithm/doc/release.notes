@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.25 2007-10-16 14:08:18 jpalac Exp $
+! $Id: release.notes,v 1.26 2007-10-18 10:26:53 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-18 - Juan PALACIOS
+ - MicroDST/CopyAndStoreData.h
+  . Reorganization of functors.
 
 ! 2007-10-16 - Juan PALACIOS
  - Add algorithm CopyPrimaryVertices to components library. 
