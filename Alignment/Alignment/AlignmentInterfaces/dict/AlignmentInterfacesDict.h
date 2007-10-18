@@ -2,7 +2,6 @@
 #define DICT_ALIGNMENTINTERFACESDICT_H  1
 
 #include "AlignmentInterfaces/IAlignDetectorSelector.h"
-#include "AlignmentInterfaces/IAlignSelTool.h"
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
 #include "AlignmentInterfaces/IDerivatives.h"
