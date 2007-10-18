@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.1 2007-10-16 14:41:45 jpalac Exp $
+// $Id: CopyParticles.h,v 1.2 2007-10-18 10:28:18 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -40,37 +40,29 @@ protected:
   {
   public:
 
-    LHCb::Vertex* clone(const LHCb::Vertex* vtx) const
+    static LHCb::Vertex* clone(const LHCb::Vertex* vtx)
     {
       LHCb::Vertex* item = vtx->clone();
       return item;
     }
-  private:
-    
   };
+
+private:
+  
+  StatusCode storeMothers();
+
+  StatusCode storeEndVertices();
+  
 
 private:
 
   typedef LHCb::Vertex::Container Vertices;
   typedef LHCb::Particle::Container Particles;
-  typedef CopyAndStoreData::BasicItemCloner<LHCb::Particle> ParticleCloner;
-  typedef CopyAndStoreData::ContainerCloner<Vertices, VertexCloner > VContainerCloner;
-  typedef CopyAndStoreData::ContainerCloner<Particles, ParticleCloner > ParticleContainerCloner;
-
-//   inline const VContainerCloner& containerCloner() const 
-//   {
-//     return m_vtxCloner;
-//   }
-
-//   inline VContainerCloner& containerCloner()
-//   {
-//     return m_vtxCloner;
-//   }
+  typedef CopyAndStoreData::BasicItemCloner<LHCb::Particle> ParticleCloneFunctor;
+  typedef CopyAndStoreData::CloneKeyedContainerItem<Particles, ParticleCloneFunctor> ParticleCloner;
+  
 
 private:
 
-  //  VContainerCloner m_vtxCloner;
-  ParticleContainerCloner m_partCloner;
-  
 };
 #endif // COPYPRIMARYVERTICES_H

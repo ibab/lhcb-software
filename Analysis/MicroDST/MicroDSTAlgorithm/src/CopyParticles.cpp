@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.1 2007-10-16 14:41:45 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.2 2007-10-18 10:28:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -21,8 +21,7 @@ DECLARE_ALGORITHM_FACTORY( CopyParticles );
 //=============================================================================
 CopyParticles::CopyParticles( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator ),
-    m_partCloner(ParticleCloner())
+  : CopyAndStoreData ( name , pSvcLocator )
 {
   //  declareProperty( "StoreTracks", m_storeTracks );
 }
@@ -48,8 +47,6 @@ StatusCode CopyParticles::initialize() {
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
-  //  containerCloner().cloner().storeTracks(storeTracks());
-
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -61,13 +58,20 @@ StatusCode CopyParticles::execute() {
   verbose() << "Going to store Particles from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
 
-  return copyAndStoreContainer<Particles, ParticleContainerCloner>(inputTESLocation(),
-                                                            fullOutputTESLocation(),
-                                                            ParticleContainerCloner() );
-  
-  //  return copyAndStoreContainer<Vertices, PVContainerCloner>(inputTESLocation(),
-    //                                                            cloner());
-  // need to do something about the tracks...
+  return copyKeyedContainer<Particles, ParticleCloner>(inputTESLocation(),
+                                                       fullOutputTESLocation() );
+
+}
+//=============================================================================
+StatusCode CopyParticles::storeMothers() 
+{
+  return copyKeyedContainer<Particles, ParticleCloner>(inputTESLocation(),
+                                                       fullOutputTESLocation() );
+}
+//=============================================================================
+StatusCode CopyParticles::storeEndVertices() 
+{
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 //  Finalize

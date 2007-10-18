@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.1 2007-10-16 14:07:30 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.2 2007-10-18 10:28:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -24,8 +24,7 @@ DECLARE_ALGORITHM_FACTORY( CopyPrimaryVertices );
 CopyPrimaryVertices::CopyPrimaryVertices( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : CopyAndStoreData ( name , pSvcLocator ),
-    m_storeTracks(false),
-    m_cloner( PVCloner(m_storeTracks) )
+    m_storeTracks(false)
 {
   declareProperty( "StoreTracks", m_storeTracks );
 }
@@ -51,8 +50,6 @@ StatusCode CopyPrimaryVertices::initialize() {
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
-  containerCloner().cloner().storeTracks(storeTracks());
-
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -64,12 +61,10 @@ StatusCode CopyPrimaryVertices::execute() {
   verbose() << "Going to store Primary Vertex bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
 
-  return copyAndStoreContainer<Vertices, PVContainerCloner>(inputTESLocation(),
-                                                            fullOutputTESLocation(),
-                                                            containerCloner() );
+  return copyKeyedContainer<Vertices, BasicPVCloner>(inputTESLocation(),
+                                                     fullOutputTESLocation() );
   
-  //  return copyAndStoreContainer<Vertices, PVContainerCloner>(inputTESLocation(),
-    //                                                            cloner());
+
   // need to do something about the tracks...
 }
 //=============================================================================

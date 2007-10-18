@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.1 2007-10-16 14:07:30 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.2 2007-10-18 10:28:18 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -28,33 +28,20 @@ protected:
 
   /**
    * Functor to custom-clone an LHCb::Vertex object.
-   * Depending on the state of storeTracks(), 
-   * either performs standard clone or does something
-   * special with the SmartRefVector<LHCb::Track>
+   * Does something what BasicItemCloner does, plus
+   * something special with the SmartRefVector<LHCb::Track>
    *
    * @author Juan Palacios juanch@nikhef.nl
    * @date 16-10-2007
    */
-  struct PVCloner 
+  struct PVCloner
   {
   public:
-
-    explicit PVCloner(const bool& storeTracks)
-      : m_storeTracks(storeTracks)
-    {
-      std::cout << "In PVCloner constructor!" << std::endl;
-    }
-
-    void storeTracks(const bool& storeTracks) 
-    {
-      m_storeTracks=storeTracks;
-    }
-
-    LHCb::RecVertex* clone(const LHCb::RecVertex* pv) const
+    static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
     {
       LHCb::RecVertex* item = pv->clone();
       const SmartRefVector< LHCb::Track >& tracks = pv->tracks();
-      if (m_storeTracks) storeVertexTracks(item, tracks);
+      storeVertexTracks(item, tracks);
       return item;
     }
   private:
@@ -71,36 +58,19 @@ protected:
         pv->addToTracks(*iTrack);      
       }
     }
-  
-  private:
-    bool m_storeTracks;
     
   };
 
 private:
 
   typedef LHCb::RecVertex::Container Vertices;
-  typedef CopyAndStoreData::ContainerCloner<Vertices, PVCloner > PVContainerCloner;
-
-  inline const bool storeTracks() const 
-  {
-    return m_storeTracks;
-  }
-
-  inline const PVContainerCloner& containerCloner() const 
-  {
-    return m_cloner;
-  }
-
-  inline PVContainerCloner& containerCloner()
-  {
-    return m_cloner;
-  }
+  typedef CopyAndStoreData::BasicItemCloner<LHCb::RecVertex> PVCloneFunctor;
+  typedef CopyAndStoreData::CloneKeyedContainerItem<Vertices, PVCloneFunctor> BasicPVCloner;
+  
 
 private:
 
   bool m_storeTracks;
-  PVContainerCloner m_cloner;
 
 };
 #endif // COPYPRIMARYVERTICES_H
