@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.4 2007-10-16 14:08:54 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.5 2007-10-18 10:27:19 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -68,10 +68,9 @@ protected:
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
-  template <class T, class containerCloner >
-  StatusCode copyAndStoreContainer( const std::string& from,
-                                    const std::string& to,
-                                    const containerCloner& cloner) 
+  template <class T, class ContainedItemCloner >
+  StatusCode copyKeyedContainer( const std::string& from,
+                                 const std::string& to    ) 
   {
     debug() << "now store container for location " << from << endmsg;
 
@@ -83,77 +82,72 @@ protected:
       if (!data) {
         return StatusCode::FAILURE;
       }
-      verbose() << "got # elements in container: " << data->size() << endmsg;
       T* clones = getOutputContainer<T>(to);
-      return cloner.clone(data, clones);
+
+      verbose() << "copyKeyedContainer " << data->size() 
+                << " elements from " << from 
+                << " into " << to << ", size " << clones->size()
+                << endmsg;
+      StatusCode sc =  copyKeyedContainer<T, ContainedItemCloner>(data, 
+                                                                  clones); 
+      verbose() << "copyKeyedContainer copied " 
+                << clones->size() << " elements" <<endmsg;
+
+      return sc;
     } // if !exist
   }
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T, class ContainedItemCloner >
+  StatusCode copyKeyedContainer( const T* from, T* to    ) 
+  {
+    verbose() << "copyContainer output container size " << to->size() 
+              << endmsg;
+    std::for_each(from->begin(), from->end(), 
+                  ContainedItemCloner(to) );
+
+    verbose() << "copyContainer copied # elements into output container: " 
+              << to->size() << endmsg;
+
+    return StatusCode::SUCCESS;
+  }
+
   //===========================================================================
   /**
+   *
+   * Clone an item into a container of type T. 
+   * The functor checks if an item with the same key already exists.
+   * Requirements:
+   *
+   * Container type T:
+   * Must export value type as T::value_type. 
+   * Must have an insert method T::insert(T::value_type, type of T::value_type::key() )
+   * Must have a method T::value_type T::object( type of T::value_type::key() )
+   *
+   * Type T::value_type must have method key()
+   *
    *
    * @author Juan Palaicos juancho@nikhef.nl
    * @date 16-10-2007
    */
   template <class T, class itemCloner>
-  StatusCode cloneItemIntoContainer(const T* item,
-                                    const std::string& to,
-                                    const itemCloner& cloner) 
+  struct CloneKeyedContainerItem
   {
-    typename T::Container* container = getOutputContainer<T::Container>(to);
-    if ( !container->object( item->key() ) ) {
-      T* clonedItem = cloner.clone(item);
-      container->insert( clonedItem, item->key()) ;
-    }
-    return StatusCode::SUCCESS;
-  }
-  //===========================================================================
-
-  /**
-   * Clone the contents of a container and put into another one.
-   * Designed for keyed containers.
-   * Contained types must have a clone() method.
-   * Container must have an object(key), an insert and a 
-   * value_type typedef.
-   * The functor checks if an object of type T::value_type already
-   * exists in "clones". If not, the object is cloned and inserted.
-   *
-   * @author Juan Palacios juanch@nikhef.nl
-   * @date 15-10-2007
-   */
-  template <class T, class itemCloner> 
-  struct ContainerCloner 
-  {
-  public:
-    explicit ContainerCloner(const itemCloner& cloner)
-      : m_cloner(cloner)
+    CloneKeyedContainerItem(T*& to) 
+      : m_to(to) { }
+    
+    void operator() ( const typename T::value_type item )
     {
+      if ( !m_to->object( item->key() ) ) {
+        typename T::value_type clonedItem = itemCloner::clone(item);
+        m_to->insert( clonedItem, item->key()) ;
+      }
     }
     
-    StatusCode clone(const T* data, T* clones) const
-      {
-        for (typename T::const_iterator i = data->begin(); 
-             i != data->end(); 
-             ++i) {
-          //          typename T::value_type item = clones->object( (*i)->key() );
-          if ( !clones->object( (*i)->key() ) ) {
-             typename T::value_type item = cloner().clone(*i);
-            clones->insert(item, (*i)->key());
-          }
-        }
-        return StatusCode::SUCCESS;
-      }
-
-    inline const itemCloner& cloner() const
-    {
-      return m_cloner;
-    }
-    inline itemCloner& cloner()
-    {
-      return m_cloner;
-    }
-
-  private:
-    itemCloner m_cloner;
+    T* m_to;
     
   };
   
@@ -165,7 +159,7 @@ protected:
   class BasicItemCloner 
   {
   public:
-    T* clone(const T* item) 
+    static T* clone(const T* item) 
     {
       return item->clone();
     }
@@ -190,6 +184,7 @@ protected:
     }
     return get<T>( location );     
   }
+  
   //=========================================================================  
 
   /**
