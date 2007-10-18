@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.7 2007-01-12 14:17:54 ranjard Exp $
+// $Id: PVReFitter.cpp,v 1.8 2007-10-18 16:35:38 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -225,8 +225,12 @@ StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
   Gaudi::Vector3 V3;
   Gaudi::SymMatrix3x3 Cov3;
 
-  LHCb::State statetr1 = stateAtFirstMeas(tr1);
-  LHCb::State statetr2 = stateAtFirstMeas(tr2);
+  //causes crash if measurements are unavailable
+  //LHCb::State statetr1 = stateAtFirstMeas(tr1);
+  //LHCb::State statetr2 = stateAtFirstMeas(tr2);
+
+  LHCb::State statetr1 =  tr1->firstState();
+  LHCb::State statetr2 =  tr2->firstState();
 
   double tx1=statetr1.tx();
   double ty1=statetr1.ty();
@@ -475,7 +479,9 @@ StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
 
   double z2 = PosPV.z();
 
-  LHCb::State statetr = stateAtFirstMeas(tr);
+  //LHCb::State statetr = stateAtFirstMeas(tr);
+
+  LHCb::State statetr =  tr->firstState();
   LHCb::State newstate =  statetr;
 
   if(isVelo || isVeloB) sc = m_veloExtrapolator->propagate( newstate, z2 );

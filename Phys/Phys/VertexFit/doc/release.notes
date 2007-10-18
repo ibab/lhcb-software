@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.112 2007-10-11 17:11:40 pkoppenb Exp $
+! $Id: release.notes,v 1.113 2007-10-18 16:35:38 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-10-18 - Yuehong Xie
+ - PVReFitter.cpp
+  . bug fix: replace  stateAtFirstMeas(tr) with tr->firstState()
 
 !========================== VertexFit v4r3p1 2007-10-10 ====================
 
