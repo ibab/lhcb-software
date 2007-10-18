@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.117 2007-07-31 09:28:51 jpalac Exp $
+! $Id: release.notes,v 1.118 2007-10-18 16:55:34 xieyu Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-10-18
+ - CompositeParticle2MCLinks.cpp
+  . Replace v->outgoingParticles() with p->daughters() to make it work for
+    particles made with OfflineVertexFitter.useResonanceVertex=flase 
 
 !========================== DaVinciAssociators v9r2p1 2007-07-31 ==============
 

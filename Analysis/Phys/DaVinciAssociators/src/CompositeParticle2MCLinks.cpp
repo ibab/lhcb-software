@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.19 2007-06-20 12:48:21 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.20 2007-10-18 16:55:34 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -325,7 +325,9 @@ bool CompositeParticle2MCLinks::addDaughters( const Particle* p,
 {
   const Vertex* v = p->endVertex();
   if ( v != 0 ) {
-    const SmartRefVector<Particle>& dau = v->outgoingParticles();
+    //change to make it work for the case outgoingParticles()!=daughters()
+    //const SmartRefVector<Particle>& dau = v->outgoingParticles();
+    const SmartRefVector<Particle>& dau = p->daughters();
     for (SmartRefVector<Particle>::const_iterator k = dau.begin();
          k != dau.end(); ++k ) {
 
