@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r4p1 2007-10-19 ====================
 ! 2007-10-19 Stefan
 - fix typo. The generated copyconstructor was missing a comma for base classes,
   which were not KeyedObjects
