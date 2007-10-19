@@ -4,6 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-10-19 Stefan
+- fix typo. The generated copyconstructor was missing a comma for base classes,
+  which were not KeyedObjects
+
 !======================== GaudiObjDesc v10r4 2007-09-19 ======================
 ! 2007-09-17 Stefan Roiser
 - New feature for string to type conversion for enums and vice versa

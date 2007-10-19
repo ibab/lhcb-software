@@ -193,7 +193,7 @@ class genClasses(genSrcUtils.genSrcUtils):
           for b in godClass['base']:
             bname = b['attrs']['name']
             if bname.find('KeyedObject') != -1 : s += '   %s(),\n' % bname
-            else                               : s += '   %s(rh)\n' % bname
+            else                               : s += '   %s(rh),\n' % bname
         if godClass.has_key('attribute'):
           for a in godClass['attribute']:
             aname = a['attrs']['name']
