@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.22 2007-09-18 11:43:39 cattanem Exp $
+# $Id: requirements,v 1.23 2007-10-19 15:47:20 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r6
+version           v2r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -22,6 +22,10 @@ end_private
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict RecEventCustomDict ../dict/lcgDict.h
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================

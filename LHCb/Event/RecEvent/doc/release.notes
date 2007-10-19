@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.66 2007-09-18 11:43:39 cattanem Exp $
+! $Id: release.notes,v 1.67 2007-10-19 15:47:20 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+!========================= RecEvent v2r6 2007-10-19 ==========================
+! 2007-10-19 - Marco Cattaneo
+ - Add generation of a custom dictionary, and generate dictionary for
+   std::vector<const LHCb::RecVertex*> 
 
 !========================= RecEvent v2r6 2007-09-18 ==========================
 ! 2007-08-09 - Chris Jones
