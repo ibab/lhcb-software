@@ -1,4 +1,4 @@
-// $Id: Range.h,v 1.13 2007-08-13 09:59:02 ibelyaev Exp $
+// $Id: Range.h,v 1.14 2007-10-19 13:41:54 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -72,7 +72,6 @@ namespace LoKi
     typedef typename Container::const_iterator         const_iterator         ;
     typedef typename Container::const_reverse_iterator reverse_iterator       ;
     typedef typename Container::const_reverse_iterator const_reverse_iterator ;
-    typedef typename Container::value_type             value_type             ;
     typedef typename Container::const_reference        reference              ;
     typedef typename Container::const_reference        const_reference        ;
     /// internal types 

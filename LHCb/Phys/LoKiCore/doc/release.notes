@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2007-10-08 06:44:16 cattanem Exp $ 
+! $Id: release.notes,v 1.61 2007-10-19 13:41:55 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiCore v6r1p1 2007-10-19 ======================
+! 2007-10-19 - Marco Cattaneo
+ - Remove duplicate typedef, to please gcc 4.0
 
 !=========================== LoKiCore v6r1 2007-10-08 ======================
 ! 2007-10-07 - Vanya BELYAEV
@@ -383,6 +387,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.60  2007/10/08 06:44:16  cattanem
+! move tag
+!
 ! Revision 1.59  2007/10/07 13:45:33  ibelyaev
 !  add install_python_modules pattern
 !
