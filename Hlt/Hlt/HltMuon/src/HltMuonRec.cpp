@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.5 2007-09-07 14:41:28 sandra Exp $
+// $Id: HltMuonRec.cpp,v 1.6 2007-10-19 07:36:29 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -461,6 +461,22 @@ StatusCode HltMuonRec::execute() {
 StatusCode HltMuonRec::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  //to avoid menmory leak delete the regions created in initialize
+  std::vector<HltMuonStationRec>::iterator itSt;
+  for (itSt=m_station.begin();itSt<m_station.end();itSt++){
+    std  ::vector<HltMuonRegion*> regVector=itSt->region();
+    std::vector<HltMuonRegion*>::iterator itReg;
+    for(itReg=regVector.begin();itReg<regVector.end();itReg++){
+      if((*itReg)!=NULL){
+        delete *itReg;
+        //info()<<"deleting "<<endreq;
+        
+      }
+      
+    }    
+  }
+  
+
   
   info () << "Number of events processed: " << double(m_countEvents) << endreq;
   info () << "Average number of muon tracks: " 
