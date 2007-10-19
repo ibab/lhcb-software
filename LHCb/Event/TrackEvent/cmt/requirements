@@ -23,6 +23,10 @@ end_private
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict TrackEventCustomDict ../dict/lcgDict.h
+
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 macro TrackEventDict_dependencies TrackEvent

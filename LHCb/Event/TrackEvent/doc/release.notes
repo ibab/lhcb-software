@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r8 2007-10-19 ==========================
+! 2007-10-19 - Marco Cattaneo
+ - Add generation of a custom dictionary, and generate dictionary for
+   std::vector<const LHCb::Track*> 
+
 !======================= TrackEvent v4r7 2007-10-08 ==========================
 !2007-10-08 - Stephanie Hansmann-Menzemer (for Adrian Perieanu)
  - Add Cand2ndQPat, NCandCommonHits, Cand2ndChi2Mat, GhosProbability flag to
