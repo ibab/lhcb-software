@@ -5,7 +5,7 @@
 #		Adlene Hicheur, EPFL, Lausanne
 #============================================================================
 package           AlignTrTools
-version           v3r1
+version           v3r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -34,7 +34,6 @@ use   LinkerEvent     v*     Event
 
 use   TrackInterfaces v*     Tr
 use   TrackFitEvent   v*     Tr
-use   TsaKernel       v*     Tr
 
 use   STDet           v*     Det
 use   OTDet           v*     Det
@@ -42,9 +41,8 @@ use   VeloDet         v*     Det
 #============================================================================
 # Component library building rule
 #============================================================================
-library          AlignTrTools    ../src/*.cpp ../src/minres/*.f -import=AIDA
+library          AlignTrTools    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=AlignTrTools
-set ALIGNTRTOOLSOPTS  ${ALIGNTRTOOLSROOT}/options
