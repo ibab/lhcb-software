@@ -52,24 +52,24 @@ PreFitMatch.Fitter.ErrorTy2 = 2e-3;
 PreFitMatch.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
 ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
 
-// KShort fit
-FitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
-FitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
-FitKsTrack.Fitter.StateAtBeamLine = false;
-FitKsTrack.Fitter.SetRefInfo      = false;
-FitKsTrack.Fitter.NumberFitIterations = 2;
-FitKsTrack.Fitter.MakeNodes = false;
+// Downstream fit
+FitDownstream.TracksInContainer = "Rec/Track/Downstream";
+FitDownstream.Fitter.ZPositions      = { 990., 2165., 9450. };
+FitDownstream.Fitter.StateAtBeamLine = false;
+FitDownstream.Fitter.SetRefInfo      = false;
+FitDownstream.Fitter.NumberFitIterations = 2;
+FitDownstream.Fitter.MakeNodes = false;
 
-PreFitKsTrack.TracksInContainer = "Rec/Track/KsTrack";
-PreFitKsTrack.Fitter.ZPositions      = { 990., 2165., 9450. };
-PreFitKsTrack.Fitter.StateAtBeamLine = false;
-PreFitKsTrack.Fitter.SetRefInfo      = false;
-PreFitKsTrack.Fitter.NumberFitIterations = 2;
-PreFitKsTrack.Fitter.MaxNumberOutliers = 0;
-PreFitKsTrack.Fitter.ErrorX2 = 40.0;
-PreFitKsTrack.Fitter.ErrorTx2 = 1e-3;
-PreFitKsTrack.Fitter.ErrorTy2 = 2e-3;
-PreFitKsTrack.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
+PreFitDownstream.TracksInContainer = "Rec/Track/Downstream";
+PreFitDownstream.Fitter.ZPositions      = { 990., 2165., 9450. };
+PreFitDownstream.Fitter.StateAtBeamLine = false;
+PreFitDownstream.Fitter.SetRefInfo      = false;
+PreFitDownstream.Fitter.NumberFitIterations = 2;
+PreFitDownstream.Fitter.MaxNumberOutliers = 0;
+PreFitDownstream.Fitter.ErrorX2 = 40.0;
+PreFitDownstream.Fitter.ErrorTx2 = 1e-3;
+PreFitDownstream.Fitter.ErrorTy2 = 2e-3;
+PreFitDownstream.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector";
 ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
 
 // Velo-TT fit

@@ -41,11 +41,11 @@ RecoOTSeq.Members += { "OTTimeCreator" };
 
 // Tracking sequence
 RecoTrSeq.Members  += { "ProcessPhase/Track" };
-Track.DetectorList  = { "ForwardPat", "ForwardPreFit", "ForwardFit"
-                      , "SeedPat",    "SeedPreFit",    "SeedFit"
-                      , "MatchPat",   "MatchPreFit",   "MatchFit"
-                     // , "KShortPat",  "KShortPreFit",  "KShortFit"
-                      , "VeloTTPat",  "VeloTTPreFit",  "VeloTTFit"
+Track.DetectorList  = { "ForwardPat",   "ForwardPreFit",   "ForwardFit"
+                      , "SeedPat",      "SeedPreFit",      "SeedFit"
+                      , "MatchPat",     "MatchPreFit",     "MatchFit"
+                      , "DownstreamPat","DownstreamPreFit","DownstreamFit"
+                      , "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
                       , "PostFit"
                       , "VeloPreFit", "VeloFit"
                       , "AddExtraInfo"
@@ -95,14 +95,14 @@ TrackMatchPreFitSeq.Members += { "TrackEventFitter/PreFitMatch" };
 // Match fit
 TrackMatchFitSeq.Members += { "TrackEventFitter/FitMatch" };
 
-// KShort pattern
-//TrackKShortPatSeq.Members += { "PatKShort" };
+// Downstream pattern
+TrackDownstreamPatSeq.Members += { "PatDownstream" };
 
-// KShort prefit
-//TrackKShortPreFitSeq.Members += { "TrackEventFitter/PreFitKsTrack" };
+// Downstream prefit
+TrackDownstreamPreFitSeq.Members += { "TrackEventFitter/PreFitDownstream" };
 
-// KShort fit
-//TrackKShortFitSeq.Members += { "TrackEventFitter/FitKsTrack" };
+// Downstream fit
+TrackDownstreamFitSeq.Members += { "TrackEventFitter/FitDownstream" };
 
 // Velo-TT pattern
 TrackVeloTTPatSeq.Members += { "PatVeloTT" };
@@ -143,5 +143,5 @@ TrackClonesSeq.MeasureTime = true;
 #include "$TRACKSYSROOT/options/Fitting.opts"
 
 TrackAddLikelihood.TrackMatching_likTool.otEff = 0.9;
-//TrackAddLikelihood.PatKShort_likTool.otEff = 0.9;
+//TrackAddLikelihood.PatDownstream_likTool.otEff = 0.9;
 
