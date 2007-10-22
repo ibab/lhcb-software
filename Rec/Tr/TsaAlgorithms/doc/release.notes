@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-10-22 - Marco Cattaneo
+ - This package is obsolete. Functionality has been moved to Tf/TsaAlgorithms
+
 !======================= TsaAlgorithms v2r7 2007-10-04 ======================
 ! 2007-9-28 M. Needham
  - Change extraInfo flag to TsaLikelihood
