@@ -14,26 +14,26 @@
       keyedContTypeDef = "TRUE"
       stdVectorTypeDef = "TRUE">
 
-      <location name="Ideal"   place="MC/Track/Ideal"/>
-      <location name="Seed"    place="Rec/Track/Seed"/>
-      <location name="RZVelo"  place="Rec/Track/RZVelo"/>
-      <location name="Velo"    place="Rec/Track/Velo"/>
-      <location name="Forward" place="Rec/Track/Forward"/>
-      <location name="VeloTT"  place="Rec/Track/VeloTT"/>
-      <location name="Match"   place="Rec/Track/Match"/>
-      <location name="KsTrack" place="Rec/Track/KsTrack"/>
-      <location name="Tsa"     place="Rec/Track/Tsa"/>
-      <location name="Muon"    place="Rec/Track/Muon"/>
+      <location name="Ideal"      place="MC/Track/Ideal"/>
+      <location name="Seed"       place="Rec/Track/Seed"/>
+      <location name="RZVelo"     place="Rec/Track/RZVelo"/>
+      <location name="Velo"       place="Rec/Track/Velo"/>
+      <location name="Forward"    place="Rec/Track/Forward"/>
+      <location name="VeloTT"     place="Rec/Track/VeloTT"/>
+      <location name="Match"      place="Rec/Track/Match"/>
+      <location name="Downstream" place="Rec/Track/Downstream"/>
+      <location name="Tsa"        place="Rec/Track/Tsa"/>
+      <location name="Muon"       place="Rec/Track/Muon"/>
 
-      <location name="HltSeed"    place="Hlt/Track/Seed"/>
-      <location name="HltRZVelo"  place="Hlt/Track/RZVelo"/>
-      <location name="HltVelo"    place="Hlt/Track/Velo"/>
-      <location name="HltForward" place="Hlt/Track/Forward"/>
-      <location name="HltVeloTT"  place="Hlt/Track/VeloTT"/>
-      <location name="HltMatch"   place="Hlt/Track/Match"/>
-      <location name="HltKsTrack" place="Hlt/Track/KsTrack"/>
-      <location name="HltTsa"     place="Hlt/Track/Tsa"/>
-      <location name="HltMuon"    place="Hlt/Track/Muon"/>
+      <location name="HltSeed"       place="Hlt/Track/Seed"/>
+      <location name="HltRZVelo"     place="Hlt/Track/RZVelo"/>
+      <location name="HltVelo"       place="Hlt/Track/Velo"/>
+      <location name="HltForward"    place="Hlt/Track/Forward"/>
+      <location name="HltVeloTT"     place="Hlt/Track/VeloTT"/>
+      <location name="HltMatch"      place="Hlt/Track/Match"/>
+      <location name="HltDownstream" place="Hlt/Track/Downstream"/>
+      <location name="HltTsa"        place="Hlt/Track/Tsa"/>
+      <location name="HltMuon"       place="Hlt/Track/Muon"/>
 
 
       <base name='KeyedObject&lt;int&gt;' />
@@ -61,13 +61,16 @@
         <enumval name = "TrackVeloTT"    value="5" desc="track produced with the offline Velo-TT pattern recognition"/>
         <enumval name = "PatForward"     value="6" desc="track produced with the forward pattern recognition"/>
         <enumval name = "TrackMatching"  value="7" desc=""/>
-        <enumval name = "PatKShort"      value="8" desc=""/>
+        <enumval name = "PatKShort"      value="8" desc="track produced with the PatKShort pattern recognition"/>
         <enumval name = "TsaTrack"       value="9" desc=""/>
         <enumval name = "MuonID"         value="10" desc="track produced with the Muon pattern recognition"/>
         <enumval name = "PatVeloR"       value="11" desc="produced with the 2D VELO pattern recognition"/>
         <enumval name = "PatVeloGeneric" value="12" desc="produced with the VELO Generic pattern recognition"/>
         <enumval name = "PatVeloGeneral" value="13" desc="produced with the VELO General pattern recognition"/>
         <enumval name = "PatVeloOpen"    value="14" desc="produced with the VELO open pattern recognition"/>
+        <enumval name = "PatSeeding"     value="15" desc="track produced with the PatSeeding pattern recognition"/>
+        <enumval name = "PatMatch"       value="16" desc="track produced with the PatMatch pattern recognition"/>
+        <enumval name = "PatDownstream"  value="17" desc="track produced with the PatDownstream pattern recognition"/>
       </enum>
 
       <enum

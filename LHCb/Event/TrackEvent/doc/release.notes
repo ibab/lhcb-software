@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-10-22 - Olivier Callot
+ - Replace 'KShort' by 'Downtream' in track locations
+ - Add history for PatSeeding, PatMatch and PatDowsntream algorithms
+
 !======================= TrackEvent v4r8 2007-10-19 ==========================
 ! 2007-10-19 - Marco Cattaneo
  - Add generation of a custom dictionary, and generate dictionary for
