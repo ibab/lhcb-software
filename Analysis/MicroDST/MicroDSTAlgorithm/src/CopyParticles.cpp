@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.3 2007-10-22 13:34:40 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.4 2007-10-22 16:29:17 jpalac Exp $
 // Include files 
 
 // STL
@@ -64,40 +64,18 @@ StatusCode CopyParticles::execute() {
             << " into " << fullOutputTESLocation() << endmsg;
 
 
-  StatusCode sc = storeMothers();
-  return sc;
+  const LHCb::Particle::Container* particles = 
+    get<LHCb::Particle::Container>( inputTESLocation() );
+
+  verbose() << "Found " << particles->size() << " particles" << endmsg;
+  
+  for (Particles::const_iterator iPart = particles->begin();
+       iPart != particles->end();
+       ++iPart) storeParticle( *iPart);
+
+  return StatusCode::SUCCESS;
   
 
-}
-//=============================================================================
-StatusCode CopyParticles::storeMothers() 
-{
-  const Particles* particles =
-    copyKeyedContainer<Particles, ParticleCloner>(inputTESLocation(),
-                                                  fullOutputTESLocation());
-  
-  StatusCode sc(StatusCode::SUCCESS);
-
-  for (Particles::const_iterator it = particles->begin();
-       sc.isSuccess() && it != particles->end();
-       ++it) {
-    storeDecay(*it);
-  }
-
-  return sc;
-
-}
-//=============================================================================
-StatusCode CopyParticles::storeDecay(LHCb::Particle* particleClone)
-{
-  StatusCode sc(StatusCode::SUCCESS);
-
-  if (particleClone->endVertex()) {
-    const LHCb::Vertex* vertexClone = 
-      storeVertex(particleClone->endVertex());
-    if (vertexClone) particleClone->setEndVertex(vertexClone);
-  }
-  return sc;
 }
 //=============================================================================
 const LHCb::Vertex* CopyParticles::storeVertex(const LHCb::Vertex* vertex)
@@ -121,7 +99,7 @@ LHCb::Particle* CopyParticles::storeParticle(const LHCb::Particle* particle)
   const std::string to = outputTESLocation(from);
 
   LHCb::Particle* particleClone = 
-    cloneKeyedContainerItem<LHCb::Particle, ParticleCloneFunctor>(particle, to);
+    cloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner>(particle, to);
 
   if (particle->endVertex() && particleClone) {
     const LHCb::Vertex* vertexClone = storeVertex(particle->endVertex() );
