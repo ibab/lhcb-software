@@ -4,9 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r10 2007-10-12 ===================
 ! 2007-10-12 - Wouter Hulsbergen
 - adapted trajectories to change in Trajectory interface
-- added TrackTraj, CubicStateVectorInterpolationTraj, CubicStateInterpolationTraj, StateZTraj
+- added TrackTraj, StateZTraj, CubicStateVectorInterpolationTraj,
+        CubicStateInterpolationTraj
 
 !========================== TrackFitEvent v3r9 2007-10-04 ====================
 ! 2007-09-25 - Wouter Hulsbergen
