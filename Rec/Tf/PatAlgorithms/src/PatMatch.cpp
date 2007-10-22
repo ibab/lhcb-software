@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatMatch.cpp,v 1.2 2007-10-22 15:50:07 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,6 @@ StatusCode PatMatch::execute() {
   for ( std::vector<MatchCandidate>::iterator itM = cand.begin(); cand.end() != itM; ++itM ) {
     LHCb::Track* vTr = (*itM).vTr();
     LHCb::Track* sTr = (*itM).sTr();
-    double dist = (*itM).dist();
    
     if ( veloUsed[ vTr->key()] ) continue;
     if ( seedUsed[ sTr->key()] ) continue;
@@ -131,7 +130,7 @@ StatusCode PatMatch::execute() {
     
     //== Adjust flags
     match->setType(         LHCb::Track::Long  );
-    match->setHistory(      LHCb::Track::TrackMatching );
+    match->setHistory(      LHCb::Track::PatMatch );
     match->setPatRecStatus( LHCb::Track::PatRecIDs   );
     match->setLhcbIDs(  vTr->lhcbIDs()      );   // copy those from the Seed
     //== add new LHCbIDs

@@ -14,19 +14,18 @@ include_path      none
 #============================================================================
 # Used packages.
 #============================================================================
-use     PatVeloTT       v*      Tf
 use     PatKernel       v*      Tf
 use	TfKernel	v*	Tf
 use     TrackInterfaces v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
 use     OTDAQ           v*      OT
-
+use     TrackMCInterfaces v*    Tr
 #============================================================================
 # Component library building rule
 #============================================================================
-library          PatForward    ../src/*.cpp 
+library          PatAlgorithms    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=PatForward
+apply_pattern    component_library library=PatAlgorithms

@@ -1,8 +1,13 @@
+
 !-----------------------------------------------------------------------------
 ! Package     : Tf/PatAlgorithms
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2007-10-22 - Olivier Callot
+ - Import PatDownstream, an adaptation of PatKShort.
+ - Update the history flag with the proper value in PatSeeding and PatMatch
 
 !========================== PatAlgorithms v3r0 2007-10-12 ====================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer

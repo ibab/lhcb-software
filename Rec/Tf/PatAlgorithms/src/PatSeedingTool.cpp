@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.2 2007-10-22 15:50:07 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -1354,7 +1354,7 @@ void PatSeedingTool::processTracks ( std::string location, std::vector<LHCb::Tra
     LHCb::Track* out = new LHCb::Track();
     out->addToAncestors( *itT );
     out->setType( LHCb::Track::Ttrack );
-    out->setHistory( LHCb::Track::PatForward );
+    out->setHistory( LHCb::Track::PatSeeding );
     out->setPatRecStatus( LHCb::Track::PatRecIDs );
     out->setLhcbIDs( ids );
     LHCb::State& state = (*itT)->stateAt(  LHCb::State::AtT );
