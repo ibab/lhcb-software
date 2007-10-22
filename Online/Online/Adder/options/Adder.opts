@@ -1,6 +1,6 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
-
+#include "${TOPLEVEL}/std.opts"
 ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
@@ -17,7 +17,7 @@ ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 Adder.nodename="node00101";
-Adder.servername="node00101";
+Adder.servername="${TOPLEVEL}";
 Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
 Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
 Adder.taskname={"Test","Test","Test","Test"};

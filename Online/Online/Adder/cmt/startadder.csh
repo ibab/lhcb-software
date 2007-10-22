@@ -20,8 +20,8 @@ setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
 
 setenvOnline v3r4
 source /afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/Online/Adder/v4r3/cmt/setup.csh
-
-	
+setenv TOPLEVEL node00101
+echo "TOPLEVEL "$TOPLEVEL	
 /afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/InstallArea/slc4_ia32_gcc34_dbg/bin/Gaudi.exe \
 /afs/cern.ch/user/e/evh/w0/newcmt/Online_v3r4/InstallArea/slc4_ia32_gcc34_dbg/lib/libGaudiOnline.so GaudiOnline \
 -runable=LHCb::OnlineRunable \

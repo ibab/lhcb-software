@@ -19,9 +19,7 @@ void Tim::timerHandler()
    {
       for (int j=0;j<=(int)info.size()-1;j++) {
          for (int i=0;i<=(int)info[j].size()-1;i++) {
- 	    info[j][0]->add(info[j][i]);
 	    if (info[j][0]->add(info[j][i])==false) {
-               info[j][0]->add2d(info[j][i]);
 	       if (info[j][0]->add2d(info[j][i])==false) {
 	          info[j][0]->addp(info[j][i]);
 	       }	  
