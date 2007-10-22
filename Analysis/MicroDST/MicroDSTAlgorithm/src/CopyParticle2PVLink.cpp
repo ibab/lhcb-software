@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.1 2007-10-22 16:29:50 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.2 2007-10-22 16:54:40 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,8 @@
 // from LHCb
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+// from DaVinci
+#include "Kernel/Particle2Vertex.h"
 // local
 #include "CopyParticle2PVLink.h"
 
@@ -59,6 +61,19 @@ StatusCode CopyParticle2PVLink::initialize() {
 //=============================================================================
 StatusCode CopyParticle2PVLink::execute() {
 
+  if (exist<Particle2Vertex::Table>(inputTESLocation()) )
+  {
+    verbose() << "Retrieving relations table from " 
+              << inputTESLocation() << endmsg;
+    Particle2Vertex::Table* table = get<Particle2Vertex::Table>(inputTESLocation());
+    if (table) {
+      verbose() << "found table!" << endmsg;
+    }
+    
+  } else {
+    verbose() << "Found no table at " << inputTESLocation() << endmsg;
+  }
+      
   return StatusCode::SUCCESS;  
 }
 //=============================================================================
