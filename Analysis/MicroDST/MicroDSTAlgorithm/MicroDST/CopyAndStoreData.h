@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.5 2007-10-18 10:27:19 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.6 2007-10-22 13:33:47 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -69,18 +69,18 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  StatusCode copyKeyedContainer( const std::string& from,
-                                 const std::string& to    ) 
+  const T* copyKeyedContainer( const std::string& from,
+                               const std::string& to    ) 
   {
     debug() << "now store container for location " << from << endmsg;
 
     if (!exist<T>(from)) {
       debug() << "Container location does not exist" << endmsg;
-      return StatusCode::FAILURE;    
+      return 0;    
     } else {
       const T* data = get<T>( from );
       if (!data) {
-        return StatusCode::FAILURE;
+        return 0;
       }
       T* clones = getOutputContainer<T>(to);
 
@@ -88,12 +88,8 @@ protected:
                 << " elements from " << from 
                 << " into " << to << ", size " << clones->size()
                 << endmsg;
-      StatusCode sc =  copyKeyedContainer<T, ContainedItemCloner>(data, 
-                                                                  clones); 
-      verbose() << "copyKeyedContainer copied " 
-                << clones->size() << " elements" <<endmsg;
-
-      return sc;
+      return  copyKeyedContainer<T, ContainedItemCloner>(data, 
+                                                         clones); 
     } // if !exist
   }
 
@@ -102,8 +98,9 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  StatusCode copyKeyedContainer( const T* from, T* to    ) 
+  const T* copyKeyedContainer( const T* from, T* to    ) 
   {
+    if (!from || !from ) return 0;
     verbose() << "copyContainer output container size " << to->size() 
               << endmsg;
     std::for_each(from->begin(), from->end(), 
@@ -112,9 +109,20 @@ protected:
     verbose() << "copyContainer copied # elements into output container: " 
               << to->size() << endmsg;
 
-    return StatusCode::SUCCESS;
+    return to;
   }
 
+  template <class T, class itemCloner>
+  T* cloneKeyedContainerItem(const T* item, 
+                             const std::string& location)
+  {
+    typename T::Container* clones = getOutputContainer<typename T::Container>(location);
+    if (0==clones) return 0;
+    CloneKeyedContainerItem<T, itemCloner> cloner(clones);
+    return cloner(item);
+    
+  }
+  
   //===========================================================================
   /**
    *
@@ -122,32 +130,35 @@ protected:
    * The functor checks if an item with the same key already exists.
    * Requirements:
    *
-   * Container type T:
-   * Must export value type as T::value_type. 
-   * Must have an insert method T::insert(T::value_type, type of T::value_type::key() )
-   * Must have a method T::value_type T::object( type of T::value_type::key() )
+   * Contained type T:
+   * Must export container type as T::Container. 
+   * T::Container must have a method 
+   * insert(T::value_type, type of T::value_type::key() )
+   * Must have a method T* object( type of T::key() )
    *
-   * Type T::value_type must have method key()
+   * Type T must have method T::key()
    *
    *
-   * @author Juan Palaicos juancho@nikhef.nl
+   * @author Juan Palacios juancho@nikhef.nl
    * @date 16-10-2007
    */
   template <class T, class itemCloner>
   struct CloneKeyedContainerItem
   {
-    CloneKeyedContainerItem(T*& to) 
+    CloneKeyedContainerItem(typename T::Container*& to) 
       : m_to(to) { }
     
-    void operator() ( const typename T::value_type item )
+    T* operator() ( const T* item )
     {
       if ( !m_to->object( item->key() ) ) {
-        typename T::value_type clonedItem = itemCloner::clone(item);
+        T* clonedItem = itemCloner::clone(item);
         m_to->insert( clonedItem, item->key()) ;
+        return clonedItem;
       }
+      return m_to->object( item->key() );
     }
     
-    T* m_to;
+    typename T::Container* m_to;
     
   };
   
@@ -196,7 +207,7 @@ protected:
    * @author Ulrich Kerzel
    *
    */
-  inline const std::string objectLocation(const DataObject* pObject) const
+  inline static const std::string objectLocation(const DataObject* pObject)
   {
     return (!pObject ? "Null DataObject" :
             (pObject->registry() ? pObject->registry()->identifier() : "UnRegistered"));
@@ -239,7 +250,7 @@ protected:
       "/" + this->inputTESLocation();
   }
 
-  inline const std::string outputTESLocation(std::string& inputLocation) 
+  inline const std::string outputTESLocation(std::string& inputLocation)
   {
     getNiceLocationName(inputLocation);
     return "/Event/"+ this->outputPrefix() + inputLocation;
