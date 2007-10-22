@@ -1,4 +1,4 @@
-// $Id: CopyODIN.cpp,v 1.1 2007-10-15 16:24:56 jpalac Exp $
+// $Id: CopyODIN.cpp,v 1.2 2007-10-22 20:29:23 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -58,8 +58,9 @@ StatusCode CopyODIN::execute() {
   debug() << "==> Execute" << endmsg;
   verbose() << "Going to store ODIN bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
-  return copyAndStoreObject<LHCb::ODIN>( inputTESLocation(),
-                                         fullOutputTESLocation() );
+  return (0!=copyAndStoreObject<LHCb::ODIN>( inputTESLocation(),
+                                             fullOutputTESLocation() ) ) ?
+    StatusCode::SUCCESS : StatusCode::FAILURE;
   
 }
 //=============================================================================
