@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.7 2007-10-22 16:30:55 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.8 2007-10-22 20:28:20 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -39,14 +39,14 @@ protected:
    * 
    * @param from The TES location of the object to be copied
    * @param to   The TES location where the copy should be stored
-   * @return     Status code
+   * @return     Const pointer to the cloned object.
    *
    * @author Juan Palacios juancho@nikhef.nl
    * @author Ulrich Kerzel
    */
   template <class T>
-  StatusCode copyAndStoreObject( const std::string& from,
-                                 const std::string& to   ) 
+  const T* copyAndStoreObject( const std::string& from,
+                               const std::string& to   ) 
   {
     verbose() << "try to get data container" << endmsg;
 
@@ -56,11 +56,12 @@ protected:
       T* newData = new T(*data);
       put (newData, to );
       verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
+      return newData;
     } else {
       Warning("No data container found at "+ from, StatusCode::SUCCESS);
+      return 0;
     } // if exist
 
-    return StatusCode::SUCCESS;
   }
   //===========================================================================
 
