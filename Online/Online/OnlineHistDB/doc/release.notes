@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
+! $Id: release.notes,v 1.16 2007-10-22 17:41:22 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
+
+! 20071022  - OnlineHistDB v3r2
+	- try to increase performances by removing searches by non-indexed variables
 
 ! 20071016  - OnlineHistDB v3r1
 	- improved support of display options

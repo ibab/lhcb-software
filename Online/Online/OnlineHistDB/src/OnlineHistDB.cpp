@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.15 2007-10-16 12:16:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.16 2007-10-22 17:41:22 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -480,7 +480,7 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
   stringstream ss;
   Page = PagenameSyntax(Page, folder);
   ss << "select VH.NAME,VH.HSTYPE,SH.INSTANCE from VIEWHISTOGRAM VH, SHOWHISTO SH "
-     << "WHERE SH.HISTO = VH.HID AND PAGEFULLNAME(SH.PAGE,SH.PAGEFOLDER)='" << Page 
+     << "WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page 
      << "' ORDER BY SH.INSTANCE";
   Statement *qst=m_conn->createStatement(ss.str());
   ResultSet *rset = qst->executeQuery ();
@@ -526,7 +526,7 @@ int OnlineHistDB::getPageNames(std::vector<string>& list) {
 
 int OnlineHistDB::getPageNamesByFolder(std::string Folder,
 				       std::vector<string>& list) {
-  std::string command = "SELECT PAGEFULLNAME(PAGENAME,FOLDER) from PAGE";
+  std::string command = "SELECT PAGENAME from PAGE";
   if (Folder != "_ALL_") 
     command += " WHERE FOLDER='" + Folder + "'";
   return genericStringQuery(command,list);

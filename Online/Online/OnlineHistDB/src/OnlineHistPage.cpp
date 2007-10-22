@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.13 2007-10-16 12:16:10 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.14 2007-10-22 17:41:22 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -39,7 +39,7 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
 
     ResultSet *rset=0;
     astmt=m_conn->createStatement
-      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,INSTANCE FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE PAGEFULLNAME(SH.PAGE,SH.PAGEFOLDER)=:1 and VH.HID= SH.HISTO ORDER BY SH.INSTANCE");
+      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,INSTANCE FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE SH.PAGE=:1 and VH.HID= SH.HISTO ORDER BY SH.INSTANCE");
     try{
       astmt->setString(1, m_name);
       rset =  astmt->executeQuery ();
@@ -294,12 +294,7 @@ bool OnlineHistPage::save() {
   return out;
 }
 
-// std::string OnlineHistPage::fullName(std::string simplename, std::string folder) {
-//   std::string outname=folder;
-//   if (folder != "/") outname+= "/";
-//   outname += simplename;
-//   return outname;
-// }
+
 
 
 

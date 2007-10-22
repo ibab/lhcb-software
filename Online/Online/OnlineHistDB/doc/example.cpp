@@ -1,14 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.6 2007-10-02 15:28:45 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.7 2007-10-22 17:41:22 ggiacomo Exp $
 #include <stdio.h>
 #include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
 
 int main ()
 {
- OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
-					  OnlineHistDBEnv_constants::ACCOUNT,
-					  OnlineHistDBEnv_constants::DB);
-  
+   OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
+  					  OnlineHistDBEnv_constants::ACCOUNT,
+  				  OnlineHistDBEnv_constants::DB);
  bool ok=true;
   
  ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
@@ -40,31 +39,9 @@ int main ()
  if(thisH)
    thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
  
- HistDB->declareCreatorAlgorithm("Subtraction",2,OnlineHistDBEnv::H1D,0,NULL,
-				 "bin-by-bin subtraction");
-
- OnlineHistogram* s1=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips");
- OnlineHistogram* s2=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
- OnlineHistogram* htrips=0;
- std::vector<OnlineHistogram*> sources;
- if(s1 && s2) {
-   sources.push_back(s1);
-   sources.push_back(s2);
-   htrips=HistDB->declareAnalysisHistogram("Subtraction",
-					   "Trips_due_to_CRack",
-					   sources);
- }
-
- std::string mypar[1]={"Max"};
- bool algok=HistDB->declareCheckAlgorithm("CheckMax",1,mypar,
-			       "Checks all bins to be smaller than Max");
  
- if (htrips && algok) {
-   std::vector<float> warn(1,100.);
-   std::vector<float> alarm(1,500.);
-   htrips->declareAnalysis("CheckMax", &warn, &alarm);
- } 
 
+ 
 
  OnlineHistogram* h1=HistDB->getHistogram
    ("EXAMPLE/OccupancyMap/Hit_Map_$Region_M1R1");
@@ -74,22 +51,6 @@ int main ()
    ("EXAMPLE/OccupancyMap/Hit_Map_$Region_M3R1");
 
  if (h1 && h2 && h3) {
-   std::string hcpar[2]={"w1","w2"};
-   algok = HistDB->declareCreatorAlgorithm("Weighted mean",
-					   2,
-					   OnlineHistDBEnv::H1D,
-					   2,
-					   hcpar,
-				"weighted mean of two histograms with weights w1 and w2");
-   sources.clear();
-   sources.push_back(h1);
-   sources.push_back(h2);
-   std::vector<float> weights(2,1.);
-   weights[1]=0.5;
-   if(algok) HistDB->declareAnalysisHistogram("Weighted mean",
-					      "Silly plot",
-					      sources,
-					      &weights);
 
    OnlineHistPage* pg=HistDB->getPage("/Examples/My Example Page");
    if(pg) {

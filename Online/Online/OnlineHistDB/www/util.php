@@ -107,5 +107,8 @@ function PageFullName($p,$f) {
     return "$f/$p";
 }
 
+function PageSimpleName($fp) {
+  return preg_replace("/^.*\/([^\/]+)$/","\${1}",$fp);
+}
 
 ?>

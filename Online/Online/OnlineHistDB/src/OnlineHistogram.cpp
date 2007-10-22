@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.16 2007-10-16 12:23:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.17 2007-10-22 17:41:22 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -93,7 +93,7 @@ bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
   if (m_page != "_NONE_") {
     ResultSet *rset;
     Statement *query = 
-      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO SH ,VIEWHISTOGRAM VH WHERE VH.NAME=:1 AND SH.PAGEFOLDER||'/'||SH.PAGE=:2 AND SH.INSTANCE=:3");
+      m_conn->createStatement("SELECT INSTANCE FROM SHOWHISTO SH ,VIEWHISTOGRAM VH WHERE VH.NAME=:1 AND SH.PAGE=:2 AND SH.INSTANCE=:3");
     query->setString(1,m_identifier);
     query->setString(2,Page);
     query->setInt(3,Instance);
@@ -436,7 +436,7 @@ int OnlineHistogram::nThisPageInstances() {
   int out=0;
   ResultSet *rset;
   Statement *query = 
-    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1 AND PAGEFOLDER||'/'||PAGE=:2");
+    m_conn->createStatement("SELECT HISTO FROM SHOWHISTO WHERE HISTO=:1 AND PAGE=:2");
   query->setString(1,m_hid);
   query->setString(2,m_page);
   try{

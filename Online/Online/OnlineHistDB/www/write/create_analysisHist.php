@@ -24,7 +24,7 @@ for ($ip=1;$ip<=$np;$ip++) {
 $parameters="thresholds(".implode(",",$mypars).")";
 $command="begin OnlineHistDB.DeclareAnalysisHistogram(theAlg=>'".$_POST["alg"].
   "',theTitle=>'".sqlstring($_POST["hctitle"])."',${sourceh},thePars=>${parameters}); end;";
-// echo "command is $command <br>";
+//echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
 $r=OCIExecute($stid,OCI_DEFAULT);
 if ($r) {

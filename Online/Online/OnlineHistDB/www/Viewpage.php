@@ -30,7 +30,7 @@ function showhisto_display($hid,$doid,$instance)
       $act= $canwrite ? 'Specify' : 0;
       echo "Using Histogram Default Display Options<br>";
     }
-    $page=PageFullName($_POST["PAGENAME"],$_POST["FOLDER"]);
+    $page=$_POST["PAGENAME"];
     if ($act) {
       $getp=toGet($page);
       echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}>$act special Display Options for Histogram in this page </a>\n";
@@ -67,7 +67,7 @@ function page_form($page) {
   else {
      printf("Folder <input class='normal' type='text' size=40 name='FOLDER' value='%s' READONLY>\n",$_POST["FOLDER"]);
   }
-  printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' $epreadonly ><br>\n",$_POST["PAGENAME"]);
+  printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' $epreadonly ><br>\n",PageSimpleName($_POST["PAGENAME"]));
 
   echo "</td></tr></table>\n";
   echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='2' name='PAGEDOC'".
@@ -125,8 +125,8 @@ function show_pagefolder($sel='') {
     $pstid = OCIParse($conn,"SELECT PAGENAME FROM PAGE where FOLDER='".$pagef["PAGEFOLDERNAME"]."'");
     OCIExecute($pstid);
     while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
-      $p=$page["PAGENAME"];
-      $getp=toGet(PageFullName($p,$pagef["PAGEFOLDERNAME"]));
+      $getp=toGet($page["PAGENAME"]);
+      $p=PageSimpleName($page["PAGENAME"]);
       echo "<a class=normal href=$PHP_SELF?page=${getp}> $p</a><br>\n";
     }  
     ocifreestatement($pstid);
@@ -146,7 +146,7 @@ $conn=HistDBconnect(1);
 if (array_key_exists("page",$_GET)) {
   $page=fromGet($_GET["page"]);
   if ($page != "new__") {
-    $stid = OCIParse($conn,"SELECT * from PAGE where PAGEFULLNAME(PAGENAME,FOLDER)='${page}'");
+    $stid = OCIParse($conn,"SELECT * from PAGE where PAGENAME='${page}'");
     OCIExecute($stid);
     OCIFetchInto($stid, $mypage, OCI_ASSOC ) or die ("Don't know this page: $page <br>");
     foreach (array("PAGENAME","NHISTO","PAGEDOC","FOLDER")
