@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.2 2007-10-18 10:28:18 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.3 2007-10-22 13:34:40 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -65,7 +65,7 @@ private:
 
   typedef LHCb::RecVertex::Container Vertices;
   typedef CopyAndStoreData::BasicItemCloner<LHCb::RecVertex> PVCloneFunctor;
-  typedef CopyAndStoreData::CloneKeyedContainerItem<Vertices, PVCloneFunctor> BasicPVCloner;
+  typedef CopyAndStoreData::CloneKeyedContainerItem<LHCb::RecVertex, PVCloneFunctor> BasicPVCloner;
   
 
 private:

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.26 2007-10-18 10:26:53 jpalac Exp $
+! $Id: release.notes,v 1.27 2007-10-22 13:34:40 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-22 - Juan PALACIOS
+ - Improvements to StoreParticles algorithm.
 
 ! 2007-10-18 - Juan PALACIOS
  - MicroDST/CopyAndStoreData.h
