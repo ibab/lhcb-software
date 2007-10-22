@@ -1,4 +1,4 @@
-// $Id: PatKShortChecker.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatKShortChecker.cpp,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode PatKShortChecker::initialize() {
   m_ppSvc     = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
   m_trToMCP   = new TrAsct( evtSvc(), m_inputLocation);
   m_seedToMCP = new TrAsct( evtSvc(), LHCb::TrackLocation::Seed );
-  m_downToMCP = new TrAsct( evtSvc(), LHCb::TrackLocation::KsTrack );
+  m_downToMCP = new TrAsct( evtSvc(), LHCb::TrackLocation::Downstream );
 
   unsigned int kk;
   for ( kk=0 ; 20 > kk ; kk++ ) m_counter.push_back(0);
@@ -73,7 +73,7 @@ StatusCode PatKShortChecker::execute() {
   
   LHCb::Tracks* tracks  = get<LHCb::Tracks>( m_inputLocation );
   LHCb::Tracks* seeds   = get<LHCb::Tracks>( LHCb::TrackLocation::Seed    );
-  LHCb::Tracks* downs   = get<LHCb::Tracks>( LHCb::TrackLocation::KsTrack );
+  LHCb::Tracks* downs   = get<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
 
   LHCb::MCParticles* parts  = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 

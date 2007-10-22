@@ -1,4 +1,4 @@
-// $Id: PatChecker.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatChecker.cpp,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -28,13 +28,13 @@ PatChecker::PatChecker( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "CheckMissedVeloSpace", m_checkMissedVeloSpace = false );
-  declareProperty( "CheckMissedForward",   m_checkMissedForward   = false );
-  declareProperty( "CheckMissedSeed",      m_checkMissedSeed      = false );
-  declareProperty( "CheckMissedKShort",    m_checkMissedKShort    = false );
-  declareProperty( "CheckMatchNotForward", m_checkMatchNotForward = false );
+  declareProperty( "CheckMissedVeloSpace", m_checkMissedVeloSpace  = false );
+  declareProperty( "CheckMissedForward",   m_checkMissedForward    = false );
+  declareProperty( "CheckMissedSeed",      m_checkMissedSeed       = false );
+  declareProperty( "CheckMissedDownstream",m_checkMissedDownstream = false );
+  declareProperty( "CheckMatchNotForward", m_checkMatchNotForward  = false );
 
-  declareProperty( "MeasureTime",          m_measureTime          = false );
+  declareProperty( "MeasureTime",          m_measureTime           = false );
 }
 //=============================================================================
 // Destructor
@@ -123,16 +123,16 @@ StatusCode PatChecker::initialize() {
   m_match->addSelection( "        long" );
   m_match->addSelection( "long > 5 GeV" );
 
-  m_kShort = tool<PatCounter>( "PatCounter", "KShort", this );
-  m_kShort->setContainer( LHCb::TrackLocation::KsTrack );
-  m_kShort->setSelectId( 12 );
-  m_kShort->addSelection( "   with hits" );
-  m_kShort->addSelection( "    has Seed" );
-  m_kShort->addSelection( "+noVelo,T+TT" );
-  m_kShort->addSelection( " + strange<-" );
-  m_kShort->addSelection( " and > 5 GeV" );
-  m_kShort->addSelection( "   pi<-Ks<-B" );
-  m_kShort->addSelection( " and > 5 GeV" );
+  m_downst = tool<PatCounter>( "PatCounter", "Downstream", this );
+  m_downst->setContainer( LHCb::TrackLocation::Downstream );
+  m_downst->setSelectId( 12 );
+  m_downst->addSelection( "   with hits" );
+  m_downst->addSelection( "    has Seed" );
+  m_downst->addSelection( "+noVelo,T+TT" );
+  m_downst->addSelection( " + strange<-" );
+  m_downst->addSelection( " and > 5 GeV" );
+  m_downst->addSelection( "   pi<-Ks<-B" );
+  m_downst->addSelection( " and > 5 GeV" );
 
   m_kSNew = tool<PatCounter>( "PatCounter", "KSNew", this );
   m_kSNew->setContainer( "Rec/Track/FromKs" );
@@ -154,7 +154,7 @@ StatusCode PatChecker::initialize() {
   m_allCounters.push_back( m_tsa    );
   m_allCounters.push_back( m_tTrack );
   m_allCounters.push_back( m_match );
-  m_allCounters.push_back( m_kShort  );
+  m_allCounters.push_back( m_downst  );
   m_allCounters.push_back( m_kSNew  );
   m_allCounters.push_back( m_best  );
 
@@ -170,19 +170,19 @@ StatusCode PatChecker::initialize() {
   m_ttMatch->addSelection( "        long" );
   m_ttMatch->addSelection( "long > 5 GeV" );
 
-  m_ttKShort = tool<PatTTCounter>( "PatTTCounter", "TTKShort", this );
-  m_ttKShort->setContainer( LHCb::TrackLocation::KsTrack );
-  m_ttKShort->addSelection( "   with hits" );
-  m_ttKShort->addSelection( "    has Seed" );
-  m_ttKShort->addSelection( "+noVelo,T+TT" );
-  m_ttKShort->addSelection( " + strange<-" );
-  m_ttKShort->addSelection( " and > 5 GeV" );
-  m_ttKShort->addSelection( "   pi<-Ks<-B" );
-  m_ttKShort->addSelection( " and > 5 GeV" );
+  m_ttDownst = tool<PatTTCounter>( "PatTTCounter", "TTDownstream", this );
+  m_ttDownst->setContainer( LHCb::TrackLocation::Downstream );
+  m_ttDownst->addSelection( "   with hits" );
+  m_ttDownst->addSelection( "    has Seed" );
+  m_ttDownst->addSelection( "+noVelo,T+TT" );
+  m_ttDownst->addSelection( " + strange<-" );
+  m_ttDownst->addSelection( " and > 5 GeV" );
+  m_ttDownst->addSelection( "   pi<-Ks<-B" );
+  m_ttDownst->addSelection( " and > 5 GeV" );
 
   m_allTTCounters.push_back( m_ttForward );
   m_allTTCounters.push_back( m_ttMatch   );
-  m_allTTCounters.push_back( m_ttKShort  );
+  m_allTTCounters.push_back( m_ttDownst  );
 
   if ( m_measureTime ) {
     m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
@@ -379,12 +379,21 @@ StatusCode PatChecker::execute() {
      flags.push_back( fromKsFromB );
      flags.push_back( fromKsFromB && over5 );
     }
-    int foundKShort = m_kShort->count( part, flags, ids );
-    m_ttKShort->count( part, flags, ids );
+    int foundDownst = m_downst->count( part, flags, ids );
+    m_ttDownst->count( part, flags, ids );
 
-    if ( 3 < flags.size() && fromKsFromB && 0 <= foundKShort ) {
+    if ( m_checkMissedDownstream &&
+         0 > foundDownst &&  
+         3 < flags.size() && 
+         fromKsFromB ) {
+      info() << "=== Missed Downstream track key " << part->key() 
+             << " seed key " << foundSeed << endreq;
+    }
+    
+
+    if ( 3 < flags.size() && fromKsFromB && 0 <= foundDownst ) {
       partFromKs.push_back( part );
-      seedFromKs.push_back( foundKShort );
+      seedFromKs.push_back( foundDownst );
     }
   }
 

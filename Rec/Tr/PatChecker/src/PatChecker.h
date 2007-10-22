@@ -1,4 +1,4 @@
-// $Id: PatChecker.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatChecker.h,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 #ifndef PATCHECKER_H 
 #define PATCHECKER_H 1
 
@@ -38,7 +38,7 @@
     bool m_checkMissedVeloSpace;
     bool m_checkMissedForward;
     bool m_checkMissedSeed;
-    bool m_checkMissedKShort;
+    bool m_checkMissedDownstream;
     bool m_checkMatchNotForward;
     
     PatCounter* m_veloRz;
@@ -48,13 +48,13 @@
     PatCounter* m_tsa;
     PatCounter* m_tTrack;
     PatCounter* m_match;
-    PatCounter* m_kShort;
+    PatCounter* m_downst;
     PatCounter* m_kSNew;
     PatCounter* m_best;
     
     PatTTCounter* m_ttForward;
     PatTTCounter* m_ttMatch;
-    PatTTCounter* m_ttKShort;
+    PatTTCounter* m_ttDownst;
     
     //== Vector of the counters
     std::vector<PatCounter*> m_allCounters;

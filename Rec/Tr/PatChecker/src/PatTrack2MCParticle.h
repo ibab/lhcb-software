@@ -1,4 +1,4 @@
-// $Id: PatTrack2MCParticle.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatTrack2MCParticle.h,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 #ifndef PATTRACK2MCPARTICLE_H 
 #define PATTRACK2MCPARTICLE_H 1
 
@@ -43,7 +43,7 @@
     bool   m_level1;
     std::string m_lhcbLinks;
     double m_fractionOK;
-    std::vector<std::string> m_otherLocations;
+    std::vector<std::string> m_locations;
   };
 
 #endif // PATTRACK2MCPARTICLE_H

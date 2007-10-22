@@ -1,4 +1,4 @@
-// $Id: PatTrack2MCParticle.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatTrack2MCParticle.cpp,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -23,13 +23,18 @@ PatTrack2MCParticle::PatTrack2MCParticle( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "FractionOK"      , m_fractionOK     = 0.70 );
-  declareProperty( "OtherLocations"  , m_otherLocations        );
-  m_otherLocations.push_back( LHCb::TrackLocation::Tsa );
-  m_otherLocations.push_back( LHCb::TrackLocation::Seed );
-  m_otherLocations.push_back( LHCb::TrackLocation::Match );
-  m_otherLocations.push_back( LHCb::TrackLocation::Default );
-  m_otherLocations.push_back( "Rec/Track/FromKs" );
+  declareProperty( "FractionOK" , m_fractionOK     = 0.70 );
+  declareProperty( "Locations"  , m_locations        );
+  m_locations.push_back( LHCb::TrackLocation::RZVelo );
+  m_locations.push_back( LHCb::TrackLocation::Velo );
+  m_locations.push_back( LHCb::TrackLocation::Forward );
+  m_locations.push_back( LHCb::TrackLocation::Tsa );
+  m_locations.push_back( LHCb::TrackLocation::Seed );
+  m_locations.push_back( LHCb::TrackLocation::Match );
+  m_locations.push_back( LHCb::TrackLocation::Downstream );
+  m_locations.push_back( LHCb::TrackLocation::Tsa );
+  m_locations.push_back( LHCb::TrackLocation::VeloTT );
+  m_locations.push_back( LHCb::TrackLocation::Default );
 }
 //=============================================================================
 // Destructor
@@ -60,11 +65,10 @@ StatusCode PatTrack2MCParticle::execute() {
   debug() << "Loading LHCbID Links from " << m_lhcbLinks << endreq;
   LinkedTo<LHCb::MCParticle> lhcbIdLink( evtSvc(), msgSvc(), m_lhcbLinks );
 
-    //== Other locations, if any
+  //== Process the list of locations
 
-  for ( std::vector<std::string>::iterator itS = m_otherLocations.begin();
-        m_otherLocations.end() != itS; ++itS )
-  {
+  for ( std::vector<std::string>::iterator itS = m_locations.begin();
+        m_locations.end() != itS; ++itS ) {
     const std::string & name =  (*itS);
     if ( !exist<LHCb::Tracks>( name ) ) {
       debug() << "Container " << name << " not found." << endreq;
@@ -85,10 +89,9 @@ StatusCode PatTrack2MCParticle::execute() {
 //=========================================================================
 //  Associate a track
 //=========================================================================
-void
-PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
-                                      LinkedTo<LHCb::MCParticle>& lhcbIdLink,
-                                      LinkerWithKey<LHCb::MCParticle, LHCb::Track>& trackLink ) 
+void PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
+                                           LinkedTo<LHCb::MCParticle>& lhcbIdLink,
+                                           LinkerWithKey<LHCb::MCParticle, LHCb::Track>& trackLink ) 
 {
   const bool isVerbose = msgLevel( MSG::VERBOSE );
   double nTotT    = 0.;
