@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.2 2007-10-22 16:54:40 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.3 2007-10-22 20:29:59 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,10 @@ StatusCode CopyParticle2PVLink::initialize() {
 //=============================================================================
 StatusCode CopyParticle2PVLink::execute() {
 
+  debug() << "==> Execute" << endmsg;
+
+  verbose() << "Checking input location " << inputTESLocation() << endmsg;
+  
   if (exist<Particle2Vertex::Table>(inputTESLocation()) )
   {
     verbose() << "Retrieving relations table from " 
@@ -73,8 +77,17 @@ StatusCode CopyParticle2PVLink::execute() {
   } else {
     verbose() << "Found no table at " << inputTESLocation() << endmsg;
   }
-      
-  return StatusCode::SUCCESS;  
+
+  verbose() << "Going to store relations table from " << inputTESLocation()
+            << " into " << fullOutputTESLocation() << endmsg;
+  // This is just an example, we really have to re-populate the new table 
+  // created above.
+  return (0 != copyAndStoreObject<Particle2Vertex::Table>( inputTESLocation(),
+                                                           fullOutputTESLocation() ) ) ? 
+    StatusCode::SUCCESS : StatusCode::FAILURE;
+  
+
+
 }
 //=============================================================================
 //  Finalize
