@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v3r2 2007-10-22 =======================
 ! 2007-10-18 - Manuel Schiller
  - Fixed TrackCheckerNT algorithm to use IProjectorSelector interface
  - same algorithm: bug fix in OT hit mask calculation
