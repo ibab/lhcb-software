@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.6 2007-10-22 13:33:47 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.7 2007-10-22 16:30:55 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -253,7 +253,7 @@ protected:
   inline const std::string outputTESLocation(std::string& inputLocation)
   {
     getNiceLocationName(inputLocation);
-    return "/Event/"+ this->outputPrefix() + inputLocation;
+    return "/Event/"+ this->outputPrefix() + "/" + inputLocation;
   }
   
 private:
