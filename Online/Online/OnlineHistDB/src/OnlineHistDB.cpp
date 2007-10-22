@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.16 2007-10-22 17:41:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.17 2007-10-22 17:47:47 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -15,7 +15,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   OnlineHistDBEnv(user),
   OnlineTaskStorage(this), OnlineHistogramStorage(this),
   OnlinePageStorage(this, this), 
-  m_DBschema(4), m_AlgListID(-1), m_stmt(0), m_nit(0), m_maxNit(1000)
+  m_DBschema(5), m_AlgListID(-1), m_stmt(0), m_nit(0), m_maxNit(1000)
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
