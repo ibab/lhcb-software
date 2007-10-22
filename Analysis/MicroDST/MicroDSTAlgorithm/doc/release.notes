@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.27 2007-10-22 13:34:40 jpalac Exp $
+! $Id: release.notes,v 1.28 2007-10-22 16:31:04 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
 
 ! 2007-10-22 - Juan PALACIOS
- - Improvements to StoreParticles algorithm.
+
+ - Improvements to CopyParticles algorithm.
+
+ - Add src/CopyParticle2PVLink{.cpp, .h}
+  . Algorithm to store the links between particles and primary vertices.
+    Simply used relations table associated to particle TES location.
+    Users must pass location of table. Original location of particles is 
+    inferred from this. Default offline PV location is assumed.
 
 ! 2007-10-18 - Juan PALACIOS
  - MicroDST/CopyAndStoreData.h
