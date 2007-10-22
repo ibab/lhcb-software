@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r17 2007-10-22 ======================
 ! 2007-10-16 Wouter Hulsbergen
  - adapted to changes in Trajectory interface
  - replaced StateTraj with StateZTraj in projectors (to speed things up)
