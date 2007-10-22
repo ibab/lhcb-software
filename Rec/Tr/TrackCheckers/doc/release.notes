@@ -4,6 +4,13 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-10-18 - Manuel Schiller
+ - Fixed TrackCheckerNT algorithm to use IProjectorSelector interface
+ - same algorithm: bug fix in OT hit mask calculation
+ - same algorithm: added new fields containing total number of hits per
+   subdetector for easier occupancy calculation
+ - same algorithm: brought macros in root subdirectory in sync with changes
+
 !======================= TrackCheckers v3r1 2007-09-20 =======================
 ! 2007-09-14 - Chris Jones
  - Add monitor for Clone variable (KL distance)

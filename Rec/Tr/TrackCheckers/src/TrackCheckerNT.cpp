@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.5 2007-05-07 09:38:40 cattanem Exp $
+// $Id: TrackCheckerNT.cpp,v 1.6 2007-10-22 09:45:51 mschille Exp $
 // Include files 
 
 // local
@@ -131,7 +131,7 @@ StatusCode TrackCheckerNT::initialize()
 
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator"       );
   m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
-  m_projector    = tool<ITrackProjector>( "TrackMasterProjector",
+  m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector",
                                           "Projector", this );
   
   // get number of channels per detector - this may be interesting
@@ -223,6 +223,15 @@ StatusCode TrackCheckerNT::execute()
     warning() << "Event has " << tracks->size() << " Tracks, "
       "saving only " << m_maxTracks << " to avoid NTuple array/matrix "
       "overflows." << endmsg;
+  // write number of channels hit per subdetector
+  VeloClusters* VeloCont = get<VeloClusters>("Raw/Velo/Clusters");
+  STClusters *TTCont = get<STClusters>("Raw/TT/Clusters");
+  STClusters *ITCont = get<STClusters>("Raw/IT/Clusters");
+  OTTimes* OTCont = get<OTTimes>("Raw/OT/Times");
+  tuple->column("nVeloHits", VeloCont->size());
+  tuple->column("nTTHits", TTCont->size());
+  tuple->column("nITHits", ITCont->size());
+  tuple->column("nOTHits", OTCont->size());
 
   // handle the tracks in our event
   // the loop over tracks is done in the different methods
@@ -483,6 +492,14 @@ StatusCode TrackCheckerNT::fillGlobalTrackParameters(
     // a pointer is faster than deferencing the iterator every time
     Track *track = *t;
     
+    if (LHCb::Track::FitStatusUnknown == track->fitStatus()) {
+	warning() << "Track with unknown fit status, skipping!" << endmsg;
+	continue;
+    }
+    if (LHCb::Track::FitFailed == track->fitStatus()) {
+	debug() << "Track with fit failure, trying to continue!" << endmsg;
+    }
+    
     type[nTrack] = (float) track->type();
     chi2[nTrack] = (float) track->chi2();
     nDoF[nTrack] = (float) track->nDoF();
@@ -649,6 +666,14 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
       (t != tracks->end()) && (nTrack < nTracks); ++t, ++nTrack) {
     // a pointer is faster than deferencing the iterator every time
     Track *tr = *t;
+    
+    if (LHCb::Track::FitStatusUnknown == tr->fitStatus()) {
+	warning() << "Track with unknown fit status, skipping!" << endmsg;
+	continue;
+    }
+    if (LHCb::Track::FitFailed == tr->fitStatus()) {
+	debug() << "Track with fit failure, trying to continue!" << endmsg;
+    }
     
     // try to get associated MCParticle
     MCParticle *mcPart = directLink.first(tr);
@@ -863,16 +888,23 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 		  "caused a hit in " << pfx << "." << endmsg;
 	  break;
 	}
-	sc = m_projector->project(trueState, *m);
-	if (sc.isFailure()) {
-	  warning() << "Can't project true state onto measurement in " <<
-		  pfx << "." << endmsg;
-	  break;
+	ITrackProjector *proj = m_projectorSelector->projector(*m);
+	if (0 != proj) {
+		sc = proj->project(trueState, *m);
+		if (sc.isFailure()) {
+			warning() << "Can't project true state onto measurement in " <<
+				pfx << "." << endmsg;
+			break;
 	}
 	
-	// unbiased measurement residuals/errors
-	measres[nTrack][i] = (float) (m_projector->residual() / mm);
-	measerr[nTrack][i] = (float) (m_projector->errMeasure() / mm);
+		// unbiased measurement residuals/errors
+		measres[nTrack][i] = (float) (proj->residual() / mm);
+		measerr[nTrack][i] = (float) (proj->errMeasure() / mm);
+	} else {
+		warning() << "Can't obtain projector for a measurement in " <<
+			pfx << "." << endmsg;
+		break;
+	}
       } while (false);
       
       // check if we have an mcPart (if not, we can't gather more
@@ -971,6 +1003,15 @@ StatusCode TrackCheckerNT::fillHitPurEff(
   for (Tracks::const_iterator t = tracks->begin();
       (t != tracks->end()) && (nTrack < nTracks); ++t, ++nTrack) {
     Track *track = *t;
+    
+    if (LHCb::Track::FitStatusUnknown == track->fitStatus()) {
+	warning() << "Track with unknown fit status, skipping!" << endmsg;
+	continue;
+    }
+    if (LHCb::Track::FitFailed == track->fitStatus()) {
+	debug() << "Track with fit failure, trying to continue!" << endmsg;
+    }
+
     // zero counters
     int nTotalVelo   = 0, nTotalTT   = 0, nTotalIT   = 0, nTotalOT   = 0;
     int nGoodVelo    = 0, nGoodTT    = 0, nGoodIT    = 0, nGoodOT    = 0;
@@ -1410,27 +1451,17 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 	// get OT Module which took the hit to find the Monolayer
 	DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
 	DeOTModule *mod = OT->findModule(ott->channel());
-	// ok, we have to do a few tricks here because the dynamic range of a
-	// float is 23 bits only, but we do also have the mantissa's sign bit
-	// to play with (the idea is to interpret bit 24 as sign bit of the
-	// float's mantissa)
-	// make sure you know what you're doing when you change this - the
-	// same thing applies when you intend to use this hit mask in the
-	// NTuple
+	// although the mantisse of a float is 23 bits only, it is just the
+	// "fractional part" of the number represented, so a leading set bit
+	// is implicitly assumed. hence, we will not run into trouble with a
+	// 24 bit hit mask: if msb is not set, we have 23 bits, so all is well
+	// if msb is set, it becomes the suppressed leading bit, and the
+	// remaining 23 are safe in the mantissa - again, all is well
 	int mask = (int) HitMaskOT[nPart];
-	// build a "24 bit signed integer" quantity in our 32 bit wide int
-	// which will appear unsigned (that's what we want to have)
-	mask &= 0x00ffffffUL;	// mask away the upper eight bits
 	// ok, or our new bit onto mask
 	mask |= (1 << ((mod->monoLayerA(ott->channel().straw())?0:1) +
 			8 * (ott->channel().station() - 1) +
-			2 * (ott->channel().layer() - 1)));
-	// do the sign extension if neccessary (we don't add one as in
-	// one's complement notation because the value is not a number,
-	// we just use it as a convenient way to stuff 24 bits into
-	// a float)
-	// ok, propagate bit 24 into all uppermost eight bits if set
-	if (mask & 0x00800000UL) mask |= 0xff000000;
+			2 * ott->channel().layer()));
 	// ok, convert back to float...
 	HitMaskOT[nPart] = (float) mask;
       }

@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.h,v 1.3 2007-06-29 14:02:11 mneedham Exp $
+// $Id: TrackCheckerNT.h,v 1.4 2007-10-22 09:45:51 mschille Exp $
 #ifndef TRACKCHECKERNT_H 
 #define TRACKCHECKERNT_H 1
 
@@ -14,6 +14,7 @@
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackProjector.h"
 
 // from Event/LinkerEvent
@@ -135,9 +136,9 @@ private:
       LHCb::MCParticles* particles);
  
   // Interfaces
-  IIdealStateCreator*     m_stateCreator; // Pointer to IdealStateCreator
-  ITrackExtrapolator*     m_extrapolator; // Pointer to TrackMasterExtrapolator
-  ITrackProjector*        m_projector;    // Pointer to TrackMasterProjector
+  IIdealStateCreator*      m_stateCreator; // Pointer to IdealStateCreator
+  ITrackExtrapolator*      m_extrapolator; // Pointer to TrackMasterExtrapolator
+  ITrackProjectorSelector* m_projectorSelector;    // Pointer to Projector selection tool
 
   // jobOptions
   std::string m_tracksInContainer; // Input Tracks container location

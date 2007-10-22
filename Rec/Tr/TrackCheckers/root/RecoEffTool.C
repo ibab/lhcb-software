@@ -293,20 +293,8 @@ void RecoEffTool::Loop()
       std::cerr << "RecoEffTool: Processing Event " << ++event << ", MCParticle " << std::setw(5) << " ";
       // ok, figure out occupancy of detector components
       // start by counting the total number of hits per subdetector
-      long tot_Velo = 0, tot_TT = 0, tot_IT = 0, tot_OT = 0;
-      for (int mcPart = 0; mcPart <= nSavedMCParticles; ++mcPart) {
-	if (MCParticles_nVeloRHits[mcPart] > 0.) tot_Velo += long(MCParticles_nVeloRHits[mcPart]);
-	if (MCParticles_nVeloPhiHits[mcPart] > 0.) tot_Velo += long(MCParticles_nVeloPhiHits[mcPart]);
-	if (MCParticles_nTTXHits[mcPart] > 0.) tot_TT += long(MCParticles_nTTXHits[mcPart]);
-	if (MCParticles_nTTUHits[mcPart] > 0.) tot_TT += long(MCParticles_nTTUHits[mcPart]);
-	if (MCParticles_nTTVHits[mcPart] > 0.) tot_TT += long(MCParticles_nTTVHits[mcPart]);
-	if (MCParticles_nITXHits[mcPart] > 0.) tot_IT += long(MCParticles_nITXHits[mcPart]);
-	if (MCParticles_nITUHits[mcPart] > 0.) tot_IT += long(MCParticles_nITUHits[mcPart]);
-	if (MCParticles_nITVHits[mcPart] > 0.) tot_IT += long(MCParticles_nITVHits[mcPart]);
-	if (MCParticles_nOTXHits[mcPart] > 0.) tot_OT += long(MCParticles_nOTXHits[mcPart]);
-	if (MCParticles_nOTUHits[mcPart] > 0.) tot_OT += long(MCParticles_nOTUHits[mcPart]);
-	if (MCParticles_nOTVHits[mcPart] > 0.) tot_OT += long(MCParticles_nOTVHits[mcPart]);
-      }
+      long tot_Velo = nVeloHits, tot_TT = nTTHits,
+	   tot_IT = nITHits, tot_OT = nOTHits;
       // calculate occupancies from that
       // the magiacal constants in the four lines below come from asking
       // each detector in Brunel v30r9 for the number of channels it has

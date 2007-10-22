@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Nov 10 16:38:49 2006 by ROOT version 5.13/04b
+// Wed Jun 13 10:36:07 2007 by ROOT version 5.13/04c
 // from TTree 4242/Events
 // found on file: 0601-11144100-nt.root
 //////////////////////////////////////////////////////////
@@ -12,8 +12,8 @@
 #include <TChain.h>
 #include <TFile.h>
 
-#define MAXTRACKS       1000
-#define MAXMCPARTICLES  10000
+#define MAXTRACKS	1000
+#define MAXMCPARTICLES	10000
 
 class SlopeITOT {
 public :
@@ -25,6 +25,10 @@ public :
    Int_t           nSavedMCParticles;
    Int_t           nTracks;
    Int_t           nSavedTracks;
+   Int_t           nVeloHits;
+   Int_t           nTTHits;
+   Int_t           nITHits;
+   Int_t           nOTHits;
    Int_t           nMaxSavedTracks;
    Float_t         Tracks_type[MAXTRACKS];   //[nMaxSavedTracks]
    Float_t         Tracks_chi2[MAXTRACKS];   //[nMaxSavedTracks]
@@ -382,6 +386,10 @@ public :
    TBranch        *b_nSavedMCParticles;   //!
    TBranch        *b_nTracks;   //!
    TBranch        *b_nSavedTracks;   //!
+   TBranch        *b_nVeloHits;   //!
+   TBranch        *b_nTTHits;   //!
+   TBranch        *b_nITHits;   //!
+   TBranch        *b_nOTHits;   //!
    TBranch        *b_nMaxSavedTracks;   //!
    TBranch        *b_Tracks_type;   //!
    TBranch        *b_Tracks_chi2;   //!
@@ -811,6 +819,10 @@ void SlopeITOT::Init(TTree *tree)
    fChain->SetBranchAddress("nSavedMCParticles", &nSavedMCParticles, &b_nSavedMCParticles);
    fChain->SetBranchAddress("nTracks", &nTracks, &b_nTracks);
    fChain->SetBranchAddress("nSavedTracks", &nSavedTracks, &b_nSavedTracks);
+   fChain->SetBranchAddress("nVeloHits", &nVeloHits, &b_nVeloHits);
+   fChain->SetBranchAddress("nTTHits", &nTTHits, &b_nTTHits);
+   fChain->SetBranchAddress("nITHits", &nITHits, &b_nITHits);
+   fChain->SetBranchAddress("nOTHits", &nOTHits, &b_nOTHits);
    fChain->SetBranchAddress("nMaxSavedTracks", &nMaxSavedTracks, &b_nMaxSavedTracks);
    fChain->SetBranchAddress("Tracks_type", Tracks_type, &b_Tracks_type);
    fChain->SetBranchAddress("Tracks_chi2", Tracks_chi2, &b_Tracks_chi2);

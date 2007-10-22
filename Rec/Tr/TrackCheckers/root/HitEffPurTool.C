@@ -232,25 +232,8 @@ void HitEffPurTool::Loop()
       // start by counting the total number of hits per subdetector
       // (we need a loop over MCParticles for that...)
       double tot_Velo, tot_TT, tot_IT, tot_OT;
-      tot_Velo = 0.; tot_TT = 0.; tot_IT = 0.; tot_OT = 0.;
-      for (int mcPart = 0; mcPart <= nSavedMCParticles; ++mcPart) {
-	// if the particle has no hits at all, skip it
-	double tmp = MCParticles_nVeloStations[mcPart] + MCParticles_nTTStations[mcPart] +
-		MCParticles_nTStations[mcPart];
-	if (0. >= tmp) continue;
-	
-	if (MCParticles_nVeloRHits[mcPart] > 0.) tot_Velo += MCParticles_nVeloRHits[mcPart];
-	if (MCParticles_nVeloPhiHits[mcPart] > 0.) tot_Velo += MCParticles_nVeloPhiHits[mcPart];
-	if (MCParticles_nTTXHits[mcPart] > 0.) tot_TT += MCParticles_nTTXHits[mcPart];
-	if (MCParticles_nTTUHits[mcPart] > 0.) tot_TT += MCParticles_nTTUHits[mcPart];
-	if (MCParticles_nTTVHits[mcPart] > 0.) tot_TT += MCParticles_nTTVHits[mcPart];
-	if (MCParticles_nITXHits[mcPart] > 0.) tot_IT += MCParticles_nITXHits[mcPart];
-	if (MCParticles_nITUHits[mcPart] > 0.) tot_IT += MCParticles_nITUHits[mcPart];
-	if (MCParticles_nITVHits[mcPart] > 0.) tot_IT += MCParticles_nITVHits[mcPart];
-	if (MCParticles_nOTXHits[mcPart] > 0.) tot_OT += MCParticles_nOTXHits[mcPart];
-	if (MCParticles_nOTUHits[mcPart] > 0.) tot_OT += MCParticles_nOTUHits[mcPart];
-	if (MCParticles_nOTVHits[mcPart] > 0.) tot_OT += MCParticles_nOTVHits[mcPart];
-      } // end loop over MCPaticles
+      tot_Velo = nVeloHits; tot_TT = nTTHits;
+      tot_IT = nITHits; tot_OT = nOTHits;
       // calculate occupancies from that
       // the magiacal constants in the four lines below come from asking
       // each detector in Brunel v30r9 for the number of channels it has
