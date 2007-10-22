@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r8 2007-10-22 ========================
+! 2007-10-22 - Marco Cattaneo
+ - Add a dictionary needed by Panoramix
+
 ! 2007-10-12 - Wouter Hulsbergen
  - Adapted interface of trajectories for 'generic' expansion parameter
 

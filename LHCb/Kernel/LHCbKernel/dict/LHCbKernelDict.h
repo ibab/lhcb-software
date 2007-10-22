@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.5 2007-09-07 11:52:38 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.6 2007-10-22 08:33:12 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -60,6 +60,7 @@ namespace {
     LHCb::SiPositionInfo<LHCb::VeloChannelID>        m_SiPositionInfo_VeloChannelID;
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>       m_std_pair_XYZPoint_XYZPoint;
     std::vector<LHCb::VeloChannelID>                 m_std_vector_VeloChannelID;
+    std::vector<LHCb::LHCbID>::const_iterator        m_std_vector_LHCbID_const_iterator;
     // end instantiations
   };
 }

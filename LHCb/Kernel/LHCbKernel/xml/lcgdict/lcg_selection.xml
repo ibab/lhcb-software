@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name="std::vector<LHCb::LHCbID>::const_iterator"/>
   <class name="std::vector<LHCb::VeloChannelID>"/>
   <class name="std::vector<std::pair<LHCb::VeloChannelID,int> >"/>
   <class name="std::pair<LHCb::VeloChannelID,int>"/>
