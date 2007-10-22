@@ -4,10 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r12 2007-10-12 ==========================
 ! 2007-10-12 - Wouter Hulsbergen
  - changes in TrajPoca
-   - adapted to interface change in trajectory
-   - fixed bug in specification of tolerance for validity of quadratic approximation 
+   . adapted to interface change in trajectory
+   . fixed bug in specification of tolerance for validity of quadratic
+     approximation 
 
 !======================== LHCbAlgs v2r11 2007-10-11 ==========================
 ! 2007-10-11 - Marco Cattaneo
