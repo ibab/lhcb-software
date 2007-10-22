@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r10>2007-10-12 RecSys v4r10</A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2007-10-12 RecSys v5r0</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0. Introduces Tf framework
 
 - Packages removed: Pat/PatUtils        - obsolete
