@@ -1,2 +1,0 @@
-PatVeloRTracking.ZVertexMin = -2000.*mm; 
-PatVeloRTracking.ZVertexMax = 2000.*mm; 

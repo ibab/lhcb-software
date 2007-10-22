@@ -1,5 +1,0 @@
-//==============================================================
-// Build the Track - MCParticle associations
-// for the Tracks in the "best" container
-//==============================================================
-CheckTrSeq.Members  += { "TrackAssociator" };

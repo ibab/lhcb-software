@@ -1,7 +1,0 @@
-RecoVeloSeq.Members -= {"PatVeloRTracking"
-                      , "PatVeloSpaceTracking"
-                      , "PatFilterUsedClusters"
-                       };
-
-PatVeloGeneralTracking.PointErrorMin = 2*mm;
-ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;

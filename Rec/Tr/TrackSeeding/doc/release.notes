@@ -4,6 +4,9 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-10-22 - Marco Cattaneo
+ - This package is obsolete. Functionality moved to Tf/TrackSeeding
+
 !========================= TrackSeeding v1r2 2007-09-20 ======================
 ! 2007-09-17 - Juan PALACIOS
  - src/SeedHit.cpp

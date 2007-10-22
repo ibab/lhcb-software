@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-10-22 - Marco Cattaneo
+ - This package is obsolete. Functionality has been moved to Tf/TrackSys
+
 !============================ TrackSys v4r10 2007-10-10 ======================
 ! 2007-10-10 Eduardo Rodrigues
  - synchronised fitting options of "Tf" framework with the standard ones 
