@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2007-10-23 - Chris Jones
+ - Add option to MCParticleSelector to select only B decay products
+
 !====================== SimComponents v2r6 2007-10-10 ========================
 ! 2007-10-10 - Juan PALACIOS
  - Import src/PrintMCTree{.cpp, .h} from Phys/DaVinciMCTools.

@@ -26,13 +26,23 @@ public:
                       const std::string& name,
                       const IInterface* parent );
 
-  // destructor
+  /// destructor
   virtual ~MCParticleSelector();
+
+   // Tool initialization
+  virtual StatusCode initialize(); 
+
+public:
 
   // select
   virtual bool accept(const LHCb::MCParticle* aParticle) const;
 
-private:
+private: // methods
+
+  /// Determine if the given MCParticle is from a B decay or not
+  bool fromBdecay( const LHCb::MCParticle * aParticle ) const;
+
+private: // data
 
   double m_zOrigin;       ///< Maximum z position of origin vertex
   double m_pMin;          ///< Minimum momentum
@@ -45,9 +55,12 @@ private:
   bool m_selCharged;      ///< Select charged particles
   bool m_selNeutral;      ///< Select neutral particles
 
-  bool m_rejectElectrons; /// Reject electrons
-  bool m_rejectInteractions; /// Reject interactions
-  double m_zInteraction; /// z of the interaction
+  bool m_rejectElectrons;    ///< Reject electrons
+
+  bool m_rejectInteractions; ///< Reject interactions
+  double m_zInteraction;     ///< z of the interaction
+
+  bool m_selBprods;         ///< Select only b decay products
 
 };
 

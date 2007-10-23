@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.7 2007-07-02 07:30:29 mneedham Exp $
+// $Id: MCParticleSelector.cpp,v 1.8 2007-10-23 10:03:26 jonrob Exp $
 
 #include "Event/MCParticle.h"
 
@@ -15,7 +15,7 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
                                         const IInterface* parent ) :
   GaudiTool( type, name, parent )
 {
-  // constructor
+  // JOs
   declareProperty("zOrigin",      m_zOrigin      = 9999.0*Gaudi::Units::cm );
   declareProperty("pMin",         m_pMin         = 1.0*Gaudi::Units::GeV );
   declareProperty("pMax",         m_pMax         = 999999*Gaudi::Units::GeV );
@@ -25,18 +25,41 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
   declareProperty("rejectElectrons", m_rejectElectrons  = false );
   declareProperty("SelectChargedParticles", m_selCharged = true );
   declareProperty("SelectNeutralParticles", m_selNeutral = true );
-  declareProperty("rejectInteractions", m_rejectInteractions = false);
-  declareProperty("zInteraction", m_zInteraction = -9999.0*Gaudi::Units::m);
+  declareProperty("rejectInteractions", m_rejectInteractions = false );
+  declareProperty("zInteraction", m_zInteraction = -9999.0*Gaudi::Units::m );
+  declareProperty("SelectOnlyBDecayProducts", m_selBprods = true );
 
-  // need a line here to get the interface correct !!!!
+  // interface
   declareInterface<IMCParticleSelector>(this);
 }
 
 MCParticleSelector::~MCParticleSelector() { }
 
+StatusCode MCParticleSelector::initialize()
+{
+  // Initialize base class
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
+  // printout selection criteria
+  info() << "MCParticle Momentum cut     : " << m_pMin << " GeV/c < P < " << m_pMax << " GeV/c" << endreq;
+  info() << "           Beta * gamma cut : " << m_betaGammaMin << " < beta*gamma" << endreq;
+  info() << "           Eta cut          : " << m_etaMin << " < P < " << m_etaMax << endreq;
+  if ( m_rejectElectrons ) info() << "           Will reject electrons" << endreq;
+  if ( m_selBprods       ) info() << "           Will only select B decay products" << endreq;
+  if ( m_rejectInteractions ) info() << "           Will reject particles from interations before z=" << m_zInteraction << endreq;
+  if ( !m_selCharged ) info() << "           Will reject charged particles" << endreq;
+  if ( !m_selNeutral ) info() << "           Will reject neutral particles" << endreq;
+
+  return sc;
+}
+
 bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const 
 {
   // select particles of some quality ...
+
+  // Check for NULL pointers
+  if ( !aParticle ) return false;
 
   // charge selection
   const int charge = aParticle->particleID().threeCharge();
@@ -64,9 +87,26 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   if ( m_rejectElectrons &&
        (aParticle->particleID().abspid() == 11) ) return false;
 
-  if (m_rejectInteractions == true && 
-      LHCb::MC::zInteraction(aParticle) < m_zInteraction) return false;
+  // reject interactions
+  if ( m_rejectInteractions && 
+       LHCb::MC::zInteraction(aParticle) < m_zInteraction) return false;
+  
+  // select only b decay products ?
+  if ( m_selBprods && !fromBdecay(aParticle) ) return false;
   
   // all OK
   return true;
+}
+
+bool MCParticleSelector::fromBdecay( const LHCb::MCParticle * aParticle ) const
+{
+  // loop back and see if there is a B in the history
+  bool fromB = false;
+  const LHCb::MCParticle * motherP = aParticle->mother();
+  while ( motherP != NULL && false == fromB ) 
+  {
+    fromB   = motherP->particleID().hasBottom();
+    motherP = motherP->mother();
+  }
+  return fromB;
 }
