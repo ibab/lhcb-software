@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.65 2007-09-28 10:11:26 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.66 2007-10-23 10:46:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -29,7 +29,11 @@ PIDQC::PIDQC( const std::string& name,
               ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator ),
     m_pidTDS           ( LHCb::RichPIDLocation::Default ),
-    m_requiredRads     ( Rich::NRadiatorTypes )
+    m_trSelector       ( NULL ),
+    m_mcTruth          ( NULL ),
+    m_mcPselector      ( NULL ),
+    m_requiredRads     ( Rich::NRadiatorTypes ),
+    m_sF               ( "%7.3f" )
 {
 
   if      ( context() == "Offline" )
@@ -50,7 +54,7 @@ PIDQC::PIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
   declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
   declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
@@ -59,6 +63,7 @@ PIDQC::PIDQC( const std::string& name,
   m_requiredRads[Rich::Rich1Gas] = false;
   m_requiredRads[Rich::Rich2Gas] = false;
   declareProperty( "RequiredRads", m_requiredRads );
+  declareProperty( "ApplyMCPSel", m_mcPsel = false );
 
 }
 
@@ -87,6 +92,12 @@ StatusCode PIDQC::initialize()
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
+
+  if ( m_mcPsel ) 
+  { 
+    info() << "Will filter only selected MCParticles" << endreq;
+    acquireTool( "MCParticleSelector", m_mcPselector, this );
+  }
 
   // Warn if extra histos are enabled
   if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
@@ -250,9 +261,6 @@ StatusCode PIDQC::execute()
 
   }
 
-  // format for numbers
-  const std::string & sF ( "%7.3f" );
-
   // apply track multiplicity cuts
   if ( m_multiplicity < m_minMultCut ||
        m_multiplicity > m_maxMultCut ) return StatusCode::SUCCESS;
@@ -278,11 +286,10 @@ StatusCode PIDQC::execute()
       //if ( !iPID->usedAerogel() && !iPID->usedRich1Gas() ) continue;
 
       // Track selection
-      if ( !m_trSelector->trackSelected( track ) ) continue;
+      if ( !selectTracks(track) ) continue;
 
-      // Track momentum in GeV/C
-      const LHCb::State* state = &(track)->firstState();
-      const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
+      // Track momentum in GeV/c
+      const double tkPtot = trackP( iPID );
 
       // Track type
       const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
@@ -329,6 +336,11 @@ StatusCode PIDQC::execute()
              !iPID->isAboveThreshold(mcpid) )
         {
           //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
+          if ( msgLevel(MSG::DEBUG) )
+          {
+            debug() << "MCPID below threshold :-" << endreq;
+            print ( debug(), iPID, pid, mcpid );
+          }
           mcpid = Rich::BelowThreshold;
         }
       }
@@ -338,41 +350,18 @@ StatusCode PIDQC::execute()
       {
         //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")",
         //        StatusCode::SUCCESS, 0 );
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << "RecoPID below threshold :-" << endreq;
+          print ( debug(), iPID, pid, mcpid );
+        }
         pid = Rich::BelowThreshold;
       }
 
       // some verbose printout
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "RichPID " << iPID->key() << " ("
-                  << iPID->pidType() << "), '"
-                  << tkType << "' track, Ptot " << boost::format(sF)%tkPtot << " GeV/c," << endreq
-                  << "  Active rads =";
-        if ( iPID->usedAerogel()  ) { verbose() << " " << Rich::Aerogel;  }
-        if ( iPID->usedRich1Gas() ) { verbose() << " " << Rich::Rich1Gas; }
-        if ( iPID->usedRich2Gas() ) { verbose() << " " << Rich::Rich2Gas; }
-        verbose() << endreq
-                  << "  Threshold   = ";
-        {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          const std::string T = iPID->isAboveThreshold(pid) ? "T" : "F";
-          verbose() << T << " ";
-        }}
-        verbose() << endreq
-                  << "  Dlls        = " 
-                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Electron)) << " "
-                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Muon)) << " " 
-                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Pion)) << " "
-                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Kaon)) << " "
-                  << boost::format(sF)%(iPID->particleDeltaLL(Rich::Proton)) 
-                  << endreq
-                  << "  Prob(r/n)   = ";
-        {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          verbose() << boost::format(sF)%(iPID->particleRawProb(pid)) 
-                    << "/" << boost::format(sF)%(iPID->particleNormProb(pid)) << " ";
-        }}
-        verbose() << endreq << "  RecoPID     = " << pid << endreq;
+        print ( verbose(), iPID, pid, mcpid );
       }
 
       // Fill histos for deltaLLs and probabilities
@@ -660,7 +649,69 @@ void PIDQC::countTracks( const std::string & location )
   for ( LHCb::Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
-    if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++m_multiplicity;   }
-    if ( m_trSelector->trackSelected( *iTrk ) ) { ++m_totalSelTracks; }
+    if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++m_multiplicity; }
+    if ( selectTracks(*iTrk) ) 
+    {
+      ++m_totalSelTracks;  
+    }
   }
+}
+
+bool PIDQC::selectTracks( const LHCb::Track * track )
+{
+  bool OK = false;
+  if ( m_trSelector->trackSelected(track) ) 
+  {
+    OK = true;
+    if ( m_mcPsel )
+    {
+      const LHCb::MCParticle * mcP = m_mcTruth->mcParticle(track);
+      OK = mcPselector()->accept(mcP);
+    }
+  }
+  return OK;
+}
+
+void PIDQC::print( MsgStream & msg, 
+                   LHCb::RichPID * iPID,
+                   const Rich::ParticleIDType pid,
+                   const Rich::ParticleIDType mcpid  ) const
+{
+  // Track type
+  const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(iPID->track());
+
+  // Track momentum in GeV/C
+  const double tkPtot = trackP( iPID );
+
+  msg << "RichPID " << iPID->key() << " ("
+      << iPID->pidType() << "), '"
+      << tkType << "' track, Ptot " << boost::format(m_sF)%tkPtot << " GeV/c," << endreq
+      << "  Active rads =";
+  if ( iPID->usedAerogel()  ) { msg << " " << Rich::Aerogel;  }
+  if ( iPID->usedRich1Gas() ) { msg << " " << Rich::Rich1Gas; }
+  if ( iPID->usedRich2Gas() ) { msg << " " << Rich::Rich2Gas; }
+  msg << endreq
+      << "  Threshold   = ";
+  {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
+    const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+    const std::string T = iPID->isAboveThreshold(pid) ? "T" : "F";
+    msg << T << " ";
+  }}
+  msg << endreq
+      << "  Dlls        = "
+      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Electron)) << " "
+      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Muon)) << " "
+      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Pion)) << " "
+      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Kaon)) << " "
+      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Proton))
+      << endreq
+      << "  Prob(r/n)   = ";
+  {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
+    const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+    msg << boost::format(m_sF)%(iPID->particleRawProb(pid))
+        << "/" << boost::format(m_sF)%(iPID->particleNormProb(pid)) << " ";
+  }}
+  msg << endreq 
+      << "  RecoPID     = " << pid << endreq;
+  msg << "  MCID        = " << mcpid << endreq;
 }

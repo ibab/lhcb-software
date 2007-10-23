@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-10-23 - Chris Jones
+ - Improvements to PID performance monitor
+
 ! 2007-10-09 - Chris Jones
  - Add MC-fake and inclusive CK theta resolution plots to RichRecoQC
 

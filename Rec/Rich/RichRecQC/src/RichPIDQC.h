@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.30 2007-06-01 06:50:12 cattanem Exp $
+ *  $Id: RichPIDQC.h,v 1.31 2007-10-23 10:46:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -39,6 +39,7 @@
 // interfaces
 #include "RichRecBase/IRichTrackSelector.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -81,8 +82,6 @@ namespace Rich
         virtual StatusCode execute   ();    // Algorithm execution
         virtual StatusCode finalize  ();    // Algorithm finalization
 
-      private: // definitions
-
       private: // methods
 
         /// Loads the PID data from configured location
@@ -96,6 +95,28 @@ namespace Rich
 
         /// Count all Tracks in given location passing the selection criteria
         void countTracks( const std::string & location );
+
+        /// Print out the given PID
+        void print( MsgStream & msg, 
+                    LHCb::RichPID * iPID,
+                    const Rich::ParticleIDType pid,
+                    const Rich::ParticleIDType mcpid ) const;
+
+        /// Get the track momentum
+        inline double trackP( LHCb::RichPID * pid ) const
+        {
+          const LHCb::State* state = &(pid->track())->firstState();
+          return ( state ? state->p()/Gaudi::Units::GeV : 0 );
+        }
+
+        /// Get the MCParticle Selector tool
+        inline const IMCParticleSelector * mcPselector()
+        {
+          return m_mcPselector;
+        }
+
+        /// Select Tracks
+        bool selectTracks( const LHCb::Track * track );
 
       private: // data
 
@@ -113,12 +134,15 @@ namespace Rich
         int m_bins;                    ///< Number of bins
         bool m_finalPrintOut;          ///< Perform final prinout of PID tables
         bool m_extraHistos;            ///< Fill full set of histograms
-        bool m_ignoreRecoThres; ///< Flag to turn on/off the setting of Reco-PIDs as "below threshold"
-        bool m_ignoreMCThres; ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
+        bool m_ignoreRecoThres;        ///< Flag to turn on/off the setting of Reco-PIDs as "below threshold"
+        bool m_ignoreMCThres;          ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
+        bool m_mcPsel;                 ///< Flag to turn on/off the selection of 'nice' MCParticles
 
         const ITrackSelector * m_trSelector;  ///< Track selector
 
         const Rich::Rec::MC::IMCTruthTool * m_mcTruth;    ///< MC Truth tool
+
+        const IMCParticleSelector * m_mcPselector; ///< MCParticle selector
 
         // Summary information
         double m_sumTab[6][6];
@@ -141,6 +165,9 @@ namespace Rich
 
         /// Radiators to require are present
         std::vector<bool> m_requiredRads;
+
+        // format for numbers
+        std::string m_sF;
 
         // Histograms
 
