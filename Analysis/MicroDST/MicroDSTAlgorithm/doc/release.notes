@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.28 2007-10-22 16:31:04 jpalac Exp $
+! $Id: release.notes,v 1.29 2007-10-23 14:46:11 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-23 - Juan PALACIOS
+ - Add src/CopyProtoParticles{.cpp, .h}
+  . Algorithm to store protoparticles related to particle decay trees starting 
+    from TES location of LHCb::Particles given by option InputLocation.
+
 
 ! 2007-10-22 - Juan PALACIOS
 
