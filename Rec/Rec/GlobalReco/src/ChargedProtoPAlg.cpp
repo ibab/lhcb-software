@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.60 2007-08-15 11:04:51 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.61 2007-10-23 10:38:24 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -202,6 +202,7 @@ StatusCode ChargedProtoPAlg::execute()
       verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
       verbose() << " -> Track type " << (*iTrack)->type() << endreq;
       verbose() << " -> Track flag " << (*iTrack)->flag() << endreq;
+      verbose() << " -> Track charge " << (*iTrack)->charge() << endreq;
     }
 
     // Count selectedtracks
