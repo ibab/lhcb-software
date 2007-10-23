@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.61 2007-10-23 10:38:24 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.62 2007-10-23 10:41:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -67,11 +67,13 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   if      ( context() == "Offline" )
   {
     m_richPath   = LHCb::RichPIDLocation::Offline; 
+    m_muonPath   = MuonPIDLocation::Default;
   }
   else if ( context() == "HLT" || context() == "Hlt" )
   {
     m_richPath   = LHCb::RichPIDLocation::HLT;
     m_tracksPath = LHCb::TrackLocation::HltForward;
+    m_muonPath   = "Hlt/Muon/MuonPID";
   }
 
   // Input data
@@ -110,25 +112,35 @@ StatusCode ChargedProtoPAlg::initialize()
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
-  if ( m_veloPID) {
-    // Velo dE/dx tool
+  // Velo dE/dx tool
+  if ( m_veloPID) 
+  {
     m_velodEdx = tool<ITrackVelodEdxCharge>( "TrackVelodEdxCharge", "VeloCharge", this );
   }
   
   // CaloElectron tool
-  if (m_EcalPID){
+  if (m_EcalPID)
+  {
     m_electron = tool<ICaloElectron>("CaloElectron","CaloElectron",this);
   }
   
   // disabled CALO warnings
-  if (!m_EcalPID) Warning( "ECAL PID HAS BEEN DISABLED", StatusCode::SUCCESS );
-  if (!m_PrsPID)  Warning( "PRS  PID HAS BEEN DISABLED", StatusCode::SUCCESS );
-  if (!m_HcalPID) Warning( "HCAL PID HAS BEEN DISABLED", StatusCode::SUCCESS );
-  if (!m_BremPID) Warning( "BREM PID HAS BEEN DISABLED", StatusCode::SUCCESS );
-  if (!m_SpdPID)  Warning( "SPD  PID HAS BEEN DISABLED", StatusCode::SUCCESS );
+  if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS );
+  if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS );
+  if (!m_HcalPID) Warning( "HCAL PID has been disabled", StatusCode::SUCCESS );
+  if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS );
+  if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS );
+  // disable RICH warnings
+  if (!m_richPID)  Warning( "RICH PID has been disabled", StatusCode::SUCCESS );
+  // disable MUON warnings
+  if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS );
+  // disable VELO warnings
+  if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS );
 
-  if (msgLevel(MSG::DEBUG)) {
-    m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+  // timing in debug mode only
+  if (msgLevel(MSG::DEBUG)) 
+  {
+    m_timer      = tool<ISequencerTimerTool>( "SequencerTimerTool" );
     m_timerIndex = m_timer->addTimer(name()+"::execute") ;
   }
   
@@ -304,10 +316,9 @@ StatusCode ChargedProtoPAlg::execute()
   // update tallies
   ++m_nEvts;
 
-  if ( msgLevel(MSG::DEBUG) ){
+  if ( msgLevel(MSG::DEBUG) )
+  {
     m_timer->stop(m_timerIndex) ;
-    //    chrono->chronoPrint(name());
-    
     debug() << "  USER TIME: " << m_timer->lastTime(m_timerIndex)
              << " Tracks " << tracks->size() << endmsg ;
   }
