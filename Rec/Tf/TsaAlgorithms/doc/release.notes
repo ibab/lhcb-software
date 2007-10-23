@@ -3,6 +3,9 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2007-23-10 - Stephanie Hansmann-Menzemer
+ - Move TsaTStationHitManager to TsaKernel, so that it can be used
+   outside TsaAlgorithms (e.g. HLT)
 
 !======================= TsaAlgorithms v3r0 2007-10-12 ======================
 ! 2007-10-12 - Marco Cattaneo
