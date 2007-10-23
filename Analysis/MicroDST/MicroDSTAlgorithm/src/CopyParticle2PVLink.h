@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.h,v 1.1 2007-10-22 16:29:50 jpalac Exp $
+// $Id: CopyParticle2PVLink.h,v 1.2 2007-10-23 14:45:06 jpalac Exp $
 #ifndef COPYPARTICLE2PVLINK_H 
 #define COPYPARTICLE2PVLINK_H 1
 
@@ -6,6 +6,8 @@
 // from Gaudi
 #include "MicroDST/CopyAndStoreData.h"
 
+// from DaVinci
+#include "Kernel/Particle2Vertex.h"
 
 /** @class CopyParticle2PVLink CopyParticle2PVLink.h
  *  
@@ -28,8 +30,9 @@ protected:
 
 private:
 
-  std::string m_inputParticleLocation;
-  std::string m_inputPVLocation;
+  Particle2Vertex::Table* tableOfClones(const Particle2Vertex::Table* table);
+
+  const std::string particleLocation(const std::string& tableLocation);
   
 };
 #endif // COPYPARTICLE2PVLINK_H
