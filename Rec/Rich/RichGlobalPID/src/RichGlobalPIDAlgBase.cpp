@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.cpp,v 1.10 2007-08-09 16:06:07 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.cpp,v 1.11 2007-10-23 10:43:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -30,7 +30,8 @@ AlgBase::AlgBase( const std::string& name,
     m_richGPIDTrackLocation   ( LHCb::RichGlobalPIDTrackLocation::Default ),
     m_richGPIDSummaryLocation ( LHCb::RichGlobalPIDSummaryLocation::Default ),
     m_richGPIDLocation        ( LHCb::RichGlobalPIDLocation::Default ),
-    m_richGPIDName            ( "RichGloPID" )
+    m_richGPIDName            ( "RichGloPID" ),
+    m_richPartProp     ( NULL )
 {
 
   if      ( context() == "Offline" )
@@ -55,6 +56,23 @@ AlgBase::AlgBase( const std::string& name,
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
 
+}
+
+//  Initialize
+StatusCode AlgBase::initialize()
+{
+  // Sets up various tools and services
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
+  // get tools
+  acquireTool( "RichParticleProperties",  m_richPartProp );
+  
+  // PID types
+  m_pidTypes = m_richPartProp->particleTypes();
+  info() << "Particle types considered                 = " << m_pidTypes << endreq;
+ 
+  return sc;
 }
 
 // Destructor

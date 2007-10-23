@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.h,v 1.10 2007-03-09 22:10:41 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.h,v 1.11 2007-10-23 10:43:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -55,7 +55,7 @@ namespace Rich
 
         virtual ~Finalize();   ///< Destructor
 
-        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode execute (); // Algorithm execution
 
       };
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.5 2007-08-09 16:06:08 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.6 2007-10-23 10:43:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -30,7 +30,6 @@ Likelihood::Likelihood( const std::string& name,
   : AlgBase        ( name, pSvcLocator ),
     m_tkSignal     ( NULL ),
     m_photonSig    ( NULL ),
-    m_richPartProp ( NULL ),
     m_inR1         ( true ),
     m_inR2         ( true )
 {
@@ -74,24 +73,16 @@ StatusCode Likelihood::initialize()
   // Acquire tools
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
-  acquireTool( "RichParticleProperties",  m_richPartProp );
 
   // trick to force pre-loading of various tools. Avoids loading
   // during first processed event and thus biasing any timing numbers
   photonCreator();
+  statusCreator();
 
   // Initialise parameters
   m_logMinSig = log( exp(m_minSig) - 1.0 );
 
-  // PID types
-  m_pidTypes = m_richPartProp->particleTypes();
-
-  // trick to force pre-loading of various tools. Avoids loading
-  // during first processed event and thus biased any timing numbers
-  statusCreator();   // pre-load the status creator
-
   // Printout some initialisation info
-  info() << "Particle types considered                 = " << m_pidTypes << endreq;
   info() << "Maximum event iterations                  = " << m_maxEventIterations << endreq;
   info() << "Minimum signal for LL calculation         = " << m_minSig << endreq;
   info() << "Track freeze-out DLL value                = " << freezeOutDll() << endreq;

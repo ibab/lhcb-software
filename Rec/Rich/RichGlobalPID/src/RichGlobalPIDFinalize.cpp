@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.18 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.19 2007-10-23 10:43:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -83,18 +83,15 @@ StatusCode Finalize::execute()
       warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
                 << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
-
     // Internally, the Global PID normalises the DLL values to the best hypothesis
     // and also works in "-loglikelihood" space.
     // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and
     // invert the values
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( Rich::Particles::const_iterator iHypo = m_pidTypes.begin(); 
+          iHypo != m_pidTypes.end(); ++iHypo )
     {
-      if ( deltaLLs[iHypo] < 0 )
-      {
-        deltaLLs[iHypo] = 0;
-      }
-      deltaLLs[iHypo] = pionDLL - deltaLLs[iHypo];
+      if ( deltaLLs[*iHypo] < 0 ) { deltaLLs[*iHypo] = 0; }
+      deltaLLs[*iHypo] = pionDLL - deltaLLs[*iHypo];
     }
     // final update DLL values in stored RichPID data object
     pid->setParticleLLValues(deltaLLs);

@@ -5,7 +5,7 @@
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.8 2007-03-09 22:10:41 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.9 2007-10-23 10:43:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
@@ -24,6 +24,9 @@
 #include "Event/RichGlobalPIDSummary.h"
 #include "Event/RichGlobalPID.h"
 #include "Event/ProcStatus.h"
+
+// interfaces
+#include "RichKernel/IRichParticleProperties.h"
 
 // Definitions
 #include "RichGlobalPID/RichGlobalPIDTkQuality.h"
@@ -56,6 +59,8 @@ namespace Rich
                  ISvcLocator* pSvcLocator );
 
         virtual ~AlgBase() = 0;  ///< Destructor
+
+        virtual StatusCode initialize(); // Algorithm initialization
 
         // Protected methods
       protected:
@@ -90,6 +95,12 @@ namespace Rich
 
         /// Location of processing status object in TES
         std::string m_procStatLocation;
+
+        /// Pointer to RichParticleProperties interface
+        const IParticleProperties * m_richPartProp;
+
+        /// Particle ID types to consider
+        Rich::Particles m_pidTypes;
 
       };
 
