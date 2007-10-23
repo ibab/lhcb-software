@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.24 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.25 2007-10-23 10:50:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,9 +34,15 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
     m_sellmeir     ( 0 ),
     m_sigDetEff    ( 0 ),
     m_richPartProp ( 0 ),
-    m_rayScat      ( 0 )
+    m_rayScat      ( 0 ),
+    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 )
 {
+  // interface
   declareInterface<IExpectedTrackSignal>(this);
+  // JOS
+  declareProperty( "MinNumPhotonsPerRad", 
+                   m_minPhotonsPerRad,
+                   "Minimum number of photons in each radiator for a radiator segment to be considered as having RICH information" );
 }
 
 StatusCode ExpectedTrackSignal::initialize()
@@ -56,6 +62,8 @@ StatusCode ExpectedTrackSignal::initialize()
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endreq;
+
+  info() << "Minimum number of expected photons (Aero/R1Gas/R2Gas) : " << m_minPhotonsPerRad << endmsg;
 
   return sc;
 }
@@ -436,7 +444,7 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
 {
   // default to no info
   bool hasInfo = false;
-  // above lowest hypothesis ?
+  // above lowest mass hypothesis threshold ?
   if ( aboveThreshold( segment, m_pidTypes.front() ) )
   {
     if ( msgLevel(MSG::DEBUG) )
@@ -454,11 +462,24 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
         hasInfo = true; break;
       }
     }
+    // Check segment has minimum number of required photons expected
+    if ( hasInfo )
+    {
+      hasInfo = false;
+      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+            hypo != m_pidTypes.end(); ++hypo )
+      {
+        if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] < nObservableSignalPhotons(segment,*hypo) )
+        { 
+          hasInfo = true; break;
+        }
+      }
+    }
     if ( msgLevel(MSG::DEBUG) )
     {
-      const std::string & A = ( hasInfo ? "non-zero" : "zero" );
-      debug() << "RichRecSegment has " << A << " geometrical efficiency" << endreq;
+      debug() << "RichRecSegment has richInfo = " << hasInfo << endmsg;
     }
+
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
@@ -497,8 +518,9 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
 
   // is this momentum above the cherenkov threshold momentum
   const double pthres = m_richPartProp->thresholdMomentum(type,tkSeg.radiator());
-  //const bool above = ( P > pthres );
-  const bool above = ( P+Perr > pthres );
+  const bool above = ( P > pthres );
+  //const bool above = ( P+Perr > pthres );
+  //const bool above = ( P-Perr > pthres );
 
   if ( msgLevel(MSG::DEBUG) )
   {

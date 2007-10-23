@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-10-23 - Chris Jones
+ - Update threshold info in expected signal tool
+
 !===================== RichRecTools v3r14 2007-10-09 ==========================
 ! 2007-10-04 - Chris Jones
  - Small change to Binned CK theta tool to also handle MCRichTracks

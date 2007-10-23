@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.17 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.18 2007-10-23 10:50:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -181,6 +181,9 @@ namespace Rich
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
+
+      /// Minimum number of photons in each radiator for a radiator segment to be considered as having RICH information
+      std::vector<double> m_minPhotonsPerRad;
 
     };
 
