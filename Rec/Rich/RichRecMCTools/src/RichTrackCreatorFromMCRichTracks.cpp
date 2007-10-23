@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.13 2007-08-09 16:13:54 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.14 2007-10-23 10:44:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -353,6 +353,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
           const LHCb::Track * faketrack = m_mcToFakeMap[mcrTrack];
           if (!faketrack) Warning( "MCRichTrack has no fake Track !" );
           newTrack->setParentTrack( faketrack );
+          newTrack->trackID().initialiseFor( faketrack );
         }
         else
         {
