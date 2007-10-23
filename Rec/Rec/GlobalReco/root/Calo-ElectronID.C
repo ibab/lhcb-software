@@ -72,8 +72,8 @@
 
   // Brem only
   pid->configReset();
-  pid->config.minCut    = 0;
-  pid->config.maxCut    = 0.5;
+  pid->config.minCut    = -1;
+  pid->config.maxCut    = 1;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0   * GeV;

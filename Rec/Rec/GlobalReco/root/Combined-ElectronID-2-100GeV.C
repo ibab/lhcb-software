@@ -11,13 +11,18 @@
   // All CALO
   pid->configReset();
   pid->config.title     = "Electron ID : CALO V RICH V Combined";
-  pid->config.minCut    = -10;
-  pid->config.maxCut    = 10;
+  pid->config.useFixedGraphRange = true;
+  pid->config.minGraphX = 40;
+  pid->config.maxGraphX = 100;
+  pid->config.minGraphY = 0.1;
+  pid->config.maxGraphY = 50;
+  pid->config.minCut    = -20;
+  pid->config.maxCut    = 20;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0   * GeV;
   pid->config.maxPt     = 100 * GeV;
-  pid->config.minMisIDeff  = 0.1;
+  pid->config.minMisIDeff  = 0.05;
   pid->config.idType    = GlobalPID::Electron;
   pid->config.misidType = GlobalPID::Pion;
   pid->config.var1      = GlobalPID::caloPIDe;
@@ -32,8 +37,8 @@
 
   // All RICH
   pid->configReset();
-  pid->config.minCut    = -30;
-  pid->config.maxCut    = 30;
+  pid->config.minCut    = -20;
+  pid->config.maxCut    = 20;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0   * GeV;

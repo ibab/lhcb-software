@@ -50,8 +50,9 @@ bool GlobalPID::passBasicPIDDet() const
   if ( config.mustHavePRS     && !hasPrsInfo()     ) return false;
   if ( config.mustHaveECALorPRS && !hasPrsInfo() && !hasEcalInfo() ) return false;
   if ( config.mustHaveECALorPRSorRICH && !hasRichInfo() && !hasPrsInfo() && !hasEcalInfo() ) return false;
-  // cannot apply muon sel due to fact protos own have info for IDed muons
+  // cannot apply muon sel due to fact protos only have info for IDed muons
   // must, for the moment, assume all protos have muons info
+  if ( config.mustHaveMUON    && !hasMuonInfo()    ) return false;
   return true;
 }
 
@@ -101,6 +102,7 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
 
     // pid det selection
     if ( !passBasicPIDDet()    ) continue;
+
     // run the track selection
     if ( !passTrackSelection() ) continue;
 
@@ -219,6 +221,7 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     XYpad->Draw();
     XYpad->cd();
     TH1F* temp = XYpad->DrawFrame(config.minGraphX, config.minGraphY, config.maxGraphX, config.maxGraphY);
+    temp->SetTitle( config.title.c_str() );
     temp->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()    );
     temp->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
   }
@@ -235,6 +238,18 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     g->SetMarkerColor(config.color);
     g->SetLineColor(config.color);
 
+    if ( !config.superImpose )
+    {
+      g->SetTitle( config.title.c_str() );
+      g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
+      g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
+    }
+    else
+    {
+      g->SetTitle( "" );
+      g->GetXaxis()->SetTitle( "" );
+      g->GetYaxis()->SetTitle( "" );
+    }
     if ( config.useFixedGraphRange )
     {
       g->Draw("LP");
@@ -243,16 +258,10 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     {
       if ( !config.superImpose )
       {
-        g->SetTitle( config.title.c_str() );
-        g->GetXaxis()->SetTitle( (name(config.idType)+" ID Efficiency / %").c_str()       );
-        g->GetYaxis()->SetTitle( (name(config.misidType)+" MisID Efficiency / %").c_str() );
         g->Draw("ALP");
       }
       else
       {
-        g->SetTitle( "" );
-        g->GetXaxis()->SetTitle( "" );
-        g->GetYaxis()->SetTitle( "" );
         g->Draw("LP");
       }
     }
@@ -279,7 +288,7 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
   else
   {
     std::cout << "WARNING : Zero data points found for "
-              << name(config.idType) << " v " << name(config.misidType) 
+              << name(config.idType) << " v " << name(config.misidType)
               << " -> No graph created"
               << std::endl;
   }
@@ -328,16 +337,16 @@ void GlobalPID::recreateCombinedDLL()
     NewCombDLLk  += MuonBkgLL;
     NewCombDLLp  += MuonBkgLL;
   }
-  //std::cout << "Old CombDLLs     = " << CombDLLe << " " << CombDLLmu << " " 
+  //std::cout << "Old CombDLLs     = " << CombDLLe << " " << CombDLLmu << " "
   //          << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
-  //std::cout << "New CombDLLs     = " << NewCombDLLe << " " << NewCombDLLmu << " " 
+  //std::cout << "New CombDLLs     = " << NewCombDLLe << " " << NewCombDLLmu << " "
   //          << NewCombDLLpi << " " << NewCombDLLk << " " << NewCombDLLp << std::endl;
   CombDLLe=NewCombDLLe;
   CombDLLmu=NewCombDLLmu;
   CombDLLpi=NewCombDLLpi;
   CombDLLk=NewCombDLLk;
   CombDLLp=NewCombDLLp;
-  //std::cout << "Updated CombDLLs = " << CombDLLe << " " << CombDLLmu << " " 
+  //std::cout << "Updated CombDLLs = " << CombDLLe << " " << CombDLLmu << " "
   //          << CombDLLpi << " " << CombDLLk << " " << CombDLLp << std::endl;
 }
 
@@ -557,7 +566,7 @@ void GlobalPID::loadTTree( const std::string & filename )
 }
 
 void GlobalPID::resetFile()
-{ 
+{
   if ( m_file ) { m_file->Close(); delete m_file; }
 }
 

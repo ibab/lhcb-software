@@ -9,6 +9,11 @@
   // K-pi RICH
   pid->configReset();
   pid->config.title     = "Proton ID";
+  pid->config.useFixedGraphRange = true;
+  pid->config.minGraphX = 40;
+  pid->config.maxGraphX = 100;
+  pid->config.minGraphY = 0.1;
+  pid->config.maxGraphY = 50;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0.5 * GeV;
@@ -94,6 +99,11 @@
   // K-pi RICH
   pid->configReset();
   pid->config.title     = "Proton ID";
+  pid->config.useFixedGraphRange = true;
+  pid->config.minGraphX = 40;
+  pid->config.maxGraphX = 100;
+  pid->config.minGraphY = 1;
+  pid->config.maxGraphY = 50;
   pid->config.minP      = 2   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0.5 * GeV;

@@ -280,6 +280,12 @@ private: // inline methods
   /// Any RICH info available
   inline bool hasRichInfo() const
   {
+    //const PIDType mcType = getMcType();
+    //if ( ( mcType == Electron && RichAboveElThres == 0 ) ||
+    //     ( mcType == Muon     && RichAboveMuThres == 0 ) ||
+    //     ( mcType == Pion     && RichAbovePiThres == 0 ) ||
+    //     ( mcType == Kaon     && RichAboveKaThres == 0 ) ||
+    //     ( mcType == Proton   && RichAbovePrThres == 0 ) ) return false;
     return ( hasAerogelInfo() || hasRich1Gas() || hasRich2Gas() );
   }
   /// CALO Ecal info ?
@@ -306,7 +312,9 @@ private: // inline methods
   /// Has Muon Info ?
   inline bool hasMuonInfo() const
   {
-    return MuonInAcc != 0;
+    //return MuonInAcc != 0;
+    //return MuonInAcc != 0 && ( getMcType() != Muon || MuonIsMuon != 0 );
+    return ( getMcType() != Muon || MuonIsMuon != 0 );
   }
 
   // returns the poison error

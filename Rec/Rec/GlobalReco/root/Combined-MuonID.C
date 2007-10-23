@@ -9,6 +9,11 @@
   // Ecal Only PID
   pid->configReset();
   pid->config.title     = "Muon ID";
+  pid->config.useFixedGraphRange = true;
+  pid->config.minGraphX = 60;
+  pid->config.maxGraphX = 100;
+  pid->config.minGraphY = 0.3;
+  pid->config.maxGraphY = 40;
   pid->config.minCut    = -4;
   pid->config.maxCut    = 4;
   pid->config.nSteps    = 41;
@@ -121,7 +126,7 @@
 
   // Combined DLL PID
   pid->configReset();
-  pid->config.recreateCombinedDLLs = true;
+  //pid->config.recreateCombinedDLLs = true;
   pid->config.minCut    = -8;
   pid->config.maxCut    = 4;
   //pid->config.minIDeff  = 50;
@@ -144,7 +149,7 @@
 
   // Combined DLL PID
   pid->configReset();
-  pid->config.recreateCombinedDLLs = true;
+  //pid->config.recreateCombinedDLLs = true;
   pid->config.minCut    = -8;
   pid->config.maxCut    = 4;
   //pid->config.minIDeff  = 50;
