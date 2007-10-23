@@ -1,4 +1,4 @@
-// $Id: PatDebugTTTruthTool.cpp,v 1.1 2007-10-22 15:52:36 ocallot Exp $
+// $Id: PatDebugTTTruthTool.cpp,v 1.2 2007-10-23 14:56:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 
 #include "Event/MCParticle.h"
 #include "Event/STCluster.h"
+#include "Event/Track.h"
 
 // local
 #include "PatDebugTTTruthTool.h"
@@ -31,7 +32,7 @@ PatDebugTTTruthTool::PatDebugTTTruthTool( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IPatDebugTTTruthTool>(this);
+  declareInterface<IPatDebugTTTool>(this);
 
 }
 //=============================================================================
@@ -41,9 +42,9 @@ PatDebugTTTruthTool::~PatDebugTTTruthTool() {}
 //=========================================================================
 //  Print the true TT clusters associated to the specified track
 //=========================================================================
-void PatDebugTTTruthTool::printTrueTTClusterOnTrack (  const LHCb::Track* track, 
-                                                       const PatTTHits::const_iterator beginCoord,
-                                                       const PatTTHits::const_iterator endCoord   ) {
+void PatDebugTTTruthTool::debugTTClusterOnTrack (  const LHCb::Track* track, 
+                                                   const PatTTHits::const_iterator beginCoord,
+                                                   const PatTTHits::const_iterator endCoord   ) {
   //== Get the truth on this track
   std::string containerName = track->parent()->registry()->identifier();
   std::string linkerName = "Link/"+containerName;
@@ -90,7 +91,7 @@ void PatDebugTTTruthTool::printTrueTTClusterOnTrack (  const LHCb::Track* track,
 //=========================================================================
 //  Print the MC keys associated to this cluster
 //=========================================================================
-void PatDebugTTTruthTool::printTTClusterTruth( MsgStream& msg, const PatTTHit* hit ) {
+void PatDebugTTTruthTool::debugTTCluster( MsgStream& msg, const PatTTHit* hit ) {
 
   LinkedTo<LHCb::MCParticle> itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters );
   std::string value = "";
