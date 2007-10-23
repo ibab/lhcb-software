@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.9 2006-11-06 18:36:14 cattanem Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.10 2007-10-23 15:37:16 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -29,11 +29,11 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // default list of input containers
-  m_tracksInContainers.push_back( LHCb::TrackLocation::VeloTT  );
-  m_tracksInContainers.push_back( LHCb::TrackLocation::Forward );
-  m_tracksInContainers.push_back( LHCb::TrackLocation::Match   );
-  m_tracksInContainers.push_back( LHCb::TrackLocation::Tsa     );
-  m_tracksInContainers.push_back( LHCb::TrackLocation::KsTrack );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::VeloTT     );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::Match      );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::Tsa        );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::Downstream );
 
   declareProperty( "TracksInContainers",
                    m_tracksInContainers );

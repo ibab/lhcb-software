@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r16 2007-10-23 ======================
+! 2007-10-23 - Marco Cattaneo
+ - Adapt to change in Track flag name from KsTrack to Downstream
+
 !========================== TrackUtils v1r15 2007-10-05 ======================
 ! 2007-10-03 M Needham
  - Changes in TrackAddLikelihood to allow different values for different

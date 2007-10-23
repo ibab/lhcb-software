@@ -1,4 +1,4 @@
-// $Id: TrackFromDST.cpp,v 1.3 2006-11-24 08:39:03 cattanem Exp $
+// $Id: TrackFromDST.cpp,v 1.4 2007-10-23 15:37:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -51,8 +51,9 @@ StatusCode TrackFromDST::initialize()
   m_map[ LHCb::Track::PatVeloTT     ] = LHCb::TrackLocation::VeloTT;
   m_map[ LHCb::Track::PatForward    ] = LHCb::TrackLocation::Forward;
   m_map[ LHCb::Track::TrackMatching ] = LHCb::TrackLocation::Match;
-  m_map[ LHCb::Track::PatKShort     ] = LHCb::TrackLocation::KsTrack;
+  m_map[ LHCb::Track::PatKShort     ] = LHCb::TrackLocation::Downstream;
   m_map[ LHCb::Track::TsaTrack      ] = LHCb::TrackLocation::Tsa;
+  m_map[ LHCb::Track::PatDownstream ] = LHCb::TrackLocation::Downstream;
   
   return StatusCode::SUCCESS;
 }
