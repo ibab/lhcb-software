@@ -2,6 +2,9 @@
 // Default PID monitor : 2-100 GeV/c
 CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To100" };
 
+// Default PID monitor : 2-100 GeV/c
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To100_Thres" };
+
 // Very Low Momentum PID monitor : 0-2 GeV/c
 //CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll0To2" };
 

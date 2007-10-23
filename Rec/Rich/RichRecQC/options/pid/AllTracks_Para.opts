@@ -6,6 +6,15 @@ RiPIDMonAll2To100.MCHistoPath = "RICH/PIDQC/ALL/2TO100/MC/";
 RiPIDMonAll2To100.HistoPath = "RICH/PIDQC/ALL/2TO100/";
 RiPIDMonAll2To100.FinalPrintout = true;
 
+// Default PID monitor : 2-100 GeV/c
+RiPIDMonAll2To100_Thres.TrackSelector.MinPCut = 2;
+RiPIDMonAll2To100_Thres.TrackSelector.MaxPCut = 100;
+RiPIDMonAll2To100_Thres.MCHistoPath = "RICH/PIDQC/ALLWTHRES/2TO100/MC/";
+RiPIDMonAll2To100_Thres.HistoPath = "RICH/PIDQC/ALLWTHRES/2TO100/";
+RiPIDMonAll2To100_Thres.FinalPrintout = true;
+RiPIDMonAll2To100_Thres.IgnoreRecoThresholds = true;
+RiPIDMonAll2To100_Thres.IgnoreMCThresholds = true;
+
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonAll0To2.TrackSelector.MinPCut = 0;
 RiPIDMonAll0To2.TrackSelector.MaxPCut = 2;

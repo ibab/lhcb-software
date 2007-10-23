@@ -148,6 +148,7 @@ RiRecPhotSigKsTkMoni.TrackSelector.TrackAlgs = { "KsTrack" };
 // forward tracks
 RichPhotAng.Members += { "Rich::Rec::MC::CherenkovAngleMonitor/RiRecPhotAngFrwdTkMoni" };
 RiRecPhotAngFrwdTkMoni.TrackSelector.TrackAlgs = { "Forward" };
+//RiRecPhotAngFrwdTkMoni.TrackSelector.MinPtCut = 2;
 // match tracks
 RichPhotAng.Members += { "Rich::Rec::MC::CherenkovAngleMonitor/RiRecPhotAngMatchTkMoni" };
 RiRecPhotAngMatchTkMoni.TrackSelector.TrackAlgs = { "Match" };
