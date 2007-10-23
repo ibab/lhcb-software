@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.8 2007-10-22 20:28:20 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.9 2007-10-23 14:42:51 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -123,6 +123,48 @@ protected:
     return cloner(item);
     
   }
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T>
+  const T* getStoredClone( const T* original    ) const
+  {
+    return getStoredClone<T>(original);
+//     // get location of original, from that get location of clone,
+//     // search for it and return it if found.
+//     const std::string cloneLocation = 
+//       outputTESLocation(objectLocation(original->parent()));
+
+//     if (!exist<typename T::Container>(cloneLocation)) return 0;
+
+//     typename T::Container* clones = get<typename T::Container>(cloneLocation);
+//     // check what this returns if no object found.
+//     return clones->object(original->key() ); 
+    
+  }
+  
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T>
+  T* getStoredClone( const T* original    ) 
+  {
+    // get location of original, from that get location of clone,
+    // search for it and return it if found.
+    const std::string cloneLocation = 
+      outputTESLocation(objectLocation(original->parent()));
+
+    if (!exist<typename T::Container>(cloneLocation)) return 0;
+
+    typename T::Container* clones = get<typename T::Container>(cloneLocation);
+    // check what this returns if no object found.
+    return clones->object(original->key() ); 
+    
+  }
+  
   
   //===========================================================================
   /**
@@ -251,10 +293,11 @@ protected:
       "/" + this->inputTESLocation();
   }
 
-  inline const std::string outputTESLocation(std::string& inputLocation)
+  inline const std::string outputTESLocation(const std::string& inputLocation)
   {
-    getNiceLocationName(inputLocation);
-    return "/Event/"+ this->outputPrefix() + "/" + inputLocation;
+    std::string tmp(inputLocation);
+    getNiceLocationName(tmp);
+    return "/Event/"+ this->outputPrefix() + "/" + tmp;
   }
   
 private:
