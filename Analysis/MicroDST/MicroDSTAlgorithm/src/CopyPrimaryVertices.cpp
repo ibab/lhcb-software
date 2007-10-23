@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.3 2007-10-22 13:34:40 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.4 2007-10-23 14:45:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -60,19 +60,13 @@ StatusCode CopyPrimaryVertices::execute() {
   debug() << "==> Execute" << endmsg;
   verbose() << "Going to store Primary Vertex bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
-
-  return (0==0) ? StatusCode::SUCCESS : StatusCode::FAILURE;
   
   const Vertices* v = 
     copyKeyedContainer<Vertices, BasicPVCloner>( inputTESLocation(),
                                                  fullOutputTESLocation());
-  
- //  if ( 0 != v) {
-//     return StatusCode::SUCCESS;
-//   } else {
-    return StatusCode::FAILURE;
-    //  }
-  // need to do something about the tracks...
+
+  return (v!=0) ? StatusCode::SUCCESS : StatusCode::FAILURE;  
+
 }
 //=============================================================================
 //  Finalize
