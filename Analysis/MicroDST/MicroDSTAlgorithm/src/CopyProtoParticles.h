@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.1 2007-10-23 14:42:13 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.2 2007-10-23 16:01:31 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -32,7 +32,12 @@ protected:
 private:
 
   const LHCb::ProtoParticle* storeProtoParticle(const LHCb::Particle* particle);
-  
+
+  void scanParticleTree(const LHCb::Particle* particle);
+
+  template <class T>
+  void scanParticleSet(typename T::const_iterator begin,
+                       typename T::const_iterator end     );
 
   typedef LHCb::ProtoParticle::Container ProtoParticles;
   typedef CopyAndStoreData::BasicItemCloner<LHCb::ProtoParticle> PPCloneFunctor;
