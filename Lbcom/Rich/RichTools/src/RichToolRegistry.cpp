@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.18 2007-09-04 16:57:33 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.19 2007-10-23 09:55:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -42,10 +42,7 @@ StatusCode Rich::ToolRegistry::initialize()
 
   // define some default tool mappings
   ToolList defaultTools;
-  // MC
-  defaultTools.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
-  defaultTools.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
-  defaultTools.push_back ( "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" );
+
   // Common RICH tools
   defaultTools.push_back ( "Rich::MirrorSegFinder/RichMirrorSegFinder"     );
   defaultTools.push_back ( "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" );
@@ -74,7 +71,12 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::TrackSelector/TrackSelector" );
   defaultTools.push_back ( "Rich::Rec::StereoFitter/RichStereoFitter" );
   defaultTools.push_back ( "Rich::Rec::StereoProjection/RichStereoProjection" );
-  // other tools
+  // MC
+  defaultTools.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
+  defaultTools.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
+  defaultTools.push_back ( "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" );
+  // other (non RICH) tools
+  defaultTools.push_back ( "MCParticleSelector/MCParticleSelector" );
   defaultTools.push_back ( "OdinTimeDecoder/OdinTimeDecoder" );
 
   // configure the default tools first

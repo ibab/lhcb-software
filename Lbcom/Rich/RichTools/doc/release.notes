@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-10-23 - Chris Jones
+ - Add some new default tool mappings
+
 !=========================== RichTools v2r15 2007-09-19 ======================
 ! 2007-09-04 - Chris Jones
  - Add default name mappings for tools in RichRecStereoTools
