@@ -77,7 +77,7 @@ namespace RICH
       hout->Add(h3);
       hout->Add(h4);
       hout->Add(h5);
-      hout->Add(h6);
+      // hout->Add(h6);
       return hout;
     }
 
