@@ -70,8 +70,8 @@ Bd2JpsiKsDD.MotherFilter.bdVertex.MaxChi2  = 500.0 ;
 //======================================================
 //          FLAVOUR TAGGING
 //======================================================
-// #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-// BTagging.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
+#include "$FLAVOURTAGGINGOPTS/BTagging.opts"
+BTagging.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
 
 #include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingAnalysis.opts"
 BTaggingAnalysis.PhysDesktop.InputLocations= {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
@@ -79,26 +79,28 @@ BTaggingAnalysis.PhysDesktop.InputLocations= {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKs
 //======================================================
 //Add DecayChainNtuple
 //======================================================
-ApplicationMgr.TopAlg += { "DecayChainNTuple/B2JpsihhTree" };
-B2JpsihhTree.OutputLevel = 3;
-B2JpsihhTree.PhysDesktop.OutputLevel = 5;
-B2JpsihhTree.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
-B2JpsihhTree.LinkAsct.Location = {"Phys/Relations/Particle2MCLinksB2JpsihhTree"};
-B2JpsihhTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
-B2JpsihhTree.LinkAsct.AlgorithmName = "Particle2MCLinksB2JpsihhTree";
-B2JpsihhTree.LinkAsct.OutputLevel   = 4;
-Particle2MCLinksB2JpsihhTree.OutputLevel = 4;
-Particle2MCLinksB2JpsihhTree.InputData = {"Phys/StandardMuons/Particles",
-                                          "Phys/StandardPions/Particles",
-                                          "Phys/Bd2JpsiKsLL/Particles",
-					  "Phys/Bd2JpsiKsDD/Particles" };
+ApplicationMgr.TopAlg += { "DecayChainNTuple/BDecay" };
+//MySeqTag.Members += { "DecayChainNTuple/BDecay" };//if need to fix B-fractions
 
-B2JpsihhTree.DecayDescriptor ="[B0 -> J/psi(1S) KS0]cc" ;
-B2JpsihhTree.Decay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
-B2JpsihhTree.FillMCDecay = true;
-B2JpsihhTree.MCDecay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
+BDecay.OutputLevel = 3;
+BDecay.PhysDesktop.OutputLevel = 5;
+BDecay.PhysDesktop.InputLocations = {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKsDD"};
+BDecay.LinkAsct.Location      = {"Phys/Relations/Particle2MCLinksBDecay"};
+BDecay.LinkAsct.AlgorithmType = "Particle2MCLinks";
+BDecay.LinkAsct.AlgorithmName = "Particle2MCLinksBDecay";
+BDecay.LinkAsct.OutputLevel   = 4;
+Particle2MCLinksBDecay.OutputLevel = 4;
+Particle2MCLinksBDecay.InputData = {"Phys/StandardMuons/Particles",
+				    "Phys/StandardPions/Particles",
+				    "Phys/Bd2JpsiKsLL/Particles",
+				    "Phys/Bd2JpsiKsDD/Particles" };
 
-B2JpsihhTree.RequireTagging = true;
+BDecay.DecayDescriptor ="[B0 -> J/psi(1S) KS0]cc" ;
+BDecay.Decay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
+BDecay.FillMCDecay = true;
+BDecay.MCDecay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";
+
+BDecay.RequireTagging = true;
 
 //======================================================
 #include "$STDOPTS/RootHist.opts"
@@ -106,7 +108,7 @@ HistogramPersistencySvc.OutputFile = "histos.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='B2JpsiKS.root' TYP='ROOT' OPT='NEW'"};
 
-MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent =  1;
 EventSelector.PrintFreq  =  1;

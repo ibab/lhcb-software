@@ -1,6 +1,17 @@
 ///---------------------------------------------------------------
 #include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+
+ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
+
+//no filter:
 ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
+
+//if using the filter to fix opposite side B fractions:
+// ApplicationMgr.DLLs += { "DaVinciMCTools" };
+// ApplicationMgr.TopAlg += { "GaudiSequencer/MySeqTag" };
+// MySeqTag.Members += { "FilterToFixOppositeBFractions" };
+// MySeqTag.Members += { "BTaggingAnalysis" };
+// FilterToFixOppositeBFractions.ActivateCorrection = true;
 
 ///---------------------------------------------------------------
 ///               OUTPUT LEVELS
@@ -25,7 +36,7 @@ BTaggingAnalysis.PhysDesktop.OutputLevel = 5;
 BTaggingAnalysis.GeomDispCalculator.OutputLevel=4;
 
 //-----------------------------------------------------------------------
-//new associators
+//associators
 BTaggingAnalysis.AssociatorInputData = { "Phys/BTaggingAnalysis/Particles" };
 BTaggingAnalysis.Particle2MCChi2.Chi2Cut = 75.; // Default is 100.
 

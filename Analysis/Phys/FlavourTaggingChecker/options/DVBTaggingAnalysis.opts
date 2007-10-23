@@ -3,11 +3,13 @@
 // to run BTaggingAnalysis with an event selection
 //##############################################################
 
+#pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"
 #include "$HLTSYSROOT/options/HltSelections.opts"
+#pragma print on
 
 ///example Bd Channel Selection ----------------------------------
 //#include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
@@ -50,7 +52,7 @@ BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
 ///---------------------------------------------------------------
 ///               BTaggingAnalysis
 ///---------------------------------------------------------------
-#include "$FLAVOURTAGGINGOPTS/BTaggingAnalysis.opts"
+#include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingAnalysis.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency

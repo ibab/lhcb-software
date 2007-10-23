@@ -31,7 +31,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_TriggerTisTosTool(0)
 {
   declareProperty( "SecondaryVertexType", m_SVtype    = "SVertexTool" );
-  declareProperty( "TagOutputLocation", m_TagLocation = "" );
+  declareProperty( "TagOutputLocation", m_TagLocation = FlavourTagLocation::Default );
   declareProperty( "AssociatorInputData", m_setInputData );
 
   declareProperty( "UseMCTrueFlavour", m_UseMCTrueFlavour = true );
@@ -422,8 +422,8 @@ StatusCode BTaggingAnalysis::execute() {
     if( (*imc) != BS ) 
       if((*imc)->particleID().hasBottom()) {
 	bool close2BS = false;
-	if(BS) if(((*imc)->originVertex()->position().z() 
-		   - BS->originVertex()->position().z()) /Gaudi::Units::mm < 1.0)
+	if(BS) if(fabs((*imc)->originVertex()->position().z() 
+		       - BS->originVertex()->position().z()) /Gaudi::Units::mm < 1.0)
 	  close2BS = true;
 	
         if( close2BS || (!BS) ) {
@@ -746,13 +746,11 @@ StatusCode BTaggingAnalysis::execute() {
   bool foundb = false;
   FlavourTags*  tags = new FlavourTags;
   FlavourTag* theTag = new FlavourTag;
-  if (exist<FlavourTags>(FlavourTagLocation::Default)){
-    tags = get<FlavourTags>(FlavourTagLocation::Default);
-    //take first, there is already something in TES
-    info() <<"Tagging already ran. Use existing result in TES."<< endreq;
+  if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
+    tags = get<FlavourTags>(m_TagLocation);
     if(tags->size()>1) 
-      warning()<<"More than one FlavourTag obj in TES: "<<tags->size()
-	       <<"  Search for the highest pT B one."<<endreq;
+      info()<<"FlavourTag objects in TES:"<<tags->size()
+	    <<"  Search for the highest pT B.."<<endreq;
     FlavourTags::const_iterator ti;
     for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
       if((*ti)->taggedB() == AXBS) {
@@ -771,10 +769,10 @@ StatusCode BTaggingAnalysis::execute() {
       delete theTag;
       return StatusCode::SUCCESS;
     } 
-    if(!exist<FlavourTags>(FlavourTagLocation::Default)){
+    if(!exist<FlavourTags>(m_TagLocation)){
       tags->insert(theTag);
-      put(tags, FlavourTagLocation::Default);
-      debug()<<"Inserted tags into "<<FlavourTagLocation::Default<<endreq;
+      put(tags, m_TagLocation);
+      debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
     }
   }
 
