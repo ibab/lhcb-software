@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.9 2007-10-16 12:16:10 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.10 2007-10-23 07:30:03 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 
 OnlineRootHist::OnlineRootHist(std::string Identifier,
@@ -77,6 +77,7 @@ void OnlineRootHist::setTH1FromDB() {
     if(m_dbHist->getDisplayOption("LINESTYLE", &iopt)) m_rootHist->SetLineStyle(iopt);
     if(m_dbHist->getDisplayOption("LINECOLOR", &iopt)) m_rootHist->SetLineColor(iopt);
     if(m_dbHist->getDisplayOption("LINEWIDTH", &iopt)) m_rootHist->SetLineWidth(iopt);
+    if(m_dbHist->getDisplayOption("DRAWOPTS",  &sopt)) m_rootHist->SetOption(sopt.data());
     if(m_dbHist->getDisplayOption("STATS",     &iopt)) m_rootHist->SetStats(true);
   }
 }
