@@ -3,6 +3,7 @@
   <class name    = "IHitExpectation"         />
   <class name    = "IMaterialLocator"        />
   <class name    = "IMeasurementProvider"    />
+  <class name    = "IPatDebugTTTool"         />
   <class name    = "IPatForwardTool"         />
   <class name    = "IPatSeedingTool"         />
   <class name    = "IStateCorrectionTool"    />
