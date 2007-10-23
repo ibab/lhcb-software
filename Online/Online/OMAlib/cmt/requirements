@@ -9,7 +9,7 @@ version          v0r0
 branches src cmt doc OMAlib
 
 use   ROOT             v*      LCG_Interfaces
-use   OnlineHistDB     v3r1    Online
+use   OnlineHistDB     v3r*    Online
 #
 apply_pattern install_more_includes more=OMAlib
 #
