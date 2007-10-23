@@ -4,9 +4,11 @@
 ! Purpose     : Add various types of background in the muon system : 
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
+
+!====================== MuonBackground v2r5 2007-10-17 =====================
 ! 2007-10-17 - Alessia Satta
  - change for new DDDB muon structure description (add side layer between 
-    station and region)
+    station and region), needs MuonDet v7r0 and SQLDDDB v3r0
 
 !====================== MuonBackground v2r4 2007-06-08 =====================
 ! 2007-06-08 - Alessia Satta

@@ -1,5 +1,5 @@
 package MuonBackground 
-version v2r4
+version v2r5
 
 # ================ structure ===========================================
 branches src cmt options doc
