@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='STTELL1Event'>
+  <!-- location = address in TES -->
+  <!-- classId = identifier -->
+   
+    <class name='STTELL1Data'
+	   id='9010' 
+	   author='Matthew Needham' 
+	   desc='ADCs from a TELL1 board'
+           serializers = 'FALSE'>
+      <base name='KeyedObject&lt; int &gt; '/>  
+      <location name="ITFull"   place="Raw/IT/Full"   />
+      <location name="TTFull"   place="Raw/TT/Full"   />
+      <location name="ITPedestal"   place="Raw/IT/Pedestal"   />
+      <location name="TTPedestal"   place="Raw/TT/Pedestal"   />
+      <location name="ITProcFull"   place="Raw/IT/ProcFull"   />
+      <location name="TTProcFull"   place="Raw/TT/ProcFull"   />
+      <location name="ITPedSubADCs"   place="Raw/IT/PedSubADCs"   />
+      <location name="TTPedSubADCs"   place="Raw/TT/PedSubADCs"   />
+      <location name="ITSubPeds"   place="Raw/IT/SubPeds"   />
+      <location name="TTSubPeds"   place="Raw/TT/SubPeds"   />
+      <location name="ITLCMSADCs"   place="Raw/IT/LCMSADCs"   />
+      <location name="TTLCMSADCs"   place="Raw/TT/LCMSADCs"   />
+      <location name="ITEmulated"   place="Raw/IT/Emulated"   />
+      <location name="TTEmulated"   place="Raw/TT/Emulated"   />
+      
+      &KeyedContainer;
+      <import name='Event/STTELL1EventInfo' />
+      <typedef desc = "2-d data vector of signed int typedef"
+       type =  "std::vector &lt;  std::vector &lt; signed int &gt; &gt;"
+       def = "Data"
+       access = "PUBLIC " />
+      
+      <typedef desc = "Vector of STTELL1EventInfo typedef"
+       type =  "SmartRefVector&lt;LHCb::STTELL1EventInfo&gt;"
+       def = "Info"
+       access = "PUBLIC " />
+
+      <constructor
+        desc = 'constructor with arguments'
+        argList = 'Data data'
+        initList = 'm_data(data)'>
+      </constructor>
+
+      <constructor
+        desc = 'constructor with key'
+        argList = 'const int numberOfTELL1'
+        initList = 'KeyedObject&lt;int&gt;(numberOfTELL1), m_data(), m_header()'>
+      </constructor>
+
+     <!--<destructor
+        desc = 'destructor'>
+      <code> 
+        for ( std::vector&lt; LHCb::STTELL1EventInfo* &gt;::iterator it = m_eventInfo.begin();
+              it != m_eventInfo.end(); ++it ) delete *it;
+              m_eventInfo.clear();
+      </code>
+      </destructor>-->
+
+      <attribute 
+        type ='Data'
+        name = 'data'
+        desc = 'vector of raw data'
+      /> 
+      
+       <attribute 
+        type ='Data'
+        name = 'header'
+        desc = 'vector of headers'
+      /> 
+
+       
+       
+       <relation 
+       name="eventInfo" 
+       multiplicity="M" 
+       type="LHCb::STTELL1EventInfo"
+       desc= "Vector of 4 Event Info block (1 per PP)"
+       />
+      
+      
+      
+      
+       <!--<attribute
+        type      = 'Info'
+        name      = 'eventInfo'
+        desc      = 'Vector of 4 Event Info block (1 per PP)'
+        access    = 'PUBLIC'
+        />-->
+
+      
+      
+        
+      <method type = 'unsigned int'
+              name = 'dataSize'
+              desc = 'size of TELL1 data'
+              const = 'TRUE'>
+        <code> return m_data.size();  </code>
+      </method>
+      
+      
+      <method type = 'unsigned int'
+      	      name = 'TELL1ID'
+	      desc = 'Returns the TELL1D id'
+	      const = 'TRUE'> 
+      <code>  return key();
+      </code>
+      </method>
+      
+      <method type = 'const std::vector &lt; signed int &gt; &amp;'
+      	      name = 'beetleData'
+	      argList = 'unsigned char beetleID'
+	      desc = 'Returns the data of a single beetle'
+	      const = 'TRUE'> 
+      <code>  return m_data[beetleID];
+      </code>
+      </method>
+
+    </class>   
+ 
+  </package>
+</gdd>

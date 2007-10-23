@@ -1,0 +1,15 @@
+# $Id: requirements,v 1.1.1.1 2007-10-23 09:24:28 akeune Exp $
+package STTell1Event
+version v1r0
+
+branches Event xml cmt doc src
+
+use LHCbKernel     v* Kernel
+#use Tell1Kernel    v* DAQ
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+
+# Produce Header-Files from XML description
+apply_pattern god_headers files=../xml/*.xml
+apply_pattern install_more_includes more=Event

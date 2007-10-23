@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='STTELL1Event'>
+  <!-- location = address in TES -->
+  <!-- classId = identifier -->
+    <class name='STTELL1EventInfo'
+	   id='9011' 
+	   author='Mathias Knecht' 
+	   desc='Event info from a TELL1 board'
+           serializers = 'FALSE'>
+   <base name='KeyedObject&lt; int &gt; '/>
+      <location name="ITEventInfo"   place="Raw/IT/EventInfo"   />
+      <location name="TTEventInfo"   place="Raw/TT/EventInfo"   />
+      <attribute
+       type    = 'bitfield'
+       name    = 'word0'
+       desc    = 'Word 0 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'short'
+         name      = 'BCnt'
+         length    = '12'
+         desc      = 'Bunch counter'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+          <bitfield
+         type      = 'unsigned char'
+         name      = 'DetectorID'
+         length    = '4'
+         desc      = 'ID of the sub-detector'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'BankList'
+         length    = '8'
+         desc      = 'List of the Banks sent by the TELL1 (Internal use)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EventInformation'
+         length    = '8'
+         desc      = 'For internal use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+       	</attribute>
+ 	   
+      <attribute
+       type    = 'bitfield'
+       name    = 'word1'
+       desc    = 'Word 1 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'int'
+         name      = 'L0EvID'
+         length    = '32'
+         desc      = 'L0 Event ID'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         </attribute>
+      <attribute
+       type    = 'bitfield'
+       name    = 'word2'
+       desc    = 'Word 2 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCN'
+         length    = '8'
+         desc      = 'PCN from Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'ProcessInfo'
+         length    = '8'
+         desc      = 'Indicates what processing has been applied'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'short'
+         name      = 'R1'
+         length    = '16'
+         desc      = 'Reserved bits for later use, =0x8A8A'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        </attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word3'
+       desc    = 'Word 3 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkNoEvt'
+         length    = '6'
+         desc      = 'Indicates that no data has been received, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkDisable'
+         length    = '6'
+         desc      = 'Indicates if link is disabled by ECS, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'SyncEvtSizeError'
+         length    = '6'
+         desc      = 'Set if more or less than 35 words are sent paer event (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+    
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'TLKLnkLoss'
+         length    = '6'
+         desc      = 'Error on reception, bit set if the link is not plugged (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'SyncRAMFull'
+         length    = '6'
+         desc      = 'Overflow on input sync RAM (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'ChipAddr'
+         length    = '2'
+         desc      = 'Address of the PP-FPGA (between 0 and 3)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word4'
+       desc    = 'Word 4 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'int'
+         name      = 'HeaderPseudoError'
+         length    = '24'
+         desc      = 'Indicates if the ADC value is between low and high thresholds, one per Analog Link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkNoClock'
+         length    = '6'
+         desc      = 'Indicates if no clock is received, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNError'
+         length    = '1'
+         desc      = 'Indocates if the PCN among the links are not equal'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+    
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'R2'
+         length    = '1'
+         desc      = 'Reserved bit for later use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word5'
+       desc    = 'Word 5 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle0'
+         length    = '8'
+         desc      = 'PCN of the Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle1'
+         length    = '8'
+         desc      = 'PCN of the Beetle 1'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle2'
+         length    = '8'
+         desc      = 'PCN of the Beetle 2'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle3'
+         length    = '8'
+         desc      = 'PCN of the Beetle 3'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word6'
+       desc    = 'Word 6 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle4'
+         length    = '8'
+         desc      = 'PCN of the Beetle 4'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle5'
+         length    = '8'
+         desc      = 'PCN of the Beetle 5'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'short'
+         name      = 'R3'
+         length    = '16'
+         desc      = 'Reserved bits for later use =0x8B8B'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 
+	
+	</attribute>
+      <attribute
+       type    = 'bitfield'
+       name    = 'word7'
+       desc    = 'Word 7 of Event Info block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle0'
+         length    = '4'
+         desc      = 'I Header of the Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle1'
+         length    = '4'
+         desc      = 'I Header of the Beetle 1'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle2'
+         length    = '4'
+         desc      = 'I Header of the Beetle 2'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle3'
+         length    = '4'
+         desc      = 'I Header of the Beetle 3'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle4'
+         length    = '4'
+         desc      = 'I Header of the Beetle 4'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle5'
+         length    = '4'
+         desc      = 'I Header of the Beetle 5'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'R4'
+         length    = '8'
+         desc      = 'Reserved bits for later use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+ 
+	
+	</attribute>  
+	 </class>
+  </package>
+</gdd>
