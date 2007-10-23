@@ -1,8 +1,10 @@
-// $Id: PatDownstream.h,v 1.1 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatDownstream.h,v 1.2 2007-10-23 15:19:45 cattanem Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
 // Include files
+#include <string>
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -11,7 +13,7 @@
 
 #include "TfKernel/TTStationHitManager.h"
 #include "PatKernel/PatTTHit.h"
-#include "TrackMCInterfaces/IPatDebugTTTruthTool.h"
+#include "TrackInterfaces/IPatDebugTTTool.h"
 
 /** @class PatDownstream PatDownstream.h
  *  Algorithm to reconstruct tracks with seed and TT, for KShort use.
@@ -68,10 +70,11 @@ private:
 
   bool   m_useForward;
   bool   m_printTracks;
-  bool   m_withTruth;
+  bool   m_withDebugTool;
 
   Tf::TTStationHitManager<PatTTHit> * m_ttHitManager;
-  IPatDebugTTTruthTool* m_truthTool;
+  IPatDebugTTTool* m_debugTool;
+  std::string m_debugToolName;
 
   DeSTDetector*       m_ttDet;    ///< TT Detector element
   double m_zTTa;                  ///< Position of first station

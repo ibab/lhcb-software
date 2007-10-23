@@ -5,6 +5,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r1 2007-10-23 ====================
 ! 2007-10-22 - Olivier Callot
  - Import PatDownstream, an adaptation of PatKShort.
  - Update the history flag with the proper value in PatSeeding and PatMatch

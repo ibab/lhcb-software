@@ -2,8 +2,8 @@
 # Created    : 2005-03-30
 # Maintainer : Stephanie Hansmann-Menzemer
 #============================================================================
-package           PatAlgoritms
-version           v3r0
+package           PatAlgorithms
+version           v3r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,7 +20,6 @@ use     TrackInterfaces v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
 use     OTDAQ           v*      OT
-use     TrackMCInterfaces v*    Tr
 #============================================================================
 # Component library building rule
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.1 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatDownstream.cpp,v 1.2 2007-10-23 15:19:45 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,8 @@ PatDownstream::PatDownstream( const std::string& name,
 
   //== debugging options
   declareProperty( "SeedKey"       , m_seedKey       = -1    );
-  declareProperty( "WithTruth"     , m_withTruth     = false );
+  declareProperty( "WithDebugTool" , m_withDebugTool = false );
+  declareProperty( "DebugTool"     , m_debugToolName = "PatDebugTTTruthTool" );
 }
 //=============================================================================
 // Destructor
@@ -89,9 +90,10 @@ StatusCode PatDownstream::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_ttHitManager = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
-  m_truthTool = 0;
-  if ( m_withTruth ) {
-    m_truthTool = tool<IPatDebugTTTruthTool>( "PatDebugTTTruthTool" );
+
+  m_debugTool = 0;
+  if ( m_withDebugTool ) {
+    m_debugTool = tool<IPatDebugTTTool>( m_debugToolName );
   }  
 
   info() << "========================================"  << endreq
@@ -233,7 +235,7 @@ StatusCode PatDownstream::execute() {
       info() << format( " Y slope %8.6f computed %8.6f", track.state()->ty(), track.slopeY() ) 
              << endreq;
 
-      if ( m_truthTool ) m_truthTool->printTrueTTClusterOnTrack( tr, ttCoords.begin(), ttCoords.end() );      
+      if ( m_debugTool ) m_debugTool->debugTTClusterOnTrack( tr, ttCoords.begin(), ttCoords.end() );      
     }
     
     
@@ -283,7 +285,7 @@ StatusCode PatDownstream::execute() {
               info() << format( "  plane%2d z %8.2f x %8.2f pos %8.2f High%2d dist %8.2f", 
                                 hit->planeCode(), hit->z(), hit->x(), pos, 
                                 hit->hit()->sthit()->cluster().highThreshold(), hit->x() - pos);
-              if ( m_truthTool ) m_truthTool->printTTClusterTruth( info(), hit );
+              if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
               info() << endreq;
             }
           }
@@ -423,7 +425,7 @@ StatusCode PatDownstream::execute() {
                               icID.station(), icID.layer(), icID.detRegion(), 
                               icID.sector(), icID.strip(), xCoord,
                               track.distance( *itH1 ), (*itH1)->hit()->sthit()->cluster().highThreshold() ) ;
-            if ( m_truthTool ) m_truthTool->printTTClusterTruth( info(), *itH1 );
+            if ( m_debugTool ) m_debugTool->debugTTCluster( info(), *itH1 );
             info() << endreq;
           }
         }
@@ -570,7 +572,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
-        if ( m_truthTool ) m_truthTool->printTTClusterTruth( info(), hit );
+        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
         info() << endreq;
       }
     }
@@ -618,7 +620,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
-        if ( m_truthTool ) m_truthTool->printTTClusterTruth( info(), hit );
+        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
         info() << endreq;
       }
       chisq += dist * dist * hit->hit()->weight();
