@@ -4,8 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatChecker v3r1 2007-10-23 =======================
 ! 2007-10-22 - Olivier Callot
- - Adapt to the new name of Downtream track container (was KShort)
+ - Adapt to the new name of Downstream track container (was KShort)
  - Put all track locations by default in PatTrack2MCParticle
  - Restore the message for missed downstream track in PatChecker with option
    CheckMissedDownstream.
