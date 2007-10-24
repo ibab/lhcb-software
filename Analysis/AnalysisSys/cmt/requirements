@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2007-10-17 07:33:53 jpalac Exp $
+# $Id: requirements,v 1.26 2007-10-24 10:07:32 pkoppenb Exp $
 package AnalysisSys
 version v1r6
 
@@ -41,10 +41,10 @@ use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 use LoKiJets            v2r4    Phys    # Vanya Belyaev
 
 ####################################################################
-use  Stripping          v6r2    Tools   # Juan Palacios
+use  Stripping          v6r3    Tools   # Juan Palacios
 
 ####################################################################
-use  MicroDSTAlgorithm  v1r1    MicroDST          # Ulrich Kerzel
+use  MicroDSTAlgorithm  v2r0    MicroDST          # Ulrich Kerzel
 
 ####################################################################
 use  KtJet              v2r1    External          # I. Belyaev
