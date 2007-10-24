@@ -1,9 +1,22 @@
-<PRE>
+	<PRE>
 Package: HltSys
-Package Coordinator: Jose Angel Hernando Morata
+Package Coordinator: Jose Angel Hernando Morata, P. Koppenburg
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
+
+</PRE><H1><A NAME=v1r10>2007-10-24 HltSys v1r10</A></H1><PRE>
+This version uses LHCb v22r10
+
+  - Minor release for DaVinci v19r6. All big developments will go into the
+    next release v2r0. 
+  - Changes in Hlt options and HltSelections to reflect changes in Muon 
+    alleys.
+  - Bug fix in ecal alley options
+
+!========================== HltSys v1r10 2007-10-24 ===================
+! 2007-10-24 - Patrick Koppenburg
+ - Add writing to TES for L0.
 
 ! 2007-10-16 - Jose A. Hernando
  - HltMC.opts to get the link LHCbIDs->MCParticles

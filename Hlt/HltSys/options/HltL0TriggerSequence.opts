@@ -55,9 +55,8 @@ PrepareL0TriggerHadronSeq.Members = {
 
 L0MuonCandidatesFromRawSeq.Members = {
   "L0Entry/L0EntryTriggerAllMuons"
-  //  "L0MuonCandidatesFromRaw" // removed following a change in L0Muon v7r3
+  //  ,  "L0MuonCandidatesFromRaw" // removed following a change in L0Muon v7r3
 };
-
 
 PrepareL0TriggerMuonSeq.Members = {
   "L0Entry/L0EntryTriggerMuon",

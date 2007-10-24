@@ -1,5 +1,5 @@
 package HltSys
-version v1r9
+version v1r10
 
 branches cmt doc options
 
@@ -10,7 +10,7 @@ branches cmt doc options
 use HltCommon           v1r6    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v1r4    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r3    Hlt   # Jose Angel Hernando-Morata
-use HltMuon             v1r5    Hlt   # Alessia Satta
+use HltMuon             v1r5p1  Hlt   # Alessia Satta
 use HltMuonAlley        v1r5    Hlt   # Alessia Satta
 use HltCaloAlley        v1r3    Hlt   # Stefano Villa
 
@@ -19,7 +19,7 @@ use HltL0Conf           v1r4    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r2    Hlt   # Alessia Satta
 use HltHadL0Conf        v1r1    Hlt   # Jose Angel Hernando-Morata
 
-use HltSelections       v5r5    Hlt   # Patrick Koppenburg
+use HltSelections       v5r6    Hlt   # Patrick Koppenburg
 use HltSelChecker       v5r1    Hlt   # Patrick Koppenburg
 
 #=============================================================
@@ -28,7 +28,7 @@ use HltSelChecker       v5r1    Hlt   # Patrick Koppenburg
 
 use HltBase             v2r6   Hlt    # Jose Angel Hernando-Morata
 
-use LoKiTrigger         v6r0   Phys   # Vanya Belyaev
+use LoKiTrigger         v6r1   Phys   # Vanya Belyaev
 
 use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
 
