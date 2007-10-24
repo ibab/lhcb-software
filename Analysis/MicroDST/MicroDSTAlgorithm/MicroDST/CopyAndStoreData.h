@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.12 2007-10-24 17:28:09 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.13 2007-10-24 17:36:39 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -184,7 +184,8 @@ protected:
     getNiceLocationName(tmp);
     return "/Event/"+ this->outputPrefix() + "/" + tmp;
   }
-  
+
+
 private:
 
   /**
@@ -202,6 +203,12 @@ private:
    */
   const std::string getNiceLocationName(const std::string& location) const;
   
+  typedef std::map<std::string, ObjectContainerBase*> LocalDataStore;
+
+  inline LocalDataStore& localDataStore() 
+  {
+    return m_containerMap;
+  }
 
 private:
 
@@ -209,7 +216,7 @@ private:
   std::string m_outputPrefix;
   std::string m_fullOutputTESLocation;
 
-  typedef std::map<std::string, ObjectContainerBase*> LocalDataStore;
+
 
   LocalDataStore m_containerMap; ///< map of local container - locations to store
   
