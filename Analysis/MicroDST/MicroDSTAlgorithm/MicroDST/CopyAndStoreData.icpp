@@ -1,0 +1,179 @@
+// $Id: CopyAndStoreData.icpp,v 1.1 2007-10-24 17:06:45 jpalac Exp $
+//-----------------------------------------------------------------------------
+// Implementation file for templated methods of class : CopyAndStoreData
+//
+// 2007-10-24 : Juan PALACIOS
+//-----------------------------------------------------------------------------
+
+//=============================================================================
+template <class T>
+const T* CopyAndStoreData::copyAndStoreObject( const std::string& from,
+                                               const std::string& to   )
+  
+{
+  verbose() << "try to get data container" << endmsg;
+
+  if (exist<T>( from ) ) {
+    const T* data = get<T>( from );
+    verbose() << "now copy information" << endmsg;
+    T* newData = new T(*data);
+    put (newData, to );
+    verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
+    return newData;
+  } else {
+    Warning("No data container found at "+ from, StatusCode::SUCCESS);
+    return 0;
+  } // if exist
+
+}
+//=============================================================================
+template <class T, class ContainedItemCloner >
+const T* CopyAndStoreData::copyKeyedContainer( const std::string& from,
+                                               const std::string& to    ) 
+{
+  debug() << "now store container for location " << from << endmsg;
+
+  if (!exist<T>(from)) {
+    debug() << "Container location does not exist" << endmsg;
+    return 0;    
+  } else {
+    const T* data = get<T>( from );
+    if (!data) {
+      return 0;
+    }
+    T* clones = getOutputContainer<T>(to);
+
+    verbose() << "copyKeyedContainer " << data->size() 
+              << " elements from " << from 
+              << " into " << to << ", size " << clones->size()
+              << endmsg;
+    return  copyKeyedContainer<T, ContainedItemCloner>(data, 
+                                                       clones); 
+  } // if !exist
+}
+//=============================================================================
+template <class T, class ContainedItemCloner >
+const T* CopyAndStoreData::cloneContainerToLocalStore(const std::string& from) 
+{
+  debug() << "now store container for location " << from << endmsg;
+
+  if (!exist<T>(from)) {
+    debug() << "Container location does not exist" << endmsg;
+    return 0;    
+  } else {
+    const T* data = get<T>( from );
+    if (!data) {
+      return 0;
+    }
+    T* clones = getLocalContainer<T>(from);
+
+    verbose() << "cloneToLocalStore " << data->size() 
+              << " elements from " << from 
+              << " into local store, size " << clones->size() << endmsg;
+    return  copyKeyedContainer<T, ContainedItemCloner>(data, 
+                                                       clones); 
+  } // if !exist
+}
+//=============================================================================
+template <class T, class ContainedItemCloner >
+const T* CopyAndStoreData::copyKeyedContainer( const T* from, T* to    ) 
+{
+  if (!from || !from ) return 0;
+  verbose() << "copyContainer output container size " << to->size() 
+            << endmsg;
+  std::for_each(from->begin(), from->end(), 
+                ContainedItemCloner(to) );
+
+  verbose() << "copyContainer copied # elements into output container: " 
+            << to->size() << endmsg;
+
+  return to;
+}
+//=============================================================================
+template <class T, class itemCloner>
+T* CopyAndStoreData::cloneKeyedContainerItem( const T* item )
+{
+  const std::string cloneLocation = 
+    outputTESLocation( objectLocation( item->parent()) );
+  typename T::Container* clones = getOutputContainer<typename T::Container>(cloneLocation);
+  if (0==clones) return 0;
+  MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
+  return cloner(item);
+    
+}
+//=============================================================================
+template <class T, class itemCloner>
+T* CopyAndStoreData::cloneKeyedItemToLocalStore( const T* item )
+{
+  const std::string location( objectLocation( item->parent() ) );
+  typename T::Container* clones = 
+    getLocalContainer<typename T::Container>(location);
+  if (0==clones) return 0;
+  MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
+  return cloner(item);
+    
+}
+//=============================================================================
+template <class T>
+const T* CopyAndStoreData::getStoredClone( const T* original    ) const
+{
+  return getStoredClone<T>(original);
+}
+//=============================================================================
+template <class T>
+T* CopyAndStoreData::getStoredClone( const T* original    ) 
+{
+  const std::string cloneLocation = 
+    outputTESLocation(objectLocation(original->parent()));
+
+  if (!exist<typename T::Container>(cloneLocation)) return 0;
+
+  typename T::Container* clones = get<typename T::Container>(cloneLocation);
+  // check what this returns if no object found.
+  return clones->object(original->key() ); 
+    
+}
+//=============================================================================
+template <class T>
+T* CopyAndStoreData::getLocalClone( const T* original    ) 
+{
+  const std::string cloneLocation = objectLocation(original->parent());
+
+  if (!getLocalContainer<typename T::Container>(cloneLocation)) return 0;
+
+  typename T::Container* clones = 
+    getLocalContainer<typename T::Container>(cloneLocation);
+  // check what this returns if no object found.
+  return clones->object(original->key() ); 
+    
+}
+//=============================================================================
+template <class T>
+T* CopyAndStoreData::getLocalContainer( const std::string& location )
+{
+  const std::string niceLocation = getNiceLocationName(location);
+  // check if location already known
+  LocalDataStore::const_iterator iMap = m_containerMap.find(niceLocation);
+  if (iMap != m_containerMap.end()) {
+    verbose() << "return existing container" << endmsg;
+    return dynamic_cast<T*>(*iMap);
+  } else {
+    // create new container and store into TES
+    T* container = new T();
+    //    put (container, containerLocation);     
+    m_containerMap[niceLocation] = 
+      dynamic_cast<ObjectContainerBase*>(container);
+    return dynamic_cast<T*>(*iMap);
+  }
+}
+//=============================================================================
+template <class T>
+T* CopyAndStoreData::getOutputContainer( const std::string& location ) 
+{
+  if ( !exist<T>( location ) ) {
+    T* container = new T();
+    put(container, location);
+  }
+  return get<T>( location );     
+}
+//=============================================================================
