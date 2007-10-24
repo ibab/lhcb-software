@@ -1,8 +1,5 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
-ApplicationMgr.DLLs    += { "DaVinciAssociators" };
-ApplicationMgr.DLLs    += { "DaVinciUser" };
-ApplicationMgr.DLLs    += { "MicroDST"};
 ApplicationMgr.TopAlg  += { "GaudiSequencer/TestSeq" };
 
 // ========================================================================
@@ -14,12 +11,6 @@ ApplicationMgr.EvtMax            = -1;
 EventSelector.PrintFreq = 10;
 //MessageSvc.OutputLevel = 1;
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-
-// ========================================================================
-// =================  dictionary for event model
-// =======================================================================
-
-PoolDbCacheSvc.DLLs       += { "PhysEventDict"};
 
 // ========================================================================
 // =================  Input file
