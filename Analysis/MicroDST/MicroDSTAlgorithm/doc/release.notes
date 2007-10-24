@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.29 2007-10-23 14:46:11 jpalac Exp $
+! $Id: release.notes,v 1.30 2007-10-24 17:10:30 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-24 - Juan PALACIOS
+ - Add MicroDST/CopyAndStoreData.icpp
+  . Contains implementations of templated methods of CopyAndStoreData class.
+
+ - Add MicroDST/Functors.hpp
+  . header with useful functors, moved from MicroDST/CopyAndStoreData.h.
+    Functors are under namespace MicroDST.
 
 ! 2007-10-23 - Juan PALACIOS
  - Add src/CopyProtoParticles{.cpp, .h}
