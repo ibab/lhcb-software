@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.9 2007-10-23 14:42:51 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.10 2007-10-24 15:37:25 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -6,7 +6,8 @@
 // from Gaudi
 #include <GaudiAlg/GaudiAlgorithm.h>
 #include <GaudiKernel/IRegistry.h>
-
+// Local
+#include "MicroDST/Functors.hpp"
 class ObjectContainerBase;
 /** @class CopyAndStoreData CopyAndStoreData.h
  *  
@@ -25,11 +26,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-  std::string m_inputTESLocation;
-  std::string m_outputPrefix;
-  std::string m_fullOutputTESLocation;
+  //protected:
 
 protected:
 
@@ -119,7 +116,7 @@ protected:
   {
     typename T::Container* clones = getOutputContainer<typename T::Container>(location);
     if (0==clones) return 0;
-    CloneKeyedContainerItem<T, itemCloner> cloner(clones);
+    MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
     return cloner(item);
     
   }
@@ -132,17 +129,6 @@ protected:
   const T* getStoredClone( const T* original    ) const
   {
     return getStoredClone<T>(original);
-//     // get location of original, from that get location of clone,
-//     // search for it and return it if found.
-//     const std::string cloneLocation = 
-//       outputTESLocation(objectLocation(original->parent()));
-
-//     if (!exist<typename T::Container>(cloneLocation)) return 0;
-
-//     typename T::Container* clones = get<typename T::Container>(cloneLocation);
-//     // check what this returns if no object found.
-//     return clones->object(original->key() ); 
-    
   }
   
   /**
@@ -167,57 +153,6 @@ protected:
   
   
   //===========================================================================
-  /**
-   *
-   * Clone an item into a container of type T. 
-   * The functor checks if an item with the same key already exists.
-   * Requirements:
-   *
-   * Contained type T:
-   * Must export container type as T::Container. 
-   * T::Container must have a method 
-   * insert(T::value_type, type of T::value_type::key() )
-   * Must have a method T* object( type of T::key() )
-   *
-   * Type T must have method T::key()
-   *
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   * @date 16-10-2007
-   */
-  template <class T, class itemCloner>
-  struct CloneKeyedContainerItem
-  {
-    CloneKeyedContainerItem(typename T::Container*& to) 
-      : m_to(to) { }
-    
-    T* operator() ( const T* item )
-    {
-      if ( !m_to->object( item->key() ) ) {
-        T* clonedItem = itemCloner::clone(item);
-        m_to->insert( clonedItem, item->key()) ;
-        return clonedItem;
-      }
-      return m_to->object( item->key() );
-    }
-    
-    typename T::Container* m_to;
-    
-  };
-  
-  //===========================================================================
-
-  /**
-   */
-  template <class T>
-  class BasicItemCloner 
-  {
-  public:
-    static T* clone(const T* item) 
-    {
-      return item->clone();
-    }
-  };
   
   //===========================================================================
 
@@ -311,6 +246,14 @@ private:
    * @author Ulrich kerzel
   */
   void getNiceLocationName(std::string& location);
+
+private:
+
+  std::string m_inputTESLocation;
+  std::string m_outputPrefix;
+  std::string m_fullOutputTESLocation;
+
+  std::map<std::string, ObjectContainerBase*> m_containerMap; ///< map of local container - locations to store
   
 };
 #endif // COPYANDSTOREDATA_H
