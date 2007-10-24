@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.cpp,v 1.3 2007-10-24 15:38:35 jpalac Exp $
+// $Id: CopyProtoParticles.cpp,v 1.4 2007-10-24 17:08:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -110,11 +110,8 @@ const LHCb::ProtoParticle* CopyProtoParticles::storeProtoParticle(const LHCb::Pa
 
   if ( proto && particleClone ) {
 
-    const std::string from = objectLocation(proto->parent());
-    const std::string to = outputTESLocation(from);
-
     const LHCb::ProtoParticle* ppClone = 
-      cloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor>(particle->proto(), to );
+      cloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor>(particle->proto() );
     
     particleClone->setProto(ppClone);
 

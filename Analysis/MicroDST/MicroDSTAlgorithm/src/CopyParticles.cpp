@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.5 2007-10-24 15:38:35 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.6 2007-10-24 17:08:51 jpalac Exp $
 // Include files 
 
 // STL
@@ -78,10 +78,8 @@ StatusCode CopyParticles::execute() {
 const LHCb::Vertex* CopyParticles::storeVertex(const LHCb::Vertex* vertex)
 {
   StatusCode sc(StatusCode::SUCCESS);
-  std::string from = objectLocation(vertex->parent());
-  const std::string to = outputTESLocation(from);
 
-  LHCb::Vertex* vertexClone = cloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner>(vertex, to);
+  LHCb::Vertex* vertexClone = cloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner>(vertex);
 
   storeOutgoingParticles(vertexClone, vertex->outgoingParticles());
 
@@ -92,11 +90,9 @@ const LHCb::Vertex* CopyParticles::storeVertex(const LHCb::Vertex* vertex)
 LHCb::Particle* CopyParticles::storeParticle(const LHCb::Particle* particle)
 {
   StatusCode sc(StatusCode::SUCCESS);
-  std::string from = objectLocation(particle->parent());
-  const std::string to = outputTESLocation(from);
 
   LHCb::Particle* particleClone = 
-    cloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner>(particle, to);
+    cloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner>(particle);
 
   if (particle->endVertex() && particleClone) {
     const LHCb::Vertex* vertexClone = storeVertex(particle->endVertex() );
