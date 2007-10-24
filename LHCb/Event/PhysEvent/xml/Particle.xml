@@ -37,12 +37,28 @@
         name="User"
         place="Phys/User/Particles"
         />
-      <enum
+     <enum
         desc="Additional information"
         name="additionalInfo"
-        value="ConfLevel, Weight, LastGlobal=10000"
         access="PUBLIC"
-        />
+        strTypConv="TRUE">
+        <enumval name="Unknown"              value="-1"         desc="Unknown/illegal value of the index for 'additional info'"/>
+
+        <enumval name="ConfLevel"            value="0"          desc="Confidence Level for the particle" />
+        <enumval name="Weight"                                  desc="'Weight' for the particle"         />
+
+        <enumval name="FirstJetIndex"        value="9500"       desc="The first index allocated for jet-related studies"   />
+        <enumval name="JetActiveArea"                           desc="Jet Active Area estimation"   />
+        <enumval name="JetActiveAreaError"                      desc="Uncertanty in Jet Active Area evaluation"   />
+        <enumval name="JetActiveAreaPx"                         desc="Px-component of Jet active area four-momentum"   />
+        <enumval name="JetActiveAreaPy"                         desc="Py-component of Jet active area four-momentum"   />
+        <enumval name="JetActiveAreaPz"                         desc="Pz-component of Jet active area four-momentum"   />
+        <enumval name="JetActiveAreaE"                          desc="E-component  of Jet active area four-momentum"   />
+        <enumval name="JetPtPerUnitArea"                        desc="Underlying event activity per unit of Active Area" />
+        <enumval name="LastJetIndex"  value="FirstJetIndex+199" desc="The last  index allocated for jet-related studies"   />
+
+        <enumval name="LastGlobal"    value="10000"             desc="The last 'global' index, other values are specific for user analysis" />
+      </enum>
       <location
         name="Production"
         place="Phys/Prod/Particles"
