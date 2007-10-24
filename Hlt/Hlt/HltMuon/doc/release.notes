@@ -4,6 +4,9 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+! 2007-10-24 - Patrick Koppenburg
+ - Increment to v1r5p1
+
 ! 2007-10-19 - Alessia Satta
  - fix in memory leak in HltMuonRec ( same leak as in comment below)
 
