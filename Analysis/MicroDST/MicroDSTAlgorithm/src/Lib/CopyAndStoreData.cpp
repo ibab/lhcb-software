@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.6 2007-10-24 17:09:31 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.7 2007-10-24 17:28:09 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -51,9 +51,13 @@ StatusCode CopyAndStoreData::execute() {
 
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
 //  Finalize
+//=============================================================================
+StatusCode CopyAndStoreData::copyLocalStoreToTES() 
+{
+  return StatusCode::SUCCESS;
+}
 //=============================================================================
 StatusCode CopyAndStoreData::finalize() {
 

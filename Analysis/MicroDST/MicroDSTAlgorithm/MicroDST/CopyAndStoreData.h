@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.11 2007-10-24 17:07:41 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.12 2007-10-24 17:28:09 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -118,6 +118,13 @@ protected:
    */
   template <class T>
   T* getOutputContainer( const std::string& location ) ;
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+
+  StatusCode copyLocalStoreToTES();
 
   /**
    * Get the TES location of an object.

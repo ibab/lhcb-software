@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.icpp,v 1.1 2007-10-24 17:06:45 jpalac Exp $
+// $Id: CopyAndStoreData.icpp,v 1.2 2007-10-24 17:28:09 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : CopyAndStoreData
 //
@@ -156,14 +156,14 @@ T* CopyAndStoreData::getLocalContainer( const std::string& location )
   LocalDataStore::const_iterator iMap = m_containerMap.find(niceLocation);
   if (iMap != m_containerMap.end()) {
     verbose() << "return existing container" << endmsg;
-    return dynamic_cast<T*>(*iMap);
+    return dynamic_cast<T*>(m_containerMap[niceLocation]);
   } else {
     // create new container and store into TES
     T* container = new T();
     //    put (container, containerLocation);     
     m_containerMap[niceLocation] = 
       dynamic_cast<ObjectContainerBase*>(container);
-    return dynamic_cast<T*>(*iMap);
+    return dynamic_cast<T*>(m_containerMap[niceLocation]);
   }
 }
 //=============================================================================
