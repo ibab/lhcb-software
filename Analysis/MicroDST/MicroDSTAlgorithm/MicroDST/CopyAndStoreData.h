@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.10 2007-10-24 15:37:25 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.11 2007-10-24 17:07:41 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -26,8 +26,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  //protected:
-
 protected:
 
   /**
@@ -43,24 +41,8 @@ protected:
    */
   template <class T>
   const T* copyAndStoreObject( const std::string& from,
-                               const std::string& to   ) 
-  {
-    verbose() << "try to get data container" << endmsg;
-
-    if (exist<T>( from ) ) {
-      const T* data = get<T>( from );
-      verbose() << "now copy information" << endmsg;
-      T* newData = new T(*data);
-      put (newData, to );
-      verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
-      return newData;
-    } else {
-      Warning("No data container found at "+ from, StatusCode::SUCCESS);
-      return 0;
-    } // if exist
-
-  }
-  //===========================================================================
+                               const std::string& to   );
+  
 
   /**
    *
@@ -68,94 +50,64 @@ protected:
    */
   template <class T, class ContainedItemCloner >
   const T* copyKeyedContainer( const std::string& from,
-                               const std::string& to    ) 
-  {
-    debug() << "now store container for location " << from << endmsg;
-
-    if (!exist<T>(from)) {
-      debug() << "Container location does not exist" << endmsg;
-      return 0;    
-    } else {
-      const T* data = get<T>( from );
-      if (!data) {
-        return 0;
-      }
-      T* clones = getOutputContainer<T>(to);
-
-      verbose() << "copyKeyedContainer " << data->size() 
-                << " elements from " << from 
-                << " into " << to << ", size " << clones->size()
-                << endmsg;
-      return  copyKeyedContainer<T, ContainedItemCloner>(data, 
-                                                         clones); 
-    } // if !exist
-  }
+                               const std::string& to    );
+  
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T, class ContainedItemCloner >
+  const T* cloneContainerToLocalStore( const std::string& from ) ;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  const T* copyKeyedContainer( const T* from, T* to    ) 
-  {
-    if (!from || !from ) return 0;
-    verbose() << "copyContainer output container size " << to->size() 
-              << endmsg;
-    std::for_each(from->begin(), from->end(), 
-                  ContainedItemCloner(to) );
+  const T* copyKeyedContainer( const T* from, T* to    ) ;
 
-    verbose() << "copyContainer copied # elements into output container: " 
-              << to->size() << endmsg;
-
-    return to;
-  }
-
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
   template <class T, class itemCloner>
-  T* cloneKeyedContainerItem(const T* item, 
-                             const std::string& location)
-  {
-    typename T::Container* clones = getOutputContainer<typename T::Container>(location);
-    if (0==clones) return 0;
-    MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
-    return cloner(item);
-    
-  }
+  T* cloneKeyedContainerItem( const T* item );
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T, class itemCloner>
+  T* cloneKeyedItemToLocalStore( const T* item );
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  const T* getStoredClone( const T* original    ) const
-  {
-    return getStoredClone<T>(original);
-  }
+  const T* getStoredClone( const T* original    ) const;
   
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getStoredClone( const T* original    ) 
-  {
-    // get location of original, from that get location of clone,
-    // search for it and return it if found.
-    const std::string cloneLocation = 
-      outputTESLocation(objectLocation(original->parent()));
+  T* getStoredClone( const T* original    ) ;
 
-    if (!exist<typename T::Container>(cloneLocation)) return 0;
-
-    typename T::Container* clones = get<typename T::Container>(cloneLocation);
-    // check what this returns if no object found.
-    return clones->object(original->key() ); 
-    
-  }
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T>
+  T* getLocalClone( const T* original    ) ;
   
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T>
+  T* getLocalContainer( const std::string& location );
   
-  //===========================================================================
-  
-  //===========================================================================
-
   /**
    * Get the TES container in the TES location to be stored on the
    * MicroDST. 
@@ -165,16 +117,7 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getOutputContainer( const std::string& location ) 
-  {
-    if ( !exist<T>( location ) ) {
-      T* container = new T();
-      put(container, location);
-    }
-    return get<T>( location );     
-  }
-  
-  //=========================================================================  
+  T* getOutputContainer( const std::string& location ) ;
 
   /**
    * Get the TES location of an object.
@@ -238,14 +181,20 @@ protected:
 private:
 
   /**
-   * Most orignial locations start with /Event/<alg,Phys,MC, ..>/...
-   *  - but not all, "/Event" is optional, some have it, some don't
-   * insert the output-prefix to distinguish the microDST location
-   * -> remove the "/Event" bit if found at beginning of routine
+   * Remove leading "/Event" from TES locations.
    * 
    * @author Ulrich kerzel
   */
   void getNiceLocationName(std::string& location);
+
+  /**
+   * Remove leading "/Event" from TES locations.
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   *
+   */
+  const std::string getNiceLocationName(const std::string& location) const;
+  
 
 private:
 
@@ -253,7 +202,11 @@ private:
   std::string m_outputPrefix;
   std::string m_fullOutputTESLocation;
 
-  std::map<std::string, ObjectContainerBase*> m_containerMap; ///< map of local container - locations to store
+  typedef std::map<std::string, ObjectContainerBase*> LocalDataStore;
+
+  LocalDataStore m_containerMap; ///< map of local container - locations to store
   
 };
+// templated method implementations.
+#include "CopyAndStoreData.icpp"
 #endif // COPYANDSTOREDATA_H
