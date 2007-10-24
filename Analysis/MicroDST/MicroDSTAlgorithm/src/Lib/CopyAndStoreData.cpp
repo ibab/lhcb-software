@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.5 2007-10-16 14:08:54 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.6 2007-10-24 17:09:31 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -70,5 +70,12 @@ void CopyAndStoreData::getNiceLocationName(std::string& location)
     location.replace(loc, tmpString.length(), "");
     verbose() << "TES location ID is now " << location << endmsg;
   }
+}
+//=============================================================================
+const std::string CopyAndStoreData::getNiceLocationName(const std::string& location) const
+{
+  std::string return_value(location);
+  getNiceLocationName(return_value);
+  return return_value;
 }
 //=============================================================================
