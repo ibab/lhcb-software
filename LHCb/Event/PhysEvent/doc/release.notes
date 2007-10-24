@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.129 2007-10-24 12:10:24 ibelyaev Exp $
+! $Id: release.notes,v 1.130 2007-10-24 15:35:18 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================== PhysEvent v11r4 2007-10-24 ========================
 ! 2007-10-24 - Vanya BELYAEV
  - xml/Particle.xml
-      1) Allocate the range of indices [9500,9699] for jet-related informatios    
+      1) Allocate the range of indices [9500,9699] for jet-related information   
       2) add few named enum-values for jet-relates studies.
       3) activate "strTypeConv" attribute for AdditionalInfo enums
- 
 
 !======================== PhysEvent v11r3 2007-09-04 ========================
 ! 2007-08-23 - Juan PALACIOS
