@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.4 2007-10-22 16:29:17 jpalac Exp $
+// $Id: CopyParticles.h,v 1.5 2007-10-24 15:38:35 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -32,12 +32,12 @@ private:
 
 
   typedef LHCb::Particle::Container Particles;
-  typedef CopyAndStoreData::BasicItemCloner<LHCb::Particle> ParticleItemCloner;
-  typedef CopyAndStoreData::CloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner> ParticleCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::Particle> ParticleItemCloner;
+  typedef MicroDST::CloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner> ParticleCloner;
 
   typedef LHCb::Vertex::Container Vertices;
-  typedef CopyAndStoreData::BasicItemCloner<LHCb::Vertex> VertexItemCloner;
-  typedef CopyAndStoreData::CloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner> VertexCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::Vertex> VertexItemCloner;
+  typedef MicroDST::CloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner> VertexCloner;
 
 
 private:

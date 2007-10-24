@@ -1,16 +1,13 @@
-// $Id: CopyParticles.cpp,v 1.4 2007-10-22 16:29:17 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.5 2007-10-24 15:38:35 jpalac Exp $
 // Include files 
 
 // STL
 #include <functional>
-// BOOST
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // local
 #include "CopyParticles.h"
-
+//
 //-----------------------------------------------------------------------------
 // Implementation file for class : CopyParticles
 //

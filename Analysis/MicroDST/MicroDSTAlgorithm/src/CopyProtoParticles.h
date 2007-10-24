@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.2 2007-10-23 16:01:31 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.3 2007-10-24 15:38:35 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -40,8 +40,8 @@ private:
                        typename T::const_iterator end     );
 
   typedef LHCb::ProtoParticle::Container ProtoParticles;
-  typedef CopyAndStoreData::BasicItemCloner<LHCb::ProtoParticle> PPCloneFunctor;
-  typedef CopyAndStoreData::CloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor> BasicPPCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::ProtoParticle> PPCloneFunctor;
+  typedef MicroDST::CloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor> BasicPPCloner;
 
 private:
 

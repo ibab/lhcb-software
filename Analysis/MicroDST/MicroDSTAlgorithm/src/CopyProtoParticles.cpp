@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.cpp,v 1.2 2007-10-23 16:01:31 jpalac Exp $
+// $Id: CopyProtoParticles.cpp,v 1.3 2007-10-24 15:38:35 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -69,6 +69,7 @@ void CopyProtoParticles::scanParticleTree(const LHCb::Particle* particle)
 {
 
   storeProtoParticle(particle);
+
   typedef SmartRefVector<LHCb::Particle> ParticleVector;
 
   const ParticleVector& daughters = particle->daughters();
