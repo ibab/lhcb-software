@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.24 2007-10-23 21:21:36 musy Exp $
+! $Id: release.notes,v 1.25 2007-10-25 16:14:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!===================== FlavourTaggingChecker v2r5 2007-10-25 =================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v2r5
 
 ! 2007-10-23 - Marco Musy
  - other fixes to BTAnalysis and corresponding opts
