@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2007-10-25 14:57:26 jpalac Exp $
+# $Id: requirements,v 1.30 2007-10-25 15:32:12 jpalac Exp $
 package AnalysisSys
 version v1r7
 
@@ -25,11 +25,11 @@ use  PhysSelSys      	v10r5   PhysSel
 #===================================================================
 use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r5	PhysSel # Rare Decays Working Group
-use B2D0X		v1r10	PhysSel # WGs
+use B2D0X		v1r11	PhysSel # WGs
 use B2DplusX		v1r1	PhysSel # WGs
 use B2DsX		v1r5	PhysSel # WGs
 use B2DstarX		v1r6	PhysSel # WGs
-use B2uds	        v2r4    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use B2uds	        v2r5    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 use JetsSel	        v1r4p1  PhysSel # Jets WG
 use Radiative           v2r3    PhysSel # Vanya BELYAEV
 
