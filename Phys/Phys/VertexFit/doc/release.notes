@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.113 2007-10-18 16:35:38 xieyu Exp $
+! $Id: release.notes,v 1.114 2007-10-25 15:02:51 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v4r3p2 2007-10-25 ====================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r3p2
 
 ! 2007-10-18 - Yuehong Xie
  - PVReFitter.cpp
