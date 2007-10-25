@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaudiObjDesc v10r4p1 2007-10-19 ====================
-! 2007-10-19 Stefan
+! 2007-10-25 Stefan Roiser
+ - Add a missing "inline" in string to type conversion functions
+
+! 2007-10-19 Stefan Roiser
 - fix typo. The generated copyconstructor was missing a comma for base classes,
   which were not KeyedObjects
 
