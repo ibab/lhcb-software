@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.18 2007-09-20 15:44:50 wouter Exp $
+// $Id: SolidTubs.h,v 1.19 2007-10-25 07:31:27 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -281,7 +281,7 @@ private:
   
 // ===========================================================================
 /** check for R 
- *  @param point to be checked 
+ *  @param point point to be checked 
  *  @return true if point is "inside rho" 
  */
 // ===========================================================================
@@ -300,7 +300,7 @@ inline const bool SolidTubs::insideRho ( const aPoint& point ) const
 
 // ===========================================================================
 /** check for phi 
- *  @param point to be checked 
+ *  @param phi point to be checked [-pi,pi]
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
@@ -316,7 +316,7 @@ inline bool SolidTubs::insidePhi ( const double phi /* [-pi,pi] */ ) const
 
 // ===========================================================================
 /** check for phi 
- *  @param point to be checked 
+ *  @param point point to be checked 
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================

@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.27 2007-09-18 08:43:01 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.28 2007-10-25 07:31:27 cattanem Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -217,7 +217,7 @@ public:
    *  @see toLocalMatrix()
    *  @see toGlobalMatrix()
    *  @see toLocal( const Gaudi::XYZVector&)
-   *  @param  localVector vector in Local Reference System
+   *  @param  localDirection vector in Local Reference System
    *  @return vector in Global reference system direction
    */
   virtual Gaudi::XYZVector toGlobal ( const Gaudi::XYZVector& localDirection  ) const = 0;
@@ -239,10 +239,10 @@ public:
    *  @see toGlobal( const Gaudi::XYZPoint& )
    *  @see toLocalMatrix()
    *  @see toGlobalMatrix()
-   *  @param GlobalPoint point in Global Referency System
+   *  @param globalPoint point in Global Referency System
    *  @return true if point "is inside" of the Geometry Info element
    */
-  virtual bool isInside( const Gaudi::XYZPoint& GlobalPoint ) const = 0;
+  virtual bool isInside( const Gaudi::XYZPoint& globalPoint ) const = 0;
   /** @} */ // end of group PureGeometricalInfo
 
   /** @defgroup BelongsTo  IGeometryInfo "Find daughter by point" family

@@ -1,4 +1,4 @@
-// $Id: Mixture.h,v 1.12 2006-06-16 11:53:53 cattanem Exp $ 
+// $Id: Mixture.h,v 1.13 2007-10-25 07:31:27 cattanem Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
@@ -52,19 +52,19 @@ public:
    *   a) the fraction of the mass ( material mixture )
    *  b) the number of the atoms  ( material compund )
    */
-  void Mixture::addElement( const SmartRef<Element>& e  , 
-                            const int    nOfAtoms , 
-                            const bool comp = false );
-  void Mixture::addElement( const SmartRef<Element>& e  , 
-                            const double fraction , 
-                            const bool comp = false );
+  void addElement( const SmartRef<Element>& e  , 
+                   const int    nOfAtoms , 
+                   const bool comp = false );
+  void addElement( const SmartRef<Element>& e  , 
+                   const double fraction , 
+                   const bool comp = false );
   
   /** Add another mixture into this mixture by specifying its fraction
       of the mass
   */
-  void Mixture::addMixture( const SmartRef<Mixture>& mx , 
-                            const double fraction , 
-                            const bool comp = false);
+  void addMixture( const SmartRef<Mixture>& mx , 
+                   const double fraction , 
+                   const bool comp = false);
   
   /// Return i-th element's pointer
   const SmartRef<Element>&  element ( const unsigned int i ) const ;  

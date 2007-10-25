@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.12 2007-09-20 15:44:50 wouter Exp $ 
+// $Id: SolidPolycone.h,v 1.13 2007-10-25 07:31:27 cattanem Exp $ 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
@@ -192,7 +192,7 @@ public:
   
   
   /** find the index from the z position
-   *  @param z z-position
+   *  @param thisz z-position
    *  @return index -- return 'number()-1' if not in z-range
    */
   inline const Triplets::size_type index( const double thisz ) const 

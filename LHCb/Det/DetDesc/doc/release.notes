@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.340 2007-10-05 13:01:59 cattanem Exp $ 
+! $Id: release.notes,v 1.341 2007-10-25 07:31:28 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v18r1p1 2007-10-25 ============================
+! 2007-10-25 - Marco Cattaneo
+ - Fix gcc 4.2 compilation problem (https://savannah.cern.ch/bugs/?30713)
+ - Fix docygen warnings
 
 !====================== DetDesc v18r1 2007-10-02 ==============================
 ! 2007-10-02 - Marco Cattaneo

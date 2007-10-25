@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.20 2007-09-20 15:44:50 wouter Exp $ 
+// $Id: SolidCons.h,v 1.21 2007-10-25 07:31:27 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -380,7 +380,7 @@ inline double SolidCons::oR_z( const double z ) const
 
 // ===========================================================================
 /** check for phi 
- *  @param point to be checked 
+ *  @param phi point to be checked [-pi,pi] 
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
@@ -396,7 +396,7 @@ inline bool SolidCons::insidePhi ( const double phi /* [-pi,pi] */ ) const
 
 // ===========================================================================
 /** check for phi 
- *  @param point to be checked 
+ *  @param point point to be checked 
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
@@ -408,9 +408,3 @@ inline const bool SolidCons::insidePhi ( const aPoint& point ) const
 // ===========================================================================
 #endif ///<  DETDESC_SOLIDCONS_H
 // ===========================================================================
-
-
-
-
-
-
