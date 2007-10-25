@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.187 2007-10-10 13:41:04 jpalac Exp $
+! $Id: release.notes,v 1.188 2007-10-25 15:59:22 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r7 2007-10-25 ===================
 
 ! 2007-10-10 - Juan PALACIOS
  - Add src/PrintDecayTreeTool{.cpp, .h}
