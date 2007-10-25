@@ -37,18 +37,18 @@ class PresenterMainFrame : public TGMainFrame
 {
   public:
 
-    PresenterMainFrame(const char* name, UInt_t x, UInt_t y,
-        UInt_t w, UInt_t h, MsgLevel v);
-    //  PresenterMainFrame() {};                       
+    PresenterMainFrame(const char* name, UInt_t x, UInt_t y, UInt_t w,
+      UInt_t h, MsgLevel v);
+    //  PresenterMainFrame() {};
     virtual ~PresenterMainFrame();
 
     // Add button, menu etc. commands to this list (do not define elsewhere:
-    // typesafety...) 
+    // typesafety...)
     enum Command
     {
       X_ENIGMA_COMMAND,
       EXIT_COMMAND,
-      //    M_FILE_CLOSE_COMMAND,
+//    M_FILE_CLOSE_COMMAND,
       LOGOUT_COMMAND,
       LOGIN_COMMAND,
       CLEAR_PAGE_COMMAND,
@@ -71,7 +71,7 @@ class PresenterMainFrame : public TGMainFrame
       TString m_yLabel;
       int m_fillColour;
       int m_lineColour;
-      int m_statsOption;      
+      int m_statsOption;
       int m_fillStyle;
       int m_lineWidth;
       int m_lineStyle;
@@ -97,9 +97,13 @@ class PresenterMainFrame : public TGMainFrame
     void stopPageRefresh();
     void clearHistos();
     void refreshPage();
-    void readFromHistoDatabase(TGListTree* listView, FilterCriteria filterCriteria, bool histograms);
+    void readFromHistoDatabase(TGListTree* listView, FilterCriteria
+      filterCriteria, bool histograms);
+    void fillTreeNodeWithHistograms(TGListTree* listView,
+      TGListTreeItem* node, std::vector<std::string>*  localDatabaseIDS,
+      std::vector<std::string>* histogramTypes);
     std::string getDBName();
-    std::string convDimToHistoID(std::string dimSvcName);    
+
     void setTreeNodeIcon(TGListTreeItem* node, std::string type);
     void setStatusBarText(const char* text, int slice);
     void editHistogramProperties();
@@ -108,14 +112,22 @@ class PresenterMainFrame : public TGMainFrame
     TH1* getSelectedHisto();
 
     void checkedTreeItems(TGListTree* selected, TGListTree* treeList);
-    void checkedTreeItemsChildren(TGListTreeItem* node, TGListTree* selected);
-    
+    void checkedTreeItemsChildren(TGListTreeItem* node,
+      TGListTree* selected);
+
     void checkTreeChildrenItems(TGListTreeItem* node, bool check);
     void checkTreeChildrenItemsChildren(TGListTreeItem* node, bool check);
-    
-    void collapseTreeChildrenItems(TGListTree* treeList, TGListTreeItem* node);
-    void collapseTreeChildrenItemsChildren(TGListTree* treeList, TGListTreeItem* node);    
-    
+
+    void collapseTreeChildrenItems(TGListTree* treeList,
+      TGListTreeItem* node);
+    void collapseTreeChildrenItemsChildren(TGListTree* treeList,
+      TGListTreeItem* node);
+      
+    void sortTreeChildrenItems(TGListTree* treeList,
+      TGListTreeItem* node);
+    void sortTreeChildrenItemsChildren(TGListTree* treeList,
+      TGListTreeItem* node);      
+
 
     void enableAutoCanvasLayoutBtn();
     void disableAutoCanvasLayoutBtn();
@@ -129,12 +141,12 @@ class PresenterMainFrame : public TGMainFrame
   private:
 
     MsgLevel            m_verbosity;
-    DimBrowser*         m_dimBrowser;    
+    DimBrowser*         m_dimBrowser;
     TGCompositeFrame*   m_ef;
     TTimer*             m_refreshTimer;
     bool                m_refreshing;
     bool                m_clearedHistos;
-    OnlineHistDB*       m_histogramDB;    
+    OnlineHistDB*       m_histogramDB;
     OMAlib*             m_analib;
     bool                m_connectedToHistogramDatabase;
     int                 m_msgBoxReturnCode;
@@ -170,12 +182,10 @@ class PresenterMainFrame : public TGMainFrame
     TGButton*           m_clearHistoButton;
     TGButton*           m_zoomHistoButton;
     TGButton*           m_editHistoButton;
-    TGButton*           m_fitPanelButton;
     TGButton*           m_autoCanvasLayoutButton;
     TGButton*           m_deleteHistoFromCanvasButton;
 
-
-    //  TGButton*           m_quitButton;
+    //  TGButton*         m_quitButton;
     //  TGPicturePool*    m_picturePool;
     const TGPicture*  m_openedFolderIcon;
     const TGPicture*  m_closedFolderIcon;
@@ -187,10 +197,47 @@ class PresenterMainFrame : public TGMainFrame
     const TGPicture*  m_iconPage;
     const TGPicture*  m_fitIcon;
     const TGPicture*  m_iconQuestion;
+    const TGPicture*  m_iconTask;
+    const TGPicture*  m_iconAlgorithm;
+    const TGPicture*  m_iconSet;
+    const TGPicture*  m_iconLevel;
 
-    std::vector<TColor*>          m_RootColourVector;         // vector of colours defined for own colour palette -
+    // vector of colours defined for own colour palette
+    std::vector<TColor*>          m_RootColourVector;
 
-    ClassDef(PresenterMainFrame, 0) // main editor window        
+    std::vector<std::string>      m_localDatabaseFolders;
+    std::vector<std::string>::const_iterator m_folderIt;
+
+    std::vector<std::string>      m_localDatabasePages;
+    std::vector<std::string>::const_iterator m_pageIt;
+
+    std::vector<std::string>      m_localDatabaseIDS;
+    std::vector<std::string>::const_iterator m_histogramIt;
+
+    std::vector<std::string>      m_histogramTypes;
+    std::vector<std::string>::const_iterator m_histogramType;
+
+    TGListTreeItem* m_treeNode;
+    TGListTreeItem* m_taskNode;
+    TGListTreeItem* m_algorithmNode;
+    TGListTreeItem* m_histogramSetNode;
+
+    TGListTreeItem* m_histogramNode;
+    TGListTreeItem* m_pageNode;
+
+    TObjArray* m_folderItems;
+    TIterator* m_folderItemsIt;
+    TObject*   m_folderItem;
+
+//    TObjArray* m_histogramSetItems;
+//    TIterator* m_histogramSetItemsIt;
+//    TObject*   m_histogramSetItem;
+//
+    TObjArray* m_histogramIdItems;
+    TIterator* m_histogramIdItemsIt;
+    TObject*   m_histogramIdItem;
+
+    ClassDef(PresenterMainFrame, 0) // main editor window
 };
 
 R__EXTERN PresenterMainFrame* gPresenter;
