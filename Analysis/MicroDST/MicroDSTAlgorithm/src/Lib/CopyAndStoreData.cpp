@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.8 2007-10-24 17:36:50 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.9 2007-10-25 14:22:23 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,13 @@ StatusCode CopyAndStoreData::copyLocalStoreToTES()
   for (LocalDataStore::const_iterator i = localDataStore().begin();
        i != localDataStore().end();
        ++i ) {
-    
+    const std::string TESLocation = outputTESLocation( (*i).first );
+
+    ObjectContainerBase* localContainer = (*i).second;
+    verbose() << "Storing local clone of " << (*i).first 
+              << " into TES location " << TESLocation << endmsg;
+    put(localContainer, TESLocation);
+ 
   }
   
   return StatusCode::SUCCESS;

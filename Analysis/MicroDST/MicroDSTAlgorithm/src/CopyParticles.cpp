@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.7 2007-10-24 17:28:09 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.8 2007-10-25 14:22:23 jpalac Exp $
 // Include files 
 
 // STL
@@ -68,9 +68,20 @@ StatusCode CopyParticles::execute() {
   
   for (Particles::const_iterator iPart = particles->begin();
        iPart != particles->end();
-       ++iPart) storeParticle( *iPart);
+       ++iPart) {
+    verbose() << "Storing particle" << endmsg;
+    LHCb::Particle* clone = storeParticle( *iPart);
+    if (clone) {
+      verbose() << "Cloned and stored particle!" << endmsg;
+    } else {
+      verbose() << "Particle cloning failed!" << endmsg;
+    }
+  }
+  
 
-  return StatusCode::SUCCESS;
+  verbose() << "Going to store to TES" << endmsg;
+
+  return copyLocalStoreToTES();
   
 
 }
@@ -79,15 +90,20 @@ LHCb::Particle* CopyParticles::storeParticle(const LHCb::Particle* particle)
 {
   StatusCode sc(StatusCode::SUCCESS);
 
+  verbose() << "StoreParticles clone into local store"<< endmsg;
+
   LHCb::Particle* particleClone = 
     cloneKeyedItemToLocalStore<LHCb::Particle, ParticleItemCloner>(particle);
+
+  verbose() << "StoreParticles cloned into local store!"<< endmsg;
 
   if (particle->endVertex() && particleClone) {
     const LHCb::Vertex* vertexClone = storeVertex(particle->endVertex() );
     if (vertexClone) particleClone->setEndVertex(vertexClone);
+    storeDaughters( particleClone, particle->daughters() );
   }
 
-  storeDaughters( particleClone, particle->daughters() );
+
 
   return particleClone;
 

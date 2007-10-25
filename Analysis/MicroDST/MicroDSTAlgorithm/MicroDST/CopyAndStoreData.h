@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.13 2007-10-24 17:36:39 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.14 2007-10-25 14:22:23 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -8,7 +8,10 @@
 #include <GaudiKernel/IRegistry.h>
 // Local
 #include "MicroDST/Functors.hpp"
+
+
 class ObjectContainerBase;
+
 /** @class CopyAndStoreData CopyAndStoreData.h
  *  
  *
