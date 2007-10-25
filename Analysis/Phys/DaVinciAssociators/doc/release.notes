@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.118 2007-10-18 16:55:34 xieyu Exp $
+! $Id: release.notes,v 1.119 2007-10-25 16:02:05 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v9r2p2 2007-10-25 ==============
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p2
 
 ! 2007-10-18
  - CompositeParticle2MCLinks.cpp
