@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.30 2007-10-24 17:10:30 jpalac Exp $
+! $Id: release.notes,v 1.31 2007-10-25 16:29:32 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+!======================== MicroDST v2r0 2007-10-25 ====================
 
 ! 2007-10-24 - Juan PALACIOS
  - Add MicroDST/CopyAndStoreData.icpp
