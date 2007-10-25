@@ -19,7 +19,8 @@ class TGLineStyleComboBox;
 class HistoPropDialog : public TGTransientFrame
 {
   public:
-    HistoPropDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height, MsgLevel v);   
+    HistoPropDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height,
+      MsgLevel v);
     virtual ~HistoPropDialog();
 
     void ok();

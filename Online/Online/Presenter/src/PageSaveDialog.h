@@ -13,13 +13,13 @@ class OnlineHistDB;
 class DbRootHist;
 class TGTextBuffer;
 class TGTextEntry;
-class vector;
-
+class std::vector;
 
 class PageSaveDialog : public TGTransientFrame
 {
   public:
-    PageSaveDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height, MsgLevel v);    
+    PageSaveDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height,
+      MsgLevel v);
     virtual ~PageSaveDialog();
 
     void build();

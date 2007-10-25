@@ -8,7 +8,7 @@ class ViewerFrame
 public:
   ViewerFrame();
   virtual ~ViewerFrame();
-  
+
   ClassDef(ViewerFrame, 0) // main editor window
 };
 
