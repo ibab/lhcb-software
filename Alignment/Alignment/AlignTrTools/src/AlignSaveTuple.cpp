@@ -1,8 +1,8 @@
-// $Id: AlignTrackMonitor.cpp,v 1.8 2007-10-25 09:59:49 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.1 2007-10-25 09:59:49 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : AlignTrackMonitor
+// Implementation file for class : AlignSaveTuple
 //
 // Louis Nicolas, Adlene Hicheur (EPFL)
 // Started: 06/06
@@ -12,19 +12,22 @@
 // Includes
 //===========================================================================
 // Local
-#include "AlignTrackMonitor.h"
+#include "AlignSaveTuple.h"
 
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/ToStream.h"
 
 // Interfaces
 #include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "MCInterfaces/ITrackGhostClassification.h"
 
 // Det
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
+
+// Event
+#include "Event/GhostTrackInfo.h"
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -36,15 +39,15 @@ using namespace boost::lambda;
 // Declare
 //===========================================================================
 // Declaration of the algorithm factory
-DECLARE_ALGORITHM_FACTORY ( AlignTrackMonitor );
+DECLARE_ALGORITHM_FACTORY ( AlignSaveTuple );
 //===========================================================================
 
 //===========================================================================
 // Constructor
 //===========================================================================
-AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
+AlignSaveTuple::AlignSaveTuple ( const std::string& name,
                                        ISvcLocator* pSvcLocator ):
-  GaudiHistoAlg ( name, pSvcLocator ),
+  GaudiTupleAlg ( name, pSvcLocator ),
   m_otTracker ( 0 ),
   m_itTracker ( 0 ) {
   
@@ -52,6 +55,10 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   // Clone finder
   this -> declareProperty ( "CloneFinderTool",
                             m_cloneFinderName = "TrackCloneFinder" );
+
+  // Ghost classification
+  this -> declareProperty( "GhostClassification",
+                           m_ghostToolName = "TTrackGhostClassification" );
 
   // Location of the IT/OT geometries
   this -> declareProperty ( "OTGeometryPath",
@@ -74,6 +81,8 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
                             m_nStripsTol = 2 );
   this -> declareProperty ( "IsolatedTrackNStrawsTolerance",
                             m_nStrawsTol = 1 );
+
+  this -> declareProperty ( "MaxNHits", m_maxNHits = 40 );
 }
 //===========================================================================
 
@@ -81,7 +90,7 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
 //===========================================================================
 // Destructor
 //===========================================================================
-AlignTrackMonitor::~AlignTrackMonitor ( ) {
+AlignSaveTuple::~AlignSaveTuple ( ) {
 }
 //===========================================================================
 
@@ -89,12 +98,12 @@ AlignTrackMonitor::~AlignTrackMonitor ( ) {
 //===========================================================================
 // Initialize
 //===========================================================================
-StatusCode AlignTrackMonitor::initialize ( ) {
+StatusCode AlignSaveTuple::initialize ( ) {
 
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return Error( "Failed to initialize" );
 
   // The extrapolator
@@ -104,6 +113,10 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
                                            "CloneFinderTool", this );
 
+  // Retrieve the ghost classification tool
+  m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
+                                                           "GhostTool", this );
+  
   // Get The Magnetic Field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
@@ -121,7 +134,16 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   m_nLayers = m_itTracker->nLayerPerBox();
   m_nStrips = m_itTracker->nStrip()/m_itTracker->nReadoutSector()/3;
   
-  debug() << "AlignTrackMonitor initialized successfully" << endmsg;    
+  // Max possible number of hits:
+  // In OT: = nLayers * 2 (two layers of straws per layer)
+  // In IT: counted wrong: nLayers = 3 stations * 4 boxes/station * 4 layers/box
+  //        shouldn't count 4 boxes
+  //        but compensates possible box (*2) and ladder (*2) overlaps
+//   m_maxNHits = m_otTracker->layers().size()*2 + m_itTracker->nLayer();
+
+  m_iEvent = 0;
+
+  debug() << "AlignSaveTuple initialized successfully" << endmsg;    
 
   return StatusCode::SUCCESS;
 }
@@ -131,11 +153,14 @@ StatusCode AlignTrackMonitor::initialize ( ) {
 //===========================================================================
 // Execute
 //===========================================================================
-StatusCode AlignTrackMonitor::execute ( ) {
+StatusCode AlignSaveTuple::execute ( ) {
 
   if ( msgLevel( MSG::DEBUG ) )     
-    debug() << "AlignTrackMonitor starting execution" << endmsg;
+    debug() << "AlignSaveTuple starting execution" << endmsg;
   
+  // Get the odin information
+  odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+
   // Get the tracks
   m_tracks = get<LHCb::Tracks>( m_tracksPath );
 
@@ -144,6 +169,9 @@ StatusCode AlignTrackMonitor::execute ( ) {
 
   // Get the OT times
   m_otTimes = get<LHCb::OTTimes>( m_otTimesPath );
+  
+  // Creating the tuple in memory
+  Tuples::Tuple trackSelTuple = nTuple( "TrackSel N-tuple" );
   
   // Get the association table 
   AsctTool associator( evtSvc(), m_tracksPath );
@@ -158,15 +186,19 @@ StatusCode AlignTrackMonitor::execute ( ) {
   //**********************************************************************
   // Global Variables
   //**********************************************************************
+  m_runNr = odin->runNumber();
+  m_evtNr = odin->eventNumber(); 
+  m_iEvent++;
   m_eventMultiplicity = m_tracks->size();
   //**********************************************************************
 
   // Loop over tracks - select some and make some plots
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
+  m_iGoodTrack = 0;
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = *(*iTracks);
 
-    if ( (iTracks == m_tracks->begin()) && m_mcData )
+    if ( iTracks == m_tracks->begin() )
       if ( isGhostTrack( &aTrack ) )
         m_ghostRate = (double)1/m_eventMultiplicity;
       else
@@ -183,10 +215,10 @@ StatusCode AlignTrackMonitor::execute ( ) {
       }
       
       // Compute ghost rate
-      if ( (iTracks == m_tracks->begin()) && m_mcData )
+      if ( iTracks == m_tracks->begin() )
         if ( isGhostTrack( &tr2 ) )
           m_ghostRate += (double)1/m_eventMultiplicity;
-      
+
     }
     if ( isAClone ) {
       if ( msgLevel( MSG::DEBUG ) )
@@ -198,19 +230,21 @@ StatusCode AlignTrackMonitor::execute ( ) {
       debug() << "******************************************************" << endmsg
               << "Entering new good track" << endmsg;
 
-    // Get the nunmber of IT and OT hits
+    // Get the number of IT and OT hits
     const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-    m_nITHits = std::count_if(ids.begin(), ids.end(), bind(&LHCb::LHCbID::isIT,_1));
-    m_nOTHits = std::count_if(ids.begin(), ids.end(), bind(&LHCb::LHCbID::isOT,_1));
-    
-    // Only fill the histos when there are some IT or OT Hits
+    m_nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isIT,_1));
+    m_nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isOT,_1));
+
+    // Only fill NTuple when there are some IT or OT Hits
     if ( !m_nITHits && !m_nOTHits ) {
-      Warning("There is no hit in IT nor in OT!!!", StatusCode::SUCCESS, 1);
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << "There is no hit in IT nor in OT!!!" << endmsg;
       continue;
     }
     StatusCode sc;
-    if ( (sc=fillVariables( &aTrack ) )
+    if ( (sc=fillVariables( &aTrack, trackSelTuple ) )
          == StatusCode::FAILURE ) return sc;
+    ++m_iGoodTrack;
   }
   
   return StatusCode::SUCCESS;  
@@ -221,12 +255,12 @@ StatusCode AlignTrackMonitor::execute ( ) {
 //===========================================================================
 // Finalize
 //===========================================================================
-StatusCode AlignTrackMonitor::finalize ( ) {
+StatusCode AlignSaveTuple::finalize ( ) {
   
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "==> Finalize" << endmsg;
 
-  return GaudiHistoAlg::finalize ( );   // Must be called after all other actions  
+  return GaudiTupleAlg::finalize ( );   // Must be called after all other actions  
 };
 //===========================================================================
 
@@ -235,27 +269,53 @@ StatusCode AlignTrackMonitor::finalize ( ) {
 // Fill Variables
 //===========================================================================
 StatusCode
-AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
+AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
+                                   Tuples::Tuple trackSelTuple ) {
 
   //**********************************************************************
   // Tracks Variables
   //**********************************************************************
+  // Ghost? ==> ghost classification
+  if ( m_mcData ) {
+    m_isGhostTrack = isGhostTrack( aTrack );
+    m_ghostTrackClassification = defValue;
+    LHCb::GhostTrackInfo ghostClassInfo;
+    if ( m_isGhostTrack ) {
+      m_ghostClassification->info( *aTrack , ghostClassInfo );
+      m_ghostTrackClassification = ghostClassInfo.classification();
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << "Ghost classification = " 
+                << ghostClassInfo.classification() << endmsg;
+    }
+  }
+  // Ghost Track Classification:
+  // 0  = None
+  // 1  = Real
+  // 10 = Conversion
+  // 11 = EM
+  // 12 = FromPhi
+  // 13 = HadronicInteraction
+  // 14 = DecayInFlight
+  // 20 = SpilloverAndNoise
+  // 21 = GhostParent
+  // 22 = InconsistentParts
+  // 23 = Combinatoric
+
   m_nSharedHits = 0;
   m_fSharedHits = defValue;
   m_nCloseHits = nNeighbouringHits( aTrack );
   m_nHoles = 0;
-  m_nLadOverlaps = 0;
-  m_nBoxOverlaps = 0;
 
   m_trackChi2PerDoF = aTrack->chi2PerDoF();
   m_trackChi2Prob = aTrack->probChi2();
 
-  // Get momentum, transverse momentum and error in GeV
   m_trackP = aTrack->p()/Gaudi::Units::GeV;
   m_trackPt = aTrack->pt()/Gaudi::Units::GeV;
   m_trackErrP = sqrt(aTrack->firstState().errP2())/Gaudi::Units::GeV;
-  m_trackMCP = defValue;
-  m_trackMCPt = defValue;
+  if ( m_mcData ) {
+    m_trackMCP = defValue;
+    m_trackMCPt = defValue;
+  }
 
   // Track Slope and Position at 7500 mm
   LHCb::State aState = aTrack->closestState(7500.);
@@ -263,6 +323,30 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   m_entryTY = aState.ty();
   m_entryX = aState.x();
   m_entryY = aState.y();
+  //**********************************************************************
+
+
+  //**********************************************************************
+  // Hits Variables
+  //**********************************************************************
+  m_res.clear();
+  m_errRes.clear();
+
+//   m_hitX.clear();
+//   m_hitY.clear();
+//   m_hitZ.clear();
+
+//   m_hitLocalX.clear();
+//   m_hitLocalY.clear();
+//   m_hitLocalZ.clear();
+
+  m_nLadOverlaps = 0;
+  m_ladOvlapRes.clear();
+  m_ladOvlapLay.clear();
+
+  m_nBoxOverlaps = 0;
+  m_boxOvlapRes.clear();
+  m_boxOvlapSta.clear();
   //**********************************************************************
 
   if ( m_mcData ) {
@@ -275,8 +359,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     if ( directLink.notFound() )
       Error("Linker table not found", StatusCode::SUCCESS, 1);
 
-    // Get MCParticle linked by highest weight to Track
-    // and get its p and pt in GeV
+    // Get MCParticle linked by highest weight to Track and get its p and pt
     LHCb::MCParticle* mcPart = new LHCb::MCParticle;
     mcPart = directLink.first( aTrack );
     if ( 0 != mcPart ) {
@@ -296,7 +379,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
 
     const LHCb::Node& aNode = *(*iNodes);
     LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
-
+    
     // Only loop on hits with measurement
     if ( !aNode.hasMeasurement() ) continue;
     if ( (aNode.measurement().type() != LHCb::Measurement::IT) &&
@@ -335,21 +418,31 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     //**********************************************************************
     // Residuals and Residual Errors
     //**********************************************************************
-    if ( aNode.measurement().type() == LHCb::Measurement::IT ) {
-      int id = 100*theSTID.layer() + 10*theSTID.detRegion() + theSTID.sector();
-      std::string resPlotID = "ITResiduals/";
-      resPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
-      resPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-//       plot (aNode.residual(), resPlotID, resPlotID, -0.2, 0.2, 50);
-      plot (fNode->unbiasedResidual(), resPlotID, resPlotID, -0.2, 0.2, 50);
-    }
-    else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
-      int id = 100*theOTID.layer() + 10*theOTID.quarter() + theOTID.module();
-      std::string resPlotID = "OTResiduals/";
-      resPlotID.append( Gaudi::Utils::toString( theOTID.station() ) );
-      resPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-      plot (fNode->unbiasedResidual(), resPlotID, resPlotID, -1., 1., 50);
-    }
+//     m_res.push_back(aNode.residual());
+//     m_errRes.push_back(aNode.errResidual());
+    m_res.push_back(fNode->unbiasedResidual());
+    m_errRes.push_back(fNode->errUnbiasedResidual());
+    //**********************************************************************
+
+    //**********************************************************************    
+    // Hit Position
+    //**********************************************************************
+//     Gaudi::XYZPoint hitPos = aNode.state().position();
+//     m_hitX.push_back(hitPos.X());
+//     m_hitY.push_back(hitPos.Y());
+//     m_hitZ.push_back(hitPos.Z());
+
+//     Gaudi::XYZPoint hitLocalPos(defValue,defValue,defValue);
+//     if ( aNode.measurement().type() == LHCb::Measurement::IT )
+//       if( 0 != m_itTracker->DeSTDetector::findSector(theSTID) )
+//         hitLocalPos = m_itTracker->DeSTDetector::findSector(theSTID)->toLocal(hitPos);
+//       else if ( aNode.measurement().type() == LHCb::Measurement::OT )
+//         if( 0 != m_otTracker->findModule(theOTID) )
+//           hitLocalPos = m_otTracker->findModule(theOTID)->toLocal(hitPos);
+
+//     m_hitLocalX.push_back(hitLocalPos.X());
+//     m_hitLocalY.push_back(hitLocalPos.Y());
+//     m_hitLocalZ.push_back(hitLocalPos.Z());
     //**********************************************************************
 
     //**********************************************************************
@@ -381,23 +474,17 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
              (theSTID.sector() != theSTID2.sector()) ) {
           // Convention: define overlap residual as
           // residual(at bigger z) - residual (at smaller z)
-          double lOResidual = 0;
-//             lOResidual = aNode.residual() - aNode2.residual();
-          if ( aNode.z() > aNode2.z() )
-            lOResidual = fNode->unbiasedResidual() - fNode2->unbiasedResidual();
+//             m_ladOvlapRes.push_back( aNode.residual()-aNode2.residual() );
+          if ( aNode.z()>aNode2.z() )
+            m_ladOvlapRes.push_back( fNode->unbiasedResidual()-fNode2->unbiasedResidual() );
           else
-            lOResidual = fNode2->unbiasedResidual() - fNode->unbiasedResidual();
-//             lOResidual = aNode2.residual() - aNode.residual();
-          int id = 1000*theSTID.layer() + 100*theSTID.detRegion() + 
-            10*theSTID.sector() + theSTID2.sector();
-          std::string lOResPlotID = "LadOverlaps/";
-          lOResPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
-          lOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-          plot (lOResidual, lOResPlotID, lOResPlotID, -0.5, 0.5, 50);
+            m_ladOvlapRes.push_back( fNode2->unbiasedResidual()-fNode->unbiasedResidual() );
+//             m_ladOvlapRes.push_back( aNode2.residual()-aNode.residual() );
+          m_ladOvlapLay.push_back( theSTID.uniqueDetRegion() );
           if ( msgLevel( MSG::DEBUG ) )
             debug() << "Found IT ladder overlap: ladOverlap = " 
-                    << lOResidual << " in layer " << theSTID.uniqueDetRegion()
-                    << endmsg;
+                    << m_ladOvlapRes.back() << " in layer "
+                    << m_ladOvlapLay.back() << endmsg;
           ++m_nLadOverlaps;
         }
         //**********************************************************************
@@ -412,17 +499,17 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
           // Save only one overlap per station (up to three box overlaps per track)
           if ( theSTID.station() != overlapStation ) {
             overlapStation = theSTID.station();
-            // Get the average of box overlap residuals
-            double bOResidual = boxOverlap( aTrack, theSTID, theSTID2 );
-            int id = 10*theSTID.detRegion() + theSTID2.detRegion();
-            std::string bOResPlotID = "BoxOverlaps/";
-            bOResPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
-            bOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
-            plot (bOResidual, bOResPlotID, bOResPlotID, -150., 150., 50);
+            // Get a vector of box overlap residuals
+            m_boxOvlapRes.push_back( boxOverlap( aTrack, theSTID, theSTID2 ) );
+            // Remove entry of a problem occured in boxOverlap function
+            if ( m_boxOvlapRes.back() == defValue )
+              m_boxOvlapRes.pop_back();
+            else
+              m_boxOvlapSta.push_back( overlapStation );
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Station " << overlapStation 
                       << ": Found IT box overlap: boxOverlap = "
-                      << bOResidual << endmsg;
+                      << m_boxOvlapRes.back() << endmsg;
             }
             ++m_nBoxOverlaps;
           }
@@ -432,13 +519,13 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     }
     //**********************************************************************
   }
-
+  
   //**********************************************************************
   // Number of Holes
   //**********************************************************************
-  unsigned int itExpHits = (unsigned int)aTrack->info(LHCb::Track::nExpectedIT, 0);
-  unsigned int otExpHits = (unsigned int)aTrack->info(LHCb::Track::nExpectedOT, 0);
-  unsigned int expHits = itExpHits + otExpHits;
+  int itExpHits = (int)aTrack->info(LHCb::Track::nExpectedIT, 0);
+  int otExpHits = (int)aTrack->info(LHCb::Track::nExpectedOT, 0);
+  int expHits = itExpHits + otExpHits;
   if ( expHits < m_nITHits + m_nOTHits ) expHits = m_nITHits + m_nOTHits;
   m_nHoles = expHits - (m_nITHits + m_nOTHits);
   //**********************************************************************
@@ -460,12 +547,12 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
             << "               " << m_nOTHits << " OT hits" << endmsg
             << "               " << otExpHits << " OT expected hits" << endmsg
             << "               " << m_nHoles << " holes" << endmsg
-            << "               " << m_nSharedHits << " shared hits" << " (= "
+            << "               " << m_nSharedHits << " shared hits" << " (= " 
             << 100*m_fSharedHits << " %)" << endmsg
             << "               " << m_nCloseHits << " neighbouring hits" << endmsg;
   //**********************************************************************
 
-  return fillHistos( );
+  return writeNTuple( trackSelTuple );
 }
 //===========================================================================
 
@@ -473,7 +560,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
 //===========================================================================
 // Is track ghost or not?
 //===========================================================================
-bool AlignTrackMonitor::isGhostTrack ( const LHCb::Track* aTrack ) {
+bool AlignSaveTuple::isGhostTrack ( const LHCb::Track* aTrack ) {
 
   DirectRange range = m_directTable->relations(aTrack);
 
@@ -485,7 +572,7 @@ bool AlignTrackMonitor::isGhostTrack ( const LHCb::Track* aTrack ) {
 //===========================================================================
 // Is track isolated or not?
 //===========================================================================
-int AlignTrackMonitor::nNeighbouringHits ( const LHCb::Track* aTrack ) {
+int AlignSaveTuple::nNeighbouringHits ( const LHCb::Track* aTrack ) {
 
   int nNeighbouringHits = 0;
 
@@ -547,7 +634,7 @@ int AlignTrackMonitor::nNeighbouringHits ( const LHCb::Track* aTrack ) {
 //===========================================================================
 // Check if cluster is neighbouring the IT hit
 //===========================================================================
-bool AlignTrackMonitor::isNeighbouringHit ( LHCb::STChannelID clusID,
+bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
                                             LHCb::STChannelID hitID,
                                             unsigned int hitStrip ) {
   
@@ -566,7 +653,7 @@ bool AlignTrackMonitor::isNeighbouringHit ( LHCb::STChannelID clusID,
 //===========================================================================
 // Check if time is neighbouring the OT hit
 //===========================================================================
-bool AlignTrackMonitor::isNeighbouringHit ( LHCb::OTChannelID timeID,
+bool AlignSaveTuple::isNeighbouringHit ( LHCb::OTChannelID timeID,
                                             LHCb::OTChannelID hitID,
                                             unsigned int hitStraw ) {
        
@@ -589,7 +676,7 @@ bool AlignTrackMonitor::isNeighbouringHit ( LHCb::OTChannelID timeID,
 //===========================================================================
 // Check if this hit is shared with (at least) one other track
 //===========================================================================
-bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* iTrack,
+bool AlignSaveTuple::isSharedHit ( const LHCb::Track* iTrack,
                                       const LHCb::Node* aNode ) {
   
   LHCb::LHCbID measurementID;
@@ -617,9 +704,9 @@ bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* iTrack,
 //===========================================================================
 // Get box overlaps
 //===========================================================================
-double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
-                                       LHCb::STChannelID STChanID1,
-                                       LHCb::STChannelID STChanID2 ) {
+double AlignSaveTuple::boxOverlap ( const LHCb::Track* aTrack,
+                                    LHCb::STChannelID STChanID1,
+                                    LHCb::STChannelID STChanID2 ) {
 
   Array fitPar ( 5,defValue );
 
@@ -685,14 +772,14 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
                        b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
                        aNode2.measurement().trajectory().endPoint().X())/
                       sqrt(1+b*b) );
-  }  
+  }
 
   // Averaging the overlap residual values of hits in second box
   double bOResidual = 0;
   std::vector<double>::const_iterator iBOVect = bOVect.begin();
   for ( ; iBOVect != bOVect.end(); ++iBOVect )
     bOResidual += *iBOVect;
-  
+
   return bOResidual/bOVect.size();
 }
 //===========================================================================
@@ -702,7 +789,7 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
 // Fit piece of track with straight line and return fit parameters
 //===========================================================================
 std::vector<double>
-AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
+AlignSaveTuple::fitTrackPiece ( const LHCb::Track* aTrack,
                                    std::vector<LHCb::Node*> hitsOverlapBox ) {
 
   int nHitsToFit = hitsOverlapBox.size();
@@ -796,44 +883,84 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
 
 
 //===========================================================================
-// Fill the histos
+// Write NTuple
 //===========================================================================
-StatusCode AlignTrackMonitor::fillHistos ( ) {
+StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
 
-  // Event Variables  
-  plot ( m_eventMultiplicity, "Multiplicity", "Multiplicity", 0., 500., 50);
-  if ( m_mcData )
-    plot ( m_ghostRate, "GhostRate", "GhostRate", -0.01, 1.01, 50);
+  //**********************************************************************
+  // Fill the NTuple columns
+  //**********************************************************************
+  //     plot(variable, tag, "variable", min, max, nbins);
+  // Global Variables
+  trackSelTuple -> column ( "IEvent", m_iEvent );
+  trackSelTuple -> column ( "EvtNr", m_evtNr );
+  trackSelTuple -> column ( "RunNr", m_runNr );
+  trackSelTuple -> column ( "Multiplicity", m_eventMultiplicity );
+  trackSelTuple -> column ( "GhostRate", m_ghostRate );
 
-  // Various numbers related to the track
-  plot ( m_nITHits, "NITHits", "NITHits", -0.5, 30.5, 31);
-  plot ( m_nOTHits, "NOTHits", "NOTHits", -0.5, 40.5, 41);
-  plot ( m_nSharedHits, "NSharedHits", "NSharedHits", -0.5, 20.5, 21);
-  plot ( m_fSharedHits, "FSharedHits", "FSharedHits", -0.01, 1.01, 50);
-  plot ( m_nCloseHits, "NNeighbouringHits", "NNeighbouringHits", -0.5, 50.5, 51);
-  plot ( m_nHoles, "NHoles", "NHoles", -0.5, 20.5, 21);
-  plot ( m_nLadOverlaps, "NLadOverlaps", "NLadOverlaps", -0.5, 15.5, 16);
-  plot ( m_nBoxOverlaps, "NBoxOverlaps", "NBoxOverlaps", -0.5, 3.5, 4);
+  // Track Variables                     
+  trackSelTuple -> column ( "ITrack", m_iGoodTrack );
   
-  // Track fit "quality"
-  plot ( m_trackChi2PerDoF, "TrackChi2PerDoF", "TrackChi2PerDoF", -2., 100., 50);
-  plot ( m_trackChi2Prob, "TrackChi2Prob", "TrackChi2Prob", -0.01, 1.01, 50);
+  if ( m_mcData ) {
+    trackSelTuple -> column ( "IsAGhost", m_isGhostTrack );
+    trackSelTuple -> column ( "GhostTrackClassification", m_ghostTrackClassification );
+  }
   
-  // Track momentum and more
-  plot ( m_trackP, "TrackP", "TrackP", -5., 205., 50);
-  plot ( m_trackPt, "TrackPt", "TrackPt", -0.1, 10.1, 50);
-  plot ( m_trackErrP, "TrackErrP", "TrackErrP", -0.1, 10.1, 50);
-  if ( m_mcData && (m_trackMCP != defValue) && (m_trackMCPt != defValue) ) {
-    plot ( m_trackMCP, "TrackMCP", "TrackMCP", -5., 205., 50);
-    plot ( m_trackMCPt, "TrackMCPt", "TrackMCPt", -0.1, 10.1, 50);
+  trackSelTuple -> column ( "NITHits", m_nITHits );
+  trackSelTuple -> column ( "NOTHits", m_nOTHits );
+  trackSelTuple -> column ( "NSharedHits", m_nSharedHits );
+  trackSelTuple -> column ( "FSharedHits", m_fSharedHits );
+  trackSelTuple -> column ( "NNeighbouringHits", m_nCloseHits );
+  trackSelTuple -> column ( "NHoles", m_nHoles );
+  
+  trackSelTuple -> column ( "TrackChi2PerDoF", m_trackChi2PerDoF );
+  trackSelTuple -> column ( "TrackChi2Prob", m_trackChi2Prob );
+  
+  trackSelTuple -> column ( "TrackP", m_trackP );
+  trackSelTuple -> column ( "TrackPt", m_trackPt );
+  trackSelTuple -> column ( "TrackErrP", m_trackErrP );
+  if ( m_mcData ) {
+    trackSelTuple -> column ( "TrackMCP", m_trackMCP );
+    trackSelTuple -> column ( "TrackMCPt", m_trackMCPt );
   }
   // Track State closest to 7500. mm
-  plot ( m_entryTX, "TXAt7500", "TXAt7500", -1., 1., 50);
-  plot ( m_entryTY, "TYAt7500", "TYAt7500", -0.5, 0.5, 50);
-  plot ( m_entryX, "XAt7500", "XAt7500", -3000., 3000., 50);
-  plot ( m_entryY, "YAt7500", "YAt7500", -3000., 3000., 50);
+  trackSelTuple -> column ( "TXAt7500", m_entryTX );
+  trackSelTuple -> column ( "TYAt7500", m_entryTY );
+  trackSelTuple -> column ( "XAt7500", m_entryX );
+  trackSelTuple -> column ( "YAt7500", m_entryY );
+
+  // Overlaps
+  trackSelTuple -> farray ( "LadOvlapRes", m_ladOvlapRes.begin(),
+                            m_ladOvlapRes.end(),  "NLadOverlaps", int(m_maxNHits/2) );
+  trackSelTuple -> farray ( "LadOvlapLay", m_ladOvlapLay.begin(),
+                            m_ladOvlapLay.end(), "NLadOverlaps", int(m_maxNHits/2) );
+
+  trackSelTuple -> farray ( "BoxOvlapRes", m_boxOvlapRes.begin(),
+                            m_boxOvlapRes.end(), "NBoxOverlaps", m_nStations );
+  trackSelTuple -> farray ( "BoxOvlapStation", m_boxOvlapSta.begin(),
+                            m_boxOvlapSta.end(), "NBoxOverlaps", m_nStations );
+  
+  // Hits Variables
+  trackSelTuple -> farray ( "Residuals", m_res.begin(),
+                            m_res.end(), "NResiduals", m_maxNHits );
+  trackSelTuple -> farray ( "ErrResiduals", m_errRes.begin(),
+                            m_errRes.end(), "NResiduals", m_maxNHits );
+  
+//   trackSelTuple -> farray ( "HitX", m_hitX.begin(),
+//                             m_hitX.end(), "NResiduals", m_maxNHits );
+//   trackSelTuple -> farray ( "HitY", m_hitY.begin(),
+//                             m_hitY.end(), "NResiduals", m_maxNHits );
+//   trackSelTuple -> farray ( "HitZ", m_hitZ.begin(),
+//                             m_hitZ.end(), "NResiduals", m_maxNHits );
+  
+//   trackSelTuple -> farray ( "HitLocalX", m_hitLocalX.begin(),
+//                             m_hitLocalX.end(), "NResiduals", m_maxNHits );
+//   trackSelTuple -> farray ( "HitLocalY", m_hitLocalY.begin(),
+//                             m_hitLocalY.end(), "NResiduals", m_maxNHits );
+//   trackSelTuple -> farray ( "HitLocalZ", m_hitLocalZ.begin(),
+//                             m_hitLocalZ.end(), "NResiduals", m_maxNHits );
   //**********************************************************************
   
-  return StatusCode::SUCCESS;
+  return trackSelTuple->write();  
 }
 //===========================================================================

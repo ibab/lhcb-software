@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.6 2007-10-17 09:28:58 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.7 2007-10-25 09:59:49 lnicolas Exp $
 // Include files 
 
 // local
@@ -165,6 +165,8 @@ StatusCode AlignSelTool::initialize ( ) {
            << endmsg;
 
   // Printing value of defined cuts
+  if ( c_flatIllum )
+    info() << "          Will flatten out illumination" << endmsg;
   if ( c_maxMulti != abs(defValue) )
     info() << "          Max Multiplicity cut = " << c_maxMulti << endmsg;
   if ( c_minP != defValue )
@@ -231,7 +233,7 @@ void AlignSelTool::initEvent ( ) const {
 //=============================================================================
 bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
 
-  debug() << "AlignSelTool starting selectTrack" << endmsg;
+  debug() << "AlignSelTool starting 'accept(track)'" << endmsg;
 
   // Get the containers for first track of event
   if (!m_configured) initEvent();

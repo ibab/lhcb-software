@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2007-10-25 - Louis Nicolas
+ - Added code AlignSaveTuple: saving various variables in an NTuple for further debugging analysis
+
 ! 2007-10-17 - Louis Nicolas
  - Few changes in AlignTrackMonitor to save residuals in a nicer way (+ use unbiasedResiduals)
 
