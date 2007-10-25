@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.52 2007-10-18 13:54:01 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.53 2007-10-25 15:21:57 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -387,7 +387,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("bufName",          m_bufName = "MEPRX");
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RTTCCompat",       m_RTTCCompat = false);
-  declareProperty("RxIPAddr",         m_rxIPAddr = "127.0.0.1");
+  declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
   declareProperty("InitialMEPRQs",    m_initialMEPRQ = 1);
   declareProperty("MEPsPerMEPRQ",     m_MEPsPerMEPRQ = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
