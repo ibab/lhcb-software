@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2007-10-25 14:45:38 jpalac Exp $
+# $Id: requirements,v 1.29 2007-10-25 14:57:26 jpalac Exp $
 package AnalysisSys
 version v1r7
 
@@ -38,7 +38,7 @@ use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
 use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 
 ####################################################################
-use LoKiJets            v3r0    Phys    # Vanya Belyaev
+use LoKiJets            v2r4    Phys    # Vanya Belyaev
 
 ####################################################################
 use  Stripping          v6r3    Tools   # Juan Palacios
