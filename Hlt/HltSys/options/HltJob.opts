@@ -12,7 +12,7 @@
 
 #include "$STDOPTS/LHCbApplication.opts"
 #include "$STDOPTS/DstDicts.opts"
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 //
 // L0 and HLT sequences
