@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.8 2007-04-18 12:10:07 csalzman Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.9 2007-10-25 10:30:07 cattanem Exp $
 
 
 #include <algorithm>
@@ -26,11 +26,6 @@
 
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDataFunctor.h"
-
-#include "STDet/DeSTDetector.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 #include "Kernel/FastClusterContainer.h"
 

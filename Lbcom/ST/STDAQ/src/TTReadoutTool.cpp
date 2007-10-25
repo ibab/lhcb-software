@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.5 2007-10-08 14:57:31 cattanem Exp $
+// $Id: TTReadoutTool.cpp,v 1.6 2007-10-25 10:30:07 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -8,9 +8,6 @@
 #include "TTReadoutTool.h"
 #include "STTell1Board.h"
 #include "STTell1ID.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 // IT
 #include "Kernel/STChannelID.h"

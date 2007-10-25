@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.14 2007-04-18 12:10:06 csalzman Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.15 2007-10-25 10:30:06 cattanem Exp $
 
 #include <algorithm>
 
@@ -26,10 +26,6 @@
 #include "Kernel/STDetSwitch.h"
 
 #include "STDet/DeSTDetector.h"
-
-// GSL
-#include "gsl/gsl_math.h"
-
 
 using namespace LHCb;
 

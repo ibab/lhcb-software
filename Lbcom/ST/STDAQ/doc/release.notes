@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r2 2007-10-25 =======================
+! 2007-10-25 - Marco Cattaneo
+ - Remove some unneccessary includes
+
 ! 2007-25-10 M Needham
  - fix warnings in readout tool
 

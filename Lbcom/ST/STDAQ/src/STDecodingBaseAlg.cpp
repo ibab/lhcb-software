@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.2 2006-02-22 09:25:42 cattanem Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.3 2007-10-25 10:30:07 cattanem Exp $
 
 #include <algorithm>
 
@@ -23,9 +23,6 @@
 #include "Kernel/STDetSwitch.h"
 
 #include "STDet/DeSTDetector.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 
 using namespace LHCb;
