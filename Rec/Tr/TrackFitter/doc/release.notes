@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-10-25 - Wouter Hulsbergen
+ - fixed unchecked status code when projecting reference, leading to fatal error in transportsvc
+
 !=========================== TrackFitter v2r19 2007-10-08 ===================
 ! 2007-10-03 - Wouter Hulsbergen
  - make sure first measurement state still added to track even if extrapolation
