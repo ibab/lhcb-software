@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.18 2007-10-25 17:17:04 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.19 2007-10-25 17:24:23 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -102,7 +102,7 @@ StatusCode DecayFinder::finalize()
   if (m_ppSvc ) delete m_ppSvc;
   if (m_EDS )   delete m_EDS;
 
-  return = GaudiTool::finalize();
+  return GaudiTool::finalize();
 }
 //=============================================================================
 StatusCode DecayFinder::setDecay( std::string decay )
