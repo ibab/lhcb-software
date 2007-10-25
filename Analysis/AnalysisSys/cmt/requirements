@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.30 2007-10-25 15:32:12 jpalac Exp $
+# $Id: requirements,v 1.31 2007-10-25 16:33:22 jpalac Exp $
 package AnalysisSys
 version v1r7
 
@@ -8,22 +8,22 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  CommonParticles            v3r9     Phys   # Juan Palacios, WGs
+use  CommonParticles            v3r10    Phys   # Juan Palacios, WGs
 use  FlavourTagging             v7r3     Phys   # Marco Musy
 
 ####################################################################
 use  DaVinciMCTools     	v9r7     Phys   # Juan Palacios
-use  DaVinciAssociators         v9r2p1   Phys   # Philippe Charpentier
-use  VertexFitCheck             v1r0     Phys   # Yuehong Xie
+use  DaVinciAssociators         v9r2p2   Phys   # Philippe Charpentier
+use  VertexFitCheck             v1r1     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v2r4     Phys   # Marco Musy
-use  DaVinciUser      	        v8r2     Phys   # Juan Palacios
+use  FlavourTaggingChecker      v2r5     Phys   # Marco Musy
+use  DaVinciUser      	        v8r3     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1p1   Phys   # Chris Jones
 use  LoKiUser                   v6r0     Phys   # Vanya Belyaev
 ####################################################################
-use  PhysSelSys      	v10r5   PhysSel
+use  PhysSelSys      	v10r6   PhysSel
 #===================================================================
-use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
+use Ccbar	        v1r5    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r5	PhysSel # Rare Decays Working Group
 use B2D0X		v1r11	PhysSel # WGs
 use B2DplusX		v1r1	PhysSel # WGs
@@ -49,7 +49,7 @@ use  MicroDSTAlgorithm  v2r0    MicroDST          # Ulrich Kerzel
 ####################################################################
 use  KtJet              v2r1    External          # I. Belyaev
 ####################################################################
-use Analysis            v6r4    Tutorial         # P. Koppenburg
+use Analysis            v6r5    Tutorial         # P. Koppenburg
 
 ####################################################################
 use LoKiExample         v6r0    Ex       # Vanya Belyaev
