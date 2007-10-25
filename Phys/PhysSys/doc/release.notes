@@ -13,6 +13,15 @@ Purpose     : LHCb physics packages
 #                                  PHYS v6r7                                  #
 ###############################################################################
 
+!========================== DaVinciTools v15r6 2007-10-25====================
+
+! 2007-10-25 - Juan PALACIOS
+ - src/DecayFinder.h
+  . Move ParticlePropertySvc initialisation from constructor 
+    to initialize and delete in finalize.
+ - cmt/requirements
+  . Increase version to v15r6
+
 !========================== DaVinciFilter v6r5p2 2007-10-25 =================
 
 ! 2007-10-11 - Patrick Koppenburg
