@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.4 2007-04-18 12:10:07 csalzman Exp $
+// $Id: STTell1Board.cpp,v 1.5 2007-10-25 10:25:14 mneedham Exp $
 #include "STTell1Board.h"
 #include "STDAQDefinitions.h"
 
@@ -76,7 +76,7 @@ void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
                                 const double interStripPos) const
 {
   unsigned int index = aDAQChan/m_nStripsPerHybrid;
-  int size = adcs.size();
+  unsigned int size = adcs.size();
   int newoffset;
 
   // flip sequence of adc vector
@@ -91,7 +91,7 @@ void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
 
     // Do the actual flipping
     STCluster::ADCVector adcsflip = adcs;
-    for(unsigned int i = 0; i < size; ++i) {
+    for(unsigned int i = 0u; i < size; ++i) {
       adcsflip[size -i -1] = adcs[i];
       adcsflip[size -i -1].first = size -i -1 -newoffset;
     }    

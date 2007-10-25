@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2007-25-10 M Needham
+ - fix warnings in readout tool
+
 ! 2007-22-10 M. Needham
  - Bug fix in header file inclusion 
 
