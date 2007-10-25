@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.46 2007-09-28 13:58:18 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.47 2007-10-25 21:54:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -130,7 +130,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         node.measurement().setRefVector( refVec ) ;
       
       // Project the reference (only in the forward filter)
-      projectReference( node );
+      sc = projectReference( node );
+      if ( sc.isFailure() ) return failure( "unable to project reference" );
 
       // Filter step
       sc = filter( node, state );
