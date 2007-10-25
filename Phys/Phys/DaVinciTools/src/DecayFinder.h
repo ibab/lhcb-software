@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.13 2006-03-16 13:35:56 pkoppenb Exp $
+// $Id: DecayFinder.h,v 1.14 2007-10-25 17:17:04 jpalac Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -99,6 +99,9 @@ public:
   virtual ~DecayFinder( ); ///< Destructor
 
   StatusCode initialize( void );
+
+  StatusCode finalize();
+  
 
   /// Get/Set the decay string to find
   std::string decay( void ) { return m_source; }

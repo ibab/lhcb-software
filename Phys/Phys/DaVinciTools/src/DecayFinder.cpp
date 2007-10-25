@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.17 2007-01-15 10:32:28 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.18 2007-10-25 17:17:04 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -31,18 +31,13 @@ DECLARE_TOOL_FACTORY( DecayFinder );
 DecayFinder::DecayFinder( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0)
+  : 
+  GaudiTool ( type, name , parent ),
+  m_ppSvc(0), 
+  m_source("B0 -> pi+ pi-"), 
+  m_decay(0), 
+  m_members(0)
 {
-  if( serviceLocator() ) {
-    StatusCode sc = StatusCode::FAILURE;
-    sc = serviceLocator()->service("ParticlePropertySvc",m_ppSvc);
-  }
-  if( !m_ppSvc ) {
-    throw GaudiException( "ParticlePropertySvc not found",
-                          "DecayFinderException",
-                          StatusCode::FAILURE );
-  }
 
   declareInterface<IDecayFinder>(this);
 
@@ -58,6 +53,7 @@ DecayFinder::~DecayFinder( )
 {
   if( m_decay ) delete m_decay;
   if( m_members ) delete m_members;
+  
 }
 
 //=============================================================================
@@ -68,6 +64,16 @@ StatusCode DecayFinder::initialize()
   if (!sc) return sc ;
   
   debug() << "==> Initializing" << endreq;
+
+  if( serviceLocator() ) {
+    StatusCode sc = StatusCode::FAILURE;
+    sc = serviceLocator()->service("ParticlePropertySvc",m_ppSvc);
+  }
+  if( !m_ppSvc ) {
+    throw GaudiException( "ParticlePropertySvc not found",
+                          "DecayFinderException",
+                          StatusCode::FAILURE );
+  }
 
   sc = service("EventDataSvc", m_EDS, true);   
   if( sc.isFailure() ) {
@@ -89,7 +95,16 @@ StatusCode DecayFinder::initialize()
   debug() << "Could not compile the decay description" << endreq;
   return StatusCode::FAILURE;
 }
+//=============================================================================
+StatusCode DecayFinder::finalize() 
+{
+  
+  if (m_ppSvc ) delete m_ppSvc;
+  if (m_EDS )   delete m_EDS;
 
+  return = GaudiTool::finalize();
+}
+//=============================================================================
 StatusCode DecayFinder::setDecay( std::string decay )
 {
 
@@ -336,6 +351,8 @@ DecayFinder::Descriptor::~Descriptor()
     delete *di;
   if( alternate )
     delete alternate;
+  if (m_ppSvc) delete m_ppSvc;
+  
 }
 
 std::string DecayFinder::Descriptor::describe( void )
