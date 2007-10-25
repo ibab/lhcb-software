@@ -4,6 +4,8 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+!========================== ParticleMakerChecker v1r1p1 2007-10-25 ============
+
 ! 2007-07-17 - Patrick Koppenburg
  - Removed _load file. Release when needed.
 
