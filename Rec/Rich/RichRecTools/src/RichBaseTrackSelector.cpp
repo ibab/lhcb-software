@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.11 2007-09-17 12:51:49 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.12 2007-10-26 10:47:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -77,7 +77,7 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
   const int slash = name().find_last_of(".");
   const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
 
-  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e| : cloneCut = %|-4.2e|" )
+  os << boost::format( " %|.12s| %|12t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e| : cloneCut = %|-4.2e|" )
     % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut % m_cloneCut;
   if ( m_acceptClones ) os << " clonesOK";
   if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;

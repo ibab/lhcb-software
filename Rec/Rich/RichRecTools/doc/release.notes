@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-10-26 - Chris Jones
+ - Improve printout for track selector
+
 ! 2007-10-23 - Chris Jones
  - Update threshold info in expected signal tool
 
