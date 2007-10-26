@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.9 2007-01-24 19:21:50 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.10 2007-10-26 12:32:59 cattanem Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -27,6 +27,11 @@
   #include <ctype.h>
   #include <unistd.h>
   static const int O_BINARY = 0;
+  #ifdef __APPLE__
+    inline long long lseek64(int fd, long long offset, int where)  {
+      return lseek(fd,offset,where);
+    }
+  #endif
 #endif
 
 namespace Networking {

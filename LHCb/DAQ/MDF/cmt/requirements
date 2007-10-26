@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           MDF
-version           v2r5
+version           v2r6
 
 #============================================================================
 branches          cmt doc src MDF
@@ -23,6 +23,9 @@ apply_pattern generate_rootmap library=MDF
 apply_pattern ld_library_path
 
 library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
+# Make dummy RFIO library on Darwin, shift library not available
+macro_remove MDF_RFIO_use_linkopts '' Darwin '$(CASTOR_linkopts)'
+#
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open     /EXPORT:rfio_close   /EXPORT:rfio_read '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write    /EXPORT:rfio_stat    /EXPORT:rfio_fstat '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek    /EXPORT:rfio_access  /EXPORT:rfio_unlink '

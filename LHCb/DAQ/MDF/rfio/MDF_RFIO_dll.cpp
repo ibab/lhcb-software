@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.7 2006-07-04 16:26:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.8 2007-10-26 12:32:58 cattanem Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -66,6 +66,7 @@ extern "C" EXPORT LHCb::PosixIO* MDF_RFIO()  {
   if ( 0 == p.open )  {
     memset(&p,0,sizeof(p));
     p.unbuffered  = _IO::COMPLETE;
+#ifndef __APPLE__ // Dummy library on Darwin, libshift not available
     p.open      = rfio_open;
     p.close     = rfio_close;
     p.read      = rfio_read;
@@ -99,7 +100,7 @@ extern "C" EXPORT LHCb::PosixIO* MDF_RFIO()  {
     p.serror    = rfio_serror;
 
     p.setopt    = rfiosetopt;
-
+#endif // __APPLE__
   #ifdef _WIN32
     p.serrno    = C__serrno;
     p.ioerrno   = C__rfio_errno;

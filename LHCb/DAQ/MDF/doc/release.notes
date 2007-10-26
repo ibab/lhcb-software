@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v2r6 2007-10-26 ===============================
+! 2007-10-26 - Marco Cattaneo, Markus Frank
+ - Add Darwin support to libMDF
+ - libMDF_RFIO is dummy in Darwin case, since libshift does not exist
+
 !========================= MDF v2r5 2007-10-05 ===============================
 ! 2007-10-04 - Markus Frank
   - Set source ID to MDF bank in MDFio to 0
