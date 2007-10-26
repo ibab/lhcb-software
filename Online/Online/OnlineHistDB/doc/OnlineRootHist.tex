@@ -27,7 +27,7 @@
  corresponding ROOT TH1 object
 
 
-\item    bool {\bf setdbHist}(OnlineHistogram*  oh);
+\item    virtual bool {\bf setdbHist}(OnlineHistogram*  oh);
 
 
  link to an existing OnlineHistogram object, returns true on success
@@ -42,6 +42,11 @@
 \item    bool {\bf connected}() ;
 
  true if object knows an existing DB session
+
+
+\item    OnlineHistDB* {\bf dbSession}() ;
+
+ returns link to DB session
 
 
 \item    bool {\bf connectToDB}(OnlineHistDB* Session,\\\mbox{}~~~~~~~~~
@@ -70,21 +75,9 @@
  saves current ROOT display options to OnlineHistogram object and to Histogram DB
 
 
-\item    virtual void {\bf Draw}(Option\_t* option="");
+\item    virtual void {\bf Draw}();
 
 
  calls TH1 Draw method, calls setDrawOptions()
-
-
-\item    virtual void {\bf DrawPanel}();
-
-
- calls TH1 DrawPanel method, calls setDrawOptions()
-
-
-\item    virtual TH1* {\bf myDrawCopy}(Option\_t* option="");
-
-
- calls TH1 DrawCopy method and setDrawOptions()
 
 

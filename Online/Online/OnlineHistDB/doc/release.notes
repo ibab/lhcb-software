@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.16 2007-10-22 17:41:22 ggiacomo Exp $
+! $Id: release.notes,v 1.17 2007-10-26 14:25:07 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
+
+! 20071026  - OnlineHistDB v3r3
+     	- setDoc and setDescr methods added to OnlineHistogram
+	- minor changes to release with Online Env v4r1
 
 ! 20071022  - OnlineHistDB v3r2
 	- try to increase performances by removing searches by non-indexed variables

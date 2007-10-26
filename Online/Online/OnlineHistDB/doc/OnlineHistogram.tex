@@ -48,6 +48,11 @@
  histogram name
 
 
+\item    std::string {\bf htitle}() const ;
+
+ standard DB histogram title (not necessarly equal to the published ROOT title)
+
+
 \item    std::string {\bf hsname}() const ;
 
  histogram set name
@@ -106,6 +111,18 @@
 
 
  sets the DIM service name that is currently publishing the histogram. Returns true on success
+
+
+\item    bool {\bf setDoc}(std::string doc);
+
+
+ provide a short description to be optionally printed on the plot 
+
+
+\item    bool {\bf setDescr}(std::string descr);
+
+
+ provide a  description of the histogram content 
 
 
 \item    void {\bf dump}();
@@ -227,19 +244,23 @@
  success.
 
 
+\item    bool {\bf getCreationDirections}(std::string \&Algorithm,\\\mbox{}~~~~~~~~~
+			     std::vector$<$std::string$>$ \&source\_list,\\\mbox{}~~~~~~~~~
+			     std::vector$<$float$>$ \&parameters);
+
+ for analysis histogram, get the directions for creating histogram
+
+
 \item    int {\bf nanalysis}() const ;
 
  number of analysis to be performed on the histogram set
 
 
-\item    const std::vector$<$int$>$\& {\bf anaId}() const ;
+\item    void {\bf getAnalyses}(std::vector$<$int$>$\& anaIDs,\\\mbox{}~~~~~~~~~
+		   std::vector$<$std::string$>$\& anaAlgs) const ;
 
- vector of length {\it  nanalysis}() containing the analysis internal IDs
-
-
-\item    const std::vector$<$std::string$>$\& {\bf anaName}() const ;
-
- vector of length {\it  nanalysis}() containing the analysis algorithm names
+ get analysy description as vectors of length {\it  nanalysis}() containing 
+ the analysis internal IDs and the analysis algorithm names
 
 
 \item    boolean {\bf isAnaHist}() const ;
