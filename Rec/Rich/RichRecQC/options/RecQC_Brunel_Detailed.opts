@@ -35,6 +35,10 @@
 #include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks_dllcut.opts"
 #include "$RICHRECQCOPTS/pid/LongTracks_Para_dllcut.opts"
 
+// MC cheated tracks
+#include "$RICHRECQCOPTS/pid/BrunelMoni_MCRichTracks.opts"
+#include "$RICHRECQCOPTS/pid/MCRichTracks_Para.opts"
+
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                          "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };

@@ -1,0 +1,3 @@
+
+// Default PID monitor : 2-100 GeV/c
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonMCRichTks2To100" };

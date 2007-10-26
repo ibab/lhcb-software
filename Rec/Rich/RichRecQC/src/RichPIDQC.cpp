@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.66 2007-10-23 10:46:10 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.67 2007-10-26 10:44:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -93,8 +93,8 @@ StatusCode PIDQC::initialize()
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
 
-  if ( m_mcPsel ) 
-  { 
+  if ( m_mcPsel )
+  {
     info() << "Will filter only selected MCParticles" << endreq;
     acquireTool( "MCParticleSelector", m_mcPselector, this );
   }
@@ -473,149 +473,159 @@ StatusCode PIDQC::finalize()
     double trueTotExcludeX[] = {0,0,0,0,0,0};
     double eff[]             = {0,0,0,0,0,0};
     double purity[]          = {0,0,0,0,0,0};
-    for ( iRec = 0; iRec<6; ++iRec ) {
-      for ( iTrue = 0; iTrue<6; ++iTrue ) {
+    for ( iRec = 0; iRec<6; ++iRec )
+    {
+      for ( iTrue = 0; iTrue<6; ++iTrue )
+      {
         sumTot += m_sumTab[iTrue][iRec];;
         recTot[iRec] += m_sumTab[iTrue][iRec];
         trueTot[iTrue] += m_sumTab[iTrue][iRec];
         if (iRec<5) trueTotExcludeX[iTrue] += m_sumTab[iTrue][iRec];
       }
     }
-    if ( sumTot < 1 ) sumTot = 1;
-    for ( iRec = 0; iRec<6; ++iRec ) {
-      eff[iRec] = ( trueTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/trueTot[iRec] : 0 );
-      purity[iRec] = ( recTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/recTot[iRec] : 0 );
-    }
-
-    // Kaon Pion seperation
-    double kaonIDEff[2];
-    kaonIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                     100*( m_sumTab[Rich::Kaon][Rich::Kaon] +
-                           m_sumTab[Rich::Kaon][Rich::Proton] ) /
-                     trueTotExcludeX[Rich::Kaon] : 0 );
-    kaonIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                     sqrt( kaonIDEff[0]*(100.-kaonIDEff[0])/
-                           trueTotExcludeX[Rich::Kaon] ) : 0 );
-    double kaonMisIDEff[2];
-    kaonMisIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                        100*( m_sumTab[Rich::Kaon][Rich::Electron] +
-                              m_sumTab[Rich::Kaon][Rich::Muon] +
-                              m_sumTab[Rich::Kaon][Rich::Pion] ) /
-                        trueTotExcludeX[Rich::Kaon] : 0 );
-    kaonMisIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                        sqrt( kaonMisIDEff[0]*(100.-kaonMisIDEff[0])/
-                              trueTotExcludeX[Rich::Kaon] ) : 0 );
-    double piIDEff[2];
-    piIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
-                   100*( m_sumTab[Rich::Pion][Rich::Electron] +
-                         m_sumTab[Rich::Pion][Rich::Muon] +
-                         m_sumTab[Rich::Pion][Rich::Pion] ) /
-                   trueTotExcludeX[Rich::Pion] : 0 );
-    piIDEff[1] =  ( trueTotExcludeX[Rich::Pion]>0 ?
-                    sqrt( piIDEff[0]*(100.-piIDEff[0])/
-                          trueTotExcludeX[Rich::Pion] ) : 0 );
-    double piMisIDEff[2];
-    piMisIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
-                      100*( m_sumTab[Rich::Pion][Rich::Kaon] +
-                            m_sumTab[Rich::Pion][Rich::Proton] ) /
-                      trueTotExcludeX[Rich::Pion] : 0 );
-    piMisIDEff[1] = ( trueTotExcludeX[Rich::Pion]>0 ?
-                      sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
-                            trueTotExcludeX[Rich::Pion] ) : 0 );
-
-    // Scale entries to percent of total number of entries
-    for ( iTrue = 0; iTrue<6; ++iTrue )
+    if ( sumTot > 0.5 )
     {
       for ( iRec = 0; iRec<6; ++iRec )
       {
-        m_sumTab[iTrue][iRec] = 100.0*m_sumTab[iTrue][iRec]/sumTot;
+        eff[iRec] = ( trueTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/trueTot[iRec] : 0 );
+        purity[iRec] = ( recTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/recTot[iRec] : 0 );
       }
-    }
 
-    // compute event and track PID success rates
-    double evPIDRate[2];
-    double trPIDRate[2];
-    evPIDRate[0] = ( m_nEvents[0]>0 ? 100.*m_nEvents[1]/m_nEvents[0] : 100 );
-    evPIDRate[1] = ( m_nEvents[0]>0 ? sqrt(evPIDRate[0]*(100.-evPIDRate[0])/m_nEvents[0]) : 100 );
-    trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
-    trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
+      // Kaon Pion seperation
+      double kaonIDEff[2];
+      kaonIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                       100*( m_sumTab[Rich::Kaon][Rich::Kaon] +
+                             m_sumTab[Rich::Kaon][Rich::Proton] ) /
+                       trueTotExcludeX[Rich::Kaon] : 0 );
+      kaonIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                       sqrt( kaonIDEff[0]*(100.-kaonIDEff[0])/
+                             trueTotExcludeX[Rich::Kaon] ) : 0 );
+      double kaonMisIDEff[2];
+      kaonMisIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                          100*( m_sumTab[Rich::Kaon][Rich::Electron] +
+                                m_sumTab[Rich::Kaon][Rich::Muon] +
+                                m_sumTab[Rich::Kaon][Rich::Pion] ) /
+                          trueTotExcludeX[Rich::Kaon] : 0 );
+      kaonMisIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                          sqrt( kaonMisIDEff[0]*(100.-kaonMisIDEff[0])/
+                                trueTotExcludeX[Rich::Kaon] ) : 0 );
+      double piIDEff[2];
+      piIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                     100*( m_sumTab[Rich::Pion][Rich::Electron] +
+                           m_sumTab[Rich::Pion][Rich::Muon] +
+                           m_sumTab[Rich::Pion][Rich::Pion] ) /
+                     trueTotExcludeX[Rich::Pion] : 0 );
+      piIDEff[1] =  ( trueTotExcludeX[Rich::Pion]>0 ?
+                      sqrt( piIDEff[0]*(100.-piIDEff[0])/
+                            trueTotExcludeX[Rich::Pion] ) : 0 );
+      double piMisIDEff[2];
+      piMisIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                        100*( m_sumTab[Rich::Pion][Rich::Kaon] +
+                              m_sumTab[Rich::Pion][Rich::Proton] ) /
+                        trueTotExcludeX[Rich::Pion] : 0 );
+      piMisIDEff[1] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                        sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
+                              trueTotExcludeX[Rich::Pion] ) : 0 );
 
-    info() << "-------------+-------------------------------------------------+------------"
-           << endreq
-           << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endreq
-           << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endreq;
-    info() << " #Tks(+MC)   |";
-    unsigned int tkCount = 0;
-    for ( TkCount::const_iterator iTk = m_trackCount.begin();
-          iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
-      if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
-      info() << " " << (*iTk).first << "=" << (*iTk).second.first
-             << "(" << (*iTk).second.second << ")";
+      // Scale entries to percent of total number of entries
+      for ( iTrue = 0; iTrue<6; ++iTrue )
+      {
+        for ( iRec = 0; iRec<6; ++iRec )
+        {
+          m_sumTab[iTrue][iRec] = 100.0*m_sumTab[iTrue][iRec]/sumTot;
+        }
+      }
+
+      // compute event and track PID success rates
+      double evPIDRate[2];
+      double trPIDRate[2];
+      evPIDRate[0] = ( m_nEvents[0]>0 ? 100.*m_nEvents[1]/m_nEvents[0] : 100 );
+      evPIDRate[1] = ( m_nEvents[0]>0 ? sqrt(evPIDRate[0]*(100.-evPIDRate[0])/m_nEvents[0]) : 100 );
+      trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
+      trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
+
+      info() << "-------------+-------------------------------------------------+------------"
+             << endreq
+             << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endreq
+             << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endreq;
+      info() << " #Tks(+MC)   |";
+      unsigned int tkCount = 0;
+      for ( TkCount::const_iterator iTk = m_trackCount.begin();
+            iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
+        if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
+        info() << " " << (*iTk).first << "=" << (*iTk).second.first
+               << "(" << (*iTk).second.second << ")";
+      }
+      tkCount = 0;
+      info() << endreq
+             << " Using PIDs  | " << m_pidTDS << endreq
+             << " #PIDs(+MC)  |";
+      for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
+            iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
+        if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
+        info() << " " << (*iPC).first << "=" << (*iPC).second.first
+               << "(" << (*iPC).second.second << ")";
+      }
+      info() << endreq;
+      if ( m_dllKaonCut < 9999991 ) {
+        info() << " Tagging tracks as kaons if kaon DLL > " << m_dllKaonCut << endreq;
+      }
+      if ( m_dllPionCut < 9999991 ) {
+        info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endreq;
+      }
+      info() << "-------------+-------------------------------------------------+------------"
+             << endreq
+             << "   %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
+             << endreq
+             << "-------------+-------------------------------------------------+------------"
+             << endreq
+             << "             |                                                 |" << endreq;
+      const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
+                                    " Kaon        |", " Proton      |", " X           |" };
+      for ( iRec = 0; iRec < 6; ++iRec )
+      {
+        info() << type[iRec]
+               << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f" ) %
+          m_sumTab[0][iRec] % m_sumTab[1][iRec] %
+          m_sumTab[2][iRec] % m_sumTab[3][iRec] %
+          m_sumTab[4][iRec] % m_sumTab[5][iRec] %
+          purity[iRec] << endreq;
+      }
+      info() << "   (reco)    |                                                 |" << endreq
+             << "-------------+-------------------------------------------------+------------"
+             << endreq;
+      info() << "   %Eff.     |" << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f " ) %
+        eff[0] % eff[1] % eff[2] % eff[3] % eff[4] % eff[5]
+             << "     |" << endreq;
+      info() << "-------------+-------------------------------------------------+------------"
+             << endreq;
+
+      info() << " % ID eff    |  K->K,Pr   : "
+             << boost::format( "%6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
+        kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endreq;
+      info() << " % MisID eff |  K->e,m,pi : "
+             << boost::format( "%6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
+        kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endreq;
+      info() << " % ID rate   |  Events    : "
+             << boost::format( "%6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
+        evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
+
+      for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
+      {
+        const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
+        const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
+        info() << "             |  -> With "
+               << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endreq;
+      }
+
+      info() << "-------------+-------------------------------------------------+------------"
+             << endreq;
+
     }
-    tkCount = 0;
-    info() << endreq
-           << " Using PIDs  | " << m_pidTDS << endreq
-           << " #PIDs(+MC)  |";
-    for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
-          iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
-      if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
-      info() << " " << (*iPC).first << "=" << (*iPC).second.first
-             << "(" << (*iPC).second.second << ")";
-    }
-    info() << endreq;
-    if ( m_dllKaonCut < 9999991 ) {
-      info() << " Tagging tracks as kaons if kaon DLL > " << m_dllKaonCut << endreq;
-    }
-    if ( m_dllPionCut < 9999991 ) {
-      info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endreq;
-    }
-    info() << "-------------+-------------------------------------------------+------------"
-           << endreq
-           << "   %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
-           << endreq
-           << "-------------+-------------------------------------------------+------------"
-           << endreq
-           << "             |                                                 |" << endreq;
-    const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
-                                  " Kaon        |", " Proton      |", " X           |" };
-    for ( iRec = 0; iRec < 6; ++iRec )
+    else
     {
-      info() << type[iRec]
-             << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f" ) %
-        m_sumTab[0][iRec] % m_sumTab[1][iRec] %
-        m_sumTab[2][iRec] % m_sumTab[3][iRec] %
-        m_sumTab[4][iRec] % m_sumTab[5][iRec] %
-        purity[iRec] << endreq;
+      warning() << "NO ENTRIES -> PID table skipped ..." << endreq;
     }
-    info() << "   (reco)    |                                                 |" << endreq
-           << "-------------+-------------------------------------------------+------------"
-           << endreq;
-    info() << "   %Eff.     |" << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f " ) %
-      eff[0] % eff[1] % eff[2] % eff[3] % eff[4] % eff[5]
-           << "     |" << endreq;
-    info() << "-------------+-------------------------------------------------+------------"
-           << endreq;
-
-    info() << " % ID eff    |  K->K,Pr   : "
-           << boost::format( "%6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
-      kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endreq;
-    info() << " % MisID eff |  K->e,m,pi : "
-           << boost::format( "%6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
-      kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endreq;
-    info() << " % ID rate   |  Events    : "
-           << boost::format( "%6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
-      evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
-
-    for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
-    {
-      const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
-      const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
-      info() << "             |  -> With "
-             << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endreq;
-    }
-
-    info() << "-------------+-------------------------------------------------+------------"
-           << endreq;
 
   } // final printout
 
@@ -650,9 +660,9 @@ void PIDQC::countTracks( const std::string & location )
         iTrk != tracks->end(); ++iTrk )
   {
     if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++m_multiplicity; }
-    if ( selectTracks(*iTrk) ) 
+    if ( selectTracks(*iTrk) )
     {
-      ++m_totalSelTracks;  
+      ++m_totalSelTracks;
     }
   }
 }
@@ -660,7 +670,7 @@ void PIDQC::countTracks( const std::string & location )
 bool PIDQC::selectTracks( const LHCb::Track * track )
 {
   bool OK = false;
-  if ( m_trSelector->trackSelected(track) ) 
+  if ( m_trSelector->trackSelected(track) )
   {
     OK = true;
     if ( m_mcPsel )
@@ -672,7 +682,7 @@ bool PIDQC::selectTracks( const LHCb::Track * track )
   return OK;
 }
 
-void PIDQC::print( MsgStream & msg, 
+void PIDQC::print( MsgStream & msg,
                    LHCb::RichPID * iPID,
                    const Rich::ParticleIDType pid,
                    const Rich::ParticleIDType mcpid  ) const
@@ -711,7 +721,7 @@ void PIDQC::print( MsgStream & msg,
     msg << boost::format(m_sF)%(iPID->particleRawProb(pid))
         << "/" << boost::format(m_sF)%(iPID->particleNormProb(pid)) << " ";
   }}
-  msg << endreq 
+  msg << endreq
       << "  RecoPID     = " << pid << endreq;
   msg << "  MCID        = " << mcpid << endreq;
 }

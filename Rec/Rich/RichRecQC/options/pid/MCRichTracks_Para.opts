@@ -1,0 +1,8 @@
+
+// Default PID monitor : 2-100 GeV/c
+RiPIDMonMCRichTks2To100.TrackSelector.MinPCut = 2;
+RiPIDMonMCRichTks2To10.TrackSelector.MaxPCut = 100;
+RiPIDMonMCRichTks2To100.MCHistoPath = "RICH/PIDQC/MCRICHTKS/2TO100/MC/";
+RiPIDMonMCRichTks2To100.HistoPath = "RICH/PIDQC/MCRICHTKS/2TO100/";
+RiPIDMonMCRichTks2To100.TrackSelector.TrackAlgs = { "MCRichTrack" };
+
