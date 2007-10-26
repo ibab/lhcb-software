@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.14 2007-10-23 10:44:05 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.15 2007-10-26 10:41:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -123,6 +123,7 @@ TrackCreatorFromMCRichTracks::trTracks() const
       for ( LHCb::MCRichTracks::const_iterator track = m_mcrTracks->begin();
             track != m_mcrTracks->end(); ++track )
       {
+        verbose() << "Trying MCRichTrack " << (*track)->key() << endreq;
 
         // Pointer to underlying MCParticle
         const LHCb::MCParticle * mcPart = (*track)->mcParticle();
@@ -138,24 +139,25 @@ TrackCreatorFromMCRichTracks::trTracks() const
         const double ptot   = mcPart->p();
         const double charge = mcPart->particleID().threeCharge()/3;
 
-        // Track selection
-        //if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
-
         // new fake Track
         LHCb::Track * newFake = new LHCb::Track();
-
-        // add to container
-        fakedTracks()->insert( newFake );
 
         // set momentum and charge info
         LHCb::State fakeState;
         fakeState.setQOverP( ptot>0 ? charge/ptot : 0 );
         newFake->addToStates( fakeState );
 
-        // pretend these are forward unique tracks
+        // set track types
         //newFake->setFlag    ( LHCb::Track::Clone, false ); // Unique by default
         newFake->setType    ( LHCb::Track::Long         );
-        newFake->setHistory ( LHCb::Track::PatForward   );
+        newFake->setHistory ( LHCb::Track::TrackIdealPR ); // closest to 'MC' history
+
+        // Track selection
+        //if ( !trackSelector().trackSelected(newFake) ) { delete newFake; continue; }
+        verbose() << " -> Selected for fake reco track" << endreq;
+
+        // add to container
+        fakedTracks()->insert( newFake );
 
         // store MC link
         linker.link( newFake, mcPart );
@@ -181,6 +183,8 @@ TrackCreatorFromMCRichTracks::trTracks() const
 LHCb::RichRecTrack *
 TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 {
+  // make sure fake tracks are available if requested
+  trTracks();
 
   // Is this a Track ?
   const LHCb::MCRichTrack * mcrTrack = dynamic_cast<const LHCb::MCRichTrack*>(obj);
@@ -335,7 +339,15 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
       {
 
         // give to container
-        richTracks()->insert( newTrack, mcrTrack->key() );
+        try
+        {
+          richTracks()->insert( newTrack, mcrTrack->key() );
+        }
+        catch ( const GaudiException & excpt )
+        {
+          Warning( "Failed to insert MCRichTrack based RichRecTrack with original key", StatusCode::SUCCESS );
+          richTracks()->insert( newTrack );
+        }
 
         // Set momentum and pt
         newTrack->setVertexMomentum( ptot );
@@ -351,9 +363,9 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         if ( m_fakeRecoTracks )
         {
           const LHCb::Track * faketrack = m_mcToFakeMap[mcrTrack];
-          if (!faketrack) Warning( "MCRichTrack has no fake Track !" );
-          newTrack->setParentTrack( faketrack );
-          newTrack->trackID().initialiseFor( faketrack );
+          if (!faketrack) { Warning( "MCRichTrack has no fake Track !" ); }
+          else            { newTrack->setParentTrack( faketrack ); }
+          //newTrack->trackID().initialiseFor( faketrack );
         }
         else
         {

@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.9 2007-02-02 10:06:27 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.10 2007-10-26 10:41:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -47,12 +47,12 @@ TrSegMakerFromMCRichTracks( const std::string& type,
 
   m_minPathL[Rich::Aerogel]  = 10 *Gaudi::Units::mm;
   m_minPathL[Rich::Rich1Gas] = 500*Gaudi::Units::mm;
-  m_minPathL[Rich::Rich2Gas] = 500*Gaudi::Units::mm;
+  m_minPathL[Rich::Rich2Gas] = 1500*Gaudi::Units::mm;
   declareProperty( "MinPathLengths", m_minPathL );
 
-  m_minPhots[Rich::Aerogel] = 3;
-  m_minPhots[Rich::Rich1Gas]   = 5;
-  m_minPhots[Rich::Rich2Gas]     = 5;
+  m_minPhots[Rich::Aerogel]   = 3;
+  m_minPhots[Rich::Rich1Gas]  = 5;
+  m_minPhots[Rich::Rich2Gas]  = 5;
   declareProperty( "MinNumPhotons", m_minPhots );
 
 }
@@ -80,8 +80,8 @@ StatusCode TrSegMakerFromMCRichTracks::initialize()
   m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
   m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
 
-  info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq
-         << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;
+  info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq;
+  info() << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;
 
   return sc;
 }
@@ -131,7 +131,7 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     }
 
     // Apply selection cuts
-    if ( segment->pathLength() < m_minPathL[rad] ) continue;
+    if ( segment->pathLength()                  < m_minPathL[rad] ) continue;
     if ( segment->mcRichOpticalPhotons().size() < m_minPhots[rad] ) continue;
 
     verbose() << "  -> Segment selected" << endreq;
