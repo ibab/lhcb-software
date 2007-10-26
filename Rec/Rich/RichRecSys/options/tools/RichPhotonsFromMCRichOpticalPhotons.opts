@@ -9,8 +9,8 @@ ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005
 ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-// Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+// N sigma on expected CK theta resolution
+ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)

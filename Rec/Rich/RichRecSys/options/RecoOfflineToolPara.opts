@@ -65,7 +65,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 // ================================== Photon Creators ==========================================
 
 // Photon reconstruction using full reconstructed information (Default)
-//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
+#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
 
 // Photon reconstruction using reconstructed but estimates CK angles using
 // track and hit positions on the local HPD plane - Fast approach
@@ -82,7 +82,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 // Photon reconstruction that uses only true Cherenkov information from the MCRichOpticalPhotons
 // I.e cheat the emission, detection and mirror reflection points, and the cherenkov angles
 // and only reconstruct true photons
-#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
 
 // Photon reconstruction using full reconstructed information, but applying an additional
 // gaussian smear to the reconstructed theta values
