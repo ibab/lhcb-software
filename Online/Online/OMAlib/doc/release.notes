@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.1.1.1 2007-10-16 13:03:03 ggiacomo Exp $
+! $Id: release.notes,v 1.2 2007-10-26 14:27:03 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
 ! 20071011 - OMAlib v0r0
-       First release of library for analysis of Online Monitoring Data:
+       Release first prototype of analysis library for Online Monitoring Data:
 	- algorithms are implemented in src/OMAAlgorithms.cpp
 	  as classes derived from OMAHcreatorAlg or OMACheckAlg 
  	- Algorithm classes are instantiated in the constructor of
