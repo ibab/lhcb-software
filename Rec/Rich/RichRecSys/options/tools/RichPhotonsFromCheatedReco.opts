@@ -12,16 +12,10 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhoton
 // absolute max and min allowed Cherenkov theta angles
 ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
 ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
-//ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.0,     0.0,     0.0    };
-//ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.5,     0.15,    0.07   };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-//ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-99,   1e-99,   1e-99  };
-// Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
-//ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999,    999,   999 };
+// N sigma on expected CK theta resolution
+ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // geometrical photon reconstruction
-// use Quartic solving tool
-ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+#include "$RICHRECSYSOPTS/tools/RichRecoPhotonParams.opts"
