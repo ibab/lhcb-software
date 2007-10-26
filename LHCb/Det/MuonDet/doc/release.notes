@@ -1,20 +1,22 @@
-! $Id: release.notes,v 1.98 2007-10-22 11:55:09 cattanem Exp $
+! $Id: release.notes,v 1.99 2007-10-26 14:43:12 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v7r0 2007-10-22 ==========================
-  2007-10-17 - Alessia Satta
+! 2007-10-17 - Alessia Satta
  - change to cope with new gemetry description: half station layer has been 
    added to structure description ( ASide ; C Side) as intermidiate layer 
    between station and region. Needs SQLDDDB v3r0 or greater
+ - fix bug in listOfPhysChannels: check if hit was inside a gap was wrongly
+   performed. Effect is very small.
 
 !========================= MuonDet v6r4 2007-09-17 ========================
 ! 2007-09-13 - Juan PALACIOS
  - Changes to adapt to new IGeometryInfo interface.
    NEEDS Det/DetDesc v18r0 OR HIGHER
  - src/Lib/MuonChamberLayout.cpp
-   . Change callt to IGeometryIngo::matrixInv() by IGeometryInfo::toGlobalMatrix()
+   . Change call to IGeometryInfo::matrixInv() by IGeometryInfo::toGlobalMatrix()
  - cmt/requirements
    . Increase version to v6r4
 
