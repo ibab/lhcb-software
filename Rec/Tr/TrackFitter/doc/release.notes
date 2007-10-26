@@ -3,8 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r20 2007-10-08 ===================
 ! 2007-10-25 - Wouter Hulsbergen
- - fixed unchecked status code when projecting reference, leading to fatal error in transportsvc
+ - fixed unchecked status code when projecting reference, leading to fatal
+   error in transportsvc
 
 !=========================== TrackFitter v2r19 2007-10-08 ===================
 ! 2007-10-03 - Wouter Hulsbergen
