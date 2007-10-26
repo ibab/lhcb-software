@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.8 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeSTBaseElement.h,v 1.9 2007-10-26 14:53:48 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -10,6 +10,8 @@
 #include "Kernel/STChannelID.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaudiKernel/GaudiException.h"
+
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 class DeSTBaseElement : public DetectorElement  {
 
@@ -77,6 +79,33 @@ public:
   */
   template <typename TYPE>
   std::vector<typename STDetTraits<TYPE>::child*> getChildren();
+
+  /**
+  * call back for update service 
+  * @param CallerClass caller
+  * @param ObjectClass object
+  * @param ObjectMemberFunction<CallerClass>::MemberFunctionType
+  * @param bool force update
+  * @return StatusCode Success or Failure
+  */
+  template<typename CallerClass, typename ObjectClass>
+  StatusCode registerCondition(CallerClass* caller, ObjectClass* object, 
+                               typename ObjectMemberFunction<CallerClass>::MemberFunctionType mf, 
+                               bool forceUpdate = true );
+
+
+  /**
+  * call back for update service 
+  * @param CallerClass caller
+  * @param std:string conditionName 
+  * @param ObjectMemberFunction<CallerClass>::MemberFunctionType
+  * @param bool force update
+  * @ return StatusCode Success or Failure
+  */
+  template<typename CallerClass>
+  StatusCode registerCondition(CallerClass* caller, const std::string& conditionName,
+                               typename ObjectMemberFunction<CallerClass>::MemberFunctionType mf, 
+                               bool forceUpdate = true );
 
 private:
 
@@ -163,6 +192,50 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
 inline bool DeSTBaseElement::duplicate(const std::string& testString, const std::vector<std::string> & names) const{
   std::vector<std::string >::const_iterator iter = std::find(names.begin(), names.end(), testString);
   return (iter == names.end() ? false : true); 
+}
+
+template<typename CallerClass,typename ObjectClass>
+inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, ObjectClass* object, 
+                            typename ObjectMemberFunction<CallerClass>::MemberFunctionType mf, bool forceUpdate ){
+
+ // initialize method
+ MsgStream msg(msgSvc(), name() );
+ StatusCode sc = StatusCode::SUCCESS;
+
+ try { 
+   if (forceUpdate) updMgrSvc()->invalidate(this);
+   msg << MSG::DEBUG << "Registering conditions" << endmsg;
+   updMgrSvc()->registerCondition(caller,object,mf);
+   msg << MSG::DEBUG << "Start first update" << endmsg;
+   sc = updMgrSvc()->update(caller);
+ } 
+ catch (DetectorElementException &e) {
+   msg << MSG::ERROR << e << endmsg;
+   return StatusCode::FAILURE;
+ }
+ return sc;
+}
+
+template<typename CallerClass>
+inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, const std::string& conditionName , 
+                            typename ObjectMemberFunction<CallerClass>::MemberFunctionType mf, bool forceUpdate ){
+
+ // initialize method
+ MsgStream msg(msgSvc(), name() );
+ StatusCode sc = StatusCode::SUCCESS;
+
+ try { 
+   if (forceUpdate) updMgrSvc()->invalidate(this);
+   msg << MSG::DEBUG << "Registering conditions" << endmsg;
+   updMgrSvc()->registerCondition(caller,condition(conditionName).path(),mf);
+   msg << MSG::DEBUG << "Start first update" << endmsg;
+   sc = updMgrSvc()->update(caller);
+ } 
+ catch (DetectorElementException &e) {
+   msg << MSG::ERROR << e << endmsg;
+   return StatusCode::FAILURE;
+ }
+ return sc;
 }
 
 

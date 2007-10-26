@@ -41,17 +41,12 @@ StatusCode DeSTLayer::initialize() {
     m_cosAngle = cos(m_angle);
     m_sinAngle = sin(m_angle);
      
-  // cache trajectories
-  try {
-    msg << MSG::DEBUG << "Registering conditions" << endmsg;
-    updMgrSvc()->invalidate(this);
-    updMgrSvc()->registerCondition(this,this->geometry(),&DeSTLayer::cachePlane);
-    sc = updMgrSvc()->update(this);
-  } 
-  catch (DetectorElementException &e) {
-   msg << MSG::ERROR << e << endmsg;
-   return StatusCode::FAILURE;
-  }
+    // cache trajectories
+    sc = registerCondition(this,this->geometry(),&DeSTLayer::cachePlane);
+    if (sc.isFailure() ){
+      msg << MSG::ERROR << "Failed to register conditions" << endreq;
+      return StatusCode::FAILURE; 
+    }
   }
 
   return StatusCode::SUCCESS;

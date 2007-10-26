@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.30 2007-07-25 11:18:19 wouter Exp $
+// $Id: DeSTSector.cpp,v 1.31 2007-10-26 14:53:48 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -135,15 +135,10 @@ StatusCode DeSTSector::initialize() {
     determineSense();
 
     // cache trajectories
-    try {
-      updMgrSvc()->invalidate(this);
-      msg << MSG::DEBUG << "Registering conditions" << endmsg;
-      updMgrSvc()->registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
-      sc = updMgrSvc()->update(this);
-    } 
-    catch (DetectorElementException &e) {
-     msg << MSG::ERROR << e << endmsg;
-     return StatusCode::FAILURE;
+    sc = registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
+    if (sc.isFailure() ){
+      msg << MSG::ERROR << "Failed to register conditions" << endreq;
+      return StatusCode::FAILURE; 
     }
   }
   return StatusCode::SUCCESS;

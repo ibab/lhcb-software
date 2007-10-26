@@ -31,19 +31,15 @@ StatusCode DeSTBaseElement::initialize() {
 
   StatusCode sc = DetectorElement::initialize();
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    return StatusCode::FAILURE; 
   }
  
   // cache trajectories
-  try {
-    msg << MSG::DEBUG << "Registering conditions" << endmsg;
-    updMgrSvc()->registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint);
-    msg << MSG::DEBUG << "Start first update" << endmsg;
-    sc = updMgrSvc()->update(this);
-  } 
-  catch (DetectorElementException &e) {
-   msg << MSG::ERROR << e << endmsg;
-   return StatusCode::FAILURE;
+  sc = registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint,false);
+  if (sc.isFailure() ){
+    msg << MSG::ERROR << "Failed to register conditions" << endreq;
+    return StatusCode::FAILURE; 
   }
 
   return StatusCode::SUCCESS;
@@ -63,4 +59,6 @@ Gaudi::XYZPoint DeSTBaseElement::globalPoint( const double x, const double y,
   Gaudi::XYZPoint gPoint = toGlobal(lPoint);
   return gPoint;
 }
+
+
 

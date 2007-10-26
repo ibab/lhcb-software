@@ -1,16 +1,20 @@
-// $Id: DeSTSector.h,v 1.20 2007-08-28 12:05:01 jonrob Exp $
+// $Id: DeSTSector.h,v 1.21 2007-10-26 14:53:48 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
 #include <string>
 #include <vector>
+#include <map>
 #include <utility>
 
 #include "Kernel/STChannelID.h"
+#include "Kernel/LHCbConstants.h"
+
 #include "STDet/DeSTBaseElement.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
+
 
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"
@@ -33,6 +37,12 @@ namespace LHCb{
 class DeSTSector : public DeSTBaseElement  {
 
 public:
+
+  /** status enum */
+  enum Status{
+    OK = 0,
+    Dead = 10
+  };
 
   /** Constructor */
   DeSTSector ( const std::string& name = "" ) ;
@@ -208,6 +218,31 @@ public:
   /** @return cosine of stereo angle */
   double cosAngle() const;
 
+  /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
+  unsigned int beetle(const LHCb::STChannelID& chan) const;
+
+  /** n beetle */
+  unsigned int nBeetle() const;
+
+  /** Status of sector*/
+  Status sectorStatus() const;
+
+  /** Status of the Beetle corresponding to strip */
+  Status beetleStatus(const LHCb::STChannelID& chan) const;
+  
+  /** Status of the Beetle with given id  1-3 (IT), 1-4 (TT) */
+  Status beetleStatus(const unsigned int id) const;
+
+  std::vector<DeSTSector::Status> beetleStatus() const;
+
+  /** Status of channel */
+  Status stripStatus(const LHCb::STChannelID& chan) const;
+
+  std::vector<Status> stripStatus() const;
+
+   /** short cut for strip status ok */
+  bool isOKStrip(const LHCb::STChannelID& chan) const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -260,6 +295,12 @@ private:
   double m_angle ;
   double m_cosAngle ;
   double m_sinAngle ;
+
+  // status info
+  Status m_status;
+  typedef std::map<unsigned int,Status> StatusMap;
+  mutable StatusMap m_beetleStatus;
+  mutable StatusMap m_stripStatus;
 
 };
 
@@ -340,6 +381,72 @@ inline void DeSTSector::trajectory(unsigned int strip,
   zAtYEq0 = m_p0.z() + numstrips * m_dp0di.z() ;
   ybegin  = m_p0.y() + numstrips * m_dp0di.y() ;
   yend    = ybegin + m_dy ;
+}
+
+inline unsigned int DeSTSector::beetle(const LHCb::STChannelID& chan) const{
+  return ((chan.strip()-1)/LHCbConstants::nStripsInBeetle) + 1;
+}
+
+inline unsigned int DeSTSector::nBeetle() const{
+  return nStrip()/LHCbConstants::nStripsInBeetle;
+}
+
+inline DeSTSector::Status DeSTSector::sectorStatus() const{
+  return m_status;
+}
+
+inline DeSTSector::Status DeSTSector::beetleStatus(const LHCb::STChannelID& chan) const{
+  return beetleStatus(beetle(chan));
+}
+
+inline DeSTSector::Status DeSTSector::beetleStatus(const unsigned int id) const{
+  DeSTSector::Status theStatus = sectorStatus();
+  if (theStatus == DeSTSector::OK){
+    DeSTSector::StatusMap::const_iterator iter = m_beetleStatus.find(id);
+    if (iter != m_beetleStatus.end()) theStatus = iter->second; 
+  } 
+  return theStatus;
+}
+
+inline DeSTSector::Status DeSTSector::stripStatus(const LHCb::STChannelID& chan) const{
+  DeSTSector::Status theStatus = beetleStatus(chan);
+  if (theStatus == DeSTSector::OK){
+    DeSTSector::StatusMap::const_iterator iter = m_stripStatus.find(chan.strip());
+    if (iter != m_stripStatus.end()) theStatus = iter->second; 
+  } 
+  return theStatus;
+}
+
+inline bool DeSTSector::isOKStrip(const LHCb::STChannelID& chan) const{
+  return (stripStatus(chan) == DeSTSector::OK ? true : false);
+} 
+
+inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
+  std::vector<Status> vec; vec.resize(nBeetle());
+  for (unsigned int iBeetle = m_firstStrip; iBeetle <= nBeetle(); ++iBeetle){
+    DeSTSector::StatusMap::const_iterator iter = m_beetleStatus.find(iBeetle);
+    if (iter != m_beetleStatus.end()){
+      vec[iBeetle - 1] = iter->second;
+    } 
+    else{
+      vec[iBeetle - 1] = DeSTSector::OK;
+    } 
+  } // nStrip
+  return vec;
+}
+
+inline std::vector<DeSTSector::Status> DeSTSector::stripStatus() const{
+  std::vector<Status> vec; vec.resize(nStrip());
+  for (unsigned int iStrip = m_firstStrip; iStrip <= nStrip(); ++iStrip){
+    DeSTSector::StatusMap::const_iterator iter = m_stripStatus.find(iStrip);
+    if (iter != m_stripStatus.end()){
+      vec[iStrip - 1] = iter->second;
+    } 
+    else{
+      vec[iStrip - 1] = DeSTSector::OK;
+    } 
+  } // nStrip
+  return vec;
 }
 
 /** ouput operator for class DeSTSector
