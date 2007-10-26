@@ -44,18 +44,5 @@ ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-75,   1e-75
 ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999999,   999999,   999999 };
 */
 
-
 // geometrical photon reconstruction
-ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
-
-// use Quartic solving tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
-//                                                                                 Aero   C4F10  CF4
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+#include "$RICHRECSYSOPTS/tools/RichRecoPhotonParams.opts"

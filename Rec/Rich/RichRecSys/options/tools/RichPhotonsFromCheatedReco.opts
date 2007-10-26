@@ -1,5 +1,5 @@
 
-// Perform the full reconstruction of photons
+// Perform the full reconstruction of photons, but using MC to only select true CK photons
 
 // RichRecPhoton predictor
 // Uses MC information to check if a given pixel/segment combination is a true Cherenkov hit
