@@ -4,6 +4,8 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r6 2007-10-26 ===================
+
 ! 2007-10-25 - Juan PALACIOS
  - Add options/DaVinci.py, a minimal python script to run DaVinci
    from the python prompt.
