@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-10-26 - Chris Jones
+ - Move RichMCMassHypoRingsAlg to new package RichRecMCAlgorithms
+
 ! 2007-10-09 - Chris Jones
  - Add plots for fake photons to photon angle monitor
 
