@@ -23,17 +23,26 @@ RecoRICHSeq.Context = "Offline";
 // Initialisation (Technically not needed, but nuseful for timing studies)
 //-----------------------------------------------------------------------------
 RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitSeq" };
-RichRecInitSeq.MeasureTime       = true;
-RichRecInitSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
+RichRecInitSeq.MeasureTime = true;
+
+RichRecInitSeq.Members += { "GaudiSequencer/RichPixelsSeq" };
+RichPixelsSeq.MeasureTime      = true;
+RichPixelsSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
 DecodeRawRich.DecodeBufferOnly = true;
-RichRecInitSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
-RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreatePixels" };
-CreatePixels.CheckProcStatus  = false;
-CreatePixels.CreatePixels     = true;
-RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreateTracks" };
+RichPixelsSeq.Members += { "Rich::Rec::Initialise/CreatePixels" };
+CreatePixels.CheckProcStatus   = false;
+CreatePixels.CreatePixels      = true;
+
+RichRecInitSeq.Members += { "GaudiSequencer/RichTracksSeq" };
+RichTracksSeq.MeasureTime     = true;
+RichTracksSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
+RichTracksSeq.Members += { "Rich::Rec::Initialise/CreateTracks" };
 CreateTracks.CheckProcStatus  = false;
 CreateTracks.CreateTracks     = true;
-RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreatePhotons" };
+
+RichRecInitSeq.Members += { "GaudiSequencer/RichPhotonsSeq" };
+RichPhotonsSeq.MeasureTime    = true;
+RichPhotonsSeq.Members += { "Rich::Rec::Initialise/CreatePhotons" };
 CreatePhotons.CheckProcStatus = false;
 CreatePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
@@ -105,7 +114,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack" }; // uncomment to all MC tracks to be used by GPID
+RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack"}; // uncomment to all MC tracks to be used by GPID
 RichGloPIDTrSel.TrackSelector.KsTrack.MinPCut = 0;
 RichGloPIDTrSel.TrackSelector.VeloTT.MinPCut  = 0;
 RichGloPIDTrSel.MaxUsedTracks             = 400;
