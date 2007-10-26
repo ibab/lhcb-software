@@ -18,7 +18,7 @@ namespace LHCb {
   class Class1Task : public GaudiTask {
   public:
     /// Standard constructor
-    Class1Task(IInterface* svc) : GaudiTask(svc) {}
+    Class1Task(IInterface* svc);
     /// Default destructor
     virtual ~Class1Task() {}
     /// Callback on configure transition

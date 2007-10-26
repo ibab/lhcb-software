@@ -9,5 +9,5 @@ ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
                                 "LHCb::DimMonitoringEngine/MonitoringEngine" };
 // ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 // ApplicationMgr.Dlls     += { "Gaucho" };
-MessageSvc.LoggerOnly       = true;  // Set to false for stdout message service
+//MessageSvc.LoggerOnly       = true;  // Set to false for stdout message service
 MessageSvc.OutputLevel      = 3;

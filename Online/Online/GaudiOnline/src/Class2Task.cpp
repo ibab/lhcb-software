@@ -1,6 +1,12 @@
 #include "GaudiOnline/Class2Task.h"
+#include "CPP/IocSensor.h"
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class2Task)
+
+/// Standard constructor
+LHCb::Class2Task::Class2Task(IInterface* svc) : GaudiTask(svc) {
+  IOCSENSOR.send(this, STARTUP_DONE);
+}
 
 StatusCode LHCb::Class2Task::initialize()  {
   int result = configApplication();
@@ -22,6 +28,6 @@ StatusCode LHCb::Class2Task::finalize()  {
       return DimTaskFSM::finalize();
     }
   }
-  declareState(ST_READY);
+  declareState(ST_STOPPED);
   return StatusCode::FAILURE;
 }

@@ -41,6 +41,7 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
   propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
   propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
+  propertyMgr().declareProperty("AutoStart",      m_autostart   = false);
   ::lib_rtl_create_lock(0,&s_lock);
 }
 
@@ -80,6 +81,11 @@ StatusCode LHCb::GaudiTask::run()  {
         ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
       }
       m_appMgr = ui;
+      if ( m_autostart )  {
+	std::cout << "Commencing autostart sequence..." << std::endl;
+	IOCSENSOR.send(this,CONFIGURE);
+	IOCSENSOR.send(this,INITIALIZE);
+      }
       StatusCode sc = m_appMgr->run();
       if ( !sc.isSuccess() ) {
         declareState(ST_ERROR);
@@ -118,7 +124,7 @@ IMessageSvc* LHCb::GaudiTask::msgSvc()  {
 void LHCb::GaudiTask::handle(const Incident& inc)    {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Got incident:" << inc.source()
-    << " of type " << inc.type() << endmsg;
+      << " of type " << inc.type() << endmsg;
   if ( inc.type() == "DAQ_ERROR" )  {
     IOCSENSOR.send(this,ERROR);
   }
@@ -249,33 +255,43 @@ int LHCb::GaudiTask::initApplication()  {
 }
 
 int LHCb::GaudiTask::finalizeApplication()  {
-  if ( m_handle )  {
-    ::lib_rtl_join_thread(m_handle);
-    m_handle = 0;
-  }
-  gauditask_task_lock();
-  if ( m_incidentSvc ) m_incidentSvc->release();
-  m_incidentSvc= 0;
-  StatusCode sc = StatusCode::SUCCESS;
-  if ( m_subMgr ) sc = m_subMgr->finalize();
-  if ( !sc.isSuccess() )   {
+  if ( m_subMgr )  {
+    if ( m_handle )  {
+      ::lib_rtl_join_thread(m_handle);
+      m_handle = 0;
+    }
+    gauditask_task_lock();
+    try {
+      if ( m_incidentSvc ) m_incidentSvc->release();
+      m_incidentSvc= 0;
+      StatusCode sc = StatusCode::SUCCESS;
+      if ( m_subMgr ) sc = m_subMgr->finalize();
+      if ( !sc.isSuccess() )   {
+	gauditask_task_unlock();
+	return 0;
+      }
+    }
+    catch(...) {
+    }
     gauditask_task_unlock();
-    return 0;
   }
-  gauditask_task_unlock();
   return 1;
 }
 
 int LHCb::GaudiTask::terminateApplication()  {
   if ( m_subMgr )  {
-    StatusCode sc = m_subMgr->terminate();
-    if ( sc.isSuccess() )   {
-      m_subMgr->release();
-      m_subMgr = 0;
-      Gaudi::setInstance(m_appMgr);
-      return 1;
+    try {
+      StatusCode sc = m_subMgr->terminate();
+      if ( sc.isSuccess() )   {
+	m_subMgr->release();
+	m_subMgr = 0;
+	Gaudi::setInstance(m_appMgr);
+	return 1;
+      }
+      return 0;
     }
-    return 0;
+    catch(...) {
+    }
   }
   return 1;
 }

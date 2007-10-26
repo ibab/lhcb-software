@@ -247,19 +247,9 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     p->setProperty(StringProperty("Runable",runable));
     p->setProperty(StringProperty("OptionalOptions",optopts));
     p->setProperty(BooleanProperty("HaveEventLoop",evtLoop));
+    p->setProperty(BooleanProperty("AutoStart",autostart));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
-      if ( autostart )  {
-        Interactor* actor = dynamic_cast<Interactor*>(runner.pRef());
-        if ( actor )  {
-          std::cout << "Commencing autostart sequence..." << std::endl;
-          IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
-          IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
-        }
-        else  {
-          std::cout << "Autostart failed: " << type << " is no Interactor!" << std::endl;
-        }
-      }
       return runner->run();
     }
   }

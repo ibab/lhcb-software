@@ -67,7 +67,8 @@ namespace LHCb  {
       FINALIZE,
       TERMINATE,
       UNLOAD, 
-      ERROR
+      ERROR,
+      STARTUP_DONE
     };
     enum State  {
       ST_UNKNOWN,
@@ -75,6 +76,7 @@ namespace LHCb  {
       ST_NOT_READY,
       ST_READY,
       ST_RUNNING,
+      ST_STOPPED,
       ST_ERROR
     };
     enum SubState  {
@@ -146,6 +148,8 @@ namespace LHCb  {
     virtual const std::string& name() const        {    return m_name;      }
     /// IAppMgrUI overload: state name
     virtual const std::string& stateName() const   {    return m_stateName; }
+    /// Startup done                                    (Offline    -> Inactive)
+    virtual StatusCode startupDone();
     /// Configure application                           (Inactive   -> Configured)
     virtual StatusCode configure();
     /// Initialize the application                      (Configured -> Ready)

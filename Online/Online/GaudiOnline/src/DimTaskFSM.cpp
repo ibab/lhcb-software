@@ -15,6 +15,8 @@
 #define ST_NAME_ERROR       "ERROR"
 #define ST_NAME_NOT_READY   "NOT_READY"
 #define ST_NAME_READY       "READY"
+//#define ST_NAME_STOPPED     "STOPPED"
+#define ST_NAME_STOPPED     "READY"
 #define ST_NAME_RUNNING     "RUNNING"
 #define TR_COMPLETED        "Transition Completed"
 #define TR_EXECUTING        "Executing Transition"
@@ -48,11 +50,15 @@ namespace  {
       m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "configure"  ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
-      else if ( cmd == "stop"       ) m_target->disable(); // IOCSENSOR.sendHead(m_target, LHCb::DimTaskFSM::DISABLE);
+      else if ( cmd == "stop"       ) m_target->disable();
       else if ( cmd == "reset"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::TERMINATE);
-      else if ( cmd == "unload"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
+      else if ( cmd == "unload"     ) {
+        m_target->cancel();
+        IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
+      }
       else   {
         m_target->declareSubState(TR_UNKNOWN);
+        m_target->declareState(ST_NAME_ERROR);
         return;
       }
       m_target->declareSubState(TR_EXECUTING);
@@ -88,9 +94,6 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname= m_procName+"/fsm_status";
   m_subStateService = new DimService(svcname.c_str(),(char*)m_subStateName.c_str());
-  DimServer::start(m_procName.c_str());
-  m_stateName = ST_NAME_NOT_READY;
-  m_service->updateService((char*)m_stateName.c_str());
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
   //::lib_rtl_install_printer(printout,this);
@@ -178,6 +181,8 @@ StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
       return declareState(ST_NAME_NOT_READY);
     case ST_READY:
       return declareState(ST_NAME_READY);
+    case ST_STOPPED:
+      return declareState(ST_NAME_STOPPED);
     case ST_RUNNING:
       return declareState(ST_NAME_RUNNING);
     case ST_UNKNOWN:
@@ -219,15 +224,16 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
     StatusCode sc = StatusCode::FAILURE;
     try  {
       switch(ev.type) {
-        _CASE(UNLOAD)     sc=unload();                                break;
-        _CASE(CONFIGURE)  sc=configure();                             break;
-        _CASE(INITIALIZE) sc=initialize();                            break;
-        _CASE(ENABLE)     sc=enable();                                break;
-        _CASE(DISABLE)    sc=disable();                               break;
-        _CASE(NEXTEVENT)  sc=nextEvent(1);                            break;
-        _CASE(FINALIZE)   sc=finalize();                              break;
-        _CASE(TERMINATE)  sc=terminate();                             break;
-        _CASE(ERROR)      sc=declareState(ST_NAME_ERROR);             break;
+        _CASE(UNLOAD)       sc=unload();                              break;
+        _CASE(CONFIGURE)    sc=configure();                           break;
+        _CASE(INITIALIZE)   sc=initialize();                          break;
+        _CASE(ENABLE)       sc=enable();                              break;
+        _CASE(DISABLE)      sc=disable();                             break;
+        _CASE(NEXTEVENT)    sc=nextEvent(1);                          break;
+        _CASE(FINALIZE)     sc=finalize();                            break;
+        _CASE(TERMINATE)    sc=terminate();                           break;
+        _CASE(ERROR)        sc=declareState(ST_NAME_ERROR);           break;
+        _CASE(STARTUP_DONE) sc = startupDone();                       break;
         default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
       }
       sc.isSuccess() ? declareSubState(TR_COMPLETED) : declareSubState(TR_FAILED);
@@ -250,6 +256,13 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
     }
   }
   printErr(0,"Got Unkown event request.");
+}
+
+StatusCode LHCb::DimTaskFSM::startupDone()  {
+  m_stateName = ST_NAME_NOT_READY;
+  DimServer::start(m_procName.c_str());
+  m_service->updateService((char*)m_stateName.c_str());
+  return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::DimTaskFSM::configure()  {
@@ -289,15 +302,18 @@ StatusCode LHCb::DimTaskFSM::disable()  {
 StatusCode LHCb::DimTaskFSM::finalize()  {
   m_continue = false;
   cancel();
-  return declareState(ST_NAME_READY);
+  return declareState(ST_NAME_STOPPED);
 }
 
 StatusCode LHCb::DimTaskFSM::terminate()  {
-  return declareState(ST_NAME_NOT_READY);
+  declareState(ST_NAME_NOT_READY);
+  //IOCSENSOR.send(this,UNLOAD);
+  return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::DimTaskFSM::unload()  {
   declareState(ST_NAME_UNKNOWN);
+  ::lib_rtl_sleep(100);
   ::exit(0);
   return StatusCode::SUCCESS;
 }

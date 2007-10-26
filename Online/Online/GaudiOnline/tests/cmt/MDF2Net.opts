@@ -1,19 +1,15 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtMax                = 200000;
+ApplicationMgr.EvtMax                = 200000000;
 Runable.MEPManager                   = "";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
-ApplicationMgr.TopAlg               += {"LHCb::DimDataSender/Sender"};
-
-Sender.DataSink                      = "LHCb_storerecv01_lbhlt00_HLT";
-ApplicationMgr.ExtSvc               += {"LHCb::AMSService/AMS"};
-ApplicationMgr.TopAlg                = {"LHCb::AmsDataSender/Sender"};
-Sender.DataSink                      = "storerecv01::PRS_storerecv01_lbhlt00_HLT";
-Sender.Compress                      = 0;
-Sender.AllowSuspend                  = false;
+ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND_0"};
+SND_0.DataSink                       = "storerecv01-d1::LHCb_STORERECV01_SF00_HLT";
+SND_0.Compress                       = 0;
+SND_0.AllowSuspend                   = false;
+SND_0.DataType                       = 2; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
 EventSelector.PrintFreq              = 5000;
 #pragma print off
 #include "data/data.opts"
 MessageSvc.OutputLevel = 3;
-//ApplicationMgr.EvtMax                = 200;

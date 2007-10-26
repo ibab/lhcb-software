@@ -1,6 +1,12 @@
 #include "GaudiOnline/Class1Task.h"
+#include "CPP/IocSensor.h"
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task)
+
+/// Standard constructor
+LHCb::Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc) {
+  IOCSENSOR.send(this, STARTUP_DONE);
+}
 
 StatusCode LHCb::Class1Task::configure()  {
   int result = configApplication();
@@ -9,7 +15,12 @@ StatusCode LHCb::Class1Task::configure()  {
     declareState(ST_NOT_READY);
     break;
   case 1:
-    return DimTaskFSM::configure();
+    result = initApplication();
+    if ( result == 1 ) {
+      return DimTaskFSM::configure();
+    }
+    declareState(ST_ERROR);
+    break;
   case 0:
   default:
     declareState(ST_ERROR);
@@ -19,38 +30,22 @@ StatusCode LHCb::Class1Task::configure()  {
 }
     
 StatusCode LHCb::Class1Task::initialize()  {
-  int result = initApplication();
-  switch(result) {
-  case 3:
-    declareState(ST_READY);
-    return StatusCode::SUCCESS;
-  case 1:
-    DimTaskFSM::initialize();
-    return StatusCode::SUCCESS;
-  case 0:
-  default:
-    declareState(ST_ERROR);
-    return StatusCode::FAILURE;
-  }
+  DimTaskFSM::initialize();
+  return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::Class1Task::finalize()  {
-  int result = finalizeApplication();
-  if (1 == result) {
-    return DimTaskFSM::finalize();
-  }
-  declareState(ST_RUNNING);
-  return StatusCode::FAILURE;
+  return DimTaskFSM::finalize();
 }
 
 StatusCode LHCb::Class1Task::terminate()  {
-  int result = terminateApplication();
-  switch(result) {
-  case 1:
-    return DimTaskFSM::terminate();
-  default:
-  case 0:
-    declareState(ST_READY);
-    return StatusCode::FAILURE;
+  int result = finalizeApplication();
+  if (1 == result) {
+    result = terminateApplication();
+    if( 1 == result ) {
+      return DimTaskFSM::terminate();
+    }
   }
+  declareState(ST_STOPPED);
+  return StatusCode::FAILURE;
 }
