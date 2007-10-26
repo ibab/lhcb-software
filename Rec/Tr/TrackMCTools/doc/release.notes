@@ -4,11 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
-!======================= TrackMCTools v2r13 2007-10-23 =======================
-! 2007-10-22 - Olivier Callot
- - Implement PatDebugTTTruthTool for use in PatDownstream to print truth 
-   information when debugging pattern recognition.
-
+!======================= TrackMCTools v2r13 2007-10-26 =======================
 ! 2007-10-08 M Needham
  - Fix problem in DaVinci with ghost classification tool
 
