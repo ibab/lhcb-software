@@ -20,13 +20,22 @@ ToolSvc.Offline.RichPhotonCreatorReco.MinAllowedCherenkovTheta   = {  0.075,   0
 ToolSvc.Offline.RichPhotonCreatorReco.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreatorReco.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-// Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichPhotonCreatorReco.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
+// N sigma on expected CK theta resolution
+ToolSvc.Offline.RichPhotonCreatorReco.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichPhotonCreatorReco.PhotonRecoTool  = "PhotonParams";
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+//                                                                                     Aero   C4F10  CF4
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
 
 // MC creator
 //=================================================================================================
@@ -38,5 +47,5 @@ ToolSvc.Offline.RichPhotonCreatorMC.MinAllowedCherenkovTheta   = {  0.075,   0.0
 ToolSvc.Offline.RichPhotonCreatorMC.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreatorMC.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-// Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichPhotonCreatorMC.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
+// N sigma on expected CK theta resolution
+ToolSvc.Offline.RichPhotonCreatorMC.NSigma                     = {  3.8,     3.3,     3.3    };

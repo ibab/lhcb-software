@@ -7,6 +7,7 @@
 ! 2007-10-26 - Chris Jones
  - Reorganise sequences to have a single sequence for each initialisation
    task (Makes it easy to append algorothms at correct place later).
+ - Fix some of the cheated MC options that had stopped working
 
 ! 2007-10-04 - Chris Jones
  - Fixes to get MCRichTracks working again

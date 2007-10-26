@@ -16,10 +16,7 @@ ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005
 ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-// Fixed range around expected Cherenkov theta
-//ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.015,   0.007,   0.0035  };
 // N sigma on expected CK theta resolution
-//ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  999,     999,     999     };
 ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 
@@ -52,7 +49,6 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999999,   9999
 ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
 
 // use Quartic solving tool
-
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 //                                                                                 Aero   C4F10  CF4
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
