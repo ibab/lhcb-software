@@ -1,5 +1,6 @@
-// $Id: HltSelChecker.cpp,v 1.4 2007-08-10 16:00:25 pkoppenb Exp $
+// $Id: HltSelChecker.cpp,v 1.5 2007-10-26 14:23:37 pkoppenb Exp $
 // Include files 
+#include "gsl/gsl_cdf.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -122,6 +123,7 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
     tuple->column( "PV", Gaudi::XYZVector(-1.,-1.,-1.)  );    
     tuple->column( part+"IP",  -1.);
     tuple->column( part+"IPe", -1.);
+    tuple->column( part+"IPprob", -1.);
   } else {
     tuple->column( "PV",   rPV->position());    
     // ip
@@ -129,6 +131,7 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
     geomDispCalculator()->calcImpactPar(*P, *rPV, ip, ipe);
     tuple->column( part+"IP",  ip);
     tuple->column( part+"IPe", ipe);
+    tuple->column( part+"IPprob", gsl_cdf_chisq_Q(ip*ip/(ipe*ipe),1));
   }
   
   if (m_doMC) {
