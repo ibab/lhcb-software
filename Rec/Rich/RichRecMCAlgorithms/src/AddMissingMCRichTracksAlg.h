@@ -4,14 +4,14 @@
  *  Header file for algorithm class : Rich::Rec::MC::AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.h,v 1.1.1.1 2007-10-26 10:34:19 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.h,v 1.2 2007-10-26 10:38:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
- *  @date   10/01/2003
+ *  @date   26/10/2007
  */
 
-#ifndef RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H
-#define RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H 1
+#ifndef RICHRECMCALGORITHMS_AddMissingMCRichTracksAlg_H
+#define RICHRECMCALGORITHMS_AddMissingMCRichTracksAlg_H 1
 
 // STD
 #include <set>
@@ -34,10 +34,12 @@ namespace Rich
 
       /** @class AddMissingMCRichTracksAlg AddMissingMCRichTracksAlg.h
        *
-       *  Al
+       *  Checks the currently existing RichRecTracks to see if there are
+       *  any MCRichTracks not accounted for. If there are, adds these to 
+       *  the RichRecTracks.
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       *  @date   10/01/2003
+       *  @date   26/10/2007
        */
 
       class AddMissingMCRichTracksAlg : public RichRecAlgBase
@@ -70,4 +72,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H
+#endif // RICHRECMCALGORITHMS_AddMissingMCRichTracksAlg_H
