@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.18 2007-03-09 22:10:41 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.19 2007-10-26 10:40:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -62,8 +62,13 @@ namespace Rich
       private:
 
         /// Clean up after event abortion
-        void deleteEvent();
-
+        inline void deleteEvent()
+        {
+          // Tidy up incase of event abort
+          if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
+          if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
+        }
+        
         /// Determine the global PID Status of a track.
         /// Determines how the track will be used in the global likelihood
         Rich::Rec::GlobalPID::TkQuality trackStatus( LHCb::RichRecTrack * track );
@@ -73,8 +78,10 @@ namespace Rich
 
         const IExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
 
-        /// Track selector
+        /// Primary Track selector
         const ITrackSelector * m_trSelector;
+        /// 'Frozen' Track selector
+        const ITrackSelector * m_frozenTrSel;
 
         // Selection cuts
         double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
@@ -87,14 +94,13 @@ namespace Rich
         /// Maximum total number of input TrStoredTracks
         int m_maxInputTracks;
 
-      };
+        /// Turn on the use of 'frozen' tracks
+        bool m_freezeTracks;
 
-      inline void TrackSel::deleteEvent()
-      {
-        // Tidy up incase of event abort
-        if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
-        if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
-      }
+        /// The mass hypothesis for frozen tracks
+        int m_frozenType;
+
+      };
 
     }
   }

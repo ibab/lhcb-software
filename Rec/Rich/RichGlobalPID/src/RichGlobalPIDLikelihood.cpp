@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.6 2007-10-23 10:43:08 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.7 2007-10-26 10:40:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -96,7 +96,7 @@ StatusCode Likelihood::initialize()
 StatusCode Likelihood::execute()
 {
 
-  // ------------------------- General  RICH reco stuff --------------------------------
+  // ------------------------------ General RICH reco stuff -------------------------------------
 
   // Update RichRecEvent pointers
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -118,7 +118,7 @@ StatusCode Likelihood::execute()
       return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
 
-  // ------------------------- General  RICH reco stuff --------------------------------
+  // ------------------------------ General RICH reco stuff -------------------------------------
 
   // Now start Global PID
 
@@ -266,6 +266,13 @@ unsigned int Likelihood::initBestLogLikelihood()
   {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
+    // skip frozen tracks
+    if ( (*track)->frozenHypo() ) 
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endreq; }
+      continue;
+    }
     // Initialise starting values
     double mindeltaLL = 99999.;
     Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
@@ -372,7 +379,15 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Track " << gTrack->key() << " DLL = " << (*iP).first << endreq;
 
-    // skip frozen tracks
+    // skip globally frozen tracks
+    if ( gTrack->frozenHypo() ) 
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      { debug() << "  -> Skipping globally frozen track" << gTrack->key() << endreq; }
+      continue;
+    }
+
+    // skip tracks frozen for this iteration
     if ( (*iP).first > freezeOutDll() )
     {
       if ( msgLevel(MSG::DEBUG) )

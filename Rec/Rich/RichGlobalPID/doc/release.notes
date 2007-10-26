@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-10-26 - Chris Jones
+ - Add ability to freeze certain tracks to a fixed mass hypothesis during
+   the likelihood minimisation
+
 ! 2007-10-23 - Chris Jones
  - Minor tidy up
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.30 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.31 2007-10-26 10:40:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -20,7 +20,6 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespaces
-using namespace LHCb;
 using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
@@ -32,6 +31,8 @@ TrackSel::TrackSel( const std::string& name,
                     ISvcLocator* pSvcLocator )
   : AlgBase ( name, pSvcLocator ),
     m_tkSignal       ( 0 ),
+    m_trSelector     ( 0 ),
+    m_frozenTrSel    ( 0 ),
     m_minPhysPtot    ( 0 ),
     m_minLLPtot      ( 0 ),
     m_resetToPion    ( false ),
@@ -40,11 +41,13 @@ TrackSel::TrackSel( const std::string& name,
 {
 
   // Selection cuts
-  declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 2.0*Gaudi::Units::GeV );
-  declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 1.0*Gaudi::Units::GeV );
+  declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 0.0*Gaudi::Units::GeV );
+  declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 0.0*Gaudi::Units::GeV );
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
   declareProperty( "MaxInputTracks", m_maxInputTracks = 350 );
+  declareProperty( "FreezeSelectedTracks", m_freezeTracks = false );
+  declareProperty( "FrozenTrackMassHypo",  m_frozenType = (int)Rich::Pion );
 
 }
 
@@ -67,6 +70,13 @@ StatusCode TrackSel::initialize()
   trackCreator();
   segmentCreator();
 
+  if ( m_freezeTracks )
+  {
+    info() << "Will freeze selected tracks to mass hypothesis "
+           << (Rich::ParticleIDType)m_frozenType << endreq;
+    acquireTool( "TrackSelector", "FrozenTrackSelector", m_frozenTrSel, this );
+  }
+  
   return sc;
 }
 
@@ -81,8 +91,9 @@ StatusCode TrackSel::execute()
   if ( !gpidTracks() || !gpidPIDs() ) return StatusCode::FAILURE;
 
   // Check if track processing was aborted.
-  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() ) {
+  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
+  if ( procStat->aborted() ) 
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );  // set event status false
     deleteEvent();
@@ -90,7 +101,8 @@ StatusCode TrackSel::execute()
   }
 
   // Check the number of input raw tracks
-  if ( trackCreator()->nInputTracks() > m_maxInputTracks ) {
+  if ( trackCreator()->nInputTracks() > m_maxInputTracks ) 
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrTrackLimit );
     deleteEvent();
     return Warning("Max. number of input tracks exceeded -> Abort",StatusCode::SUCCESS);
@@ -98,41 +110,69 @@ StatusCode TrackSel::execute()
 
   // Make sure RichRecTracks are available
   if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-  if ( richTracks()->empty() ) {
+  if ( richTracks()->empty() ) 
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     deleteEvent();
     return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
-  } else if ( richTracks()->size() > m_maxUsedTracks ) {
+  } 
+  else if ( richTracks()->size() > m_maxUsedTracks )
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedRichTrackLimit );
     deleteEvent();
     return Warning("Max. number of RICH tracks exceeded -> Abort",StatusCode::SUCCESS);
   }
 
   // Iterate over all RichRecTracks and choose those to use
-  for ( RichRecTracks::iterator track = richTracks()->begin();
-        track != richTracks()->end(); ++track ) {
+  for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
+        track != richTracks()->end(); ++track ) 
+  {
 
     // select tracks for use
     Rich::Rec::GlobalPID::TkQuality quality = trackStatus( *track );
-    if ( Rich::Rec::GlobalPID::Unusable == quality ) {
+    if ( Rich::Rec::GlobalPID::Unusable == quality ) 
+    {
       (*track)->setInUse( false );
       continue;
-    } else {
+    } 
+    else 
+    {
       (*track)->setInUse( true );
     }
 
     // Set to pion hypothesis if configured to do so
     if ( m_resetToPion ) (*track)->setCurrentHypothesis( Rich::Pion );
-    verbose() << "Track " << (*track)->key() << " has initial hypothesis "
-              << (*track)->currentHypothesis() << endreq;
-
+    if ( msgLevel(MSG::VERBOSE) )
+    { verbose() << "Track " << (*track)->key() << " has initial hypothesis "
+                << (*track)->currentHypothesis() << endreq; }
+    
     // Make a new RichGlobalPIDTrack
-    RichGlobalPIDTrack * pidTrack = new RichGlobalPIDTrack();
+    LHCb::RichGlobalPIDTrack * pidTrack = new LHCb::RichGlobalPIDTrack();
     m_GPIDtracks->insert( pidTrack, (*track)->key() );
 
     // Make new PID result and give to track
-    RichGlobalPID * newPID = new RichGlobalPID();
+    LHCb::RichGlobalPID * newPID = new LHCb::RichGlobalPID();
     m_GPIDs->insert( newPID, (*track)->key() );
+
+    // Frozen track ?
+    if ( m_freezeTracks )
+    {
+      // is this track selected as one to freeze ?
+      if ( m_frozenTrSel->trackSelected(*track) )
+      {
+        // freeze the track
+        pidTrack->setFrozenHypo(true);
+        // Set mass hypo to frozen type
+        (*track)->setCurrentHypothesis( (Rich::ParticleIDType)m_frozenType );
+        // label track as one not to have a final PID object 
+        quality = Rich::Rec::GlobalPID::LikelihoodOnly;
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << " -> Track is selected to be frozen to type " 
+                    << (Rich::ParticleIDType)m_frozenType << endreq;
+        }
+      }
+    }
 
     // set track reference
     pidTrack->setGlobalPID( newPID );
@@ -151,9 +191,11 @@ StatusCode TrackSel::execute()
     // Set its SmartRef to RichRecTrack
     pidTrack->setRichRecTrack( *track );
 
+
   } // track loop
 
-  if ( m_GPIDtracks->empty() ) {
+  if ( m_GPIDtracks->empty() ) 
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     deleteEvent();
     return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
@@ -163,7 +205,7 @@ StatusCode TrackSel::execute()
 }
 
 Rich::Rec::GlobalPID::TkQuality
-TrackSel::trackStatus( RichRecTrack * track ) 
+TrackSel::trackStatus( LHCb::RichRecTrack * track ) 
 {
 
   // Set default quality to be good
