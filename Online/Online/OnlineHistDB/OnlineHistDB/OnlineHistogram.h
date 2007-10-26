@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.12 2007-10-16 12:16:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.13 2007-10-26 13:46:43 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -69,6 +69,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
   void unsetPage();
   /// sets the DIM service name that is currently publishing the histogram. Returns true on success
   bool setDimServiceName(std::string DimServiceName);
+  /// provide a short description to be optionally printed on the plot 
+  bool setDoc(std::string doc);
+  /// provide a  description of the histogram content 
+  bool setDescr(std::string descr);
   bool remove(bool RemoveWholeSet);
   /// dumps histogram data
   void dump();

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.17 2007-10-22 17:41:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.18 2007-10-26 13:46:43 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -84,6 +84,48 @@ bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
   m_conn->terminateStatement (astmt);  
   return out;
 }
+
+
+bool OnlineHistogram::setDoc(std::string doc) {
+  // to be done in v4:add length check 
+  bool out=true;
+  Statement *astmt = m_conn->createStatement("UPDATE HISTOGRAMSET set DOC=:1 where HSID=:2");
+  try{
+    astmt->setString(1, doc);
+    astmt->setInt   (2, m_hsid);
+    astmt->execute();
+    m_Doc = doc;
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistogram::setDoc");
+      out=false;
+    }
+  m_conn->terminateStatement (astmt);  
+  return out;
+}
+
+
+bool OnlineHistogram::setDescr(std::string descr) {
+  // to be done in v4:add length check 
+  bool out=true;
+  Statement *astmt = m_conn->createStatement("UPDATE HISTOGRAMSET set DESCR=:1 where HSID=:2");
+  try{
+    astmt->setString(1, descr);
+    astmt->setInt   (2, m_hsid);
+    astmt->execute();
+    m_Descr = descr;
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistogram::setDescr");
+      out=false;
+    }
+  m_conn->terminateStatement (astmt);  
+  return out;
+}
+
+
+
+
 
 bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
   // check that page exists and histogram is on it
