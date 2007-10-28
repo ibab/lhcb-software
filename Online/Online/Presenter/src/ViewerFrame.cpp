@@ -5,7 +5,6 @@ ClassImp(ViewerFrame);
 ViewerFrame::ViewerFrame()
 {
 }
-
 ViewerFrame::~ViewerFrame()
 {
 }
