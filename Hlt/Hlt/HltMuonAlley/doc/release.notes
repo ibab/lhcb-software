@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 
- ! 2007-10-12 Jose A. Hernando 
+!========================= HltMuonAlley v1r5p1 2007-10-28 ===================
+! 2007-10-12 Jose A. Hernando 
    - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
 
 !========================== HltMuonAlley v1r5 2007-09-23 ===================
