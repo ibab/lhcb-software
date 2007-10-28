@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v1r6p1 2007-10-28 ===================
 ! 2007-10-11 Jose A. Hernando
   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
   - Using HltDataSvc from DataSvc (following M.Frank suguestions)
