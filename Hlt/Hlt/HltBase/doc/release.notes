@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+!========================== HltBase v2r7 2007-10-28 ===================
 ! 2007-10-12 Jose A. Hernando 
    - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
    - HltAlgorithm: using HltDataSvc from DataSvc
