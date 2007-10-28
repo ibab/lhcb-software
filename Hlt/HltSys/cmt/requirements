@@ -11,7 +11,7 @@ use HltCommon           v1r6    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v1r4    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r3    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r5p1  Hlt   # Alessia Satta
-use HltMuonAlley        v1r5    Hlt   # Alessia Satta
+use HltMuonAlley        v1r5p1  Hlt   # Alessia Satta
 use HltCaloAlley        v1r3    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r2	Hlt   # Jose Angel Hernando-Morata
