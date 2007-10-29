@@ -1,6 +1,5 @@
 #!/bin/bash
 installation=/group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-installation=/home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
 cd $installation
 echo $0 `dirname $0`
 #
