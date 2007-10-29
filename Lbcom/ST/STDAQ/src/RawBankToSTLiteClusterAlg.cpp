@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.9 2007-10-25 10:30:07 cattanem Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.10 2007-10-29 13:51:11 mneedham Exp $
 
 
 #include <algorithm>
@@ -45,7 +45,8 @@ STDecodingBaseAlg (name , pSvcLocator){
  
 
  // Standard constructor, initializes variables
-  declareProperty( "clusterLocation", m_clusterLocation = STLiteClusterLocation::TTClusters); 
+  declareProperty( "clusterLocation", m_clusterLocation = STLiteClusterLocation::TTClusters);
+  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default); 
 }
 
 RawBankToSTLiteClusterAlg::~RawBankToSTLiteClusterAlg() {
@@ -69,7 +70,7 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
 
 
   // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(RawEventLocation::Default );
+  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt);   
@@ -86,6 +87,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   STLiteCluster::STLiteClusters* fCont = new STLiteCluster::STLiteClusters();
   fCont->reserve(5000);  
+  put(fCont, m_clusterLocation);
  
   // loop over the banks of this type..
   std::vector<RawBank* >::const_iterator iterBank =  tBanks.begin();
@@ -129,9 +131,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 
   // sort 
   std::sort(fCont->begin(),fCont->end(), Less_by_Channel());
-
-  put(fCont, m_clusterLocation);
-  
+ 
   return StatusCode::SUCCESS;
 
 }

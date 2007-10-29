@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.4 2007-04-18 12:10:07 csalzman Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.5 2007-10-29 13:51:11 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -45,16 +45,13 @@ public:
 
 private:
 
-
-  
-
   // create Clusters from this type
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt) const;
 
   /// Output location for STClusters
-  std::string m_clusterLocation;
+  std::string m_rawEventLocation;
 
-  
+  std::string m_clusterLocation;  
   
   class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
   public:

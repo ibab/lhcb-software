@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.4 2007-04-18 12:10:06 csalzman Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.5 2007-10-29 13:51:11 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -64,6 +64,9 @@ private:
   std::string m_clusterLocation;
 
   unsigned int m_nBits; 
+
+  std::string m_rawEventLocation;
+
 };
 
 #endif // RAWBUFFERTOSTDIGITALG_H 

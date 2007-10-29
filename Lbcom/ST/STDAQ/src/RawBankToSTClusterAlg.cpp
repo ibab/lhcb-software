@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.15 2007-10-25 10:30:06 cattanem Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.16 2007-10-29 13:51:11 mneedham Exp $
 
 #include <algorithm>
 
@@ -43,7 +43,8 @@ STDecodingBaseAlg (name , pSvcLocator),
 m_nBits(2){
  
  // Standard constructor, initializes variables
-  declareProperty( "clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
+  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
+  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -66,11 +67,12 @@ StatusCode RawBankToSTClusterAlg::initialize() {
 StatusCode RawBankToSTClusterAlg::execute() {
 
   // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(RawEventLocation::Default );
+  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
 
   // make a new digits container
   STClusters* clusCont = new STClusters();
   clusCont->reserve(2000);
+  put(clusCont, m_clusterLocation);
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt,clusCont);   
@@ -83,9 +85,7 @@ StatusCode RawBankToSTClusterAlg::execute() {
             clusCont->end(),
             STDataFunctor::Less_by_Channel<const STCluster*>());
 
-  // store
-  put(clusCont, m_clusterLocation);
-
+ 
   return sc;
 };
 
@@ -93,8 +93,8 @@ StatusCode RawBankToSTClusterAlg::execute() {
 StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt, 
                                               STClusters* clusCont ) const{
 
-  // create Clusters from this type
-
+  // create Clusters from this type 
+ 
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   std::vector<RawBank* >::const_iterator iterBank;
   // loop over the banks of this type..
