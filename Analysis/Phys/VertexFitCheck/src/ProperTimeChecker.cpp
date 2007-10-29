@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.1.1.1 2007-10-17 07:07:00 jpalac Exp $
+// $Id: ProperTimeChecker.cpp,v 1.2 2007-10-29 02:23:01 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,10 @@ ProperTimeChecker::ProperTimeChecker( const std::string& name,
 {
    declareProperty( "ParticlePath", m_particlePath );
    declareProperty( "pidToCheck", m_pidToCheck );
-   declareProperty( "reFitPV", m_reFitPV = true);
+   declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
+   declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
+   declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
+
 }
 //=============================================================================
 // Destructor
@@ -59,7 +62,6 @@ StatusCode ProperTimeChecker::initialize() {
   debug() << "==> Initialize" << endmsg;
   // For Particle -> MCParticle association
   m_pLinker = new Particle2MCLinker(this,
-//                                    Particle2MCMethod::Chi2,
                                       Particle2MCMethod::Composite,
                                       m_particlePath);
 
@@ -93,11 +95,11 @@ StatusCode ProperTimeChecker::initialize() {
     return StatusCode::FAILURE;
   }
 
-
-//  m_track2MCLink = new Object2MCLinker<LHCb::Track>( this,
-//                                                     "", "",
-//                                                     TrackLocation::Default);
-
+  m_cheatedPVReFitter = tool<IPVReFitter>("CheatedPVReFitter",this );
+  if (!m_cheatedPVReFitter) {
+    fatal() << "    Unable to retrieve CheatedPVReFitter " ;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -297,7 +299,7 @@ StatusCode ProperTimeChecker::execute() {
 
         LHCb::Particle newPart(*Part);
         LHCb::RecVertex newPV(*bestPV);
-        StatusCode rfsc = m_pvReFitter->remove(&newPart, &newPV);
+        StatusCode rfsc = m_pvReFitter->reFit(&newPV);
 
         if(rfsc.isSuccess()) {
           rfPVOk = true;
@@ -334,6 +336,118 @@ StatusCode ProperTimeChecker::execute() {
       ntuple->column("rfpv_cosPF", rfpv_cosPF);
 
     }
+
+    if(m_removeBFromPV) {
+      bool rfPVOk = false;
+      double rfPVx = -9999.;
+      double rfPVy = -9999.;
+      double rfPVz = -9999.;
+      double rfPVxErr = -9999.;
+      double rfPVyErr = -9999.;
+      double rfPVzErr = -9999.;
+      bool rfpv_timeFitOk = false;
+      double rfpv_time = -9999.;
+      double rfpv_timeErr = -9999.;
+      double rfpv_timeFitChi2 = -9999.;
+      double rfpv_cosPF = -9999.;
+
+      if(bestPV) {
+
+        LHCb::Particle newPart(*Part);
+        LHCb::RecVertex newPV(*bestPV);
+        StatusCode rfsc = m_pvReFitter->remove(&newPart, &newPV);
+
+        if(rfsc.isSuccess()) {
+          rfPVOk = true;
+          rfPVx = newPV.position().x();
+          rfPVy = newPV.position().y();
+          rfPVz = newPV.position().z();
+          rfPVxErr = sqrt(newPV.covMatrix()(0,0));
+          rfPVyErr = sqrt(newPV.covMatrix()(1,1));
+          rfPVzErr = sqrt(newPV.covMatrix()(2,2));
+
+          StatusCode fitsc = m_timeFitter->fit(newPV, newPart, rfpv_time, rfpv_timeErr, rfpv_timeFitChi2);
+          if (fitsc.isSuccess()) rfpv_timeFitOk = true;
+          rfpv_time/=picosecond;
+          rfpv_timeErr/=picosecond;
+
+          Gaudi::XYZVector dist = newPart.referencePoint()-newPV.position();
+          const Gaudi::XYZVector vmom = newPart.momentum().Vect();
+          rfpv_cosPF = vmom.Dot(dist)/vmom.R()/dist.R();
+
+        }
+      }
+
+      ntuple->column("rmbPVOk", rfPVOk);
+      ntuple->column("rmbPVx", rfPVx);
+      ntuple->column("rmbPVy", rfPVy);
+      ntuple->column("rmbPVz", rfPVz);
+      ntuple->column("rmbPVxErr", rfPVxErr);
+      ntuple->column("rmbPVyErr", rfPVyErr);
+      ntuple->column("rmbPVzErr", rfPVzErr);
+      ntuple->column("rmbpv_timeFitOk", rfpv_timeFitOk);
+      ntuple->column("rmbpv_time", rfpv_time);
+      ntuple->column("rmbpv_timeErr", rfpv_timeErr);
+
+    }
+
+    if(m_removeMCSecondaryFromPV) {
+
+      bool rfPVOk = false;
+      double rfPVx = -9999.;
+      double rfPVy = -9999.;
+      double rfPVz = -9999.;
+      double rfPVxErr = -9999.;
+      double rfPVyErr = -9999.;
+      double rfPVzErr = -9999.;
+      bool rfpv_timeFitOk = false;
+      double rfpv_time = -9999.;
+      double rfpv_timeErr = -9999.;
+      double rfpv_timeFitChi2 = -9999.;
+      double rfpv_cosPF = -9999.;
+
+      if(bestPV) {
+
+        LHCb::Particle newPart(*Part);
+        LHCb::RecVertex newPV(*bestPV);
+        StatusCode rfsc = m_cheatedPVReFitter->reFit(&newPV);
+
+        if(rfsc.isSuccess()) {
+          rfPVOk = true;
+          rfPVx = newPV.position().x();
+          rfPVy = newPV.position().y();
+          rfPVz = newPV.position().z();
+          rfPVxErr = sqrt(newPV.covMatrix()(0,0));
+          rfPVyErr = sqrt(newPV.covMatrix()(1,1));
+          rfPVzErr = sqrt(newPV.covMatrix()(2,2));
+
+          StatusCode fitsc = m_timeFitter->fit(newPV, newPart, rfpv_time, rfpv_timeErr, rfpv_timeFitChi2);
+          if (fitsc.isSuccess()) rfpv_timeFitOk = true;
+          rfpv_time/=picosecond;
+          rfpv_timeErr/=picosecond;
+
+          Gaudi::XYZVector dist = newPart.referencePoint()-newPV.position();
+          const Gaudi::XYZVector vmom = newPart.momentum().Vect();
+          rfpv_cosPF = vmom.Dot(dist)/vmom.R()/dist.R();
+
+        }
+      }
+
+      ntuple->column("rmsPVOk", rfPVOk);
+      ntuple->column("rmsPVx", rfPVx);
+      ntuple->column("rmsPVy", rfPVy);
+      ntuple->column("rmsPVz", rfPVz);
+      ntuple->column("rmsPVxErr", rfPVxErr);
+      ntuple->column("rmsPVyErr", rfPVyErr);
+      ntuple->column("rmsPVzErr", rfPVzErr);
+      ntuple->column("rmspv_timeFitOk", rfpv_timeFitOk);
+      ntuple->column("rmspv_time", rfpv_time);
+      ntuple->column("rmspv_timeErr", rfpv_timeErr);
+      ntuple->column("rmspv_timeFitChi2", rfpv_timeFitChi2);
+      ntuple->column("rmspv_cosPF", rfpv_cosPF);
+
+    }
+
 
     sc = ntuple->write();
     if( sc.isFailure() )
@@ -406,9 +520,6 @@ int ProperTimeChecker::countMatchedPVTrks(const RecVertex* pv,
     LHCb::Track* track = *trIt;
     if(!track) continue;
 
-//    for( LHCb::MCParticle* mcPart = m_track2MCLink->first(track);
-//         NULL != mcPart;
-//         mcPart = m_track2MCLink->next(track) ) {
     LinkedTo<LHCb::MCParticle,LHCb::Track> directLink( evtSvc(), msgSvc(), TrackLocation::Default );
 
     for( LHCb::MCParticle* mcPart = directLink.first(track);

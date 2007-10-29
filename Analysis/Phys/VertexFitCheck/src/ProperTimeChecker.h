@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.h,v 1.2 2007-10-17 07:27:55 jpalac Exp $
+// $Id: ProperTimeChecker.h,v 1.3 2007-10-29 02:23:01 xieyu Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
@@ -54,6 +54,7 @@ private:
   const IGeomDispCalculator* m_geomTool;
   IRelatedPV* m_relatedPV;
   IPVReFitter* m_pvReFitter;
+  IPVReFitter* m_cheatedPVReFitter;
 
   Particle2MCLinker* m_pLinker;
   std::string m_particlePath;
@@ -63,6 +64,9 @@ private:
   int m_pidToCheck;
 
   bool m_reFitPV;
+  bool m_removeBFromPV;
+  bool m_removeMCSecondaryFromPV;
+
 
 };
 #endif 
