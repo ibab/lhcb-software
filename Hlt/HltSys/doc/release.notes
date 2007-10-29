@@ -6,6 +6,9 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+! 2007-10-29 - Hugo Ruiz
+ - add HltMuHadAlleyConfSequence.opts with options for Muon+Hadron Alley
+ - Hlt.opts: add Muon+Hadron Alley in sequence
 ! 2007-10-25 - Eduardo Rodrigues
  - HltJob.opts: changed the obsolete file $STDOPTS/DC06Conditions.opts
                 with $DDDBROOT/options/DC06.opts

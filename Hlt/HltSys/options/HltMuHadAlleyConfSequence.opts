@@ -1,0 +1,133 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+
+//---------------------------
+// HLT MuHad Alley
+//--------------------------
+HltSummaryWriter.Save += {"PV2D",
+                          "L0TriggerMuon",
+                          "MuHadTrigger"
+};
+
+
+HltMuHadAlley.Members = {"L0Entry/L0MuHadEntry",
+                         "HltSelectionEntry/MuHadEntry",
+                         "HltTrackFilter/MuHadMuonTF",
+                         // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
+                         "HltTracking/HltRecoVelo",
+                         "HltTrackFilter/MuHadCompanionTFVelo",
+                         "GaudiSequencer/HltDecodeT",
+                         "HltTracking/MuHadCompanionTRForward",
+                         "HltTrackFilter/MuHadCompanionTFForward",
+                         "HltVertexMaker/MuHadVMaker",
+                         "HltVertexFilter/MuHadTrigger"
+};
+
+
+
+HltMuHadAlley.MeasureTime = true;
+
+//-------------------------------------------------------------------------
+// HLT MuHadAlley options
+//-------------------------------------------------------------------------
+
+
+// L0 entry: single muon
+L0MuHadEntry.L0ChannelsName = {"muon" ,"muonnoglob"};
+L0MuHadEntry.SelectionName = "MuonEntry";
+L0MuHadEntry.OutputLevel=3;
+
+// HLT entry: some L0 confirmed muon;
+MuHadEntry.Selections = {"MuonAndTVelo"};
+
+// Select Muons with IP and pT
+//MuHadMuonTF.InputTracksName  = "MuonsForwardSingle";
+MuHadMuonTF.InputTracksName  = "MuonAndTVelo";
+MuHadMuonTF.OutputTracksName = "MuHadMuonTF";
+MuHadMuonTF.PrimaryVerticesName = "PV2D";
+MuHadMuonTF.HistogramUpdatePeriod = 0;
+MuHadMuonTF.FilterDescriptor = {"PT,>,1000.",
+                                "IP,||[],0.1,3.",
+                                "FlagL0Candidate"
+};
+MuHadMuonTF.HistoDescriptor = {"PT,400,0.,6000.",
+                               "PTBest,400,0.,6000.",
+                               "IP,400,-1.,3.",
+                               "IPBest,400,-1.,3."
+};
+MuHadMuonTF.OutputLevel = 3;
+
+// do the rest of velo tracks
+HltRecoVelo.InputTracksName  = "RZVelo";
+HltRecoVelo.OutputTracksName = "Velo";
+HltRecoVelo.RecoName = "Velo";
+HltRecoVelo.OutputLevel = 3;
+
+
+// Select Velo tracks with an IP and good DOCA to Muon
+MuHadCompanionTFVelo.InputTracksName  = "Velo";
+MuHadCompanionTFVelo.InputTracks2Name = "MuHadMuonTF";
+MuHadCompanionTFVelo.OutputTracksName = "MuHadCompanionTFVelo";
+MuHadCompanionTFVelo.PrimaryVerticesName = "PV2D";
+MuHadCompanionTFVelo.HistogramUpdatePeriod = 0;
+MuHadCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
+                                         "DOCA,<,0.2"
+};
+MuHadCompanionTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
+                                        "IPBest,400,-1.,3.",
+                                        "DOCA,400,0.,1.",
+                                        "DOCABest,400,0.,1."
+};
+
+MuHadCompanionTFVelo.OutputLevel = 3;
+
+
+// Make forward the selected velo tracks
+MuHadCompanionTRForward.InputTracksName  = "MuHadCompanionTFVelo";
+MuHadCompanionTRForward.OutputTracksName = "MuHadCompanionTRForward";
+MuHadCompanionTRForward.RecoName = "Forward";
+MuHadCompanionTRForward.OutputLevel = 3;
+PatMuHadCompanionTRForward.DoCleanUp = false;
+
+// Select forward track with a given Pt
+MuHadCompanionTFForward.InputTracksName  = "MuHadCompanionTRForward";
+MuHadCompanionTFForward.OutputTracksName = "MuHadCompanionTFForward";
+MuHadCompanionTFForward.FilterDescriptor = {"PT,>,500."};
+MuHadCompanionTFForward.HistogramUpdatePeriod = 0;
+MuHadCompanionTFForward.HistoDescriptor = {"PT,100,0.,6000.",
+                                       "PTBest,100,0.,6000."
+};
+MuHadPreTriggerSingle.OutputLevel = 3;
+
+
+// Make vertices with the forward companion tracks 
+MuHadVMaker.InputTracksName    = "MuHadMuonTF";
+MuHadVMaker.InputTracks2Name   = "MuHadCompanionTFForward";
+MuHadVMaker.OutputVerticesName = "MuHadVMaker";
+MuHadVMaker.OutputLevel = 3;
+MuHadVMaker.FilterDescriptor = {"DOCA,<,0.2"
+};
+MuHadTVMaker.HistogramUpdatePeriod = 0;
+MuHadTVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
+                                      "DOCABest,100,0.,0.5"
+};
+
+// select vertices if Pt, poiting, and distance
+MuHadTrigger.InputVerticesName   = "MuHadVMaker";
+MuHadTrigger.PrimaryVerticesName = "PV2D";
+MuHadTrigger.OutputVerticesName  = "MuHadTrigger";
+MuHadTrigger.OutputLevel = 3;
+MuHadTrigger.FilterDescriptor = {"VertexPointing,<,0.4",
+                                 "VertexDz,>,2."
+};
+MuHadTrigger.HistogramUpdatePeriod = 0;
+MuHadTrigger.HistoDescriptor = {"VertexPointing,100,0.,1.",
+                                "VertexPointingBest,100,0.,1.",
+                                "VertexDz,100,-10.,50.",
+                                "VertexDzBest,100,-10.,50."
+};
+

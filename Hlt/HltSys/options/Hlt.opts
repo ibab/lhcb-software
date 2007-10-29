@@ -5,7 +5,7 @@
 HltDataSvc.ForceLeaves = true;
 
 //
-// define online reconstruction
+// defines online reconstruction parameters, does not add any algorithm!
 //
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
 
@@ -34,6 +34,7 @@ HltInitSeq.Members = {"PatInitEvent",
 
 HltAllAlleys.Members ={"HltSequencer/HltL0TriggerSequence",
                        "HltSequencer/HltMuonAlley",
+                       "HltSequencer/HltMuHadAlley",
                        "HltSequencer/HltHadAlley",
                        "HltSequencer/HltEleAlley",
                        "HltSequencer/HltPhoAlley",
