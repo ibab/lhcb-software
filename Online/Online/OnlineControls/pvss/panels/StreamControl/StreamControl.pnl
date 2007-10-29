@@ -14,7 +14,7 @@ void StreamControlPanel_updatePartitionDisplay(string stream)  {
   dyn_int    used;
   int stat = -1, res = -1;
   items = dpNames(stream+\"_Slice??.InUse\",\"StreamPartition\");
-  DebugN(\"StreamControlPanel_updatePartitionDisplay> Read data from \"+stream);
+  DebugN(\"StreamControlPanel_updatePartitionDisplay> Read data from \"+stream+\" Len:\"+dynlen(items));
   if ( dynlen(items)<=0 )   {
     res = dpGet(dpNames(stream+\"_Slice??.InUse\"),used);
     if ( 0 == res ) res = dpGet(dpNames(stream+\"_Slice??.Name\"),names);

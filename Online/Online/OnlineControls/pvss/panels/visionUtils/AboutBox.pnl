@@ -1,0 +1,144 @@
+V 10
+2
+LANG:1 11 Information
+LANG:0 11 Information
+PANEL,-1 -1 390 161 N "_3DFace" 1
+"$1"
+"main()
+{
+  text.text = $1;
+}" 0
+ E E E E 1 -1 -1 0  251 55
+""0  1
+E E 2
+"CBRef" "0"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 6 Layer1
+13 8
+"cmdOK"
+""
+1 145 125 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+2
+LANG:1 0 
+LANG:0 0 
+
+0
+2
+LANG:1 84 -*-arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,arial
+LANG:0 107 -microsoft windows-arial-medium-r-normal-*-*-120-100-100-*-*-iso8859-1|-13,0,0,0,500,0,0,0,0,0,0,0,16,arial
+0 ""
+ 145 125 243 153
+
+T 
+2
+LANG:1 5 Close
+LANG:0 2 OK
+"main()
+{
+  dyn_anytype da, daa;
+  
+  da[1] = myModuleName();
+  da[2] = myPanelName();
+  daa[1] = 0.0;
+  da[3] = daa;
+
+  if ( isEvConnOpen() )
+    PanelOff();
+  else
+    panelOff(da);
+}" 0
+ E E E
+6 11
+"m_logo"
+""
+1 -2 70 E E E 1 E 1 E N {0,0,0} E N {255,255,255} E E
+ E "main(int x, int y)    {   PanelOff(); }
+" 0
+
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 47 Yeah - that's us! Double click to close window.
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E 1 0 1 -2.999999999999998 0 2  0 3  "pictures/logo_lhcb.bmp" 13434828 E 10 10 95 70
+2 12
+"m_online"
+""
+1 31.63752167718298 85 E E E 1 E 1 E N "white" E N "red" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1.023529411764706 0 1 -1.188235294117648 7 1 E 8 63 93 84
+1 0 2 "0s" 0 0 0 65 0 0  8 63 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 6 Online
+2 13
+"text"
+""
+1 109 11 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+15 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 109 11 388 121
+0 2 2 "0s" 0 0 0 64 0 0  109 11 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 15 About text here
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
+0
+LAYER, 4 
+1
+LANG:1 6 Layer5
+0
+LAYER, 5 
+1
+LANG:1 6 Layer6
+0
+LAYER, 6 
+1
+LANG:1 6 Layer7
+0
+LAYER, 7 
+1
+LANG:1 6 Layer8
+0
+0

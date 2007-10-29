@@ -9,6 +9,7 @@ std           = PVSS.gbl.std
 log           = Online.Utils.log
 error         = Online.Utils.error
 printSlots    = Online.Utils.printSlots
+FSMmanip      = Online.Streaming.Allocator.FSMmanip
 StreamAlloc   = Online.Streaming.Allocator.Allocator
 PartitionInfo = Online.Streaming.PartitionInfo.PartitionInfo
 
@@ -112,20 +113,24 @@ class FarmSliceInfo(DatapointLoader):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self,manager,name):
+  def __init__(self,manager,name,stream,streamMgr):
     """ Default constructor
         @param  manager       Reference to PVSS ControlManager
         @param  name          Name of the datapoint
+        @param  stream        Name of the storage stream
+        @param  streamMgr     Stream controls manager entitity
 
         @return reference to initialized object
     """
     DatapointLoader.__init__(self,manager,name)
     self.dpName      = self.name
+    self.streamName  = stream
+    self.streamMgr   = streamMgr
     self.inUse       = self.dp('InUse')
     self.activity    = self.dp('Activity')
     self.sliceName   = self.dp('Name')
     self.subFarms    = self.dp('SubFarms')
-    self.ioSlice     = self.dp('IOSlice')
+    self.ioSlice     = self.dp('FSMSlice')
     self.tasks       = self.dp('Tasks')
     self.addDp(self.reader)
     self.load()
@@ -193,6 +198,10 @@ class FarmSliceInfo(DatapointLoader):
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
     cl2 = '/Class2'+opt
+    opt = '/'+dimDns+'/'+self.streamMgr.name()+'/'
+    cl0 = '/Class0'+opt
+    cl1 = '/Class1'+opt
+    cl2 = '/Class2'+opt    
 
     for i in xrange(len(recv_slots)):
       slot = recv_slots[i]
@@ -243,7 +252,25 @@ class FarmSliceInfo(DatapointLoader):
       tasks = partition.collectTasks(tasks={},with_data_sources=0)
       return tasks
     return None
-          
+
+# =============================================================================
+class FarmSliceInfoCreator:
+  def __init__(self,storage):
+    self.storage = storage
+  
+  # ===========================================================================
+  def create(self,rundp_name,partition):
+    print 'Create FarmSliceInfo for:',rundp_name, partition
+    items = rundp_name.split(':')
+    mgr = Online.PVSSSystems.controlsMgr(items[0])
+    sto = Online.PVSSSystems.controlsMgr('STORAGE')
+    return FarmSliceInfo(mgr,partition,self.storage,sto)
+  
+  # ===========================================================================
+  def showPartition(self,partition,extended=None):
+    import Online.Streaming.PartitionInfo as Info
+    partition.show(method=showRecoPartition,extended=extended)
+
 # =============================================================================
 class SubFarmInfo(DatapointLoader):
   """ @class FarmInfo
@@ -468,12 +495,21 @@ class FarmActivity(DatapointLoader):
 # =============================================================================
 class FarmSliceManager:
   # ===========================================================================
-  def __init__(self,manager,name):
+  def __init__(self,manager,name,infoCreator):
     self.manager = manager
     self.name = name
     self.dpName = self.name
     self.farm = FarmInfo(self.manager,self.name)
-    self.streamAlloc = StreamAlloc(self.manager,self.name+'IO',self)
+    self.infoCreator = infoCreator
+    self.streamAlloc = StreamAlloc(self.manager,self.name+'IO',self.infoCreator)
+  # ===========================================================================
+  def get(self,name):
+    """ Return datapoint in Streaming control structure
+        @param internal datapoint name
+        
+        @return Initialized PVSS datapoint
+    """
+    return DataPoint(self.manager,DataPoint.original(self.name+'Alloc.'+name))
 
   # ===========================================================================
   def slices(self):
@@ -515,7 +551,7 @@ class FarmSliceManager:
     return None
   
   # ===========================================================================
-  def _free(self,slice_obj, writer=None):
+  def _free(self, slice_obj, writer=None):
     "Free an allocated slice from pool and return allocated subfarms back to the farm description"
     slice,index = slice_obj
     if writer is None: writer = self.manager.devWriter()
@@ -526,6 +562,9 @@ class FarmSliceManager:
     sf = DataPoint(self.manager,DataPoint.original(slice+'.SubFarms'))
     sf.data = std.vector('std::string')()
     writer.add(sf)
+    act = DataPoint(self.manager,DataPoint.original(slice+'.RunInfo'))
+    act.data = ''
+    writer.add(act)
     if writer.execute():
       return self
     return None
@@ -536,7 +575,7 @@ class FarmSliceManager:
     return self
   
   # ===========================================================================
-  def _allocate(self, slice, numSubFarms, writer=None):
+  def _allocate(self, activity, slice, numSubFarms, writer=None):
     "Allocate a given number of subfarms from pool"
     if writer is None: writer = self.manager.devWriter()
     farms = self.farm.getFreeSubFarms()
@@ -551,6 +590,12 @@ class FarmSliceManager:
     sf = DataPoint(self.manager,DataPoint.original(slice+'.SubFarms'))
     sf.data = [i[0] for i in farms]
     writer.add(sf)
+    act = DataPoint(self.manager,DataPoint.original(slice+'.RunInfo'))
+    act.data = 'RecoFarmActivity_'+activity
+    if not DataPoint.exists(act.data):
+      error('The activity '+activity+' does not exist.',timestamp=1)
+      return None
+    writer.add(act)
     self.farm.allocate(slice,farms,writer)
     if writer.execute():
       log('Allocated slice:%s with %d subfarms:%s'%(slice,numSubFarms,[i for i in sf.data]),timestamp=1)
@@ -558,11 +603,11 @@ class FarmSliceManager:
     return None
 
   # ===========================================================================
-  def _allocateIO(self, slice, writer=None):
-    ioSlice_name = self.streamAlloc.allocate(slice,slice)
+  def _allocateIO(self, rundp_name, slice, writer=None):
+    ioSlice_name = self.streamAlloc.allocate(rundp_name,slice)
     if writer is None: writer = self.manager.devWriter()
     if ioSlice_name:
-      ioSlice = DataPoint(self.manager,DataPoint.original(slice+'.IOSlice'))
+      ioSlice = DataPoint(self.manager,DataPoint.original(slice+'.FSMSlice'))
       ioSlice.data = ioSlice_name
       writer.add(ioSlice)
       if writer.execute():
@@ -570,24 +615,30 @@ class FarmSliceManager:
         return self
       log('Failed to update I/O partition:'+ioSlice_name+' for slice:'+slice,timestamp=1)
     log('No I/O partition availible for slice:'+slice,timestamp=1)
-    return None
+    return None1
   
   # ===========================================================================
-  def allocate(self, numSubFarms):
+  def allocate(self, activity, numSubFarms):
     "Allocate a given number of subfarms from pool"
     slice = self.findFreeSlice()
+    numSubFarms = int(numSubFarms)
+    if activity[:len('RecoFarmActivity_')] == 'RecoFarmActivity_':
+      activity = activity[len('RecoFarmActivity_'):]
+    log('Executing allocate: '+activity+' NSF:'+str(numSubFarms)+' Slice:'+slice,timestamp=1)
     writer = self.manager.devWriter()
     if slice:
-      log('Allocating slice:'+slice,timestamp=1)
-      if self._allocate(slice, numSubFarms, writer):
-        if self._allocateIO(slice, writer):
+      rundp_name = self.manager.name()+':'+slice
+      log('Allocating slice:'+slice+' RunDP:'+rundp_name,timestamp=1)
+      if self._allocate(activity, slice, numSubFarms, writer):
+        if self._allocateIO(rundp_name,slice, writer):
           return slice
       return None
     return self.makeError('Failed to find free slice...')
   
   # ===========================================================================
-  def free(self,slice):
+  def free(self, rundp_name, slice):
     "Free an allocated slice from pool and return allocated subfarms back to the farm description"
+    # slice = PVSS.DataPoint.dpname(rundp_name)
     slice_obj = self.findSlice(slice)
     if slice_obj:
       self.streamAlloc.load()
@@ -598,9 +649,9 @@ class FarmSliceManager:
         return self.makeError('Failed to free I/O partition for slice:'+slice)
       return self.makeError('Failed to write data when freeing slice '+slice)
     return self.makeError('Failed to find slice:'+slice)
-  
+
   # ===========================================================================
-  def _configureIO(self,slice_obj,activity,farm):
+  def _configureIO(self, rundp_name, slice_obj, activity, farm):
     slice,index = slice_obj
     writer = self.manager.devWriter()
     activityDp      = DataPoint(self.manager,DataPoint.original(slice+'.Activity'))
@@ -614,7 +665,7 @@ class FarmSliceManager:
     writer.add(runInfo)
     if writer.execute():
       dp, io_slice, id = self.streamAlloc.getPartition(slice)
-      res = self.streamAlloc.configure(slice,slice)
+      res = self.streamAlloc.configure(rundp_name,slice)
       if res:
         runInfo = DataPoint(self.manager,DataPoint.original(io_slice+'.RunInfo'))
         runInfo.data = activityDp.data
@@ -622,57 +673,86 @@ class FarmSliceManager:
         if writer.execute():
           return res
     return None
-  
+
+  # ===========================================================================
+  def _configure(self,slice,tasks):
+    start = time.time()
+    self.detName = slice
+    self.name = slice
+    fsm_manip = FSMmanip(self,'_FwFsmDevice',match='*')
+    self.name = 'Reco'
+    fsm_manip.optionsFile = self._optsFile
+    print '....Collecting task slots.... %7.2f  %d'%(time.time()-start,fsm_manip.writer.length())
+    fsm_manip.collectTaskSlots()
+    print '....Allocating task slots.... %7.2f  %d'%(time.time()-start,fsm_manip.writer.length())
+    for sf in tasks.keys():
+      task_set = tasks[sf]
+      if fsm_manip.allocateProcesses(task_set) is None:
+        return None
+    print '....Resetting task slots..... %7.2f  %d'%(time.time()-start,fsm_manip.writer.length())
+    result = fsm_manip.reset()
+    if result is None:
+      return None
+    print '....All Done................. %7.2f  %s'%(time.time()-start,str(result))
+    return self
+
   # ===========================================================================
   def defineTasks(self,slice_obj,activity, farms):
     slice,index = slice_obj
     task_set = {}
-    opt = '/'+self.manager.hostName()+'/'+self.manager.name()+'/'
-    cl0 = '/Class0'+opt
-    cl1 = '/Class1'+opt
-    cl2 = '/Class2'+opt
+    dns = self.manager.hostName()
+    sys = self.manager.name()
+    cl0 = 'Class0'
+    cl1 = 'Class1'
+    cl2 = 'Class2'
+    nset = -1
+    max_tasks = 40
     for subfarm_name,index in farms:
       task_set[subfarm_name] = {}
       sf = SubFarmInfo(self.manager,self.name+'_'+subfarm_name).load()
       cpus = sf.nodesCPU()
       nodes = sf.processors()
-      max_tasks = 23
       tasks = []
-      nset = 0
+      nset = nset + 1
+      set_name = 'TaskSet%02d'%nset
+      opts = '("'+subfarm_name+'","'+set_name+'")'
       for i in xrange(nodes.size()):
         p = nodes[i]
-        ncpu = cpus[i]
+        ncpu = 6 #cpus[i]
         node_tasks = []
         for j in activity.farmInfrastructure.data:
-          node_tasks.append(p+'/'+p+'_'+j+'/'+p+'_'+j+'/'+j+cl0)
+          node_tasks.append([p,p+'_'+j,p+'_'+j,j,cl0,dns,sys,opts])
         typ = activity.farmReceiver.data
-        node_tasks.append(p+'/'+p+'_'+typ+'/'+p+'_'+typ+'/'+typ+cl1)
+        node_tasks.append([p,p+'_'+typ,p+'_'+typ,typ,cl1,dns,sys,opts])
         typ = activity.farmSender.data
-        node_tasks.append(p+'/'+p+'_'+typ+'/'+p+'_'+typ+'/'+typ+cl2)
+        node_tasks.append([p,p+'_'+typ,p+'_'+typ,typ,cl2,dns,sys,opts])
         for j in xrange(ncpu):
           itm = '_%02d'%j
           for k in activity.farmTasks.data:
-            task = p+'_%s'%(k,)
-            node_tasks.append(p+'/'+task+itm+'/'+task+'/'+k+cl1)
+            t = p+'_%s%s'%(k,itm)
+            node_tasks.append([p,t,t,k,cl1,dns,sys,opts])
 
         if len(tasks)+len(node_tasks)<= max_tasks:
           for j in node_tasks: tasks.append(j)
         else:
-          set_name = self.name+'_Slice%02d'%nset
-          opts = '("'+subfarm_name+'","'+set_name+'")'
-          task_set[subfarm_name][set_name] = [j+opts for j in tasks]
-          tasks = [j for j in node_tasks]
+          task_set[subfarm_name][set_name] = tasks
+          tasks = node_tasks
           nset = nset + 1
-      set_name = self.name+'_Slice%02d'%nset
+          set_name = 'TaskSet%02d'%nset
+          opts = '("'+subfarm_name+'","'+set_name+'")'
       opts = '("'+subfarm_name+'","'+set_name+'")'
-      task_set[subfarm_name][set_name] = [j+opts for j in tasks]
+      task_set[subfarm_name][set_name] = tasks
     return task_set
 
   # ===========================================================================
-  def configure(self,slice,activity):
+  def configure(self,rundp_name,activity):
+    log('Configuring:'+rundp_name+' Activity:'+activity,timestamp=1)
+    slice = PVSS.DataPoint.dpname(rundp_name)
     slice_obj = self.findSlice(slice)
     if slice_obj is None:
-      return self.makeError('Failed to find slice:'+slice)    
+      return self.makeError('Failed to find slice:'+slice)
+    if activity[:len('RecoFarmActivity_')] == 'RecoFarmActivity_':
+      activity = activity[len('RecoFarmActivity_'):]
     act = FarmActivity(self.manager,'RecoFarmActivity_'+activity).load()
     if not act:
       return self.makeError('Failed to find reconstruction activity:'+activity)    
@@ -684,50 +764,62 @@ class FarmSliceManager:
       sf = SubFarmInfo(self.manager,self.name+'_'+name).load()
       sf.show()
     task_set = self.defineTasks(slice_obj,act,farms)
-    all_tasks = {}
     for n,tasks in task_set.items():
       print n,':'
       for s,t in tasks.items():
         print '\t',s
         for tt in t:
-          print '\t\t\t',tt
-          items = tt.split('/')
-          if len(items)>0:
-            if not tasks.has_key(items[0]):
-              all_tasks[items[0]] = []
-            all_tasks[items[0]].append(items)
-    # return all_tasks
-    if not self._configureIO(slice_obj,activity,farms):
+          print '\t\t\t',str(tt).replace('[','').replace(', ','/').replace("'",'').replace(']','')
+    if self._configure(slice,task_set) is None:
+      self._free(slice_obj)
+      return self.makeError('Failed configure slice '+slice+' for activity:'+activity)    
+    if not self._configureIO(rundp_name,slice_obj,activity,farms):
+      self._free(slice_obj)
       return self.makeError('Failed configure I/O for slice '+slice+' and activity:'+activity)    
     return self
 
-  def create(self,rundp_name,partition):
-    return FarmSliceInfo(self.manager,partition)
-  def showPartition(self,partition,extended=None):
-    import Online.Streaming.PartitionInfo as Info
-    partition.show(method=showRecoPartition,extended=extended)
+  # ===========================================================================
+  def recover(self, rundp_name, partition):
+    return self.free(rundp_name, partition)
+  
+  # ===========================================================================
+  def recover_slice(self, rundp_name, partition):
+    log('Recover '+partition+' runDP:'+rundp_name)
+    return 'SUCCESS'  # self.free(rundp_name, partition)
+  
+  # ===========================================================================
+  def _optsFile(self,name,type):
+    if type == 'Brunel': return type+'.opts'
+    return name+'.opts'
+  
+  # ===========================================================================
+  def detectorName(self):
+    return self.detName
 
 # =============================================================================
-def do_it(name='Reco'):
-  mgr = FarmSliceManager(Online.PVSSSystems.controlsMgr('RECOTEST'),name)
-  mgr.free(name+'_Slice00')
-  mgr.allocate(2)
-  mgr.configure(name+'_Slice00','REPRO_1')
-  return mgr
-  
-  
-def bla(name):
-  res = mgr.allocate(2)
-  if res is None:
-    mgr.free(name+'_Slice00')
-    print "mgr.free(name+'_Slice00')"
-  res = mgr.allocate(2)
-  farm = FarmInfo(mgr.manager,name)
-  farm.show()
-  mgr = FarmSliceManager(mgr,name)
-  mgr.defineTasks(name+'_Slice00')
+def test_RecoFarm(name='Reco'):
+  manager = Online.PVSSSystems.controlsMgr('RECOTEST')
+  sys = manager.name()
+  infoCreator = FarmSliceInfoCreator('Storage')
+  mgr = FarmSliceManager(manager, name, infoCreator)
+  mgr.free(sys+':'+name+'_Slice00')
+  mgr.allocate(sys+':'+name+'_Slice00',2)
+  mgr.configure(sys+':'+name+'_Slice00','REPRO_1')
   return mgr
 
-if __name__ == "__main__":
-  do_it()
+def run(name='Reco',sim=None):
+  import Online.Reco.FarmInfo as RI
+  import Online.AllocatorControl    as Control
+  import Online.JobOptions.OptionsWriter as JobOptions
+
+  info     = RI.FarmSliceInfoCreator('Storage')
+  mgr      = Online.PVSSSystems.controlsMgr('RECOTEST')
+  streamer = FarmSliceManager(mgr,name,info)
+  #writer   = JobOptions.MonitoringOptionsWriter(mgr,name,info)
+  ctrl = Control.Control(mgr,name,'Alloc',[streamer]).run()
+  ctrl.sleep()
+  return (ctrl,run(name,mgr,sim))
   
+if __name__ == "__main__":
+  #  test_RecoFarm()
+  run()

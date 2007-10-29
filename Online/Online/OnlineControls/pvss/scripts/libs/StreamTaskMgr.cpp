@@ -21,6 +21,8 @@ int StreamTaskMgr_install()  {
   names[12] = makeDynString ("","InUse","","");
   names[13] = makeDynString ("","Priority","","");
   names[14] = makeDynString ("","FMC_Start","","");
+  names[15] = makeDynString ("","SysName","","");
+  names[16] = makeDynString ("","DimDNS","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRING,0,0);
@@ -35,6 +37,8 @@ int StreamTaskMgr_install()  {
   types[12] = makeDynInt (0,DPEL_INT,0,0);
   types[13] = makeDynInt (0,DPEL_INT,0,0);
   types[14] = makeDynInt (0,DPEL_STRING,0,0);
+  types[15] = makeDynInt (0,DPEL_STRING,0,0);
+  types[16] = makeDynInt (0,DPEL_STRING,0,0);
   ctrlUtils_installDataType(names,types);
 
   names[1]  = makeDynString ("StreamTaskCreator","","","");
@@ -131,9 +135,9 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
       string name = strtoupper(recvNodes[i]);
       string dp_name = name+"_StreamTaskCreator";
       string svc_name = "/" + name + "/task_manager";
+      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
       fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
       fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
-      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
       dpSet(dp_name+".Name",name);
       fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
       fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
@@ -231,7 +235,8 @@ int StreamTaskMgr_createTree(string stream,
 			     int num_strmTasks,
 			     string monitoringInput,
 			     int num_monTasks,
-			     int refresh=1)  
+			     int refresh=1,
+                           bool have_config=1)  
 {
   dyn_string recvNodes, strmNodes, sendNodes;
   // Get stream configuration from the corresponding StreamControl datapoint
@@ -247,8 +252,10 @@ int StreamTaskMgr_createTree(string stream,
     string stream_node = StreamTaskMgr_addTreeNode(stream+"_Slices", node, "FSM_Slice", 1);
     DebugN("Slices:"+slice_node+" Stream:"+stream_node);
     if ( stream_node != "" )   {
-      StreamTaskMgr_addTreeNode(stream_node, node+"_Config", "StreamConfigurator", 0);
-      fwFsmTree_setNodeLabel(node+"_Config","Configurator");
+      if ( have_config )  {
+        StreamTaskMgr_addTreeNode(stream_node, node+"_Config", "StreamConfigurator", 0);
+        fwFsmTree_setNodeLabel(node+"_Config","Configurator");
+      }
       for(int i=1; i<=dynlen(sendNodes); ++i)  {
         name = node+"_"+sendNodes[i];
         StreamTaskMgr_createNode(stream_node,name,"FSM_Tasks",num_monTasks);
@@ -276,14 +283,15 @@ int StreamTaskMgr_createAllTree(string stream,
                                 int num_recvTasks,
                                 int num_strmTasks,
                                 string monitoringInput,
-                                int num_monTasks)
+                                int num_monTasks,
+                                bool have_config=1)
 {
   for(int i=0; i<16; ++i)  {    
     string node;
     sprintf(node,"Slice%02X",i);
     StreamTaskMgr_createTree(stream,node,
                              num_recvTasks,num_strmTasks,
-                             monitoringInput,num_monTasks,0);
+                             monitoringInput,num_monTasks,0,have_config);
   }
   fwFsmTree_refreshTree();
   DebugN("All Done.");

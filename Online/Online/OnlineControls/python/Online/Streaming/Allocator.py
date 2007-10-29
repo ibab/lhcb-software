@@ -68,9 +68,13 @@ class FSMmanip:
     self.prio    = self._tskLookup('Priority',tsk_typ)
     self.types   = self._tskLookup('Type',tsk_typ)
     self.cmds    = self._tskLookup('FMC_Start',tsk_typ)
+    self.sysName = self._tskLookup('SysName',tsk_typ)
+    self.dimDns = self._tskLookup('DimDNS',tsk_typ)
     self.slots = {}
-    obj = PVSS.DpVectorActor(self.manager)
-    obj.lookupOriginal(self.name+'_'+match,tsk_typ)
+    self.optionsFile = self._optsFile
+    self.setupTask = self._setupTask
+    self.configureTask = self._configureTask
+    self.allocateProcesses = self._allocateProcesses
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]
@@ -84,8 +88,13 @@ class FSMmanip:
     self.nodeParents = {}
     rdr = self.manager.devReader()
     rdr.add(self.fsmtypes.container)
-    rdr.execute()
+    if not rdr.execute():
+      print 'Failed to read FSM info.',self.manager.name()
+      print self.name+'_'+match,self.names.container.size(),self.slots
 
+  # ===========================================================================
+  def _optsFile(self,name,type):
+    return name+'.opts'
   # ===========================================================================
   def _fsmLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
@@ -115,13 +124,7 @@ class FSMmanip:
         val = self.enabled.container[j].name()
         val = val[val.find('|')+1:val.find('.')]
         m[dp].append(val.upper())
-    for i in self.tasks.keys():
-      for j in self.tasks[i]:
-        dp = tag+i+'FSM_DimTask_FWDM.fsm.sendCommand'
-        if not m.has_key(dp): m[dp] = []
-        val = self.enabled.container[j].name()
-        val = val[val.find('|')+1:val.find('.')]
-        m[dp].append(val.upper())
+    if debug: print 'Taskmap:',m
     return m
   
   # ===========================================================================
@@ -129,6 +132,7 @@ class FSMmanip:
     dpv = PVSS.DataPointVector()
     count = 0
     commit = 0
+    length = 0
     while(len(dpMap)>0):
       for i in dpMap.keys():
         dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
@@ -138,13 +142,14 @@ class FSMmanip:
         del dpMap[i][0]
         if len(dpMap[i])==0: del dpMap[i]
       self.writer.add(dpv)
+      length = self.writer.length()
       if not self.writer.execute():
-        log(self.name+'> PVSS commit failed!',timestamp=1)
+        log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
         return None
       commit = commit + 1
       dpv.clear()
     return self
-  
+ 
   # ===========================================================================
   def addNodeObject(self,name):
     self.enabled.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.mode.enabled')))
@@ -188,8 +193,6 @@ class FSMmanip:
         if debug: log('Add node:'+node2)
         self.nodeParents[node2] = self.enabled.container.size()
         self.addNodeObject(nam+node2)
-    #print 'Tasks:',self.tasks
-    #print 'TaskSlots:',self.taskSlots
     if debug: log('Task nodes:'+str(self.tasks.keys())+' '+str(self.tasks))
     
   # ===========================================================================
@@ -197,7 +200,6 @@ class FSMmanip:
     if debug:
       print 'Enable slot for:', i, i.__class__, enabled, visible, label
       print 'Enable:', self.enabled.container[i].name()
-    #visible = 1
     self.enabled.container[i].data = int(enabled)
     self.writer.add(self.enabled.container[i])
     self.labels.container[i].data = label
@@ -206,15 +208,19 @@ class FSMmanip:
     self.writer.add(self.visible.container[i])
         
   # ===========================================================================
-  def setupTask(self,which,node,name,type,inUse,prio,cmd):
+  def _setupTask(self,which,node,name,type,inUse,prio,cmd,sysname,dimdns,nodename=None):
     if debug:
       print 'setupTask:',which,node,name,type,inUse,prio
+    if nodename is None:
+      nodename = node
     i = self.taskSlots[node][which]
     self.names.container[i].data = name
     self.inUse.container[i].data = inUse
-    self.nodes.container[i].data = node
+    self.nodes.container[i].data = nodename
     self.prio.container[i].data  = prio
     self.types.container[i].data = type
+    self.sysName.container[i].data = sysname
+    self.dimDns.container[i].data = dimdns
     self.cmds.container[i].data  = cmd
     self.writer.add(self.names.container[i])
     self.writer.add(self.inUse.container[i])
@@ -222,7 +228,9 @@ class FSMmanip:
     self.writer.add(self.prio.container[i])
     self.writer.add(self.types.container[i])
     self.writer.add(self.cmds.container[i])
-    
+    self.writer.add(self.dimDns.container[i])
+    self.writer.add(self.sysName.container[i])
+
   # ===========================================================================
   def reset(self):
     for i in self.nodeParents.keys():
@@ -230,44 +238,31 @@ class FSMmanip:
     for i in self.tasks.keys():
       for j in self.tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
-        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
-    for i in self.tasks.keys():
-      for j in self.tasks[i]:
-        self.enableObject(j,i,-1,0,'Disabled')
-        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
-    res = self.writer.execute()
+        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE",dimdns="NONE",sysname="NONE")
     return self._commitFSM(self._makeTaskMap(),'DISABLE')
 
   # ===========================================================================
-  def allocateProcesses(self,processes):
+  def _allocateProcesses(self,processes):
     cl1 = copy.deepcopy(self.tasks)
+    parents = copy.deepcopy(self.nodeParents)
     self.tasks = {}
     for n in processes.keys():
       if debug: print '--->',len(processes[n]),' tasks running on node:',n
     for (n,task_list) in processes.items():
       if debug: print 'allocateProcesses:',n,task_list
-      if self.nodeParents.has_key(n):
-        if len(task_list) > 0:
-          itm1 = self.nodeParents[n]
-          if self.enabled.container[itm1].data != 1:
-            self.enableObject(itm1,n,1,1,n)
-      if self.nodeParents.has_key(n):
-        if len(task_list) > 0:
-          itm1 = self.nodeParents[n]
-          if self.enabled.container[itm1].data != 1:
-            self.enableObject(itm1,n,1,1,n)
-
+      if parents.has_key(n) and len(task_list) > 0:
+        itm1 = parents[n]
+        #if self.enabled.container[itm1].data != 1:
+        self.enableObject(itm1,n,1,1,n)
+        del parents[n]
       self.tasks[n] = []
-      script = Params.gauditask_startscript
       for task in task_list:
         if cl1.has_key(n) and len(cl1[n]) > 0:
           i = cl1[n][0]
           if debug: print 'Task:',task
           self.enableObject(i,n,1,1,task[2])
-          cmd = task[6]+'#-e -o -u '+task[1]+' -D PARTITION='+self.info.detectorName()+' '+script+' '+task[1]+'.opts '+task[4]+' '+task[3]+' '+task[5]
-          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
+          self.configureTask(n,i,task)
           self.tasks[n].append(i)
-          #print 'Setup Task:',task[0],task[1],task[2],n,cl1[n][0]
           del cl1[n][0]
         else:
           error(self.name+': No task slots for Class 1 present!',timestamp=1)
@@ -276,10 +271,32 @@ class FSMmanip:
           else:
             error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
           return None
+    self.nodeParents = parents
+    self.tasks = cl1
+    return self
+
+  # ===========================================================================
+  def _configureTask(self, fsm_node, item, task):
+    "Configure single task object"
+    node    = task[0]
+    utgid   = task[1]
+    sysname = task[6]
+    dimdns  = task[5]
+    type    = task[3]
+    opts = self.optionsFile(utgid,type)
+    script = Params.gauditask_startscript
+    cmd = sysname+'#-e -o -u '+utgid+\
+          ' -D TASKTYPE='+type+\
+          ' -D TASKCLASS='+task[4]+\
+          ' -D PARTITION='+self.info.detectorName()+\
+          ' '+script+' '+opts+' '+\
+          task[4]+' '+type+' '+dimdns
+    self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
     return self
 
   # ===========================================================================
   def commit(self):
+    "Commit all the writer's datapoints."
     if not self.writer.execute():
       log(self.name+': PVSS commit failed!',timestamp=1)
       return None
@@ -321,7 +338,6 @@ class BlockSlotPolicy(SlotPolicy):
             if not alloc_slots.has_key(node): alloc_slots[node] = []
             alloc_slots[node].append(slots.pop())
             num = num + 1
-
     if self.debug:
       print 'Allocated %d slots on %d nodes:'%(num,len(alloc_slots))
       for node,slots in alloc_slots.items():

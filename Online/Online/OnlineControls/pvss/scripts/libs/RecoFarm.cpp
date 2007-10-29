@@ -1,13 +1,13 @@
 #uses "ctrlUtils.cpp"
 //=============================================================================
-int RecoFarm_createTree(string stream, string slice,int numSet,int numTasks)  {
+int RecoFarm_createTree(string stream, string slice,int numSet,int numTasks,bool refresh=0)  {
   dyn_string sets;
   string name;
   for(int i=0; i<numSet; ++i)  {
     sprintf(name,"TaskSet%02d",i);
     dynAppend(sets,name);
   }
-  ctrlUtils_createFsmTaskTree(stream,slice,sets,numTasks);
+  ctrlUtils_createFsmTaskTree(stream,slice,sets,numTasks,refresh);
 }
 //=============================================================================
 int RecoFarm_deleteTree(string stream, string slice_name, int refresh=1)  {
@@ -18,7 +18,7 @@ int RecoFarm_deleteTree(string stream, string slice_name, int refresh=1)  {
   for(int i=1, n=dynlen(tasks); i<=n; ++i)  {
     if ( dpExists(tasks[i]) ) dpDelete(tasks[i]);
   }
-  if ( refresh ) fwFsmTree_refreshTree();
+  if ( refresh ) ctrlUtils_refreshDEN();
   DebugN("All Done...Deleted tree and "+dynlen(tasks)+" Tasks.");
 }
 //=============================================================================
@@ -56,7 +56,7 @@ int RecoFarm_install()  {
   names[5]  = makeDynString ("","Command","","");
   names[6]  = makeDynString ("","State","","");
   names[7]  = makeDynString ("","SubFarms","","");
-  names[8]  = makeDynString ("","IOSlice","","");
+  names[8]  = makeDynString ("","FSMSlice","","");
   names[9]  = makeDynString ("","Tasks","","");
   names[10] = makeDynString ("","RunInfo","","");
   names[11] = makeDynString ("","general","","");
@@ -81,14 +81,16 @@ int RecoFarm_install()  {
   names[5]  = makeDynString ("","","TaskTypes","");
   names[6]  = makeDynString ("","","ReceiverType","");
   names[7]  = makeDynString ("","","SenderType","");
-  names[8]  = makeDynString ("","Input","","");
-  names[9]  = makeDynString ("","","Infrastructure","");
-  names[10] = makeDynString ("","","ReaderType","");
-  names[11] = makeDynString ("","","SenderType","");
-  names[12] = makeDynString ("","Output","","");
-  names[13] = makeDynString ("","","Infrastructure","");
-  names[14] = makeDynString ("","","ReceiverType","");
-  names[15] = makeDynString ("","","WriterType","");
+  names[8]  = makeDynString ("","Storage","","");
+  names[9]  = makeDynString ("","","storeFlag","");
+  names[10] = makeDynString ("","","recvInfrastructure","");
+  names[11] = makeDynString ("","","recvTypes","");
+  names[12] = makeDynString ("","","recvMultiplicity","");
+  names[13] = makeDynString ("","","recvStrategy","");
+  names[14] = makeDynString ("","","streamInfrastructure","");
+  names[15] = makeDynString ("","","streamTypes","");
+  names[16] = makeDynString ("","","streamMultiplicity","");
+  names[17] = makeDynString ("","","strmStrategy","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRUCT,0,0);
@@ -97,13 +99,15 @@ int RecoFarm_install()  {
   types[6]  = makeDynInt (0,0,DPEL_STRING,0);
   types[7]  = makeDynInt (0,0,DPEL_STRING,0);
   types[8]  = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[9]  = makeDynInt (0,0,DPEL_DYN_STRING,0);
-  types[10] = makeDynInt (0,0,DPEL_STRING,0);
-  types[11] = makeDynInt (0,0,DPEL_STRING,0);
-  types[12] = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[13] = makeDynInt (0,0,DPEL_DYN_STRING,0);
-  types[14] = makeDynInt (0,0,DPEL_STRING,0);
-  types[15] = makeDynInt (0,0,DPEL_STRING,0);
+  types[9]  = makeDynInt (0,0,DPEL_INT,0);
+  types[10] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[11] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[12] = makeDynInt (0,0,DPEL_DYN_INT,0);
+  types[13] = makeDynInt (0,0,DPEL_INT,0);
+  types[14] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[15] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[16] = makeDynInt (0,0,DPEL_DYN_INT,0);
+  types[17] = makeDynInt (0,0,DPEL_INT,0);
   ctrlUtils_installDataType(names,types);
   return 1;
 }

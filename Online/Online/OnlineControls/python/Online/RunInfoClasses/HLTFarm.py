@@ -27,13 +27,15 @@ class HLTFarmInfo(General):
         @return reference to initialized object
     """
     General.__init__(self,manager,name)
-    self.nodes     = self.dp('HLTFarm.nodeList')
-    self.subFarms  = self.dp('HLTFarm.subFarms')
-    self.odin      = self.dp('TFC.ODIN')
+    self.nodes       = self.dp('HLTFarm.nodeList')
+    self.subFarms    = self.dp('HLTFarm.subFarms')
+    self.odinData    = self.dp('TFC.OdinData')
+    self.odinRequest = self.dp('TFC.OdinMEPRequest')
     self.reader.add(self.nodes)
     self.reader.add(self.subFarms)
-    self.reader.add(self.odin)
-    
+    self.reader.add(self.odinData)
+    self.reader.add(self.odinRequest)
+
   # ===========================================================================
   def showSubfarms(self):
     """
@@ -45,8 +47,8 @@ class HLTFarmInfo(General):
       error('Subfarm allocation inconsistency: nSubFarm(%d) != len(subFarms)(%d)'%(len(farms),nSF))
     log('Input from %d sub farms'%nSF)
     for i in nSF:
-      log(' -> Subfarm:%-24s '%(farms[i],))
-      #log(' -> Subfarm:SF%02d '%(i,))
+      log(' -> Subfarm:[SF%02d] %-24s '%(i,farms[i],))
+    log(' -> TFC:    Data interface:%-12s MEP Request interface'%(self.odinData.data,self.odinRequest.data,))
   # ===========================================================================
   def show(self):
     """

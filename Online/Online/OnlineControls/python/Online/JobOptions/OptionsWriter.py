@@ -29,17 +29,21 @@ class Options:
     self.value = msg
     if len(self.value)>0: self.value = self.value+'\n'
   # ===========================================================================
-  def add(self,name,value=None):
+  def add(self,name,value=None,operator='='):
     "Add a new options item"
     if value:
       v = str(value)
       if isinstance(value,str): v = '"'+v+'"'
-      s = 'OnlineEnv.%-16s = %s;\n'%(name,v.replace("'",'"').replace('[','{').replace(']','}'))
+      s = 'OnlineEnv.%-16s %s %s;\n'%(name,operator,v.replace("'",'"').replace('[','{').replace(']','}'))
       self.value = self.value + s
     elif len(name)>0:
       self.value = self.value + name + '\n'
     return self
-
+  # ===========================================================================
+  def append(self,name,value):
+    "Append items to existing options"
+    return self.add(name,value,'+=')
+  
 # =============================================================================
 class OptionsWriter(Control.AllocatorClient):
   """
@@ -278,37 +282,39 @@ class HLTOptionsWriter(OptionsWriter):
         opts.add('//\n// ---------------- Tell1 board information:')
         opts.add('OnlineEnv.Tell1Boards         = {')
         err = None
+        num = 0;
         for b in self.run.tell1Boards.data:
           itms = b.split(':')
           try:
             board = itms[0]
             if len(itms)>1: board = itms[1]
-            ip = socket.gethostbyname(board+"-d1.data");
-            opts.add('  "%s", "%s", "",'%(ip,board))
+            opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+"-d1.data"),board))
+            num = num + 1
           except Exception,X:
             error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
             error('Error '+str(X),timestamp=1)
-            err = self
-        opts.value = opts.value[:-2] + '\n};\n'
+            err = None # self
+        if num > 0:
+          opts.value = opts.value[:-2] + '\n};\n'
+        else:
+          opts.value = opts.value + '\n};\n'
         if err:
           return None
+
         odin = 'Unknown'
-        itms = ''
         try:
-          odin  = self.run.odin.data
-          itms  = odin.split(':')
-          board = itms[0]
-          if len(itms)>1: board = itms[1]
-          ip    = socket.gethostbyname(board+"-d1.data");
-          opts.add('ODIN_Name',   board)
-          opts.add('ODIN_IP',     ip)
+          odin  = self.run.odinData.data
+          opts.append('Tell1Boards',[socket.gethostbyname(odin),odin,''])
+
+          odin  = self.run.odinRequest.data
+          opts.add('ODIN_Name',odin)
+          opts.add('ODIN_IP',  socket.gethostbyname(odin))
         except Exception,X:
           error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
           error('Error [IGNORED for NOW] '+str(X),timestamp=1)
           err = None
         if err:
           return None
-
         fname = partition+'_Tell1Boards'
         if self.writeOptionsFile(partition, fname, opts.value) is None:
           return None

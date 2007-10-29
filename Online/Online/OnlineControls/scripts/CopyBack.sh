@@ -83,6 +83,7 @@ checkFiles ${PVSS_PROJECT_BASE} scripts/libs *.cpp
 checkFiles ${PVSS_PROJECT_BASE} panels/Reco *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/JobOptions *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/StreamControl *.pnl
+checkFiles ${PVSS_PROJECT_BASE} panels/visionUtils *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/fwFSMuser *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/fwFSM/ui *.pnl
 #
@@ -95,6 +96,18 @@ if test "${PVSS_INSTALL_NAME}" = JOBOPTIONS;
 	-out  ${ONLINECONTROLSROOT}/pvss/dplist/JobOptionsControl.dpl \
 	-filter DOP -filterDp fwOT_JobOptionsControl.*
 elif test ${PVSS_PROJECT_NAME} = STORAGE -o ${PVSS_PROJECT_NAME} = MONITORING;
+    then
+    echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
+    ${PVSS_II_HOME}/bin/PVSS00ascii \
+	-proj ${PVSS_PROJECT_NAME} \
+	-out  ${ONLINECONTROLSROOT}/pvss/dplist/${PVSS_PROJECT_NAME}.dpl \
+	-filter DOP \
+	-filterDp fwOT_StreamCluster.* \
+	-filterDp fwOT_StreamControl.* \
+	-filterDp fwOT_StreamConfigurator.* \
+	-filterDp fwOT_JobOptionsControl.* \
+	-filterDp fwOT_FSM_*.*;
+elif test ${PVSS_PROJECT_NAME} = RECOTEST;
     then
     echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
     ${PVSS_II_HOME}/bin/PVSS00ascii \

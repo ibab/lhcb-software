@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.30 2007-10-15 20:03:51 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.31 2007-10-29 13:08:23 frankm Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.30 2007-10-15 20:03:51 frankm Exp $
+// $Id: DataPoint.cpp,v 1.31 2007-10-29 13:08:23 frankm Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -324,12 +324,12 @@ std::string DataPoint::sysname()  const {
   return sysname(name());
 }
 
-/// Extract system name of datapoint from online/original name
+/// Extract element name of datapoint from online/original name
 std::string DataPoint::elementName(const std::string& dp)   {
   return ControlsManager::dpElementName(dp);
 }
 
-/// Extract system name of datapoint from online/original name
+/// Extract element name of datapoint from online/original name
 std::string DataPoint::elementName(const DpID& dp)   {
   char* nam = 0;
   if ( !pvss_lookup_name(dp,nam) )
@@ -337,7 +337,7 @@ std::string DataPoint::elementName(const DpID& dp)   {
   return elementName(nam);
 }
 
-/// Extract name of datapoint from online/original name
+/// Extract element name of datapoint from online/original name
 std::string DataPoint::elementName()  const {
   return elementName(name());
 }
