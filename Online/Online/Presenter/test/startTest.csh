@@ -16,4 +16,4 @@ echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 #source /afs/cern.ch/lhcb/software/releases/ONLINE/ONLINE_v2r2/OnlineSys/v2r2/cmt/setup.csh
 source $LHCb_release_area/ONLINE/ONLINE_v4r0/OnlineSys/v4r0/cmt/setup.csh
 $DIMROOT/$CMTCONFIG/DNS.exe&
-$CCPCHISTROOT/$CMTCONFIG/Ctest.exe&
+$CCPCHISTROOT/$CMTCONFIG/CCPCtest.exe&
