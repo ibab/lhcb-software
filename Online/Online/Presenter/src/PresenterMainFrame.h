@@ -126,7 +126,10 @@ class PresenterMainFrame : public TGMainFrame
     void sortTreeChildrenItems(TGListTree* treeList,
       TGListTreeItem* node);
     void sortTreeChildrenItemsChildren(TGListTree* treeList,
-      TGListTreeItem* node);      
+      TGListTreeItem* node);
+      
+    void deleteTreeChildrenItemsUserData(TGListTreeItem* node);
+    void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);    
 
 
     void enableAutoCanvasLayoutBtn();
