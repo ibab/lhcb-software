@@ -39,6 +39,7 @@ StatusCode LHCb::Class1Task::finalize()  {
 }
 
 StatusCode LHCb::Class1Task::terminate()  {
+  cancel();
   int result = finalizeApplication();
   if (1 == result) {
     result = terminateApplication();

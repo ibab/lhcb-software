@@ -62,7 +62,7 @@ void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
 StatusCode LHCb::MEPHolderSvc::initialize()  {
   StatusCode sc = OnlineService::initialize();
   if ( sc.isSuccess() )  {
-    declareInfo("EvtCount",m_evtCount=0,"Number of events received from network");
+    declareInfo("MEPsIn",m_evtCount=0,"Number of events received from network");
     if ( service(m_mepMgrName,m_mepMgr).isSuccess() )  {
       incidentSvc()->addListener(this,"DAQ_CANCEL");
       try {
@@ -87,6 +87,7 @@ StatusCode LHCb::MEPHolderSvc::initialize()  {
 }
 
 StatusCode LHCb::MEPHolderSvc::finalize()  {
+  undeclareInfo("MEPsIn");
   if ( m_consumer    )  {
     delete m_consumer;
     m_consumer = 0;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.7 2007-01-29 14:54:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.8 2007-10-29 14:33:29 frankm Exp $
 //  ====================================================================
 //  MDFReceiver.cpp
 //  --------------------------------------------------------------------
@@ -42,7 +42,7 @@ StatusCode MDFReceiver::initialize()   {
     m_bm_name += ::_itoa(m_partitionID,txt,16);
   }
   m_prod = new MBM::Producer(m_bm_name,m_procName,m_partitionID);
-  declareInfo("EvtCount",   m_evtCount=0, "Number of events received from network");
+  declareInfo("EventsIn",   m_evtCount=0, "Number of events received from network");
   declareInfo("MBMName",    m_bm_name,    "MBM buffer name");
   declareInfo("PartitionID",m_partitionID,"Partition identifier");
   return StatusCode::SUCCESS;
@@ -50,6 +50,9 @@ StatusCode MDFReceiver::initialize()   {
 
 /// Finalize
 StatusCode MDFReceiver::finalize()     {    
+  //undeclareInfo("EventsIn");
+  //undeclareInfo("MBMName");
+  //undeclareInfo("PartitionID");
   if ( m_prod ) delete m_prod;
   m_prod = 0;
   m_procName = "";

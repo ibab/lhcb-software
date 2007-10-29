@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.9 2007-06-21 12:18:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.10 2007-10-29 14:33:29 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -57,9 +57,9 @@ StatusCode NetworkDataReceiver::initialize()   {
   }
   try {
     // Do NOT call base class initialization: we are not writing to file/socket!
-    declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
-    declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
-    declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
+    declareInfo("EventsIn", m_recvReq=0,   "Total number of items received.");
+    declareInfo("ErrorsIn", m_recvError=0, "Total number of receive errors.");
+    declareInfo("BytesIn",  m_recvBytes=0, "Total number of bytes received from clients.");
     sc = service("MEPManager",m_mepMgr);
     if ( !sc.isSuccess() )  {
       MsgStream info(msgSvc(), name());
@@ -96,9 +96,9 @@ StatusCode NetworkDataReceiver::finalize()     {
   m_prod = 0;
   if ( m_mepMgr ) m_mepMgr->release();
   m_mepMgr = 0;
-  undeclareInfo("RecvCount");
-  undeclareInfo("RecvErrors");
-  undeclareInfo("RecvBytes");
+  undeclareInfo("EventsIn");
+  undeclareInfo("ErrorsIn");
+  undeclareInfo("BytesIn");
   return OnlineService::finalize();
 }
 

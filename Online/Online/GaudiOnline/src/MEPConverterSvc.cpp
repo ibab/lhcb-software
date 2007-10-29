@@ -84,9 +84,9 @@ StatusCode LHCb::MEPConverterSvc::initialize()  {
         }
         incidentSvc()->addListener(this,"DAQ_CANCEL");
         incidentSvc()->addListener(this,"DAQ_ENABLE");
-        declareInfo("MEPCount",  m_mepCount=0,"Number of MEPs processed.");
-        declareInfo("EventCount",m_evtCount=0,"Number of events processed.");
-        declareInfo("Packing",   m_packingFactor=0,
+        declareInfo("MEPsIn",   m_mepCount=0,"Number of MEPs processed.");
+        declareInfo("EventsOut",m_evtCount=0,"Number of events processed.");
+        declareInfo("Packing",  m_packingFactor=0,
                     "Packing factor of current/last event.");
         return StatusCode::SUCCESS;
       }
@@ -112,6 +112,12 @@ StatusCode LHCb::MEPConverterSvc::finalize()  {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
+  undeclareInfo("EventsOut");
+  undeclareInfo("MEPsIn");
+  undeclareInfo("Packing");
+  m_mepCount = 0;
+  m_evtCount = 0;
+  m_packingFactor = 0;
   return OnlineService::finalize();
 }
 

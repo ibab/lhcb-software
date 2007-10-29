@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.4 2006-12-14 18:59:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.5 2007-10-29 14:33:29 frankm Exp $
 //  ====================================================================
 //  MDFSender.cpp
 //  --------------------------------------------------------------------
@@ -33,7 +33,6 @@ LHCb::MDFSender::~MDFSender()      {
 
 /// Initialize
 StatusCode LHCb::MDFSender::initialize()   {
-  std::string nam;
   if ( m_recipients.empty() )  {
     MsgStream log(msgSvc(),name());
     log << MSG::FATAL << "You need to set the option recipients "
@@ -41,25 +40,32 @@ StatusCode LHCb::MDFSender::initialize()   {
     return StatusCode::FAILURE;
   }
   m_current = 0;
-  declareInfo("EvtCount", m_allEvtSent=0,  "Total number of events sent to receiver.");
-  declareInfo("ErrCount", m_allEvtError=0, "Total number of event send errors to receiver.");
-  declareInfo("ByteCount",m_allBytesSent=0,"Total number of bytes sent to receiver.");
+  declareInfo("EventsOut", m_allEvtSent=0,  "Total number of events sent to receiver.");
+  declareInfo("ErrorsOut", m_allEvtError=0, "Total number of event send errors to receiver.");
+  declareInfo("BytesOut",m_allBytesSent=0,"Total number of bytes sent to receiver.");
   m_evtSent.resize(m_recipients.size()+1);
   m_evtError.resize(m_recipients.size()+1);
   m_bytesSent.resize(m_recipients.size()+1);
   for(size_t i=0; i<m_recipients.size(); ++i)  {
-    nam = "EvtCount_" + m_recipients[i];
-    declareInfo(nam, m_evtSent[i]=0,  "Number of events sent to:"+m_recipients[i]);
-    nam = "ByteCount_" + m_recipients[i];
-    declareInfo(nam, m_bytesSent[i]=0,"Number of bytes sent to:"+m_recipients[i]);
-    nam = "ErrCount_" + m_recipients[i];
-    declareInfo(nam, m_evtError[i]=0, "Number of event send errors to:"+m_recipients[i]);
+    declareInfo("EventsOut_" + m_recipients[i], m_evtSent[i]=0,  "Number of events sent to:"+m_recipients[i]);
+    declareInfo("BytesOut_" + m_recipients[i], m_bytesSent[i]=0,"Number of bytes sent to:"+m_recipients[i]);
+    declareInfo("ErrorsOut_" + m_recipients[i], m_evtError[i]=0, "Number of event send errors to:"+m_recipients[i]);
   }
   return StatusCode::SUCCESS;
 }
 
 /// Finalize
-StatusCode LHCb::MDFSender::finalize()     {    
+StatusCode LHCb::MDFSender::finalize()     {
+#if 0    
+  undeclareInfo("EventsOut");
+  undeclareInfo("ErrorsOut");
+  undeclareInfo("BytesOut");
+  for(size_t i=0; i<m_recipients.size(); ++i)  {
+    undeclareInfo("EventsOut_" + m_recipients[i]);
+    undeclareInfo("BytesOut_" + m_recipients[i]);
+    undeclareInfo("ErrorsOut_" + m_recipients[i);
+  }
+#endif
   return StatusCode::FAILURE;
 }
 

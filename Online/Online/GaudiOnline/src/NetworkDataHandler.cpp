@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.5 2007-05-18 13:58:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.6 2007-10-29 14:33:29 frankm Exp $
 //  ====================================================================
 //  NetworkDataHandler.cpp
 //  --------------------------------------------------------------------
@@ -59,12 +59,12 @@ int NetworkDataHandler::rearm_net_request(unsigned int,void* param)  {
 StatusCode NetworkDataHandler::initialize()   {
   // Do NOT call base class initialization: we are not writing to file/socket!
   m_recipients.clear();
-  declareInfo("SendCount",  m_sendReq=0,   "Total number of items sent to receiver(s).");
-  declareInfo("SendErrors", m_sendError=0, "Total number of send errors to receiver(s).");
-  declareInfo("SendBytes",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
-  declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
-  declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
-  declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
+  declareInfo("EventsOut", m_sendReq=0,   "Total number of items sent to receiver(s).");
+  declareInfo("ErrorsOut", m_sendError=0, "Total number of send errors to receiver(s).");
+  declareInfo("BytesOut",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
+  declareInfo("EventsIn",  m_recvReq=0,   "Total number of items received.");
+  declareInfo("ErrorsIn",  m_recvError=0, "Total number of receive errors.");
+  declareInfo("BytesIn",   m_recvBytes=0, "Total number of bytes received from clients.");
   StatusCode sc = subscribeNetwork();
   if ( !sc.isSuccess() )  {
     return sc;
@@ -92,6 +92,14 @@ StatusCode NetworkDataHandler::finalize()     {
     delete (*i).producer;
     (*i).producer = 0;
   }
+#if 0
+  undeclareInfo("EventsOut");
+  undeclareInfo("ErrorsOut");
+  undeclareInfo("BytesOut");
+  undeclareInfo("EventsIn");
+  undeclareInfo("ErrorsIn");
+  undeclareInfo("BytesIn");
+#endif
   m_receivers.clear();
   if ( m_evtSelector ) m_evtSelector->release();
   m_evtSelector = 0;

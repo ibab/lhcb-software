@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.6 2007-06-21 12:18:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.7 2007-10-29 14:33:29 frankm Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -35,9 +35,9 @@ StatusCode NetworkDataSender::initialize()   {
   MsgStream output(msgSvc(),name());
   // Do NOT call base class initialization: we are not writing to file/socket!
   m_recipients.clear();
-  declareInfo("SendCount",  m_sendReq=0,   "Total number of items sent to receiver(s).");
-  declareInfo("SendErrors", m_sendError=0, "Total number of send errors to receiver(s).");
-  declareInfo("SendBytes",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
+  declareInfo("EventsOut", m_sendReq=0,   "Total number of items sent to receiver(s).");
+  declareInfo("ErrorsOut", m_sendError=0, "Total number of send errors to receiver(s).");
+  declareInfo("BytesOut",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
   if ( m_allowSuspend ) {
     sc = service("EventSelector",m_evtSelector,true);
     if ( !sc.isSuccess() )  {
@@ -80,6 +80,11 @@ StatusCode NetworkDataSender::finalize()     {
   m_recipients.clear();
   // Do NOT call base class finalization: we are not writing to file/socket!
   StatusCode sc = unsubscribeNetwork();
+#if 0
+  undeclareInfo("EventsOut");
+  undeclareInfo("ErrorsOut");
+  undeclareInfo("BytesOut");
+#endif
   if ( m_evtSelector ) m_evtSelector->release();
   m_evtSelector = 0;
   return sc;

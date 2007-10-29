@@ -46,7 +46,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_ONLINECONTEXT_H
 
-// $Id: OnlineEvtSelector.cpp,v 1.27 2007-05-18 13:58:55 frankm Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.28 2007-10-29 14:33:29 frankm Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -289,8 +289,8 @@ StatusCode OnlineEvtSelector::initialize()    {
   }
   m_evtCount = 0;
   m_reqCount = 0;
-  declareInfo("EvtCount",m_evtCount=0,"Event received counter");
-  declareInfo("ReqCount",m_reqCount=0,"Event request counter");
+  declareInfo("EventsIn",m_evtCount=0,"Event received counter");
+  declareInfo("EventsReq",m_reqCount=0,"Event request counter");
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   return status;
 }
@@ -307,8 +307,10 @@ StatusCode OnlineEvtSelector::finalize()    {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
-  undeclareInfo("EvtCount");
-  undeclareInfo("ReqCount");
+  undeclareInfo("EventsIn");
+  undeclareInfo("EventsReq");
+  m_evtCount = 0;
+  m_reqCount = 0;
   return OnlineService::finalize();
 }
 
