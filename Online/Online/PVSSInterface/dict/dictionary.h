@@ -1,6 +1,7 @@
 #ifndef __GCCXML
 #define __GCCXML
 #define __REAL_COMP
+#include "Python.h"
 #endif
 #include <iostream>
 #include <ctime>

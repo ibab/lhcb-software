@@ -1,9 +1,9 @@
 #ifndef PYDIM_DIMPYTHON_H
 #define PYDIM_DIMPYTHON_H
 
+#include "Python.h"
 #include <string>
 #include <typeinfo>
-#include "Python.h"
 
 /*
  *  DIM namespace declaration

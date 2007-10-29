@@ -1,5 +1,5 @@
-#include <iostream>
 #include "DimPython.h"
+#include <iostream>
 
 namespace DIM  {
   static PyThreadState* s_mainThreadState = 0;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.3 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.4 2007-10-29 14:18:52 frankm Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -10,13 +10,8 @@
 #define ONLINE_PVSS_PYTHONCALLBACK_H
 
 // Framework include files
-#include "PVSS/DeviceListener.h"
-#if defined(__GCCXML) && !defined(__REAL_COMP)
-struct _object;
-typedef _object PyObject;
-#else
 #include "Python.h"
-#endif
+#include "PVSS/DeviceListener.h"
 
 /*
  * PVSS namespace

@@ -1,3 +1,4 @@
+#include "DimPython.h"
 #ifdef __GNUC__
 #include <stdint.h>
 #define longlong aStupidHackForAmd64
@@ -6,7 +7,6 @@
 #endif
 #include "dis.hxx"
 #include "dic.hxx"
-#include "DimPython.h"
 
 namespace DIM  {
 
