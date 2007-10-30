@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.cpp,v 1.2 2007-10-22 20:29:23 jpalac Exp $
+// $Id: CopyRecHeader.cpp,v 1.3 2007-10-30 18:10:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -57,6 +57,9 @@ StatusCode CopyRecHeader::initialize() {
 StatusCode CopyRecHeader::execute() {
 
   debug() << "==> Execute" << endmsg;
+
+  setFilterPassed(true);
+
   verbose() << "Going to store RecHeader bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
   return (0!=copyAndStoreObject<LHCb::RecHeader>( inputTESLocation(),

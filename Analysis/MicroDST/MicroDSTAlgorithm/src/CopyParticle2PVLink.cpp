@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.4 2007-10-23 14:45:06 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.5 2007-10-30 18:10:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -58,6 +58,8 @@ StatusCode CopyParticle2PVLink::execute() {
 
   verbose() << "Checking input location " << inputTESLocation() << endmsg;
   
+  setFilterPassed(true);
+
   if (exist<Particle2Vertex::Table>(inputTESLocation()) )
   {
     verbose() << "Retrieving relations table from " 

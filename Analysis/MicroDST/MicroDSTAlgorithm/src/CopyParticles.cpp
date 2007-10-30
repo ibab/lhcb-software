@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.8 2007-10-25 14:22:23 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.9 2007-10-30 18:10:48 jpalac Exp $
 // Include files 
 
 // STL
@@ -77,7 +77,8 @@ StatusCode CopyParticles::execute() {
       verbose() << "Particle cloning failed!" << endmsg;
     }
   }
-  
+
+  setFilterPassed(true);
 
   verbose() << "Going to store to TES" << endmsg;
 

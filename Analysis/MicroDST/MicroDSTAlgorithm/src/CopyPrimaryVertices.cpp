@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.4 2007-10-23 14:45:39 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.5 2007-10-30 18:10:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,6 +64,8 @@ StatusCode CopyPrimaryVertices::execute() {
   const Vertices* v = 
     copyKeyedContainer<Vertices, BasicPVCloner>( inputTESLocation(),
                                                  fullOutputTESLocation());
+
+  setFilterPassed(true);
 
   return (v!=0) ? StatusCode::SUCCESS : StatusCode::FAILURE;  
 
