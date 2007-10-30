@@ -3,10 +3,9 @@
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class0Task)
 
-static bool conf = false;
-
 /// Standard constructor
 LHCb::Class0Task::Class0Task(IInterface* svc) : GaudiTask(svc) {
+  m_configured = false;
   IOCSENSOR.send(this,CONFIGURE);
 }
 
@@ -15,12 +14,12 @@ LHCb::Class0Task::~Class0Task() {
 }
 
 StatusCode LHCb::Class0Task::configure()  {
-  if ( !conf ) {
+  if ( !m_configured ) {
     int result = configApplication();
     if ( result == 1 ) {
       result = initApplication();
       if ( result == 1 ) {
-	conf = true;
+	m_configured = true;
         IOCSENSOR.send(this, STARTUP_DONE);
 	return StatusCode::SUCCESS;
       }
@@ -33,7 +32,7 @@ StatusCode LHCb::Class0Task::configure()  {
 
 StatusCode LHCb::Class0Task::terminate()  {
   int result = finalizeApplication();
-  conf = false;
+  m_configured = false;
   if ( result == 1 ) {
     result = terminateApplication();
     if ( result == 1 ) {

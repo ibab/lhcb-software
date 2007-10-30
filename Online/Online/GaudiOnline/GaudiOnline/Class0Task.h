@@ -16,6 +16,8 @@ namespace LHCb {
     * @version 1.0
     */
   class Class0Task : public GaudiTask {
+    /// Flag to indicate configured step
+    bool m_configured;
   public:
     /// Standard constructor
     Class0Task(IInterface* svc);
