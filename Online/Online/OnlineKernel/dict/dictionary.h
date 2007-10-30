@@ -1,7 +1,15 @@
+#include <cstdarg>
+
 #ifndef __GCCXML
 #define __GCCXML
 #define __REAL_COMP
+#ifdef _WIN32
+#else
+typedef void __va_list_tag;
 #endif
+#else
+#endif
+
 #include <iostream>
 #include <ctime>
 #include <map>

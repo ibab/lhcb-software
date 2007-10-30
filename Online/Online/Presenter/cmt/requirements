@@ -1,11 +1,11 @@
 package Presenter
-version v0r3
+version v0r4
 
 branches cmt doc src test
 
 use DIM           v16r* Online
 
-use OnlineHistDB  v3r1  Online
+use OnlineHistDB  v3r4  Online
 use OMAlib        v0r0  Online
 
 use ROOT          v5r*  LCG_Interfaces
@@ -20,13 +20,19 @@ use Python        v2r*  LCG_Interfaces
 #macro     ROOT_home     "/tmp/root"
 #path_prepend  LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 
-# Build ROOT dictionary - cmt fragment accepts only(?) 1 header file... 
+# Build ROOT dictionary - cmt fragment accepts only(?) 1 header file...
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
-macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib libGraf3d.lib libGed.lib"
-macro_append OnlineHistDB_linkopts "" WIN32 " oci.lib ociw32.lib oraocci10.lib "
+macro_append includes " -I$(PRESENTERROOT)/inc \
+                                         -I$(PRESENTERROOT)/src"
+macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
+  WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
+               libGraf3d.lib libGed.lib"
+macro_append OnlineHistDB_linkopts "" WIN32 " oci.lib ociw32.lib \
+                                                                              oraocci10.lib "
 
 application Presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
-DbRootHist.cpp EditorFrame.cpp LoginDialog.cpp HistoPropDialog.cpp PageSaveDialog.cpp  \
-PresenterMainFrame.cpp presenter.cpp "
+                                     DbRootHist.cpp HistogramIdentifier.cpp \
+                                     EditorFrame.cpp LoginDialog.cpp \
+                                     HistoPropDialog.cpp PageSaveDialog.cpp  \
+                                     PresenterMainFrame.cpp presenter.cpp "

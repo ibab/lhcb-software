@@ -1,5 +1,5 @@
 package OnlineSys
-version v3r4
+version v4r2
 
 branches cmt doc
  
@@ -16,7 +16,7 @@ use ExampleGaucho     v2r4     Online
 use Gaucho            v5r6     Online
 use GauchoJob         v3r1     Online
 use GaudiOnline       v2r9     Online
-use GaudiUPI          v1r4     Online
+use GaudiUPI          v1r5     Online
 use HPDMonitor        v1r3     Online
 use InsertDB          v1r0     Online
 use MBMDump           v1r4     Online

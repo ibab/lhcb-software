@@ -44,14 +44,18 @@ enum TopMenuItems {
 Gaudi::UPIService::UPIService( const std::string& nam, ISvcLocator* svc )
 : Service(nam, svc), m_window(0), m_child(0), m_appMgr(0)
 {
-  svc->queryInterface(IAppMgrUI::interfaceID(),(void**)&m_appMgr);
-  addRef();
+  if ( svc && nam != "DefaultName" ) {  // Does not work with genconf
+    svc->queryInterface(IAppMgrUI::interfaceID(),(void**)&m_appMgr);
+    addRef();
+  }
 }
     
 /// Destructor.
 Gaudi::UPIService::~UPIService() { 
-  print("UPI Service destructed.");
-  updateState(m_appMgr->stateName());
+  if ( name() != "DefaultName" ) {  // Does not work with genconf
+    print("UPI Service destructed.");
+    updateState(m_appMgr->stateName());
+  }
 }
 
 /// Initialize the service.

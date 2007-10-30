@@ -190,7 +190,9 @@ extern "C" {
   /// Printout redirection
   size_t lib_rtl_printf(__CXX_CONST char* fmt, ...);
   /// Install RTL printer 
+#if !defined(__GCCXML) 
   void lib_rtl_install_printer(size_t (*func)(void*, __CXX_CONST char*, va_list args), void* param);
+#endif
   /// Formatted time string
 #ifdef __cplusplus
   __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt = "%b %d %H:%M:%S ", const time_t* tp=0);

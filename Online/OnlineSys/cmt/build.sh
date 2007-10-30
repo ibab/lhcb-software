@@ -3,6 +3,7 @@
 show=;
 config=0;
 clean=0;
+quiet=0
 args="";
 #
 #
@@ -10,6 +11,7 @@ for i in $*;
 do
   if test $i = "--clean"; then clean=1;
   elif test $i = "--config"; then config=1;
+  elif test $i = "--quiet"; then quiet=1;
   else args=`echo $args $i`;
   fi;
 done;
@@ -20,6 +22,10 @@ then
     do 
 	export CMTCONFIG=$i;
         echo "Now building configuration: $CMTCONFIG "
+        if test $quiet = 1; 
+	then
+            export QUIET=1
+	fi;
         if test $clean = 1; 
 	then
 	    $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "rm -rf ../${CMTCONFIG} || /bin/true";
