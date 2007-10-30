@@ -30,6 +30,11 @@ class AllocatorClient:
     return 'SUCCESS'
 
   # ===========================================================================
+  def reallocate(self,rundp_name, partition):
+    "Default client callback on the command 'reallocate'"
+    return 'SUCCESS'
+
+  # ===========================================================================
   def free(self,rundp_name, partition):
     "Default client callback on the command 'free'"
     return 'SUCCESS'
@@ -197,6 +202,13 @@ class Control(PVSS.PyDeviceListener):
             return self
           try:
             if command == "ALLOCATE":
+              result = self.doExecute('allocate',runDpName,partition)
+              if result is not None:
+                return self.makeAnswer(command,answer+'/'+result)
+            elif command == "REALLOCATE":
+              result = self.doExecute('free',runDpName,partition)
+              if result is None:
+                PVSS.error('The command:"free" failed.',timestamp=1,type=PVSS.ILLEGAL_ARG)
               result = self.doExecute('allocate',runDpName,partition)
               if result is not None:
                 return self.makeAnswer(command,answer+'/'+result)

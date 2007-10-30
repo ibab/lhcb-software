@@ -108,17 +108,17 @@ class FSMmanip:
     return obj
   
   # ===========================================================================
-  def _makeTaskMap(self):
+  def _makeTaskMap(self,tasks):
     m = {}
     nam = self.name+'_'
     tag = self.name+'|'+nam
-    for i in self.tasks.keys():
+    for i in tasks.keys():
       if debug: log(self.name+'> Task map:'+tag+' '+i+' '+i[5:9],timestamp=1)
       dpn = self.name+'|FSM_Tasks_FWDM.fsm.sendCommand'
       if not m.has_key(dpn): m[dpn] = []
       m[dpn].append(str(nam+i).upper())
-    for i in self.tasks.keys():
-      for j in self.tasks[i]:
+    for i in tasks.keys():
+      for j in tasks[i]:
         dp = tag+i+'FSM_DimTask_FWDM.fsm.sendCommand'
         if not m.has_key(dp): m[dp] = []
         val = self.enabled.container[j].name()
@@ -139,15 +139,16 @@ class FSMmanip:
         dpv.back().data = action+'/DEVICE(S)='+dpMap[i][0].upper()
         count = count + 1
         if debug: log('%-12s %3d %3d %s'%(action, commit, count, dpv.back().data))
+        #log('%-12s %3d %3d %s'%(action, commit, count, dpv.back().data))
         del dpMap[i][0]
         if len(dpMap[i])==0: del dpMap[i]
-      self.writer.add(dpv)
-      length = self.writer.length()
-      if not self.writer.execute():
-        log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
-        return None
-      commit = commit + 1
-      dpv.clear()
+    self.writer.add(dpv)
+    length = self.writer.length()
+    if not self.writer.execute():
+      log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
+      return None
+    commit = commit + 1
+    dpv.clear()
     return self
  
   # ===========================================================================
@@ -194,6 +195,7 @@ class FSMmanip:
         self.nodeParents[node2] = self.enabled.container.size()
         self.addNodeObject(nam+node2)
     if debug: log('Task nodes:'+str(self.tasks.keys())+' '+str(self.tasks))
+    return (self.tasks,self.nodeParents)
     
   # ===========================================================================
   def enableObject(self, i, node, enabled, visible, label, type="NONE"):
@@ -210,7 +212,7 @@ class FSMmanip:
   # ===========================================================================
   def _setupTask(self,which,node,name,type,inUse,prio,cmd,sysname,dimdns,nodename=None):
     if debug:
-      print 'setupTask:',which,node,name,type,inUse,prio
+      print 'setupTask:',which,node,name,type,inUse,prio,dimdns
     if nodename is None:
       nodename = node
     i = self.taskSlots[node][which]
@@ -232,48 +234,60 @@ class FSMmanip:
     self.writer.add(self.sysName.container[i])
 
   # ===========================================================================
-  def reset(self):
-    for i in self.nodeParents.keys():
-      self.enableObject(self.nodeParents[i],i,-1,0,'Disabled')
-    for i in self.tasks.keys():
-      for j in self.tasks[i]:
+  def disableTasks(self,tasks_parents):
+    tasks = tasks_parents[0]
+    parents = tasks_parents[1]
+    for i in parents.keys():
+      self.enableObject(parents[i],i,-1,0,'Disabled')
+    for i in tasks.keys():
+      for j in tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
         self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE",dimdns="NONE",sysname="NONE")
-    return self._commitFSM(self._makeTaskMap(),'DISABLE')
+    return self
 
   # ===========================================================================
-  def _allocateProcesses(self,processes):
-    cl1 = copy.deepcopy(self.tasks)
-    parents = copy.deepcopy(self.nodeParents)
-    self.tasks = {}
+  def reset(self,tasks_parents):
+    if tasks_parents:
+      self.disableTasks(tasks_parents)
+      return self._commitFSM(self._makeTaskMap(tasks_parents[0]),'DISABLE')
+    return None
+
+  # ===========================================================================
+  def _allocateProcesses(self,processes,tasks_parents):
+    if not tasks_parents:
+      error(self.name+': No task list present!',timestamp=1)
+      return None
+    unused_tasks = copy.deepcopy(tasks_parents[0])
+    parents = copy.deepcopy(tasks_parents[1])
+    used_tasks = {}
     for n in processes.keys():
       if debug: print '--->',len(processes[n]),' tasks running on node:',n
     for (n,task_list) in processes.items():
       if debug: print 'allocateProcesses:',n,task_list
       if parents.has_key(n) and len(task_list) > 0:
         itm1 = parents[n]
-        #if self.enabled.container[itm1].data != 1:
         self.enableObject(itm1,n,1,1,n)
         del parents[n]
-      self.tasks[n] = []
+      used_tasks[n] = []
       for task in task_list:
-        if cl1.has_key(n) and len(cl1[n]) > 0:
-          i = cl1[n][0]
+        if unused_tasks.has_key(n) and len(unused_tasks[n]) > 0:
+          i = unused_tasks[n][0]
           if debug: print 'Task:',task
           self.enableObject(i,n,1,1,task[2])
           self.configureTask(n,i,task)
-          self.tasks[n].append(i)
-          del cl1[n][0]
+          used_tasks[n].append(i)
+          del unused_tasks[n][0]
+          #print 'Task:',len(used_tasks[n]),task
         else:
           error(self.name+': No task slots for Class 1 present!',timestamp=1)
-          if not cl1.has_key(n):
+          if not unused_tasks.has_key(n):
             error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
           else:
             error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
           return None
-    self.nodeParents = parents
-    self.tasks = cl1
-    return self
+    #self.nodeParents = parents
+    #self.tasks = used_tasks
+    return (used_tasks,unused_tasks)
 
   # ===========================================================================
   def _configureTask(self, fsm_node, item, task):
@@ -295,13 +309,17 @@ class FSMmanip:
     return self
 
   # ===========================================================================
-  def commit(self):
+  def commit(self,tasks):
     "Commit all the writer's datapoints."
     if not self.writer.execute():
       log(self.name+': PVSS commit failed!',timestamp=1)
       return None
-    return self._commitFSM(self._makeTaskMap(),'ENABLE')
-
+    used = tasks[0]
+    unused = tasks[1]
+    if self._commitFSM(self._makeTaskMap(unused),'DISABLE'):
+      return self._commitFSM(self._makeTaskMap(used),'ENABLE')
+    return None
+  
 # =============================================================================
 #
 # CLASS: BlockSlotPolicy
@@ -564,16 +582,18 @@ class Allocator(StreamingDescriptor):
     tasks = info_obj.defineTasks(part_info)
     if tasks:
       fsm_manip = self.fsmManip(part_info,'_FwFsmDevice',match='*')
-      fsm_manip.collectTaskSlots()
-      fsm_manip.reset()
-      if fsm_manip.allocateProcesses(tasks) is None:
-        #self.free(rundp_name,partition)
-        return None
-      if fsm_manip.commit() is None:
-        #self.free(rundp_name,partition)
-        return None
-      self.infoInterface.showPartition(partition=part_info,extended=1)
-      return part_info.name
+      res = fsm_manip.collectTaskSlots()
+      if res:
+        fsm_manip.disableTasks(res)
+        res = fsm_manip.allocateProcesses(tasks,res)
+        if res is None:
+          return None
+        if fsm_manip.commit(res) is None:
+          return None
+        self.infoInterface.showPartition(partition=part_info,extended=1)
+        return part_info.name
+      error('No task slots found of type:'+self.name+' for partition:'+partition,timestamp=1)
+      return None
     error('Failed to configure slots of type:'+self.name+' for partition:'+partition,timestamp=1)
     return None
   
