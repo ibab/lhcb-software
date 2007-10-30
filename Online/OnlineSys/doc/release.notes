@@ -5,6 +5,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r2</A></H1><PRE>
+This is a new version built against LHCb v23r0.
+Several bug fixes in OnlineKernel, GaudiOnline as a result
+of the Online commissioning.
+New versions of the Presenter, OnlineHistDB and OMAlib (new library).
+
 </PRE><H1><A NAME=v4r0>2007-08-10 OnlineSys v4r0</A></H1><PRE>
 This is a new version built against LHCb v22r8
 
