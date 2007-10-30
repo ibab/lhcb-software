@@ -38,7 +38,6 @@ export gaudi_exe2="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe libGaudiOnline.so O
 # MBMInit initializes the shared memory
 $MINITERM MEPInit@${HOST} -e "export UTGID=MEPInit ; ${gaudi_exe} -main=${GAUDIONLINEROOT}/options/MEPInit.opts  -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
-$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff ; ${gaudi_exe} -main=$GAUDIONLINEROOT/options/MBMinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 # ErrorLogger (not required for running)
 $WIDETERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog; ${gaudi_exe2} -opts=$GAUDIONLINEROOT/options/ErrorLogger.opts -main=$GAUDIONLINEROOT/options/Remap.opts " &
 #
