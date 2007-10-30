@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.5 2007-10-08 13:55:37 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.6 2007-10-30 11:22:35 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -66,8 +66,6 @@ private:
 
   ITrackExtrapolator* m_extrapolator; // Interface to track extrapolator
 
-  int alignSelectedModules;
-
   //===========================================================================
   // Incident listener
   //===========================================================================
@@ -104,7 +102,8 @@ private:
   //=============================================================================
   std::string c_trackType;
   int c_modulesToAlign;
-  bool c_flatIllum;
+  mutable int alignSelectedModules;
+  bool c_constOccup;
   int c_maxMulti;
   double c_minP;
   double c_maxChi2PerDoF;
@@ -118,8 +117,7 @@ private:
   //  Various containers
   //===========================================================================
   mutable const LHCb::Tracks* m_tracks;
-  mutable const STLiteClusters* m_itClusters;
-  mutable const LHCb::OTTimes* m_otTimes;
+  mutable std::vector<LHCb::LHCbID> m_closeHits;
   //===========================================================================
 
   //===========================================================================
@@ -143,11 +141,14 @@ private:
   int getAllVariables ( const LHCb::Track& aTrack ) const;
   bool isSharedHit ( const LHCb::Track& aTrack,
                      const LHCb::Node* aNode ) const;
+  std::vector<LHCb::LHCbID> getCloseHits ( ) const;
   int nNeighbouringHits ( const LHCb::Track& aTrack ) const;
+  bool isNeighbouringHit ( LHCb::STChannelID clusID,
+                           LHCb::STChannelID hitID ) const;
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,
-                           LHCb::OTChannelID hitID,
-                           unsigned int hitStraw ) const;  
-  double flatIllum_distri ( double flatIllum_var ) const;
+                           LHCb::OTChannelID hitID ) const;  
+  double constOccup_distri ( double constOccup_var ) const;
+  void printCutValues ( ) const;
   //=============================================================================
 
   //=============================================================================
@@ -155,7 +156,7 @@ private:
   //=============================================================================
   bool selectDefinedModules ( const LHCb::Track& aTrack ) const;
   bool selectBoxOverlaps ( const LHCb::Track& aTrack ) const;
-  bool cutFlatIllum ( ) const;
+  bool cutConstOccup ( ) const;
   bool cutMultiplicity ( ) const;
   bool cutTrackP ( ) const;
   bool cutTrackChi2PerDoF ( ) const;
@@ -163,6 +164,18 @@ private:
   bool cutNHoles ( ) const;
   bool cutNSharedHits ( ) const;
   bool cutNCloseHits ( ) const;
+  //=============================================================================
+
+  //=============================================================================
+  // for comparing LHCbIDs
+  //=============================================================================
+  class lessByID {
+  public:
+    inline bool operator() ( const LHCb::LHCbID& obj1 ,
+                             const LHCb::LHCbID& obj2 ) const { 
+      return obj1.lhcbID() < obj2.lhcbID() ; 
+    }
+  };
   //=============================================================================
 };
 #endif // ALIGNTRTOOLS_ALIGNSELTOOL_H

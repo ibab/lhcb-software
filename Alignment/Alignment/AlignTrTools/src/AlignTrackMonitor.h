@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.5 2007-10-17 09:28:58 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.6 2007-10-30 11:22:35 lnicolas Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -73,19 +73,18 @@ private:
 
   // Check if the hit is being shared with (at least) one other Track
   bool isSharedHit ( const LHCb::Track* aTrack,
-                                        const LHCb::Node* aNode );
-
+                     const LHCb::Node* aNode );
+  
   // Is the track isolated?
+  std::vector<LHCb::LHCbID> getCloseHits ( );
   int nNeighbouringHits ( const LHCb::Track* aTrack );
 
   // Is the strip/straw trajectory too close to the track at z?
   bool isNeighbouringHit ( LHCb::STChannelID clusID,
-                                              LHCb::STChannelID hitID,
-                                              unsigned int hitStrip );
+                           LHCb::STChannelID hitID );
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,
-                                              LHCb::OTChannelID hitID,
-                                              unsigned int hitStraw );  
-
+                           LHCb::OTChannelID hitID );
+  
   // Get the box overlaps for this track (given by the itNodes)
   double boxOverlap ( const LHCb::Track* aTrack,
                       LHCb::STChannelID STChanID1,
@@ -139,6 +138,7 @@ private:
   const LHCb::Tracks* m_tracks;
   const STLiteClusters* m_itClusters;
   const LHCb::OTTimes* m_otTimes;
+  mutable std::vector<LHCb::LHCbID> m_closeHits;
 
   // event variables
   int m_eventMultiplicity;
@@ -170,6 +170,18 @@ private:
   double m_entryTY;
   double m_entryX;
   double m_entryY;
+
+  //=============================================================================
+  // for comparing LHCbIDs
+  //=============================================================================
+  class lessByID {
+  public:
+    inline bool operator() ( const LHCb::LHCbID& obj1 ,
+                             const LHCb::LHCbID& obj2 ) const { 
+      return obj1.lhcbID() < obj2.lhcbID() ; 
+    }
+  };
+  //=============================================================================
 };
 
 #endif // _AlignTrackMonitor_H_

@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.1 2007-10-25 09:59:49 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.2 2007-10-30 11:22:35 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -169,6 +169,9 @@ StatusCode AlignSaveTuple::execute ( ) {
 
   // Get the OT times
   m_otTimes = get<LHCb::OTTimes>( m_otTimesPath );
+
+  // Get the hits close to any other
+  m_closeHits = getCloseHits ( );
   
   // Creating the tuple in memory
   Tuples::Tuple trackSelTuple = nTuple( "TrackSel N-tuple" );
@@ -303,6 +306,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 
   m_nSharedHits = 0;
   m_fSharedHits = defValue;
+  
   m_nCloseHits = nNeighbouringHits( aTrack );
   m_nHoles = 0;
 
@@ -570,60 +574,58 @@ bool AlignSaveTuple::isGhostTrack ( const LHCb::Track* aTrack ) {
 
 
 //===========================================================================
+// Get the IT clusters and OT times that are close to anything else
+//===========================================================================
+std::vector<LHCb::LHCbID> AlignSaveTuple::getCloseHits ( ) {
+  
+  std::vector<LHCb::LHCbID> closeHits;
+  
+  const STLiteClusters* itClusters = get<STLiteClusters>( m_itClustersPath );
+  const LHCb::OTTimes* otTimes = get<LHCb::OTTimes>( m_otTimesPath );
+  STLiteClusters::const_iterator iClus = itClusters->begin();
+  LHCb::OTTimes::const_iterator iTimes = otTimes->begin();
+
+  // Loop over all the IT clusters
+  for ( ; iClus+1 != itClusters->end(); ++iClus )
+    if ( isNeighbouringHit( (*iClus).channelID(), (*(iClus+1)).channelID() ) ) {
+      closeHits.push_back( (*iClus).channelID() );
+      closeHits.push_back( (*(iClus+1)).channelID() );
+    }
+  
+  // Loop over all the OT times
+  for ( ; iTimes+1 != otTimes->end(); ++iTimes )
+    if ( isNeighbouringHit( (**iTimes).channel(), (**(iTimes+1)).channel()) ) {
+      closeHits.push_back( (**iTimes).channel() );
+      closeHits.push_back( (**(iTimes+1)).channel() );
+    }
+
+  // sorting and stripping out duplicates
+  std::sort( closeHits.begin(), closeHits.end(), lessByID() );
+  std::unique( closeHits.begin(), closeHits.end() );
+  
+  return closeHits;
+}
+//===========================================================================
+
+
+//===========================================================================
 // Is track isolated or not?
 //===========================================================================
 int AlignSaveTuple::nNeighbouringHits ( const LHCb::Track* aTrack ) {
-
-  int nNeighbouringHits = 0;
-
-  //**********************************************************************
-  // For each IT/OT hit check if there are neighbouring clusters/times
-  //**********************************************************************
-  STLiteClusters::const_iterator iClus = m_itClusters->begin();
-  for ( ; iClus != m_itClusters->end(); ++iClus ) {
-    // Not already on the track
-    if ( aTrack->isOnTrack( (*iClus).channelID() ) ) continue;
-
-    std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();  
-    for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
-      if ( (*iNodes)->hasMeasurement() ) {
-        if ( (*iNodes)->measurement().type() == LHCb::Measurement::IT ) {
-          LHCb::STChannelID nodeSTID;
-          nodeSTID = (*iNodes)->measurement().lhcbID().stID();
-          
-          // For each IT hit, check that no other cluster is found close to it          
-          if ( isNeighbouringHit((*iClus).channelID(),
-                                 nodeSTID, nodeSTID.strip()) ) {
-            ++nNeighbouringHits;
-            break;
-          }
-        }
-      }
-    }
-  }
   
-  LHCb::OTTimes::const_iterator iTimes = m_otTimes->begin();
-  for ( ; iTimes != m_otTimes->end(); ++iTimes ) {
-    // Not already on the track
-    if ( aTrack->isOnTrack( (*iTimes)->channel() ) ) continue;
-
-    std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();  
-    for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {    
-      if ( (*iNodes)->hasMeasurement() ) {
-        if ( (*iNodes)->measurement().type() == LHCb::Measurement::OT ) {        
-          LHCb::OTChannelID nodeOTID;
-          nodeOTID = (*iNodes)->measurement().lhcbID().otID();
-          
-          // For each OT hit, check that no other time is found close to it
-          if ( isNeighbouringHit((*iTimes)->channel(),
-                                 nodeOTID, nodeOTID.straw()) ) {
-            ++nNeighbouringHits;
-            break;
-          }
-        }
-      }
+  int nNeighbouringHits = 0;
+  
+  //**********************************************************************
+  // For each IT/OT hit on track check if there are neighbouring clusters/times
+  //**********************************************************************
+  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
+  for ( ; iNodes != aTrack->nodes().end(); ++iNodes )
+    if ( (*iNodes)->hasMeasurement() ) {
+      LHCb::LHCbID nodeID = (*iNodes)->measurement().lhcbID();
+      if ( std::binary_search( m_closeHits.begin(),
+                               m_closeHits.end(), nodeID, lessByID() ) )
+        ++nNeighbouringHits;
     }
-  }
   //**********************************************************************
 
   return nNeighbouringHits;
@@ -635,15 +637,14 @@ int AlignSaveTuple::nNeighbouringHits ( const LHCb::Track* aTrack ) {
 // Check if cluster is neighbouring the IT hit
 //===========================================================================
 bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
-                                            LHCb::STChannelID hitID,
-                                            unsigned int hitStrip ) {
+                                         LHCb::STChannelID hitID ) {
   
   // Not a TELL1 artefact at beetles boundaries
-  if ( (hitStrip+clusID.strip())%(2*m_nStrips) <= 3 ) return false;
+  if ( (hitID.strip()+clusID.strip())%(2*m_nStrips) <= 3 ) return false;
 
   // Same ladder within 2 strips aside
   if ( (hitID.uniqueSector() == clusID.uniqueSector()) &&
-       (abs(int(hitStrip-clusID.strip()))<=m_nStripsTol) ) return true;
+       (abs(int(hitID.strip()-clusID.strip())) <= m_nStripsTol) ) return true;
   
   return false;
 }
@@ -654,19 +655,18 @@ bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
 // Check if time is neighbouring the OT hit
 //===========================================================================
 bool AlignSaveTuple::isNeighbouringHit ( LHCb::OTChannelID timeID,
-                                            LHCb::OTChannelID hitID,
-                                            unsigned int hitStraw ) {
+                                         LHCb::OTChannelID hitID ) {
        
   // Same module?
   if ( hitID.uniqueModule() != timeID.uniqueModule() ) return false;
   
   // In module 9 of quarters 0 and 2, only 2*32 straws
   if ( !(timeID.quarter()%2) && (int(timeID.module()) == m_nOTModules) ) {
-    if ( (abs(int((hitStraw%int(m_nStraws/4))
-              -(timeID.straw()%int(m_nStraws/4))))<=m_nStrawsTol) ) return true;
+    if ( (abs(int((hitID.straw()%int(m_nStraws/4))
+                  -(timeID.straw()%int(m_nStraws/4)))) <= m_nStrawsTol) ) return true;
   }
-  else if ( (abs(int((hitStraw%int(m_nStraws/2))
-                 -(timeID.straw()%int(m_nStraws/2))))<=m_nStrawsTol) ) return true;
+  else if ( (abs(int((hitID.straw()%int(m_nStraws/2))
+                     -(timeID.straw()%int(m_nStraws/2)))) <= m_nStrawsTol) ) return true;
 
   return false;
 }
@@ -677,7 +677,7 @@ bool AlignSaveTuple::isNeighbouringHit ( LHCb::OTChannelID timeID,
 // Check if this hit is shared with (at least) one other track
 //===========================================================================
 bool AlignSaveTuple::isSharedHit ( const LHCb::Track* iTrack,
-                                      const LHCb::Node* aNode ) {
+                                   const LHCb::Node* aNode ) {
   
   LHCb::LHCbID measurementID;
   if ( aNode->hasMeasurement() )

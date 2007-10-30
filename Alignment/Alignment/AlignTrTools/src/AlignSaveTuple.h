@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.1 2007-10-25 09:59:49 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.2 2007-10-30 11:22:35 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -71,25 +71,24 @@ private:
   // Fill the Variables
   StatusCode fillVariables ( const LHCb::Track* aTrack,
                              Tuples::Tuple trackSelTuple );
-
+  
   // Is the track linked to a MC particle or not?
   bool isGhostTrack ( const LHCb::Track* aTrack );
-
+  
   // Check if the hit is being shared with (at least) one other Track
   bool isSharedHit ( const LHCb::Track* aTrack,
-                                        const LHCb::Node* aNode );
-
+                     const LHCb::Node* aNode );
+  
   // Is the track isolated?
+  std::vector<LHCb::LHCbID> getCloseHits ( );
   int nNeighbouringHits ( const LHCb::Track* aTrack );
-
+  
   // Is the strip/straw trajectory too close to the track at z?
   bool isNeighbouringHit ( LHCb::STChannelID clusID,
-                                              LHCb::STChannelID hitID,
-                                              unsigned int hitStrip );
+                           LHCb::STChannelID hitID );
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,
-                                              LHCb::OTChannelID hitID,
-                                              unsigned int hitStraw );  
-
+                           LHCb::OTChannelID hitID );  
+  
   // Get the box overlaps for this track
   double boxOverlap ( const LHCb::Track* aTrack,
                       LHCb::STChannelID STChanID1,
@@ -139,6 +138,7 @@ private:
   ITrackGhostClassification* m_ghostClassification;  ///< Pointer to ghost tool 
 
   const LHCb::Tracks* m_tracks;
+  mutable std::vector<LHCb::LHCbID> m_closeHits;
   const LHCb::ODIN * odin;
   const STLiteClusters* m_itClusters;
   const LHCb::OTTimes* m_otTimes;
@@ -199,6 +199,18 @@ private:
   int m_nBoxOverlaps;
   Array m_boxOvlapRes;
   Array m_boxOvlapSta;
+
+  //=============================================================================
+  // for comparing LHCbIDs
+  //=============================================================================
+  class lessByID {
+  public:
+    inline bool operator() ( const LHCb::LHCbID& obj1 ,
+                             const LHCb::LHCbID& obj2 ) const { 
+      return obj1.lhcbID() < obj2.lhcbID() ; 
+    }
+  };
+  //=============================================================================
 };
 
 #endif // _AlignSaveTuple_H_
