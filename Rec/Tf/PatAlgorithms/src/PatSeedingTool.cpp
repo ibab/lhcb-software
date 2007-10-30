@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.2 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatSeedingTool.cpp,v 1.3 2007-10-30 18:29:29 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -45,7 +45,8 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "TolCollectIT",      m_tolCollectIT     = 0.3   * Gaudi::Units::mm );
   declareProperty( "InitialArrow",      m_initialArrow     = 0.0022                   );
   declareProperty( "CurveTol",          m_curveTol         =    5. * Gaudi::Units::mm );
-  declareProperty( "zReference",        m_zReference       = 8520. * Gaudi::Units::mm );
+  declareProperty( "zReference",        m_zReference       =  StateParameters::ZMidT);
+  declareProperty( "zOutput",           m_zOutput          =  StateParameters::ZAtT);
   declareProperty( "dRatio",            m_dRatio           = -0.377e-3                );
   declareProperty( "TolExtrapolate",    m_tolExtrapolate   = 4.    * Gaudi::Units::mm );
   declareProperty( "yCorrection",       m_yCorrection      = .8e14 * Gaudi::Units::mm );
@@ -658,7 +659,7 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track, std::vector<LHCb::Track*>
 
 
 
-  double z = StateParameters::ZAtT;
+  double z = m_zOutput;
 
   temp.setLocation( LHCb::State::AtT );
   temp.setState( track.xAtZ( z ), track.yAtZ( z ), z,

@@ -1,9 +1,13 @@
-
 !-----------------------------------------------------------------------------
 ! Package     : Tf/PatAlgorithms
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2007-10-30 - Stephanie Hansmann-Menzemer
+ - bug fix in PatMatch
+ - add switch for z position of output state for PatSeeding and PatForward 
+   algorithm
 
 !========================== PatAlgorithms v3r1 2007-10-23 ====================
 ! 2007-10-22 - Olivier Callot

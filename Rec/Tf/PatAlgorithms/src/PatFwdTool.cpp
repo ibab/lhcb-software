@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.2 2007-10-30 18:29:29 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -35,12 +35,12 @@ PatFwdTool::PatFwdTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<PatFwdTool>(this);
-  declareProperty( "ZReference"      , m_zReference      = 8520 * Gaudi::Units::mm);
+  declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT); 
+  declareProperty( "ZOutput"         , m_zOutput         = StateParameters::ZAtT);
   declareProperty( "ZMagnetParams"   , m_zMagnetParams  );
   declareProperty( "xParams"         , m_xParams        );
   declareProperty( "yParams"         , m_yParams        );
   declareProperty( "momentumParams"  , m_momentumParams );
-  declareProperty( "ZAfter"          , m_zAfter          = StateParameters::ZAtT );
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField = false);

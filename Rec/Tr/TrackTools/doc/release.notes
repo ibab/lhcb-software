@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+! 2007-10-30 Stephanie Hansmann-Menzemer
+ - add Fast Momentum Tool and according option file
 
 !======================== TrackTools v3r0 2007-10-12 ========================
 ! 2007-10-10 Stephanie Hansmann-Menzemer

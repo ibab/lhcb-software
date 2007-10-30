@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.2 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatMatch.cpp,v 1.3 2007-10-30 18:29:29 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -68,13 +68,19 @@ StatusCode PatMatch::execute() {
  
   
   std::vector<MatchCandidate> cand;
-  std::vector<bool> veloUsed( velos->size(), false );
-  std::vector<bool> seedUsed( seeds->size(), false );
+  std::map<bool,int> veloUsed;
+  std::map<bool,int> seedUsed;
+
+  LHCb::Tracks::iterator itV, itS;
+  for ( itV = velos->begin(); velos->end() != itV; ++itV ) 
+    veloUsed[(*itV)->key()] = false;
+  for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) 
+    seedUsed[(*itS)->key()] = false;
 
   double dxTol2 = m_dxTol * m_dxTol;
   double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope; 
 
-  LHCb::Tracks::iterator itV, itS;
+  
   for ( itV = velos->begin(); velos->end() != itV; ++itV ) {
     if ( (*itV)->checkFlag( LHCb::Track::Invalid  ) ) continue;
     if ( (*itV)->checkFlag( LHCb::Track::Backward ) ) continue;    
