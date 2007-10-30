@@ -229,6 +229,7 @@ extern "C" {
  *
  */
 namespace RTL  {
+#if !defined(__GCCXML) 
   typedef std::map<lib_rtl_event_t, lib_rtl_thread_t> lib_rtl_thread_map_t;
   typedef std::map<std::string, lib_rtl_event_t>      lib_rtl_event_map_t;
   typedef std::map<std::string, lib_rtl_gbl_t>        lib_rtl_gbl_map_t;
@@ -237,7 +238,7 @@ namespace RTL  {
   lib_rtl_thread_map_t& waitEventThreads();
   lib_rtl_gbl_map_t&    allSections();
   lib_rtl_lock_map_t&   allLocks();
-
+#endif
 
   /// Process name (UTGID)
   const std::string& processName();

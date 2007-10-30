@@ -1,13 +1,30 @@
 #include <cstdarg>
 
 #ifndef __GCCXML
-#define __GCCXML
-#define __REAL_COMP
-#ifdef _WIN32
+  #define __GCCXML
+  #define __REAL_COMP
+  #ifdef _WIN32
+  #else
+    typedef void __va_list_tag;
+  #endif
 #else
-typedef void __va_list_tag;
-#endif
-#else
+  #ifdef _WIN32
+    #pragma warning("excluding _LDT_ENTRY_DEFINED")
+    #define _LDT_ENTRY_DEFINED
+    typedef struct _LDT_ENTRY {
+    unsigned short LimitLow;
+    unsigned short BaseLow;
+    union {
+        struct {
+            unsigned char  BaseMid;
+            unsigned char  Flags1;     // Declare as bytes to avoid alignment
+            unsigned char  Flags2;     // Problems.
+            unsigned char  BaseHi;
+        } Bytes;
+    } HighWord;
+} LDT_ENTRY, *PLDT_ENTRY;
+    #include "windows.h"
+  #endif
 #endif
 
 #include <iostream>
