@@ -93,7 +93,6 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   EvtIncoherentMixing::OtherB(p,t,other_b);
 //  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);//also possible
 
-
   //Here we're gonna generate and set the "envelope" lifetime
   //So we take the longest living component (for positive deltaGamma: tauH)
   //The double exponent will be taken care of later, by the amplitudes
@@ -117,35 +116,39 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   G0P=EvtComplex(getArg(4)*cos(getArg(5)),getArg(4)*sin(getArg(5)));
   G1M=EvtComplex(getArg(6)*cos(getArg(7)),getArg(6)*sin(getArg(7)));
 
-  EvtComplex lambda_km=EvtComplex(cos(2*getArg(0)),-sin(2*getArg(0)));
+  EvtComplex lambda_km=EvtComplex(cos(2*getArg(0)),sin(2*getArg(0)));//was een min in oude versie
 
   //deltaMs is no argument anymore
   //Tristan
   static double deltaMs = EvtIncoherentMixing::getdeltams();
-  double cdmt=cos(deltaMs*t/(2*EvtConst::c));
-  double sdmt=sin(deltaMs*t/(2*EvtConst::c));
 
   EvtComplex cG0P,cG1P,cG1M;
 
   double mt = exp(-std::max(0.,deltaGamma)*t/(2*EvtConst::c));
   double pt = exp(+std::min(0.,deltaGamma)*t/(2*EvtConst::c));
 
+  EvtComplex gplus = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
+		      +pt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin(-deltaMs*t/(2*EvtConst::c))) )/2;
+ EvtComplex gminus = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
+        	      -pt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin(-deltaMs*t/(2*EvtConst::c))) )/2;;
+
   if (other_b==BSB){
     //These are the right equations for the transversity formalism
-    //cGOP is de 0-component, CP-even, so lives shorter: lifetime tauL
-    //cG1P is the //-component, also CP-even, also smaller exponent
-    //cG1M is the transverse component, CP-odd, so has longer lifetime tauH
+    //cGOP is de 0-component, CP-even, so lives shorter: mainly lifetime tauL
+    //cG1P is the //-component, also CP-even, also mainly smaller exponent
+    //cG1M is the transverse component, CP-odd, so has mainly longer lifetime tauH
     //Tristan
-    cG0P = mt*G0P*(cdmt+lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
-    cG1P = mt*G1P*(cdmt+lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
-    cG1M = pt*G1M*(cdmt-lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
+    cG0P = G0P*( gplus + lambda_km*gminus );
+    cG1P = G1P*( gplus + lambda_km*gminus );
+    cG1M = G1M*( gplus - lambda_km*gminus );
   } else if (other_b==BS0){
     //The equations for BsBar
-    //Note: a minus-sign difference
+    //Note the minus-sign difference
     //Tristan
-    cG0P = mt*G0P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
-    cG1P = mt*G1P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
-    cG1M =-pt*G1M*(cdmt-(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
+    cG0P = G0P*( gplus + (1.0/lambda_km)*gminus );
+    cG1P = G1P*( gplus + (1.0/lambda_km)*gminus );
+    cG1M =-G1M*( gplus - (1.0/lambda_km)*gminus );
+
   } else{
     report(ERROR,"EvtGen") << "other_b was not BSB or BS0!"<<std::endl;
     ::abort();

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-10-30 - Patrick Robbe
+ - EvtPVVCPLH.cpp: corrections by Tristan du Pree
+
 ! 2007-10-14 - Patrick Robbe
  - Adapt static classes to windows compilation
 
