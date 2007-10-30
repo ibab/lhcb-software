@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2007-10-29 M. Needham
+ - Modifications to MCReconstructible to protect against unknown category
+
 ! 2007-10-23 - Chris Jones
  - Add option to MCParticleSelector to select only B decay products
 

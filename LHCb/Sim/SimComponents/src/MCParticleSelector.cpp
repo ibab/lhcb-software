@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.8 2007-10-23 10:03:26 jonrob Exp $
+// $Id: MCParticleSelector.cpp,v 1.9 2007-10-30 15:17:07 mneedham Exp $
 
 #include "Event/MCParticle.h"
 
@@ -17,9 +17,9 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
 {
   // JOs
   declareProperty("zOrigin",      m_zOrigin      = 9999.0*Gaudi::Units::cm );
-  declareProperty("pMin",         m_pMin         = 1.0*Gaudi::Units::GeV );
+  declareProperty("pMin",         m_pMin         = 0.0*Gaudi::Units::GeV );
   declareProperty("pMax",         m_pMax         = 999999*Gaudi::Units::GeV );
-  declareProperty("betaGammaMin", m_betaGammaMin = 1.0 );
+  declareProperty("betaGammaMin", m_betaGammaMin = 0.0 );
   declareProperty("etaMin",       m_etaMin       = -9999.);
   declareProperty("etaMax",       m_etaMax       = 9999. );
   declareProperty("rejectElectrons", m_rejectElectrons  = false );
@@ -27,7 +27,7 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
   declareProperty("SelectNeutralParticles", m_selNeutral = true );
   declareProperty("rejectInteractions", m_rejectInteractions = false );
   declareProperty("zInteraction", m_zInteraction = -9999.0*Gaudi::Units::m );
-  declareProperty("SelectOnlyBDecayProducts", m_selBprods = true );
+  declareProperty("SelectOnlyBDecayProducts", m_selBprods = false );
 
   // interface
   declareInterface<IMCParticleSelector>(this);

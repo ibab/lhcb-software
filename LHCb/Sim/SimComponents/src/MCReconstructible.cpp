@@ -4,7 +4,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.9 2007-05-25 14:38:40 mneedham Exp $
+ *  $Id: MCReconstructible.cpp,v 1.10 2007-10-30 15:17:07 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -222,12 +222,24 @@ bool MCReconstructible:: isReconstructibleAs(
         const IMCReconstructible::RecCategory& category,
         const LHCb::MCParticle* mcPart ) const{
   
+  // protect against the strip case
+  if (category == NoClassification ){
+    Warning("Called with no classification", StatusCode::SUCCESS);
+    return false;
+  }
+
   if (!inAcceptance(mcPart)) return false;
 
   const bool isCharged = mcPart->particleID().threeCharge() != 0;  
-  if (isCharged == true && category != Neutral){
-    LHCb::MC::MCTrackGeomCriteria* criteria = m_critMap[category];
-    return criteria->accepted(mcTkInfo(),mcPart) && m_mcSel->accept(mcPart);
+  if (isCharged == true && category != Neutral && category != NotReconstructible){
+    CriteriaMap::iterator criteria = m_critMap.find(category);
+    if (criteria == m_critMap.end()) {
+      Warning("Category not found - defaulting to false",StatusCode::SUCCESS);
+      return false; 
+    } 
+    else {
+      return criteria->second->accepted(mcTkInfo(),mcPart) && m_mcSel->accept(mcPart);
+    }
   }
   else if (isCharged == false && category == Neutral) {
     return true;
