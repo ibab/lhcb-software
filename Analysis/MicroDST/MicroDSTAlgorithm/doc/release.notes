@@ -1,7 +1,18 @@
-! $Id: release.notes,v 1.31 2007-10-25 16:29:32 jpalac Exp $
+! $Id: release.notes,v 1.32 2007-10-30 15:00:27 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-10-30 - Juan PALACIOS
+
+ - cmt/requirements
+  . Increase version to v2r1
+
+ - MicroDST/CopyAndStoreData{.icpp, .h}
+  . Remove non-const method getNiceLocationName(std::string& location)
+
+ - src/Lib/CopyAndStoreData.cpp
+  . Fix problems with local data store.
 
 !======================== MicroDST v2r0 2007-10-25 ====================
 
