@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+! 2007-10-30 - Stephanie Hansmann-Menzemer
+ - remove PatDataStore from requirement file & from usage in HltMuonRec and HltMuonRefine
 
 !========================== HltMuon v1r5p1 2007-10-24 ===================
 ! 2007-10-24 - Patrick Koppenburg

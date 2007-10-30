@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.6 2007-10-19 07:36:29 asatta Exp $
+// $Id: HltMuonRec.cpp,v 1.7 2007-10-30 19:05:27 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -70,15 +70,9 @@ StatusCode HltMuonRec::initialize() {
     m_timer->decreaseIndent();
   }
 
-  // create the container for storing muon tracks
 
-//  PatDataStore* store = tool<PatDataStore> ( "PatDataStore", "" );
- m_onTES        = true;  
-  m_muonTracksContainer = m_patDataStore->createTrackContainer(m_outputMuonTracksName,
-                                                        10 );
-  m_states       = m_patDataStore->states();
-  //release( store );
-
+ 
+  
   //retrieve the pointer to the muon detector 
 
   m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
@@ -264,6 +258,8 @@ StatusCode HltMuonRec::execute() {
 
   setFilterPassed(true);
 
+  LHCb::Tracks* outputTracks = get<LHCb::Tracks>( m_outputTracksName );
+
   int m_countMuonCandidates=0;
   
   m_countEvents += 1;
@@ -320,7 +316,7 @@ StatusCode HltMuonRec::execute() {
       itMuonTrack<m_muonTracks.end();itMuonTrack++){
     if(!(itMuonTrack)->clone()){	
       m_countMuonCandidates++;
-      LHCb::Track* trgTr = m_muonTracksContainer->newEntry();
+      LHCb::Track* trgTr = new LHCb::Track();
       //        trgTr->setType(Track::Muon);
       
      
@@ -331,25 +327,16 @@ StatusCode HltMuonRec::execute() {
         slopeX(1,2,m_station[1].z(),m_station[2].z());
       float tym= itMuonTrack->
         slopeY(1,2,m_station[1].z(),m_station[2].z());
-      if ( !m_onTES ) {
-        LHCb::State* temp = m_states->newEntry();
-        //        trgTr->states().push_back( temp );
-        temp->setZ(m_station[1].z());
-        temp->setX(xm);
-        temp->setY(ym);
-        temp->setTx(txm);
-        temp->setTy(tym);
-        temp->setLocation(LHCb::State::Muon);
-      } else {
-        LHCb::State temp;
-        temp.setZ(m_station[1].z());
-        temp.setX(xm);
-        temp.setY(ym);
-        temp.setTx(txm);
-        temp.setTy(tym);
-        trgTr->addToStates( temp );
-        temp.setLocation(LHCb::State::Muon);
-      }
+      
+      LHCb::State temp;
+      temp.setZ(m_station[1].z());
+      temp.setX(xm);
+      temp.setY(ym);
+      temp.setTx(txm);
+      temp.setTy(tym);
+      trgTr->addToStates( temp );
+      temp.setLocation(LHCb::State::Muon);
+      
       
       xm=itMuonTrack->point(2).x();       
       ym=itMuonTrack->point(2).y();
@@ -357,55 +344,30 @@ StatusCode HltMuonRec::execute() {
         slopeX(2,3,m_station[2].z(),m_station[3].z());
       tym= itMuonTrack->
         slopeY(2,3,m_station[2].z(),m_station[3].z());
-      if ( !m_onTES ) {
-        LHCb::State* temp = m_states->newEntry();
-        //        trgTr->states().push_back( temp );
-        temp->setZ(m_station[2].z());
-        temp->setX(xm);
-        temp->setY(ym);
-        temp->setTx(txm);
-        temp->setTy(tym);
-        temp->setLocation(LHCb::State::Muon);
-      } else {
-        LHCb::State temp;
-        temp.setZ(m_station[2].z());
-        temp.setX(xm);   
-        temp.setY(ym);   
-        temp.setTx(txm);
-        temp.setTy(tym);
-        trgTr->addToStates( temp );
-        temp.setLocation(LHCb::State::Muon);
-      }
       
-      
-      
+      temp.setZ(m_station[2].z());
+      temp.setX(xm);   
+      temp.setY(ym);   
+      temp.setTx(txm);
+      temp.setTy(tym);
+      trgTr->addToStates( temp );
+      temp.setLocation(LHCb::State::Muon);
+            
       xm=itMuonTrack->point(3).x();       
       ym=itMuonTrack->point(3).y();
       txm= itMuonTrack->
         slopeX(3,4,m_station[3].z(),m_station[4].z());
       tym= itMuonTrack->
         slopeY(3,4,m_station[3].z(),m_station[4].z());
-      if ( !m_onTES ) {
-        LHCb::State* temp = m_states->newEntry();
-        //        trgTr->states().push_back( temp );
-        temp->setZ(m_station[3].z());
-        temp->setX(xm);
-        temp->setY(ym);
-        temp->setTx(txm);
-        temp->setTy(tym);
-        temp->setLocation(LHCb::State::Muon);
-        
-      } else {
-        LHCb::State temp;
-        temp.setZ(m_station[3].z());
-        temp.setX(xm);   
-        temp.setY(ym);   
-        temp.setTx(txm);
-        temp.setTy(tym);
-        trgTr->addToStates( temp );
-        temp.setLocation(LHCb::State::Muon);
-      }
-      
+     
+      temp.setZ(m_station[3].z());
+      temp.setX(xm);   
+      temp.setY(ym);   
+      temp.setTx(txm);
+      temp.setTy(tym);
+      trgTr->addToStates( temp );
+      temp.setLocation(LHCb::State::Muon);
+            
       
       xm=itMuonTrack->point(4).x();       
       ym=itMuonTrack->point(4).y();
@@ -413,31 +375,22 @@ StatusCode HltMuonRec::execute() {
         slopeX(3,4,m_station[3].z(),m_station[4].z());
       tym= itMuonTrack->
         slopeY(3,4,m_station[3].z(),m_station[4].z());
+            
+      temp.setZ(m_station[4].z());
+      temp.setX(xm);   
+      temp.setY(ym);   
+      temp.setTx(txm);
+      temp.setTy(tym);
+      trgTr->addToStates( temp );
+      temp.setLocation(LHCb::State::Muon);
       
-      if ( !m_onTES ) {
-        LHCb::State* temp = m_states->newEntry();
-        //        trgTr->states().push_back( temp );
-        temp->setZ(m_station[4].z());
-        temp->setX(xm);
-        temp->setY(ym);
-        temp->setTx(txm);
-        temp->setTy(tym);
-        temp->setLocation(LHCb::State::Muon);
-      } else {
-        LHCb::State temp;
-        temp.setZ(m_station[4].z());
-        temp.setX(xm);   
-        temp.setY(ym);   
-        temp.setTx(txm);
-        temp.setTy(tym);
-        trgTr->addToStates( temp );
-        temp.setLocation(LHCb::State::Muon);
-      }    
       trgTr->addToLhcbIDs(itMuonTrack->point(1).tile());    
       trgTr->addToLhcbIDs(itMuonTrack->point(2).tile());     
       trgTr->addToLhcbIDs(itMuonTrack->point(3).tile());     
       trgTr->addToLhcbIDs(itMuonTrack->point(4).tile());
       
+      outputTracks->insert(trgTr);
+
     }
   }  
     
@@ -450,8 +403,7 @@ StatusCode HltMuonRec::execute() {
   
   m_muonTracks.clear();
   debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
-  debug()<<" in container "<< m_muonTracksContainer->size()<<endreq;
-
+  
   return StatusCode::SUCCESS;
 };
 

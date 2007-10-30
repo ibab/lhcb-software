@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
+// $Id: HltMuonRec.h,v 1.2 2007-10-30 19:05:27 smenzeme Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -13,8 +13,6 @@
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/IMuonLayout.h"
 #include "Event/Track.h"
-
-#include "PatTools/PatDataStore.h"
                               
 #include "HltMuonStationRec.h"
 #include "HltMuonTrack.h"
@@ -66,11 +64,6 @@ private:
 DeMuonDetector* m_muonDetector;
   IMuonPosTool      *m_iPosTool;
   //ITrackSelector* m_trackSelector; // tool to accept a track
-
-  bool               m_onTES; ///< Should create States ?
-  PatTrackContainer* m_muonTracksContainer;
-  PatStateContainer* m_states;
-
 
   unsigned int m_nStation;
   unsigned int m_nRegion;

@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.h,v 1.2 2006-09-27 13:55:23 cattanem Exp $
+// $Id: HltMuonRefine.h,v 1.3 2007-10-30 19:05:27 smenzeme Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
@@ -64,10 +64,6 @@ private:
   float m_dyR4;
   
   bool               m_onTES; ///< Should create States ?
-  //  PatTrackContainer* m_muonTracksContainer;
-  //PatTrackContainer* m_tracksInput;
-  //PatTrackContainer* m_tracksOutput;
-  //PatStateContainer* m_states;
 
   // Counters
   int m_countEvents;

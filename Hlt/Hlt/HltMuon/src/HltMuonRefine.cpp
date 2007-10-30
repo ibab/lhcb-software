@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.5 2007-06-20 16:12:13 hernando Exp $
+// $Id: HltMuonRefine.cpp,v 1.6 2007-10-30 19:05:27 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -73,14 +73,6 @@ StatusCode HltMuonRefine::initialize() {
   m_countEvents = 0;
   m_countRemoved = 0;
 
-  /*  PatDataStore* store = tool<PatDataStore> ( "PatDataStore", "" );
-  m_onTES        = store->onTES();
-  m_muonTracksContainer = store->tracks(m_inputMuonTracksName);
-  m_tracksInput = store->tracks(m_inputLongTracksName);
-  m_tracksOutput = store->tracks(m_outputTracksName);
-  m_states       = store->states();
-  release( store );
-  */
 
   //  m_l0MuonProvider = tool<TrgL0MuonProvider>( "TrgL0MuonProvider" );
   //m_inputL0Muons   = m_l0MuonProvider->container( TrgL0MuonLocation::Default );
