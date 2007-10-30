@@ -6,7 +6,7 @@
 
 using namespace pres;
 
-class vector;
+class std::vector;
 
 class TGTab;
 class TRootEmbeddedCanvas;
@@ -45,17 +45,20 @@ enum Command
   M_RefreshHistoDBListTree_COMMAND,
   M_RefreshHistoDIMListTree_COMMAND,
   M_RefreshDBPagesListTree_COMMAND,
-  M_LoadPage_COMMAND
+  M_LoadPage_COMMAND,
+  M_DeletePage_COMMAND,
+  M_DeleteFolder_COMMAND
 };
 
 class EditorFrame : public TGCompositeFrame
 {
   public:
-    EditorFrame(TGWindow* p, UInt_t w, UInt_t h, DimBrowser& dim, MsgLevel v);
+    EditorFrame(TGWindow* p, UInt_t w, UInt_t h, DimBrowser& dim,
+      MsgLevel v);
     virtual ~EditorFrame();
 
     // slots
-    void refreshHistoDBListTree(FilterCriteria filterCriteria);
+    void refreshHistoDBListTree();
     void refreshPagesDBListTree();
     void refreshDimSvcListTree();
     void hideDBTools();
@@ -70,11 +73,14 @@ class EditorFrame : public TGCompositeFrame
     void enableLoadPage();
 
     void autoCanvasLayout();
-    void deleteHistoFromCanvas();
+    void deleteSelectedHistoFromCanvas();
 
-    void clickedDimTreeItem(TGListTreeItem* item, MouseButton btn, Int_t x, Int_t y);
-    void clickedHistoDBTreeItem(TGListTreeItem* item, MouseButton btn, Int_t x, Int_t y);
-    void clickedPageTreeItem(TGListTreeItem* item, MouseButton btn, Int_t x, Int_t y);
+    void clickedDimTreeItem(TGListTreeItem* item, MouseButton btn, Int_t x,
+      Int_t y);
+    void clickedHistoDBTreeItem(TGListTreeItem* item, MouseButton btn,
+      Int_t x, Int_t y);
+    void clickedPageTreeItem(TGListTreeItem* item, MouseButton btn, Int_t x,
+      Int_t y);
 
     TGPopupMenu* getDimContextMenu() const { return m_dimContextMenu; }
     void handleCommand(Command cmd);
@@ -83,15 +89,17 @@ class EditorFrame : public TGCompositeFrame
     void addDbHistoToPage();
     void dimCheckAllChildren();
     void dimUnCheckAllChildren();
-    void dimCollapseAllChildren();    
-    
-    void setHistoPropertiesInDB();    
+    void dimCollapseAllChildren();
+
+    void setHistoPropertiesInDB();
     void dbHistoCheckAllChildren();
     void dbHistoUnCheckAllChildren();
     void dbHistoCollapseAllChildren();
-    
-    void deleteHistoFromDB();
-    void loadPage();
+
+    void deleteSelectedHistoFromDB();
+    void loadSelectedPageFromDB();
+    void deleteSelectedPageFromDB();
+    void deleteSelectedFolderFromDB();
     void setHistoParFromDB(TH1* histogram, OnlineHistogram* onlineHistogram);
     void refreshPage();
     bool paintHist(DbRootHist* histogram);
@@ -107,13 +115,14 @@ class EditorFrame : public TGCompositeFrame
 
   private:
     EditorFrame (const EditorFrame & );
-    EditorFrame & operator= (const EditorFrame &);  
+    EditorFrame & operator= (const EditorFrame &);
 
     void buildGUI();
+    std::string convDimToHistoID(std::string dimSvcName);
 
     MsgLevel             m_verbosity;
-    PresenterMainFrame*  m_mainFrame; 
-    DimBrowser*          m_dimBrowser;    
+    PresenterMainFrame*  m_mainFrame;
+    DimBrowser*          m_dimBrowser;
     OnlineHistDB*        m_histogramDB;
 
     TGCompositeFrame*    m_editorCanvasMainFrame;
@@ -141,11 +150,14 @@ class EditorFrame : public TGCompositeFrame
     TGVerticalFrame*     m_histoDBFilterFrame;
     TGComboBox*          m_histoDBFilterComboBox;
 
-    std::vector<TString>      m_knownDimServices;
-    std::vector<TString>::const_iterator m_knownDimServicesIt;
+    std::vector<std::string>      m_knownDimServices;
+    std::vector<std::string>::const_iterator m_knownDimServicesIt;
 
     std::vector<OnlineHistogram*>      m_onlineHistosOnPage;
     std::vector<OnlineHistogram*>::const_iterator m_onlineHistosOnPageIt;
+
+    std::vector<std::string>      m_histogramTypes;
+    std::vector<std::string>::const_iterator m_histogramType;
 
     ClassDef(EditorFrame, 0)
 };
