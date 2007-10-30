@@ -79,8 +79,8 @@ BTaggingAnalysis.PhysDesktop.InputLocations= {"Phys/Bd2JpsiKsLL","Phys/Bd2JpsiKs
 //======================================================
 //Add DecayChainNtuple
 //======================================================
-ApplicationMgr.TopAlg += { "DecayChainNTuple/BDecay" };
-//MySeqTag.Members += { "DecayChainNTuple/BDecay" };//if need to fix B-fractions
+//ApplicationMgr.TopAlg += { "DecayChainNTuple/BDecay" };
+MySeqTag.Members += { "DecayChainNTuple/BDecay" };//if need to fix B-fractions
 
 BDecay.OutputLevel = 3;
 BDecay.PhysDesktop.OutputLevel = 5;

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.25 2007-10-25 16:14:24 jpalac Exp $
+! $Id: release.notes,v 1.26 2007-10-30 10:13:51 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-10-30 - Marco Musy
+ - Use FilterToFixOppositeBFractions by default in BTaggingAnalysis.opts
+
 
 !===================== FlavourTaggingChecker v2r5 2007-10-25 =================
 

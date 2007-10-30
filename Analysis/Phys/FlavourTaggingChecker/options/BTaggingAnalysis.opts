@@ -4,14 +4,14 @@
 ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
 
 //no filter:
-ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
+//ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
 
 //if using the filter to fix opposite side B fractions:
-// ApplicationMgr.DLLs += { "DaVinciMCTools" };
-// ApplicationMgr.TopAlg += { "GaudiSequencer/MySeqTag" };
-// MySeqTag.Members += { "FilterToFixOppositeBFractions" };
-// MySeqTag.Members += { "BTaggingAnalysis" };
-// FilterToFixOppositeBFractions.ActivateCorrection = true;
+ApplicationMgr.DLLs   += { "DaVinciMCTools" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MySeqTag" };
+MySeqTag.Members      += { "FilterToFixOppositeBFractions" };
+MySeqTag.Members      += { "BTaggingAnalysis" };
+FilterToFixOppositeBFractions.ActivateCorrection = true;
 
 ///---------------------------------------------------------------
 ///               OUTPUT LEVELS
