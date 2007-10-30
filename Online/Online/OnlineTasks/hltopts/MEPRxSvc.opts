@@ -1,0 +1,27 @@
+// 
+// MEPRxSvc.opts
+// $Id: MEPRxSvc.opts,v 1.1 2007-10-30 14:59:44 frankm Exp $
+// Sample options for the eventbuilder service MEPRxSvc
+// niko.neufeld@cern.ch
+#include "$HLTOPTS/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
+ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPRxSvc/Runable" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.Buffers                   = { "MEP" };
+MessageSvc.OutputLevel   = 1;
+Runable.OutputLevel      = 1;
+Runable.MEPBuffers       = 1;          // concurrently built events
+Runable.maxBadPktRatio   = 0.1;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
+Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
+Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
+Runable.partitionID      = @OnlineEnv.PartitionID;
+Runable.MEPBufSize       = 1500000;
+Runable.refCount         = 2;
+Runable.RTTCCompat       = false;       // for RTTC backward compatibility
+#include "$HLTOPTS/EBSetup.opts"

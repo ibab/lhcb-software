@@ -2,4 +2,4 @@
 
 . ./setupOnline.sh
 
-${gaudi_exe}  -main=${GAUDIONLINEROOT}/options/MBMinit.opts -opt=${GAUDIONLINEROOT}/options/Daemon.opts &
+${CLASS0_TASK}  -main=${GAUDIONLINEROOT}/options/MBMinit.opts &

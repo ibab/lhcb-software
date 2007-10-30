@@ -1,0 +1,24 @@
+#include "$HLTOPTS/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.Buffers                   = { "EVENT", "RESULT" };
+
+ApplicationMgr.DLLs                 += { "GaudiAlg" };
+EventSelector.Input                  = "EVENT";
+EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
+
+// Prescale events declared to RESULT buffer
+ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
+SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::DecisionSetterAlg/DecisionSetter"};
+Prescaler.PercentPass                = 100.;
+Prescaler.OutputLevel                = 4;

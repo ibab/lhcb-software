@@ -1,0 +1,7 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = 1;
+ApplicationMgr.ExtSvc                = { };
+MessageSvc.OutputLevel               = 4;
