@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.14 2007-10-25 14:22:23 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.15 2007-10-30 15:00:04 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -181,22 +181,14 @@ protected:
       "/" + this->inputTESLocation();
   }
 
-  inline const std::string outputTESLocation(const std::string& inputLocation)
+  inline const std::string outputTESLocation(const std::string& inputLocation) const
   {
-    std::string tmp(inputLocation);
-    getNiceLocationName(tmp);
-    return "/Event/"+ this->outputPrefix() + "/" + tmp;
+    return "/Event/"+ this->outputPrefix() + "/" + 
+      getNiceLocationName(inputLocation);
   }
 
 
 private:
-
-  /**
-   * Remove leading "/Event" from TES locations.
-   * 
-   * @author Ulrich kerzel
-  */
-  void getNiceLocationName(std::string& location);
 
   /**
    * Remove leading "/Event" from TES locations.
