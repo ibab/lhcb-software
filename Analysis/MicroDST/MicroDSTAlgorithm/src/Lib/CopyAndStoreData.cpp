@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.cpp,v 1.9 2007-10-25 14:22:23 jpalac Exp $
+// $Id: CopyAndStoreData.cpp,v 1.10 2007-10-30 14:59:44 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,8 +65,12 @@ StatusCode CopyAndStoreData::copyLocalStoreToTES()
     verbose() << "Storing local clone of " << (*i).first 
               << " into TES location " << TESLocation << endmsg;
     put(localContainer, TESLocation);
- 
+    verbose() << "Stored clone!" << endmsg;
   }
+  
+
+  verbose() << "Now clear local data store" << endmsg;
+  localDataStore().clear();
   
   return StatusCode::SUCCESS;
 }
@@ -78,20 +82,15 @@ StatusCode CopyAndStoreData::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================
-void CopyAndStoreData::getNiceLocationName(std::string& location)
-{
-  const std::string tmpString = "/Event/";
-  const std::string::size_type loc       = location.find(tmpString);
-  if ( loc != std::string::npos) {
-    location.replace(loc, tmpString.length(), "");
-    verbose() << "TES location ID is now " << location << endmsg;
-  }
-}
-//=============================================================================
 const std::string CopyAndStoreData::getNiceLocationName(const std::string& location) const
 {
-  std::string return_value(location);
-  getNiceLocationName(return_value);
-  return return_value;
+  std::string tmp(location);
+  const std::string tmpString = "/Event/";
+  const std::string::size_type loc       = tmp.find(tmpString);
+  if ( loc != std::string::npos) {
+    tmp.replace(loc, tmpString.length(), "");
+    verbose() << "TES location ID is now " << tmp << endmsg;
+  }
+  return tmp;
 }
 //=============================================================================
