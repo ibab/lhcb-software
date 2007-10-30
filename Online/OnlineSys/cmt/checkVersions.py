@@ -1,11 +1,13 @@
-#/usr/bin/python
+#!/usr/bin/python
 import os
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
 curr_dir = os.getcwd()
 dir2 = curr_dir[0:curr_dir.rfind('/')]
+#dir2 = dir2[0:dir2.rfind('/')-1]
 dir2 = dir2[0:dir2.rfind('/')+1]
 print dir2
+# print lines
 
 for line in lines:
   items = line.split()[1:]
@@ -21,6 +23,7 @@ for line in lines:
     dir = items[3][1:-1]
     path = dir+head+os.sep+package
     pkg = head+os.sep+package
+  #print dir,pkg,path
   if dir == dir2:
     last_tag = []
     lines = os.popen('cd '+path+'; cvs status -v cmt/requirements').readlines()
