@@ -9,18 +9,18 @@
 #include "Event/MCCaloDigit.h" 
 #include "Event/CaloDigit.h" 
 // local
-#include "CaloDigitMonitor.h"
+#include "CaloDigitChecker.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CaloDigitMonitor
+// Implementation file for class : CaloDigitChecker
 //
 // 25/05/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloDigitChecker );
 
 // Standard creator
-CaloDigitMonitor::CaloDigitMonitor( const std::string& name, 
+CaloDigitChecker::CaloDigitChecker( const std::string& name, 
 				    ISvcLocator* pSvcLocator) 
   : GaudiHistoAlg ( name , pSvcLocator            )
   , m_maxMultiplicity ( 2000. )
@@ -37,12 +37,12 @@ CaloDigitMonitor::CaloDigitMonitor( const std::string& name,
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloDigitMonitor::~CaloDigitMonitor() {};
+CaloDigitChecker::~CaloDigitChecker() {};
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode CaloDigitMonitor::initialize() {
+StatusCode CaloDigitChecker::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << " >>> Initialize" << endreq;
@@ -62,7 +62,7 @@ StatusCode CaloDigitMonitor::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CaloDigitMonitor::execute() {
+StatusCode CaloDigitChecker::execute() {
   debug() << " >>> Execute" << endreq;
 
 /**  
@@ -141,7 +141,7 @@ StatusCode CaloDigitMonitor::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode CaloDigitMonitor::finalize() {
+StatusCode CaloDigitChecker::finalize() {
   
   debug() << " >>> Finalize" << endreq;
   return GaudiHistoAlg::finalize();  // must be called after all other actions

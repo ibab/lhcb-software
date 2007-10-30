@@ -1,0 +1,36 @@
+// $Id: CaloDigitChecker.opts,v 1.1 2007-10-30 20:24:38 odescham Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/23 00:07:11  odescham
+// update histo scale in options file
+//
+// Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
+// // The new package: code is inported from Calo/CaloChecker
+// 
+// ============================================================================
+
+/** @file 
+ *  the configuration file ro tun Digi Motoring for Calo 
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *  @date 2004-10-25 
+ */
+
+// Spd  digits Checker 
+SpdCheck.Detector                 = "Spd"  ;
+SpdCheck.MaxEnergy                =  5.    ;
+
+// Prs  digits Checker 
+PrsCheck.Detector                 = "Prs"  ;
+PrsCheck.MaxEnergy                =  10.   ;
+
+// Ecal digits Checker 
+EcalCheck.Detector                = "Ecal" ;
+EcalCheck.MaxMultiplicity         = 6100.  ;
+EcalCheck.ScaleHit                = 7.27   ;
+
+// Hcal digits Checker 
+HcalCheck.Detector                = "Hcal" ;
+HcalCheck.ScaleHit                =  57.4   ;
+

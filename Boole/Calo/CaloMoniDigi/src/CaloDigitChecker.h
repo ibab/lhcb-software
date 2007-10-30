@@ -1,8 +1,11 @@
-// $Id: CaloDigitMonitor.h,v 1.3 2006-02-13 14:39:27 odescham Exp $
+// $Id: CaloDigitChecker.h,v 1.1 2007-10-30 20:24:38 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/13 14:39:27  odescham
+// migration to GaudiHistoAlg completed
+//
 // Revision 1.2  2006/01/18 18:15:21  odescham
 // v2r0 : adapt to the new Event Model + cleaning
 //
@@ -13,8 +16,8 @@
 //  small update of monitoring algorithms
 //
 // ============================================================================
-#ifndef CALODIGITMONITOR_H 
-#define CALODIGITMONITOR_H 1
+#ifndef CALODIGITCHECKER_H 
+#define CALODIGITCHECKER_H 1
 // Include files
 
 // from STL 
@@ -24,18 +27,18 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 
-/** @class CaloDigitMonitor CaloDigitMonitor.h
+/** @class CaloDigitChecker CaloDigitChecker.h
  *  Monitor the results of the Calo Digitisation. Histograms
  *
  *  @author Olivier Callot
  *  @date   25/05/2001
  */
 
-class CaloDigitMonitor : public GaudiHistoAlg {
+class CaloDigitChecker : public GaudiHistoAlg {
 public:
   /// Standard constructor & descructor
-  CaloDigitMonitor( const std::string& name, ISvcLocator* pSvcLocator) ;
-  virtual ~CaloDigitMonitor( ); 
+  CaloDigitChecker( const std::string& name, ISvcLocator* pSvcLocator) ;
+  virtual ~CaloDigitChecker( ); 
 
   StatusCode initialize();   ///< Initialisation
   StatusCode execute   ();   ///< Execution
@@ -54,4 +57,4 @@ private:
   double                   m_scaleHit            ;
 
 };
-#endif // CALODIGITMONITOR_H
+#endif // CALODIGITCHECKER_H
