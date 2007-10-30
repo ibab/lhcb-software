@@ -3,6 +3,8 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+!2007-10-30 - Stephanie Hansmann-Menzemer
+ - Add additional z position in TStation in StateParameters.h
 
 !======================= TrackEvent v4r8 2007-10-23 ==========================
 ! 2007-10-22 - Olivier Callot
