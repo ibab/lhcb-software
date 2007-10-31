@@ -1,4 +1,4 @@
-// $Id: bankKiller.cpp,v 1.2 2006-09-08 12:15:53 cattanem Exp $
+// $Id: bankKiller.cpp,v 1.3 2007-10-31 14:33:41 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -24,14 +24,24 @@ bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
 {
 
   // Map to be completed if needed
+  // Calo 'Online' banks
   m_bankMap["EcalPacked"]= LHCb::RawBank::EcalPacked ;
   m_bankMap["HcalPacked"]= LHCb::RawBank::HcalPacked ;
   m_bankMap["PrsPacked"]= LHCb::RawBank::PrsPacked ;
+  // L0 stuff
+  m_bankMap["L0Calo"]= LHCb::RawBank::L0Calo ;
+  m_bankMap["L0Muon"]= LHCb::RawBank::L0Muon ;
+  m_bankMap["L0PU"]= LHCb::RawBank::L0PU ;
+  m_bankMap["L0DU"]= LHCb::RawBank::L0DU ;
 
   // default : Calo packed banks
   m_bankTypes.push_back( "EcalPacked" );
   m_bankTypes.push_back( "HcalPacked" );
   m_bankTypes.push_back( "PrsPacked"  );
+  m_bankTypes.push_back( "L0DU"  );
+  m_bankTypes.push_back( "L0Calo"  );
+  m_bankTypes.push_back( "L0Muon"  );
+  m_bankTypes.push_back( "L0PU"  );
 
   declareProperty("BankTypes"   , m_bankTypes      ) ;
 
