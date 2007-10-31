@@ -10,193 +10,451 @@
       
       <base name="DataObject"/>
       &DataObject;
+<<<<<<< L0DUReport.xml
+      <location name = "Default"   place = "Trig/L0/L0DUReport"  />
+      <location name = "Emulated"  place = "Emu/L0/L0DUReport"  />
+
+
+       <import name="Event/L0DUConfig"/>
+
+
+      <copyconstructor/>
+=======
       <location name = "Default"  place = "Trig/L0/L0DU"  />
       <import name="sstream" std="TRUE"/>
+>>>>>>> 1.6
 
       <constructor 
         desc = "Default constructor" 
-      initList="m_report(0), m_channelNames(), m_conditionPattern(0),m_conditionNames()" > 
+        initList= "m_configuration(NULL), m_tck(0xFFFF)">
+        <code>
+           clear();
+        </code>
+      </constructor>
+
+      <constructor 
+        desc = "Non-default constructor" 
+        argList = "LHCb::L0DUConfig* config"
+        initList= "m_configuration(config)"> 
+        <code>
+          m_tck = config->key();
+          clear();
+        </code>
       </constructor>
         
-      <constructor 
-        desc = "Special constructor" 
-        argList="unsigned int report   , std::vector&lt;std::string&gt; channelNames, unsigned int conditionPattern, std::vector&lt;std::string&gt; conditionNames"
-      initList="m_report(report) , m_channelNames(channelNames), m_conditionPattern(conditionPattern),m_conditionNames(conditionNames)" > 
-      </constructor>
 
-      <attribute 
-        desc="Pattern of channel decisions" 
-        name="report" 
-        type="unsigned int"/>
-      <attribute 
-        desc="Vector of Channel names" 
-        name="channelNames"  
-        type="std::vector&lt;std::string&gt;"/>
-      <attribute 
-        desc="Pattern of conditions values" 
-        name="conditionPattern" 
-        type="unsigned int"/>
-      <attribute 
-        desc="Vector of Condition names" 
-        name="conditionNames"  
-        type="std::vector&lt;std::string&gt;"/>
-      
-                                                          
+      <attribute  desc=" global decision"                       name="decision"                 type="bool"                               />
+      <attribute  desc=" L0DU algorithm configuration"          name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
+      <attribute  desc=" L0DU algorithm configuration Key"      name="tck"                      type="long" />
+      <attribute  desc="'Fired channels' Summaries   (FCS)"     name="firedChannelsSummaries"   type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
+      <attribute  desc="'Channel decisions' Summaries  (TCS)"   name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
+      <attribute  desc="'Elementary conditions' Summaries (ECS)"name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
+      <attribute  desc=" sum(Et) value over several BX"         name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
+
+
+
       <method
-        name="setChannel"
-        desc="set channel name and decision"
-        argList="std::string name , bool decision"
+        name="clear"
+        desc="clear the summaries MAPs"
         type="void">
         <code> 
-          if(m_channelNames.size() &lt; L0DUPattern::Size -1){
-          m_channelNames.push_back(name);
-          if(decision){
-          m_report |= 1;
-          m_report |= ( 1 &lt;&lt; m_channelNames.size()  ) ;
-           }
-          }
+          m_channelsDecisionSummaries.clear();
+          m_firedChannelsSummaries.clear();
+          m_conditionsValueSummaries.clear();
+          m_sumEt.clear();
+          m_decision=false;
+        </code>
+      </method>
+
+
+
+      <method
+        name="setConfiguration"
+        desc="set the configuration "
+        argList="LHCb::L0DUConfig* config"
+        type="void">
+        <code> 
+          m_configuration = config;
+          m_tck = config->key();
         </code>
       </method>
 
       <method
-        name="setCondition"
-        desc="set condition name and value"
-        argList="std::string name , bool value"
+        name="setSumEt"
+        desc="set the sumEt value for a given BX "
+        argList="int value, int bx=0"
         type="void">
         <code> 
-          if(m_channelNames.size() &lt; L0DUPattern::Size ){
-          m_conditionNames.push_back(name);
-          if(value)m_conditionPattern |= ( 1 &lt;&lt; (m_conditionNames.size()-1) ) ;
-          }
+          m_sumEt[bx]=value;
+        </code>
+      </method>
+      <method
+        name="sumEt"
+        desc="get the sumEt value for a given BX "
+        argList="int bx=0"
+        type="int"
+        const='TRUE'>
+        <code> 
+          std::map&lt;int , unsigned int&gt;::const_iterator it = m_sumEt.find( bx );
+          if(it == m_sumEt.end())return 0;
+          return (*it).second;
         </code>
       </method>
 
+
+
+
+
       <method
-        name="decision"
-        desc="return L0DU global decision"
-        type="bool"
+        name="dataDigit"
+        argList="const std::string name"
+        desc="return L0DU elementary data value (digit) from m_configuration->data()"
+        type="unsigned long"
         const="TRUE">
         <code> 
-          return ((m_report != 0) ? true : false) ;
+          if(NULL == m_configuration)return 0;
+          LHCb::L0DUElementaryData::Map data = m_configuration->data();
+          LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
+          if( it == data.end() )return 0;
+          return ((*it).second)->digit();
         </code>
       </method>
+
+      <method
+        name="dataValue"
+        argList="const std::string name"
+        desc="return L0DU elementary data value (converted) from m_configuration->data()"
+        type="double"
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return 0.;
+          LHCb::L0DUElementaryData::Map data=m_configuration->data();
+          LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
+          if( it == data.end() )return 0.;
+          return ((*it).second)->value();
+        </code>
+      </method>
+
+
+
+      <method  
+        name   = "setFiredChannelsSummary"
+        desc   = "add a 32-bit L0DUChannels firing summary (FCS)"
+        argList= "const unsigned int summary,  unsigned int loc=0, int bx=0"
+        type   = "void"> 
+        <code>
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,loc);
+          m_firedChannelsSummaries[key]=summary;
+        </code>
+      </method>
+
+      <method  
+        name   = "setChannelsDecisionSummary"
+        desc   = "add a 32-bit L0DUChannels decision summary (TCS) [== FCS + downscaling decision] "
+        argList= "const unsigned int summary,  unsigned int loc=0, int bx=0"
+        type   = "void"> 
+        <code>
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,loc); 
+          m_channelsDecisionSummaries[key]=summary;
+        </code>
+      </method>
+      <method  
+        name   = "setConditionsValueSummary"
+        desc   = "add a 32-bit Conditions summary"
+        argList= "const unsigned int summary,  unsigned int loc=0, int bx=0" 
+        type   = "void">
+        <code>
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,loc); 
+          m_conditionsValueSummaries[key]=summary;
+        </code>
+      </method>
+      <method  
+        name   = "setFiredChannel"
+        desc   = "add a fired channel bit in the FCS summary"
+        argList= "std::string name , bool fired, int  bx=0 "
+        type   = "void"> 
+        <code>
+          if(NULL == m_configuration)return;
+
+          LHCb::L0DUChannel::Map channels = m_configuration->channels();
+          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          if( it == channels.end() )return;
+          unsigned int pos = ((*it).second)->id();
+          unsigned int index = pos / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
+          unsigned int summary = m_firedChannelsSummaries[key];
+          unsigned int loc   = pos - index *32;
+          fired ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
+          m_firedChannelsSummaries[key] = summary;
+        </code>
+      </method>
+
+      <method  
+        name   = "setChannelDecision"
+        desc   = "add a decision bit in the TCS "
+        argList= "std::string name , bool decision , int  bx=0 "
+        type   = "void"> 
+        <code>
+          if(NULL == m_configuration)return;
+          LHCb::L0DUChannel::Map channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          if( it == channels.end() )return;
+          unsigned int pos = ((*it).second)->id();
+          unsigned int index = pos / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
+          unsigned int summary = m_channelsDecisionSummaries[key];
+          unsigned int loc   = pos - index *32;
+          decision ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
+          m_channelsDecisionSummaries[key] = summary;
+        </code>
+      </method>
+
+      <method  
+        name   = "setConditionValue"
+        desc   = "add a onditions bit in the ECS"
+        argList= "std::string name , bool decision, int  bx=0 "
+        type   = "void">
+        <code>
+          if(NULL == m_configuration)return;
+          LHCb::L0DUElementaryCondition::Map conditions = m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::iterator it = conditions.find( name );
+          if( it == conditions.end() )return;
+          unsigned int pos = ((*it).second)->id();
+          unsigned int index = pos / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
+          unsigned int summary = m_conditionsValueSummaries[key];
+          unsigned int loc   = pos - index *32;
+          decision ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
+          m_conditionsValueSummaries[key] = summary;
+        </code>
+      </method>
+
+
+
+
+
+      <method
+        name="channelsDecisionSummary"
+        desc="32-bit summary for the channels decision"
+        argList="unsigned int index=0, int bx=0"
+        const = "TRUE"
+        type="const unsigned int">
+        <code> 
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsDecisionSummaries.find( key );
+          if(it == m_channelsDecisionSummaries.end())return 0;
+          return (*it).second;
+        </code>
+      </method>
+
+
+
+      <method
+        name="firedChannelsSummary"
+        desc="32-bit summary for the fired channels"
+        argList="unsigned int index=0, int bx=0"
+        const = "TRUE"
+        type="const unsigned int">
+        <code> 
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_firedChannelsSummaries.find( key );
+          if(it == m_firedChannelsSummaries.end())return 0;
+          return (*it).second;
+        </code>
+      </method>
+
+      <method
+        name="conditionsValueSummary"
+        desc="32-bit summary for the elementary conditions"
+        argList="unsigned int index=0, int bx=0"
+        const = "TRUE"
+        type="const unsigned int">
+        <code> 
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_conditionsValueSummaries.find( key );
+          if(it == m_conditionsValueSummaries.end())return 0;
+          return (*it).second;
+        </code>
+      </method>
+
 
 
       <method
         name="channelDecision"
-        argList="unsigned int channel"
-        desc="return channel decision by channel number"
+        argList="const unsigned int channel, int bx=0"
+        desc="return the channel decision by channel number (incl. the downscaling decision)"
         type="bool"
         const="TRUE">
         <code> 
-          return ((((m_report >> channel ) &amp; 1) !=0) ? true : false );
+          unsigned int index = channel / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsDecisionSummaries.find( key );
+          if( it == m_channelsDecisionSummaries.end())return 0;
+          unsigned int summary = (*it).second;
+          unsigned int loc   = channel - index *32;
+          return ( 1 &amp; (summary >> loc));
+        </code>
+      </method>
+      <method
+        name="firedChannel"
+        argList="const unsigned int channel, int bx=0"
+        desc="return the channel decision by channel number (NOT incl. the downscaling decision)"
+        type="bool"
+        const="TRUE">
+        <code> 
+          unsigned int index = channel / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_firedChannelsSummaries.find(key);
+          if( it == m_firedChannelsSummaries.end())return 0;
+          unsigned int summary = (*it).second;
+          unsigned int loc   = channel - index *32;
+          return ( 1 &amp; (summary >> loc));
         </code>
       </method>
 
       <method
         name="conditionValue"
-        argList="unsigned int cond"
-        desc="return condition value by condition number"
+        argList="const unsigned int condition, int bx=0"
+        desc="return the condition value by condition number"
         type="bool"
         const="TRUE">
         <code> 
-          return ((((m_conditionPattern >> cond ) &amp; 1) !=0) ? true : false );
+          unsigned int index = condition / 32;
+          std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_conditionsValueSummaries.find(key);
+          if( it == m_conditionsValueSummaries.end())return 0;
+          unsigned int summary = (*it).second;
+          unsigned int loc   = condition - index *32;
+          return ( 1 &amp; (summary >> loc));
         </code>
       </method>
 
 
+
+                                                          
+      <method
+        name="firedChannelByName"
+        argList="const std::string name, int bx=0"
+        desc="return channel firing by channel name"
+        type="bool"
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUChannel::Map channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          if( it == channels.end() )return false;
+          const unsigned int pos = ((*it).second)->id();
+          return firedChannel( pos,bx );
+        </code>
+      </method>
       <method
         name="channelDecisionByName"
-        argList="std::string name"
+        argList="const std::string name, int bx=0"
         desc="return channel decision by channel name"
         type="bool"
         const="TRUE">
         <code> 
-          for(unsigned int ichan = 0 ; ichan != m_channelNames.size();ichan++){
-          if(name == m_channelNames[ichan]){
-          return ((((m_report >> (ichan+1) ) &amp; 1) !=0) ? true : false );
-          break;
-           }
-          }
-          return false ;
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUChannel::Map channels=m_configuration->channels();
+          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          if( it == channels.end() )return false;
+          const unsigned int pos = ((*it).second)->id();
+          return channelDecision( pos,bx );
         </code>
       </method>
-
       <method
         name="conditionValueByName"
-        argList="std::string name"
+        argList="const std::string name, int bx=0"
         desc="return condition value by condition name"
         type="bool"
         const="TRUE">
         <code> 
-          for(unsigned int icond = 0 ; icond != m_conditionNames.size();icond++){
-          if(name == m_conditionNames[icond]){
-          return ((((m_conditionPattern >> (icond) ) &amp; 1) !=0) ? true : false );
-          break;
-           }
-          }
-          return false ;
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUElementaryCondition::Map conditions=m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::iterator it = conditions.find( name );
+          if( it == conditions.end() )return false;
+          const unsigned int pos = ((*it).second)->id();
+          return conditionValue( pos, bx );
         </code>
       </method>
+
+
+
+
 
       <method
         name="channelName"
-        argList="unsigned int channel"
-        desc="return channel name"
+        argList="const unsigned int channel"
+        desc="return channel name by index"
         type="std::string"
         const="TRUE">
         <code> 
-          if(channel == 0){
-          return "Global L0 Decision";
-          }else if(channel &lt; (m_channelNames.size()+1) ){
-          return m_channelNames[channel-1];
-          }else{
-          std::string message = &quot; Channel &quot; ;
+          std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
+          if(NULL == m_configuration)return bad;
+          LHCb::L0DUChannel::Map channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::iterator it;
+          for(it = channels.begin() ; it != channels.end() ; it++){
+           unsigned int id = ((*it).second)->id();
+           if( channel == id ) return ((*it).second)->name();
+          }          
+          bad = &quot; Channel no &quot; ;
           std::stringstream os(&quot; &quot;);
           os &lt;&lt; channel;
-          message += os.str();
-          message += &quot; (name not specified) &quot; ;
-          return message;
-          }
+          bad += os.str();
+          bad += &quot; is not defined in the loaded configuration - Please check &quot; ;
+          return bad;          
         </code>
       </method>
+      
+
 
       <method
-        name="conditionName"
-        argList="unsigned int cond"
-        desc="return condition name"
-        type="std::string"
+        name="conditionName" 
+        argList="const unsigned int cond"
+        desc="return condition name by index"
+        type="std::string" 
         const="TRUE">
         <code> 
-          if(cond &lt; (m_conditionNames.size()) ){
-          return m_conditionNames[cond];
-          }else{
-          std::string message = &quot; Condition &quot; ;
-          std::stringstream os(&quot; &quot;);
-          os &lt;&lt; cond;
-          message += os.str();
-          message += &quot; (name not specified) &quot; ;
-          return message;
+          std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
+          if(NULL == m_configuration)return bad;
+          LHCb::L0DUElementaryCondition::Map conditions = m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::iterator it;
+          for(it = conditions.begin() ; it != conditions.end() ; it++){
+           unsigned int id = ((*it).second)->id();
+           if(   cond == id ) return ((*it).second)->name();          
           }
+          bad = &quot; Condition no &quot; ;
+          std::stringstream os(&quot;&quot;);
+          os &lt;&lt; cond;
+          bad += os.str();
+          bad += &quot; is not defined in the loaded configuration - Please check &quot; ;
+          return bad;
         </code>
       </method>
 
-       <import name="Event/L0DUPattern"/>
+
+
+      <method
+        name="decisionFromSummary" 
+        argList="int bx=0"
+        desc="return the L0 decision computed from the ChannelsDecisionSummaries"
+        type="bool" 
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUChannel::Map channels = m_configuration->channels();
+          for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           if( channelDecision( channel->id(),bx  ) &amp;&amp; channel->enable() )return true;
+          }
+          return false;
+        </code>
+      </method>
+
+
+
+
 
     </class>
-
-
-
-   <namespace
-    desc   = "Describes the L0DU condition pattern and size" 
-    name   = "L0DUPattern"
-    author = "Olivier Deschamps">
-  
-      <attribute desc="number of bits" type="static const unsigned int" name="Size" init="32" />
-
-    </namespace>  
-   
- 
-
   </package>
 </gdd>

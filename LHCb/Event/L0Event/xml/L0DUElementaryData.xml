@@ -12,37 +12,69 @@
       <base name="ContainedObject"/>
        &ContainedObject;
 
-      <location name = "Default"   place = "/Event/Trig/L0/L0Data"  />
-      <import name="Event/L0DUElementaryData"/>
+      <enum name="Type"desc="Types of ElementaryData" value="Predefined=0,Constant,Compound" access='PUBLIC'/>
+
+      <location name = "Default"   place = "Trig/L0/L0DUData"  />
+      <location name = "Emulated"  place = "Emu/L0/L0DUData"  />
+
+      
+      <import name="sstream" std="TRUE"/>
 
       <typedef def    = "Map" 
         desc   = "std::map Container "
         type   = "std::map&lt;std::string, L0DUElementaryData* &gt;" 
         access = "PUBLIC"/>
 
+      <copyconstructor/>
+      <constructor 
+        desc="non-default constructor" 
+        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::string operandName" 
+        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_scale(1.)">
+        <code> m_operandsName.push_back(operandName);</code>
+      </constructor>
+      <constructor 
+        desc="non-default constructor" 
+        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::string operandName1,const std::string operandName2" 
+        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_scale(1.)">
+        <code> 
+          m_operandsName.push_back(operandName1);
+          m_operandsName.push_back(operandName2);
+        </code>
+      </constructor>
+      <constructor 
+        desc="non-default constructor" 
+        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::vector&lt;std::string&gt; operandsName"
+        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_operandsName(operandsName), m_scale(1.)">
+      </constructor>
 
 
-      <attribute name = "name" desc = " L0DU cata name "  type = "std::string" />
 
+
+      <attribute name = "id" desc = " L0DU Data index "  type = "int" />
+      <attribute name = "type"     desc = " data type (predefined [0]/constant value [1]/user-defined [2])"  type = "LHCb::L0DUElementaryData::Type" />
+      <attribute name = "name" desc = " L0DU Data name "  type = "std::string" />
+      <attribute name = "operator" desc = " Operator symbol"  type = "std::string" getMeth="FALSE"/>
       <attribute name = "operandsName" desc = " Operands name"  type = " std::vector&lt;std::string&gt;"  />
-
-      <attribute name = "operands" desc = " Operands value"  type = "std::vector&lt;double&gt;"
-        nonconstaccessor='TRUE' />
-
-      <attribute name = "operator" desc = " Operator symbol"  type = "std::string" getMeth = 'FALSE'/>
+      <attribute name = "scale"     desc = " Operands scale"  type = "double "  init="1."/>
+      <attribute name = "operands"  desc = " Operands value"  type = "std::vector&lt;unsigned long&gt;" nonconstaccessor='TRUE' />
 
 
+
+      <method name      = "getOperator" desc = "get operator symbol" type  = "std::string" >
+        <code> return m_operator; </code>
+      </method>
 
       <method name      = "setOperand" desc = "push_back a single operand value" type  = "void" 
-        argList   = "double operand">
+        argList   = "const unsigned long operand, const double scale">
         <code> 
           m_operands.clear(); 
           m_operands.push_back(operand);
+          m_scale = scale;
         </code>
       </method>
 
       <method name      = "addOperand" desc = "add a single operand value" type  = "void" 
-        argList   = "double operand">
+        argList   = "unsigned long operand">
         <code> 
           m_operands.push_back(operand);
         </code>
@@ -50,53 +82,37 @@
 
 
 
-      <method name      = "value" desc = "L0DU data value = operation(operands,operator)" type  = "double" >
+      <method name      = "digit" desc = "L0DU data value (digit) = operation(operands,operator)" type  = "unsigned long" >
         <code> return operation(m_operator,m_operands); </code>
       </method>
 
 
-      <method name      = "init" desc = "Set-up the channel " type  = "void" 
-        argList   = "const std::string name, const std::string v_operator , const std::vector&lt;std::string&gt; operandsName" >
-        <code>
-          m_name = name;
-          m_operator = v_operator;
-          m_operandsName = operandsName ;
-        </code>
-      </method>
-
-
-      <method name      = "init" desc = "Set-up the channel " type  = "void" 
-        argList   = "const std::string name, const std::string v_operator, std::string operandName1" >
-        <code>
-          m_name = name;
-          m_operator = v_operator;
-          m_operandsName.clear();
-          m_operandsName.push_back(operandName1) ;
-        </code>
-      </method>
-
-      <method name      = "init" desc = "Set-up the channel " type  = "void" 
-        argList   = "const std::string name, const std::string v_operator, std::string operandName1, std::string operandName2" >
-        <code>
-          m_name = name;
-          m_operator = v_operator;
-          m_operandsName.clear();
-          m_operandsName.push_back(operandName1) ;
-          m_operandsName.push_back(operandName2) ;
+      <method name      = "value" 
+        desc = "data operand value in natural unit" type= "double" >
+        <code> 
+          return ((double) digit())* m_scale; 
         </code>
       </method>
 
 
 
-      <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string" >
+
+
+      <method name  = "description" desc = "L0DUElementaryData short description" type  = "std::string" > </method>
+      <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string" > </method>
+
+      <method name      = "operation" desc = "Operation method" type  = "unsigned long" 
+        argList   = "std::string v_operator , std::vector&lt;unsigned long&gt; v_operands">
       </method>
 
-      <method name      = "operation" desc = "Operation method" type  = "double" 
-        argList   = "std::string v_operator , std::vector&lt;double&gt; v_operands">
-      </method>
-      
 
     </class>
+
+
+
+
+     
+
 
   </package>
 </gdd>

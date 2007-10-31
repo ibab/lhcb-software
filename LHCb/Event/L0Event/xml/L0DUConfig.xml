@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+    
+    <class 
+      author="Olivier Deschamps"
+      desc="This class represents the keyed L0DU Configuration"
+      name="L0DUConfig"
+      serializers="FALSE">
+      <base   name = "KeyedObject&lt;long&gt;" />
+      <template name="KeyedObjectDict" t1="long"/>
+      &KeyedObject;
+
+      <location name = "Default"   place = "Trig/L0/L0DUConfig"  />
+      <location name = "Emulated"  place = "Emu/L0/L0DUConfig"  />
+
+
+      <import name="Event/L0DUElementaryData"/>
+      <import name="Event/L0DUElementaryCondition"/>
+      <import name="Event/L0DUChannel"/>
+      <import name="Event/IL0Candidate"/>
+
+
+      <typedef
+        def    = "Base"
+        type   = "KeyedObject&lt;long&gt;"
+        desc   = "L0DU Trigger Configuration Key"
+        access = "PROTECTED"
+        />
+
+
+      <constructor
+        desc     = "Default constructor"
+        initList = "Base ( 0xFFFF   )  , m_definition(),m_data(),m_conditions(),m_channels()"
+        > <code/></constructor>
+
+      <constructor
+        desc     = "non-default constructor"
+        argList  = "long tck "
+        initList = "Base ( tck ) , m_definition(),m_data(),m_conditions(),m_channels()"
+        > <code/> </constructor>
+
+
+      <constructor 
+        desc     = "Copy Constructor" 
+        argList  = "LHCb::L0DUConfig rh"
+        initList = "Base(rh.key() ), m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() )
+        , m_channels(rh.channels() )"
+        > <code/> </constructor>
+
+
+      <attribute name = "definition" desc = " L0DU Channel key definition"  type = "std::string"/>
+      <attribute name = "data" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryData::Map" nonconstaccessor='TRUE' />
+      <attribute name = "conditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map"  nonconstaccessor='TRUE'/>
+      <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
+
+
+      <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "long" const = 'TRUE'><code>return key();</code></method>
+      <method desc   = "delete MAPs content" name="release" type="void">
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!=m_channels.end();++ic){
+           if( NULL != (*ic).second)delete (*ic).second;
+          }
+          m_channels.clear();
+          for(LHCb::L0DUElementaryCondition::Map::iterator ic = m_conditions.begin();ic!=m_conditions.end();++ic){
+           if( NULL != (*ic).second)delete (*ic).second;
+          }
+          m_conditions.clear();
+          for(LHCb::L0DUElementaryData::Map::iterator ic = m_data.begin();ic!=m_data.end();++ic){
+           if( NULL != (*ic).second)delete (*ic).second;
+          }
+          m_data.clear();
+        </code>
+      </method>
+
+
+      <method name  = "description" desc = "L0DUConfig  short description" type  = "std::string" > </method>
+      <method name  = "summary" desc = "L0DUConfig full summary after processing" type  = "std::string" > </method>
+
+
+      <method name  = "resetChannelCounters" desc = "reset all channel counters" type  = "void" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          ((*it).second)->setCounter(0);
+          }
+        </code>
+      </method>
+      <method name  = "resetEmulated" desc = "reset all channels emulation flags" type  = "void" argList="bool value=false" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          ((*it).second)->setEmulated(value);
+          }
+        </code>
+      </method>
+
+      <method name  = "emulated" desc = "return true when all channels are emulated" type  = "bool" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          if( !((*it).second)->emulated() )return false;
+          }
+          return true;
+        </code>
+      </method>
+
+      <method name  = "clearDataValue" desc = "clear all ElementaryData operands" type  = "void" >
+        <code>
+          for(LHCb::L0DUElementaryData::Map::iterator it = m_data.begin();it!=m_data.end();it++){
+          ((*it).second)->operands().clear();
+          }
+          resetEmulated();
+        </code>
+      </method>
+
+      <method name  = "emulate" desc = "emulate all channels" type  = "LHCb::L0DUConfig*" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+	    ((*it).second)->emulate();
+          }
+	  return this;
+        </code>
+      </method>
+
+
+      <method name  = "decision" desc = "emulated global decision" type  = "bool" >
+        <code>
+          emulate();
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           if( channel->decision() &amp;&amp; channel->enable() )return true;
+          }
+	  return false;
+        </code>
+      </method>
+
+
+    </class>
+  </package>
+</gdd>
+
+
+

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.71 2007-10-17 12:54:10 cattanem Exp $
+! $Id: release.notes,v 1.72 2007-10-31 14:31:15 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+! 2007-10-31 - Olivier Deschamps 	
+ - add new class (L0DUConfig.xml)
+ - improve L0DU-related classes (L0DUElementaryData/L0DUElementaryCondition/L0DUChannel/L0DUReport)
+ - complete Event/L0DUBase.h
 
 !======================== L0Event v16r5p1 2007-10-17 =========================
 ! 2007-10-17 - Marco Cattaneo

@@ -13,14 +13,17 @@
        &KeyedObject;
 
 
-      <location name = "Calo"      place = "/Event/Trig/L0/L0DUCaloData"    />
-      <location name = "Muon"      place = "/Event/Trig/L0/L0DUMuonData"    />
-      <location name = "PileUp"    place = "/Event/Trig/L0/L0DUPusData"  />
-      <location name = "All"       place = "/Event/Trig/L0/L0DUData"  />
+      <location name = "Calo"      place = "Trig/L0/L0DUCaloData"    />
+      <location name = "Muon"      place = "Trig/L0/L0DUMuonData"    />
+      <location name = "PileUp"    place = "Trig/L0/L0DUPusData"  />
+      <location name = "L0Calo"    place = "Trig/L0/L0DUL0CaloData"    />
+      <location name = "L0Muon"    place = "Trig/L0/L0DUL0MuonData"    />
+      <location name = "L0PileUp"  place = "Trig/L0/L0DUL0PusData"  />
+      <location name = "L0DU"      place = "Trig/L0/L0DUData"  />
 
 
 
-
+      <copyconstructor/>
       <typedef
         def    = "Base"
         type   = "KeyedObject&lt;int&gt;"
