@@ -52,9 +52,23 @@ HistogramPersistencySvc.OutputFile = "Moore_minbias.root";
 // PoolDbCacheSvc.Catalog = {
 //  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
 // };
+ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
+ApplicationMgr.AuditAlgorithms = 1;  
+AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
+ToolSvc.SequencerTimerTool.OutputLevel = 4;          
 
 //---------------------------------------------------------------------------
 // Event input
 //---------------------------------------------------------------------------
-#include "$MOOREROOT/options/raw06_minbias_1.opts"
+//#include "$MOOREROOT/options/raw06_minbias_1.opts"
 
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+ };
+
+
+// remove this
+#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"

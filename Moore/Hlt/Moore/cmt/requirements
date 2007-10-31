@@ -1,59 +1,56 @@
 #============================================================================
-# $Id: requirements,v 1.14 2007-03-06 16:22:17 pkoppenb Exp $
+# $Id: requirements,v 1.15 2007-10-31 21:57:25 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : J.A. Hernando & P. Koppenburg & M. Cattaneo
 #============================================================================
 
 #============================================================================
 package Moore
-version v2r2
+version v2r3
 
 branches doc cmt options
 
 #============================================================================
 
-#-- CMT and GaudiPolicy
-use GaudiPolicy v6r4
+# Set the default path for Brunel options.
+set MOOREOPTS ${MOOREROOT}/options
 
-#-- External libraries now taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          -no_auto_imports
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
 
-#-- Gaudi libraries (from GAUDI_v19r2)
-use GaudiKernel		v22r1
-use GaudiSvc 		v15r2        -no_auto_imports
-use GaudiAlg 		v9r12        -no_auto_imports
-use GaudiAud 	        v8r1         -no_auto_imports
-use GaudiGSL		v6r6         -no_auto_imports
-use GaudiPoolDb	        v2r11        -no_auto_imports
-use RootHistCnv         v9r12        -no_auto_imports
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
 
-#-- Database
-use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v5r0         -no_auto_imports
-use SQLDDDB             v1r*    Det  -no_auto_imports
+# Databases
+use DDDB               v1r*  Det            -no_auto_imports
+use ParamFiles         v7r0                 -no_auto_imports
+use FieldMap           v4r7                 -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r2)
-use GaudiConf           v10r2          -no_auto_imports
-use GaudiObjDesc        v9r9           -no_auto_imports
-use KernelSys           v6r2    Kernel -no_auto_imports
-use DetSys              v9r2    Det    -no_auto_imports
-use EventSys            v23r2   Event  -no_auto_imports
-use DAQSys              v3r1    DAQ    -no_auto_imports
-use LHCbAlgs            v2r6    Kernel -no_auto_imports
-use SimComponents       v2r1    Sim    -no_auto_imports
-use PatTools            v3r1    Pat    -no_auto_imports
+# The rest are needed only to set up environment variables for job options
+# and to give a cmt broadcast dependency for user checked out component packages
 
-#-- Lbcom packages (from LBCOM_v6r2)
-use LbcomSys            v6r2         -no_auto_imports
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports
 
-#-- Rec packages (from REC_v4r2)
-use RecSys              v4r2         -no_auto_imports
+# From LHCbSys
+use LHCbAlgs           v*    Kernel         -no_auto_imports
+use SimComponents      v*    Sim            -no_auto_imports
 
-#-- HLT packages (from HLT_v1r3)
-use HltSys		v1r3	     -no_auto_imports
+#-- Lbcom packages 
+use LbcomSys            v*        -no_auto_imports
 
-#-- Phys packages (from PHYS_v6r0)
-use PhysSys		v6r0	     -no_auto_imports
+#-- Rec packages 
+use RecSys              v*         -no_auto_imports
+
+#-- HLT packages 
+use HltSys		v*	     -no_auto_imports
+
+#-- Phys packages 
+use PhysSys		v*	     -no_auto_imports
 
 #-- Online ??
 
