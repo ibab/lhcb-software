@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.39 2007-10-31 08:33:23 frankb Exp $
+// $Id: HPDGui.cpp,v 1.40 2007-10-31 10:45:37 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -40,6 +40,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
                TTimer* timer,              
                std::string histoDimNameArgument)  : 
   TGMainFrame(p,guiWidth,guiHeight),
+  m_externalTimer(timer),
   m_timerRuns(false),
   m_ZoomCanvasActive(false),
   m_nTimeSteps(100),
@@ -54,7 +55,6 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   m_connectOK(false),
   m_histoOK(true),
   m_verbose(verbose),
-  m_externalTimer(timer),
   m_histoDimNameArgument(histoDimNameArgument)
 {
   //
@@ -625,6 +625,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
 
       default:
         std::cout << "--> button with ID " << parm1 << " pressed - but not known.." << std::endl;
+        std::cout << "     parm2         " << parm2 << std::endl;
         break;
       } // switch parm1
     } // switch getSubMessage
@@ -1165,7 +1166,6 @@ bool HPDGui::Connect2DIM() {
   std::string            stringServerNode;  
   std::string            stringService;
   std::string            stringFormat;  
-  std::string::size_type stringLocation;
   std::string            tmpString;
 
   std::vector<std::string> serviceH1DNameVector;
@@ -1300,10 +1300,10 @@ bool HPDGui::Connect2DIM() {
 	      std::cout << "add new GaudiAlg to map" << std::endl;
             TGListTreeItem *thisGaudiAlg    = m_ListTreeDimServices -> AddItem(thisDimServer, GaudiAlgName.c_str());
             m_GaudiAlgNameMap[MapIndex]     = thisGaudiAlg;            
-            TGListTreeItem *thisH2D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H2D");
-            TGListTreeItem *thisH1D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H1D");
-            TGListTreeItem *thisHPD         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "HPD");
-            TGListTreeItem *thisOther       = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "Other");
+            m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H2D");
+            m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H1D");
+            m_ListTreeDimServices -> AddItem(thisGaudiAlg , "HPD");
+            m_ListTreeDimServices -> AddItem(thisGaudiAlg , "Other");
           } // if mapIter
 
           // remove the server name from the service ID string

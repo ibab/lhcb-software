@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.13 2007-05-31 15:21:49 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.14 2007-10-31 10:45:37 ukerzel Exp $
 
 // Include files 
 
@@ -37,15 +37,15 @@ namespace win {
 DimInfoHisto::DimInfoHisto(std::string serviceName,
                            int         refreshTime,
                            int         verbosity ):
+  DimInfo(serviceName.c_str(), refreshTime, -1),
   m_serviceOK(false),
   m_serviceUpdated(false),
+  m_bookedHistogram(false),
   m_verbosity(verbosity),
   m_histoDimension(-1),
-  m_serviceName(serviceName),
-  m_bookedHistogram(false),
   m_serviceSize(0),
+  m_serviceName(serviceName),
   m_serviceType(DimInfoHisto::unknown),
-  DimInfo(serviceName.c_str(), refreshTime, -1),
   m_nWait(0),
   m_waitTime(0){
   
@@ -88,7 +88,7 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
     m_serviceSize = getSize()/sizeof(float);
 
     // wait until data has arrived
-    m_waitTime = (double)refreshTime*1e5; // 10% of refresh time
+    m_waitTime =(int)((double)refreshTime*1e5); // 10% of refresh time
     if (m_verbosity > 0)
       std::cout << "wait time " << m_waitTime << std::endl;
 

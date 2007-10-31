@@ -1,4 +1,4 @@
-// $Id: HPDMonitorApp.cpp,v 1.6 2007-05-31 14:47:15 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.7 2007-10-31 10:45:37 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -63,6 +63,14 @@ void HPDMonitorApp::Start() {
 //-----------------------------------------------------------------------------
 Bool_t HPDMonitorApp::HandleTimer(TTimer* timer) {
   // std::cout << "HPDMonitorApp::HandleTimer" << std::endl;
+
+  int verbose = 0;
+  if (verbose > 0) {
+    TTime now = timer->GetTime();
+    std::cout << "HPDMonitorApp::HandleTimer  Time is " << now.AsString() << std::endl;
+  } // if verbose
+
+
   m_HPDGui->Update();
   
   return kFALSE;

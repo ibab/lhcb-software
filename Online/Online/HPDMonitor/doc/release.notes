@@ -4,6 +4,33 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-10-31 - Ulrich Kerzel
+- removed compiler warnings:
+  ../src/HPDMonitorApp.cpp:64: warning: unused parameter 'timer'
+
+  ../src/DimInfoHisto.h: In constructor `DimInfoHisto::DimInfoHisto(std::string, int, int)':
+  ../src/DimInfoHisto.h:67: warning: `DimInfoHisto::m_serviceName' will be initialized after
+  ../src/DimInfoHisto.h:63: warning:   `bool DimInfoHisto::m_bookedHistogram'
+  ../src/DimInfoHisto.cpp:50: warning:   when initialized here
+  ../src/DimInfoHisto.h:72: warning: `DimInfoHisto::m_serviceType' will be initialized after
+  ../src/DimInfoHisto.cpp:50: warning:   base `DimInfo'
+  ../src/DimInfoHisto.cpp:50: warning:   when initialized here
+  ../src/DimInfoHisto.cpp:91: warning: converting to `int' from `double'
+
+  ../src/HPDGui.h: In constructor `HPDGui::HPDGui(const TGWindow*, UInt_t, UInt_t, int, TTimer*, std::string)':
+  ../src/HPDGui.h:274: warning: `HPDGui::m_verbose' will be initialized after
+  ../src/HPDGui.h:236: warning:   `TTimer*HPDGui::m_externalTimer'
+  ../src/HPDGui.cpp:59: warning:   when initialized here
+  ../src/HPDGui.cpp: At global scope:
+  ../src/HPDGui.cpp:556: warning: unused parameter 'parm2'
+  ../src/HPDGui.cpp: In member function `bool HPDGui::Connect2DIM()':
+  ../src/HPDGui.cpp:1303: warning: unused variable 'thisH2D'
+  ../src/HPDGui.cpp:1304: warning: unused variable 'thisH1D'
+  ../src/HPDGui.cpp:1305: warning: unused variable 'thisHPD'
+  ../src/HPDGui.cpp:1306: warning: unused variable 'thisOther'
+  ../src/HPDGui.cpp:1168: warning: unused variable 'stringLocation'
+  
+
 ! 2007-08-15 - Ulrich Kerzel
  - add new "write" and "read" buttons which
    -> create in the current directory the file SelectedDimServices.txt
