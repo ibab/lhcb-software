@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsNoIP.h,v 1.1 2007-07-12 18:03:14 asatta Exp $
+// $Id: HltMuonTrigger2MuonsNoIP.h,v 1.2 2007-10-31 11:42:37 sandra Exp $
 #ifndef HLTMUONTRIGGER2MUONSNOIP_H 
 #define HLTMUONTRIGGER2MUONSNOIP_H 1
 
@@ -22,50 +22,26 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  void makeDiMuonPair(const Hlt::TrackContainer& tcon1,
-                      const Hlt::TrackContainer& tcon2,
-                      // Estd::bifunction<Track,Track>& fun,
-                      // Estd::filter<double>& cut,
-                      Hlt::VertexContainer& vcon);
+  void makeDiMuonPair(Hlt::VertexContainer& vcon);
+
   StatusCode checkIfL0Dimuon(LHCb::RecVertex* vertexToTest);
+  StatusCode checkIfSameAncestor(LHCb::RecVertex* vertexToTest);
+
   
 protected:
 
-
-
-protected:
-
-  
-
-  Estd::filter<LHCb::Track>* _negMuonFil;
-  Estd::filter<LHCb::Track>* _posMuonFil;
-  //Estd::filter<LHCb::RecVertex>*  _massAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _massCut;
-  //Estd::filter<LHCb::RecVertex>*  _massAndDOCAAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _massAndDOCACut;
-  //  Estd::filter<LHCb::RecVertex>*  _massAndIPAndL0Cut;
-  Estd::filter<LHCb::RecVertex>*  _massAndL0Cut;
-  //  Estd::filter<LHCb::RecVertex>*  _triggerMassAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _triggerMassCut;
 
-  Estd::function<LHCb::Track>* _chargeFun;
-  Hlt::TrackVertexBiFunction*   _ipFun;
-  //Estd::filter<LHCb::Track>*   _ptCut;
- Hlt::TrackBiFunction*   _docaFun;
 
 
   Hlt::SortTrackByPt _sortByPT;
-  int m_IPKey;
   int m_massKey;
   int m_DOCAKey;
   int m_MuonKey;
-  double m_minMassWithIP;
   double m_minMassNoIP;  
-  double m_minIP;
   double m_maxDOCA;
-  int m_L0confirm;
-  Hlt::TrackContainer m_otrack;
-  Hlt::TrackContainer m_otrack2;
 
   Hlt::VertexContainer m_overtices;  
   Hlt::VertexContainer m_selevertices;  
@@ -73,13 +49,8 @@ protected:
   Hlt::VertexCreator _vertexCreator;
   HltHisto h_mass;
   HltHisto h_DOCA;
-  HltHisto h_IP;
 
   PatVertexContainer* m_patVertexBank;
-  std::string m_selection2SummaryName;
-  int m_selection2SummaryID;
   std::string m_outputDimuonVerticesName;
-  bool m_pretrigger;  
-
 };
 #endif // HLTMUONTRIGGER2MUONSNOIP_H

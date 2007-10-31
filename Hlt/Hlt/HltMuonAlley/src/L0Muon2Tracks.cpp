@@ -1,4 +1,4 @@
-// $Id: L0Muon2Tracks.cpp,v 1.2 2007-08-03 09:29:06 asatta Exp $
+// $Id: L0Muon2Tracks.cpp,v 1.3 2007-10-31 11:42:38 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -125,6 +125,8 @@ StatusCode L0Muon2Tracks::execute() {
 StatusCode L0Muon2Tracks::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  delete m_myState;
+  delete m_vertexState; 
   return HltAlgorithm::finalize();
 
 
@@ -142,6 +144,7 @@ StatusCode L0Muon2Tracks::fillSingle() {
     if(fabs(pt)<0.1)continue;
     if(fabs(pt)> m_L0MuonThreshold){
       m_outputTracks->push_back(*pItr);
+      debug() << " single " << *pItr << endmsg;
        debug()<< " selected the L0 single "<<pt<<endreq;
     };
   }  
@@ -166,6 +169,7 @@ StatusCode L0Muon2Tracks::fillDiMuon() {
       if(fabs(ptTwo)<0.1)continue;
       if(fabs(ptOne)+fabs(ptTwo)>m_L0MuonThreshold){
         fillVertex(*pItrOne,*pItrTwo);      
+        debug() << "FillDimuon " << *pItrOne << " " << *pItrTwo << endmsg;
 /*        bool already=isIn(*pItrOne);
         if(!already) m_outputTracks->push_back(*pItrOne);
         already=false;

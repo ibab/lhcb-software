@@ -3,7 +3,15 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
-
+!========================= HltMuonAlley 2007-10-30 ===================
+! 2007-10-30 Sandra Amato
+   - fix Abs value in HltMuonTrigger2MuonsWithIP
+   - remove requirement of opposite charge from HltMuonTrigger2MuonsNoIP
+     and HltMuonTrigger2MuonsWithIP
+   - require both tracks not to come from the same ancestor
+   - fix bug in  checkIfL0Dimuon in HltMuonTrigger2MuonsNoIP
+     and HltMuonTrigger2MuonsWithIP
+   - require at least one track from L0 when making dimuons
 
 !========================= HltMuonAlley v1r5p1 2007-10-28 ===================
 ! 2007-10-12 Jose A. Hernando 
