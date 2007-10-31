@@ -137,18 +137,19 @@ class FSMmanip:
       for i in dpMap.keys():
         dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
         dpv.back().data = action+'/DEVICE(S)='+dpMap[i][0].upper()
+        #print 'Send command:',dpv.back().name(),'cmd:',dpv.back().data
         count = count + 1
         if debug: log('%-12s %3d %3d %s'%(action, commit, count, dpv.back().data))
         #log('%-12s %3d %3d %s'%(action, commit, count, dpv.back().data))
         del dpMap[i][0]
         if len(dpMap[i])==0: del dpMap[i]
-    self.writer.add(dpv)
-    length = self.writer.length()
-    if not self.writer.execute():
-      log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
-      return None
-    commit = commit + 1
-    dpv.clear()
+      self.writer.add(dpv)
+      length = self.writer.length()
+      if not self.writer.execute():
+        log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
+        return None
+      commit = commit + 1
+      dpv.clear()
     return self
  
   # ===========================================================================
@@ -299,7 +300,7 @@ class FSMmanip:
     type    = task[3]
     opts = self.optionsFile(utgid,type)
     script = Params.gauditask_startscript
-    cmd = sysname+'#-e -o -u '+utgid+\
+    cmd = sysname+'#-e -o -c -u '+utgid+\
           ' -D TASKTYPE='+type+\
           ' -D TASKCLASS='+task[4]+\
           ' -D PARTITION='+self.info.detectorName()+\
