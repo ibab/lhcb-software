@@ -10,19 +10,14 @@
       
       <base name="DataObject"/>
       &DataObject;
-<<<<<<< L0DUReport.xml
       <location name = "Default"   place = "Trig/L0/L0DUReport"  />
       <location name = "Emulated"  place = "Emu/L0/L0DUReport"  />
 
-
-       <import name="Event/L0DUConfig"/>
+      <import name="sstream" std="TRUE"/>
+      <import name="Event/L0DUConfig"/>
 
 
       <copyconstructor/>
-=======
-      <location name = "Default"  place = "Trig/L0/L0DU"  />
-      <import name="sstream" std="TRUE"/>
->>>>>>> 1.6
 
       <constructor 
         desc = "Default constructor" 
