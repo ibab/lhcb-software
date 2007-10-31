@@ -1,4 +1,4 @@
-// $Id: L0MuonConfWithT.h,v 1.4 2007-09-08 18:34:11 sandra Exp $
+// $Id: L0MuonConfWithT.h,v 1.5 2007-10-31 11:51:50 sandra Exp $
 #ifndef L0MUONCONFWITHT_H 
 #define L0MUONCONFWITHT_H 1
 
@@ -16,7 +16,6 @@
 
 #include "HltBase/ITrackConfirmTool.h" 
 
-#include "Event/L0MuonCandidate.h"
 
 
 /** @class L0MuonConfWithT L0MuonConfWithT.h
@@ -29,31 +28,30 @@ class L0MuonConfWithT : public HltAlgorithm {
 public: 
   /// Standard constructor
   L0MuonConfWithT( const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   virtual ~L0MuonConfWithT( ); ///< Destructor
-
+  
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-private:
+ protected:
+  
+ private:
   
   bool m_debugInfo;  
-  LHCb::L0MuonCandidates* m_inputL0Muons;
-
-    IPrepareMuonSeed* m_prepareMuonSeed;
+  
+  IPrepareMuonSeed* m_prepareMuonSeed;
   // Tsa Collector
   ITsaCollector*    m_tsacollector;
-
+  
   //new seeding tool
   ITrackConfirmTool* m_TsaConfirmTool;
   PatTrackContainer*
-  m_outputMuonTracks;///< Pointer to the muon track containe
+    m_outputMuonTracks;///< Pointer to the muon track containe
   LHCb::State* m_myState;
-
+  
   std::string m_outputMuonTracksName;   ///< output container name
- double sigmaX2[4], sigmaY2[4], sigmaTx2[4], sigmaTy2[4];
+  double sigmaX2[4], sigmaY2[4], sigmaTx2[4], sigmaTy2[4];
 };
 #endif // L0MUONCONFWITHT_H

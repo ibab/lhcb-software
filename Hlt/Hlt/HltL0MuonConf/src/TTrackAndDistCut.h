@@ -1,6 +1,6 @@
-// $Id: L0MuonAndTConf.h,v 1.3 2007-07-12 17:52:36 asatta Exp $
-#ifndef L0MUONANDTCONF_H 
-#define L0MUONANDTCONF_H 1
+// $Id: TTrackAndDistCut.h,v 1.1 2007-10-31 11:51:50 sandra Exp $
+#ifndef TTRACKANDDISTCUT_H 
+#define TTRACKANDDISTCUT_H 1
 
 // Include files
 // from Gaudi
@@ -10,18 +10,18 @@
 #include "Event/L0MuonCandidate.h"
 #include "MuonDet/IMuonPosTool.h"
 
-/** @class L0MuonAndTConf L0MuonAndTConf.h
+/** @class TTrackAndDistCut TTrackAndDistCut.h
  *  
  *
  *  @author Alessia Satta
  *  @date   2007-02-21
  */
-class L0MuonAndTConf : public HltAlgorithm {
+class TTrackAndDistCut : public HltAlgorithm {
 public: 
   /// Standard constructor
-  L0MuonAndTConf( const std::string& name, ISvcLocator* pSvcLocator );
+  TTrackAndDistCut( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~L0MuonAndTConf( ); ///< Destructor
+  virtual ~TTrackAndDistCut( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -36,4 +36,4 @@ private:
   double  calcDLL(LHCb::Track* track, LHCb::MuonTileID & tileM4, LHCb::MuonTileID & tileM5);
 
 };
-#endif // L0MUONANDTCONF_H
+#endif // TTRACKANDDISTCUT_H

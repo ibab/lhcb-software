@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.h,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: MuonTConfWithT.h,v 1.2 2007-10-31 11:51:50 sandra Exp $
 #ifndef MUONTCONFWITHT_H 
 #define MUONTCONFWITHT_H 1
 
@@ -13,7 +13,6 @@
 #include "TsaKernel/OTCluster.h"
 
 #include "HltBase/IPrepareMuonTSeed.h"
-
 #include "HltBase/ITrackConfirmTool.h" 
 
 #include "Event/L0MuonCandidate.h"
@@ -37,24 +36,22 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-
+  
 private:
   
-  int m_nsigma;
   bool m_debugInfo;  
-  //  LHCb::MuonTCandidates* m_inputMuonTs; 
   LHCb::L0MuonCandidates* m_inputL0Muons;
-
-    IPrepareMuonTSeed* m_prepareMuonSeed;
+  
+  IPrepareMuonTSeed* m_prepareMuonSeed;
   // Tsa Collector
   ITsaCollector*    m_tsacollector;
-
+  
   //new seeding tool
   ITrackConfirmTool* m_TsaConfirmTool;
   PatTrackContainer*
-  m_outputMuonTracks;///< Pointer to the muon track containe
+    m_outputMuonTracks;///< Pointer to the muon track containe
   LHCb::State* m_myState;
-
+  
   
   std::string m_outputMuonTracksName;   ///< output container name
   float m_countEvent;

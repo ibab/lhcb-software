@@ -1,4 +1,4 @@
-// $Id: L0MuonAndTConf.cpp,v 1.5 2007-09-08 18:34:11 sandra Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.1 2007-10-31 11:51:50 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -9,23 +9,23 @@
 
 
 // local
-#include "L0MuonAndTConf.h"
+#include "TTrackAndDistCut.h"
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : L0MuonAndTConf
+// Implementation file for class : TTrackAndDistCut
 //
 // 2007-02-21 : Alessia Satta
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonAndTConf );
+DECLARE_ALGORITHM_FACTORY( TTrackAndDistCut );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-L0MuonAndTConf::L0MuonAndTConf( const std::string& name,
+TTrackAndDistCut::TTrackAndDistCut( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
@@ -35,12 +35,12 @@ L0MuonAndTConf::L0MuonAndTConf( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0MuonAndTConf::~L0MuonAndTConf() {} 
+TTrackAndDistCut::~TTrackAndDistCut() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode L0MuonAndTConf::initialize() {
+StatusCode TTrackAndDistCut::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -54,7 +54,7 @@ StatusCode L0MuonAndTConf::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode L0MuonAndTConf::execute() {
+StatusCode TTrackAndDistCut::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
@@ -82,7 +82,7 @@ StatusCode L0MuonAndTConf::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode L0MuonAndTConf::finalize() {
+StatusCode TTrackAndDistCut::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -93,7 +93,7 @@ StatusCode L0MuonAndTConf::finalize() {
 
 
 
-double  L0MuonAndTConf::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID & tileM5)
+double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID & tileM5)
 {
 
   double distDLL=0;

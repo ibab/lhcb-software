@@ -3,6 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+!========================== HltL0MuonConf 2007-10-30  ===================
+! 2007-10-30 - Sandra Amato
+ - Changed the name of L0MuonAndTConf to TTrackAndDistCut
+ - MuonTConfWithT: skip muon segments that do not share M3 hit with a T track from L0
+ - L0MuonConfWithT: clean up L0MuonCandidate access
 
 !========================== HltL0MuonConf v1r2 2007-09-23 ===================
 ! 2007-09-08 - Sandra Amato
