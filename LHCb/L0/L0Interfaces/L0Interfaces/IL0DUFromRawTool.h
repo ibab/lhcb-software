@@ -1,13 +1,16 @@
-// $Id: IL0DUFromRawTool.h,v 1.1.1.1 2007-10-31 13:38:04 odescham Exp $
+// $Id: IL0DUFromRawTool.h,v 1.2 2007-10-31 16:42:21 odescham Exp $
 #ifndef IL0DUFROMRAWTOOL_H 
 #define IL0DUFROMRAWTOOL_H 1
 
 // Include files
 // from STL
 #include <string>
-
+#include <utility>
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+// from L0Event
+#include "Event/L0DUReport.h"
+#include "Event/L0ProcessorData.h"
 
 static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 0 );
 

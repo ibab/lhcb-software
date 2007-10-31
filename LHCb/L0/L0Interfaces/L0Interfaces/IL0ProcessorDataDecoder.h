@@ -1,4 +1,4 @@
-// $Id: IL0ProcessorDataDecoder.h,v 1.1.1.1 2007-10-31 13:38:04 odescham Exp $
+// $Id: IL0ProcessorDataDecoder.h,v 1.2 2007-10-31 16:42:21 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,11 +9,12 @@
 
 // STD & STL 
 #include <string>
+#include <vector>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// Local
+// from Event
 #include "Event/L0ProcessorData.h"
-
+#include "Event/L0DUBase.h"
 static const InterfaceID IID_L0ProcessorDataDecoder( "IL0ProcessorDataDecoder", 1, 0 );
 
 

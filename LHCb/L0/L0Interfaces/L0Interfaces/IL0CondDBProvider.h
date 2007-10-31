@@ -1,4 +1,4 @@
-// $Id: IL0CondDBProvider.h,v 1.1.1.1 2007-10-31 13:38:04 odescham Exp $
+// $Id: IL0CondDBProvider.h,v 1.2 2007-10-31 16:42:21 odescham Exp $
 #ifndef IL0CONDDBPROVIDER_H 
 #define IL0CONDDBPROVIDER_H 1
 
@@ -8,7 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/L0DUBase.h"
 
 static const InterfaceID IID_IL0CondDBProvider ( "IL0CondDBProvider", 1, 0 );
 
