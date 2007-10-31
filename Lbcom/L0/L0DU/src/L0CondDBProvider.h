@@ -1,4 +1,4 @@
-// $Id: L0CondDBProvider.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0CondDBProvider.h,v 1.2 2007-10-31 16:42:10 odescham Exp $
 #ifndef L0CONDDBPROVIDER_H 
 #define L0CONDDBPROVIDER_H 1
 
@@ -8,7 +8,6 @@
 // from LHCb
 #include "CaloDet/DeCalorimeter.h"
 #include "L0Interfaces/IL0CondDBProvider.h"            
-
 /** @class L0CondDBProvider L0CondDBProvider.h
  *  
  *

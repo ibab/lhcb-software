@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.2 2007-10-31 16:42:10 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -103,6 +103,7 @@ StatusCode L0DUAlg::execute() {
   if(sc.isFailure())return sc;
 
   // push Report and Config on TES
+  debug() <<"Push L0DUReport on TES" << endreq;
   if(m_writeOnTES){
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->report());
     put (report   , rootInTES() + m_reportLocation );//non-const

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.2 2007-10-31 16:42:10 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -12,8 +12,6 @@
 #include "L0Interfaces/IL0CondDBProvider.h"
 // from Event
 #include "Event/RawEvent.h"
-#include "Event/L0DUReport.h"
-#include "Event/L0DUBase.h"
 
 
 /** @class L0DUFromRawTool L0DUFromRawTool.h

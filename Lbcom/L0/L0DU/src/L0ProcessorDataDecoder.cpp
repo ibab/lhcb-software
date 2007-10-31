@@ -1,4 +1,4 @@
-// $Id: L0ProcessorDataDecoder.cpp,v 1.1 2007-10-31 15:04:46 odescham Exp $
+// $Id: L0ProcessorDataDecoder.cpp,v 1.2 2007-10-31 16:42:10 odescham Exp $
 // ============================================================================
 
 // from Gaudi
@@ -79,14 +79,16 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<std::string> dataLoc
       m_ok=false;
       break;
     }
-
+    verbose() << "inserting data from " << *it << endreq;
+    
     LHCb::L0ProcessorDatas* datas = get<LHCb::L0ProcessorDatas>( *it ) ;
     for(LHCb::L0ProcessorDatas::iterator itt=datas->begin();datas->end()!=itt;itt++){
-      m_dataContainer->insert(*itt);
-    }
-  }
+          m_dataContainer->insert(*itt);
+    } 
+  } 
+  verbose() << "ALL DATA INSERTED" << endreq;
   return m_ok;
-}
+} 
 
 // ============================================================================
 bool L0ProcessorDataDecoder::setL0ProcessorData(std::string dataLoc ){
