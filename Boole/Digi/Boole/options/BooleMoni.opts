@@ -36,7 +36,8 @@ Boole.BooleMemory.HistoDir    = "MemoryTool";
 
 // L0 Trigger
 MoniL0Seq.Members += { "L0CaloMonit" };
-MoniL0Seq.Members += { "L0Monitor" };
+MoniL0Seq.Members += { "L0DUReportMonitor/L0Monitor" };
+
 
 // Velo
 MoniVELOSeq.Members += {
@@ -79,11 +80,11 @@ MoniOTSeq.Members += { "OTTimeChecker" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"
 
 // Calorimeters
-#include "$CALOMONIDIGIOPTS/MoniDigi.opts"
-MoniCALOSeq.Members += { "CaloDigitMonitor/SpdMoni" };
-MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
-MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
-MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
+#include "$CALOMONIDIGIOPTS/CaloDigitChecker.opts"
+MoniCALOSeq.Members += { "CaloDigitChecker/SpdCheck" };
+MoniCALOSeq.Members += { "CaloDigitChecker/PrsCheck" };
+MoniCALOSeq.Members += { "CaloDigitChecker/EcalCheck" };
+MoniCALOSeq.Members += { "CaloDigitChecker/HcalCheck" };
 
 // Muon
 MoniMUONSeq.Members += { "MuonDigitChecker" };
