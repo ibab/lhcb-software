@@ -1,0 +1,8 @@
+! =============================================================================
+! Package     : L0Interfaces
+! Responsible : Olivier Deschamps odescham@in2p3.fr
+! =============================================================================
+
+! 2007-10-25 - Olivier Deschamps 
+ - NEW PACKAGE 
+ - contain all L0-related interfaces 

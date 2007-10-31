@@ -1,0 +1,11 @@
+<lcgdict>
+
+  <class name    = "IL0CondDBProvider.h"             />
+  <class name    = "IL0DUConfigProvider.h"           />
+  <class name    = "IL0DUEmulatorTool.h"             />
+  <class name    = "IL0DUFromRawTool.h"              />
+  <class name    = "IL0ProcessorDataDecoder.h"       />
+
+</lcgdict>
+
+

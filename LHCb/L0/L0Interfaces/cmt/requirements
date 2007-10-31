@@ -1,0 +1,24 @@
+# =============================================================================
+package           L0Interfaces
+version           v1r0
+
+# =============== structure ===================================================
+branches          cmt doc L0Interfaces
+
+# =============== dependencies ================================================
+use L0Event         v*    Event
+# =============== include directories =========================================
+apply_pattern	  install_more_includes more=L0Interfaces
+ 
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                           \
+              dictionary=L0Interfaces                                     \
+              headerfiles=$(L0INTERFACESROOT)/dict/L0InterfacesDict.h     \
+              selectionfile=$(L0INTERFACESROOT)/dict/L0InterfacesDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro L0InterfacesDict_use_linkopts $(use_linkopts)
+
+
