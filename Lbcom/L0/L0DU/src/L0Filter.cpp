@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.1 2007-07-11 12:53:09 pkoppenb Exp $
+// $Id: L0Filter.cpp,v 1.2 2007-10-31 15:04:46 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode L0Filter::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>(m_l0Location);
+  const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>(m_l0Location);
 
   setFilterPassed(false); // switch off by default
 

@@ -1,7 +1,40 @@
-! $Id: release.notes,v 1.66 2007-09-07 15:35:55 cattanem Exp $
+! $Id: release.notes,v 1.67 2007-10-31 15:04:37 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+! 2007-10-31 - Olivier Deschamps 
+ - Full review of the L0DU package
+ - new tools : 
+ src/L0CandidateTool.cpp
+R src/L0CandidateTool.h
+
+A src/L0CondDBProvider.cpp
+A src/L0CondDBProvider.h
+A src/L0DUAlg.cpp
+A src/L0DUAlg.h
+A src/L0DUConfigProvider.cpp
+A src/L0DUConfigProvider.h
+A src/L0DUEmulatorTool.cpp
+A src/L0DUEmulatorTool.h
+R src/L0DUFromRaw.cpp
+R src/L0DUFromRaw.h
+A src/L0DUFromRawAlg.cpp
+A src/L0DUFromRawAlg.h
+A src/L0DUFromRawTool.cpp
+A src/L0DUFromRawTool.h
+R src/L0DUMakerTools.cpp
+R src/L0DUMakerTools.h
+A src/L0DUReportMonitor.cpp
+A src/L0DUReportMonitor.h
+M src/L0Filter.cpp
+A src/L0ProcessorDataDecoder.cpp
+A src/L0ProcessorDataDecoder.h
+R src/L0DU.cpp
+R src/L0DU.h
+
+
 
 !========================== L0DU v7r7 2007-09-07 =========================
 ! 2007-09-06 - Julien Cogan

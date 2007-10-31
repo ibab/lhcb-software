@@ -1,5 +1,5 @@
 package		L0DU
-version 	v7r7
+version 	v7r8
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -9,10 +9,11 @@ include_path none
 set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v*    Event
-use DAQEvent    v*    Event
-use CaloDet     v*    Det
-use L0Muon      v*    L0
+use L0Event      v*    Event
+use DAQEvent     v*    Event
+use CaloDet      v*    Det
+use L0Muon       v*    L0
+use L0Interfaces v*    L0
 # ================ component library =====================================
 library		L0DU  *.cpp
 

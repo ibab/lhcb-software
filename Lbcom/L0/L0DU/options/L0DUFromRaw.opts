@@ -1,20 +1,21 @@
+//_________________________________________________________
+// 
+// DECODE L0DU BANK AND PUT L0DUReport on TES + MONITORING
+//_________________________________________________________
+//
+#include "$L0DUROOT/options/L0Sequence.opts"
 
-L0DUFromRaw.Channels = {  "L0electron_High" ,  "L0electron_Low",
-                          "L0photon_High"   ,  "L0photon_Low",
-                          "L0localPi0_High" ,  "L0localPi0_Low",
-                          "L0globalPi0_High",  "L0globalPi0_Low",
-                          "L0hadron_High"   ,  "L0hadron_Low",
-                          "L0muon_High"     ,  "L0muon_Low",
-                          "L0dimuon_High"   ,  "L0dimuon_Low"};
 
-L0DUFromRaw.Conditions = {"Total_Et", "Global_SPD", "Global_PU", "Peak2_Sum",
-                          "Electron_High" ,  "Electron_Low",
-                          "Photon_High"   ,  "Photon_Low",
-                          "Hadron_High"   ,  "Hadron_Low",
-                          "LocalPi0_High" ,  "LocalPi0_Low",
-                          "GlobalPi0_High",  "GlobalPi0_Low",
-                          "Muon_High"     ,  "Muon_Low",
-                          "Dimuon_High"   ,  "Dimuon_Low"};
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0romRaw" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
 
+
+
+// IF YOU RUN ON OLD L0DU RAWBANK FORMAT (version 0) AS FOR DC06 DATA PRODUCED SO FAR
+// YOU MUST UNCOMMENT THE FOLLOWING LINE
+// WARNING : YOU MUST KNOW WHAT YOU ARE DOING : THIS BREAKS THE TCK MECHANISM
+//-----------------------------------
+////// L0DUFromRaw.forcedTCK = 65535;
+//-----------------------------------
 
 

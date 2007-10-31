@@ -1,0 +1,17 @@
+// -----------------------------------------------------------------------------------
+// The Trigger Configuration Key (TCK) MECHANISM IS PARTIALLY IMPLEMENTED SO FAR
+// ==> ALL CONFIGURATION DEFINED VIA OPTION FILE HAVE THE SAME DEFAULT TCK (0xFFFF)
+// -----------------------------------------------------------------------------------
+
+L0DU.TCK = 65535;  // This is the default 
+
+// ==> UNCOMMENT YOUR PREFERD CONFIGURATION 
+
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi1.opts"
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi2.opts"
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi3.opts"
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi4.opts"
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi5.opts"
+//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi6.opts"
+
+#include "L0DUConfig_alg1_set0_lumi2.opts"

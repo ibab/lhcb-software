@@ -1,0 +1,23 @@
+//________________________________________________________________________
+// 
+// Replace the old bank format (L0DU v0/L0Muon) with the new one (L0DU v1)
+//_________________________________________________________________________
+//
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0DUBankSwap" };
+
+
+L0DUBankSwap.Members   = { "RemoveL0Banks",                          // remove L0 banks (except L0PU which can only be produced via MC in Boole)
+                           "GaudiSequencer/ReRunL0"};                // and re-run the whole L0 stuff
+
+ReRunL0.Members      = {"L0CaloAlg/L0Calo",       // Produce (NEW) rawBank
+                        "L0MuonAlg/L0Muon",       // Produce NEW rawBanks
+                        "PuVetoAlg/L0PuVeto",     // DOES NOT produce any bank
+                        "L0DUAlg/L0DU"};          // Produce NEW rawBank (LHCb::RawBank::L0DU v1)
+
+#include "$L0DUROOT/options/L0DUConfig.opts"
+#include "$L0MUONROOT/options/l0muonAlg.opts"
+
+
+
+RemoveL0Banks.bankTypes ={ "L0DU", "L0Calo", "L0Muon" };

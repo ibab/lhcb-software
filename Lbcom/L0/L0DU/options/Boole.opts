@@ -1,0 +1,6 @@
+
+L0DU.OutputLevel=3;
+L0DUFromRaw.OutputLevel = 3;
+
+
+#include "$L0DUROOT/options/L0DUConfig.opts"

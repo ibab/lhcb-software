@@ -1,14 +1,30 @@
-
+//-----------------------------------------------------
+// Run the whole L0 sequence including the L0Processors
+//-----------------------------------------------------
 L0.Members += { "L0CaloAlg/L0Calo", 
                 "L0MuonAlg/L0Muon",
                 "PuVetoAlg/L0PuVeto",
-                "L0DU"};
+                "L0DUAlg/L0DU"};
 #include "$L0MUONROOT/options/l0muonAlg.opts"
-
 // Do not create rawBank when re-running L0DU out of Boole
 L0DU.StoreInBuffer = false;   
 L0Calo.StoreInBuffer=false;
 L0Muon.StoreInBuffer=false;
 
-//
-MoniL0.Members += { "L0Monitor" };
+//---------------------
+// Monitoring sequence
+//--------------------
+MoniL0.Members += { "L0DUReportMonitor" };
+
+
+//------------------------
+// L0DU From Raw sequence
+//-----------------------
+L0FromRaw.Members += { "L0DUFromRawAlg" };
+
+
+
+
+// THE CONFIGURATIONS :
+
+#include "$L0DUROOT/options/L0DUConfig.opts"

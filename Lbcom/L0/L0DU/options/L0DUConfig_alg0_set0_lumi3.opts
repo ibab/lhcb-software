@@ -1,0 +1,172 @@
+//----------------------------------------------------------------------------------------------------------------------------
+//                                           L0DU Algorithm Configuration 
+//----------------------------------------------------------------------------------------------------------------------------
+//
+// The L0DU algorithm is configurable.
+//
+// It is based on 27 predefined 'L0DUElementaryData' received from the L0Processors :
+//-----------------------------------------------------------------------------------
+// The name of those ElementaryData are fixed (should be self-explained)
+//
+// From L0Calo : Et & Addresses :  Electron(Et) , Photon(Et) , Hadron(Et) , LocalPi0(Et) , GlobalPi0(Et) , Sum(Et), SPD(Mult)
+//                                 Electron(Add), Photon(Add), Hadron(Add), LocalPi0(Add), GlobalPi0(Add)
+//
+// From L0Muon : Pt & Sign & Addresses :  Muon1(Pt) , Muon2(Pt) , Muon3(Pt), DiMuon(Pt)
+//                                        Muon1(Add), Muon2(Add), Muon3(Add) 
+//                                        Muon1(Sgn), Muon2(Sgn), Muon3(Sgn)
+//
+// From L0PU   : peak content & position : :  PuPeak1(Cont), PUPeak2(Cont), PUHits(Mult)
+//                                            PuPeak1(Add),  PuPeak2(Add)
+//
+// 
+// ================================================================
+// The configuration of the L0DU Algorithm can defined in 4 steps :
+// ================================================================
+//
+// 1 - identify your algorithm
+//  --------------------------
+//          => you have to provide an unique 16-bit identifier (Trigger Configuration Key) and a description (string)
+//
+//  ToolSvc.L0DUConfig.TCK = 65535; 
+//  ToolSvc.L0DUConfig.Description =" TCK = 0xFFFF : my prefered configuration defined through options file"; 
+//
+//
+// 2- Describe your algorithm
+//  ---------------------------
+//
+// Then you have to defined successively the Data, the Conditions and the L0DU Channels.
+//
+//      => For all ot them the description is a vector<vector<string>> 
+//      => the syntax is generic  : 
+//
+//         ToolSvc.L0DUConfig.XXX = { { "tag=[value]", "tag=[value]", ...}
+//
+// For XXX=Data       allowed tags are : { 'name' , 'data', 'operator'
+// For XXX=Conditions allowed tags are : { 'name' , 'data', 'comparator', 'threshold'}
+// For XXX=Channels   allowed tags are : { 'name' , 'conditions', 'rate', 'enable', 'disable'}
+//
+// additional comments about the syntax
+// -------------------------------------
+//
+//  - the tags ('name', 'rate', 'data', 'comparator', ...) are case-insensitive but the [value] are not
+//  - Many protection are included in the parsing code so you should not be able to provide a mistyped configuration
+//  - If you are not hapy with the default separator marks [..] you can change it with whatever symbol you like :
+//
+//      ToolSvc.L0DUConfig.Separators = { "{" : "}" }; 
+//      ToolSvc.L0DUConfig.Separators = { "/" : "/" }; 
+//      ToolSvc.L0DUConfig.Separators = { "'" : "'" }; 
+//      ...
+//
+//      obviously those symbols must not be used in any tag or value string
+//
+//
+//
+// 2a - creation of new compound data (if needed)
+//  --------------------------------
+//               => DEFINITION : simple operation (+,-,&,^) on the predefined L0DUElementaryData
+//
+//               => Syntax : 
+//
+//   ToolSvc.L0DUConfig.Data += {  { "name=[DiMuon(Sgn)]"  , "data=[Muon1(Sgn)]",  "operator=[+]", "data=[Muon2(Sgn)]" }  };
+//
+// this defines a new data which is the sum of the sign  of the 2 highest-Pt muon :  'DiMuon(Sgn)' = Muon1(Sgn) + Muon2(Sgn) :
+//
+//
+// The following syntax is also valid :
+//   
+//   ToolSvc.L0DUConfig.Data += {  { "name=[DiMuon(Sgn)]"  , "operator=[+]",  "data= [Muon1(Sgn)] , [Muon2(Sgn)]" }  };
+//
+//
+//               => it is also possible to use a constant value in the operation, e.g.
+//
+//   ToolSvc.L0DUConfig.ConstData = {"CaloArea" : 3000 };  // The mask to retrieve the 2-bits calo-area within the 14-bit calo-address   
+//   ToolSvc.L0DUConfig.Data += {  { "name=[Electron(Area)]"  , "data=[Electron(Add)]", "operator=[&]", "data=[CaloArea]" }  };
+//
+//
+//
+// 2b - creation of the L0DUElementaryCondition
+//  ------------------------------------------
+//               => DEFINITION : result of the comparaison :  ( Data , Comparator[>,<,=,!=] , Threshold)
+//               => Syntax example :
+//
+//   ToolSvc.L0DUConfig.Conditions = {   
+//             { "name=[SumEt]"            , "data=[Sum(Et)]"          , "comparator=[>]" , "threshold=[250]"    },
+//             { "name=[SpdMult]"          , "data=[Spd(Mult)]"        , "comparator=[<]" , "threshold=[280]"   },
+//             { "name=[Electron,Inner]"   , "data=[Electron(Area)]"   , "comparator=[=]" , "threshold=[2000]"   },
+//             { "name=[Electron,HighEt]"  , "data=[Electron(Et)]"     , "comparator=[>]" , "threshold=[130]"    },
+//             { "name=[DiMuon,Opposite]"  , "data=[DiMuon(Sgn)]"      , "comparator=[=]" , "threshold=[1]"      },
+//             { "name=[DiMuon,HighPt]"    , "data=[DiMuon(Pt)]"       , "comparator=[>]" , "threshold=[37]"     } 
+//    };
+// 
+//
+//  Note the threshold value must be the DIGITAL value as in the L0DU board registers. 
+//  The L0DU code no longer support the conversion from MeV/GeV for Pt and Et (you have to do it yourself)
+//
+//
+// 2c - creation of the L0DUChannel
+//  ------------------------------
+//                => DEFINITION : this is the result of the 'AND' of several Elementary Conditions
+//                => The L0DU Channels decision are then OR'ed to provide the global L0 decision
+//                => Each channel can be :
+//                                - downscaled (AcceptRate in [0,100%] with 1% step : default if not specified = 100%) 
+//                                - disable : i.e. is not taken into acount in the global decision 
+//                                  (useful to monitoring a not-used channel) : default if not specified = ENABLE
+//               => Syntax :
+//
+//  ToolSvc.L0DUConfig.Channels ={ 
+//             {"name=[InnerElectron]"  , "rate=[20]"  , "conditions= [Electron,HighEt] && [Electron,Inner]  &&  [SpdMult] && [SumEt] " },
+//             {"name=[OppositeDiMuon]" , "rate=[100]",  "conditions= [DiMuon,HighPt]   && [DiMuon,Opposite] && [SpdMult] && [SumEt] " }
+//      };
+//
+//               => NB : the symbol '&&' in the conditions list is meaningless (could be nothing or whatever you like)
+//               => the following syntax is also valid :
+//
+//  ToolSvc.L0DUConfig.Channels ={ 
+//             {"name=[Common]"         , "rate=[100]  , "conditions= [SpdMult] && [SumEt] " , "disable=[TRUE]"};
+//             {"name=[InnerElectron]"  , "rate=[20]"  , "conditions= [Electron,HighEt] && [Electron,Inner]  &&  [Common]" },
+//             {"name=[OppositeDiMuon]" , "rate=[100]" , "conditions= [DiMuon,HighPt]   && [DiMuon,Opposite] &&  [Common]" }
+//      };
+//
+//              => the channel 'Common' is re-used as a list of conditions in the other channels
+//              => this implies that all Channel names MUST be different from all Condition names
+//              => this 'Common' channel will not be used in the global decision (disable=[TRUE] should also be enable=[FALSE])
+//
+//
+//----------------------------------------------------------------------------------------------------------------------------
+// Let's try now. Your prefered algorithm is :
+//----------------------------------------------------------------------------------------------------------------------------
+
+//-------------------------------- TCK = 0xFFFF
+ToolSvc.L0DUConfig.TCK = 65535;
+ToolSvc.L0DUConfig.Description =" TCK = 0xFFFF : Algorithm[0] Setting[0] lumi[3] - DC04/DC06 - gain : Calo[20] : Muon[40]"; 
+
+//----------------------------------------------- Compound data
+
+//-----------------------------------------------
+// 11 Elementary Conditions  
+ToolSvc.L0DUConfig.Conditions = { 
+  { "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
+  { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
+  { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     },
+  { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  // 5000 MeV 
+  { "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[109]"   },  // 2180 MeV
+  { "name=[Photon,HighEt]"   , "data=[Photon(Et)]"    , "comparator=[>]" , "threshold=[132]"   },  // 2640 MeV
+  { "name=[Hadron,HighEt]"   , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[217]"   },  // 4340 MeV
+  { "name=[LocalPi0,HighEt]" , "data=[LocalPi0(Et)]"  , "comparator=[>]" , "threshold=[199]"   },  // 3980 MeV
+  { "name=[GlobalPi0,HighEt]", "data=[GlobalPi0(Et)]" , "comparator=[>]" , "threshold=[170]"   },  // 3400 MeV
+  { "name=[Muon,HighPt]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[26]"    },  // 1040 MeV
+  { "name=[DiMuon,HighPt]"   , "data=[DiMuon(Pt)]"    , "comparator=[>]" , "threshold=[39]"    },  // 1560 MeV
+};
+//------------------
+// 7+1 L0-Channels 
+ToolSvc.L0DUConfig.Channels ={ 
+  {"name=[GEC]"            , "rate==[100]", "conditions= [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2] ", "DISABLE=[TRUE]" },
+  {"name=[Electron]"       , "rate==[100]", "conditions= [Electron,HighEt]    && [GEC] " }, 
+  {"name=[Photon]"         , "rate==[100]", "conditions= [Photon,HighEt]      && [GEC] " },
+  {"name=[Hadron]"         , "rate==[100]", "conditions= [Hadron,HighEt]      && [GEC] " },
+  {"name=[LocalPi0]"       , "rate==[100]", "conditions= [LocalPi0,HighEt]    && [GEC] " },
+  {"name=[GlobalPi0]"      , "rate==[100]", "conditions= [GlobalPi0,HighEt]   && [GEC] " },
+  {"name=[Muon]"           , "rate==[100]", "conditions= [Muon,HighPt]        && [GEC] " }, 
+  {"name=[DiMuon]"         , "rate==[100]", "conditions= [DiMuon,HighPt]      && [SumEt]"}, 
+};
+

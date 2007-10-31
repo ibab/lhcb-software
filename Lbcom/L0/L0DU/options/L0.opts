@@ -1,7 +1,14 @@
+//_________________________________________________________________
+// 
+// Run the whole L0 sequence (including L0Processors) + monitoring
+//________________________________________________________________
+//
+#include "$L0DUROOT/options/L0Sequence.opts"
+
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
-#include "$L0DUROOT/options/L0Sequence.opts"
+
 
 L0DU.WriteOnTES = true; // Write L0DUChannel on TES for monitoring purpose
 
