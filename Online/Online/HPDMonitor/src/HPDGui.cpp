@@ -1,11 +1,11 @@
-// $Id: HPDGui.cpp,v 1.38 2007-08-15 17:09:21 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.39 2007-10-31 08:33:23 frankb Exp $
 // Include files 
 
 #include <iostream>
-#include <fstream.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 #include <algorithm>
 
 // BOOST
