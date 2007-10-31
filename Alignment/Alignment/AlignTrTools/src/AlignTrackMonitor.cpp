@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.9 2007-10-30 11:22:35 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.10 2007-10-31 10:57:26 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -47,6 +47,10 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   GaudiHistoAlg ( name, pSvcLocator ),
   m_otTracker ( 0 ),
   m_itTracker ( 0 ) {
+
+  // Reserving space for some vectors
+  m_closeHits.reserve  ( 1000 );
+  m_sharedHits.reserve ( 1000 );
   
   // constructor
   // Clone finder
@@ -64,7 +68,7 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
                             m_itClustersPath = LHCb::STLiteClusterLocation::ITClusters );
   this -> declareProperty ( "OTTimesLocation",
                             m_otTimesPath = LHCb::OTTimeLocation::Default );
-  this -> declareProperty ( "TracksLocation", m_tracksPath = "Rec/Track/Tsa" );
+  this -> declareProperty ( "TracksLocation", m_tracksPath = "Rec/Track/Best" );
 
   // Are we using MC or real data?
   this -> declareProperty ( "MCData", m_mcData = true );
@@ -146,7 +150,12 @@ StatusCode AlignTrackMonitor::execute ( ) {
   m_otTimes = get<LHCb::OTTimes>( m_otTimesPath );
 
   // Get the hits close to any other
-  m_closeHits = getCloseHits ( );
+  m_closeHits.clear( );
+  getCloseHits ( );
+
+  // Get the hits shared by more than one track
+  m_sharedHits.clear( );
+  getSharedHits ( );
   
   // Get the association table 
   AsctTool associator( evtSvc(), m_tracksPath );
@@ -167,7 +176,7 @@ StatusCode AlignTrackMonitor::execute ( ) {
   // Loop over tracks - select some and make some plots
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
-    LHCb::Track& aTrack = *(*iTracks);
+    LHCb::Track& aTrack = **iTracks;
 
     if ( (iTracks == m_tracks->begin()) && m_mcData )
       if ( isGhostTrack( &aTrack ) )
@@ -179,7 +188,7 @@ StatusCode AlignTrackMonitor::execute ( ) {
     // Do not run code on clones
     LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
     for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
-      LHCb::Track& tr2 = *(*iTracks2);
+      LHCb::Track& tr2 = **iTracks2;
       if ( m_cloneFinder->areClones( aTrack, tr2 ) ) {
         isAClone = true;
         break;
@@ -244,8 +253,8 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   // Tracks Variables
   //**********************************************************************
   m_nSharedHits = 0;
-  m_fSharedHits = defValue;
-  m_nCloseHits = nNeighbouringHits( aTrack );
+  m_fSharedHits = 0;
+  m_nCloseHits = 0;
   m_nHoles = 0;
   m_nLadOverlaps = 0;
   m_nBoxOverlaps = 0;
@@ -295,24 +304,20 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
 
   // Loop over the nodes to get the hits variables
   std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
-  for ( ; iNodes!=aTrack->nodes().end(); ++iNodes ) {
-
-    const LHCb::Node& aNode = *(*iNodes);
-    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+  for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
 
     // Only loop on hits with measurement
-    if ( !aNode.hasMeasurement() ) continue;
-    if ( (aNode.measurement().type() != LHCb::Measurement::IT) &&
-         (aNode.measurement().type() != LHCb::Measurement::OT) ) {
-      Warning("Found measurement not in IT nor in OT!!!", StatusCode::SUCCESS, 1);
-      continue;
-    }
+    if ( !(**iNodes).hasMeasurement() ) continue;
+
+    const LHCb::Node& aNode = **iNodes;
+    LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
+    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
     LHCb::STChannelID theSTID;
     LHCb::OTChannelID theOTID;
     
     if ( aNode.measurement().type() == LHCb::Measurement::IT ) {
-      theSTID = aNode.measurement().lhcbID().stID();
+      theSTID = nodeID.stID();
       if ( msgLevel( MSG::VERBOSE ) )
         verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = (" 
                   << theSTID.station() << "," << theSTID.detRegion() << "," 
@@ -320,19 +325,32 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
                   << theSTID.strip() << ")" << endmsg;
     }
     else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
-      theOTID = aNode.measurement().lhcbID().otID();
+      theOTID = nodeID.otID();
       if ( msgLevel( MSG::VERBOSE ) )
         verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = (" 
                   << theOTID.station() << "," << theOTID.layer() << "," 
                   << theOTID.quarter() << "," << theOTID.module() << "," 
                   << theOTID.straw() << ")" << endmsg;
     }
+    else {
+      Warning("Found measurement not in IT nor in OT!!!", StatusCode::SUCCESS, 1);
+      continue;
+    }
 
     //**********************************************************************
     // Number of shared hits in the track
     //**********************************************************************
-    if ( isSharedHit( aTrack, &aNode ) )
+    if ( std::binary_search( m_sharedHits.begin(),
+                             m_sharedHits.end(), nodeID, lessByID() ) )
       ++m_nSharedHits;
+    //**********************************************************************
+
+    //**********************************************************************
+    // Number of hits close to the track
+    //**********************************************************************
+    if ( std::binary_search( m_closeHits.begin(),
+                             m_closeHits.end(), nodeID, lessByID() ) )
+      ++m_nCloseHits;
     //**********************************************************************
 
     //**********************************************************************
@@ -361,7 +379,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     std::vector<LHCb::Node*>::const_iterator iNodes2 = iNodes+1;
     for ( ; iNodes2 != aTrack->nodes().end(); ++iNodes2 ) {
 
-      const LHCb::Node& aNode2 = *(*iNodes2);
+      const LHCb::Node& aNode2 = **iNodes2;
       LHCb::FitNode* fNode2 = dynamic_cast<LHCb::FitNode*>(*iNodes2);
 
       // Only loop on hits with measurement
@@ -488,9 +506,7 @@ bool AlignTrackMonitor::isGhostTrack ( const LHCb::Track* aTrack ) {
 //===========================================================================
 // Get the IT clusters and OT times that are close to anything else
 //===========================================================================
-std::vector<LHCb::LHCbID> AlignTrackMonitor::getCloseHits ( ) {
-
-  std::vector<LHCb::LHCbID> closeHits;
+void AlignTrackMonitor::getCloseHits ( ) {
 
   const STLiteClusters* itClusters = get<STLiteClusters>( m_itClustersPath );
   const LHCb::OTTimes* otTimes = get<LHCb::OTTimes>( m_otTimesPath );
@@ -500,47 +516,20 @@ std::vector<LHCb::LHCbID> AlignTrackMonitor::getCloseHits ( ) {
   // Loop over all the IT clusters
   for ( ; iClus+1 != itClusters->end(); ++iClus )
     if ( isNeighbouringHit( (*iClus).channelID(), (*(iClus+1)).channelID() ) ) {
-      closeHits.push_back( (*iClus).channelID() );
-      closeHits.push_back( (*(iClus+1)).channelID() );
+      m_closeHits.push_back( (*iClus).channelID() );
+      m_closeHits.push_back( (*(iClus+1)).channelID() );
     }
   
   // Loop over all the OT times
   for ( ; iTimes+1 != otTimes->end(); ++iTimes )
     if ( isNeighbouringHit( (**iTimes).channel(), (**(iTimes+1)).channel()) ) {
-      closeHits.push_back( (**iTimes).channel() );
-      closeHits.push_back( (**(iTimes+1)).channel() );
+      m_closeHits.push_back( (**iTimes).channel() );
+      m_closeHits.push_back( (**(iTimes+1)).channel() );
     }
 
   // sorting and stripping out duplicates
-  std::sort( closeHits.begin(), closeHits.end(), lessByID() );
-  std::unique( closeHits.begin(), closeHits.end() );
-
-  return closeHits;
-}
-//===========================================================================
-
-
-//===========================================================================
-// Is track isolated or not?
-//===========================================================================
-int AlignTrackMonitor::nNeighbouringHits ( const LHCb::Track* aTrack ) {
-
-  int nNeighbouringHits = 0;
-  
-  //**********************************************************************
-  // For each IT/OT hit on track check if there are neighbouring clusters/times
-  //**********************************************************************
-  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();  
-  for ( ; iNodes != aTrack->nodes().end(); ++iNodes )
-    if ( (*iNodes)->hasMeasurement() ) {
-      LHCb::LHCbID nodeID = (*iNodes)->measurement().lhcbID();
-      if ( std::binary_search( m_closeHits.begin(),
-                               m_closeHits.end(), nodeID, lessByID() ) )
-        ++nNeighbouringHits;
-    }
-  //**********************************************************************
-
-  return nNeighbouringHits;
+  std::sort( m_closeHits.begin(), m_closeHits.end(), lessByID() );
+  std::unique( m_closeHits.begin(), m_closeHits.end() );
 }
 //===========================================================================
 
@@ -588,20 +577,37 @@ bool AlignTrackMonitor::isNeighbouringHit ( LHCb::OTChannelID timeID,
 //===========================================================================
 // Check if this hit is shared with (at least) one other track
 //===========================================================================
-bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* iTrack,
-                                      const LHCb::Node* aNode ) {
-  
-  LHCb::LHCbID measurementID;
-  if ( aNode->hasMeasurement() )
-    measurementID = aNode->measurement().lhcbID();
-  else
-    return false;
+void AlignTrackMonitor::getSharedHits ( ) {
 
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
-    const LHCb::Track& aTrack = *(*iTracks);
-    if ( &aTrack != iTrack )
-      if ( aTrack.isMeasurementOnTrack(measurementID) ) {
+    const LHCb::Track* aTrack = *iTracks;
+    std::vector<LHCb::LHCbID>::const_iterator iIDs = aTrack->lhcbIDs().begin();
+    for ( ; iIDs != aTrack->lhcbIDs().end(); ++iIDs ) {
+      const LHCb::LHCbID aID = *iIDs;
+      if ( isSharedHit ( aTrack, aID ) )
+        m_sharedHits.push_back ( aID );
+    }
+  }
+
+  // sorting and stripping out duplicates
+  std::sort( m_sharedHits.begin(), m_sharedHits.end(), lessByID() );
+  std::unique( m_sharedHits.begin(), m_sharedHits.end() );
+}
+//===========================================================================
+
+
+//===========================================================================
+// Check if this hit is shared with (at least) one other track
+//===========================================================================
+bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* theTrack,
+                                      const LHCb::LHCbID aID ) {
+  
+  LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
+  for ( ; iTracks != m_tracks->end(); ++iTracks ) {
+    const LHCb::Track* aTrack = *iTracks;
+    if ( aTrack != theTrack )
+      if ( aTrack->isOnTrack( aID ) ) {
         if ( msgLevel( MSG::DEBUG ) )
           debug() << "This hit is being shared" << endmsg;
         return true;
@@ -629,7 +635,7 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
   std::vector<LHCb::Node*>::const_iterator iNodesEnd = aTrack->nodes().end();
 
   for ( ; iNodes!=iNodesEnd; ++iNodes ) {
-    LHCb::Node& aNode = *(*iNodes);
+    LHCb::Node& aNode = **iNodes;
     LHCb::STChannelID aSTID;
     if ( aNode.hasMeasurement() )
       aSTID = aNode.measurement().lhcbID().stID();
@@ -668,7 +674,7 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
 
   for ( ; iNodes != iNodesEnd; ++iNodes ) {
 
-    const LHCb::Node& aNode2 = *(*iNodes);
+    const LHCb::Node& aNode2 = **iNodes;
     if ( !aNode2.hasMeasurement() )
       continue;
 
@@ -716,7 +722,7 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
   Gaudi::XYZPoint bFieldPoint;
   std::vector<LHCb::Node*>::const_iterator iNodes = hitsOverlapBox.begin();
   for ( ; iNodes != hitsOverlapBox.end(); ++iNodes ) {
-    const LHCb::Node& aNode = *(*iNodes);
+    const LHCb::Node& aNode = **iNodes;
     LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
     LHCb::State hitState;
@@ -807,7 +813,7 @@ StatusCode AlignTrackMonitor::fillHistos ( ) {
   // Various numbers related to the track
   plot ( m_nITHits, "NITHits", "NITHits", -0.5, 30.5, 31);
   plot ( m_nOTHits, "NOTHits", "NOTHits", -0.5, 40.5, 41);
-  plot ( m_nSharedHits, "NSharedHits", "NSharedHits", -0.5, 20.5, 21);
+  plot ( m_nSharedHits, "NSharedHits", "NSharedHits", -0.5, 30.5, 31);
   plot ( m_fSharedHits, "FSharedHits", "FSharedHits", -0.01, 1.01, 50);
   plot ( m_nCloseHits, "NNeighbouringHits", "NNeighbouringHits", -0.5, 50.5, 51);
   plot ( m_nHoles, "NHoles", "NHoles", -0.5, 20.5, 21);

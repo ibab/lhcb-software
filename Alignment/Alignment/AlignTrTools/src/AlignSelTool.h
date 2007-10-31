@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.6 2007-10-30 11:22:35 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.7 2007-10-31 10:57:26 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -118,6 +118,7 @@ private:
   //===========================================================================
   mutable const LHCb::Tracks* m_tracks;
   mutable std::vector<LHCb::LHCbID> m_closeHits;
+  mutable std::vector<LHCb::LHCbID> m_sharedHits;
   //===========================================================================
 
   //===========================================================================
@@ -139,10 +140,10 @@ private:
   // Getting the tracks variables
   //=============================================================================
   int getAllVariables ( const LHCb::Track& aTrack ) const;
+  void getSharedHits ( ) const;
   bool isSharedHit ( const LHCb::Track& aTrack,
-                     const LHCb::Node* aNode ) const;
-  std::vector<LHCb::LHCbID> getCloseHits ( ) const;
-  int nNeighbouringHits ( const LHCb::Track& aTrack ) const;
+                     const LHCb::LHCbID aID ) const;
+  void getCloseHits ( ) const;
   bool isNeighbouringHit ( LHCb::STChannelID clusID,
                            LHCb::STChannelID hitID ) const;
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,

@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2007-10-31 - Louis Nicolas
+ - In AlignSelTool, AlignTrackMonitor and AlignSaveTuple: changed the way nSharedHits is calculated to speed up things
+
 ! 2007-10-30 - Louis Nicolas
  - In AlignSelTool, AlignTrackMonitor and AlignSaveTuple: changed the way nNeighbouringHits is calculated to speed up things
 

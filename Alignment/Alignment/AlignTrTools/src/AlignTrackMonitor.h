@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.6 2007-10-30 11:22:35 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.7 2007-10-31 10:57:26 lnicolas Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -72,13 +72,12 @@ private:
   bool isGhostTrack ( const LHCb::Track* aTrack );
 
   // Check if the hit is being shared with (at least) one other Track
+  void getSharedHits ( );
   bool isSharedHit ( const LHCb::Track* aTrack,
-                     const LHCb::Node* aNode );
+                     const LHCb::LHCbID aID );
   
   // Is the track isolated?
-  std::vector<LHCb::LHCbID> getCloseHits ( );
-  int nNeighbouringHits ( const LHCb::Track* aTrack );
-
+  void getCloseHits ( );
   // Is the strip/straw trajectory too close to the track at z?
   bool isNeighbouringHit ( LHCb::STChannelID clusID,
                            LHCb::STChannelID hitID );
@@ -139,6 +138,7 @@ private:
   const STLiteClusters* m_itClusters;
   const LHCb::OTTimes* m_otTimes;
   mutable std::vector<LHCb::LHCbID> m_closeHits;
+  mutable std::vector<LHCb::LHCbID> m_sharedHits;
 
   // event variables
   int m_eventMultiplicity;

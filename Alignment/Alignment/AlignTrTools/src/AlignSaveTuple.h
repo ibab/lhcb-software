@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.2 2007-10-30 11:22:35 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.3 2007-10-31 10:57:26 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -76,14 +76,13 @@ private:
   bool isGhostTrack ( const LHCb::Track* aTrack );
   
   // Check if the hit is being shared with (at least) one other Track
+  void getSharedHits ( );
   bool isSharedHit ( const LHCb::Track* aTrack,
-                     const LHCb::Node* aNode );
+                     const LHCb::LHCbID aID );
   
   // Is the track isolated?
-  std::vector<LHCb::LHCbID> getCloseHits ( );
-  int nNeighbouringHits ( const LHCb::Track* aTrack );
-  
-  // Is the strip/straw trajectory too close to the track at z?
+  void getCloseHits ( );
+  // Is the strip/straw trajectory too close to the track?
   bool isNeighbouringHit ( LHCb::STChannelID clusID,
                            LHCb::STChannelID hitID );
   bool isNeighbouringHit ( LHCb::OTChannelID timeID,
@@ -139,6 +138,7 @@ private:
 
   const LHCb::Tracks* m_tracks;
   mutable std::vector<LHCb::LHCbID> m_closeHits;
+  mutable std::vector<LHCb::LHCbID> m_sharedHits;
   const LHCb::ODIN * odin;
   const STLiteClusters* m_itClusters;
   const LHCb::OTTimes* m_otTimes;
