@@ -13,8 +13,8 @@
       <import name="GaudiKernel/Point3DTypes.h"/>
       <import name="GaudiKernel/MsgStream"/>
 
-      <location name="Default" place="/Event/Trig/L0/Calo"/>
-      <location name="Full"    place="/Event/Trig/L0/FullCalo"/>
+      <location name="Default" place="Trig/L0/Calo"/>
+      <location name="Full"    place="Trig/L0/FullCalo"/>
       <constructor 
 	argList  = "int type, CaloCellID ID, int etCode, double et, Gaudi::XYZPoint cellCenter, double cellSize" 
 	desc     = "special constructor" 

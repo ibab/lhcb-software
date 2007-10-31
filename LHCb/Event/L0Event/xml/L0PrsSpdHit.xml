@@ -7,8 +7,8 @@
 <gdd>
   <package name="L0Event">
     <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit">
-      <location name = "Prs" place="/Event/Trig/L0/PrsRaw"/>
-      <location name = "Spd" place="/Event/Trig/L0/SpdRaw"/>
+      <location name = "Prs" place="Trig/L0/PrsRaw"/>
+      <location name = "Spd" place="Trig/L0/SpdRaw"/>
 
       <base     name = "KeyedObject&lt;int&gt;"/>
       &KeyedObject;

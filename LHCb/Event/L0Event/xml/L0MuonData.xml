@@ -11,7 +11,7 @@
       <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
-      <location name="Default"  place="/Event/Trig/L0/MuonData"/>
+      <location name="Default"  place="Trig/L0/MuonData"/>
       <constructor 
         argList="LHCb::MuonTileID pu, std::vector&lt;LHCb::MuonTileID&gt; ols, std::vector&lt;LHCb::MuonTileID&gt; neighs" 
 	initList = "KeyedObject&lt;LHCb::MuonTileID&gt;( pu ), m_ols( ols ), m_neighs( neighs )"
