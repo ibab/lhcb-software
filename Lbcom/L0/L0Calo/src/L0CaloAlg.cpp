@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.43 2007-07-02 14:00:49 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.44 2007-10-31 14:36:18 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -421,28 +421,28 @@ StatusCode L0CaloAlg::execute() {
   //=== Store the perValidation candidates, only in Raw Event
 
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloElectron, allElectrons[kk], 1 );
+    saveInRawEvent(  L0DUBase::CaloType::Electron, allElectrons[kk], 1 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk], 1 );
+    saveInRawEvent(  L0DUBase::CaloType::Photon, allPhotons[kk], 1 );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     hadron.setCandidate( m_hcalFe[hCard].etMax(), m_hcalFe[hCard].cellIdMax() );
-    saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron, 0 );
+    saveInRawEvent(  L0DUBase::CaloType::Hadron, hadron, 0 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Local, allPi0Local[kk], 1 );
+    saveInRawEvent(  L0DUBase::CaloType::Pi0Local, allPi0Local[kk], 1 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Global, allPi0Global[kk], 1 );
+    saveInRawEvent(  L0DUBase::CaloType::Pi0Global, allPi0Global[kk], 1 );
   }
 
   if ( 0 < sumEt ) {
-    int word = ( L0DUBase::Fiber::CaloSumEt << 24 ) + sumEt;
+    int word = ( L0DUBase::CaloType::SumEt << 24 ) + sumEt;
     m_rawOutput[0].push_back( word );
   }
-  int word = ( L0DUBase::Fiber::CaloSpdMult << 24 ) + m_spdMult;
+  int word = ( L0DUBase::CaloType::SpdMult << 24 ) + m_spdMult;
   m_rawOutput[1].push_back( word );
 
   if ( msgLevel( MSG::DEBUG ) ) {

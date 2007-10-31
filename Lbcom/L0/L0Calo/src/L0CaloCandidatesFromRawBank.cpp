@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.4 2007-06-06 14:59:26 cattanem Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.5 2007-10-31 14:36:18 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -93,14 +93,14 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
 
       if ( msgLevel( MSG::VERBOSE ) ) verbose() << format( "Data %8x ", cand );
 
-      if ( L0DUBase::Fiber::CaloSumEt == type ) {
+      if ( L0DUBase::CaloType::SumEt == type ) {
         int sumEt = cand & 0xFFFFFF;
         myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                sumEt, sumEt * m_etScale, dummy, 0. );
         outFull->add( myL0Cand );
         bestCand[type] = myL0Cand;
         if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
-      } else if ( L0DUBase::Fiber::CaloSpdMult == type ) {
+      } else if ( L0DUBase::CaloType::SpdMult == type ) {
         int mult = cand & 0xFFFFFF;
         myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                mult, 0., dummy, 0. );
@@ -109,7 +109,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
       } else {
         int rawId =  ( cand >>8 ) & 0xFFFF;
-        if ( 2 == type ) {
+        if ( L0DUBase::CaloType::Hadron == type ) {
           det = m_hcal;
           rawId |= 0xc000;  // HCAL
         } else {

@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.21 2007-03-01 16:40:26 cattanem Exp $
+// $Id: L0CaloAlg.h,v 1.22 2007-10-31 14:36:18 odescham Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -52,7 +52,7 @@ public:
    */
   void  saveCandidate( L0DUBase::Fiber::Type type, LHCb::L0ProcessorDatas* L0Calo ) {
     unsigned int word = ( 0x10000 | 
-                          (m_ID.all() << L0DUBase::Calo::Address::Shift) | 
+                          (m_ID.index() << L0DUBase::Calo::Address::Shift) | 
                           (m_et << L0DUBase::Calo::Et::Shift)      );  // According to EDMS 525625      
     LHCb::L0ProcessorData* temp = new LHCb::L0ProcessorData ( type, word );
     L0Calo->add( temp );

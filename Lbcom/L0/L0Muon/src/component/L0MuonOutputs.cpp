@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.5 2007-10-09 23:37:24 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.6 2007-10-31 14:40:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -419,8 +419,8 @@ StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
   unsigned long cu[4],su[4];
   unsigned long  index[4];
   for (int iq=0;iq<4;iq++) {
-    cu[iq] = L0DUBase::Muon::emptyMuonData ;
-    su[iq] = L0DUBase::Muon::emptyMuonData ;
+    cu[iq] = L0DUBase::EmptyData ;
+    su[iq] = L0DUBase::EmptyData ;
     index[iq] = 0;
   }
   

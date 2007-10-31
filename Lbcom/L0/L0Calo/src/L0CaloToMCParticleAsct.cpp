@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.8 2006-11-07 10:41:30 cattanem Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.9 2007-10-31 14:36:18 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -59,12 +59,12 @@ StatusCode L0CaloToMCParticleAsct::execute() {
   LHCb::L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     mcDigs = 0;
-    if ( ( L0DUBase::Fiber::CaloElectron  == (*cand)->type() ) ||
-         ( L0DUBase::Fiber::CaloPhoton    == (*cand)->type() ) ||
-         ( L0DUBase::Fiber::CaloPi0Local  == (*cand)->type() ) ||
-         ( L0DUBase::Fiber::CaloPi0Global == (*cand)->type() )   ) {
+    if ( ( L0DUBase::CaloType::Electron  == (*cand)->type() ) ||
+         ( L0DUBase::CaloType::Photon    == (*cand)->type() ) ||
+         ( L0DUBase::CaloType::Pi0Local  == (*cand)->type() ) ||
+         ( L0DUBase::CaloType::Pi0Global == (*cand)->type() )   ) {
       mcDigs = mcEcalDigs;
-    } else if ( ( L0DUBase::Fiber::CaloHadron  == (*cand)->type() )  ) {
+    } else if ( ( L0DUBase::CaloType::Hadron  == (*cand)->type() )  ) {
       mcDigs = mcHcalDigs;
     }
     if ( 0 != mcDigs ) {
