@@ -71,7 +71,8 @@ HltEndSeq.Members = {"HltSelectionDataToTes",
 
 
 
-HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
+//HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
+HltSelectionDataToTes.Copy+={"MuonAndTVelo", "DiMuonAndTVelo"};
 // HltSelectionDataToTes.CopyAll = true;
 
 // HltSummaryWriter.SaveAll = true;
