@@ -1,19 +1,15 @@
-! $Id: release.notes,v 1.73 2007-11-01 09:57:02 pkoppenb Exp $
+! $Id: release.notes,v 1.74 2007-11-01 10:21:45 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
 
-! 2007-10-31 - Patrick Koppenburg
- - increment to v16r5p2
-
+!======================== L0Event v16r6 2007-11-01 ===========================
 ! 2007-10-31 - Olivier Deschamps 	
  - add new class (L0DUConfig.xml)
- - improve L0DU-related classes (L0DUElementaryData/L0DUElementaryCondition/L0DUChannel/L0DUReport)
+ - improve L0DU-related classes 
+   (L0DUElementaryData/L0DUElementaryCondition/L0DUChannel/L0DUReport)
  - complete Event/L0DUBase.h
-
-!======================== L0Event v16r5p1 2007-10-17 =========================
-! 2007-10-17 - Marco Cattaneo
- - Remove leading "/Event/" from L0DUReportLocation
+ - Remove leading "/Event/" from TES locations
 
 !======================== L0Event v16r5 2007-09-07 ===========================
 ! 2007-07-11 - Julien Cogan	
