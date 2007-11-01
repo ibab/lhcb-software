@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-11-01 - Patrick Koppenburg
+ - Preparing for HLT v1r11 for benchmark
+ - L0.opts : new options for running L0
+
 ! 2007-10-30 - Sandra Amato
  - HltMuonAlleyConfSequence.opts: removed Pre-trigger and forward reco.
               changed the name of L0MuonAndTConf to TTrackAndDistCut.

@@ -12,9 +12,9 @@ ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
 // L0.Members += { "L0DUFromRaw"};
 
 // Emulate L0
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 #include "$L0DUROOT/options/L0Sequence.opts"
 // L0.Members += {"L0MuonCandidatesFromRaw"};
-L0DU.ResetConfiguration=true;
-#include "$L0DUROOT/options/L0DU-reconfigure.opts"
 
 L0Muon.WriteOnTES = true ;
+L0DU.WriteOnTES = true ;
