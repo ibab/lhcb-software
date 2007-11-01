@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.72 2007-10-31 14:31:15 odescham Exp $
+! $Id: release.notes,v 1.73 2007-11-01 09:57:02 pkoppenb Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v16r5p2
 
 ! 2007-10-31 - Olivier Deschamps 	
  - add new class (L0DUConfig.xml)
