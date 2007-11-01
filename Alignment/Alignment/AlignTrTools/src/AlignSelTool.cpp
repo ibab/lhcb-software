@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.10 2007-11-01 13:18:07 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.11 2007-11-01 13:26:56 lnicolas Exp $
 // Include files 
 
 // local
@@ -133,13 +133,11 @@ StatusCode AlignSelTool::initialize ( ) {
 StatusCode AlignSelTool::finalize ( ) {
   
   m_uniformDist.finalize( );
-
-  GaudiTool::finalize( );
-
+  
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "AlignSelTool finalized successfully" << endmsg;
   
-  return StatusCode::SUCCESS;
+  return GaudiTool::finalize( );
 }
 //=============================================================================
 
