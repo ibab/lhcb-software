@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.69 2007-11-01 10:29:58 cattanem Exp $
+! $Id: release.notes,v 1.70 2007-11-01 16:17:30 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
@@ -9,33 +9,36 @@
 
 ! 2007-10-31 - Olivier Deschamps 
  - Full review of the L0DU package
- - new tools : 
- src/L0CandidateTool.cpp
-R src/L0CandidateTool.h
-
-A src/L0CondDBProvider.cpp
-A src/L0CondDBProvider.h
-A src/L0DUAlg.cpp
-A src/L0DUAlg.h
-A src/L0DUConfigProvider.cpp
-A src/L0DUConfigProvider.h
-A src/L0DUEmulatorTool.cpp
-A src/L0DUEmulatorTool.h
-R src/L0DUFromRaw.cpp
-R src/L0DUFromRaw.h
-A src/L0DUFromRawAlg.cpp
-A src/L0DUFromRawAlg.h
-A src/L0DUFromRawTool.cpp
-A src/L0DUFromRawTool.h
-R src/L0DUMakerTools.cpp
-R src/L0DUMakerTools.h
-A src/L0DUReportMonitor.cpp
-A src/L0DUReportMonitor.h
-M src/L0Filter.cpp
-A src/L0ProcessorDataDecoder.cpp
-A src/L0ProcessorDataDecoder.h
-R src/L0DU.cpp
-R src/L0DU.h
+ - Implement the 'final'  rawBank format for L0DU (as in EDMS 868071)
+ - first step toward the implementation of the Trigger Configuration Key mechanism
+ - Add few missing part in the emulator to follow hardware processing
+ - Adapt to change in L0Event
+ - repackaging 
+ - new tools (interface in new package L0Interfaces) 
+       - src/L0CondDBProvider     --> provide L0DU conditions from condDB
+       - src/L0DUConfigProvider   --> provide L0DU configuration 
+       - src/L0DUEmulatorTool     --> Emulator processing
+       - src/L0DUFromRawTool      --> rawBank decoding
+       - src/L0ProcessorDataDecoder --> ProcessorData decoding
+ - new Algs :
+       - src/L0DUAlg              --> run emulator and produce rawBank (replace obsolete L0DU algo)
+       - src/L0DUFromRawAlg       --> decode rawBank and produce L0DUReport (replace obsolete L0DUFromRaw algo)
+       - src/L0DUReportMonitor    --> L0DUReport monitoring (replace the obsolete L0DUMonitor algo)
+ - obsolete tools and algs removed  (src/L0CandidateTool,src/L0DUMakerTools,src/L0DU,src/L0DUFromRaw,src/L0DUMonitor)
+ - new options :
+     - for configurations : 
+            L0DUConfig_alg0_set0_lumi1.opts   -> DC06 algorithm definition - default setting for lumi = 1
+            L0DUConfig_alg0_set0_lumi2.opts   -> DC06 algorithm definition - default setting for lumi = 2
+            L0DUConfig_alg0_set0_lumi3.opts   -> DC06 algorithm definition - default setting for lumi = 3
+            L0DUConfig_alg0_set0_lumi4.opts   -> DC06 algorithm definition - default setting for lumi = 4
+            L0DUConfig_alg0_set0_lumi5.opts   -> DC06 algorithm definition - default setting for lumi = 5
+            L0DUConfig_alg0_set0_lumi6.opts   -> DC06 algorithm definition - default setting for lumi = 6
+            L0DUConfig_alg1_set0_lumi2.opts   -> DC06 new algorithm definition (alg0 + true dimuon + muonNoGlog) - setting for lumi = 2
+     - all configuration are in L0DUConfig.opts
+     - L0.opts          -> rerun the whole L0 emulator stuff - produce L0DUReport on TES but no rawBank
+     - L0DUFromRaw.opts -> produce L0DUReport from rawBank
+     - L0BankSwap.opts  -> remove L0 banks and reproduce it from emulators
+      
 
 !========================== L0DU v7r7 2007-09-07 =========================
 ! 2007-09-06 - Julien Cogan
