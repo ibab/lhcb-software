@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.5 2007-10-30 18:10:48 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.6 2007-11-01 16:53:37 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -94,11 +94,13 @@ Particle2Vertex::Table* CopyParticle2PVLink::tableOfClones(const Particle2Vertex
 
   if (particles) {    
     // Step 2. Get TES of PVs from PVs related to original particles.
+    verbose() << "Found " << particles->size() << " particles" << endmsg;
     for (LHCb::Particle::Container::const_iterator iParts = particles->begin();
          iParts != particles->end();
          ++iParts) {
       // get related PVs and weight
       Particle2Vertex::Range range = table->relations(*iParts);
+      verbose() << "Found " << range.size() << " related PVs" << endmsg;
       for (Particle2Vertex::Range::const_iterator iRange = range.begin();
            iRange != range.end();
            ++iRange) {
@@ -128,8 +130,11 @@ Particle2Vertex::Table* CopyParticle2PVLink::tableOfClones(const Particle2Vertex
         }
       }
     }
+  } else {
+    error() << "No particles found in " << partLocation << endmsg;
   }
-
+  
+  
   return cloneTable;
 
 }
