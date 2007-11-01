@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.67 2007-10-31 15:04:37 odescham Exp $
+! $Id: release.notes,v 1.68 2007-11-01 09:55:45 pkoppenb Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v8r0
 
 ! 2007-10-31 - Olivier Deschamps 
  - Full review of the L0DU package
