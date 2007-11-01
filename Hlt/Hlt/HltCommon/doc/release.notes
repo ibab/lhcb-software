@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-11-1 Jose A. Hernando
+  - L0Entry.cpp: using channel IDs from the new L0, still hardwirted TODO!!!
+	  use in HltInit.TCKName = "UpdatedL0" to consider the new L0 channels IDs
+
 !========================== HltCommon v1r6p1 2007-10-28 ===================
 ! 2007-10-11 Jose A. Hernando
   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 

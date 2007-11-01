@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.7 2007-07-12 16:56:55 asatta Exp $
+// $Id: L0Entry.cpp,v 1.8 2007-11-01 16:36:48 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -55,15 +55,45 @@ StatusCode L0Entry::initialize() {
   typedef std::pair< std::string, int>  Config;  
   std::vector< Config > configs;
 
-  // TODO do not hardwire this!!!
-  configs.push_back( Config("electron",1) );
-  configs.push_back( Config("photon",3) );
-  configs.push_back( Config("localPi0",5) );
-  configs.push_back( Config("globalPi0",7) );
-  configs.push_back( Config("hadron",9) );
-  configs.push_back( Config("muon",11) );
-  configs.push_back( Config("dimuon",13) );
-  configs.push_back( Config("muonnoglob",15) );
+  // default configuration
+  // TODO; this needs to be solved with the TCK!!
+  std::vector<std::string> conf;
+  if (conf.size() == 0) {
+    const std::string& TCK = m_conf->retrieve<std::string>("TCKName");
+    if (TCK == "UpdatedL0") {
+      conf.push_back("GEC");
+      conf.push_back("electron");
+      conf.push_back("photon");
+      conf.push_back("hadron");
+      conf.push_back("localPi0");
+      conf.push_back("globalPi0");
+      conf.push_back("muon");
+      conf.push_back("dimuon");
+      conf.push_back("muonnoglob");
+    } else {
+      conf.push_back("GEC");
+      conf.push_back("electron");
+      conf.push_back("electron_low");
+      conf.push_back("photon");
+      conf.push_back("photon_low");
+      conf.push_back("localPi0");
+      conf.push_back("localPi0_low");
+      conf.push_back("globalPi0");
+      conf.push_back("globalPi0_low");
+      conf.push_back("hadron");
+      conf.push_back("hadron_low");
+      conf.push_back("muon");
+      conf.push_back("muon_low");
+      conf.push_back("dimuon");
+      conf.push_back("dimuon_low");
+      conf.push_back("muonnoglob");
+      conf.push_back("muonnoglob_low");
+    } 
+  }
+  
+  for (int i = 0; i < conf.size(); i++)
+    configs.push_back( Config(conf[i],i) );
+
   for (std::vector< std::string>::const_iterator it = values.begin();
        it != values.end(); ++it) {
     const std::string& name = *it;
@@ -101,9 +131,11 @@ StatusCode L0Entry::execute() {
       for (int i = 0; i<14; i+=1)
         if (m_l0->channelDecision(i)) fillHisto( m_histoL0, 1.*i , 1.);
     for (std::vector<int>::iterator it = m_l0Channels.begin();
-         it != m_l0Channels.end(); ++it)
+         it != m_l0Channels.end(); ++it) {
       ok = ( ok || m_l0->channelDecision( *it ) );
-    debug() << " accepted L0 channel trigger ?" << ok << endreq;
+      debug() << " accepted L0 channel trigger " << m_l0->channelName(*it ) 
+              << " ? " << m_l0->channelDecision(*it) << endreq;
+    }
     if (!ok) return stop(" No L0 channels decision");
   }
 
