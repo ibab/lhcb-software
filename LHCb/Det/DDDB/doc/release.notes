@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r2 2007-11-01 =============================
+! 2007-11-01 - Marco Cattaneo
+ - Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
+
 !========================== DDDB v1r1 2007-09-21 =============================
 ! 2007-09-21 - Marco Cattaneo
  - Change DC06.opts to pick up DC06-repro0710 tag, for DC06 reprocessing.
