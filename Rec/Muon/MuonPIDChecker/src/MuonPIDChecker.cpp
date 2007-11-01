@@ -76,14 +76,14 @@ StatusCode MuonPIDChecker::initialize() {
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
   m_NStation= basegeometry.getStations();
   m_NRegion = basegeometry.getRegions();
-  int i=0;
+  unsigned int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
     debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endreq;
     i++;
   }
   m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
-  for(int station = 0 ; station < m_NStation ; station++ ){
+  for(unsigned int station = 0 ; station < m_NStation ; station++ ){
     // z position of each station 
     m_stationZ.push_back(m_mudet->getStationZ(station));
   }
@@ -91,7 +91,7 @@ StatusCode MuonPIDChecker::initialize() {
   // Count events
 
   m_neventsTest = 0;
-  for (int i=0; i<4 ; i++){
+  for (unsigned int i=0; i<4 ; i++){
     m_cpresel[i] = 0;
     m_cisMuon[i] = 0;
     m_cDLL[i] = 0;
@@ -372,15 +372,29 @@ StatusCode MuonPIDChecker::finalize() {
   double Ef3[4];
   double misID, misIDDLL, misIDnShared;
 
-  for (int ityp = 0; ityp < 4; ityp++){
-    Ef1[ityp] = 100.*m_cisMuon[ityp]/m_cpresel[ityp];
-    Ef2[ityp] = 100.*m_cDLL[ityp]/m_cpresel[ityp];
-    Ef3[ityp] = 100.*m_cnShared[ityp]/m_cpresel[ityp];
+  for (unsigned int ityp = 0; ityp < 4; ityp++){
+    if( 0 < m_cpresel[ityp] ) {
+      Ef1[ityp] = 100.*m_cisMuon[ityp]/m_cpresel[ityp];
+      Ef2[ityp] = 100.*m_cDLL[ityp]/m_cpresel[ityp];
+      Ef3[ityp] = 100.*m_cnShared[ityp]/m_cpresel[ityp];
+    }
+    else {
+      Ef1[ityp] = -1.;
+      Ef2[ityp] = -1.;
+      Ef2[ityp] = -1.;
+    }
   }
-    misID = 100.*m_cmisID/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
-    misIDDLL = 100.*m_cmisIDDLL/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
-    misIDnShared = 100.*m_cmisIDnShared/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
-
+  unsigned int sumPresel = m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3];
+  if( 0 < sumPresel ) {
+    misID        = 100. * (double)m_cmisID        / (double)sumPresel;
+    misIDDLL     = 100. * (double)m_cmisIDDLL     / (double)sumPresel;
+    misIDnShared = 100. * (double)m_cmisIDnShared / (double)sumPresel;
+  }
+  else {
+    misID        = -1.;
+    misIDDLL     = -1.;
+    misIDnShared = -1.;
+  }
 
   info()<<"------------------Total MuonPID Efficiencies (%)------------------"
         <<  endreq;

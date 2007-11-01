@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.4 2007-08-15 16:13:41 miriamg Exp $
+// $Id: MuonPIDChecker.h,v 1.5 2007-11-01 15:29:08 cattanem Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -79,19 +79,21 @@ private:
   double m_DLLCut; ///< cut on DLL value used to define efficiency      
   double m_NSHCut; ///< cut on  nShared value used to define efficiency      
 
-  long           m_eventNumber,m_runNumber;
-  long           m_cpresel[4],m_cisMuon[4], m_cDLL[4], m_cnShared[4];
-  long           m_cmisID, m_cmisIDDLL, m_cmisIDnShared;
-  long           m_nTr, m_nPSTr, m_nPSGhosts, m_nHit;     // counters 
-  long           m_TrIsMuon,m_TrNShared;
-  double         m_TrMuonLhd,m_TrNMuonLhd,m_TrzDecay,m_TrzOrigin; 
-  double         m_Trp0,m_TrMCp0;
-  int            m_TrnLinks, m_TrType;
+  unsigned int m_eventNumber,m_runNumber;
+  unsigned int m_cpresel[4],m_cisMuon[4], m_cDLL[4], m_cnShared[4];
+  unsigned int m_cmisID, m_cmisIDDLL, m_cmisIDnShared;
+  unsigned int m_nTr, m_nPSTr, m_nPSGhosts, m_nHit;     // counters 
+  unsigned int m_TrIsMuon;
+  int          m_TrNShared;
+  double       m_TrMuonLhd,m_TrNMuonLhd,m_TrzDecay,m_TrzOrigin; 
+  double       m_Trp0,m_TrMCp0;
+  unsigned int m_TrnLinks;
+  int          m_TrType;
 
-  int m_neventsTest; ///< count events
+  unsigned int m_neventsTest; ///< count events
 
-  int m_NStation;     // Number of stations
-  int m_NRegion;      //Number of regions
+  unsigned int m_NStation;     // Number of stations
+  unsigned int m_NRegion;      //Number of regions
   //Names of the station
   std::vector<std::string> m_stationNames;
   // fill local arrays of pad sizes and region sizes
