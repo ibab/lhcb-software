@@ -20,7 +20,6 @@
       <import name="Event/L0DUElementaryData"/>
       <import name="Event/L0DUElementaryCondition"/>
       <import name="Event/L0DUChannel"/>
-      <import name="Event/IL0Candidate"/>
 
 
       <typedef
