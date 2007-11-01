@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.68 2007-11-01 09:55:45 pkoppenb Exp $
+! $Id: release.notes,v 1.69 2007-11-01 10:29:58 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r0 2007-11-01 =========================
 ! 2007-10-31 - Patrick Koppenburg
  - increment to v8r0
 
@@ -35,8 +36,6 @@ A src/L0ProcessorDataDecoder.cpp
 A src/L0ProcessorDataDecoder.h
 R src/L0DU.cpp
 R src/L0DU.h
-
-
 
 !========================== L0DU v7r7 2007-09-07 =========================
 ! 2007-09-06 - Julien Cogan
