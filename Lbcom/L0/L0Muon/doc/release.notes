@@ -1,11 +1,12 @@
-!  $Id: release.notes,v 1.40 2007-10-31 14:40:03 odescham Exp $
+!  $Id: release.notes,v 1.41 2007-11-01 09:56:06 pkoppenb Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v7r5
 
 ! 2007-10-31 - Olivier Deschamps 	
  - adapt to change in L0DUBase.h
-
 
 !========================= L0Muon v7r4 2007-10-09 ========================
 ! 2007-10-09 - Julien Cogan
