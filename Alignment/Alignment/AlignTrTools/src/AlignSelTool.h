@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.7 2007-10-31 10:57:26 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.8 2007-11-01 13:18:07 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -53,6 +53,8 @@ public:
   StatusCode AlignSelTool::finalize ( );
 
   virtual bool accept(const LHCb::Track& aTrack) const;
+
+  void handle( const Incident& incident );
   
 protected:
   
@@ -70,7 +72,6 @@ private:
   // Incident listener
   //===========================================================================
   mutable bool m_configured;
-  void handle( const Incident& incident );
   void initEvent ( ) const;
   //===========================================================================
 

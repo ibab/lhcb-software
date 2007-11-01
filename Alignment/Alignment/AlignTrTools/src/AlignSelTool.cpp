@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.9 2007-10-31 10:57:26 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.10 2007-11-01 13:18:07 lnicolas Exp $
 // Include files 
 
 // local
@@ -58,17 +58,17 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   declareProperty ( "IsolatedTrackNStrawsTolerance", m_nStrawsTol = 1       );
   declareProperty ( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2       );
 
-  declareProperty ( "TrackType",         c_trackType      = "ALL"           );
-  declareProperty ( "ModulesToAlign",    c_modulesToAlign = defValue        );
-  declareProperty ( "ConstantOccupancy", c_constOccup      = false           );
+  declareProperty ( "TrackType",          c_trackType      = "ALL"           );
+  declareProperty ( "ModulesToAlign",     c_modulesToAlign = defValue        );
+  declareProperty ( "ConstantOccupancy",  c_constOccup      = false           );
 
-  declareProperty ( "MultiplicityCut",   c_maxMulti       = abs(defValue)   );
-  declareProperty ( "MinMomentumCut",    c_minP           = defValue        );
-  declareProperty ( "Chi2PerDoFMaxCut",  c_maxChi2PerDoF  = abs(defValue)   );
-  declareProperty ( "Chi2ProbMinCut",    c_minChi2Prob    = defValue        );
-  declareProperty ( "NHolesMaxCut",      c_maxNHoles      = abs(defValue)   );
-  declareProperty ( "NSharedHitsMaxCut", c_maxNSharedHits = abs(defValue)   );
-  declareProperty ( "NCloseHitsMaxCut",  c_maxNCloseHits  = abs(defValue)   );
+  declareProperty ( "MultiplicityMaxCut", c_maxMulti       = abs(defValue)   );
+  declareProperty ( "MomentumMinCut",     c_minP           = defValue        );
+  declareProperty ( "Chi2PerDoFMaxCut",   c_maxChi2PerDoF  = abs(defValue)   );
+  declareProperty ( "Chi2ProbMinCut",     c_minChi2Prob    = defValue        );
+  declareProperty ( "NHolesMaxCut",       c_maxNHoles      = abs(defValue)   );
+  declareProperty ( "NSharedHitsMaxCut",  c_maxNSharedHits = abs(defValue)   );
+  declareProperty ( "NCloseHitsMaxCut",   c_maxNCloseHits  = abs(defValue)   );
 }
 //=============================================================================
 
@@ -186,8 +186,8 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
 
   // Cut on some variables
   if ( cutMultiplicity( ) || cutTrackP( ) || cutNHoles( ) ||
-       cutTrackChi2Prob( ) || cutNSharedHits( ) ||
-       cutNCloseHits( ) ) return false;
+       cutTrackChi2PerDoF( ) || cutTrackChi2Prob( ) || 
+       cutNSharedHits( ) || cutNCloseHits( ) ) return false;
 
   // Cut tracks "randomly" to get "constant" occupancy of detector
   if ( c_constOccup == true )
@@ -558,23 +558,18 @@ bool AlignSelTool::selectBoxOverlaps ( const LHCb::Track& aTrack ) const {
   std::vector<LHCb::LHCbID>::const_iterator iIDs = aTrack.lhcbIDs().begin();
   for ( ; iIDs!=aTrack.lhcbIDs().end(); ++iIDs ) {
     const LHCb::LHCbID& aID = *iIDs;
-
     // Only loop on IT LHCbIDs
     if ( !aID.isIT() ) continue;
     LHCb::STChannelID theSTID = aID.stID();
-
     std::vector<LHCb::LHCbID>::const_iterator iIDs2 = iIDs+1;
     for ( ; iIDs2 != aTrack.lhcbIDs().end(); ++iIDs2 ) {
       const LHCb::LHCbID& aID2 = *iIDs2;
-
       // Only loop on IT LHCbIDs
       if ( !aID2.isIT() ) continue;
-      LHCb::STChannelID theSTID2 = aID.stID();
-      
+      LHCb::STChannelID theSTID2 = aID2.stID();
       // Different hits in different box of same station
       if ( (theSTID.station() == theSTID2.station())
            && (theSTID.detRegion() != theSTID2.detRegion()) )
-        
         // Save only one overlap per station (up to three box overlaps per track)
         if ( theSTID.station() != overlapStation ) {
           overlapStation = theSTID.station();
@@ -707,7 +702,7 @@ void AlignSelTool::printCutValues( ) const {
   // Tracks going through IT Box Overlaps
   else if ( !c_trackType.compare( "BoxOverlaps" ) ) {
     if ( c_modulesToAlign == defValue )
-      info() << "          Will select tracks going through any box overlap"
+      info() << "          Will select tracks going through any box overlap" << endmsg
              << "          (no box overlap defined)" << endmsg;
     else if ( (c_modulesToAlign/10 > 0) && (c_modulesToAlign/10 <= m_nBoxes) &&
               (c_modulesToAlign%10 > 0) && (c_modulesToAlign%10 <= m_nBoxes) &&
