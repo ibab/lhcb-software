@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.29 2007-11-01 14:39:30 mneedham Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.30 2007-11-01 14:40:39 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -35,7 +35,7 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
   : TrackExtrapolator(type, name, parent),
-    m_materialLocator("SimplifiedMaterialLocator")
+    m_materialLocator("DetailedMaterialLocator")
 {
   //job options
   declareProperty( "ExtraSelector",
