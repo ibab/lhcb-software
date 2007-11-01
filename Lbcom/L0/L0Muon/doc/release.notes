@@ -1,7 +1,9 @@
-!  $Id: release.notes,v 1.41 2007-11-01 09:56:06 pkoppenb Exp $
-Package L0Muon
-Package manager: A.Tsaregorodtsev
+!  $Id: release.notes,v 1.42 2007-11-01 10:27:13 cattanem Exp $
+!Package L0Muon
+!Package manager: A.Tsaregorodtsev
+!-------------------------------------------------------------------------
 
+!========================= L0Muon v7r5 2007-11-01 ========================
 ! 2007-10-31 - Patrick Koppenburg
  - increment to v7r5
 
