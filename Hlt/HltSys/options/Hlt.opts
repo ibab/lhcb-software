@@ -27,6 +27,8 @@ HltInitSeq.Members = {"PatInitEvent",
                       "HltInit"  
 };
 
+// now use the updated L0 channel configuration
+HltInit.TCKName = "UpdatedL0";
 
 //
 // the Alleys sequencer

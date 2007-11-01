@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-11-01 - Jose A. Hernando
+  - L0.opts (resolving C conflict)
+  - new L0FromRaw.opts to read from the replaced L0 raw data!
+  - set the histograms to 0 period (do not make histograms in the alley)
+
 ! 2007-11-01 - Patrick Koppenburg
  - Preparing for HLT v1r11 for benchmark
  - L0.opts : new options for running L0

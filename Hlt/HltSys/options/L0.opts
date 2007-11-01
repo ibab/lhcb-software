@@ -1,15 +1,6 @@
-
 //---------------------------
 // LO
 //--------------------------
-
-ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
-
-// Read from Raw Event
-//------------------------------
-
-// Read L0 from RawBuffer
-// L0.Members += { "L0DUFromRaw"};
 
 // Emulate L0
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
@@ -18,3 +9,4 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 
 L0Muon.WriteOnTES = true ;
 L0DU.WriteOnTES = true ;
+

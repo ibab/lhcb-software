@@ -57,7 +57,7 @@ HltPho2DIPSelection.InputTracks2Name    = "PhoTightL0Calos";
 HltPho2DIPSelection.PrimaryVerticesName = "PV2D";
 HltPho2DIPSelection.OutputTracksName    = "HltPho2DIPSelection";
 HltPho2DIPSelection.FilterDescriptor = {"rIP,||[],0.10,3.0"};
-HltPho2DIPSelection.HistogramUpdatePeriod = 1;
+HltPho2DIPSelection.HistogramUpdatePeriod = 0;
 HltPho2DIPSelection.HistoDescriptor = {"rIP,400,-1.,3.",
                                        "rIPBest,400,-1.,3."};
 HltPho2DIPSelection.OutputLevel = 3;
@@ -76,7 +76,7 @@ HltPho3DIPSelection.InputTracksName     = "HltPhoRecoIPVelo";
 HltPho3DIPSelection.PrimaryVerticesName = "PV2D";
 HltPho3DIPSelection.OutputTracksName    = "HltPho3DIPSelection";
 HltPho3DIPSelection.FilterDescriptor = {"IP,||[],0.15,3.0"};
-HltPho3DIPSelection.HistogramUpdatePeriod = 1;
+HltPho3DIPSelection.HistogramUpdatePeriod = 0;
 HltPho3DIPSelection.HistoDescriptor = {"IP,400,-1.,3.",
                                        "IPBest,400,-1.,3."};
 HltPho3DIPSelection.OutputLevel = 3;
@@ -94,7 +94,7 @@ PatHltPhoRecoIPForward.DoCleanUp = false;
 PhoPreTrigger.InputTracksName     = "HltPhoRecoIPForward";
 PhoPreTrigger.OutputTracksName    = "PhoPreTrigger";
 PhoPreTrigger.FilterDescriptor = {"PT,>,1274."};
-PhoPreTrigger.HistogramUpdatePeriod = 1;
+PhoPreTrigger.HistogramUpdatePeriod = 0;
 PhoPreTrigger.HistoDescriptor =  {"PT,100,0.,8000.",
                                    "PTBest,100,0.,8000."};
 PhoPreTrigger.OutputLevel = 3;
