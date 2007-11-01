@@ -7,20 +7,20 @@ branches cmt doc options
 # LHCb High Level Trigger packages
 #=======================================================
 
-use HltCommon           v1r6p1  Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v1r7    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v1r4    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r3    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r5p1  Hlt   # Alessia Satta                DON'T TAKE HEAD
-use HltMuonAlley        v1r6    Hlt   # Alessia Satta                     updated
+use HltMuonAlley        v1r6    Hlt   # Alessia Satta 
 use HltCaloAlley        v1r3    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r2	Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r4    Hlt   # Johannes Albrecht
-use HltL0MuonConf       v1r3    Hlt   # Alessia Satta                     updated
+use HltL0MuonConf       v1r3    Hlt   # Alessia Satta   
 use HltHadL0Conf        v1r1    Hlt   # Jose Angel Hernando-Morata
 
 use HltSelections       v5r6    Hlt   # Patrick Koppenburg
-# use HltSelChecker       v5r1    Hlt   # Patrick Koppenburg
+use HltSelChecker       v5r2    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
@@ -28,21 +28,6 @@ use HltSelections       v5r6    Hlt   # Patrick Koppenburg
 
 use HltBase             v2r7   Hlt    # Jose Angel Hernando-Morata
 
-# commented out as not needed in the benchmark tests
-# use LoKiTrigger         v6r1   Phys   # Vanya Belyaev
-# use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
-
-#=============================================================
-# Stuff only there for the benchmark tests
-#=============================================================
-
-# use L0Event      v16r5p2 Event
-# use DAQEvent     v7r6p1 Event
-# use L0DU         v8r0 L0 
-# use L0Calo       v9r10 L0 
-# use L0Muon       v7r5 L0 
-# use L0Interfaces v1r0 L0 
-# use PuVeto       v7r2 L0
-
-# use GaudiObjDesc v10r4p1
+use LoKiTrigger         v6r1   Phys   # Vanya Belyaev
+use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
 
