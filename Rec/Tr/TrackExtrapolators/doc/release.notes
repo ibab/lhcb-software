@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-10-31 M Needham
+ - Bug fixes in TrackLongExtraSelector 
+
 ! 2007-10-05 - Wouter Hulsbergen
  - make sure to release tool handle in MasterExtrapolator::finalize
  - removed instantiation of unused function arguments to get rid of compilor warnings

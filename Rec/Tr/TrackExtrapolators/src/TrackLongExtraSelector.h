@@ -1,4 +1,4 @@
-// $Id: TrackLongExtraSelector.h,v 1.4 2006-05-17 06:42:52 mneedham Exp $
+// $Id: TrackLongExtraSelector.h,v 1.5 2007-11-01 14:39:30 mneedham Exp $
 #ifndef TrackLongExtraSelector_H
 #define TrackLongExtraSelector_H 1
 
@@ -35,6 +35,7 @@ private:
    /// Extrapolators...
   double m_shortDist;
   double m_startT;
+  double m_endVelo;
   /// extrapolator to use for short transport in mag field
   std::string m_shortFieldExtrapolatorName;
   std::string m_shortFieldExtrapolatorType;
