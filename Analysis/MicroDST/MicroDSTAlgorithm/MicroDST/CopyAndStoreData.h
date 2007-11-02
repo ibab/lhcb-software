@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.16 2007-11-02 15:18:44 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.17 2007-11-02 16:22:51 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -29,7 +29,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+public:
 
   /**
    * Copy an object of type T from the TES onto another TES location.
