@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.icpp,v 1.4 2007-10-30 15:00:04 jpalac Exp $
+// $Id: CopyAndStoreData.icpp,v 1.5 2007-11-02 15:18:44 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : CopyAndStoreData
 //
@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------
 
 //=============================================================================
-template <class T>
+template <class T, class CopyFunctor>
 const T* CopyAndStoreData::copyAndStoreObject( const std::string& from,
                                                const std::string& to   )
   
@@ -16,7 +16,8 @@ const T* CopyAndStoreData::copyAndStoreObject( const std::string& from,
   if (exist<T>( from ) ) {
     const T* data = get<T>( from );
     verbose() << "now copy information" << endmsg;
-    T* newData = new T(*data);
+    //    T* newData = new T(*data);
+    T* newData = CopyFunctor::copy(data);
     put (newData, to );
     verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
     return newData;

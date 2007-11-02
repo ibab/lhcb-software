@@ -1,4 +1,4 @@
-// $Id: CopyAndStoreData.h,v 1.15 2007-10-30 15:00:04 jpalac Exp $
+// $Id: CopyAndStoreData.h,v 1.16 2007-11-02 15:18:44 jpalac Exp $
 #ifndef COPYANDSTOREDATA_H 
 #define COPYANDSTOREDATA_H 1
 
@@ -42,7 +42,7 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    * @author Ulrich Kerzel
    */
-  template <class T>
+  template <class T, class CopyFunctor>
   const T* copyAndStoreObject( const std::string& from,
                                const std::string& to   );
   
