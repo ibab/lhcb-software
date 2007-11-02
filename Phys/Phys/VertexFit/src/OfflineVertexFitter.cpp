@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.28 2007-11-02 00:47:34 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.29 2007-11-02 17:08:52 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -2017,7 +2017,7 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   para2(0)=pos2->x();
   para2(1)=pos2->y();
   para2(2)=pos2->e();
-  cov2=pos1 -> covariance();
+  cov2=pos2 -> covariance();
   verbose() <<"Photon2 parameters: " <<para2<<endmsg;
   verbose() <<"Photon2 cov : " <<cov2<<endmsg;
 
