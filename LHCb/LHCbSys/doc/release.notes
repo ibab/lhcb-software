@@ -5,8 +5,92 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r1>2007-11-02 LHCbSys v23r1</A></H1><PRE>
+This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
+
+- Packages added:    L0Interfaces v1r0 - Interfaces for L0 tools
+- Packages modified: GaudiObjDesc v10r4p1, KernelSys v6r10, LHCbKernel v7r8,
+    EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, PhysEvent v11r4,
+    RecEvent v2r7, TrackEvent v4r8, DetSys v11r0, DetDesc v18r1p1, MuonDet v7r0,
+    STDet v3r7, DAQSys v3r6, CaloDAQ v4r1, LoKiCore v6r1p1, LHCbAlgs v2r12,
+    TrackInterfaces v3r10, TsaKernel v3r1, SimComponents v2r7, MDF v2r6,DDDB v1r2
+
+- in DDDB v1r2
+  . Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
+
+- In GaudiObjDesc v10r4p1
+  . Add a missing "inline" in string to type conversion functions
+  . Fix typo. The generated copy constructor was missing a comma for base classes
+    which were not KeyedObjects
+
+- In LHCbKernel v7r8
+  . Adapted interface of trajectories for 'generic' expansion parameter
+  . Add a dictionary needed by Panoramix
+
+- In DAQEvent v7r6p1
+  . Add the possibility to remove L0 banks in bankKiller.cpp
+
+- In L0Event v16r6
+  . Add new class (L0DUConfig.xml)
+  . Improve L0DU-related classes 
+    (L0DUElementaryData/L0DUElementaryCondition/L0DUChannel/L0DUReport)
+  . Complete Event/L0DUBase.h
+  . Remove leading "/Event/" from TES locations
+
+- In PhysEvent v11r4
+  . Add values to Particle::AdditionalInfo enum for jet-related studies
+
+- In RecEvent v2r7, TrackEvent v4r8
+  . Add generation of custom dictionary, and generate missing dictionaries
+
+- In TrackEvent v4r8
+  . Replace 'KsTrack' by 'Downstream' in track locations
+  . Add history for PatSeeding, PatMatch and PatDowsntream algorithms
+  . Add additional z position in TStation in StateParameters.h
+
+- In DetDesc v18r1p1
+  . Fix gcc 4.2 compilation problem (https://savannah.cern.ch/bugs/?30713)
+  . Fix doxygen warnings
+
+- In MuonDet v7r0
+  . Change to cope with new geometry description: half station layer has been 
+    added to structure description ( ASide ; C Side) as intermediate layer 
+    between station and region. Needs SQLDDDB v3r0 or greater
+  . Fix bug in listOfPhysChannels: check if hit was inside a gap was wrongly
+    performed. Effect is very small.
+
+- In STDet v3r7
+  . Add find box methods
+  . Clean up condition registration (DeSTLayer,DeSTBaseElement,DeSTSector)
+  . Add functionality to flag dead beetles, dead strips etc
+
+- In CaloDAQ v4r1
+  . Fix bug in CaloDataProvider.cpp
+
+- In LoKiCore v6r1p1
+  . Fix for gcc 4.0
+
+- In TrackInterfaces v3r10
+  . Add IPatDebugTTTool, IFastMomentumEstimate interfaces & PatKernel dependency
+
+- In TsaKernel v3r1
+  . Add TsaTStationHitManager class (previously in TsaAlgorithms)
+
+- In SimComponents v2r7
+  . Modifications to MCReconstructible to protect against unknown category
+  . Add option to MCParticleSelector to select only B decay products
+  . Change MCParticleSelector defaults to do no selection
+
+- In LHCbAlgs v2r12
+  . Adapted TrajPoca to interface change in trajectory
+  . Fixed bug in TrajPoca in specification of tolerance for validity of quadratic
+    approximation 
+
+- In MDF v2r6
+  . Add support for Darwin (but not in libMDF_RFIO)
+
 </PRE><H1><A NAME=v23r0>2007-10-11 LHCbSys v23r0</A></H1><PRE>
-This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
+This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 This version introduces the base classes for the Tf tracking framework, and
 removes the base classes for the previous framework
@@ -23,7 +107,7 @@ removes the base classes for the previous framework
   . Remove Tf:: from classes
 
 </PRE><H1><A NAME=v22r10>2007-10-11 LHCbSys v22r10</A></H1><PRE>
-This version uses Gaudi v19r5 and LCG_53a. Fully compatible with DC06 data
+This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r9, LHCbMath v2r3, DetSys v10r1, DetDesc v18r1,
     DetDescSvc v1r14, Magnet v3r6p1, VeloDet v12r2, DetDescChecks v4r4,
