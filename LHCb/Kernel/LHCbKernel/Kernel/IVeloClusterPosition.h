@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.10 2007-07-12 08:07:05 cattanem Exp $
+// $Id: IVeloClusterPosition.h,v 1.11 2007-11-02 14:07:32 szumlat Exp $
 #ifndef KERNEL_IVELOCLUSTERPOSITION_H 
 #define KERNEL_IVELOCLUSTERPOSITION_H 1
 
@@ -30,7 +30,7 @@ public:
   // a new tool interface, common for Velo and ST 
   // (defined in Kernel/SiPositonInfo.h)
   typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
-  typedef std::pair<double, double> Pair;
+  typedef std::pair<double, double> Direction;
   
   // Return the interface ID
   static const InterfaceID& interfaceID() {return IID_IVeloClusterPosition;}
@@ -61,7 +61,7 @@ public:
   */
   virtual toolInfo position(const LHCb::VeloCluster* aCluster,
                             const Gaudi::XYZPoint& aPoint,
-                            const Pair& aDirection) const=0;
+                            const Direction& aDirection)=0;
 
  /** calculate position of the VeloCluster
   * @param aCluster pointer to a VeloCLuster cluster
@@ -75,14 +75,14 @@ public:
   */
 
   virtual toolInfo position(const LHCb::VeloCluster* aCluster,
-                            const LHCb::StateVector& aState) const=0;
+                            const LHCb::StateVector& aState)=0;
 
 /** calculate fractional position
   * @param aCluster pointer to a VeloCLuster cluster
   * @return Pair - pair of doubles 
   * The method is very useful for resolution studies
   */
-  virtual Pair fracPosLA(const LHCb::VeloCluster* aCluster) const=0;
+  virtual double fracPosLA(const LHCb::VeloCluster* aCluster) const=0;
 
   /** return projected angle
   * @return double - value of projected angle in degree 
