@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2007-10-25 16:33:22 jpalac Exp $
+# $Id: requirements,v 1.32 2007-11-02 11:17:22 jpalac Exp $
 package AnalysisSys
 version v1r7
 
@@ -13,7 +13,7 @@ use  FlavourTagging             v7r3     Phys   # Marco Musy
 
 ####################################################################
 use  DaVinciMCTools     	v9r7     Phys   # Juan Palacios
-use  DaVinciAssociators         v9r2p2   Phys   # Philippe Charpentier
+use  DaVinciAssociators         v9r2p3   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r1     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r5     Phys   # Marco Musy
