@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : J. Hernando, P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v2r3>2007-11-02 Moore v2r3</A></H1><PRE>
+HLT benchmark version
+
 </PRE><H1><A NAME=v2r2>2007-03-09 Moore v2r2</A></H1><PRE>
 This version uses
  projects  Gaudi v19r2, LHCb v22r2, Lbcom v6r2, Rec v4r2, Hlt v1r3, Phys v6r0
