@@ -1,9 +1,9 @@
 package KernelSys
-version v6r9
+version v6r10
 
 branches doc cmt
 
-use LHCbKernel       v7r7   Kernel
+use LHCbKernel       v7r8   Kernel
 use LHCbMath         v2r3   Kernel
 use Relations        v5r2   Kernel
 use CaloKernel       v5r1   Calo
