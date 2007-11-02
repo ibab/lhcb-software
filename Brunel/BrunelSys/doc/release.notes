@@ -3,7 +3,35 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r10>2007-10-12 Brunel v32r0</A></H1><PRE>
+</PRE><H1><A NAME=v32r1>2007-11-02 Brunel v32r1</A></H1><PRE>
+This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
+ and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
+
+This is a development version with tracking pattern recognition based on the Tf
+framework.
+
+- New functionality
+  . Muon geometry now has concept of half stations to allow for misalignment
+    conditions (MuonDet v7r0, SQLDDDB v3r0)
+  . Ability to understand new L0DU bank format and Trigger Configuration Key
+    mechanism (L0DU v8r0, L0Calo v9r10, L0Muon v7r5, L0Event v16r6)
+  . Add PatDownstream, an adaptation to Tf of PatKShort
+    (TrackEvent v4r8, TrackInterfaces v3r10, TrackMCTools v2r14, TrackSys v4r11,
+     PatAlgorithms v3r1, TrackUtils v1r16, BrunelCheck.opts)
+
+- New tuning
+  . Replaced StateTraj with StateZTraj in projectors (to speed things up)
+    (LHCbKernel v7r8, TrackFitEvent v3r10, TrackProjectors v2r17)
+
+- Bug fixes
+  . Fixed in TrajPoca specification of tolerance for validity of quadratic
+    approximation (LHCbAlgs v2r12)
+  . Fix to PatMatch (PatAlgorithms v3r1)
+  . Fixes in TrackLongExtraSelector (TrackExtrapolators v2r15)
+  . Release tool handle in MasterExtrapolator::finalize (TrackExtrapolators v2r15)
+  . Protect against divide by zero when few events processed (MuonPIDChecker v2r2)
+
+</PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r0, Lbcom v6r11, Rec v5r0
  and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -13,11 +41,21 @@ recognition based on the Tf framework.
 Functionality and performance should be similar to v31r10, except that the 
 KsTrack container is not populated in this version (algorithm not yet migrated)
 
+</PRE><H1><A NAME=v31r11>2007-10-26 Brunel v31r11</A></H1><PRE>
+This version uses projects Gaudi v19r5, LHCb v22r10, Lbcom v6r10, Rec v4r11
+ and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7
+
+This is the production version for the DC06 reprocessing
+
+- Bug fixes
+  . Fixed unchecked status code when projecting reference, leading to crash in
+    TransportSvc (TrackFitter v2r20)
+
 </PRE><H1><A NAME=v31r10>2007-10-11 Brunel v31r10</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v22r10, Lbcom v6r10, Rec v4r10
  and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7
 
-This is the production version for the DC06 reprocessing
+This was the first production test version for the DC06 reprocessing
 
 - New features
   . Add new Calo monitoring (off by default)

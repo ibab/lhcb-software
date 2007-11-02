@@ -22,15 +22,6 @@ CheckPatSeq.Members += {
                         , "PatChecker"
                         };
 
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/RZVelo" };
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Velo" };
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/VeloTT" };
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Forward" };
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Tsa" };
-PatTrack2MCParticle.OtherLocations += {  "Rec/Track/Match" };
-
-
-
 // Rich reconstruction
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 

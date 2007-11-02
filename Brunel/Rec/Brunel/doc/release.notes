@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v32r1>2007-11-02 Brunel v32r1</A></H1><PRE>
+ - Update BrunelCheck.opts for changes in PatChecker v3r1
+ - Adapt ExpertCheck.opts to changed defaults in MCParticleSelector
+
 </PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
  - Update BrunelCheck.opts for use with Tf framework
 
