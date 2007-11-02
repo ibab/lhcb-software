@@ -3,11 +3,31 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+!========================== VeloTools v2r4 2007-11-01 ========================
+! 2007-11-01 - Tomasz Szumlak
+ - code update to match TELL1 board position format
+   seeding strip VeloChannelID as a cluster's centre strip
+   fractional position (0-1)
+   fractional error
+
+ - new tuning for the error parametrization for the pitch projection along
+   with previously provided one (user can decide to use one of the para
+   by changing option: ErrorParaType - default value (1) corresponds to
+   pitch para, value (2) to projected angle para
+
+ - user can also choose between different algorithms in order to compute
+   the projected angle (the projected angle can be accessed via the public
+   interface of the tool) by using option: CalculateExactProjAngle=true/false
+   the default value is false - meaning the simplified algorithm is used
+
+ - default method to use should be the one that accepts pointer to the
+   VELO cluster and reference to the state vector (this allows to gain
+   from more precise estimation of the error as a function of both
+   pitch and projected angle)
 
 !========================== VeloTools v2r3 2007-10-03 ========================
 ! 2007-10-03 - Marco Cattaneo
  - Do not access detector element in constructor, do it in initialize
-
 !========================== VeloTools v2r2 2007-07-23 ========================
 ! 2007-07-23 - Marco Cattaneo
  - Remove obsolete options file (uses options names inconsistent with code)
