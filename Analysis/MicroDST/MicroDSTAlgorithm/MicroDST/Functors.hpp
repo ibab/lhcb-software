@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.2 2007-10-25 14:22:23 jpalac Exp $
+// $Id: Functors.hpp,v 1.3 2007-11-02 15:18:21 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -62,6 +62,16 @@ namespace MicroDST {
     T* operator () (const T* item)    { return clone(item);   }
       
     static T* clone(const T* item) { return item->clone(); }
+  };
+
+  /**
+   */
+  template <class T>
+  struct BasicCopy 
+  {
+    T* operator () (const T* item)    { return copy(item);   }
+      
+    static T* copy(const T* item) { return new T(*item); }
   };
 
 
