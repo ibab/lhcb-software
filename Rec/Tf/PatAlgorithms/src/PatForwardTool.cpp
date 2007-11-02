@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.2 2007-11-02 10:33:51 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -372,7 +372,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     //== Add a new state in the T stations ...
     LHCb::State temp;
-    double dz = m_fwdTool->zAfter() - m_fwdTool->zReference();
+    double dz = m_fwdTool->zOutput() - m_fwdTool->zReference();
     double qOverP = m_fwdTool->qOverP( *itL );
     // set q/p in all of the existing states
     const std::vector< LHCb::State * > states = fwTra->states();
@@ -382,7 +382,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       (*iState)->setErrQOverP2(qOverP*qOverP*0.012*0.012);
     }
     temp.setLocation( LHCb::State::AtT );
-    temp.setState( (*itL).x( dz ), (*itL).y( dz ), m_fwdTool->zAfter(),
+    temp.setState( (*itL).x( dz ), (*itL).y( dz ), m_fwdTool->zOutput(),
                    (*itL).xSlope( dz ), (*itL).ySlope( dz ), qOverP );
 
     //== overestimated covariance matrix, as input to the Kalman fit

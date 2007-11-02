@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== PatAlgorithms v3r1 2007-11-02 ====================
+! 2007-11-02 - Marco Cattaneo
+ - Adapt PatForwardTool to interface change of PatFwdTool, was not compiling...
+
 ! 2007-10-30 - Stephanie Hansmann-Menzemer
  - bug fix in PatMatch
  - add switch for z position of output state for PatSeeding and PatForward 
