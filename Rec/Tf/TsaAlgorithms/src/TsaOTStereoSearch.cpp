@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.3 2007-08-18 16:51:59 jonrob Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.4 2007-11-02 14:56:21 albrecht Exp $
 
 #include <algorithm>
 
@@ -99,6 +99,10 @@ StatusCode OTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
             SeedHit* hit2 = (*it2);
             double sy = (hit2->y()-y1w) / (hit2->z()-z1);
             if ( fabs( sy - y1w/z1 ) > m_syCut ) continue;
+            
+            //check if hits are within prediction
+            if ( sy > m_syMax ) continue;
+            if ( sy < m_syMin ) continue;
 
             // zero the tmp vector
             select.clear();

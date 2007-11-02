@@ -53,6 +53,8 @@ namespace Tf
 
 
       double m_syCut;
+      double m_syMin;
+      double m_syMax;
       double m_win;
       double m_nWin;
       double m_yTol;
@@ -63,6 +65,7 @@ namespace Tf
     private:
 
       int m_sector;
+      double m_nSigmaTy;
       std::string m_seedHitLocation;
 
     };

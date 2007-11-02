@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.4 2007-10-12 09:55:14 cattanem Exp $
+// $Id: TsaStereoBase.cpp,v 1.5 2007-11-02 14:56:03 albrecht Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -28,6 +28,7 @@ StereoBase::StereoBase(const std::string& type,
   m_fitLine(NULL)
 {
   declareProperty("sector", m_sector = -1);
+  declareProperty("nSigmaTy", m_nSigmaTy = 10. );
 }
 
 
@@ -50,6 +51,9 @@ StatusCode StereoBase::initialize()
     return Error("Failed to initialize",sc);
   }
 
+  m_syMin = -0.3;
+  m_syMax = 0.3;
+
   m_fitLine = new SeedLineFit(msg(),TsaConstants::z0, TsaConstants::sth);
 
   // sector must be set
@@ -59,8 +63,21 @@ StatusCode StereoBase::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode StereoBase::execute(LHCb::State& , std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] ){
-  return execute(seeds, hits);
+StatusCode StereoBase::execute(LHCb::State& aState, std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] ){
+
+  // pick up the errors
+  const double errTy = sqrt(aState.errTy2());
+  m_syMin = aState.ty() - m_nSigmaTy * errTy;
+  m_syMax = aState.ty() + m_nSigmaTy * errTy;
+  
+  // call the method
+  StatusCode sc = execute(seeds, hits);
+  
+  // where we started..
+  m_syMax = 0.3;
+  m_syMin = -0.3;
+  
+  return sc;
 }
 
 StatusCode StereoBase::execute(std::vector<SeedTrack*>& , std::vector<SeedHit*>* ){

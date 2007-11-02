@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.5 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.6 2007-11-02 14:56:27 albrecht Exp $
 
 #include <algorithm>
 
@@ -95,6 +95,10 @@ StatusCode ITStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
             double sy = (hit2->y()-y1w) / (hit2->z()-z1);
             if ( fabs( sy - y1w/z1 ) > m_syCut ) continue;
 
+            //check if hits are within prediction
+            if ( sy > m_syMax ) continue;
+            if ( sy < m_syMin ) continue;
+            
             select.clear();
             for ( int lay = lay1; lay <= lay2; ++lay ) {
               for ( std::vector<SeedHit*>::iterator it = yHits[lay].begin(); yHits[lay].end() != it; ++it ) {
