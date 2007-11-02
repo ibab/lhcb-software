@@ -8,4 +8,4 @@ from Gaudi.Configuration import *
 importOptions('../options/v200601.opts')
 
 ApplicationMgr( AppName    = 'Boole',
-                AppVersion = 'v14r6' )
+                AppVersion = 'v14r7' )

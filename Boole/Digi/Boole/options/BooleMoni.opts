@@ -64,12 +64,16 @@ MCP2ITMCHitAlg.OutputData = "/Event/MC/Particles2MCITHits";
 MoniITSeq.Members += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
                       ,"STEffChecker/ITEffChecker" };
 ITEffChecker.MCParticleSelector.zOrigin = 50.0;
+ITEffChecker.MCParticleSelector.pMin = 1.0*GeV;
+ITEffChecker.MCParticleSelector.betaGammaMin = 1.0;
 
 MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
 MCP2TTMCHitAlg.OutputData = "/Event/MC/Particles2MCTTHits";
 MoniTTSeq.Members += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
                       ,"STEffChecker/TTEffChecker" };
 TTEffChecker.MCParticleSelector.zOrigin = 50.0;
+TTEffChecker.MCParticleSelector.pMin = 1.0*GeV;
+TTEffChecker.MCParticleSelector.betaGammaMin = 1.0;
 
 // OT
 MoniOTSeq.Members += { "MCOTDepositMonitor" };

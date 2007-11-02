@@ -3,6 +3,32 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r7>2007-11-02 Boole v14r7</A></H1><PRE>
+This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12
+ and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v32r1 or greater
+
+- Persistency changes
+  . L0DU Raw bank format is now as described in EDMS 868071 (L0DU v8r0)
+
+- New features
+  . Muon geometry now has concept of half stations to allow for misalignment
+    conditions (MuonDet v7r0, MuonBackground v2r5, SQLDDDB v3r0)
+  . Completely revised implementation of L0DU, including first implementation of
+    the Trigger Configuration Key mechanism, improved hardware emulation, new
+    default settings for various luminosities
+    (L0DU v8r0, L0Calo v9r10, L0Muon v7r5, L0Event v16r6, Boole.opts)
+
+- Bug fixes
+  . In listOfPhysChannels, check if hit was inside a gap was wrongly performed.
+    Effect is very small (MuonDet v7r0)
+
+- Packaging changes 
+  . Change some monitoring algorithms names to avoid clash with another package
+    (CaloMoniDigi v2r3, Boole.opts)
+
 </PRE><H1><A NAME=v14r6>2007-10-10 Boole v14r6</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v22r10, Lbcom v6r10
  and DDDB v1r* (SQLDDDB v2r3 or greater), ParamFiles v7r0, FieldMap v4r7

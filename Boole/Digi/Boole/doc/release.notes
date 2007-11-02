@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r7>2007-11-01 Boole v14r7</A></H1><PRE>
+ - Adapt Boole.opts and BooleMoni.opts to changes in L0DU
+ - Adapt BooleMoni.opts to new algorithm names in CaloMoniDigi
+ - Adapt BooleMoni.opts to changed defaults in MCParticleSelector
+
 </PRE><H1><A NAME=v14r6>2007-10-10 Boole v14r6</A></H1><PRE>
  - Fix L0Muon options to not run RawBank decoder
  - Add options/v200601.py, to execute Boole from Python shell
