@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.15 2007-02-24 14:27:15 pkoppenb Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.16 2007-11-02 00:38:14 xieyu Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -31,6 +31,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
+  bool isResonance(const LHCb::Particle*) const;
 
 private:
   // Properties

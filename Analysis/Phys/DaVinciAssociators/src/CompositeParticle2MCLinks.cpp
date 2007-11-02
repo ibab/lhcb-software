@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.20 2007-10-18 16:55:34 xieyu Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.21 2007-11-02 00:38:14 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -215,16 +215,16 @@ StatusCode CompositeParticle2MCLinks::execute() {
       }// if !mcp
 
 
-      if( !foundDirectAssociation && NULL != (*pIt)->endVertex()) {
+      if( !foundDirectAssociation && (*pIt)->daughters().size() != 0) {
         // If the particle has no daughters, useless to check matching daughters
         for (MCParticles::iterator m = mcParts->begin(); mcParts->end() != m; ++m) {
           if( associateTree(*pIt,*m)) break;
         }
       } //if
 
-      if(!foundDirectAssociation && !(*pIt)->endVertex()) {
+      if( !foundDirectAssociation && (*pIt)->daughters().size() == 0) {
         _verbose << "Particle " << objectName(*pIt)
-                 << " not considered: no direct asct and no endVertex"
+                 << " not considered: no direct asct and no daughters""
                  << endreq;
       } //if
 
@@ -262,8 +262,7 @@ CompositeParticle2MCLinks::associateTree(const Particle *p,
                << m->key() << endreq;
       return true;
     }
-    const Vertex *v = p->endVertex();
-    if (v==0) {
+    if(p->daughters().size()==0) {
 #ifdef DEEPDEBUG
       _verbose << "     No daughter, check underlying particle associator" 
                << endreq;
@@ -323,22 +322,16 @@ CompositeParticle2MCLinks::associateTree(const Particle *p,
 bool CompositeParticle2MCLinks::addDaughters( const Particle* p,
                                 std::vector<const Particle*>& daughters) const
 {
-  const Vertex* v = p->endVertex();
-  if ( v != 0 ) {
-    //change to make it work for the case outgoingParticles()!=daughters()
-    //const SmartRefVector<Particle>& dau = v->outgoingParticles();
     const SmartRefVector<Particle>& dau = p->daughters();
     for (SmartRefVector<Particle>::const_iterator k = dau.begin();
          k != dau.end(); ++k ) {
 
       // if resonances should be skipped add daughters instead
-      /*      if ( (*k)->isResonance() && 
+            if (isResonance(*k) &&
            m_skipResonances && addDaughters ( *k, daughters ) );
-	   else */ daughters.push_back( *k );
+           else  daughters.push_back( *k );
     }
     return true;
-  }
-  return false;
 }
 
 bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
@@ -366,3 +359,10 @@ bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
   }
   return false;
 }
+
+bool CompositeParticle2MCLinks::isResonance(const LHCb::Particle* part) const {
+  const int id( part->particleID().pid() );
+  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
+  return partProp->lifetime() < m_maxResonanceLifeTime ? true : false;
+}
+
