@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 !======================= TsaAlgorithms v3r1 2007-11-02 ======================
+! 2007-11-02 - Marco Cattaneo
+ - Adapt other classes to change below, they were not compiling....
+
 ! 2007-23-10 - Stephanie Hansmann-Menzemer
  - Move TsaTStationHitManager to TsaKernel, so that it can be used
    outside TsaAlgorithms (e.g. HLT)

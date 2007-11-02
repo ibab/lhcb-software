@@ -1,11 +1,11 @@
-// $Id: TsaITXSearch.h,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaITXSearch.h,v 1.5 2007-11-02 10:48:46 cattanem Exp $
 #ifndef _TsaITXSearch_H
 #define _TsaITXSearch_H
 
 #include <string>
 
 #include "TsaXSearchBase.h"
-#include "TsaTStationHitManager.h"
+#include "TsaKernel/TsaTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
 #include "TfTsHitNumMap.h"
 

@@ -9,10 +9,10 @@
 #include "TsaKernel/TsaSeedingHit.h"
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaConstants.h"
+#include "TsaKernel/TsaTStationHitManager.h"
 
 #include "TsaXSearchBase.h"
 #include "SeedParabolaFit.h"
-#include "TsaTStationHitManager.h"
 
 #include "TfTsHitNumMap.h"
 

@@ -13,18 +13,16 @@
 
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaSeedingHit.h"
-//#include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/TsaConstants.h"
+#include "TsaKernel/TsaTStationHitManager.h"
 
-#include "TsaTStationHitManager.h"
 #include "TfKernel/RecoFuncs.h"
 
 #include "SeedLineFit.h"
 #include "SeedParabolaFit.h"
 #include "TfTsHitNumMap.h"
 
-//#include "Kernel/STDataFunctor.h"
 #include "Kernel/STChannelID.h"
 
 #include "STDet/DeSTDetector.h"

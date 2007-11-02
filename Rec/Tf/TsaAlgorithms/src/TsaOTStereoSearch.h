@@ -8,8 +8,7 @@
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
 
-#include "TsaTStationHitManager.h"
-
+#include "TsaKernel/TsaTStationHitManager.h"
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedFun.h"
 #include "TsaKernel/TsaConstants.h"

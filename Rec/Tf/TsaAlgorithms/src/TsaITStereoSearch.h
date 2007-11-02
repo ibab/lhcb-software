@@ -5,7 +5,7 @@
 #include <string>
 
 #include "TsaStereoBase.h"
-#include "TsaTStationHitManager.h"
+#include "TsaKernel/TsaTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
 #include "TfTsHitNumMap.h"
 
