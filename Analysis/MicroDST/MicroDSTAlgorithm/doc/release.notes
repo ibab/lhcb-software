@@ -1,7 +1,22 @@
-! $Id: release.notes,v 1.35 2007-11-02 15:20:05 jpalac Exp $
+! $Id: release.notes,v 1.36 2007-11-02 16:29:01 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-11-02 - Juan PALACIOS
+
+ - Added src/CopyRelatedMCParticles{.cpp, .h}
+  . Skeleton implementation of IDoSomethingToParticle. Purpose is to
+    find and store all the MCParticles related to a given Particle.
+ - Added src/CopyMCHeader{.cpp, .h}
+  . Simple CopyAndStoreData algorithm with specialised copy functor to
+    remove MC primary vertices and store only SmartRefs to originals.
+ - MicroDST/CopyAndStoreData.h
+  . Make protected methods public.
+ - Added MicroDST/IDoSomethingToParticle.h
+  . Simple tool interface to manipulate particles and store related 
+    information on local store. Implementations must be owned by a
+    CopyAndStoreData instance.
 
 ! 2007-11-02 - Juan PALACIOS
  - MicroDST/Functors.hpp
