@@ -3,9 +3,11 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!======================= TsaKernel v3r1 2007-11-02 ==========================
 ! 2007-10-23 - Stephanie Hansmann-Menzemer
  - add TsaTStationHitManager class (before it was in TsaAlgorithms, thus not
-  available outside TsaAlgorithms)
+   available outside TsaAlgorithms)
 
 !======================= TsaKernel v3r0 2007-10-11 ==========================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
