@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== SimComponents v2r7 2007-11-02 ========================
+! 2007-11-02 - Marco Cattaneo
+ - Fix units in printout of MCParticleSelector cuts
+
 ! 2007-10-29 M. Needham
  - Modifications to MCReconstructible to protect against unknown category
  - Change MCParticleSelector defaults to do no selection

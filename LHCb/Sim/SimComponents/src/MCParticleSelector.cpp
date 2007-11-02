@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.9 2007-10-30 15:17:07 mneedham Exp $
+// $Id: MCParticleSelector.cpp,v 1.10 2007-11-02 14:03:58 cattanem Exp $
 
 #include "Event/MCParticle.h"
 
@@ -42,7 +42,7 @@ StatusCode MCParticleSelector::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // printout selection criteria
-  info() << "MCParticle Momentum cut     : " << m_pMin << " GeV/c < P < " << m_pMax << " GeV/c" << endreq;
+  info() << "MCParticle Momentum cut     : " << m_pMin/Gaudi::Units::GeV << " GeV/c < P < " << m_pMax << " GeV/c" << endreq;
   info() << "           Beta * gamma cut : " << m_betaGammaMin << " < beta*gamma" << endreq;
   info() << "           Eta cut          : " << m_etaMin << " < P < " << m_etaMax << endreq;
   if ( m_rejectElectrons ) info() << "           Will reject electrons" << endreq;
