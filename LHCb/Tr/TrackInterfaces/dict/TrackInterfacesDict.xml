@@ -1,5 +1,6 @@
 <lcgdict>
   <class name    = "IAddTTClusterTool"       />
+  <class name    = "IFastMomentumEstimate"   />
   <class name    = "IHitExpectation"         />
   <class name    = "IMaterialLocator"        />
   <class name    = "IMeasurementProvider"    />

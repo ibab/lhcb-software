@@ -13,8 +13,7 @@ namespace LHCb {
 
 static const InterfaceID IID_IFastMomentumEstimate ( "IFastMomentumEstimate", 1, 0 );
 
-/** @class IFastMomentumEstimate IFastMomentumEstimate.h 
- *   TrackInterfaces/IFastMomentumEstimate.h
+/** @class IFastMomentumEstimate IFastMomentumEstimate.h TrackInterfaces/IFastMomentumEstimate.h
  *  
  *
  *  @author Stephanie Hansmann-Menzemer
