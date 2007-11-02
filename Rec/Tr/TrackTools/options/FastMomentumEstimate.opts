@@ -1,0 +1,6 @@
+ToolSvc.FastMomentumEstimate.ParamsTCubic        = {-6.3453, -4.77725, -14.9039, 3.13647e-08};
+ToolSvc.FastMomentumEstimate.ParamsTParabola     = {-6.31652, -4.46153, -16.694, 2.55588e-08};
+ToolSvc.FastMomentumEstimate.ParamsVeloTCubic    = { 1.21909, 0.627841, -0.235216, 
+					             0.433811, 2.92798, -21.3909 };
+ToolSvc.FastMomentumEstimate.ParamsVeloTParabola = { 1.21485, 0.64199, -0.27158, 
+					             0.440325, 2.9191,-20.4831};		     
