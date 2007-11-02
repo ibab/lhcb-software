@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.55 2007-10-25 16:01:43 jpalac Exp $
+# $Id: requirements,v 1.56 2007-11-02 11:14:57 jpalac Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
 
 package           DaVinciAssociators
-version           v9r2p2
+version           v9r2p3
 
 # This template is an example for a standard Algorithm package
 #
