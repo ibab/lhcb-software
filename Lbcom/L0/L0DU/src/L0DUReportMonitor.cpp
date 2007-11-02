@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.1 2007-10-31 15:04:46 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.2 2007-11-02 07:34:58 cattanem Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -172,8 +172,8 @@ StatusCode L0DUReportMonitor::finalize() {
     info() << "   **************************************************** " << endreq;    
     info() << "   ***  Trigger Configuration Key "  << tck << endreq;
     info() << "   **************************************************** " << endreq;    
-    info() << "       REMIND : the corresponding L0DU algorithm description is : " << endreq;
-    info() << config->description() << endreq;
+    debug() << "       REMIND : the corresponding L0DU algorithm description is : " << endreq;
+    debug() << config->description() << endreq;
     info() << " " << endreq;
 
     info() << "   ------------------------------------------------------------------- " <<endreq;
