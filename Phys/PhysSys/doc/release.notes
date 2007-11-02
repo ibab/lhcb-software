@@ -3,6 +3,87 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r7p1>2007-11-02 Phys v6r7p1 - DC06 stripping version</A></H1><PRE>
+
+- Based on LHCb v22r10
+- Minor bug fixes to Phys/VertexFit for correct treatment of merged Pi0s. 
+  Otherwise identical to Phys v6r7.
+- Phys v6r7 release notes kept for clarity.
+  
+###############################################################################
+#                                  PHYS v6r7p1                                #
+###############################################################################
+
+!========================== DaVinciTools v15r6 2007-10-25====================
+
+! 2007-10-25 - Juan PALACIOS
+ - src/DecayFinder.h
+  . Move ParticlePropertySvc initialisation from constructor 
+    to initialize and delete in finalize.
+ - cmt/requirements
+  . Increase version to v15r6
+
+!========================== DaVinciFilter v6r5p2 2007-10-25 =================
+
+! 2007-10-11 - Patrick Koppenburg
+ - src/PIDFilterCriterion.cpp
+   . Move ppSvc access from contructor to initialise
+> The reason you see this is that the code that is generating the
+> configurables (for the Python job options) is instantiating all
+> components, asking them for their properties, then deleting them -
+> without calling initialize.
+ - increment to v6r5p2
+
+!========================== VertexFit v4r3p3 2007-11-02 ====================
+
+! 2007-11-02 - Juan Palacios
+ - cmt/requirements
+  . Increase version to v4r3p3
+
+! 2007-11-02 - Yuehong Xie
+ - src/OfflineVertexFitter.cpp/.h
+  . Add treatment of merged pi0
+  . simplify the way to get photon parameters, 
+    no chnage of performance expected
+
+!========================== VertexFit v4r3p2 2007-10-25 ====================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r3p2
+
+! 2007-10-18 - Yuehong Xie
+ - PVReFitter.cpp
+  . bug fix: replace  stateAtFirstMeas(tr) with tr->firstState()
+
+!========================== VertexFit v4r3p1 2007-10-10 ====================
+
+! 2007-10-11 - Patrick Koppenburg
+ - TrgVertexFitter: protect against 0 denominators. 0 is defined as 
+	 smaller that 10^{-16}. Can be changed by options
+   . More verbose printout
+   . Use pointers instead of references
+   . retag as v4r3p1
+
+! 2007-10-08 - Juan PALACIOS
+ - src/OfflineVertexFitter.cpp
+  . Remove last changes as they affect some pre-selections. Behaviour should
+    now be the same as in revision 1.25. Revert to that version once 
+    pre-selections have been adapted accordingly.
+ - cmt/requirements
+  . Increase version to v4r3p1
+
+! 2007-10-05 - Yuehong Xie
+  - src/OfflineVertexFitter.cpp
+   . change the chi2 definition so that when "useResonanceVertex" is true,
+     the chi2 and NDoF of no resonance are included for the mother. The 
+     chi2 and NDoF of the first resonance were included by mistake.
+
+! 2007-10-02 - Yuehong Xie
+  - src/OfflineVertexFitter.cpp
+   . fix a typo in addFlying method
+
+###############################################################################
 
 </PRE><H1><A NAME=v6r7>2007-10-25 Phys v6r7 - DC06 stripping version</A></H1><PRE>
 
