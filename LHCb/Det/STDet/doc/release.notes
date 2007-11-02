@@ -1,13 +1,13 @@
-!$Id: release.notes,v 1.114 2007-10-26 14:53:48 mneedham Exp $
+!$Id: release.notes,v 1.115 2007-11-02 09:43:12 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v3r7 2007-11-02 ==========================
 ! 2007-10-26 M. Needham
  - Clean up condition registration (DeSTLayer,DeSTBaseElement,DeSTSector)
  - Add functionality to flag dead beetles, dead strips etc
 
-!======================== STDet v3r7 2007-10-19 ==========================
 ! 2007-10-13 M Needham
  - Add find box methods to DeITDetector
 
