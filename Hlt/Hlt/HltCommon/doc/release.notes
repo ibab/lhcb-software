@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-11-01 - Patrick Koppenburg
+ - Increment to v1r7
+
 ! 2007-11-1 Jose A. Hernando
   - L0Entry.cpp: using channel IDs from the new L0, still hardwirted TODO!!!
 	  use in HltInit.TCKName = "UpdatedL0" to consider the new L0 channels IDs
