@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.70 2007-11-01 16:17:30 odescham Exp $
+! $Id: release.notes,v 1.71 2007-11-02 11:04:24 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2007-11-01 Olivier Deschamps
+ - default writeOnTES set to TRUE in L0DUAlg
+
 
 !========================== L0DU v8r0 2007-11-01 =========================
 ! 2007-10-31 - Patrick Koppenburg

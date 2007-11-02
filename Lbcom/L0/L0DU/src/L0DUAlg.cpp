@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.2 2007-10-31 16:42:10 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.3 2007-11-02 11:04:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ L0DUAlg::L0DUAlg( const std::string& name,
   //
   declareProperty( "StoreInBuffer"           , m_fillRaw = true );
   declareProperty( "RawLocation"             , m_rawLocation    = LHCb::RawEventLocation::Default   );
-  declareProperty( "WriteOnTES"              , m_writeOnTES = false   );
+  declareProperty( "WriteOnTES"              , m_writeOnTES = true   );
   declareProperty( "ReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
   //
   declareProperty( "TCK"                     , m_tck=0xFFFF);

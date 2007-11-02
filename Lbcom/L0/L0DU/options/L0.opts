@@ -10,6 +10,5 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
 
 
-L0DU.WriteOnTES = true; // Write L0DUChannel on TES for monitoring purpose
 
 
