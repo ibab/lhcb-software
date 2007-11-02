@@ -1,5 +1,5 @@
 package RecSys
-version v4r10
+version v5r1
 
 branches cmt doc
  
@@ -17,27 +17,27 @@ use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r9    Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use TrackExtrapolators  v2r14   Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r12   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r9    Tr    # Eduardo Rodrigues
-use TrackTools          v3r0    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r15   Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r14   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r10   Tr    # Eduardo Rodrigues
+use TrackTools          v3r1    Tr    # Eduardo Rodrigues
 use TrackFitter         v2r19   Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r16   Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackProjectors     v2r17   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r13   Tr    # Eduardo Rodrigues
-use TrackUtils          v1r15   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r16   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use PatChecker          v3r0    Tr    # Olivier Callot, David Hutchcroft
+use PatChecker          v3r1    Tr    # Olivier Callot, David Hutchcroft
 use PatFitParams        v3r0    Tr    # Olivier Callot
-use TrackCheckers       v3r1    Tr    # Eduardo Rodrigues
+use TrackCheckers       v3r2    Tr    # Eduardo Rodrigues
 use NNTools             v1r0    Tr    # Adrian Perieanu
 
 # Tf packages: Track Pattern Recognition
-use TrackSys            v4r10   Tf    # Eduardo Rodrigues
+use TrackSys            v4r11   Tf    # Eduardo Rodrigues
 use PatVelo             v3r0    Tf    # David Hutchcroft
 use PatVeloTT           v3r0    Tf    # Mariusz Witek
-use PatAlgorithms       v3r0    Tf    # Stephanie Hansmann-Menzemer
-use TsaAlgorithms       v3r0    Tf    # Matt Needham
+use PatAlgorithms       v3r1    Tf    # Stephanie Hansmann-Menzemer
+use TsaAlgorithms       v3r1    Tf    # Matt Needham
 use TrackSeeding        v1r2    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r16   Tf    # Eduardo Rodrigues
 use TfTools             v1r0    Tf    # Stephanie Hansmann-Menzemer
@@ -48,7 +48,7 @@ use PatPV               v3r0    Tr   # Mariusz Witek
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
-use MuonPIDChecker      v2r1    Muon  # Erica Polycarpo, Miriam Gandelman
+use MuonPIDChecker      v2r2    Muon  # Erica Polycarpo, Miriam Gandelman
 #use MuonTrackAlign      v1r0    Muon  # Silvia Pozzi - not migrated to Tf
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
