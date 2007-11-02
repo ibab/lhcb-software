@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.21 2007-11-02 00:38:14 xieyu Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.22 2007-11-02 11:15:29 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -224,7 +224,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
 
       if( !foundDirectAssociation && (*pIt)->daughters().size() == 0) {
         _verbose << "Particle " << objectName(*pIt)
-                 << " not considered: no direct asct and no daughters""
+                 << " not considered: no direct asct and no daughters"
                  << endreq;
       } //if
 
