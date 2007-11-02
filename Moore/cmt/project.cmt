@@ -1,9 +1,9 @@
 project MOORE
 
-use HLT		HLT_v1r3
-use LBCOM	LBCOM_v6r2
-use REC		REC_v4r2
-use PHYS        PHYS_v6r0
+use HLT		HLT_v1r11
+use LBCOM	LBCOM_v6r10p1
+use REC		REC_v4r12
+use PHYS        PHYS_v6r8
 
 build_strategy	with_installarea
 setup_strategy	root
