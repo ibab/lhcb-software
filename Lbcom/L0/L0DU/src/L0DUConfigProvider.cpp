@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.2 2007-11-01 16:17:30 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.3 2007-11-02 07:10:52 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -182,7 +182,7 @@ void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
   info() << "              - " << config.conditions().size() << " Elementary conditions " << endreq;
   info() << "              - " << config.channels().size()   << " Channels " << endreq;
   info() << " " << endreq;
-  info() <<  "Short description ::" << config->definition() << endreq;
+  info() <<  "Short description ::" << config.definition()  << endreq;
   debug() << "Full description  ::" << config.description() << endreq;
 }
 
