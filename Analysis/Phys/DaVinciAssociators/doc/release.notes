@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.120 2007-11-02 00:38:14 xieyu Exp $
+! $Id: release.notes,v 1.121 2007-11-02 11:15:52 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
 
-! 2007-11-02
- - CompositeParticle2MCLinks.cpp
+!========================== DaVinciAssociators v9r2p3 2007-11-02 ==============
+
+! 2007-11-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p3
+ - src/CompositeParticle2MCLinks.cpp
+  . Fix typo that was stopping compilation.
+
+! 2007-11-02 - Yuehong Xie
+ - src/CompositeParticle2MCLinks.cpp
   . Replace all v->outgoingParticles() with p->daughters() 
   . Enable skipping resonances for recosntructed particles in addDaughters
     to make sure Daughters and MCDaughters have the same size
