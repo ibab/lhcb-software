@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.h,v 1.1 2007-10-15 16:24:57 jpalac Exp $
+// $Id: CopyRecHeader.h,v 1.2 2007-11-02 15:19:07 jpalac Exp $
 #ifndef COPYRECHEADER_H 
 #define COPYRECHEADER_H 1
 
@@ -27,6 +27,6 @@ public:
 protected:
 
 private:
-
+  typedef MicroDST::BasicCopy<LHCb::RecHeader> RecHeaderCopy;
 };
 #endif // COPYRECHEADER_H

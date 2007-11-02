@@ -1,4 +1,4 @@
-// $Id: CopyODIN.h,v 1.1 2007-10-15 16:24:56 jpalac Exp $
+// $Id: CopyODIN.h,v 1.2 2007-11-02 15:19:07 jpalac Exp $
 #ifndef COPYODIN_H 
 #define COPYODIN_H 1
 
@@ -27,6 +27,6 @@ public:
 protected:
 
 private:
-
+  typedef MicroDST::BasicCopy<LHCb::ODIN> ODINCopy;
 };
 #endif // COPYODIN_H
