@@ -3,6 +3,267 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r7p1>2007-11-02 Analysis v1r7p1 - DC06 Stripping version</A></H1><PRE>
+ - Uses LHCb v22r10
+ - Bug fix to Phys/DaVinciAssociators and new Bd2PhiKst pre-selection 
+   in PhysSel/B2uds. Otherwise identical to v1r7
+ - Analysis v1r7 release notes copied for clarity.
+
+#######################################MM######################################
+#                                  ANALYSIS v1r7p1                            #
+###############################################################################
+
+##################################### PHYS ####################################
+!========================== DaVinciMCTools v9r7 2007-10-25 ===================
+
+! 2007-10-10 - Juan PALACIOS
+ - Add src/PrintDecayTreeTool{.cpp, .h}
+  . New implementation of Kernel/IPrintDecayTreeTool. really contains 
+    a subset of the old DebutTool methods.
+ - Move src/PrintMCTree{.cpp, .h} to Sim/SimComponents.
+ - cmt/requirements
+  . Increase version to v9r7.
+
+!========================== DaVinciMCTools v9r6 2007-10-10 ===================
+
+! 2007-10-10 - Patrick Koppenburg
+ - Use PrintMCDecayTree in PrintMCTree. 
+
+! 2007-10-03 - Patrick Koppenburg
+ - TrueMCFilterCriterion : new option AssociationMethod allowing to change
+   asociator type. Default is 2 (chi2). For neutrals, 3 is needed.
+
+FilterTrueBu.Members += { "FilterDesktop/TrueGammas" };
+TrueGammas.PhysDesktop.InputLocations = { "Phys/StdLoosePhotons" } ;
+TrueGammas.Filter.Selections = { "gamma : TrueMCFilterCriterion" };
+TrueGammas.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  
+   "[B+ -> (K*(1680)+ -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) ^K+ {,gamma}{,gamma}) ^gamma {,gamma}{,gamma}]cc" ;
+TrueGammas.Filter.TrueMCFilterCriterion.AssociationMethod = 3 ;
+ 
+ - increment to v9r6
+
+!========================== DaVinciAssociators v9r2p3 2007-11-02 ==============
+
+! 2007-11-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p3
+ - src/CompositeParticle2MCLinks.cpp
+  . Fix typo that was stopping compilation.
+
+! 2007-11-02 - Yuehong Xie
+ - src/CompositeParticle2MCLinks.cpp
+  . Replace all v->outgoingParticles() with p->daughters() 
+  . Enable skipping resonances for recosntructed particles in addDaughters
+    to make sure Daughters and MCDaughters have the same size
+
+!========================== DaVinciAssociators v9r2p2 2007-10-25 ==============
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p2
+
+! 2007-10-18
+ - CompositeParticle2MCLinks.cpp
+  . Replace v->outgoingParticles() with p->daughters() to make it work for
+    particles made with OfflineVertexFitter.useResonanceVertex=flase 
+
+!===================== VertexFitCheck v1r1 2007-10-25 ======================
+
+! 2007-10-09 - Y. Xie
+  . New package to check vertex fit and propertime fit performance
+  . Examples of option files that can be run in DaVinci v19r5
+
+!========================== CommonParticles v3r10 2007-10-25 ==================
+
+! 2007-10-01 - Patrick Spradlin for Jim Libby
+ - Added new StdLooseD02KsKPi to StandardD0.opts
+
+!===================== FlavourTaggingChecker v2r5 2007-10-25 =================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v2r5
+
+! 2007-10-23 - Marco Musy
+ - other fixes to BTAnalysis and corresponding opts
+
+! 2007-10-16 - Marco Musy
+- many improvements in BTaggingAnalysis (Hlt, tistos, bkgcategory..)
+- added BTaggingAnalysis.opts
+- revised DVBTagging_for_B2JpsiKs.opts to produce both a DecayChainNtp and
+  a specific tagging ntp for tuning
+
+!========================== DaVinciUser v8r3 2007-10-25 ===================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v8r3
+
+! 2007-09-25 - Juan PALACIOS
+ - Add src/TestMCParticleFilters{.cpp, .h}
+
+#################################### PHYSSEL ##################################
+
+!========================== B2D0X v1r11 2007-10-25 ==================
+
+! 2007-10-08 - Patrick Spradlin
+ - Merged PreselBu2D0Pi and PreselBu2D0K_D02HH into PreselBu2D0H_D02HH
+   - Removed file DVPreselBu2D0Pi.opts
+   . Renamed DVPreselBu2D0K_D02HH.opts DVPreselBu2D0H_D02HH.opts, making
+   	the same change to the sequence and component name
+   . Renamed PreselBu2D0K_D02HH.opts PreselBu2D0H_D02HH.opts, making
+   	the same change to the component names.
+       Added the decay signatures for B -> D0 pi to PreselBu2D0H_D02HH.
+       Specified that bachelor pions of B -> D0 pi have same kinematic
+        selection criteria as the bachelor K of B -> D0 K.
+
+! 2007-10-05 - Patrick Spradlin for Jim Libby
+ - options/PreselBu2D0K_D02KsKPi.opts
+   . Added missing decay signature
+
+! 2007-10-02 - Patrick Spradlin
+ - B->D0(Kpipi0)K : New preselection
+   + New preselection declaration file DVPreselBu2D0K_D02KPiPi0.opts
+   + New preselection definition file PreselBu2D0K_D02KPiPi0.opts
+   . Added definition of TightD02KPiPi0ForB2D0K to SpecialD0ForB2D0K.opts
+
+! 2007-10-01 - Patrick Spradlin for Jim Libby
+ - B->D0(KsKpi)K : New preselection
+   + New preselection declaration file DVPreselBu2D0K_D02KsKPi.opts
+   + New preselection definition file PreselBu2D0K_D02KsKPi.opts
+
+!========================== B2uds v2r6 2007-11-02 ===================
+
+! 2007-11-02 - Patrick SPRADLIN
+ - cmt/requirements
+  . Increase version to v2r6
+
+! 2007-11-02 - Patrick Spradlin for Nick Styles and Philip Clark
+  - New preselection PreselBd2PhiKst
+    + options/DVPreselBd2PhiKst.opts : New selection file
+
+!========================== B2uds v2r5 2007-10-25 ===================
+
+! 2007-10-15 - Patrick Spradlin for Gabriel Guerrer and Luigi Del Buono
+  - Reinstated PreselBu2HHH
+    + options/DVPreselBu2HHH.opts : Reinstated with updated selection criteria
+    - options/_DVPreselBu2HHH.opts : Removed placeholder file
+
+! 2007-10-15 - Patrick Spradlin for Gabriel Guerrer
+  - options/DVPreselBd2KsPiPi.opts
+    . Updated selection criteria
+
+! 2007-10-04 - Yuehong Xie
+  - options/PreselBd2PhiKs.opts
+    . remove unused filters
+
+!========================== Ccbar v1r5 2007-10-25 ===================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r5
+
+! 2007-10-18 - Eduard Simioni
+
+ - options/InclJpsi2MuMuDSTs-Brunelv30r13.opts: renamed as InclJpsi2MuMuDSTs-Brunelv30r14.opts
+   with a new dataset from bookeeping.
+
+ - options/TestPreselectionJpsi2MuMu.opts: renamed as TestPreselectionHeavyDimuon.opts
+   and changed to include the pre-selection options/DVPreselHeavyDimuon.opts and the new dataset.
+
+ - options/ExTuneJpsiSelection.opts: changed to include the pre-selection
+   DVPreselHeavyDimuon.opts and the new dataset.
+
+ - options/MonitorPreselJpsi2MuMu.opts: renamed as MonitorHeavyDimuon.opts
+
+!========================== PhysSelSys v10r6 2007-10-25 ===================
+
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version of PhysSel/Ccbar, PhysSel/B2D0X, PhysSel/B2uds.
+  . Increase version to v10r6.
+
+####################################### TOOLS #################################
+!======================== Stripping v6r3 2007-10-25 =====================
+
+! 2007-10-24 - Patrick Koppenburg
+ - options/Correlations.opts
+   . Use list of algos from Presel.opts
+ - options/DVMerge.opts
+   . Removed
+ - Increment to v6r3
+
+!======================== MicroDST v2r0 2007-10-25 ====================
+
+! 2007-10-24 - Juan PALACIOS
+ - Add MicroDST/CopyAndStoreData.icpp
+  . Contains implementations of templated methods of CopyAndStoreData class.
+
+ - Add MicroDST/Functors.hpp
+  . header with useful functors, moved from MicroDST/CopyAndStoreData.h.
+    Functors are under namespace MicroDST.
+
+! 2007-10-23 - Juan PALACIOS
+ - Add src/CopyProtoParticles{.cpp, .h}
+  . Algorithm to store protoparticles related to particle decay trees starting 
+    from TES location of LHCb::Particles given by option InputLocation.
+
+
+! 2007-10-22 - Juan PALACIOS
+
+ - Improvements to CopyParticles algorithm.
+
+ - Add src/CopyParticle2PVLink{.cpp, .h}
+  . Algorithm to store the links between particles and primary vertices.
+    Simply used relations table associated to particle TES location.
+    Users must pass location of table. Original location of particles is 
+    inferred from this. Default offline PV location is assumed.
+
+! 2007-10-18 - Juan PALACIOS
+ - MicroDST/CopyAndStoreData.h
+  . Reorganization of functors.
+
+! 2007-10-16 - Juan PALACIOS
+ - Add algorithm CopyPrimaryVertices to components library. 
+ - Modifications to CopyAndStoreData base class.
+
+
+! 2007-10-15 - Juan PALACIOS
+ - Add algorithms CopyODIN and CopyRecHeader to components library.
+   The algorithms are specializations of CopyAndStoreData and do
+   what their name indicates.
+
+! 2007-10-15 - Juan PALACIOS
+ - src/Lib/CopyAndStoreData.cpp, MicroDST/CopyAndStoreData.h
+  . Add new functionality and doxygen comments.
+ - Add src/CopyODIN{.cpp, .h}
+  . Very simple algorithm to copy the ODIN header to the microDST TES.
+    Inherits from CopyAndStoreData and simply calls two of its methods.
+
+! 2007-10-12 - Chris Jones
+ - Fix possible cause of memory leak in CreateMicroDSTAlg
+
+! 2007-10-11 - Juan PALACIOS
+ - cmt/requirements
+  . Add branch MicroDST
+  . Add pattern for linker library
+  . Increase version to v2r0
+ - Add base class MicroDST/CopyAndStoreData.h, src/Lib/CopyAndStoreData.cpp
+
+
+############################ EXAMPLES AND TUTORIALS ###########################
+
+!===================== Tutorial/Analysis v6r5 2007-10-25 ======================
+! 2007-10-25 - Juan PALACIOS
+ - cmt/requirements
+  . Really increment to v6r5!
+
+! 2007-10-10 - Patrick Koppenburg
+ - solutions/DaVinci6 : use new PrintMCDecayTreeTool tool
+ - increment to v6r5
+
+###############################################################################
+
 </PRE><H1><A NAME=v1r7>2007-10-25 Analysis v1r7 - DC06 Stripping version</A></H1><PRE>
  - Uses LHCb v22r10
 
