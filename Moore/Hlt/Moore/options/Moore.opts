@@ -71,4 +71,4 @@ EventSelector.Input   = {
 
 
 // remove this
-#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
+//#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
