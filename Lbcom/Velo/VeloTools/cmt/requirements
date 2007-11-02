@@ -17,6 +17,7 @@ use  DigiEvent    v*  Event
 use  VeloDet      v*  Det
 use  GaudiAlg     v*
 use  GaudiGSL     v* 
+use  TrackEvent   v*  Event
 # Component library building rule
 #============================================================================
 library          VeloTools      ../src/*.cpp

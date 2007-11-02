@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 !========================== VeloTools v2r4 2007-11-01 ========================
+! 2007-11-02 - Tomasz Szumlak
+ - fix requirements file - TrackEvent dependecy added
+
 ! 2007-11-01 - Tomasz Szumlak
  - code update to match TELL1 board position format
    seeding strip VeloChannelID as a cluster's centre strip
