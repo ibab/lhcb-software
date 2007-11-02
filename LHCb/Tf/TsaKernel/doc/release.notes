@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-11-02 - Johannes Albrecht
+	- add interface for Seed-track conversion tool to make conversion 
+	  accessible from outside Tsa
+
 !======================= TsaKernel v3r1 2007-11-02 ==========================
 ! 2007-10-23 - Stephanie Hansmann-Menzemer
  - add TsaTStationHitManager class (before it was in TsaAlgorithms, thus not
