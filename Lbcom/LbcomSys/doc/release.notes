@@ -2,9 +2,32 @@
 !-----------------------------------------------------------------------------
 ! Package     : LbcomSys
 ! Responsible : Marco Cattaneo
-! Purpose     : Package describing contents of Lbcom project.
-!             : Contains packages shared by Boole and other applications   
+! Purpose     : Package describing contents of Lbcom project. Packages in this
+!             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
+
+</PRE><H1><A NAME=v6r12>2007-11-01 LbcomSys v6r12</A></H1><PRE>
+This version uses Gaudi v19r5 and LHCb v23r1
+
+- Packages modified: L0Calo v9r10, L0DU v8r0, L0Muon v7r5, STDAQ v3r2
+
+- In L0Calo v9r10, L0Muon v7r5
+  . Adapt to change in L0DUBase.h (L0Event v16r6)
+
+- In L0DU v8r0
+  . Full review of the L0DU package
+  . Implement the 'final' rawBank format for L0DU (as in EDMS 868071)
+  . First step toward implementation of the Trigger Configuration Key mechanism
+  . Add few missing part in the emulator to follow hardware processing
+  . Adapt to change in L0Event
+  . Repackaging 
+  . See package release notes for details of new tools and options
+
+- In STDAQ v3r2
+  . Remove some unneccessary includes
+  . fix compilation warnings in readout tool
+  . Bug fix in header file inclusion 
+  . Make rawevent location a jobOption
 
 </PRE><H1><A NAME=v6r11>2007-10-16 LbcomSys v6r11</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0

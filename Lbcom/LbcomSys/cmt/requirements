@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r11
+version v6r12
 
 branches doc cmt
 
@@ -8,9 +8,9 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r9  L0          # Olivier Deschamps, Patrick Robbe
-use L0DU              v7r7  L0          # Olivier Deschamps   
-use L0Muon            v7r4  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use L0Calo            v9r10 L0          # Olivier Deschamps, Patrick Robbe
+use L0DU              v8r0  L0          # Olivier Deschamps   
+use L0Muon            v7r5  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
@@ -27,7 +27,7 @@ use RichMCMonitors    v1r4  Rich        # Chris Jones
 use SiTools           v1r3  Si          # Matt Needham
 
 # Silicon Tracker
-use STDAQ             v3r1  ST          # Jeroen van Tilburg
+use STDAQ             v3r2  ST          # Jeroen van Tilburg
 use STTools           v3r4  ST          # Jeroen van Tilburg
 use STAlgorithms      v2r3  ST          # Jeroen van Tilburg
 use STAssociators     v1r4  ST          # Jeroen van Tilburg
