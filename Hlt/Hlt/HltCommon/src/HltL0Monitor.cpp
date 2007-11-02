@@ -1,4 +1,4 @@
-// $Id: HltL0Monitor.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
+// $Id: HltL0Monitor.cpp,v 1.3 2007-11-02 14:24:22 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -28,14 +28,11 @@ DECLARE_ALGORITHM_FACTORY( HltL0Monitor );
 HltL0Monitor::HltL0Monitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
-    , m_CaloDataLocation ( LHCb::L0ProcessorDataLocation::Calo )
-    , m_MuonDataLocation ( LHCb::L0ProcessorDataLocation::Muon )
-    , m_PileUpDataLocation ( LHCb::L0ProcessorDataLocation::PileUp )
-    , m_L0DUReportLocation ( LHCb::L0DUReportLocation::Default  )
 {
   
-  declareProperty("L0DUReportLocation", m_L0DUReportLocation );
-
+  declareProperty("L0DUReportLocation", 
+                  m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
+  
   declareProperty( "ADCconvert", m_ADCconvert = true );  
 }
 //=============================================================================
@@ -50,16 +47,16 @@ StatusCode HltL0Monitor::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_CaloCandidate   = tool<IL0Candidate>("L0CandidateTool",
-                                         "L0CaloCandidate",this);
-  m_MuonCandidate   = tool<IL0Candidate>("L0CandidateTool",
-                                         "L0MuonCandidate",this);
-  m_PileUpCandidate = tool<IL0Candidate>("L0CandidateTool",
-                                         "L0PileUpCandidate",this);
+ //  m_CaloCandidate   = tool<IL0Candidate>("L0CandidateTool",
+//                                          "L0CaloCandidate",this);
+//   m_MuonCandidate   = tool<IL0Candidate>("L0CandidateTool",
+//                                          "L0MuonCandidate",this);
+//   m_PileUpCandidate = tool<IL0Candidate>("L0CandidateTool",
+//                                          "L0PileUpCandidate",this);
 
-  m_CaloCandidate   -> setUp(m_CaloDataLocation     , m_ADCconvert);
-  m_MuonCandidate   -> setUp(m_MuonDataLocation     , m_ADCconvert);
-  m_PileUpCandidate -> setUp(m_PileUpDataLocation   , m_ADCconvert);
+//   m_CaloCandidate   -> setUp(m_CaloDataLocation     , m_ADCconvert);
+//   m_MuonCandidate   -> setUp(m_MuonDataLocation     , m_ADCconvert);
+//   m_PileUpCandidate -> setUp(m_PileUpDataLocation   , m_ADCconvert);
 
   initializeHisto(m_histoL0,"L0",0.,14.,28);
 
@@ -131,14 +128,16 @@ void HltL0Monitor::monitorGlobalEvent() {
       debug() << " condition " << i << endreq;
   }
 
-  double Et      =  m_CaloCandidate->value( L0DUBase::Sum::Et);
-  double SPDMult =  m_CaloCandidate->value( L0DUBase::Spd::Mult);
+  double Et,SPDMult;
+  //  double Et      =  m_CaloCandidate->value( L0DUBase::Sum::Et);
+  //   double SPDMult =  m_CaloCandidate->value( L0DUBase::Spd::Mult);
 
   fillHisto(m_histoEt,      Et,1.);
   fillHisto(m_histoSPDMult, SPDMult,1.);  
 
-  double PUHits  =  m_PileUpCandidate->value(L0DUBase::PileUp::Hits);
-  double PUPeak2 =  m_PileUpCandidate->value(L0DUBase::PileUp::Peak2);
+  double PUHits,PUPeak2;
+  //   double PUHits  =  m_PileUpCandidate->value(L0DUBase::PileUp::Hits);
+  //   double PUPeak2 =  m_PileUpCandidate->value(L0DUBase::PileUp::Peak2);
 
   fillHisto(m_histoPUHits,  PUHits,1.);
   fillHisto(m_histoPUPeak2, PUPeak2,1.);
@@ -157,11 +156,12 @@ void HltL0Monitor::monitorCalo()
 
   if (m_veto) return;
 
-  double EtEle   =  m_CaloCandidate->value( L0DUBase::Electron::Et);
-  double EtGamma =  m_CaloCandidate->value( L0DUBase::Photon::Et);
-  double EtHad   =  m_CaloCandidate->value( L0DUBase::Hadron::Et);
-  double EtPi0G  =  m_CaloCandidate->value( L0DUBase::Pi0Global::Et);
-  double EtPi0L  =  m_CaloCandidate->value( L0DUBase::Pi0Local::Et);
+  double EtEle,EtGamma,EtHad,EtPi0G,EtPi0L;
+  //  double EtEle   =  m_CaloCandidate->value( L0DUBase::Electron::Et);
+  //   double EtGamma =  m_CaloCandidate->value( L0DUBase::Photon::Et);
+  //   double EtHad   =  m_CaloCandidate->value( L0DUBase::Hadron::Et);
+  //   double EtPi0G  =  m_CaloCandidate->value( L0DUBase::Pi0Global::Et);
+  //   double EtPi0L  =  m_CaloCandidate->value( L0DUBase::Pi0Local::Et);
 
   fillHisto(m_histoEtEle,  EtEle,1.);
   fillHisto(m_histoEtGamma,EtGamma,1.);
@@ -182,28 +182,28 @@ void HltL0Monitor::monitorMuon() {
   
   std::vector<double> ptmus;
   
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon1::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon2::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon3::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon4::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon5::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon6::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon7::Pt));
-  ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon8::Pt));
+//   //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon1::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon2::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon3::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon4::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon5::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon6::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon7::Pt));
+// //   ptmus.push_back(m_MuonCandidate->value( L0DUBase::Muon8::Pt));
   
-  std::sort(ptmus.begin(),ptmus.end());
-  double ptmu = ptmus[7];
-  double ptdimu = ptmus[6]+ptmus[7];
+//   std::sort(ptmus.begin(),ptmus.end());
+//   double ptmu = ptmus[7];
+//   double ptdimu = ptmus[6]+ptmus[7];
 
-  fillHisto(m_histoPtMu,ptmu,1.);
-  fillHisto(m_histoPtDiMu,ptdimu,1.);
+//   fillHisto(m_histoPtMu,ptmu,1.);
+//   fillHisto(m_histoPtDiMu,ptdimu,1.);
  
-  if (m_l0->channelDecision(11)) fillHisto(m_histoPtMu1,ptmu,1.);
-  if (m_l0->channelDecision(13)) fillHisto(m_histoPtDiMu1,ptdimu,1.);
+//   if (m_l0->channelDecision(11)) fillHisto(m_histoPtMu1,ptmu,1.);
+//   if (m_l0->channelDecision(13)) fillHisto(m_histoPtDiMu1,ptdimu,1.);
  
-  debug() << " L0 Pt mu " << ptmu << endreq;
-  debug() << " L0 Pt dimu " << ptdimu << endreq;
-  for (int i = 0; i < 8; i++) debug() << " ptmu i " << ptmus[i] << endreq;
+//   debug() << " L0 Pt mu " << ptmu << endreq;
+//   debug() << " L0 Pt dimu " << ptdimu << endreq;
+//   for (int i = 0; i < 8; i++) debug() << " ptmu i " << ptmus[i] << endreq;
 
 }
 

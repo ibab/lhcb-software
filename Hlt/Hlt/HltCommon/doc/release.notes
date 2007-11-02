@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-11-2 Jose A. Hernando
+	 - HltL0Monitor and L0Value: commented for the moment, for the DAQ release, to be corrected later
+
 ! 2007-11-01 - Patrick Koppenburg
  - Increment to v1r7
 

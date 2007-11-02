@@ -1,4 +1,4 @@
-// $Id: L0Value.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: L0Value.h,v 1.2 2007-11-02 14:24:23 hernando Exp $
 #ifndef L0VALUE_H 
 #define L0VALUE_H 1
 
@@ -8,7 +8,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/HltSummary.h"
 #include "Event/L0DUReport.h"
-#include "Event/IL0Candidate.h"
+//#include "Event/IL0Candidate.h"
 #include "HltBase/IL0Value.h"
 
 /** @class L0Value L0Value.h
@@ -47,9 +47,9 @@ protected:
 
   bool m_ADCconvert;
   
-  IL0Candidate* m_CaloCandidate;
-  IL0Candidate* m_MuonCandidate;
-  IL0Candidate* m_PileUpCandidate;
+  // IL0Candidate* m_CaloCandidate;
+  // IL0Candidate* m_MuonCandidate;
+  // IL0Candidate* m_PileUpCandidate;
 
 };
 #endif // L0ENTRY_H

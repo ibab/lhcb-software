@@ -1,4 +1,4 @@
-// $Id: HltL0Monitor.h,v 1.2 2007-02-05 09:09:08 hernando Exp $
+// $Id: HltL0Monitor.h,v 1.3 2007-11-02 14:24:22 hernando Exp $
 #ifndef HLTL0MONITOR_H 
 #define HLTL0MONITOR_H 1
 
@@ -8,7 +8,7 @@
 
 #include "Event/HltSummary.h"
 #include "Event/L0DUReport.h"
-#include "Event/IL0Candidate.h"
+// #include "Event/IL0Candidate.h"
 #include "HltBase/HltAlgorithm.h"
 
 /** @class HltL0Monitor HltL0Monitor.h
@@ -49,9 +49,10 @@ protected:
 
   bool m_ADCconvert;
   
-  IL0Candidate* m_CaloCandidate;
-  IL0Candidate* m_MuonCandidate;
-  IL0Candidate* m_PileUpCandidate;
+  // 2-11-07 REPLACE BY NEW TOOL: TODO
+  // IL0Candidate* m_CaloCandidate;
+  // IL0Candidate* m_MuonCandidate;
+  // IL0Candidate* m_PileUpCandidate;
 
 protected:
   
