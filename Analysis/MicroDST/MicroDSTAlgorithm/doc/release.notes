@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.34 2007-11-01 16:53:55 jpalac Exp $
+! $Id: release.notes,v 1.35 2007-11-02 15:20:05 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-11-02 - Juan PALACIOS
+ - MicroDST/Functors.hpp
+  . Added basic copy functor. Just uses the copy constructor and
+    returns a newed pointer.
+ - MicroDST/CopyAndStoreData{.h, .icpp}
+  . Add second template parameter CopyFunctor to copyAndStoreObject. This
+    allows users of the methods to use their own copying logic within the
+    method. In conjunction with MicroDST::BasicCopy<T> from MicroDST/Functors
+    (see above) the previous behaviour of the method is maintained.
+ - src/CopyODIN.h, src/CopyRecHeader.h
+  . Set new BasicCopy<T> typedefs
+ - src/CopyODIN.cpp, src/CopyRecHeader.cpp
+  . Use BasicCopy<T> in copyAndStoreObject calls.
 
 ! 2007-11-01 - Juan PALACIOS
  - src/CopyParticle2PVLink.cpp
