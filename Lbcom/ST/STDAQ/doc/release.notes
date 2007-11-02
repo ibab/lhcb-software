@@ -4,10 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r2 2007-11-02 =======================
 ! 2007-10-29 M. Needham
   - make rawevent location a jobOption...
 
-!=============================== STDAQ v3r2 2007-10-25 =======================
 ! 2007-10-25 - Marco Cattaneo
  - Remove some unneccessary includes
 
