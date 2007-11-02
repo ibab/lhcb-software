@@ -82,12 +82,14 @@ public:
 private:
 
   bool isResonance(const LHCb::Particle*) const; 
+  bool isMergedPi0(const LHCb::Particle*) const;
   bool isVertexed(const LHCb::Particle*) const;
   int countTraj(const LHCb::Particle*) const;
   bool isPhotonPair(const LHCb::Particle*) const;
   bool isPurePhotonDecay(const LHCb::Particle*) const;
 
   StatusCode classify(const LHCb::Particle*, 
+                      LHCb::Particle::ConstVector &,
                       LHCb::Particle::ConstVector &,
                       LHCb::Particle::ConstVector &,
                       LHCb::Particle::ConstVector &,
@@ -104,6 +106,9 @@ private:
                        const LHCb::Particle *) const;
 
   StatusCode addPhoton(LHCb::Particle&, 
+                       const LHCb::Particle *) const;
+
+  StatusCode addMergedPi0(LHCb::Particle&,
                        const LHCb::Particle *) const;
 
   StatusCode addPhotonPair(LHCb::Particle&, 
@@ -154,6 +159,14 @@ private:
                                 Gaudi::Vector3& para , 
                                 Gaudi::SymMatrix3x3& cov ) const;
 
+  StatusCode getMergedPi0Parameter(const LHCb::Particle& part,
+                                double& zg1,
+                                Gaudi::Vector3& para1 ,
+                                Gaudi::SymMatrix3x3& cov1,
+                                double& zg2,
+                                Gaudi::Vector3& para2 ,
+                                Gaudi::SymMatrix3x3& cov2 ) const;
+
   void addToDaughters( LHCb::Particle&, const LHCb::Particle::ConstVector& ) const ; // add to particle daughters
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle::ConstVector& ) const ; // add to vertex particles
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle* ) const ; // add to vertex particles
@@ -162,6 +175,7 @@ private:
 private:
       
   int m_photonID; ///< Photon particle ID
+  int m_pi0ID; ///< Pi0 particle ID
 
   IParticleTransporter* m_transporter;
 

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.114 2007-10-25 15:02:51 jpalac Exp $
+! $Id: release.notes,v 1.115 2007-11-02 00:47:34 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-10-25 - Yuehong Xie
+ - src/OfflineVertexFitter.cpp/.h
+  . Add treatment of merged pi0
+  . simplify the way to get photon parameters, no chnage of performance expected
 
 !========================== VertexFit v4r3p2 2007-10-25 ====================
 
