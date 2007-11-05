@@ -3,12 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r1>2007-11-02 Brunel v32r1</A></H1><PRE>
+</PRE><H1><A NAME=v32r1>2007-11-05 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
 
 This is a development version with tracking pattern recognition based on the Tf
 framework.
+
+- Persistency changes:
+  . Tracks created by PatDownstream algorithm have new PatDownstream history
+    flag set (TrackEvent v4r8, PatAlgorithms v3r1)
 
 - New functionality
   . Muon geometry now has concept of half stations to allow for misalignment
@@ -22,6 +26,9 @@ framework.
 - New tuning
   . Replaced StateTraj with StateZTraj in projectors (to speed things up)
     (LHCbKernel v7r8, TrackFitEvent v3r10, TrackProjectors v2r17)
+  . TsaSeedTrackCnv algorithm new uses FastMomentumEstimate tool
+    (TsaKernel v3r1, TrackInterfaces v3r10, TrackTools v3r1, TsaAlgorithms v3r1,
+     TrackSys v4r11)
 
 - Bug fixes
   . Fixed in TrajPoca specification of tolerance for validity of quadratic
