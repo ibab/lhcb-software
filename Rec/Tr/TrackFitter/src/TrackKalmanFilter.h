@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.20 2007-09-25 11:51:32 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.21 2007-11-05 16:33:23 mneedham Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -96,6 +96,42 @@ private:
   StatusCode failure( const std::string& comment ) const;
 
   bool m_debugLevel;
+  bool m_checked;
   
   };
 #endif // TRACKFITTER_TRACKKALMANFILTER_H
+
+
+//=========================================================================
+// Helper to print a failure comment
+//=========================================================================
+inline StatusCode TrackKalmanFilter::failure( const std::string& comment ) const {
+  if ( m_debugLevel )
+    debug() << "TrackKalmanFilter failure: " << comment << endreq;
+  return StatusCode::FAILURE;
+}
+
+//=========================================================================
+// 
+//=========================================================================
+inline StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const
+{
+
+  unsigned int count = 0;
+  for ( unsigned int i = 0; i < Gaudi::TrackSymMatrix::kRows ; ++i ) {
+    for ( unsigned int j = 0; j <=i && mat(i,j) < 1e20; ++j ) {
+      ++count;
+    } // j
+  } // i
+  return count != Gaudi::TrackSymMatrix::kRows*Gaudi::TrackSymMatrix::kRows ? StatusCode::SUCCESS : Warning( "Covariance matrix elements too big !",StatusCode::FAILURE,1 );
+}
+
+//=========================================================================
+// 
+//=========================================================================
+StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
+{
+  unsigned int i = 0u;
+  for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
+  return i == Gaudi::TrackSymMatrix::kRows ? StatusCode::SUCCESS : Warning( "Covariance matrix has non-positive elements!",StatusCode::FAILURE,1 ); ;
+}

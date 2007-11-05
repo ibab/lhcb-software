@@ -3,6 +3,12 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-11-6 M Needham
+  - fix unchecked status codes
+  - use warning is used rather than private failure method in TrackKalmanFilter
+  - change checkInvertMatrix and CheckPositiveMatrix and (faster) in TrackKalmanFilter 
+  - add possibility to check [safe] or not [faster] in TrackKalmanFilter
+
 !=========================== TrackFitter v2r20 2007-10-08 ===================
 ! 2007-10-25 - Wouter Hulsbergen
  - fixed unchecked status code when projecting reference, leading to fatal
