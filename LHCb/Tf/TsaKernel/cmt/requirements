@@ -28,11 +28,21 @@ use TfKernel    v*  Tf
 apply_pattern install_more_includes more=TsaKernel
 
 #============================================================================
-# Component library building rule
+# Library building rule
 #============================================================================
 library TsaKernel ../src/*.cpp 
 
 #============================================================================
-# define component library link options
+# define library link options
 #============================================================================
 apply_pattern linker_library    library=TsaKernel
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                 \
+              dictionary=TsaKernel                                        \
+              headerfiles=$(TSAKERNELROOT)/dict/TsaKernelDict.h     \
+              selectionfile=$(TSAKERNELROOT)/dict/TsaKernelDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro TsaKernelDict_use_linkopts $(use_linkopts)
