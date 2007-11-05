@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-11-05 Eduardo Rodrigues
+ - fixed typo in DSTRefitting.opts
+
 !============================ TrackSys v4r11 2007-10-23 ======================
 ! 2007-10-22 - Olivier Callot
  - Update RecoTracking and Fitting.opts to re-introduce the downstream tracks.
