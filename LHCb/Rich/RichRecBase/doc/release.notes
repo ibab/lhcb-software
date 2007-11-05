@@ -4,11 +4,14 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r8 2007-11-05 =======================
+! 2007-11-05 - Marco Cattaneo
+ - Adapt to change of track type from KsTrack to Downstream
+
 ! 2007-10-26 - Chris Jones
  - Update RichTrackID to handle 'ideal' tracks
 
 !===================== RichRecBase v3r7 2007-09-17 =======================
-
 ! 2007-09-17 - Chris Jones
  - Adapt to last minute changes in Clone information from tracking
 

@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.22 2007-10-26 09:54:40 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.23 2007-11-05 16:04:49 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -94,7 +94,8 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
     else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Rec::Track::VeloTT;   }
     //else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Rec::Track::VeloTT;   }
     // Ks Tracks
-    else if ( LHCb::Track::PatKShort     == hist )  { return Rich::Rec::Track::KsTrack;  }
+    else if ( LHCb::Track::PatKShort     == hist ||
+              LHCb::Track::PatDownstream == hist )  { return Rich::Rec::Track::KsTrack;  }
     // Velo only tracks (from any source)
     else if ( LHCb::Track::Velo  == track->type() ||
               LHCb::Track::VeloR == track->type() ) { return Rich::Rec::Track::Velo;     }
