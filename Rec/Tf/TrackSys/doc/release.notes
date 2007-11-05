@@ -4,6 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r11 2007-11-05 ======================
+! 2007-11-05 - Marco Cattaneo
+ - Fixed CloneKiller options to use also Downstream tracks as input
+ - Updated NoFieldTracking.opts and DSTRefitting.opts with new name of downstream
+   tracking sequences
+
 ! 2007-11-05 Johannes Albrecht
 	- options/RecoTracking.opts and NoFieldTracking.opts
 	include parameter file for fast momentum estimate tool
@@ -11,7 +17,6 @@
 ! 2007-11-05 Eduardo Rodrigues
  - fixed typo in DSTRefitting.opts
 
-!============================ TrackSys v4r11 2007-10-23 ======================
 ! 2007-10-22 - Olivier Callot
  - Update RecoTracking and Fitting.opts to re-introduce the downstream tracks.
 

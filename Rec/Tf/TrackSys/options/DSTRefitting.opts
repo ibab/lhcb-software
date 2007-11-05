@@ -58,7 +58,7 @@ RefitTrSeq.Members += { "TrackEventFitter/FitTsa" };
 RefitTrSeq.Members += { "TrackEventFitter/FitMatch" };
 
 // KShort fit
-RefitTrSeq.Members += { "TrackEventFitter/FitKsTrack" };
+RefitTrSeq.Members += { "TrackEventFitter/FitDownstream" };
 
 // Velo-TT fit
 RefitTrSeq.Members += { "TrackEventFitter/FitVeloTT" };

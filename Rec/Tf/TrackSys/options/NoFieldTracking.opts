@@ -11,9 +11,9 @@ MagneticFieldSvc.UseConstantField = true;
 // ====================================================================
 
 // K Short
-Track.DetectorList -= { "KShortPat" };
-Track.DetectorList -= { "KShortPreFit" };
-Track.DetectorList -= { "KShortFit" };
+Track.DetectorList -= { "DownstreamPat" };
+Track.DetectorList -= { "DownstreamPreFit" };
+Track.DetectorList -= { "DownstreamFit" };
 
 // Set up clone killer without removed track types
 TrackEventCloneKiller.TracksInContainers  = {
