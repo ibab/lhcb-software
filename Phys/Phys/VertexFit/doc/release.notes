@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.117 2007-11-02 17:08:52 xieyu Exp $
+! $Id: release.notes,v 1.118 2007-11-05 07:25:56 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v4r3p3 2007-11-05 ====================
+
 ! 2007-11-02 - Yuehong Xie
  - src/OfflineVertexFitter.cpp
  . Fix bug: cov2=pos1 -> covariance()
-
-!========================== VertexFit v4r3p3 2007-11-02 ====================
 
 ! 2007-11-02 - Juan Palacios
  - cmt/requirements
