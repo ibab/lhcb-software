@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-11-05 Johannes Albrecht
+	- options/RecoTracking.opts and NoFieldTracking.opts
+	include parameter file for fast momentum estimate tool
+
 ! 2007-11-05 Eduardo Rodrigues
  - fixed typo in DSTRefitting.opts
 
