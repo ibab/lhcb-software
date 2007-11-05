@@ -1,14 +1,4 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.7 2007-04-16 16:16:48 pkoppenb Exp $
-// ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/08/29 11:40:48  ibelyaev
-//  many fixed to simplify MC-match
-//
-// Revision 1.5  2006/08/15 15:27:43  ibelyaev
-//  adaptation to new inheritance scheme for Vertices
-//
+// $Id: LoKi_PV2MCAlg.cpp,v 1.8 2007-11-05 14:41:01 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -192,19 +182,21 @@ StatusCode LoKi_PV2MCAlg::execute()
   const LHCb::MCVertex2Collision* collision =  
     get<LHCb::MCVertex2Collision> ( m_collision ) ;
   if ( 0 == collision ) { return StatusCode::FAILURE ; }         // RETURN 
-
+  
   // get Track  -> MC links 
-  typedef const IRelation<LHCb::Track,LHCb::MCParticle> TrackTable ;
+  typedef const IRelationWeighted<LHCb::Track,LHCb::MCParticle,double> TrackTable ;
+  //typedef const IRelation<LHCb::Track,LHCb::MCParticle> TrackTable ;
   typedef TrackTable::Range                             TrackRange ;
   const TrackTable* trackMC = get<TrackTable> ( m_track2MC ) ;
   if ( 0 == trackMC ) { return StatusCode::FAILURE ; }           // RETURN 
   
-  // from all MC-verties select only the primaries
+  // from all MC-vertices select only the primaries
   PRIMARIES prims0 ;
-  LoKi::select ( vertices->begin () , 
-                 vertices->end   () , 
-                 std::back_inserter ( prims0 ) , 
-                 MCPRIMARY ) ;
+  LoKi::select 
+    ( vertices->begin () , 
+      vertices->end   () , 
+      std::back_inserter ( prims0 ) , 
+      MCPRIMARY ) ;
   if ( prims0.empty()  )
   { Warning ( " Empty container of primary MC-vertices! " ) ; }
   
@@ -248,8 +240,8 @@ StatusCode LoKi_PV2MCAlg::execute()
       const LHCb::MCParticle* mcp = r.front().to() ;
       if ( 0 == mcp   ) { continue ; }                             // CONTINUE
       // get the primary vertex!!!
-      const LHCb::MCVertex* mcpv = mcp->primaryVertex() ;
-      if ( 0 == mcpv  ) { continue ; }                             // CONTINUE 
+      const LHCb::MCVertex* mcpv = mcp -> primaryVertex() ;
+      if ( 0 == mcpv ) { continue ; }                              // CONTINUE 
       // fill the temporary map (count number of tracks from MC-vertices)
       _map[mcpv] += 1 ;
     } 
@@ -270,7 +262,7 @@ StatusCode LoKi_PV2MCAlg::execute()
       LHCb::PV2MCWeight weight ( nTrack , chi2 ) ;
       
       // Fill the relation table LHCb::RecVertes <--> LHCb::MCParticle
-      table1->relate ( pv , mc , weight ) ;
+      table1 -> relate ( pv , mc , weight ) ;
       
       // it has been checked already that it is OK!!!
       const LHCb::GenCollision* c = 
@@ -279,13 +271,8 @@ StatusCode LoKi_PV2MCAlg::execute()
       // Fill the relation table LHCb::PrimVertes <--> LHCb::GenCollision
       table2->relate ( pv , c , weight ) ;
       
-    } // end of loop over Monte Carlo primary vertices
-    
-    if ( _map.size() != table1->relations( pv ).size() )
-    { Warning ( "Mismatch in sizes: check PV definition!" ) ; }
-    
-  }  // end of loop over reconstructd primary vertices
-  
+    } // end of loop over Monte Carlo primary vertices    
+  }  // end of loop over reconstructed primary vertices
   // DECORATIONS:
   {
     // total number of established links 
@@ -303,7 +290,7 @@ StatusCode LoKi_PV2MCAlg::execute()
     if ( msgLevel ( MSG::DEBUG ) ) 
     { debug() << " Number of 'PV->Colllsion' links : " << links  << endreq ; }
   }
-
+  
   return StatusCode::SUCCESS ;
 } ;
 

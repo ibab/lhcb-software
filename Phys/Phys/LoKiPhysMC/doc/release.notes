@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.34 2007-10-08 06:57:59 cattanem Exp $ 
+! $Id: release.notes,v 1.35 2007-11-05 14:41:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-11-05 - Vanya BELYAEV
+  
+  - src/Components/LoKi_PV2MCAlg.cpp 
+
+    fix couple of small problems with PV vertex <--> MC vertex association 
+     
+ - cmt/requirements 
+   version increment to v6r2 
 
 !========================== LoKiPhysMC v6r1 2007-10-08 ========================
 ! 2007-10-07 - Vanya BELYAEV
