@@ -1,4 +1,4 @@
-// $Id: TrackAddLikelihood.cpp,v 1.2 2007-10-03 14:01:37 mneedham Exp $
+// $Id: TrackAddLikelihood.cpp,v 1.3 2007-11-05 16:00:42 cattanem Exp $
 
 
 // BOOST
@@ -31,7 +31,7 @@ TrackAddLikelihood::TrackAddLikelihood(const std::string& name,
 
  declareProperty("types", m_types = boost::assign::list_of(Track::PatVelo )(Track::PatVeloTT )
                                            (Track::PatForward )(Track::TrackMatching )
-                                           (Track::PatKShort)(Track::TsaTrack)(Track::PatVeloGeneral));                  
+                                           (Track::PatDownstream)(Track::TsaTrack)(Track::PatVeloGeneral));
 }
 
 TrackAddLikelihood::~TrackAddLikelihood()
