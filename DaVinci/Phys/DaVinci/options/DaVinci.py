@@ -7,4 +7,4 @@ from Gaudi.Configuration import *
 importOptions('../options/DaVinci.opts')
 
 ApplicationMgr( AppName    = 'DaVinci',
-                AppVersion = 'v19r6' )
+                AppVersion = 'v19r7' )
