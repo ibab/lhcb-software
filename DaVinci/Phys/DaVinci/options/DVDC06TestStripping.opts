@@ -26,7 +26,7 @@
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 1000 ;
+ApplicationMgr.EvtMax = 10000 ;
 EventSelector.PrintFreq  = 1;
 
 MessageSvc.OutputLevel = 3 ;
