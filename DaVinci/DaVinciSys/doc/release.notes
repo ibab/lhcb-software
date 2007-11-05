@@ -3,6 +3,13 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v19r7>2007-11-05 DaVinci v19r7. New DC06 stripping version</A></H1><PRE>
+Based on Phys v6r7p1, Analysis v1r7p1, Rec v4r11, HLT v1r10, Lbcom v6r10, LHCb v22r10, Gaudi v19r5, LCGCMT 53c.
+Identical to DaVinci v19r6 except for:
+* Bug fixes to Phys/VertexFit (PHYS v6r7p1)
+* Bug fix Phys/DaVinciAssociators (ANALYSIS v1r7p1)
+* New preselection in PhysSel/B2uds (ANALYSIS v1r7p1)
+
 </PRE><H1><A NAME=v19r6>2007-10-25 DaVinci v19r6. New DC06 stripping version</A></H1><PRE>
 Based on Phys v6r7, Analysis v1r7, Rec v4r11, HLT v1r10, Lbcom v6r10, LHCb v22r10, Gaudi v19r5, LCGCMT 53c.
 
