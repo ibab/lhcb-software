@@ -62,6 +62,9 @@ TsaSeed.stubExtender.y0Cut1 = 100.;
 TsaSeed.stubExtender.txCut = 0.1;
 TsaSeed.stubExtender.tyCut = 0.1;
 
+//get parameters for fast momentum estimate
+#include "$TRACKTOOLSROOT/options/FastMomentumEstimate.opts"
+
 // Match pattern
 TrackMatch.Chi2MatchingCut = 4000;
 TrackMatch.MomentumCut = 0.;

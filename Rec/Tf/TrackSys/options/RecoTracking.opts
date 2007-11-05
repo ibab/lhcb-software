@@ -83,6 +83,9 @@ TsaSeed.stereoS4.sector = 4;
 ToolSvc.TsaDataManager.CleanITHits = true;
 ToolSvc.TsaDataManager.CleanOTHits = true;
 
+//get parameters for fast momentum estimate
+#include "$TRACKTOOLSROOT/options/FastMomentumEstimate.opts"
+
 // Seed fit
 TrackSeedFitSeq.Members += { "TrackEventFitter/FitTsa" };
 
