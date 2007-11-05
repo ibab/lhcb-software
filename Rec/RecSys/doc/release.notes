@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r1>2007-11-02 RecSys v5r1</A></H1><PRE>
+</PRE><H1><A NAME=v5r1>2007-11-05 RecSys v5r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r1.
 This version includes also the bug fixes of RecSys v4r11 (not in v5r0)
 
@@ -45,11 +45,24 @@ This version includes also the bug fixes of RecSys v4r11 (not in v5r0)
     CheckMissedDownstream.
 
 - In TrackSys v4r11
-  . Update RecoTracking and Fitting.opts to re-introduce the downstream tracks
+  . Updated RecoTracking, Fitting, NoFieldTracking, DSTReffitting.opts to
+    re-introduce downstream tracks
+	. options/RecoTracking.opts and NoFieldTracking.opts:
+	  included parameter file for fast momentum estimate tool
+  . Fixed typo in DSTRefitting.opts
 
 - In TsaAlgorithms v3r1
   . Move TsaTStationHitManager to TsaKernel, so that it can be used outside
     TsaAlgorithms (e.g. HLT)
+	. TsaSeedTrackCnvTool.cpp, h: 
+		o add new tool which does the conversion from TsaSeed to LHCb::Track
+		o add possibility to return state at mid T
+		o add possibility (set as default) to get momentum for Track from
+      FastMomentumEstimate
+	. TsaSeedTrackCnv.cpp,h algorithm now calls the tool for track conversion
+	. TsaStereoBase.cpp, h add possibility to restrict Ty slope in track search
+	. TsaITStereoSearch.cpp, TsaOTStereoSearch.cpp: 
+	  adapt for possible Ty restriction
 
 - In PatAlgorithms v3r1
   . Import PatDownstream, an adaptation of PatKShort
