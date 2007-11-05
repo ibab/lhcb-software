@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r1>2007-11-02 LHCbSys v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2007-11-05 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - Packages added:    L0Interfaces v1r0 - Interfaces for L0 tools
@@ -13,7 +13,8 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
     EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, PhysEvent v11r4,
     RecEvent v2r7, TrackEvent v4r8, DetSys v11r0, DetDesc v18r1p1, MuonDet v7r0,
     STDet v3r7, DAQSys v3r6, CaloDAQ v4r1, LoKiCore v6r1p1, LHCbAlgs v2r12,
-    TrackInterfaces v3r10, TsaKernel v3r1, SimComponents v2r7, MDF v2r6,DDDB v1r2
+    TrackInterfaces v3r10, TsaKernel v3r1, SimComponents v2r7, RichRecBase v3r8,
+    MDF v2r6, DDDB v1r2
 
 - in DDDB v1r2
   . Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
@@ -75,6 +76,12 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - In TsaKernel v3r1
   . Add TsaTStationHitManager class (previously in TsaAlgorithms)
+	. Add ITsaSeedTrackCnvTool interface for Seed-track conversion tool
+  . Add LCG dictionary generation, and make dictionary for the new inteface
+
+- In RichRecBase v3r8
+  . Adapt to change of track type from KsTrack to Downstream
+  . Update RichTrackID to handle 'ideal' tracks
 
 - In SimComponents v2r7
   . Modifications to MCReconstructible to protect against unknown category

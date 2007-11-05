@@ -68,7 +68,7 @@ use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use L0Interfaces          v1r0   L0      # Olivier Deschamps
 use CaloInterfaces        v7r4   Calo    # Olivier Deschamps
 use CaloUtils             v7r5   Calo    # Olivier Deschamps
-use RichRecBase           v3r7   Rich    # Chris Jones
+use RichRecBase           v3r8   Rich    # Chris Jones
 use TrackInterfaces       v3r10  Tr      # Matt Needham
 use LinkerInstances       v3r3   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v11r6  Det     # Marco Clemencic
