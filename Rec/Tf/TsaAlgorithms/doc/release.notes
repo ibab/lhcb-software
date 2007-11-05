@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r1 2007-11-05 ======================
 ! 2007-11-02 - Johannes Albrecht
 	- TsaSeedTrackCnvTool.cpp, h: 
 		add new tool which does the conversion from TsaSeed to LHCb::Track
@@ -15,7 +16,6 @@
 	- TsaITStereoSearch.cpp, TsaOTStereoSearch.cpp: 
 	  adapt fpr possible Ty restriction
 
-!======================= TsaAlgorithms v3r1 2007-11-02 ======================
 ! 2007-11-02 - Marco Cattaneo
  - Adapt other classes to change below, they were not compiling....
 
