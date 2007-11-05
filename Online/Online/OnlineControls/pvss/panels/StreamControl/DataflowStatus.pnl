@@ -1,0 +1,171 @@
+V 10
+1
+LANG:1 19 Dataflow FSM Status
+PANEL,-1 -1 700 739 N "_3DFace" 0
+E E E E E 1 -1 -1 0  0 0
+""0  1
+E E 2
+"CBRef" "0"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+13 0
+"m_close"
+""
+1 610 710 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+0 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 608 708 692 732
+
+T 
+1
+LANG:1 5 Close
+"main()
+{
+  PanelOff();
+}" 0
+ E E "main()    {
+  m_install.visible = 0;
+  m_uninstall.visible = 0;
+  dyn_string params = makeDynString(\"$1:STORAGE:Storage_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Storage\",
+              params,0,0,0,1,1);
+  params = makeDynString(\"$1:MONITORING:Monitoring_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Monitoring\",
+              params,0,350,0,1,1);
+}
+" 0
+
+13 2
+"m_installation"
+""
+1 20 710 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+3 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 18 708 102 732
+
+T 
+1
+LANG:1 12 Installation
+"main()    {
+  m_uninstall.visible = !m_install.visible; 
+  m_install.visible = !m_install.visible;
+}" 0
+ E E E
+13 3
+"m_install"
+""
+1 110 710 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 108 708 192 732
+
+T 
+1
+LANG:1 7 Install
+"main()  {
+  StreamStatusDisplay_install();
+}" 0
+ E E "main()    {
+  dyn_string params = makeDynString(\"$1:STORAGE:Storage_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Storage\",
+              params,0,0,0,1,1);
+  params = makeDynString(\"$1:MONITORING:Monitoring_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Monitoring\",
+              params,0,350,0,1,1);
+}
+" 0
+
+13 4
+"m_uninstall"
+""
+1 200 710 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 198 708 282 732
+
+T 
+1
+LANG:1 9 Uninstall
+"main()  {
+  StreamStatusDisplay_uninstall();
+}" 0
+ E E "main()    {
+  dyn_string params = makeDynString(\"$1:STORAGE:Storage_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Storage\",
+              params,0,0,0,1,1);
+  params = makeDynString(\"$1:MONITORING:Monitoring_Slice00\");
+  int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Monitoring\",
+              params,0,350,0,1,1);
+}
+" 0
+
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0
