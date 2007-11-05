@@ -17,7 +17,10 @@ void StreamStatusDisplay_install() {
     strreplace(dp,getSystemName(),"");
     if ( !dpExists(dp) ) dpCreate(dp,"StreamDisplayData");
   }
+  // Display Server
   ctrlUtils_installPythonManager(51,"PVSS00DataflowMon","../python/Online/Streaming/DisplayServer.py");
+  // Display itslf
+  fwInstallation_addManager("PVSS00ui","never", 30, 3, 3, "-p StreamControl/DataflowStatus.pnl -iconBar -menuBar");
 }
 //=============================================================================
 int StreamStatusDisplay_uninstall()  {
