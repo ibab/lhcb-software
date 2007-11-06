@@ -2,13 +2,12 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
-
-
+!======================= STAlgorithms v2r4 2007-11-06 ========================
 ! 2007-11-06 M. Needham
  - Retune conversion factor from e- to ADC for IT
  - Add possibility to make STDigits on all detector strips
  - Use dead channel info from detector element in digitization code
- - Remove STEffCalculator tool
+ - Remove STEffCalculator tool and ISTEffCalculator interface
  - Add STClusterKiller algorithm
 
 !======================= STAlgorithms v2r3 2007-10-03 ========================

@@ -1,12 +1,14 @@
 package STAlgorithms
-version v2r3
+version v2r4
 
 branches cmt doc src options
 
 include_path none
 
-use GaudiGSL            v*
+use GSL                 v*    LCG_Interfaces
+use GaudiKernel         v*
 use GaudiAlg            v*
+use GaudiGSL            v*
 use STDet               v*    Det
 use DigiEvent           v*    Event
 use MCEvent             v*    Event
