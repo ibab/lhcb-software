@@ -2,7 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+
+
 ! 2007-11-06 M. Needham
+ - Retune conversion factor from e- to ADC for IT
  - Add possibility to make STDigits on all detector strips
  - Use dead channel info from detector element in digitization code
  - Remove STEffCalculator tool
