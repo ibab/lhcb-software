@@ -69,7 +69,6 @@ void upic_pos_of_histo (Histo*,int*,int*);
 void upic_moving_histo (Histo*);
 
 /*- From UPI_INPUT.C --------------------------------------------------*/
-
 int upic_wait (int*);
 int upic_get_input_with_index (int*,int*,int*,int*);
 int upic_get_input (int*,int*,int*);

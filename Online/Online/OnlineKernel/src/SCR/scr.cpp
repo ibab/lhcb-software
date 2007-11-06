@@ -43,7 +43,7 @@ static Display *Resizing_display, *Resizing_text;
 int scr_ignore_input;
 
 //---------------------------------------------------------------------------
-int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* cols)  {
+int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, int* cols)  {
   if (Paste)  {
     *paste = Paste;
     *rows = Paste->rows;

@@ -6,16 +6,16 @@ namespace SCR {
 #endif
   typedef enum {
           INVALID = 0x100, 
-          CTRL_A,
-          CTRL_B,
-          CTRL_C,
+          CTRL_A, //      101
+          CTRL_B, //      102
+          CTRL_C, //      103
           CTRL_D,
           CTRL_E,
           CTRL_F,
           CTRL_G,
           CTRL_H,
           CTRL_I,
-          CTRL_J,
+          CTRL_J, // 10   10A
           CTRL_K,
           CTRL_L,
           CTRL_M,
@@ -25,20 +25,20 @@ namespace SCR {
           CTRL_Q,
           CTRL_R,
           CTRL_S,
-          CTRL_T,
+          CTRL_T, // 20   114
           CTRL_U,
           CTRL_V,
           CTRL_W,
           CTRL_X,
           CTRL_Y,
-          CTRL_Z,
+          CTRL_Z, // 26   11A
 
-          DELETE,
+          DELETE, // 27   11B
 
-          MOVE_UP,
-          MOVE_DOWN,
-          MOVE_LEFT,
-          MOVE_RIGHT,
+          MOVE_UP,     // 28   11C
+          MOVE_DOWN,   // 29   11D
+          MOVE_LEFT,   // 30   11E
+          MOVE_RIGHT,  // 31   12F
 
           F6,
           F7,

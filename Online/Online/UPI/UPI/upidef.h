@@ -36,14 +36,24 @@
 #define ONLY_PAGE	"   "
 #define PAGE_MARKER_SIZE 3
 
+namespace SCR {
 #if !defined(ON_OFF_DEFINED)
 #define ON_OFF_DEFINED 1
-typedef enum FLAG {OFF, ON} flag;
+enum FLAG {OFF, ON};
+typedef FLAG flag;
 #endif
 
 struct Pasteboard;
 struct Display;
 struct Window;
+}
+using SCR::Display;
+using SCR::Window;
+using SCR::Pasteboard;
+using SCR::FLAG;
+using SCR::ON;
+using SCR::OFF;
+
 
 typedef unsigned Unsigned;
 typedef void (*Routine)(int,int,...);

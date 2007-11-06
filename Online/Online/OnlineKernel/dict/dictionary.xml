@@ -12,6 +12,14 @@
     <function name="remqhead"/>
     <class name="qentry"/>
 
+    <class pattern="*Sensor"/>
+
+    <enum  pattern="SCR::*"/>
+    <class pattern="SCR::*"/>
+    <function pattern="scrc_*"/>
+    <function pattern="scrcc_*"/>
+    <function pattern="SCR::*"/>
+
     <function pattern="wtc_*"/>
 
     <function pattern="amsc_*"/>

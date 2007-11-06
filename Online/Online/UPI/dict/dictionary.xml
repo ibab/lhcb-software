@@ -1,0 +1,14 @@
+<lcgdict>
+  <selection>
+    <function pattern="upic_*"/>
+    <function pattern="upicc_*"/>
+  </selection>
+  <exclusion>
+    <function name="upic_declare_callback"/>
+    <function name="upic_set_message_callback"/>
+    <function name="upic_declare_ast_handler"/>
+    <function name="upic_declare_exit_handler"/>
+    <function name="upic_enable_action_routine"/>
+    <function name="upic_set_drag_histo_action"/>
+  </exclusion>
+</lcgdict>

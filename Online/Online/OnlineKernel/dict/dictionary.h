@@ -47,6 +47,10 @@
 #include "NET/TcpConnection.h"
 #include "NET/UdpNetworkChannel.h"
 #include "NET/UdpConnection.h"
+#include "SCR/scr.h"
+#include "CPP/IocSensor.h"
+#include "CPP/AmsSensor.h"
+#include "CPP/TimeSensor.h"
 
 #if 0
 namespace  {

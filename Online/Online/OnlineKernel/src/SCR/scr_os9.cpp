@@ -13,6 +13,9 @@
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
 #include "NET/IOPortManager.h"
+
+using namespace SCR;
+
 static Pasteboard *Kbd = 0;
 
 static char Last_char = 0;
@@ -26,7 +29,6 @@ static int (*User_mouse_handler)(int,int) = 0;
 static int (*User_configure_handler)(int,int) = 0;
 
 extern int scr_ignore_input;
-using namespace SCR;
 static const char* s_termType = ::getenv("TERM");
 
 //----------------------------------------------------------------------------
