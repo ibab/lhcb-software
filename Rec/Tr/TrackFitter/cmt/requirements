@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.26 2007-10-26 05:50:52 cattanem Exp $
+# $Id: requirements,v 1.27 2007-11-06 15:05:27 cattanem Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
 package           TrackFitter
-version           v2r20
+version           v2r21
 
 # Structure, i.e. directories to process. 
 #============================================================================
