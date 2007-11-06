@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.21 2007-10-26 14:53:48 mneedham Exp $
+// $Id: DeSTSector.h,v 1.22 2007-11-06 10:31:02 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -243,6 +243,11 @@ public:
    /** short cut for strip status ok */
   bool isOKStrip(const LHCb::STChannelID& chan) const;
 
+  /** strip to channel
+  * @param unsigned int strip
+  * @return STChannelID corresponding channel */ 
+  LHCb::STChannelID stripToChan(const unsigned int strip) const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -447,6 +452,13 @@ inline std::vector<DeSTSector::Status> DeSTSector::stripStatus() const{
     } 
   } // nStrip
   return vec;
+}
+
+inline LHCb::STChannelID DeSTSector::stripToChan(const unsigned int strip) const{
+  return isStrip(strip) ? LHCb::STChannelID(elementID().type(),elementID().station(),
+                                      elementID().layer(),elementID().detRegion(),
+                                      elementID().sector(), strip)
+                        : LHCb::STChannelID(0); 
 }
 
 /** ouput operator for class DeSTSector

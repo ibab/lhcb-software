@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.9 2007-10-26 14:53:48 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.10 2007-11-06 10:31:02 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -27,12 +27,6 @@ public:
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
-
-  /** check whether point is inside element
-  * @param point 
-  * @return true if inside
-  */
-  bool isInside(const Gaudi::XYZPoint& point) const;
 
   /** transform global to local point
   * @param  point global point 
@@ -120,10 +114,6 @@ private:
 };
 
 #include "DetDesc/IGeometryInfo.h"
-
-inline bool DeSTBaseElement::isInside(const Gaudi::XYZPoint& point) const{
-  return this->geometry()->isInside(point);
-}
 
 inline Gaudi::XYZPoint DeSTBaseElement::toLocal(const Gaudi::XYZPoint& point) const{
   return this->geometry()->toLocal(point);
