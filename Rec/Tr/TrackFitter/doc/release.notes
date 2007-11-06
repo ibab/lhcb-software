@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-11-5 M. Needham
+  - Put checking on by default
+
 ! 2007-11-6 M Needham
   - fix unchecked status codes
   - use warning is used rather than private failure method in TrackKalmanFilter
