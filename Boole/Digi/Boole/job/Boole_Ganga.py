@@ -45,7 +45,8 @@ myApplication.version = BooleVersion
 # Note, if you want you can replace the PFNs in this file with LFNs directly,
 # since ganga takes care of the book-keeping for you :)
 myApplication.optsfile = File ( myApplication.cmt_user_path
-   + '/Digi/Boole/' + BooleVersion + '/options/v200601.opts' )
+   + '/Boole_' + BooleVersion + '/Digi/Boole/' + BooleVersion
+   + '/options/v200601.opts' )
 # Extra options
 # Appended to the end of the main options to override default settings
 #myApplication.extraopts = ''
