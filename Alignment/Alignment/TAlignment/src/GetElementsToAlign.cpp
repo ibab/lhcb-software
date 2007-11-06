@@ -1,4 +1,4 @@
-// $Id: GetElementsToAlign.cpp,v 1.4 2007-10-17 13:49:56 lnicolas Exp $
+// $Id: GetElementsToAlign.cpp,v 1.5 2007-11-06 16:20:08 lnicolas Exp $
 // Include files 
 // from STD
 #include <iomanip>
@@ -229,8 +229,13 @@ StatusCode GetElementsToAlign::initialize() {
       typedef DeSTLayer* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
       memberFunctionP fp = &DeSTDetector::findLayer;
       m_detElemFromLHCbID = bind<const DetectorElement*>(fp, tt, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
-    } else if (boost::regex_match(name, boost::regex(".*TT/TT./.*Layer/.*Module.*$"))) { ///< TT Modules
+    } else if (boost::regex_match(name, boost::regex(".*TT/TT./.*Layer/.*Module.*/Ladder.$"))) { ///< TT Ladders
       /// DeSTDetector::findLayer is overloaded. So we need a function pointer to the function we want to use.
+      typedef DeSTSector* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
+      memberFunctionP fp = &DeSTDetector::findSector;
+      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, tt, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
+    } else if (boost::regex_match(name, boost::regex(".*TT/TT./.*Layer/.*Module.*$"))) { ///< TT Modules
+      /// DeSTDetector::findSector is overloaded. So we need a function pointer to the function we want to use.
       typedef DeSTSector* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
       memberFunctionP fp = &DeSTDetector::findSector;
       m_detElemFromLHCbID =
