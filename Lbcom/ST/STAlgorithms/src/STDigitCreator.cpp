@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.14 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: STDigitCreator.cpp,v 1.15 2007-11-06 09:53:22 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,7 +20,6 @@
 #include "Kernel/STDetSwitch.h"
 
 // local
-#include "ISTEffCalculator.h"
 #include "STDigitCreator.h"
 
 using namespace LHCb;
@@ -40,6 +39,7 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("TailStart", m_tailStart = 3.0);
   declareProperty("Saturation", m_saturation = 127.);
   declareProperty("DetType", m_detType = "TT");
+  declareProperty("allStrips", m_allStrips = false);
 }
 
 STDigitCreator::~STDigitCreator()
@@ -57,8 +57,6 @@ StatusCode STDigitCreator::initialize()
   STDetSwitch::flip(m_detType,m_inputLocation);
   STDetSwitch::flip(m_detType,m_outputLocation);
 
-   // eff tool
-  m_effTool = tool<ISTEffCalculator>(m_effToolName,this);
 
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
                                                m_sigNoiseToolName+m_detType);
@@ -70,9 +68,13 @@ StatusCode STDigitCreator::initialize()
                             m_gaussTailDist.pRef());
 
   // cache the number of noise strips
-  double fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
-  m_numNoiseStrips = (int)(fracOfNoiseStrips*m_tracker->nStrip());
-
+  if (!m_allStrips){
+    double fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
+    m_numNoiseStrips = (int)(fracOfNoiseStrips*m_tracker->nStrip());
+  }
+  else {
+    m_numNoiseStrips = m_tracker->nStrip();
+  }
   return sc;
 }
 
@@ -125,23 +127,32 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
 
   // create noise strips in loop
   const DeSTDetector::Sectors& tSectors = m_tracker->sectors();
-  for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
-    // generate a random readout sector
-    int iSector = (int)(m_uniformDist->shoot()*nSector);
-    DeSTSector* aSector = tSectors[iSector];
-    int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
-    STChannelID aChan = STChannelID(aSector->elementID().type(),
-                                    aSector->elementID().station(),
-                                    aSector->elementID().layer(),
-                                    aSector->elementID().detRegion(),
-                                    aSector->elementID().sector(),
-                                    iStrip);
+  if (!m_allStrips){
+    for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
+      // generate a random readout sector
+      int iSector = (int)(m_uniformDist->shoot()*nSector);
+      DeSTSector* aSector = tSectors[iSector];
+      int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
+      STChannelID aChan = aSector->stripToChan(iStrip); 
 
-    // Generate a ADC value following a gaussian tail distribution
-    double ranNoise = m_sigNoiseTool->noiseInADC(aSector) *
-      m_gaussTailDist->shoot();
-    noiseCont.push_back(std::make_pair(ranNoise,aChan));
-  } // iNoiseStrip
+      if (aSector->stripStatus(aChan) != DeSTSector::Dead){
+        // Generate a ADC value following a gaussian tail distribution
+        double ranNoise = m_sigNoiseTool->noiseInADC(aSector) *
+        m_gaussTailDist->shoot();
+        noiseCont.push_back(std::make_pair(ranNoise,aChan));
+      } // alive strip
+    } // iNoiseStrip
+  } 
+  else {
+    DeSTDetector::Sectors::const_iterator iterS = tSectors.begin(); 
+    for ( ; iterS != tSectors.end(); ++iterS){
+      for (unsigned int iStrip =0;  iStrip != (*iterS)->nStrip();  ++iStrip){
+        STChannelID aChan = (*iterS)->stripToChan(iStrip);
+        double ranNoise = m_sigNoiseTool->noiseInADC(*iterS) * m_gaussDist->shoot();
+        noiseCont.push_back(std::make_pair(ranNoise,aChan));
+      } // iStrip
+    } // for
+  }
 
   // Sort the noise digits by STChannelID
   std::sort( noiseCont.begin(), noiseCont.end(), Less_by_Channel() );
@@ -154,21 +165,17 @@ void STDigitCreator::createDigits(MCSTDigits* mcDigitCont, STDigits* digitsCont)
   MCSTDigits::const_iterator iterMC = mcDigitCont->begin();
   for ( ; iterMC != mcDigitCont->end(); ++iterMC ) {
 
-    // Apply readout inefficiency/dead channels
-    if ( m_effTool->accept() ) {
+    // charge including noise
+    const SmartRefVector<MCSTDeposit> depositCont = (*iterMC)->mcDeposit();
+    double totalCharge =
+       std::accumulate(depositCont.begin(),depositCont.end(), 0.,
+                       STDataFunctor::Accumulate_Charge<const MCSTDeposit*>());
+    totalCharge += (m_gaussDist->shoot() *
+                    m_sigNoiseTool->noiseInADC((*iterMC)->channelID()) );
 
-      // charge including noise
-      const SmartRefVector<MCSTDeposit> depositCont = (*iterMC)->mcDeposit();
-      double totalCharge =
-        std::accumulate(depositCont.begin(),depositCont.end(), 0.,
-                        STDataFunctor::Accumulate_Charge<const MCSTDeposit*>());
-      totalCharge += ( m_gaussDist->shoot() *
-                       m_sigNoiseTool->noiseInADC((*iterMC)->channelID()) );
-
-      // make digit and add to container.
-      STDigit* newDigit = new STDigit( adcValue( totalCharge ) );
-      digitsCont->insert(newDigit,(*iterMC)->channelID());
-    } // isOK
+    // make digit and add to container.
+    STDigit* newDigit = new STDigit( adcValue( totalCharge ) );
+    digitsCont->insert(newDigit,(*iterMC)->channelID());
   } // iterDigit
 }
 
@@ -181,10 +188,8 @@ void STDigitCreator::mergeContainers( const std::vector<digitPair>& noiseCont,
   while (iterNoise != noiseCont.end()) {
     // if strip was not hit: add noise
     if ((0 == findDigit(iterNoise->second)) && (prevChan != iterNoise->second)){
-      if ( m_effTool->accept() ) {
-        STDigit* newDigit = new STDigit( adcValue(iterNoise->first) );
-        digitsCont->insert(newDigit,iterNoise->second);
-      } // alive
+      STDigit* newDigit = new STDigit( adcValue(iterNoise->first) );
+      digitsCont->insert(newDigit,iterNoise->second);
     }   // findDigit
     prevChan = iterNoise->second;
     ++iterNoise;
@@ -213,7 +218,8 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
   for( ; curDigit != digitsCont->end(); ++curDigit ) {
 
     // Get left neighbour
-    STChannelID leftChan = m_tracker->nextLeft((*curDigit)->channelID());
+    const DeSTSector* aSector = m_tracker->findSector((*curDigit)->channelID());
+    STChannelID leftChan = aSector->nextLeft((*curDigit)->channelID());
 
     // Don't add left neighbour if this neighbour is already hit
     STChannelID prevDigitChan = 0u;
@@ -227,7 +233,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
     }
   
     // Get right neighbour
-    STChannelID rightChan = m_tracker->nextRight((*curDigit)->channelID());
+    STChannelID rightChan = aSector->nextRight((*curDigit)->channelID());
 
     // Don't add right neighbour if this neighbour is already hit
     STChannelID nextDigitChan = 0u;
@@ -246,8 +252,11 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
   for ( ; iterP != tmpCont.end(); ++iterP){
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
-      STDigit* aDigit = new STDigit( adcValue(iterP->first) );
-      digitsCont->insert(aDigit,iterP->second);
+      DeSTSector* aSector = m_tracker->findSector(iterP->second);
+      if (aSector->stripStatus(iterP->second) != DeSTSector::Dead){
+        STDigit* aDigit = new STDigit( adcValue(iterP->first) );
+        digitsCont->insert(aDigit,iterP->second);
+      } //ok strip
     }
   } //iterP
 }

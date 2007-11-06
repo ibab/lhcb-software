@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.5 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: MCSTDepositCreator.h,v 1.6 2007-11-06 09:53:22 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -64,9 +64,8 @@ private:
 
   void chargeSharing(const std::vector<double>& sites, 
                      const DeSTSector* aSector,
-                     std::map<unsigned int,double>& stripMap) const;
+                     std::map<unsigned int,double>& stripMap, double& possibleCollectedCharge) const;
 
-  double chargeOnStrips(const std::map<unsigned int,double>& stripMap) const;
 
   double beetleResponse(const double time, const double capacitance,
                         const std::string& type);

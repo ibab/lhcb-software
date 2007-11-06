@@ -2,6 +2,12 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-11-06 M. Needham
+ - Add possibility to make STDigits on all detector strips
+ - Use dead channel info from detector element in digitization code
+ - Remove STEffCalculator tool
+ - Add STClusterKiller algorithm
+
 !======================= STAlgorithms v2r3 2007-10-03 ========================
 ! 2007-10-03 - Marco Cattaneo
  - Adapt to SmartIF changes in Gaudi v19r5

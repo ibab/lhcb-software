@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.6 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: STDigitCreator.h,v 1.7 2007-11-06 09:53:22 mneedham Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
@@ -16,7 +16,6 @@
 #include "LHCbMath/LHCbMath.h"
 
 class ISTSignalToNoiseTool;
-class ISTEffCalculator;
 class DeSTDetector;
 class DeSTSector;
 
@@ -68,7 +67,6 @@ private:
 
   DeSTDetector* m_tracker;
   ISTSignalToNoiseTool* m_sigNoiseTool;  
-  ISTEffCalculator* m_effTool;
 
   LHCb::STDigits::iterator m_cachedIter;
   LHCb::STDigits::iterator m_lastIter;
@@ -82,7 +80,7 @@ private:
   double m_tailStart;
   double m_saturation;
   std::string m_detType;
-
+  bool m_allStrips;
 
   class Less_by_Channel
     : public std::binary_function<digitPair,digitPair,bool> 

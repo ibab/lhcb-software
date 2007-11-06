@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.17 2007-05-29 13:48:08 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.18 2007-11-06 09:53:22 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -124,7 +124,7 @@ StatusCode MCSTDepositCreator::execute()
     }
     else {
       // found spill - create digitizations and add them to deposits container
-      MCHits* hits = get<MCHits>(m_spillPaths[iSpill]);
+      const MCHits* hits = get<MCHits>(m_spillPaths[iSpill]);
       createDeposits(hits,m_spillTimes[iSpill],depositsCont);
     }
   } // iSpill
@@ -150,17 +150,18 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
     MCHit* aHit = *iterHit;
     
     DeSTSector* aSector = m_tracker->findSector(aHit->sensDetID());
-    if ((0 != aSector)&&(hitToDigitize(aHit))){           
+    if ((0 != aSector)&&(aSector->sectorStatus() != DeSTSector::Dead)
+        &&(hitToDigitize(aHit))){           
       
       // global to local transformation
-      Gaudi::XYZPoint entryPoint = aSector->toLocal(aHit->entry());
-      Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
-      Gaudi::XYZPoint midPoint = aSector->toLocal(aHit->midPoint());
+      const Gaudi::XYZPoint entryPoint = aSector->toLocal(aHit->entry());
+      const Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
+      const Gaudi::XYZPoint midPoint = aSector->toLocal(aHit->midPoint());
         
       if (aSector->localInActive(midPoint) == true) {
 
         // Calculate the deposited charge on strip
-        double ionization = m_depositedCharge->charge(aHit);
+        const double ionization = m_depositedCharge->charge(aHit);
         	    
         // distribute charge to n sites
         std::vector<double> chargeSites;
@@ -168,10 +169,8 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
 
         // doing charge sharing + go to strips
         std::map<unsigned int,double> stripMap;
-        chargeSharing(chargeSites,aSector,stripMap);
-
-        // correct normalization of charge
-        double totWeightedCharge = chargeOnStrips(stripMap);
+        double totWeightedCharge = 0.0;
+        chargeSharing(chargeSites,aSector,stripMap, totWeightedCharge);
       
         if (totWeightedCharge > 1e-3 ){
 
@@ -212,17 +211,18 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
                                            SiAmpliferResponseType::capCoupling);
             }
 
-            STChannelID aChan(DeSTDetLocation::detType(m_detType),
-                              elemChan.station(), elemChan.layer(), 
-                              elemChan.detRegion(), elemChan.sector(), iStrip);
-            
-            double electrons = ionization*beetleFraction*scaling*weightedCharge
-              /totWeightedCharge;
+            STChannelID aChan = aSector->stripToChan(iStrip);
 
-            double adcCounts = m_sigNoiseTool->convertToADC(electrons);
+            if (aSector->stripStatus(aChan) != DeSTSector::Dead){
             
-            MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
-            depositCont->insert(newDeposit);
+              const double electrons = ionization*beetleFraction*scaling*weightedCharge
+                                 /totWeightedCharge;
+
+              const double adcCounts = m_sigNoiseTool->convertToADC(electrons);
+            
+              MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
+              depositCont->insert(newDeposit);
+	    } // ok strip
           } // loop strip
         } // if has some charge
       }  // in active area
@@ -259,7 +259,7 @@ void MCSTDepositCreator::distributeCharge(const double entryU,
                                           std::vector<double>& sites) const
 {
   // distribute charge homogeneously at n Sites
-  double deltaU = fabs(exitU - entryU);
+  const double deltaU = fabs(exitU - entryU);
   int nSites;
   if ( deltaU <= m_siteSize ) {
     nSites = 1;
@@ -275,7 +275,7 @@ void MCSTDepositCreator::distributeCharge(const double entryU,
     std::swap(startU,stopU);
   }
 
-  double siteSize = deltaU/nSites;
+  const double siteSize = deltaU/nSites;
   int iSite;
   for (iSite = 0; iSite < nSites; ++iSite){
     sites.push_back(startU+((double)iSite+0.5)*siteSize);
@@ -286,10 +286,11 @@ void MCSTDepositCreator::distributeCharge(const double entryU,
 void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
                                        const DeSTSector* aSector,
                                        std::map<unsigned int,
-                                       double>& stripMap) const 
+                                       double>& stripMap, 
+                                       double& possibleCollectedCharge) const 
 {
   // init
-  double chargeOnSite = 1.0/((double)sites.size());
+  const double chargeOnSite = 1.0/((double)sites.size());
   std::vector<double>::const_iterator iterSite = sites.begin();
   double frac = 0.0;
   unsigned int firstStrip;
@@ -307,6 +308,7 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
       frac = m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(firstStrip))
                                      /aSector->pitch());
       stripMap[firstStrip] += frac*chargeOnSite;
+      possibleCollectedCharge += frac*chargeOnSite;
     }
 
     // second strip - if there is one
@@ -314,6 +316,7 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
       frac =m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(secondStrip))
                                     /aSector->pitch());
       stripMap[secondStrip] += frac*chargeOnSite;
+      possibleCollectedCharge += frac*chargeOnSite;
     }
 
     ++iterSite;
@@ -322,28 +325,17 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
   // add entry for strip before first and after last
   std::map<unsigned int,double>::iterator startIter = stripMap.begin();
   std::map<unsigned int,double>::iterator lastIter = stripMap.end();
-  lastIter--;
+  --lastIter;
 
   firstStrip = startIter->first;
   if (aSector->isStrip(firstStrip-1)){
     stripMap[firstStrip-1] += 0.0;
   }
 
-  unsigned int lastStrip = lastIter->first;
+  const unsigned int lastStrip = lastIter->first;
   if (aSector->isStrip(lastStrip+1)){
     stripMap[lastStrip+1] += 0.0;
   }
-}
-
-double MCSTDepositCreator::chargeOnStrips( const std::map<unsigned int,
-                                           double>& stripMap) const
-{
-  double totCharge = 0.0;
-  std::map<unsigned int,double>::const_iterator iterMap = stripMap.begin();
-  for ( ; iterMap != stripMap.end(); ++iterMap ) {
-    totCharge += iterMap->second;
-  }
-  return totCharge;
 }
 
 double MCSTDepositCreator::beetleResponse(const double time, 
