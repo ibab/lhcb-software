@@ -1,15 +1,13 @@
-!$Id: release.notes,v 1.116 2007-11-06 10:31:02 mneedham Exp $
+!$Id: release.notes,v 1.117 2007-11-06 10:55:58 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-
-! 2007-06-11 M Needham
+!======================== STDet v3r7 2007-11-06 ==========================
+! 2007-11-06 M Needham
  - Remove isInside from base class DeSTBaseElement (functionality now 
    provided by DetectorElement)
  - stripToChan method added to DeSTSector
-
-!======================== STDet v3r7 2007-11-02 ==========================
 
 ! 2007-10-26 M. Needham
  - Clean up condition registration (DeSTLayer,DeSTBaseElement,DeSTSector)
