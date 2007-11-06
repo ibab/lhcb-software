@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.21 2007-11-05 16:33:23 mneedham Exp $
+// $Id: TrackKalmanFilter.h,v 1.22 2007-11-06 16:57:18 mneedham Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -111,20 +111,7 @@ inline StatusCode TrackKalmanFilter::failure( const std::string& comment ) const
   return StatusCode::FAILURE;
 }
 
-//=========================================================================
-// 
-//=========================================================================
-inline StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const
-{
 
-  unsigned int count = 0;
-  for ( unsigned int i = 0; i < Gaudi::TrackSymMatrix::kRows ; ++i ) {
-    for ( unsigned int j = 0; j <=i && mat(i,j) < 1e20; ++j ) {
-      ++count;
-    } // j
-  } // i
-  return count != Gaudi::TrackSymMatrix::kRows*Gaudi::TrackSymMatrix::kRows ? StatusCode::SUCCESS : Warning( "Covariance matrix elements too big !",StatusCode::FAILURE,1 );
-}
 
 //=========================================================================
 // 

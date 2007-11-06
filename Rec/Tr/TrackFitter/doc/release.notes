@@ -3,8 +3,15 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2007-11-6 M Needham
+ - Bug fix in TrackKalmanFilter
+
+! 2007-11-5 M. Needham
+=======
 !=========================== TrackFitter v2r21 2007-11-06 ===================
 ! 2007-11-06 M Needham
+>>>>>>> 1.99
   - Put checking on by default
 
 ! 2007-11-05 M Needham

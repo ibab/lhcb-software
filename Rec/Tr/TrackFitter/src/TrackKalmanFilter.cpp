@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.49 2007-11-06 14:17:54 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.50 2007-11-06 16:57:18 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -543,7 +543,7 @@ StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m ) const
   // check that the elements are not too large else dsinv will crash
   if (m_checked) {
     StatusCode sc = checkInvertMatrix( m );
-    return sc;
+    if (sc.isFailure())  return sc;
   }
   TrackUnitsConverters::convertToG3( m );
   const bool OK = m.Invert();
@@ -553,3 +553,19 @@ StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m ) const
 }
 
 //=========================================================================
+
+
+//=========================================================================
+// 
+//=========================================================================
+StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const
+{
+  for ( unsigned int i = 0; i < TrackSymMatrix::kRows ; ++i ) {
+    for ( unsigned int j = 0; j <=i; ++j ) {
+      if ( mat(i,j) > 1e20 )
+        return Warning( "Covariance errors too big to invert!",
+                        StatusCode::FAILURE, 1 );
+    }
+  }
+  return StatusCode::SUCCESS;
+}
