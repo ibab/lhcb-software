@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.82 2007-08-25 19:43:48 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.83 2007-11-06 10:52:51 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -392,30 +392,28 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
 StatusCode DeVelo::updateLeftHalfBoxOffset() {
 
-  // TODO: it is unclear whether it is a good idea to do this for the
-  // first sensor instead of computing an average.  However, this is
-  // what was done in the now obsolete PatVeloAlignTool.  So we stick with
-  // it for the time being in order to get the same results wiht the VELO
-  // pattern recognition.
   Gaudi::XYZPoint localZero(0.,0.,0.);
-  
-  Gaudi::XYZPoint global = (*leftRSensorsBegin())->veloHalfBoxToGlobal(localZero);
-  m_halfBoxOffsets[LeftHalf] = global-localZero;
+ 
+  if ( leftRSensorsBegin() == leftRSensorsEnd() ) { // no modules in this half
+    m_halfBoxOffsets[LeftHalf] = localZero;
+  } else { 
+    Gaudi::XYZPoint global = (*leftRSensorsBegin())->veloHalfBoxToGlobal(localZero);
+    m_halfBoxOffsets[LeftHalf] = global-localZero;
+  }
   
   return StatusCode::SUCCESS;
 }
 
 StatusCode DeVelo::updateRightHalfBoxOffset() {
 
-  // TODO: it is unclear whether it is a good idea to do this for the
-  // first sensor instead of computing an average.  However, this is
-  // what was done in the now obsolete PatVeloAlignTool.  So we stick with
-  // it for the time being in order to get the same results wiht the VELO
-  // pattern recognition.
   Gaudi::XYZPoint localZero(0.,0.,0.);
   
-  Gaudi::XYZPoint global = (*rightRSensorsBegin())->veloHalfBoxToGlobal(localZero);
-  m_halfBoxOffsets[RightHalf] = global-localZero;
+  if ( rightRSensorsBegin() == rightRSensorsEnd() ) { // no modules in this half
+     m_halfBoxOffsets[RightHalf] = localZero;
+  } else {
+    Gaudi::XYZPoint global = (*rightRSensorsBegin())->veloHalfBoxToGlobal(localZero);
+    m_halfBoxOffsets[RightHalf] = global-localZero;
+  }
   
   return StatusCode::SUCCESS;
 }
