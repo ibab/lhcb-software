@@ -5,6 +5,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2007-11-06 - Louis Nicolas
  - GetElementsToAlign: added part for TT ladders
+ - Bug fix in boxes part of AlignITDetector.cpp
 
 ! 2007-10-17 - Louis Nicolas
  - GetElementsToAlign: added TT specific part to get TT stations, layers and half-modules
