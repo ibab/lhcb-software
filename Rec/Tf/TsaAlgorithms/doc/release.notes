@@ -4,9 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r1 2007-11-06 ======================
 ! 2007-11-06 M Needham
  - TsaSeed: ensure StatusCode checked 
-!======================= TsaAlgorithms v3r1 2007-11-05 ======================
+
 ! 2007-11-02 - Johannes Albrecht
 	- TsaSeedTrackCnvTool.cpp, h: 
 		add new tool which does the conversion from TsaSeed to LHCb::Track
