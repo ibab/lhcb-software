@@ -104,7 +104,7 @@ StatusCode Seed::execute(){
 
   if (nHit > m_maxNumHits) return StatusCode::SUCCESS;
 
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc(StatusCode::SUCCESS,true);
 
   // Loop over sectors of tracker (0-2 are IT, 3-4 are OT)
   for ( int sector = 0; sector < 5; ++sector ) {
