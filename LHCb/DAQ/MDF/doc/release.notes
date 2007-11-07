@@ -6,10 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v2r6 2007-11-07 ===============================
 ! 2007-11-07 - Markus Frank
  - Fix 64 bit checksum creation bug for hash32
 
-!========================= MDF v2r6 2007-10-26 ===============================
 ! 2007-10-26 - Marco Cattaneo, Markus Frank
  - Add Darwin support to libMDF
  - libMDF_RFIO is dummy in Darwin case, since libshift does not exist
