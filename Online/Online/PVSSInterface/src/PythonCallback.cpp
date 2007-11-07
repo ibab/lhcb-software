@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.6 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.7 2007-11-07 15:15:07 frankm Exp $
 //  ====================================================================
 //  PythonCallback.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PythonCallback.cpp,v 1.6 2007-10-01 14:46:55 frankm Exp $
+// $Id: PythonCallback.cpp,v 1.7 2007-11-07 15:15:07 frankm Exp $
 
 #include "PVSS/PythonCallback.h"
 namespace PVSS  {
@@ -154,6 +154,28 @@ PyCallbackTest::~PyCallbackTest()       {
 /// DIM overloaded callback calling python itself.
 void PyCallbackTest::handle()   { 
   (*m_call)("handle");  
+}
+/// Default destructor
+PyInteractor::PyInteractor(PyObject* self) : m_currentEvent(0) {
+  m_call = new PythonCall(self);
+  m_call->m_type = &typeid(*this); 
+}
+
+/// Standard destructor
+PyInteractor::~PyInteractor() {
+  delete m_call;
+}
+
+/// Sensor callback
+void PyInteractor::handle(const Event& ev) {
+  m_currentEvent = &ev;
+  handleEvent();
+  m_currentEvent = 0;
+}
+
+/// Overloaded Sensor callback: call to event() is valid!
+void PyInteractor::handleEvent() {
+  (*m_call)("handleEvent");  
 }
 
 /// Standard constructor: Argument self: instance to python object implementation

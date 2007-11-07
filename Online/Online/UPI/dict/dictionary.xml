@@ -1,5 +1,9 @@
 <lcgdict>
   <selection>
+    <class name="UPI::upicc_result"/>
+    <class name="Interactor"/>
+    <class name="UpiSensor"/>
+    <class name="Event"/>
     <function pattern="upic_*"/>
     <function pattern="upicc_*"/>
   </selection>

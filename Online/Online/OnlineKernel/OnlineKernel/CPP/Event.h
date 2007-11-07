@@ -44,6 +44,14 @@ public:
   Event() {}
   /// Standard destructor
   ~Event() {}
+  int iocType() const             {  return type;                      }
+  unsigned long iocData() const   {  return (unsigned long)data;       }
+  int menu() const                {  return menu_id;                   }
+  int command() const             {  return command_id;                }
+  int param() const               {  return param_id;                  }
+  int index() const               {  return index_id;                  }
+  unsigned long timerID() const   {  return (unsigned long)timer_id;   }
+  unsigned long timerData() const {  return (unsigned long)timer_data; }
 private:
   friend class Sensor;
   friend class Interactor;

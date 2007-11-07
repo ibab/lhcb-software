@@ -10,7 +10,8 @@ Dictionary.loadDict(lib_prefix+'STLRflx')
 gbl  = Dictionary.makeNamespace('')
 std  = gbl.std
 
-
+def makePrint(msg):
+  print msg
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
 logTrailer    = logHeader
@@ -39,14 +40,14 @@ def log(msg, with_header=None, with_trailer=None,timestamp=0):
   if len(logPrefix)>0: stamp = logPrefix + ' '
   if timestamp:        stamp = timeStamp() + ' '
   if ( with_header ):
-    print stamp + logHeader
+    makePrint(stamp + logHeader)
   if msg.__class__ == str().__class__:
-    print stamp + '|  ' + msg
+    makePrint(stamp + '|  ' + msg)
   else:
     for line in msg:
-      print stamp + '|  ' + line
+      makePrint(stamp + '|  ' + line)
   if ( with_trailer ):
-    print stamp + logTrailer
+    makePrint(stamp + logTrailer)
   sys.stdout.flush()
 # =============================================================================
 def error(msg, with_header=0, with_trailer=0, timestamp=0):

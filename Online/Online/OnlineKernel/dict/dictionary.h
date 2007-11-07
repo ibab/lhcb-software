@@ -52,12 +52,12 @@
 #include "CPP/AmsSensor.h"
 #include "CPP/TimeSensor.h"
 
-#if 0
 namespace  {
   class Dictionary  {
+  protected:
+    std::vector<int> m_intV;
     Dictionary()  {
     }
     ~Dictionary() {}
   };
 }
-#endif

@@ -21,11 +21,12 @@ macro lib_UPI_cppflags  " -DSCREEN "
 apply_pattern reflex_dictionary dictionary=UPI \
                                 headerfiles=$(UPIROOT)/dict/dictionary.h \
                                 selectionfile=$(UPIROOT)/dict/dictionary.xml
-macro_append OnlineKernel_reflex_options " -D__GCCXML"
+macro_append OnlineKernel_reflex_options " -D__GCCXML "
 # Gnerate dictionary rootmap file
 apply_pattern generate_rootmap library=UPIDict
+apply_pattern declare_python_modules files=*.py
 
 private
-use RELAX v* LCG_Interfaces
-use GaudiPython v*
+use Python v* LCG_Interfaces -no_auto_imports
+#
 macro_append  cppflags " -ansi -pedantic-errors -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""

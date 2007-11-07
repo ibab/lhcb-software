@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.5 2007-10-29 14:30:28 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.6 2007-11-07 15:15:07 frankm Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -26,6 +26,24 @@ namespace PVSS {
   // Forward declarations
   class PythonCall;
   class ControlsManager;
+
+  class PyInteractor : public Interactor {
+    /// Dressed python callback
+    PythonCall* m_call;
+    /// Sensor callback data
+    const Event* m_currentEvent;
+  public:
+    /// Default destructor
+    PyInteractor(PyObject* self);
+    /// Standard destructor
+    virtual ~PyInteractor();
+    /// Access Sensor callback  data
+    const Event* event() {  return m_currentEvent; }
+    /// Sensor callback
+    virtual void handle(const Event& ev);
+    /// Overloaded Sensor callback: call to event() is valid!
+    virtual void handleEvent();
+  };
 
   /** @class PyDeviceListener
     * 
