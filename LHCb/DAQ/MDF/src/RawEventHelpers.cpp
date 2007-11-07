@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.23 2007-01-24 19:21:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.24 2007-11-07 15:53:07 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -45,7 +45,7 @@ namespace LHCb {
 
 /// one-at-time hash function
 static unsigned int hash32Checksum(const void* ptr, size_t len) {
-  size_t hash = 0;
+  unsigned int hash = 0;
   const char* k = (const char*)ptr;
   for (size_t i=0; i<len; ++i, ++k) {
     hash += *k;
@@ -160,7 +160,7 @@ static unsigned short crc16Checksum (const char *data, size_t len) {
     0X4E00, 0X8EC1, 0X8F81, 0X4F40, 0X8D01, 0X4DC0, 0X4C80, 0X8C41,
     0X4400, 0X84C1, 0X8581, 0X4540, 0X8701, 0X47C0, 0X4680, 0X8641,
     0X8201, 0X42C0, 0X4380, 0X8341, 0X4100, 0X81C1, 0X8081, 0X4040 };
-    size_t nTemp;
+    unsigned int nTemp;
     unsigned short wCRCWord = 0xFFFF;
     while (len--)  {
       nTemp = *data++ ^ wCRCWord;

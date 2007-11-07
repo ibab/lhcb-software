@@ -1,5 +1,4 @@
 ApplicationMgr.Dlls                  = { "MDF" };
-ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -36,4 +35,7 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector' NSkip='500'",
   "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector' NSkip='500'",
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
+};
+EventSelector.Input                  = {
+  "DATA='file:///afs/cern.ch/user/f/frankb/cmtuser/RichCommissioning-2007.11.01-10.mdf' SVC='LHCb::MDFSelector'"
 };
