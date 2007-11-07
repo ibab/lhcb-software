@@ -15,6 +15,8 @@ namespace Tf
 {
   namespace Tsa
   {
+    // forward delclaration
+    class SeedParabolaFit;
 
     /** @class XSearchBase TsaXSearchBase.h
      * Follow track and pick up hits
@@ -89,9 +91,12 @@ namespace Tf
       int m_nT2Conf;
       double m_xsParam;
       double m_arrow;
+      double m_outlierCut;
 
       std::string m_collectPolicy;
       collectFun m_collectFun;
+
+      SeedParabolaFit* m_parabolaFit;
 
     private:
 

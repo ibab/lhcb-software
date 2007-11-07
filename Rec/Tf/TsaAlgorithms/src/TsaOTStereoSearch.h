@@ -5,8 +5,6 @@
 #include <string>
 
 #include "TsaStereoBase.h"
-#include "SeedParabolaFit.h"
-#include "SeedLineFit.h"
 
 #include "TsaKernel/TsaTStationHitManager.h"
 #include "TsaKernel/SeedFunctor.h"
@@ -21,7 +19,6 @@ namespace Tf
 {
   namespace Tsa
   {
-
     /** @class OTStereoSearch TsaOTStereoSearch.h
      * Follow track and pick up hits
      * @author M. Needham
@@ -48,8 +45,6 @@ namespace Tf
     private:
 
       void loadData(std::vector<SeedHit*> hits[6]) const;
-
-      SeedLineFit* m_parabolaFit;
 
       std::string m_dataSvcType;
       std::string m_dataSvcName;

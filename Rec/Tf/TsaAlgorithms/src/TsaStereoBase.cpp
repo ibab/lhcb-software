@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.5 2007-11-02 14:56:03 albrecht Exp $
+// $Id: TsaStereoBase.cpp,v 1.6 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -28,6 +28,7 @@ StereoBase::StereoBase(const std::string& type,
   m_fitLine(NULL)
 {
   declareProperty("sector", m_sector = -1);
+  declareProperty("outlierCut", m_outlierCut = 3.5);
   declareProperty("nSigmaTy", m_nSigmaTy = 10. );
 }
 
@@ -54,7 +55,7 @@ StatusCode StereoBase::initialize()
   m_syMin = -0.3;
   m_syMax = 0.3;
 
-  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0, TsaConstants::sth);
+  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0, TsaConstants::sth, m_outlierCut);
 
   // sector must be set
   if (m_sector == -1){

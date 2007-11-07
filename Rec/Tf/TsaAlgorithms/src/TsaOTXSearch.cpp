@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.3 2007-08-18 16:51:59 jonrob Exp $
+// $Id: TsaOTXSearch.cpp,v 1.4 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -10,6 +10,9 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/bind.hpp>
+
+#include "SeedParabolaFit.h"
+
 using namespace boost::assign;
 using namespace boost;
 
@@ -23,8 +26,7 @@ DECLARE_TOOL_FACTORY( OTXSearch );
 OTXSearch::OTXSearch(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
-  XSearchBase(type, name, parent),
-  m_parabolaFit(0)
+  XSearchBase(type, name, parent)
 {
   declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");
@@ -45,14 +47,10 @@ OTXSearch::OTXSearch(const std::string& type,
   declareProperty("maxDriftRadius", m_maxDriftRadius = 2.7*Gaudi::Units::mm);
   declareProperty("deltaX", m_deltaX = 1.0*Gaudi::Units::mm);
   declareProperty("collectPolicy", m_collectPolicy = "Curved");
-
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
-
 };
 
 OTXSearch::~OTXSearch(){
   // destructer
-  delete m_parabolaFit;
 }
 
 

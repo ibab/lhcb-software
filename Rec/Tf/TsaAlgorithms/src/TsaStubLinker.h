@@ -58,6 +58,8 @@ namespace Tf
 
       double m_deltaSx;
       double m_deltaXCon;
+      double m_outlierCutParabola;
+      double m_outlierCutLine;
 
     };
 

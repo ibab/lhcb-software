@@ -57,6 +57,7 @@ namespace Tf
       double m_syMax;
       double m_win;
       double m_nWin;
+      double m_outlierCut;
       double m_yTol;
       double m_nY;
 

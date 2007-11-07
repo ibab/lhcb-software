@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.6 2007-11-02 14:56:27 albrecht Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.7 2007-11-07 17:28:39 mschille Exp $
 
 #include <algorithm>
 
@@ -6,7 +6,6 @@
 #include "GaudiKernel/ToolFactory.h"
 
 #include "TsaITStereoSearch.h"
-#include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedFun.h"

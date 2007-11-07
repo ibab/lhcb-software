@@ -1,11 +1,10 @@
 
-// $Id: TsaITXSearch.cpp,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaITXSearch.cpp,v 1.5 2007-11-07 17:28:39 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "TsaITXSearch.h"
-#include "SeedParabolaFit.h"
 #include "TsaKernel/SeedTrack.h"
 
 #include "TsaKernel/TsaConstants.h"
@@ -17,6 +16,9 @@
 // BOOST !
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
+
+#include "SeedParabolaFit.h"
+
 using namespace boost::assign;
 using namespace boost;
 
@@ -30,8 +32,7 @@ DECLARE_TOOL_FACTORY( ITXSearch );
 ITXSearch::ITXSearch(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
-  XSearchBase(type, name, parent),
-  m_parabolaFit(0)
+  XSearchBase(type, name, parent)
 {
   declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
@@ -50,14 +51,10 @@ ITXSearch::ITXSearch(const std::string& type,
   declareProperty("nT2",m_nT2Conf = 0);
   declareProperty("deltaX", m_deltaX = 0.3*Gaudi::Units::mm);
   declareProperty("collectPolicy", m_collectPolicy = "Linear");
-
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
-
 };
 
 ITXSearch::~ITXSearch(){
   // destructer
-  delete m_parabolaFit;
 }
 
 

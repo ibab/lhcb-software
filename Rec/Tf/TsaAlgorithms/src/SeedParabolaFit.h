@@ -1,4 +1,4 @@
-// $Id: SeedParabolaFit.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: SeedParabolaFit.h,v 1.2 2007-11-07 17:28:39 mschille Exp $
 #ifndef SEEDPARABOLAFIT_H
 #define SEEDPARABOLAFIT_H 1
 
@@ -13,7 +13,7 @@ namespace Tf
 
     public:
 
-      SeedParabolaFit(double z0, unsigned int nIter = 5, double outlierCut = 3.1);
+      SeedParabolaFit(double z0, double outlierCut, unsigned int nIter = 5);
 
       ~SeedParabolaFit(){}
 
@@ -42,20 +42,13 @@ namespace Tf
       double m_z0;
       unsigned int m_maxIter;
       double m_outlierCut;
-      double m_otResolution;
-      double m_otResolution2;
-      double m_itResolution;
 
     };
 
-    inline SeedParabolaFit::SeedParabolaFit(double z0, unsigned int nIter, double outlierCut):
+    inline SeedParabolaFit::SeedParabolaFit(double z0, double outlierCut, unsigned int nIter):
       m_z0(z0),
       m_maxIter(nIter),
       m_outlierCut(outlierCut){
-
-      m_otResolution = 0.2;
-      m_otResolution2 = m_otResolution * m_otResolution ;
-      m_itResolution = 0.05;
 
       reset();
     }

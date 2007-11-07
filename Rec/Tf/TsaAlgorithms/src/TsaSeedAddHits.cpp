@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.5 2007-08-28 12:14:09 jonrob Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.6 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -25,6 +25,8 @@ SeedAddHits::SeedAddHits(const std::string& type,
   declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
   declareProperty("tol", m_tol =  1.0*Gaudi::Units::mm);
   declareProperty("dCut", m_dCut = 0.18*Gaudi::Units::mm);
+  declareProperty("outlierCutParabola",m_outlierCutParabola = 3.1);
+  declareProperty("outlierCutLine",m_outlierCutLine = 3.5);
 
   declareInterface<ITsaSeedAddHits>(this);
 
@@ -45,8 +47,9 @@ StatusCode SeedAddHits::initialize(){
   }
 
   m_hitMan = tool<ITHitMan>(m_dataSvcType,m_dataSvcName);
-  m_fitLine = new SeedLineFit(msg(), TsaConstants::z0, TsaConstants::sth);
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
+  m_fitLine = new SeedLineFit(msg(), TsaConstants::z0, TsaConstants::sth,
+		  m_outlierCutLine);
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCutParabola);
 
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::IT);
   const DeSTDetector::Stations& stations = m_tracker->stations();

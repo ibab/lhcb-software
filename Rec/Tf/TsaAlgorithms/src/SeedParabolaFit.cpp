@@ -31,11 +31,11 @@ int SeedParabolaFit::fit( SeedTrack* seed, const double &csth ) const {
       double dz4 = dz3*(z-m_z0);
       double dd;
       if ( pnt.hit()->OT() ) {
-        dd = m_otResolution2*csth*csth;
+        dd = pnt.hit()->tfHit()->hit()->variance()*csth*csth;
         if ( pnt.sign() == 0 ) dd = csth*csth;
       }
       else {
-        dd = m_itResolution*m_itResolution;
+        dd = pnt.hit()->tfHit()->hit()->variance();
       }
       double invdd = 1.0/dd;
       m_a += x * invdd;
@@ -66,7 +66,7 @@ int SeedParabolaFit::fit( SeedTrack* seed, const double &csth ) const {
       double x = pnt.hit()->x();
       double z = pnt.hit()->z();
       double xSeed = seed->x(z,m_z0);
-      double dx = (x - xSeed) / (m_itResolution);
+      double dx = (x - xSeed) / sqrt(pnt.hit()->tfHit()->hit()->variance());
       if ( pnt.hit()->OT() ) {
         double r = pnt.hit()->r()*csth;
         if ( pnt.sign() == 0 ) {
@@ -79,7 +79,7 @@ int SeedParabolaFit::fit( SeedTrack* seed, const double &csth ) const {
             pnt.flipSign();
           }
         }
-        dx = (x + pnt.sign()*r - xSeed)*(1.0/csth) /(m_otResolution);
+        dx = (x + pnt.sign()*r - xSeed)*(1.0/csth) / sqrt(pnt.hit()->tfHit()->hit()->variance());
       }
       if ( fabs(dx) > dMax ) {
         dMax = fabs(dx);
@@ -102,11 +102,9 @@ int SeedParabolaFit::fit( SeedTrack* seed, const double &csth ) const {
     if ( pnt.skip() ) continue;
     double z = pnt.hit()->z();
     double ch = x - seed->x(z,m_z0);
-    if ( pnt.hit()->OT() ) {
-      chi2 += ch*ch/(csth*csth*m_otResolution2);
-    } else {
-      chi2 += ch*ch / m_itResolution*m_itResolution;
-    }
+    ch = ch * ch / pnt.hit()->tfHit()->hit()->variance();
+    if (pnt.hit()->OT()) ch /= csth * csth;
+    chi2 += ch;
   }
   seed->setXChi2( chi2 );
   return nIt;
@@ -130,8 +128,8 @@ int SeedParabolaFit::refit( SeedTrack* seed, const double &csth ) const{
     double dz2 = (z-m_z0)*(z-m_z0);
     double dz3 = dz2*(z-m_z0);
     double dz4 = dz3*(z-m_z0);
-    double dd = m_itResolution*m_itResolution;
-    if ( pnt.hit()->OT() ) dd = m_otResolution2*csth*csth;
+    double dd = pnt.hit()->tfHit()->hit()->variance();
+    if ( pnt.hit()->OT() ) dd *= csth*csth;
     double invDD = 1./dd;
     m_a += x * invDD;
     m_b += 1. * invDD;
@@ -164,11 +162,9 @@ int SeedParabolaFit::refit( SeedTrack* seed, const double &csth ) const{
     SeedPnt & pnt = *it;
     if ( pnt.skip() ) continue;
     double ch = pnt.coord() - seed->x(pnt.z(),m_z0);
-    if ( pnt.hit()->OT() ) {
-      chi2 += ch*ch/ (m_otResolution2*csth*csth);
-    } else {
-      chi2 += ch*ch / (m_itResolution*m_itResolution);
-    }
+    ch = ch * ch / pnt.hit()->tfHit()->hit()->variance();
+    if (pnt.hit()->OT()) ch /= csth * csth;
+    chi2 += ch;
   }
   seed->setXChi2( chi2 );
   return 1;

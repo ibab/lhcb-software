@@ -1,10 +1,11 @@
-// $Id: TsaXSearchBase.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaXSearchBase.cpp,v 1.2 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "TsaXSearchBase.h"
+#include "SeedParabolaFit.h"
 
 #include "Event/State.h"
 
@@ -13,7 +14,8 @@ using namespace Tf::Tsa;
 XSearchBase::XSearchBase(const std::string& type,
                          const std::string& name,
                          const IInterface* parent):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_parabolaFit(0)
 {
   // constructer
   declareProperty("xSearch_xsParam", m_xsParam = 1.0/3125.0);
@@ -21,12 +23,16 @@ XSearchBase::XSearchBase(const std::string& type,
   declareProperty("seedHitLocation",  m_seedHitLocation = SeedHitLocation::Default);
   declareProperty("sector", m_sector = 0);
   declareProperty("nSigmaTx", m_nSigmaTx = 5.0 );
+  declareProperty("outlierCut", m_outlierCut = 3.1 );
+
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
 
   declareInterface<ITsaSeedStep>(this);
 }
 
 XSearchBase::~XSearchBase(){
   // destructer
+  if (0 != m_parabolaFit) delete m_parabolaFit;
 }
 
 StatusCode XSearchBase::initialize(){
@@ -45,7 +51,6 @@ StatusCode XSearchBase::initialize(){
   else {
     m_collectFun = &XSearchBase::collectXHitsLinear;
   }
-
   return StatusCode::SUCCESS;
 }
 

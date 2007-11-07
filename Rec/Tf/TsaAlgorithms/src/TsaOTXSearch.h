@@ -12,7 +12,6 @@
 #include "TsaKernel/TsaTStationHitManager.h"
 
 #include "TsaXSearchBase.h"
-#include "SeedParabolaFit.h"
 
 #include "TfTsHitNumMap.h"
 
@@ -48,8 +47,6 @@ namespace Tf
     private:
 
       void loadData(std::vector<SeedHit*> hits[6]) const;
-
-      SeedParabolaFit* m_parabolaFit;
 
       std::string m_dataSvcType;
       std::string m_dataSvcName;

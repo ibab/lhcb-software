@@ -88,6 +88,9 @@ namespace Tf
 
     };
 
+      double m_outlierCutLine;
+      double m_outlierCutParabola;
+
   }
 }
 

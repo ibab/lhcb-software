@@ -4,6 +4,27 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-11-07 Manuel Schiller
+ - throughout the TsaAlgorithms package: removed hardcoded constants for
+   resolution which the code now gets from the Tf::-framework
+ - outlier rejection cuts now tunable through job options
+ - likelihood contributions can be weighted differently (or switched off)
+   with job options
+
+ Changes are needed to run with drift times off/misalignments. Expect tiny
+ differences in performance when comparing with earier versions; the old
+ hardcoded resolution constants do not exactly match the values from the
+ conditions database.
+
+ Files touched:
+	SeedLineFit.cpp SeedLineFit.h SeedParabolaFit.cpp SeedParabolaFit.h
+	TsaITStereoSearch.cpp TsaITStereoSearch.h TsaITXSearch.cpp
+	TsaITXSearch.h TsaLikelihood.cpp TsaLikelihood.h
+	TsaOTStereoSearch.cpp TsaOTStereoSearch.h TsaOTXSearch.cpp
+	TsaOTXSearch.h TsaSeedAddHits.cpp TsaSeedAddHits.h TsaStereoBase.cpp
+	TsaStereoBase.h TsaStubExtender.cpp TsaStubExtender.h
+	TsaStubLinker.cpp TsaStubLinker.h TsaXSearchBase.cpp TsaXSearchBase.h
+
 !======================= TsaAlgorithms v3r1 2007-11-06 ======================
 ! 2007-11-06 M Needham
  - TsaSeed: ensure StatusCode checked 

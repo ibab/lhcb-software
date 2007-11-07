@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
+// $Id: TsaLikelihood.cpp,v 1.3 2007-11-07 17:28:39 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -39,8 +39,14 @@ Likelihood::Likelihood(const std::string& type,
   declareProperty("OTEff", m_otEff = 0.9);
   declareProperty("f1Par", m_f1Par = list_of(5.335)(0.005433)(7.551)(0.04098));
   declareProperty("f2Par", m_f2Par = list_of(6.884)(35.49)(5.62)(6.928));
+  declareProperty("weights", m_weights = list_of(1.0)(1.0)(1./3.)(1./3.)(1.0)(1.0)(1.0));
+  declareProperty("outlierCut", m_outlierCut = 3.1);
 
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
+  // make sure we have enough elements
+  while (m_weights.size() < 7)
+	  m_weights.push_back(-1.0);
+
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
   declareInterface<ITsaSeedStep>(this);
 };
 
@@ -123,7 +129,9 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
     double csth = sqrt(1.0 + sx*sx);
     // if the fit fails or we dont have enough measurements stop
     const int fitResult = m_parabolaFit->refit(seed,csth);
-    verbose() << " -> fitResult=" << fitResult << " nx=" << seed->nx() << " ny=" << seed->ny() << endreq;
+    verbose() << " -> fitResult=" << fitResult <<
+	    " chi^2(x)=" << seed->xChi2() << " nx=" << seed->nx() <<
+	    " chi^2(y)=" << seed->yChi2() << " ny=" << seed->ny() << endreq;
     if ( fitResult < 1 || seed->nx() < 4 || seed->ny() < 3)
     {
       verbose() << "  -> FAILED parabola fit or not enough measurements" << endreq;
@@ -167,7 +175,11 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
     } else {
       const double prx = log( gsl_cdf_chisq_Q( seed->xChi2(), seed->nx()-3 ));
       const double pry = log( gsl_cdf_chisq_Q( seed->yChi2(), seed->ny()-2 ));
-      double lik = xLik + yLik + ( prx + pry )/3.0;
+      double lik = 0.0;
+      if (m_weights[0] > 0.0) lik += m_weights[0] * xLik;
+      if (m_weights[1] > 0.0) lik += m_weights[1] * yLik;
+      if (m_weights[2] > 0.0) lik += m_weights[2] * prx;
+      if (m_weights[3] > 0.0) lik += m_weights[3] * pry;
 
       int n = nxExp + nyExp;
       int r = nxFound + nyFound;
@@ -180,7 +192,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
       }
 
       // Add binomial term to likelihood according to number of found hits on seed
-      lik+=binomialTerm(sect,fnum/fden,n,r);
+      if (m_weights[4] > 0.0) lik += m_weights[4] * binomialTerm(sect,fnum/fden,n,r);
 
       // weight up tracks from the primary interaction point
       const double arg1 = fabs( seed->y0() );
@@ -189,7 +201,8 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
       const double f1 = (exp(m_f1Par[0] - m_f1Par[1]*arg1) + exp(m_f1Par[2] - m_f1Par[3]*arg1)) * m_f1Norm;
       const double f2 = (exp(m_f2Par[0] - m_f2Par[1]*arg2) + exp(m_f2Par[2] - m_f2Par[3]*arg2)) * m_f2Norm;
 
-      lik += log( f1 ) + log( f2 );
+      if (m_weights[5] > 0.0) lik += m_weights[5] * log(f1);
+      if (m_weights[6] > 0.0) lik += m_weights[6] * log(f2);
       if ( lik < m_likCut ) seed->setLive( false );
 
       seed->setLik( lik );

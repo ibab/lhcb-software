@@ -91,6 +91,9 @@ namespace Tf
       double m_otEff;
       std::vector<double> m_f1Par;
       std::vector<double> m_f2Par;
+      std::vector<double> m_weights;
+
+      double m_outlierCut;
 
       double m_logITEff;
       double m_logOTEff;

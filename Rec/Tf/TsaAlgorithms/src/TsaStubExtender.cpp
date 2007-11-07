@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.2 2007-10-17 12:32:21 cattanem Exp $
+// $Id: TsaStubExtender.cpp,v 1.3 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -39,6 +39,9 @@ StubExtender::StubExtender(const std::string& type,
   declareProperty("dxCut", m_dxCut = 1.0);
   declareProperty("dyCut", m_dyCut = 40.0);
 
+  declareProperty("outlierCutLine", m_outlierCutLine = 3.5);
+  declareProperty("outlierCutParabola", m_outlierCutParabola = 3.1);
+
   m_scth = 1.0/TsaConstants::sth;
 
   declareInterface<ITsaStubExtender>(this);
@@ -64,8 +67,10 @@ StatusCode StubExtender::initialize()
     return Error("Failed to initialize",sc);
   }
 
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
-  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0, TsaConstants::sth);
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0,
+		  m_outlierCutParabola);
+  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0,
+		  TsaConstants::sth, m_outlierCutLine);
 
   return sc;
 }

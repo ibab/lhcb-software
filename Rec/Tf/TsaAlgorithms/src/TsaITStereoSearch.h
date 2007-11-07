@@ -14,8 +14,6 @@ namespace Tf
   namespace Tsa
   {
 
-    class SeedLineFit;
-
     /** @class ITStereoSearch TsaITStereoSearch.h
      *  Follow track and pick up hits
      * @author M. Needham
@@ -43,8 +41,6 @@ namespace Tf
     private:
 
       void loadData(std::vector<SeedHit*> hits[6]) const;
-
-      SeedLineFit* m_parabolaFit;
 
       std::string m_dataSvcType;
       std::string m_dataSvcName;

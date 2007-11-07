@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.4 2007-11-02 14:56:21 albrecht Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.5 2007-11-07 17:28:40 mschille Exp $
 
 #include <algorithm>
 
@@ -10,6 +10,9 @@
 // BOOST !
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
+
+#include "SeedLineFit.h"
+
 using namespace boost::assign;
 using namespace boost;
 

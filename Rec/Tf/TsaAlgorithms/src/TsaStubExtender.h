@@ -72,6 +72,8 @@ namespace Tf
       double m_y0Cut2;
       double m_dxCut;
       double m_dyCut;
+      double m_outlierCutLine;
+      double m_outlierCutParabola;
 
     };
 

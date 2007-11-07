@@ -1,4 +1,4 @@
-// $Id: SeedLineFit.h,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: SeedLineFit.h,v 1.2 2007-11-07 17:28:39 mschille Exp $
 #ifndef SEEDLINEFIT_H
 #define SEEDLINEFIT_H 1
 
@@ -16,7 +16,7 @@ namespace Tf
 
     public:
 
-      SeedLineFit( MsgStream & msg, double z0, double sth, unsigned int nIter = 10, double outlierCut = 3.5);
+      SeedLineFit( MsgStream & msg, double z0, double sth, double, unsigned int nIter = 10);
 
       ~SeedLineFit() {}
 
@@ -41,7 +41,7 @@ namespace Tf
 
     };
 
-    inline SeedLineFit::SeedLineFit(MsgStream & msg,double z0, double sth,  unsigned int nIter, double outlierCut)
+    inline SeedLineFit::SeedLineFit(MsgStream & msg,double z0, double sth, double outlierCut, unsigned int nIter)
       : m_z0(z0),
         m_sth(sth),
         m_scth(1.0/sth),

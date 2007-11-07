@@ -38,9 +38,8 @@ int SeedLineFit::fit( SeedTrack* seed) const
       if ( pnt.hit()->OT() ) y += pnt.sign()*pnt.hit()->r()*m_scth;
       double z = pnt.hit()->z();
       double dz2 = (z-m_z0)*(z-m_z0);
-      double dd = 0.0036*m_scth*m_scth;
+      double dd = pnt.hit()->tfHit()->hit()->variance()*m_scth*m_scth;
       if ( pnt.hit()->OT() ) {
-        dd = 0.04*m_scth*m_scth;
         if ( pnt.sign() == 0 ) dd = m_scth*m_scth;
       }
       double invDD = 1.0/dd;
@@ -72,7 +71,7 @@ int SeedLineFit::fit( SeedTrack* seed) const
       if ( seed->sector() > 5 && pnt.hit()->OT() == 0 ) continue;
       double y = pnt.hit()->y();
       double ySeed = seed->y(pnt.hit()->z(),m_z0);
-      double dy = ( y - ySeed ) / ( 0.06*m_scth );
+      double dy = ( y - ySeed ) / ( sqrt(pnt.hit()->tfHit()->hit()->variance())*m_scth );
       if ( pnt.hit()->OT() ) {
         double r = pnt.hit()->r()*m_scth;
         if ( pnt.sign() == 0 ) {
@@ -85,7 +84,7 @@ int SeedLineFit::fit( SeedTrack* seed) const
             pnt.flipSign();
           }
         }
-        dy = ( y + pnt.sign()*r - ySeed ) / ( 0.2*m_scth );
+        dy = ( y + pnt.sign()*r - ySeed ) / ( sqrt(pnt.hit()->tfHit()->hit()->variance())*m_scth );
       }
       if ( fabs(dy) > dMax ) {
         dMax = fabs(dy);
@@ -109,11 +108,7 @@ int SeedLineFit::fit( SeedTrack* seed) const
     pnt.setZ( z );
     if ( pnt.skip() ) continue;
     const double ch = y - seed->y(z,m_z0);
-    if ( pnt.hit()->OT() ) {
-      chi2 += ch*ch*m_sth*m_sth / 0.04;
-    } else {
-      chi2 += ch*ch*m_sth*m_sth / 0.0036;
-    }
+    chi2 += ch*ch*m_sth*m_sth / pnt.hit()->tfHit()->hit()->variance();
   }
   seed->setYChi2( chi2 );
 

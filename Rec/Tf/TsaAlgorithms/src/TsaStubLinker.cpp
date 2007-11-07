@@ -1,4 +1,4 @@
-// $Id: TsaStubLinker.cpp,v 1.2 2007-10-12 09:55:14 cattanem Exp $
+// $Id: TsaStubLinker.cpp,v 1.3 2007-11-07 17:28:40 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -28,6 +28,8 @@ StubLinker::StubLinker(const std::string& type,
 
   declareProperty("deltaSx",  m_deltaSx = 0.03);
   declareProperty("deltaXCon", m_deltaXCon = 0.006);
+  declareProperty("outlierCutParabola", m_outlierCutParabola = 3.1);
+  declareProperty("outlierCutLine", m_outlierCutLine = 3.5);
 
   declareInterface<ITsaStubLinker>(this);
 
@@ -51,8 +53,10 @@ StatusCode StubLinker::initialize(){
     return Error("Failed to initialize",sc);
   }
 
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
-  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0, TsaConstants::sth);
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0,
+		  m_outlierCutParabola);
+  m_fitLine = new SeedLineFit(msg(),TsaConstants::z0,
+		  TsaConstants::sth, m_outlierCutLine);
 
   return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: TsaITXSearch.h,v 1.5 2007-11-02 10:48:46 cattanem Exp $
+// $Id: TsaITXSearch.h,v 1.6 2007-11-07 17:28:39 mschille Exp $
 #ifndef _TsaITXSearch_H
 #define _TsaITXSearch_H
 
@@ -13,8 +13,6 @@ namespace Tf
 {
   namespace Tsa
   {
-
-    class SeedParabolaFit;
 
     /** @class ITXSearch TsaITXSearch.h
      * Follow track and pick up hits
@@ -41,8 +39,6 @@ namespace Tf
     private:
 
       void loadData(std::vector<SeedHit*> hits[6]) const;
-
-      SeedParabolaFit* m_parabolaFit;
 
       std::string m_dataSvcType;
       std::string m_dataSvcName;
