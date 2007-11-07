@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.83 2007-11-06 10:52:51 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.84 2007-11-07 15:43:58 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -324,12 +324,14 @@ StatusCode DeVelo::registerConditionCallBacks()
                                  &DeVelo::updateTell1ToSensorsCondition);
   
   // Half box offset  cache
-  updMgrSvc()->
-    registerCondition(this,(*leftRSensorsBegin())->geometry(),&DeVelo::updateLeftHalfBoxOffset);
-  
-  updMgrSvc()->
-    registerCondition(this,(*rightRSensorsBegin())->geometry(),&DeVelo::updateRightHalfBoxOffset);
-  
+  if(m_nLeftSensors > 0) {
+    updMgrSvc()->
+      registerCondition(this,(*leftRSensorsBegin())->geometry(),&DeVelo::updateLeftHalfBoxOffset);
+  }
+  if(m_nRightSensors > 0) {
+    updMgrSvc()->
+      registerCondition(this,(*rightRSensorsBegin())->geometry(),&DeVelo::updateRightHalfBoxOffset);
+  }
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
     msg << MSG::ERROR 

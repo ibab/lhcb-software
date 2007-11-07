@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.181 2007-11-06 11:04:32 cattanem Exp $
+! $Id: release.notes,v 1.182 2007-11-07 15:43:58 mtobin Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-11-07 - Mark Tobin
+ - protect against empty velo half in registerConditionCallBacks so that code
+ can run with test beam geometry.
 
 !======================== VeloDet v12r3 2007-11-06 ===========================
 ! 2007-11-06 - Kurt Rinnert
