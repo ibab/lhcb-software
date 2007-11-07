@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.287 2007-10-25 17:17:34 jpalac Exp $
+! $Id: release.notes,v 1.288 2007-11-07 16:42:43 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-11-07 - Juan PALACIOS
+
+ - src/DecayFinder.cpp
+  . Remove deletes of particle property and event data services. 
+    These are not owned by the class.
+ - cmt/requirements
+  . Increase version to v15r6p1
 
 !========================== DaVinciTools v15r6 2007-10-25====================
 
