@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.19 2007-10-25 17:24:23 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.20 2007-11-07 16:38:48 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -99,8 +99,8 @@ StatusCode DecayFinder::initialize()
 StatusCode DecayFinder::finalize() 
 {
   
-  if (m_ppSvc ) delete m_ppSvc;
-  if (m_EDS )   delete m_EDS;
+  //  if (m_ppSvc ) delete m_ppSvc;
+  //  if (m_EDS )   delete m_EDS;
 
   return GaudiTool::finalize();
 }
