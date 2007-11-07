@@ -45,8 +45,8 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 // C.Jones : RICH options
 // Disabled by default. To enable uncomment the lines below
 //----------------------------------------------------------------------------------------------------
-#include "$RICHHLTSYSOPTS/RecoHLTToolPara.opts"
-#include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
+//#include "$RICHHLTSYSOPTS/RecoHLTToolPara.opts"
+//#include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
 // temporary, to use the cleaned forward tracks
 ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
 // uncomment to use aerogel as well as gas radiators (low P ID)
