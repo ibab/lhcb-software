@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.20 2007-11-07 16:38:48 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.21 2007-11-07 17:21:57 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -351,7 +351,7 @@ DecayFinder::Descriptor::~Descriptor()
     delete *di;
   if( alternate )
     delete alternate;
-  if (m_ppSvc) delete m_ppSvc;
+  //  if (m_ppSvc) delete m_ppSvc;
   
 }
 
