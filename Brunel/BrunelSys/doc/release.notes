@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r1>2007-11-05 Brunel v32r1</A></H1><PRE>
+</PRE><H1><A NAME=v32r1>2007-11-07 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -22,20 +22,30 @@ framework.
   . Add PatDownstream, an adaptation to Tf of PatKShort
     (TrackEvent v4r8, TrackInterfaces v3r10, TrackMCTools v2r14, TrackSys v4r11,
      PatAlgorithms v3r1, TrackUtils v1r16, BrunelCheck.opts)
+  . Add RealData.opts to process "real data" (v200601 geometry) in mdf format
+  . Outlier rejection cuts now tunable through job options (TsaAlgorithms v3r1)
+  . Likelihood contributions can be weighted differently (or switched off)
+    with job options (TsaAlgorithms v3r1)
 
 - New tuning
   . Replaced StateTraj with StateZTraj in projectors (to speed things up)
     (LHCbKernel v7r8, TrackFitEvent v3r10, TrackProjectors v2r17)
-  . TsaSeedTrackCnv algorithm new uses FastMomentumEstimate tool
+  . TsaSeedTrackCnv algorithm now uses FastMomentumEstimate tool
     (TsaKernel v3r1, TrackInterfaces v3r10, TrackTools v3r1, TsaAlgorithms v3r1,
      TrackSys v4r11)
+  . Faster error checking (TrackFitter v2r21)
+  . Tiny differences in performance due to changes in TsaAlgorithms to pick up
+    resolution constants from CondDB, to allow running with drift times 
+    off/misalignments (TsaAlgorithms v3r1)
 
 - Bug fixes
+  . Fix error in default Brunel_Ganga.py file for latest CMT structure.
   . Fixed in TrajPoca specification of tolerance for validity of quadratic
     approximation (LHCbAlgs v2r12)
   . Fix to PatMatch (PatAlgorithms v3r1)
   . Fixes in TrackLongExtraSelector (TrackExtrapolators v2r15)
   . Release tool handle in MasterExtrapolator::finalize (TrackExtrapolators v2r15)
+  . Fix unchecked StatusCode (TsaAlgorithms v3r1, TrackFitter v2r21)
   . Protect against divide by zero when few events processed (MuonPIDChecker v2r2)
 
 </PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
