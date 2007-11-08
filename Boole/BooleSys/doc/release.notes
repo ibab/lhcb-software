@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r7>2007-11-02 Boole v14r7</A></H1><PRE>
+</PRE><H1><A NAME=v14r7>2007-11-06 Boole v14r7</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -20,10 +20,20 @@ Brunel v32r1 or greater
     the Trigger Configuration Key mechanism, improved hardware emulation, new
     default settings for various luminosities
     (L0DU v8r0, L0Calo v9r10, L0Muon v7r5, L0Event v16r6, Boole.opts)
+  . Add possibility to make STDigits on all detector strips
+    (STAlgorithms v2r4)
+  . Use ST dead channel info from detector element in digitization code
+    (STAlgorithms v2r4)
+  . Add STClusterKiller algorithm, to kill clusters at random. Default efficiency
+    is 99.5%
+
+- New tuning
+  . Retune conversion factor from e- to ADC for IT (STAlgorithms v2r4)
 
 - Bug fixes
   . In listOfPhysChannels, check if hit was inside a gap was wrongly performed.
     Effect is very small (MuonDet v7r0)
+  . Fix error in default Boole_Ganga.py file for latest CMT structure.
 
 - Packaging changes 
   . Change some monitoring algorithms names to avoid clash with another package
