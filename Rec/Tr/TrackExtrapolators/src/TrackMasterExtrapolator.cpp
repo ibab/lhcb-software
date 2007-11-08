@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.30 2007-11-01 14:40:39 mneedham Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.31 2007-11-08 17:48:37 smenzeme Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -99,8 +99,14 @@ StatusCode TrackMasterExtrapolator::initialize()
 
 StatusCode TrackMasterExtrapolator::finalize()
 {
-  m_materialLocator.release() ;
-  return TrackExtrapolator::finalize() ;
+  StatusCode sc = m_materialLocator.release() ;
+  
+  if( !sc.isSuccess() ) return Error( "Failed to finalize material locator", sc );
+  
+    sc = TrackExtrapolator::finalize() ;
+    if( !sc.isSuccess() ) return Error( "Failed to finalize track extraploatorr", sc );
+
+    return StatusCode::SUCCESS;
 }
 
 //=========================================================================
