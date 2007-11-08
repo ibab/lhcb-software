@@ -6,10 +6,11 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r12>2007-11-01 LbcomSys v6r12</A></H1><PRE>
+</PRE><H1><A NAME=v6r12>2007-11-06 LbcomSys v6r12</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r1
 
-- Packages modified: L0Calo v9r10, L0DU v8r0, L0Muon v7r5, STDAQ v3r2
+- Packages modified: L0Calo v9r10, L0DU v8r0, L0Muon v7r5, STDAQ v3r2,
+    STAlgorithms v2r4
 
 - In L0Calo v9r10, L0Muon v7r5
   . Adapt to change in L0DUBase.h (L0Event v16r6)
@@ -28,6 +29,13 @@ This version uses Gaudi v19r5 and LHCb v23r1
   . fix compilation warnings in readout tool
   . Bug fix in header file inclusion 
   . Make rawevent location a jobOption
+
+- In STAlgorithms v2r4
+  . Retune conversion factor from e- to ADC for IT
+  . Add possibility to make STDigits on all detector strips
+  . Use dead channel info from detector element in digitization code
+  . Remove STEffCalculator tool and ISTEffCalculator interface
+  . Add STClusterKiller algorithm
 
 </PRE><H1><A NAME=v6r11>2007-10-16 LbcomSys v6r11</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0

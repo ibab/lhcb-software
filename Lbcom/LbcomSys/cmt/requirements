@@ -29,7 +29,7 @@ use SiTools           v1r3  Si          # Matt Needham
 # Silicon Tracker
 use STDAQ             v3r2  ST          # Jeroen van Tilburg
 use STTools           v3r4  ST          # Jeroen van Tilburg
-use STAlgorithms      v2r3  ST          # Jeroen van Tilburg
+use STAlgorithms      v2r4  ST          # Jeroen van Tilburg
 use STAssociators     v1r4  ST          # Jeroen van Tilburg
 use STCheckers        v2r2  ST          # Jeroen van Tilburg
 
