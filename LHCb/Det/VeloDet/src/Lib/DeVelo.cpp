@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.84 2007-11-07 15:43:58 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.85 2007-11-08 14:41:55 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -326,11 +326,11 @@ StatusCode DeVelo::registerConditionCallBacks()
   // Half box offset  cache
   if(m_nLeftSensors > 0) {
     updMgrSvc()->
-      registerCondition(this,(*leftRSensorsBegin())->geometry(),&DeVelo::updateLeftHalfBoxOffset);
+      registerCondition(this,(*leftSensorsBegin())->geometry(),&DeVelo::updateLeftHalfBoxOffset);
   }
   if(m_nRightSensors > 0) {
     updMgrSvc()->
-      registerCondition(this,(*rightRSensorsBegin())->geometry(),&DeVelo::updateRightHalfBoxOffset);
+      registerCondition(this,(*rightSensorsBegin())->geometry(),&DeVelo::updateRightHalfBoxOffset);
   }
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
@@ -396,12 +396,8 @@ StatusCode DeVelo::updateLeftHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
  
-  if ( leftRSensorsBegin() == leftRSensorsEnd() ) { // no modules in this half
-    m_halfBoxOffsets[LeftHalf] = localZero;
-  } else { 
-    Gaudi::XYZPoint global = (*leftRSensorsBegin())->veloHalfBoxToGlobal(localZero);
-    m_halfBoxOffsets[LeftHalf] = global-localZero;
-  }
+  Gaudi::XYZPoint global = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  m_halfBoxOffsets[LeftHalf] = global-localZero;
   
   return StatusCode::SUCCESS;
 }
@@ -410,12 +406,8 @@ StatusCode DeVelo::updateRightHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
   
-  if ( rightRSensorsBegin() == rightRSensorsEnd() ) { // no modules in this half
-     m_halfBoxOffsets[RightHalf] = localZero;
-  } else {
-    Gaudi::XYZPoint global = (*rightRSensorsBegin())->veloHalfBoxToGlobal(localZero);
-    m_halfBoxOffsets[RightHalf] = global-localZero;
-  }
+  Gaudi::XYZPoint global = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  m_halfBoxOffsets[RightHalf] = global-localZero;
   
   return StatusCode::SUCCESS;
 }
