@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r1 2007-11-08 ======================
 ! 2007-11-07 Manuel Schiller
  - throughout the TsaAlgorithms package: removed hardcoded constants for
    resolution which the code now gets from the Tf::-framework
@@ -25,7 +26,6 @@
 	TsaStereoBase.h TsaStubExtender.cpp TsaStubExtender.h
 	TsaStubLinker.cpp TsaStubLinker.h TsaXSearchBase.cpp TsaXSearchBase.h
 
-!======================= TsaAlgorithms v3r1 2007-11-06 ======================
 ! 2007-11-06 M Needham
  - TsaSeed: ensure StatusCode checked 
 
