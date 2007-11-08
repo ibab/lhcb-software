@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.9 2007-10-30 18:10:48 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.10 2007-11-08 16:45:23 jpalac Exp $
 // Include files 
 
 // STL
@@ -44,7 +44,7 @@ StatusCode CopyParticles::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if (inputTESLocation()=="")  {
-    error() << "changing input TES location " << endmsg;
+    error() << "No TES location " << endmsg;
     return StatusCode::FAILURE;
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
