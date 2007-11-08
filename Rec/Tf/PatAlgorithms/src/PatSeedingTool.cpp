@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.3 2007-10-30 18:29:29 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.4 2007-11-08 16:01:15 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "OTDet/DeOTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"
-
+#include <boost/assign/list_of.hpp>
 // local
 #include "PatSeedingTool.h"
 #include "PatFwdFitLine.h"
@@ -71,7 +71,8 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "StateErrorTY2",     m_stateErrorTY2    =  1.e-4);
   declareProperty( "StateErrorP",       m_stateErrorP      =  0.40);
   declareProperty( "MomentumScale",     m_momentumScale    = 40.  );
-  declareProperty( "MomentumParams",     m_momentumParams    );
+  declareProperty( "MomentumParams",     m_momentumParams  =  boost::assign::list_of
+		   (-6.3453) (-4.77725) (-14.9039) (3.13647e-08) );
   declareProperty( "MeasureTime",       m_measureTime      = false                    );
   declareProperty( "UseForward",        m_useForward       = false                    );
   }

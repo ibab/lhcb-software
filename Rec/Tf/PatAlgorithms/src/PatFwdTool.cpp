@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.2 2007-10-30 18:29:29 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.3 2007-11-08 16:01:15 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "Event/StateParameters.h"
 
 #include "TfKernel/RecoFuncs.h"
+#include <boost/assign/list_of.hpp>
 
 // local
 #include "PatFwdTool.h"
@@ -37,10 +38,14 @@ PatFwdTool::PatFwdTool( const std::string& type,
   declareInterface<PatFwdTool>(this);
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT); 
   declareProperty( "ZOutput"         , m_zOutput         = StateParameters::ZAtT);
-  declareProperty( "ZMagnetParams"   , m_zMagnetParams  );
-  declareProperty( "xParams"         , m_xParams        );
-  declareProperty( "yParams"         , m_yParams        );
-  declareProperty( "momentumParams"  , m_momentumParams );
+  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = boost::assign::list_of
+		   (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281));
+  declareProperty( "xParams"         , m_xParams         = boost::assign::list_of
+		   (16.8238) (-6.35556));
+  declareProperty( "yParams"         , m_yParams         = boost::assign::list_of
+		   (-970.89)  (-0.686028) );
+  declareProperty( "momentumParams"  , m_momentumParams  = boost::assign::list_of
+		   (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909));
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField = false);
