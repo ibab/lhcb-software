@@ -1,11 +1,12 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.1 2007-11-02 16:28:24 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.2 2007-11-08 16:48:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 // local
 #include "CopyRelatedMCParticles.h"
 
@@ -15,34 +16,76 @@
 // 2007-11-02 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CopyRelatedMCParticles );
-
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyRelatedMCParticles );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+
+CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
+                                                ISvcLocator* pSvcLocator )
+  : CopyAndStoreData ( name , pSvcLocator )
 {
-  declareInterface<IDoSomethingToParticle>(this);
 
 }
-//=============================================================================
-StatusCode CopyRelatedMCParticles::operator()  (LHCb::Particle* particle)
-{
-  return this->doSomething(particle);
-}
-//=============================================================================
-StatusCode CopyRelatedMCParticles::doSomething (LHCb::Particle* particle)
-{
-  return StatusCode::SUCCESS;
-}
+
 //=============================================================================
 // Destructor
 //=============================================================================
+
 CopyRelatedMCParticles::~CopyRelatedMCParticles() {} 
 
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode CopyRelatedMCParticles::initialize() {
+
+  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+
+  debug() << "==> Initialize" << endmsg;
+
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  if (inputTESLocation()=="")  {
+    error() << "No TES location " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
+
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Main execution
+//=============================================================================
+
+StatusCode CopyRelatedMCParticles::execute() {
+
+  debug() << "==> Execute" << endmsg;
+  verbose() << "Going to store MCParticles related to Particles from " 
+            << inputTESLocation() << endmsg;
+
+  return StatusCode::SUCCESS;
+
+}
+//=============================================================================
+LHCb::MCParticle*  CopyRelatedMCParticles::storeMCParticle(const LHCb::MCParticle* particle)
+{
+  return 0;
+}
+//=============================================================================
+const LHCb::MCVertex* CopyRelatedMCParticles::storeMCVertex(const LHCb::MCVertex* vertex) 
+{
+  return 0;
+}
+//=============================================================================
+//  Finalize
+//=============================================================================
+
+StatusCode CopyRelatedMCParticles::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return CopyAndStoreData::finalize();  // must be called after all other actions
+}
 //=============================================================================
