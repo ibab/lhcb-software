@@ -1,0 +1,49 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
+///   geometry lhcb-200601 (DC06), starting from MDF real data format       ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
+#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+//Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
+//Init.DetectorList += { "L0" }; // Uncomment to reconstruct only L0-yes events
+
+//---------------------------------------------------------------------------
+// Set up DC06 geometry, conditions, magnetic field
+//---------------------------------------------------------------------------
+#pragma print on
+#include "$DDDBROOT/options/DC06.opts"
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = -1;
+//EventSelector.FirstEvent = 187;  // To skip some events 
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";  // Monitoring histos
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+};
+PoolDbCacheSvc.Dlls += { "LHCbKernelDict" };
+
+
+EventPersistencySvc.CnvServices     += {"LHCb::RawDataCnvSvc"};
+EventSelector.Input                  = {
+  "DATA='rfio:///castor/cern.ch/user/c/cattanem/Boole/v12r10/00001820_00000001_4.mdf' SVC='LHCb::MDFSelector'" 
+}; // MDF file produced with DAQ/MDF v2r6, starting from standard Brunel DST
+
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+DstWriter.Output = "DATAFILE='PFN:test_mdf.dst' TYP='POOL_ROOTTREE' OPT='REC'";
