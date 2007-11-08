@@ -4,6 +4,13 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2007-11-08 - Gloria Corti for Karl Harrison
+ - Introduce linking for pythia6 and GENSER for WIN32
+
+! 2007-11-08 - Gloria Corti
+ - Change native version of pythia8 to pick up interface to hepmc compiled
+   with hepmc 1.26.2
+
 !========================== GENSER v3r2 2007-08-31 ===========================
 ! 2007-08-31 - Gloria Corti
  - Move use of Pythia8 to LbPythia package

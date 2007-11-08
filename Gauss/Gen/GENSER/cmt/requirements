@@ -1,5 +1,5 @@
 package GENSER
-version v3r2
+version v3r3
 
 branches doc cmt src
 
@@ -11,7 +11,8 @@ include_path none
 #-- Pythia 6
 macro pythia6_native_version "411.2"
 use pythia6  v* LCG_GeneratorsInterfaces
-macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
+macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
+                        WIN32 " pythia6_pdfdummy.lib "
 
 #-- Photos
 macro photos_native_version "215.2"
@@ -21,7 +22,6 @@ use photos v* LCG_GeneratorsInterfaces
 macro lhapdf_native_version "5.3.0"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/PDFsets
-#macro_remove lhapdf_linkopts " -llhapdf_dummy "
 
 #-- Herwig and Jimmy
 macro herwig_native_version "6.510.2"
@@ -41,9 +41,10 @@ macro alpsho_linkopts "-L$(alpgen_home)/lib \
 macro alpgen_name "alpgen"
 
 #-- Pythia 8
-macro pythia8_native_version "080"
+macro pythia8_native_version "095.1"
 macro_append pythia8_linkopts " -lhepmcinterface "
 
 #-- linkopts
-macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c"
+macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c" \
+                WIN32 "/LIBPATH:$(DFDir)\LIB DFORDLL.LIB DFPORT.LIB"
 
