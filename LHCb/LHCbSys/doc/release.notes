@@ -5,16 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r1>2007-11-05 LHCbSys v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2007-11-07 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - Packages added:    L0Interfaces v1r0 - Interfaces for L0 tools
 - Packages modified: GaudiObjDesc v10r4p1, KernelSys v6r10, LHCbKernel v7r8,
     EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, PhysEvent v11r4,
     RecEvent v2r7, TrackEvent v4r8, DetSys v11r0, DetDesc v18r1p1, MuonDet v7r0,
-    STDet v3r7, DAQSys v3r6, CaloDAQ v4r1, LoKiCore v6r1p1, LHCbAlgs v2r12,
-    TrackInterfaces v3r10, TsaKernel v3r1, SimComponents v2r7, RichRecBase v3r8,
-    MDF v2r6, DDDB v1r2
+    STDet v3r7, VeloDet v12r3, DAQSys v3r6, CaloDAQ v4r1, LoKiCore v6r1p1,
+    LoKiPhysMC v6r2, TrackInterfaces v3r10, TsaKernel v3r1, RichRecBase v3r8,
+    LHCbAlgs v2r12, SimComponents v2r7, MDF v2r6, DDDB v1r2, IOExample v2r2
 
 - in DDDB v1r2
   . Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
@@ -64,12 +64,23 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . Add find box methods
   . Clean up condition registration (DeSTLayer,DeSTBaseElement,DeSTSector)
   . Add functionality to flag dead beetles, dead strips etc
+  . Remove isInside from base class DeSTBaseElement (functionality now 
+    provided by DetectorElement)
+  . stripToChan method added to DeSTSector
+
+- In VeloDet v12r3
+  . Bug fix in cache update for half box offset. Was not protected against an
+    empty VELO half, leading to a crash when running on test beam geometry.
 
 - In CaloDAQ v4r1
   . Fix bug in CaloDataProvider.cpp
 
 - In LoKiCore v6r1p1
   . Fix for gcc 4.0
+
+- In LokiPhysMC v6r2
+  . Fix couple of small problems with PV vertex <--> MC vertex association 
+  . Fix some doxygen warnings
 
 - In TrackInterfaces v3r10
   . Add IPatDebugTTTool, IFastMomentumEstimate interfaces & PatKernel dependency
@@ -94,7 +105,11 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
     approximation 
 
 - In MDF v2r6
+  . Fix 64 bit checksum creation bug for hash32
   . Add support for Darwin (but not in libMDF_RFIO)
+
+- In IOExample v2r2
+  . Add WriteMDF.opts, example to write an MDF file starting from DST
 
 </PRE><H1><A NAME=v23r0>2007-10-11 LHCbSys v23r0</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data

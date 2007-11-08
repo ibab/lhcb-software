@@ -24,7 +24,7 @@ use ProcessorKernel       v5r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v11r0   Det     # Marco Cattaneo
-use VeloDet               v12r2   Det     # Mark Tobin, Kurt Rinnert
+use VeloDet               v12r3   Det     # Mark Tobin, Kurt Rinnert
 use DetDesc               v18r1p1 Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r3p1  Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r14   Det     # Marco Clemencic, Matt Needham
@@ -85,7 +85,7 @@ use LoKiMC                v6r1   Phys    # Ivan Belyaev
 use LoKiGen               v6r1   Phys    # Ivan Belyaev
 use LoKiGenMC             v6r1   Phys    # Ivan Belyaev
 use LoKiPhys              v6r1   Phys    # Ivan Belyaev
-use LoKiPhysMC            v6r1   Phys    # Ivan Belyaev
+use LoKiPhysMC            v6r2   Phys    # Ivan Belyaev
 use LoKiAlgo              v6r1   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v6r1   Phys    # Ivan Belyaev
 use LoKiArrayFunctors     v6r1   Phys    # Ivan Belyaev
@@ -97,5 +97,5 @@ use TsaKernel             v3r1   Tf      # Matt Needham
 # LHCb  Examples
 use DetDescChecks         v4r4   Det     # Ivan Belyaev
 use DetDescExample        v7r5   Ex      # Marco Clemencic
-use IOExample             v2r1   Ex      # Marco Cattaneo
+use IOExample             v2r2   Ex      # Marco Cattaneo
 use DetCondExample        v11r2  Ex      # Marco Clemencic
