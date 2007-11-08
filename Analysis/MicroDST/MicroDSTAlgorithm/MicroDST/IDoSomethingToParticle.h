@@ -1,4 +1,4 @@
-// $Id: IDoSomethingToParticle.h,v 1.1 2007-11-02 16:26:16 jpalac Exp $
+// $Id: IDoSomethingToParticle.h,v 1.2 2007-11-08 16:46:37 jpalac Exp $
 #ifndef MICRODST_IDOSOMETHINGTOPARTICLE_H 
 #define MICRODST_IDOSOMETHINGTOPARTICLE_H 1
 
@@ -21,6 +21,9 @@ static const InterfaceID IID_IDoSomethingToParticle ( "IDoSomethingToParticle", 
  *  @author Juan PALACIOS
  *  @date   2007-11-01
  */
+
+class CopyAndStoreData;
+
 class IDoSomethingToParticle : virtual public IAlgTool {
 public: 
 
@@ -35,8 +38,14 @@ public:
   
 
 protected:
+  CopyAndStoreData* parentCopyAlg() { return m_parentCopyAlg; }
+
+protected:
+
+  CopyAndStoreData* m_parentCopyAlg;  
 
 private:
 
+  
 };
 #endif // MICRODST_IDOSOMETHINGTOPARTICLE_H
