@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.40 2007-10-11 11:55:20 gcorti Exp $ 
+# $Id: requirements,v 1.41 2007-11-08 15:48:48 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-20
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       Generators
-version       v7r5
+version       v7r6
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -43,4 +43,5 @@ apply_pattern library_stamps    library=GeneratorsLib
 #============================================================================
 # Link with HepMCfio from HepMC
 #============================================================================
-macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio "
+macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio " \
+                       WIN32 "/LIBPATH:$(HepMC_home)/lib HepMCfio.lib"
