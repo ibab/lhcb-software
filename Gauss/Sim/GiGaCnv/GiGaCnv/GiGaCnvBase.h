@@ -1,45 +1,29 @@
-// $Id: GiGaCnvBase.h,v 1.13 2004-03-20 20:16:13 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.12  2003/12/10 14:04:24  ranjard
-// v14r0 - fix for Gaudi v13r0
-//
-// Revision 1.11  2003/04/06 18:55:31  ibelyaev
-//  remove unnesessary dependencies and adapt for newer GiGa
-//
-// Revision 1.10  2002/12/07 21:13:48  ibelyaev
-//  bug fix and small CPU performace optimization
-//
-// Revision 1.9  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.8  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
-// ============================================================================
+// $Id: GiGaCnvBase.h,v 1.14 2007-11-08 15:29:04 gcorti Exp $ 
 #ifndef GIGA_GIGACNVBASE_H 
 #define GIGA_GIGACNVBASE_H  1 
-// ============================================================================
-// STL 
+
+// Include files
+// from STL 
 #include <string> 
 #include <vector> 
 #include <map> 
 #include <exception> 
-// Gaudi base type  
+
+// from Gaudi 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IToolSvc.h" 
 #include "GaudiKernel/Converter.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/System.h" 
-// GiGaCnv 
+
+// from GiGa
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaCnvSvcLocation.h" 
 #include "GiGaCnv/IGiGaKineCnvSvc.h" 
 #include "GiGaCnv/GiGaLeaf.h" 
-//
+
+// forward declarations
 class IDataProviderSvc     ;
 class IMessageSvc          ; 
 class IChronoStatSvc       ; 
@@ -52,14 +36,14 @@ class GaudiException       ;
 //
 class IGiGaGeomCnvSvc      ;
 class IGiGaHitsCnvSvc      ; 
-//
+
 
 /** @class GiGaCnvBase  GiGaCnvBase.h GiGaCnv/GiGaCnvBase.h
  *
  *  Base class for  converters from Geant4 to Gaudi and vice versa  
  *  
  *  @author  Vanya Belyaev
- *   @date    21/02/2001
+ *  @date    21/02/2001
  */
 
 class GiGaCnvBase: public Converter 
