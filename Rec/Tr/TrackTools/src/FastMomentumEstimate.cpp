@@ -9,7 +9,7 @@
 #include "FastMomentumEstimate.h"
 #include "Event/TrackParameters.h"
 #include "Event/State.h"
-
+#include <boost/assign/list_of.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FastMomentumEstimate
@@ -27,15 +27,21 @@ FastMomentumEstimate::FastMomentumEstimate( const std::string& type,
 					    const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IFastMomentumEstimate>(this);
 
- declareProperty( "ParamsTCubic", m_paramsTCubic ); 
- declareProperty( "ParamsTParabola", m_paramsTParab );
- declareProperty( "ParamsVeloTCubic", m_paramsVeloTCubic ); 
- declareProperty( "ParamsVeloTParabola", m_paramsVeloTParab );
- declareProperty( "TResolution", m_tResolution = 0.025);
- declareProperty( "VeloPlusTResolution", m_veloPlusTResolution = 0.015);
- 
+  declareInterface<IFastMomentumEstimate>(this);
+  
+  declareProperty( "ParamsTCubic", m_paramsTCubic 
+		   = boost::assign::list_of(-6.3453)(-4.77725)(-14.9039)(3.13647e-08)); 
+  declareProperty( "ParamsTParabola", m_paramsTParab  
+		   = boost::assign::list_of(-6.31652)(-4.46153)(-16.694)(2.55588e-08));
+  declareProperty( "ParamsVeloTCubic", m_paramsVeloTCubic 
+		   = boost::assign::list_of(1.21909)(0.627841)(-0.235216)(0.433811)
+		   (2.92798)(-21.3909) ); 
+  declareProperty( "ParamsVeloTParabola", m_paramsVeloTParab 
+		   = boost::assign::list_of(1.21485)(0.64199)(-0.27158)(0.440325)
+		   (2.9191)(-20.4831));
+  declareProperty( "TResolution", m_tResolution = 0.025);
+  declareProperty( "VeloPlusTResolution", m_veloPlusTResolution = 0.015);
 };
 
 //=============================================================================
@@ -51,11 +57,11 @@ StatusCode FastMomentumEstimate::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
-  if (m_paramsTParab.size() != 4     || m_paramsTCubic.size()!=4 ||
-      m_paramsVeloTParab.size() !=6  || m_paramsVeloTCubic.size() !=6 )
-    return StatusCode::FAILURE;
-
-
+  if (m_paramsTParab.size()!=4)     return Error ( "Not enough ParamsTParabola values" ); 
+  if (m_paramsTCubic.size()!=4)     return Error ( "Not enough ParamsTCubic values" );  
+  if (m_paramsVeloTParab.size()!=6) return Error ( "Not enough ParamsVeloTParabola values" ); 
+  if (m_paramsVeloTCubic.size()!=6) return Error ( "Not enough ParamsVeloTCubic values" );
+  
   return StatusCode::SUCCESS;
 };
 
