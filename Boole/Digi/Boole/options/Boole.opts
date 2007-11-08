@@ -130,12 +130,14 @@ DigiITSeq.Members += { "MCSTDepositCreator/MCITDepositCreator" };
 DigiITSeq.Members += { "MCSTDigitCreator/MCITDigitCreator" };
 DigiITSeq.Members += { "STDigitCreator/ITDigitCreator" };
 DigiITSeq.Members += { "STClusterCreator/ITClusterCreator" };
+DigiITSeq.Members += { "STClusterKiller/ITClusterKiller" };
 DigiITSeq.Members += { "STClustersToRawBankAlg/createITRawBuffer" };
 
 DigiTTSeq.Members += { "MCSTDepositCreator/MCTTDepositCreator" };
 DigiTTSeq.Members += { "MCSTDigitCreator/MCTTDigitCreator" };
 DigiTTSeq.Members += { "STDigitCreator/TTDigitCreator" };
 DigiTTSeq.Members += { "STClusterCreator/TTClusterCreator" };
+DigiITSeq.Members += { "STClusterKiller/TTClusterKiller" };
 DigiTTSeq.Members += { "STClustersToRawBankAlg/createTTRawBuffer" };
 
 // Outer tracker digitisation

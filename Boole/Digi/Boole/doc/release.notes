@@ -3,12 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r7>2007-11-06 Boole v14r7</A></H1><PRE>
  - Fix error in default Boole_Ganga.py file for latest CMT structure.
-
-</PRE><H1><A NAME=v14r7>2007-11-01 Boole v14r7</A></H1><PRE>
  - Adapt Boole.opts and BooleMoni.opts to changes in L0DU
  - Adapt BooleMoni.opts to new algorithm names in CaloMoniDigi
  - Adapt BooleMoni.opts to changed defaults in MCParticleSelector
+ - Add IT(TT)ClusterKiller to Boole.opts
 
 </PRE><H1><A NAME=v14r6>2007-10-10 Boole v14r6</A></H1><PRE>
  - Fix L0Muon options to not run RawBank decoder
