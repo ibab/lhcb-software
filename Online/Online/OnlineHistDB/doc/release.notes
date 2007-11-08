@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.17 2007-10-26 14:25:07 ggiacomo Exp $
+! $Id: release.notes,v 1.18 2007-11-08 16:18:52 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
+!
+! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
+!
 
-! 20071026  - OnlineHistDB v3r3
+! 20071108  - OnlineHistDB v4r0
+	- C++ API completely rewritten to use OCI instead of OCCI
+	- improved handling of display options using an Oracle object type
+          (easier to add options and better performances)
+	- added many more display options
+	- options from ROOT saved only if different from default in OnlineRootHist
+	- some optimizations for faster loading
+	- added support for saving/retrieving single reference histograms to C++ API
+	- get total entry counts when connecting
+
+! 20071026  - OnlineHistDB v3r3 (retagged also as v3r4)
      	- setDoc and setDescr methods added to OnlineHistogram
 	- minor changes to release with Online Env v4r1
 

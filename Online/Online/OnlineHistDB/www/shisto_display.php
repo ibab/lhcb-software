@@ -22,6 +22,7 @@ if (!$doid) {
   OCIExecute($stid);
 }
 $histo["NHS"]=1; $histo["DISPLAY"]=$doid;$histo["PAGE"]=$page;
+$histo["HSTYPE"]=$type;
 $histo["INSTANCE"]=$instance;
 //echo "instance is $instance\n";
 

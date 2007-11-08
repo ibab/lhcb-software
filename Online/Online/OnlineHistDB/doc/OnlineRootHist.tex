@@ -69,10 +69,30 @@
  updates current drawing options from Histogram DB (via OnlineHistogram object)
 
 
-\item    bool {\bf saveTH1ToDB}();
+\item    bool {\bf saveTH1ToDB}(TPad* Pad = NULL);
 
 
  saves current ROOT display options to OnlineHistogram object and to Histogram DB
+
+
+\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
+				void* value);
+
+ sets display option (see OnlineHistogram method). Change is sent to the DB only 
+ after a call to saveTH1ToDB()
+
+
+\item    bool {\bf setReference}(TH1 *ref,\\\mbox{}~~~~~~~~~
+		    int startrun = 1,\\\mbox{}~~~~~~~~~
+		    std::string DataType = "default");
+
+ save provided histogram as a reference in the standard file, with optional run period and data type
+
+
+\item    TH1* {\bf getReference}(int startrun = 1,\\\mbox{}~~~~~~~~~
+		    std::string DataType = "default");
+
+ get reference histogram if available
 
 
 \item    virtual void {\bf Draw}();

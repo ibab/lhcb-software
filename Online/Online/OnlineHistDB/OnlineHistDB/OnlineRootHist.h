@@ -1,10 +1,10 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.9 2007-10-16 12:16:10 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.10 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
-#include "TH1.h"
-#include "TStyle.h"
+#include <TH1.h>
+#include <TPad.h>
 
 class OnlineRootHist 
 {
@@ -16,7 +16,7 @@ class OnlineRootHist
 		 int Instance=1);
   /// constructor from existing OnlineHistogram object
   OnlineRootHist(OnlineHistogram*  oh);
-  virtual ~OnlineRootHist() {};
+  virtual ~OnlineRootHist();
   /// histogram identifier
   std::string identifier()  { return m_identifier;}
   /// corresponding OnlineHistogram object
@@ -41,28 +41,34 @@ class OnlineRootHist
   /// updates current drawing options from Histogram DB (via OnlineHistogram object)
   void setDrawOptionsFromDB();
   /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
-  bool saveTH1ToDB();
+  bool saveTH1ToDB(TPad* Pad = NULL);
   // OnlineHistogram methods for setting display options  
-  virtual bool setHistoSetDisplayOption(std::string ParameterName, 
-					void* value);
-  virtual bool setHistDisplayOption(std::string ParameterName, 
-				    void* value);
-  virtual bool setHistoPageDisplayOption(std::string ParameterName, 
-					 void* value,
-					 std::string PageName = "_DEFAULT_",
-					 int Instance=-1);
+  /// sets display option (see OnlineHistogram method). Change is sent to the DB only 
+  /// after a call to saveTH1ToDB()
   virtual bool setDisplayOption(std::string ParameterName, 
 				void* value);
+  /// save provided histogram as a reference in the standard file, with optional run period and data type
+  bool setReference(TH1 *ref,
+		    int startrun = 1,
+		    std::string DataType = "default");
+  /// get reference histogram if available
+  TH1* getReference(int startrun = 1,
+		    std::string DataType = "default");
 
   // TH1 drawing methods
   /// calls TH1 Draw method, calls setDrawOptions()
   virtual void Draw();
 
  private:
+  bool updateDBOption(std::string opt, void *value, bool isdefault);
   std::string m_identifier;
   OnlineHistDB *m_session;
   OnlineHistogram* m_dbHist;
   TH1* m_rootHist;
+
+  TH1* m_reference;
+  int m_startrun;
+  std::string m_DataType;
 };
 
 

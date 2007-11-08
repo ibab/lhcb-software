@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.10 2007-10-16 12:16:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.11 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -10,22 +10,43 @@
 
 #include <iostream>
 #include <sstream>
+#include <set>
+#include <vector>
 #include <cctype>
-#include <occi.h>
-using namespace oracle::occi;
+#include <oci.h>
 using namespace std;
+class OnlineTaskStorage;
+class OnlineHistogramStorage;
+class OnlinePageStorage;
 
 namespace OnlineHistDBEnv_constants {
+  static const int NHTYPES=6;
   static const char HistTypeName[][4] = {
     "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
-  static const unsigned int maxSNsize = 130; 
-  static const unsigned int maxANsize = 100;
-  static const unsigned int maxTNsize = 250;
-  static const unsigned int maxHTsize = 3;
   static const std::string DB="lbora01:1528/HISTOGRAMDB";
   static const std::string ACCOUNT="HIST_WRITER";
+  static const std::string RefRoot="/home/online/Histograms/Reference"; 
+  static const unsigned int DBschema = 6;
   static const std::string m_SetSeparator = "_$";
+
+  static const unsigned int VSIZE_SN          = 131;
+  static const unsigned int VSIZE_HID         =  13;
+  static const unsigned int VSIZE_TYPE        =   4;
+  static const unsigned int VSIZE_HSTITLE     = 101;
+  static const unsigned int VSIZE_SUBTITLE    =  51;
+  static const unsigned int VSIZE_HSTASK      =  65;
+  static const unsigned int VSIZE_HSALG       =  65;
+  static const unsigned int VSIZE_DESCR       =2001;
+  static const unsigned int VSIZE_DOC         = 201;
+  static const unsigned int VSIZE_ALGNAME     =  31; 
+  static const unsigned int VSIZE_NAME        = 131;
+  static const unsigned int VSIZE_FOLDER      = 301;
+  static const unsigned int VSIZE_PAGENAME    = 351;
+  static const unsigned int VSIZE_PAGEDOC     = 101;
+  static const unsigned int VSIZE_SSNAME      =  11;
+  static const unsigned int VSIZE_REFERENCE   = 101;
+  static const unsigned int VSIZE_PARAMETERS  =  16;
 }
 
 
@@ -35,7 +56,7 @@ class OnlineHistDBEnv {
  public:
   /// get verbosity level (0 for no debug messages, up to 3)
   typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;
-  int debug() const { return m_debug;}
+  inline int debug() const { return m_debug;}
   /// set verbosity level
   void setDebug(int DebugLevel) { m_debug=DebugLevel;}
   /// exception level: 0 means never throw exc. to client code, 1 means only
@@ -50,26 +71,129 @@ class OnlineHistDBEnv {
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
   /// check the syntax of the page full name, returning the correct syntax and the folder name 
   std::string PagenameSyntax(std::string fullname, std::string &folder);
-  /// standard way to dump error message
+  /// gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
+  int getAlgorithmNpar(std::string AlgName,
+		       int* Ninput = NULL);
+  /// gets the name of parameter Ipar (starting from 1) of algorithm AlgName
+  std::string getAlgParName(std::string AlgName,
+			    int Ipar);
   void errorMessage(std::string Error) const; 
+  inline OCIEnv *envhp() const {return m_envhp;}
+  inline OCIError *errhp() const {return m_errhp;}
+  inline OCISvcCtx *svchp() const {return m_svchp;}
+
 
  protected:
   OnlineHistDBEnv(std::string User); 
-  OnlineHistDBEnv(Connection* Conn, 
-		  std::string User, 
-		  int ExcLevel);
+  /* OnlineHistDBEnv(OCIEnv *Env, */
+/* 		  OCIError *Err, */
+/* 		  OCISvcCtx *Svc, */
+/*   		  std::string User,  */
+/*   		  int ExcLevel); */
   OnlineHistDBEnv(OnlineHistDBEnv &m);
-  virtual ~OnlineHistDBEnv() {};
-  
-  void dumpError(SQLException& ex,std::string MethodName) const; 
-  Environment* m_env;
-  Connection* m_conn;
-  std::string m_user;
-  
+  virtual ~OnlineHistDBEnv() 
+  {  };
+
+  // methods for OCI statements and OCI error handling
+  std::string m_StmtMethod;
+  typedef enum { 
+    NORMAL,      // error that may occur normally  
+    MODERATE,    // error that can be tolerated 
+    SEVERE       // severe error that always triggers an exception
+  } OCIErrorLevel;
+  sword checkerr(sword status,
+		OCIErrorLevel level = MODERATE);
+
+
+  void initOCIBinds();
+  void getOCITypes();
+
+  sword prepareOCIStatement(OCIStmt* & stmt, 
+			    const char *sqlcommand,
+			    bool cleanBinds=true);
+  sword prepareOCITaggedStatement(OCIStmt* & stmt, 
+				  const char *sqlcommand,
+				  const char *StmtKey,
+				  bool cleanBinds=true);
+  sword releaseOCITaggedStatement(OCIStmt* & stmt, 
+				  const char *StmtKey);
+  sword myOCIBindInt(OCIStmt* stmt,
+		     const char *str, 
+		     int &var,
+		     sb2 * ind = NULL);
+  sword myOCIBindFloat(OCIStmt* stmt,
+		       const char *str, 
+		       float &var,
+		       sb2 * ind = NULL);
+  sword myOCIBindString(OCIStmt* stmt,
+			const char *str, 
+			std::string &var,
+			sb2 * ind = NULL);
+  sword myOCIBindString(OCIStmt* stmt,
+			const char *str, 
+			text* var,
+			int size,
+			sb2 * ind = NULL);
+  sword myOCIBindObject(OCIStmt* stmt,
+			const char *str, 
+			void** var,
+			OCIType* type,
+			void** ind_struct = NULL);
+  sword myOCIDefineInt(OCIStmt* stmt,
+		      int position, 
+		      int &var,
+		      sb2 *isNULL = NULL);
+  sword myOCIDefineFloat(OCIStmt* stmt,
+			 int position, 
+			 float &var,
+			 sb2 *isNULL = NULL);
+  sword myOCIDefineString(OCIStmt* stmt,
+			  int position, 
+			  text* var,
+			  int size,
+			  sb2 *isNULL = NULL);
+  sword myOCISelectExecute(OCIStmt* stmt,
+			OCIErrorLevel level = MODERATE);
+  sword myOCIStmtExecute(OCIStmt* stmt,
+			OCIErrorLevel level = MODERATE);
+  int myOCIFetch(OCIStmt* stmt,
+		 int Nf);
+  int myOCIFetchedRows(OCIStmt* stmt);
+    
+  void intVarrayToVector(OCIColl* col, std::vector<int> &v);
+  void floatVarrayToVector(OCIColl* col, std::vector<float> &v);
+  void stringVarrayToVector(OCIColl* col, std::vector<std::string> &v);
+  void floatVectorToVarray(std::vector<float> &v, OCIColl* col);
+  void stringVectorToVarray(std::vector<std::string> &v,OCIColl* col);
+  OCIEnv *m_envhp;
+  OCIError *m_errhp;
+  OCISvcCtx *m_svchp;
+
+  OCIType *OCIthresholds;
+  OCIType *OCIparameters;
+  OCIType *OCIintlist;
+  OCIType *OCIanalist;
+  OCIType *OCIhnalist;
+  OCIType *OCIflolist;
+  OCIType *OCIdispopt;
+
+  std::set<std::string> *m_TaggedStatement;
+
+  OnlineTaskStorage *m_TStorage;
+  OnlineHistogramStorage *m_HStorage;
+  OnlinePageStorage *m_PStorage;
+
  private: 
+  std::string m_user;
+
+  OCIBind* m_bnd[40];
+  unsigned int m_curBind;
+
+  void checkCurBind();
   std::string toUpper(string str);
   int m_debug;
   int m_excLevel;
+
 };
 
 #endif // ONLINEHISTDBENV_H

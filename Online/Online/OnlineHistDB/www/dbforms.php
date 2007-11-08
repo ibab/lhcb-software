@@ -1,4 +1,5 @@
 <?
+include 'dispopt.php';
 
 function show_anahist($id) {
  global $conn;
@@ -127,23 +128,11 @@ function histo_header($id,$htype,$mode)
 
 }
 
-function get_displayoptions($disp) {
-  global $conn;
-  $query="select * from DISPLAYOPTIONS where DOID='".$disp."'";
-  $dstid = OCIParse($conn,$query);
-  OCIExecute($dstid);
-  OCIFetchInto($dstid, $mydisp, OCI_ASSOC );
-  foreach (array("LABEL_X","LABEL_Y","LABEL_Z","YMIN","YMAX","STATS","FILLCOLOR","FILLSTYLE","LINEWIDTH","LINESTYLE",
-		 "LINECOLOR","DRAWOPTS")
-	   as $field)
-    $_POST[$field]=$mydisp[$field];
-  ocifreestatement($dstid);
-}
+
 
 function hidpost_displayoptions() {
-  foreach (array("LABEL_X","LABEL_Y","LABEL_Z","YMIN","YMAX","STATS","FILLCOLOR","FILLSTYLE","LINEWIDTH","LINESTYLE",
-		 "LINECOLOR","DRAWOPTS")
-	   as $field)
+  global  $DispOpt;
+  foreach ( $DispOpt as $field)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
 }
 
@@ -156,6 +145,8 @@ function histo_display($id,$htype,$mode)
   global $debug;
   global $conn;
   global $PHP_SELF;
+  $cw_dis=  ($canwrite ? "" : "DISABLED");
+  $cw_ro=  ($canwrite ? "" : "READONLY");
   $script=$PHP_SELF;
   $setlist=0;
   if($mode == "displaylist") {
@@ -213,34 +204,80 @@ function histo_display($id,$htype,$mode)
     echo "<input type='hidden' name='PAGE' value='".$_POST["PAGE"]."'>\n";
     echo "<input type='hidden' name='INSTANCE' value='".$_POST["INSTANCE"]."'>\n";
   }
+  echo "Leave options blank for default values<br>";
 
-  printf("X Label <input name='LABEL_X' size=15 value='%s' %s> &nbsp&nbsp \n",$_POST["LABEL_X"],
-    ($canwrite ? "" : "readonly"));
-  printf("Y Label <input name='LABEL_Y' size=15 value='%s' %s><br>\n",$_POST["LABEL_Y"],
-    ($canwrite ? "" : "readonly"));
-  if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D')
-    printf("Z Label <input name='LABEL_Z' size=15 value='%s' %s><br>\n",$_POST["LABEL_Z"],
-      ($canwrite ? "" : "readonly"));
-   printf("Y miminum <input name='YMIN' size=7 value='%s' %s> &nbsp&nbsp ",$_POST["YMIN"], 
-    ($canwrite ? "" : "readonly"));
-   printf("Y maximum <input name='YMAX' size=7 value='%s' %s> <br>\n",$_POST["YMAX"], 
-    ($canwrite ? "" : "readonly"));
-   printf("Stats option <input name='STATS' size=7 value='%s' %s> &nbsp&nbsp ",$_POST["STATS"], 
-    ($canwrite ? "" : "readonly"));
-   printf("Fill Style <input name='FILLSTYLE' size=2 value='%s' %s> &nbsp&nbsp ",$_POST["FILLSTYLE"], 
-    ($canwrite ? "" : "readonly"));
-   printf("Fill Color <input name='FILLCOLOR' size=2 value='%s' %s><br>\n",$_POST["FILLCOLOR"],
-    ($canwrite ? "" : "readonly"));
-   printf("Line Width <input name='LINEWIDTH' size=2 value='%s' %s> &nbsp&nbsp ",$_POST["LINEWIDTH"],
-    ($canwrite ? "" : "readonly"));
-   printf("Line Style <input name='LINESTYLE' size=2 value='%s' %s> &nbsp&nbsp ",$_POST["LINESTYLE"], 
-    ($canwrite ? "" : "readonly"));
-   printf("Line Color <input name='LINECOLOR' size=2 value='%s' %s><br>\n",$_POST["LINECOLOR"],
-    ($canwrite ? "" : "readonly"));
-   printf("ROOT Draw options <input name='DRAWOPTS' size=20 value='%s' %s><br>\n",$_POST["DRAWOPTS"],
-    ($canwrite ? "" : "readonly"));
+  printf("X Axis &nbsp&nbsp  title <input name='LABEL_X' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_X"]);
+  printf("size <input name='TIT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_X_SIZE"]);
+  printf("offset <input name='TIT_X_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_X_OFFS"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+  printf(" labels size <input name='LAB_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LAB_X_SIZE"]);
+  printf("offset <input name='LAB_X_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["LAB_X_OFFS"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+  printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGX' value='1' %s>&nbsp&nbsp\n",
+	 $_POST["LOGX"] ? "checked" : "");
+  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s><br>\n",
+	 $_POST["GRIDX"] ? "checked" : "");
+  
+  
+  printf("Y Axis &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
+  printf("size <input name='TIT_Y_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Y_SIZE"]);
+  printf("offset <input name='TIT_Y_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Y_OFFS"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+  printf(" labels size <input name='LAB_Y_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LAB_Y_SIZE"]);
+  printf("offset <input name='LAB_Y_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["LAB_Y_OFFS"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+  printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGY' value='1' %s>&nbsp&nbsp\n",
+	 $_POST["LOGY"] ? "checked" : "");
+  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDY' value='1' %s><br>\n",
+	 $_POST["GRIDY"] ? "checked" : "");
 
+  if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
+    printf("Z Axis &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
+    printf("size <input name='TIT_Z_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Z_SIZE"]);
+    printf("offset <input name='TIT_Z_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Z_OFFS"]);
+    echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+    printf(" labels size <input name='LAB_Z_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LAB_Z_SIZE"]);
+    printf("offset <input name='LAB_Z_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["LAB_Z_OFFS"]);
+    echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+    printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGZ' value='1' %s>&nbsp&nbsp\n",
+	   $_POST["LOGZ"] ? "checked" : "");
+    printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDZ' value='1' %s><br>\n",
+	   $_POST["GRIDZ"] ? "checked" : "");
+  }
+  
+  printf("X miminum <input name='XMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["XMIN"]);
+  printf("X maximum <input name='XMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["XMAX"]);
+  printf("Y miminum <input name='YMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["YMIN"]);
+  printf("Y maximum <input name='YMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["YMAX"]);
+  if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
+    printf("Z miminum <input name='ZMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["ZMIN"]);
+    printf("Z maximum <input name='ZMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["ZMAX"]);
 
+    echo"3D plots rendering: &nbsp&nbsp Engine <select name='TIMAGE'>";
+    foreach (array("","HIST","IMAGE","AUTO") as $val) {
+      $SELECTED[$val] = ( ($_POST["TIMAGE"] == $val) ? "SELECTED" : "") ;
+      echo "<option ".$SELECTED[$val]."> ".$val." </option>";
+    }
+    echo "</select>";
+    echo "&nbsp&nbsp Angles (deg): ";
+     printf("Theta <input name='THETA' size=5 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["THETA"]);
+     printf("Phi <input name='PHI' size=5 value='%s' ${cw_ro}> <br>",$_POST["PHI"]);     
+  }
+
+  printf("Stats option <input name='STATS' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["STATS"]);
+  printf("Fill Style <input name='FILLSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["FILLSTYLE"]);
+  printf("Fill Color <input name='FILLCOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["FILLCOLOR"]);
+  printf("Line Width <input name='LINEWIDTH' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINEWIDTH"]);
+  printf("Line Style <input name='LINESTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINESTYLE"]);
+  printf("Line Color <input name='LINECOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["LINECOLOR"]);
+  printf("ROOT Draw options <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
+  printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
+  printf("Overplot reference (if available)    <select name='REF'>");
+  foreach (array("","NOREF","NONE","AREA","ENTR") as $val) {
+      $SELECTED[$val] = ($_POST["REF"] == $val) ? "SELECTED" : "" ;
+      echo "<option ".$SELECTED[$val]."> ".$val." </option>";
+    }
+  echo "</select><br> &nbsp&nbsp&nbsp&nbsp(Possible Normalization is NONE, same AREA, same ENTRies)";
   if( $canwrite) {
     $action= ($mode == "display" && $htype != "SHID") ? "Update Display Options" : "Confirm";
     echo "<table align=right><tr><td> <input align=right type='submit' name='Update_display' value='${action}'></tr></table>";

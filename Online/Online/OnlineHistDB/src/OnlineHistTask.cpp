@@ -1,6 +1,6 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.1 2007-07-09 10:17:42 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.2 2007-11-08 16:18:52 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
-
+using namespace OnlineHistDBEnv_constants;
 
 OnlineHistTask::OnlineHistTask(OnlineHistDBEnv &env,
 			       std::string Name, 
@@ -23,34 +23,41 @@ OnlineHistTask::OnlineHistTask(OnlineHistDBEnv &env,
 			       std::string Name) :
   OnlineHistDBEnv(env) , m_abort(false)
 {
-  Statement *qst=m_conn->createStatement 
-    ("SELECT SUBSYS1,SUBSYS2,SUBSYS3,RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SAVEFREQUENCY,REFERENCE FROM TASK where TASKNAME=:1");
-  try{
-    qst->setString(1, Name);
-    m_name = Name;
-    ResultSet *rset =qst->executeQuery();
-    if(rset->next ()) {
+
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistTask::OnlineHistTask";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "SELECT SUBSYS1,SUBSYS2,SUBSYS3,RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SAVEFREQUENCY,REFERENCE FROM TASK where TASKNAME=:1") ) {
+    text SUBSYS[3][VSIZE_SSNAME];
+    SUBSYS[0][0]=SUBSYS[1][0]=SUBSYS[2][0]='\0';
+    int RUNONPHYSICS,RUNONCALIB,RUNONEMPTY;
+    text REFERENCE[VSIZE_REFERENCE]="";
+    myOCIBindString(stmt,":1", Name);
+    myOCIDefineString(stmt, 1, SUBSYS[0], VSIZE_SSNAME, &m_sd_null[0]);
+    myOCIDefineString(stmt, 2, SUBSYS[1], VSIZE_SSNAME, &m_sd_null[1]);
+    myOCIDefineString(stmt, 3, SUBSYS[2], VSIZE_SSNAME, &m_sd_null[2]);
+    myOCIDefineInt   (stmt, 4, RUNONPHYSICS, &m_RunsOnPhysics_null);
+    myOCIDefineInt   (stmt, 5, RUNONCALIB, &m_RunsOnCalib_null);
+    myOCIDefineInt   (stmt, 6, RUNONEMPTY, &m_RunsOnEmpty_null);
+    myOCIDefineFloat (stmt, 7, m_SavingFrequency, &m_SavingFrequency_null);
+    myOCIDefineString(stmt, 8, REFERENCE, VSIZE_REFERENCE, &m_Reference_null);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      m_name = Name;      
       m_ndet=0;
       for ( int id=0; id<3; id++) {
 	m_sd[id]="NULL";
-	if(rset->getString(id+1) != "") 
-	  m_sd[m_ndet++] = rset->getString(id+1) ;
+	if(! m_sd_null[id]) 
+	  m_sd[m_ndet++] = std::string((const char*) SUBSYS[id]);
       }
-      m_RunsOnPhysics = (rset->getInt(4) > 0);      
-      m_RunsOnCalib = (rset->getInt(5) > 0);
-      m_RunsOnEmpty = (rset->getInt(6) > 0);
-      m_SavingFrequency = rset->getFloat(7);
-      m_Reference = rset->getString(8);
+      m_RunsOnPhysics = m_RunsOnPhysics_null ? false : (RUNONPHYSICS > 0);      
+      m_RunsOnCalib = m_RunsOnCalib_null ? false : (RUNONCALIB > 0);
+      m_RunsOnEmpty = m_RunsOnEmpty_null ? false : (RUNONEMPTY > 0);
+      m_Reference = m_Reference_null ? "" : std::string((const char*) REFERENCE);
     }
-    else { // task does not exist
+    else {// task does not exist
       m_abort=true;
     }
-  }catch(SQLException ex)
-    {
-      dumpError(ex,"OnlineHistTask::OnlineHistTask for "+Name);
-      m_abort=true;
-    }
-  m_conn->terminateStatement (qst);  
+  }
 }
 
 
@@ -90,27 +97,41 @@ bool OnlineHistTask::addSubDetector(std::string SubDet) {
 
 
 bool OnlineHistTask::save() {
-  bool out=true;
-  Statement *tstmt=m_conn->createStatement 
-    ("begin OnlineHistDB.DeclareTask(:x1,:x2,:x3,:x4,:x5,:x6,:x7,:x8,:x9); end;");
-  try{
-    tstmt->setString(1, m_name);
-    tstmt->setString(2, m_sd[0]);
-    tstmt->setString(3, m_sd[1]);
-    tstmt->setString(4, m_sd[2]);
-    tstmt->setInt(5, (int)m_RunsOnPhysics);
-    tstmt->setInt(6, (int)m_RunsOnCalib);
-    tstmt->setInt(7, (int)m_RunsOnEmpty);
-    tstmt->setFloat(8, m_SavingFrequency);
-    tstmt->setString(9, m_Reference);
-    tstmt->executeUpdate ();
-  }catch(SQLException ex)
-    {
-      dumpError(ex,"OnlineHistTask::save for Task "+m_name);
-      out=false;
+  bool out=false;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistTask::save";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN ONLINEHISTDB.DECLARETASK(:x1,:x2,:x3,:x4,:x5,:x6,:x7,:x8,:x9); END;") ) {
+    int RUNONPHYSICS= (int)m_RunsOnPhysics,
+      RUNONCALIB= (int)m_RunsOnCalib,
+      RUNONEMPTY= (int)m_RunsOnEmpty;
+    myOCIBindString(stmt,":x1", m_name);
+    myOCIBindString(stmt,":x2", m_sd[0], &m_sd_null[0]);
+    myOCIBindString(stmt,":x3", m_sd[1], &m_sd_null[1]);
+    myOCIBindString(stmt,":x4", m_sd[2], &m_sd_null[2]);
+    myOCIBindInt   (stmt,":x5", RUNONPHYSICS, &m_RunsOnPhysics_null);
+    myOCIBindInt   (stmt,":x6", RUNONCALIB, &m_RunsOnCalib_null);
+    myOCIBindInt   (stmt,":x7", RUNONEMPTY, &m_RunsOnEmpty_null);
+    myOCIBindFloat (stmt,":x8", m_SavingFrequency, &m_SavingFrequency_null);
+    myOCIBindString(stmt,":x9", m_Reference, &m_Reference_null);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      out=true;
     }
-  m_conn->terminateStatement (tstmt);  
+  }
   return out;
+}
+
+void OnlineHistTask::dump() {
+    cout << "Task "<< name() << "  related to "<<ndet() << " detectors:"<<endl <<"             ";
+    for (int i=0 ; i< ndet(); i++) 
+      cout << det(i) << "  ";
+  cout << endl << " Run Conf: Ph=" << runsOnPhysics() <<
+    "  Calib=" << runsOnCalib() << "  Empty=" << runsOnEmpty() <<endl ;
+  if (m_SavingFrequency_null == 0)
+    cout << " Frequency : " << savingFrequency() <<endl;
+  if (m_Reference_null == 0)
+    cout << " Reference : " << reference() <<endl;
+  cout<< "-----------------------------------------------------------------------"<<endl;
 }
 
 

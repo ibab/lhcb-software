@@ -4,8 +4,8 @@
 \usepackage{epsfig}
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
-\dociss{3}
-\docrev{3}
+\dociss{4}
+\docrev{0}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -70,7 +70,7 @@ number of histograms in set
 'H1D', 'H2D' for normal histograms, 'P1D', 'P2D' for profile
 histograms, 'CNT' for counters
 \item{Nanalysis} (integer)\\
-number of analysis to be performed on set
+number of analysis to be performed on the set
 \item{Description} (string of max length 4000) 
 \item{Documentation} (string of max length 200)\\
 link to a more extensive documentation
@@ -80,6 +80,9 @@ identifier of display option set associated to Histogram set
 
 \subsubsection{Properties of HISTOGRAM}
 \begin{description}
+\item{NAME} (string of max length 130)\\
+Unique histogram identifier given by\\
+ {\it Taskname}/{\it Algorithmname}/{\it HistogramName}
 \item{HID} (string of max length 12)\\
 {\it HSID}/{\it IHS}
 \item{Subname} (string of max length 50)
@@ -124,15 +127,42 @@ unique identifier
 \item{LABEL\_X}  (string of max length 50)
 \item{LABEL\_Y}  (string of max length 50)
 \item{LABEL\_Z}  (string of max length 50)
-\item{YMIN} (float)
-\item{YMAX} (float)
-\item{STATS} (int)
-\item{FILLSTYLE} (int)
-\item{FILLCOLOR} (int)
-\item{LINESTYLE} (int)
-\item{LINECOLOR} (int)
-\item{LINEWIDTH} (int)
+\item{YMIN}  (float)
+\item{YMAX}  (float)
+\item{STATS}  (int)
+\item{FILLSTYLE}  (int)
+\item{FILLCOLOR}  (int)
+\item{LINESTYLE}  (int)
+\item{LINECOLOR}  (int)
+\item{LINEWIDTH}  (int)
 \item{DRAWOPTS}  (string of max length 50)
+\item{XMIN}  (float)
+\item{XMAX}  (float)
+\item{ZMIN}  (float)
+\item{ZMAX}  (float)
+\item{LOGX}  (int)
+\item{LOGY}  (int)
+\item{LOGZ}  (int)
+\item{TIMAGE}  (string of max length 5)
+\item{REF}  (string of max length 5)
+\item{REFRESH}  (float)
+\item{TIT\_X\_SIZE}  (float)
+\item{TIT\_X\_OFFS}  (float)
+\item{TIT\_Y\_SIZE}  (float)
+\item{TIT\_Y\_OFFS}  (float)
+\item{TIT\_Z\_SIZE}  (float)
+\item{TIT\_Z\_OFFS}  (float)
+\item{LAB\_X\_SIZE}  (float)
+\item{LAB\_X\_OFFS}  (float)
+\item{LAB\_Y\_SIZE}  (float)
+\item{LAB\_Y\_OFFS}  (float)
+\item{LAB\_Z\_SIZE}  (float)
+\item{LAB\_Z\_OFFS}  (float)
+\item{GRIDX}  (int)
+\item{GRIDY}  (int)
+\item{THETA}  (float)
+\item{PHI}  (float)
+
 \end{description}
 \subsubsection{Properties of PAGEFOLDER}
 \begin{description}
@@ -257,6 +287,7 @@ It is available for test at the address\\
 while the production address (visible only from the CERN network)
 will be \\
 \centerline{ \it http://lbweb01:8090/histogramdb}  
+(or { \it http://web01:8090/histogramdb} from the pit).
 
 It is intended to be the most suitable tool to browse available
 histograms, edit the display options and the automatic analysis, including
@@ -279,7 +310,7 @@ different reference for different run condition and time range.
 
 \section{C++ Interface}
 
-The interface is available as a link library that can be compiled from
+The interface is available as a linker library that can be compiled from
 the package \\
 {\it Online/OnlineHistDB} \\
 in the LHCb code repository.
@@ -310,16 +341,7 @@ commit} method.
 By default, DB errors don't throw exceptions to the client code but
 for severe inconsistencies (i.e. bugs). The default behaviour can be
 changed (see section \ref{dbenvclass}). Normally, one can detect
-errors by the method return values and choose if commit or not. \\
-Histogram declarations are a special case since, 
-in order to improve performance, they are stored in
-a buffer, with default depth 1000, and actually sent to the DB
-server only when the buffer is full or at commit time. In order to
-check for errors in histogram declarations, one can use the {\it
-sendHistBuffer} method to force buffer sending, and check its return
-value before committing. Note that if an error occurs and you commit anyway, 
-only all histograms declared before the error are sent to the DB, and
-the buffer is emptied.
+errors by the method return values and choose if commit or not. 
 
 
 \begin{list}{$\bullet$}{}
@@ -333,7 +355,9 @@ the buffer is emptied.
 
 OnlineHistogram objects are instantiated within an
 OnlineHistDB object, i.e. a DB transaction, through the {\it
-getHistogram} method.
+getHistogram} method. To minimize newtwork roundtrips with the DB
+server, all changes to display options are kept local before an
+explicit call to {\it saveDisplayOptions()}
 
 \begin{list}{$\bullet$}{}
 \input{OnlineHistogram}
@@ -346,6 +370,8 @@ Histogram DB, in
 order to load or save display parameters trasparently.
  The user can instantiate objects that can be optionally 
 linked to existing OnlineHistogram and/or TH1 objects.
+Display options in ROOT are saved to the DB only if different from the
+default values in {\it gStyle}.
 
 The identifier must be the DB histogram identifier\\
 {\it Taskname}/{\it Algorithmname}/{\it HistogramName}
@@ -404,7 +430,10 @@ int main ()
  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
                                         OnlineHistDBEnv_constants::ACCOUNT,
                                         OnlineHistDBEnv_constants::DB);
-  
+ cout << "opened connection with "<<HistDB->nHistograms()<<" Histograms "
+      << HistDB->nPages()<<" Pages "
+      << HistDB->nPageFolders()<<" PageFolders "<<endl;
+    
  bool ok=true;
   
  ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
@@ -427,43 +456,12 @@ int main ()
    HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
    HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
    
-   ok &= HistDB->sendHistBuffer(); // needed to send histogram buffer to DB
  }
  OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
  if(thisH)
    thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
 \end{verbatim}
-Now declare an histogram to be produced at analysis level by some
-algorithm, and an automatic check to be performed on it (the
-declaration of algorithms should be normally done by the developers of analysis
-library)  
-\begin{verbatim}
- HistDB->declareCreatorAlgorithm("Subtraction",2,OnlineHistDBEnv::H1D,0,NULL,
-                                 "bin-by-bin subtraction");
 
- OnlineHistogram* s1=HistDB->getHistogram("EXAMPLE/SafetyCheck/Trips");
- OnlineHistogram* s2=HistDB->getHistogram(
-                       "EXAMPLE/SafetyCheck/Trips_after_use_of_CRack");
- OnlineHistogram* htrips=0;
- std::vector<OnlineHistogram*> sources;
- if(s1 && s2) {
-   sources.push_back(s1);
-   sources.push_back(s2);
-   htrips=HistDB->declareAnalysisHistogram("Subtraction",
-                                           "Trips_due_to_CRack",
-                                           sources);
- }
-
- std::string mypar[1]={"Max"};
- bool algok=HistDB->declareCheckAlgorithm("CheckMax",1,mypar,
-                        "Checks all bins to be smaller than Max");
- 
- if (htrips && algok) {
-   std::vector<float> warn(1,100.);
-   std::vector<float> alarm(1,500.);
-   htrips->declareAnalysis("CheckMax", &warn, &alarm);
- } 
-\end{verbatim}
 Now create a page and edit the display options of its
 histograms. 
 \begin{verbatim}
@@ -505,7 +503,7 @@ histograms.
      h1->setDisplayOption("FILLSTYLE",(void*) &fs);
      h1->setDisplayOption("FILLCOLOR",(void*) &fc); 
      h1->setDisplayOption("YMAX",(void*) &ymax); 
-
+     h1->saveDisplayOptions();
      h1->dump();
 
      // second instance of h1
@@ -516,6 +514,7 @@ histograms.
      newh->unsetDisplayOption("FILLCOLOR");
      lc=4;
      newh->setDisplayOption("LINECOLOR",(void*) &lc);
+     newh->saveDisplayOptions();
      newh->dump();
 
      // link a DB histogram with a ROOT histogram

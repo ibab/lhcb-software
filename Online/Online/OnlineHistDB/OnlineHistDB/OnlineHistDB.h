@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.12 2007-10-16 12:16:09 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.13 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -13,9 +13,10 @@
 #include "OnlineHistDB/OnlineHistTask.h"
 
 
-class  OnlineHistDB : public OnlineHistDBEnv, 
-    public OnlineTaskStorage, public OnlineHistogramStorage, 
-    public OnlinePageStorage
+class  OnlineHistDB : public OnlineHistDBEnv,
+  public OnlineTaskStorage, 
+  public OnlineHistogramStorage,
+  public OnlinePageStorage
 {
  public:
   /// constructor
@@ -26,12 +27,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   // DB session methods
   /// commits all changes to the DB. Returns true if there are no errors.
   bool commit();
-  /// when creating histograms with the {\it declareHistByServiceName}
-  /// method, the histogram list is actually send to the DB server every N
-  /// histograms (or at commit) in order to optimize performance. The
-  /// default buffer depth (recommended value) is 1000. 
-  void setHistogramBufferDepth(int N);
-  
+
   // declarations of main DB objects
   /// declares a  subsystem, returning true on success
   bool declareSubSystem(std::string SubSys);
@@ -45,9 +41,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   void declareHistogram(std::string TaskName,
 			std::string AlgorithmName,
 			std::string HistogramName,
-			HistType Type);
-  /// forces sending histogram declaration buffer to the DB. Returns true if there are no errors.
-  bool sendHistBuffer();
+			HistType Type); 
   /// declares an histogram to be produced at analysis
   /// level using algorithm Algorithm. Name is the histogram name. Sources
   /// must contain the pointers to the input histograms. Parameters is a
@@ -77,25 +71,27 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			       std::vector<std::string> *pars=NULL,
 			       std::string doc="NONE");
 
+
+  /// gets the algorithm list version
+  int getAlgListID() const {return m_AlgListID;}
+  /// sets the algorithm list version (works only for DB admin account)
+  bool setAlgListID(int algListID);
+
+
   // deleting methods (handle with care!)
 
   /// removes Page Folder only if it doesn't have pages (useful for cleanup)
   bool removePageFolder(std::string Folder);
 
-  // access methods
-  /// gets the algorithm list version
-  int getAlgListID() const {return m_AlgListID;}
-  /// sets the algorithm list version (works only for DB admin account)
-  bool setAlgListID(int algListID);
-  /// gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
-  int getAlgorithmNpar(std::string AlgName,
-		       int* Ninput = NULL) const;
-  /// gets the name of parameter Ipar (starting from 1) of algorithm AlgName
-  std::string getAlgParName(std::string AlgName,
-		       int Ipar) const;
 
 
   // query functions
+  /// total number of histograms in the DB
+  int nHistograms() {return m_nHistograms;}
+  /// total number of pages in the DB
+  int nPages() {return m_nPages;}
+  ///  total number of page folders in the DB
+  int nPageFolders() {return m_nPageFolders;}
   /// gets the full list of histograms. Returns the number of histograms found. Vectors with pointers
   /// to OnlineHistogram objects, histogram identifiers, histogram types can optionally created  by the user
   /// and filled if not null
@@ -149,19 +145,19 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 
  private:
   // private dummy copy constructor and assignment operator
-  OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"), 
-    OnlineTaskStorage(this), OnlineHistogramStorage(this), OnlinePageStorage(this,this) {}
-  OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;}
-  int m_DBschema;
+   OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"),  
+     OnlineTaskStorage(NULL), OnlineHistogramStorage(NULL), OnlinePageStorage(NULL) {} 
+     OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;} 
   int m_AlgListID;
-  Statement *m_stmt;
   int m_nit;
-  int m_maxNit;
+  int m_nHistograms;
+  int m_nPages;
+  int m_nPageFolders;
   int genericStringQuery(std::string command,std::vector<string>& list);
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,
 		    std::vector<string>* ids = NULL,
-		    std::vector<string>* types = NULL);
+		    std::vector<string>* types = NULL); 
 };
 
-#endif // ONLINEHISTDB_H
+#endif // ONLINEHISTDB_Hg

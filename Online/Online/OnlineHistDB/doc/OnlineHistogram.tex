@@ -1,74 +1,84 @@
-\item    std::string {\bf identifier}() const ;
+\item    inline std::string {\bf identifier}() const ;
 
  full histogram unique identifier Taskname/AlgorithmName/HistogramName
 
 
-\item    std::string {\bf page}() const ;
+\item    inline std::string {\bf page}() const ;
 
  full path name of the page to which this histogram object is attached
 
 
-\item    int {\bf instance}() const ;
+\item    inline int {\bf instance}() const ;
 
  counter (starting from 1) to distinguish several instances of the same histogram on the same page
 
 
-\item    std::string {\bf dimServiceName}() const  ;
+\item    inline std::string {\bf dimServiceName}() const  ;
 
  name of the DIM service that is currently publishing the histogram
 
 
-\item    int {\bf hsid}() const ;
+\item    inline int {\bf hsid}() const ;
 
  internal histogram set ID
 
 
-\item    int {\bf ihs}() const ;
+\item    inline int {\bf ihs}() const ;
 
  position of this histogram in set (starting from 1). Can be larger than nhs() if some histogram in the set has been deleted
 
 
-\item    std::string {\bf hid}() const ;
+\item    inline std::string {\bf hid}() const ;
 
  internal histogram ID (equivalent to hsid()/ihs())
 
 
-\item    int {\bf nhs}() const ;
+\item    inline int {\bf nhs}() const ;
 
  number of histograms in set
 
 
-\item    std::string {\bf hstype}() const ;
+\item    inline std::string {\bf hstype}() const ;
 
  histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
 
 
-\item    std::string {\bf hname}() const ;
+\item    inline OnlineHistDBEnv::HistType {\bf type}() const ;
+
+ histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+
+
+\item    inline int {\bf dimension}() ;
+
+ histogram dimension (1 or 2 for histograms, 0 for counters)
+
+
+\item    inline std::string {\bf hname}() const ;
 
  histogram name
 
 
-\item    std::string {\bf htitle}() const ;
+\item    inline std::string {\bf htitle}() const ;
 
  standard DB histogram title (not necessarly equal to the published ROOT title)
 
 
-\item    std::string {\bf hsname}() const ;
+\item    inline std::string {\bf hsname}() const ;
 
  histogram set name
 
 
-\item    std::string {\bf subname}() const ;
+\item    inline std::string {\bf subname}() const ;
 
  subname
 
 
-\item    std::string {\bf task}() const ;
+\item    inline std::string {\bf task}() const ;
 
  task name
 
 
-\item    std::string {\bf algorithm}() const ;
+\item    inline std::string {\bf algorithm}() const ;
 
  algorithm name
 
@@ -113,18 +123,6 @@
  sets the DIM service name that is currently publishing the histogram. Returns true on success
 
 
-\item    bool {\bf setDoc}(std::string doc);
-
-
- provide a short description to be optionally printed on the plot 
-
-
-\item    bool {\bf setDescr}(std::string descr);
-
-
- provide a  description of the histogram content 
-
-
 \item    void {\bf dump}();
 
 
@@ -149,6 +147,12 @@
  number of instances of this histogram on its current page
 
 
+\item    OnlineHistTask* {\bf getTask}();
+
+
+ gets associated task object
+
+
 \item   typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
 \item    DisplayOptionMode {\bf domode}() const ;
 
@@ -157,65 +161,61 @@
  associated to the histogram on  page {\it page()}
 
 
-\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
-				void* value);
+\item    bool {\bf getDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~
+			void* option);
 
- sets a display option.  The available parameter names and the corresponding types are listed 
- in section \ref{dispopts}. Returns true on success.
- This method chooses the most appropriate display option mode calling one of the next methods  
-
-
-\item    virtual bool {\bf setHistoSetDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
-					void* value);
-
- sets a display option for the whole histogram set
+ gets the current value of display option ParameterName, returning false if
+ the option is unset.
+ option must be a pointer to a variable allocated by the user, of type 
+ std::string, int (signed) or float depending on the option type.
+ The available option names and the corresponding types are listed 
+ in section \ref{dispopts}.
 
 
-\item    virtual bool {\bf setHistDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
-				void* value);
-
- sets a display option for the present histogram.
+\item    bool {\bf isSetDisplayOption}(std::string ParameterName);
 
 
-\item    virtual bool {\bf setHistoPageDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
-					 void* value,\\\mbox{}~~~~~~~~~
-					 std::string FullPathPageName = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
-					 int Instance=-1);
+ checks is display option is set
 
- sets a display option for the present histogram on page FullPathPageName (default is {\it page()})
+
+\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~
+			void* option);
+
+ sets a display option (in the current display mode). Change is sent to the DB only 
+ after a call to saveDisplayOptions()
 
 
 \item    virtual bool {\bf unsetDisplayOption}(std::string ParameterName);
 
 
- unsets a display option in the current display mode
+ unsets a display option (in the current display mode)
 
 
-\item    virtual bool {\bf unsetHistoSetDisplayOption}(std::string ParameterName); 
+\item    virtual bool {\bf saveDisplayOptions}();
 
 
- unsets a display option for the whole histogram set
+ saves current display options.  This is the recommended saving method, that
+ chooses the most appropriate display option mode 
+ (Histogram set, Histogram, or Histogram on Page) calling one of the next methods.
 
 
-\item    virtual bool {\bf unsetHistDisplayOption}(std::string ParameterName); 
+\item    virtual bool {\bf saveHistoSetDisplayOptions}();
 
 
- unsets a display option for the present histogram.
+ saves current display options for the whole histogram set
 
 
-\item    virtual bool {\bf unsetHistoPageDisplayOption}(std::string ParameterName);
+\item    virtual bool {\bf saveHistDisplayOptions}();
 
 
- unsets a display option for the present histogram on its page (if defined)
+ saves current display options for the present histogram.
 
 
-\item    bool {\bf getDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~
-			void* option);
+\item    virtual bool {\bf saveHistoPageDisplayOptions}(std::string Page = "\_DEFAULT\_",\\\mbox{}~~~~~~~~~
+					   int Instance=-1);
 
- if display option  ParameterName has been defined, puts its value into
- option and returns true. In case different sets of display options
- exists for histogram set, histogram and histogram in page, the most
- specific one is used.
+ attaches current display options to instance Instance of the present histogram on page 
+ Page (default values for Page, Instance are {\it page()},{\it instance()}  )
 
 
 \item    bool {\bf initHistDisplayOptionsFromSet}(); 
@@ -257,13 +257,13 @@
 
 
 \item    void {\bf getAnalyses}(std::vector$<$int$>$\& anaIDs,\\\mbox{}~~~~~~~~~
-		   std::vector$<$std::string$>$\& anaAlgs) const ;
+		   std::vector$<$std::string$>$\& anaAlgs) ;
 
  get analysy description as vectors of length {\it  nanalysis}() containing 
  the analysis internal IDs and the analysis algorithm names
 
 
-\item    boolean {\bf isAnaHist}() const ;
+\item    bool {\bf isAnaHist}() const ;
 
  true if the histogram is produced at analysis level
 
@@ -293,7 +293,8 @@
 
 \item    bool {\bf getAnaSettings}(int AnaID,\\\mbox{}~~~~~~~~~
 		      std::vector$<$float$>$* warn,\\\mbox{}~~~~~~~~~ 
-		      std::vector$<$float$>$* alarm) const;
+		      std::vector$<$float$>$* alarm,\\\mbox{}~~~~~~~~~
+		      bool \&mask);
 
  gets parameters for analysis with ID AnaID. Returns true on success
 

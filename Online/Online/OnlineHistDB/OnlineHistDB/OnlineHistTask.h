@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.3 2007-07-17 15:54:13 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.4 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -60,18 +60,26 @@ class OnlineHistTask : public OnlineHistDBEnv
   /// sets task saving frequency
   bool setSavingFrequency(float SavingFrequency) {m_SavingFrequency = SavingFrequency; return save();}
   /// sets the location of latest reference file
-  bool setReference(std::string Reference) {m_Reference = Reference; return save();}
+  bool setReference(std::string Reference) {m_Reference = Reference; m_Reference_null=0;return save();}
   bool isAbort() {return m_abort;}
+  /// dumps task options
+  void dump();
 
  private:
   std::string m_name;
   int m_ndet;
   std::string m_sd[3];
+  sb2 m_sd_null[3];
   bool m_RunsOnPhysics;
+  sb2 m_RunsOnPhysics_null;
   bool m_RunsOnCalib;
+  sb2 m_RunsOnCalib_null;
   bool m_RunsOnEmpty;
+  sb2 m_RunsOnEmpty_null;
   float m_SavingFrequency;
+  sb2 m_SavingFrequency_null;
   std::string m_Reference;
+  sb2 m_Reference_null;
   bool m_abort;
   bool save();
   void declareSubDetectors(std::string SubDet1="NULL", 

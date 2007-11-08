@@ -12,18 +12,21 @@ $conn=HistDBconnect(1);
 
 function update_histo_display() {
   global $conn;
-
+  global  $DispOpt;
   $command="begin :out := OnlineHistDB.".
     ( $_POST["htype"] == "SHID" ? 
       "DeclareHistoPageDisplayOptions('".$_POST["id"]."','".$_POST["PAGE"]."',".$_POST["INSTANCE"] :
       ($_POST["htype"] == "HSID" ? 
        "DeclareHistoSetDisplayOptions(".$_POST["id"] :
        "DeclareHistDisplayOptions('".$_POST["id"]."'") );
-  foreach  (array('LABEL_X','LABEL_Y','LABEL_Z','YMIN','YMAX','STATS','FILLSTYLE','FILLCOLOR',
-                  'LINESTYLE','LINECOLOR','LINEWIDTH','DRAWOPTS') as $var) {
-    if ($_POST[$var] != '') $command.=",K${var} => '".$_POST[$var]."'";
+  $command.=",DISPOPT(";
+  $nopts = count($DispOpt);
+  for ($i=0 ; $i< $nopts; $i++) {
+    $var = $DispOpt[$i];
+    $command.= ($_POST[$var] != '') ? "'".$_POST[$var]."'" : "NULL";
+    if($i < $nopts-1) $command.=",";
   }
-  $command.=",reset => 1); end;";
+  $command.=")); END;";
   if ($debug>1) echo "command is $command <br>";
   $stid = OCIParse($conn,$command);
   ocibindbyname($stid,":out",$out,10);

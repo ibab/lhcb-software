@@ -18,7 +18,6 @@ drop sequence HistogramSet_ID;
 drop sequence Analysis_ID;
 drop sequence Displayoptions_ID;
 
-
 CREATE OR REPLACE TYPE thresholds as TABLE OF FLOAT;
 /
 CREATE OR REPLACE TYPE parameters as TABLE OF VARCHAR2(15);
@@ -29,9 +28,49 @@ CREATE OR REPLACE TYPE analist is VARRAY(20) OF varchar2(30);
 /
 CREATE OR REPLACE TYPE flolist is VARRAY(20) OF float;
 /
-CREATE OR REPLACE TYPE hnalist is VARRAY(100) OF varchar2(400);
+CREATE OR REPLACE TYPE hnalist is VARRAY(100) OF varchar2(130);
 /
-
+CREATE OR REPLACE TYPE DISPOPT AS OBJECT (
+  LABEL_X varchar2(50),
+  LABEL_Y varchar2(50),
+  LABEL_Z varchar2(50),
+  YMIN float,
+  YMAX float,
+  STATS smallint,
+  FILLSTYLE smallint,
+  FILLCOLOR smallint,
+  LINESTYLE smallint,
+  LINECOLOR smallint,
+  LINEWIDTH smallint,
+  DRAWOPTS varchar2(50),
+  XMIN         FLOAT,
+  XMAX         FLOAT,
+  ZMIN         FLOAT,
+  ZMAX         FLOAT,
+  LOGX         NUMBER(1),
+  LOGY         NUMBER(1),
+  LOGZ         NUMBER(1),
+  TIMAGE       VARCHAR2(5),
+  REF          VARCHAR2(5),
+  REFRESH      FLOAT,
+  TIT_X_SIZE   FLOAT,
+  TIT_X_OFFS   FLOAT,
+  TIT_Y_SIZE   FLOAT,
+  TIT_Y_OFFS   FLOAT,
+  TIT_Z_SIZE   FLOAT,
+  TIT_Z_OFFS   FLOAT,
+  LAB_X_SIZE   FLOAT,
+  LAB_X_OFFS   FLOAT,
+  LAB_Y_SIZE   FLOAT,
+  LAB_Y_OFFS   FLOAT,
+  LAB_Z_SIZE   FLOAT,
+  LAB_Z_OFFS   FLOAT,
+  GRIDX        NUMBER(1),
+  GRIDY        NUMBER(1),
+  THETA        FLOAT,
+  PHI          FLOAT
+);
+/
 
 create table ERGOSUM (
  version number(5),
@@ -64,27 +103,17 @@ CREATE INDEX TK_SS3_IX on TASK(SUBSYS3) TABLESPACE INDX01;
 
 
 
-
 CREATE SEQUENCE Displayoptions_ID START WITH 1
       NOMAXVALUE
       NOCACHE; 
 
 create table DISPLAYOPTIONS (
   DOID integer constraint DO_PK primary key 
-	USING INDEX (create index DO_PK_IX on DISPLAYOPTIONS(DOID) TABLESPACE INDX01),
-  LABEL_X varchar2(50),
-  LABEL_Y varchar2(50),
-  LABEL_Z varchar2(50),
-  YMIN float,
-  YMAX float,
-  STATS smallint,
-  FILLSTYLE smallint,
-  FILLCOLOR smallint,
-  LINESTYLE smallint,
-  LINECOLOR smallint,
-  LINEWIDTH smallint,
-  DRAWOPTS varchar2(50)
+        USING INDEX (create index DO_PK_IX on DISPLAYOPTIONS(DOID) TABLESPACE INDX01),
+  OPT dispopt
 );
+
+
 
 
 CREATE SEQUENCE HistogramSet_ID START WITH 1
@@ -109,6 +138,9 @@ create table HISTOGRAMSET (
 CREATE INDEX HS_TIT_IX ON HISTOGRAMSET(HSTITLE) TABLESPACE INDX01;
 CREATE INDEX HS_ALG_IX ON HISTOGRAMSET(HSALGO) TABLESPACE INDX01;
 CREATE INDEX HS_TK_IX on HISTOGRAMSET(HSTASK) TABLESPACE INDX01;
+
+
+
 CREATE INDEX HS_DISP_IX on HISTOGRAMSET(HSDISPLAY) TABLESPACE INDX01;
 
 

@@ -1,5 +1,5 @@
 \item   typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;
-\item    int {\bf debug}() const ;
+\item    inline int {\bf debug}() const ;
 
  get verbosity level (0 for no debug messages, up to 3)
 
@@ -31,9 +31,15 @@
  check the syntax of the page full name, returning the correct syntax and the folder name 
 
 
-\item    void {\bf errorMessage}(std::string Error) const; 
+\item    int {\bf getAlgorithmNpar}(std::string AlgName,\\\mbox{}~~~~~~~~~
+		       int* Ninput = NULL);
+
+ gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
 
 
- standard way to dump error message
+\item    std::string {\bf getAlgParName}(std::string AlgName,\\\mbox{}~~~~~~~~~
+			    int Ipar);
+
+ gets the name of parameter Ipar (starting from 1) of algorithm AlgName
 
 

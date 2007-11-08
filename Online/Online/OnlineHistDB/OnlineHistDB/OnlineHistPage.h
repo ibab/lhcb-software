@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.11 2007-09-28 15:46:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.12 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -16,7 +16,6 @@ class OnlineHistPage : public OnlineHistDBEnv
 {
  public:
   OnlineHistPage(OnlineHistDBEnv& Env,
-		 OnlineHistogramStorage* Storage,
 		 std::string Name);
   virtual ~OnlineHistPage();
   /// number of histograms on page
@@ -37,17 +36,17 @@ class OnlineHistPage : public OnlineHistDBEnv
   /// same histogram more than once. Returns the object attached to page (the input
   /// one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
   OnlineHistogram* declareHistogram(OnlineHistogram* h,
-				    float Cx,
-				    float Cy,
-				    float Sx,
-				    float Sy,
+				    double Cx,
+				    double Cy,
+				    double Sx,
+				    double Sy,
 				    unsigned int instance=1);
   /// like declareHistogram, but a new instance is always created
   OnlineHistogram* addHistogram(OnlineHistogram* h,
-				float Cx,
-				float Cy,
-				float Sx,
-				float Sy);
+				double Cx,
+				double Cy,
+				double Sx,
+				double Sy);
   /// removes histogram from page, or one of its instances, returning true on success
   bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
@@ -57,28 +56,32 @@ class OnlineHistPage : public OnlineHistDBEnv
   /// fills the hlist vector with pointers to the histograms attached to this page
   void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
     std::vector<OnlineHistogram*>::iterator ix;
+    hlist->reserve(hlist->size()+m_h.size());
     for (ix = m_h.begin();ix != m_h.end(); ++ix)
       hlist->push_back(*ix);
   }
   /// get the layout of given histogram. returns false if histogram is not found
   bool getHistLayout(OnlineHistogram* h,
-		     float &Cx,
-		     float &Cy,
-		     float &Sx,
-		     float &Sy,
+		     double &Cx,
+		     double &Cy,
+		     double &Sx,
+		     double &Sy,
 		     unsigned int instance=1) const;
-  /// save the current page layout to the DB
+  /// saves the current page layout to the DB
   bool save();
+  /// dumps the current page layout 
+  void dump();
 
  private:
   // private dummy copy constructor and assignment operator 
   OnlineHistPage(const OnlineHistPage&) : OnlineHistDBEnv("dummy") {}
   OnlineHistPage & operator= (const OnlineHistPage&) {return *this;}
   //
-  OnlineHistogramStorage* m_Hstorage;
   std::string m_name;
+  std::string m_shortname;
   std::string m_folder;
   std::string m_doc;
+  sb2 m_doc_null;
   bool m_syncWithDB;
   std::vector<OnlineHistogram*> m_h;
   std::vector<float> m_cx;
@@ -88,14 +91,14 @@ class OnlineHistPage : public OnlineHistDBEnv
   int findHistogram(OnlineHistogram* h,
 		    unsigned int instance,
 		    bool &knownHisto) const;
-  unsigned int newHistogramInstance(OnlineHistogram* h) const;
+  unsigned int newHistogramInstance(OnlineHistogram* h);
   unsigned int HistogramInstance(unsigned int xh) const;
 };
 
 class OnlinePageStorage
 {
  public:
-  OnlinePageStorage(OnlineHistDBEnv* Env, OnlineHistogramStorage* Hstorage);
+  OnlinePageStorage(OnlineHistDBEnv* Env);
   virtual ~OnlinePageStorage();
   /// get an OnlineHistPage object, to create a new page or view/edit an existing one
   OnlineHistPage* getPage(std::string Name);
@@ -103,7 +106,6 @@ class OnlinePageStorage
   bool removePage(OnlineHistPage* Page);
  private:
   OnlineHistDBEnv* m_Pagenv;
-  OnlineHistogramStorage* m_Hstorage;
   std::vector<OnlineHistPage*> m_myPage;
 };
 

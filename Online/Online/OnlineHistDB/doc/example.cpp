@@ -1,15 +1,19 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.7 2007-10-22 17:41:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.8 2007-11-08 16:18:51 ggiacomo Exp $
 #include <stdio.h>
 #include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
 
 int main ()
 {
-   OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
+  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
   					  OnlineHistDBEnv_constants::ACCOUNT,
-  				  OnlineHistDBEnv_constants::DB);
- bool ok=true;
+					  OnlineHistDBEnv_constants::DB);
+  cout << "opened connection with "<<HistDB->nHistograms()<<" Histograms "
+       << HistDB->nPages()<<" Pages "
+       << HistDB->nPageFolders()<<" PageFolders "<<endl;
   
+  bool ok=true;
+ 
  ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
  OnlineHistTask* mytask = HistDB->getTask("EXAMPLE");
  if (mytask)
@@ -30,7 +34,6 @@ int main ()
    HistDB->declareHistogram("EXAMPLE","Timing","Coincidences",OnlineHistDBEnv::H1D);
    HistDB->declareHistogram("EXAMPLE","Timing","Time_of_flight",OnlineHistDBEnv::H1D);
    
-   ok &= HistDB->sendHistBuffer(); // needed to send histogram buffer to DB
  }
 
 
@@ -65,7 +68,7 @@ int main ()
      h1->setDisplayOption("FILLSTYLE",(void*) &fs);
      h1->setDisplayOption("FILLCOLOR",(void*) &fc); 
      h1->setDisplayOption("YMAX",(void*) &ymax); 
-
+     h1->saveDisplayOptions();
      h1->dump();
 
      // second instance of h1
@@ -76,6 +79,7 @@ int main ()
      newh->unsetDisplayOption("FILLCOLOR");
      lc=4;
      newh->setDisplayOption("LINECOLOR",(void*) &lc);
+     newh->saveDisplayOptions();
      newh->dump();
 
      // link a DB histogram with a ROOT histogram

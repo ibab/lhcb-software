@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v3r4
+version             v4r0
 
 branches            cmt doc src OnlineHistDB sql www
 use GaudiPolicy    v*
@@ -22,7 +22,9 @@ macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
 
 apply_pattern  linker_library library=OnlineHistDB 
 
-macro_append OnlineHistDB_shlibflags " -locci " \
-  WIN32                              " oci.lib ociw32.lib oraocci10.lib "
+macro_append OnlineHistDB_shlibflags  "" \
+  WIN32                              " oci.lib ociw32.lib "
 
-macro_append OnlineHistDB_shlibflags " -lHist  " WIN32 " libHist.lib "
+macro_append OnlineHistDB_shlibflags " -lHist -lGraf  " WIN32 " libHist.lib libGraf.lib"
+
+

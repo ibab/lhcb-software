@@ -32,8 +32,9 @@ function showhisto_display($hid,$doid,$instance)
     }
     $page=$_POST["PAGENAME"];
     if ($act) {
+      $type=$histo["HSTYPE"];
       $getp=toGet($page);
-      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}>$act special Display Options for Histogram in this page </a>\n";
+      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}&type=${type}>$act special Display Options for Histogram in this page </a>\n";
     }
     echo "</table>";
   }
@@ -152,7 +153,7 @@ if (array_key_exists("page",$_GET)) {
     foreach (array("PAGENAME","NHISTO","PAGEDOC","FOLDER")
              as $field)
       $_POST[$field]=$mypage[$field];
-    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGEFULLNAME(PAGE,PAGEFOLDER)='${page}' order by HISTO,INSTANCE");
+    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGE='${page}' order by HISTO,INSTANCE");
     OCIExecute($shtid);
     $i=0;
     while( OCIFetchInto($shtid, $showhisto, OCI_ASSOC )) {

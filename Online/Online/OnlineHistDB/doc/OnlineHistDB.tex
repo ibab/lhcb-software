@@ -11,15 +11,6 @@
  commits all changes to the DB. Returns true if there are no errors.
 
 
-\item    void {\bf setHistogramBufferDepth}(int N);
-
-
- when creating histograms with the {\it declareHistByServiceName}
- method, the histogram list is actually send to the DB server every N
- histograms (or at commit) in order to optimize performance. The
- default buffer depth (recommended value) is 1000. 
-
-
 \item    bool {\bf declareTask}(std::string Name,\\\mbox{}~~~~~~~~~ 
 		   std::string SubDet1="NULL",\\\mbox{}~~~~~~~~~ 
 		   std::string SubDet2="NULL",\\\mbox{}~~~~~~~~~ 
@@ -97,12 +88,6 @@
  declares an Histogram to the DB by its attributes.  The enum HistType is defined in class OnlineHistDBEnv
 
 
-\item    bool {\bf sendHistBuffer}();
-
-
- forces sending histogram declaration buffer to the DB. Returns true if there are no errors.
-
-
 \item    OnlineHistogram* {\bf declareAnalysisHistogram}(std::string Algorithm,\\\mbox{}~~~~~~~~~
 					    std::string Name,\\\mbox{}~~~~~~~~~
 					    std::vector$<$OnlineHistogram*$>$ \&Sources,\\\mbox{}~~~~~~~~~
@@ -140,12 +125,6 @@
  description of the algorithm.
 
 
-\item    bool {\bf removePageFolder}(std::string Folder);
-
-
- removes Page Folder only if it doesn't have pages (useful for cleanup)
-
-
 \item    int {\bf getAlgListID}() const ;
 
  gets the algorithm list version
@@ -157,16 +136,25 @@
  sets the algorithm list version (works only for DB admin account)
 
 
-\item    int {\bf getAlgorithmNpar}(std::string AlgName,\\\mbox{}~~~~~~~~~
-		       int* Ninput = NULL) const;
-
- gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
+\item    bool {\bf removePageFolder}(std::string Folder);
 
 
-\item    std::string {\bf getAlgParName}(std::string AlgName,\\\mbox{}~~~~~~~~~
-		       int Ipar) const;
+ removes Page Folder only if it doesn't have pages (useful for cleanup)
 
- gets the name of parameter Ipar (starting from 1) of algorithm AlgName
+
+\item    int {\bf nHistograms}() ;
+
+ total number of histograms in the DB
+
+
+\item    int {\bf nPages}() ;
+
+ total number of pages in the DB
+
+
+\item    int {\bf nPageFolders}() ;
+
+  total number of page folders in the DB
 
 
 \item    int {\bf getAllHistograms}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~

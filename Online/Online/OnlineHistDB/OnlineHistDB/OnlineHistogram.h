@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.13 2007-10-26 13:46:43 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.14 2007-11-08 16:18:51 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -9,6 +9,8 @@
  */
 
 #include "OnlineHistDB/OnlineHistDBEnv.h"
+#include "OnlineHistDB/OnlineHistTask.h"
+#include "OnlineHistDB/OHDB_ocitypes.h"
 
 class  OnlineHistogram : public OnlineHistDBEnv
 {
@@ -21,37 +23,55 @@ class  OnlineHistogram : public OnlineHistDBEnv
   void checkServiceName();
   bool isAbort() const {return m_isAbort;}
   /// full histogram unique identifier Taskname/AlgorithmName/HistogramName
-  std::string identifier() const {return m_identifier;}
+  inline std::string identifier() const {return m_identifier;}
   /// full path name of the page to which this histogram object is attached
-  std::string page() const {return m_page;}
+  inline std::string page() const {return m_page;}
   /// counter (starting from 1) to distinguish several instances of the same histogram on the same page
-  int instance() const {return m_instance;}
+  inline int instance() const {return m_instance;}
   /// name of the DIM service that is currently publishing the histogram
-  std::string dimServiceName() const  {return m_dimServiceName;}
+  inline std::string dimServiceName() const  {return m_dimServiceName;}
   /// internal histogram set ID
-  int hsid() const {return m_hsid;}
+  inline int hsid() const {return m_hsid;}
   /// position of this histogram in set (starting from 1). Can be larger than nhs() if some histogram in the set has been deleted
-  int ihs() const {return m_ihs;}
+  inline int ihs() const {return m_ihs;}
   /// internal histogram ID (equivalent to hsid()/ihs())
-  std::string hid() const {return m_hid;}
+  inline std::string hid() const {return m_hid;}
   /// number of histograms in set
-  int nhs() const {return m_nhs;}
+  inline int nhs() const {return m_nhs;}
   /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
-  std::string hstype() const {return m_hstype;}
+  inline std::string hstype() const {return m_hstype;}
+  /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+  inline OnlineHistDBEnv::HistType type() const {return m_type;}
+  /// histogram dimension (1 or 2 for histograms, 0 for counters)
+  inline int dimension() { 
+    int out=-1;
+    switch (m_type) {
+    case OnlineHistDBEnv::SAM :
+    case OnlineHistDBEnv::CNT ://should be 1?
+      out=0; break;
+    case OnlineHistDBEnv::H1D :
+    case OnlineHistDBEnv::P1D :
+      out=1; break;
+    case OnlineHistDBEnv::H2D :
+    case OnlineHistDBEnv::P2D :
+      out=2; break;
+    }
+    return out;
+  }
   /// histogram name
-  std::string hname() const {return (m_subname == "" && m_nhs == 1) ? 
+  inline std::string hname() const {return (m_subname == "" && m_nhs == 1) ? 
       m_hsname : m_hsname + OnlineHistDBEnv_constants::m_SetSeparator + m_subname;}
   /// standard DB histogram title (not necessarly equal to the published ROOT title)
-  std::string htitle() const {return (m_subname == "" && m_nhs == 1) ? 
+  inline std::string htitle() const {return (m_subname == "" && m_nhs == 1) ? 
       m_hsname : m_hsname + " " + m_subname;} 
   /// histogram set name
-  std::string hsname() const {return m_hsname;}
+  inline std::string hsname() const {return m_hsname;}
   /// subname
-  std::string subname() const {return m_subname;}
+  inline std::string subname() const {return m_subname;}
   /// task name
-  std::string task() const {return m_task;}
+  inline std::string task() const {return m_task;}
   /// algorithm name
-  std::string algorithm() const {return m_algorithm;}  
+  inline std::string algorithm() const {return m_algorithm;}  
   /// short description of the histogram
   std::string descr() const {return m_Descr;}
   /// link to a more extensive documentation
@@ -82,6 +102,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int nPageInstances();
   /// number of instances of this histogram on its current page
   int nThisPageInstances();
+  /// gets associated task object
+  OnlineHistTask* getTask();
 
   // DISPLAY OPTIONS
   /// specifies if the display options in this object are: not defined,
@@ -89,39 +111,38 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// associated to the histogram on  page {\it page()}
   typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
   DisplayOptionMode domode() const {return m_domode;}
-  /// sets a display option.  The available parameter names and the corresponding types are listed 
-  /// in section \ref{dispopts}. Returns true on success.
-  /// This method chooses the most appropriate display option mode calling one of the next methods  
-  virtual bool setDisplayOption(std::string ParameterName, 
-				void* value);
-  /// sets a display option for the whole histogram set
-  virtual bool setHistoSetDisplayOption(std::string ParameterName, 
-					void* value);
-  /// sets a display option for the present histogram.
-  virtual bool setHistDisplayOption(std::string ParameterName, 
-				void* value);
-  /// sets a display option for the present histogram on page FullPathPageName (default is {\it page()})
-  virtual bool setHistoPageDisplayOption(std::string ParameterName, 
-					 void* value,
-					 std::string FullPathPageName = "_DEFAULT_",
-					 int Instance=-1);
-  /// unsets a display option in the current display mode
-  virtual bool unsetDisplayOption(std::string ParameterName);
-  /// unsets a display option for the whole histogram set
-  virtual bool unsetHistoSetDisplayOption(std::string ParameterName); 
-  /// unsets a display option for the present histogram.
-  virtual bool unsetHistDisplayOption(std::string ParameterName); 
-  /// unsets a display option for the present histogram on its page (if defined)
-  virtual bool unsetHistoPageDisplayOption(std::string ParameterName);
-
-
-  /// if display option  ParameterName has been defined, puts its value into
-  /// option and returns true. In case different sets of display options
-  /// exists for histogram set, histogram and histogram in page, the most
-  /// specific one is used.
+  /// gets the current value of display option ParameterName, returning false if
+  /// the option is unset.
+  /// option must be a pointer to a variable allocated by the user, of type 
+  /// std::string, int (signed) or float depending on the option type.
+  /// The available option names and the corresponding types are listed 
+  /// in section \ref{dispopts}.
   bool getDisplayOption(std::string ParameterName,
 			void* option);
+  /// checks is display option is set
+  bool isSetDisplayOption(std::string ParameterName);
+  /// sets a display option (in the current display mode). Change is sent to the DB only 
+  /// after a call to saveDisplayOptions()
+  virtual bool setDisplayOption(std::string ParameterName,
+			void* option);
+  /// unsets a display option (in the current display mode)
+  virtual bool unsetDisplayOption(std::string ParameterName);
+  /// saves current display options.  This is the recommended saving method, that
+  /// chooses the most appropriate display option mode 
+  /// (Histogram set, Histogram, or Histogram on Page) calling one of the next methods.
+  virtual bool saveDisplayOptions();
+  /// saves current display options for the whole histogram set
+  virtual bool saveHistoSetDisplayOptions();
+  /// saves current display options for the present histogram.
+  virtual bool saveHistDisplayOptions();
+  /// attaches current display options to instance Instance of the present histogram on page 
+  /// Page (default values for Page, Instance are {\it page()},{\it instance()}  )
+  virtual bool saveHistoPageDisplayOptions(std::string Page = "_DEFAULT_",
+					   int Instance=-1);
 
+
+
+  
   /// initializes display options associated to this histogram with the
   /// options defined for the histogram set (if available). Returns true on
   /// success.
@@ -149,14 +170,15 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// get analysy description as vectors of length {\it  nanalysis}() containing 
   /// the analysis internal IDs and the analysis algorithm names
   void getAnalyses(std::vector<int>& anaIDs,
-		   std::vector<std::string>& anaAlgs) const {
+		   std::vector<std::string>& anaAlgs) {
+    if(!m_anadirLoaded) loadAnalysisDirections();
     anaIDs.clear();    
     anaAlgs.clear();    
     anaIDs.insert(anaIDs.begin(),m_anaId.begin(),m_anaId.end());
     anaAlgs.insert(anaAlgs.begin(),m_anaName.begin(),m_anaName.end());
   }
   /// true if the histogram is produced at analysis level
-  boolean isAnaHist() const {return m_isAnaHist;}
+  bool isAnaHist() const {return m_isAnaHist;}
   /// declare an analysis to be performed on the histogram set. If the algorithm
   /// requires some parameters, the warning and alarm values must be
   /// specified as vectors of floats and will be set for all histograms in
@@ -177,16 +199,22 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// gets parameters for analysis with ID AnaID. Returns true on success
   bool getAnaSettings(int AnaID,
 		      std::vector<float>* warn, 
-		      std::vector<float>* alarm) const; 
+		      std::vector<float>* alarm,
+		      bool &mask); 
   /// masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
   bool maskAnalysis(int AnaID,
 		    bool Mask=true); 
 
+  // methods to force reloading of all or part of histogram variables
+  void load();
+  bool loadAnalysisDirections();
+  bool loadCreationDirections();
 
  protected:
   std::string CreationAlgorithm;
   std::vector<std::string> Sources;
   int SourceSet;
+  sb2 SourceSet_null;
   std::vector<float> SourcePar;
 
  private:
@@ -198,81 +226,87 @@ class  OnlineHistogram : public OnlineHistDBEnv
   public:
     typedef enum {STRING, FLOAT, INT} DisplayOptionType;
     OnlineDisplayOption(std::string Name, 
-			DisplayOptionType Type) 
-      : m_name(Name), m_type(Type), m_value(0) {};
-    virtual ~OnlineDisplayOption(); 
+			DisplayOptionType Type,
+			void* OCIvar,
+			OCIInd* OCIvar_null,
+			OnlineHistDBEnv * Env) 
+      : m_name(Name), m_type(Type), 
+      m_value(OCIvar), m_value_null(OCIvar_null),
+      m_env(Env) {}
+    virtual ~OnlineDisplayOption() {}
     std::string name() const { return m_name; }
-    DisplayOptionType type() const { return m_type; }
-    const void* value() const { return m_value; }
-    void set(void* value); 
-    void set(std::string value); 
-    void set(int value); 
-    void set(float value);
+    inline DisplayOptionType type() const { return m_type; }    
+    void set(void* option);
+    bool get(void* option);
     void unset();
-    bool isSet() { return (m_value != NULL);}     
-
+    inline bool isSet() { return (0 == *m_value_null);}     
+    
   private:
     std::string m_name;
     DisplayOptionType m_type;
     void* m_value;
+    OCIInd* m_value_null;
+    OnlineHistDBEnv* m_env;
   };
 
   bool m_isAbort;
   std::string m_identifier;
   std::string m_page;
   int m_instance;
+  bool m_page_verified;
   std::string m_hid;
   std::string m_dimServiceName;
+  sb2 m_dimServiceName_null;
   int m_hsid;
   int m_ihs;
   int m_nhs;
   std::string m_hstype;
+  OnlineHistDBEnv::HistType m_type;
   std::string m_hsname;
   std::string m_subname;
+  sb2 m_subname_null;
   std::string m_task;
   std::string m_algorithm;
   int m_nanalysis;
   std::string m_Descr;
+  sb2 m_Descr_null;
   std::string m_Doc;
+  sb2 m_Doc_null;
   std::vector<int> m_anaId;
   std::vector<std::string> m_anaName;
-  boolean m_isAnaHist;
+  
+  bool m_isAnaHist;
   
   int m_creation;
   int m_obsoleteness;
+  sb2 m_obsoleteness_null;
   //display options
   bool m_DOinit;
   DisplayOptionMode m_InitDOmode;
   DisplayOptionMode m_domode;
   int m_hsdisp;
+  sb2 m_hsdisp_null;
   int m_hdisp;
+  sb2 m_hdisp_null;
   int m_shdisp;
+  sb2 m_shdisp_null;
+  dispopt *m_dispopt;
+  dispoptInd *m_dispopt_null;
   std::vector<OnlineDisplayOption*> m_do;
   bool verifyPage(std::string &Page, int Instance);
-  void load();
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();
   bool useSetForHistDisplay();
   bool useHistForPageDisplay();
   OnlineDisplayOption* getDO(std::string ParameterName); 
   void getDisplayOptions(int doid); 
-  bool linkDisplayParameter(std::string& ParameterName,
-			    Statement *st, 
-			    int pos,
-			    void* value);
-  int algNpars(std::string* Algorithm,
-	       int* anaid) const;
-  int formatThresholds(std::string* Algorithm,
-		       int* anaid,
-		       std::vector<float>* warningThr, 
-		       std::vector<float>* alarmThr,
-		       std::string * warnString, 
-		       std::string* alarmString) const;
+  std::string algFromID(int anaid);
   int setDisplayOptions(std::string function);
   void createDisplayOptions();
   int findAnalysis(std::string Algorithm,
 		   int instance=1);
-  bool loadCreationDirections();
+  bool m_anadirLoaded;
+  bool m_credirLoaded;
 };
 
 
@@ -296,6 +330,8 @@ class OnlineHistogramStorage
   /// ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
   virtual bool removeHistogram(OnlineHistogram* h,
 			       bool RemoveWholeSet = false);		 
+  void reloadAnalysisForSet(int Hsid,
+			    int ihs);
 private: 
   OnlineHistDBEnv* m_Histenv;
   std::vector<OnlineHistogram*> m_myHist;
