@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.36 2007-11-02 16:29:01 jpalac Exp $
+! $Id: release.notes,v 1.37 2007-11-08 16:48:42 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-11-08 - Juan PALACIOS
+ - src/CopyParticles.cpp
+  . Change initialize() error message.
+
 
 ! 2007-11-02 - Juan PALACIOS
 
