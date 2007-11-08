@@ -1,24 +1,12 @@
-// $Id: GiGaCnvBase.cpp,v 1.17 2006-03-27 17:39:04 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.16  2006/03/27 17:37:36  gcorti
-// retag v16r1
-//
-// Revision 1.14  2006/03/20 12:51:49  gcorti
-// fix of units when passing isotopes
-//
-// Revision 1.13  2004/03/20 20:16:13  ibelyaev
-//  fix for MCVertex type
-//
-// ============================================================================
-#define GIGACNV_GIGACNVBASE_CPP 1 
-// ============================================================================
-//  STL 
+// $Id: GiGaCnvBase.cpp,v 1.18 2007-11-08 15:29:36 gcorti Exp $ 
+
+// Include files 
+
+// from STL 
 #include <string> 
 #include <vector> 
-//  GaudiKernel
+
+// from Gaudi
 #include "GaudiKernel/Converter.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/ISvcLocator.h"
@@ -27,33 +15,29 @@
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Stat.h"
-//  GiGa 
+#include "GaudiKernel/IChronoStatSvc.h"
+
+// from GiGa 
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaException.h"
 #include "GiGa/GiGaUtil.h"
-// GiGaCnv 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h" 
 #include "GiGaCnv/IGiGaKineCnvSvc.h" 
 #include "GiGaCnv/IGiGaHitsCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvBase.h"
 
-// ============================================================================
-/** @file 
- *  implementation of 
- *  base class for  converters from Geant4 to Gaudi and vice versa  
- *  
- *  @author  Vanya Belyaev
- *  @date    21/02/2001
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaCnvBase
+// base class for  converters from Geant4 to Gaudi and vice versa  
+//
+// 2001-02-21 : Vanya Belyaev
+//-----------------------------------------------------------------------------
 
-namespace GiGaCnvBaseLocal
-{
+namespace GiGaCnvBaseLocal {
 
- class Counter
-  {
+ class Counter {
   public:
     // constructor 
     Counter ( const std::string& msg = " Misbalance ")
@@ -108,9 +92,9 @@ namespace GiGaCnvBaseLocal
 
 };
 
-// ============================================================================
-/// constructor 
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaCnvBase::GiGaCnvBase
 //( const unsigned char  StorageType , 
 ( const long StorageType , 
@@ -143,24 +127,18 @@ GiGaCnvBase::GiGaCnvBase
   GiGaCnvBaseLocal::s_InstanceCounter.increment ( m_local ) ;
 };
 
-// ============================================================================
-/// destructor 
-// ============================================================================
+//=============================================================================
+// Destructor 
+//=============================================================================
 GiGaCnvBase::~GiGaCnvBase()
 {
   GiGaCnvBaseLocal::s_Counter.decrement () ;
   GiGaCnvBaseLocal::s_InstanceCounter.decrement ( m_local ) ;
 };
 
-// ============================================================================
-/** (re)-throw exception and print error message 
- *  @param msg  error message 
- *  @param exc  previous exception 
- *  @param lvl  print level
- *  @param sc   status code
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// (re)-throw exception and print error message 
+//=============================================================================
 StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const GaudiException & Excp    ,
@@ -174,15 +152,9 @@ StatusCode GiGaCnvBase::Exception
   return  Status;
 };
 
-// ============================================================================
-/** (re)-throw exception and print error message 
- *  @param msg  error message 
- *  @param exc  previous exception 
- *  @param lvl  print level
- *  @param sc   status code
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// (re)-throw exception and print error message 
+//=============================================================================
 StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const std::exception & Excp    ,
@@ -197,14 +169,9 @@ StatusCode GiGaCnvBase::Exception
   return  Status;
 };
 
-// ============================================================================
-/** throw exception and print error message 
- *  @param msg  error message 
- *  @param lvl  print level
- *  @param sc   status code
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// throw exception and print error message 
+//=============================================================================
 StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const MSG::Level     & level   , 
@@ -217,13 +184,9 @@ StatusCode GiGaCnvBase::Exception
   return  Status;
 };
 
-// ============================================================================
-/** print and return the error
- *  @param Message message to be printed 
- *  @param status  status code to be returned 
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// print and return the error
+//=============================================================================
 StatusCode GiGaCnvBase::Error
 ( const std::string& msg   , 
   const StatusCode&  st    , 
@@ -233,13 +196,9 @@ StatusCode GiGaCnvBase::Error
   return ( ++m_errors[msg] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
 };  
 
-// ============================================================================
-/** print warning message and return status code
- *  @param msg warning message 
- *  @param sc  status code
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// print warning message and return status code
+//=============================================================================
 StatusCode GiGaCnvBase::Warning
 ( const std::string& msg  , 
   const StatusCode & st   ,
@@ -249,14 +208,9 @@ StatusCode GiGaCnvBase::Warning
   return ( ++m_warnings[msg] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
 };
 
-// ============================================================================
-/** print the  message and return status code
- *  @param msg error message 
- *  @param lvl print level 
- *  @param sc  status code
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// print the  message and return status code
+//=============================================================================
 StatusCode GiGaCnvBase::Print
 ( const std::string& Message , 
   const StatusCode & Status  ,  
@@ -267,11 +221,9 @@ StatusCode GiGaCnvBase::Print
   return  Status; 
 };
 
-// ============================================================================
-/** initialization
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// initialization
+//=============================================================================
 StatusCode GiGaCnvBase::initialize () 
 {
   StatusCode st = Converter::initialize() ; 
@@ -360,11 +312,9 @@ StatusCode GiGaCnvBase::initialize ()
   return StatusCode::SUCCESS ; 
 };
 
-// ============================================================================
-/** finalization 
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// finalization 
+//=============================================================================
 StatusCode GiGaCnvBase::finalize () 
 {
   /// release (in reverse order)
@@ -431,24 +381,16 @@ StatusCode GiGaCnvBase::finalize ()
   ///
 };
 
-// ============================================================================
-/** declare the object to conversion service 
- *  @param Path path/address in Transoent Store 
- *  @param Clid object class identifier 
- *  @param Addr1 major GiGa address 
- *  @param Addr2 minor GiGa address 
- *  @return statsu code 
- */
-// ============================================================================
+//=============================================================================
+// declare the object to conversion service 
+//=============================================================================
 StatusCode GiGaCnvBase::declareObject( const GiGaLeaf& leaf )
 { 
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS; 
 };
 
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================
 
 
 

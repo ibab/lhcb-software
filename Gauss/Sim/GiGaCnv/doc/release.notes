@@ -4,6 +4,11 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-11-08 - Gloria Corti
+ - Include IChronoStatSvc.h to be able to compile with Gaudi v19r5: before
+   it was included by Stat.h
+   . GiGaCnvBase.cpp
+
 !========================= GiGaCnv v18r3 2007-10-02 ==========================
 ! 2007-10-02 - Gloria Corti
  - Adapt to changes in method names in IGeometryInfo.h (as from DetDesc v18r0
