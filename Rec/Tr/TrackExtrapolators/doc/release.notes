@@ -3,10 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
-! 2007-11-08 - Stephanie Hansmann-Menzemer
-  - check status code in finalize methode of TrackMasterExtrapolator
 
-!======================= TrackExtrapolators v2r15 2007-11-02 =================
+!======================= TrackExtrapolators v2r15 2007-11-09 =================
+! 2007-11-08 - Stephanie Hansmann-Menzemer
+  - check status code in finalize method of TrackMasterExtrapolator
+
 ! 2007-10-31 M Needham
  - Bug fixes in TrackLongExtraSelector 
 
