@@ -10,7 +10,6 @@
       name="L0DUConfig"
       serializers="FALSE">
       <base   name = "KeyedObject&lt;long&gt;" />
-      <template name="KeyedObjectDict" t1="long"/>
       &KeyedObject;
 
       <location name = "Default"   place = "Trig/L0/L0DUConfig"  />
