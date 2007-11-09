@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.183 2007-11-08 14:41:55 mtobin Exp $
+! $Id: release.notes,v 1.184 2007-11-09 09:15:50 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r3 2007-11-09 ===========================
 ! 2007-11-08 - Mark Tobin
- - Also not proctects against possible case where there is no R sensor 
- (although this is unlikely!).
+ - Also now protects against possible case where there is no R sensor 
+   (although this is unlikely!).
 
 ! 2007-11-07 - Mark Tobin
  - protect against empty velo half in registerConditionCallBacks so that code
- can run with test beam geometry.
+   can run with test beam geometry.
 
-!======================== VeloDet v12r3 2007-11-06 ===========================
 ! 2007-11-06 - Kurt Rinnert
  - bugfix in cache update for half box offset.  The update was not protected
    against an empty VELO half, leading to a crash when running on test beam
