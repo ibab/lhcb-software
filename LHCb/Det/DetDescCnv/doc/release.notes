@@ -4,6 +4,14 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2007-11-09 - Marco Clemencic
+ - Implemented the parsing of <map> elements inside conditions (see Det/SQLDDDB
+   v3r0).
+ - Change the class id in the opaque address if it does not match the one
+   specified in the XML of the object (it happens when a <catalogref> is used to
+   point to a <condition>).
+ - Added .cvsignore files.
+
 !================ DetDescCnv v4r3p1 2007-04-23 ================================
 ! 2007-04-20 - Marco Clemencic
  - Improved the warning for failing computation in XmlMixtureCnv.
