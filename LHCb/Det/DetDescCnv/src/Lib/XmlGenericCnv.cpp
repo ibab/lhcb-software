@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.19 2007-02-05 18:55:33 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.20 2007-11-09 17:05:34 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -10,6 +10,7 @@
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -325,6 +326,8 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
               << "The default converter will be used" << endreq;
           converter = this;
         }
+        GenericAddress *gaddr = dynamic_cast<GenericAddress *>(address);
+        if (gaddr) gaddr->setClID(clsID);
       }
     }
   }
