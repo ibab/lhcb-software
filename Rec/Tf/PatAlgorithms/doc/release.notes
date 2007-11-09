@@ -3,10 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================== PatAlgorithms v3r1 2007-11-09 ====================
 ! 2007-11-08 - Stephanie Hansmann-Menzemer
   - set default values for parameter arrays in PatFwdTool and PatSeedingTool
 
-!========================== PatAlgorithms v3r1 2007-11-02 ====================
 ! 2007-11-02 - Marco Cattaneo
  - Adapt PatForwardTool to interface change of PatFwdTool, was not compiling...
 
