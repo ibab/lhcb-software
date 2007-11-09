@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-11-09 - Olivier Callot
+ - Implement PatVeloDebugTool for use in PatVeloOpenTracking to print truth
+   information when debugging pattern recognition.
+
 !======================= TrackMCTools v2r14 2007-10-26 =======================
 ! 2007-10-22 - Olivier Callot
  - Implement PatDebugTTTruthTool for use in PatDownstream to print truth 
