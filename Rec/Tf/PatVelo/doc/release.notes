@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r1 2007-11-09 ==========================
 ! 2007-11-09 - Olivier Callot
  - Import PatVeloOpenTracking from the old Pat package, adapt to Tf context.
  - Improve ghost rate by cleaning tracks sharing 1 R and 1 Phi according to chi2

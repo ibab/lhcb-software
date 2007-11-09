@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.cpp,v 1.1 2007-11-09 07:49:07 ocallot Exp $
+// $Id: PatVeloOpenTracking.cpp,v 1.2 2007-11-09 10:53:09 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -60,7 +60,7 @@ StatusCode PatVeloOpenTracking::initialize() {
   m_phiHitManager = tool<Tf::PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", "PatVeloPhiHitManager" );
   m_trackTool     = tool<Tf::PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
   m_debugTool     = 0;
-  if ( "" != m_debugToolName ) m_debugTool = tool<IPatVeloDebugTool>( m_debugToolName );
+  if ( "" != m_debugToolName ) m_debugTool = tool<IPatDebugTool>( m_debugToolName );
 
   //== Get detector element
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );

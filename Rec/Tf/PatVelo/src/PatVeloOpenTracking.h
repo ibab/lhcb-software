@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.h,v 1.1 2007-11-09 07:49:07 ocallot Exp $
+// $Id: PatVeloOpenTracking.h,v 1.2 2007-11-09 10:53:09 cattanem Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
-#include "TrackInterfaces/IPatVeloDebugTool.h"
+#include "TrackInterfaces/IPatDebugTool.h"
 
 #include "PatVeloRHitManager.h"
 #include "PatVeloPhiHitManager.h"
@@ -79,7 +79,7 @@ private:
   Tf::PatVeloRHitManager*   m_rHitManager;
   Tf::PatVeloPhiHitManager* m_phiHitManager;
   Tf::PatVeloTrackTool*     m_trackTool;
-  IPatVeloDebugTool*        m_debugTool;
+  IPatDebugTool*            m_debugTool;
 
   DeVelo* m_velo;            ///< Detector element
 
