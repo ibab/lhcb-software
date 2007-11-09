@@ -1,11 +1,11 @@
-// $Id: PatVeloDebugTool.h,v 1.1 2007-11-09 07:48:06 ocallot Exp $
+// $Id: PatVeloDebugTool.h,v 1.2 2007-11-09 10:44:20 cattanem Exp $
 #ifndef PATVELODEBUGTOOL_H 
 #define PATVELODEBUGTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/IPatVeloDebugTool.h"            // Interface
+#include "TrackInterfaces/IPatDebugTool.h"            // Interface
 
 
 /** @class PatVeloDebugTool PatVeloDebugTool.h
@@ -14,7 +14,7 @@
  *  @author Olivier Callot
  *  @date   2007-10-25
  */
-class PatVeloDebugTool : public GaudiTool, virtual public IPatVeloDebugTool {
+class PatVeloDebugTool : public GaudiTool, virtual public IPatDebugTool {
 public: 
   /// Standard constructor
   PatVeloDebugTool( const std::string& type, 

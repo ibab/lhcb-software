@@ -1,4 +1,4 @@
-// $Id: PatVeloDebugTool.cpp,v 1.1 2007-11-09 07:48:06 ocallot Exp $
+// $Id: PatVeloDebugTool.cpp,v 1.2 2007-11-09 10:44:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 
 #include "Event/MCParticle.h"
 #include "Event/VeloCluster.h"
+#include "Kernel/LHCbID.h"
 
 // local
 #include "PatVeloDebugTool.h"
@@ -31,7 +32,7 @@ PatVeloDebugTool::PatVeloDebugTool( const std::string& type,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IPatVeloDebugTool>(this);
+  declareInterface<IPatDebugTool>(this);
 
 }
 //=============================================================================
