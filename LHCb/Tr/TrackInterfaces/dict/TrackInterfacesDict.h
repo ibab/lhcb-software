@@ -6,6 +6,7 @@
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/IPatDebugTool.h"
 #include "TrackInterfaces/IPatDebugTTTool.h"
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TrackInterfaces/IPatSeedingTool.h"

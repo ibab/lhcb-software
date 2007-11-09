@@ -4,10 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r10 2007-11-09 =====================
 ! 2007-11-09 - Olivier Callot
- - Add interface IPatVeloDebugTool for debugging Velo tracking
+ - Add interface IPatDebugTool, initially for debugging Velo tracking
 
-!====================== TrackInterfaces v3r10 2007-11-02 =====================
 ! 2007-10-30 - Stephanie Hansmann-Menzemer
  - Add Interface for FastMomentumEstimate Tool 
 
