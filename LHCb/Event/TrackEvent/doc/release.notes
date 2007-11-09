@@ -4,8 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
-!======================= TrackEvent v4r8 2007-11-02 ==========================
-!2007-10-30 - Stephanie Hansmann-Menzemer
+!======================= TrackEvent v4r8 2007-11-09 ==========================
+! 2007-11-09 - Marco Cattaneo
+ - Remove an obsolete dependency
+
+! 2007-10-30 - Stephanie Hansmann-Menzemer
  - Add additional z position in TStation in StateParameters.h
 
 ! 2007-10-22 - Olivier Callot
