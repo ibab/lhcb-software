@@ -1,4 +1,4 @@
-///  $Id: XmlBaseConditionCnv.h,v 1.5 2005-08-31 15:53:49 marcocle Exp $
+///  $Id: XmlBaseConditionCnv.h,v 1.6 2007-11-09 17:06:05 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLCONDITIONCNV_H
 #define DETDESCCNV_XMLCONDITIONCNV_H
@@ -8,6 +8,8 @@
 #include "DetDesc/Condition.h"
 
 #include "GaudiKernel/Converter.h"
+
+#include <xercesc/dom/DOMNodeList.hpp>
 
 /// Forward and external declarations
 class     ISvcLocator;
@@ -111,13 +113,63 @@ private:
   const XMLCh* specificString;
   const XMLCh* paramString;
   const XMLCh* paramVectorString;
+  const XMLCh* mapString;
+  const XMLCh* entryString;
 
   // Constant Strings for parameter names
   const XMLCh* typeString;
   const XMLCh* nameString;
   const XMLCh* commentString;
+  const XMLCh* keytypeString;
+  const XMLCh* valuetypeString;
+  const XMLCh* keyString;
+  const XMLCh* valueString;
+
+  // Functions used for the map parameter
+  template <class T>
+  inline T i_convert(const XMLCh *value){
+    return (T)xmlSvc()->eval(i_convert<std::string>(value), false);
+  }
   
+  template <class T>
+  inline T i_convert(const std::string &value){
+    return (T)xmlSvc()->eval(value, false);
+  }
+
+  template <class T>
+  inline T i_convertVect(XMLCh *value){
+    std::vector<T> v;
+    std::istringstream cstr(i_convert<std::string>(value));
+    std::string itemval;
+    while (cstr >> itemval) {
+      v.push_back(i_convert<T>(itemval));
+    }
+    return v;
+  }
+    
+  template <class K, class V>
+  std::map<K,V> i_makeMap(xercesc::DOMNodeList* entries){
+    std::map<K,V> map;
+    XMLSize_t i;
+    for (i = 0; i < entries->getLength(); i++) {
+      xercesc::DOMNode* entryNode = entries->item(i);
+      if (entryNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+        xercesc::DOMElement* entry = static_cast<xercesc::DOMElement*>(entryNode);
+        map[i_convert<K>(entry->getAttribute(keyString))] =
+          i_convert<V>(entry->getAttribute(valueString));
+      }
+    }
+    return map;
+  }
 };
+
+template <> inline std::string XmlBaseConditionCnv::i_convert<std::string>(const XMLCh *value){
+  return dom2Std(value);
+}
+
+template <> inline std::string XmlBaseConditionCnv::i_convert<std::string>(const std::string &value){
+  return value;
+}
 
 #endif // DETDESCCNV_XMLCONDITIONCNV_H
 

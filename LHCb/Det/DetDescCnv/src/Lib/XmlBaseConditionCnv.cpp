@@ -1,10 +1,8 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.9 2006-01-26 10:42:30 marcocle Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.10 2007-11-09 17:06:05 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
-
-#include <xercesc/dom/DOMNodeList.hpp>
 
 #include "DetDesc/Condition.h"
 #include "DetDescCnv/XmlBaseConditionCnv.h"
@@ -29,9 +27,16 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc) :
   specificString = xercesc::XMLString::transcode("specific");
   paramString = xercesc::XMLString::transcode("param");
   paramVectorString = xercesc::XMLString::transcode("paramVector");
+  mapString = xercesc::XMLString::transcode("map");
+  entryString = xercesc::XMLString::transcode("entry");
+  
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
   commentString = xercesc::XMLString::transcode("comment");
+  keytypeString = xercesc::XMLString::transcode("keytype");
+  valuetypeString = xercesc::XMLString::transcode("valuetype");
+  keyString = xercesc::XMLString::transcode("key");
+  valueString = xercesc::XMLString::transcode("value");
 }
 
 
@@ -45,9 +50,16 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
   specificString = xercesc::XMLString::transcode("specific");
   paramString = xercesc::XMLString::transcode("param");
   paramVectorString = xercesc::XMLString::transcode("paramVector");
+  mapString = xercesc::XMLString::transcode("map");
+  entryString = xercesc::XMLString::transcode("entry");
+  
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
   commentString = xercesc::XMLString::transcode("comment");
+  keytypeString = xercesc::XMLString::transcode("keytype");
+  valuetypeString = xercesc::XMLString::transcode("valuetype");
+  keyString = xercesc::XMLString::transcode("key");
+  valueString = xercesc::XMLString::transcode("value");
 }
 
 
@@ -58,9 +70,16 @@ XmlBaseConditionCnv::~XmlBaseConditionCnv () {
   xercesc::XMLString::release((XMLCh**)&specificString);
   xercesc::XMLString::release((XMLCh**)&paramString);
   xercesc::XMLString::release((XMLCh**)&paramVectorString);
+  xercesc::XMLString::release((XMLCh**)&mapString);
+  xercesc::XMLString::release((XMLCh**)&entryString);
+  
   xercesc::XMLString::release((XMLCh**)&typeString);
   xercesc::XMLString::release((XMLCh**)&nameString);
   xercesc::XMLString::release((XMLCh**)&commentString);
+  xercesc::XMLString::release((XMLCh**)&keytypeString);
+  xercesc::XMLString::release((XMLCh**)&valuetypeString);
+  xercesc::XMLString::release((XMLCh**)&keyString);
+  xercesc::XMLString::release((XMLCh**)&valueString);
 }
 
 
@@ -127,7 +146,6 @@ StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
   // returns
   return StatusCode::SUCCESS;
 } // end i_createObj
-
 
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
@@ -258,7 +276,38 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         dataObj->addParam(name,vect,comment);
       }
     }
+  } else if (0 == xercesc::XMLString::compareString(mapString, tagName)) {
+    std::string name = dom2Std(childElement->getAttribute(nameString));
+    std::string comment = dom2Std(childElement->getAttribute(commentString));
+    std::string keytype = dom2Std(childElement->getAttribute(keytypeString));
+    std::string valuetype = dom2Std(childElement->getAttribute(valuetypeString));
     
+    xercesc::DOMNodeList* entries = childElement->getChildNodes();
+    if ( keytype == "string" ) {
+      if ( valuetype == "int" ) {
+        dataObj->addParam(name,i_makeMap<std::string,int>(entries),comment);
+      }
+      else if ( valuetype == "double" ) {
+        dataObj->addParam(name,i_makeMap<std::string,double>(entries),comment);
+      }
+      else {
+        dataObj->addParam(name,i_makeMap<std::string,std::string>(entries),comment);
+      }
+    }
+    else if ( keytype == "int" ) {
+      if ( valuetype == "int" ) {
+        dataObj->addParam(name,i_makeMap<int,int>(entries),comment);
+      }
+      else if ( valuetype == "double" ) {
+        dataObj->addParam(name,i_makeMap<int,double>(entries),comment);
+      }
+      else {
+        dataObj->addParam(name,i_makeMap<int,std::string>(entries),comment);
+      }
+    }
+    else {
+      log << MSG::WARNING << "Type " << keytype <<  " not supported for map keys";
+    }
   } else {
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
