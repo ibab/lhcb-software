@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v10r4p2 2007-11-09 ====================
+! 2007-11-09 - Marco Cattaneo
+ - In god_headers CMT pattern, add dependency of <package> constituent on
+   <package>Obj2Doth constituent, to ensure headers are generated before 
+   everything else, as this was not the case on osx platform
+
 !======================== GaudiObjDesc v10r4p1 2007-10-19 ====================
 ! 2007-10-25 Stefan Roiser
  - Add a missing "inline" in string to type conversion functions
