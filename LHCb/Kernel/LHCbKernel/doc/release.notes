@@ -4,11 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r8 2007-10-22 ========================
-! 2007-11-02 - Tomasz Szumlak
- - updated IVeloClusterPosition interface - method accepting
-   a pointer to the VeloCluster and reference to the state 
-   vector added
+!===================== LHCbKernel v7r8 2007-11-09 ========================
+! 2007-11-09 - Marco Cattaneo
+ - Fix dependencies for customdict generation
 
 ! 2007-10-22 - Marco Cattaneo
  - Add a dictionary needed by Panoramix
