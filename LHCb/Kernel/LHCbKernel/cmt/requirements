@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.128 2007-10-22 08:33:11 cattanem Exp $
+# $Id: requirements,v 1.129 2007-11-09 07:41:33 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -31,10 +31,10 @@ make_fragment customdict -header=customdict_header -trailer=customdict_trailer
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
 document customdict LHCbKernelCustomDict ../dict/LHCbKernelDict.h
+macro_append LHCbKernelObj2Dict_dependencies LHCbKernelCustomDict
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
-macro LHCbKernelDict_dependencies LHCbKernel
 macro LHCbKernelObj2Dict_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 apply_pattern god_dictionary files=../xml/*.xml
