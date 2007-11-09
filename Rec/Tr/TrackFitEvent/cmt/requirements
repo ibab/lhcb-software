@@ -33,10 +33,10 @@ apply_pattern install_more_includes more=Event
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
 document customdict TrackFitEventCustomDict ../Event/lcgDict.h
+macro TrackFitEventObj2Dict_dependencies TrackFitEventCustomDict
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
-macro TrackFitEventDict_dependencies TrackFitEvent
 apply_pattern god_dictionary files=../xml/*.xml
 
 # Build linker library
