@@ -5,6 +5,16 @@ Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+</PRE><H1><A NAME=v2r2>2007-11-09 AlignmentSys v2r2</A></H1><PRE>
+- Packages updated: AlignTrTools	v3r3
+
+- in AlignTrTools	v3r3
+	- modifications performed by L. Nicolas on AlignSelTool, AlignTrackMonitor
+   	  and AlignSaveTuple: changed the way nSharedHits is calculated to speed up things
+ 	- idem, but changed the way nNeighbouringHits is calculated to speed up things
+	- added code to AlignSaveTuple: saving various variables in an NTuple for further debugging analysis
+	- changes to AlignTrackMonitor: save residuals in a nicer way (+ use unbiasedResiduals)
+
 </PRE><H1><A NAME=v2r1>2007-09-18 AlignmentSys v2r1</A></H1><PRE>
 - Packages added: AlignT2Velo
 - Packages update: AlignmentInterfaces 	v2r2
