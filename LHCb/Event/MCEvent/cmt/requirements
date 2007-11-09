@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.27 2007-09-19 05:58:19 cattanem Exp $
+# $Id: requirements,v 1.28 2007-11-09 07:45:56 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
 package           MCEvent
-version           v2r5
+version           v2r5p1
 
 branches          cmt doc src xml Event dict
 
@@ -23,10 +23,10 @@ apply_pattern install_more_includes more=Event
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
 document customdict MCEventCustomDict ../dict/lcgDict.h
+macro_append MCEventObj2Dict_dependencies MCEventCustomDict
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
-macro MCEventDict_dependencies MCEvent
 apply_pattern god_dictionary files=../xml/*.xml
 
 # Build linker library
