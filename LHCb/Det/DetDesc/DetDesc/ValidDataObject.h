@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.7 2006-10-25 13:45:01 marcocle Exp $
+//$Id: ValidDataObject.h,v 1.8 2007-11-09 17:10:06 marcocle Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -59,7 +59,10 @@ class ValidDataObject : public DataObject,
   inline virtual const CLID& clID() const { return classID(); } 
 
   /// Class ID of this class
-  inline static  const CLID& classID() { return CLID_ValidDataObject; };
+  inline static  const CLID& classID() { return CLID_ValidDataObject; }
+
+  /// Fill the output stream (ASCII)
+  virtual std::ostream& fillStream( std::ostream& s ) const;
 
  public:
 

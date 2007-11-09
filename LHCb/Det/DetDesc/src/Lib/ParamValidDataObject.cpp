@@ -1,6 +1,7 @@
-//$Id: ParamValidDataObject.cpp,v 1.11 2007-02-02 11:27:40 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.12 2007-11-09 17:10:07 marcocle Exp $
 #include <string>
 
+#include "GaudiKernel/System.h"
 #include "DetDesc/ParamValidDataObject.h"
 
 //---------------------------------------------------------------------------
@@ -22,6 +23,14 @@ ParamValidDataObject::ParamValidDataObject (const ParamValidDataObject& obj)
 ParamValidDataObject::~ParamValidDataObject() {};
 
 //----------------------------------------------------------------------------
+
+std::ostream& ParamValidDataObject::fillStream( std::ostream& s ) const {
+  ValidDataObject::fillStream(s);
+  s << std::endl << printParams();
+  return s;
+}
+
+//---------------------------------------------------------------------------
 
 void ParamValidDataObject::reset() 
 {
@@ -183,7 +192,7 @@ std::string ParamValidDataObject::printParams() const {
   std::ostringstream os;
   ParamList::const_iterator i;
   for ( i = m_paramList.begin(); i != m_paramList.end() ; ++i ){    
-    os << "(" << i->second->type().name() << ") " << i->first ;
+    os << "(" << System::typeinfoName(i->second->type()) << ") " << i->first ;
     
     CommentMap::const_iterator c = m_comments.find(i->first);
     if ( c != m_comments.end() ) os << " (" << c->second << ")";

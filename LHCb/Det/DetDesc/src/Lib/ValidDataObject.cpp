@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.9 2006-10-25 13:45:01 marcocle Exp $
+//$Id: ValidDataObject.cpp,v 1.10 2007-11-09 17:10:07 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -32,6 +32,14 @@ ValidDataObject::ValidDataObject( const ValidDataObject& obj )
   , m_validUntil (obj.validTill())
   , m_updateMode (obj.updateMode())
 {}
+
+//---------------------------------------------------------------------------
+std::ostream& ValidDataObject::fillStream( std::ostream& s ) const {
+  DataObject::fillStream(s);
+  s << std::endl << "Validity: " << std::dec << validSince()
+                                   << " -> " << validTill();
+  return s;
+}
 
 //---------------------------------------------------------------------------
 

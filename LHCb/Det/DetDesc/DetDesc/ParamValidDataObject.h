@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.8 2006-10-25 13:45:01 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.9 2007-11-09 17:10:06 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -51,6 +51,9 @@ class ParamValidDataObject : public ValidDataObject {
 
   /// Do the deep copy
   virtual void update ( ValidDataObject& obj );
+  
+  /// Fill the output stream (ASCII)
+  virtual std::ostream& fillStream( std::ostream& s ) const;
 
  public:
 
