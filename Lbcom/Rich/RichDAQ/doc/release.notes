@@ -4,8 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
-!========================== RichDAQ v3r12 2007-09-19 =========================
+!========================== RichDAQ v3r12p1 2007-11-09 =======================
+! 2007-11-09 - Marco Cattaneo
+ - Fix a compilation error with gcc 4 on osx
 
+!========================== RichDAQ v3r12 2007-09-19 =========================
 ! 2007-09-20 - Chris Jones
  - Adapt to move of memory pool class from RichKernel to LHCbKernel
 
