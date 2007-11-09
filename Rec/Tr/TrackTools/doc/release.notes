@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 !======================== TrackTools v3r1 2007-11-09 ========================
+! 2007-11-09 - Marco Cattaneo
+ - Add a missing template<> declaration needed by gcc 4.0 on osx
+
 ! 2007-11-08 Stephanie Hansmann-Menzemer
  - add default values for momentum parametrization in FastMomentumEstimate
 

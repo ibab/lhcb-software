@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.4 2007-09-11 14:40:50 mneedham Exp $
+// $Id: MeasurementProviderT.cpp,v 1.5 2007-11-09 15:28:29 cattanem Exp $
 // Include files
 
 //=============================================================================
@@ -363,12 +363,14 @@ namespace MeasurementProviderTypes {
   };
 }
 
+template<>
 LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::OT>::
 createUnchecked( const MeasurementProviderTypes::OT::ClusterType& cluster ) const
 {
   return new MeasurementProviderTypes::OT::MeasurementType( cluster, *m_det, 0 );
 }
 
+template<>
 void MeasurementProviderT<MeasurementProviderTypes::OT>::
 updateUnchecked( MeasurementProviderTypes::OT::MeasurementType& meas,
 		 const LHCb::StateVector& refvector) const
