@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.74 2007-11-01 10:21:45 cattanem Exp $
+! $Id: release.notes,v 1.75 2007-11-09 07:55:26 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
 
-!======================== L0Event v16r6 2007-11-01 ===========================
+!======================== L0Event v16r6 2007-11-09 ===========================
+! 2007-11-09 - Marco Cattaneo
+ - Remove an obsolete dependency
+
 ! 2007-10-31 - Olivier Deschamps 	
  - add new class (L0DUConfig.xml)
  - improve L0DU-related classes 
