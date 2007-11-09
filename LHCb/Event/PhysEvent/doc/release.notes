@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.130 2007-10-24 15:35:18 cattanem Exp $
+! $Id: release.notes,v 1.131 2007-11-09 08:24:09 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
-!======================== PhysEvent v11r4 2007-10-24 ========================
+!======================== PhysEvent v11r4 2007-11-09 ========================
+! 2007-11-09 - Marco Cattaneo
+ - Remove an obsolete dependency
+
 ! 2007-10-24 - Vanya BELYAEV
  - xml/Particle.xml
       1) Allocate the range of indices [9500,9699] for jet-related information   

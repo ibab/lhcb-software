@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.81 2007-10-24 15:35:18 cattanem Exp $
+# $Id: requirements,v 1.82 2007-11-09 08:24:09 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -26,7 +26,6 @@ apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
-macro PhysEventDict_dependencies PhysEvent
 apply_pattern god_dictionary files=../xml/*.xml
 
 # Make the linker library
