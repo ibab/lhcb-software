@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.2 2007-10-29 02:23:01 xieyu Exp $
+// $Id: ProperTimeChecker.cpp,v 1.3 2007-11-11 03:11:45 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,7 @@ ProperTimeChecker::ProperTimeChecker( const std::string& name,
    declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
    declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
    declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
+   declareProperty( "PVReFitterName", m_PVReFitterName = "PVReFitter");
 
 }
 //=============================================================================
@@ -89,9 +90,9 @@ StatusCode ProperTimeChecker::initialize() {
     return StatusCode::FAILURE;
   }
 
-  m_pvReFitter = tool<IPVReFitter>("PVReFitter",this );
+  m_pvReFitter = tool<IPVReFitter>(m_PVReFitterName, this );
   if (!m_pvReFitter) {
-    fatal() << "    Unable to retrieve PVReFitter " ;
+    fatal() << "    Unable to retrieve " << m_PVReFitterName ;
     return StatusCode::FAILURE;
   }
 

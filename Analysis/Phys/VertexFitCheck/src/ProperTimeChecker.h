@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.h,v 1.3 2007-10-29 02:23:01 xieyu Exp $
+// $Id: ProperTimeChecker.h,v 1.4 2007-11-11 03:11:45 xieyu Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
@@ -67,6 +67,7 @@ private:
   bool m_removeBFromPV;
   bool m_removeMCSecondaryFromPV;
 
+  std::string m_PVReFitterName;
 
 };
 #endif 

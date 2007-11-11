@@ -1,9 +1,13 @@
-// $Id: release.notes,v 1.5 2007-10-29 02:22:58 xieyu Exp $
+// $Id: release.notes,v 1.6 2007-11-11 03:11:45 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2007-10-29 - Y. Xie
+  - src/ProperTimeChecker.cpp
+    .add option "PVReFitterName"
 
 ! 2007-10-29 - Y. Xie
   . Add CheatedPVReFitter.cpp/.h
