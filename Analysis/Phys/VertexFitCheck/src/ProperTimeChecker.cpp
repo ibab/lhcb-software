@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.3 2007-11-11 03:11:45 xieyu Exp $
+// $Id: ProperTimeChecker.cpp,v 1.4 2007-11-11 03:35:02 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,7 @@ ProperTimeChecker::ProperTimeChecker( const std::string& name,
    declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
    declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
    declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
-   declareProperty( "PVReFitterName", m_PVReFitterName = "PVReFitter");
+   declareProperty( "PVReFitterName", m_PVReFitterName = "AdaptivePVReFitter");
 
 }
 //=============================================================================

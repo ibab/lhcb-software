@@ -61,8 +61,13 @@ ProperTimeChecker.pidToCheck = 531 ;
 ProperTimeChecker.PhysDesktop.InputLocations = {"/Event/Phys/DC06selBs2Jpsi2MuMu_Phi2KK"};
 ProperTimeChecker.OutputLevel = 4;
 
+ProperTimeChecker.PVReFitterName =  "AdaptivePVReFitter";
+ProperTimeChecker.AdaptivePVReFitter.OutputLevel = 4;
+//ProperTimeChecker.PVReFitterName =  "PVReFitter";
 
-
+ProperTimeChecker.fillNtuplePVReFit = true;
+ProperTimeChecker.fillNtuplePVSignalBRemoval = true;
+ProperTimeChecker.fillNtuplePVMCSecondaryRemoval = true;
 
 //--------------------------------------------------------------
 // Histogram persistency (defined in DaVinciCommon.opts)

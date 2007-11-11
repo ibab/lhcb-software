@@ -62,6 +62,9 @@ ProperTimeChecker.pidToCheck = 531 ;
 ProperTimeChecker.PhysDesktop.InputLocations = {"/Event/Phys/PreselBs2PhiPhi"};
 ProperTimeChecker.OutputLevel = 4;
 
+ ProperTimeChecker.PVReFitterName =  "AdaptivePVReFitter";
+ ProperTimeChecker.AdaptivePVReFitter.OutputLevel = 4;
+ //ProperTimeChecker.PVReFitterName =  "PVReFitter";
 
 
 
