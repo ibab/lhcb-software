@@ -21,6 +21,15 @@ static void help()  {
   ::lib_rtl_printf("    -c        [ ]       Do not keep process alive; continue execution \n");
 }
 
+static int _mbm_installer_shutdown(void* param) {
+  std::pair<void*,int>* p = (std::pair<void*,int>*)param;
+  BUFFERS* b = (BUFFERS*)p->first;
+  int id = p->second;
+  memset(&b->buffers[id],0,sizeof(BUFFERS::BUFF));
+  b->nbuffer--;
+  delete p;
+}
+
 MBM::Installer::Installer(int argc, char **argv)  {
   p_continue = 0;
   p_moni   = 0;
@@ -203,7 +212,7 @@ int MBM::Installer::install()  {
     event[j].block_id = BID_EVENT;
     event[j].eid      = j;
   }
-  status = mbm_map_global_buffer_info(&bm_all);
+  status = mbm_map_global_buffer_info(&bm_all,true);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::lib_rtl_delete_section(m_bm->user_add);
@@ -212,12 +221,24 @@ int MBM::Installer::install()  {
     ::lib_rtl_printf("Cannot map global buffer information....\n");
     return status;
   }
+
   BUFFERS* buffs = (BUFFERS*)bm_all->address;
+  for(int i=0; i<buffs->p_bmax; ++i)  {
+    if ( ::strcmp(buffs->buffers[i].name,bm_id)==0 )  {
+      buffs->buffers[i].used = 1;
+      ::lib_rtl_printf("++bm_init++ BM installation [%s] finished successfully.\n",m_bm->bm_name);
+      lib_rtl_declare_exit (_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
+      lib_rtl_declare_rundown(_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
+      return MBM_NORMAL;
+    }
+  }
   for(int i=0; i<buffs->p_bmax; ++i)  {
     if ( 0 == buffs->buffers[i].used )  {
       buffs->buffers[i].used = 1;
       ::strcpy(buffs->buffers[i].name, m_bm->bm_name);
       buffs->nbuffer++;
+      lib_rtl_declare_exit (_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
+      lib_rtl_declare_rundown(_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
       ::lib_rtl_printf("++bm_init++ BM registration successful:%d buffers now\n",buffs->nbuffer);
       break;
     }
@@ -266,7 +287,7 @@ int MBM::Installer::deinstall()  {
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",bitmap_mod,status);
   }
-  status = mbm_map_global_buffer_info(&bm_all);
+  status = mbm_map_global_buffer_info(&bm_all,true);
   if(!::lib_rtl_is_success(status))
     return 1;
   BUFFERS* buffs = (BUFFERS*)bm_all->address;

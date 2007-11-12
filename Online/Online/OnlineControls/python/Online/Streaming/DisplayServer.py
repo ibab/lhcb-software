@@ -3,12 +3,24 @@ import Online.PVSS as PVSS
 import Online.Utils
 
 log = Online.Utils.log
+error = PVSS.error
 
-class SliceDisplaySrv(PVSS.PyDeviceListener):
+def matchName(self):
+  return self.name+'|'+self.name
+def matchHLT(self):
+  return self.name+'?????|*/'+self.name+'?????'
+def targetName(self):
+  return self.name.replace('_Slice','Display_Slice')+'.Tasks'
+def targetHLT(self):
+  return PVSS.defaultSystemName()+'_FSMDisplay.Tasks'
+
+class DisplayServer(PVSS.PyDeviceListener):
   # ===========================================================================
-  def __init__(self,manager,name,match='*'):
+  def __init__(self,manager,name,match=matchName,target=targetName):
     self.manager = manager
     self.name = name
+    self.matchName = match
+    self.targetName = target
     self._init()
     PVSS.PyDeviceListener.__init__(self,self,manager)
     log('Starting display server for slice:'+self.name+' on system:'+self.manager.name(),timestamp=1)
@@ -25,16 +37,16 @@ class SliceDisplaySrv(PVSS.PyDeviceListener):
     self.fsmtypes = self._fsmLookup('type',typ1,typ2)
 
     self.writer = self.manager.devWriter()
-    nam = self.name.replace('_Slice','Display_Slice')
-    self.taskData = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(nam+'.Tasks'))
+    nam = self.targetName(self)
+    self.taskData = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(nam))
     self.writer.add(self.taskData)
     self.sensor = PVSS.DeviceSensor(self.manager,self.actions)
     self.taskData.data = PVSS.StringVector()
+    # for i in self.actions: print i.name()
     
   # ===========================================================================
   def _fsmLookup(self,dp,typ1,typ2):
-    match = '_*.'
-    nam = self.name+'|'+self.name
+    nam = self.matchName(self)
     obj = PVSS.DpVectorActor(self.manager)
     obj.lookupOriginal(nam+'_*.'+dp,typ2)
     obj.lookupOriginal(nam+'_*.'+dp,typ1)
@@ -51,6 +63,7 @@ class SliceDisplaySrv(PVSS.PyDeviceListener):
       if i.name().find('_FWCNM') > 0: continue
       if i.name() != cfg:
         v.push_back(PVSS.DataPoint(self.manager,i.name()))
+    # print nam+'_*.'+dp,v.size()
     return v
   # ===========================================================================
   def collectInfo(self):
@@ -90,8 +103,13 @@ class SliceDisplaySrv(PVSS.PyDeviceListener):
             elif typ == 'StreamConfigurator':
               node = slice
               data = sys+'#'+slice+'#'+slice+'#StreamConfigurator#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
+            elif typ == 'GaudiJob':
+              task = fsm[fsm.rfind('/')+1:]
+              node = task[:task.find('_')]
+              #print sys,slice,node,task,state,'"'+action+'"',cmd,sys+':'+slice+'_'+task
+              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
             else:
-              #print typ,fsm
+              print typ,fsm,nam
               continue
             if not tasks.has_key(node): tasks[node] = []
             tasks[node].append(data)
@@ -127,11 +145,33 @@ class SliceDisplaySrv(PVSS.PyDeviceListener):
     self.taskData = None
     return self
 
-class DisplayManager(PVSS.PyDeviceListener):
+# =============================================================================
+class BaseDisplayServerManager:
   # ===========================================================================
   def __init__(self,manager):
     self.manager = manager
-    self.do_sleep= 1
+    self.servers = {}
+    target = targetHLT(None)
+    target = target[:target.find('.')]
+    devMgr = self.manager.deviceMgr()
+    if not devMgr.exists(target):
+      typ = self.manager.typeMgr().type('FSMDisplay')
+      if not devMgr.createDevice(target,typ,1).release():
+        error('Failed to create the datapoint:"'+target+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
+      else:
+        log('Created the datapoint:"'+target+'"',timestamp=1)    
+    srv = DisplayServer(self.manager,'node',matchHLT,targetHLT).run()
+    self.servers['node']=srv
+    
+  # ===========================================================================
+  def run(self):
+    return self
+
+# =============================================================================
+class DisplayServerManager(PVSS.PyDeviceListener):
+  # ===========================================================================
+  def __init__(self,manager):
+    self.manager = manager
     typ = self.manager.typeMgr().type('StreamPartition')
     self.slices = PVSS.DpVectorActor(self.manager)
     self.slices.lookupOriginal('*_Slice??.InUse',typ)
@@ -152,11 +192,12 @@ class DisplayManager(PVSS.PyDeviceListener):
     self.sensor.addListener(self)
     self.sensor.run(1)
     return self
-  
+
   # ===========================================================================
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
     return 1
+  
   # ===========================================================================
   def handleDevices(self):
     "Callback once per device sensor list on datapoint change."
@@ -165,7 +206,7 @@ class DisplayManager(PVSS.PyDeviceListener):
       if i.data > 0 and self.servers[nam] is None:
         n = nam[nam.find(':')+1:]
         n = n[:n.find('.')]
-        srv = SliceDisplaySrv(self.manager,n).run()
+        srv = DisplayServer(self.manager,n).run()
         self.servers[nam] = srv
         log('Started display server:'+self.servers[nam].name,timestamp=1)
       elif i.data<=0 and self.servers[nam] is not None:
@@ -174,21 +215,25 @@ class DisplayManager(PVSS.PyDeviceListener):
         self.servers[nam] = None
     return 1
   
-  # ===========================================================================
-  def sleep(self):
-    "Serve controls requests in daemon mode"
-    if PVSS.batchMode(): Online.Utils.log('Sleeping ....',timestamp=1)
-    else:                print 'Sleeping ....'
-    sys.stdout.flush()
-    try:
-      while(self.do_sleep):
-        time.sleep(1)
-    except Exception,X:
-      print 'Exception:',str(X)
-    except:
-      print 'Unknown Exception'
-    
+# ===========================================================================
+def sleep():
+  "Serve controls requests in daemon mode"
+  if PVSS.batchMode(): Online.Utils.log('Sleeping ....',timestamp=1)
+  else:                print 'Sleeping ....'
+  sys.stdout.flush()
+  try:
+    while(1):
+      time.sleep(1)
+  except Exception,X:
+    print 'Exception:',str(X)
+  except:
+    print 'Unknown Exception'
+   
 if __name__=="__main__":
   mgr = PVSS.controlsMgr()
-  mgr = DisplayManager(mgr)
-  mgr.run().sleep()
+  if PVSS.defaultSystemName()[:3]=='HLT':
+    mgr = BaseDisplayServerManager(mgr)
+  else:
+    mgr = DisplayServerManager(mgr)
+  mgr.run()
+  sleep()

@@ -12,68 +12,90 @@ CMD_QUIT   = 4
 _timeSensor = upi.gbl.TimeSensor.instance()
 _iocSensor  = upi.gbl.IocSensor.instance()
 
-class SliceDisplaySrv(upi.Interactor):
+mk_timestamps = not PVSS.batchMode()
+
+def targetName(self):
+  return self.name.replace('_Slice','Display_Slice')+'.Tasks'
+def targetHLT(self):
+  return PVSS.defaultSystemName()+'_FSMDisplay.Tasks'
+
+
+class Display(upi.Interactor):
   # ===========================================================================
-  def __init__(self,manager,name):
+  def __init__(self,manager,name,target=targetName,standalone=None):
     self.manager = manager
     self.name = name
     self.lines = CMD_QUIT
     self.incremental = True
     self.reader = self.manager.devReader()
-    nam = self.name.replace('_Slice','Display_Slice')
-    self.dp = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(nam+'.Tasks'))
+    self.dp = PVSS.DataPoint(self.manager,PVSS.DataPoint.original(target(self)))
     self.reader.add(self.dp)
-    log('Starting display for slice:'+self.name+' on system:'+self.manager.name(),timestamp=1)
+    log('Starting display for slice:'+self.name+' on system:'+self.manager.name(),timestamp=mk_timestamps)
     upi.Interactor.__init__(self,self)
     self.mid = len(menus)+1
     menus[self.mid] = self
     upi.open_window()
-    upi.open_menu(self.mid,0,0,self.manager.name(),name,timeStamp())
+    upi.open_menu(self.mid,0,0,timeStamp(),name,self.manager.name())
     upi.add_command(CMD_UPDATE,'Update')
     upi.add_command(CMD_INCREMENTAL,'Show full status')
     upi.add_command(CMD_QUIT,'Close')
     upi.close_menu()
-    self.update()
+    self.updateDisplay()
     upi.set_cursor(self.mid,CMD_UPDATE,0)
     upi.sensor().add(self,self.mid)
     self.isAlive = 1
+    self.standalone = standalone
+    #if self.standalone:
+    #  _timeSensor.add(self,10,0)
 
   # ===========================================================================
   def handleEvent(self):
     ev = self.event()
     if ev.eventtype == upi.EventType:  # UpiEvent
       if ev.command_id==CMD_QUIT:
-        self.stop()
-        #upi.resetANSI()
-        #sys.exit(0)
+        if self.standalone:
+          _iocSensor.send(self,CMD_QUIT,CMD_QUIT)
+        else:
+          self.stop()
       elif ev.command_id==CMD_INCREMENTAL:
         self.incremental = not self.incremental
         if self.incremental:
           upi.replace_command(self.mid,CMD_INCREMENTAL,'Show full status')
         else:
           upi.replace_command(self.mid,CMD_INCREMENTAL,'Show incremental status')
-        log(self.name+'> Incremental status is now:'+str(self.incremental),timestamp=1)
-        self.update()
+        log(self.name+'> Incremental status is now:'+str(self.incremental),timestamp=mk_timestamps)
+        self.updateDisplay()
       elif ev.command_id==CMD_UPDATE:
-        self.update()
+        self.updateDisplay()
       elif ev.menu_id == 0 and ev.command_id == 0 and ev.param_id == 0:
         upi.refresh_screen()
       else:
         log(self.name+'> UPI Event arrived.')
-        self.update()
+        self.updateDisplay()
     elif ev.eventtype == 0:            # TimeEvent
       log(self.name+'> Time event arrived')
-      self.update()
+      self.updateDisplay()
+      if self.standalone:
+        _timeSensor.add(self,10,0)
     elif ev.eventtype == 3:            # IocEvent
       if ev.iocType() == CMD_UPDATE:
-        self.update()
+        self.updateDisplay()
+      elif ev.iocType() == CMD_QUIT:
+        upi.quit()
+        upi.resetANSI()
+        sys.exit(0)
       else:
-        log(self.name+'> Unknown IOC event arrived'+str(ev.type)+' '+str(ev.iocType())+' '+str(ev.iocData()),timestamp=1)
+        log(self.name+'> Unknown IOC event arrived'+str(ev.type)+' '+str(ev.iocType())+' '+str(ev.iocData()),timestamp=mk_timestamps)
     else:
       log(self.name+'> Unknown event of type '+str(ev.eventtype)+' arrived')
-      
+
   # ===========================================================================
   def update(self):
+    _iocSensor.send(self,CMD_UPDATE,CMD_UPDATE)
+    return self
+  
+  # ===========================================================================
+  def updateDisplay(self):
     if self.reader.execute(1,1):
       last = ''
       fmt0 = '%-34s'
@@ -110,7 +132,7 @@ class SliceDisplaySrv(upi.Interactor):
 
       lineNo = CMD_QUIT
       upi.begin_update()
-      upi.change_titles(self.mid,self.manager.name(),self.name,timeStamp())
+      upi.change_titles(self.mid,timeStamp(),self.name,self.manager.name())
       for node,n,line in all_lines:
         if self.incremental:
           if n == '' and opt[node]==0:
@@ -134,13 +156,12 @@ class SliceDisplaySrv(upi.Interactor):
         self.lines = self.lines - 1
         l = l - 1
       upi.end_update()
-      #upi.resetANSI()
-      _timeSensor.add(self,10,0)
       return
-    log(self.name+'> Failed to read datapoint:'+self.dp.name(),timestamp=1)
+    log(self.name+'> Failed to read datapoint:'+self.dp.name(),timestamp=mk_timestamps)
     
   # ===========================================================================
   def stop(self):
+    _timeSensor.remove(self,0)
     upi.sensor().remove(self,self.mid)
     upi.delete_menu(self.mid)
     self.isAlive = 0
@@ -182,10 +203,10 @@ class ManagerMenu(upi.Interactor):
         n = nam[:nam.find('.')]
         if self.dispMgr.slices.container[cmd].data>0:
           n = n[n.find(':')+1:]
-          self.dispMgr.servers[nam] = SliceDisplaySrv(self.manager,n)
-          log(self.name+'> Started display server:'+n,timestamp=1)
+          self.dispMgr.servers[nam] = Display(self.manager,n)
+          log(self.name+'> Started display server:'+n,timestamp=mk_timestamps)
         else:
-          log(self.name+'> The slice '+n+' is currently not used. No Display availible.',timestamp=1)
+          log(self.name+'> The slice '+n+' is currently not used. No Display availible.',timestamp=mk_timestamps)
       else:
         log(self.name+'> UPI Event arrived.')
     else:
@@ -202,7 +223,7 @@ class DisplayManager(PVSS.PyDeviceListener):
     self.slices.lookupOriginal('*_Slice??.InUse',typ)
     self.sensor = PVSS.DeviceSensor(self.manager,self.slices.container)
     PVSS.PyDeviceListener.__init__(self,self,manager)
-    log('Starting display server on system:'+self.manager.name(),timestamp=1)
+    log('Starting display server on system:'+self.manager.name(),timestamp=mk_timestamps)
     self.servers = {}
     for i in self.slices.container:
       self.servers[i.name()] = None
@@ -233,11 +254,11 @@ class DisplayManager(PVSS.PyDeviceListener):
       if i.data > 0 and self.servers[nam] is None:
         n = nam[nam.find(':')+1:]
         n = n[:n.find('.')]
-        srv = SliceDisplaySrv(self.manager,n)
+        srv = Display(self.manager,n)
         self.servers[nam] = srv
-        log('Started display server:'+self.servers[nam].name,timestamp=1)
+        log('Started display server:'+self.servers[nam].name,timestamp=mk_timestamps)
       elif i.data<=0 and self.servers[nam] is not None:
-        log('Stop display server:'+self.servers[nam].name,timestamp=1)
+        log('Stop display server:'+self.servers[nam].name,timestamp=mk_timestamps)
         self.servers[nam].stop()
         self.servers[nam] = None
     return 1
@@ -252,17 +273,48 @@ class DisplayManager(PVSS.PyDeviceListener):
 # =============================================================================
 def sleep(mgrs=[]):
   "Serve controls requests in daemon mode"
-  cnt = 0
-  while(1):
-    time.sleep(1)
-    cnt = cnt + 1
-    if cnt%2 == 0:
-      for i in mgrs:
-        i.update()
+  upi.refresh_screen()
+  log('Sleeping ....',timestamp=1)
+  try:
+    cnt = 0
+    while(1):
+      time.sleep(1)
+      cnt = cnt + 1
+      if cnt%2 == 0:
+        for i in mgrs:
+          if hasattr(i,'update'):
+            i.update()
+  except Exception,X:
+    print 'Exception:',str(X)
+  except:
+    print 'Unknown Exception'
       
-if __name__=="__main__":
+
+# =============================================================================
+def runDataflow():
   import Online.PVSSSystems as Systems
   sto_mgr = DisplayManager(Systems.controlsMgr('STORAGE')).run()
   mon_mgr = DisplayManager(Systems.controlsMgr('MONITORING')).run()
-  upi.refresh_screen()
   sleep([sto_mgr,mon_mgr])
+
+# =============================================================================
+def runHLT(with_server=1):
+  import Online.Streaming.DisplayServer as Srv
+  upi.attach_terminal()
+  Online.Utils.makePrint = upi.write_message
+  mgr = PVSS.controlsMgr()
+  servers = [Display(mgr,mgr.name()+'_FSMDisplay',target=targetHLT)]
+  if with_server:
+    servers.append(Srv.BaseDisplayServerManager(mgr))
+  else:
+    cont = PVSS.DataPointVector()
+    sensor = PVSS.DeviceSensor(mgr,cont)
+    sensor.run(1)
+  sleep(servers)
+
+if __name__=="__main__":
+  if PVSS.defaultSystemName()[:3]=='HLT':
+    runHLT()
+  else:
+    runDataflow()
+  

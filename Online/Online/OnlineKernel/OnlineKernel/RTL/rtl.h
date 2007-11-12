@@ -154,7 +154,7 @@ extern "C" {
   int lib_rtl_try_event(lib_rtl_event_t event_handle);
 
   /// Create named global section
-  int lib_rtl_create_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* handle);
+  int lib_rtl_create_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* handle, bool keep=false);
   /// Map global section a a specific address
   int lib_rtl_map_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* address);
   /// Delete named global section

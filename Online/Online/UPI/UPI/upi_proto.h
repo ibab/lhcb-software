@@ -152,7 +152,7 @@ int upic_resize_message (Display*,int,int);
 int upic_drag_message (Display*,int,int);
 void upic_draw_message (void);
 void upic_paste_message (void);
-void upic_refresh_message (Async*);
+int upic_refresh_message (Async*);
 #endif
 
 /*- From UPI_PAGE.C ---------------------------------------------------*/
@@ -320,8 +320,8 @@ int upic_begin_update (void);
 int upic_end_update (void);
 int upic_hide_menu (int);
 
+int upic_refresh_screen (void);
 #ifdef SCREEN
-void upic_refresh_screen (void);
 void upic_broadcast_handler (const char*);
 void upic_init_screen (void);
 void upic_erase_screen (void);

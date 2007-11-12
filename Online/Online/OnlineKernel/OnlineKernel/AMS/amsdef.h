@@ -58,10 +58,10 @@ extern "C" {
 #include <stdlib.h>
 #define __CXX_CONSTANT 
 #endif
-
+enum { AMS_NAME_LENGTH = 128 };
 struct amsuc_info  {
   char message[80];
-  char source[128];
+  char source[AMS_NAME_LENGTH];
   unsigned int  facility;
   size_t length;
   int  status;

@@ -6,8 +6,14 @@ if platform.system()=='Linux':
 else:
   Dict.loadDictionary('OnlineKernelDict.dll')
   Dict.loadDictionary('UPIDict.dll')
+
 gbl = Dict.makeNamespace('')
 pvss = Dict.makeNamespace('PVSS')
+#import os
+#l=os.popen("cat /proc/"+str(os.getpid())+"/maps | grep UPIR").readlines()
+#ll=os.popen('nm -C -D '+l[0].split(' ')[-1])
+#for i in ll:
+#  if i.find('upic_refresh')>=0: print i[:-1]
 
 EventType            = 2
 

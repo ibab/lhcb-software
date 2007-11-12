@@ -1,7 +1,10 @@
 #ifndef BUFFERMANAGER_BITS_H
 #define BUFFERMANAGER_BITS_H
 #ifdef __cplusplus
+#include <cstdlib>
 extern "C" {
+#else
+#include <stdio.h>
 #endif
   inline int bit_set(unsigned int* mask,int pos)  {
     mask[pos/32] |= (1<<(pos%32));

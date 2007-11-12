@@ -8,17 +8,17 @@
 #include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
 #include "NET/IOPortManager.h"
-#define _USE_FULL_WT
+// #define _USE_FULL_WT
 
 enum  {
- SAFE_NAME_LENGTH      =  128,
+ SAFE_NAME_LENGTH      =  AMS_NAME_LENGTH,
  HOST_NAME_LENGTH      =  32,
  PROC_NAME_LENGTH      =  64,
  TRAILER_PATTERN       =  0xFEADBABE,
  AMS_MSG_DATA          =  2,
  AMS_K_COPY_LIMIT      = (8192*2),
  LINGER_VALUE          =  0,
- NAME_LENGTH           =  127,
+ NAME_LENGTH           =  AMS_NAME_LENGTH-1,
  CHOP_SIZE             = (8192*4),
  LOWER_CHOP            = 4096,
  MAX_TCP_ERRORS        = 20

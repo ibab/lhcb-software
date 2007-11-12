@@ -128,7 +128,7 @@ void upic_paste_message ()  {
 }
 
 //---------------------------------------------------------------------------
-void upic_refresh_message (Async* a)  {
+int upic_refresh_message (Async* a)  {
   Async_line* line = a->last;
   const char *c, null = '\0';
   for (int i = a->rows; i > 0; i--)  {
@@ -143,6 +143,7 @@ void upic_refresh_message (Async* a)  {
     }
     scrc_put_chars (a->id, c, render, i, 1, 1);
   }
+  return UPI_NORMAL;
 }
 
 //---------------------------------------------------------------------------

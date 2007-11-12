@@ -13,14 +13,15 @@
   *
   */
 class UpiSensor : public Sensor {
-  typedef std::map<long,Interactor*> Table;
+  typedef std::map<int,Interactor*> Table;
   Table    m_table;
   UpiSensor();
   virtual ~UpiSensor();
 public:
   static UpiSensor& instance();
-  virtual void  add(Interactor* source, long id);
-  virtual void  remove(Interactor* source, long id);
+  static int newID();
+  virtual void  add(Interactor* source, int id);
+  virtual void  remove(Interactor* source, int id);
   virtual void  dispatch(void* param);
   virtual void  rearm() { }
 };

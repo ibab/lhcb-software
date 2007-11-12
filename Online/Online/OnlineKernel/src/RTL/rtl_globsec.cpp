@@ -34,7 +34,7 @@ extern "C" int lib_rtl_gbl_exithandler() {
 }
 
 /// Create named global section
-int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address) {
+int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address, bool keep) {
   long siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
   std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
   sprintf(h->name,"/%s",sec_name);
@@ -53,7 +53,9 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
     ::ftruncate(h->fd, h->size);
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
     if ( h->address != MAP_FAILED && h->address != 0 )  {
-      allSections().insert(std::make_pair(h->name,h.get()));
+      if ( !keep ) {
+	allSections().insert(std::make_pair(h->name,h.get()));
+      }
       *address = h.release();
       return 1;
     }

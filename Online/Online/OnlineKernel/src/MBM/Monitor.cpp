@@ -14,12 +14,10 @@
 /*  4  21/02/90  Now it can allocate buffer across memories    PM        */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
-#include <cstdlib>
+#include "MBM/Monitor.h"
 #include <cstdio>
 #include <cstring>
-#include <cstdarg>
 #include <ctime>
-#include "RTL/screen.h"
 #include "MBM/bmstruct.h"
 #include "bm_internals.h"
 #include "Manager.h"
@@ -28,116 +26,46 @@
 #endif
 #define E_MNF  221
 
-namespace MBM {
+namespace {
   static int USER_next_off;
   static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
   static int cont = 1;
   static int end  = 1;
 
-  struct Monitor {
-    struct ManagerImp : public Manager {
-      virtual int  optparse (const char*) {
-        return 1;
-      }
-      ManagerImp() {}
-      virtual ~ManagerImp() {}
-    };
-    struct DISP_BMDES   {
-      ManagerImp      m_mgr;
-      BUFFERS::BUFF*  m_buff;
-      DISP_BMDES() : m_buff(0) {}
-      ~DISP_BMDES() {}
-    };
-    DISP_BMDES* m_bms;
-    int  m_numBM;
-    size_t m_currLine;
-    char m_buffID[32];
-    char* m_bmid;
-    lib_rtl_gbl_t m_bm_all;
-    WINDOW*       m_window;
-    BUFFERS*      m_buffers;
-    int m_color;
-
-    int monitor();
-    int put_inf();
-    void setTextcolor(int col)  {
-      m_color = col;
-      textcolor(col);
+  struct ManagerImp : public MBM::Manager {
+    virtual int  optparse (const char*) {
+      return 1;
     }
-
-    size_t draw_line()  {
-      print_char(1, m_currLine, TEE_LEFT);
-      for(size_t i=1; i < term_width()-1; ++i)
-        print_char(i+1, m_currLine, HORZ_BAR);
-      print_char(term_width(), m_currLine, TEE_RIGHT);
-      return ++m_currLine;
-    }
-    size_t draw_bar()  {
-      print_char(1, m_currLine, VERT_BAR);
-      for(size_t i=1; i < term_width()-1; ++i)
-        print_char(i+1, m_currLine, FAT_VERT_BAR);
-      print_char(term_width(), m_currLine, VERT_BAR);      
-      return ++m_currLine;
-    }
-    size_t draw_line(int flags, const char* format,...)  {
-      va_list args;
-      char buffer[1024];
-      va_start( args, format );
-      size_t len = ::vsprintf(buffer, format, args);
-      print_char(1, m_currLine, VERT_BAR);
-      for(size_t j=0; j<len && j<term_width()-1; ++j)
-        print_char(j+2, m_currLine, flags|buffer[j]);
-      for(size_t i=len; i < term_width()-1; ++i)
-        print_char(i+2, m_currLine, ' '|flags);
-      print_char(term_width(), m_currLine, VERT_BAR);
-      return ++m_currLine;
-    }
-    void begin_update()  {
-      ::textcolor(YELLOW);
-      m_currLine = 1;
-      print_char(1,m_currLine,LEFT_UP_EDGE);
-      for(size_t i=1; i < term_width()-1; ++i)
-        print_char(i+1,m_currLine,HORZ_BAR);
-      print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
-      m_currLine = 2;
-    }
-    void end_update() { 
-      while(m_currLine<term_height()-1) {
-        //char buffer[1024];
-        //sprintf(buffer," Line:%d total:%d ------",m_currLine, term_height());
-        //draw_line(NORMAL,buffer);
-        draw_line(NORMAL,"");
-      }
-      print_char(1,m_currLine,LEFT_LOW_EDGE);
-      for(size_t i=1; i < term_width()-1; ++i)
-        print_char(i+1,m_currLine,HORZ_BAR);
-      print_char(term_width(),m_currLine,RIGHT_LOW_EDGE);      
-      m_currLine++;
-      refresh();
-    }
-
-    size_t draw_buffer(const char* name, CONTROL* ctrl);
-
-    void getOptions(int argc, char** argv);
-    virtual int optparse (const char* c);
-    int get_bm_list();
-    int drop_bm_list();
-    size_t draw_bar(float ratio,int full_scale);
-    static size_t print(void* ctxt, const char* format, va_list args) {
-      char buffer[1024];
-      Monitor* m = (Monitor*)ctxt;
-      size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);
-      m->draw_line(NORMAL,buffer);
-      return res;
-    }
-    Monitor(int argc , char** argv) 
-    : m_bms(0), m_bmid(0), m_bm_all(0), m_window(0), m_buffers(0), m_color(YELLOW)  
-    {
-      lib_rtl_install_printer(print,this);
-      getOptions(argc, argv);
-    }
+    ManagerImp() {}
+    virtual ~ManagerImp() {}
   };
+}
+namespace MBM {
+  struct DisplayDescriptor   {
+    ManagerImp      m_mgr;
+    BUFFERS::BUFF*  m_buff;
+    DisplayDescriptor() :  m_buff(0) {}
+    ~DisplayDescriptor() {}
+  };
+}
+
+MBM::Monitor::Monitor(int argc , char** argv) 
+  : m_bms(0), m_bmid(0), m_bm_all(0), m_buffers(0)
+{
+  lib_rtl_install_printer(print,this);
+  getOptions(argc, argv);
+}
+
+MBM::Monitor::~Monitor() {
+}
+
+size_t MBM::Monitor::print(void* ctxt, const char* format, va_list args) {
+  char buffer[1024];
+  Monitor* m = (Monitor*)ctxt;
+  size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);
+  m->draw_line_normal(buffer);
+  return res;
 }
 
 void MBM::Monitor::getOptions(int argc, char** argv)    {
@@ -147,79 +75,70 @@ void MBM::Monitor::getOptions(int argc, char** argv)    {
       optparse (cptr+1);
   }
 }
-size_t MBM::Monitor::draw_bar(float ratio,int full_scale)    {
-  int barlen  =  int(0.5+ratio*float(full_scale));
-  graphics();
-  printf("\164");
-  for (int j=barlen;j<full_scale;j++) ::printf("\161");
-  ::printf("\165");
-  ascii();
-  return 0;
-}
 
 int MBM::Monitor::monitor() {
-  byte_offset(USER,next,USER_next_off);
+  int status = initMonitor();
+  if ( !lib_rtl_is_success(status) ) {
+    exit(status);
+  }
+  setup_window();
+  if( cont )    {
+    while( 0 != end ) {
+      updateDisplay();
+      ::lib_rtl_sleep(2000);
+    }
+  }
+  else  {
+    show_information();
+  }
+  reset_window();
+  return 1;
+}
 
+int MBM::Monitor::initMonitor() {
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
   int status = ::mbm_map_global_buffer_info(&m_bm_all);
   if(!lib_rtl_is_success(status))   {   
     printf("Cannot map global buffer information....\n");
-    exit(status);
+    return status;
   }
   m_buffers = (BUFFERS*)m_bm_all->address;
-  m_bms = new DISP_BMDES[m_buffers->p_bmax];
+  m_bms = new DisplayDescriptor[m_buffers->p_bmax];
+  return 1;
+}
 
-  m_window = initscreen();
-  _setcursortype(_NOCURSOR);      // hide the cursor
-  textcolor(YELLOW);              // change textcolor to YELLOW
-  textbackground(BLUE);           // change backgroundcolor to BLUE
-  if( cont )    {
-    while( 0 != end )    {
-      try {
-        begin_update();
-        get_bm_list();    
-        put_inf();
-        drop_bm_list();
-      }
-      catch(...) {
-        draw_line(NORMAL," Exception during buffer monitoring.");
-      }
-      end_update();
-      lib_rtl_sleep(1000);
-    }      
+int MBM::Monitor::updateDisplay() {
+  try {
+    begin_update();
+    get_bm_list();    
+    show_information();
+    drop_bm_list();
   }
-  else  {
-    put_inf();
+  catch(...) {
+    draw_line_normal(" Exception during buffer monitoring.");
   }
-  _setcursortype(_NORMALCURSOR);
+  end_update();
   return 1;
 }
 
 size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
-  int i, m;
   char txt[256];
   sprintf(txt," Buffer \"%s\"",name);
-  draw_line(NORMAL,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
+  draw_line_normal("%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
     txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
-  draw_line(NORMAL,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
+  draw_line_normal("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
     "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
     ctr->i_users, ctr->p_umax);
 
-  draw_line(NORMAL,"  Occupancy [Events]:");
-  float f1=float(ctr->i_events)/float(ctr->p_emax);
-  for (i=0, m=term_width()-30; i<m; ++i)  {
-    print_char(i+30,m_currLine-1,f1*m > i ? FAT_VERT_BAR : DIM_VERT_BAR);
-  }
-  draw_line(NORMAL,"            [Space]: ");
-  f1 = float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size);
-  for (i=0, m=term_width()-30; i<m; ++i)  {
-    print_char(i+30,m_currLine-1,f1*m > i ? FAT_VERT_BAR : DIM_VERT_BAR);
-  }
+  draw_line_normal("  Occupancy [Events]:");
+  draw_bar(30,m_currLine-1,float(ctr->i_events)/float(ctr->p_emax),display_width()-30);
+  draw_line_normal("            [Space]: ");
+  draw_bar(30,m_currLine-1,float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size),display_width()-30);
   return 1;
 }
 
-int MBM::Monitor::put_inf()   {
+int MBM::Monitor::show_information()   {
   int i, j, k;
 #if defined(SHOW_TIMES)
   static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
@@ -239,19 +158,19 @@ int MBM::Monitor::put_inf()   {
 #endif
   char line[256];
   draw_line();
-  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]  pid:%d", 
+  draw_line_reverse("                               Buffer Manager Monitor [%s]  pid:%d", 
     ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
   draw_line();
-  draw_line(NORMAL,"");
+  draw_line_normal("");
   for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       draw_buffer(dsc->bm_name, dsc->ctrl);
-      draw_line(NORMAL,"");
+      draw_line_normal("");
     }
   }
   draw_line();
-  draw_line(NORMAL,m_numBM<=0 ? "               No active buffers present" : head);
+  draw_line_normal(m_numBM<=0 ? "               No active buffers present" : head);
   draw_line();
 
   for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
@@ -297,7 +216,7 @@ int MBM::Monitor::put_inf()   {
         else        {
           sprintf(line,fmt_def,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
         }
-        draw_line(NORMAL,line);
+        draw_line_normal(line);
       }
     }
   }
@@ -341,7 +260,7 @@ int MBM::Monitor::get_bm_list()   {
     return 0;
   }
   m_buffers = (BUFFERS*)m_bm_all->address;
-  m_bms = new DISP_BMDES[m_buffers->p_bmax];
+  m_bms = new DisplayDescriptor[m_buffers->p_bmax];
   for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
@@ -370,7 +289,7 @@ int MBM::Monitor::drop_bm_list()   {
       if ( m_bms[i].m_buff != 0 )  {
         // char txt[144];
         // sprintf(txt,"Unmap section:%s",m_buffers->buffers[i].name);
-        // draw_line(NORMAL,txt);
+        // draw_line_normal(txt);
         m_bms[i].m_mgr.unmapSections();
         m_bms[i].m_buff = 0;
       }
@@ -384,17 +303,5 @@ int MBM::Monitor::drop_bm_list()   {
   m_buffers = 0;
   if ( m_bms ) delete [] m_bms;
   m_bms = 0;
-  return 1;
-}
-
-int mbm_mon(int argc , char** argv) {
-  MBM::Monitor mon(argc, argv);
-  return mon.monitor();
-}
-
-extern "C" int mbm_ascii(int /* argc */, char** /* argv */) {
-  for ( unsigned char i=0; i < 255; ++i)  {
-    printf("%3d  %03X   \"%c\"\n", i,i,i);
-  }
   return 1;
 }

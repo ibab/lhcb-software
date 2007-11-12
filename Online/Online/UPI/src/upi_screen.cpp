@@ -193,8 +193,9 @@ int upic_get_screen_size(int* rows, int* cols)  {
 
 #ifdef SCREEN
 //---------------------------------------------------------------------------
-void upic_refresh_screen ()   {
+int upic_refresh_screen ()   {
   scrc_repaint_screen(Sys.pb);
+  return UPI_NORMAL;
 }
 
 //---------------------------------------------------------------------------

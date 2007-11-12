@@ -131,7 +131,7 @@ namespace {
   };
   struct SrvConnection {
     int col;
-    char s[64];
+    char s[AMS_NAME_LENGTH];
     void *data;
   };
 
@@ -391,6 +391,8 @@ static SrvConnect* SrvConnect_of_histo = 0;
 
 static int LogFile_active = 1;
 static char LogFile_name[133];
+static FILE* LogFile_Ptr = 0;
+
 static System *UPIsystem;
 static bool no_time_stamps = true;
 static struct {
@@ -766,7 +768,7 @@ void connectTask(const char* dest) {
   if (!find_connect_with_name (dest))      {
     UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
     int status = server_send_message (dest);
-    if (!(status & 1)) upic_signal_error (status, "");
+    if (!(status & 1)) upic_signal_error(status,dest);
     else upic_write_message ("Connecting...", "");
   }
   else
@@ -820,7 +822,10 @@ int message_handler (unsigned int, void*)  {
   }
   if ((info != UpiBufferNoData) && (info != UpiBufferBadHeader))  {
     const char* infoText = UpiBufferGetInfoText (info);
-    if (infoText) upic_write_message (infoText, "");
+    if (infoText) {
+      upic_write_message (infoText, "");
+      if (LogFile_active) log_message (infoText,"");
+    }
   }
   UpiBufferReset (GetBuffer);
   if (c) server_send_message (c->source);
@@ -2261,14 +2266,26 @@ void ast_kbd (int arg)    {
 }
 
 //--------------------------------------------------------------------------
-void log_message (const char* /* t1 */, const char* /* t2 */ ) {
-  //server_log( t1, t2 );
+void log_message (const char* t1, const char* /* t2 */ ) {
+  if ( t1 ) {
+    if ( !LogFile_Ptr ) {
+      LogFile_Ptr = ::fopen(LogFile_name,"a");
+      if ( !LogFile_Ptr ) {
+	upic_write_message("Failed to open log file.","");
+	return;
+      }
+    }
+    ::fprintf(LogFile_Ptr,"%s\n",t1);
+    ::fflush(LogFile_Ptr);
+  }
 }
 
 //--------------------------------------------------------------------------
 void log_reset () {
   const char* log_file = ::getenv ("SERVER_LOG_FILE");
   if (!log_file) return;
+  if ( LogFile_Ptr ) ::fclose(LogFile_Ptr);
+  LogFile_Ptr = 0;
   FILE* f = fopen (log_file, "w");
   if (!f) return;
   fclose (f);
@@ -2278,7 +2295,7 @@ void log_reset () {
 void log_show ()    {
   int len;
   char msg[1024];
-  const char* log_file = (char*) getenv ("SERVER_LOG_FILE");
+  const char* log_file = ::getenv ("SERVER_LOG_FILE");
   if (log_file)  {
     strcpy(msg,log_file);
     len = cut_blanks (msg);
@@ -2290,26 +2307,29 @@ void log_show ()    {
 
 //--------------------------------------------------------------------------
 void log_get_name ()    {
-  const char* log_file = (char*) getenv ("SERVER_LOG_FILE");
+  const char* log_file = getenv ("SERVER_LOG_FILE");
   if (log_file) strcpy (LogFile_name, log_file);
   else strcpy (LogFile_name, "");
 }
 
 //--------------------------------------------------------------------------
-void log_set_name (const char* /* name */ )    {
+void log_set_name (const char* log_file)    {
+  if (log_file) strcpy (LogFile_name, log_file);
+  else strcpy (LogFile_name, "");
   log_show ();
 }
 
 //--------------------------------------------------------------------------
 void database_dump ()   {
-  const char* log_file = getenv ("SERVER_LOG_FILE");
-  if (!log_file)   {
-    log_file	= "SERVER_LOG_FILE";
-  }
   char str[255];
+  const char* log_file = getenv("SERVER_LOG_FILE");
+  if (!log_file) {
+    upic_write_message("The environment SERVER_LOG_FILE is not set...no dump made.","");
+    return;
+  }
   sprintf(str,"Dumping to file %s",log_file);
   upic_write_message(str,"");
-  FILE* f = fopen (log_file, "a");
+  FILE* f = ::fopen (log_file, "a");
   if (!f)  {
     upic_write_message("cannot open file...","");
     return;

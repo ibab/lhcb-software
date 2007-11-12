@@ -13,7 +13,7 @@ Created           : 15-DEC-1989 by
 
 static int  Opened = 0;
 static char My_node[80];
-static char Source_name[80];
+static char Source_name[AMS_NAME_LENGTH];
 
 #define DUMMYLENGTH  32
 struct MessageLog {
@@ -22,7 +22,7 @@ struct MessageLog {
   int isSpy;
   int status;
   int total;
-  char sourceName[80];
+  char sourceName[AMS_NAME_LENGTH];
   char buffer[DUMMYLENGTH];
 };
 
@@ -43,7 +43,7 @@ int upic_net_init (const char* name, char** server, WtRoutine handler, WtRoutine
   status = (name) ? amsc_init (name) : amsc_init (0);
   if ( server )  {
     *server = 0;
-    char srv[128];
+    char srv[AMS_NAME_LENGTH];
     if ( upic_net_server_name(srv) )  {
       *server = (char*)::malloc(::strlen(srv)+1);
       ::strcpy(*server,srv);

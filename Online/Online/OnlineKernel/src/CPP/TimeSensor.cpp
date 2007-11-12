@@ -13,8 +13,6 @@ namespace {
 
   class Period {
   private:
-    // ONESEC is the equivalent of ONE second in OS9 time
-    static const int ONESEC = 100;
     int           Time; 
     unsigned long m_alrmID;
     std::string   m_ascTime;
@@ -49,7 +47,7 @@ namespace {
     else                  m_cyclic = false;
     m_ascTime = period;
     sscanf(m_ascTime.c_str(), "%d %d:%d:%d.0", &day, &hour, &minute, &sec); 
-    Time = ONESEC * (sec + day*86400 + hour*3600 + minute*60); 
+    Time = sec + day*86400 + hour*3600 + minute*60; 
     m_rearmPending = true;
     m_next = 0;
   }
@@ -169,14 +167,14 @@ void TimeSensor::dispatch( void* id ) {
             pd->m_next = period->m_next; break; 
           }
         }
-        s_interactorTable.erase(i);
-        Event ev(it->Inter, TimeEvent);
-        ev.timer_id   = id;
-        ev.timer_data = it->Data;
-        delete period; 
-        delete it;
-        ev.target->handle(ev);       
       }
+      s_interactorTable.erase(i);
+      Event ev(it->Inter, TimeEvent);
+      ev.timer_id   = id;
+      ev.timer_data = it->Data;
+      delete period; 
+      delete it;
+      ev.target->handle(ev);       
     }
   }
 }

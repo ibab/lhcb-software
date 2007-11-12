@@ -15,6 +15,8 @@ static inline void printxy(int x, int y, const char* buff) {  ::gotoxy(x,y);  ::
 static inline void print_char(int x, int y, int c) {  ::gotoxy(x,y); ::putchar(c); }
 static inline size_t term_height() {  return   24; }
 static inline size_t term_width()  {   return 132; }
+#define TERM_WIDTH  (size_t)132
+#define TERM_HEIGHT  (size_t)24
 
 #define NORMAL          0
 #define BOLD            0
@@ -61,7 +63,8 @@ static inline void graphics()       {  }
 static inline void print_char(int x, int y, int c) {  mvaddch(y, x-1, c); }
 static inline size_t term_height() {  return LINES; }
 static inline size_t term_width()  {   return COLS; }
-
+#define TERM_WIDTH  (size_t)COLS
+#define TERM_HEIGHT (size_t)LINES
 
 #define NORMAL          A_NORMAL
 #define BOLD            A_BOLD

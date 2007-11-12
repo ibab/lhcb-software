@@ -9,6 +9,7 @@ Created           : 17-NOV-1989 by Christian Arnault
 #include "UPI/upidef.h"
 #include "UPI/upirem.h"
 #include "UPI/upi_buffer.h"
+#include "AMS/amsdef.h"
 #include "WT/wt_facilities.h"
 #include "WT/wtdef.h"
 #include "SCR/lists.h"
@@ -77,8 +78,8 @@ static UpiBuffer SendBuffer = 0;
 static UpiBuffer GetBuffer = 0;
 static int Hidden = 0;
 
-static char My_name[80] = "";
-static char Server_name[80] = "";
+static char My_name[AMS_NAME_LENGTH] = "";
+static char Server_name[AMS_NAME_LENGTH] = "";
 
 extern System Sys;
 

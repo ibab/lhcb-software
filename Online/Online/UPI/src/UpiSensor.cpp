@@ -5,12 +5,17 @@
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 
+static int s_menuID = 1234;
+
 //----------------------------------------------------------------------------
 UpiSensor& UpiSensor::instance()  {
   static UpiSensor inst;
   return inst;
 }
-
+//----------------------------------------------------------------------------
+int UpiSensor::newID() {
+  return ++s_menuID;
+}
 //----------------------------------------------------------------------------
 UpiSensor::UpiSensor() : Sensor(WT_FACILITY_UPI,"UpiSensor",true) {
   upic_attach_terminal();
@@ -22,14 +27,14 @@ UpiSensor::~UpiSensor()   {
 }
 
 //----------------------------------------------------------------------------
-void UpiSensor::add(Interactor* interactor, long menu) {
+void UpiSensor::add(Interactor* interactor, int menu) {
   Table::iterator i=m_table.find(menu);
   if ( i != m_table.end() ) m_table.erase(i);
   m_table.insert(std::make_pair(menu,interactor));
 }
 
 //----------------------------------------------------------------------------
-void UpiSensor::remove( Interactor* /* interactor */, long menu )   {
+void UpiSensor::remove( Interactor* /* interactor */, int menu )   {
   Table::iterator i=m_table.find(menu);
   if ( i != m_table.end() ) m_table.erase(i);
 }

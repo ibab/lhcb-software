@@ -659,6 +659,11 @@ int upic_key_action (unsigned int /* event */, void*)
     /*      upic_scroll_message (key);  */
     break;
   }
+  /* {
+    char txt[128];
+    sprintf(txt,"You did hit key:%d 0x%02X",key,key);
+    upic_write_message(txt,"");
+    } */
   if (key == SCR::RETURN_KEY)  {
     int menu_id, item_id, param_id, list_index;
     menu_id = m->id;

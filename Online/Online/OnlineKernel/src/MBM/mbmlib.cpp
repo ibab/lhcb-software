@@ -706,11 +706,11 @@ int mbm_cancel_request (BMID bm)   {
 int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   lib_rtl_gbl_t h;
   size_t len = sizeof(BUFFERS)+(MBM_MAX_BUFF-1)*sizeof(BUFFERS::BUFF);
-  int status = lib_rtl_map_section("bm_buffers", len, &h);
+  int status = ::lib_rtl_map_section("bm_buffers", len, &h);
   if( !lib_rtl_is_success(status) && create )  {
-    status = lib_rtl_create_section("bm_buffers", len, &h);
+    status = ::lib_rtl_create_section("bm_buffers", len, &h, true);
     if(!lib_rtl_is_success(status))   {   
-      lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
       return MBM_ERROR;
     }
     BUFFERS* buffs = (BUFFERS*)h->address;

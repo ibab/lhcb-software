@@ -40,7 +40,7 @@ namespace SCR {
           MOVE_LEFT,   // 30   11E
           MOVE_RIGHT,  // 31   12F
 
-          F6,
+          F6,          // 32
           F7,
           F8,
           F9,
@@ -48,7 +48,7 @@ namespace SCR {
           F11,
           F12,
           F13,
-          F14,
+          F14,         // 40
           F15,
           F16,
           F17,
@@ -59,7 +59,7 @@ namespace SCR {
           KPD_MINUS,
           KPD_PERIOD,
 
-          KPD_0,
+          KPD_0,       // 50
           KPD_1,
           KPD_2,
           KPD_3,
@@ -70,7 +70,7 @@ namespace SCR {
           KPD_8,
           KPD_9,
 
-          KPD_ENTER,
+          KPD_ENTER,  // 60
           KPD_PF1,
           KPD_PF2,
           KPD_PF3,
