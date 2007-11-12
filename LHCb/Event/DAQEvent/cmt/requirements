@@ -24,6 +24,7 @@ apply_pattern     reflex_dictionary                            \
 macro DAQEventDict_use_linkopts $(use_linkopts)
 
 # ==================== linker library =======================================
+macro DAQEventLib_dependencies DAQEventObj2Dict
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================

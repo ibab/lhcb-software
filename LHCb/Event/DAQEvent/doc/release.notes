@@ -4,7 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-!================ DAQEvent v7r6p1 2007-11-01 ==========================
+!================ DAQEvent v7r6p1 2007-11-12 ==========================
+! 2007-11-12 - Marco Cattaneo
+ - Add explicit dependency of library on generated header files
+
 ! 2007-10-31 - Olivier Deschamps 	
  - add the possibility to remove L0 banks in bankKiller.cpp
 
