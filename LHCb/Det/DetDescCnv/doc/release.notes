@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!================ DetDescCnv v4r4 2007-11-12 ==================================
 ! 2007-11-09 - Marco Clemencic
  - Implemented the parsing of <map> elements inside conditions (see Det/SQLDDDB
    v3r0).
