@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r8 2007-11-12 ====================
 ! 2007-10-10 - Tomasz Skwarnicki
  - dictionary for TisTos tools
    add new methods to their interfaces to make use in python easier 
