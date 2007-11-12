@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.32 2007-07-20 09:27:40 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.33 2007-11-12 09:48:55 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -26,9 +26,10 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool );
 Rich::SmartIDTool::SmartIDTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : RichToolBase( type, name, parent )
+  : RichToolBase( type, name, parent ), m_hitPhotoCathSide( false )
 {
   declareInterface<ISmartIDTool>(this);
+  declareProperty( "HitOnPhotoCathSide", m_hitPhotoCathSide = false );
 }
 
 //=============================================================================
@@ -70,7 +71,6 @@ StatusCode Rich::SmartIDTool::initialize()
 
   return sc;
 }
-//=============================================================================
 
 //=============================================================================
 // Returns the position of a RichSmartID cluster in global coordinates
@@ -109,7 +109,8 @@ StatusCode
 Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
                                     Gaudi::XYZPoint& detectPoint ) const
 {
-  return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID, detectPoint);
+  return m_photoDetPanels[smartID.rich()][smartID.panel()]->
+    detectionPoint(smartID, detectPoint, m_hitPhotoCathSide);
 }
 
 //=============================================================================
