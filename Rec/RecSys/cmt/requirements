@@ -34,7 +34,7 @@ use NNTools             v1r0    Tr    # Adrian Perieanu
 
 # Tf packages: Track Pattern Recognition
 use TrackSys            v4r11   Tf    # Eduardo Rodrigues
-use PatVelo             v3r0    Tf    # David Hutchcroft
+use PatVelo             v3r1    Tf    # David Hutchcroft
 use PatVeloTT           v3r0    Tf    # Mariusz Witek
 use PatAlgorithms       v3r1    Tf    # Stephanie Hansmann-Menzemer
 use TsaAlgorithms       v3r1    Tf    # Matt Needham
@@ -63,7 +63,7 @@ use RichRecMCTools      v2r13   Rich  # Chris Jones
 use RichRecMonitors     v2r12   Rich  # Chris Jones
 use RichRecQC           v2r14   Rich  # Chris Jones
 use RichRecStereoTools  v1r0    Rich  # Chris Jones
-use RichHLTLocalPID     v1r0    Rich  # Chris Jones
+use RichHLTLocalPID     v1r0p1  Rich  # Chris Jones
 use RichHLTSys          v3r1    Rich  # Chris Jones
 
 # Global reco

@@ -5,19 +5,21 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r1>2007-11-06 RecSys v5r1</A></H1><PRE>
+</PRE><H1><A NAME=v5r1>2007-11-09 RecSys v5r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r1.
 This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
 
 - Packages modified: TrackFitEvent v3r10, TrackProjectors v2r17, TrackTools v3r1,
     TrackExtrapolators v2r15, TrackCheckers v3r2, TrackMCTools v2r14, 
     PatChecker v3r1, TrackSys v4r11, TsaAlgorithms v3r1, PatAlgorithms v3r1,
-    TrackUtils v1r16, TrackFitter v2r21, MuonPIDChecker v2r2
+    TrackUtils v1r16, TrackFitter v2r21, MuonPIDChecker v2r2, PatVelo v3r1,
+    RichHLTLocalPID v1r0p1
 
 - In TrackFitEvent v3r10
   . Adapted trajectories to change in Trajectory interface
   . Added TrackTraj, StateZTraj, CubicStateVectorInterpolationTraj,
           CubicStateInterpolationTraj
+  . Fixed dependencies for building dictionaries
 
 - In TrackProjectors v2r17
   . Adapted to changes in Trajectory interface
@@ -25,19 +27,22 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
 
 - In TrackTools v3r1
   . Add Fast Momentum Tool
+  . Add default values for momentum parametrization in FastMomentumEstimate
+  . Add a missing template<> declaration needed by gcc 4.0 on osx
 
 - In TrackExtrapolators v2r15
   . Bug fixes in TrackLongExtraSelector 
   . Make sure to release tool handle in MasterExtrapolator::finalize
   . Removed instantiation of unused function arguments to get rid of compiler
     warnings
+  . Check status code in finalize method of TrackMasterExtrapolator
 
 - In TrackCheckers v3r2
   . Various updates to TrackCheckerNT and corresponding root macros
 
 - In TrackMCTools v2r14
-  . Add PatDebugTTTruthTool to print truth information when debugging pattern
-    recognition.
+  . Add PatDebugTool and PatDebugTTTruthTool to print truth information when
+    debugging pattern recognition.
 
 - In PatChecker v3r1
   . Put all track locations by default in PatTrack2MCParticle
@@ -75,6 +80,7 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
   . Bug fix in PatMatch
   . Add switch for z position of output state for PatSeeding and PatForward 
     algorithm
+  . Set default values for parameter arrays in PatFwdTool and PatSeedingTool
 
 - In TrackUtils v1r16, PatChecker v3r1
   . Adapt to the new name of Downstream track container
@@ -85,9 +91,16 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
   . Make checkInvertMatrix and CheckPositiveMatrix faster in TrackKalmanFilter 
   . Add possibility to check [safe] or not [faster] in TrackKalmanFilter
 
+- In PatVelo v3r1
+  . Import PatVeloOpenTracking from the old Pat package, adapt to Tf context and
+    improve ghost rate by cleaning tracks sharing 1 R and 1 Phi according to chi2
+
 - In MuonPIDChecker v2r2
   . Protect against divide by zero when zero or few events processed
   . Change some ints to unsigned ints
+
+- In RichHLTLocalPID v1r0p1
+  . Remove unneccessary malloc.h include, to please gcc 4.0 on osx
 
 </PRE><H1><A NAME=v5r0>2007-10-12 RecSys v5r0</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0. Introduces Tf framework
