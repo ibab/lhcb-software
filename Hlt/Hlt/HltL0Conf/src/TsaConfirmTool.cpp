@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.8 2007-11-08 15:47:50 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.9 2007-11-12 15:26:05 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -230,9 +230,8 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
            &&((*it)->lik() > m_likCut) ) {
         LHCb::Track* fitTrack = this->convert(*it);
         outputTracks.push_back( fitTrack );
-        delete *it;
       }
-      
+      delete *it;
     }
     
     //  For those IT stubs that remain, try to extend them into the OT
