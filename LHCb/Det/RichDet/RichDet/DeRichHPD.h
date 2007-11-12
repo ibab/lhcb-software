@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.11 2007-09-13 13:10:54 jpalac Exp $
+ *  $Id: DeRichHPD.h,v 1.12 2007-11-12 09:42:04 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -16,7 +16,6 @@
 // DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
-//#include "DetDesc/TabulatedProperty.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -80,12 +79,21 @@ public:
   }
 
   /**
-   * Get the point on the centre of the HPD window on the inside surface
-   * @return Inside window surface centre point
+   * Get the point on the centre of the HPD window on the inside surface without misalignment
+   * @return Inside window surface centre point without misalignment
    */
   Gaudi::XYZPoint windowCentreInIdeal() const
   {
     return geometry()->toGlobalMatrixNominal() * m_pvWindow->toMother(Gaudi::XYZPoint(0,0,sqrt(m_winInRsq)));
+  }
+
+  /** Get the point on the centre of the HPD window on the inside surface in the mother
+   *  (panel) coodinate system
+   *  @return Inside window surface centre point in panel system
+   */
+  inline const Gaudi::XYZPoint hpdWinInsideCentreInMother() const
+  {
+    return m_windowInsideCentreMother;
   }
 
   /**
@@ -98,15 +106,20 @@ public:
   }
 
   /** @brief Converts a RichSmartID to a point in global coordinates.
-   *  The point is given on the inside of the HPD window, on the photocathode.
+   *  The point can be given either on the inside of the HPD window (photocathode) if
+   *  photoCathodeSide=true or on the outside including refraction correction if
+   *  photoCathodeSide=false
+   *
    *  @param[in]  smartID     The RichSmartID pixel channel ID
    *  @param[out] detectPoint The position in global coordinates
+   *  @param[in]  photoCathodeSide Set to false to include refraction on HPD window
    *  @return StatusCode indicating if the conversion was successful or not
    *  @retval StatusCoe::SUCCESS Conversion was successful
    *  @retval StatusCode::FAILURE Conversion failed
    */
   StatusCode detectionPoint ( const LHCb::RichSmartID smartID,
-                              Gaudi::XYZPoint& detectPoint ) const;
+                              Gaudi::XYZPoint& detectPoint,
+                              bool photoCathodeSide ) const;
 
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
@@ -161,6 +174,57 @@ public:
     return Gaudi::XYZPoint( xOnSilicon(smartID), yOnSilicon(smartID), 0 );
   }
 
+  /** Convert a point from the HPD panel coordinate system to the HPD quartz
+   *  window coordinate system
+   *  @return The position on the HPD quartz window
+   */
+  inline Gaudi::XYZPoint fromPanelToHPDWindow ( const Gaudi::XYZPoint& pWin ) const
+  {
+    return Gaudi::XYZPoint( m_fromPanelToWindow * pWin );
+  }
+
+  /** Convert a vector from the HPD panel coordinate system to the HPD quartz
+   *  window coordinate system
+   *  @return The vector in the HPD quartz window system
+   */
+  inline Gaudi::XYZVector fromPanelToHPDWindow ( const Gaudi::XYZVector& vWin ) const
+  {
+    return Gaudi::XYZVector( m_fromPanelToWindow * vWin );
+  }
+
+  /** Get the tranformation from the HPD panel to the kapton coordinate system
+   *  @return The panel to kapton tranform
+   */
+  inline const Gaudi::Transform3D& fromPanelToKapton ( ) const
+  {
+    return m_fromPanelToKapton;
+  }
+
+  /** Get the tranformation from the HPD quartz window to the HPD
+   *  @return The HPD window to HPD tranformation
+   */
+  inline const Gaudi::Transform3D& fromHPDWindowToHPD ( ) const
+  {
+    return m_fromWindowToHPD;
+  }
+
+  /** Convert a point from the HPD coordinate system to the panel coordinate
+   *  system including misalignment
+   *  @return The position in the HPD panel
+   */
+  inline Gaudi::XYZPoint fromHPDToPanel ( const Gaudi::XYZPoint& pInHPD ) const
+  {
+    return Gaudi::XYZPoint( m_fromHPDToPanel * pInHPD );
+  }
+
+  /** Get the solid for the HPD window (for intersection purposes)
+   *  @return The quartz window solid
+   */
+  inline const ISolid*  HPDWindowSolid ( ) const
+  {
+    return m_windowSolid;
+  }
+
 private: // functions
 
   /// Clean up interpolators
@@ -192,11 +256,14 @@ private: // functions
   /// Get parameters from Rich1
   StatusCode getParameters();
 
+  /// Update the locally stored transformations
+  StatusCode updateTransformations();
+
   /// Update the magnification abnd demagnification information
   StatusCode updateDemagProperties();
 
-  StatusCode magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const;
-  StatusCode magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint ) const;
+  StatusCode magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  StatusCode magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
   //void init_mm( );
   //int number_range( int from, int to );
@@ -214,17 +281,16 @@ private: // data
   const IDetectorElement* m_deSiSensor;  ///< The silicon sensor detector element
 
   const IPVolume* m_pvWindow;      ///< The pv for the HPD quartz window
+  const ISolid* m_windowSolid;     ///< The HPD window solid
 
   std::string m_name;              ///< The name of this HPD
-  int m_number;                    ///< HPD number (copy number)
+  int m_number;                    ///< HPD number (should be the same as copy number)
 
   double m_winInRsq;          ///< Inner radius of HPD window square
   double m_winOutRsq;         ///< Outter radius of HPD window square
 
   /// The active HPD window radius (photocathode coverage)
   double m_activeRadius;
-
-  Gaudi::Transform3D m_fromWindowToGlobal; ///< window to global coord system transform
 
   double m_pixelSize;           ///< The pixel size on the silicon sensor
   double m_siliconHalfLengthX;  ///< Si sensor half size in x
@@ -242,17 +308,24 @@ private: // data
   /// Demagnification parameters condition
   SmartRef<Condition> m_demagCond;
 
-  bool m_firstUpdate; ///< Flag to identify first UMS update
+  unsigned int m_firstUpdates; ///< Flag to identify first UMS update
 
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
-
-  /// Cache the local matrix for the sensor, for speed reasons
-  Gaudi::Transform3D m_localMatrixInv;
 
   //int    rgiState[2+55];
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
   double m_LongitudinalBField ;
+
+  // Cached parameters for speed reasons.
+  Gaudi::Transform3D m_SiSensorToHPDMatrix; ///< silicon to HPD transform
+  Gaudi::Transform3D m_fromWindowToGlobal; ///< window to global coord system transform
+  Gaudi::Transform3D m_fromPanelToWindow; ///< HPD panel to HPD window coord system transform
+  Gaudi::Transform3D m_fromPanelToKapton; ///< HPD panel to kapton coord system transform
+  Gaudi::Transform3D m_fromWindowToHPD; ///< window to global coord system transform
+  Gaudi::Transform3D m_fromHPDToPanel; ///< HPD to HPD Panel transform
+  /// The centre of the HPD window (inside) in the mother (panel) coordinate system
+  Gaudi::XYZPoint m_windowInsideCentreMother;
 
 };
 
@@ -260,16 +333,16 @@ private: // data
 // Converts a RichSmartID to a point in global coordinates.
 //=========================================================================
 inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
-                                              Gaudi::XYZPoint& detectPoint ) const
+                                              Gaudi::XYZPoint& detectPoint,
+                                              bool photoCathodeSide ) const
 {
   // convert pixel number to silicon coordinates
   // and transform the point to get the misalignment of the Si sensor
-  //detectPoint = m_deSiSensor->geometry()->localMatrix().Inverse()*pointOnSilicon(smartID);
-  detectPoint = m_localMatrixInv * pointOnSilicon(smartID);
+  detectPoint = m_SiSensorToHPDMatrix * pointOnSilicon(smartID);
   detectPoint.SetZ(0.0);
   return ( m_UseHpdMagDistortions ?
-           magnifyToGlobal_new( detectPoint ) :  // M.Musy 07/09/2006
-           magnifyToGlobal_old( detectPoint ) ); // old demag parameters
+           magnifyToGlobal_new( detectPoint, photoCathodeSide ) :  // M.Musy 07/09/2006
+           magnifyToGlobal_old( detectPoint, photoCathodeSide ) ); // old demag parameters
 }
 
 //=========================================================================

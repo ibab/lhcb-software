@@ -4,6 +4,13 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-11-09 - "Antonis Papanestis"
+ - Cleaned up DeRichHPD and DeRichHPDPanel and made them fully compatible
+   with the alignment framework.
+   Method detectionPoint now has an option to chose between the
+   photoCathode side, or the outside of the window (including refraction
+   correction).
+
 !======================== RichDet v10r7 2007-09-17 ========================
 ! 2007-09-13 - Juan PALACIOS
  - Changes to adapt to new IGeometryInfo interface. 
