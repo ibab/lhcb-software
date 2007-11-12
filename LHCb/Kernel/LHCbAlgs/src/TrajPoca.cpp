@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.6 2007-10-16 11:53:20 wouter Exp $
+// $Id: TrajPoca.cpp,v 1.7 2007-11-12 14:55:36 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -127,7 +127,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
           // between'.
           mu1 = prevflt1 + 0.5 * step1 ;
           if( restrictRange1 ) restrictToRange(mu1,traj1) ;
-          mu1 = prevflt2 + 0.5 * step2 ;
+          mu2 = prevflt2 + 0.5 * step2 ;
           if( restrictRange2 ) restrictToRange(mu2,traj2) ;
           newPos1    = traj1.position( mu1 );
           newPos2    = traj2.position( mu2 );
