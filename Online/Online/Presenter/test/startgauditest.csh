@@ -15,14 +15,9 @@ echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 #source $LHCBSCRIPTS/lhcbsetup.csh 
 #source $LHCBSCRIPTS/CMT.csh
 
-#cd ~/w0/cmtuser
 #setenv CMTPATH `pwd`
 #setenv CMTCONFIG $CMTDEB
 
-#OnlineEnv v2r0
-
-
-#source ~/w0/cmtuser/Online/GaudiOnline/v2r0/cmt/setup.csh 
 #echo 'gaudisvcshr  ' $GaudiSvcShr
 
 #$ONLINEKERNELROOT/$CMTCONFIG/gentest.exe $GaudiOnlineShr.so OnlineDeamon -dll=libOnlineKernel.so -call=rtl_test_main

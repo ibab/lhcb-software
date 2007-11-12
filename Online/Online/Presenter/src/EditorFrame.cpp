@@ -407,7 +407,7 @@ void EditorFrame::refreshDimSvcListTree()
                   new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
                     Form("The DIM servicename\n%s\n does not appear to follow the" \
                       "convention\nPlease use the following format:\n" \
-                      "HnD/UTGID/Algorithmname/Histogramname\n where the UTGID " \
+                      "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
                       "normally has the following format:\n node00101_taskname_1 " \
                       "or simply taskname, without \"_\"", dimService),
                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
@@ -548,13 +548,13 @@ void EditorFrame::addDimSvcToHistoDB()
         m_histogramDB->declareHistByServiceName(
           std::string(*static_cast<TString*>(currentNode->GetUserData())));
       }
-    } catch (SQLException sqlException) {
+    } catch (std::string Exc) {
       // TODO: add error logging backend
-      if (m_verbosity >= Verbose) { std::cout << sqlException.getMessage(); }
+      if (m_verbosity >= Verbose) { std::cout << Exc; }
 
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
                    Form("OnlineHistDB server:\n\n%s\n",
-                        sqlException.getMessage().c_str()),
+                        Exc.c_str()),
                    kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
     }
     currentNode = currentNode->GetNextSibling();
@@ -562,16 +562,16 @@ void EditorFrame::addDimSvcToHistoDB()
   try {
     m_histogramDB = m_mainFrame->getDatabase();
     if (m_histogramDB) {
-      if (m_histogramDB->sendHistBuffer()) { m_histogramDB->commit(); }
+      m_histogramDB->commit(); 
       refreshHistoDBListTree();
     }
-  } catch (SQLException sqlException) {
+  } catch (std::string Exc) {
     // TODO: add error logging backend
-    if (m_verbosity >= Verbose) { std::cout << sqlException.getMessage(); }
+    if (m_verbosity >= Verbose) { std::cout << Exc; }
 
     new TGMsgBox(fClient->GetRoot(), this, "Database Error",
                  Form("OnlineHistDB server:\n\n%s\n",
-                      sqlException.getMessage().c_str()),
+                      Exc.c_str()),
                  kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   }
   list->Delete();
@@ -634,7 +634,7 @@ void EditorFrame::addDimSvcToPage()
     int paintFillStyle = m_mainFrame->m_bulkHistoOptions.m_fillStyle;
     int paintLineStyle = m_mainFrame->m_bulkHistoOptions.m_lineStyle;
     int paintLineColour = m_mainFrame->m_bulkHistoOptions.m_lineColour;
-    int paintStats = m_mainFrame->m_bulkHistoOptions.m_statsOption;
+    bool paintStats = m_mainFrame->m_bulkHistoOptions.m_statsOption;
     dbRootHist->rootHistogram->SetXTitle(paintDrawXLabel.Data());
     dbRootHist->rootHistogram->SetYTitle(paintDrawYLabel.Data());
     dbRootHist->rootHistogram->SetLineWidth(paintLineWidth);
@@ -723,13 +723,13 @@ void EditorFrame::addDbHistoToPage()
       delete list;
       list = NULL;
     }
-  } catch (SQLException sqlException) {
+  } catch (std::string Exc) {
     // TODO: add error logging backend
-    if (m_verbosity >= Verbose) { std::cout << sqlException.getMessage(); }
+    if (m_verbosity >= Verbose) { std::cout << Exc; }
 
     new TGMsgBox(fClient->GetRoot(), this, "Database Error",
                  Form("OnlineHistDB server:\n\n%s\n",
-                       sqlException.getMessage().c_str()),
+                       Exc.c_str()),
                  kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   }
 
@@ -835,7 +835,7 @@ void EditorFrame::setHistoPropertiesInDB()
         int paintFillStyle = m_mainFrame->m_bulkHistoOptions.m_fillStyle;
         int paintLineStyle = m_mainFrame->m_bulkHistoOptions.m_lineStyle;
         int paintLineColour = m_mainFrame->m_bulkHistoOptions.m_lineColour;
-        int paintStats = m_mainFrame->m_bulkHistoOptions.m_statsOption;
+        bool paintStats = m_mainFrame->m_bulkHistoOptions.m_statsOption;
 
         if (H1D == onlineHistogramToSet->hstype() ||
             P1D == onlineHistogramToSet->hstype() ||
@@ -848,25 +848,27 @@ void EditorFrame::setHistoPropertiesInDB()
           m_drawOption + TString(" ") +
           m_mainFrame->m_bulkHistoOptions.m_genericRootDrawOption).Data();
 
-        onlineHistogramToSet->setHistDisplayOption("LABEL_X",
-          &paintDrawXLabel);
-        onlineHistogramToSet->setHistDisplayOption("LABEL_Y",
-          &paintDrawYLabel);
-        onlineHistogramToSet->setHistDisplayOption("FILLSTYLE",
-          &paintFillStyle);
-        onlineHistogramToSet->setHistDisplayOption("FILLCOLOR",
-          &paintFillColour);
-        onlineHistogramToSet->setHistDisplayOption("LINESTYLE",
-          &paintLineStyle);
-        onlineHistogramToSet->setHistDisplayOption("LINECOLOR",
-          &paintLineColour);
-        onlineHistogramToSet->setHistDisplayOption("LINEWIDTH",
-          &paintLineWidth);
-        onlineHistogramToSet->setHistDisplayOption("STATS",
-          &paintStats);
-        onlineHistogramToSet->setHistDisplayOption("DRAWOPTS",
-          &paintDrawOption);
+        onlineHistogramToSet->setDisplayOption("LABEL_X",
+                                                   &paintDrawXLabel);
+        onlineHistogramToSet->setDisplayOption("LABEL_Y",
+                                                   &paintDrawYLabel);
+        onlineHistogramToSet->setDisplayOption("FILLSTYLE",
+                                                   &paintFillStyle);
+        onlineHistogramToSet->setDisplayOption("FILLCOLOR",
+                                                   &paintFillColour);
+        onlineHistogramToSet->setDisplayOption("LINESTYLE",
+                                                   &paintLineStyle);
+        onlineHistogramToSet->setDisplayOption("LINECOLOR",
+                                                   &paintLineColour);
+        onlineHistogramToSet->setDisplayOption("LINEWIDTH",
+                                                   &paintLineWidth);
+        onlineHistogramToSet->setDisplayOption("STATS",
+                                                   &paintStats);
+        onlineHistogramToSet->setDisplayOption("DRAWOPTS",
+                                                   &paintDrawOption);
 
+        onlineHistogramToSet->saveDisplayOptions();
+        
         currentNode = currentNode->GetNextSibling();
       }
       list->Delete();
@@ -874,14 +876,14 @@ void EditorFrame::setHistoPropertiesInDB()
       list = NULL;
       m_histogramDB->commit();
     }
-  } catch (SQLException sqlException) {
+  } catch (std::string Exc) {
     // TODO: add error logging backend
-    if (m_verbosity >= Verbose) { std::cout << sqlException.getMessage(); }
+    if (m_verbosity >= Verbose) { std::cout << Exc; }
 
     new TGMsgBox(fClient->GetRoot(), this, "Database Error",
         Form("OnlineHistDB server:\n\n%s\n",
-             sqlException.getMessage().c_str()),
-        kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+             Exc.c_str()),
+             kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   }
   refreshHistoDBListTree();
 }
@@ -914,13 +916,13 @@ void EditorFrame::deleteSelectedHistoFromDB()
       list = NULL;
       m_histogramDB->commit();
     }
-  } catch (SQLException sqlException) {
+  } catch (std::string Exc) {
     // TODO: add error logging backend
-    if (m_verbosity >= Verbose) { std::cout << sqlException.getMessage(); }
+    if (m_verbosity >= Verbose) { std::cout << Exc; }
     new TGMsgBox(fClient->GetRoot(), this, "Database Error",
                  Form("OnlineHistDB server:\n\n%s\n",
-                      sqlException.getMessage().c_str()),
-                kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+                      Exc.c_str()),
+                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   }
   refreshHistoDBListTree();
 }
@@ -939,10 +941,10 @@ void EditorFrame::loadSelectedPageFromDB()
       std::string path = std::string(*static_cast<TString*>(
                                      node->GetUserData()));
       try {
-        float xlow = 0.0;
-        float ylow = 0.0;
-        float xup = 0.0;
-        float yup = 0.0;
+        double xlow = 0.0;
+        double ylow = 0.0;
+        double xup = 0.0;
+        double yup = 0.0;
 
         clearHistosOnPage();
         OnlineHistPage* page = m_histogramDB->getPage(path);
@@ -982,9 +984,9 @@ void EditorFrame::loadSelectedPageFromDB()
           }
         }
 
-      } catch (SQLException sqlException) {
+      } catch (std::string Exc) {
         // TODO: add error logging backend - MsgStream?
-        std::string m_message = sqlException.getMessage();
+        std::string m_message = Exc;
         m_mainFrame->setStatusBarText(m_message.c_str(), 0);
         if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 
@@ -1022,9 +1024,9 @@ void EditorFrame::deleteSelectedPageFromDB()
           m_histogramDB->commit();
           refreshPagesDBListTree();
         }
-      } catch (SQLException sqlException) {
+      } catch (std::string Exc) {
         // TODO: add error logging backend - MsgStream?
-        std::string m_message = sqlException.getMessage();
+        std::string m_message = Exc;
         m_mainFrame->setStatusBarText(m_message.c_str(), 0);
         if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 
@@ -1061,9 +1063,9 @@ void EditorFrame::deleteSelectedFolderFromDB()
         m_histogramDB->removePageFolder(folder);
         m_histogramDB->commit();
         refreshPagesDBListTree();
-      } catch (SQLException sqlException) {
+      } catch (std::string Exc) {
         // TODO: add error logging backend - MsgStream?
-        std::string m_message = sqlException.getMessage();
+        std::string m_message = Exc;
         m_mainFrame->setStatusBarText(m_message.c_str(), 0);
         if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 
@@ -1083,7 +1085,6 @@ void EditorFrame::setHistoParFromDB(TH1* histogram,
 }
 bool EditorFrame::paintHist(DbRootHist* histogram)
 {
-
   //  xlow [0, 1] is the position of the bottom left point of the pad
   //             expressed in the mother pad reference system
   //  ylow [0, 1] is the Y position of this point.
@@ -1091,10 +1092,10 @@ bool EditorFrame::paintHist(DbRootHist* histogram)
   //             expressed in the mother pad reference system
   //  yup  [0, 1] is the Y position of this point.
 
-  float xlow = 0.1 + 0.01*m_histoPadOffset;
-  float ylow = xlow;
-  float xup = 0.5 + 0.01*m_histoPadOffset;
-  float yup = xup;
+  double xlow = 0.1 + 0.01*m_histoPadOffset;
+  double ylow = xlow;
+  double xup = 0.5 + 0.01*m_histoPadOffset;
+  double yup = xup;
 
   if (0.5 == xlow) {
     m_histoPadOffset = 0;
@@ -1123,9 +1124,8 @@ bool EditorFrame::paintHist(DbRootHist* histogram)
 }
 void EditorFrame::autoCanvasLayout()
 {
-
-  float xmargin = 0.01;
-  float ymargin = 0.01;
+  double xmargin = 0.01;
+  double ymargin = 0.01;
   int nx = (int) ceil(sqrt((double)m_DbHistosOnPage.size()));
   int ny = nx;
 

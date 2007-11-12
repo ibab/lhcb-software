@@ -54,7 +54,7 @@ void HistoPropDialog::ok()
     dynamic_cast<TGTextLBEntry*>(m_genericRootDrawOptionComboBox->
     GetSelectedEntry())->GetText()->GetString();
   m_mainFrame->m_bulkHistoOptions.m_statsOption =
-    (int) m_statOptionComboBox->GetSelected();
+    (bool) m_statOptionComboBox->GetSelected();
   m_mainFrame->m_bulkHistoOptions.m_xLabel =
     m_xAxisLabelTextEntry->GetDisplayText();
   m_mainFrame->m_bulkHistoOptions.m_yLabel =
