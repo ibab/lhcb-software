@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.3 2007-11-12 15:14:07 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -48,14 +48,15 @@ namespace Tf {
       /// constructor
       PatVeloLocalPoint(PatVeloRHit *rHit, PatVeloPhiHit *phiHit,double phi):
 	m_rHit(rHit), m_phiHit(phiHit),
-	m_pos(rHit->hit()->coord()*cos(phi),rHit->hit()->coord()*sin(phi),rHit->z())
+	m_pos(rHit->hit()->coordHalfBox()*cos(phi),
+	      rHit->hit()->coordHalfBox()*sin(phi),rHit->z())
       {      
 	m_dx = sqrt(rHit->hit()->variance()*gsl_pow_2(cos(phi)) + 
 		    phiHit->hit()->variance()*
-		    gsl_pow_2(rHit->hit()->coord()*sin(phi)));
+		    gsl_pow_2(rHit->hit()->coordHalfBox()*sin(phi)));
 	m_dy = sqrt(rHit->hit()->variance()*gsl_pow_2(sin(phi)) + 
 		    phiHit->hit()->variance() * 
-		    gsl_pow_2(rHit->hit()->coord()*cos(phi)));
+		    gsl_pow_2(rHit->hit()->coordHalfBox()*cos(phi)));
       };
       /// check if either cluster is already used elsewhere
       inline bool used() const { 

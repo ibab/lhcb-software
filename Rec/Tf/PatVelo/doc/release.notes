@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-11-12 - David Hutchcroft
+ - Fix to PatVeloGeneralTracking to improve hit efficiency when detector is open
+
 !========================== PatVelo v3r1 2007-11-09 ==========================
 ! 2007-11-09 - Olivier Callot
  - Import PatVeloOpenTracking from the old Pat package, adapt to Tf context.
