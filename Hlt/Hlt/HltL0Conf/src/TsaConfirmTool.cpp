@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.9 2007-11-12 15:26:05 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.10 2007-11-12 15:55:42 snies Exp $
 // Include files 
 
 // from Gaudi
@@ -248,6 +248,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
           LHCb::Track* fitTrack = this->convert(*itEx);
           outputTracks.push_back( fitTrack );
         }
+       delete *itEx;
       }
     }
 
