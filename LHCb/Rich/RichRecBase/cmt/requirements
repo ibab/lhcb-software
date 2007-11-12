@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.62 2007-11-05 16:04:48 cattanem Exp $
+# $Id: requirements,v 1.63 2007-11-12 16:47:21 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
@@ -35,6 +35,7 @@ apply_pattern install_more_includes more=RichRecBase offset=Event
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
 apply_pattern linker_library    library=RichRecBase
+macro RichRecBase_dependencies RichRecBase_CommonObj2Doth
 
 # =============== LCG Dictionaries ============================================
 apply_pattern reflex_dictionary                                         \

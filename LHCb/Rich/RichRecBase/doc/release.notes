@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!===================== RichRecBase v3r8 2007-11-05 =======================
+!===================== RichRecBase v3r8 2007-11-12 =======================
+! 2007-11-12 - Marco Cattaneo
+ - Add explicit dependency of library on generated includes
+
 ! 2007-11-05 - Marco Cattaneo
  - Adapt to change of track type from KsTrack to Downstream
 
