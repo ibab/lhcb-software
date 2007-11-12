@@ -14,12 +14,12 @@ PANEL,-1 -1 700 349 N "_3DFace" 1
   if ( isDollarDefined(\"$1\") )  {
     m_sliceName.text = $1;
     //StreamStatusDisplay_connectTasksTable(m_sliceName.text);
-    StreamStatusDisplay_startTasksTable();
+    StreamStatusDisplay_startTasksTable(true);
   }
   else if ( m_sliceName.itemCount>0 )   {
     m_sliceName.selectedPos = 1;
     //StreamStatusDisplay_connectTasksTable(m_sliceName.text);  
-    StreamStatusDisplay_startTasksTable();
+    StreamStatusDisplay_startTasksTable(true);
   }
 }
 " 0
@@ -27,7 +27,9 @@ PANEL,-1 -1 700 349 N "_3DFace" 1
 ""0  1
 E "#uses \"StreamStatusDisplay.cpp\"
 //string m_dispDpName = \"\";
-" 0
+void update()  {
+  StreamStatusDisplay_UpdateDisplay();
+}" 0
  2
 "CBRef" "1"
 "EClose" E
@@ -94,7 +96,7 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 272 3 423 19
 0 2 2 "0s" 0 0 0 64 0 0  272 3 1
 1
-LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-12-*-100-100-*-*-iso8859-1|-12,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 4 time
@@ -111,7 +113,7 @@ LANG:1 0
 
 0
 1
-LANG:1 83 -*-Sans-*-r-normal-*-*-100-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
 0 ""
  528 -2 551 26
 1
@@ -142,7 +144,7 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 434 3 512 20
 0 2 2 "0s" 0 0 0 64 0 0  434 3 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 4 incr
@@ -162,7 +164,7 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 550 5 690 25
 0 2 2 "0s" 0 0 0 64 0 0  550 5 1
 1
-LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-*-80-100-100-*-*-iso8859-1|-12,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-12-*-100-100-*-*-iso8859-1|-12,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 13 Current Slice

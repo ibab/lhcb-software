@@ -30,7 +30,7 @@ void ctrlUtils_setListItems(string shape_name, dyn_string values)  {
 }
 //=============================================================================
 dyn_string ctrlUtils_getStrings(string dp, string type)  {
-  StreamControl_trace("ctrlUtils_getStrings:"+dp+" ["+type+"]");
+  ctrlUtils_trace("ctrlUtils_getStrings:"+dp+" ["+type+"]");
   dyn_string items = dpNames(dp,type);
   dyn_string values, result;
   int res = dpGet(items,values);

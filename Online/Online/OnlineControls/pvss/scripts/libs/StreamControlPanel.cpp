@@ -678,7 +678,7 @@ bool StreamControlPanel_showInfrastructure(string name)  {
   return ctrlUtils_checkErrors(res);
 }
 //=============================================================================
-string StreamControlPanel_getPartition(string stream,string name)  {
+string StreamControlPanel_getPartition(string stream,string name,int dp_type=DPSUB_DP)  {
   StreamControl_trace("StreamControlPanel_getPartition:"+stream+" Name:"+name);
   dyn_string items = dpNames(stream+"_Slice*.Name","StreamPartition");
   if ( dynlen(items)>0 ) {
@@ -687,7 +687,7 @@ string StreamControlPanel_getPartition(string stream,string name)  {
     if ( 0 == res )  {
       for(int i=1; i<=dynlen(values); i++) {
 	if ( name == values[i] )  {
-	  string dp = dpSubStr(items[i],DPSUB_DP);
+	  string dp = dpSubStr(items[i],dp_type);
 	  return dp;
 	}
       }

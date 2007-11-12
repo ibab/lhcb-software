@@ -5,6 +5,7 @@ string m_dispDpName = "";
 void StreamStatusDisplay_install() {
   dyn_dyn_string names;
   dyn_dyn_int types;
+  ctrlUtils_trace("StreamStatusDisplay_install> Installing datapoint types...");
   names[1]  = makeDynString ("StreamDisplayData","","","");
   names[2]  = makeDynString ("","Tasks","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
@@ -18,9 +19,11 @@ void StreamStatusDisplay_install() {
     if ( !dpExists(dp) ) dpCreate(dp,"StreamDisplayData");
   }
   // Display Server
+  ctrlUtils_trace("StreamStatusDisplay_install> Installing display server...");
   ctrlUtils_installPythonManager(51,"PVSS00DataflowMon","../python/Online/Streaming/DisplayServer.py");
   // Display itslf
-  fwInstallation_addManager("PVSS00ui","never", 30, 3, 3, "-p StreamControl/DataflowStatus.pnl -iconBar -menuBar");
+  ctrlUtils_trace("StreamStatusDisplay_install> Installing display monitor...");
+  fwInstallation_addManager("PVSS00ui","manual", 30, 3, 3, "-p StreamControl/DataflowStatus.pnl -iconBar -menuBar");
 }
 //=============================================================================
 int StreamStatusDisplay_uninstall()  {
@@ -65,9 +68,9 @@ void StreamStatusDisplay_connectTasksTable(string slice)  {
   }
 }
 //=============================================================================
-void StreamStatusDisplay_startTasksTable()  {
+void StreamStatusDisplay_startTasksTable(bool runIt)  {
   StreamStatusDisplay_initTasksTable();
-  while(1)  {
+  while(runIt)  {
     StreamStatusDisplay_UpdateDisplay();
     delay(2);
   }
@@ -124,8 +127,9 @@ void StreamStatusDisplay_CheckDisplay(string dp, dyn_string values)  {
     m_table.adjustColumn(0);
     return;
   }
-  //m_table.visible = 0;
   m_timeField.text = formatTime("%d %b %Y %H:%M:%S",getCurrentTime());
+  m_table.visible = 0;
+  //m_table.stop(TRUE);
   for(int j=1, n=dynlen(values); j<=n; ++j )  {
     items = strsplit(values[j],"#");
     set = items[3];
@@ -236,12 +240,10 @@ void StreamStatusDisplay_CheckDisplay(string dp, dyn_string values)  {
     StreamStatusDisplay_SetCellColors(nLine,cell_type,cols);
     ++nLine;
   }
-  if ( cnt > nLine )  m_table.deleteLinesN(nLine-1,cnt-nLine);
-  for(int j=0,n=dynlen(cols); j<n; ++j)  {
-    //m_table.adjustColumn(j);
-  }
+  if ( cnt > nLine ) m_table.deleteLinesN(nLine-1,cnt-nLine);
   //m_table.lineVisible(0);
-  //m_table.visible = 1;
+  m_table.visible = 1;
+  //m_table.stop(FALSE);
 }
 //=============================================================================
 void StreamStatusDisplay_SetCellColors(int nLine,int cell_type,dyn_string cols)  {

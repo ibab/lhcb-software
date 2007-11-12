@@ -130,6 +130,25 @@ class FSMmanip:
   # ===========================================================================
   def _commitFSM(self, dpMap, action):
     dpv = PVSS.DataPointVector()
+    length = 0
+    for i in dpMap.keys():
+      vals = ''
+      for j in dpMap[i]: vals = vals+j.upper()+'|'
+      if len(vals)>0:
+        dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
+        dpv.back().data = action+'/DEVICES(S)='+vals[:-1]
+        if debug: log('%-12s %s'%(action,dpv.back().data))
+        log('%s>>>>>>> %-12s %s'%(i,action,dpv.back().data))
+    self.writer.add(dpv)
+    length = self.writer.length()
+    if not self.writer.execute():
+      log(self.name+'> PVSS commit failed! [%d datapoints]'%(length,),timestamp=1)
+      return None
+    return self
+ 
+  # ===========================================================================
+  def _commitFSM_OLD(self, dpMap, action):
+    dpv = PVSS.DataPointVector()
     count = 0
     commit = 0
     length = 0
@@ -151,7 +170,6 @@ class FSMmanip:
       commit = commit + 1
       dpv.clear()
     return self
- 
   # ===========================================================================
   def addNodeObject(self,name):
     self.enabled.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.mode.enabled')))

@@ -1,10 +1,13 @@
 V 10
 1
 LANG:1 19 Dataflow FSM Status
-PANEL,-1 -1 700 739 N "_3DFace" 0
+PANEL,-1 -1 700 734 N "_3DFace" 0
 E E E E E 1 -1 -1 0  0 0
 ""0  1
-E E 2
+E "#uses \"ctrlUtils.cpp\"
+#uses \"StreamControlPanel.cpp\"
+" 0
+ 2
 "CBRef" "0"
 "EClose" E
 ""
@@ -15,7 +18,7 @@ LANG:1 0
 13 0
 "m_close"
 ""
-1 610 710 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 605 707 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 0 0 0 0 0 0
 E E E
@@ -25,9 +28,9 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 608 708 692 732
+ 603 705 687 729
 
 T 
 1
@@ -39,12 +42,28 @@ LANG:1 5 Close
  E E "main()    {
   m_install.visible = 0;
   m_uninstall.visible = 0;
-  dyn_string params = makeDynString(\"$1:STORAGE:Storage_Slice00\");
+  string pname = \"LHCb\";
+  dyn_string runinfos = dpNames(\"*:*_RunInfo\",\"RunInfo\");
+  ctrlUtils_setListItems(\"m_runInfoSelector\",runinfos);
+  DebugN(runinfos);
+  if ( dynlen(runinfos)>0 ) m_runInfoSelector.selectedPos(1);
+  dpGet(runinfos[1]+\".general.partName\",pname);
+  string stor_slice = StreamControlPanel_getPartition(\"STORAGE:Storage\",pname,DPSUB_SYS_DP);
+  string mon_slice  = StreamControlPanel_getPartition(\"MONITORING:Monitoring\",pname,DPSUB_SYS_DP);
+  DebugN(\"Slices: Storage=\"+stor_slice+\" Monitoring:\"+mon_slice);
   int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Storage\",
-              params,0,0,0,1,1);
-  params = makeDynString(\"$1:MONITORING:Monitoring_Slice00\");
+            makeDynString(\"$1:\"+stor_slice),0,0,0,1,1);
   int res = addSymbol(myModuleName(), myPanelName(), \"StreamControl/StatusDisplay\", \"Monitoring\",
-              params,0,350,0,1,1);
+            makeDynString(\"$1:\"+mon_slice),0,350,0,1,1);
+/*
+  delay(1);
+  while(1)  {
+    getShape(\"Storage\").update();
+    getShape(\"Monitoring\").update();
+    DebugN(\"Sleep.....\");
+    delay(2);
+  }
+*/
 }
 " 0
 
@@ -61,7 +80,7 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  18 708 102 732
 
@@ -86,7 +105,7 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  108 708 192 732
 
@@ -119,7 +138,7 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  198 708 282 732
 
@@ -139,6 +158,57 @@ LANG:1 9 Uninstall
 }
 " 0
 
+22 5
+"m_runInfoSelector"
+""
+1 349 710 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 347 708 582 731
+0
+
+E
+"main()      {
+  dpGet(m_runInfoSelector.text+\".general.partName\",pname);
+  string stor_slice = StreamControlPanel_getPartition(\"STORAGE:Storage\",pname,DPSUB_SYS_DP);
+  string mon_slice  = StreamControlPanel_getPartition(\"MONITORING:Monitoring\",pname,DPSUB_SYS_DP);
+  DebugN(\"Changeing slices to partition:\"+pname+\" Storage=\"+stor_slice+\" Monitoring:\"+mon_slice);
+  Storage.m_sliceName.text = stor_slice;
+  Monitoring.m_sliceName.text = mon_slice;
+}
+" 0
+
+E
+ 1 0
+2 6
+"PRIMITIVE_TEXT1"
+""
+1 291 711 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 291 711 345 726
+0 2 2 "0s" 0 0 0 64 0 0  291 711 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 8 RunInfo:
 0
 LAYER, 1 
 1

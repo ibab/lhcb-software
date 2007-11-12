@@ -2,15 +2,15 @@ package OnlineControls
 version v1r0
 
 branches  cmt doc
-use PVSSInterface v* Online
-use PyDIM         v* Online
+use PVSSInterface v* Online -no_auto_imports
+use PyDIM         v* Online -no_auto_imports
+
 
 path_remove  PYTHONPATH "/OnlineControls/" WIN32 "\OnlineControls\"
 path_prepend PYTHONPATH "$(ONLINECONTROLSROOT)/python"
 set          PYTHONHOME "$(Python_home)"
-# set          PVSS_II    '/localdisk/pvss/LBECS/config/config' 
-# set          PVSS_II    '/localdisk/pvss/STORAGE/config/config' 
 
 private
 use RELAX        v* LCG_Interfaces -no_auto_imports
-use UPI          v* Online         -no_auto_imports
+use UPI          v* Online -no_auto_imports
+use UPIR         v* Online -no_auto_imports
