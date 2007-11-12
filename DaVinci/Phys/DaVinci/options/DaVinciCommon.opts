@@ -20,7 +20,6 @@
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 // Profiling
-#pragma print on
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = false ;
