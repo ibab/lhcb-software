@@ -2,10 +2,10 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v23r10 2007-11-01 =====================
-! 2007-11-01 - Marco Cattaneo
- - Use DAQEvent v7r6p1, L0Event v16r6, PhysEvent v11r4, RecEvent v2r7, 
-       TrackEvent v4r8
+!======================== EventSys v23r10 2007-11-09 =====================
+! 2007-11-09 - Marco Cattaneo
+ - Use DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, PhysEvent v11r4,
+       RecEvent v2r7, TrackEvent v4r8
 
 !======================== EventSys v23r9 2007-10-05 ======================
 ! 2007-10-05 - Marco Cattaneo
