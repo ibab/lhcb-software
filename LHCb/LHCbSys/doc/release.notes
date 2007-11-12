@@ -5,28 +5,32 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r1>2007-11-07 LHCbSys v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2007-11-09 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - Packages added:    L0Interfaces v1r0 - Interfaces for L0 tools
-- Packages modified: GaudiObjDesc v10r4p1, KernelSys v6r10, LHCbKernel v7r8,
-    EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, PhysEvent v11r4,
-    RecEvent v2r7, TrackEvent v4r8, DetSys v11r0, DetDesc v18r1p1, MuonDet v7r0,
-    STDet v3r7, VeloDet v12r3, DAQSys v3r6, CaloDAQ v4r1, LoKiCore v6r1p1,
-    LoKiPhysMC v6r2, TrackInterfaces v3r10, TsaKernel v3r1, RichRecBase v3r8,
-    LHCbAlgs v2r12, SimComponents v2r7, MDF v2r6, DDDB v1r2, IOExample v2r2
+- Packages modified: GaudiObjDesc v10r4p2, KernelSys v6r10, LHCbKernel v7r8,
+    EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, 
+    PhysEvent v11r4, RecEvent v2r7, TrackEvent v4r8, DetSys v11r0,
+    DetDesc v18r1p1, MuonDet v7r0, STDet v3r7, VeloDet v12r3, DAQSys v3r6,
+    CaloDAQ v4r1, LoKiCore v6r1p1, LoKiPhysMC v6r2, TrackInterfaces v3r10,
+    TsaKernel v3r1, RichRecBase v3r8, LHCbAlgs v2r12, SimComponents v2r7,
+    MDF v2r6, DDDB v1r2, IOExample v2r2
 
 - in DDDB v1r2
   . Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
 
-- In GaudiObjDesc v10r4p1
+- In GaudiObjDesc v10r4p1, v10r4p2
   . Add a missing "inline" in string to type conversion functions
   . Fix typo. The generated copy constructor was missing a comma for base classes
     which were not KeyedObjects
+  . Fix dependencies to ensure headers are generated before everything else, 
+    this was not explicit and is needed on osx platform
 
 - In LHCbKernel v7r8
   . Adapted interface of trajectories for 'generic' expansion parameter
   . Add a dictionary needed by Panoramix
+  . Fixed dependencies for customdict generation
 
 - In DAQEvent v7r6p1
   . Add the possibility to remove L0 banks in bankKiller.cpp
@@ -37,6 +41,9 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
     (L0DUElementaryData/L0DUElementaryCondition/L0DUChannel/L0DUReport)
   . Complete Event/L0DUBase.h
   . Remove leading "/Event/" from TES locations
+
+- In L0Event v16r6,MCEvent v2r5p1,PhysEvent v11r4,RecEvent v2r7,TrackEvent v4r8 
+  . Fixed dependencies for dictionary generation
 
 - In PhysEvent v11r4
   . Add values to Particle::AdditionalInfo enum for jet-related studies
@@ -69,8 +76,8 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . stripToChan method added to DeSTSector
 
 - In VeloDet v12r3
-  . Bug fix in cache update for half box offset. Was not protected against an
-    empty VELO half, leading to a crash when running on test beam geometry.
+  . Add protections against missing detector elements, to allow use with test
+    beam geometry
 
 - In CaloDAQ v4r1
   . Fix bug in CaloDataProvider.cpp
@@ -83,7 +90,8 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . Fix some doxygen warnings
 
 - In TrackInterfaces v3r10
-  . Add IPatDebugTTTool, IFastMomentumEstimate interfaces & PatKernel dependency
+  . Add IPatDebugTool, IPatDebugTTTool, IFastMomentumEstimate interfaces and
+    PatKernel dependency
 
 - In TsaKernel v3r1
   . Add TsaTStationHitManager class (previously in TsaAlgorithms)

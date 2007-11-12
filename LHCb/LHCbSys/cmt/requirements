@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 use GaudiConf	         v10r4
-use GaudiObjDesc         v10r4p1
+use GaudiObjDesc         v10r4p2
 
 #                                         Maintainer
 # Kernel packages
@@ -40,7 +40,7 @@ use STDet                 v3r7    Det     # Jeroen van Tilburg, Matt Needham
 # Event data model
 use EventSys              v23r10  Event   # Marco Cattaneo
 use EventBase             v2r4    Event   # Marco Cattaneo, Gloria Corti
-use MCEvent               v2r5    Event   # Gloria Corti and sub-det experts
+use MCEvent               v2r5p1  Event   # Gloria Corti and sub-det experts
 use DigiEvent             v2r2    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r7    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v16r6   Event   # Julien Cogan
