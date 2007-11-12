@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.8 2007-11-12 09:42:04 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.9 2007-11-12 12:34:12 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -217,8 +217,6 @@ StatusCode DeRichHPD::getParameters ( )
     m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
 
   m_UseHpdMagDistortions= deRich1->param<int>("UseHpdMagDistortions");
-  //m_UseHpdMagDistortions = 1;
-
   m_UseBFieldTestMap    = deRich1->param<int>("UseBFieldTestMap");
   m_LongitudinalBField  = deRich1->param<double>("LongitudinalBField");
   //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
@@ -481,6 +479,9 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint,
                      sqrt(gsl_pow_2( m_deMagFactor[0] ) -
                           4*m_deMagFactor[1]*rSilicon))/(2*m_deMagFactor[1]);
 
+  // check if this point could have come from the photoCathode
+  if ( m_winInRsq < rWindow*rWindow ) return StatusCode::FAILURE;
+
   if ( !photoCathodeSide ) {
     // for the refraction on the HPD window, assuming 90 degrees angle
     rWindow  = rWindow + m_refactParams[3]*gsl_pow_3(rWindow)+
@@ -496,7 +497,7 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint,
   const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
 
   const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
-  if ( m_winInRsq < XsqPlusYsq ) return StatusCode::FAILURE;
+  if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
   const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
 
   detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
@@ -513,6 +514,9 @@ StatusCode DeRichHPD::magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint,
   const double rSilicon = detectPoint.R();
 
   double result_r   = magnification_RtoR()->value( rSilicon );
+  // check if this point could have come from the photoCathode
+  if ( m_winInRsq < result_r*result_r ) return StatusCode::FAILURE;
+
   const double result_phi = magnification_RtoPhi()->value( rSilicon );
 
   double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
