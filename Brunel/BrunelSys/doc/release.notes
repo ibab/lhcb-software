@@ -45,7 +45,8 @@ framework.
   . Fix to PatMatch (PatAlgorithms v3r1)
   . Fixes in TrackLongExtraSelector (TrackExtrapolators v2r15)
   . Release tool handle in MasterExtrapolator::finalize (TrackExtrapolators v2r15)
-  . Fix unchecked StatusCode (TsaAlgorithms v3r1, TrackFitter v2r21)
+  . Fix unchecked StatusCode
+    (TsaAlgorithms v3r1, TrackFitter v2r21, TrackExtrapolators v2r15))
   . Protect against divide by zero when few events processed (MuonPIDChecker v2r2)
 
 </PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
