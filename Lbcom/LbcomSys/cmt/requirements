@@ -18,7 +18,7 @@ use OTMonitor         v2r7  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r12 Rich        # Chris Jones
+use RichDAQ         v3r12p1 Rich       # Chris Jones
 use RichTools         v2r15 Rich        # Chris Jones
 use RichMCTools       v3r7  Rich        # Chris Jones
 use RichMCMonitors    v1r4  Rich        # Chris Jones

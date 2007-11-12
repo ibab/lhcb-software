@@ -10,7 +10,7 @@
 This version uses Gaudi v19r5 and LHCb v23r1
 
 - Packages modified: L0Calo v9r10, L0DU v8r0, L0Muon v7r5, STDAQ v3r2,
-    STAlgorithms v2r4
+    STAlgorithms v2r4, RichDAQ v3r12p1
 
 - In L0Calo v9r10, L0Muon v7r5
   . Adapt to change in L0DUBase.h (L0Event v16r6)
@@ -36,6 +36,9 @@ This version uses Gaudi v19r5 and LHCb v23r1
   . Use dead channel info from detector element in digitization code
   . Remove STEffCalculator tool and ISTEffCalculator interface
   . Add STClusterKiller algorithm
+
+- In RichDAQ v3r12p1
+  . Fix a compilation problem with gcc 4 on osx
 
 </PRE><H1><A NAME=v6r11>2007-10-16 LbcomSys v6r11</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r0
