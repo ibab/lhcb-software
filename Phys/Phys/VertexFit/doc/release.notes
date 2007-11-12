@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.119 2007-11-11 03:22:30 xieyu Exp $
+! $Id: release.notes,v 1.120 2007-11-12 02:36:08 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-11-12 - Yuehong Xie
+ - src/AdaptivePVReFitter.cpp(.h)
+   . add new properties "reweightTracks", "temperatures", "criticalPoint"
 
 ! 2007-11-11 - Yuehong Xie
  - add src/AdaptivePVReFitter.cpp, AdaptivePVReFitter.h, PVFitTrack.h

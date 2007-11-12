@@ -53,6 +53,9 @@ private:
 private:
       
   int m_maxIter;
+  bool m_reweightTracks;
+  std::vector<double> m_temperatures;
+  double m_criticalPoint;
   double m_maxDeltaChi2;
   int m_minTrNumber;
   

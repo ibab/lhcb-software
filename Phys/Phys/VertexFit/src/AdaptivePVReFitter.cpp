@@ -34,12 +34,16 @@ AdaptivePVReFitter::AdaptivePVReFitter( const std::string& type,
   declareInterface<IPVReFitter>(this);
 
   declareProperty( "maxIter", m_maxIter = 6);
+  declareProperty( "reweightTracks", m_reweightTracks = true);
+  declareProperty( "temperatures", m_temperatures );
+  declareProperty( "criticalPoint", m_criticalPoint = 9.0 );
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "fullExtrapolatorName", 
                    m_fullExtrapolatorName = "TrackMasterExtrapolator");
   declareProperty( "veloExtrapolatorName", 
                    m_veloExtrapolatorName = "TrackLinearExtrapolator");
   declareProperty( "minTrNumber", m_minTrNumber = 2);
+
 }
 
 //=============================================================================
@@ -53,6 +57,14 @@ AdaptivePVReFitter::~AdaptivePVReFitter() {};
 StatusCode AdaptivePVReFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
+
+  if(m_reweightTracks && m_temperatures.size()==0) {
+    m_temperatures.push_back(10.0);
+    m_temperatures.push_back(4.0);
+    m_temperatures.push_back(1.0);
+    m_temperatures.push_back(0.001);
+    m_temperatures.push_back(0.001);
+  }
 
   m_fullExtrapolator = tool<ITrackExtrapolator>( m_fullExtrapolatorName );
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
@@ -158,7 +170,6 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
   int Iter=0;
   while(!converged && Iter < m_maxIter) 
   {
-    ++Iter;
     debug() <<" Iteration " << Iter <<endreq;
 
     Gaudi::XYZPoint PosPV = PV->position();
@@ -214,7 +225,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       pk[3] = newstate.ty();
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
-      if(Iter==1) {
+      if(Iter==0) {
          qk0[0] = pk[2];
          qk0[1] = pk[3];
       }
@@ -287,7 +298,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       double zref = statetr.z();
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
-      if(Iter==1) {
+      if(Iter==0) {
          qk0[0] = pk[2];
          qk0[1] = pk[3];
       }
@@ -355,7 +366,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       double zref = statetr.z();
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
-      if(Iter==1) {
+      if(Iter==0) {
          qk0[0] = pk[2];
          qk0[1] = pk[3];
       }
@@ -425,8 +436,10 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       // debug() <<"change of chi2 " << distSq << endreq;
       chi2Fit+= wk*distSq;
 
-      double wknew = getNewWeight(distSq, Iter);
-      aFitTrack.setWeight(wknew);   
+      if(m_reweightTracks) {
+        double wknew = getNewWeight(distSq, Iter);
+        aFitTrack.setWeight(wknew);   
+      }
     }
     debug() <<"chi2Fit " << chi2Fit <<endreq;
  
@@ -435,7 +448,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
     } else {
       chi2Previous=chi2Fit;
     }
-
+    ++Iter;
   }
 
   debug()<< "new position " << PV->position()  <<endreq;
@@ -477,18 +490,12 @@ void AdaptivePVReFitter::getFinalTracks(LHCb::Particle* part,
 
 double AdaptivePVReFitter::getNewWeight(double& x, int& i)
 {
-
   double T;
-  if(i==1) T = 10.;
-  if(i==2) T = 4.;
-  if(i==3) T = 1.;
-  if(i==4) T = 0.001;
-  if(i==5) T = 0.001;
-  if(i==6) T = 0.001;
+  int tsize = m_temperatures.size();
+  if(i<tsize) T = m_temperatures[i];
+  else T = m_temperatures[tsize-1];
 
-  double xc = 9.;
-
-  double w = 1/(1+exp((x-xc)/2./T));
+  double w = 1/(1+exp((x-m_criticalPoint)/2./T));
 
   return w;
 }
