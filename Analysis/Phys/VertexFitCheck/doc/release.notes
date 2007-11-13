@@ -1,9 +1,13 @@
-// $Id: release.notes,v 1.7 2007-11-11 03:16:00 xieyu Exp $
+// $Id: release.notes,v 1.8 2007-11-13 13:54:20 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2007-11-13 - Y. Xie
+  - src/ProperTimeChecker.cpp
+    .add more variables in ntuple
 
 ! 2007-11-11 - Y. Xie
   - src/ProperTimeChecker.cpp

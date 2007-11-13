@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.4 2007-11-11 03:35:02 xieyu Exp $
+// $Id: ProperTimeChecker.cpp,v 1.5 2007-11-13 13:54:20 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -178,6 +178,9 @@ StatusCode ProperTimeChecker::execute() {
     double selPVxErr = -9999.;
     double selPVyErr = -9999.;
     double selPVzErr = -9999.;
+    long selPVnTr = 0;
+    long selPVnDF = 0;
+    double selPVChi2 = -9999.;
 
     double time0 =-9999.;
     bool timeFitOk = false;
@@ -195,7 +198,10 @@ StatusCode ProperTimeChecker::execute() {
       selPVxErr = sqrt(bestPV->covMatrix()(0,0));
       selPVyErr = sqrt(bestPV->covMatrix()(1,1));
       selPVzErr = sqrt(bestPV->covMatrix()(2,2));
-     
+      selPVnTr= bestPV->tracks().size();
+      selPVnDF = bestPV->nDoF(); 
+      selPVChi2 = bestPV->chi2();
+
       Gaudi::XYZVector tmpL = Part->endVertex()->position() -
                               bestPV->position();
       time0 = (1/(picosecond*c_light))*(Part->measuredMass())*
@@ -251,6 +257,9 @@ StatusCode ProperTimeChecker::execute() {
     ntuple->column("selPVxErr", selPVxErr);
     ntuple->column("selPVyErr", selPVyErr);
     ntuple->column("selPVzErr", selPVzErr);
+    ntuple->column("selPVnTr",  selPVnTr);
+    ntuple->column("selPVnDF",  selPVnDF);
+    ntuple->column("selPVChi2",  selPVChi2);
 
     ntuple->column("selMCPVkey", selMCPVkey);
     ntuple->column("selMCPVx", selMCPVx);
@@ -290,6 +299,10 @@ StatusCode ProperTimeChecker::execute() {
       double rfPVxErr = -9999.;
       double rfPVyErr = -9999.;
       double rfPVzErr = -9999.;
+      long rfPVnTr = 0;
+      long rfPVnDF = 0;
+      double rfPVChi2 = -9999.;
+
       bool rfpv_timeFitOk = false;
       double rfpv_time = -9999.;
       double rfpv_timeErr = -9999.;
@@ -310,6 +323,10 @@ StatusCode ProperTimeChecker::execute() {
           rfPVxErr = sqrt(newPV.covMatrix()(0,0));
           rfPVyErr = sqrt(newPV.covMatrix()(1,1));
           rfPVzErr = sqrt(newPV.covMatrix()(2,2));
+          rfPVnTr= newPV.tracks().size();
+          rfPVnDF = newPV.nDoF();
+          rfPVChi2 = newPV.chi2();
+
 
           StatusCode fitsc = m_timeFitter->fit(newPV, newPart, rfpv_time, rfpv_timeErr, rfpv_timeFitChi2);
           if (fitsc.isSuccess()) rfpv_timeFitOk = true;
@@ -330,6 +347,10 @@ StatusCode ProperTimeChecker::execute() {
       ntuple->column("rfPVxErr", rfPVxErr);
       ntuple->column("rfPVyErr", rfPVyErr);
       ntuple->column("rfPVzErr", rfPVzErr);
+      ntuple->column("rfPVnTr",  rfPVnTr);
+      ntuple->column("rfPVnDF",  rfPVnDF);
+      ntuple->column("rfPVChi2",  rfPVChi2);
+
       ntuple->column("rfpv_timeFitOk", rfpv_timeFitOk);
       ntuple->column("rfpv_time", rfpv_time);
       ntuple->column("rfpv_timeErr", rfpv_timeErr);
@@ -346,6 +367,10 @@ StatusCode ProperTimeChecker::execute() {
       double rfPVxErr = -9999.;
       double rfPVyErr = -9999.;
       double rfPVzErr = -9999.;
+      long rfPVnTr = 0;
+      long rfPVnDF = 0;
+      double rfPVChi2 = -9999.;
+
       bool rfpv_timeFitOk = false;
       double rfpv_time = -9999.;
       double rfpv_timeErr = -9999.;
@@ -366,6 +391,9 @@ StatusCode ProperTimeChecker::execute() {
           rfPVxErr = sqrt(newPV.covMatrix()(0,0));
           rfPVyErr = sqrt(newPV.covMatrix()(1,1));
           rfPVzErr = sqrt(newPV.covMatrix()(2,2));
+          rfPVnTr= newPV.tracks().size();
+          rfPVnDF = newPV.nDoF();
+          rfPVChi2 = newPV.chi2();
 
           StatusCode fitsc = m_timeFitter->fit(newPV, newPart, rfpv_time, rfpv_timeErr, rfpv_timeFitChi2);
           if (fitsc.isSuccess()) rfpv_timeFitOk = true;
@@ -386,9 +414,15 @@ StatusCode ProperTimeChecker::execute() {
       ntuple->column("rmbPVxErr", rfPVxErr);
       ntuple->column("rmbPVyErr", rfPVyErr);
       ntuple->column("rmbPVzErr", rfPVzErr);
+      ntuple->column("rmbPVnTr",  rfPVnTr);
+      ntuple->column("rmbPVnDF",  rfPVnDF);
+      ntuple->column("rmbPVChi2",  rfPVChi2);
+
       ntuple->column("rmbpv_timeFitOk", rfpv_timeFitOk);
       ntuple->column("rmbpv_time", rfpv_time);
       ntuple->column("rmbpv_timeErr", rfpv_timeErr);
+      ntuple->column("rmbpv_timeFitChi2", rfpv_timeFitChi2);
+      ntuple->column("rmbpv_cosPF", rfpv_cosPF);
 
     }
 
@@ -401,6 +435,10 @@ StatusCode ProperTimeChecker::execute() {
       double rfPVxErr = -9999.;
       double rfPVyErr = -9999.;
       double rfPVzErr = -9999.;
+      long rfPVnTr = 0;
+      long rfPVnDF = 0;
+      double rfPVChi2 = -9999.;
+
       bool rfpv_timeFitOk = false;
       double rfpv_time = -9999.;
       double rfpv_timeErr = -9999.;
@@ -421,6 +459,9 @@ StatusCode ProperTimeChecker::execute() {
           rfPVxErr = sqrt(newPV.covMatrix()(0,0));
           rfPVyErr = sqrt(newPV.covMatrix()(1,1));
           rfPVzErr = sqrt(newPV.covMatrix()(2,2));
+          rfPVnTr= newPV.tracks().size();
+          rfPVnDF = newPV.nDoF();
+          rfPVChi2 = newPV.chi2();
 
           StatusCode fitsc = m_timeFitter->fit(newPV, newPart, rfpv_time, rfpv_timeErr, rfpv_timeFitChi2);
           if (fitsc.isSuccess()) rfpv_timeFitOk = true;
@@ -441,6 +482,10 @@ StatusCode ProperTimeChecker::execute() {
       ntuple->column("rmsPVxErr", rfPVxErr);
       ntuple->column("rmsPVyErr", rfPVyErr);
       ntuple->column("rmsPVzErr", rfPVzErr);
+      ntuple->column("rmsPVnTr",  rfPVnTr);
+      ntuple->column("rmsPVnDF",  rfPVnDF);
+      ntuple->column("rmsPVChi2",  rfPVChi2);
+
       ntuple->column("rmspv_timeFitOk", rfpv_timeFitOk);
       ntuple->column("rmspv_time", rfpv_time);
       ntuple->column("rmspv_timeErr", rfpv_timeErr);
