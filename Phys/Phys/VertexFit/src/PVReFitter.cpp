@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.8 2007-10-18 16:35:38 xieyu Exp $
+// $Id: PVReFitter.cpp,v 1.9 2007-11-13 15:01:29 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -147,6 +147,8 @@ StatusCode PVReFitter::fitPV(LHCb::RecVertex* PV,
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
+
+  PV->clearTracks();
 
   if(tracks.size()<2) {
     debug() << "number of track left for the PV "<< tracks.size() <<endreq;
