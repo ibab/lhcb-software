@@ -3,10 +3,11 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+</PRE><H1><A NAME=v2r3>2007-11-13 AlignmentInterfaces v2r3 </A></H1><PRE>
 ! 2007-10-18 - Louis Nicolas
  - Removed obsolete IAlignSelTool.h. It has been merged to TrackInterfaces/ITrackSelector.h.
 
-</PRE><H1><A NAME=v2r1>2007-08-28 AlignmentInterfaces v2r2 </A></H1><PRE>
+</PRE><H1><A NAME=v2r2>2007-08-28 AlignmentInterfaces v2r2 </A></H1><PRE>
 - 2007-08-28 - Johan Blouw
    - added Centipede interface to hide different use of Millepede 
 - 2007-08-16 - Gerhard Raven
