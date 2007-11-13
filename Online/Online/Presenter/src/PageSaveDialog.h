@@ -31,6 +31,7 @@ class PageSaveDialog : public TGTransientFrame
     PresenterMainFrame* m_mainFrame;
     TGListTree* m_pageFolderListTree;
     TGTextButton *m_okButton;
+    TGTextButton *m_cancelButton;
     TGTextEntry *folderNameTextEntry;
     TGTextEntry *pageNameTextEntry;
     MsgLevel            m_verbosity;
