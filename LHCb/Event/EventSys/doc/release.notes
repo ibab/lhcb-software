@@ -2,7 +2,10 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v23r10 2007-11-09 =====================
+!======================== EventSys v23r10 2007-11-13 =====================
+! 2007-11-13 - Marco Cattaneo
+ - Fix copy_relax_rootmap pattern for Windows backslashes
+ 
 ! 2007-11-09 - Marco Cattaneo
  - Use DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, PhysEvent v11r4,
        RecEvent v2r7, TrackEvent v4r8

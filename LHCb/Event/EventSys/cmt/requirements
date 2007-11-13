@@ -25,10 +25,10 @@ use RELAX       v*      LCG_Interfaces
 
 #----This is only for RELAX 1_1_9 that had an inconsistent library names in rootmap files 
 pattern copy_relax_rootmap \
-  macro fixup_rootmap<dict> "i=open('$(RELAX_home)/lib/lib<dict>Rflx.rootmap');\
+  macro fixup_rootmap<dict> "i=open(r'$(RELAX_home)/lib/lib<dict>Rflx.rootmap');\
                              lines=[line.replace('lib<dict>Dict.so','lib<dict>Rflx.so') for line in i.readlines()];\
                              open('lib<dict>Rflx.rootmap','w').writelines(lines)" \
-        WIN32                "i=open('$(RELAX_home)/lib/<dict>Rflx.rootmap');\
+        WIN32                "i=open(r'$(RELAX_home)/lib/<dict>Rflx.rootmap');\
                              lines=[line.replace('<dict>Dict.dll','<dict>Rflx.dll') for line in i.readlines()];\
                              open('<dict>Rflx.rootmap','w').writelines(lines)" ;\
   action copy_relax_rootmap<dict> 'python -c "$(fixup_rootmap<dict>)";\
