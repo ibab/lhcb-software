@@ -1,0 +1,5 @@
+cmt broadcast "${CMTROOT}/mgr/cmt setup -sh -pack= -version= -path=  -no_cleanup>setup.vars"
+tmStart -m store* -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/tan_server.sh
+tmStart -m store* -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/MBMMON.web.sh
+tmStart -m store* -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/MBMMON.upi.sh
+tmStart -m storectl01 -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/FSMMON.upi.sh STORAGE

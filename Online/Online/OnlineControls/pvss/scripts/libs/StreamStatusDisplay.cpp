@@ -153,9 +153,9 @@ void StreamStatusDisplay_CheckDisplay(string dp, dyn_string values)  {
     else if ( state != par_state )   {
       if ( par_state=="FINALIZED" && state != "NOT_READY" )
         print_node = 1;
-      else if ( par_state=="NOT_READY" && state != "UNKNOWN" )
+      else if ( par_state=="NOT_READY" && state != "OFFLINE" )
         print_node = 1;
-      else if ( par_state=="CONFIGURED" && state != "UNKNOWN" )
+      else if ( par_state=="CONFIGURED" && state != "OFFLINE" )
         print_node = 1;
       else if ( par_state=="CREATED" && state != "NOT_READY" )
         print_node = 1;
@@ -201,7 +201,7 @@ void StreamStatusDisplay_CheckDisplay(string dp, dyn_string values)  {
     }
     else  {
       set = "";
-      if ( parents[np] == 2 && (state == "ERROR" || state == "UNKNOWN") )  {
+      if ( parents[np] == 2 && (state == "ERROR" || state == "OFFLINE") )  {
         cell_type = parents[np];
       }
       else if ( parents[np] == 2 )  {
@@ -273,6 +273,6 @@ int StreamStatusDisplay_CellColor(string state)  {
   else if ( state=="CREATED" ) return 7;
   else if ( state=="CONFIGURED" ) return 7;
   else if ( state=="NOT_READY" ) return 7;
-  else if ( state=="UNKNOWN" ) return 8;
+  else if ( state=="OFFLINE" ) return 8;
   return -1;
 }

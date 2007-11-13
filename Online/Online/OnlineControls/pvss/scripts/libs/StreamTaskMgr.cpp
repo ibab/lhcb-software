@@ -215,7 +215,7 @@ int StreamTaskMgr_createNodeTasks(string node, string name, int howmany, int fir
     if ( !dpExists(dev_name) )  {
       dpCreate(dev_name,"FSM_DimTask");
     }
-    dpSet(dev_name+".State","UNKNOWN");
+    dpSet(dev_name+".State","OFFLINE");
     string task = StreamTaskMgr_addTreeNode(node, dev_name, "FSM_DimTask", 0);
   }
   return 1;

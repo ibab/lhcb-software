@@ -104,7 +104,7 @@ int ctrlUtils_createFsmTasks(string node, string name, int howmany, int first) {
     sprintf(dev_name,"%s_%03d",name,j);
     if ( !dpExists(dev_name) )  {
       dpCreate(dev_name,"FSM_DimTask");
-      dpSet(dev_name+".State","UNKNOWN");
+      dpSet(dev_name+".State","OFFLINE");
     }
     string task = ctrlUtils_addFsmTreeNode(set_name, dev_name, "FSM_DimTask", 0);
   }

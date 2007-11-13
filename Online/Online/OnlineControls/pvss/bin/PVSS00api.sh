@@ -3,11 +3,11 @@ installation=/group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/cm
 cd $installation
 echo $0 `dirname $0`
 #
-. ./PVSS.setup.sh
+. ./setup.vars
 PVSS_system=`python <<EOF
 args = '$*'.split(' ')
 for i in xrange(len(args)):
-  if args[i]=='-PROJ':
+  if args[i].upper()[:5]=='-PROJ':
     print args[i+1]
     break
 EOF`

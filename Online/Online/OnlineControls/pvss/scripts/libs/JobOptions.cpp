@@ -218,7 +218,7 @@ void JobOptions_callback(string dpe, string cmd)  {
   else if ( cmd == "unload" )  {
     // Disconnect datapoint ... stop liostening to commands
     dpDisconnect("JobOptions_callback",dpe);
-    JobOptions_setState("UNKNOWN");
+    JobOptions_setState("OFFLINE");
     jo_doExit = 1;
   }
   else if ( cmd == "reset" )  {
