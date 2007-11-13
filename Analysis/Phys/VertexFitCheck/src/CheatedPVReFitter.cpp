@@ -1,4 +1,4 @@
-// $Id: CheatedPVReFitter.cpp,v 1.1 2007-10-29 02:23:01 xieyu Exp $
+// $Id: CheatedPVReFitter.cpp,v 1.2 2007-11-13 15:00:16 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -138,6 +138,8 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
+
+  PV->clearTracks();
 
   if(tracks.size()<2) {
     debug() << "number of track left for the PV "<< tracks.size() <<endreq;

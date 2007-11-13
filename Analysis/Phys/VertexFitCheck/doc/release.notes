@@ -1,4 +1,4 @@
-// $Id: release.notes,v 1.8 2007-11-13 13:54:20 xieyu Exp $
+// $Id: release.notes,v 1.9 2007-11-13 15:00:15 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
@@ -8,6 +8,8 @@
 ! 2007-11-13 - Y. Xie
   - src/ProperTimeChecker.cpp
     .add more variables in ntuple
+  - src/CheatedPVReFitter.cpp
+    .bug fix: call clearTracks() to avoid duplciated tracks
 
 ! 2007-11-11 - Y. Xie
   - src/ProperTimeChecker.cpp
