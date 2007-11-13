@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v3r3>2007-11-13 TAlignment v3r3</A></H1><PRE>
+! 2007-11-13 - Johan Blouw
+ - new release of this package
+ - removed small inconsistency in GetElementsToAlign with LHCB_v23
+
 ! 2007-11-06 - Louis Nicolas
  - GetElementsToAlign: added part for TT ladders
  - Bug fix in boxes part of AlignITDetector.cpp

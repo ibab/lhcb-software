@@ -1,4 +1,4 @@
-// $Id: GetElementsToAlign.cpp,v 1.5 2007-11-06 16:20:08 lnicolas Exp $
+// $Id: GetElementsToAlign.cpp,v 1.6 2007-11-13 10:32:51 jblouw Exp $
 // Include files 
 // from STD
 #include <iomanip>
@@ -197,8 +197,8 @@ StatusCode GetElementsToAlign::initialize() {
     } else if (boost::regex_match(name, boost::regex(".*IT/Station./.*Box$"))) { ///< IT Boxes
       /// DeITDetector::findBox is overloaded. So we need a function pointer to the function we want to use.
       typedef DeITBox* (DeITDetector::*memberFunctionP) (const LHCb::STChannelID);
-      memberFunctionP fp = &DeITDetector::findBox;
-      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, it, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
+//      memberFunctionP fp = &DeITDetector::findBox;
+//      m_detElemFromLHCbID = bind<const DetectorElement*>(fp, it, bind<LHCb::STChannelID>(&LHCb::LHCbID::stID,_1));
     } else if (boost::regex_match(name, boost::regex(".*IT/Station./.*Box/Layer.*/Ladder.$"))) { ///< IT Sectors
       /// DeSTDetector::findSector is overloaded. So we need a function pointer to the function we want to use.
       typedef DeSTSector* (DeSTDetector::*memberFunctionP) (const LHCb::STChannelID);
