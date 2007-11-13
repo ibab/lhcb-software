@@ -7,6 +7,7 @@ Purpose: LHCb Alignment packages.
          components.
 </PRE><H1><A NAME=v2r2>2007-11-09 AlignmentSys v2r2</A></H1><PRE>
 - Packages updated: AlignTrTools	v3r3
+                    TAlignment          v3r3
 
 - in AlignTrTools	v3r3
 	- modifications performed by L. Nicolas on AlignSelTool, AlignTrackMonitor
@@ -14,6 +15,20 @@ Purpose: LHCb Alignment packages.
  	- idem, but changed the way nNeighbouringHits is calculated to speed up things
 	- added code to AlignSaveTuple: saving various variables in an NTuple for further debugging analysis
 	- changes to AlignTrackMonitor: save residuals in a nicer way (+ use unbiasedResiduals)
+
+- in TAlignment		v3r3
+ 	- modifications by Louis Nicolas to 
+		- GetElementsToAlign: added part for TT ladders
+		- GetElementsToAlign: added TT specific part to get TT stations, layers and half-modules
+	- bug fixes in AlignAlgorithm by LN
+	- GetElementsToAlign.cpp deals with OT modules and IT ladders
+	- bug fix in GetElementsToAlign
+	- modifications by Gerhard Raven:
+		- add treatment of hit-hit correlations to AlignAlgorithm using Wouter's ResidualCovarianceTool	
+		- add ResidualCovarianceTool
+	- Louis Nicolas: Added AlignITDetector: IT specific part in old framework
+		       : GetElementsToAlign: added IT specific part to get IT stations, layers and boxes
+	   	       : TrackFilterAlg: changed interface to AlignSelTool track selector (now using TrackInterfaces/TrackSelector)
 
 </PRE><H1><A NAME=v2r1>2007-09-18 AlignmentSys v2r1</A></H1><PRE>
 - Packages added: AlignT2Velo
