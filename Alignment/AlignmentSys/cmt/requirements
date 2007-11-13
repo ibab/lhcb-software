@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use AlignmentInterfaces	v2r2	Alignment # Johan Blouw
+use AlignmentInterfaces	v2r3	Alignment # Johan Blouw
 use AlignmentTools      v2r8    Alignment # Sebastien Viret
 use AlignTrTools	v3r3	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
 use SolvKernel		v1r1    Alignment # Adlene Hicheur
