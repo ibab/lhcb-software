@@ -15,11 +15,11 @@ use HltMuonAlley        v1r6    Hlt   # Alessia Satta
 use HltCaloAlley        v1r3    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r2	Hlt   # Jose Angel Hernando-Morata
-use HltL0Conf           v1r4    Hlt   # Johannes Albrecht
+use HltL0Conf           v1r4p1  Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r3    Hlt   # Alessia Satta   
 use HltHadL0Conf        v1r1    Hlt   # Jose Angel Hernando-Morata
 
-use HltSelections       v5r6    Hlt   # Patrick Koppenburg
+use HltSelections       v5r6p1  Hlt   # Patrick Koppenburg
 use HltSelChecker       v5r2    Hlt   # Patrick Koppenburg
 
 #=============================================================

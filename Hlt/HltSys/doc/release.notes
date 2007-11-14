@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r11>2007-11-14 HltSys v1r11</A></H1><PRE>
+This version uses LHCb v22r11
+
+  - Online benchmark version. Last version using Pat. 
+
+!========================== HltSys v1r11 2007-11-14 ===================
 ! 2007-11-07 - Patrick Koppenburg
  - Comment out rich by default
 
