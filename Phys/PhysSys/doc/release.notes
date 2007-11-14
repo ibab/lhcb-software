@@ -3,13 +3,18 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r8>2007-11-14 Phys v6r8 - HLT benchmark tests version</A></H1><PRE>
+
+- Based on LHCb v22r11
+- Improvements in VertexFit
+- Bug fix in DaVinciTools
+  
 </PRE><H1><A NAME=v6r7p1>2007-11-02 Phys v6r7p1 - DC06 stripping version</A></H1><PRE>
 
 - Based on LHCb v22r10
 - Minor bug fixes to Phys/VertexFit for correct treatment of merged Pi0s. 
   Otherwise identical to Phys v6r7.
 - Phys v6r7 release notes kept for clarity.
-  
 ###############################################################################
 #                                  PHYS v6r7p1                                #
 ###############################################################################
