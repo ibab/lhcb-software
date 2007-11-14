@@ -1,4 +1,4 @@
-// $Id: IOTRawBankDecoder.h,v 1.1 2007-10-05 11:54:37 cattanem Exp $
+// $Id: IOTRawBankDecoder.h,v 1.2 2007-11-14 16:05:39 wouter Exp $
 #ifndef OTDAQ_IOTRAWBANKDECODER_H
 #define OTDAQ_IOTRAWBANKDECODER_H 1
 
@@ -8,6 +8,9 @@
 
 // Kernel
 #include "Event/OTLiteTime.h"
+
+// Forward declarations
+class DeOTModule ;
 
 /// Interface ID
 static const InterfaceID IID_OTRawBankDecoder( "IOTRawBankDecoder", 1, 0 );
@@ -40,6 +43,12 @@ public:
   
   /// Decode all modules
   virtual StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const = 0;
+
+  /// Conversion factor from tdc to ns
+  virtual double nsPerTdcCount() const = 0 ;
+
+  /// Get a lite time from an OTChannelId (and its module mother)
+  virtual LHCb::OTLiteTime time( LHCb::OTChannelID id, const DeOTModule& module) const = 0 ;
 };
 
 #endif // OTDAQ_IOTRAWBANKDECODER_H

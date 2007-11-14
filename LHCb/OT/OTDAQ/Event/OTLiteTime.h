@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.2 2007-11-14 12:38:22 cattanem Exp $
+ *  $Id: OTLiteTime.h,v 1.3 2007-11-14 16:05:39 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -23,7 +23,9 @@ namespace LHCb
 {
 
   /** @class OTLiteTime OTDAQ/OTLiteTime.h
-   *  Simple class to extend the OTChannelID with calibrated raw time information
+   *  Simple class to hold an OT hit, including a 'calibrated' drift time. This
+   *  is the 'light' version of an OTTime. (It is light because it is not a
+   *  contained object.)
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
@@ -32,17 +34,18 @@ namespace LHCb
 
   public:
 
+    /// Default constructor does nothing
+    OTLiteTime() : m_channelid(0), m_calibratedTime(0) {}
+    
     /// Constructor from an OTChannelID
-    OTLiteTime(LHCb::OTChannelID channelid) : m_channelid(channelid) {}
+    OTLiteTime(LHCb::OTChannelID channelid, float calibratedtime) 
+      : m_channelid(channelid), m_calibratedTime(calibratedtime) {}
 
     /// Access the OTChannelID for this OTLiteTime
     const LHCb::OTChannelID& channel() const { return m_channelid ; }
 
-    /// Access the raw OT time
-    float rawTime() const;
-
-    /// Static method to set the ns per TDS conversion factor
-    static void setNsPerTdcCount(const float c);
+    /// Access to the calibrated time
+    float calibratedTime() const { return m_calibratedTime ; }
 
   public:
 
@@ -57,10 +60,8 @@ namespace LHCb
     }
 
   private:
-
-    LHCb::OTChannelID m_channelid ;       ///< The OTChannelID
-    static float m_nsPerTdcCount ;  ///< The ns per TDC conversion factor
-
+    LHCb::OTChannelID m_channelid ; ///< The OTChannelID
+    float m_calibratedTime ;        ///< T0 corrected timet0 corrected; calibratedTime=propagationTime+driftTime 
   } ;
 
   /// Type for a container of OTLiteTime objects

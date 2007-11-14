@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.2 2007-10-05 22:48:23 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.3 2007-11-14 16:05:39 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -9,7 +9,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 // Kernel
-
+#include "OTDet/DeOTModule.h"
 #include "Event/OTLiteTime.h"
 
 // forward declarations
@@ -64,6 +64,12 @@ public:
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
   
+  /// Get the conversion factor
+  double nsPerTdcCount() const { return m_nsPerTdcCount ; }
+  
+  /// Create a single OTLiteTime
+  LHCb::OTLiteTime time( LHCb::OTChannelID channel, const DeOTModule& module ) const ;
+  
 private:
   virtual void handle ( const Incident& incident );
   size_t decodeModule( OTRawBankDecoderHelpers::Module& ) const ;
@@ -74,10 +80,18 @@ private:
   int  m_countsPerBX;                       ///< Counts per BX
   int  m_numberOfBX;                        ///< Number of BX
   double m_timePerBX;                       ///< Time Per BX
-  DeOTDetector* m_tracker;                  ///< Pointer to XML geometry
+  DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns
   
   mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+inline LHCb::OTLiteTime 
+OTRawBankDecoder::time( LHCb::OTChannelID channel, const DeOTModule& module ) const
+{
+  return LHCb::OTLiteTime( channel, channel.tdcTime() * m_nsPerTdcCount - module.strawT0(channel.straw())) ;
+}
 
 #endif // OTRAWBANKDECODER_H

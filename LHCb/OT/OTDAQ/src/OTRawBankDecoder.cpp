@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.5 2007-10-07 20:51:29 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.6 2007-11-14 16:05:39 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -34,36 +34,52 @@ namespace OTRawBankDecoderHelpers
   class Module
   {
   public:
-    Module() : m_isdecoded(false), m_data(0) { /* FIXME */ m_ottimes.reserve(128) ; }
+    Module() : m_detelement(0), m_isdecoded(false), m_data(0) { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_data=0 ; m_ottimes.clear() ; }
     void setGolHeader( const LHCb::GolHeader& header, const unsigned int* data) {
       m_golHeader = header; m_data = data ; }
     
     const LHCb::GolHeader& golHeader() const { return m_golHeader ; }
     bool isDecoded() const { return m_isdecoded ; }
-    void setIsDecoded(bool b=true) { m_isdecoded = b; }
+    void setIsDecoded(bool b=true) { m_isdecoded = b ; }
     const unsigned int* data() const { return m_data ; }
     LHCb::OTLiteTimeContainer& ownedottimes() { return m_ottimes ; }
     LHCb::OTLiteTimeRange ottimes() const { return LHCb::OTLiteTimeRange(m_ottimes.begin(),m_ottimes.end()) ; }
+    void setDetElement( const DeOTModule& e) { m_detelement = &e ; }
+    const DeOTModule& detelement() const { return *m_detelement ; }
+    void addHit(LHCb::OTChannelID channel, float tdcconversion) ;
     
   private:
+    const DeOTModule* m_detelement ;
     bool m_isdecoded ;
     LHCb::GolHeader m_golHeader ;
     const unsigned int* m_data ;
     LHCb::OTLiteTimeContainer m_ottimes ;
   } ;
   
+  inline void Module::addHit(LHCb::OTChannelID channel, float tdcconversion) 
+  {
+    float t0 = m_detelement->strawT0( channel.straw()) ;
+    m_ottimes.push_back( LHCb::OTLiteTime( channel, channel.tdcTime() * tdcconversion - t0) );
+  }
+  
   class Detector
   {
   public:
-    Detector() : m_golHeadersLoaded(false) {}
+    Detector(const DeOTDetector& det) : m_golHeadersLoaded(false) 
+    {  
+      for(DeOTDetector::Modules::const_iterator imod = det.modules().begin() ;
+          imod != det.modules().end(); ++imod) 
+        module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()).setDetElement(**imod) ;
+    }
+    
     void clearevent() {
       m_golHeadersLoaded = false ;
       for(iterator imod = begin(); imod!= end(); ++imod)
-	imod->clearevent() ;
+        imod->clearevent() ;
     }
     Module& module(const unsigned int station, const unsigned int layer, 
-		   const unsigned int quarter, const unsigned int module) {
+                   const unsigned int quarter, const unsigned int module) {
       return m_modules[station-1][layer][quarter][module-1] ;
     }
     bool golHeadersLoaded() const { return m_golHeadersLoaded ; }
@@ -96,7 +112,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
     m_countsPerBX(64),
     m_numberOfBX(3),
     m_timePerBX(25*Gaudi::Units::ns),
-    m_tracker(0),
+    m_otdet(0),
     m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
     m_detectordata(0)
 {
@@ -104,7 +120,6 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("countsPerBX", m_countsPerBX );
   declareProperty("numberOfBX", m_numberOfBX );
   declareProperty("timePerBX", m_timePerBX );
-  
 }
 //=============================================================================
 // Destructor
@@ -128,15 +143,14 @@ StatusCode OTRawBankDecoder::initialize()
   incSvc()->addListener( this, IncidentType::EndEvent );
   
   // Loading OT Geometry from XML
-  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_detectordata = new OTRawBankDecoderHelpers::Detector() ;
+  m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  m_detectordata = new OTRawBankDecoderHelpers::Detector(*m_otdet) ;
   
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   
   m_nsPerTdcCount = m_timePerBX/ double(m_countsPerBX);
-  OTLiteTime::setNsPerTdcCount( m_nsPerTdcCount ) ;
   
   return StatusCode::SUCCESS;
 };
@@ -244,9 +258,6 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   // make sure we don't call this until the next event
   m_detectordata->setGolHeadersLoaded(true) ; 
   
-  // this needs to be replaced with something sensible in real data
-  OTLiteTime::setNsPerTdcCount( m_nsPerTdcCount ) ;
-  
   return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
 }
 
@@ -299,43 +310,41 @@ size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduleda
       unsigned int quarter = golHeader.quarter();
       unsigned int module = golHeader.module();
       
-      //std::cout << "decoding module with num hits = " << size << std::endl ;
-      //std::cout << "num hits in global list before: " << m_detectordata->m_ottimes.size() << std::endl ;
-      
+      moduledata.ownedottimes().reserve(2*size) ;
       for(unsigned int i=0; i<size; ++i) {
-	DataWord dataWord = data[i];
-	
-	//getting data word information using the mask
-	int nextTime = dataWord.nextTime();
-	int nextChannelID = dataWord.nextChannel();
-	int nextOtisID = dataWord.nextOtis();
-	int firstTime = dataWord.firstTime();
-	int firstChannelID = dataWord.firstChannel();
-	int firstOtisID = dataWord.firstOtis();
-	
-	//Get Straw numbers
-	int Fstraw  = getStrawID(firstOtisID, firstChannelID);
-	int Nstraw = ((nextTime==0 && nextOtisID==0 && nextChannelID==0) ? 0 : getStrawID(nextOtisID, nextChannelID)) ;
-	
-	// format statement is always evaluated so check msg level
-	if (msgLevel(MSG::DEBUG)) {
-	  verbose() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, "
-					    "nextOtisID %d, nextStrawID %d, nextTime %d",
-					    firstOtisID, firstChannelID, firstTime,
-					    nextOtisID, nextChannelID, nextTime) << endmsg;
-	}
-	
-	//Get First ChannelID
-	OTChannelID fchannelID(station, layer, quarter, module, Fstraw, firstTime);
-	moduledata.ownedottimes().push_back( OTLiteTime( fchannelID ) ) ;
-	
-	//Next Hit
-	if (Nstraw != 0) { //To Check that this is not a No Channel Case
-	  
-	  //Get Next ChannelID
-	  OTChannelID nchannelID(station, layer, quarter, module, Nstraw, nextTime);
-	    moduledata.ownedottimes().push_back(OTLiteTime( nchannelID ) ) ;
-	}
+        DataWord dataWord = data[i];
+        
+        //getting data word information using the mask
+        int nextTime = dataWord.nextTime();
+        int nextChannelID = dataWord.nextChannel();
+        int nextOtisID = dataWord.nextOtis();
+        int firstTime = dataWord.firstTime();
+        int firstChannelID = dataWord.firstChannel();
+        int firstOtisID = dataWord.firstOtis();
+        
+        //Get Straw numbers
+        int Fstraw  = getStrawID(firstOtisID, firstChannelID);
+        int Nstraw = ((nextTime==0 && nextOtisID==0 && nextChannelID==0) ? 0 : getStrawID(nextOtisID, nextChannelID)) ;
+        
+        // format statement is always evaluated so check msg level
+        if (msgLevel(MSG::DEBUG)) {
+          verbose() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, "
+                                            "nextOtisID %d, nextStrawID %d, nextTime %d",
+                                            firstOtisID, firstChannelID, firstTime,
+                                            nextOtisID, nextChannelID, nextTime) << endmsg;
+        }
+        
+        //Get First ChannelID
+        OTChannelID fchannelID(station, layer, quarter, module, Fstraw, firstTime);
+        moduledata.addHit( fchannelID, m_nsPerTdcCount ) ;
+        
+        //Next Hit
+        if (Nstraw != 0) { //To Check that this is not a No Channel Case
+          
+          //Get Next ChannelID
+          OTChannelID nchannelID(station, layer, quarter, module, Nstraw, nextTime);
+          moduledata.addHit( nchannelID, m_nsPerTdcCount  ) ;
+        }
       }
     }
     moduledata.setIsDecoded(true) ;

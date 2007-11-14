@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.20 2007-10-05 11:54:39 cattanem Exp $
+// $Id: OTTimeCreator.cpp,v 1.21 2007-11-14 16:05:39 wouter Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -36,7 +36,6 @@ OTTimeCreator::OTTimeCreator( const std::string& name,
     m_rawBankDecoder( (IOTRawBankDecoder*)0 )
 {
   declareProperty( "OutputLocation", m_timeLocation = OTTimeLocation::Default );
-  declareProperty("ToFCorrection", m_tofCorrection = true);
 }
 
 //=============================================================================
@@ -77,11 +76,8 @@ StatusCode OTTimeCreator::execute()
       imod != m_tracker->modules().end(); ++imod) {
     LHCb::OTLiteTimeRange ottimes = m_rawBankDecoder->decodeModule( (*imod)->elementID() ) ;
     
-    for( LHCb::OTLiteTimeRange::const_iterator it = ottimes.begin() ; it != ottimes.end(); ++it) {
-      double unCorrectedTime = it->rawTime() ;
-      double t0 = m_tofCorrection ? (*imod)->strawT0( it->channel().straw()) : 0 ;
-      outputTimes->insert(new OTTime(it->channel(),unCorrectedTime - t0 ));
-    }
+    for( LHCb::OTLiteTimeRange::const_iterator it = ottimes.begin() ; it != ottimes.end(); ++it) 
+      outputTimes->insert(new OTTime(it->channel(),it->calibratedTime())) ;
   }
   
   return StatusCode::SUCCESS;
