@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.3 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.4 2007-11-14 13:57:04 hernando Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -33,10 +33,6 @@ class HltVertexMaker : public HltAlgorithm {
   bool haveOverlaps(const LHCb::Track& track1, const LHCb::Track& track2 );
 
  private:
-
-  // PatOutputVertices
-  std::string m_patOutputVerticesName;
-  PatVertexContainer* m_patOutputVertices;
 
   bool m_checkForOverlaps;
   bool m_twoContainers;

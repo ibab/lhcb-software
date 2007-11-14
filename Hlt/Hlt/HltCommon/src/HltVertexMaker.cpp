@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.6 2007-10-11 09:41:18 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.7 2007-11-14 13:57:04 hernando Exp $
 // Include files 
 
 
@@ -24,6 +24,8 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltVertexMaker );
 
+using namespace LHCb;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -32,9 +34,7 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   m_consider2 = true;
-  declareProperty( "CheckForOverlaps",       m_checkForOverlaps = false );  
-  declareProperty( "PatOutputVerticesName",  
-                   m_patOutputVerticesName = "Hlt/Vertex/VertexMakerBank");
+  declareProperty( "CheckForOverlaps",       m_checkForOverlaps = false );
 
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
@@ -70,10 +70,6 @@ StatusCode HltVertexMaker::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by HltAlgorithm
 
-  
-  // Prepare output vertex container
-  m_patOutputVertices = 
-    m_patDataStore->createVertexContainer(m_patOutputVerticesName,200);
   
   checkInput(m_inputTracks," input tracks ");
   checkInput(m_inputTracks2," input tracks2 ");
@@ -136,6 +132,9 @@ StatusCode HltVertexMaker::execute() {
   StatusCode sc = StatusCode::SUCCESS;
 
   if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
+
+  RecVertices* overtices = new RecVertices();
+  put(overtices,m_outputVerticesName);
   m_outputVertices->clear();
 
   if (!m_twoContainers && m_inputTracks->size() <2) {
@@ -200,7 +199,7 @@ StatusCode HltVertexMaker::execute() {
       verbose()<<" pair found [1] "<<track2.key() <<track2.slopes() << endreq;
       // Write vertex
       //if ( m_outputByVertex ) {
-      LHCb::RecVertex* sv = m_patOutputVertices->newEntry();
+      LHCb::RecVertex* sv = new RecVertex();
       _makeVertex(track1,track2,*sv);
       m_outputVertices->push_back(sv);
       for (size_t i = 0; i < m_filterIDs.size(); ++i) {

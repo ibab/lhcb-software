@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.cpp,v 1.4 2007-10-12 14:33:01 hernando Exp $
+// $Id: HltPrepareTracks.cpp,v 1.5 2007-11-14 13:57:03 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ HltPrepareTracks::HltPrepareTracks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
+  declareProperty("TESInputTracksName", m_TESInputTracksName = "");
 }
 //=============================================================================
 // Destructor
@@ -49,7 +50,6 @@ StatusCode HltPrepareTracks::initialize() {
   Hlt::CheckFlag back(Track::Backward);
   _nobackwards = (!back).clone();
 
-  checkInput(m_patInputTracks," pat input tracks ");
   checkInput(m_outputTracks," output tracks ");
 
   return StatusCode::SUCCESS;
@@ -62,9 +62,10 @@ StatusCode HltPrepareTracks::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
   
+  Tracks* itracks = get<Tracks>(m_TESInputTracksName);
   // select the input tracks that are non-backwards
   m_outputTracks->clear();
-  Hlt::select(*m_patInputTracks,*_nobackwards,*m_outputTracks);
+  Hlt::select(*itracks,*_nobackwards,*m_outputTracks);
   debug() << " non backward tracks " << m_outputTracks->size() << endreq;
 
   int ncan = m_outputTracks->size();

@@ -1,4 +1,4 @@
-// $Id: HltPrepareVertices.cpp,v 1.1 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltPrepareVertices.cpp,v 1.2 2007-11-14 13:57:03 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ HltPrepareVertices::HltPrepareVertices( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
+  declareProperty("TESInputVerticesName", m_TESInputVerticesName = "");
 }
 //=============================================================================
 // Destructor
@@ -42,7 +43,6 @@ StatusCode HltPrepareVertices::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  checkInput(m_patInputVertices," pat input vertices ");
   checkInput(m_outputVertices," output vertices ");
 
   return StatusCode::SUCCESS;
@@ -54,8 +54,10 @@ StatusCode HltPrepareVertices::initialize() {
 StatusCode HltPrepareVertices::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
-
-  Hlt::copy(*m_patInputVertices,*m_outputVertices);  
+  
+  RecVertices* ivertices = get<RecVertices>(m_TESInputVerticesName);
+  
+  Hlt::copy(*ivertices,*m_outputVertices);  
   
   int ncan = m_outputVertices->size();
   candidateFound(ncan);

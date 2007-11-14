@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.h,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltPrepareTracks.h,v 1.2 2007-11-14 13:57:03 hernando Exp $
 #ifndef HLTPREPARETRACKS_H 
 #define HLTPREPARETRACKS_H 1
 
@@ -27,6 +27,8 @@ public:
 
 
 protected:
+
+  std::string m_TESInputTracksName;
 
   Hlt::TrackFilter* _nobackwards;
 

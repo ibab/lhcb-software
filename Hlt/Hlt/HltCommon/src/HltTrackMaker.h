@@ -1,4 +1,4 @@
-// $Id: HltTrackMaker.h,v 1.1 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltTrackMaker.h,v 1.2 2007-11-14 13:57:04 hernando Exp $
 #ifndef HLTTRACKMAKER_H 
 #define HLTTRACKMAKER_H 1
 
@@ -32,9 +32,6 @@ class HltTrackMaker : public HltAlgorithm {
   void saveConfiguration();
 
  private:
-
-  // PatOutputVertices
-  std::string m_patOutputTracksName;
 
   std::string m_trackMakerName;
 

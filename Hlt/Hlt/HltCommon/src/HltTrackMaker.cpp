@@ -1,4 +1,4 @@
-// $Id: HltTrackMaker.cpp,v 1.1 2007-08-09 14:00:25 hernando Exp $
+// $Id: HltTrackMaker.cpp,v 1.2 2007-11-14 13:57:03 hernando Exp $
 // Include files 
 
 
@@ -33,9 +33,6 @@ HltTrackMaker::HltTrackMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
-  declareProperty( "PatOutputTracksName",  
-                   m_patOutputTracksName = "Hlt/Track/TrackMakerBank");
 
   declareProperty( "TrackMakerTool",  
                    m_trackMakerName = "empty");
@@ -137,7 +134,7 @@ StatusCode HltTrackMaker::execute() {
   m_outputTracks->clear();
 
   Tracks* otracks = new Tracks();
-  put(otracks,m_patOutputTracksName);
+  put(otracks,m_outputTracksName);
 
   if (m_debug) {
     printInfo( "tracks [1]", *m_inputTracks);
@@ -187,8 +184,7 @@ StatusCode HltTrackMaker::execute() {
         }
         if (m_debug)
           printInfo(" make track ",*otrack);
-      } // track donde
-      
+      } else delete otrack;
       
     } // loop on tracks2
   } // loop on tracks1
