@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.122 2007-11-14 11:28:23 pkoppenb Exp $
+! $Id: release.notes,v 1.123 2007-11-14 16:29:13 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+ 2007-11-14 - Yuehong Xie
+  - src/AdaptivePVReFitter.cpp
+    .use the right method to initialize std::vector<double>
 
 !========================== VertexFit v4r4 2007-11-14 ===================
 ! 2007-11-13 - Yuehong Xie

@@ -44,6 +44,12 @@ AdaptivePVReFitter::AdaptivePVReFitter( const std::string& type,
                    m_veloExtrapolatorName = "TrackLinearExtrapolator");
   declareProperty( "minTrNumber", m_minTrNumber = 2);
 
+  m_temperatures.push_back(10.0);
+  m_temperatures.push_back(4.0);
+  m_temperatures.push_back(1.0);
+  m_temperatures.push_back(0.001);
+  m_temperatures.push_back(0.001);
+
 }
 
 //=============================================================================
@@ -57,14 +63,6 @@ AdaptivePVReFitter::~AdaptivePVReFitter() {};
 StatusCode AdaptivePVReFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-
-  if(m_reweightTracks && m_temperatures.size()==0) {
-    m_temperatures.push_back(10.0);
-    m_temperatures.push_back(4.0);
-    m_temperatures.push_back(1.0);
-    m_temperatures.push_back(0.001);
-    m_temperatures.push_back(0.001);
-  }
 
   m_fullExtrapolator = tool<ITrackExtrapolator>( m_fullExtrapolatorName );
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
