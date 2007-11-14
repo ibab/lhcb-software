@@ -15,6 +15,7 @@
 #include "HltBase/HltTypes.h"
 #include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/HltFunctions.h"
+#include "HltBase/ERelations.h"
 
 // struct __Instantiations
 // {

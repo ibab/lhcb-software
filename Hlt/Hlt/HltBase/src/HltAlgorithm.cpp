@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.20 2007-10-12 14:33:09 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.21 2007-11-14 13:34:19 hernando Exp $
 // Include files 
 
 // from boost
@@ -10,7 +10,6 @@
 
 // local
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/IHltDataStore.h"
 
 #include "HltBase/ESequences.h"
 #include "Event/HltNames.h"
@@ -39,11 +38,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("SelectionName",
                   m_selectionName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
-  
-  // location of the input tracks, primary vertices and vertices
-  declareProperty("PatInputTracksName",     m_patInputTracksName = "");
-  declareProperty("PatInputTracks2Name",     m_patInputTracks2Name = "");
-  declareProperty("PatInputVerticesName",     m_patInputVerticesName = "");
 
   // location of the input tracks, primary vertices and vertices
   declareProperty("InputTracksName",     m_inputTracksName = "");
@@ -112,21 +106,6 @@ StatusCode HltAlgorithm::initialize() {
 
 }
 
-void HltAlgorithm::patretrieve(PatTrackContainer*& con,
-                               PatDataStore*& store,
-                               const std::string& name) {
-  con = NULL;
-  if (name != "") {con = store->tracks(name);
-  debug() << " initialize pat container " << name << endreq;} 
-}
-
-void HltAlgorithm::patretrieve(PatVertexContainer*& con,
-                               PatDataStore*& store, 
-                               const std::string& name) {
-  con = NULL;
-  if (name != "") { con = store->vertices(name);
-  debug() << " initialize pat container " << name << endreq;} 
-}
 
 bool HltAlgorithm::initContainers() {
 
@@ -144,20 +123,6 @@ bool HltAlgorithm::initContainers() {
   sumregister(m_outputVertices,m_outputVerticesName);
   sumregister(m_outputTracks,m_outputTracksName);
 
-  // from PatDataStore
-  m_patDataStore = NULL;
-  m_patDataStore = tool<PatDataStore>("PatDataStore");
-  if (!m_patDataStore) return false;
-  
-  patretrieve(m_patInputTracks,m_patDataStore,m_patInputTracksName);
-  patretrieve(m_patInputTracks2,m_patDataStore,m_patInputTracks2Name);
-  patretrieve(m_patInputVertices,m_patDataStore,m_patInputVerticesName);
-
-  // info of using containers...
-  infoContainer(m_patInputTracks," pat input tracks ",m_patInputTracksName);
-  infoContainer(m_patInputTracks2," pat input tracks2 ",m_patInputTracks2Name);
-  infoContainer(m_patInputVertices," pat input vertices ",
-                m_patInputVerticesName);
   
   infoContainer(m_inputTracks,   " input tracks ",   m_inputTracksName);
   infoContainer(m_inputTracks2,  " input tracks2 ", m_inputTracks2Name);
@@ -189,13 +154,6 @@ void HltAlgorithm::initHistograms() {
     initializeHisto(m_histoInputTracks,   "InputTracks");
   if (m_inputTracks2)
     initializeHisto(m_histoInputTracks2,  "InputTracks2");
-
-  if (m_patInputTracks)
-    initializeHisto(m_histoPatInputTracks, "PatInputTracks");
-  if (m_patInputTracks2)
-    initializeHisto(m_histoPatInputTracks2, "PatInputTracks2");
-  if (m_patInputVertices)
-    initializeHisto(m_histoPatInputVertices, "PatInputVertices");
 
   // Output
   initializeHisto(m_histoCandidates ,   "Candidates");
@@ -299,24 +257,12 @@ bool HltAlgorithm::beginExecute() {
 
   if( m_consider1 && !(ok1||ok2) )return false;
 
-  ok = size(m_patInputTracks,m_nPatInputTracks,m_histoPatInputTracks,
-            " pat input tracks ");
-  if (!ok) return ok;
-
-  ok = size(m_patInputTracks2,m_nPatInputTracks2,m_histoPatInputTracks2,
-            " pat input tracks 2");
-  if (!ok) return ok;
-
   ok = size(m_primaryVertices,m_nPrimaryVertices,m_histoInputPVs,
             " input primary vertices ");
   if (!ok) return ok;
   
   ok = size(m_inputVertices,m_nInputVertices,m_histoInputVertices,
             " input vertices ");
-  if (!ok) return ok;
-
-  ok = size(m_patInputVertices,m_nPatInputVertices,m_histoPatInputVertices,
-            " pat input vertices ");
   if (!ok) return ok;
 
 

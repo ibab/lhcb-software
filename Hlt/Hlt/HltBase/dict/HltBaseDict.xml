@@ -17,4 +17,6 @@
   <class name = "Hlt::VertexFilter" />
   <class name = "Hlt::TrackBiFunction" />
   <class name = "Hlt::VertexBiFunction" />
+  <class name = "Estd::IntRelation" />
+  <class name = "Hlt::KeyRelation" />
 </lcgdict>

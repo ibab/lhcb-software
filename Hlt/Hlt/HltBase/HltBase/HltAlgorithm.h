@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.15 2007-09-20 19:20:54 tskwarni Exp $
+// $Id: HltAlgorithm.h,v 1.16 2007-11-14 13:34:18 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -8,8 +8,6 @@
 #include "Event/HltNames.h"
 
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/IHltDataStore.h"
-#include "PatTools/PatDataStore.h"
 #include "HltBase/HltTypes.h"
 #include "HltBase/EParser.h"
 #include "HltBase/HltConfigurationHelper.h"
@@ -18,7 +16,6 @@
  *  
  *  functionality:
  *        - deals with input/output tracks from the summary-data 
- *          options to set the pat to input/output tracks and vertices
  *        - deals with the HltSummary
             save an retrieve from summary, set decision and decision type.
  *        - beginExecute, and endExecute methods to do common task 
@@ -31,9 +28,7 @@
  *      OuptutTracksName,OutputVertices:
  *          input tracks and vertices from the HltDataStore (logical objects)
  *          logical objects: the containers are pointers to objects owned
- *                           by an external container (in this case PatDataStore)
- *      PatInputTracksName,PatInputTrack2Name,PatInputVerticesName:
- *          input tracks and vertices from the PatDataStore (own objectes)
+ *                           by the TES
  *      SummaryLocation: location of the HltSummary 
  *      SelectionName: name of the SelectionSummary of this algorithm
  *                     (see Event/HltEnums.h)  
@@ -233,31 +228,11 @@ protected:
     info() << " retrieved data from hlt " << loca << endreq;
   }
   
-  // retrieve a pat track container from the pat store with a given name
-  void patretrieve(PatTrackContainer*& con, PatDataStore*& store,
-                   const std::string& name);
-
-  // retrieve a pat vertex container from the pat store with a given name
-  void patretrieve(PatVertexContainer*& con, PatDataStore*& store,
-                   const std::string& name);
 
 protected:
 
-  // pointer to the pat data Store
-  PatDataStore* m_patDataStore;
-
   // hlt data provided service
   IDataProviderSvc* m_hltSvc;
-
-  // names of the pat input containers
-  std::string m_patInputTracksName;
-  std::string m_patInputTracks2Name;
-  std::string m_patInputVerticesName;
-  
-  // pointers to the pat containers
-  PatTrackContainer* m_patInputTracks;
-  PatTrackContainer* m_patInputTracks2;
-  PatVertexContainer* m_patInputVertices;
   
   // names of the selection containers
   std::string m_inputTracksName;
@@ -336,10 +311,6 @@ protected:
   HltHisto m_histoInputTracks;
   HltHisto m_histoInputTracks2;
 
-  // Input histograms for tracks and vertices from Pat container
-  HltHisto m_histoPatInputTracks;
-  HltHisto m_histoPatInputTracks2;
-  HltHisto m_histoPatInputVertices;
 
   // Output histograms for track and vertices
   HltHisto m_histoCandidates;
@@ -351,11 +322,7 @@ protected:
   int m_nInputTracks;
   int m_nInputTracks2;
   int m_nInputVertices;
-  int m_nPrimaryVertices;
-  
-  int m_nPatInputTracks;
-  int m_nPatInputTracks2;
-  int m_nPatInputVertices;
+  int m_nPrimaryVertices;  
   
   // size of the output containers
   int m_nOutputTracks;
