@@ -55,6 +55,7 @@ HistogramPersistencySvc.OutputFile = "Moore_minbias.root";
 ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
 ApplicationMgr.AuditAlgorithms = 1;  
 AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 ToolSvc.SequencerTimerTool.OutputLevel = 4;          
 
 //---------------------------------------------------------------------------
