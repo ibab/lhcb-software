@@ -3,6 +3,10 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+! 2007-11-14 - Wouter Hulsbergen
+ - moved calibratedTime from OTHit to OTLiteTime
+
 ! 2007-11-14 - Stephanie Hansmann-Menzemer
  - add double to float conversion in RecoFuncs.h to remove compiler warning
 

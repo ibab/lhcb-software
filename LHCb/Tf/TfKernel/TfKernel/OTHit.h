@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.7 2007-09-07 13:32:10 wouter Exp $
+ *  $Id: OTHit.h,v 1.8 2007-11-14 16:06:07 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -18,6 +18,7 @@
 // Include files
 #include "TfKernel/LineHit.h"
 #include "LoKi/Range.h"
+#include "Event/OTLiteTime.h"
 
 namespace Tf
 {
@@ -49,7 +50,7 @@ namespace Tf
   public: // Simple accessors to internal data members
 
     /** Returns the calibrated time is drift time + propagation time - default tof */
-    inline float calibratedTime() const { return m_calibratedTime; }
+    inline float calibratedTime() const { return m_rawhit.calibratedTime(); }
 
     /** Access the associated DeOTModule for this hit
      *  @return Reference to the associated DeOTModule */
@@ -116,7 +117,6 @@ namespace Tf
 
     const DeOTModule* m_module ;         ///< Pointer to the associated DeOTModule
     LHCb::OTLiteTime  m_rawhit ;         ///< The raw OTLiteTime for this hit
-    float             m_calibratedTime ; ///< The calibrated time = drift time + propagation time - default tof
     float             m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
 
   };
@@ -137,8 +137,7 @@ namespace Tf
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) :
     LineHit(aModule,rawhit),
     m_module(&aModule),
-    m_rawhit(rawhit),
-    m_calibratedTime( m_rawhit.rawTime() - module().strawT0(m_rawhit.channel().straw() ) )
+    m_rawhit(rawhit)
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
