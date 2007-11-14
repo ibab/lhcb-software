@@ -8,7 +8,7 @@
  *  pattern reco algorithms
  *
  *  CVS Log :-
- *  $Id: RecoFuncs.h,v 1.5 2007-08-28 12:03:58 jonrob Exp $
+ *  $Id: RecoFuncs.h,v 1.6 2007-11-14 09:10:31 smenzeme Exp $
  *
  *  @authors S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-03
@@ -132,7 +132,6 @@ namespace Tf
     }
   };
 
-  /// XXX???XXX What is this for ?
   template<class Hit>
   inline void updateTTHitForTrack ( Hit* hit, 
                                     const double y0, 
@@ -143,15 +142,15 @@ namespace Tf
     hit->setX( hit->hit()->x(y) ) ;
   }
 
-  /// XXX???XXX What is this for ?
+
   template<class Hit>
   inline void updateHitForTrack ( Hit* hit, 
                                   const double y0, 
                                   const double dyDz ) 
   {
     const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
-    hit->setZ( hit->hit()->z(y) ) ;
-    hit->setX( hit->hit()->x(y) ) ;
+    hit->setZ( hit->hit()->z(float(y)) ) ;
+    hit->setX( hit->hit()->x(float(y)) ); 
     const Tf::OTHit* otHit = hit->hit()->othit();
     if(otHit) 
     {
