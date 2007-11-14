@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.1 2007-09-07 13:19:20 wouter Exp $
+ *  $Id: OTLiteTime.h,v 1.2 2007-11-14 12:38:22 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -39,10 +39,10 @@ namespace LHCb
     const LHCb::OTChannelID& channel() const { return m_channelid ; }
 
     /// Access the raw OT time
-    float rawTime() const { return m_channelid.tdcTime()*m_nsPerTdcCount ; }
+    float rawTime() const;
 
     /// Static method to set the ns per TDS conversion factor
-    static void setNsPerTdcCount(const float c) { m_nsPerTdcCount = c ; }
+    static void setNsPerTdcCount(const float c);
 
   public:
 

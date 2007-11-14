@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r6 2007-11-14 ======================
+! 2007-11-14 - Marco Cattaneo
+ - In OTLiteTime, move accessors to static member to .cpp, to please windows
+
 !======================= OTDAQ v5r5 2007-10-08 ======================
 ! 2007-10-06 - Wouter Hulsbergen
  - Added some protection against corrupted banks
