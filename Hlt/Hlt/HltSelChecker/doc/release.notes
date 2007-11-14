@@ -12,6 +12,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v5r2 2007-11-14 ===================
 ! 2007-10-26 - Patrick Koppenburg
  - options/DVTestHltMB.opts
    . Test HLT on MB. Fulls tuple for pions.
