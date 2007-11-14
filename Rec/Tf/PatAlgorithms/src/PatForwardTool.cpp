@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.2 2007-11-02 10:33:51 cattanem Exp $
+// $Id: PatForwardTool.cpp,v 1.3 2007-11-14 09:06:53 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -460,7 +460,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doubl
           PatFwdHit* hit = *itH;
           updateHitForTrack( hit, y0, ty);
 
-          if ( !hit->hit()->isYCompatible( yRegion, yCompat ) )
+          if ( !hit->hit()->isYCompatible( (float)yRegion, (float)yCompat ) )
             continue;
 
 
@@ -540,8 +540,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
           PatFwdHit* hit = *itH;
 
-          if ( !hit->hit()->isYCompatible( yRegion, tolY ) ) continue;
-
+          if ( !hit->hit()->isYCompatible( (float)yRegion, (float)tolY ) ) continue;
 
           updateHitForTrack( hit, y0, ty );
 
