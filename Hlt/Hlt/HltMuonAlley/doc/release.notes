@@ -3,7 +3,11 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
-!========================= HltMuonAlley 2007-10-30 ===================
+
+!========================== HltMuonAlley v1r6 2007-11-14 ===================
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v1r6
+
 ! 2007-10-30 Sandra Amato
    - fix Abs value in HltMuonTrigger2MuonsWithIP
    - remove requirement of opposite charge from HltMuonTrigger2MuonsNoIP
