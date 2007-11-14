@@ -19,7 +19,7 @@ HltL0TriggerSequence.Members = {
   "HltSequencer/PrepareL0TriggerLocalPi0Seq",
   "HltSequencer/PrepareL0TriggerGlobalPi0Seq",
   "HltSequencer/PrepareL0TriggerHadronSeq",
-  "HltSequencer/L0MuonCandidatesFromRawSeq",
+  "HltSequencer/L0MuonCandidatesFromRawSeq", 
   "HltSequencer/PrepareL0TriggerMuonSeq",
   "HltSequencer/PrepareL0TriggerDiMuonSeq",
   "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"

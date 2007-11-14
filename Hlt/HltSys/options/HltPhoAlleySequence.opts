@@ -19,6 +19,7 @@ HltPhoAlley.Members = {"L0Entry/PhoL0Entry",
                        "HltTracking/HltPhoRecoIPVelo",
                        "HltTrackFilter/HltPho3DIPSelection",
                        "GaudiSequencer/HltDecodeT",
+                       "GaudiSequencer/HltDecodeTT",
                        "HltTracking/HltPhoRecoIPForward",
                        "HltTrackFilter/PhoPreTrigger",
                        "HltVertexMaker/PhoTriggerPhoTrk"

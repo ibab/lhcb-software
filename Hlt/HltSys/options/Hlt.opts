@@ -23,9 +23,7 @@ Hlt.ModeOr = true;
 //
 // init the HLT sequencer
 //
-HltInitSeq.Members = {"PatInitEvent",
-                      "HltInit"  
-};
+HltInitSeq.Members = {"HltInit"};
 
 // now use the updated L0 channel configuration
 HltInit.TCKName = "UpdatedL0";

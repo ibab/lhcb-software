@@ -21,6 +21,7 @@ HltEleAlley.Members = {"L0Entry/EleL0Entry",
                        "HltTracking/EleSingleTRVelo",
                        "HltTrackFilter/EleSingleTFVelo",
                        "GaudiSequencer/HltDecodeT",
+                       "GaudiSequencer/HltDecodeTT",
                        "HltTracking/EleSingleTRForward",
                        "HltTrackFilter/ElePreTriggerSingle",
                        "HltSequencer/HltEleTriggers"

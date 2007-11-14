@@ -12,6 +12,8 @@ HltRecoSequence.Members = {
   "HltTracking/HltRecoForward"
 };
 
+
+
 HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
 HltRecoVelo.RecoName = "Velo";
 HltRecoVelo.HistogramUpdatePeriod = 0;
@@ -50,8 +52,7 @@ PatHltRecoForward.DoCleanUp = false;
 // TODO: If unique decoding REC/HLT use same algo name
 //       or both REC/HLT use DecodeOnDemand
 HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer", 
-                              "PatVeloLoadClusters/PatHltVeloLoadClusters",
-                              "PatVeloRTracking/PatHltVeloRTracking",
+                              "Tf::PatVeloRTracking/PatHltVeloRTracking",
                               "PatPV2D/PatHltPV2D",
                               "HltPrepareTracks/HltPrepareRZVelo",
                               "HltPrepareVertices/HltPreparePrimaryVertices"
@@ -64,12 +65,12 @@ PatHltPV2D.InputTracksName = "Hlt/Track/RZVelo";
 PatHltPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
 PatHltPV2D.OutputLevel = 3;
 
-HltPrepareRZVelo.PatInputTracksName   = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.TESInputTracksName   = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.OutputTracksName     = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.OutputLevel = 3;
 
 HltPreparePrimaryVertices.SelectionName = "PV2D";
-HltPreparePrimaryVertices.PatInputVerticesName = "Hlt/Vertex/PV2D";
+HltPreparePrimaryVertices.TESInputVerticesName = "Hlt/Vertex/PV2D";
 HltPreparePrimaryVertices.OutputVerticesName   = "Hlt/Vertex/PV2D";
 HltPrepareRZVelo.OutputLevel = 3;
 
@@ -83,14 +84,12 @@ PatPV3D.InputTracksName = "Hlt/Track/Velo";
 
 // Decode TT
 //-------------
-HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters",
-                         "PatTTCoordFromRaw/PatHltTTCoordFromRaw"
+HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters"
 };
 
 // Decode T
 //--------------
-HltDecodeT.Members += { "RawBankToSTLiteClusterAlg/createITLiteClusters",
-                        "PatTCoordFromRaw/PatHltTCoordFromRaw"
+HltDecodeT.Members += { "RawBankToSTLiteClusterAlg/createITLiteClusters"
 };
 createITLiteClusters.detType = "IT";
 
@@ -101,7 +100,7 @@ createITLiteClusters.detType = "IT";
 
 // Forward
 //----------------
-#include "$PATFORWARDROOT/options/PatFwdTool.opts"
+#include "$PATALGORITHMSROOT/options/PatFwdTool.opts"
 ToolSvc.PatForwardTool.OutputLevel = 3;
 ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
 ToolSvc.PatForwardTool.MinPt       = 80. ;   
