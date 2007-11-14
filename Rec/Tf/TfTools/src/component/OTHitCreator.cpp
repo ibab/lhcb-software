@@ -90,7 +90,7 @@ namespace Tf
         if( tmin < tmax ) {
           for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
                ihit != otlitetimes.end(); ++ihit) {
-            float calibTime = ihit->rawTime() - moduleelement.strawT0( ihit->channel().straw() ) ;
+            float calibTime = ihit->calibratedTime() ;
             if( tmin <= calibTime && calibTime <= tmax )
               m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
           }
@@ -331,65 +331,7 @@ namespace Tf
   Tf::OTHit OTHitCreator::hit( const LHCb::OTChannelID id ) const
   {
     // we could as well use OTDet here .. we only need the element.
-    const Tf::HitCreatorGeom::OTModule* thismodule = module(id) ;
-    return Tf::OTHit( thismodule->detelement(), LHCb::OTLiteTime(id)) ;
+    const DeOTModule& thismodule = module(id)->detelement() ;
+    return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule )  ) ;
   }
-  
-  //   void OTHitCreator::insertHits(const std::vector<size_t>& modules) const
-  //   {
-  //     // this call invalidates all pointers in modules that we don't
-  //     // currently need. the problem is that it is far too expensive to
-  //     // fill all of them.
-
-
-  //     size_t totalnuminsertedhits(0) ;
-  //     for(  std::vector<unsigned int>::const_iterator imodindex = modules.begin() ;
-  //    imodindex != modules.end(); ++imodindex ) {
-
-  //       HitCreatorGeom::OTDetector::ModuleContainer::iterator imodule = m_detectordata->modules().begin() + *imodindex ;
-  //       HitCreatorGeom::OTModule& module = **imodule ;
-  //       if( ! module.isLoaded() ) {
-
-  //  // create the hits, sort etc.
-  //  unsigned int numinsertedhits = loadHits(module) ;
-
-  //  if( numinsertedhits > 0 ) {
-  //    totalnuminsertedhits += numinsertedhits ;
-
-  //    // I still need to figure out if the insertion is faster or
-  //    // slower than just resetting all pointers.
-  //    if( tryinsertion ) {
-
-  //      // insert in the master hit list
-  //      HitCreatorGeom::OTDetector::HitContainer& hits = m_detectordata->hits() ;
-  //      HitCreatorGeom::OTDetector::HitContainer::iterator oldbegin = hits.begin() ;
-
-  //      // this is just a const-cast!
-  //      HitCreatorGeom::OTDetector::HitContainer::iterator modulebegin = oldbegin + (module.hits().begin()-oldbegin) ;
-
-  //      hits.insert(modulebegin , module.sortedhits().begin(), module.sortedhits().end() ) ;
-
-  //      // now correct all pointers from modules into master hit list
-  //      bool afterinsertedmodule = false ;
-  //      HitCreatorGeom::OTDetector::HitContainer::iterator newbegin ;
-  //      for( HitCreatorGeom::OTDetector::ModuleContainer::iterator jmodule =  m_detectordata->modules().begin() ;
-  //    jmodule != m_detectordata->modules().end() ; ++jmodule ) {
-  //        // this is the pointer to the first hit in this module
-  //        newbegin = hits.begin() + ((*jmodule)->hits().begin() - oldbegin) ;
-  //        // correct for the number of inserted hits if needed
-  //        if( afterinsertedmodule ) newbegin += numinsertedhits ;
-  //        // update the range
-  //        (*jmodule)->setRange( newbegin, newbegin + (*jmodule)->ownedhits().size() ) ;
-  //        if(jmodule == imodule) afterinsertedmodule = true ;
-  //      }
-  //      // check that everything adds up
-  //      assert( m_detectordata->modules().back()->hits().end() == hits.end() ) ;
-  //    }
-  //  }
-  //       }
-  //     }
-  //     if(!tryinsertion && totalnuminsertedhits>0) fillMasterHitList(m_detectordata->hits().size() + totalnuminsertedhits) ;
-  //   }
-
-
 }

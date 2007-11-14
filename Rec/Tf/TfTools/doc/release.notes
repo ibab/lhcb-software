@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-11-14 - Wouter Hulsbergen
+ - adapted to change in OTLiteTime and OTHit
+
 !============================ TfTools v1r0 2007-10-12 ========================
 ! 2007-10-12 - Marco Cattaneo
  - Include changes released in Tf/TfKernel v1r1
