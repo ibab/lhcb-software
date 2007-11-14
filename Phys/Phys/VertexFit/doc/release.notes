@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.121 2007-11-13 15:01:29 xieyu Exp $
+! $Id: release.notes,v 1.122 2007-11-14 11:28:23 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+
+!========================== VertexFit v4r4 2007-11-14 ===================
 ! 2007-11-13 - Yuehong Xie
   - src/PVReFitter.cpp
     .bug fix: call clearTracks() to avoid duplicated tracks
