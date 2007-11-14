@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.1 2007-06-28 22:24:17 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.2 2007-11-14 14:00:10 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -75,7 +75,7 @@ protected:
 
 protected:
 
-  std::string m_patOutput;
+  std::string m_TESOutput;
   
   std::vector<LHCb::Track*> m_tracks;
 

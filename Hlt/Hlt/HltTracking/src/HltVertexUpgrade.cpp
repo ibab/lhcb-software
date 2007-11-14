@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.2 2007-06-28 22:24:18 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.3 2007-11-14 14:00:11 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -18,7 +18,6 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltVertexUpgrade );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -30,9 +29,8 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
 
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
 
-  declareProperty( "PatOutputVerticesName",  
-                   m_patOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
-
+  declareProperty( "TESOutputVerticesName",  
+                   m_TESOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
   
 };
 //=============================================================================
@@ -53,9 +51,6 @@ StatusCode HltVertexUpgrade::initialize() {
   
   m_tool->setReco(m_recoName);
 
-  m_patOutputVertices = 
-    m_patDataStore->createVertexContainer(m_patOutputVerticesName,200);
-
   checkInput(m_inputVertices," input vertices");
   checkInput(m_outputVertices," output vertices");
 
@@ -73,6 +68,8 @@ StatusCode HltVertexUpgrade::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
+  RecVertices* overtices = 
+    getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
   m_tool->beginExecute();
 
   for (Hlt::VertexContainer::iterator it = m_inputVertices->begin();
@@ -97,8 +94,9 @@ StatusCode HltVertexUpgrade::execute() {
       for (std::vector<Track*>::iterator t2 = m_tracks2.begin();
            t2 != m_tracks2.end(); ++t2) {
         Track& track2 = *(*t2);
-        LHCb::RecVertex* sv = m_patOutputVertices->newEntry();
+        RecVertex* sv = new RecVertex();
         _makeVertex(track1,track2,*sv);
+        overtices->insert(sv);
         m_outputVertices->push_back(sv);
         debug() << " created vertex " << endreq;
         if (m_debug) printInfo(" vertex ",*sv);

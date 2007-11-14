@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.14 2007-06-25 21:35:12 hernando Exp $
+// $Id: HltTracking.cpp,v 1.15 2007-11-14 14:00:10 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -39,10 +39,11 @@ HltTracking::HltTracking( const std::string& name,
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   declareProperty("OrderByPt", m_orderByPt = false);
 
-  m_configs["Velo"] = RecoConfiguration("Velo","RZVelo","PatVeloSpaceTracking",
+  m_configs["Velo"] = RecoConfiguration("Velo","RZVelo",
+                                        "Tf::PatVeloSpaceTracking",
                                         LHCb::TrackLocation::HltRZVelo,
                                         LHCb::TrackLocation::HltVelo);
-    
+  
   m_configs["VeloTT"] = RecoConfiguration("VeloTT","Velo","PatVeloTT",
                                           LHCb::TrackLocation::HltVelo,
                                           LHCb::TrackLocation::HltVeloTT);
@@ -88,21 +89,6 @@ StatusCode HltTracking::initialize() {
 
   sc = iniRecoAlgorithm();
   if ( sc.isFailure() ) return sc;  // error printed already by iniRecoAlgorithm
-
-  // get the Pat tracks that uses the reconstruction algorithm  
-  //----------------------------------------------------------
-  std::string patInputTracksName  = m_configs[m_recoName].inputTracksName;
-  std::string patOutputTracksName = m_configs[m_recoName].outputTracksName;
-
-  m_patInputTracks  = m_patDataStore->tracks(patInputTracksName);
-  m_patOutputTracks = m_patDataStore->tracks(patOutputTracksName);
-
-  infoContainer(m_patInputTracks,  " pat  input tracks", patInputTracksName);
-  infoContainer(m_patOutputTracks, " pat output tracks", patOutputTracksName);
-
-  initializeHisto(m_histoPatInputTracks,"PatInputTracks");
-  initializeHisto(m_histoPatOutputTracks,"PatOutputTracks");
-
   return StatusCode::SUCCESS;
 
 };
@@ -120,10 +106,14 @@ StatusCode HltTracking::iniRecoAlgorithm()
   m_prevrecoKey = HltNames::particleInfoID( prevrecoName );
   m_recoHasPt   = HltNames::particleInfoID( "VeloTTKey" );
 
+  m_TESInputTracksName = m_configs[m_recoName].inputTracksName;
+  m_TESOutputTracksName = m_configs[m_recoName].outputTracksName;
+  debug() << " TESInputTracksName " << m_TESInputTracksName << endreq;
+  debug() << " TESOutputTracksName " << m_TESOutputTracksName << endreq;
+
   IAlgManager* appMgr;
   StatusCode sc = service( "ApplicationMgr", appMgr );
   if ( !sc.isSuccess() )  return Error( "Unable to locate the ApplicationMgr" );
-
   IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
 
   StringProperty propertySelectorName = 
@@ -173,25 +163,21 @@ StatusCode HltTracking::iniRecoAlgorithm()
 // Main execution
 //=============================================================================
 StatusCode HltTracking::execute() {
-
+  
+  m_TESInputTracks  = getOrCreate<Tracks,Tracks>(m_TESInputTracksName);
+  m_TESOutputTracks = getOrCreate<Tracks,Tracks>(m_TESOutputTracksName);
+  
   flag();
   if (m_measureTime) m_timer->start(m_timePat);
   StatusCode sc = m_algo->execute();
   if (m_measureTime) m_timer->stop(m_timePat);
   load();
-  
-  if (m_outputTracks) candidateFound( m_outputTracks->size() );
-  else candidateFound(m_patOutputTracks->size());
 
-  if (m_debug && m_outputTracks) {
-    for (PatTrackContainer::iterator it0 = m_patOutputTracks->begin();
-         it0 != m_patOutputTracks->end(); it0++) {
-      debug() << " key " << (*it0)->key() << " slopes " << (*it0)->slopes() 
-              << " pt " << (*it0)->pt() << endreq; 
-    }
+  if (m_outputTracks) candidateFound( m_outputTracks->size() );
+
+  if (m_debug && m_outputTracks) 
     printInfo(" output tracks ",*m_outputTracks);
-  }
-        
+  
   return sc;
   
 }
@@ -201,8 +187,8 @@ StatusCode HltTracking::execute() {
 void HltTracking::flag() {
   if (m_measureTime) m_timer->start(m_timeFlag);
 
-  for (PatTrackContainer::iterator it = m_patInputTracks->begin();
-       it != m_patInputTracks->end(); ++it) {
+  for (Tracks::iterator it = m_TESInputTracks->begin();
+       it != m_TESInputTracks->end(); ++it) {
     (*it)->setFlag(Track::IPSelected,false);
     verbose() << "Flagged track " << (*it)->key() << " " 
               << " " << (*it)->momentum() << ", Cov:\n" 
@@ -210,11 +196,11 @@ void HltTracking::flag() {
   }
   
   if (m_inputTracks) markTracks(*m_inputTracks);
-  else markTracks(*m_patInputTracks);
+  else markTracks(*m_TESInputTracks);
 
   if (m_measureTime) m_timer->stop(m_timeFlag);
   
-  debug() << " pat input      tracks " << m_patInputTracks->size() << endreq;
+  debug() << " pat input      tracks " << m_TESInputTracks->size() << endreq;
   if (m_inputTracks)
     debug() << "     input      tracks " << m_inputTracks->size() << endreq;
 }
@@ -223,8 +209,8 @@ void HltTracking::flag() {
 void HltTracking::loadFrom(const Track& mon) {
   int keymon = mon.key();
   verbose() << " mon " << mon.key() << mon.slopes() << endreq;
-  for (PatTrackContainer::iterator it = m_patOutputTracks->begin();
-       it != m_patOutputTracks->end(); ++it) {
+  for (Tracks::iterator it = m_TESOutputTracks->begin();
+       it != m_TESOutputTracks->end(); ++it) {
     if ((*it)->nStates() <=0) continue; /// @todo protection to buggy tracks
     Track& son = **it;
     bool ok = false;
@@ -252,14 +238,14 @@ void HltTracking::load() {
   if (m_measureTime) m_timer->start(m_timeLoad);
 
   if (m_inputTracks) loadTracks(*m_inputTracks);
-  else loadTracks(*m_patInputTracks);
+  else loadTracks(*m_TESInputTracks);
   
   if ((m_orderByPt) && (m_outputTracks) && (m_recoKey >= m_recoHasPt)) 
     std::sort(m_outputTracks->begin(),m_outputTracks->end(),_sortByPt);
 
   if (m_measureTime) m_timer->stop(m_timeLoad);
   if (m_debug) {
-    debug() << " pat output tracks " << m_patOutputTracks->size() << endreq;
+    debug() << " pat output tracks " << m_TESOutputTracks->size() << endreq;
     if (m_outputTracks)
       debug() << "     output tracks " << m_outputTracks->size() << endreq;
   }

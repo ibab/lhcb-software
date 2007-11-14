@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.2 2007-06-28 22:24:18 hernando Exp $
+// $Id: HltVertexUpgrade.h,v 1.3 2007-11-14 14:00:11 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -52,8 +52,7 @@ protected:
 
 protected:
 
-  std::string m_patOutputVerticesName;
-  PatVertexContainer* m_patOutputVertices;
+  std::string m_TESOutputVerticesName;
 
   HltTrackUpgradeTool* m_tool;
 

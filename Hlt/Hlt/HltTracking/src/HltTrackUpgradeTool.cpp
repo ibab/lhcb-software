@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.1 2007-06-28 22:24:17 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.2 2007-11-14 14:00:10 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -93,15 +93,15 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
 
   std::string toolName = m_recoConf.retrieve<std::string>(m_recoName+"/Tool");
   m_recoID   = m_recoConf.retrieve<int>(m_recoName+"/RecoID");
-  std::string patInput  = m_recoConf.retrieve<std::string>(m_recoName+"/TESInput");
-  m_patOutput = m_recoConf.retrieve<std::string>(m_recoName+"/TESOutput");
+  std::string TESInput  = m_recoConf.retrieve<std::string>(m_recoName+"/TESInput");
+  m_TESOutput = m_recoConf.retrieve<std::string>(m_recoName+"/TESOutput");
   m_owner = m_recoConf.retrieve<bool>(m_recoName+"/Owner");
   m_trackType = m_recoConf.retrieve<int>(m_recoName+"/TrackType");
   if (m_recoID <= HltEnums::VeloKey) m_orderByPt = false;
 
   info() << " Reco " << m_recoName << " ID " << m_recoID 
-         << " Tool " << toolName << " Input " << patInput 
-         << " Output " << m_patOutput << " owner " << m_owner 
+         << " Tool " << toolName << " Input " << TESInput 
+         << " Output " << m_TESOutput << " owner " << m_owner 
          << " track type " << m_trackType << endreq;
 
   
@@ -115,7 +115,7 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
 
 void HltTrackUpgradeTool::beginExecute() {
   if (m_owner)
-    m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_patOutput);
+    m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_TESOutput);
 }
 
 
