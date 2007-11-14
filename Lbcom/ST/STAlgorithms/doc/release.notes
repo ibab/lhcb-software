@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-11-15 M. Needham
+ - Bug fix in STDigitCreator [in all strip running, not the default]
+
 !======================= STAlgorithms v2r4 2007-11-06 ========================
 ! 2007-11-06 M. Needham
  - Retune conversion factor from e- to ADC for IT

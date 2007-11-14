@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.15 2007-11-06 09:53:22 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.16 2007-11-14 14:14:00 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -128,7 +128,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
   // create noise strips in loop
   const DeSTDetector::Sectors& tSectors = m_tracker->sectors();
   if (!m_allStrips){
-    for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
+    for (unsigned int iNoiseStrip=0u; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
       // generate a random readout sector
       int iSector = (int)(m_uniformDist->shoot()*nSector);
       DeSTSector* aSector = tSectors[iSector];
@@ -146,7 +146,8 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
   else {
     DeSTDetector::Sectors::const_iterator iterS = tSectors.begin(); 
     for ( ; iterS != tSectors.end(); ++iterS){
-      for (unsigned int iStrip =0;  iStrip != (*iterS)->nStrip();  ++iStrip){
+      for (unsigned int iStrip =1u;  iStrip <= (*iterS)->nStrip();  ++iStrip){
+
         STChannelID aChan = (*iterS)->stripToChan(iStrip);
         double ranNoise = m_sigNoiseTool->noiseInADC(*iterS) * m_gaussDist->shoot();
         noiseCont.push_back(std::make_pair(ranNoise,aChan));
