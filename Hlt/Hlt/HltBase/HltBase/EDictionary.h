@@ -24,7 +24,6 @@ namespace Estd {
     }
   };
 
-
   class dictionary  {
   protected:
     
@@ -53,7 +52,7 @@ namespace Estd {
   public:
 
     //! default constructor
-    dictionary() {}
+    dictionary() { }
 
     //! default destructor
     virtual ~dictionary() 
@@ -83,17 +82,13 @@ namespace Estd {
     template <class T>
     T& retrieve(const Key& key) {
       if (!has_key(key)) throw invalid_key(key);
-      Item_root* root = _map[key];
-      Item<T>& obj = *(dynamic_cast<Item<T>*>(root));
-      return obj.item();
+      return dynamic_cast<Item<T>&>(*_map[key]).item();
     }
 
     template <class T>
     const T& retrieve(const Key& key) const {
       if (!has_key(key)) throw invalid_key(key);
-      Item_root* root = _map.find(key)->second;
-      Item<T>& obj = *(dynamic_cast<Item<T>*>(root));
-      return obj.item();
+      return dynamic_cast<Item<T>&>(*_map.find(key)->second()).item();
     } 
 
     //! clear the dictionary
@@ -111,5 +106,3 @@ namespace Estd {
   };
 };
 # endif
-
-  
