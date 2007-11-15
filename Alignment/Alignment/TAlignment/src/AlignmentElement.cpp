@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.2 2007-11-15 11:12:03 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.3 2007-11-15 15:22:54 janos Exp $
 // Include files
 
 // from STD
@@ -57,16 +57,16 @@ const std::vector<double>& AlignmentElement::deltaRotations() const {
 }
 
 std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
-  const std::string s = this->name();
-  const std::vector<double>& t = this->deltaTranslations();
-  const std::vector<double>& r = this->deltaRotations();
+  const std::string s = name();
+  const std::vector<double>& t = deltaTranslations();
+  const std::vector<double>& r = deltaRotations();
   lhs << std::endl;
   lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
   lhs << "* Element  : " << s << "\n"
-      << "* Index    : " << this->index() << "\n"
+      << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n" 
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n" 
-      << "* pivotXYZ : " << this->pivotXYZPoint() << std::endl;
+      << "* pivotXYZ : " << pivotXYZPoint() << std::endl;
   lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
   
   return lhs;

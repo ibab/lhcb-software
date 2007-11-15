@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.10 2007-11-15 11:12:02 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.11 2007-11-15 15:22:54 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -264,19 +264,19 @@ StatusCode AlignAlgorithm::execute() {
 
 
     for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-      m_equations->V(id->index())             -= convert(id->r()*id->d()) ; 
-      m_equations->M(id->index(),id->index()) += (Transpose(id->d())*id->d());
+      m_equations->V(id->index())              -= convert(id->r()*id->d()) ; 
+      m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
       
       for (std::vector<Data>::const_iterator jd = id; jd != idEnd; ++jd) {
 	if ( m_correlation || jd==id) {
 	  // make sure we go for the upper triangle...
-	  std::vector<Data>::const_iterator i(id),j(jd);
-	  if (i->index()>j->index()) std::swap(i,j);
-	  double c = cov.HCH_norm(i->id(),j->id());
-	  m_equations->M(i->index(),j->index()) -= c * Transpose(i->d())*j->d();
+	  std::vector<Data>::const_iterator i(id), j(jd);
+	  if (i->index() > j->index()) std::swap(i, j);
+	  const double c = cov.HCH_norm(i->id(),j->id());
+	  m_equations->M(i->index(), j->index()) -= c * Transpose(i->d())*j->d();
 	  
 	  if (!( i->id()==j->id())) {
-	    m_corrHistos[std::make_pair(i->index(),j->index())]->fill(m_iteration,c/std::sqrt(cov.HCH_norm(i->id(),i->id())*cov.HCH_norm(j->id(),j->id())));
+	    m_corrHistos[std::make_pair(i->index(), j->index())]->fill(m_iteration, c/std::sqrt(cov.HCH_norm(i->id(), i->id())*cov.HCH_norm(j->id(), j->id())));
 	  } else {
 	    m_autoCorrHistos[i->index()]->fill(m_iteration,c);
 	  }
@@ -311,16 +311,16 @@ void AlignAlgorithm::update() {
   AlSymMat      matrix(Derivatives::kCols*numElements + m_constraints.size());
 
   /// Loop over map of index to 2nd derivative matrix and 1st derivative vector 
-  for (unsigned(i) = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {                                           
+  for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {                                           
     ass(derivatives, i*Derivatives::kCols, m_equations->V(i));
     /// (assume upper triangular input!)
-    for (unsigned(j) = i ; j < iEnd ; ++j) ass(matrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
+    for (unsigned j = i ; j < iEnd ; ++j) ass(matrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   }
 
   /// Add constraints
   if (!m_constraints.empty()) {
-    for (unsigned(i) = Derivatives::kCols*numElements, iEnd = Derivatives::kCols*numElements + m_constraints.size(), 
-	   nC=0u; i != iEnd; ++i, ++nC) {
+    for (unsigned i = Derivatives::kCols*numElements, iEnd = Derivatives::kCols*numElements + m_constraints.size(), 
+	   nC = 0u; i != iEnd; ++i, ++nC) {
       const std::vector<double>& constraint = m_constraints.at(nC);
       derivatives[i] = constraint.back();
       unsigned cEntry = 0u;
@@ -397,10 +397,10 @@ StatusCode AlignAlgorithm::putAlignmentConstants(const Range& rangeElements, con
     }
     /// 3 translations
     std::vector<double> translations;
-    for (unsigned(j) = 0u; j < 3u; ++j) translations.push_back(alignConstants[i->index()*Derivatives::kCols + j]);
+    for (unsigned j = 0u; j < 3u; ++j) translations.push_back(alignConstants[i->index()*Derivatives::kCols + j]);
     /// 3 rotations
     std::vector<double> rotations;
-    for (unsigned(j) = 3u; j < 6u; ++j) rotations.push_back(alignConstants[i->index()*Derivatives::kCols + j]);
+    for (unsigned j  = 3u; j < 6u; ++j) rotations.push_back(alignConstants[i->index()*Derivatives::kCols + j]);
     /// Set local delta matrix
     StatusCode sc = i->setLocalDeltaMatrix(translations, rotations); 
     if (sc.isFailure()) return Error("Failed to set alignment conditions", StatusCode::FAILURE);

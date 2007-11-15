@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.3 2007-11-15 12:39:08 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.4 2007-11-15 15:22:54 janos Exp $
 // Include files 
 //from STL
 #include <iomanip>
@@ -81,7 +81,7 @@ StatusCode GetElementsToBeAligned::initialize() {
   info() << "   Using the following regular expressions: " << endmsg;
   info() << "       ";
   for (Tokenizer::iterator i = regexs.begin(), iEnd = regexs.end(); i != iEnd; ++i) {
-    info() << std::left << std::setw(3) << (*i) << " ";
+    info() << std::left << std::setw(3) << "\"" << (*i) << "\"" << " ";
   }
   info() << endmsg;
   
