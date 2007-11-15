@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.2 2007-11-15 11:33:25 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.3 2007-11-15 12:39:08 janos Exp $
 // Include files 
 //from STL
 #include <iomanip>
@@ -120,18 +120,19 @@ StatusCode GetElementsToBeAligned::initialize() {
   bool clear = false;
   for (IGetElementsToBeAligned::Constraints::const_iterator i = m_constraints.begin(), iEnd = m_constraints.end(); i != iEnd; 
        ++i, ++nC) {
-    info() << "       " << nC << ": f = [ ";
-    for (std::vector<double>::const_iterator j = i->begin(), jEnd = i->end()-1u; j != jEnd; ++j) {
-      info()  << (*j) << " ";
-    }
-    info() << " ] ";
-    info() << " and f0 = " << i->back() << endmsg;
-    if (i->size()-1u !=  std::distance(m_rangeElements.first, m_rangeElements.second)*6u) {
+    if (i->empty() || i->size()-1u !=  std::distance(m_rangeElements.first, m_rangeElements.second)*6u) {
       warning() << "Number of elements do not much total number of degrees of freedom!" << endmsg;
       warning() << "Setting constraints to ZERO!" << endmsg;
       clear = true;
       break;
     }
+    info() << "       " << nC << ": f = [ ";
+    for (std::vector<double>::const_iterator j = i->begin(), jEnd = i->end()-1u; j != jEnd; ++j) {
+      info()  << (*j) << " ";
+    }
+    
+    info() << " ] ";
+    info() << " and f0 = " << i->back() << endmsg;
   }
   if (clear) m_constraints.clear();
   
