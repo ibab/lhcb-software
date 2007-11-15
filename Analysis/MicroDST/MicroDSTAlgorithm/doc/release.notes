@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.37 2007-11-08 16:48:42 jpalac Exp $
+! $Id: release.notes,v 1.38 2007-11-15 08:20:47 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-11-08 - Juan PALACIOS
+ - src/CopyRelatedMCParticles{.cpp, .h}
+  . Continue to add more imlementation.
 
 ! 2007-11-08 - Juan PALACIOS
  - src/CopyParticles.cpp
