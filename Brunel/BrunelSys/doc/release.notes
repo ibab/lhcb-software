@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r1>2007-11-07 Brunel v32r1</A></H1><PRE>
+</PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -26,6 +26,8 @@ framework.
   . Outlier rejection cuts now tunable through job options (TsaAlgorithms v3r1)
   . Likelihood contributions can be weighted differently (or switched off)
     with job options (TsaAlgorithms v3r1)
+  . Add Empty.opts dummy options file to bootstrap Dirac with non-standard
+    configurations
 
 - New tuning
   . Replaced StateTraj with StateZTraj in projectors (to speed things up)

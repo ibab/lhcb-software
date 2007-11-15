@@ -3,11 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v32r1>2007-11-07 Brunel v32r1</A></H1><PRE>
+</PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
  - Fix error in default Brunel_Ganga.py file for latest CMT structure.
  - Update BrunelCheck.opts for changes in PatChecker v3r1
  - Adapt ExpertCheck.opts to changed defaults in MCParticleSelector
  - Add RealData.opts to process "real data" (v200601 geometry) in mdf format
+ - Add Empty.opts dummy options file to bootstrap Dirac with non-standard
+   configurations
 
 </PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
  - Update BrunelCheck.opts for use with Tf framework
