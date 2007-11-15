@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.1 2007-11-15 11:12:05 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.2 2007-11-15 11:33:25 janos Exp $
 // Include files 
 //from STL
 #include <iomanip>
@@ -37,7 +37,8 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
     m_findElement()
 {
   declareInterface<IGetElementsToBeAligned>(this);
-  declareProperty("Elements", m_elemsToBeAligned);
+  declareProperty("Elements"   , m_elemsToBeAligned);
+  declareProperty("Constraints", m_constraints     );
 }
 
 GetElementsToBeAligned::~GetElementsToBeAligned() {}
