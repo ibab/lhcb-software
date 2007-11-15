@@ -1,4 +1,4 @@
-// $Id: Pythia8Production.cpp,v 1.2 2007-10-08 10:13:30 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.3 2007-11-15 19:19:40 robbep Exp $
 
 // Include files
 
@@ -128,10 +128,10 @@ StatusCode Pythia8Production::initialize( ) {
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
   
-  always() << "=================================================================="
+  always() << "============================================================="
            << endmsg;
   always() << "Using as production engine  " << this->type() << endmsg;
-  always() << "=================================================================="
+  always() << "============================================================="
            << endmsg;
   
   //Initializing the beam tool
@@ -143,8 +143,7 @@ StatusCode Pythia8Production::initialize( ) {
     xmlpath  = seal::ShellEnvironment().get( "PYTHIA8XML" ) ;
 
   //Initializing the pythia object
-  m_pythia = 
-    new Pythia8::Pythia( xmlpath );
+  m_pythia = new Pythia8::Pythia( xmlpath );
   
   //Setting the random generator
   IRndmGenSvc * randSvc( 0 ) ;
@@ -154,11 +153,12 @@ StatusCode Pythia8Production::initialize( ) {
   }
   
   m_randomEngine = new GaudiRandomForPythia8( randSvc , sc ) ;
-  if ( ! sc.isSuccess() ) return Error( "Cannot initialize GaudiRandomForPythia8" , sc ) ;
+  if ( ! sc.isSuccess() ) 
+    return Error( "Cannot initialize GaudiRandomForPythia8" , sc ) ;
   release( randSvc ) ;
   
   m_pythia -> setRndmEnginePtr( m_randomEngine );
-  
+
   return initializeGenerator() ;
 }
 
@@ -169,101 +169,108 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   m_id1 = 2212;
   m_id2 = 2212;
   bool success = true ;
-  int i = 4;
   StatusCode sc = StatusCode::SUCCESS ;
+  int i = 4 ;
   double mass1, mass2;
   
   //Initializing default settings
-  for (unsigned int count = i; count<m_defaultSettings.size(); ++count) {
+  for (unsigned int count = 4; count<m_defaultSettings.size(); ++count) {
     if ((!(m_defaultSettings[count]=="Process commands for Pythia8")) 
-        && (!(m_defaultSettings[count]=="Output commands for Pythia8")))
-    {success = m_pythia->readString(m_defaultSettings[count]);
-    i = count;}
+        && (!(m_defaultSettings[count]=="Output commands for Pythia8"))) {
+      success = m_pythia->readString(m_defaultSettings[count]);
+    }
+    i = count ;
+  }
+
+  m_pythia->readString("Main:inCMFrame = on");
+  if ( ! m_commandVector.empty() ) {
+    //Initializing user settings
+    if (!(m_commandVector[0]=="Beam Settings")) {
+      return Error( "Syntax error" ) ;
+    } else {
+      //Initializing settings for the beams
+      if (m_commandVector[2]=="PDG id code for the second incoming particle") {
+        m_id1 = 2212;
+        i = 3;
+      } else {
+        m_id1 = atoi(m_commandVector[2].c_str());
+        i = 4;
+      }
+      if (m_commandVector[i]=="Mode commands for Pythia8") {
+        m_id2 = 2212;     
+        i = 4;
+      } else {
+        m_id2 = atoi(m_commandVector[i].c_str());      
+        i = i + 2;
+      } 
+    }  
   }
   
-  //Initializing user settings
-  if (!(m_commandVector[0]=="Beam Settings")) {sc = StatusCode::FAILURE ;}
-  else {
-    m_pythia->readString("Main:inCMFrame = on");
-    //Initializing settings for the beams
-    if (m_commandVector[2]=="PDG id code for the second incoming particle") {
-      m_id1 = 2212;
-      i = 3;
-    } else {
-      m_id1 = atoi(m_commandVector[2].c_str());
-      i = 4;
-    }
-    if (m_commandVector[i]=="Mode commands for Pythia8") {
-      m_id2 = 2212;     
-      i = 4;
-    } else {
-      m_id2 = atoi(m_commandVector[i].c_str());      
-      i = i + 2;
-    } 
     
-    Gaudi::XYZVector pBeam1 , pBeam2 ;
-    m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;  
-    // retrieve Gaudi particle property service  
-    IParticlePropertySvc * ppSvc( 0 ) ;
-    try { ppSvc = svc< IParticlePropertySvc > ( "ParticlePropertySvc" , true ) ; }
-    catch ( const GaudiException & exc ) {
-      Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
-    }
-    
-    mass1 = (ppSvc -> findByStdHepID(m_id1)) -> mass();
-    mass2 = (ppSvc -> findByStdHepID(m_id2)) -> mass();
-    
-    m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
+  Gaudi::XYZVector pBeam1 , pBeam2 ;
+  m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;  
+  // retrieve Gaudi particle property service  
+  IParticlePropertySvc * ppSvc( 0 ) ;
+  try { ppSvc = svc< IParticlePropertySvc > ( "ParticlePropertySvc" , 
+                                              true ) ; }
+  catch ( const GaudiException & exc ) {
+    Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
+  }
+  
+  mass1 = (ppSvc -> findByStdHepID(m_id1)) -> mass();
+  mass2 = (ppSvc -> findByStdHepID(m_id2)) -> mass();
+  
+  m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
              sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/GeV;
-    
-    
-    //Initializing the settings for the generator
-    //First cut all processes in case of user settings for processes
-    for (int count = i; count<m_commandVector.size(); ++count) {	 
-      if (m_commandVector[count]=="Do user change the processes settings ?") {
-        if (m_commandVector[count + 1]=="yes") {  
-          m_pythia->readString("HardQCD:qq2qq = off");
-          m_pythia->readString("HardQCD:qqbar2ccbar = off");
-          m_pythia->readString("HardQCD:qqbar2bbbar = off");
-          m_pythia->readString("HardQCD:qqbar2qqbarNew = off");
-          m_pythia->readString("HardQCD:qqbar2gg = off");
-          m_pythia->readString("HardQCD:qg2qg = off");
-          m_pythia->readString("HardQCD:gg2qqbar = off");
-          m_pythia->readString("HardQCD:gg2ccbar = off");
-          m_pythia->readString("HardQCD:gg2bbbar = off");
-          m_pythia->readString("HardQCD:gg2gg = off");
-          m_pythia->readString("SoftQCD:elastic = off");
-          m_pythia->readString("SoftQCD:singleDiffractive = off");
-          m_pythia->readString("SoftQCD:doubleDiffractive = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3P0(1)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3P1(1)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3P2(1)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3S1(8)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[1S0(8)]g = off");
-          m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
-          m_pythia->readString("StringFlav:mesonCL1S0J1 = 0");
-          m_pythia->readString("StringFlav:mesonCL1S1J0 = 0");
-          m_pythia->readString("StringFlav:mesonCL1S1J1 = 0");
-          m_pythia->readString("StringFlav:mesonCL1S1J2 = 0");
-          m_pythia->readString("StringFlav:mesonBL1S0J1 = 0");
-          m_pythia->readString("StringFlav:mesonBL1S1J0 = 0");
-          m_pythia->readString("StringFlav:mesonBL1S1J1 = 0");
-          m_pythia->readString("StringFlav:mesonBL1S1J2 = 0");
-          count = count + 2;
-        }
-        if (m_commandVector[count + 1]=="no")
-          count = count + 2;
+  
+  
+  //Initializing the settings for the generator
+  //First cut all processes in case of user settings for processes
+  for (unsigned int count = i; count<m_commandVector.size(); ++count) {	 
+    if (m_commandVector[count]=="Do user change the processes settings ?") {
+      if (m_commandVector[count + 1]=="yes") {  
+        m_pythia->readString("HardQCD:qq2qq = off");
+        m_pythia->readString("HardQCD:qqbar2ccbar = off");
+        m_pythia->readString("HardQCD:qqbar2bbbar = off");
+        m_pythia->readString("HardQCD:qqbar2qqbarNew = off");
+        m_pythia->readString("HardQCD:qqbar2gg = off");
+        m_pythia->readString("HardQCD:qg2qg = off");
+        m_pythia->readString("HardQCD:gg2qqbar = off");
+        m_pythia->readString("HardQCD:gg2ccbar = off");
+        m_pythia->readString("HardQCD:gg2bbbar = off");
+        m_pythia->readString("HardQCD:gg2gg = off");
+        m_pythia->readString("SoftQCD:elastic = off");
+        m_pythia->readString("SoftQCD:singleDiffractive = off");
+        m_pythia->readString("SoftQCD:doubleDiffractive = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3P0(1)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3P1(1)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3P2(1)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3S1(8)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[1S0(8)]g = off");
+        m_pythia->readString("Charmonium:gg2QQbar[3S1(1)]g = off");
+        m_pythia->readString("StringFlav:mesonCL1S0J1 = 0");
+        m_pythia->readString("StringFlav:mesonCL1S1J0 = 0");
+        m_pythia->readString("StringFlav:mesonCL1S1J1 = 0");
+        m_pythia->readString("StringFlav:mesonCL1S1J2 = 0");
+        m_pythia->readString("StringFlav:mesonBL1S0J1 = 0");
+        m_pythia->readString("StringFlav:mesonBL1S1J0 = 0");
+        m_pythia->readString("StringFlav:mesonBL1S1J1 = 0");
+        m_pythia->readString("StringFlav:mesonBL1S1J2 = 0");
+        count = count + 2;
       }
-      //Then initializing user settings for processes and output
-      if ((!(m_commandVector[count]=="Process commands for Pythia8")) 
-          && (!(m_commandVector[count]=="Output commands for Pythia8"))) {
-        success = m_pythia->readString(m_commandVector[count]);
-      }
+      if (m_commandVector[count + 1]=="no")
+        count = count + 2;
+    }
+    //Then initializing user settings for processes and output
+    if ((!(m_commandVector[count]=="Process commands for Pythia8")) 
+        && (!(m_commandVector[count]=="Output commands for Pythia8"))) {
+      success = m_pythia->readString(m_commandVector[count]);
     }
   }
-  if (!success) sc = StatusCode::FAILURE;
   
+  if (!success) sc = StatusCode::FAILURE;
+
   m_pythia->init(m_id1, m_id2, m_engCM) ;
   
   return sc;
@@ -273,40 +280,12 @@ StatusCode Pythia8Production::initializeGenerator( ) {
 //   Function called to generate one event with Pythia8
 //=============================================================================
 StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent , 
-                                             LHCb::GenCollision * theCollision ) {
+                                             LHCb::GenCollision * 
+                                             theCollision ) 
+{
   // Generate Event
-  
   m_pythia->next();
-  m_event = m_pythia->event;
-  
-  //counting b containing hadrons
-  
-  int nbOfb = 0;
-  for (int i=1; i< m_pythia->event.size(); ++i) {
-    if (m_pythia->event[i].isFinal()) {
-      int id = m_pythia->event[i].idAbs();
-      bool isB = false;
-      string result = " false";
-      while (id>9) {
-        id = id / 10;
-      }
-      if (id == 5) {
-        isB = true;
-        result = " true";
-	    }
-      
-      if (isB) ++nbOfb;
-    }
-  }
-  if (!nbOfb==0) {
-    always() << endl 
-             << "=============================================================" << endl
-             << "<!>                                                       <!>" << endl
-             << "<!>  There are " << nbOfb << " final b containing particles in the " 
-             << m_nEvents << "th interaction  <!>" << endl
-             << "=============================================================" << endmsg;
-  } 
-  
+  m_event = m_pythia->event;  
   // Update event counter
   ++m_nEvents ;
   return toHepMC( theEvent, theCollision ) ;
@@ -318,7 +297,6 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
 void Pythia8Production::setStable( const ParticleProperty * thePP ) {
   int pdgId = thePP -> pdgID();
   m_pythia->particleData.mayDecay(pdgId, false);
-  return ;
 }
 
 //=============================================================================
@@ -348,10 +326,7 @@ void Pythia8Production::updateParticleProperties( const ParticleProperty *
       m_pythia -> particleData.tau0(pdgId, lifetime / mm) ;
     }
   }
-  
-  return ;
 }
-
 
 //=============================================================================
 // Retrieve the Hard scatter information
@@ -364,13 +339,13 @@ void Pythia8Production::hardProcessInfo( LHCb::GenCollision * theCollision ) {
   theCollision -> setPtHat( m_pythia -> info.pTHat() );
   theCollision -> setX1Bjorken( m_pythia -> info.x1() );
   theCollision -> setX2Bjorken( m_pythia -> info.x2() );
-  return ;
 } 
 
 //=============================================================================
 // Finalize method
 //=============================================================================
 StatusCode Pythia8Production::finalize( ) {
+  m_pythia -> statistics() ;
   delete m_randomEngine;
   delete m_pythia ;
   return GaudiTool::finalize( ) ;
@@ -382,7 +357,6 @@ StatusCode Pythia8Production::finalize( ) {
 //=============================================================================
 void Pythia8Production::printPythiaParameter( ) {
   m_pythia->statistics();
-  return ;
 }
 
 //=============================================================================
@@ -390,7 +364,6 @@ void Pythia8Production::printPythiaParameter( ) {
 //=============================================================================
 void Pythia8Production::turnOnFragmentation( ){
   m_pythia -> readString("Pythia:hadronLevel = on");
-  return ;
 }
 
 //=============================================================================
@@ -398,47 +371,43 @@ void Pythia8Production::turnOnFragmentation( ){
 //=============================================================================
 void Pythia8Production::turnOffFragmentation( ){
   m_pythia -> readString("Pythia:hadronLevel = off");
-  return ;
 }
 
 //=============================================================================
 // Save parton event
 //=============================================================================
 void Pythia8Production::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
-  //dummy function
-  return ;
 }
 
 //=============================================================================
 // Load parton event
 //=============================================================================
-void Pythia8Production::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
-  //dummy function
-  return ;
+void Pythia8Production::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ )
+{
 }
 
 //=============================================================================
 // Hadronize Pythia8 event
 //=============================================================================
-StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent , 
-                                        LHCb::GenCollision * theCollision ) {
+StatusCode Pythia8Production::hadronize( HepMC::GenEvent * /*theEvent*/ , 
+                                         LHCb::GenCollision * 
+                                         /*theCollision*/ ) {
   m_pythia->readString("HadronLevel:Hadronize = on");
   return StatusCode::SUCCESS ;  
-} ;
-
+}
 
 //=============================================================================
 // Debug print out to be printed after all initializations
 //=============================================================================
 void Pythia8Production::printRunningConditions( ) { 
   m_pythia->settings.listChanged();
-  return ;
 }
 
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modify
 //=============================================================================
-bool Pythia8Production::isSpecialParticle( const ParticleProperty * thePP ) const { 
+bool Pythia8Production::isSpecialParticle( const ParticleProperty * thePP ) 
+  const { 
   switch ( abs( thePP -> pdgID() ) ) {
   case 1:
   case 2:
@@ -526,34 +495,29 @@ bool Pythia8Production::isSpecialParticle( const ParticleProperty * thePP ) cons
   }
   return false ;    
 }
+
 //=============================================================================
 // Setup for forced fragmentation 
 //=============================================================================
-StatusCode Pythia8Production::setupForcedFragmentation( const int thePdgId ) {
-
+StatusCode Pythia8Production::setupForcedFragmentation( const int 
+                                                        /*thePdgId*/ ) {
   m_pythia->readString("PartonLevel:all = off");
-  
   return StatusCode::SUCCESS ;  
 }
+
 // ============================================================================
 /// PYTHIA -> HEPEVT -> HEPMC 
 // ============================================================================
 StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    , 
-                                        LHCb::GenCollision * theCollision ){
+                                        LHCb::GenCollision * 
+                                        /*theCollision*/ ){
   StatusCode sc = StatusCode::SUCCESS ;
   
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
-  
-  if (!(conversion.fill_next_event(m_pythia->event, theEvent))) sc = StatusCode::FAILURE ;
-  
-  // retrieve Gaudi particle property service  
-  IParticlePropertySvc * ppSvc( 0 ) ;
-  try { ppSvc = 
-          svc< IParticlePropertySvc > ( "ParticlePropertySvc" , true ) ; }
-  catch ( const GaudiException & exc ) {
-    Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
-  }
+
+  if (!(conversion.fill_next_event(m_pythia->event, theEvent))) 
+    return Error( "Cannot convert Pythia8 event to HepMC" ) ;
   
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
@@ -564,19 +528,20 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
       else (*p) -> set_status(3);
     }
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-  }  
+  }
+  
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
     CLHEP::HepLorentzVector newPos ;
     newPos.setX( (*v) -> position() . x() ) ;
     newPos.setY( (*v) -> position() . y() ) ;
     newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
-    
+    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;    
     (*v) -> set_position( newPos ) ;
   }
+
   return sc;
-} ;
+}
 // ============================================================================
 
 

@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2007-11-15 - Patrick Robbe
+ - src/component/Pythia8Production.cpp: protect against empty user options
+
 ! 2007-10-08 - Patrick Robbe
  - cmt/requirements: add new environment variable to point to xmldoc repository
    of Pythia8/GENSER distribution
