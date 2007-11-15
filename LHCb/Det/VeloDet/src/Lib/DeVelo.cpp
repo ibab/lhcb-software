@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.85 2007-11-08 14:41:55 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.86 2007-11-15 10:58:46 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -319,6 +319,7 @@ StatusCode DeVelo::registerConditionCallBacks()
   MsgStream msg(msgSvc(), "DeVelo");
 
   // TELL1 to sensor mapping condition
+  // Also contains mapping of sensor to Liverpool module condition
   updMgrSvc()->registerCondition(this,
                                  condition(m_tell1ToSensorsConditionName.c_str()).path(),
                                  &DeVelo::updateTell1ToSensorsCondition);
@@ -352,26 +353,36 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
     = m_tell1ToSensorsCondition->paramAsIntVect("Tell1Id");
   const std::vector<int>& sensorNumbers 
     = m_tell1ToSensorsCondition->paramAsIntVect("SensorId");
+  const std::vector<int>& moduleIds 
+    = m_tell1ToSensorsCondition->paramAsIntVect("ModuleId");
   
+  // check for trivial size mismatch bug in CondDB
+  if ( tell1Ids.size() != sensorNumbers.size() || tell1Ids.size() != sensorNumbers.size()) {
+    msg << MSG::ERROR 
+        << "Number of TELL1 and sensor/module IDs do not match!"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   m_sensorByTell1Id.clear();
 
   std::vector<int>::const_iterator i = tell1Ids.begin();
   std::vector<int>::const_iterator j = sensorNumbers.begin();
+  std::vector<int>::const_iterator k = moduleIds.begin();
 
-  for (; i != tell1Ids.end() && j != sensorNumbers.end(); ++i, ++j) {
+  for (; i != tell1Ids.end() && j != sensorNumbers.end() && k != moduleIds.end(); ++i, ++j, ++k) {
     unsigned int tell1Id      = static_cast<unsigned int>(*i);
     unsigned int sensorNumber = static_cast<unsigned int>(*j);
+    unsigned int moduleId      = static_cast<unsigned int>(*k);
 
+    const DeVeloSensor* sens=sensor(sensorNumber);
+    if(!sens) {
+      msg << MSG::ERROR << "No such sensor " << sensorNumber << endreq;
+      return StatusCode::FAILURE;
+    }
+    sens->m_moduleId=moduleId;
     m_sensorByTell1Id[tell1Id] = sensor(sensorNumber);
     m_tell1IdBySensorNumber[sensorNumber] = tell1Id;
-  }
-
-  // check for trivial size mismatch bug in CondDB
-  if (i != tell1Ids.end() || j != sensorNumbers.end()) {
-    msg << MSG::ERROR 
-        << "Number of TELL1 and sensor IDs do not match!"
-        << endreq;
-    return StatusCode::FAILURE;
   }
 
   // check consistency with sensor readout flags. this assumes the latter are updated first.

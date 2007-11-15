@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.184 2007-11-09 09:15:50 cattanem Exp $
+! $Id: release.notes,v 1.185 2007-11-15 10:58:46 mtobin Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2007-11-15 - Mark Tobin
+ - Added method to DeVeloSensor that returns the module id from the conditions
+ database.  Value is set in DeVelo. 
+ - Added protection for invalid sensor in registering of conditions.
 
 !======================== VeloDet v12r3 2007-11-09 ===========================
 ! 2007-11-08 - Mark Tobin

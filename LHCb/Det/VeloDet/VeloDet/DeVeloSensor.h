@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.36 2007-08-28 12:05:43 jonrob Exp $
+// $Id: DeVeloSensor.h,v 1.37 2007-11-15 10:58:46 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -24,6 +24,7 @@
 static const CLID CLID_DeVeloSensor = 1008101 ;
 
 // forward declarations needed for fast casting
+class DeVelo;
 class DeVeloRType;
 class DeVeloPhiType;
 
@@ -216,8 +217,11 @@ public:
   /// The thickness of the sensor in mm
   inline double siliconThickness() const {return m_siliconThickness;}
 
-  /// Returns the module number
+  /// Returns the software module number
   inline std::string module() const {return m_module;}
+
+  /// Returns the hardware module number
+  inline unsigned int moduleId() const {return m_moduleId;}
 
   /// Returns the sensor type
   inline std::string type() const {return m_type;}
@@ -469,6 +473,9 @@ private:
   std::vector<StripInfo> m_stripInfos;
   bool m_isReadOut;
   bool m_tell1WithoutSensor;
+  
+  friend class DeVelo;
+  mutable int m_moduleId;//<Liverpool database module id
 
   // Set output level for message service
   bool m_debug;
