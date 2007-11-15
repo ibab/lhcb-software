@@ -3,6 +3,114 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r8>2007-11-15 Analysis v1r8 - DC06-compatible analysis  version</A></H1><PRE>
+
+ - Uses LHCb v22r11
+ - Otherwise, minor changes to Phys/VertexFitCheck and Phys/FlavourTaggingChecker, plus continued development to MicroDST/MicroDSTAlgorithm
+ - Released in order to have a DaVinci v19 series with the latest LHCb v22 based HLT.
+
+#######################################MM######################################
+#                                  ANALYSIS v1r8                              #
+###############################################################################
+
+
+##################################### PHYS ####################################
+
+!===================== FlavourTaggingChecker v2r6 2007-11-15 =================
+
+! 2007-11-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v2r6
+
+! 2007-10-30 - Marco Musy
+ - Use FilterToFixOppositeBFractions by default in BTaggingAnalysis.opts
+
+!===================== VertexFitCheck v1r2 2007-11-15 ======================
+
+! 2007-11-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increment version to v1r2
+
+! 2007-11-13 - Y. Xie
+  - src/ProperTimeChecker.cpp
+    .add more variables in ntuple
+  - src/CheatedPVReFitter.cpp
+    .bug fix: call clearTracks() to avoid duplciated tracks
+
+! 2007-11-11 - Y. Xie
+  - src/ProperTimeChecker.cpp
+    .add option "PVReFitterName"
+
+! 2007-10-29 - Y. Xie
+  . Add CheatedPVReFitter.cpp/.h
+  . Update ProperTimeChecker.cpp/.h
+
+####################################### TOOLS #################################
+
+!======================== MicroDST v2r1 2007-11-15 ====================
+
+! 2007-11-08 - Juan PALACIOS
+ - src/CopyRelatedMCParticles{.cpp, .h}
+  . Continue to add more imlementation.
+
+! 2007-11-08 - Juan PALACIOS
+ - src/CopyParticles.cpp
+  . Change initialize() error message.
+
+
+! 2007-11-02 - Juan PALACIOS
+
+ - Added src/CopyRelatedMCParticles{.cpp, .h}
+  . Skeleton implementation of IDoSomethingToParticle. Purpose is to
+    find and store all the MCParticles related to a given Particle.
+ - Added src/CopyMCHeader{.cpp, .h}
+  . Simple CopyAndStoreData algorithm with specialised copy functor to
+    remove MC primary vertices and store only SmartRefs to originals.
+ - MicroDST/CopyAndStoreData.h
+  . Make protected methods public.
+ - Added MicroDST/IDoSomethingToParticle.h
+  . Simple tool interface to manipulate particles and store related 
+    information on local store. Implementations must be owned by a
+    CopyAndStoreData instance.
+
+! 2007-11-02 - Juan PALACIOS
+ - MicroDST/Functors.hpp
+  . Added basic copy functor. Just uses the copy constructor and
+    returns a newed pointer.
+ - MicroDST/CopyAndStoreData{.h, .icpp}
+  . Add second template parameter CopyFunctor to copyAndStoreObject. This
+    allows users of the methods to use their own copying logic within the
+    method. In conjunction with MicroDST::BasicCopy<T> from MicroDST/Functors
+    (see above) the previous behaviour of the method is maintained.
+ - src/CopyODIN.h, src/CopyRecHeader.h
+  . Set new BasicCopy<T> typedefs
+ - src/CopyODIN.cpp, src/CopyRecHeader.cpp
+  . Use BasicCopy<T> in copyAndStoreObject calls.
+
+! 2007-11-01 - Juan PALACIOS
+ - src/CopyParticle2PVLink.cpp
+  . Add some debug statements
+
+! 2007-10-30 - Juan PALACIOS
+
+ - src/CopyODIN.cpp
+ - src/CopyParticle2PVLink.cpp
+ - src/CopyParticles.cpp
+ - src/CopyPrimaryVertices.cpp
+ - src/CopyRecHeader.cpp
+  . Put setFilterPassed(true) in the ::execute() methods.
+
+ - cmt/requirements
+  . Increase version to v2r1
+
+ - MicroDST/CopyAndStoreData{.icpp, .h}
+  . Remove non-const method getNiceLocationName(std::string& location)
+
+ - src/Lib/CopyAndStoreData.cpp
+  . Fix problems with local data store.
+
+
+
 </PRE><H1><A NAME=v1r7p1>2007-11-02 Analysis v1r7p1 - DC06 Stripping version</A></H1><PRE>
  - Uses LHCb v22r10
  - Bug fix to Phys/DaVinciAssociators and new Bd2PhiKst pre-selection 
