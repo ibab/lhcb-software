@@ -1,8 +1,24 @@
-// $Id: FindAlignmentElement.h,v 1.1 2007-09-01 17:35:12 janos Exp $
+// $Id: FindAlignmentElement.h,v 1.2 2007-11-15 11:12:04 janos Exp $
 #ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H 
 #define TALIGNMENT_FINDALIGNMENTELEMENT_H 1
 
 // Include files
+// from STD
+#include <string>
+#include <map>
+
+// from DetDesc
+#include "DetDesc/DetectorElement.h"
+#include "AlignmentElement.h"
+
+// from LHCbKernel
+#include "Kernel/LHCbID.h"
+
+// from STDet
+#include "STDet/DeSTSector.h"
+
+// from BOOST
+#include "boost/function.hpp"
 
 /** @class FindAlignmentElement FindAlignmentElement.h
  *  
@@ -11,34 +27,42 @@
  *  @date   2007-08-31
  */
 
+/// These are some free functions
+namespace Alignment {  
+  typedef boost::function<bool (LHCb::LHCbID)> IsDet;
+  typedef boost::function<const DetectorElement* (LHCb::LHCbID)> DetElemFromID;
+  typedef std::map<std::string, DetElemFromID> FunctorMap;
+  
+  /** This should go into the sub-detector interfaces */
+    /// This returns the tt half module, i.e. parent, that a sensor belongs to
+  const DetectorElement* findHalfModule(const DeSTSector* sensor);
+
+  /// This returns the IT ladder, i.e. parent, that a sensor belongs to
+  const DetectorElement* findLadder(const DeSTSector* sensor);
+  
+  /* ***************************************************** */
+
+  DetElemFromID FindElement(const std::string& findWhat);
+};
+
 class FindAlignmentElement {
   
  public:
-  typedef std::vector<AlignmentElement>::const_iterator AlignElemIter;
+  typedef std::vector<AlignmentElement>::const_iterator            AlignElemIter;
+  typedef std::pair<std::vector<AlignmentElement>::const_iterator, 
+                    std::vector<AlignmentElement>::const_iterator> Range;
   
-  FindAlignmentElement(){};
+  FindAlignmentElement();
   
-  template <typename ACTION1, typename ACTION2>
-    FindAlignmentElement(AlignElemIter begin, AlignElemIter end, ACTION1 isDet, ACTION2 elemFromLHCbID) 
-    : m_begin(begin),
-    m_end(end),
-    m_isDet(isDet),
-    m_elemFromLHCbID(elemFromLHCbID) {};
+  FindAlignmentElement(Alignment::DetElemFromID elemFromLHCbID, Range rangeElements);
   
-  const AlignmentElement* operator()(const LHCb::LHCbID& anLHCbID) {
-    if (!m_isDet(anLHCbID)) return static_cast<const AlignmentElement*>(0);
-    const DetectorElement* elem = m_elemFromLHCbID(anLHCbID);
-    AlignElemIter AlignElem = find_if(m_begin, m_end, boost::lambda::bind(&AlignmentElement::matches, 
-                                                                          boost::lambda::_1, 
-                                                                          elem));
-    return (AlignElem != m_end) ? &(*AlignElem) : static_cast<const AlignmentElement*>(0);
-  };
+  const AlignmentElement* operator()(const LHCb::LHCbID& anLHCbID);
   
  private:
-  AlignElemIter                                          m_begin;
-  AlignElemIter                                          m_end;
-  boost::function<bool                   (LHCb::LHCbID)> m_isDet;
-  boost::function<const DetectorElement* (LHCb::LHCbID)> m_elemFromLHCbID;
+  
+  Alignment::DetElemFromID m_elemFromLHCbID;
+  Range                    m_rangeElements;
+  
 };  
 
 #endif // TALIGNMENT_FINDALIGNMENTELEMENT_H

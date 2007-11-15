@@ -1,7 +1,25 @@
 // Main job options for running Escher
-//
-//
 //***************************************
+
+//for histos
+#include "$STDOPTS/RootHist.opts"
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+// Uncomment the line below to read the xml version of the dbase
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+//---------------------------------------------------------------------------
+// Use sqlite dbase
+//---------------------------------------------------------------------------
+// DC06 database tags
+// Comment the two lines below to switch back to the xml dbase
+//DDDB.DefaultTAG = "DC06";
+//LHCBCOND.DefaultTAG = "DC06";
+#include "$DDDBROOT/options/DC06.opts"
+
+// DC06 magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 
 // Standard LHCb application setup
 #include "$STDOPTS/LHCbApplication.opts"
@@ -49,9 +67,7 @@ DecodingSeq.Members += { "OTTimeCreator" };
 //**************************
 // Track fit:
 //**************************
-EscherMainSeq.Members += { //"TConditionsChecker/CondChecker" , 
-                           "GaudiSequencer/TrackFitSeq" 
-};
+EscherMainSeq.Members += { "GaudiSequencer/TrackFitSeq" };
 
 TrackFitSeq.Members += { "TrackFilterAlg/FilterTracks", 
                          "TrackEventFitter/FitTracks" };
@@ -59,11 +75,13 @@ TrackFitSeq.MeasureTime = true;
 FilterTracks.TracksInputContainer = "Rec/Track/Best";
 FilterTracks.TracksOutputContainer = "Alignment/FilteredTracks";
 FilterTracks.TrackType = "Long";
+FilterTracks.StripUnwantedDetectorHits = false;
+FilterTracks.KeepDetectorHits = "OT";
 FilterTracks.Selector.TracksLocation = "Rec/Track/Best";
 FilterTracks.Selector.BFieldStatus = true;
 FilterTracks.Selector.IsolatedTrackNStripsTolerance = 2;
 FilterTracks.Selector.IsolatedTrackNStrawsTolerance = 1;
-FilterTracks.Selector.MinMomentumCut = -999999;
+//FilterTracks.Selector.MinMomentumCut = -999999;
 FilterTracks.Selector.Chi2PerDoFMaxCut = 999999;
 FilterTracks.Selector.Chi2ProbMinCut = 0.01;
 FilterTracks.Selector.Chi2ProbMinCut = 0.3;
@@ -72,18 +90,7 @@ FilterTracks.Selector.NSharedHitsMaxCut = 0;
 FilterTracks.Selector.NCloseHitsMaxCut = 3;
 FilterTracks.Selector.OutputLevel = 3;
 FilterTracks.OutputLevel = 3;
-FitTracks.TracksInContainer = "Alignment/FilteredTracks"; //"Alignment/OTTracks";
+FitTracks.TracksInContainer = "Alignment/FilteredTracks";
 FitTracks.TracksOutContainer = "Alignment/OTTracks";
 //FitTracks.Fitter.NumberFitIterations = 3;
-CondChecker.OutputLevel = 3;
-
-//**************************
-// Alignment options
-//**************************
-EscherMainSeq.Members += { "GaudiSequencer/AlignmentSeq" };
-AlignmentSeq.Members += { "AlignAlgorithm/AlignOTStations"//,
-                         //"AlignAlgorithm/AlignOTLayers",
-                         //"AlignAlgorithm/AlignOTModules"
-};
-AlignmentSeq.MeasureTime = true;
-#include "$TALIGNMENTROOT/options/OTAlignment.opts"
+ToolSvc.DetailedMaterialLocator.OutputLevel = 5;

@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.2 2007-09-26 13:29:41 jblouw Exp $
+// $Id: AlignmentElement.h,v 1.3 2007-11-15 11:12:03 janos Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H 
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -11,7 +11,10 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 // from DetDesc
+#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/3DTransformationFunctions.h"
+#include "DetDesc/GlobalToLocalDelta.h"
 #include "DetDesc/AlignmentCondition.h"
 
 // from BOOST
@@ -49,11 +52,17 @@ class AlignmentElement {
    */
   unsigned int index() const;
 
-  bool matches(const DetectorElement* element) const; 
-
   /** Method to get the pivot point. The derivatives are taken w.r.t. this point
    */
-  const Gaudi::XYZPoint pivotXYZPoint() const;
+  const Gaudi::XYZPoint& pivotXYZPoint() const;
+
+  /** Method to get the delta translations as a vector of doubles
+   */
+  const std::vector<double>& deltaTranslations() const;
+
+  /** Method to get the delta rotations as a vector of doubles
+   */
+  const std::vector<double>& deltaRotations() const;
 
   /** Method to get the pivot point as a vector of doubles
    */
@@ -70,7 +79,19 @@ class AlignmentElement {
    */
   StatusCode setLocalDeltaMatrix(const std::vector<double>& globalDeltaT, 
                                  const std::vector<double>& globalDeltaR) const;
+
+  /** Method to get the local delta transformation matrix (from global to local)
+   *
+   */
+  const Gaudi::Transform3D localDeltaMatrix() const;
   
+
+  const Gaudi::XYZPoint localCentre() const;
+  
+  /** operator ==. Is this AlignmentElement constructed from this DetectorElement?  
+   */
+  bool operator==(const DetectorElement* rhs) const;
+
   /** Output stream method
    */
   std::ostream& fillStream(std::ostream& s) const;
@@ -96,9 +117,9 @@ inline const DetectorElement* AlignmentElement::element() const {return m_elemen
   
 inline unsigned int AlignmentElement::index() const { return m_index; }
 
-inline bool AlignmentElement::matches(const DetectorElement* element) const {return m_element == element; }
+inline bool AlignmentElement::operator==(const DetectorElement* rhs) const {return m_element == rhs; }
 
-inline const Gaudi::XYZPoint AlignmentElement::pivotXYZPoint() const { return m_pivot; }
+inline const Gaudi::XYZPoint& AlignmentElement::pivotXYZPoint() const { return m_pivot; }
 
 inline const std::vector<double> AlignmentElement::pivot() const {
   
@@ -113,12 +134,12 @@ inline StatusCode AlignmentElement::setLocalDeltaParams(const std::vector<double
 }
 
 inline StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double>& globalDeltaT, 
-                                                 const std::vector<double>& globalDeltaR) const {
+                                                        const std::vector<double>& globalDeltaR) const {
   /// Get transformation matrix to go from old delta to new delta
   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(globalDeltaT, 
                                                                                     globalDeltaR, 
-                                                                                    pivot()     );
-  /// Transform global deltas to local deltas
+                                                                                    this->pivot());
+  /// Transform global deltas to new local deltas (takes into account current local delta!!)
   const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix(m_element, globalDeltaMatrix);
   /// Update position of detector elements
   StatusCode sc = const_cast<IGeometryInfo*>(m_element->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
@@ -126,4 +147,11 @@ inline StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double
   return sc;
 }
 
+inline const Gaudi::Transform3D AlignmentElement::localDeltaMatrix() const {
+  return m_element->geometry()->ownToOffNominalMatrix();  
+}
+
+inline const Gaudi::XYZPoint AlignmentElement::localCentre() const {
+  return m_element->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0));
+}
 #endif // ALIGNMENTELEMENT_H

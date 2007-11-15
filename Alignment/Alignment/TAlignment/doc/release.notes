@@ -3,6 +3,19 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-11-15 - Jan Amoraal
+ - Framework++: More generic framework for the alignment of IT/OT
+ - Removed:
+  GetElementsToAlign.(h,cpp)
+  AlignOTDetector.(h,cpp)
+  AlignITDetector.(h,cpp)
+  AlignmentFunctions.h
+ - Added:
+  IGetElementsToBeAligned.h
+  GetElementsToBeAligned.(h,cpp)
+  FindAlignmentElement.cpp
+ - Modified AlignAlgorithm to use new classes and tools 
+
 </PRE><H1><A NAME=v3r3>2007-11-13 TAlignment v3r3</A></H1><PRE>
 ! 2007-11-13 - Johan Blouw
  - new release of this package
