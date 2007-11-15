@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>DaVinci.exe</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestBd2DstarPi.opts</text>
+</set></argument>
+<argument name="validator"><text>
+reference = """
+================================================================================
+                     TestCorrelations.AlgorithmCorrelations
+================================================================================
+    Algorithm                   Eff.      1      2      3      4      5      6  
+--------------------------------------------------------------------------------
+  1 AllTrueNoPIDsDecay          0.2% |  ##### 100.0%   0.8%   1.7%   1.8%   0.0%
+  2 AllTrueLooseDecay           0.2% | 100.0%  #####   0.8%   1.7%   1.8%   0.0%
+  3 StdLooseD02KPi             25.0% | 100.0% 100.0%  ##### 100.0% 100.0% 100.0%
+  4 StdLooseDstarWithD02KPi    11.8% | 100.0% 100.0%  47.2%  ##### 100.0% 100.0%
+  5 FilterDstarForBd2DstarPi   11.4% | 100.0% 100.0%  45.6%  96.6%  ##### 100.0%
+  6 PreselBd2DstarPi            0.6% |   0.0%   0.0%   2.4%   5.1%   5.3%  #####
+================================================================================
+"""
+
+# split reference file, sanitize EOLs and remove empty lines
+reflines = filter(None,map(lambda s: s.rstrip(), reference.splitlines()))
+# the same on standard output
+outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
+
+# find the reference block in the output file
+try:
+    pos = outlines.index(reflines[1])
+    outlines = outlines[pos-1:pos+10]
+    if reflines != outlines:
+        causes.append("correlation table")
+        result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
+        result["CorrelationTest.observer"] = result.Quote("\n".join(outlines))
+except ValueError:
+    causes.append("missing correlation table")
+</text></argument>
+</extension>
