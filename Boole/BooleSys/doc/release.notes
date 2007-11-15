@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r7>2007-11-06 Boole v14r7</A></H1><PRE>
+</PRE><H1><A NAME=v14r7>2007-11-15 Boole v14r7</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -26,6 +26,8 @@ Brunel v32r1 or greater
     (STAlgorithms v2r4)
   . Add STClusterKiller algorithm, to kill clusters at random. Default efficiency
     is 99.5%
+  . Add Empty.opts dummy options file to bootstrap Dirac with non-standard
+    configurations
 
 - New tuning
   . Retune conversion factor from e- to ADC for IT (STAlgorithms v2r4)
@@ -214,6 +216,9 @@ Brunel v31r4 or greater
 This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
 
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r2 or greater
+
 - Packaging changes
   . Database now accessed via DDDB interface package, no longer SQLDDDB directly
 
@@ -234,12 +239,19 @@ This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3
 This version uses projects Gaudi v19r2, LHCb v22r2, Lbcom v6r2
  and databases SQLDDDB v1r*, ParamFiles v5r0, FieldMap v4r7
 
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r2 or greater
+
 - New features
   . Now uses SQLDDDB database for geometry and conditions data
   . Various fixes to deal with conditions data
     (MuonDet v6r1, OTDet v7r2, STDet v3r2, VeloDet v11r1)
   . Possibility to simulate calorimeter LED data
     (CaloDet v8r1, DigiEvent v2r1, L0Event v16r2, CaloDigit v2r3)
+
+- Persistency changes
+  . Ecal banks contain header of PIN-diode FEB data, needs CaloDAQ v3r1
+    or greater to decode (CaloDAQ v3r1, SQLDDDB v1r0)
 
 - New tuning
   . Modified for dialog dead time (MuonAlgs v6r2)
