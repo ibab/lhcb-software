@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.1 2007-11-15 11:12:04 janos Exp $
+// $Id: FindAlignmentElement.cpp,v 1.2 2007-11-15 15:05:28 jblouw Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -74,7 +74,7 @@ Alignment::FunctorMap createFunctorMap() {
 
   /// IT specific
   typedef DeITBox* (DeITDetector::*FindITBox) (const STChannelID);
-  FindITBox findITBox = &DeITDetector::findBox;
+//  FindITBox findITBox = &DeITDetector::findBox;
   STParentOfSector findITLadder = &Alignment::findLadder;
 
   /// OT
@@ -115,10 +115,10 @@ Alignment::FunctorMap createFunctorMap() {
 						    bind<const DetectorElement*>(findSTLayer,   it, bind<STChannelID>(&LHCbID::stID,_1)),
 						    static_cast<const DetectorElement*>(0)));
   
-  DetElemFromID itBox     =  
-    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1), 
-						    bind<const DetectorElement*>(findITBox,     it, bind<STChannelID>(&LHCbID::stID,_1)),
-						    static_cast<const DetectorElement*>(0)));
+//  DetElemFromID itBox     =  
+//    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1), 
+//						    bind<const DetectorElement*>(findITBox,     it, bind<STChannelID>(&LHCbID::stID,_1)),
+//						    static_cast<const DetectorElement*>(0)));
 
   DetElemFromID itLadder =  
     ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1),
@@ -147,7 +147,7 @@ Alignment::FunctorMap createFunctorMap() {
                               ("TTLayers"      , ttLayer     )
                               ("TTHalfModules" , ttHalfModule) 
                               ("ITStations"    , itStation   )
-                              ("ITBoxes"       , itBox       )
+//                              ("ITBoxes"       , itBox       )
                               ("ITLayers"      , itLayer     )
                               ("ITLadders"     , itLadder    )
                               ("OTStations"    , otStation   )
