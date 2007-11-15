@@ -62,7 +62,7 @@ namespace Estd {
                   const FUNCTION& fun, 
                   int key) { 
     for ( ;begin != end; ++begin) 
-    {if ((**begin).info(key,1.e6) == 1.e6) (**begin).addInfo(key,fun(**begin));}
+    {if ( !(*begin)->hasInfo(key)) (*begin)->addInfo(key,fun(**begin));}
   }
   
   template<class INPUT , class OUTPUT , class FILTER>
