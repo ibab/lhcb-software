@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.366 2007-11-05 15:47:27 pkoppenb Exp $
+# $Id: requirements,v 1.367 2007-11-15 13:21:26 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -9,7 +9,7 @@ version           v19r8
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src job options
+branches          cmt doc src job options tests
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -61,3 +61,6 @@ apply_pattern application_path
 
 # define aliases
 alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"
+
+# for QMtest
+apply_pattern QMTest
