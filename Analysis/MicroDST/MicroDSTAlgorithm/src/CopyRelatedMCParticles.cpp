@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.2 2007-11-08 16:48:25 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.3 2007-11-15 08:19:08 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,13 +65,41 @@ StatusCode CopyRelatedMCParticles::execute() {
   verbose() << "Going to store MCParticles related to Particles from " 
             << inputTESLocation() << endmsg;
 
-  return StatusCode::SUCCESS;
+  const LHCb::Particle::Container* particles = 
+    get<LHCb::Particle::Container>( inputTESLocation() );
+
+  verbose() << "Found " << particles->size() << " particles" << endmsg;
+  
+  for (LHCb::Particle::Container::const_iterator iPart = particles->begin();
+       iPart != particles->end();
+       ++iPart) {
+    LHCb::MCParticle* mcPart = storeMCParticle( *iPart);
+  }
+
+  setFilterPassed(true);
+
+  verbose() << "Going to store to TES" << endmsg;
+
+  return copyLocalStoreToTES();
+
 
 }
 //=============================================================================
-LHCb::MCParticle*  CopyRelatedMCParticles::storeMCParticle(const LHCb::MCParticle* particle)
+LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::Particle* particle)
 {
+
+  // Get a vector of associated particles
+  // Store them on the local store.
+
   return 0;
+
+}
+//=============================================================================
+StatusCode CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
+                                                         LHCb::MCParticle::ConstVector&) 
+{
+  return StatusCode::SUCCESS;
+  
 }
 //=============================================================================
 const LHCb::MCVertex* CopyRelatedMCParticles::storeMCVertex(const LHCb::MCVertex* vertex) 

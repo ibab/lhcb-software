@@ -1,11 +1,11 @@
-// $Id: CopyRelatedMCParticles.h,v 1.2 2007-11-08 16:48:25 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.3 2007-11-15 08:19:09 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
 // Include files
 // from Gaudi
 #include "MicroDST/CopyAndStoreData.h"
-
+#include "Event/Particle.h"
 class MCParticle;
 class MCVertex;
 
@@ -32,11 +32,11 @@ protected:
 private:
 
   /**
-   *
+   * Store the MCParticle which is related to a Particle.
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
-  LHCb::MCParticle* storeMCParticle(const LHCb::MCParticle* particle);
+  LHCb::MCParticle* storeMCParticle(const LHCb::Particle* particle);
 
   /**
    *
@@ -44,5 +44,15 @@ private:
    * @author Juan Palacios juancho@nikhef.nl
    */
   const LHCb::MCVertex* storeMCVertex(const LHCb::MCVertex* vertex);
+
+  /**
+   *
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  StatusCode associatedMCParticles(const LHCb::Particle* particle,
+                                   LHCb::MCParticle::ConstVector&);
+  
+
 };
 #endif // COPYRELATEDMCPARTICLES_H
