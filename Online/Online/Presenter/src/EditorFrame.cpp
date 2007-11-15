@@ -23,6 +23,10 @@
 #include <TObjArray.h>
 //#include <TImage.h>
 //#include <TGVSplitter.h>
+#include <TGSplitter.h>
+//#include <TGLabel.h>
+#include <TGTextEdit.h>
+
 
 #include <TH1.h>
 #include <TH2.h>
@@ -77,23 +81,84 @@ void EditorFrame::buildGUI()
 {
   // composite frame
   m_editorCanvasMainFrame = new TGCompositeFrame(
-    this, 548, 502, kVerticalFrame);
+    this, 548, 502, kVerticalFrame | kSunkenFrame);
 
-  // composite frame
-  TGCompositeFrame* fCompositeFrame649 = new TGCompositeFrame(
-    m_editorCanvasMainFrame, 548, 502, kVerticalFrame);
+//TGLabel *lm_editorCanvasMainFrame = new TGLabel(m_editorCanvasMainFrame, "m_editorCanvasMainFrame");
+//m_editorCanvasMainFrame->AddFrame(lm_editorCanvasMainFrame, new TGLayoutHints(kLHintsTop, 3, 0, 0, 0));
 
-  // horizontal frame
-  TGHorizontalFrame* fHorizontalFrame650 = new TGHorizontalFrame(
-    fCompositeFrame649, 544, 498, kHorizontalFrame);
+//  // horizontal frame
+  TGHorizontalFrame* editorMainHorizontalFrame = new TGHorizontalFrame(
+    m_editorCanvasMainFrame, 544, 498, kHorizontalFrame | kSunkenFrame);
 
-  // horizontal frame
-  TGVerticalFrame* fVerticalFrame651 = new TGVerticalFrame(
-    fHorizontalFrame650, 106, 494, kVerticalFrame);
+//TGLabel *leditorMainHorizontalFrame = new TGLabel(editorMainHorizontalFrame, "editorMainHorizontalFrame");
+//m_editorCanvasMainFrame->AddFrame(leditorMainHorizontalFrame, new TGLayoutHints(kLHintsTop, 3, 0, 0, 0));
+
+  // editorDatabaseVerticalFrame
+  TGVerticalFrame* editorLeftVerticalFrame = new TGVerticalFrame(
+    editorMainHorizontalFrame, 155, 494, kVerticalFrame | kSunkenFrame |  kFixedWidth);
+//     editorMainHorizontalFrame, 430, 494, kVerticalFrame | kHorizontalFrame);
+
+//TGLabel *leditorDatabaseVerticalFrame = new TGLabel(editorLeftVerticalFrame, "editorLeftVerticalFrame");
+//editorLeftVerticalFrame->AddFrame(leditorDatabaseVerticalFrame, new TGLayoutHints(kLHintsTop, 3, 0, 0, 0));
+
+  editorMainHorizontalFrame->AddFrame(editorLeftVerticalFrame,
+    new TGLayoutHints(kLHintsTop | kLHintsExpandY, 2, 2, 2, 2));
+
+  // editorCentralVerticalFrame
+  TGVerticalFrame* editorCentralVerticalFrame = new TGVerticalFrame(
+    editorMainHorizontalFrame, 430, 494, kVerticalFrame | kSunkenFrame);
+
+//TGLabel *leditorCentralVerticalFrame = new TGLabel(editorCentralVerticalFrame, "editorCentralVerticalFrame");
+//editorCentralVerticalFrame->AddFrame(leditorCentralVerticalFrame,
+// new TGLayoutHints(kLHintsTop | kLHintsExpandY, 3, 0, 0, 0));
+
+TGVSplitter *leftVerticalSplitter = new TGVSplitter(editorMainHorizontalFrame,2,2);
+leftVerticalSplitter->SetFrame(editorLeftVerticalFrame, kTRUE);
+editorMainHorizontalFrame->AddFrame(leftVerticalSplitter, new TGLayoutHints(kLHintsLeft | kLHintsExpandY));
+
+  editorMainHorizontalFrame->AddFrame(editorCentralVerticalFrame,
+    new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX |
+                      kLHintsExpandY, 2, 2, 2, 2));
+
+  // embedded canvas
+  editorEmbCanvas = new TRootEmbeddedCanvas(0, editorCentralVerticalFrame,
+    m_mainCanvasWidth, m_mainCanvasHeight);
+  Int_t wm_editorEmbCanvas = editorEmbCanvas->GetCanvasWindowId();
+  editorEmbCanvas->SetBit(kNoContextMenu);
+  editorCanvas = new TCanvas("editor canvas", m_mainCanvasWidth,
+    m_mainCanvasHeight, wm_editorEmbCanvas);
+//  editorCanvas->SetFixedAspectRatio(true);
+  editorEmbCanvas->AdoptCanvas(editorCanvas);
+  editorCentralVerticalFrame->AddFrame(editorEmbCanvas,
+    new TGLayoutHints(kLHintsRight | kLHintsTop | kLHintsExpandX |
+                      kLHintsExpandY, 2, 2, 2, 2));
+  editorCanvas->Connect("ProcessedEvent(Int_t, Int_t, Int_t, TObject*)",
+                        "EditorFrame", this,
+                        "EventInfo(Int_t, Int_t, Int_t, TObject*)");
+//  editorCanvas->Connect("Selected(TPad*, TObject*, Int_t)","EditorFrame", this,
+//                        "highlightSelectedPad(TPad*, TObject*, Int_t)");
+  editorCanvas->SetGrid();
+  editorCanvas->SetBit(kNoContextMenu);
+
+   TGTextEdit *pageDescription = new TGTextEdit(editorCentralVerticalFrame,430,56);
+   editorCentralVerticalFrame->AddFrame(pageDescription,
+    new TGLayoutHints(kLHintsRight | kLHintsBottom | kLHintsExpandX, 2, 2, 2, 2));
+   
+//   TGTextEdit *logWatch = new TGTextEdit(editorCentralVerticalFrame,430,56);
+//   editorCentralVerticalFrame->AddFrame(logWatch, new TGLayoutHints(kLHintsLeft | kLHintsBottom,2,2,2,2));
+
+
+  // vertical frame
+  TGVerticalFrame* editorRightVerticalFrame = new TGVerticalFrame(
+    editorMainHorizontalFrame, 106, 494, kVerticalFrame | kSunkenFrame);
+
+//TGLabel *lfVerticalFrame651 = new TGLabel(editorRightVerticalFrame, "editorRightVerticalFrame");
+//editorRightVerticalFrame->AddFrame(lfVerticalFrame651, new TGLayoutHints(kLHintsTop, 3, 0, 0, 0));
+
 
   // canvas widget
   m_dimSvcListTreeContainterCanvas = new TGCanvas(
-    fVerticalFrame651, 170, 243);
+    editorRightVerticalFrame, 170, 243);
 
   // canvas viewport
   TGViewPort* fViewPort664 = m_dimSvcListTreeContainterCanvas->GetViewPort();
@@ -112,7 +177,7 @@ void EditorFrame::buildGUI()
   m_dimSvcListTree->MapSubwindows();
   m_dimSvcListTreeContainterCanvas->SetContainer(m_dimSvcListTree);
   m_dimSvcListTreeContainterCanvas->MapSubwindows();
-  fVerticalFrame651->AddFrame(m_dimSvcListTreeContainterCanvas,
+  editorRightVerticalFrame->AddFrame(m_dimSvcListTreeContainterCanvas,
     new TGLayoutHints(kLHintsRight | kLHintsTop | kLHintsExpandY,
                       2, 2, 2, 2));
 
@@ -135,7 +200,7 @@ void EditorFrame::buildGUI()
   m_dimContextMenu->Connect("Activated(Int_t)","EditorFrame", this,
                             "handleCommand(Command)");
   // canvas widget
-  TGCanvas* fCanvas652 = new TGCanvas(fVerticalFrame651, 170, 243);
+  TGCanvas* fCanvas652 = new TGCanvas(editorRightVerticalFrame, 170, 243);
 
   // canvas viewport
   m_pagesFromHistoDBViewPort = fCanvas652->GetViewPort();
@@ -153,11 +218,11 @@ void EditorFrame::buildGUI()
   m_pagesFromHistoDBListTree->MapSubwindows();
   fCanvas652->SetContainer(m_pagesFromHistoDBListTree);
   fCanvas652->MapSubwindows();
-  fVerticalFrame651->AddFrame(fCanvas652,
+  editorRightVerticalFrame->AddFrame(fCanvas652,
     new TGLayoutHints(kLHintsRight | kLHintsBottom | kLHintsExpandY,
                       2, 2, 2, 2));
 
-  fHorizontalFrame650->AddFrame(fVerticalFrame651,
+  editorMainHorizontalFrame->AddFrame(editorRightVerticalFrame,
     new TGLayoutHints(kLHintsRight | kLHintsTop | kLHintsExpandY,
                       2, 2, 2, 2));
 
@@ -169,39 +234,11 @@ void EditorFrame::buildGUI()
   m_pagesContextMenu->AddSeparator();
   m_pagesContextMenu->AddEntry("Refresh", M_RefreshDBPagesListTree_COMMAND);
   m_pagesContextMenu->Connect("Activated(Int_t)","EditorFrame", this,
-                              "handleCommand(Command)");
-
-  // vertical frame
-  TGVerticalFrame* fVerticalFrame674 = new TGVerticalFrame(
-    fHorizontalFrame650, 430, 494, kVerticalFrame | kHorizontalFrame);
-
-  // embedded canvas
-  editorEmbCanvas = new TRootEmbeddedCanvas(0, fVerticalFrame674,
-    m_mainCanvasWidth, m_mainCanvasHeight);
-  Int_t wm_editorEmbCanvas = editorEmbCanvas->GetCanvasWindowId();
-  editorEmbCanvas->SetBit(kNoContextMenu);
-  editorCanvas = new TCanvas("editor canvas", m_mainCanvasWidth,
-    m_mainCanvasHeight, wm_editorEmbCanvas);
-//  editorCanvas->SetFixedAspectRatio(true);
-  editorEmbCanvas->AdoptCanvas(editorCanvas);
-  fVerticalFrame674->AddFrame(editorEmbCanvas,
-    new TGLayoutHints(kLHintsRight | kLHintsBottom | kLHintsExpandX |
-                      kLHintsExpandY, 2, 2, 2, 2));
-  editorCanvas->Connect("ProcessedEvent(Int_t, Int_t, Int_t, TObject*)",
-                        "EditorFrame", this,
-                        "EventInfo(Int_t, Int_t, Int_t, TObject*)");
-//  editorCanvas->Connect("Selected(TPad*, TObject*, Int_t)","EditorFrame", this,
-//                        "highlightSelectedPad(TPad*, TObject*, Int_t)");
-  editorCanvas->SetGrid();
-  editorCanvas->SetBit(kNoContextMenu);
-
-  // vertical frame
-  m_histoDBFilterFrame = new TGVerticalFrame(fVerticalFrame674, 155, 490,
-                                             kVerticalFrame);
+                              "handleCommand(Command)");           
 
   // combo box
   m_histoDBFilterComboBox = new TGComboBox(
-    m_histoDBFilterFrame, -1, kHorizontalFrame | kSunkenFrame |
+    editorLeftVerticalFrame, -1, kHorizontalFrame | kSunkenFrame |
     kDoubleBorder | kOwnBackground);
   m_histoDBFilterComboBox->AddEntry("Folder/Page", ByFolderAndPage); // #0
   m_histoDBFilterComboBox->AddEntry("Tasks/Algorithm", ByTask); // #1
@@ -216,12 +253,12 @@ void EditorFrame::buildGUI()
   m_histoDBFilterComboBox->Select(ByTask);
   m_histoDBFilterComboBox->Connect("Selected(Int_t)", "EditorFrame", this,
                                    "refreshHistoDBListTree()");
-  m_histoDBFilterFrame->AddFrame(m_histoDBFilterComboBox,
+  editorLeftVerticalFrame->AddFrame(m_histoDBFilterComboBox,
     new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
                       2, 2, 2, 2));
 
   // canvas widget
-  m_histoDBCanvas = new TGCanvas(m_histoDBFilterFrame, 124, 460);
+  m_histoDBCanvas = new TGCanvas(editorLeftVerticalFrame, 124, 460);
 
   // canvas viewport
   m_histoDBCanvasViewPort = m_histoDBCanvas->GetViewPort();
@@ -261,23 +298,12 @@ void EditorFrame::buildGUI()
   m_databaseHistogramTreeList->MapSubwindows();
   m_histoDBCanvas->SetContainer(m_databaseHistogramTreeList);
   m_histoDBCanvas->MapSubwindows();
-  m_histoDBFilterFrame->AddFrame(m_histoDBCanvas,
+  editorLeftVerticalFrame->AddFrame(m_histoDBCanvas,
     new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX |
                       kLHintsExpandY, 2, 2, 2, 2));
 
-  fVerticalFrame674->AddFrame(m_histoDBFilterFrame,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandY,
-                      2, 2, 2, 2));
 
-  fHorizontalFrame650->AddFrame(fVerticalFrame674,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX |
-                      kLHintsExpandY, 2, 2, 2, 2));
-
-  fCompositeFrame649->AddFrame(fHorizontalFrame650,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX |
-    kLHintsExpandY, 2, 2, 2, 2));
-
-  m_editorCanvasMainFrame->AddFrame(fCompositeFrame649,
+  m_editorCanvasMainFrame->AddFrame(editorMainHorizontalFrame,
     new TGLayoutHints(kLHintsExpandX | kLHintsExpandY));
 
   AddFrame(m_editorCanvasMainFrame,
@@ -795,7 +821,7 @@ void EditorFrame::dbHistoCollapseAllChildren()
 std::string EditorFrame::convDimToHistoID(std::string dimSvcName)
 {
   HistogramIdentifier histogram = HistogramIdentifier(dimSvcName);
-  if (histogram.isPlausible()) {
+  if (histogram.isDimFormat()) {
     return histogram.histogramIdentifier();
   } else {
     new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
@@ -1031,7 +1057,7 @@ void EditorFrame::deleteSelectedPageFromDB()
         if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 
         new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("Could delete the page to OnlineHistDB:\n\n%s\n",
+                     Form("Could not delete the page to OnlineHistDB:\n\n%s\n",
                           m_message.c_str()),
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
@@ -1083,7 +1109,7 @@ void EditorFrame::setHistoParFromDB(TH1* histogram,
   histogram->SetNameTitle(onlineHistogram->dimServiceName().c_str(),
                           onlineHistogram->hsname().c_str());
 }
-bool EditorFrame::paintHist(DbRootHist* histogram)
+void EditorFrame::paintHist(DbRootHist* histogram)
 {
   //  xlow [0, 1] is the position of the bottom left point of the pad
   //             expressed in the mother pad reference system
@@ -1120,7 +1146,6 @@ bool EditorFrame::paintHist(DbRootHist* histogram)
       histogram->hostingPad = pad;
     }
   }
-  return 0;
 }
 void EditorFrame::autoCanvasLayout()
 {

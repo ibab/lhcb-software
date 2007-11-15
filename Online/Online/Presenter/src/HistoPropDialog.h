@@ -27,7 +27,6 @@ class HistoPropDialog : public TGTransientFrame
     void build();
 
   private:
-
     PresenterMainFrame *m_mainFrame;
     TGTextButton       *m_okButton;
     TGTextButton       *m_cancelButton;

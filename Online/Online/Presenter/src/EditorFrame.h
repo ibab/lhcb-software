@@ -102,7 +102,7 @@ class EditorFrame : public TGCompositeFrame
     void deleteSelectedFolderFromDB();
     void setHistoParFromDB(TH1* histogram, OnlineHistogram* onlineHistogram);
     void refreshPage();
-    bool paintHist(DbRootHist* histogram);
+    void paintHist(DbRootHist* histogram);
 
     void clearHistosOnPage();
     void EventInfo(int event, int px, int py, TObject *selected);
