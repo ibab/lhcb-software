@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r1>2007-11-09 LHCbSys v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2007-11-15 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
 - Packages added:    L0Interfaces v1r0 - Interfaces for L0 tools
@@ -13,9 +13,9 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
     EventSys v23r10, DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, 
     PhysEvent v11r4, RecEvent v2r7, TrackEvent v4r8, DetSys v11r0,
     DetDesc v18r1p1, MuonDet v7r0, STDet v3r7, VeloDet v12r3, DAQSys v3r6,
-    CaloDAQ v4r1, LoKiCore v6r1p1, LoKiPhysMC v6r2, TrackInterfaces v3r10,
-    TsaKernel v3r1, RichRecBase v3r8, LHCbAlgs v2r12, SimComponents v2r7,
-    MDF v2r6, DDDB v1r2, IOExample v2r2
+    CaloDAQ v4r1, OTDAQ v5r6, TfKernel v2r1, LoKiCore v6r1p1, LoKiPhysMC v6r2,
+    TrackInterfaces v3r10, TsaKernel v3r1, RichRecBase v3r8, DaVinciKernel v6r8,
+    LHCbAlgs v2r12, SimComponents v2r7, MDF v2r6, DDDB v1r2, IOExample v2r2
 
 - in DDDB v1r2
   . Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
@@ -32,6 +32,9 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . Add a dictionary needed by Panoramix
   . Fixed dependencies for customdict generation
 
+- In EventSys v23r10
+  . Fix copy_relax_rootmap pattern for Windows backslashes
+
 - In DAQEvent v7r6p1
   . Add the possibility to remove L0 banks in bankKiller.cpp
 
@@ -42,7 +45,8 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . Complete Event/L0DUBase.h
   . Remove leading "/Event/" from TES locations
 
-- In L0Event v16r6,MCEvent v2r5p1,PhysEvent v11r4,RecEvent v2r7,TrackEvent v4r8 
+- In DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, PhysEvent v11r4,
+     RecEvent v2r7, TrackEvent v4r8, RichRecBase v3r8
   . Fixed dependencies for dictionary generation
 
 - In PhysEvent v11r4
@@ -78,9 +82,19 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 - In VeloDet v12r3
   . Add protections against missing detector elements, to allow use with test
     beam geometry
+  . Added method to DeVeloSensor that returns the module id from the conditions
+    database. Value is set in DeVelo. 
+  . Added protection for invalid sensor in registering of conditions.
 
 - In CaloDAQ v4r1
   . Fix bug in CaloDataProvider.cpp
+
+- In OTDAQ v5r6
+  . Cache calibrated time in OTLiteTime, replacing the static data member
+
+- In TfKernel v2r1
+  . Moved calibratedTime from OTHit to OTLiteTime
+  . Add double to float conversion in RecoFuncs.h to remove compiler warning
 
 - In LoKiCore v6r1p1
   . Fix for gcc 4.0
@@ -106,6 +120,10 @@ This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
   . Modifications to MCReconstructible to protect against unknown category
   . Add option to MCParticleSelector to select only B decay products
   . Change MCParticleSelector defaults to do no selection
+
+- In DaVinciKernel v6r8
+  . Make dictionary for TisTos tools
+  . Add new methods to their interfaces to make use in python easier 
 
 - In LHCbAlgs v2r12
   . Adapted TrajPoca to interface change in trajectory
