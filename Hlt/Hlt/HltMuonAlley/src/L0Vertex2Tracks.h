@@ -1,4 +1,4 @@
-// $Id: L0Vertex2Tracks.h,v 1.1 2007-08-03 09:29:30 asatta Exp $
+// $Id: L0Vertex2Tracks.h,v 1.2 2007-11-15 14:55:03 graven Exp $
 #ifndef L0VERTEX2TRACKS_H 
 #define L0VERTEX2TRACKS_H 1
 
@@ -25,8 +25,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  bool isIn(LHCb::Track* track);
-protected:
 
 private:
 
