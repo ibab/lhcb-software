@@ -4,6 +4,20 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r8 2007-11-15 ===================
+
+! 2007-11-15 - Juan PALACIOS
+
+ - job/DaVinci_Ganga.py, options/DaVinci.py
+  . Increase DaVinci version to v19r8.
+ - Add pattern for QMTest
+ - Add test directories.
+ - Add:
+        tests/qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+        tests/qmtest/davinci.qms/preselections.qms/test_bd2kstarmumu.qmt
+        tests/options/DVTestBd2DstarPi.opts
+        tests/options/DVTestBd2KstarMuMu.opts
+
 ! 2007-11-12 - Chris Jones
  - Remove '#pragma print on' from DaVinciCommon.opts
 
