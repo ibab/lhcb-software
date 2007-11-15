@@ -40,7 +40,7 @@ use PatAlgorithms       v3r1    Tf    # Stephanie Hansmann-Menzemer
 use TsaAlgorithms       v3r1    Tf    # Matt Needham
 use TrackSeeding        v1r2    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r16   Tf    # Eduardo Rodrigues
-use TfTools             v1r0    Tf    # Stephanie Hansmann-Menzemer
+use TfTools             v1r1    Tf    # Stephanie Hansmann-Menzemer
 
 # Primary Vertex Finder
 use PatPV               v3r0    Tr   # Mariusz Witek

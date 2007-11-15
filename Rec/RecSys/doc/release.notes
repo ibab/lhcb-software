@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r1>2007-11-09 RecSys v5r1</A></H1><PRE>
+</PRE><H1><A NAME=v5r1>2007-11-12 RecSys v5r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r1.
 This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
 
@@ -13,7 +13,7 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
     TrackExtrapolators v2r15, TrackCheckers v3r2, TrackMCTools v2r14, 
     PatChecker v3r1, TrackSys v4r11, TsaAlgorithms v3r1, PatAlgorithms v3r1,
     TrackUtils v1r16, TrackFitter v2r21, MuonPIDChecker v2r2, PatVelo v3r1,
-    RichHLTLocalPID v1r0p1
+    TfTools v1r1, RichHLTLocalPID v1r0p1
 
 - In TrackFitEvent v3r10
   . Adapted trajectories to change in Trajectory interface
@@ -81,6 +81,7 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
   . Add switch for z position of output state for PatSeeding and PatForward 
     algorithm
   . Set default values for parameter arrays in PatFwdTool and PatSeedingTool
+  . Add double -> float conversion in PatForwardTool to remove compiler warning 
 
 - In TrackUtils v1r16, PatChecker v3r1
   . Adapt to the new name of Downstream track container
@@ -94,6 +95,10 @@ This version includes also the bug fixes of RecSys v4r11 (not included in v5r0)
 - In PatVelo v3r1
   . Import PatVeloOpenTracking from the old Pat package, adapt to Tf context and
     improve ghost rate by cleaning tracks sharing 1 R and 1 Phi according to chi2
+  . Fix to PatVeloGeneralTracking to improve hit efficiency when detector is open
+
+- In TfTools v1r1
+  . Adapted to change in OTLiteTime and OTHit
 
 - In MuonPIDChecker v2r2
   . Protect against divide by zero when zero or few events processed
