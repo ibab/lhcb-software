@@ -6,6 +6,6 @@ branches doc cmt
 # LHCb DAQ buffer libraries
 
 use MuonDAQ     v3r2    Muon
-use OTDAQ       v5r5    OT
+use OTDAQ       v5r6    OT
 use CaloDAQ     v4r1    Calo
 use SiDAQ       v2r0    Si
