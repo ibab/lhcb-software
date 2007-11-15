@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.2 2007-06-25 20:40:11 hernando Exp $
+// $Id: HltTypes.h,v 1.3 2007-11-15 14:34:29 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -71,10 +71,10 @@ namespace Hlt
   
   typedef Estd::bifunction<LHCb::Track, LHCb::Track>         TrackBiFunction;  
   typedef Estd::bifunction<LHCb::RecVertex, LHCb::RecVertex> VertexBiFunction;
-  typedef Estd::bifunction<LHCb::Track, LHCb::RecVertex> TrackVertexBiFunction;
+  typedef Estd::bifunction<LHCb::Track, LHCb::RecVertex>     TrackVertexBiFunction;
 
-  typedef Hlt::DataHolder< Hlt::Configuration > HolderConfiguration;
-  typedef Hlt::DataSizeHolder< TrackContainer > HolderTrackContainer;
+  typedef Hlt::DataHolder< Hlt::Configuration >  HolderConfiguration;
+  typedef Hlt::DataSizeHolder< TrackContainer >  HolderTrackContainer;
   typedef Hlt::DataSizeHolder< VertexContainer > HolderVertexContainer;
 
 };
