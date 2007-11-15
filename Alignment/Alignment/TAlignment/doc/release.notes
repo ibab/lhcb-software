@@ -4,7 +4,7 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 ! 2007-11-15 - Johan Blouw
- - restored head of TAlignment package...
+ - restored head of TAlignment package to v3r3...
 
 ! 2007-11-15 - Jan Amoraal
  - Framework++: More generic framework for the alignment of IT/OT
