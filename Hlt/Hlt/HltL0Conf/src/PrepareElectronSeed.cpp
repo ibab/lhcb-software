@@ -72,12 +72,12 @@ StatusCode PrepareElectronSeed::initialize()
   
   //double sParIP[2], sParMP[2], sParOP[2];
   //calculate these once ..
-  sParIP[0] = tan(  cellSize[0]/2. / parIP[0] );
-  sParIP[1] = tan( -cellSize[0]/2. / parIP[0] );
-  sParMP[0] = tan(  cellSize[1]/2. / parMP[0] );
-  sParMP[1] = tan( -cellSize[1]/2. / parMP[0] );
-  sParOP[0] = tan(  cellSize[2]/2. / parOP[0] );
-  sParOP[1] = tan( -cellSize[2]/2. / parOP[0] );
+  sParIP[0] = tan(  cellSize[0]*0.5 / parIP[0] );
+  sParIP[1] = tan( -cellSize[0]*0.5 / parIP[0] );
+  sParMP[0] = tan(  cellSize[1]*0.5 / parMP[0] );
+  sParMP[1] = tan( -cellSize[1]*0.5 / parMP[0] );
+  sParOP[0] = tan(  cellSize[2]*0.5 / parOP[0] );
+  sParOP[1] = tan( -cellSize[2]*0.5 / parOP[0] );
 
   return StatusCode::SUCCESS;
 }
@@ -129,16 +129,16 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   //========================================================================================================
   // now correct barycenter position 
   double candx = 0.;
-  if( e_s1!=0 && e_s2!=0 )      candx=(e_x1+e_x2)/2.;
-  else if( e_s1!=0 && e_s4!=0 ) candx=(e_x1+e_x4)/2.;
-  else if( e_s3!=0 && e_s2!=0 ) candx=(e_x3+e_x2)/2.;
-  else if( e_s3!=0 && e_s4!=0 ) candx=(e_x3+e_x4)/2.;
+  if( e_s1!=0 && e_s2!=0 )      candx=(e_x1+e_x2)*0.5;
+  else if( e_s1!=0 && e_s4!=0 ) candx=(e_x1+e_x4)*0.5;
+  else if( e_s3!=0 && e_s2!=0 ) candx=(e_x3+e_x2)*0.5;
+  else if( e_s3!=0 && e_s4!=0 ) candx=(e_x3+e_x4)*0.5;
 
   double candy = 0.;
-  if( e_s1!=0 && e_s3!=0 )      candy=(e_y1+e_y3)/2.;
-  else if( e_s1!=0 && e_s4!=0 ) candy=(e_y1+e_y4)/2.;
-  else if( e_s2!=0 && e_s3!=0 ) candy=(e_y2+e_y3)/2.;
-  else if( e_s2!=0 && e_s4!=0 ) candy=(e_y2+e_y4)/2.;
+  if( e_s1!=0 && e_s3!=0 )      candy=(e_y1+e_y3)*0.5;
+  else if( e_s1!=0 && e_s4!=0 ) candy=(e_y1+e_y4)*0.5;
+  else if( e_s2!=0 && e_s3!=0 ) candy=(e_y2+e_y3)*0.5;
+  else if( e_s2!=0 && e_s4!=0 ) candy=(e_y2+e_y4)*0.5;
   
   
   double barx = (e_x1*e_e1+e_x2*e_e2+e_x3*e_e3+e_x4*e_e4)/(e_e1+e_e2+e_e3+e_e4);
@@ -150,33 +150,33 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   // apply corrections
   if( fabs(cellSize[0]-e_s1) < 1 ){
     ecalRegion=0;
-    if     ( barx-candx >  cellSize[0]/2. ) barx_cor = candx + parIP[1] * sParIP[0];
-    else if( barx-candx < -cellSize[0]/2. ) barx_cor = candx + parIP[1] * sParIP[1];
+    if     ( barx-candx >  cellSize[0]*0.5 ) barx_cor = candx + parIP[1] * sParIP[0];
+    else if( barx-candx < -cellSize[0]*0.5 ) barx_cor = candx + parIP[1] * sParIP[1];
     else                            barx_cor = candx + parIP[1]*tan( (barx-candx) / parIP[0] );     
     
-    if     ( bary-candy >  cellSize[0]/2. ) bary_cor = candy + parIP[1] * sParIP[0]; 
-    else if( bary-candy < -cellSize[0]/2. ) bary_cor = candy + parIP[1] * sParIP[1]; 
+    if     ( bary-candy >  cellSize[0]*0.5 ) bary_cor = candy + parIP[1] * sParIP[0]; 
+    else if( bary-candy < -cellSize[0]*0.5 ) bary_cor = candy + parIP[1] * sParIP[1]; 
     else                            bary_cor = candy + parIP[1]*tan( (bary-candy) / parIP[0] );     
   }
   
   if( fabs(cellSize[1]-e_s1) < 1 ){
     ecalRegion=1;
-    if     ( barx-candx >  cellSize[1]/2. ) barx_cor = candx + parMP[1] * sParMP[0]; 
-    else if( barx-candx < -cellSize[1]/2. ) barx_cor = candx + parMP[1] * sParMP[1]; 
+    if     ( barx-candx >  cellSize[1]*0.5 ) barx_cor = candx + parMP[1] * sParMP[0]; 
+    else if( barx-candx < -cellSize[1]*0.5 ) barx_cor = candx + parMP[1] * sParMP[1]; 
     else                            barx_cor = candx + parMP[1]*tan( (barx-candx) / parMP[0] );     
   
-    if     ( bary-candy >  cellSize[1]/2. ) bary_cor = candy + parMP[1] * sParMP[0]; 
-    else if( bary-candy < -cellSize[1]/2. ) bary_cor = candy + parMP[1] * sParMP[1]; 
+    if     ( bary-candy >  cellSize[1]*0.5 ) bary_cor = candy + parMP[1] * sParMP[0]; 
+    else if( bary-candy < -cellSize[1]*0.5 ) bary_cor = candy + parMP[1] * sParMP[1]; 
     else                            bary_cor = candy + parMP[1]*tan( (bary-candy) / parMP[0] ); 
   }
   
   if( fabs(cellSize[2]-e_s1) < 1 ){
     ecalRegion=2;
-    if     ( barx-candx >  cellSize[2]/2. ) barx_cor = candx + parOP[1] * sParOP[0]; 
-    else if( barx-candx < -cellSize[2]/2. ) barx_cor = candx + parOP[1] * sParOP[1]; 
+    if     ( barx-candx >  cellSize[2]*0.5 ) barx_cor = candx + parOP[1] * sParOP[0]; 
+    else if( barx-candx < -cellSize[2]*0.5 ) barx_cor = candx + parOP[1] * sParOP[1]; 
     else                            barx_cor = candx + parOP[1]*tan( (barx-candx) / parOP[0] );     
-    if     ( bary-candy >  cellSize[2]/2. ) bary_cor = candy + parOP[1] * sParOP[0]; 
-    else if( bary-candy < -cellSize[2]/2. ) bary_cor = candy + parOP[1] * sParOP[1]; 
+    if     ( bary-candy >  cellSize[2]*0.5 ) bary_cor = candy + parOP[1] * sParOP[0]; 
+    else if( bary-candy < -cellSize[2]*0.5 ) bary_cor = candy + parOP[1] * sParOP[1]; 
     else                            bary_cor = candy + parOP[1]*tan( (bary-candy) / parOP[0] ); 
   }
   
@@ -240,8 +240,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);
   
-  if(m_debugMode) m_DataStore->region = ecalRegion;
-
+  if(m_debugMode) m_DataStore->region.push_back( ecalRegion );
 
   return StatusCode::SUCCESS;
   

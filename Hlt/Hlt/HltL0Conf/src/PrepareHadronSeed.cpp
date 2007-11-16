@@ -167,10 +167,10 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
   float YHCALBAR = (had_y1*had_e1+had_y2*had_e2+had_y3*had_e3+had_y4*had_e4)/EHCALCLU;
   float XHCALCLU = 0.;
   float YHCALCLU = 0.;
-  if     ( 0!=had_s1 ){ XHCALCLU = had_x1+had_s1/2.; YHCALCLU = had_y1+had_s1/2.; }
-  else if( 0!=had_s2 ){ XHCALCLU = had_x2-had_s2/2.; YHCALCLU = had_y2+had_s2/2.; }
-  else if( 0!=had_s3 ){ XHCALCLU = had_x3+had_s3/2.; YHCALCLU = had_y3-had_s3/2.; }
-  else if( 0!=had_s4 ){ XHCALCLU = had_x4-had_s4/2.; YHCALCLU = had_y4-had_s4/2.; }
+  if     ( 0!=had_s1 ){ XHCALCLU = had_x1+had_s1*0.5; YHCALCLU = had_y1+had_s1*0.5; }
+  else if( 0!=had_s2 ){ XHCALCLU = had_x2-had_s2*0.5; YHCALCLU = had_y2+had_s2*0.5; }
+  else if( 0!=had_s3 ){ XHCALCLU = had_x3+had_s3*0.5; YHCALCLU = had_y3-had_s3*0.5; }
+  else if( 0!=had_s4 ){ XHCALCLU = had_x4-had_s4*0.5; YHCALCLU = had_y4-had_s4*0.5; }
   
   double Hpar0_IP = 66.56;double Hpar1_IP = 51.01;
   double Hpar0_OP = 141.6;double Hpar1_OP = 96.76;
@@ -263,36 +263,36 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
     ecalpart = ECALpart( XECALBAR , YECALBAR );
       
     if( XECALMAX!=XECALMIN ){
-      XECALCLU=(XECALMAX+XECALMIN)/2.;
+      XECALCLU=(XECALMAX+XECALMIN)*0.5;
     }
     else{
       if     ( 1==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csIPE/2.;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csIPE/2.;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csIPE*0.5;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csIPE*0.5;
       }
       else if( 2==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csMPE/2.;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csMPE/2.;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csMPE*0.5;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csMPE*0.5;
       }
       else if( 3==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csOPE/2.;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csOPE/2.;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csOPE*0.5;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csOPE*0.5;
       }
     }// else
 
-    if( YECALMAX!=YECALMIN ) YECALCLU=(YECALMAX+YECALMIN)/2.;
+    if( YECALMAX!=YECALMIN ) YECALCLU=(YECALMAX+YECALMIN)*0.5;
     else{
       if     ( 1==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csIPE/2.;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csIPE/2.;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csIPE*0.5;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csIPE*0.5;
       }
       else if( 2==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csMPE/2.;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csMPE/2.;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csMPE*0.5;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csMPE*0.5;
       }
       else if( 3==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csOPE/2.;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csOPE/2.;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csOPE*0.5;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csOPE*0.5;
       }
     }
     

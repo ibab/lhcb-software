@@ -153,7 +153,7 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
   seedState.setCovariance(stateCov);
 
   if( m_debugMode ){
-    m_DataStore->region = regionL0Cand;
+    m_DataStore->region.push_back( regionL0Cand );
   }
     
 
