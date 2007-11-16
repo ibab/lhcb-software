@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.h,v 1.2 2007-04-27 13:26:01 albrecht Exp $
+// $Id: L0ConfDataStore.h,v 1.3 2007-11-16 11:08:47 albrecht Exp $
 #ifndef L0CONFDATASTORE_H 
 #define L0CONFDATASTORE_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "Event/State.h"
 
 /** @class L0ConfDataStore L0ConfDataStore.h
  *  
@@ -39,16 +40,15 @@ public:
   
   void clearStore();  
 
-  int region;
-  double decodingTime;
+  int nL0Candidates;
+  std::vector<double> seedingTime;
+  std::vector<double> decodingTime;
+  std::vector<double> trackingTime;
+  std::vector<double> nTHits;
+  std::vector<double> region;
+  std::vector<LHCb::State> refinedStatePos;
+  std::vector<LHCb::State> refinedStateNeg;
   
-  int nModulesToDecode;
-  
-  //variables for TsaCollect tool
-  double collectTime, trackingTime;
-  int nStClusters, nOtClusters, nTHits;
-  
-
 protected:
 
 private:

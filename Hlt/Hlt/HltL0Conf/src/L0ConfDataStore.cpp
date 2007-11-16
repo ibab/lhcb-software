@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.cpp,v 1.2 2007-04-27 13:26:13 albrecht Exp $
+// $Id: L0ConfDataStore.cpp,v 1.3 2007-11-16 11:08:50 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -38,22 +38,31 @@ L0ConfDataStore::~L0ConfDataStore() {}
 
 StatusCode L0ConfDataStore::initialize()
 {
+ StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()){
+    return sc;
+  }
+  debug() << " ==> Initialize "<< endmsg;
+
 // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   return StatusCode::SUCCESS;
 }
 
-void L0ConfDataStore::clearStore()
+  void L0ConfDataStore::clearStore()
 {
+  //variables per event
+  nL0Candidates =-1;
 
-  region = -1;
-  nModulesToDecode = 0;
-  decodingTime = 0;
-  collectTime = 0;
-  trackingTime = 0;
-  nStClusters = 0;
-  nOtClusters = 0;
-  nTHits = 0;
+  //variables per L0 cand
+  seedingTime.clear();
+  decodingTime.clear();
+  trackingTime.clear();
+  nTHits.clear();
+  region.clear();
+  refinedStatePos.clear();
+  refinedStateNeg.clear();
+   
 }
 
 
