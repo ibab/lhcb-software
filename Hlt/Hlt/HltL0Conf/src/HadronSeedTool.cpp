@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.3 2007-09-21 14:52:14 pkoppenb Exp $
+// $Id: HadronSeedTool.cpp,v 1.4 2007-11-16 11:06:50 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -165,8 +165,8 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   seedState.setCovariance(stateCov);
   seedState.setLocation(State::MidHCal);
 
-  if(m_debugMode) m_DataStore->region = region;
-  
+  if(m_debugMode) m_DataStore->region.push_back( region );
+
   seedTrack.addToStates(seedState);
 
   return sc;
