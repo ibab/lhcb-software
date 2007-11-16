@@ -15,7 +15,7 @@
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 
-#include "STTell1ID.h"
+#include "Kernel/STTell1ID.h"
 #include "STDAQGeneral.h"
 
 DECLARE_ALGORITHM_FACTORY( STRawBankMonitor );

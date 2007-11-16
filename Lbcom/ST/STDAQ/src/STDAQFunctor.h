@@ -1,10 +1,10 @@
-// $Id: STDAQFunctor.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STDAQFunctor.h,v 1.2 2007-11-16 16:43:36 mneedham Exp $
 #ifndef _ITDataFunctor_H_
 #define _ITDataFunctor_H_
 
 #include <functional>
 #include <numeric>
-#include "STTell1ID.h"
+#include "Kernel/STTell1ID.h"
 
 namespace STDAQFunctor{
 

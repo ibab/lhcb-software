@@ -1,10 +1,10 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.5 2007-10-29 13:51:11 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.6 2007-11-16 16:43:36 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
 #include "STDecodingBaseAlg.h"
 #include "Event/RawBank.h"
-#include "STDAQDefinitions.h"
+#include "Kernel/STDAQDefinitions.h"
 
 #include "Event/STCluster.h"
 
@@ -20,7 +20,7 @@
  */
 
 
-#include "STClusterWord.h"
+#include "Kernel/STClusterWord.h"
 
 class SiADCWord;
 class STTell1Board;

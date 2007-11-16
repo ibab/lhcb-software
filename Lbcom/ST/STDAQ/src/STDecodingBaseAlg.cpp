@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.3 2007-10-25 10:30:07 cattanem Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.4 2007-11-16 16:43:36 mneedham Exp $
 
 #include <algorithm>
 
@@ -12,9 +12,9 @@
 #include "Event/STCluster.h"
 #include "Kernel/STDataFunctor.h"
 
-#include "ISTReadoutTool.h"
-#include "STTell1Board.h"
-#include "STTell1ID.h"
+#include "Kernel/ISTReadoutTool.h"
+#include "Kernel/STTell1Board.h"
+#include "Kernel/STTell1ID.h"
 
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQGeneral.h"

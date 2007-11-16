@@ -14,6 +14,7 @@ use DetDesc      v*  Det
 use GaudiKernel  v*
 use GaudiAlg     v*
 use GSL          v*  LCG_Interfaces
+use STKernel v* ST
 
 #component
 library STDAQ *.cpp
