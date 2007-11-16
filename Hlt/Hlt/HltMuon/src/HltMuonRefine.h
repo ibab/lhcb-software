@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.h,v 1.3 2007-10-30 19:05:27 smenzeme Exp $
+// $Id: HltMuonRefine.h,v 1.4 2007-11-16 14:42:10 hernando Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
@@ -36,6 +36,9 @@ protected:
 
 private:
 
+  LHCb::Tracks* m_TESInputTracks;
+  std::string m_TESInputTracksName;
+  
   IMuonPosTool      *m_iPosTool;
   LHCb::L0MuonCandidates* m_inputL0Muon;
   

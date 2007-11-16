@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+
+! 2007-11-15 - Jose A. Hernando
+ - removing Pat tracks from HltMuonRefine
+
 ! 2007-10-30 - Stephanie Hansmann-Menzemer
  - remove PatDataStore from requirement file & from usage in HltMuonRec and HltMuonRefine
 

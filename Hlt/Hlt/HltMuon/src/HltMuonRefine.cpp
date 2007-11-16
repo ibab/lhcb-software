@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.6 2007-10-30 19:05:27 smenzeme Exp $
+// $Id: HltMuonRefine.cpp,v 1.7 2007-11-16 14:42:10 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -43,15 +43,8 @@ HltMuonRefine::HltMuonRefine( const std::string& name,
     declareProperty("DYR4",m_dyR4=150);
  
 
-    //  declareProperty( "InputLongTracksName" ,
-    //             m_inputLongTracksName  = 
-    //             TrgTrackLocation::HltGenericLong );
-    //declareProperty( "InputMuonTracksName" ,
-    //              m_inputMuonTracksName  = 
-    //              TrgTrackLocation::HltGenericMuon);
-    //declareProperty( "OutputMuonTracksName" ,
-    //              m_outputTracksName  = 
-    //              TrgTrackLocation::HltGenericMuon);
+    declareProperty( "TESInputTracksName" ,
+                     m_TESInputTracksName = LHCb::TrackLocation::HltForward);
 
 }
 //=============================================================================
@@ -75,10 +68,7 @@ StatusCode HltMuonRefine::initialize() {
 
 
   //  m_l0MuonProvider = tool<TrgL0MuonProvider>( "TrgL0MuonProvider" );
-  //m_inputL0Muons   = m_l0MuonProvider->container( TrgL0MuonLocation::Default );
-
-
-  
+  //m_inputL0Muons   = m_l0MuonProvider->container( TrgL0MuonLocation::Default );  
   m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
@@ -100,9 +90,8 @@ StatusCode HltMuonRefine::initialize() {
 //=============================================================================
 StatusCode HltMuonRefine::execute() {
 
+  Tracks* m_TESInputTracks = get<Tracks>(m_TESInputTracksName);
 
-
-  debug() << "==> Execute" << m_patInputTracks->size()<<endmsg;
 //std::string nameLong=m_tracksInput->name();
 //std::string nameMuon=m_muonTracksContainer->name();
   setFilterPassed(false);
@@ -202,8 +191,8 @@ StatusCode HltMuonRefine::execute() {
       }
       
       if(whoselected==2){
-        for(itMuonTrack = m_patInputTracks->begin();
-            itMuonTrack < m_patInputTracks->end(); itMuonTrack++){
+        for(itMuonTrack = m_TESInputTracks->begin();
+            itMuonTrack < m_TESInputTracks->end(); itMuonTrack++){
           // if(!(*itMuonTrack)->clone()){
           XMuon=(*itMuonTrack)->firstState().x();
           YMuon=(*itMuonTrack)->firstState().y();
