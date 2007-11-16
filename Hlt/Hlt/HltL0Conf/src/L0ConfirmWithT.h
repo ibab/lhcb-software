@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.h,v 1.1 2007-07-04 12:33:22 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.2 2007-11-16 11:10:54 albrecht Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
@@ -40,7 +40,8 @@ private:
 
   StatusCode extrapolateToT3( LHCb::State& statePos, LHCb::State& stateNeg );
   
-  ITrackConfirmTool* m_TsaConfirmTool;
+  ITrackConfirmTool* m_TrackConfirmTool;
+ std::string m_trackingTool;
 
 };
 #endif // L0CONFIRMWITHT_H

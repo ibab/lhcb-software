@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.2 2007-07-17 14:09:43 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.3 2007-11-16 11:10:58 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,7 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ITracksFromTrack>(this);
-
+  declareProperty("trackingTool", m_trackingTool = "TsaConfirmTool");
 }
 //=============================================================================
 // Destructor
@@ -46,7 +46,7 @@ StatusCode L0ConfirmWithT::initialize()
   }
   debug() << " Initialize L0ConfirmWithT" << endmsg;
 
-  m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool" );
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool );
 
   return sc;
 }
@@ -63,12 +63,12 @@ StatusCode L0ConfirmWithT::tracksFromTrack( const LHCb::Track& seed,
   StatusCode sc = extrapolateToT3( *seedStatePos, *seedStateNeg );
   
   //do the tracks
-  m_TsaConfirmTool->tracks( *seedStatePos , tracks );
+  m_TrackConfirmTool->tracks( *seedStatePos , tracks );
 
   if( 0 != seedStateNeg->x() ){
     //is only set for calo seed, set to 0 for muon
     //preliminary solution JA 2007-07-04
-    m_TsaConfirmTool->tracks( *seedStateNeg , tracks );
+    m_TrackConfirmTool->tracks( *seedStateNeg , tracks );
   }
 
   delete seedStateNeg;
