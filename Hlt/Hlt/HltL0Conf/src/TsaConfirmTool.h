@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.3 2007-09-03 14:56:33 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.4 2007-11-16 11:22:31 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -9,6 +9,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/ITrackConfirmTool.h"            // Interface
+#include "TsaKernel/TsaTStationHitManager.h"
+#include "TsaKernel/ITsaSeedTrackCnvTool.h"
 
 #include "L0ConfDataStore.h"
 
@@ -17,29 +19,27 @@
  *
  *  @author Johannes Albrecht
  *  @date   2007-01-26
+ *
+ *  2007-11-16 Johannes Albrecht
+ *  Bring TsaConfirmTool to new Tf framework
+ *
  */
 
-// forward declaration
-class IITDataSvc;
-class IOTDataSvc;
+namespace Tf{
+  namespace Tsa{
+    class ITsaSeedStep;
+    class ITsaStubFind;
+    class ITsaStubLinker;
+    class ITsaStubExtender;
+  }
+}
 
-class ITsaCollector;
-class ITsaSeedStep;
-
-class ITsaStubFind;
-class ITsaStubLinker;
-class ITsaStubExtender;
-
-namespace LHCb
-{
+namespace LHCb{
   class Track;
 }
 
-
-
-
 class TsaConfirmTool : public GaudiTool, virtual public ITrackConfirmTool {
-public: 
+ public: 
   /// Standard constructor
   TsaConfirmTool( const std::string& type, 
                   const std::string& name,
@@ -52,63 +52,40 @@ public:
 
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks );
      
-protected:
+ protected:
 
-private:
+ private:
   //variables declared in job options
   int m_nsigma;
   bool m_debugMode;
-   
-  //from initialization
-  std::string m_otDataSvcType;
-  std::string m_itDataSvcType;
-  std::string m_otDataSvcName;
-  std::string m_itDataSvcName;
-  IOTDataSvc* m_otDataSvc; 
-  IITDataSvc* m_itDataSvc; 
-  bool m_initIT;
-  bool m_initOT;
-
-  // Tsa Collector
-  ITsaCollector*    m_tsacollector;
-
+  bool m_restrictTx;
+  bool m_restrictTy;
 
   std::string m_seedTrackLocation;
   std::string m_seedHitLocation;
   std::string m_seedStubLocation;
 
   std::string m_selectorType;
-  //double m_maxNumHits;
   bool m_calcLikelihood; 
 
-  std::vector<ITsaSeedStep*> m_xSearchStep;
-  std::vector<ITsaSeedStep*> m_stereoStep;
-  ITsaSeedStep* m_xSelection;
-  ITsaSeedStep* m_finalSelection;
-  ITsaSeedStep* m_likelihood;
-  ITsaStubFind* m_stubFind;
-  ITsaStubLinker* m_stubLinker;
-  ITsaStubExtender* m_extendStubs;
-
-  //from TsaSeedTrackCnv
-  double m_EX2;
-  double m_EY2;
-  double m_ETx2;
-  double m_ETy2;
-  double m_EQdivP2;
+  //TStationHitManager does decoding on demand
+  Tf::Tsa::TStationHitManager* m_hitMan;
+  
+  std::vector<Tf::Tsa::ITsaSeedStep*> m_xSearchStep;
+  std::vector<Tf::Tsa::ITsaSeedStep*> m_stereoStep;
+  Tf::Tsa::ITsaSeedStep* m_xSelection;
+  Tf::Tsa::ITsaSeedStep* m_finalSelection;
+  Tf::Tsa::ITsaSeedStep* m_likelihood;
+  Tf::Tsa::ITsaStubFind* m_stubFind;
+  Tf::Tsa::ITsaStubLinker* m_stubLinker;
+  Tf::Tsa::ITsaStubExtender* m_extendStubs;
+  
+  //for conversion from SeedTracks to LHCb::Tracks
   double m_likCut;
-  double m_curvFactor;
-  bool m_pFromCurvature;
-  bool m_largeErrors;
-
-  LHCb::Track* convert(const SeedTrack* aTrack) const;
-  void addState(const SeedTrack* aTrack, 
-                LHCb::Track* lTrack, const double z) const;
-
-  ITrackPtKick* m_ptKickTool;
-
+  Tf::Tsa::ITsaSeedTrackCnvTool* m_Tsa2TrackCnv;
+  
   //debug information
   L0ConfDataStore* m_DataStore;
 
-  };
+};
 #endif // TSACONFIRMTOOL_H
