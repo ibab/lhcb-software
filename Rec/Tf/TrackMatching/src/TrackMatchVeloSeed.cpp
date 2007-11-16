@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.1.1.1 2007-10-09 18:11:39 smenzeme Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.2 2007-11-16 15:38:36 aperiean Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -91,6 +91,8 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty("nUseT", m_nUseT = 0u);
   declareProperty("nUseVelo", m_nUseVelo = 0u);
 
+  /*switch on or off NN var. writing*/
+  declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
 //=============================================================================
 // Destructor
@@ -295,7 +297,38 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
       matches -> add( aTrack ) ;
     }
   } // loop matches
+  if( m_writeNNVariables == 1){
+    /*************************************************************************/
+    /*added for NNTools; Adrian Perieanu*/
+    Tracks::const_iterator imatch;
+    for( imatch = matches->begin(); imatch != matches->end(); ++imatch){
+      const SmartRefVector<Track>& Ancestors = (*imatch)->ancestors();
+      const Track* veloTrack = Ancestors.front();
+      const Track* seedTrack = Ancestors.back();
+      /*define counter for candidates*/
+      int cand_counter = 0;
+      float cand1stchi2 = 0.;
+      float cand2ndchi2 = 0.;
+      /*loop over matchVector*/
+      TrackMatches::const_iterator iall;
+      for( iall = matchVector.begin(); iall != matchVector.end(); ++iall){
+        if((*iall)->veloTrack() == veloTrack ||
+           (*iall)->seedTrack() == seedTrack){
+          ++cand_counter;
 
+          if(cand_counter == 1){
+            cand1stchi2   = (*iall)->chi2();
+          }else if(cand_counter == 2){
+            cand2ndchi2   = (*iall)->chi2();
+          }
+        }
+      }/*end loop over matchVector*/
+      (*imatch)->addInfo(LHCb::Track::NCandCommonHits, cand_counter);
+      (*imatch)->addInfo(LHCb::Track::Cand1stChi2Mat, cand1stchi2);
+      (*imatch)->addInfo(LHCb::Track::Cand2ndChi2Mat, cand2ndchi2);
+    }/*end loop over matches*/
+    /*************************************************************************/
+  }
   // clean up !
   for (TrackMatches::const_iterator iterM = matchVector.begin();
        iterM != matchVector.end(); ++iterM) delete *iterM;
