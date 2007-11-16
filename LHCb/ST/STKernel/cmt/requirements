@@ -1,0 +1,18 @@
+package STKernel 
+version v1r0
+
+use GaudiKernel v*
+use SiDAQ v* Si
+
+branches Kernel doc cmt src 
+
+apply_pattern install_more_includes more=Kernel
+
+# ==================== linker library =======================================
+library STKernelLib     *.cpp
+
+
+apply_pattern linker_library  library=STKernelLib
+
+
+

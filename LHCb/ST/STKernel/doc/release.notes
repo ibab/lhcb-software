@@ -1,0 +1,13 @@
+! $Id: release.notes,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+! Package     : linklib
+! Responsible : Florence Ranjard
+
+! 20010912 - linklib v1
+  cmt/requirements  - builds a linker library
+                      replace "linklib" with your package name
+                      add use statements
+  doc/release.notes - do not forget to fill the release notes.
+  src/              - contains *.cpp files
+  component/        - contains *.h files which are included with
+                      #include "linklib/my.h"
+
