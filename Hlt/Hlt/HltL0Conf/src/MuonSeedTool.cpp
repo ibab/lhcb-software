@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.2 2007-07-04 15:31:10 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.3 2007-11-16 11:49:35 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -74,7 +74,6 @@ StatusCode MuonSeedTool::initialize()
 StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                     LHCb::Track& seedTrack )
 {
-
   LHCb::State seedState;
  
   std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
@@ -148,12 +147,8 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
     return StatusCode::SUCCESS;
   }
 
-  //  double zT3 = 9315.;//middle T3
   double dxdz   = (xTileM2 - xTileM1)/ ( zTileM2 - zTileM1);
   double dydz   = (yTileM2 - yTileM1)/ ( zTileM2 - zTileM1);
-    
-  //double xT3 = xTileM2 - dxdz * (zTileM2 - zT3);
-  //double yT3 = yTileM2 - dydz * (zTileM2 - zT3);
 
   seedState.setState( xTileM2 , yTileM2 , zTileM2 , dxdz , dydz , 0 );
 
@@ -174,12 +169,12 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   seedState.setCovariance(stateCov);
 
   if( m_debugMode ){
-    m_DataStore->region = regionL0Cand;
+    m_DataStore->region.push_back( regionL0Cand );
   }
-    
+     
   // add to states
   seedTrack.addToStates(seedState);
-  //seedTrack.setType(LHCb::Track::Muon);
+  seedTrack.setType(LHCb::Track::Muon);
   
   return StatusCode::SUCCESS;
     
