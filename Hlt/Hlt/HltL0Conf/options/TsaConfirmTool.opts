@@ -1,7 +1,7 @@
-ToolSvc.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc"; 
-ToolSvc.L0ConfToolITDataSvc.sortData = true;
-ToolSvc.L0ConfToolOTDataSvc.sortData = true;
+// ToolSvc.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
+// ToolSvc.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc"; 
+// ToolSvc.L0ConfToolITDataSvc.sortData = true;
+// ToolSvc.L0ConfToolOTDataSvc.sortData = true;
 
 //from TsaSeed
 ToolSvc.TsaConfirmTool.xSearchS0.sector = 0;
@@ -22,6 +22,7 @@ ToolSvc.TsaConfirmTool.stereoS4.sector = 4;
 // ToolSvc.TsaConfirmTool.xSearchS3.nSigmaTx = 5;
 // ToolSvc.TsaConfirmTool.xSearchS4.nSigmaTx = 5;
 
+/*
 ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
@@ -44,4 +45,4 @@ ToolSvc.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
 ToolSvc.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
 ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
-
+*/
