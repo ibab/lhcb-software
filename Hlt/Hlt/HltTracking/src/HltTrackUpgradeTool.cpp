@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.2 2007-11-14 14:00:10 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.3 2007-11-16 16:58:53 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -42,14 +42,21 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   std::string info = "InfoID";
 
-  m_recoConf.add("Velo/Tool",std::string("PatVeloSpaceTool"));
+  m_recoConf.add("TConf/Tool",std::string("L0ConfirmWithT"));
+  m_recoConf.add("TConf/RecoID", (int) HltEnums::MuonTKey); //TODO
+  m_recoConf.add("TConf/Owner",true);
+  m_recoConf.add("TConf/TrackType", (int) LHCb::Track::Ttrack);
+  m_recoConf.add("TConf/TESInput",std::string("none"));
+  m_recoConf.add("TConf/TESOutput",LHCb::TrackLocation::HltTsa);
+
+  m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
   m_recoConf.add("Velo/RecoID", (int) HltEnums::VeloKey);
   m_recoConf.add("Velo/Owner",true);
   m_recoConf.add("Velo/TrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("Velo/TESInput",LHCb::TrackLocation::HltRZVelo);
   m_recoConf.add("Velo/TESOutput",LHCb::TrackLocation::HltVelo);
   
-  m_recoConf.add("VeloTT/Tool",std::string("PatVeloTTTool"));
+  m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
   m_recoConf.add("VeloTT/RecoID", (int) HltEnums::VeloTTKey);
   m_recoConf.add("VeloTT/Owner",false);
   m_recoConf.add("VeloTT/TrackType", (int) LHCb::Track::Upstream);
