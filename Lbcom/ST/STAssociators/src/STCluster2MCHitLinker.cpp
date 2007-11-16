@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.10 2007-03-23 08:59:12 jvantilb Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.11 2007-11-16 16:50:17 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,6 +21,8 @@ STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
                                               ISvcLocator* pSvcLocator) : 
   GaudiAlgorithm (name,pSvcLocator) 
 {
+
+  declareProperty("IntputData", m_inputData = STClusterLocation::TTClusters );
   declareProperty("OutputData", m_outputData = STClusterLocation::TTClusters 
                   + "2MCHits" );
   declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
@@ -42,7 +44,6 @@ StatusCode STCluster2MCHitLinker::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   m_hitLocation = MCHitLocation::TT;
-  m_inputData   = STClusterLocation::TTClusters;
   m_asctLocation= STDigitLocation::TTDigits + "2MCHits";
 
   STDetSwitch::flip(m_detType,m_hitLocation);

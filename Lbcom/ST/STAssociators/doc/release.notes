@@ -2,6 +2,10 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+
+! 2007-15-11 M Needham
+ - Make input location of STClusters2MCHits a jobOption
+
 !======================= STAssociators v1r4 2007-03-23 ========================
 ! 2007-03-23 - Marco Cattaneo
  - remove obsolete file STAssociators_load.cpp
