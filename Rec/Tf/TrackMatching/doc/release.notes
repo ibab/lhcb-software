@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r16 2007-11-16 ======================
+! 2007-11-16 Adrian Perieanu
+  - switch added for the neural network loop; the default value is true
 !======================= TrackMatching v2r16 2007-10-12 ======================
 ! 2007-10-09 Stephanie Hansmann-Menzemer
   - moved package from Tr/TrackMatching to Tf/TrackMatching

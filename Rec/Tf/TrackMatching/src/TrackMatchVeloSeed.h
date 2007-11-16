@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.1.1.1 2007-10-09 18:11:39 smenzeme Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.2 2007-11-16 15:38:45 aperiean Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -154,6 +154,7 @@ private:
   std::vector<double> m_yTParams;
   std::vector<double> m_tyTParams; 
 
+  bool m_writeNNVariables; /*switch on or off NN var. writing*/
 };
 
 inline bool TrackMatchVeloSeed::usedT(const LHCb::Track* aTrack) const{

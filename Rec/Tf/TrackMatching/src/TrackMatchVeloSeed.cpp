@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.2 2007-11-16 15:38:36 aperiean Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.3 2007-11-16 15:42:55 aperiean Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -297,7 +297,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
       matches -> add( aTrack ) ;
     }
   } // loop matches
-  if( m_writeNNVariables == 1){
+  if( m_writeNNVariables == true){
     /*************************************************************************/
     /*added for NNTools; Adrian Perieanu*/
     Tracks::const_iterator imatch;
