@@ -1,4 +1,4 @@
-// $Id: PatForward.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatForward.cpp,v 1.2 2007-11-16 14:33:09 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -92,9 +92,8 @@ StatusCode PatForward::execute() {
  
   LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
     
-  LHCb::Tracks* outputTracks  = new LHCb::Tracks();
-  outputTracks->reserve(200);
-  put(outputTracks, m_outputTracksName);
+  LHCb::Tracks* outputTracks  = 
+    getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
   debug() << "==> Execute" << endmsg;
 
