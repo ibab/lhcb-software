@@ -28,8 +28,9 @@ outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
 
 # find the reference block in the output file
 try:
+    sign_pos = 1
     pos = outlines.index(reflines[1])
-    outlines = outlines[pos-1:pos+10]
+    outlines = outlines[pos-sign_pos:pos+len(reflines)-sign_pos]
     if reflines != outlines:
         causes.append("correlation table")
         result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
