@@ -1,19 +1,27 @@
-// $Id: Particle2MCMethod.h,v 1.1 2006-10-11 15:52:17 jpalac Exp $
-#ifndef KERNEL_PARTICLE2MCMETHOD_H 
+// $Id: Particle2MCMethod.h,v 1.2 2007-11-16 09:13:08 jonrob Exp $
+#ifndef KERNEL_PARTICLE2MCMETHOD_H
 #define KERNEL_PARTICLE2MCMETHOD_H 1
 
 // Include files
 
 /** @namespace Particle2MCMethod Particle2MCMethod.h Kernel/Particle2MCMethod.h
- *  
+ *
  *  @author Philippe CHARPENTIER
  *  @author Juan PALACIOS
  *  @date   2006-10-11
  */
 namespace Particle2MCMethod {
 
+  /** @enum 
+   *
+   *  Enumeration for MC association method
+   *
+   *  @author Philippe CHARPENTIER
+   *  @author Juan PALACIOS
+   *  @date   2006-10-11
+   */
   enum {
-    No = 0, WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max 
+    No = 0, WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max
   } ;
 
   static const std::string extension[Max] = {

@@ -4,6 +4,10 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2007-11-16 - Chris Jones
+ - Remove couts from Constructors in Particle2MCLinker.h + fix a few doxygen
+   errors
+
 !====================== DaVinciMCKernel v2r4 2007-10-10 =====================
 ! 2007-10-09 - Juan PALACIOS
  - Add Kernel/IPrintDecayTreeTool.h
