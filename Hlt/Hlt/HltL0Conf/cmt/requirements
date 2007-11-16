@@ -19,7 +19,7 @@ use MuonDet             v*      Det
 use CaloDet             v*      Det
 use CaloUtils           v*      Calo
         
-use TsaKernel           v*      Tr
+use TsaKernel           v*      Tf
 
 use HltBase             v*      Hlt
 
