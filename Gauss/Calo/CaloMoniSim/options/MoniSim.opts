@@ -1,4 +1,4 @@
-// $Id: MoniSim.opts,v 1.2 2007-02-08 19:20:14 gcorti Exp $ 
+// $Id: MoniSim.opts,v 1.3 2007-11-16 16:30:51 gcorti Exp $ 
 
 /** @file 
  *  The configuration of monitoring algorithms 
@@ -9,21 +9,21 @@
 
 SpdMonitor.Detector="Spd";
 SpdMonitor.Regions = true ;
-SpdMonitor.MaximumEnergy=10 MeV;
-SpdMonitor.Threshold=1.5MeV;
+SpdMonitor.MaximumEnergy=10.*MeV;
+SpdMonitor.Threshold=1.5*MeV;
 
 PrsMonitor.Detector="Prs";
 PrsMonitor.Regions = true ;
-PrsMonitor.MaximumEnergy=10 MeV;
-PrsMonitor.Threshold=1.5MeV;
+PrsMonitor.MaximumEnergy=10.*MeV;
+PrsMonitor.Threshold=1.5*MeV;
 
 EcalMonitor.Detector="Ecal";
 EcalMonitor.Regions = true ;
-EcalMonitor.MaximumEnergy=1000 MeV;
-EcalMonitor.Threshold=10MeV;
+EcalMonitor.MaximumEnergy=1000.*MeV;
+EcalMonitor.Threshold=10.*MeV;
 
 HcalMonitor.Detector="Hcal";
 HcalMonitor.Regions = true ;
-HcalMonitor.MaximumEnergy=1000 MeV;
-HcalMonitor.Threshold=5MeV;
+HcalMonitor.MaximumEnergy=1000.*MeV;
+HcalMonitor.Threshold=5.*MeV;
 
