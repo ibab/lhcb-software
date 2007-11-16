@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.4 2007-05-29 15:01:28 cattanem Exp $
+// $Id: STEffChecker.cpp,v 1.5 2007-11-16 16:12:39 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -42,10 +42,11 @@ STEffChecker::STEffChecker( const std::string& name,
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)
 { 
-  this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
-  this->declareProperty("DetType", m_detType = "TT");
-  this->declareProperty("IncludeGuardRings", m_includeGuardRings = true);
-  this->declareProperty("PrintEfficiency", m_pEff = true);
+  declareProperty("InputData" , m_clusterLocation  = STClusterLocation::TTClusters);
+  declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
+  declareProperty("DetType", m_detType = "TT");
+  declareProperty("IncludeGuardRings", m_includeGuardRings = true);
+  declareProperty("PrintEfficiency", m_pEff = true);
 }
 
 STEffChecker::~STEffChecker()
@@ -65,7 +66,7 @@ StatusCode STEffChecker::initialize()
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // Make location of STClusters and relation table consistent with m_detType
-  m_clusterLocation = STClusterLocation::TTClusters;
+
   m_hitTableLocation = LHCb::MCParticleLocation::Default + "2MCTTHits";
   STDetSwitch::flip( m_detType, m_clusterLocation );
   STDetSwitch::flip( m_detType, m_hitTableLocation );
