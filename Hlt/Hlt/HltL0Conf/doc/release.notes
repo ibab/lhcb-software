@@ -4,6 +4,32 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-11-16 - Johannes Albrecht
+	Major update to the Tf framework, hit decoding is now done inside the PR tool 
+	(besides ITLiteCluster creation)
+
+	-src/L0ConfirmWithT.h, cpp
+		- new option to use Tsa or Pat seeding tool
+	-src/TsaConfirmTool.h, cpp	
+		- bring tool to Tf framework
+		- T-decoding now done internally
+		- TsaSeed-track conversion now done in tool
+		- tx and ty restrictions configurable in job options
+	-src/PatConfirmTool.h, cpp
+		- new tool for L0 confirmation PR based on the PatSeeding tool
+		- does the T-decoding internally using a parabola
+	-src/TrackParabel.h
+		- new helper class which parameterizes a Track hypothesis as a parabola 
+		  from a seed state which is expected at T3
+	 	-src/L0ConfDataStore: internal debug tool now works with vectors
+	-src/ElectronSeedTool, HadronSeedTool, MuonSeedTool:
+		- minor changes to spped up and adapt for new debugging tool
+	-src/PrepareElectronSeed, PrepareMuonSeed (these tools should not be used any more):
+		- minor changes to spped up and adapt for new debugging tool
+		
+	- options/TsaConfirmTool.opts: portation to Tf
+
+
 !========================= HltL0Conf v1r4p1 2007-11-13 ==================
 !	2007-11-08 - Johannes Albrecht
  	- src/TsaConfirmTool.cpp
