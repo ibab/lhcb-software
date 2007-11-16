@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.1.1.1 2007-10-23 09:24:28 akeune Exp $
+! $Id: release.notes,v 1.2 2007-11-16 16:48:08 mneedham Exp $
 ! Package     : STOnline
 ! Responsible : Mathias Knecht
+
+! 2007-11-16 M Needham
+ - Add non const accessor to STTell1Event
 
 ! 2007-10-10 M. Needham
  - Clean up cmt requirements for new release area
