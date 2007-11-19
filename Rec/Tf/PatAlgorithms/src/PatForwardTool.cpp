@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.3 2007-11-14 09:06:53 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.4 2007-11-19 15:06:12 aperiean Exp $
 // Include files
 
 // from Gaudi
@@ -307,7 +307,34 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     PatFwdPlaneCounter<PatForwardHit> planeCounter( temp.coordBegin(), temp.coordEnd() );
     if ( minPlanes+1 < planeCounter.nbDifferent() ) minPlanes =  planeCounter.nbDifferent()-1;
   }
-
+  // added for Tr/NNTools -- sort all candidates with respect to PatQuality
+  if( this->nnSwitch()){
+    std::sort( goodCandidates.begin(), goodCandidates.end(), sortQuality());
+    // loop over all candidates
+    std::vector<PatFwdTrackCandidate>::iterator iall;
+    int cand_count = 0;
+    for( iall = goodCandidates.begin(); goodCandidates.end() != iall; ++iall){
+      if(goodCandidates.size() == 1){
+	(*iall).setCand1stQuality((*iall).quality());
+	(*iall).setCand2ndQuality(0.);
+      }
+      ++cand_count;
+      if(goodCandidates.size() > 1){
+	(*iall).setCand1stQuality((*iall).quality());
+	std::vector<PatFwdTrackCandidate>::iterator iallb;
+	bool cand2nd = false;
+	for( iallb = goodCandidates.begin(); goodCandidates.end() != iallb; 
+	       ++iallb){
+	  if( (*iall).quality() == (*iallb).quality()) continue;
+	  if( !cand2nd){
+	    (*iall).setCand2ndQuality((*iallb).quality());
+	    cand2nd = true;
+	  }
+	}
+      }
+    }
+  }
+  // end of NNTools loop
   //================================================================================
   //  Now some filtering of tracks, in case of multiple candidates.
   //================================================================================

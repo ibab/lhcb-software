@@ -1,4 +1,4 @@
-// $Id: PatFwdTrackCandidate.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatFwdTrackCandidate.h,v 1.2 2007-11-19 15:06:20 aperiean Exp $
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
@@ -154,6 +154,17 @@
     int nbOT()          const { return m_nbOT; }
     void setNbIT( int nb )    { m_nbIT = nb; }
     void setNbOT( int nb )    { m_nbOT = nb; }
+
+    // added for Tr/NNTools; Adrian Perieanu
+    void setCand1stQuality( double cand1stquality){ 
+      m_cand1stquality = cand1stquality; 
+    }
+    double cand1stquality() const { return m_cand1stquality; }
+    
+    void setCand2ndQuality( double cand2ndquality){ 
+      m_cand2ndquality = cand2ndquality; 
+    }
+    double cand2ndquality() const { return m_cand2ndquality; }
 
   protected:
 

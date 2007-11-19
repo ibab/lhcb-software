@@ -8,6 +8,9 @@
  - getOrCreate at PatForward
 
 !========================== PatAlgorithms v3r1 2007-11-14 ====================
+! 2007-11-19 - Adrian Perieanu
+ - add the loops to extract the neural net variables for Tr/NNTools
+
 ! 2007-11-14 - Stephanie Hansmann-Menzemer
  - add double -> float conversion in PatForwardTool to remove compiler warning 
 

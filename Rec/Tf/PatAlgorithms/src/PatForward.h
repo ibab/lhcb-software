@@ -1,4 +1,4 @@
-// $Id: PatForward.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatForward.h,v 1.2 2007-11-19 15:06:38 aperiean Exp $
 #ifndef PATFORWARD_H
 #define PATFORWARD_H 1
 
@@ -48,5 +48,6 @@
     IPatForwardTool*     m_forwardTool;
     ISequencerTimerTool* m_timerTool;
     int              m_fwdTime;
+    bool             m_writeNNVariables; // switch on or off NN var. writing
   };
 #endif // PATFORWARD_H

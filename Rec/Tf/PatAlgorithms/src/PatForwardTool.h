@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatForwardTool.h,v 1.2 2007-11-19 15:06:06 aperiean Exp $
 #ifndef PATFORWARDTOOL_H
 #define PATFORWARDTOOL_H 1
 
@@ -53,6 +53,23 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
 
     virtual StatusCode initialize();
 
+    // added for NNTools
+    void setNNSwitch( bool nnSwitch)  { m_nnSwitch = nnSwitch;}
+    bool nnSwitch()       const       { return m_nnSwitch;}
+
+    struct sortQuality{
+      bool operator()( PatFwdTrackCandidate first, PatFwdTrackCandidate second)
+      {
+	bool sortDecision = ( first.quality() < second.quality());
+	if(first.quality() == second.quality()){
+	  sortDecision = ( first.chi2PerDoF() < second.chi2PerDoF());
+	  if(first.chi2PerDoF() == second.chi2PerDoF()){
+	    sortDecision = ( first.qOverP() < second.qOverP());
+	  }
+	}
+	return sortDecision;
+      }
+    };
 
 
   protected:
@@ -123,6 +140,8 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
     Tf::RegionID::ITIndex::kNRegions;
     static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
     static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
+
+    bool   m_nnSwitch;                   // switch on or off NN var. writing
   };
 
 #endif // PATFORWARDTOOL_H

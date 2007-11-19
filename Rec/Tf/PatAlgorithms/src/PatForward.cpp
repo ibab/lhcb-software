@@ -1,4 +1,4 @@
-// $Id: PatForward.cpp,v 1.2 2007-11-16 14:33:09 hernando Exp $
+// $Id: PatForward.cpp,v 1.3 2007-11-19 15:06:30 aperiean Exp $
 // Include files
 
 // from Gaudi
@@ -34,6 +34,8 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
   declareProperty( "DoCleanUp", m_doClean = true);
+  // switch on or off NN var. writing
+  declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
 //=============================================================================
 // Destructor
@@ -56,6 +58,7 @@ StatusCode PatForward::initialize() {
   }
 
   m_forwardTool = tool<IPatForwardTool>( "PatForwardTool" );
+  m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
 
   if ( msgLevel( MSG::DEBUG ) ) {
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
@@ -116,6 +119,53 @@ StatusCode PatForward::execute() {
 
     }
   }
+  // added for NNTools -- check how many tracks have common hits
+  if( m_writeNNVariables){
+    LHCb::Tracks::iterator mitT;
+    LHCb::Tracks::iterator mitT1;
+    std::vector<LHCb::LHCbID>::const_iterator mitId0, mitId1;
+    for( mitT = outputTracks->begin(); outputTracks->end() != mitT; ++mitT){
+      int count_Tr = 0;
+      LHCb::State& state0 = (*mitT)->stateAt( LHCb::State::AtT );
+      for( mitT1 = outputTracks->begin(); outputTracks->end()!=mitT1; ++mitT1){
+	LHCb::State& state1 = (*mitT1)->stateAt( LHCb::State::AtT );
+	if ( 5. > fabs( state0.x() - state1.x() ) ) {
+	  int nbCommon = 0;
+	  int nb0      = 0;
+	  int nbTT0    = 0;
+	  int nbTT1    = 0;
+	  int nb1      = 0;
+	  for( mitId1=(*mitT1)->lhcbIDs().begin(); 
+	       (*mitT1)->lhcbIDs().end() != mitId1; ++mitId1){
+	    if ( (*mitId1).isVelo() ) continue;
+	    if ( (*mitId1).isTT()   ) {
+	      ++nbTT1;
+	    } else {
+	      ++nb1;
+	    }
+	  }
+	  for( mitId0 = (*mitT)->lhcbIDs().begin(); 
+	       (*mitT)->lhcbIDs().end() != mitId0; ++mitId0 ) {
+	    if ( (*mitId0).isVelo() ) continue;
+	    if ( (*mitId0).isTT()   ) {
+	      ++nbTT0;
+	      continue;
+	    }
+	    nb0++;
+	    for ( mitId1 = (*mitT1)->lhcbIDs().begin(); 
+		  (*mitT1)->lhcbIDs().end() != mitId1; ++mitId1 ) {
+	      if ( *mitId0 == *mitId1) ++nbCommon;
+	    }
+	  }
+	  if(!( .7 * nb0 > nbCommon || .7 * nb1 > nbCommon)){
+	    ++count_Tr;
+	  }
+	}
+      }
+      (*mitT)->addInfo(LHCb::Track::NCandCommonHits, count_Tr);
+    }
+  }
+  // end of NNTools loop
 
   if (!m_doClean) {
     if ( msgLevel( MSG::DEBUG ) ) {
