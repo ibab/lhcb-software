@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.21 2007-11-14 13:34:19 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.22 2007-11-19 14:57:03 graven Exp $
 // Include files 
 
 // from boost
@@ -35,8 +35,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("DataSummaryLocation",
                   m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
 
-  declareProperty("SelectionName",
-                  m_selectionName = "");
+  declareProperty("SelectionName", m_selectionName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
 
   // location of the input tracks, primary vertices and vertices
@@ -54,9 +53,9 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   m_consider1 = false;
   m_consider2 = false;
   m_selectionID = 0;
-  m_outputHolder = NULL;
-  m_outputTracks = NULL;
-  m_outputVertices = NULL;
+  m_outputHolder = 0;
+  m_outputTracks = 0;
+  m_outputVertices = 0;
   m_inputSelections.clear();
   
 }
@@ -74,20 +73,19 @@ StatusCode HltAlgorithm::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_hltSvc = NULL;
+  m_hltSvc = 0;
   sc = serviceLocator()->service("HltDataSvc", m_hltSvc);
   if (sc.isFailure() || !m_hltSvc) 
     error() << " not able to create HltData Provider " << endreq;
 
-  m_datasummary = NULL;
+  m_datasummary = 0;
   hltretrieve(m_datasummary,m_dataSummaryLocation);
-  if (m_datasummary == NULL) 
+  if (m_datasummary == 0) 
     fatal() << " not able to hltretrieve summary data " << endreq;
 
-  std::string loca = m_dataSummaryLocation+"/Configuration";
-  m_conf = NULL;
-  hltretrieve(m_conf,loca);
-  if (m_conf == NULL) 
+  m_conf = 0;
+  hltretrieve(m_conf,m_dataSummaryLocation+"/Configuration");
+  if (m_conf == 0) 
     fatal() << " not able to hltretrieve hlt configuration " << endreq;
 
   bool ok = true;
@@ -109,17 +107,17 @@ StatusCode HltAlgorithm::initialize() {
 
 bool HltAlgorithm::initContainers() {
 
-  m_inputTracks = NULL; m_inputTracks2 = NULL;
+  m_inputTracks = 0; m_inputTracks2 = 0;
   sumretrieve(m_inputTracks,m_inputTracksName);
   sumretrieve(m_inputTracks2,m_inputTracks2Name);
 
-  m_inputVertices = NULL; m_primaryVertices = NULL;
+  m_inputVertices = 0; m_primaryVertices = 0;
   sumretrieve(m_primaryVertices,m_primaryVerticesName);
   sumretrieve(m_inputVertices,m_inputVerticesName);
 
   if (m_selectionName != "") sumregister(m_selectionName);
 
-  m_outputTracks = NULL; m_outputVertices = NULL;
+  m_outputTracks = 0; m_outputVertices = 0;
   sumregister(m_outputVertices,m_outputVerticesName);
   sumregister(m_outputTracks,m_outputTracksName);
 
@@ -157,10 +155,8 @@ void HltAlgorithm::initHistograms() {
 
   // Output
   initializeHisto(m_histoCandidates ,   "Candidates");
-  if (m_outputVertices)
-    initializeHisto(m_histoOutputVertices,"OutputVertices");
-  if (m_outputTracks)
-    initializeHisto(m_histoOutputTracks,  "OutputTracks");
+  if (m_outputVertices) initializeHisto(m_histoOutputVertices,"OutputVertices");
+  if (m_outputTracks)   initializeHisto(m_histoOutputTracks,  "OutputTracks");
 }
 
 void HltAlgorithm::saveConfiguration() {
@@ -222,8 +218,9 @@ bool HltAlgorithm::beginExecute() {
 
   // must check that the producer of input tracks was actually run and succeeded
   if( m_consider1 && m_inputTracks ){
-    std::vector<std::string> cromos = EParser::parse(m_inputTracksName,"/");
-    std::string selname = cromos.back();
+    std::string::size_type s = m_inputTracksName.rfind('/');
+    std::string selname = (s!=std::string::npos ? m_inputTracksName.substr(s+1)
+                                                : m_inputTracksName );
     int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
     if( m_datasummary->hasSelectionSummary(id) ){
       if( ! selectionSummary(id).decision() ){
@@ -240,8 +237,9 @@ bool HltAlgorithm::beginExecute() {
 
   // must check that the producer of input tracks was actually run and succeeded
   if( m_consider2 && m_inputTracks2 ){
-    std::vector<std::string> cromos = EParser::parse(m_inputTracks2Name,"/");
-    std::string selname = cromos.back();
+    std::string::size_type s = m_inputTracks2Name.rfind('/');
+    std::string selname = (s!=std::string::npos ? m_inputTracks2Name.substr(s+1)
+                                                : m_inputTracks2Name );
     int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
     if( m_datasummary->hasSelectionSummary(id) ){
       if( ! selectionSummary(id).decision() ){

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.16 2007-11-14 13:34:18 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.17 2007-11-19 14:57:03 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -9,7 +9,6 @@
 
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltTypes.h"
-#include "HltBase/EParser.h"
 #include "HltBase/HltConfigurationHelper.h"
 
 /** @class HltAlgorithm 
@@ -171,8 +170,8 @@ protected:
   template <class CONT>
   void sumretrieve(CONT*& con, const std::string& name) {
     con = NULL; if (name == "") return;
-    std::vector<std::string> cromos = EParser::parse(name,"/");
-    std::string selname = cromos.back();
+    std::string::size_type s = name.rfind('/');
+    std::string selname = (s != std::string::npos ? name.substr(s+1) : name );
     int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
     info() << " input selection " << selname << " id " << id << endreq;
     const LHCb::HltSelectionSummary& sum = selectionSummary(id);
@@ -192,9 +191,10 @@ protected:
   void sumregister(CONT*& con, const std::string& name) {
     con = NULL; if (name == "") return;
     if (m_outputHolder != NULL) 
-      fatal() << " A selection output alreadi registed! " << endreq;
-    std::vector<std::string> cromos = EParser::parse(name,"/");
-    std::string selname = cromos.back(); sumregister(selname);
+      fatal() << " A selection output already registed! " << endreq;
+    std::string::size_type s = name.rfind('/');
+    std::string selname = (s != std::string::npos ? name.substr(s+1) : name );
+    sumregister(selname);
     if (!con) con = new CONT();
     Hlt::DataSizeHolder<CONT>* holder = new Hlt::DataSizeHolder<CONT>(*con);
     m_outputHolder = holder; selectionSummary().addData(*holder);
@@ -263,8 +263,7 @@ protected:
   template <class T>
   void confregister(const std::string& key, const T& value) {
     std::string mykey = m_selectionName+"/"+key; m_conf->add(mykey,value);
-    info() << " HLT [" << mykey << "] = " 
-           << m_conf->retrieve<T>(mykey) << endreq;    
+    info() << " HLT [" << mykey << "] = " << m_conf->retrieve<T>(mykey) << endreq;    
   }
 
   template <class T>
