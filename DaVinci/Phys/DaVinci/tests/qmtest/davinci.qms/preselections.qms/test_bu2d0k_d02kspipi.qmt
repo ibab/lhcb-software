@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>DaVinci.exe</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestBu2D0K_D02KsPiPi.opts</text>
+</set></argument>
+<argument name="validator"><text>
+reference = """
+=====================================================================================
+                       TestCorrelations.AlgorithmCorrelations
+=====================================================================================
+    Algorithm                 Eff.      1      2      3      4      5      6  
+-------------------------------------------------------------------------------------
+  1 AllTrueNoPIDsDecay        5.0% |  ##### 100.0%  *****   6.2%   6.1%   3.2%
+  2 AllTrueLooseDecay         2.0% |  40.0%  #####  *****   6.2%   4.1%   1.6%
+  3 PreselBu2D0K_D02KsPiPi    0.0% |   0.0%   0.0%  #####   0.0%   0.0%   0.0%
+  4 StdLooseD02KsPiPi        16.0% |  20.0%  50.0%  *****  #####  22.4%  22.2%
+  5 StdLooseKsLL             49.0% |  60.0% 100.0%  *****  68.8%  #####  60.3%
+  6 StdLooseKsDD             63.0% |  40.0%  50.0%  *****  87.5%  77.6%  #####
+=====================================================================================
+"""
+
+# split reference file, sanitize EOLs and remove empty lines
+reflines = filter(None,map(lambda s: s.rstrip(), reference.splitlines()))
+# the same on standard output
+outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
+
+# find the reference block in the output file
+try:
+    sign_pos = 1
+    pos = outlines.index(reflines[1])
+    outlines = outlines[pos-sign_pos:pos+len(reflines)-sign_pos]
+    if reflines != outlines:
+        causes.append("correlation table")
+        result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
+        result["CorrelationTest.observer"] = result.Quote("\n".join(outlines))
+except ValueError:
+    causes.append("missing correlation table")
+</text></argument>
+</extension>
