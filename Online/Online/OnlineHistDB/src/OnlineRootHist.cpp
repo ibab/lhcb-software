@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.12 2007-11-13 14:51:55 psomogyi Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.13 2007-11-19 17:26:45 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -82,23 +82,22 @@ void OnlineRootHist::setTH1FromDB() {
     if(m_dbHist->getDisplayOption("LABEL_X",   &sopt)) m_rootHist->SetXTitle (sopt.data());
     if(m_dbHist->getDisplayOption("LABEL_Y",   &sopt)) m_rootHist->SetYTitle (sopt.data());
     if(m_dbHist->getDisplayOption("LABEL_Z",   &sopt)) m_rootHist->SetZTitle (sopt.data());
-//    double bxmin=m_rootHist->GetXaxis()->GetXmin(),bxmax=m_rootHist->GetXaxis()->GetXmax();
-//    if(m_dbHist->getDisplayOption("XMIN",      &fopt)) bxmin=fopt;
-//    if(m_dbHist->getDisplayOption("XMAX",      &fopt)) bxmax=fopt;
-//    m_rootHist->GetXaxis()->SetRangeUser(bxmin,bxmax);
-//    if(m_dbHist->type() == OnlineHistDBEnv::H1D || m_dbHist->type() == OnlineHistDBEnv::P1D ||
-//       m_dbHist->type() == OnlineHistDBEnv::CNT) { // 1d histograms
-//      if(m_dbHist->getDisplayOption("YMIN",      &fopt)) m_rootHist->SetMinimum(fopt);
-//      if(m_dbHist->getDisplayOption("YMAX",      &fopt)) m_rootHist->SetMaximum(fopt);
-//    }
-//    else {  // 2d histograms
-//      double bymin=m_rootHist->GetYaxis()->GetXmin(),bymax=m_rootHist->GetYaxis()->GetXmax();
-//      if(m_dbHist->getDisplayOption("YMIN",      &fopt)) bymin=fopt;
-//      if(m_dbHist->getDisplayOption("YMAX",      &fopt)) bymax=fopt;
-//      m_rootHist->GetYaxis()->SetRangeUser(bymin,bymax);
-//      if(m_dbHist->getDisplayOption("ZMIN",      &fopt)) m_rootHist->SetMinimum(fopt);
-//      if(m_dbHist->getDisplayOption("ZMAX",      &fopt)) m_rootHist->SetMaximum(fopt);
-//    }
+    double bxmin=m_rootHist->GetXaxis()->GetXmin(),bxmax=m_rootHist->GetXaxis()->GetXmax();
+    if(m_dbHist->getDisplayOption("XMIN",      &fopt)) bxmin=fopt;
+    if(m_dbHist->getDisplayOption("XMAX",      &fopt)) bxmax=fopt;
+    m_rootHist->GetXaxis()->SetRangeUser(bxmin,bxmax);
+    if(m_dbHist->dimension() <2) { // 1d histograms
+      if(m_dbHist->getDisplayOption("YMIN",      &fopt)) m_rootHist->SetMinimum(fopt);
+      if(m_dbHist->getDisplayOption("YMAX",      &fopt)) m_rootHist->SetMaximum(fopt);
+    }
+    else {  // 2d histograms
+      double bymin=m_rootHist->GetYaxis()->GetXmin(),bymax=m_rootHist->GetYaxis()->GetXmax();
+      if(m_dbHist->getDisplayOption("YMIN",      &fopt)) bymin=fopt;
+      if(m_dbHist->getDisplayOption("YMAX",      &fopt)) bymax=fopt;
+      m_rootHist->GetYaxis()->SetRangeUser(bymin,bymax);
+      if(m_dbHist->getDisplayOption("ZMIN",      &fopt)) m_rootHist->SetMinimum(fopt);
+      if(m_dbHist->getDisplayOption("ZMAX",      &fopt)) m_rootHist->SetMaximum(fopt);
+    }
     if(m_dbHist->getDisplayOption("STATS",     &iopt)) m_rootHist->SetStats(true);
     if(m_dbHist->getDisplayOption("FILLSTYLE", &iopt)) m_rootHist->SetFillStyle(iopt);
     if(m_dbHist->getDisplayOption("FILLCOLOR", &iopt)) m_rootHist->SetFillColor(iopt);
@@ -123,8 +122,8 @@ void OnlineRootHist::setTH1FromDB() {
 
 void OnlineRootHist::setDrawOptionsFromDB() {
   if(m_dbHist && m_rootHist) {
-//    int iopt=0;
-//    float fopt=0.;
+    int iopt=0;
+    float fopt=0.;
     //std::string sopt="";
 
     // TPaveStats is obtained after a pad->Draw(), but changing OptStat
@@ -133,17 +132,17 @@ void OnlineRootHist::setDrawOptionsFromDB() {
     //   TPaveStats* stats =  (TPaveStats*)m_rootHist->GetListOfFunctions()->FindObject("stats");
     //   if (stats) stats->SetOptStat(iopt);
 
-//    if(m_dbHist->getDisplayOption("LOGX", &iopt)) gPad->SetLogx(1);
-//    if(m_dbHist->getDisplayOption("LOGY", &iopt)) gPad->SetLogy(1);
-//    int gridx=gStyle->GetPadGridX(),gridy=gStyle->GetPadGridY();
-//    if(m_dbHist->getDisplayOption("GRIDX", &iopt)) gridx=iopt;
-//    if(m_dbHist->getDisplayOption("GRIDY", &iopt)) gridy=iopt;
-//    gPad->SetGrid(gridx,gridy);
-//    if (m_dbHist->dimension() > 1) {
-//      if(m_dbHist->getDisplayOption("LOGZ", &iopt)) gPad->SetLogz(1);
-//      if(m_dbHist->getDisplayOption("THETA", &fopt)) gPad->SetTheta(fopt);
-//      if(m_dbHist->getDisplayOption("PHI", &fopt)) gPad->SetPhi(fopt);
-//    }
+    if(m_dbHist->getDisplayOption("LOGX", &iopt)) gPad->SetLogx(1);
+    if(m_dbHist->getDisplayOption("LOGY", &iopt)) gPad->SetLogy(1);
+    int gridx=gStyle->GetPadGridX(),gridy=gStyle->GetPadGridY();
+    if(m_dbHist->getDisplayOption("GRIDX", &iopt)) gridx=iopt;
+    if(m_dbHist->getDisplayOption("GRIDY", &iopt)) gridy=iopt;
+    gPad->SetGrid(gridx,gridy);
+    if (m_dbHist->dimension() > 1) {
+      if(m_dbHist->getDisplayOption("LOGZ", &iopt)) gPad->SetLogz(1);
+      if(m_dbHist->getDisplayOption("THETA", &fopt)) gPad->SetTheta(fopt);
+      if(m_dbHist->getDisplayOption("PHI", &fopt)) gPad->SetPhi(fopt);
+    }
 
   }
 }
@@ -250,29 +249,29 @@ bool OnlineRootHist::saveTH1ToDB(TPad* Pad) {
 			   fopt == (float) gStyle->GetLabelOffset("Z") );
 
     // now options from Pad ... be sure we are in the right Pad
-//    if(Pad) {
-//      iopt = Pad->GetLogx();
-//      out &= updateDBOption ("LOGX", &iopt,
-//			     iopt == gStyle->GetOptLogx() );
-//      iopt = Pad->GetLogy();
-//      out &= updateDBOption ("LOGY", &iopt,
-//			     iopt == gStyle->GetOptLogy() );
-//      iopt = Pad->GetLogz();
-//      out &= updateDBOption ("LOGZ", &iopt,
-//			     iopt == gStyle->GetOptLogz() );
-//      iopt = Pad->GetGridx();
-//      out &= updateDBOption ("GRIDX", &iopt,
-//			     iopt == gStyle->GetPadGridX() );
-//      iopt = Pad->GetGridy();
-//      out &= updateDBOption ("GRIDY", &iopt,
-//			     iopt == gStyle->GetPadGridY() );
-//      fopt = Pad->GetTheta();
-//      out &= updateDBOption ("THETA", &fopt,
-//			     fopt == 30 ); // seems to be hardcoded in root
-//      fopt = Pad->GetPhi();
-//      out &= updateDBOption ("PHI", &fopt,
-//			     fopt == 30 ); // seems to be hardcoded in root
-//    }
+   if(Pad) {
+     iopt = Pad->GetLogx();
+     out &= updateDBOption ("LOGX", &iopt,
+			     iopt == gStyle->GetOptLogx() );
+     iopt = Pad->GetLogy();
+     out &= updateDBOption ("LOGY", &iopt,
+			     iopt == gStyle->GetOptLogy() );
+     iopt = Pad->GetLogz();
+     out &= updateDBOption ("LOGZ", &iopt,
+			     iopt == gStyle->GetOptLogz() );
+     iopt = Pad->GetGridx();
+     out &= updateDBOption ("GRIDX", &iopt,
+			    (iopt>0) == gStyle->GetPadGridX() );
+     iopt = Pad->GetGridy();
+     out &= updateDBOption ("GRIDY", &iopt,
+			    (iopt>0) == gStyle->GetPadGridY() );
+     fopt = (float)Pad->GetTheta();
+     out &= updateDBOption ("THETA", &fopt,
+			     fopt == 30 ); // seems to be hardcoded in root
+     fopt = (float)Pad->GetPhi();
+     out &= updateDBOption ("PHI", &fopt,
+			     fopt == 30 ); // seems to be hardcoded in root
+   }
     if(out)
       out=m_dbHist->saveDisplayOptions();
   }
@@ -317,7 +316,7 @@ bool OnlineRootHist::setReference(TH1 *ref,
     std::string command = "mkdir -p " +refDir;
     system(command.c_str());
     std::stringstream refFile;
-    refFile << refDir << "/" << DataType << "_" << startrun;
+    refFile << refDir << "/" << DataType << std::string("_") << startrun;
 
     m_reference = (TH1*) ref->Clone(m_dbHist->hname().c_str());
     m_startrun = startrun;
@@ -338,8 +337,8 @@ bool OnlineRootHist::setReference(TH1 *ref,
     m_reference->SetDirectory(0);
 
     if (!out)
-      cout << "ERROR in OnlineRootHist::setReference : could not save reference into file " 
-	   << refFile <<endl;
+      std::cout << "ERROR in OnlineRootHist::setReference : could not save reference into file " 
+		<< refFile.str() << std::endl;
   }
   return out;
 }

@@ -12,5 +12,5 @@ insert into SUBSYSTEM(SSName) VALUES('HCAL');
 insert into SUBSYSTEM(SSName) VALUES('MUON');
 
 insert into TASK(TASKName) VALUES('ANALYSIS');
-insert into ERGOSUM(version,apiversion) VALUES(5,'v3r2');
+insert into ERGOSUM(version,apiversion,alglist) VALUES(6,'v4r0',0);
 insert into PAGEFOLDER VALUES('/',NULL);

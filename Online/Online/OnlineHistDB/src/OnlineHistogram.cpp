@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.19 2007-11-08 16:18:53 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.20 2007-11-19 17:26:45 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -891,9 +891,10 @@ bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
 
 void OnlineHistogram::OnlineDisplayOption::set(void *option){
   *m_value_null = 0;
+  std::string* cont;
   switch (m_type) {
   case STRING :
-    std::string* cont = static_cast<std::string*>(option);
+    cont = static_cast<std::string*>(option);
     OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) cont->c_str(),
 			(ub2) ( strlen(cont->c_str())), (OCIString **) &m_value);
     break;
@@ -1210,7 +1211,7 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
       myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
       myOCIBindInt   (stmt,":m"  , imask);
       if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-	mask = (bool) imask;
+	mask = (imask == 1);
 	if(Np>0) {
 	  floatVarrayToVector(warn, *warnTh);
 	  floatVarrayToVector(alarm, *alarmTh);
@@ -1245,8 +1246,8 @@ bool OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
 
 // container class OnlineHistogramStorage
 
-OnlineHistogramStorage::OnlineHistogramStorage(OnlineHistDBEnv* Env) :
-  m_Histenv(Env), m_avoid_hdup(true)  {}
+OnlineHistogramStorage::OnlineHistogramStorage() :
+  m_avoid_hdup(true)  {}
 
 OnlineHistogramStorage::~OnlineHistogramStorage() 
 {

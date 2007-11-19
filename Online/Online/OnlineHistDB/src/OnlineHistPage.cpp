@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.15 2007-11-08 16:18:52 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.16 2007-11-19 17:26:45 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace OnlineHistDBEnv_constants;
@@ -335,8 +335,6 @@ void OnlineHistPage::dump() {
   cout << "-------------------------------------------------" << endl;
 }
 
-OnlinePageStorage::OnlinePageStorage(OnlineHistDBEnv* Env) :
-  m_Pagenv(Env){}
 
 OnlinePageStorage::~OnlinePageStorage() 
 {

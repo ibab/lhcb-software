@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.2 2007-11-08 16:18:52 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.3 2007-11-19 17:26:45 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -135,8 +135,6 @@ void OnlineHistTask::dump() {
 }
 
 
-OnlineTaskStorage::OnlineTaskStorage(OnlineHistDBEnv* Env) : m_Taskenv(Env)
-{}
 
 
 OnlineTaskStorage::~OnlineTaskStorage() {

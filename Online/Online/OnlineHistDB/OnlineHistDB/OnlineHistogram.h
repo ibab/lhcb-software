@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.14 2007-11-08 16:18:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.15 2007-11-19 17:26:44 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -313,7 +313,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
 class OnlineHistogramStorage
 {
  public:
-  OnlineHistogramStorage(OnlineHistDBEnv* Env);
+  OnlineHistogramStorage();
   virtual ~OnlineHistogramStorage();
   void updateHistograms();
   /// gets a pointer to an OnlineHistogram object that can be used to view/edit an histogram record. If FullPathPageName
@@ -332,7 +332,9 @@ class OnlineHistogramStorage
 			       bool RemoveWholeSet = false);		 
   void reloadAnalysisForSet(int Hsid,
 			    int ihs);
-private: 
+ protected:
+  void setHistEnv(OnlineHistDBEnv* Env) {m_Histenv = Env;}
+ private: 
   OnlineHistDBEnv* m_Histenv;
   std::vector<OnlineHistogram*> m_myHist;
   bool m_avoid_hdup;

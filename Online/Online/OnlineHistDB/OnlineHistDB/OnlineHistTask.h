@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.4 2007-11-08 16:18:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.5 2007-11-19 17:26:44 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -91,7 +91,7 @@ class OnlineHistTask : public OnlineHistDBEnv
 class OnlineTaskStorage
 {
  public:
-  OnlineTaskStorage(OnlineHistDBEnv* Env);
+  OnlineTaskStorage() {}
   virtual ~OnlineTaskStorage();
   /// declares a new task to the DB, or updates its configuration 
   bool declareTask(std::string Name, 
@@ -104,6 +104,8 @@ class OnlineTaskStorage
 		   float SavingFrequency=0);
   /// get an OnlineHistTask object, holding informations of an existing task, that can be used to view/edit a task record
   OnlineHistTask* getTask(std::string Name);
+ protected:
+  void setTaskEnv(OnlineHistDBEnv* Env) {m_Taskenv = Env;}
  private: 
   OnlineHistDBEnv* m_Taskenv;
   std::vector<OnlineHistTask*> m_myTask;

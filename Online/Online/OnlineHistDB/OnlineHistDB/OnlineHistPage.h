@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.12 2007-11-08 16:18:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.13 2007-11-19 17:26:44 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -98,12 +98,14 @@ class OnlineHistPage : public OnlineHistDBEnv
 class OnlinePageStorage
 {
  public:
-  OnlinePageStorage(OnlineHistDBEnv* Env);
+  OnlinePageStorage() {}
   virtual ~OnlinePageStorage();
   /// get an OnlineHistPage object, to create a new page or view/edit an existing one
   OnlineHistPage* getPage(std::string Name);
   /// removes completely the page, and all associated options (HANDLE WITH CARE!)
   bool removePage(OnlineHistPage* Page);
+ protected:
+  void setPageEnv(OnlineHistDBEnv* Env) {m_Pagenv = Env;}
  private:
   OnlineHistDBEnv* m_Pagenv;
   std::vector<OnlineHistPage*> m_myPage;

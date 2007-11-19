@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.18 2007-11-08 16:18:52 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.19 2007-11-19 17:26:45 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -11,11 +11,15 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 			   std::string user,
 			   std::string db) : 
   OnlineHistDBEnv(user),
-  OnlineTaskStorage((OnlineHistDBEnv*) this), 
-  OnlineHistogramStorage((OnlineHistDBEnv*) this),
-  OnlinePageStorage((OnlineHistDBEnv*) this),
+  OnlineTaskStorage(), 
+  OnlineHistogramStorage(),
+  OnlinePageStorage(),
   m_AlgListID(-1), m_nit(0)
 {
+  setTaskEnv((OnlineHistDBEnv*) this);
+  setHistEnv((OnlineHistDBEnv*) this);
+  setPageEnv((OnlineHistDBEnv*) this);
+
   // initialize Oracle session and log in
   OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
 		(dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
@@ -56,6 +60,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   } 
 
   // get total entry counts
+  m_nHistograms = m_nPages = m_nPageFolders = 0;
   OCIStmt *stmt2=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt2, "BEGIN ONLINEHISTDB.GETTOTALCOUNTS(:x1,:x2,:x3); END;") ) {
     if ( OCI_SUCCESS == myOCIBindInt(stmt2, ":x1", m_nHistograms) &&
@@ -284,7 +289,7 @@ bool OnlineHistDB::removePageFolder(std::string Folder) {
     myOCIBindInt   (stmt, ":out", iout);
     myOCIBindString(stmt, ":f", Folder);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-      out = (bool) iout;
+      out = (iout>0);
     }
   }
   return out;

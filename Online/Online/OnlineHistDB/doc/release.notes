@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.18 2007-11-08 16:18:52 ggiacomo Exp $
+! $Id: release.notes,v 1.19 2007-11-19 17:26:45 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 !
+
+! 20071119 
+	- make it compile under M$ (but I'm still waiting for the $s)
+
 
 ! 20071108  - OnlineHistDB v4r0
 	- C++ API completely rewritten to use OCI instead of OCCI

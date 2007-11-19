@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.11 2007-11-08 16:18:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.12 2007-11-19 17:26:44 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -65,7 +65,7 @@ class OnlineHistDBEnv {
   /// case of severe DB inconsistency. All other errors, e.g. syntax errors,
   /// can be checked from the method return values and from the warning
   /// messages on the standard output.
-  /// exception can catched using {\it catch(SQLException ex)}
+  /// Exceptions can be catched using {\it catch(std::string message)}
   int excLevel() const {return m_excLevel;}
   ///
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
