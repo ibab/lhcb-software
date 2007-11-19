@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.2 2007-06-20 16:13:14 hernando Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.3 2007-11-19 13:16:42 hmdegaud Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckVertices );
 
 HltRecCheckVertices::HltRecCheckVertices( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
+  : HltAlgorithm ( name , pSvcLocator ), m_ipFun(0)
 {
   
   declareProperty( "LinkName" ,    m_linkName     = "" );
@@ -34,7 +34,9 @@ HltRecCheckVertices::HltRecCheckVertices( const std::string& name,
 }
 
 HltRecCheckVertices::~HltRecCheckVertices() {
-  delete m_ipFun;
+  if (m_ipFun) {
+    delete m_ipFun;
+  }
 } 
 
 StatusCode HltRecCheckVertices::initialize() {
