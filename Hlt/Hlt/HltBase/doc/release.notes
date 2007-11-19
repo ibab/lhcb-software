@@ -6,6 +6,8 @@
 
 ! 2007-11-19 Gerhard Raven
    - EDictionary: use boost::any to avoid dynamic_cast altogether
+   - HltFunctions: sort by pt: explicitly compare keys if-and-only-if 
+       pt is equal instead of adding key*epsilon to the pt.-
 
 ! 2007-11-15 Gerhard Raven
    - ESequences: use 'hasInfo' to check for existence of 'info'

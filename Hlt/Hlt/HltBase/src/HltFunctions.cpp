@@ -53,10 +53,11 @@ void Hlt::VertexCreator::operator()
   // std::cout << " vertex position " << pos << std::endl;
 }
 
-bool Hlt::SortTrackByPt::operator() (const Track* track0, 
-                                     const Track* track1 ) const {
-  double pt0 = track0->pt()+0.00001*track0->key();
-  double pt1 = track1->pt()+0.00001*track1->key();
-  return (pt0 > pt1);
+bool Hlt::SortTrackByPt::operator() (const Track* lhs, 
+                                     const Track* rhs ) const {
+  double ptl = lhs->pt();
+  double ptr = rhs->pt();
+  return (ptl == ptr) ? (lhs->key() > rhs->key())
+                      : (ptl > ptr) ;
 }
 
