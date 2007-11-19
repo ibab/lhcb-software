@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-11-19 - Juan PALACIOS
+ - Added
+  . tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt 
+  . tests/options/DVTestBu2D0K_D02KsPiPi.opts
+ - Add 
+     TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false; 
+   to all opitons to allow printing of all algorithms.
+
+! 2007-11-19 - Juan PALACIOS
  - cmt/requirements
   . Add alias for running tests.
  - Added: 
