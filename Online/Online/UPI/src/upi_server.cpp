@@ -18,6 +18,7 @@ Created           : 29-NOV-1989 by Christian Arnault
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
 #include "RTL/rtl.h"
+#include "RTL/Lock.h"
 #include "SCR/scr.h"
 
 int upic_net_close_mbx(int) { return 1; }
@@ -553,25 +554,31 @@ extern "C" int upi_server (int argc, char** argv)  {
   else {
     upic_write_message("Time stamps will be written.","");
   }
+  ::lib_rtl_lock_t server_lock = 0;
+  ::lib_rtl_create_lock(0,&server_lock);
   while (!End)  {
     int sc;
     void* par;
     unsigned int event;
     wtc_wait (&event,&par,&sc);
-    switch (event)    {
-    case EVENT_SCR:
-      screen_handler ();
-      break;
-    case WT_FACILITY_UPI:
-      upi_handler();
-      break;
-    case WT_FACILITY_AMS:
-      message_handler(event,par);
-      break;
-    default:   /* Other events  */
-      break;
+    {
+      //RTL::Lock lock(server_lock);
+      switch (event)    {
+      case EVENT_SCR:
+	screen_handler();
+	break;
+      case WT_FACILITY_UPI:
+	upi_handler();
+	break;
+      case WT_FACILITY_AMS:
+	message_handler(event,par);
+	break;
+      default:   /* Other events  */
+	break;
+      }
     }
   }
+  ::lib_rtl_delete_lock(server_lock);
   upic_quit();
   return 1;
 }
