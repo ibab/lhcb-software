@@ -1,4 +1,4 @@
-// $Id: IPatForwardTool.h,v 1.1 2006-03-16 17:56:44 cattanem Exp $
+// $Id: IPatForwardTool.h,v 1.2 2007-11-19 15:11:29 aperiean Exp $
 #ifndef TRACKINTERFACES_IPATFORWARDTOOL_H 
 #define TRACKINTERFACES_IPATFORWARDTOOL_H 1
 
@@ -26,6 +26,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IPatForwardTool; }
 
   virtual void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) = 0;
+  virtual void setNNSwitch( bool nnSwitch) = 0;
 
 protected:
 

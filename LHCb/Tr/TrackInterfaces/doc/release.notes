@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !====================== TrackInterfaces v3r10 2007-11-09 =====================
+! 2007-11-19 - Adrian Perieanu
+ - Add in IPatForwardTool the method setNNSwitch
 ! 2007-11-09 - Olivier Callot
  - Add interface IPatDebugTool, initially for debugging Velo tracking
 
