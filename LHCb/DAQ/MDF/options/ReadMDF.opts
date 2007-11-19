@@ -30,7 +30,6 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector' NSkip='500'",
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
 };
-<<<<<<< ReadMDF.opts
 EventSelector.Input                  = {
   "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
   "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'",
