@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-11-19 M Needham
+ - Fix a comparision of == with double
+
 !======================== LHCbAlgs v2r12 2007-10-12 ==========================
 ! 2007-10-12 - Wouter Hulsbergen
  - changes in TrajPoca
