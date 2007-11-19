@@ -4,6 +4,14 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2007-11-19 - Gloria Corti
+ - Check status code from Giga->retrieve{The}Event, in case of an exception 
+   caught by GiGa that could have serious failure on G4 event internally.
+   In case of failure set filterPassed false so that the event is not processed
+   further in the simulation phase and not written out.
+   . GiGaFlushAlgorithm.cpp
+   . GiGaCheckEventStatus.cpp
+
 !======================== GaussAlgs v3r0 2007-07-03 ===========================
 ! 2007-07-03 - Gloria Corti
  - Fill in MCHeader the CondDB tags used for the job (requires LHCb v22r6)

@@ -1,4 +1,4 @@
-// $Id: GiGaCheckEventStatus.cpp,v 1.2 2007-01-12 15:23:41 ranjard Exp $
+// $Id: GiGaCheckEventStatus.cpp,v 1.3 2007-11-19 10:03:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -67,8 +67,12 @@ StatusCode GiGaCheckEventStatus::execute() {
 
   // Retrieve the G4 event via GiGa
   const G4Event* event = 0;
-  gigaSvc()->retrieveEvent(event);
-  
+  StatusCode sc = gigaSvc()->retrieveEvent(event);
+  if( !sc.isSuccess() ) {
+    setFilterPassed( false );
+    return StatusCode::SUCCESS;
+  }
+
   // Check if it was processed without problems. 
   // If a problem occured set false in filtering status
   if ( event->IsAborted() ) {
