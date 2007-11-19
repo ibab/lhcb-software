@@ -12,7 +12,6 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   double phi = state.y();
   double tr  = state.tx();
   double zt  = state.z();
-  // std::cout << " state " << state << std::endl;
   
   const EPoint& p = vertex.position();
   double xv = p.x();
@@ -22,7 +21,6 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   rt = rt+tr*(zv-zt);
   zt = zv;
   double rv = xv*cos(phi)+yv*sin(phi);
-  // std::cout << " point " << p << std::endl;
 
   double Dr = rt-rv;
   double Dz = zt-zv;
@@ -31,17 +29,6 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   double ZZ = Dz+dz;
   double rIP = sqrt(RR*RR+ZZ*ZZ);
   if (ZZ<0.) rIP = -1.*rIP;
-    
-//   double xhi = (z-z0)*tr-(r-r0);
-//   double ip = (lambda>0? fabs(xhi)/lambda : -1e6); 
-//   if (xhi<0) ip = -1.*ip;
-//   // std::cout << " rIP " << ip << std::endl;
-
-  // EPoint ori(r,0.,z);
-  // EVector dir(tr,0.,1.);
-  // EPoint pos(r0,0,z0);
-  // double ip2 = impactParameter(pos,ori,dir);
-  // std::cout << " rIP2 " << ip2 << std::endl;
 
   return rIP;
 }
@@ -115,9 +102,7 @@ EVector HltUtils::impactParameterVector(const EPoint& vertex,
                                         const EVector& direction) {
   EVector udir = direction.unit();
   EVector distance = point - vertex;
-  EVector ipVector = udir.Cross(distance.Cross(udir));
-  // EVector ipVector = trackDirection;
-  return ipVector;
+  return udir.Cross(distance.Cross(udir));
 }
 
 bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
@@ -187,7 +172,6 @@ EVector HltUtils::closestDistance(const Track& track1,
                                   const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
-  EVector dis(0.,0.,1.e6);
   EPoint pos1(0.,0.,0.);
   EPoint pos2(0.,0.,0.);
   EVector dir1(state1.tx(),state1.ty(),1.);
@@ -195,9 +179,8 @@ EVector HltUtils::closestDistance(const Track& track1,
   EPoint  ori1(state1.x(),state1.y(),state1.z());
   EPoint  ori2(state2.x(),state2.y(),state2.z());
   bool ok = closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
-  if (!ok) return dis;
-  dis = pos1 - pos2;
-  return dis;
+  if (!ok) return EVector(0.,0.,1.e6);
+  return pos1 - pos2;
 }
 
 EPoint HltUtils::closestPoint(const Track& track1, 
@@ -205,7 +188,6 @@ EPoint HltUtils::closestPoint(const Track& track1,
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
   
-
   EPoint pos1(0.,0.,0.);
   EPoint pos2(0.,0.,0.);
   EVector dir1(state1.tx(),state1.ty(),1.);
@@ -213,11 +195,9 @@ EPoint HltUtils::closestPoint(const Track& track1,
   EPoint  ori1(state1.x(),state1.y(),state1.z());
   EPoint  ori2(state2.x(),state2.y(),state2.z());
   closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
-  EPoint center(0.5*(pos1.x()+pos2.x()),
+  return EPoint(0.5*(pos1.x()+pos2.x()),
                 0.5*(pos1.y()+pos2.y()),
                 0.5*(pos1.z()+pos2.z()));
-  //  std::cout << " HltUtils closestPoint " << center << std::endl;
-  return center;
 }
 
 RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2) 
@@ -345,29 +325,24 @@ double HltUtils::impactParameterError(double pt0)
   double  LogFactor = 90.41;
   double  LogOffset = -0.655;
   double  Exponent  = -1.498;
-  double error = Constant +(LogFactor*(log(pt)+LogOffset))*(pow(pt,Exponent));
-  return error;
+  return Constant +(LogFactor*(log(pt)+LogOffset))*(pow(pt,Exponent));
 }
 
 double HltUtils::closestDistanceMod(const LHCb::Track& track1,
                                     const LHCb::Track& track2) {
   EVector dis = closestDistance(track1,track2);
-  double dd = sqrt(dis.Dot(dis));
-  return dd;
+  return sqrt(dis.Dot(dis));
 } 
 
 
 double HltUtils::invariantMass(const LHCb::Track& track1,
                                const LHCb::Track& track2,
                                double mass1, double mass2) {
-  Gaudi::XYZVector      p1=track1.momentum();  
-  Gaudi::XYZVector      p2=track2.momentum();
-  Gaudi::XYZVector pTot=p1+p2;
-  double e1=sqrt(pow(mass1,2)+p1.mag2());
-  double e2=sqrt(pow(mass2,2)+p2.mag2());
-//std::cout<<" calcu mass "<<p1.mag()<<" "<<p2.mag()<<" "<<pTot.mag()<<" "<<e1<$
-  double resultMass=sqrt(pow((e1+e2),2)-pTot.mag2());
-  return resultMass;
+  //TODO: is this the numerically most stable way of computing 
+  //      invariant masses?? (esp. if mass^2 << mom.mag2 ! )
+  double e = sqrt(mass1*mass1+track1.momentum().mag2())
+           + sqrt(mass2*mass2+track2.momentum().mag2());
+  return sqrt(e*e-(track1.momentum()+track2.momentum()).mag2());
 
 }
 
@@ -375,34 +350,27 @@ double HltUtils::matchIDsFraction(const LHCb::Track& track1,
                                   const LHCb::Track& track2) {
   size_t n0 = track1.lhcbIDs().size();
   if (n0 <=0) return false;
-  const std::vector<LHCbID>& ids1 = track1.lhcbIDs();
-  const std::vector<LHCbID>& ids2 = track2.lhcbIDs();
-  size_t n  = ELoop::count(ids1,ids2);
-  return (1.*n)/(1.*n0);
+  size_t n  = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
+  return double(n)/double(n0);
 }
 
 double HltUtils::deltaEta(const LHCb::Track& track1, 
                           const LHCb::Track& track2) {
-  double eta1 = track1.slopes().Eta();
-  double eta2 = track2.slopes().Eta();
-  return eta2-eta1;
+  return track2.slopes().Eta() - track1.slopes().Eta();
 }
 
 
 double HltUtils::deltaPhi(const LHCb::Track& track1, 
                           const LHCb::Track& track2) {
   
-  double phi1 = track1.slopes().Phi();
-  double phi2 = track2.slopes().Phi();
-  return phi2-phi1;
+  return track2.slopes().Phi() -  track1.slopes().Phi();;
 }
 
 double HltUtils::deltaAngle(const LHCb::Track& track1, 
                             const LHCb::Track& track2) {
   double deta = deltaEta(track1,track2);
   double dphi = deltaPhi(track1,track2);
-  double angle = sqrt ( deta*deta + dphi*dphi );
-  return angle;
+  return sqrt ( deta*deta + dphi*dphi );
 }
 
 double HltUtils::minPT(const LHCb::RecVertex& vertex) {
@@ -434,44 +402,18 @@ std::vector<LHCb::CaloCellID> HltUtils::get3x3CellIDs( const LHCb::CaloCellID& c
 	 			 row = centercell.row(),
 				 col = centercell.col();
 	
-	unsigned int rowminus = 0,
-  				 rowplus = 0,
-	  			 colminus = 0,
-		  		 colplus = 0;							
+    unsigned rowminus = ( row == 0 ? 0 : row - 1 );
+	unsigned colminus = ( col == 0 ? 0 : col - 1 );
 
-	if (row == 0) 
-		rowminus = 0;
-	else 
-		rowminus = row - 1;
-
-	if (col == 0)
-		colminus = 0;
-	else 
-		colminus = col - 1;
-
-	rowplus = row + 1;
-	colplus = col + 1;
-
-	CaloCellID cell1( calo, area, rowplus, colminus ),
-			   cell2( calo, area, rowplus, col ),
-			   cell3( calo, area, rowplus, colplus ),
-			   cell4( calo, area, row, colplus ), 
-			   cell5( calo, area, rowminus, colplus ),
-			   cell6( calo, area, rowminus, col ),
-			   cell7( calo, area, rowminus, colminus ),
-			   cell8( calo, area, row, colminus );
-
-	std::vector<LHCb::CaloCellID> cells;
-	
-	cells.push_back( cell1 );
-	cells.push_back( cell2 );
-	cells.push_back( cell3 );
-	cells.push_back( cell4 );
-	cells.push_back( cell5 );
-	cells.push_back( cell6 );
-	cells.push_back( cell7 );
-	cells.push_back( cell8 );
-
+	std::vector<LHCb::CaloCellID> cells; cells.reserve(8);
+	cells.push_back(CaloCellID( calo, area, row+1, colminus )) ;
+	cells.push_back(CaloCellID( calo, area, row+1, col ));
+	cells.push_back(CaloCellID( calo, area, row+1, col+1 ));
+	cells.push_back(CaloCellID( calo, area, row,   col+1 )); 
+	cells.push_back(CaloCellID( calo, area, rowminus, col+1 ));
+	cells.push_back(CaloCellID( calo, area, rowminus, col ));
+	cells.push_back(CaloCellID( calo, area, rowminus, colminus ));
+	cells.push_back(CaloCellID( calo, area, row, colminus ));
 	return cells;
 
 }
@@ -486,57 +428,25 @@ std::vector<LHCb::CaloCellID> HltUtils::get2x2CellIDs( const LHCb::CaloCellID& b
 				 row = bottomleftcell.row(),
 				 col = bottomleftcell.col();
 	
-	unsigned int rowminus = 0,
-  				 rowplus = 0,
-	  			 colminus = 0,
-		  		 colplus = 0;			
-	
-	if (row == 0) 
-		rowminus = 0;
-	else 
-		rowminus = row - 1;
-	
-	if (col == 0)
-		colminus = 0;
-	else
-		colminus = col - 1;
-	
-	rowplus = row + 1;
-	colplus = col + 1;
-	
-	CaloCellID cell1( calo, area, rowplus, col ),
-			   cell2( calo, area, rowplus, colplus ),
-			   cell3( calo, area, row, colplus );	
-						 
-	std::vector<LHCb::CaloCellID> cells;
-	
-	cells.push_back( cell1 );
-	cells.push_back( cell2 );
-	cells.push_back( cell3 );
-
+	std::vector<LHCb::CaloCellID> cells; cells.reserve(3);
+	cells.push_back( CaloCellID( calo, area, row+1, col )) ;
+	cells.push_back( CaloCellID( calo, area, row+1, col+1 ) );
+	cells.push_back( CaloCellID( calo, area, row, col+1 ));	
 	return cells;
-
-
 }
+
 //=============================================================================
 // matchCellIDs
 //=============================================================================
 bool HltUtils::matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
 						 	 const std::vector<LHCb::CaloCellID>& offcells )
 {
-
-	for (std::vector<LHCb::CaloCellID>::const_iterator it = oncells.begin(); it != oncells.end(); ++it) {
-		for (std::vector<LHCb::CaloCellID>::const_iterator it2 = offcells.begin(); it2 != offcells.end(); ++it2) {
-
-			CaloCellID oncell = (*it);
-			CaloCellID offcell = (*it2);
-
-			if (oncell == offcell)
-				return true;
-			}
-		}
-
+    typedef std::vector<LHCb::CaloCellID>::const_iterator iter;
+	for (iter on = oncells.begin(); on != oncells.end(); ++on) {
+        if (std::find(offcells.begin(),
+                      offcells.end(),
+                      *on)  != offcells.end() ) return true;
+    }
 	return false;				
-
 }																			 
 
