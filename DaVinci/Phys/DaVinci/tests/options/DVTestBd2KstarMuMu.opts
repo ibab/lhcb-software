@@ -57,6 +57,7 @@ AllTrueLooseDecay.DecayDescriptor = "[B0 -> K+ pi- mu- mu+]cc" ; // all particle
 // Correlations
 //
 ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", "AllTrueLooseDecay",                               // truth
                                 "PreselBd2KstarMuMu", "StdLoosePenguinDimuon", "StdLooseKstar2KPi" };    // presel
 //

@@ -62,7 +62,7 @@ PrintDiLeptonForPreselBu2LLK.OutputLevel=4;
 // Correlations
 //
 ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
-
+TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
                                 "AllTrueLooseDecay",
                                 "DiLeptonForPreselBu2LLK",
