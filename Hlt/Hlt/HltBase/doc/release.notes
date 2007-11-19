@@ -8,6 +8,7 @@
    - EDictionary: use boost::any to avoid dynamic_cast altogether
    - HltFunctions: sort by pt: explicitly compare keys if-and-only-if 
        pt is equal instead of adding key*epsilon to the pt.-
+   - HltConfigurationHelper: remove spurious cast to int
 
 ! 2007-11-15 Gerhard Raven
    - ESequences: use 'hasInfo' to check for existence of 'info'
