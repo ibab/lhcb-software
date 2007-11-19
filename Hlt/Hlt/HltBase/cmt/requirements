@@ -19,6 +19,7 @@ use RecEvent            v*    Event
 
 use DetDesc             v*    Det
 
+use Boost        v*   LCG_Interfaces
 
 # include directory
 #=========================================================================
