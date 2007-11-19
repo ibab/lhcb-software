@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.14 2007-10-04 13:57:07 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.15 2007-11-19 19:27:32 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -13,68 +13,52 @@
 //====================================================================
 
 // Include files
-#include "MDF/StorageTypes.h"
 #include "MDF/RawDataAddress.h"
 #include "MDF/RawDataSelector.h"
+#include "MDF/RawDataConnection.h"
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-// #include "FileCatalog/IFileCatalog.h"
+#include "GaudiUtils/IIODataManager.h"
 
 enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
 
+using namespace LHCb;
+
 /// Standard constructor
-LHCb::RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
-: m_sel(pSelector), m_fileOffset(0)
+RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
+: m_sel(pSelector), m_fileOffset(0), m_ioMgr(m_sel->fileMgr()), m_connection(0)
 {
-#if 0
-  if ( useCatalog() )  {
-    status = pSelector->serviceLocator()->service(m_catalogName, m_catalog);
-    if( !status.isSuccess() ) {
-      log << MSG::ERROR << "Cannot access catalog service." << endmsg;
-      return status;
-    }
-  }
-#endif
-#if 0
-  if ( useCatalog() )  {
-    Gaudi::IFileCatalogSvc::Files files;
-    catalog()->getPFN(specs,files);
-    if ( files.size() > 0 )  {
-      return files[0].first;
-    }
-    return "";
-  }
-#endif
 }
 
 /// Set connection
-StatusCode LHCb::RawDataSelector::LoopContext::connect(const std::string& specs)  {
-  m_conSpec = specs;
-  m_bindDsc = DSC::bind(m_conSpec);
-  if ( m_bindDsc.ioDesc > 0 )   {
-    m_accessDsc = DSC::accept(m_bindDsc);
-    return m_accessDsc.ioDesc > 0 ? S_OK : S_ERROR;
+StatusCode RawDataSelector::LoopContext::connect(const std::string& specs)  {
+  close();
+  StatusCode sc = m_ioMgr->connectRead(m_sel,m_connection=new RawDataConnection(m_sel,specs));
+  if ( sc.isSuccess() )  {
+    m_conSpec = m_connection->fid();
   }
-  return S_ERROR;
+  return sc;
 }
 
 /// close connection
-void LHCb::RawDataSelector::LoopContext::close()    {
-  DSC::close(m_accessDsc);
-  DSC::close(m_bindDsc);
+void RawDataSelector::LoopContext::close()    {
+  if ( m_connection )  {
+    m_ioMgr->disconnect(m_connection).ignore();
+    delete m_connection;
+    m_connection = 0;
+  }
 }
 
-LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
-: Service( nam, svcloc), m_rootCLID(CLID_NULL), m_catalog(0)
+RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
+: Service( nam, svcloc), m_rootCLID(CLID_NULL)
 {
-  declareProperty("Catalog",m_catalogName="");
+  declareProperty("DataManager", m_ioMgrName="IODataManager");
   declareProperty("NSkip", m_skipEvents=0);
 }
 
 // IInterface::queryInterface
-StatusCode 
-LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
+StatusCode RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
   if (riid == IID_IEvtSelector)  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
@@ -84,7 +68,7 @@ LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
 }
 
 /// IService implementation: Db event selector override
-StatusCode LHCb::RawDataSelector::initialize()  {
+StatusCode RawDataSelector::initialize()  {
   // Initialize base class
   StatusCode status = Service::initialize();
   MsgStream log(msgSvc(), name());
@@ -92,12 +76,13 @@ StatusCode LHCb::RawDataSelector::initialize()  {
     log << MSG::ERROR << "Error initializing base class Service!" << endreq;
     return status;
   }
-  if ( !m_catalogName.empty() )  {
-    //status = serviceLocator()->service(m_catalogName, m_catalog);
-    if( !status.isSuccess() ) {
-      log << MSG::ERROR << "Cannot get Filecatalog:" << m_catalog << endmsg;
-      return status;
-    }
+  // Retrieve conversion service handling event iteration
+  status = Service::service(m_ioMgrName, m_ioMgr);
+  if( !status.isSuccess() ) {
+    log << MSG::ERROR 
+        << "Unable to localize interface IID_IIODataManager from service:" 
+        << m_ioMgrName << endreq;
+    return status;
   }
   // Get DataSvc
   IDataManagerSvc* eds = 0;
@@ -112,7 +97,16 @@ StatusCode LHCb::RawDataSelector::initialize()  {
   return status;
 }
 
-StatusCode LHCb::RawDataSelector::next(Context& ctxt) const  {
+/// IService implementation: finalize the service
+StatusCode RawDataSelector::finalize()  {
+  if ( m_ioMgr )  {
+    m_ioMgr->release();
+    m_ioMgr = 0;
+  }
+  return Service::finalize();
+}
+
+StatusCode RawDataSelector::next(Context& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
     StatusCode sc = pCtxt->receiveData(msgSvc());
@@ -125,8 +119,7 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt) const  {
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
-{
+StatusCode RawDataSelector::next(Context& ctxt, int jump) const {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = next(ctxt);
@@ -139,13 +132,13 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const  {
+StatusCode RawDataSelector::previous(Context& /* ctxt */) const  {
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endmsg;
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const  {
+StatusCode RawDataSelector::previous(Context& ctxt, int jump) const  {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = previous(ctxt);
@@ -158,7 +151,7 @@ StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const  {
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const  {
+StatusCode RawDataSelector::releaseContext(Context*& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -170,8 +163,7 @@ StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const  {
 }
 
 StatusCode 
-LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const
-{
+RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const   {
   const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
   if ( pctxt ) {
     if ( pctxt->data().second > 0 )  {
@@ -188,8 +180,7 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
 }
 
 StatusCode 
-LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& context) const
-{
+RawDataSelector::resetCriteria(const std::string& criteria,Context& context) const    {
   MsgStream log(messageService(), name());
   LoopContext* ctxt = dynamic_cast<LoopContext*>(&context);
   if ( ctxt )  {

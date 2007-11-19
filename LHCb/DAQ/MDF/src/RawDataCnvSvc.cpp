@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.15 2007-10-04 13:57:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.16 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -6,13 +6,13 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "MDF/StorageTypes.h"
-#include "MDF/RawDataCnvSvc.h"
-#include "MDF/StreamDescriptor.h"
-#include "MDF/RawDataAddress.h"
+#include "MDF/RawDataConnection.h"
 #include "MDF/RawEventHelpers.h"
+#include "MDF/RawDataAddress.h"
+#include "MDF/RawDataCnvSvc.h"
 #include "MDF/MDFHeader.h"
 
+#include "GaudiUtils/IIODataManager.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -29,24 +29,21 @@
 #include <vector>
 #include <map>
 
-using LHCb::MDFHeader;
-using LHCb::RawEvent;
-using LHCb::RawBank;
-using LHCb::StreamDescriptor;
+using namespace LHCb;
+using namespace Gaudi;
 
 namespace {
   struct MDFMapEntry  {
-    std::string                name;
-    StreamDescriptor::Access   bind;
-    StreamDescriptor::Access   con;
-    StreamDescriptor           desc;
+    std::string              name;
+    IDataConnection*         connection;
+    StreamDescriptor         desc;
   };
 }
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
-LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
+RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
 : ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
 {
   m_data.reserve(48*1024);
@@ -55,11 +52,12 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ)
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);  // Input data type
-	declareProperty("BankLocation",		m_bankLocation=LHCb::RawEventLocation::Default);  // Location of the banks in the TES
+	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
+  declareProperty("DataManager",    m_ioMgrName="IODataManager");
 }
 
 // Initializing constructor
-LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc) 
+RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc) 
 : ConversionSvc(nam, loc, RAWDATA_StorageType), 
   MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
 {
@@ -69,34 +67,49 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc)
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
-	declareProperty("BankLocation",		m_bankLocation=LHCb::RawEventLocation::Default);  // Location of the banks in the TES
+	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
+  declareProperty("DataManager",    m_ioMgrName="IODataManager");
 }
 
 /// Service initialization
-StatusCode LHCb::RawDataCnvSvc::initialize()     {
+StatusCode RawDataCnvSvc::initialize()     {
   StatusCode sc = ConversionSvc::initialize();
   MsgStream log(msgSvc(),name());
   m_dataMgr = 0;
-  if ( sc.isSuccess() )  {
-    IPersistencySvc *pSvc = 0;
-    sc = service("EventPersistencySvc",pSvc,true);
-    if ( sc.isSuccess() )  {
-      IConversionSvc *pCnv = 0;
-      sc = pSvc->getService(repSvcType(), pCnv);
-      if ( pCnv == this )  {
-        sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
-        if ( sc.isSuccess() )  {
-          /// All OK
-          return sc;
-        }
-      }
+  if ( !sc.isSuccess() )  {
+    log << MSG::ERROR << "Unable to initialize base class ConversionSvc." << endreq;
+    return sc;
+  }
+  IPersistencySvc *pSvc = 0;
+  sc = service("EventPersistencySvc",pSvc,true);
+  if ( !sc.isSuccess() )  {
+    log << MSG::ERROR << "Unable to localize EventPersistencySvc." << endreq;
+    return sc;
+  }
+  IConversionSvc *pCnv = 0;
+  sc = pSvc->getService(repSvcType(), pCnv);
+  if ( pCnv == this )  {
+    sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
+    if ( !sc.isSuccess() )  {
+      log << MSG::ERROR << "Conversion service " << name() 
+          << "not registered to EventPersistencySvc." << endreq;
+      return sc;
     }
   }
+  // Retrieve conversion service handling event iteration
+  sc = Service::service(m_ioMgrName, m_ioMgr);
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+        << "Unable to localize interface IID_IIODataManager from service:" 
+        << m_ioMgrName << endreq;
+    return sc;
+  }
+  /// All OK
   return sc;
 }
 
 /// Service finalization
-StatusCode LHCb::RawDataCnvSvc::finalize()    {
+StatusCode RawDataCnvSvc::finalize()    {
   long typ = repSvcType();
   for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); ++i)  {
     if ( typ == RAWDATA_StorageType && (*i).second )  {
@@ -106,26 +119,28 @@ StatusCode LHCb::RawDataCnvSvc::finalize()    {
   m_fileMap.clear();
   if ( m_dataMgr ) m_dataMgr->release();
   m_dataMgr = 0;
+  if ( m_ioMgr ) m_ioMgr->release();
+  m_ioMgr = 0;
   return ConversionSvc::finalize();
 }
 
 // Helper to print errors and return bad status
-StatusCode LHCb::RawDataCnvSvc::error(CSTR msg) const {
+StatusCode RawDataCnvSvc::error(CSTR msg) const {
   MsgStream err(msgSvc(), name());
   err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
 /// Concrete class type
-const CLID& LHCb::RawDataCnvSvc::objType() const  {
+const CLID& RawDataCnvSvc::objType() const  {
   return DataObject::classID();     
 }
 
 /// Object creation callback
-StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  
-{
+StatusCode 
+RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj) {
   if ( pAddr )  {
-    if ( m_bankLocation == LHCb::RawEventLocation::Default )  {
+    if ( m_bankLocation == RawEventLocation::Default )  {
       if ( pAddr->clID() == CLID_DataObject )  {
         refpObj = new DataObject();
         return StatusCode::SUCCESS;
@@ -144,7 +159,7 @@ StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& re
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::RawDataCnvSvc::regAddr(IRegistry* pReg, 
+StatusCode RawDataCnvSvc::regAddr(IRegistry* pReg, 
                                         IOpaqueAddress* pAddress,
                                         CSTR path,
                                         const CLID& clid)  
@@ -165,7 +180,7 @@ StatusCode LHCb::RawDataCnvSvc::regAddr(IRegistry* pReg,
 
 // Pass raw banks to RawEvent identified by its path
 StatusCode 
-LHCb::RawDataCnvSvc::adoptRawBanks(CSTR path, const std::vector<RawBank*>& banks)  {
+RawDataCnvSvc::adoptRawBanks(CSTR path, const std::vector<RawBank*>& banks)  {
   RawEvent* e = 0;
   StatusCode sc = dataProvider()->retrieveObject(path,(DataObject*&)e);
   return sc.isSuccess() ? adoptBanks(e, banks) : error("Failed to retrieve object:"+path);
@@ -173,7 +188,7 @@ LHCb::RawDataCnvSvc::adoptRawBanks(CSTR path, const std::vector<RawBank*>& banks
 
 /// Callback for reference processing (misused to attach leaves)
 StatusCode 
-LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
+RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
   typedef std::vector<RawBank*> _B;
   if ( pA && pObj )  {
     try {
@@ -269,7 +284,7 @@ LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
 
 /// Connect the output file to the service with open mode.
 StatusCode 
-LHCb::RawDataCnvSvc::connectOutput(CSTR    outputFile,
+RawDataCnvSvc::connectOutput(CSTR    outputFile,
                                    CSTR    openMode) 
 {
   m_wrFlag = false;
@@ -287,7 +302,7 @@ LHCb::RawDataCnvSvc::connectOutput(CSTR    outputFile,
 }
 
 /// Connect the input file to the service with READ mode
-StatusCode LHCb::RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
+StatusCode RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
   FileMap::const_iterator it = m_fileMap.find(fname);
   if ( it == m_fileMap.end() )   {
     iodesc = openIO(fname, "READ");
@@ -302,8 +317,7 @@ StatusCode LHCb::RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
 }
 
 /// Commit pending output.
-StatusCode LHCb::RawDataCnvSvc::commitOutput(CSTR , bool doCommit ) 
-{
+StatusCode RawDataCnvSvc::commitOutput(CSTR , bool doCommit )   {
   if ( doCommit && m_wrFlag )  {
     if ( m_current != m_fileMap.end() )   {
       long typ = repSvcType();
@@ -326,19 +340,19 @@ StatusCode LHCb::RawDataCnvSvc::commitOutput(CSTR , bool doCommit )
 }
 
 /// Commit output to buffer manager
-StatusCode LHCb::RawDataCnvSvc::commitDescriptors(void* /* ioDesc */)  {
+StatusCode RawDataCnvSvc::commitDescriptors(void* /* ioDesc */)  {
   return error("Event descriptor output is not implemented for this class!");
 }
 
 /// Convert the transient object to the requested representation.
-StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress) 
+StatusCode RawDataCnvSvc::createRep(DataObject* pObj, IOpaqueAddress*& refpAddr) 
 {
-  if ( pObject )  {
+  if ( pObj )  {
     if ( m_current != m_fileMap.end() )   {
-      IRegistry* reg = pObject->registry();
+      IRegistry* reg = pObj->registry();
       std::string spar[]   = {(*m_current).first,reg->identifier()};
       unsigned long ipar[] = {0,0};
-      return createAddress(repSvcType(),pObject->clID(),spar,ipar,refpAddress);
+      return createAddress(repSvcType(),pObj->clID(),spar,ipar,refpAddr);
     }
     return error("createRep> Cannot write object: No output file is connected!");
   }
@@ -347,7 +361,7 @@ StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& 
 
 /// Resolve the references of the converted object. 
 StatusCode 
-LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pObj */) 
+RawDataCnvSvc::fillRepRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pObj */) 
 {
   if ( m_current != m_fileMap.end() )   {
     m_wrFlag = true;
@@ -357,7 +371,7 @@ LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pOb
 }
 
 /// Create a Generic address using explicit arguments to identify a single object.
-StatusCode LHCb::RawDataCnvSvc::createAddress(long typ, 
+StatusCode RawDataCnvSvc::createAddress(long typ, 
                                               const CLID& clid, 
                                               const std::string* par, 
                                               const unsigned long* ip,
@@ -369,27 +383,24 @@ StatusCode LHCb::RawDataCnvSvc::createAddress(long typ,
   return StatusCode::SUCCESS;
 }
 
-void* LHCb::RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
+void* RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
   MsgStream log(msgSvc(), name());
   MDFMapEntry* ent = new MDFMapEntry;
   ent->name = fname;
   if ( strncasecmp(mode.c_str(),"N",1)==0 || strncasecmp(mode.c_str(),"REC",3)==0 )  {
-    ent->con = StreamDescriptor::connect(fname);
-    if ( ent->con.ioDesc > 0 )  {
+    ent->connection = new RawDataConnection(this,fname);
+    if ( m_ioMgr->connectWrite(ent->connection,IDataConnection::RECREATE,"MDF").isSuccess() )  {
       log << MSG::INFO << "Opened(NEW)  MDF stream:" << ent->name
           << " ID:" << (void*)ent << endmsg;
       return ent;
     }
   }
   else if ( strncasecmp(mode.c_str(),"O",1)==0 || strncasecmp(mode.c_str(),"REA",3)==0 )  {
-    ent->bind = StreamDescriptor::bind(fname);
-    if ( ent->bind.ioDesc > 0 )  {
-      ent->con = StreamDescriptor::accept(ent->bind);
-      if ( ent->con.ioDesc > 0 )  {
-        log << MSG::INFO << "Opened(READ) MDF stream:" << ent->name 
-            << " ID:" << (void*)ent << endmsg;
-        return ent;
-      }
+    ent->connection = new RawDataConnection(this,fname);
+    if ( m_ioMgr->connectRead(false,ent->connection).isSuccess() )  {
+      log << MSG::INFO << "Opened(READ) MDF stream:" << ent->name 
+          << " ID:" << (void*)ent << endmsg;
+      return ent;
     }
   }
   error("Unknown openmode "+mode+" for MDF file :"+fname);
@@ -397,15 +408,10 @@ void* LHCb::RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
   return 0;
 }
 
-StatusCode LHCb::RawDataCnvSvc::closeIO(void* ioDesc)  const {
+StatusCode RawDataCnvSvc::closeIO(void* ioDesc)  const {
   MDFMapEntry* ent = (MDFMapEntry*)ioDesc;
   if ( ent )  {
-    if ( ent->bind.ioDesc > 0 )  {
-      StreamDescriptor::close(ent->bind);
-    }
-    if ( ent->con.ioDesc > 0 )  {
-      StreamDescriptor::close(ent->con);
-    }
+    m_ioMgr->disconnect(ent->connection).ignore();
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "Closed MDF stream:" << ent->name
         << " ID:" << (void*)ent << endmsg;
@@ -415,19 +421,17 @@ StatusCode LHCb::RawDataCnvSvc::closeIO(void* ioDesc)  const {
 }
 
 /// Read raw byte buffer from input stream
-StatusCode LHCb::RawDataCnvSvc::readBuffer(void* const ioDesc, void* const data, size_t len)  {
+StatusCode RawDataCnvSvc::readBuffer(void* const ioDesc, void* const data, size_t len)  {
   MDFMapEntry* ent = (MDFMapEntry*)ioDesc;
-  if ( ent && ent->con.ioDesc > 0 ) {
-    if ( StreamDescriptor::read(ent->con,data,len) )  {
-      return StatusCode::SUCCESS;
-    }
+  if ( ent && ent->connection > 0 ) {
+    return m_ioMgr->read(ent->connection,data,len);
   }
   return StatusCode::FAILURE;
 }
 
 /// Read raw banks
 StatusCode 
-LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& result)
+RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& result)
 {
   void* iodesc = 0;
   const std::string* par = pAddr->par();
@@ -435,8 +439,8 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& r
   if ( sc.isSuccess() )  {
     long long offset = pAddr->fileOffset();
     MDFMapEntry* ent = (MDFMapEntry*)iodesc;
-    if ( ent->con.ioDesc > 0 )  {
-      if ( StreamDescriptor::seek(ent->con, offset, SEEK_SET) != -1 )  {
+    if ( !ent->connection )  {
+      if ( m_ioMgr->seek(ent->connection, offset, SEEK_SET) != -1 )  {
         setupMDFIO(msgSvc(),dataProvider());
         result = readBanks(ent);
         if ( result.first > 0 )  {
@@ -452,10 +456,10 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& r
 }
 
 /// Write data block to stream
-StatusCode LHCb::RawDataCnvSvc::writeBuffer(void* iodesc, const void* data, size_t len)   {
+StatusCode RawDataCnvSvc::writeBuffer(void* iodesc, const void* data, size_t len)   {
   MDFMapEntry* ent = (MDFMapEntry*)iodesc;
-  if ( ent && ent->con.ioDesc > 0 )  {
-    if ( StreamDescriptor::write(ent->con, data, len) )  {
+  if ( ent && ent->connection )  {
+    if ( m_ioMgr->write(ent->connection, data, len).isSuccess() )  {
       return StatusCode::SUCCESS;
     }
     return error("Cannot write data record: [Invalid I/O operation]");

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.5 2006-10-05 16:38:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.6 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -11,82 +11,96 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiUtils/IIODataManager.h"
+#include "MDF/RawDataConnection.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataAddress.h"
-#include "MDF/StorageTypes.h"
 #include "MDF/MIFWriter.h"
 #include "MDF/MIFHeader.h"
 #include "Event/RawEvent.h"
 #include <cerrno>
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MIFWriter)
 
-typedef std::pair<LHCb::MIFHeader*,LHCb::MIFHeader::Event*> MIFDesc;
+using namespace LHCb;
+using namespace Gaudi;
+typedef std::pair<MIFHeader*,MIFHeader::Event*> MIFDesc;
 
 /// Standard algorithm constructor
-LHCb::MIFWriter::MIFWriter(const std::string& nam, ISvcLocator* svc)
-: Algorithm(nam, svc)
+MIFWriter::MIFWriter(const std::string& nam, ISvcLocator* svc)
+: Algorithm(nam, svc), m_ioMgr(0), m_connection(0)
 {
-  declareProperty("Connection", m_connectParams="");
+  declareProperty("Connection",  m_connectParams="");
+  declareProperty("DataManager", m_ioMgrName="IODataManager");
 }
 
 /// Standard Destructor
-LHCb::MIFWriter::~MIFWriter()     {
+MIFWriter::~MIFWriter()     {
 }
 
 /// Initialize
-StatusCode LHCb::MIFWriter::initialize()   {
+StatusCode MIFWriter::initialize()   {
   MsgStream log(msgSvc(), name());
-  m_connection = Descriptor::connect(m_connectParams);
-  if ( m_connection.ioDesc > 0 )  {
+  StatusCode status = service(m_ioMgrName, m_ioMgr);
+  if( !status.isSuccess() ) {
+    log << MSG::ERROR 
+        << "Unable to localize interface IID_IIODataManager from service:" 
+        << m_ioMgrName << endreq;
+    return status;
+  }
+  m_connection = new RawDataConnection(this,m_connectParams);
+  status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
+  if ( m_connection->isConnected() )
     log << MSG::INFO << "Received event request connection." << endmsg;
-  }
-  else {
+  else
     log << MSG::INFO << "FAILED receiving event request connection." << endmsg;
-  }
-  return (m_connection.ioDesc > 0) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return m_connection->isConnected() ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 /// Finalize
-StatusCode LHCb::MIFWriter::finalize() {
-  Descriptor::close(m_connection);
+StatusCode MIFWriter::finalize() {
+  if ( m_ioMgr )  {
+    m_ioMgr->disconnect(m_connection).ignore();
+    delete m_connection;
+    m_ioMgr->release();
+    m_ioMgr = 0;
+  }
   return StatusCode::SUCCESS;
 }
 
 // Execute procedure
-StatusCode LHCb::MIFWriter::execute()    {
+StatusCode MIFWriter::execute()    {
   SmartDataPtr<DataObject> raw(eventSvc(),"/Event/DAQ/RawEvent");
   if ( raw )  {
     IRegistry* pReg = raw->registry();
     if ( pReg )  {
       RawDataAddress* pA = dynamic_cast<RawDataAddress*>(pReg->address());
       if ( pA )  {
-        const std::string& fname = pA->par()[0];
-        int fid = LHCb::genChecksum(1,fname.c_str(),fname.length()+1);
         char memory[1024];
+        const std::string& dsn = pA->par()[0];
+        int fid = genChecksum(1,dsn.c_str(),dsn.length()+1);
         FidMap::const_iterator i = m_fidMap.find(fid);
         if ( i == m_fidMap.end() )   {
           MsgStream log(msgSvc(),name());
-          m_fidMap.insert(std::make_pair(fid,fname));
-          MIFHeader* hdr = MIFHeader::create(memory, fname, fid);
-          if ( !Descriptor::write(m_connection, hdr, hdr->totalSize()) )  {
-            log << MSG::ERROR << "Failed to write File record for " << fname << endmsg;
+          m_fidMap.insert(std::make_pair(fid,dsn));
+          MIFHeader* hdr = MIFHeader::create(memory, dsn, fid);
+          if ( !m_ioMgr->write(m_connection, hdr, hdr->totalSize()).isSuccess() )  {
+            log << MSG::ERROR << "Failed to write File record for " << dsn << endmsg;
             return StatusCode::FAILURE;
           }
           log << MSG::INFO << "Using FileID " << std::hex << std::setw(8) << fid 
-              << " for '" << fname << "'" << endmsg;
+              << " for '" << dsn << "'" << endmsg;
           i = m_fidMap.find(fid);
         }
-        if ( fname != (*i).second )  {
+        if ( dsn != (*i).second )  {
           MsgStream log(msgSvc(),name());
           log << MSG::ERROR << "MDF file name clash! cannot write MIF." << std::endl
-            << "FileID:" << std::hex << std::setw(8) << fid << " is hashed by '" << fname 
+            << "FileID:" << std::hex << std::setw(8) << fid << " is hashed by '" << dsn 
             << "' and by '" << (*i).second << "'" << endmsg;
           return StatusCode::FAILURE;
         }
         MIFDesc dsc = MIFHeader::create<MIFHeader::Event>(memory, fid, MIFHeader::MIF_EVENT);
         dsc.second->setOffset(pA->fileOffset());
-        return Descriptor::write(m_connection, dsc.first, dsc.first->totalSize())
-          ? StatusCode::SUCCESS : StatusCode::FAILURE;
+        return m_ioMgr->write(m_connection, dsc.first, dsc.first->totalSize());
       }
     }
   }

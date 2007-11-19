@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.7 2007-04-20 12:40:25 cattanem Exp $
+// $Id: MIFSelector.cpp,v 1.8 2007-11-19 19:27:32 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -13,8 +13,10 @@
 #include "MDF/MIFHeader.h"
 #include "MDF/MDFIO.h"
 #include "MDF/RawEventHelpers.h"
+#include "MDF/RawDataConnection.h"
 #include "MDF/RawDataSelector.h"
 #include <map>
+#include <memory>
 
 /*
  *  LHCb namespace declaration
@@ -45,17 +47,14 @@ namespace LHCb  {
     *  @version 1.0
     */
   class MIFContext : public RawDataSelector::LoopContext, protected MDFIO {
+    typedef Gaudi::IDataConnection Connection;
+    typedef std::map<int,Connection*> FidMap;
+
     long long            m_fileOffset;
     std::pair<char*,int> m_data;
     StreamBuffer         m_buff;
     MIFHeader*           m_header;
-    struct MDFMapEntry  {
-      std::string                name;
-      StreamDescriptor::Access   bind;
-      StreamDescriptor::Access   con;
-    };
     const MIFSelector*   m_mifSel;
-    typedef std::map<int,MDFMapEntry*> FidMap;
     FidMap               m_fidMap;
     int                  m_mifFID;
     IMessageSvc*         m_msg;
@@ -86,23 +85,24 @@ namespace LHCb  {
     /// Raw data buffer (if it exists)
     virtual std::pair<char*,int> data() const       { return m_data;           }
   };
-
 }
 
+using namespace LHCb;
+using namespace Gaudi;
+
 /// Create a new event loop context
-StatusCode LHCb::MIFSelector::createContext(Context*& refpCtxt) const {
+StatusCode MIFSelector::createContext(Context*& refpCtxt) const {
   refpCtxt = new MIFContext(this);
   return StatusCode::SUCCESS;
 }
 
 /// Standard destructor 
-LHCb::MIFContext::~MIFContext()  { 
+MIFContext::~MIFContext()  { 
   delete [] (char*)m_header;
   for(FidMap::iterator i=m_fidMap.begin(); i!=m_fidMap.end();++i)  {
-    MDFMapEntry* ent = (*i).second;
-    DSC::close(ent->con);
-    DSC::close(ent->bind);
-    delete ent;
+    Connection* c = (*i).second;
+    m_ioMgr->disconnect(c);
+    delete c;
     (*i).second = 0;
   }
   m_fidMap.clear();
@@ -110,28 +110,18 @@ LHCb::MIFContext::~MIFContext()  {
 
 /// Read raw byte buffer from input stream
 StatusCode 
-LHCb::MIFContext::readBuffer(void* const ioDesc, void* const data, size_t len)  
-{
-  DSC::Access* ent = (DSC::Access*)ioDesc;
-  if ( ent && ent->ioDesc > 0 ) {
-    if ( StreamDescriptor::read(*ent,data,len) )  {
-      return StatusCode::SUCCESS;
-    }
-  }
-  return StatusCode::FAILURE;
+MIFContext::readBuffer(void* const ioDesc, void* const data, size_t len) {
+  return m_ioMgr->read((IDataConnection*)ioDesc,data,len);
 }
 
-StatusCode LHCb::MIFContext::connect(const std::string& spec)  {
-  int fid = LHCb::genChecksum(1,spec.c_str(),spec.length()+1);
+StatusCode MIFContext::connect(const std::string& spec)  {
+  int fid = genChecksum(1,spec.c_str(),spec.length()+1);
   FidMap::iterator i = m_fidMap.find(fid);
   if ( i == m_fidMap.end() )  {
-    StatusCode sc = RawDataSelector::LoopContext::connect(spec);
+    std::auto_ptr<IDataConnection> c(new RawDataConnection(m_sel,spec));
+    StatusCode sc = m_ioMgr->connectRead(false,c.get());
     if ( sc.isSuccess() )  {
-      MDFMapEntry* ent = new MDFMapEntry;
-      ent->name = spec;
-      ent->bind = m_bindDsc;
-      ent->con  = m_accessDsc;
-      m_fidMap.insert(std::make_pair(fid,ent));
+      m_fidMap.insert(std::make_pair(fid,c.release()));
       m_mifFID = fid;
       return sc;
     }
@@ -143,7 +133,7 @@ StatusCode LHCb::MIFContext::connect(const std::string& spec)  {
 }
 
 /// Receive event and update communication structure
-StatusCode LHCb::MIFContext::receiveData(IMessageSvc* msg)  {
+StatusCode MIFContext::receiveData(IMessageSvc* msg)  {
   char buff[1024];
   MIFHeader *hdr = (MIFHeader*)buff;
   FidMap::iterator i = m_fidMap.find(m_mifFID);
@@ -151,10 +141,10 @@ StatusCode LHCb::MIFContext::receiveData(IMessageSvc* msg)  {
   m_data.first = 0;
   m_data.second = 0;
   if ( i != m_fidMap.end() )  {
-    MDFMapEntry* ent = (*i).second;
+    Connection* c = (*i).second;
 Next:
-    if ( StreamDescriptor::read(ent->con,hdr,sizeof(int)+2*sizeof(char)) )  {
-      if ( StreamDescriptor::read(ent->con,buff+sizeof(int)+2*sizeof(char),hdr->size()) )  {
+    if ( m_ioMgr->read(c,hdr,sizeof(int)+2*sizeof(char)).isSuccess() )  {
+      if ( m_ioMgr->read(c,buff+sizeof(int)+2*sizeof(char),hdr->size()).isSuccess() )  {
         FidMap::iterator i = m_fidMap.find(hdr->fid());
         if ( i == m_fidMap.end() )  {
           if ( hdr->type() == MIFHeader::MIF_FID )  {
@@ -173,10 +163,10 @@ Next:
             return StatusCode::FAILURE;
           }
         }
-        ent = (*i).second;
+        c = (*i).second;
       }
-      m_fileOffset = StreamDescriptor::seek(ent->con,0,SEEK_CUR);
-      m_data = readBanks(&ent->con, 0 == m_fileOffset);
+      m_fileOffset = m_ioMgr->seek(c,0,SEEK_CUR);
+      m_data = readBanks(c, 0 == m_fileOffset);
       if ( m_data.second > 0 )  {
         return StatusCode::SUCCESS;
       }
@@ -186,7 +176,7 @@ Next:
 }
 
 /// Skip N events
-StatusCode LHCb::MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
+StatusCode MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
   for(int i=0; i<numEvt; ++i)  {
   }
   return StatusCode::FAILURE;

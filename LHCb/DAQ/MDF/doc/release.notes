@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-11-04 - Markus Frank
+  - Implemement connection to XML file catalog from GaudiUtils
+    New files: RawDataConnection.h/cpp
+
 !========================= MDF v2r6 2007-11-07 ===============================
 ! 2007-11-07 - Markus Frank
  - Fix 64 bit checksum creation bug for hash32

@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.11 2007-04-20 12:40:25 cattanem Exp $
+// $Id: MDFSelector.cpp,v 1.12 2007-11-19 19:27:32 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -8,11 +8,15 @@
 //	Author     : M.Frank
 //====================================================================
 
-// Include files
-#include "MDF/MDFHeader.h"
+// Framework include files
 #include "MDF/MDFIO.h"
+#include "MDF/MDFHeader.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataSelector.h"
+#include "GaudiUtils/IIODataManager.h"
+
+// C++ include files
+#include <cctype>
 
 /*
  *  LHCb namespace declaration
@@ -25,6 +29,7 @@ namespace LHCb  {
   *  @version 1.0
   */
   class MDFContext : public RawDataSelector::LoopContext, protected MDFIO {
+    /// I/O Buffer holder
     StreamBuffer         m_buff;
   public:
     /// Standard constructor
@@ -40,19 +45,13 @@ namespace LHCb  {
     }
     /// Read raw byte buffer from input stream
     StatusCode readBuffer(void* const ioDesc, void* const data, size_t len)  {
-      DSC::Access* ent = (DSC::Access*)ioDesc;
-      if ( ent && ent->ioDesc > 0 ) {
-        if ( StreamDescriptor::read(*ent,data,len) )  {
-          return StatusCode::SUCCESS;
-        }
-      }
-      return StatusCode::FAILURE;
+      return m_ioMgr->read(m_connection, data, len);
     }
     /// Receive event and update communication structure
     virtual StatusCode receiveData(IMessageSvc* msg)  {
-      m_fileOffset = StreamDescriptor::seek(m_accessDsc,0,SEEK_CUR);
+      m_fileOffset = m_ioMgr->seek(m_connection,0,SEEK_CUR);
       setupMDFIO(msg,0);
-      m_data = readBanks(&m_accessDsc, 0 == m_fileOffset);
+      m_data = readBanks(m_connection, 0 == m_fileOffset);
       if ( m_data.second > 0 )  {
         return StatusCode::SUCCESS;
       }
@@ -68,12 +67,13 @@ namespace LHCb  {
       }
       return sc;
     }
+    /// Skip a single record in the file
     StatusCode skipRecord()  {
       MDFHeader h;
-      StatusCode sc = readBuffer(&m_accessDsc, &h, 3*sizeof(int));
+      StatusCode sc = m_ioMgr->read(m_connection, &h, 3*sizeof(int));
       if ( sc.isSuccess() )  {
         int len = h.recordSize()-3*sizeof(int);
-        m_fileOffset = StreamDescriptor::seek(m_accessDsc,len,SEEK_CUR);
+        m_fileOffset = m_ioMgr->seek(m_connection,len,SEEK_CUR);
         if ( m_fileOffset == -1 ) sc = StatusCode::FAILURE;
       }
       return sc;
@@ -94,8 +94,8 @@ namespace LHCb  {
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createContext(Context*& refpCtxt) const {
-      char c = m_ignoreChecksum[0];
-      refpCtxt = new MDFContext(this,c=='y'||c=='Y');
+      char c = ::toupper(m_ignoreChecksum[0]);
+      refpCtxt = new MDFContext(this,c=='Y'||c=='T'); // YES or TRUE
       return StatusCode::SUCCESS;
     }
     /// Service Constructor

@@ -1,8 +1,10 @@
 ApplicationMgr.Dlls                  = { "MDF" };
-ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump","LHCb::MIFWriter/Writer" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+FileCatalog.Catalogs                 = { "xmlcatalog_file:C1.xml" };
+//
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
 Dump.DumpData                        = 0;
@@ -13,6 +15,7 @@ StoreExplorerAlg.PrintFreq           = 0.01;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
   "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",

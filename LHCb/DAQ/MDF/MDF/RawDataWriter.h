@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.h,v 1.5 2007-08-29 08:22:12 apuignav Exp $
+// $Id: RawDataWriter.h,v 1.6 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  RawDataWriter.h
 //	--------------------------------------------------------------------
@@ -9,8 +9,12 @@
 #ifndef MDF_RAWDATAWRITER_H
 #define MDF_RAWDATAWRITER_H
 
+// Framework include files
 #include "GaudiKernel/Algorithm.h"
 #include "MDF/MDFIO.h"
+
+// Forward declarations
+namespace Gaudi {  class IIODataManager;     }
 
 /*
  *    LHCb namespace
@@ -27,22 +31,31 @@ namespace LHCb    {
     */
   class RawDataFile  {
     /// Pointer to checksum object
-    void*         m_md5;
+    void*               m_md5;
     /// Stream descriptor (Initializes networking)
-    void*         m_connection;
-    long long int m_bytesWritten;
-    std::string   m_name;
-    std::string   m_md5Sum;
-    unsigned int  m_runNumber;
-    unsigned int  m_firstOrbit;
-    unsigned int  m_lastOrbit;
-    time_t        m_closeStamp;
-    unsigned int  m_eventCounter;
+    RawDataConnection*  m_connection;
+    long long int       m_bytesWritten;
+    std::string         m_name;
+    std::string         m_md5Sum;
+    unsigned int        m_runNumber;
+    unsigned int        m_firstOrbit;
+    unsigned int        m_lastOrbit;
+    time_t              m_closeStamp;
+    unsigned int        m_eventCounter;
     /// Temporary Streambuffer to hold uncompressed data
-    StreamBuffer  m_data;
+    StreamBuffer        m_data;
+    /// Reference to file manager service
+    Gaudi::IIODataManager* m_ioMgr;
+    IInterface*         m_owner;
   public:
-    RawDataFile(const std::string& fname, bool md5, unsigned int run_no, unsigned int orb);
-    // Standard destructor
+    /// Initializing constructor
+    RawDataFile(Gaudi::IIODataManager* mgr, 
+                IInterface*            owner,
+                const std::string&     fname,
+                bool                   md5,
+                unsigned int           run_no,
+                unsigned int           orb);
+    /// Standard destructor
     virtual ~RawDataFile();
     /// Write byte buffer to output stream
     StatusCode writeBuffer(const void* data, size_t len);
@@ -78,9 +91,13 @@ namespace LHCb    {
 
   protected:
     typedef std::vector<RawDataFile*>  Connections;
+    /// Counter of bytes written
     long long int m_bytesWritten;
+    /// Number of mega bytes to be written to file
     int           m_MbytesPerFile;
+    /// File number counter
     int           m_fileNo;
+    /// Connection array
     Connections   m_connections;
     /// Input parameters for connection parameters
     std::string   m_volume, m_stream, m_connect, m_connectParams;
@@ -94,6 +111,10 @@ namespace LHCb    {
     int           m_closeTMO;
 		/// Location of the raw banks in the TES
 		std::string		m_bankLocation;
+    /// Reference to file manager service
+    Gaudi::IIODataManager* m_ioMgr;
+    /// Name of the IO manager service
+    std::string   m_ioMgrName;
 
   protected:
     /// Access output file according to runnumber and orbit
@@ -132,7 +153,8 @@ namespace LHCb    {
       * @return  Status code indicating success or failure.
       */
     StatusCode writeBuffer(void* const iodesc, const void* data, size_t len);
-    /// Execute procedure
+
+    /// Algorithm overlay: Execute procedure
     StatusCode execute();
   };
 }      // End namespace LHCb

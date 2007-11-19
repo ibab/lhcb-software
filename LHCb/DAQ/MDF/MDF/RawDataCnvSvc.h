@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.h,v 1.8 2007-08-29 08:22:12 apuignav Exp $
+// $Id: RawDataCnvSvc.h,v 1.9 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -9,14 +9,18 @@
 #ifndef MDF_RAWDATACNVSVC_H
 #define MDF_RAWDATACNVSVC_H
 
+// Framework include files
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "MDF/MDFIO.h"
+
+// C++ include files
 #include <map>
 
 // Forward declarations
 class IDataManagerSvc;
 class IRegistry;
+namespace Gaudi {  class IIODataManager;     }
 
 /*
  *    LHCb namespace declaration
@@ -41,20 +45,26 @@ namespace LHCb  {
     typedef const std::string&            CSTR;
     typedef std::vector<RawBank*>         Banks;
     typedef std::map<std::string, void*>  FileMap;
-    FileMap::iterator m_current;
-    FileMap           m_fileMap;
-    bool              m_wrFlag;
+    FileMap::iterator   m_current;
+    /// Mapping of accesed files
+    FileMap             m_fileMap;
+    bool                m_wrFlag;
     /// Compression algorithm identifier
-    int               m_compress;
+    int                 m_compress;
     /// Flag to create checksum
-    int               m_genChecksum;
+    int                 m_genChecksum;
     /// Streambuffer to hold uncompressed data
-    StreamBuffer      m_data;
+    StreamBuffer        m_data;
     /// Reference to data manager interface
-    IDataManagerSvc*  m_dataMgr;
-    int               m_evtsBefore, m_evtsAfter;
+    IDataManagerSvc*    m_dataMgr;
+    /// Properties for time alignment events
+    int                 m_evtsBefore, m_evtsAfter;
 		/// Location of the raw banks in the TES
-		std::string		m_bankLocation;
+		std::string	        m_bankLocation;
+    /// Reference to file manager service
+    Gaudi::IIODataManager* m_ioMgr;
+    /// Name of the IO manager service
+    std::string         m_ioMgrName;
 
     /// Helper to print errors and return bad status
     StatusCode error(CSTR msg)  const;

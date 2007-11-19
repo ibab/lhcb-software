@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.13 2007-04-20 12:40:25 cattanem Exp $
+// $Id: RawDataSelector.h,v 1.14 2007-11-19 19:27:32 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,17 +10,17 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
+#include "GaudiUtils/IIODataManager.h"
 #include "MDF/StreamDescriptor.h"
 
 // Forward declarations
-namespace Gaudi  { class IFileCatalogSvc; }
+namespace Gaudi { class IIODataManager; }
 
 /*
  *  LHCb namespace declaration
@@ -29,11 +29,13 @@ namespace LHCb  {
 
   // Forward declarations
   class RawBank;
+  class RawDataConnection;
 
   /** @class RawDataSelector
     */
   class RawDataSelector : public Service, virtual public IEvtSelector  {
   public:
+
     /** @class LoopContext
       *
       *  @author  M.Frank
@@ -41,15 +43,18 @@ namespace LHCb  {
       */
     class LoopContext : public IEvtSelector::Context {
     protected:
-      typedef StreamDescriptor   DSC;
+      /// Owning event selector
       const RawDataSelector*     m_sel;
-      std::string                m_fid;
+      /// Connection specs of current file
       std::string                m_conSpec;
-      DSC::Access                m_bindDsc;
-      DSC::Access                m_accessDsc;
+      /// Data holder
       std::pair<char*,int>       m_data;
+      /// Current file offset
       long long                  m_fileOffset;
-
+      /// Pointer to file manager service
+      Gaudi::IIODataManager*        m_ioMgr;
+      /// Pointer to file connection
+      Gaudi::IDataConnection*    m_connection;
     public:
       /// Standard constructor
       LoopContext(const RawDataSelector* pSelector);
@@ -57,8 +62,6 @@ namespace LHCb  {
       virtual ~LoopContext()                    { close();              }
       /// IEvtSelector::Context overload; context identifier
       virtual void* identifier() const          { return (void*)m_sel;  }
-      /// File identifier (when used with catalog)
-      virtual const std::string& fid() const    { return m_fid;         }
       /// Connection specification
       const std::string& specs() const          { return m_conSpec;     }
       /// Access to file offset(if possible)
@@ -75,8 +78,11 @@ namespace LHCb  {
       virtual void close();
     };
 
-    /// IService implementation: Db event selector override
+    /// IService implementation: initialize the service
     virtual StatusCode initialize();
+
+    /// IService implementation: finalize the service
+    virtual StatusCode finalize();
 
     // IInterface implementation: query interfaces
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
@@ -156,6 +162,9 @@ namespace LHCb  {
     */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
+    /// Access to the file manager
+    Gaudi::IIODataManager* fileMgr()  const  {   return m_ioMgr; }
+
     /// Service Constructor
     RawDataSelector( const std::string& name, ISvcLocator* svcloc );
 
@@ -163,19 +172,18 @@ namespace LHCb  {
     virtual ~RawDataSelector()  {}
 
   protected:
-    typedef Gaudi::IFileCatalogSvc Catalog;
 
     // Data Members
     /// ROOT class ID in TES
-    CLID        m_rootCLID;
+    CLID                m_rootCLID;
     /// Name of ROOT element in TES
-    std::string m_rootName;
-    /// Property: name of the filecatalog service
-    std::string m_catalogName;
-    /// Pointer to file catalog service
-    Catalog*    m_catalog;
+    std::string         m_rootName;
+    /// Property: name of the file manager service
+    std::string         m_ioMgrName;
+    /// Pointer to file manager service
+    Gaudi::IIODataManager* m_ioMgr;
     /// Property: First event to process
-    int         m_skipEvents;
+    int                 m_skipEvents;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

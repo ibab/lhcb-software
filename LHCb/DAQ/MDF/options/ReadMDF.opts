@@ -1,5 +1,6 @@
-ApplicationMgr.Dlls                  = { "MDF" };
+ApplicationMgr.Dlls                  = { "MDF", "GaudiUtils" };
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;
@@ -13,13 +14,6 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
-EventSelector.Input                  = {
-  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector'"
-};
 // Check legacy data:
 EventSelector.Input                  = {
   "DATA='file://VeloTestbeam/VeloTestbeam.dat' SVC='LHCb::MDFSelector'",
@@ -36,6 +30,12 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector' NSkip='500'",
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
 };
+<<<<<<< ReadMDF.opts
 EventSelector.Input                  = {
-  "DATA='file:///afs/cern.ch/user/f/frankb/cmtuser/RichCommissioning-2007.11.01-10.mdf' SVC='LHCb::MDFSelector'"
+  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector'"
 };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };

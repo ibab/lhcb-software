@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.5 2007-08-29 08:22:12 apuignav Exp $
+// $Id: MDFWriter.h,v 1.6 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -9,12 +9,17 @@
 #ifndef MDF_MDFWRITER_H
 #define MDF_MDFWRITER_H
 
+// Framework include files
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Algorithm.h"
-#include "MDF/StreamDescriptor.h"
 #include "MDF/MDFIO.h"
 
+// Forward declarations
 class TMD5;
+namespace Gaudi { 
+  class IIODataManager; 
+  class IDataConnection;
+}
 
 /*
  *    LHCb namespace
@@ -30,13 +35,16 @@ namespace LHCb    {
     * @version: 1.0
     */
   class MDFWriter : public Algorithm, protected MDFIO   {
+  public:
+    typedef Gaudi::IDataConnection Connection;
 
   protected:
-    typedef LHCb::StreamDescriptor   Descriptor;
-    typedef Descriptor::Access       Access;
-
+    /// Reference to file manager service
+    Gaudi::IIODataManager* m_ioMgr;
+    /// Name of the IO manager service
+    std::string   m_ioMgrName;
     /// Stream descriptor (Initializes networking)
-    Access        m_connection;
+    Connection*   m_connection;
     /// Input parameters for connection parameters
     std::string   m_connectParams;
     /// Compression algorithm identifier
@@ -63,10 +71,7 @@ namespace LHCb    {
       *
       * @return  Pointer to allocated memory space
       */
-    virtual std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
-      m_data.reserve(len);
-      return std::pair<char*,int>(m_data.data(), m_data.size());
-    }
+    virtual std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len);
 
     /** Write byte buffer to output stream
       * @param[in] ioDesc Output IO descriptor       

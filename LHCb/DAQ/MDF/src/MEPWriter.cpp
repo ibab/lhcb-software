@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.5 2006-10-05 16:38:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.6 2007-11-19 19:27:32 frankb Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -9,6 +9,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiUtils/IIODataManager.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MEPWriter.h"
 #include "MDF/MEPEvent.h"
@@ -25,18 +26,18 @@ static void* extendBuffer(void* p, size_t len)   {
 }
 
 /// Standard algorithm constructor
-LHCb::MEPWriter::MEPWriter(const std::string& name, ISvcLocator* pSvcLocator)
+MEPWriter::MEPWriter(const std::string& name, ISvcLocator* pSvcLocator)
 : MDFWriter(name, pSvcLocator), m_evID(0)
 {
   declareProperty("PackingFactor",  m_packingFactor=20);
 }
 
 /// Standard Destructor
-LHCb::MEPWriter::~MEPWriter()     {
+MEPWriter::~MEPWriter()     {
 }
 
 /// Execute procedure
-StatusCode LHCb::MEPWriter::execute()    {
+StatusCode MEPWriter::execute()    {
   SmartDataPtr<RawEvent> raw(eventSvc(),"/Event/DAQ/RawEvent");
   if ( raw )  {
     StatusCode sc = StatusCode::SUCCESS;
@@ -45,7 +46,7 @@ StatusCode LHCb::MEPWriter::execute()    {
     if ( int(m_events.size()) == m_packingFactor )  {
       MEPEvent* me = 0;
       encodeMEP(m_events, 0x103, &m_data, extendBuffer, &me);
-      int res = Descriptor::write(m_connection,m_data.data(),me->size()+me->sizeOf());
+      int res = m_ioMgr->write(m_connection,m_data.data(),me->size()+me->sizeOf());
       if ( !res )  {
         MsgStream log(msgSvc(),name());
         log << MSG::ERROR << "Failed to write MEPS for event:"
