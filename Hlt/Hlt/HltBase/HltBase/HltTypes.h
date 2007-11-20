@@ -1,10 +1,11 @@
-// $Id: HltTypes.h,v 1.3 2007-11-15 14:34:29 graven Exp $
+// $Id: HltTypes.h,v 1.4 2007-11-20 12:46:18 hernando Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
 #include <vector>
 #include "HltBase/EFunctions.h"
 #include "HltBase/EDictionary.h"
+#include "HltBase/ERelations.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ContainedObject.h"
 // #include "Event/Track.h"
@@ -78,4 +79,17 @@ namespace Hlt
   typedef Hlt::DataSizeHolder< VertexContainer > HolderVertexContainer;
 
 };
+
+namespace Hlt {
+  
+  class KeyRelation : public Estd::IntRelation, public DataObject {
+  public:
+    KeyRelation(){inputPath = ""; targetPath = "";}
+    ~KeyRelation() {}
+  public:
+    std::string inputPath,targetPath;
+  };  
+}
+
+
 #endif // HLTBASE_HLTCONTAINERS_H

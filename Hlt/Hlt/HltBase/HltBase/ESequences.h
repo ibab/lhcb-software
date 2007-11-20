@@ -187,6 +187,21 @@ namespace Estd {
 namespace ELoop {
 
 
+  template <class INPUT, class OUTPUT>
+  inline void copy(const INPUT& c1, OUTPUT& c2) 
+  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
+
+  template <class INPUT, class OBJECT>
+  inline bool exist(const INPUT& cont, const OBJECT& obj ) {
+    return Estd::exist(cont.begin(),cont.end(),obj);
+  }
+  
+  template <class INPUT, class OBJECT>
+  inline bool extend(INPUT& cont, const OBJECT& obj) {
+    if (std::find(cont.begin(),cont.end(),obj) != cont.end()) return false;
+    cont.push_back(obj);
+    return true;
+  }
   //--- uni loops ---------
   template <class INPUT, class FUNCTION, class OUTPUT> 
   inline  void map(const INPUT& ci, 
@@ -211,10 +226,6 @@ namespace ELoop {
   
   //--- bi loops : reduced ---------
 
-  template <class INPUT, class OBJECT>
-  inline bool exist(const INPUT& cont, const OBJECT& obj ) {
-    return Estd::exist(cont.begin(),cont.end(),obj);
-  }
   
 
   template <class INPUT, class INPUT2, class FUNCTION, class COMPARATOR> 
@@ -281,9 +292,6 @@ namespace ELoop {
   inline size_t count(const INPUT& c1, const INPUT& c2) 
   {return Estd::count(c1.begin(),c1.end(),c2.begin(),c2.end());}
   
-  template <class INPUT, class OUTPUT>
-  inline void copy(const INPUT& c1, OUTPUT& c2) 
-  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
 
 };
 

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+! 2007-11-19 Jose A. Hernando
+   - KeyRelation in dict, and minor changes to Tf
+
 ! 2007-11-19 Gerhard Raven
    - EDictionary: use boost::any to avoid dynamic_cast altogether
    - HltFunctions: sort by pt: explicitly compare keys if-and-only-if 
