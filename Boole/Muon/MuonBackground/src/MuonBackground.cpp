@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.40 2007-10-17 11:28:52 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.41 2007-11-20 07:36:36 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -99,7 +99,11 @@ StatusCode MuonBackground::initialize() {
     return sc;
   }
   IProperty* algmgrProp;
-  algmgr->queryInterface( IID_IProperty, (void**)&algmgrProp );
+  sc=algmgr->queryInterface( IID_IProperty, (void**)&algmgrProp );
+  if( !sc.isSuccess() ) {
+    err() << "Failed to locate algManager i/f of AppMgr"<< endmsg;
+    return sc;
+  }
 
   StringProperty persType;
   persType.assign( algmgrProp->getProperty("HistogramPersistency") );
@@ -141,7 +145,8 @@ StatusCode MuonBackground::initialize() {
   sc=initializeParametrization();
   if(sc.isFailure())return sc;
   m_flatDistribution =new Rndm::Numbers; 
-  m_flatDistribution->initialize(randSvc(), Rndm::Flat(0.0,1.0));
+  sc=m_flatDistribution->initialize(randSvc(), Rndm::Flat(0.0,1.0));
+  if(sc.isFailure())return sc;
   debug()<<" type input "<<m_typeOfBackground<<endreq;
     debug()<<" safety factor "<<m_safetyFactor[0]<<
 	" "<<m_safetyFactor[1]<<" "<<m_safetyFactor[2]<<" "<<
@@ -185,12 +190,18 @@ StatusCode MuonBackground::initialize() {
     }
     else {
       IProperty* spillProp;
-      spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+      sc=spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+      if( !sc.isSuccess() ) {
+	warning()<<" Spillover problem"<<endreq;
+      }
       StringArrayProperty evtPaths;
       evtPaths.assign( spillProp->getProperty("PathList") );
       m_readSpilloverEvents = evtPaths.value().size();
       // Release the interface, no longer needed
-      spillAlg->release();
+      sc=spillAlg->release();
+      if( !sc.isSuccess() ) {
+        warning()<<" release problem"<<endmsg;
+      }
     }
 
     debug() << "number of spillover events read from aux stream "
@@ -202,7 +213,10 @@ StatusCode MuonBackground::initialize() {
   }
 
   // Release interface, no longer needed  
-  algmgr->release();
+  sc=algmgr->release();
+  if( !sc.isSuccess() ) {
+    warning()<<" release problem"<<endmsg;
+  }
   //initialize the detector
 
   return StatusCode::SUCCESS;
@@ -266,6 +280,9 @@ StatusCode MuonBackground::execute() {
             
             for(int hitID=0;hitID< hitToAdd;hitID++){            
               StatusCode asc=createHit(hitsContainer, station,multi,ispill);                  if(asc.isFailure())debug()<<"failing hit creation "<<endreq;      
+              if(asc.isFailure()){
+		warning()<<" error in creating hit "<<endmsg;
+              }   
             }
             if( m_histos ) {
               m_pointer1D[index]->fill(startingHits+0.00001,1.0);
@@ -309,8 +326,9 @@ StatusCode MuonBackground::execute() {
     debug()<<" starting saveing the ocntainer "<<path<<endreq;    
     debug()<<" number of total hit added "<<
       hitsContainer->size()<<endreq;
-    eventSvc()->registerObject(path,
+    sc=eventSvc()->registerObject(path,
                                hitsContainer);    
+    if(sc.isFailure())debug()<<" error registering object "<<endmsg;
     delete m_resultPointer;
     m_vertexList.clear();
     
@@ -755,7 +773,11 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
     StatusCode sc=initializeRNDDistribution1D(ySlice,distributions , 
                                 pointerToFlags,ymin, ymax);
     if(sc.isFailure())return sc;    
-    histoSvc()->unregisterObject( ySlice );
+    sc=histoSvc()->unregisterObject( ySlice );
+    if(sc.isFailure()){
+     warning()<<" problem in releasing the histo "<<endmsg;
+    }
+    
     delete ySlice;
   }  
   return StatusCode::SUCCESS;
@@ -1030,7 +1052,7 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
                                                 Gaudi::XYZPoint& exitGlobal,
                                                 DeMuonGasGap*& p_Gap)
 {
-  StatusCode sc=StatusCode::FAILURE;  
+  //StatusCode sc=StatusCode::FAILURE;  
   IDetectorElement::IDEContainer::iterator itGap;
   int countGap=0;
   p_Gap=NULL;
@@ -1047,29 +1069,29 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     float zhalfgap= gapBox->zHalfLength() ;
     float xhalfgap= gapBox->xHalfLength() ;
     float yhalfgap= gapBox->yHalfLength() ;
-    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
-           <<endmsg;    
+//    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
+//           <<endmsg;    
     Gaudi::XYZPoint gapcc=(p_Gap->geometry())->
       toGlobal(Gaudi::XYZPoint(0,0,0));
     
-    verbose()<<"glob gap pos "<<gapcc.x()<<" "<<gapcc.y()<<" "
-                <<gapcc.z()<<endreq;
+//    verbose()<<"glob gap pos "<<gapcc.x()<<" "<<gapcc.y()<<" "
+//                <<gapcc.z()<<endreq;
                 
     
     Gaudi::XYZPoint poslocal= 
       (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
     float zcenter=poslocal.z();
-    verbose()<<" input data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
-          <<zavegaps<<" "<<endmsg;    
-    verbose()<<"center gap "<<poslocal.x()<<" "<<poslocal.y()<<" "
-             <<poslocal.z()<<" "<<zcenter<<endmsg; 
+//    verbose()<<" input data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
+//          <<zavegaps<<" "<<endmsg;    
+//    verbose()<<"center gap "<<poslocal.x()<<" "<<poslocal.y()<<" "
+//             <<poslocal.z()<<" "<<zcenter<<endmsg; 
     //Gaudi::Transform3D matrixToLocal= (p_Gap->geometry())->matrix();
     //Gaudi::XYZPoint slopelocal=matrixToLocal*
     Gaudi::XYZPoint slopelocal=Gaudi::XYZPoint(xSlope,ySlope,1.0F);
     float zinf=-zhalfgap;    
     float zsup=+zhalfgap;
-    verbose()<<"local slopes "<<
-      slopelocal.x()<<" "<<slopelocal.y()<<" "<<slopelocal.z()<<endmsg;    
+//    verbose()<<"local slopes "<<
+//      slopelocal.x()<<" "<<slopelocal.y()<<" "<<slopelocal.z()<<endmsg;    
     float xentry=poslocal.x()+(zinf-zcenter)*
       (slopelocal.x()/slopelocal.z());
     float xexit=poslocal.x()+(zsup-zcenter)*
@@ -1091,10 +1113,10 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     if(yentry<ymin||yentry>ymax)correct=false;
     if(xexit<xmin||xexit>xmax)correct=false;
     if(yexit<ymin||yexit>ymax)correct=false;
-    verbose()<<"partial  "<<xentry<<" "<<yentry<<" "
-           <<xexit<<" "<<yexit<<" "<<correct<<endmsg;    
-    verbose()<<" correct "<<correct<<" "<<slopelocal.x()<<" "<<
-      slopelocal.y()<<endmsg;
+//    verbose()<<"partial  "<<xentry<<" "<<yentry<<" "
+//           <<xexit<<" "<<yexit<<" "<<correct<<endmsg;    
+//    verbose()<<" correct "<<correct<<" "<<slopelocal.x()<<" "<<
+//      slopelocal.y()<<endmsg;
     if(correct){
       float z1,z2;
       //then x
@@ -1119,18 +1141,18 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
       yentry=poslocal.y()+(slopelocal.y()/slopelocal.z())*(zmin-zcenter);  
       yexit=poslocal.y()+(slopelocal.y()/slopelocal.z())*(zmax-zcenter);
       //back to the global frame    
-      verbose()<<xentry<<" "<<yentry<<" "<<zmin<<endreq;
-      verbose()<<xexit<<" "<<yexit<<" "<<zmax<<endreq;      
+//      verbose()<<xentry<<" "<<yentry<<" "<<zmin<<endreq;
+//      verbose()<<xexit<<" "<<yexit<<" "<<zmax<<endreq;      
       entryGlobal=(p_Gap->geometry())->
         toGlobal(Gaudi::XYZPoint(xentry,yentry,zmin));
       exitGlobal=(p_Gap->geometry())->
         toGlobal(Gaudi::XYZPoint(xexit,yexit,zmax));
-      verbose()<<"global "<<entryGlobal.x()<<" "<<entryGlobal.y()<<" "<<entryGlobal.z()<<endreq;
-      verbose()<<"global "<<exitGlobal.x()<<" "<<exitGlobal.y()<<" "<<exitGlobal.z()<<endreq;
+//      verbose()<<"global "<<entryGlobal.x()<<" "<<entryGlobal.y()<<" "<<entryGlobal.z()<<endreq;
+//      verbose()<<"global "<<exitGlobal.x()<<" "<<exitGlobal.y()<<" "<<exitGlobal.z()<<endreq;
       
       return StatusCode::SUCCESS;
     }else return StatusCode::FAILURE;    
-  }else return sc;  
+  }else return StatusCode::FAILURE;  
 }
 
 
