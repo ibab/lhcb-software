@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+! 2007-11-20 - Alessia Satta
+ - fix for unchecked StatusCode 
 
 !======================== MuonAlgs v6r4 2007-06-08 =========================
 ! 2007-06-05 - Alessia Satta

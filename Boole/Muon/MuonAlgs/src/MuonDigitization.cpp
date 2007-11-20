@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.35 2007-06-08 15:37:05 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.36 2007-11-20 07:46:17 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -76,14 +76,26 @@ StatusCode MuonDigitization::initialize()
   }
   else {
     IProperty* spillProp;
-    spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+    sc=spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+    if( !sc.isSuccess() ) {
+      warning()<<" error in query interface "<<endmsg;
+    }
     StringArrayProperty evtPaths;
-    evtPaths.assign( spillProp->getProperty("PathList") );
+    sc=evtPaths.assign( spillProp->getProperty("PathList") );
+    if( !sc.isSuccess() ) {
+      warning()<<" problem in spliiover "<<endmsg;
+    }
     m_numberOfSpilloverEvents = evtPaths.value().size();
     // Release the interfaces no longer needed
-    spillAlg->release();
+    sc=spillAlg->release();
+    if( !sc.isSuccess() ) {
+      warning()<<" error releasing the interface"<<endmsg;
+    }
   }
-  algmgr->release();
+  sc=algmgr->release();
+  if( !sc.isSuccess() ) {
+    warning()<<" error releasing the alg magr"<<endmsg;
+  }
   info() << "number of spillover events read from aux stream "
       << m_numberOfSpilloverEvents << endmsg;
   m_numberOfEvents=m_numberOfSpilloverEvents+1;
@@ -113,7 +125,8 @@ StatusCode MuonDigitization::initialize()
   //                                                detSvc(), msgSvc());
   //debug()<<m_pGetInfo->getChamberPerRegion(0)<<endreq;
   debug()<<" ciao "<<endreq;
-  m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
+  sc=m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
+  if(sc.isFailure())warning()<<" error in flat ini"<<endmsg;
   debug()<<"due "<<endreq; 
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
   debug()<<" detectorResponseInitialized "<<endreq;
@@ -489,8 +502,11 @@ MuonDigitization::createInput(
             //info()<<" dete "<<m_muonDetector->getPhChannelNX(0,hitStation,hitRegion)<<
             //" "<<m_muonDetector->getPhChannelNY(0,hitStation,hitRegion)<<endreq;
             
-            m_muonDetector->getPCCenter(fe,hitChamber,hitStation, hitRegion ,
+            
+            StatusCode sc=m_muonDetector->
+                          getPCCenter(fe,hitChamber,hitStation, hitRegion ,
                                         xcenter, ycenter,zcenter);
+            if(sc.isFailure())warning()<<" getpc ch error"<<endmsg;
             double tofOfLight=sqrt(xcenter*xcenter+ycenter*ycenter+
                                    zcenter*zcenter)/300.0;
             //info()<<" tof "<<tofOfLight<<" "<<hitStation<<" "<<hitRegion<<" "<<zcenter<<endreq;
@@ -629,7 +645,10 @@ elaborateMuonPhyChannelInputs(
            <<endreq;
       }
       outputPointer->hitsTraceBack().push_back(*pointerToHitTraceBack);
-      PhysicalChannel.addMuonObject(i,outputPointer);
+      StatusCode asc=PhysicalChannel.addMuonObject(i,outputPointer);
+      if(asc.isFailure()){
+        warning()<<" error in inserting obj "<<endmsg;
+      }
       for (inputIter=++inputIterStart;inputIter
              <PhyChaInput.getPartition(i)->end();inputIter++){
         lastFE=(*inputIter)->phChID()->getFETile();

@@ -29,7 +29,7 @@ static std::string geoBase="/dd/Conditions/ReadoutConf/Muon/";
 void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                                       IDataProviderSvc* detSvc, 
                                       IMessageSvc * msgSvc){  
-  	MsgStream log(msgSvc, "MuonDetectorResponse"); 
+  MsgStream log(msgSvc, "MuonDetectorResponse"); 
   SmartDataPtr<DeMuonDetector>  mudd(detSvc,DeMuonLocation::Default);
   m_muonDetector=mudd;
   
@@ -40,8 +40,10 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
   m_toolSvc=toolSvc;  
   // usefullPointer= 
   //new MuonGeometryStore::Parameters( toolSvc,detSvc, msgSvc);
-	m_gaussDist.initialize( randSvc, Rndm::Gauss(0.0,1.0));
-	m_flatDist.initialize( randSvc, Rndm::Flat(0.0,1.0)); 
+	StatusCode sc =m_gaussDist.initialize( randSvc, Rndm::Gauss(0.0,1.0));
+  if(sc.isFailure())log<<MSG::DEBUG<<"error ini gauss dist "<<endmsg;
+	sc = m_flatDist.initialize( randSvc, Rndm::Flat(0.0,1.0)); 
+  if(sc.isFailure())log<<MSG::DEBUG<<"error ini flat dist "<<endmsg;
 	std::vector<double> alreadyInsertedValue;
   std::string regionName[20];
   MuonBasicGeometry basegeometry(detSvc,msgSvc); 
@@ -102,7 +104,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
       log<<MSG::VERBOSE<<" time jitter "<<min<<" "<<max<<endreq;
       
       Rndm::Numbers*	m_time=new Rndm::Numbers;
-      StatusCode sc=m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
+      sc=m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
       if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini time jitter "<<endreq;
 
       m_timeJitter.push_back(m_time);
@@ -116,8 +118,8 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
         m_muonDetector->getPhChannelNY( readout,station, region)*25*1.0E-9;
 log<<MSG::VERBOSE<<"noisecounts "<<noiseCounts<<endreq;
       sc=p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
-      m_electronicNoise.push_back(p_electronicNoise);	
       if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini ele noise dist "<<endreq;
+      m_electronicNoise.push_back(p_electronicNoise);	
 
       MuonPhysicalChannelResponse* response= new
         MuonPhysicalChannelResponse(&m_flatDist,&m_gaussDist,
