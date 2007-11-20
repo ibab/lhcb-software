@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2007-11-20 - Wouter HULSBERGEN
+ - added missing tolerances for float comparison in LongTrackRefCreator
+
 !======================== TrackTools v3r1 2007-11-09 ========================
 ! 2007-11-09 - Marco Cattaneo
  - Add a missing template<> declaration needed by gcc 4.0 on osx
