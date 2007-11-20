@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.3 2007-11-16 16:58:53 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.4 2007-11-20 12:50:01 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -45,6 +45,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("TConf/Tool",std::string("L0ConfirmWithT"));
   m_recoConf.add("TConf/RecoID", (int) HltEnums::MuonTKey); //TODO
   m_recoConf.add("TConf/Owner",true);
+  m_recoConf.add("TConf/TransferIDs",true);
+  m_recoConf.add("TConf/TransferAncestor",true);
   m_recoConf.add("TConf/TrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("TConf/TESInput",std::string("none"));
   m_recoConf.add("TConf/TESOutput",LHCb::TrackLocation::HltTsa);
@@ -52,6 +54,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
   m_recoConf.add("Velo/RecoID", (int) HltEnums::VeloKey);
   m_recoConf.add("Velo/Owner",true);
+  m_recoConf.add("Velo/TransferIDs",false);
+  m_recoConf.add("Velo/TransferAncestor",false);
   m_recoConf.add("Velo/TrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("Velo/TESInput",LHCb::TrackLocation::HltRZVelo);
   m_recoConf.add("Velo/TESOutput",LHCb::TrackLocation::HltVelo);
@@ -59,6 +63,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
   m_recoConf.add("VeloTT/RecoID", (int) HltEnums::VeloTTKey);
   m_recoConf.add("VeloTT/Owner",false);
+  m_recoConf.add("VeloTT/TransferIDs",false);
+  m_recoConf.add("VeloTT/TransferAncestor",false);
   m_recoConf.add("VeloTT/TrackType", (int) LHCb::Track::Upstream);
   m_recoConf.add("VeloTT/TESInput",LHCb::TrackLocation::HltVelo);
   m_recoConf.add("VeloTT/TESOutput", LHCb::TrackLocation::HltVeloTT);
@@ -66,6 +72,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
   m_recoConf.add("Forward/RecoID", (int) HltEnums::ForwardKey);
   m_recoConf.add("Forward/Owner",true);
+  m_recoConf.add("Forward/TransferIDs",false);
+  m_recoConf.add("Forward/TransferAncestor",false);
   m_recoConf.add("Forward/TrackType", (int) LHCb::Track::Long);
   m_recoConf.add("Forward/TESInput",LHCb::TrackLocation::HltVelo);
   m_recoConf.add("Forward/TESOutput", LHCb::TrackLocation::HltForward);
@@ -104,13 +112,18 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   m_TESOutput = m_recoConf.retrieve<std::string>(m_recoName+"/TESOutput");
   m_owner = m_recoConf.retrieve<bool>(m_recoName+"/Owner");
   m_trackType = m_recoConf.retrieve<int>(m_recoName+"/TrackType");
+  m_transferIDs = m_recoConf.retrieve<bool>(m_recoName+"/TransferIDs");
+  m_transferAncestor = 
+    m_recoConf.retrieve<bool>(m_recoName+"/TransferAncestor");
+  
   if (m_recoID <= HltEnums::VeloKey) m_orderByPt = false;
 
   info() << " Reco " << m_recoName << " ID " << m_recoID 
-         << " Tool " << toolName << " Input " << TESInput 
-         << " Output " << m_TESOutput << " owner " << m_owner 
+         << " Tool " << toolName 
+         << " Input " << TESInput << " Output " << m_TESOutput 
+         << " owner " << m_owner << " transfers IDs " << m_transferIDs 
+         << " transfer ancestor " << m_transferAncestor
          << " track type " << m_trackType << endreq;
-
   
   if (m_tool) delete m_tool;
   m_tool = NULL;
@@ -174,9 +187,9 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
 }
 
 bool HltTrackUpgradeTool::isReco(const Track& seed) {
-  double key = seed.info(m_recoID,-1.);
-  bool ok = (key != -1.);
-  verbose() << " has Reco ?" << ok << " nups " << key << endreq;
+  int ncan = (int) seed.info(m_recoID,-1);
+  bool ok = (ncan != -1);
+  verbose() << " has Reco ?" << ok << " n-descendants " << ncan << endreq;
   return ok;
 }
 
@@ -187,9 +200,11 @@ void HltTrackUpgradeTool::recoDone(Track& seed,
   for (std::vector<Track*>::iterator it = tracks.begin();
        it != tracks.end(); ++it) {
     Track& track = *(*it);
+    track.setType( (LHCb::Track::Types) m_trackType );
+    if (m_transferAncestor) track.addToAncestors( (Track*) &seed);
+    if (m_transferIDs) addIDs(seed,track);
     if (m_transferExtraInfo) track.setExtraInfo(seed.extraInfo());
     track.addInfo(m_recoID,key);
-    track.setType( (LHCb::Track::Types) m_trackType );
   }
   seed.addInfo(m_recoID, (double) tracks.size());
   if (m_owner) {
@@ -203,14 +218,22 @@ void HltTrackUpgradeTool::recoDone(Track& seed,
 size_t HltTrackUpgradeTool::find(const Track& seed,
                              std::vector<Track*>& tracks) {
   double key = (double) seed.key();
-  size_t ncan = (size_t) seed.info(m_recoID,0);
-  info() << " find seed key " << key << " nups " << ncan << endreq;
+  double ncan = (double) seed.info(m_recoID,-1);
+  debug() << " find seed key " << key << " n-descendants " << ncan << endreq;
   for (Tracks::iterator it = m_otracks->begin();it != m_otracks->end();++it) {
     Track* ptrack = *it;
     if (ptrack->info(m_recoID,-1) == key) tracks.push_back(ptrack);
   }
-  if (ncan != tracks.size())
-    error() << " different number of stored tracks! " << endreq;
+  if (ncan != (double) tracks.size()) {
+    error() << " different number of stored tracks! " << ncan 
+            << " != " << tracks.size() << endreq;
+    for (Tracks::iterator it = m_otracks->begin();
+         it != m_otracks->end();++it) {
+      Track& track = *(*it);
+      info() << " key " << key << " mother " 
+             << track.info(m_recoID,-1) << endreq;
+    }
+  }  
 
   verbose() << " found tracks " << tracks.size() << endreq;
   return tracks.size();
@@ -227,4 +250,11 @@ void HltTrackUpgradeTool::printInfo(const std::string& title,
                                     const Track& track) {
   debug() << title << " track  " << track.key() << " slopes " 
           << track.slopes()  << " pt " << track.pt() << endreq;
+}
+
+void HltTrackUpgradeTool::addIDs(const Track& seed, Track& track) {
+  const std::vector<LHCbID>& ids = seed.lhcbIDs();
+  for (std::vector<LHCbID>::const_iterator it = ids.begin();
+       it != ids.end(); ++it) 
+    track.addToLhcbIDs(*it);
 }

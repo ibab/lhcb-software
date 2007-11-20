@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.2 2007-11-14 14:00:10 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.3 2007-11-20 12:50:01 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -69,6 +69,8 @@ protected:
   
   void recoDone(LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
 
+  void addIDs(const LHCb::Track& seed, LHCb::Track& track);
+
   void printInfo(const std::string& title, const Hlt::TrackContainer& con);
 
   void printInfo(const std::string& title, const LHCb::Track& track);
@@ -85,6 +87,8 @@ protected:
   int m_trackType;
 
   bool m_transferExtraInfo;
+  bool m_transferIDs;
+  bool m_transferAncestor;
   bool m_orderByPt;
 
 protected:

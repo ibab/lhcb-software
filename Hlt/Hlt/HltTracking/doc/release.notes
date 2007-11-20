@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-11-20 - Jose A. Hernando
+ - HltTrackUpgradeTool extended functionality (export IDs, ancestors)
+
 ! 2007-11-15 - Jose A. Hernando
  - L0ConfWithT in HltTrackUpgrade
 
