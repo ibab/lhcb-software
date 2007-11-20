@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2007-11-20 Jose A. Hernando
+	  - HltVertexToTracks: put the tracks of the vertex into a selection (for DiMuon alley)
+
 ! 2007-11-20 Gerhard Raven
 	 - HltPrepareCalos: set pointers to 0 when they're not pointing at anything valid
                         remove data members that are not referenced
