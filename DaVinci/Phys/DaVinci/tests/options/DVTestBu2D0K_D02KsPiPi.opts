@@ -1,6 +1,10 @@
-/** @file DVTestHltBd2MuMuKstar.opts
+// $Id: DVTestBu2D0K_D02KsPiPi.opts,v 1.2 2007-11-20 17:46:29 jpalac Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// ============================================================================
+/** @file DVTestHltBu2D0K_D02KsPiPi.opts
  *
- *  Test file for HLT Bd->MuMuK* selection
+ *  Test file for Bu->D0(KsPiPi) K selection
  *
  *  @author J. Palacios
  *  @date 2007-11-12

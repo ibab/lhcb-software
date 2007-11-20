@@ -1,4 +1,8 @@
-/** @file DVTestHltBd2MuMuKstar.opts
+// $Id: DVTestBd2KstarMuMu.opts,v 1.3 2007-11-20 17:46:29 jpalac Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// ============================================================================
+/** @file DVTestBd2KstarMuMu.opts
  *
  *  Test file for HLT Bd->MuMuK* selection
  *
