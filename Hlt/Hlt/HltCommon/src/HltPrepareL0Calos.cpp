@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.10 2007-10-12 14:33:01 hernando Exp $
+// $Id: HltPrepareL0Calos.cpp,v 1.11 2007-11-20 10:07:19 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,10 @@ DECLARE_ALGORITHM_FACTORY( HltPrepareL0Calos );
 //=============================================================================
 HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
+  : HltAlgorithm ( name , pSvcLocator ),
+    _etFun(0),
+    _typeFilter(0),
+    _etFilter(0)
 {
   // declareCondition("MinPt",m_ptMin = 0.);
   
@@ -47,9 +50,6 @@ HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
 // Destructor
 //=============================================================================
 HltPrepareL0Calos::~HltPrepareL0Calos() {
-  // delete _typeFilter;
-  // delete _etFun;
-  // delete _etFilter;
 } 
 
 //=============================================================================
@@ -142,14 +142,11 @@ StatusCode HltPrepareL0Calos::execute() {
 StatusCode HltPrepareL0Calos::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  delete _typeFilter; _typeFilter = 0;
+  delete _etFun;      _etFun = 0;
+  delete _etFilter;   _etFilter = 0;
 
-  StatusCode sc =  HltAlgorithm::finalize();  
-
-  delete _typeFilter;
-  delete _etFun;
-  delete _etFilter;
-
-  return sc;
+  return HltAlgorithm::finalize();  
 }
 
 void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,

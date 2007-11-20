@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Calos.h,v 1.3 2007-08-16 17:40:29 hernando Exp $
+// $Id: HltPrepareL0Calos.h,v 1.4 2007-11-20 10:07:19 graven Exp $
 #ifndef HLTPREPAREL0CALOS_H 
 #define HLTPREPAREL0CALOS_H 1
 
@@ -26,6 +26,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+
+private:
   class checkType : public Estd::filter<LHCb::L0CaloCandidate> {
   public:
     explicit checkType(int type): m_type(type) {}
@@ -42,9 +44,6 @@ public:
   void addExtras(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
 
 
-
-protected:
-
   int m_caloType;
   double m_etMin;
 
@@ -54,7 +53,6 @@ protected:
   HltHisto m_histoEt;
   HltHisto m_histoEt1;
 
-protected:
 
   std::string m_caloMakerName;
   
@@ -62,14 +60,11 @@ protected:
 
   void extras(const LHCb::L0CaloCandidate& calo,
               LHCb::Track& track);
-protected:
 
   std::vector<LHCb::L0CaloCandidate*> m_calos;
   std::vector<LHCb::L0CaloCandidate*> m_ocalos;
 
   Estd::function<LHCb::L0CaloCandidate>* _etFun;
-
-  Estd::filter<LHCb::Track>* _matchFilter;
   Estd::filter<LHCb::L0CaloCandidate>* _typeFilter;
   Estd::filter<LHCb::L0CaloCandidate>* _etFilter;
 

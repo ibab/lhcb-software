@@ -3,9 +3,13 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2007-11-20 Gerhard Raven
+	 - HltPrepareCalos: set pointers to 0 when they're not pointing at anything valid
+                        remove data members that are not referenced
+                        use private instead of protected whenever possible
 
 ! 2007-11-14 Jose A. Hernando
-	 - Addapting to Tf, removing Pat dependences
+	 - Adapting to Tf, removing Pat dependences
 
 !========================== HltCommon v1r7 2007-11-14 ===================
 ! 2007-11-2 Jose A. Hernando
