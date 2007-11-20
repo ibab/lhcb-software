@@ -10,6 +10,7 @@
      - HltPrepareTracks: set pointers to 0 when they're not pointing at anything valid
                          use private instead of protected whenever possible
      - HltSummaryTool: use 0 instead of NULL
+     - HltSelectionEntry: use boost::split instead of EParser
 
 ! 2007-11-14 Jose A. Hernando
 	 - Adapting to Tf, removing Pat dependences

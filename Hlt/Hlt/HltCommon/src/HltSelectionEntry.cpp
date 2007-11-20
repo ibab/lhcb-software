@@ -1,4 +1,4 @@
-// $Id: HltSelectionEntry.cpp,v 1.2 2007-07-27 22:33:17 hernando Exp $
+// $Id: HltSelectionEntry.cpp,v 1.3 2007-11-20 10:21:21 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,9 @@
 // local
 #include "HltSelectionEntry.h"
 #include "Event/HltNames.h"
-#include "HltBase/EParser.h"
+
+#include "boost/algorithm/string/classification.hpp"
+#include "boost/algorithm/string/split.hpp"
 
 using namespace LHCb;
 
@@ -55,13 +57,13 @@ StatusCode HltSelectionEntry::initialize() {
        it != values.end(); ++it) {
     const std::string& value = *it;
     info() << " selections: " << value << endreq;
-    std::vector<std::string> sels = EParser::parse(value,",");
+    std::vector<std::string> sels;
+    boost::split(sels,value,boost::is_any_of(","));
     std::vector<int> ids;
     for (std::vector<std::string>::iterator it2 = sels.begin();
          it2 != sels.end(); ++it2) {
-      const std::string sel = *it2;
-      int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",sel);      
-      info() << " \t selection " << sel << " id " << id << endreq;
+      int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",*it2);      
+      info() << " \t selection " << *it2 << " id " << id << endreq;
       ids.push_back(id);
     }
     m_selectionNames.push_back(value);
@@ -78,10 +80,9 @@ StatusCode HltSelectionEntry::initialize() {
 StatusCode HltSelectionEntry::execute() {
   
   bool ok = false;
-  int isel = -1;
+  int isel = 0;
   for (std::vector< std::vector<int> >::iterator it = m_selectionIDs.begin();
-       it != m_selectionIDs.end(); ++it) {
-    isel += 1;
+       it != m_selectionIDs.end(); ++it,++isel) {
     std::vector<int> ids = *it;
     bool ok2 = true;
     for (std::vector<int>::iterator it2 = ids.begin(); 
@@ -109,7 +110,6 @@ StatusCode HltSelectionEntry::finalize() {
     std::string title = m_selectionNames[i];
     infoSubsetEvents(m_scounters[i],m_counterEntries,title);
   }
-  
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
