@@ -1,12 +1,10 @@
-// $Id: HltPrepareTracks.h,v 1.2 2007-11-14 13:57:03 hernando Exp $
+// $Id: HltPrepareTracks.h,v 1.3 2007-11-20 10:16:01 graven Exp $
 #ifndef HLTPREPARETRACKS_H 
 #define HLTPREPARETRACKS_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
-#include "Event/L0CaloCandidate.h"
 
 /** @class HltHadAlleyPreTrigger HltHadAlleyPreTrigger.h
  *  
@@ -26,11 +24,8 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 
-protected:
-
+private:
   std::string m_TESInputTracksName;
-
   Hlt::TrackFilter* _nobackwards;
-
 };
 #endif // HLTHADALLEYPRETRIGGER_H

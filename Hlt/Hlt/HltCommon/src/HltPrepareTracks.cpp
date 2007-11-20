@@ -1,4 +1,4 @@
-// $Id: HltPrepareTracks.cpp,v 1.5 2007-11-14 13:57:03 hernando Exp $
+// $Id: HltPrepareTracks.cpp,v 1.6 2007-11-20 10:16:01 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 // local
 #include "HltPrepareTracks.h"
 #include "Event/HltEnums.h"
-//#include "Event/HltSummaryFunctor.h"
 #include "HltBase/HltSequences.h"
 #include "HltBase/HltFunctions.h"
 
@@ -28,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( HltPrepareTracks );
 //=============================================================================
 HltPrepareTracks::HltPrepareTracks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
+  : HltAlgorithm ( name , pSvcLocator ), _nobackwards(0)
 {
   declareProperty("TESInputTracksName", m_TESInputTracksName = "");
 }
@@ -36,7 +35,6 @@ HltPrepareTracks::HltPrepareTracks( const std::string& name,
 // Destructor
 //=============================================================================
 HltPrepareTracks::~HltPrepareTracks() {
-  // delete _nobackwards;
 } 
 
 //=============================================================================
@@ -78,12 +76,9 @@ StatusCode HltPrepareTracks::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltPrepareTracks::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-
-  StatusCode sc =  HltAlgorithm::finalize();
-  delete _nobackwards;
-  return sc;
+  delete _nobackwards; _nobackwards = 0;
+  return HltAlgorithm::finalize();
 }
 
 //=============================================================================
