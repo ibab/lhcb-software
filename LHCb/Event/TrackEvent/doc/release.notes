@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!2007-11-20 - Wouter Hulsbergen
+ - Corrected z-position for begin of T-station range in StateParameters
+
 !======================= TrackEvent v4r8 2007-11-09 ==========================
 ! 2007-11-09 - Marco Cattaneo
  - Remove an obsolete dependency
