@@ -1,6 +1,8 @@
 !Package         : MuonMoniDigi
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
+! 2007-11-20 - Alessia Satta
+ - Fix for ucnhecked statuscode
 
 !======================= MuonMoniDigi v2r2 2007-06-11 ========================
 ! 2007-06-11 - Alessia Satta
