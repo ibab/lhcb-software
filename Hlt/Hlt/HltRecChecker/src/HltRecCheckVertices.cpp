@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.3 2007-11-19 13:16:42 hmdegaud Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.4 2007-11-20 12:51:21 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -25,18 +25,17 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckVertices );
 
 HltRecCheckVertices::HltRecCheckVertices( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator ), m_ipFun(0)
+  : HltAlgorithm ( name , pSvcLocator )
 {
   
   declareProperty( "LinkName" ,    m_linkName     = "" );
+  declareProperty( "TESInputVerticesName", m_TESInputVerticesName = "");
   declareProperty( "IPType", m_ipType = "");
   
 }
 
 HltRecCheckVertices::~HltRecCheckVertices() {
-  if (m_ipFun) {
-    delete m_ipFun;
-  }
+  delete m_ipFun;
 } 
 
 StatusCode HltRecCheckVertices::initialize() {
@@ -77,6 +76,7 @@ void HltRecCheckVertices::relateVertices() {
 
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
 
+  m_TESInputVertices = get<RecVertices>(m_TESInputVerticesName);
   m_relTrackMCVertex.clear();
   m_relVertexMCVertex.clear();
   for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
@@ -85,19 +85,19 @@ void HltRecCheckVertices::relateVertices() {
     MCParticle* mcpar = link.first( track.key() );
 
     size_t index = 0;
-    double ip = Estd::map_compare_value(track,m_patInputVertices->begin(),
-                                        m_patInputVertices->end(),
+    double ip = Estd::map_compare_value(track,m_TESInputVertices->begin(),
+                                        m_TESInputVertices->end(),
                                         *m_ipFun,Estd::abs_min(),index);
     verbose() << " ip " << ip << " index " << index << endreq;
-    RecVertex& vertex = **(m_patInputVertices->begin()+index);
+    RecVertex& vertex = **(m_TESInputVertices->begin()+index);
     
     if (!mcpar) continue;    
 
     const MCParticle& mother = MCHlt::ancestor(*mcpar);
     const MCVertex& mcvertex = *(mother.originVertex());
 
-    m_relVertexMCVertex.relate(vertex,mcvertex);
-    m_relTrackMCVertex.relate(track,mcvertex);
+    m_relVertexMCVertex.relate((RecVertex*) &vertex, (MCVertex*) &mcvertex);
+    m_relTrackMCVertex.relate((Track*) &track, (MCVertex*) &mcvertex);
   }
   // m_relTrackMCVertex.info();
 
@@ -137,7 +137,8 @@ void HltRecCheckVertices::checkVertices() {
     double y = ver.position().y();
     double z = ver.position().z();
 
-    const MCVertex& mcver = m_relVertexMCVertex.best_relation(ver,w);    
+    const MCVertex& mcver = 
+      m_relVertexMCVertex.best_relation((RecVertex*) &ver,w);    
     double mcx = mcver.position().x();
     double mcy = mcver.position().y();
     double mcz = mcver.position().z();

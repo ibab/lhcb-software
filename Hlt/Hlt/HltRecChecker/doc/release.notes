@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2007-11-20 - Jose A. Hernando
+	- adaptation to Tf, HltLHCbIDMCParticle relation table
+
 !========================== HltRecChecker v1r2 2007-07-31 ===================
 ! 2007-07-17 - Patrick Koppenburg
  - Removed obsolete _load file.

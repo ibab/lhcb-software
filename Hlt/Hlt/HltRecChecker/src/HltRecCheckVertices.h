@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.h,v 1.1 2006-10-24 09:50:49 hernando Exp $
+// $Id: HltRecCheckVertices.h,v 1.2 2007-11-20 12:51:21 hernando Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
@@ -35,6 +35,9 @@ protected:
 
   std::string m_linkName;
   std::string m_ipType;
+
+  std::string m_TESInputVerticesName;
+  LHCb::RecVertices* m_TESInputVertices;
   
   Estd::bifunction<LHCb::Track,LHCb::RecVertex>* m_ipFun;
 
@@ -54,11 +57,11 @@ protected:
 
 protected:
 
-  Estd::relation<LHCb::Track,LHCb::MCVertex> m_relTrackMCVertex;
-  Estd::relation<LHCb::MCVertex,LHCb::Track> m_relMCVertexTrack;
+  Estd::relation<LHCb::Track*,LHCb::MCVertex*> m_relTrackMCVertex;
+  Estd::relation<LHCb::MCVertex*,LHCb::Track*> m_relMCVertexTrack;
 
-  Estd::relation<LHCb::RecVertex,LHCb::MCVertex> m_relVertexMCVertex;
-  Estd::relation<LHCb::MCVertex,LHCb::RecVertex> m_relMCVertexVertex;
+  Estd::relation<LHCb::RecVertex*,LHCb::MCVertex*> m_relVertexMCVertex;
+  Estd::relation<LHCb::MCVertex*,LHCb::RecVertex*> m_relMCVertexVertex;
 
 
 
