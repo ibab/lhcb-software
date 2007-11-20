@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.1 2007-06-20 12:17:38 hernando Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.2 2007-11-20 10:23:19 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,15 +59,14 @@ StatusCode HltTrackFromParticle::execute() {
 
   Particles* pars = get<Particles>(m_particlesName);
   if (m_debug) {
-    if (pars == NULL) verbose() << " no particles found! " << endreq;
+    if (pars == 0) verbose() << " no particles found! " << endreq;
     else verbose() << " particles found " << pars->size() << endreq;
   }  
-  if (pars == NULL) return sc;
+  if (pars == 0) return sc;
   
   m_outputTracks->clear();
   for (Particles::iterator it = pars->begin(); it != pars->end(); ++it) {
-    Particle& par = *(*it);
-    loadParticle(par);
+    loadParticle(**it);
   }
   
   int ncan = m_outputTracks->size();
@@ -85,15 +84,14 @@ void HltTrackFromParticle::loadParticle(const Particle& par) {
   verbose() << " loading " << par.pt() << endreq;
   if (par.isBasicParticle()) {
     const Track* track = par.proto()->track();
-    if (track)  m_outputTracks->push_back( (Track*) track);
+    if (track)  m_outputTracks->push_back( const_cast<Track*>(track));
     verbose() << " loading particle " << par.pt() 
               << " as track " << track->pt() << endreq;
   } else {
     const SmartRefVector<Particle>& pars2 = par.daughters();
     for (SmartRefVector<Particle>::const_iterator it2 = pars2.begin(); 
          it2 != pars2.end(); ++it2) {
-      const Particle& par2 = *(*it2);      
-      loadParticle(par2);
+      loadParticle(**it2);
     }
   }  
 }

@@ -11,6 +11,8 @@
                          use private instead of protected whenever possible
      - HltSummaryTool: use 0 instead of NULL
      - HltSelectionEntry: use boost::split instead of EParser
+     - HltTrackFromParticle: remove unneeded temporaries which fix assumptions on types
+                             use 0 instead of NULL
 
 ! 2007-11-14 Jose A. Hernando
 	 - Adapting to Tf, removing Pat dependences
