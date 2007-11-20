@@ -1,4 +1,4 @@
-// $Id: XmlMuonTSMapCnv.cpp,v 1.5 2007-06-08 15:34:00 asatta Exp $
+// $Id: XmlMuonTSMapCnv.cpp,v 1.6 2007-11-20 07:48:58 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -128,18 +128,20 @@ XmlMuonTSMapCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::string gridX =
       dom2Std (childElement->getAttribute (GridXString));
     std::vector<long> gridXValue;
-     splitList(gridX,gridXValue);
+     StatusCode sc=splitList(gridX,gridXValue);
+     if(sc.isFailure())return sc;
      std::string gridY =
       dom2Std (childElement->getAttribute (GridYString));
     std::vector<long> gridYValue;
-     splitList(gridY,gridYValue);
+     sc=splitList(gridY,gridYValue);
+     if(sc.isFailure())return sc;
      long tsgx[2];
      long tsgy[2];
      for(int i=0; i<LogLayoutNumberValue; i++){
        tsgx[i]=gridXValue[i];
        tsgy[i]=gridYValue[i];       
      }
-     StatusCode sc=dataObj->initialize(LogLayoutNumberValue,tsgx,tsgy);
+     sc=dataObj->initialize(LogLayoutNumberValue,tsgx,tsgy);
      if(sc.isFailure())return sc;
      std::string outputSignalString =
        dom2Std (childElement->getAttribute (OutputSignalString));
@@ -147,15 +149,18 @@ XmlMuonTSMapCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
      std::string outputLayoutSeqString =
        dom2Std (childElement->getAttribute (OutputLayoutSeqString));
      std::vector<long> outputLayoutSeq;
-     splitList(outputLayoutSeqString,outputLayoutSeq);
+     sc=splitList(outputLayoutSeqString,outputLayoutSeq);
+     if(sc.isFailure())return sc;
      std::string outputGridXSeqString =
        dom2Std (childElement->getAttribute (OutputGridXSeqString));
      std::vector<long> outputGridXSeq;
-     splitList(outputGridXSeqString,outputGridXSeq);
+     sc=splitList(outputGridXSeqString,outputGridXSeq);
+     if(sc.isFailure())return sc;
      std::string outputGridYSeqString =
        dom2Std (childElement->getAttribute (OutputGridYSeqString));
      std::vector<long> outputGridYSeq;
-     splitList(outputGridYSeqString,outputGridYSeq);
+     sc=splitList(outputGridYSeqString,outputGridYSeq);
+     if(sc.isFailure())return sc;
      sc=dataObj->update(outputSignalValue,outputLayoutSeq,
             outputGridXSeq,outputGridYSeq);
      if(sc.isFailure())return sc;

@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.6 2007-06-08 15:34:00 asatta Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.7 2007-11-20 07:48:58 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -137,6 +137,7 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (RegionString));
     long regionNumberValue=atol(regionNumberString.c_str());
     dataObj->initialize(ODENumberValue,regionNumberValue);    
+    //if(sc.isFailure())return sc;
 
     const std::string tsLayoutXString =
       dom2Std (childElement->getAttribute (TSLayoutXString));
@@ -150,15 +151,17 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::string tsGridXListString =
       dom2Std (childElement->getAttribute (TSGridXListString));
     std::vector<long> tsGridXValue;
-    splitList(tsGridXListString,tsGridXValue);
+    StatusCode sc=splitList(tsGridXListString,tsGridXValue);
+    if(sc.isFailure())return sc;
     std::string tsGridYListString =
       dom2Std (childElement->getAttribute (TSGridYListString));
     std::vector<long> tsGridYValue;
-    splitList(tsGridYListString,tsGridYValue);
+    sc=splitList(tsGridYListString,tsGridYValue);
+    if(sc.isFailure())return sc;
     std::string tsQuadrantListString =
       dom2Std (childElement->getAttribute (TSQuadrantListString));
     std::vector<long> tsQuadrantValue;
-    StatusCode sc=splitList(tsQuadrantListString,tsQuadrantValue);
+    sc=splitList(tsQuadrantListString,tsQuadrantValue);
     if(sc.isFailure())return sc;
     sc=dataObj->update(tsLayoutXValue,tsLayoutYValue,tsNumberValue, 
                     tsGridXValue, tsGridYValue,
