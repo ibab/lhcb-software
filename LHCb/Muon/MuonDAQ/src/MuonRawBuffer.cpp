@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.8 2007-06-06 14:26:10 cattanem Exp $
+// $Id: MuonRawBuffer.cpp,v 1.9 2007-11-20 13:04:00 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -135,7 +135,7 @@ StatusCode MuonRawBuffer::initialize()
     }
   }
   sc=initializeLUTCrossing();
-  
+  if(sc.isFailure())debug()<<"error in LUT crossing initialization"<<endmsg;  
   return StatusCode::SUCCESS ;
 };
 
