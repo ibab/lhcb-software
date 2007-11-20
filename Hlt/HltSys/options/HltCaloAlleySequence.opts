@@ -4,15 +4,15 @@
 HltCaloAlley.Members += {  "L0Entry/L0CaloEntry",
                            "HltSequencer/HltRecoVeloRZSeq",
                            "HltTrackIPSelection/HltTrack2DIPSelection",
-                           "HltTracking/HltHadRecoIPVelo",
+                           "HltTrackUpgrade/HltHadRecoIPVelo",
                            "HltTrackIPSelection/HltTrack3DIPPreSelection",
                            "HltSequencer/HltDecodeTT",
-                           "HltTracking/HltHadRecoIPVeloTT",
+                           "HltTrackUpgrade/HltHadRecoIPVeloTT",
                            "HltCaloPreTrigger/HltCaloPreTrigger0",
                            "HltSequencer/HltRecoVeloSeq",
                            "HltTrackIPSelection/HltTrack3DIPSelection",
                            "HltSequencer/HltDecodeT",
-                           "HltTracking/HltHadRecoIPForward",
+                           "HltTrackUpgrade/HltHadRecoIPForward",
                            "HltCaloPreTrigger/HltCaloTrigger"
 };
 // HltCaloAlley.OutputLevel = 3;

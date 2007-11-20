@@ -18,10 +18,10 @@ HltMuHadAlley.Members = {"L0Entry/L0MuHadEntry",
                          "HltSelectionEntry/MuHadEntry",
                          "HltTrackFilter/MuHadMuonTF",
                          // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
-                         "HltTracking/HltRecoVelo",
+                         "HltTrackUpgrade/HltRecoVelo",
                          "HltTrackFilter/MuHadCompanionTFVelo",
                          "GaudiSequencer/HltDecodeT",
-                         "HltTracking/MuHadCompanionTRForward",
+                         "HltTrackUpgrade/MuHadCompanionTRForward",
                          "HltTrackFilter/MuHadCompanionTFForward",
                          "HltVertexMaker/MuHadVMaker",
                          "HltVertexFilter/MuHadTrigger"

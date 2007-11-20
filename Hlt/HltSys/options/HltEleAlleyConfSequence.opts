@@ -18,11 +18,11 @@ HltEleAlley.Members = {"L0Entry/EleL0Entry",
                        //                       "HltPrepareL0Calos/EleL0Prepare",
                        "GaudiSequencer/DVHltEleAlley",
                        "HltTrackFilter/EleSingleTFRZVelo",
-                       "HltTracking/EleSingleTRVelo",
+                       "HltTrackUpgrade/EleSingleTRVelo",
                        "HltTrackFilter/EleSingleTFVelo",
                        "GaudiSequencer/HltDecodeT",
                        "GaudiSequencer/HltDecodeTT",
-                       "HltTracking/EleSingleTRForward",
+                       "HltTrackUpgrade/EleSingleTRForward",
                        "HltTrackFilter/ElePreTriggerSingle",
                        "HltSequencer/HltEleTriggers"
 };
@@ -35,9 +35,9 @@ HltEleTriggers.Members += { "HltTrackFilter/EleTriggerSingle",
 };
 
 EleTriggerEleTrkSeq.Members += { 
-                       "HltTracking/HltRecoVelo",
+                       "HltTrackUpgrade/HltRecoVelo",
                        "HltTrackFilter/EleCompanionTFVelo",
-                       "HltTracking/EleCompanionTRForward",
+                       "HltTrackUpgrade/EleCompanionTRForward",
                        "HltTrackFilter/EleCompanionTFForward",
                        "HltVertexMaker/EleDiElectronVMaker",
                        "HltVertexFilter/EleTriggerEleTrk"

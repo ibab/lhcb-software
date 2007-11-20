@@ -7,10 +7,10 @@ HltSummaryWriter.Save += {"L0TriggerElectron",
                           "L0TriggerPhoton",
                           "L0TriggerLocalPi0",
                           "L0TriggerGlobalPi0",
-                          "L0TriggerHadron",
-                          "L0TriggerMuon",
-                          "L0TriggerDiMuon",
-                          "L0TriggerMuonNoGlob"
+                          "L0TriggerHadron" //,
+                          // "L0TriggerMuon",
+                          // "L0TriggerDiMuon",
+                          // "L0TriggerMuonNoGlob"
 };
 
 HltL0TriggerSequence.Members = {
@@ -18,11 +18,11 @@ HltL0TriggerSequence.Members = {
   "HltSequencer/PrepareL0TriggerPhotonSeq",
   "HltSequencer/PrepareL0TriggerLocalPi0Seq",
   "HltSequencer/PrepareL0TriggerGlobalPi0Seq",
-  "HltSequencer/PrepareL0TriggerHadronSeq",
-  "HltSequencer/L0MuonCandidatesFromRawSeq", 
-  "HltSequencer/PrepareL0TriggerMuonSeq",
-  "HltSequencer/PrepareL0TriggerDiMuonSeq",
-  "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"
+  "HltSequencer/PrepareL0TriggerHadronSeq" //,
+  // "HltSequencer/L0MuonCandidatesFromRawSeq"// , 
+  // "HltSequencer/PrepareL0TriggerMuonSeq",
+  // "HltSequencer/PrepareL0TriggerDiMuonSeq",
+  // "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"
 };
 HltL0TriggerSequence.ModeOr = true;
 

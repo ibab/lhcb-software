@@ -46,7 +46,7 @@ HltMuonTConfL0SingleAlley.Members += {
           "HltTrackMerge/L0MuonTrackMuonTMerge",                                      
           "GaudiSequencer/HltRecoVeloRZSeq",
           "RZMuonMatch/RZMuonMatchForL0Single",
-          "HltTracking/HltMuonTConfL0SingleRecoVeloSpace",
+          "HltTrackUpgrade/HltMuonTConfL0SingleRecoVeloSpace",
           "SpaceMuonMatch/SpaceMuonMatchForL0Single",
           "HltSequencer/HltMuonTConfL0SingleTrigger"
  };
@@ -97,7 +97,7 @@ HltMuonTConfL0DimuonAlley.Members += {
               "TTrackAndDistCut/TTrackAndDistCutL0Dimuon",
               "GaudiSequencer/HltRecoVeloRZSeq",
               "RZMuonMatch/RZMuonMatchForL0Dimuon",
-              "HltTracking/HltMuonTConfL0DimuonRecoVeloSpace",
+              "HltTrackUpgrade/HltMuonTConfL0DimuonRecoVeloSpace",
               "SpaceMuonMatch/SpaceMuonMatchForL0Dimuon",
               "HltSequencer/HltMuonTConfL0DimuonTrigger"
 };

@@ -33,22 +33,22 @@ HltInit.TCKName = "UpdatedL0";
 //
 
 HltAllAlleys.Members ={"HltSequencer/HltL0TriggerSequence",
-                       "HltSequencer/HltMuonAlley",
-                       "HltSequencer/HltMuHadAlley",
+                       // "HltSequencer/HltMuonAlley",
+                       // "HltSequencer/HltMuHadAlley",
                        "HltSequencer/HltHadAlley",
-                       "HltSequencer/HltEleAlley",
-                       "HltSequencer/HltPhoAlley",
+                       // "HltSequencer/HltEleAlley",
+                       // "HltSequencer/HltPhoAlley",
                        "HltSelectionEntry/HltAlleys"
 };
 HltAllAlleys.ModeOr=true; 
 
 #include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
 
-#include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
+// #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
 
-#include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
-#include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
+// #include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
+// #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
 HltAlleys.Selections = {"MuonTriggerSingle",
                         "MuonTriggerDiMuon",
