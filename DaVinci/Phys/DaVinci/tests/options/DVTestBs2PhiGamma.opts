@@ -1,0 +1,66 @@
+// $Id: DVTestBs2PhiGamma.opts,v 1.1 2007-11-20 17:46:02 jpalac Exp $
+/** @file DVTestBs2PhiGamma.opts
+ *
+ *  Test file for Davinci Bs-> Phi Gamma pre-selection
+ *
+ *  @author J. Palacios
+ *  @date 2007-20-11
+*/
+//--------------------------------------------------------------
+//
+// Preselection
+//
+#include "$RADIATIVEROOT/options/DVPreselXb2GammaX.opts"
+//
+// Truth checking for Bs -> Phi Gamma
+//
+ApplicationMgr.TopAlg += { "GaudiSequencer/FindTrueDecay"};
+FindTrueDecay.IgnoreFilterPassed = true ;
+//-----------------------------------------------------------------------------
+//
+// Truth filter for Bs -> Phi(KK) Gamma Loose PID
+//
+FindTrueDecay.Members += { "FilterDesktop/SelectTrueLooseDecay"};
+SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLooseAllPhotons", 
+                                                    "Phys/StdLooseKaons"} ;
+SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
+                                            "gamma : TrueMCFilterCriterion/Decay"} ;
+//
+// The decay descriptor is the only part that requires some thinking...
+//
+SelectTrueLooseDecay.Filter.Decay.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) gamma]cc" ;
+//
+// Dummy MakeResonances to check that all tracks are there
+//
+FindTrueDecay.Members += { "MakeResonances/AllTrueLooseDecay"};
+AllTrueLooseDecay.PhysDesktop.InputLocations = {"Phys/SelectTrueLooseDecay"};
+AllTrueLooseDecay.DecayDescriptor = "[B_s0 -> K+ K- gamma]cc" ; // all particles need to be there
+//
+// Correlations
+//
+ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
+TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
+                                "AllTrueLooseDecay",                           
+                                "PreselXb2GammaX", 
+                                "Phys/StdLoosePhi2KK" };
+//
+// Options
+//
+//-- GAUDI data cards generated on 11/8/07 5:37 PM
+//-- For Event Type = 11114001 / Data type = DST 1
+
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+ApplicationMgr.EvtMax = 100 ;
+EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq = 1 ;
+
+
