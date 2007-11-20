@@ -4,6 +4,14 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-11-20 - Juan PALACIOS
+ - Added  tests/options/DVTestBs2PhiGamma.opts
+ - tests/options/*.opts
+  . Added CVS Id, tag and revision fields to all options.
+ - tests/qmtest/davinci.qms/preselections.qms/*.qmt
+  . Fix all correlaiton tables in tests, they got messed up with the
+    OnlyNonZero=false option.
+
 ! 2007-11-19 - Juan PALACIOS
  - Added
   . tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt 
