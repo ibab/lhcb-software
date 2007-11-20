@@ -30,7 +30,7 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  m_summary = NULL;
+  m_summary = 0;
   
   declareInterface<IHltConfSummaryTool>(this);
   declareInterface<IHltSummaryTool>(this);
@@ -46,11 +46,11 @@ HltSummaryTool::~HltSummaryTool() {}
 
 StatusCode HltSummaryTool::initialize() {
 
- IDataProviderSvc* hltsvc = NULL;
+ IDataProviderSvc* hltsvc = 0;
   StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
   if (!hltsvc) fatal() << " not able to create Hlt Svc provider " << endreq;
 
-  m_conf = NULL;
+  m_conf = 0;
  //  Hlt::DataHolder<Hlt::Configuration>* holder = 
 //     get<Hlt::DataHolder<Hlt::Configuration> >(hltsvc,"Hlt/Configuration");
 //   if (!holder) fatal() << " not able to retrieve configuration " << endreq;
@@ -64,7 +64,7 @@ StatusCode HltSummaryTool::initialize() {
 } 
 
 void HltSummaryTool::getSummary() {
-  m_summary = NULL;
+  m_summary = 0;
   std::string loca = m_summaryLocation;
   m_summary = get<LHCb::HltSummary >(loca);  
   if (! m_summary) error() << " No summaryy in TES! " << endreq;
