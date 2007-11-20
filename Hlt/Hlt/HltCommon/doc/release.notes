@@ -13,6 +13,9 @@
      - HltSelectionEntry: use boost::split instead of EParser
      - HltTrackFromParticle: remove unneeded temporaries which fix assumptions on types
                              use 0 instead of NULL
+     - HltTrackFromTes: don't use member data if usage is within single scope
+                        remove unneeded temporaries which fix assumptions on types
+
 
 ! 2007-11-14 Jose A. Hernando
 	 - Adapting to Tf, removing Pat dependences

@@ -1,4 +1,4 @@
-// $Id: HltTrackFromTes.h,v 1.2 2007-03-26 16:37:18 cattanem Exp $
+// $Id: HltTrackFromTes.h,v 1.3 2007-11-20 10:26:27 graven Exp $
 #ifndef HLTTRACKFROMTES_H 
 #define HLTTRACKFROMTES_H 1
 
@@ -37,6 +37,5 @@ protected:
   
   bool m_orderByPt;
   
-  LHCb::Tracks* m_tracks;
 };
 #endif // HLTTRACKFROMTES_H

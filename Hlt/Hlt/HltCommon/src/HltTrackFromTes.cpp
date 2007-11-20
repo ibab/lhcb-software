@@ -1,4 +1,4 @@
-// $Id: HltTrackFromTes.cpp,v 1.3 2007-06-25 20:50:26 hernando Exp $
+// $Id: HltTrackFromTes.cpp,v 1.4 2007-11-20 10:26:27 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,6 @@ HltTrackFromTes::HltTrackFromTes( const std::string& name,
 		  m_tracksLocation  = LHCb::TrackLocation::Default);
   
   declareProperty("Type",m_types);
-
   declareProperty("OrderByPt", m_orderByPt = false);
 
 }
@@ -46,9 +45,7 @@ HltTrackFromTes::~HltTrackFromTes() {}
 //=============================================================================
 StatusCode HltTrackFromTes::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-
   checkInput(m_outputTracks," no output tracks!");
-
   return sc;
 }
 
@@ -57,38 +54,29 @@ StatusCode HltTrackFromTes::initialize() {
 //=============================================================================
 
 StatusCode HltTrackFromTes::execute() {
-
-  StatusCode sc = StatusCode::SUCCESS;
-
-  bool ok = true;
-
-  ok = retrieve(m_tracks,m_tracksLocation);
+  LHCb::Tracks* tracks;
+  bool ok = retrieve(tracks,m_tracksLocation);
   if (!ok) return stop("no tracks in TES");
 
   m_outputTracks->clear();  
-  for (Tracks::iterator it = m_tracks->begin(); 
-       it != m_tracks->end(); it++) {
-    Track& track = (**it);
-    if (track.checkType(Track::Long)) m_outputTracks->push_back(&track);
+  for (Tracks::iterator it = tracks->begin(); 
+       it != tracks->end(); it++) {
+    if ( (*it)->checkType(Track::Long)) m_outputTracks->push_back(*it);
   }
   if (m_orderByPt)
     std::sort(m_outputTracks->begin(),m_outputTracks->end(),
               Hlt::SortTrackByPt());
   debug() << " transfered tracks " << m_outputTracks->size() 
-          << " from TES " << m_tracks->size() << endreq;
+          << " from TES " << tracks->size() << endreq;
 
-  if (m_outputTracks->empty()) return sc;
-  
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode HltTrackFromTes::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-  
   return HltAlgorithm::finalize();
 }
 
