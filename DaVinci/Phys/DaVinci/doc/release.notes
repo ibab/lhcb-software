@@ -5,8 +5,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-11-21 - Juan PALACIOS
+ - Add tests/options/DVTestAllPreselections.opts
+  . Test for the pre-selections to be run in the stripping, on BB inclusive
+    lumi 2 events.
+ - Add  tests/options/DVTest_Phys_v4_BB_lumi2.opts
+  . Data for the above.
  - Add tests/qmtest/davinci.qms/preselections.qms/test_bs2phigamma.qmt
-  . test for Bs -> Phi Gamma pre-selection
+  . New test for Bs -> Phi Gamma pre-selection
  - tests/options/DVTestBs2PhiGamma.opts
   . Add DC06-phys-lumi2 signal data.
   . Use separate TrueMCFilterCriteria for Kaons and Gammas.
