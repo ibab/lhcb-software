@@ -1,4 +1,7 @@
-// $Id: DVTestBs2PhiGamma.opts,v 1.1 2007-11-20 17:46:02 jpalac Exp $
+// $Id: DVTestBs2PhiGamma.opts,v 1.2 2007-11-21 17:17:25 jpalac Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// ============================================================================
 /** @file DVTestBs2PhiGamma.opts
  *
  *  Test file for Davinci Bs-> Phi Gamma pre-selection
@@ -23,12 +26,16 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 FindTrueDecay.Members += { "FilterDesktop/SelectTrueLooseDecay"};
 SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLooseAllPhotons", 
                                                     "Phys/StdLooseKaons"} ;
-SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
-                                            "gamma : TrueMCFilterCriterion/Decay"} ;
+SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/DecayK",
+                                            "gamma : TrueMCFilterCriterion/DecayGamma"} ;
+//SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay"};
 //
 // The decay descriptor is the only part that requires some thinking...
 //
-SelectTrueLooseDecay.Filter.Decay.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) gamma]cc" ;
+// Use linkers association for gammas.
+SelectTrueLooseDecay.Filter.DecayGamma.AssociationMethod = 3;
+SelectTrueLooseDecay.Filter.DecayGamma.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}{,gamma}) gamma]cc" ;
+SelectTrueLooseDecay.Filter.DecayK.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) gamma]cc" ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
@@ -40,26 +47,41 @@ AllTrueLooseDecay.DecayDescriptor = "[B_s0 -> K+ K- gamma]cc" ; // all particles
 //
 ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
-TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
-                                "AllTrueLooseDecay",                           
+TestCorrelations.Algorithms = { "AllTrueLooseDecay",                           
                                 "PreselXb2GammaX", 
-                                "Phys/StdLoosePhi2KK" };
+                                "StdLoosePhi2KK"    };
 //
 // Options
 //
-//-- GAUDI data cards generated on 11/8/07 5:37 PM
-//-- For Event Type = 11114001 / Data type = DST 1
+//-- GAUDI data cards generated on 11/21/07 11:28 AM
+//-- For Event Type = 13102201 / Data type = DST 1
+//--     Configuration = DC06 - phys-lumi2
+//--     DST 1 datasets produced by Brunel - v30r14
+//--     From DIGI 1 datasets produced by Boole - v12r10
+//--     From SIM 1 datasets produced by Gauss - v25r7
+//--     Database version = v30r14
+//--     Cards content = physical-physical
+//--     
+//-- Datasets replicated at CERN
+//-- 160 dataset(s) - NbEvents = 79521
+//-- 
 
 EventSelector.Input   = {
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
-ApplicationMgr.EvtMax = 100 ;
+ApplicationMgr.EvtMax = 200 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 1 ;
 
