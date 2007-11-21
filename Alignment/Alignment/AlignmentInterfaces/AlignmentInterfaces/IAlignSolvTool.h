@@ -1,4 +1,4 @@
-// $Id: IAlignSolvTool.h,v 1.2 2007-05-10 13:27:17 jblouw Exp $
+// $Id: IAlignSolvTool.h,v 1.3 2007-11-21 13:07:46 janos Exp $
 #ifndef ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 1
 
@@ -9,11 +9,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-
-class AlSymMat;
-class AlMat;
-class AlVec;
-
+// from SolvKernel
+#include "SolvKernel/AlVec.h"
+#include "SolvKernel/AlSymMat.h"
+#include "SolvKernel/AlMat.h"
 
 static const InterfaceID IID_IAlignSolvTool ( "IAlignSolvTool", 1, 0 );
 
@@ -23,16 +22,14 @@ static const InterfaceID IID_IAlignSolvTool ( "IAlignSolvTool", 1, 0 );
  *  @author Adlene Hicheur
  *  @date   2006-09-20
  */
+
 class IAlignSolvTool : virtual public IAlgTool {
 public: 
 
   // Return the interface ID
-  static const InterfaceID& interfaceID() { 
-
-    return IID_IAlignSolvTool;    
-    
-  }
-virtual bool compute(AlSymMat& ,AlVec&) = 0;
+  static const InterfaceID& interfaceID() { return IID_IAlignSolvTool; }
+  
+  virtual bool compute(AlSymMat& ,AlVec&) const = 0;
 
 
 protected:
