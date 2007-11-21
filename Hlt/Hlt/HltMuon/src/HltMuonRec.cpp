@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.7 2007-10-30 19:05:27 smenzeme Exp $
+// $Id: HltMuonRec.cpp,v 1.8 2007-11-21 13:28:28 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -258,7 +258,10 @@ StatusCode HltMuonRec::execute() {
 
   setFilterPassed(true);
 
-  LHCb::Tracks* outputTracks = get<LHCb::Tracks>( m_outputTracksName );
+  
+  LHCb::Tracks* outputTracks  = new LHCb::Tracks();
+  put(outputTracks, m_outputTracksName);
+
 
   int m_countMuonCandidates=0;
   

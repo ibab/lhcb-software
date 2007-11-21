@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+! 2007-11-21 - Stephanie Hansmann-Menzemer
+ - bug fix to previous changes
 
 ! 2007-11-15 - Jose A. Hernando
  - removing Pat tracks from HltMuonRefine
