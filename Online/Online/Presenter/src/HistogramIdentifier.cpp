@@ -82,12 +82,12 @@ HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
     m_identifier = m_histogramType + "/" + m_taskName + "/" + m_algorithmName
       + "/" + (((TObjString *)histogramUrlMatchGroup->At(6))->GetString()).
       Data();
-    if (m_isPlausible ) { // && m_histogramType != ""
+    if (m_isPlausible && m_histogramType != "") {
       m_isDimFormat = true;
     }
     m_gauchocommentBeat = histogramUrl + "/gauchocomment";
     m_gauchocommentEric = histogramUrl.erase(0, m_histogramType.length()+1) +
-      "/gauchocomment";
+                                             "/gauchocomment";
   }
   histogramUrlMatchGroup->Delete();
   delete histogramUrlMatchGroup;
