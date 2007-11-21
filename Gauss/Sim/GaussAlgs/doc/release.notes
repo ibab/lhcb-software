@@ -4,8 +4,14 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2007-11-21 - Gloria Corti
+ - In case of failure of Giga->retrieveEvent return failure of algorithm,
+   since inside an exception of some type has likely been thrown
+   . GiGaFlushAlgorithm.cpp
+   . GiGaCheckEventStatus.cpp
+
 ! 2007-11-19 - Gloria Corti
- - Check status code from Giga->retrieve{The}Event, in case of an exception 
+ - Check status code from Giga->retrieveEvent, in case of an exception 
    caught by GiGa that could have serious failure on G4 event internally.
    In case of failure set filterPassed false so that the event is not processed
    further in the simulation phase and not written out.

@@ -1,4 +1,4 @@
-// $Id: GiGaCheckEventStatus.cpp,v 1.3 2007-11-19 10:03:50 gcorti Exp $
+// $Id: GiGaCheckEventStatus.cpp,v 1.4 2007-11-21 20:55:54 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -69,8 +69,7 @@ StatusCode GiGaCheckEventStatus::execute() {
   const G4Event* event = 0;
   StatusCode sc = gigaSvc()->retrieveEvent(event);
   if( !sc.isSuccess() ) {
-    setFilterPassed( false );
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
 
   // Check if it was processed without problems. 

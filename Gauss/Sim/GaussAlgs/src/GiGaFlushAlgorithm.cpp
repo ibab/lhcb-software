@@ -1,4 +1,4 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.6 2007-11-19 10:03:50 gcorti Exp $
+// $Id: GiGaFlushAlgorithm.cpp,v 1.7 2007-11-21 20:52:17 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -69,14 +69,13 @@ StatusCode GiGaFlushAlgorithm::execute()
   
   // extract the event ( "flush the GiGa" )
   const G4Event* event = 0 ;
-  // *gigaSvc()  >> event     ;
+  //*gigaSvc()  >> event     ;
   // equivalent to retrieveEvent(), behind the scene this uses tool 
   // GiGaRunManager to prepareTheEvent() if not prepared, processTheEvent()
   // and then retrieveTheEvent().
   StatusCode sc = gigaSvc()->retrieveEvent(event);
   if( !sc.isSuccess() ) {
-    setFilterPassed( false );
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   
   if ( msgLevel( MSG::DEBUG ) ) 
