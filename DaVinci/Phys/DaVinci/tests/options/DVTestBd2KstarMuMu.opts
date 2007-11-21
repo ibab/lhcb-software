@@ -1,6 +1,6 @@
-// $Id: DVTestBd2KstarMuMu.opts,v 1.3 2007-11-20 17:46:29 jpalac Exp $
+// $Id: DVTestBd2KstarMuMu.opts,v 1.4 2007-11-21 17:15:51 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 /** @file DVTestBd2KstarMuMu.opts
  *
@@ -24,10 +24,12 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 // Truth filter for Bd -> MuMuK*  No PID
 //
 FindTrueDecay.Members += { "FilterDesktop/SelectTrueNoPIDsDecay"};
-SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdNoPIDsPions", "Phys/StdNoPIDsKaons","Phys/StdNoPIDsMuons" } ;
+SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdNoPIDsPions", 
+                                                     "Phys/StdNoPIDsKaons",
+                                                     "Phys/StdNoPIDsMuons" } ;
 SelectTrueNoPIDsDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
-                                       "pi+ : TrueMCFilterCriterion/Decay",
-                                       "mu+ : TrueMCFilterCriterion/Decay"} ;
+                                             "pi+ : TrueMCFilterCriterion/Decay",
+                                             "mu+ : TrueMCFilterCriterion/Decay"} ;
 //
 // The decay descriptor is the only part that requires some thinking...
 //
