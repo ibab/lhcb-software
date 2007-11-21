@@ -3,6 +3,10 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2007-11-21 - Jan Amoraal
+ - Remove obsolete interface IAlignDetector
+ - Clean-up interface IAlgnSolvTool
+
 </PRE><H1><A NAME=v2r3>2007-11-13 AlignmentInterfaces v2r3 </A></H1><PRE>
 ! 2007-10-18 - Louis Nicolas
  - Removed obsolete IAlignSelTool.h. It has been merged to TrackInterfaces/ITrackSelector.h.
