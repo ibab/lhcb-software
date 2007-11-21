@@ -2,6 +2,11 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+! 2007-11-21 - Jan Amoraal
+ - Remove obsolete tool AlignSolvTool
+ - fix unsigned/signed integer comparison warnings
+ - fix requirements
+
 !=========================== AlignSolvTools v2r1 2007-09-18 ==================
  - J. Blouw: new version, since Adlene has incorporated new features.
 
