@@ -1,7 +1,7 @@
 #Author: Adlene Hicheur, EPFL, Adlene.Hicheur@cern.ch
 
 package AlignSolvTools
-version           v2r0
+version           v2r1
 
 branches src cmt doc
 include_path none
