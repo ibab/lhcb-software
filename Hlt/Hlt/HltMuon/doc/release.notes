@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+! 2007-11-21 - Jose A. Hernando
+ - m_outputMuonTracksName used as a location for HltMuonRec
+
 ! 2007-11-21 - Stephanie Hansmann-Menzemer
  - bug fix to previous changes
 

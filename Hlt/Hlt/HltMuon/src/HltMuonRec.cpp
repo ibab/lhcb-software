@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.8 2007-11-21 13:28:28 smenzeme Exp $
+// $Id: HltMuonRec.cpp,v 1.9 2007-11-21 18:18:50 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -260,7 +260,7 @@ StatusCode HltMuonRec::execute() {
 
   
   LHCb::Tracks* outputTracks  = new LHCb::Tracks();
-  put(outputTracks, m_outputTracksName);
+  put(outputTracks, m_outputMuonTracksName);
 
 
   int m_countMuonCandidates=0;
@@ -393,7 +393,7 @@ StatusCode HltMuonRec::execute() {
       trgTr->addToLhcbIDs(itMuonTrack->point(4).tile());
       
       outputTracks->insert(trgTr);
-
+      // m_outputTracks->push_back(trgTr);
     }
   }  
     
