@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-11-21 M Needham
+ - Use isOKStrip method 
+
 !======================= STAlgorithms v2r4 2007-11-15 ========================
 ! 2007-11-15 M. Needham
  - Bug fix in STDigitCreator [in all strip running, not the default]

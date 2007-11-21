@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.18 2007-11-06 09:53:22 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.19 2007-11-21 13:21:11 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -213,7 +213,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
 
             STChannelID aChan = aSector->stripToChan(iStrip);
 
-            if (aSector->stripStatus(aChan) != DeSTSector::Dead){
+            if (aSector->isOKStrip(aChan) == true){
             
               const double electrons = ionization*beetleFraction*scaling*weightedCharge
                                  /totWeightedCharge;

@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.16 2007-03-23 14:13:39 cattanem Exp $
+// $Id: STClusterCreator.cpp,v 1.17 2007-11-21 13:21:11 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -70,6 +70,8 @@ StatusCode STClusterCreator::initialize()
     m_digitSig2NoiseCut[*iterS] = m_digitSig2NoiseThreshold*adc;
     m_clusterSig2NoiseCut[*iterS] = m_clusterSig2NoiseThreshold*adc; 
     m_highSig2NoiseCut[*iterS] = m_highThreshold*adc;
+    //  std::cout << (*iterS)->name() << " " <<   m_digitSig2NoiseCut[*iterS]
+    //          << " "<< m_clusterSig2NoiseCut[*iterS] << std::endl;
   } // iterS
  
   // position tool

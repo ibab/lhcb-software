@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.16 2007-11-14 14:14:00 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.17 2007-11-21 13:21:11 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -112,6 +112,7 @@ StatusCode STDigitCreator::execute()
   // register STDigits in the transient data store
   put(digitsCont,m_outputLocation);
 
+
   // Make the link between digits and mcdigits
   StatusCode sc = setMCTruth( digitsCont , mcDigitCont );
   if( sc.isFailure()) return Error("Failed to set MCTruth info", sc) ;
@@ -135,7 +136,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
       int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
       STChannelID aChan = aSector->stripToChan(iStrip); 
 
-      if (aSector->stripStatus(aChan) != DeSTSector::Dead){
+      if (aSector->isOKStrip(aChan) == true){
         // Generate a ADC value following a gaussian tail distribution
         double ranNoise = m_sigNoiseTool->noiseInADC(aSector) *
         m_gaussTailDist->shoot();
@@ -254,7 +255,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
       DeSTSector* aSector = m_tracker->findSector(iterP->second);
-      if (aSector->stripStatus(iterP->second) != DeSTSector::Dead){
+      if (aSector->isOKStrip(iterP->second) == true){
         STDigit* aDigit = new STDigit( adcValue(iterP->first) );
         digitsCont->insert(aDigit,iterP->second);
       } //ok strip
