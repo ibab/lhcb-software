@@ -28,6 +28,7 @@
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrajFitter.h"
 #include "TrackInterfaces/IVeloExpectation.h"
+#include "TrackInterfaces/IVeloClusterPosition.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
 
