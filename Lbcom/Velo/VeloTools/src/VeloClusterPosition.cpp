@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.15 2007-11-02 13:55:48 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.16 2007-11-21 13:22:26 szumlat Exp $
 // Include files
 
 // stl
@@ -53,7 +53,6 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_maxAngle ( 0. ),
     m_trackDir ( ),
     m_gloPoint ( ),
-    m_centreChan ( ),
     m_fracPos ( 0. )
 {
   declareInterface<IVeloClusterPosition>(this);
@@ -217,7 +216,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
 //============================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
-                                       const Direction& aDirection)
+                                       const Direction& aDirection) const
 {
   debug()<< " ==> position(cluster, point, direction) " <<endmsg;
   // this struct will be returned as output
@@ -234,16 +233,16 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   }
   // calculate fractional position
   double m_fracPos=fracPosLA(cluster);
-  m_centreChan=cluster->channelID();
+  LHCb::VeloChannelID centreChan=cluster->channelID();
   // fill partially the toolInfo structure
-  anInfo.strip=m_centreChan;
+  anInfo.strip=centreChan;
   anInfo.fractionalPosition=m_fracPos;
   // error estimate
   double error=0.;
   m_trackDir=Gaudi::XYZVector(aDirection.first, aDirection.second, 1.);
   m_gloPoint=aGlobalPoint;
   //-- return projected angle and local pitch
-  Pair aPair=projectedAngle(sensor);
+  Pair aPair=projectedAngle(sensor, centreChan);
   m_projectedAngle=aPair.first;
   double pitch=aPair.second;
   //-- error estimate
@@ -318,7 +317,7 @@ double VeloClusterPosition::projectedAngle() const
 }
 //============================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
-                                       const LHCb::StateVector& aState)
+                                       const LHCb::StateVector& aState) const
 {
   debug()<< " ==> position (VectorState) " <<endmsg;
   unsigned int sensorNumber=cluster->channelID().sensor();
@@ -352,7 +351,8 @@ GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
   return aType;
 }
 //============================================================================
-Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor)
+Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
+                          const LHCb::VeloChannelID centreChan) const
 {
   debug()<< " ==> projectedAngle(sensor) " <<endmsg;
   //-- returned pair consists of projected angle and local pitch
@@ -361,7 +361,7 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor)
   Pair locPair;
   // transform global point to the local reference frame
   Gaudi::XYZPoint aLocPoint=sensor->globalToLocal(m_gloPoint);
-  unsigned int centreStrip=m_centreChan.strip();
+  unsigned int centreStrip=centreChan.strip();
   //----------------
   //   R sensor
   //----------------
@@ -397,7 +397,7 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor)
     double radiusOnPhi=aLocPoint.rho();
     // make velo trajectory
     std::auto_ptr<LHCb::Trajectory> traj=
-      m_veloDet->trajectory(LHCb::LHCbID(m_centreChan), m_fracPos);
+      m_veloDet->trajectory(LHCb::LHCbID(centreChan), m_fracPos);
     double trajEnd=traj->endPoint().rho();
     double trajBeg=traj->beginPoint().rho();
     double rMax=trajEnd;
