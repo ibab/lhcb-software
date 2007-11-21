@@ -1,18 +1,16 @@
-// $Id: gslSVDsolver.h,v 1.1 2007-10-26 12:00:22 graven Exp $
+// $Id: gslSVDsolver.h,v 1.2 2007-11-21 14:14:47 janos Exp $
 #ifndef GSLSVDSOLVER_H 
 #define GSLSVDSOLVER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "AlignmentInterfaces/IAlignSolvTool.h"            // Interface
-
-// from SolvKernel
-#include "SolvKernel/AlVec.h"
-#include "SolvKernel/AlSymMat.h"
 
 // from GSL
 #include "gsl/gsl_linalg.h"
+
+// Interface
+#include "AlignmentInterfaces/IAlignSolvTool.h"
 
 /** @class gslSVDsolver gslSVDsolver.h
  *  

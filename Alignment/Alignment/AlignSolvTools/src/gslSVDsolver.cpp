@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.1 2007-10-26 12:00:21 graven Exp $
+// $Id: gslSVDsolver.cpp,v 1.2 2007-11-21 14:14:47 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -45,8 +45,8 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   gsl_matrix* matrixA = gsl_matrix_alloc(size, size);
   debug() << "Size of gsl_matrix A = " << matrixA->size1 << endmsg;
   /// Fill matrix A
-  for (unsigned(i) = 0; i < size; ++i) {
-    for (unsigned(j) = 0; j < size; ++j) {
+  for (unsigned i = 0u; i < size; ++i) {
+    for (unsigned j = 0u; j < size; ++j) {
       debug() << "Element (i,j) of AlSymMat A = " << symMatrix[i][j] << endmsg;
       gsl_matrix_set(matrixA, i, j, symMatrix[i][j]);
       debug() << "Element (i,j) of gsl_matrix A = " << gsl_matrix_get(matrixA, i, j) << endmsg;
@@ -85,7 +85,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   if (m_svdEpsilon > 0) {
     /// Threshold is epsilon times max singular value
     double threshold = m_svdEpsilon * (*gsl_vector_const_ptr(vectorS, 0));
-    for (unsigned(i) = 0; i < size; ++i) {
+    for (unsigned i = 0u; i < size; ++i) {
       double* s = gsl_vector_ptr(vectorS, i);
       if ((*s) < threshold) (*s) = 0; 
     }
