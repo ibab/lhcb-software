@@ -13,10 +13,6 @@
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/NTuple.h"
-//
-#include "SolvKernel/AlSymMat.h"
-#include "SolvKernel/AlMat.h"
-#include "SolvKernel/AlVec.h"
  
 // local
 #include "SpmInvTool.h"
@@ -49,9 +45,9 @@ SpmInvTool::~SpmInvTool() {}
 
 //=============================================================================
 
-bool SpmInvTool::compute(AlSymMat& m,AlVec& b) 
+bool SpmInvTool::compute(AlSymMat& m,AlVec& b) const 
 {
-  SolvSpmInv(m,b);
+  const_cast<SpmInvTool*>(this)->SolvSpmInv(m,b);
 
   return true;
 }

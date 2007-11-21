@@ -1,4 +1,4 @@
-// $Id: SpmInvTool.h,v 1.1 2007-06-28 16:33:57 ahicheur Exp $
+// $Id: SpmInvTool.h,v 1.2 2007-11-21 14:12:10 janos Exp $
 #ifndef ALIGNSOLVTOOLS_SPMINVTOOL_H 
 #define ALIGNSOLVTOOLS_SPMINVTOOL_H 1
 
@@ -6,12 +6,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-
-#include "AlignmentInterfaces/IAlignSolvTool.h"            // Interface
-
-class AlSymMat;
-class AlMat;
-class AlVec;
+// Interface
+#include "AlignmentInterfaces/IAlignSolvTool.h" 
 
 /** @class SpmInvTool SpmInvTool.h AlignSolvTools/SpmInvTool.h
  *  
@@ -19,16 +15,19 @@ class AlVec;
  *  @author Adlene Hicheur
  *  @date   2007-06
  */
+
 class SpmInvTool : public GaudiTool, virtual public IAlignSolvTool {
 public: 
   /// Standard constructor
   SpmInvTool( const std::string& type, 
-                 const std::string& name,
-                 const IInterface* parent);
-
+	      const std::string& name,
+	      const IInterface* parent);
+  
   virtual ~SpmInvTool( ); ///< Destructor
 
-  virtual bool compute(AlSymMat& ,AlVec&); ///< Call method to compute the solution, get symetric matrix and vector in input and replaces them by inverse matrix and solution vector in output.
+  // Call method to compute the solution, get symetric matrix and 
+  // vector in input and replaces them by inverse matrix and solution vector in output.
+  virtual bool compute(AlSymMat& ,AlVec&) const; 
 
 
 

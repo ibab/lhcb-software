@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.4 2007-08-28 14:44:04 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.5 2007-11-21 14:12:10 janos Exp $
 // Include files 
 
 #include <stdio.h>
@@ -53,11 +53,9 @@ DiagSolvTool::~DiagSolvTool() {}
 
 //=============================================================================
 
-bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) 
+bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) const
 {
-
-  
-  SolvDiag(m,b);
+  const_cast<DiagSolvTool*>(this)->SolvDiag(m,b);
 
   return true;
 }
@@ -189,7 +187,7 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
   
 // Fill the ntuple
 
-  for (int i=0;i<w.size();i++) {
+  for (unsigned i = 0u; i < w.size(); ++i) {
     nteig_mode = i;
     nteig_eigval = w[i];
     if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
@@ -200,7 +198,7 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
     MonTuple->column("eparam",nteig_eigmod);
     MonTuple->column("erreparam",nteig_erreigmod);  
     std::vector<double> eigenvector;
-    for (int j=0;j<w.size();j++) {
+    for (unsigned j = 0u; j < w.size(); ++j) {
       eigenvector.push_back(z[i][j]);
     }
     
@@ -335,9 +333,9 @@ double DiagSolvTool::findMax(AlSymMat& M)
   
   double max(0.);
   
- for (int i=0;i<M.size();i++) {
+ for (unsigned i = 0u; i < M.size(); ++i) {
 
-   for (int j=0;j<=i;j++) {
+   for (unsigned j = 0u; j <= i; ++j) {
      if (fabs(M[i][j])>max) max = fabs(M[i][j]);      
     }
 

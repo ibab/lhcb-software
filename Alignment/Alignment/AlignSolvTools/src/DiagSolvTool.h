@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.h,v 1.3 2007-07-12 09:21:29 ahicheur Exp $
+// $Id: DiagSolvTool.h,v 1.4 2007-11-21 14:12:10 janos Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
@@ -24,12 +24,15 @@ class DiagSolvTool : public GaudiTupleTool, virtual public IAlignSolvTool {
 public: 
   /// Standard constructor
   DiagSolvTool( const std::string& type, 
-                 const std::string& name,
-                 const IInterface* parent);
-
+		const std::string& name,
+		const IInterface* parent);
+  
   virtual ~DiagSolvTool( ); ///< Destructor
 
-  virtual bool compute(AlSymMat& ,AlVec&); ///< Call method to compute the solution, get symetric matrix and vector in input and replaces them by inverse matrix and solution vector in output.
+  ///< Call method to compute the solution, get symetric 
+  /// matrix and vector in input and replaces them by 
+  /// inverse matrix and solution vector in output.
+  virtual bool compute(AlSymMat& ,AlVec&) const; 
 
   //enum Solver {SPMINV, 
   //               DIAG, 
