@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.4 2007-11-20 12:51:21 hernando Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.5 2007-11-21 20:50:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode HltRecCheckVertices::initialize() {
   initializeHisto(m_histoDY,"DeltaVY",-0.2,0.2,100);
   initializeHisto(m_histoDZ,"DeltaVZ",-1.,1.,100);
 
-  if (m_ipType == "2DIP") m_ipFun = new Hlt::rIP();
+  if (m_ipType == "2DIP")      m_ipFun = new Hlt::rIP();
   else if (m_ipType == "3DIP") m_ipFun = new  Hlt::IP();
   else 
     error() << " please select an option IPType = 2DIP,3DIP " << endreq;
@@ -73,7 +73,6 @@ StatusCode HltRecCheckVertices::execute() {
 }
 
 void HltRecCheckVertices::relateVertices() {
-
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
 
   m_TESInputVertices = get<RecVertices>(m_TESInputVerticesName);
@@ -111,7 +110,6 @@ void HltRecCheckVertices::relateVertices() {
   m_relMCVertexVertex = m_relVertexMCVertex.reverse();
   // m_relMCVertexVertex.info();
   
-
 }    
 
 
@@ -132,16 +130,14 @@ void HltRecCheckVertices::checkVertices() {
   const std::vector<RecVertex*>& vers = m_relVertexMCVertex.keys();
   for (std::vector<RecVertex*>::const_iterator it = vers.begin();
        it != vers.end(); ++it) {
-    const RecVertex& ver = **it;
-    double x = ver.position().x();
-    double y = ver.position().y();
-    double z = ver.position().z();
+    double x = (*it)->position().x();
+    double y = (*it)->position().y();
+    double z = (*it)->position().z();
 
-    const MCVertex& mcver = 
-      m_relVertexMCVertex.best_relation((RecVertex*) &ver,w);    
-    double mcx = mcver.position().x();
-    double mcy = mcver.position().y();
-    double mcz = mcver.position().z();
+    const MCVertex* mcver = m_relVertexMCVertex.best_relation(*it,w);    
+    double mcx = mcver->position().x();
+    double mcy = mcver->position().y();
+    double mcz = mcver->position().z();
     
     fillHisto(m_histoX,x,1.);
     fillHisto(m_histoY,y,1.);
@@ -161,5 +157,6 @@ void HltRecCheckVertices::checkVertices() {
 
 
 StatusCode HltRecCheckVertices::finalize() {
+  delete m_ipFun; m_ipFun = 0;
   return HltAlgorithm::finalize();
 }

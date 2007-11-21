@@ -4,6 +4,10 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2007-11-21 - Gerhard Raven
+    - remove unneeded cast
+    - zero pointer after deleting it
+
 ! 2007-11-20 - Jose A. Hernando
 	- adaptation to Tf, HltLHCbIDMCParticle relation table
 
