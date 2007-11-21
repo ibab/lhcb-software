@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2007-11-02 - Tomasz Szumlak
+ - IVeloClusterPosition moved to Tr/TrackInterfaces package
 
 ! 2007-11-02 - Tomasz Szumlak
  - updated IVeloClusterPosition interface - method accepting
