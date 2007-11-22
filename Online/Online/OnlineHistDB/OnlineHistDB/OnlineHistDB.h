@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.15 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.16 2007-11-22 18:23:39 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -142,8 +142,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getTasks(std::vector<string>& list);
   /// gets the list of algorithms, type can be "_ALL_", "CHECK", "HCREATOR"
   int getAlgorithms(std::vector<string>& list,std::string type="_ALL_");
-  /// change reference histograms root directory (for testing)
-  void setRefRoot(std::string newroot) { OnlineHistDBEnv_constants::RefRoot = newroot; }
 
  private:
   // private dummy copy constructor and assignment operator

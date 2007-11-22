@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.11 2007-11-22 17:38:35 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.12 2007-11-22 18:23:40 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -57,11 +57,12 @@ class OnlineRootHist
   // TH1 drawing methods
   /// calls TH1 Draw method, calls setDrawOptions()
   virtual void Draw(TPad* &Pad);
-  /// overdraw reference (if existing and requested) on current plot
-  void drawReference();
+  /// normalize reference (if existing and requested) to current plot
+  void normalizeReference();
 
  private:
   bool updateDBOption(std::string opt, void *value, bool isdefault);
+  void drawReference();
   std::string m_identifier;
   OnlineHistDB *m_session;
   OnlineHistogram* m_dbHist;

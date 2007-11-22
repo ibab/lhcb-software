@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.13 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.14 2007-11-22 18:23:39 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -29,7 +29,7 @@ namespace OnlineHistDBEnv_constants {
     "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
 
-  static std::string RefRoot = "/home/online/Histograms/Reference"; 
+  static const std::string StdRefRoot = "/home/online/Histograms/Reference"; 
   static const std::string m_SetSeparator = "_$";
 
   static const unsigned int VSIZE_SN          = 131;
@@ -83,7 +83,10 @@ class OnlineHistDBEnv {
   inline OCIEnv *envhp() const {return m_envhp;}
   inline OCIError *errhp() const {return m_errhp;}
   inline OCISvcCtx *svchp() const {return m_svchp;}
-
+  /// get reference histograms root directory 
+  inline std::string refRoot() {return m_refRoot;}
+  /// change reference histograms root directory (for testing)
+  void setRefRoot(std::string newroot) { m_refRoot = newroot; }
 
  protected:
   OnlineHistDBEnv(std::string User); 
@@ -196,6 +199,7 @@ class OnlineHistDBEnv {
   int m_debug;
   int m_excLevel;
 
+  std::string m_refRoot;
 };
 
 #endif // ONLINEHISTDBENV_H

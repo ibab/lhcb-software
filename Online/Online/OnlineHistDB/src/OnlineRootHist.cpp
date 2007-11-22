@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.14 2007-11-22 17:38:35 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.15 2007-11-22 18:23:40 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -329,7 +329,7 @@ bool OnlineRootHist::setReference(TH1 *ref,
 				  std::string DataType) {
   bool out=false;
   if(m_dbHist) {
-    std::string refDir = OnlineHistDBEnv_constants::RefRoot +
+    std::string refDir = m_dbHist->refRoot() +
       "/" + m_dbHist->task();
     std::string command = "mkdir -p " +refDir;
     system(command.c_str());
@@ -374,7 +374,7 @@ TH1* OnlineRootHist::getReference(int startrun,
     }
     else {
       std::stringstream refFile;
-      refFile << OnlineHistDBEnv_constants::RefRoot << "/"
+      refFile << m_dbHist->refRoot() << "/"
 	      << m_dbHist->task() << "/" << DataType << "_"
 	      << startrun;
       TFile* f = new TFile(refFile.str().c_str(),"READ");
@@ -397,20 +397,25 @@ TH1* OnlineRootHist::getReference(int startrun,
   return out;
 }
 
+
+void OnlineRootHist::normalizeReference() {
+  if( m_reference ) {
+    if ("ENTR" == m_refOption) {
+      m_reference->SetNormFactor(m_rootHist->GetSumOfWeights());
+    }
+    else if ("AREA" == m_refOption) {
+      m_reference->SetNormFactor(m_rootHist->Integral());
+    }
+  }
+}
+
 void OnlineRootHist::drawReference() {
   if( m_reference ) {
     // standard plot style
     m_reference->SetLineStyle(2);
     m_reference->SetLineColor(16);
     // normalization
-    if ("ENTR" == m_refOption) {
-      m_reference->DrawNormalized("SAME",m_rootHist->GetSumOfWeights());
-    }
-    else if ("AREA" == m_refOption) {
-      m_reference->DrawNormalized("SAME",m_rootHist->Integral());
-    }
-    else {
-      m_reference->Draw("SAME");
-    }
+    normalizeReference();
+    m_reference->Draw("SAME");
   }
 }

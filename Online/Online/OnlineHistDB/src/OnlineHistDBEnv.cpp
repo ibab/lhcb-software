@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.4 2007-11-22 17:38:35 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.5 2007-11-22 18:23:40 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -6,7 +6,8 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string User)
   : OCIthresholds(NULL), OCIparameters(NULL),
     OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
-    m_user(toUpper(User)), m_debug(0), m_excLevel(1) {
+    m_user(toUpper(User)), m_debug(0), m_excLevel(1),
+    m_refRoot(OnlineHistDBEnv_constants::StdRefRoot) {
     initOCIBinds();
   }
 
@@ -26,6 +27,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
   m_TStorage = m.m_TStorage;
   m_HStorage = m.m_HStorage;
   m_PStorage = m.m_PStorage;
+  m_refRoot = m.m_refRoot;
   initOCIBinds();
 }
 
