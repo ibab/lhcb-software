@@ -765,7 +765,7 @@ std::vector<AIDA::IHistogram1D*> CaloPhotonChecker::defHisto1d(
 		AIDA::IHistogram1D* histo;
     sprintf(histoname,"%s #%i",hname.c_str(),nhisto+i);
     std::stringstream hid("");
-    hid << nhisto+i << endreq;
+    hid << nhisto+i ;
     histo  = hBook1( dir + hid.str() , histoname ,  int(xmin), int(xmax),bin );
 
 		debug() <<"booking Histo ..."<<histoname<<endreq; 
