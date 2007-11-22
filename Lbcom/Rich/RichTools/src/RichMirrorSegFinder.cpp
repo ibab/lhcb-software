@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.23 2007-11-22 13:11:08 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.24 2007-11-22 13:29:57 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -217,9 +217,13 @@ StatusCode Rich::MirrorSegFinder::initialize( )
     for (int j=0; j<2; ++j)
     {
       if ( !m_sphMirrors[i][j].empty() )
-        m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front();
+      { m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front(); }
+      else 
+      { m_lastFoundMirror[i][j][sph] = NULL; }
       if ( !m_secMirrors[i][j].empty() )
-        m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front();
+      { m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front(); }
+      else 
+      { m_lastFoundMirror[i][j][sec] = NULL; }
     }
   }}
 
@@ -305,19 +309,22 @@ Rich::MirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 
   // Most likely mirror is the last one found... So test this one first
   const DeRichSphMirror* mirror = m_lastFoundMirror[rich][side][sph];
-  const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
-  if ( dist2 > m_maxDist[rich][sph] )
+  if ( mirror )
   {
-    mirror = fullSphSearch(rich,side,reflPoint);
-  }
-  else if ( m_testFinding )
-  {
-    const DeRichSphMirror* test_mirror = fullSphSearch(rich,side,reflPoint);
-    if ( test_mirror != mirror )
+    const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
+    if ( dist2 > m_maxDist[rich][sph] )
     {
-      m_maxDist[rich][sph] *= m_tuneScale;
-      info() << "Decreasing " << rich << " spherical parameter to " << m_maxDist[rich][sph] << endreq;
-      mirror = test_mirror;
+      mirror = fullSphSearch(rich,side,reflPoint);
+    }
+    else if ( m_testFinding )
+    {
+      const DeRichSphMirror* test_mirror = fullSphSearch(rich,side,reflPoint);
+      if ( test_mirror != mirror )
+      {
+        m_maxDist[rich][sph] *= m_tuneScale;
+        info() << "Decreasing " << rich << " spherical parameter to " << m_maxDist[rich][sph] << endreq;
+        mirror = test_mirror;
+      }
     }
   }
 
@@ -365,19 +372,22 @@ Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
 
   // Most likely mirror is the last one found... So test this one first
   const DeRichSphMirror* mirror = m_lastFoundMirror[rich][side][sec];
-  const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
-  if ( dist2 > m_maxDist[rich][sec] )
+  if ( mirror )
   {
-    mirror = fullSecSearch(rich,side,reflPoint);
-  }
-  else if ( m_testFinding )
-  {
-    const DeRichSphMirror* test_mirror = fullSecSearch(rich,side,reflPoint);
-    if ( test_mirror != mirror )
+    const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
+    if ( dist2 > m_maxDist[rich][sec] )
     {
-      m_maxDist[rich][sec] *= m_tuneScale;
-      info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endreq;
-      mirror = test_mirror;
+      mirror = fullSecSearch(rich,side,reflPoint);
+    }
+    else if ( m_testFinding )
+    {
+      const DeRichSphMirror* test_mirror = fullSecSearch(rich,side,reflPoint);
+      if ( test_mirror != mirror )
+      {
+        m_maxDist[rich][sec] *= m_tuneScale;
+        info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endreq;
+        mirror = test_mirror;
+      }
     }
   }
 
