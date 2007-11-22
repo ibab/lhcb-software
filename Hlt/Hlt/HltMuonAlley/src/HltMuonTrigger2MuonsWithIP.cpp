@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsWithIP.cpp,v 1.3 2007-10-31 11:42:37 sandra Exp $
+// $Id: HltMuonTrigger2MuonsWithIP.cpp,v 1.4 2007-11-22 10:59:09 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -50,8 +50,6 @@ StatusCode HltMuonTrigger2MuonsWithIP::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  m_patVertexBank =
-    m_patDataStore->createVertexContainer(m_outputDimuonVerticesName,200);
   
   _ipFun = new Hlt::IP();
   
@@ -65,7 +63,6 @@ StatusCode HltMuonTrigger2MuonsWithIP::initialize() {
   Hlt::Info<RecVertex> docaInfo(m_DOCAKey);
   Hlt::Info<RecVertex> L0ConfirmationInfo(m_MuonKey);
   verbose() << "mass and ip cut " << m_minMassWithIP << " " << m_minIP << endmsg;
-  _massAndIPCut=((massInfo> m_minMassWithIP)&& (ipInfo > m_minIP)).clone();
   _massAndDOCAAndIPCut=((massInfo> m_minMassWithIP)&&
                         (docaInfo< m_maxDOCA)&& (ipInfo > m_minIP)).clone();
   
@@ -84,7 +81,10 @@ StatusCode HltMuonTrigger2MuonsWithIP::execute() {
   StatusCode sc = StatusCode::SUCCESS;
   debug()<<" Number of input tracks " << m_inputTracks->size() << endmsg;
   if (m_inputTracks->size() < 2) return stop(" Less than 2 muons ");
-  
+ 
+  RecVertices* muonpairs = new RecVertices();
+  muonpairs->reserve(50);
+   
   
   //first calculate IP for each muon
   
@@ -121,7 +121,8 @@ StatusCode HltMuonTrigger2MuonsWithIP::execute() {
       }
       StatusCode sc=checkIfL0Dimuon(toTest);
       if(sc.isSuccess()){
-        debug() << "vertex accepted " << endmsg;      
+        debug() << "vertex accepted " << endmsg;
+        muonpairs->insert(toTest);
         m_testedvertices.push_back(toTest);
         m_outputVertices->push_back(toTest);
       }
@@ -148,7 +149,7 @@ StatusCode HltMuonTrigger2MuonsWithIP::execute() {
     debug()<<" mass and Ip cut "<<m_selevertices.size()<<" and L0 chek "
            <<m_testedvertices.size()<<endreq;
   }
-  
+  put(muonpairs, m_outputDimuonVerticesName);  
   return sc;
 }
 
@@ -183,7 +184,7 @@ void HltMuonTrigger2MuonsWithIP::makeDiMuonPair(Hlt::VertexContainer& vcon)
       if (L0track<1) continue;
       double mass= HltUtils::invariantMass( **it, **it2,massmu,massmu); 
       double doca=HltUtils::closestDistanceMod( **it, **it2);
-      RecVertex* ver = m_patVertexBank->newEntry();
+      RecVertex* ver = new RecVertex();
       _vertexCreator(**it,**it2, *ver) ;
       ver->addInfo(m_massKey,mass); 
       ver->addInfo(m_DOCAKey,doca);    

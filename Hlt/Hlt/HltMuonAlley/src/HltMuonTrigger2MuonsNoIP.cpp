@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.4 2007-10-31 11:42:37 sandra Exp $
+// $Id: HltMuonTrigger2MuonsNoIP.cpp,v 1.5 2007-11-22 10:59:09 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -51,8 +51,6 @@ StatusCode HltMuonTrigger2MuonsNoIP::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  m_patVertexBank =
-    m_patDataStore->createVertexContainer(m_outputDimuonVerticesName,200);
   
   m_massKey= HltNames::particleInfoID("Mass");
   m_DOCAKey=HltNames::particleInfoID("DOCA");
@@ -89,7 +87,13 @@ StatusCode HltMuonTrigger2MuonsNoIP::execute() {
   if (m_inputTracks->size() < 2) return stop(" Less than 2 muons ");
   
   m_overtices.clear();
+ 
+  RecVertices* muonpairs = new RecVertices();
+  muonpairs->reserve(50);
   
+
+
+ 
   makeDiMuonPair(m_overtices);  
   if (m_overtices.size() <1) return stop(" No vertices");
   if(m_debug){
@@ -112,7 +116,6 @@ StatusCode HltMuonTrigger2MuonsNoIP::execute() {
 	//If both muons come from same muon origin (L0 or muon segment)
 	//do not consider this vertex 
 	StatusCode sc1 = checkIfSameAncestor(toTest);
-	if (sc1.isSuccess()) debug()  << "Not same ancestor "<< endmsg;
 	if (!sc1.isSuccess()){
 	  debug()  << "Same ancestor "<< endmsg;
 	  continue;
@@ -122,7 +125,9 @@ StatusCode HltMuonTrigger2MuonsNoIP::execute() {
         StatusCode sc=checkIfL0Dimuon(toTest);
         if(sc.isSuccess()){
           debug() << "vertex accepted " << endmsg;
+          
           m_testedvertices.push_back(toTest);
+          muonpairs->insert(toTest);
           m_outputVertices->push_back(toTest);
         }
 	
@@ -147,7 +152,8 @@ StatusCode HltMuonTrigger2MuonsNoIP::execute() {
     debug()<<" mass  cut "<<m_selevertices.size()<<
       " and L0 chek "<<m_testedvertices.size()<<endreq;
   }
-  
+  put(muonpairs, m_outputDimuonVerticesName);
+ 
   return sc;
 }
 
@@ -183,7 +189,7 @@ void HltMuonTrigger2MuonsNoIP::makeDiMuonPair(Hlt::VertexContainer& vcon)
       
       double mass= HltUtils::invariantMass( **it, **it2,massmu,massmu); 
       double doca=HltUtils::closestDistanceMod( **it, **it2);
-      RecVertex* ver = m_patVertexBank->newEntry();
+      RecVertex* ver = new RecVertex();      
       _vertexCreator(**it,**it2, *ver) ;
       ver->addInfo(m_massKey,mass); 
       ver->addInfo(m_DOCAKey,doca);    
@@ -191,7 +197,6 @@ void HltMuonTrigger2MuonsNoIP::makeDiMuonPair(Hlt::VertexContainer& vcon)
       ver->addInfo(m_MuonKey,L0track);
       verbose()<<"vertex mass "<<ver->info(m_massKey,0)<<endreq;
       verbose()<<" vertex position "<< ver->position()<<endreq;   
-      //m_patVertexBank->newEntry();        
       vcon.push_back( ver);
       verbose() << " make vertices with mass " << mass << endreq;
       verbose()<<" P of the two tracks "<< (**it).p()<<" "<<(**it2).p()<<endreq;       

@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsNoIP.h,v 1.2 2007-10-31 11:42:37 sandra Exp $
+// $Id: HltMuonTrigger2MuonsNoIP.h,v 1.3 2007-11-22 10:59:09 sandra Exp $
 #ifndef HLTMUONTRIGGER2MUONSNOIP_H 
 #define HLTMUONTRIGGER2MUONSNOIP_H 1
 
@@ -50,7 +50,6 @@ protected:
   HltHisto h_mass;
   HltHisto h_DOCA;
 
-  PatVertexContainer* m_patVertexBank;
   std::string m_outputDimuonVerticesName;
 };
 #endif // HLTMUONTRIGGER2MUONSNOIP_H

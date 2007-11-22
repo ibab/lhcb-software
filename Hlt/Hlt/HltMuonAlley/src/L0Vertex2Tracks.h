@@ -1,4 +1,4 @@
-// $Id: L0Vertex2Tracks.h,v 1.2 2007-11-15 14:55:03 graven Exp $
+// $Id: L0Vertex2Tracks.h,v 1.3 2007-11-22 10:59:09 sandra Exp $
 #ifndef L0VERTEX2TRACKS_H 
 #define L0VERTEX2TRACKS_H 1
 
@@ -7,7 +7,6 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltFunctions.h"
 
-#include "PatTools/PatDataStore.h"
 
 /** @class L0Vertex2Tracks L0Vertex2Tracks.h
  *  
@@ -25,6 +24,8 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+  bool isIn(LHCb::Track* track);
+protected:
 
 private:
 

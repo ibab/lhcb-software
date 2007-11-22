@@ -1,4 +1,4 @@
-// $Id: HltMuonTrigger2MuonsWithIP.h,v 1.2 2007-10-31 11:42:38 sandra Exp $
+// $Id: HltMuonTrigger2MuonsWithIP.h,v 1.3 2007-11-22 10:59:09 sandra Exp $
 #ifndef HLTMUONTRIGGER2MUONSWITHIP_H 
 #define HLTMUONTRIGGER2MUONSWITHIP_H 1
 
@@ -30,9 +30,7 @@ public:
 
 protected:
 
-  
 
-  Estd::filter<LHCb::RecVertex>*  _massAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _massAndDOCAAndIPCut;
   Estd::filter<LHCb::RecVertex>*  _triggerMassAndIPCut;
 
@@ -56,7 +54,6 @@ protected:
   HltHisto h_DOCA;
   HltHisto h_IP;
 
-  PatVertexContainer* m_patVertexBank;
   std::string m_outputDimuonVerticesName;
 };
 #endif // HLTMUONTRIGGER2MUONSWITHIP_H

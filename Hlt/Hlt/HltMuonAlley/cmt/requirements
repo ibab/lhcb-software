@@ -18,7 +18,7 @@ use TrackEvent		v*    Event
 use HltEvent            v*    Event
 use L0Event             v*    Event
 use HltBase             v*    Hlt
-use PatTools            v*    Pat
+# use PatTools            v*    Pat
 use MuonDet             v*    Det
 
 use TrackInterfaces     v*    Tr
