@@ -1,4 +1,4 @@
-// $Id: MuonTConfWithT.h,v 1.2 2007-10-31 11:51:50 sandra Exp $
+// $Id: MuonTConfWithT.h,v 1.3 2007-11-22 11:05:36 sandra Exp $
 #ifndef MUONTCONFWITHT_H 
 #define MUONTCONFWITHT_H 1
 
@@ -8,9 +8,6 @@
 #include "HltBase/HltFunctions.h"
 
 
-#include "TsaKernel/ITsaCollector.h"
-#include "TsaKernel/STCluster.h"
-#include "TsaKernel/OTCluster.h"
 
 #include "HltBase/IPrepareMuonTSeed.h"
 #include "HltBase/ITrackConfirmTool.h" 
@@ -43,13 +40,9 @@ private:
   LHCb::L0MuonCandidates* m_inputL0Muons;
   
   IPrepareMuonTSeed* m_prepareMuonSeed;
-  // Tsa Collector
-  ITsaCollector*    m_tsacollector;
   
   //new seeding tool
   ITrackConfirmTool* m_TsaConfirmTool;
-  PatTrackContainer*
-    m_outputMuonTracks;///< Pointer to the muon track containe
   LHCb::State* m_myState;
   
   

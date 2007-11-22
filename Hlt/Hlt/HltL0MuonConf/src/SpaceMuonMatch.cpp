@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.cpp,v 1.6 2007-09-08 18:34:11 sandra Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.7 2007-11-22 11:05:36 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,6 @@ SpaceMuonMatch::SpaceMuonMatch( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
- //declareProperty( "Input2TracksName", m_input2TracksName);
  
  declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName );
@@ -44,10 +43,7 @@ StatusCode SpaceMuonMatch::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-//  m_input2Tracks= &(m_hltDataStore->tracks(m_input2TracksName));
 
-  m_outputMuonTracks =
-    m_patDataStore->createTrackContainer( m_outputMuonTracksName, 20 );
   m_matchToolPointer=tool<IMatchTVeloTracks>( "MatchTVeloTracks" );
 
   return StatusCode::SUCCESS;
@@ -59,17 +55,19 @@ StatusCode SpaceMuonMatch::initialize() {
 StatusCode SpaceMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
-//  setFilterPassed(false);
-//  HltAlgorithm::beginExecute();
-  debug()<<" pat "<<m_inputTracks->size()<<" hlt "<<m_inputTracks2->size()
+  debug()<<" velo "<<m_inputTracks->size()<<" T track "<<m_inputTracks2->size()
         <<endreq;
+
+  Tracks* muontracks = new Tracks();
+  muontracks->reserve(50);
+
   int tt=0;
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {
     
     Track* pTrack = (*itT);
     if( pTrack->checkFlag( Track::Backward ) ) continue; // skip backward tracks
-    debug()<<" new pat track "<<tt<<endreq;
+    debug()<<" new velo track "<<tt<<endreq;
 
     for ( std::vector<Track*>::const_iterator itMuon = m_inputTracks2->begin();
           m_inputTracks2->end() != itMuon; itMuon++ ) {
@@ -92,44 +90,42 @@ StatusCode SpaceMuonMatch::execute() {
             debug() << "Not matched with 2d " << endmsg;
         }
 
-        Track* outTr = m_outputMuonTracks->newEntry();  
-        outTr->copy(*outputTrack);
+   //     Track* outTr = m_outputMuonTracks->newEntry();  
+   //     outTr->copy(*outputTrack);
+        muontracks->insert(outputTrack); 
         setFilterPassed(true);
         //float x_dist2d = (*(anceRZ.begin()))->info(LHCb::HltEnums::Muon2DxDist,-1);
         //debug() << "xdist 2d from ancestor " << x_dist2d << endmsg;
         //outTr->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist2d);
-        outTr->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist2dRecalc);
-        outTr->addInfo(HltNames::particleInfoID("Muon3DxDist"),x_dist);
-        outTr->addInfo(HltNames::particleInfoID("Muon3DyDist"),y_dist);
+        outputTrack->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist2dRecalc);
+        outputTrack->addInfo(HltNames::particleInfoID("Muon3DxDist"),x_dist);
+        outputTrack->addInfo(HltNames::particleInfoID("Muon3DyDist"),y_dist);
         double tDist = (*itMuon)->info(LHCb::HltEnums::MuonTdist,-1);
-        outTr->addInfo(HltNames::particleInfoID("MuonTdist"),tDist );
+        outputTrack->addInfo(HltNames::particleInfoID("MuonTdist"),tDist );
+        // Add T track LHCBIDs
         std::vector< LHCb::LHCbID > list_lhcb=(*itMuon)->lhcbIDs();
-
         for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-          if(iM1->isMuon()){
-             outTr->addToLhcbIDs(iM1->muonID());
-//             debug()<<" adding tile "<<iM1->muonID()<<iM1->muonID().station()<<endreq;
-//             debug()<<"station " << iM1->muonID().station()<<" is from L0 "<<muon->checkFlag(Track::L0Candidate) <<endreq;
-
-          }
+             outputTrack->addToLhcbIDs(iM1->muonID());
         }
 
 
         if(muon->checkFlag(Track::L0Candidate)){     
-          outTr->setFlag(Track::PIDSelected,true);
-          outTr->setFlag(Track::L0Candidate,true);
+          outputTrack->setFlag(Track::PIDSelected,true);
+          outputTrack->setFlag(Track::L0Candidate,true);
         }else{
-          outTr->setFlag(Track::PIDSelected,false);
-          outTr->setFlag(Track::L0Candidate,false);
+          outputTrack->setFlag(Track::PIDSelected,false);
+          outputTrack->setFlag(Track::L0Candidate,false);
         }
-        m_outputTracks->push_back(outTr);
+//        m_outputTracks->push_back(outTr);
+        debug() << "outputTrack first state z " << outputTrack->firstState().z() << endmsg;
+        m_outputTracks->push_back(outputTrack);
       }
-      delete outputTrack;       
             
     }
     tt++;
   }  
 //  HltAlgorithm::endExecute();
+  put(muontracks,m_outputMuonTracksName);
   return StatusCode::SUCCESS;
 }
 

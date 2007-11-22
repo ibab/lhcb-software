@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.cpp,v 1.5 2007-09-08 18:34:11 sandra Exp $
+// $Id: RZMuonMatch.cpp,v 1.6 2007-11-22 11:05:36 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -54,19 +54,18 @@ StatusCode RZMuonMatch::execute() {
   debug() << "==> Execute" << endmsg;
 //  setFilterPassed(false);
 //  HltAlgorithm::beginExecute();
-  debug()<<" pat "<<m_patInputTracks->size()<<" hlt "<<m_inputTracks->size()
+  debug()<<"velo " << m_inputTracks2->size()<<"T track "<<m_inputTracks->size()
         <<endreq;
   int tt=0;
   
-  for ( std::vector<Track*>::const_iterator itT = m_patInputTracks->begin();
-        m_patInputTracks->end() != itT; itT++ ) {
-    debug()<<" new pat track "<<endreq;
+  for ( std::vector<Track*>::const_iterator itT = m_inputTracks2->begin();
+        m_inputTracks2->end() != itT; itT++ ) {
     
     Track* pTr2d = (*itT);
     pTr2d->setFlag(Track::PIDSelected,false);
     pTr2d->setFlag(Track::L0Candidate,false);
     if( pTr2d->checkFlag( Track::Backward ) ) continue; // skip backward tracks
-    debug()<<" new pat track "<<tt<<endreq;
+    debug()<<" new velo track "<<tt<<endreq;
     tt++;
     
 
@@ -75,7 +74,6 @@ StatusCode RZMuonMatch::execute() {
       
       debug()<<" enter loop new muon "<<m_inputTracks->size()<<endreq;
       Track* muon=(*itMuon);
-      //  std::vector<Track* >::const_iterator pMuon;
       float x_dist;
       StatusCode sc=m_matchToolPointer->match2dVelo(*pTr2d,*muon, x_dist );
       
@@ -90,26 +88,6 @@ StatusCode RZMuonMatch::execute() {
         pTr2d->setFlag(Track::PIDSelected,true);
         pTr2d->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist); 
 
-        std::vector< LHCb::LHCbID > list_lhcb= muon->lhcbIDs();
-        for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-          if(iM1->isMuon()){
-             debug()<<" adding tile "<<iM1->muonID().station()<<endreq;
-             //This does not work, don't know why...
-             //pTr2d->addToLhcbIDs(iM1->muonID());
-
-          }
-        }
-
-
-//trasmit if L0 or muon seg
-        if(muon->checkFlag(Track::L0Candidate)){
-         debug() << "matched from L0 " << endmsg;          
-        pTr2d->setFlag(Track::L0Candidate,true);
-}else{
-        debug() << "matched from muon track " << endmsg;
-        pTr2d->setFlag(Track::L0Candidate,false);
-}
-        debug()<<" selected track "<<endreq;
         
         if(m_debug){
           debug() << " Selected track" << endreq;

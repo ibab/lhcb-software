@@ -1,4 +1,4 @@
-// $Id: L0MuonConfWithT.cpp,v 1.6 2007-10-31 11:51:50 sandra Exp $
+// $Id: L0MuonConfWithT.cpp,v 1.7 2007-11-22 11:05:36 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -51,8 +51,6 @@ StatusCode L0MuonConfWithT::initialize() {
   m_prepareMuonSeed = tool<IPrepareMuonSeed>("PrepareMuonSeed");
   
   m_TsaConfirmTool=tool<ITrackConfirmTool>( "TsaConfirmTool", this );
-  m_outputMuonTracks =
-    m_patDataStore->createTrackContainer( m_outputMuonTracksName, 20 );
   
   
   sigmaX2[0]=64.; sigmaX2[1]=225.; sigmaX2[2]=841.; sigmaX2[3]=2916.;
@@ -75,16 +73,19 @@ StatusCode L0MuonConfWithT::execute() {
   
   if( m_debugInfo ) info() << " Nr of L0 Muon candidates: " 
                            << m_inputTracks->size() << endmsg; 
-  
+//Container of T tracks that will come out for each L0muon track    
   std::vector<LHCb::Track*>* foundTracksTmp = new std::vector<LHCb::Track*>;
   foundTracksTmp->reserve(50);
-  
+
+//Container with all T tracks
+  Tracks* muontracks = new Tracks();
+  muontracks->reserve(50);
+   
   
   
   int muonCounter=0;  
-  std::vector<LHCb::Track*>::iterator iterTrack;
-  Hlt::TrackContainer::const_iterator it;
-  for(it=m_inputTracks->begin();it<m_inputTracks->end();it++){
+  for(Hlt::TrackContainer::const_iterator it=m_inputTracks->begin();
+      it<m_inputTracks->end();it++){
     LHCb::State L0State =(*it)->closestState (12500);
     muonCounter++;
     
@@ -107,19 +108,15 @@ StatusCode L0MuonConfWithT::execute() {
     
     
     seedState.setQOverP( L0State.qOverP() );
-    debug()<<" before seed definition "<<seedState.qOverP()<<endreq;
     Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
+//  Find out in which Muon chamber region the track is
     int regionL0Cand=-1;
     std::vector< LHCb::LHCbID > list_lhcb=(*it)->lhcbIDs();
-    
     for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
       if(iM1->isMuon()){
         if(iM1->muonID().station()==1){
           regionL0Cand=iM1->muonID().region();
-          
-          
         }
-        
       }
     }
     stateCov(0,0) = sigmaX2[regionL0Cand];
@@ -137,7 +134,7 @@ StatusCode L0MuonConfWithT::execute() {
     
     //play with seeding tool
     m_TsaConfirmTool->tracks( seedState , *foundTracksTmp );
-    for( iterTrack = foundTracksTmp->begin();
+    for( std::vector<LHCb::Track*>::iterator iterTrack = foundTracksTmp->begin();
 	 iterTrack != foundTracksTmp->end() ;
 	 iterTrack++ ) {
       LHCb::Track* fitTrack =  (*iterTrack)->clone();
@@ -153,14 +150,11 @@ StatusCode L0MuonConfWithT::execute() {
         }
       }
       
-      Track* outTr = m_outputMuonTracks->newEntry();
-      outTr->copy(*fitTrack);
-      outTr->setFlag(Track::L0Candidate,true);
-      m_outputTracks->push_back(outTr);
+      muontracks->insert(fitTrack);
+      fitTrack->setFlag(Track::L0Candidate,true);
+      m_outputTracks->push_back(fitTrack);
       
       setFilterPassed(true);
-      delete  (*iterTrack);
-      delete(fitTrack);
       
     }
     
@@ -174,8 +168,7 @@ StatusCode L0MuonConfWithT::execute() {
   
   
   delete foundTracksTmp;
-  
-  
+  put(muontracks,m_outputMuonTracksName); 
   return StatusCode::SUCCESS;
 }
 

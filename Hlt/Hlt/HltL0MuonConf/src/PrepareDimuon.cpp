@@ -1,4 +1,4 @@
-// $Id: PrepareDimuon.cpp,v 1.2 2007-09-08 18:34:11 sandra Exp $
+// $Id: PrepareDimuon.cpp,v 1.3 2007-11-22 11:05:36 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -41,10 +41,6 @@ StatusCode PrepareDimuon::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-  m_patVertexBank =
-    m_patDataStore->createVertexContainer(m_outputL0MuonVerticesName,36);
-
-
 
   return StatusCode::SUCCESS;
 }
@@ -57,6 +53,8 @@ StatusCode PrepareDimuon::execute() {
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
   HltAlgorithm::beginExecute(); 
+  RecVertices* muonpairs = new RecVertices();
+  muonpairs->reserve(50);
   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {
     for ( std::vector<Track*>::const_iterator itT2 = itT+1;
@@ -64,19 +62,18 @@ StatusCode PrepareDimuon::execute() {
       if((*itT)->checkFlag(Track::L0Candidate)||
          (*itT2)->checkFlag(Track::L0Candidate)){
         
-        //info()<<" l0 candidate ? "<<(*itT)->checkFlag(Track::L0Candidate)<<endreq;
-        RecVertex* ver = m_patVertexBank->newEntry();
+        RecVertex* ver = new RecVertex();
         ver->addToTracks (*itT);
         ver->addToTracks (*itT2);
+        muonpairs->insert(ver);
         m_outputVertices->push_back(ver);
       }
     }
     
-      // info()<<" l0 candidate ? "<<(*itT)->checkFlag(Track::L0Candidate)<<endreq;
     
     
   }
-  
+  put(muonpairs, m_outputL0MuonVerticesName);
   HltAlgorithm::endExecute();
      
   return StatusCode::SUCCESS;

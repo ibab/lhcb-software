@@ -1,4 +1,4 @@
-// $Id: PrepareDimuon.h,v 1.1 2007-07-12 17:52:36 asatta Exp $
+// $Id: PrepareDimuon.h,v 1.2 2007-11-22 11:05:36 sandra Exp $
 #ifndef PREPAREDIMUON_H 
 #define PREPAREDIMUON_H 1
 
@@ -30,7 +30,6 @@ protected:
 
 private:
   std::string  m_outputL0MuonVerticesName;
-  PatVertexContainer* m_patVertexBank;
 
 };
 #endif // PREPAREDIMUON_H

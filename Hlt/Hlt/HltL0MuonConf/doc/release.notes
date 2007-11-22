@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2007-11-22 - Sandra Amato
+ - Removed the Pat Containers. Removed the obsolete MuonCollectTsaCluster.cpp.
 
 !========================== HltL0MuonConf v1r3 2007-11-14 ===================
 ! 2007-10-31 - Patrick Koppenburg

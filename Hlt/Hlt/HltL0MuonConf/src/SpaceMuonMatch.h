@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.h,v 1.3 2007-07-12 17:52:36 asatta Exp $
+// $Id: SpaceMuonMatch.h,v 1.4 2007-11-22 11:05:36 sandra Exp $
 #ifndef SPACEMUONMATCH_H 
 #define SPACEMUONMATCH_H 1
 
@@ -31,12 +31,7 @@ protected:
 
 
 private:
-//  std::string m_input2TracksName; 
   std::string m_outputMuonTracksName;   ///< output container name 
-//  Hlt::TrackContainer* m_input2Tracks;
-  PatTrackContainer*
-  m_outputMuonTracks;///< Pointer to the muon track containe
-  // PatStateContainer* m_states;
 
  IMatchTVeloTracks* m_matchToolPointer;
 
