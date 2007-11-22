@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.22 2007-08-09 16:00:25 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.23 2007-11-22 13:11:08 papanest Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -210,13 +210,16 @@ StatusCode Rich::MirrorSegFinder::initialize( )
     m_secMirrors[Rich::Rich2][Rich::right].size() << " sec mirrors in Rich2"
           << endmsg;
 
+
   // initialise the last found mirror pointers to the first in the vectors
   {for (int i=0; i<2; ++i)
   {
     for (int j=0; j<2; ++j)
     {
-      m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front();
-      m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front();
+      if ( !m_sphMirrors[i][j].empty() )
+        m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front();
+      if ( !m_secMirrors[i][j].empty() )
+        m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front();
     }
   }}
 
