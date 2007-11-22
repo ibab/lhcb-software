@@ -7,6 +7,7 @@
 
 LHCb::GaudiDimFSM::GaudiDimFSM(IAppMgrUI* ui) : DimTaskFSM(0), m_appMgr(ui)  {
   if (m_appMgr) m_appMgr->addRef();
+  IOCSENSOR.send(this, STARTUP_DONE);
 }
 
 LHCb::GaudiDimFSM::~GaudiDimFSM()  {
