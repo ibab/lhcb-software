@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-11-22 - David Hutchcroft
+ - Fix to PatVeloOpenTracking to use coordinates in the VELO half box frame
+
 !========================== PatVelo v3r1 2007-11-12 ==========================
 ! 2007-11-12 - David Hutchcroft
  - Fix to PatVeloGeneralTracking to improve hit efficiency when detector is open

@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.h,v 1.2 2007-11-09 10:53:09 cattanem Exp $
+// $Id: PatVeloOpenTracking.h,v 1.3 2007-11-22 16:42:00 dhcroft Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
@@ -58,7 +58,7 @@ protected:
     info() << "  " << title 
            << format( " sensor %3d z%7.1f strip%5d coord%10.5f used%2d ", 
                       hit->sensorNumber(), hit->z(), hit->hit()->strip(), 
-                      hit->hit()->coord(), hit->hit()->isUsed() );
+                      hit->hit()->coordHalfBox(), hit->hit()->isUsed() );
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
     if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );
     info() << endreq;

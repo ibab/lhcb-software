@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTrack.cpp,v 1.1 2007-11-09 07:49:07 ocallot Exp $
+// $Id: PatVeloOpenTrack.cpp,v 1.2 2007-11-22 16:42:00 dhcroft Exp $
 // Include files
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -34,9 +34,9 @@ PatVeloOpenTrack::PatVeloOpenTrack ( Tf::PatVeloRHit*   cR0,   Tf::PatVeloRHit* 
 
   m_half = int( cR0->sensor()->isRight() );   //== Not very nice: A bool -> int conversion!
   
-  double r0    = cR0->coord();
+  double r0    = cR0->coordHalfBox();
   double zR0   = cR0->z();
-  double r2    = cR2->coord();
+  double r2    = cR2->coordHalfBox();
   double zR2   = cR2->z();
   double zPhi0 = cPhi0->z();
   double zPhi2 = cPhi2->z();
@@ -98,8 +98,8 @@ void PatVeloOpenTrack::update ( ) {
     double w = (*itC)->weight();
     double z = (*itC)->z();
     double phi = phiAtZ( z );
-    double c = (*itC)->coord() * cos( phi );
-    double s = (*itC)->coord() * sin( phi );
+    double c = (*itC)->coordHalfBox() * cos( phi );
+    double s = (*itC)->coordHalfBox() * sin( phi );
     s0  += w;
     sz  += w * z;
     sz2 += w * z * z;
@@ -149,8 +149,8 @@ void PatVeloOpenTrack::finalFit ( ) {
     double w = (*itC)->weight();
     double z = (*itC)->z();
     double phi = phiAtZ( z );
-    double c = (*itC)->coord() * cos( phi );
-    double s = (*itC)->coord() * sin( phi );
+    double c = (*itC)->coordHalfBox() * cos( phi );
+    double s = (*itC)->coordHalfBox() * sin( phi );
     double dx = xAtZ( z ) - c;
     double dy = yAtZ( z ) - s;
     m_chi2 += w * (dx*dx + dy * dy);

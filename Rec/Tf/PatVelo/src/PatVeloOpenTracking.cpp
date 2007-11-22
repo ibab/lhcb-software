@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.cpp,v 1.2 2007-11-09 10:53:09 cattanem Exp $
+// $Id: PatVeloOpenTracking.cpp,v 1.3 2007-11-22 16:42:00 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -207,10 +207,10 @@ StatusCode PatVeloOpenTracking::execute() {
 
         for( cR0 = hitsR0.begin(); hitsR0.end() > cR0; cR0++) {
           if ((*cR0)->hit()->isUsed()) continue;
-          r0 = (*cR0)->coord();
+          r0 = (*cR0)->coordHalfBox();
           for( cR2 = hitsR2.begin(); hitsR2.end() > cR2; cR2++) {
             if ((*cR2)->hit()->isUsed()) continue;
-            r2 = (*cR2)->coord();
+            r2 = (*cR2)->coordHalfBox();
             double drdz = (r2-r0)/(zR2-zR0);
 
             if ( m_maxSlope < fabs(drdz) ) continue;  //== Maximum slope in x
@@ -269,13 +269,13 @@ StatusCode PatVeloOpenTracking::execute() {
             for ( cPhi0 = hitsPhi0.begin(); hitsPhi0.end() > cPhi0; cPhi0++) {
               if ( isDebug && matchKey( *cPhi0 ) ) printCoord( *cPhi0, "** Good Phi0" );
               if ( (*cPhi0)->hit()->isUsed() ) continue;
-              coordPhi0 = circularRange.add( (*cPhi0)->coord(), offset0);
+              coordPhi0 = circularRange.add( (*cPhi0)->coordHalfBox(), offset0);
               if ( !circularRange.contains( range0, coordPhi0 ) ) continue;
 
               for ( cPhi2 = hitsPhi2.begin(); hitsPhi2.end() > cPhi2; cPhi2++) {
                 if ( isDebug && matchKey( *cPhi2 ) ) printCoord( *cPhi2, "** Good Phi2" );
                 if ( (*cPhi2)->hit()->isUsed() ) continue;
-                coordPhi2 = circularRange.add( (*cPhi2)->coord(), offset2);
+                coordPhi2 = circularRange.add( (*cPhi2)->coordHalfBox(), offset2);
                 if ( !circularRange.contains( range2, coordPhi2 ) ) continue;
 
                 PatVeloOpenTrack newTrack( *cR0, *cR2, *cPhi0, *cPhi2);
@@ -332,7 +332,7 @@ StatusCode PatVeloOpenTracking::execute() {
                 if ( isDebug ) printCoord( bestRc1, ".. found R1 " );
 
                 //=== We have 3 aligned points in R sensors
-                r1 = bestRc1->coord();
+                r1 = bestRc1->coordHalfBox();
                 rPredPhi = newTrack.rAtZ( zPhi1 );
                 int sectorPhi1 = 0;
                 if ( stationPhi1->sensor()->rMax( 0 ) < rPredPhi ) sectorPhi1 = 1;
@@ -359,7 +359,7 @@ StatusCode PatVeloOpenTracking::execute() {
                 if (0 == bestPhic1) continue;
 
                 double dr = ( r1 - rPred ) / rTol;
-                double dp = phiPred - bestPhic1->coord();
+                double dp = phiPred - bestPhic1->coordHalfBox();
                 if (  Gaudi::Units::pi < dp ) dp -= 2*Gaudi::Units::pi;
                 if ( -Gaudi::Units::pi > dp ) dp += 2*Gaudi::Units::pi;
                 dp = dp / phiTol;
