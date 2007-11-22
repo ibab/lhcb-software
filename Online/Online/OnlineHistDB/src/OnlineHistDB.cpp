@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.19 2007-11-19 17:26:45 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.20 2007-11-22 17:38:35 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -21,23 +21,27 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   setPageEnv((OnlineHistDBEnv*) this);
 
   // initialize Oracle session and log in
-  OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
-		(dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
-		(void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0);
+  m_StmtMethod = "OnlineHistDB::OnlineHistDB";
+  checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
+			  (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
+			  (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
+	    SEVERE);
 
-  OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
-		 (size_t) 0, (dvoid **) 0);
+  checkerr( OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
+			   (size_t) 0, (dvoid **) 0),
+	    SEVERE);
 
-  OCILogon2(m_envhp, 
-	    m_errhp, 
-	    &m_svchp, 
-	    (text *) user.data(), 
-	    (ub4) user.length(), 
-	    (text *) passwd.data(),
-	    (ub4) passwd.length(), 
-	    (text *) db.data(),
-	    (ub4) db.length(),
-	    OCI_LOGON2_STMTCACHE);
+  checkerr( OCILogon2(m_envhp, 
+		      m_errhp, 
+		      &m_svchp, 
+		      (text *) user.data(), 
+		      (ub4) user.length(), 
+		      (text *) passwd.data(),
+		      (ub4) passwd.length(), 
+		      (text *) db.data(),
+		      (ub4) db.length(),
+		      OCI_LOGON2_STMTCACHE),
+	    SEVERE);
 
   // needed initialization for OCI interface
   getOCITypes();
@@ -55,7 +59,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.CHECKSCHEMA(:x1,:x2); END;") ) {
     if ( OCI_SUCCESS == myOCIBindInt(stmt, ":x1", schema) &&
 	 OCI_SUCCESS == myOCIBindInt(stmt, ":x2", m_AlgListID) ) {
-      myOCIStmtExecute(stmt);
+      myOCIStmtExecute(stmt, SEVERE);
     }
   } 
 
@@ -175,22 +179,24 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
       }
       command << ")";
     }
+    command << ",THRESHOLDS(";
     if (np > 0) {
-      command << ",THRESHOLDS(";
       for (int ipp=0; ipp<np ;ipp++) {
 	command << Parameters->at(ipp);
 	if (ipp < np-1) command << ",";   
       }
-      command << ")";
     }
-    command <<"); END;";
+    command << ")";
+    command <<",:name); END;";
     
 
     m_StmtMethod = "OnlineHistDB::declareAnalysisHistogram";
     OCIStmt *stmt=NULL;
     if ( OCI_SUCCESS == prepareOCIStatement(stmt, command.str().c_str()) ) {
+      text name[VSIZE_SN]="";
+      myOCIBindString(stmt,":name", name, VSIZE_SN);
       if ( OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
-	std::string Name="ANALYSIS/"+Algorithm+"/"+Title;
+	std::string Name= std::string((const char *) name);
 	outh=getHistogram(Name);
       }
     }

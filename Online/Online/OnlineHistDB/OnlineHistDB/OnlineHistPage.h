@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.13 2007-11-19 17:26:44 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.14 2007-11-22 17:38:35 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -53,6 +53,8 @@ class OnlineHistPage : public OnlineHistDBEnv
   /// clean up the page removing all histograms
   bool removeAllHistograms();
   bool remove();
+  /// changes Page name 
+  void rename(std::string NewName);
   /// fills the hlist vector with pointers to the histograms attached to this page
   void getHistogramList(std::vector<OnlineHistogram*> *hlist) {
     std::vector<OnlineHistogram*>::iterator ix;

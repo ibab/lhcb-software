@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.20 2007-11-19 17:26:45 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.21 2007-11-22 17:38:35 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -258,123 +258,127 @@ void OnlineHistogram::createDisplayOptions() {
     checkerr( OCIObjectGetInd ( m_envhp,   m_errhp,
 				(dvoid *) m_dispopt,
 				(dvoid **) &m_dispopt_null), SEVERE);
-   
 
-    m_do.reserve(12);
+    m_do.reserve(39);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->LABEL_X ,
+					   (void*) &(m_dispopt->LABEL_X),
 					   &(m_dispopt_null->LABEL_X), this ) );
     m_do.push_back(new OnlineDisplayOption("LABEL_Y",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->LABEL_Y ,
+					   (void*) &(m_dispopt->LABEL_Y),
 					   &(m_dispopt_null->LABEL_Y), this ) );
     m_do.push_back(new OnlineDisplayOption("LABEL_Z",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->LABEL_Z ,
+					   (void*) &(m_dispopt->LABEL_Z),
 					   &(m_dispopt_null->LABEL_Z), this ) );
     m_do.push_back(new OnlineDisplayOption("YMIN",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->YMIN) ,
+					   (void*) &(m_dispopt->YMIN),
 					   &(m_dispopt_null->YMIN), this ) );
     m_do.push_back(new OnlineDisplayOption("YMAX",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->YMAX) ,
+					   (void*) &(m_dispopt->YMAX),
 					   &(m_dispopt_null->YMAX), this ) );
     m_do.push_back(new OnlineDisplayOption("STATS",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->STATS) ,
+					   (void*) &(m_dispopt->STATS),
 					   &(m_dispopt_null->STATS), this ) );
     m_do.push_back(new OnlineDisplayOption("FILLSTYLE",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->FILLSTYLE) ,
+					   (void*) &(m_dispopt->FILLSTYLE),
 					   &(m_dispopt_null->FILLSTYLE), this ) );
     m_do.push_back(new OnlineDisplayOption("FILLCOLOR",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->FILLCOLOR) ,
+					   (void*) &(m_dispopt->FILLCOLOR),
 					   &(m_dispopt_null->FILLCOLOR), this ) );
     m_do.push_back(new OnlineDisplayOption("LINESTYLE",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LINESTYLE) ,
+					   (void*) &(m_dispopt->LINESTYLE),
 					   &(m_dispopt_null->LINESTYLE), this ) );
     m_do.push_back(new OnlineDisplayOption("LINECOLOR",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LINECOLOR) ,
+					   (void*) &(m_dispopt->LINECOLOR),
 					   &(m_dispopt_null->LINECOLOR), this ) );
     m_do.push_back(new OnlineDisplayOption("LINEWIDTH",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LINEWIDTH) ,
+					   (void*) &(m_dispopt->LINEWIDTH),
 					   &(m_dispopt_null->LINEWIDTH), this ) );
     m_do.push_back(new OnlineDisplayOption("DRAWOPTS",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->DRAWOPTS ,
+					   (void*) &(m_dispopt->DRAWOPTS),
 					   &(m_dispopt_null->DRAWOPTS), this ) );
     m_do.push_back(new OnlineDisplayOption("XMIN",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->XMIN) ,
+					   (void*) &(m_dispopt->XMIN),
 					   &(m_dispopt_null->XMIN), this ) );
     m_do.push_back(new OnlineDisplayOption("XMAX",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->XMAX) ,
+					   (void*) &(m_dispopt->XMAX),
 					   &(m_dispopt_null->XMAX), this ) );
     m_do.push_back(new OnlineDisplayOption("ZMIN",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->ZMIN) ,
+					   (void*) &(m_dispopt->ZMIN),
 					   &(m_dispopt_null->ZMIN), this ) );
     m_do.push_back(new OnlineDisplayOption("ZMAX",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->ZMAX) ,
+					   (void*) &(m_dispopt->ZMAX),
 					   &(m_dispopt_null->ZMAX), this ) );
     m_do.push_back(new OnlineDisplayOption("LOGX",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LOGX) ,
+					   (void*) &(m_dispopt->LOGX),
 					   &(m_dispopt_null->LOGX), this ) );
     m_do.push_back(new OnlineDisplayOption("LOGY",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LOGY) ,
+					   (void*) &(m_dispopt->LOGY),
 					   &(m_dispopt_null->LOGY), this ) );
     m_do.push_back(new OnlineDisplayOption("LOGZ",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->LOGZ) ,
+					   (void*) &(m_dispopt->LOGZ),
 					   &(m_dispopt_null->LOGZ), this ) );
     m_do.push_back(new OnlineDisplayOption("TIMAGE",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->TIMAGE ,
+					   (void*) &(m_dispopt->TIMAGE),
 					   &(m_dispopt_null->TIMAGE), this ) );
     m_do.push_back(new OnlineDisplayOption("REF",OnlineDisplayOption::STRING,
-					   (void*) m_dispopt->REF ,
+					   (void*) &(m_dispopt->REF),
 					   &(m_dispopt_null->REF), this ) );
     m_do.push_back(new OnlineDisplayOption("REFRESH",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->REFRESH) ,
+					   (void*) &(m_dispopt->REFRESH),
 					   &(m_dispopt_null->REFRESH), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_X_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_X_SIZE) ,
+					   (void*) &(m_dispopt->TIT_X_SIZE),
 					   &(m_dispopt_null->TIT_X_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_X_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_X_OFFS) ,
+					   (void*) &(m_dispopt->TIT_X_OFFS),
 					   &(m_dispopt_null->TIT_X_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_Y_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_Y_SIZE) ,
+					   (void*) &(m_dispopt->TIT_Y_SIZE),
 					   &(m_dispopt_null->TIT_Y_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_Y_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_Y_OFFS) ,
+					   (void*) &(m_dispopt->TIT_Y_OFFS),
 					   &(m_dispopt_null->TIT_Y_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_Z_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_Z_SIZE) ,
+					   (void*) &(m_dispopt->TIT_Z_SIZE),
 					   &(m_dispopt_null->TIT_Z_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("TIT_Z_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->TIT_Z_OFFS) ,
+					   (void*) &(m_dispopt->TIT_Z_OFFS),
 					   &(m_dispopt_null->TIT_Z_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_X_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_X_SIZE) ,
+					   (void*) &(m_dispopt->LAB_X_SIZE),
 					   &(m_dispopt_null->LAB_X_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_X_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_X_OFFS) ,
+					   (void*) &(m_dispopt->LAB_X_OFFS),
 					   &(m_dispopt_null->LAB_X_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_Y_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_Y_SIZE) ,
+					   (void*) &(m_dispopt->LAB_Y_SIZE),
 					   &(m_dispopt_null->LAB_Y_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_Y_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_Y_OFFS) ,
+					   (void*) &(m_dispopt->LAB_Y_OFFS),
 					   &(m_dispopt_null->LAB_Y_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_Z_SIZE",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_Z_SIZE) ,
+					   (void*) &(m_dispopt->LAB_Z_SIZE),
 					   &(m_dispopt_null->LAB_Z_SIZE), this ) );
     m_do.push_back(new OnlineDisplayOption("LAB_Z_OFFS",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->LAB_Z_OFFS) ,
+					   (void*) &(m_dispopt->LAB_Z_OFFS),
 					   &(m_dispopt_null->LAB_Z_OFFS), this ) );
     m_do.push_back(new OnlineDisplayOption("GRIDX",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->GRIDX) ,
+					   (void*) &(m_dispopt->GRIDX),
 					   &(m_dispopt_null->GRIDX), this ) );
     m_do.push_back(new OnlineDisplayOption("GRIDY",OnlineDisplayOption::INT,
-					   (void*) &(m_dispopt->GRIDY) ,
+					   (void*) &(m_dispopt->GRIDY),
 					   &(m_dispopt_null->GRIDY), this ) );
     m_do.push_back(new OnlineDisplayOption("THETA",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->THETA) ,
+					   (void*) &(m_dispopt->THETA),
 					   &(m_dispopt_null->THETA), this ) );
     m_do.push_back(new OnlineDisplayOption("PHI",OnlineDisplayOption::FLOAT,
-					   (void*) &(m_dispopt->PHI) ,
+					   (void*) &(m_dispopt->PHI),
 					   &(m_dispopt_null->PHI), this ) );
+    m_do.push_back(new OnlineDisplayOption("CNTPLOT",OnlineDisplayOption::STRING,
+					   (void*) &(m_dispopt->CNTPLOT),
+					   &(m_dispopt_null->CNTPLOT), this ) );
+
+
   }
   if(m_shdisp) {
     m_domode=HISTPAGE;
@@ -887,16 +891,33 @@ bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
 }
 
 
-// private OnlineDisplayOption class to facilitate handling of many display options
+// private OnlineDisplayOption class to ease handling of many display options
+
+OnlineHistogram::OnlineDisplayOption::OnlineDisplayOption(std::string Name, 
+							  DisplayOptionType Type,
+							  void* OCIvar,
+							  OCIInd* OCIvar_null,
+							  OnlineHistDBEnv * Env) 
+  : m_name(Name), m_type(Type), 
+    m_value(OCIvar), m_value_null(OCIvar_null),
+    m_env(Env) 
+{ //if(Type == STRING) { //needs initialization? shuld not
+  //  OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) "",
+  //		(ub2)0, (OCIString **) m_value);
+  //} 
+}
 
 void OnlineHistogram::OnlineDisplayOption::set(void *option){
   *m_value_null = 0;
   std::string* cont;
+  std::string debstr;
   switch (m_type) {
   case STRING :
     cont = static_cast<std::string*>(option);
     OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) cont->c_str(),
-			(ub2) ( strlen(cont->c_str())), (OCIString **) &m_value);
+			(ub2) ( strlen(cont->c_str())), (OCIString **) m_value);
+    
+    debstr=*cont;
     break;
   case FLOAT :
     OCINumberFromReal(m_env->errhp(), (dvoid *) option, (uword) sizeof(float),(OCINumber *) m_value);
@@ -914,7 +935,7 @@ bool OnlineHistogram::OnlineDisplayOption::get(void *option){
     switch (m_type) {
     case STRING :
       * (static_cast<std::string*>(option)) = 
-	(const char*) OCIStringPtr(m_env->envhp(), (OCIString *)m_value);
+	(const char*) OCIStringPtr(m_env->envhp(), (*((OCIString **) m_value)) );
       break;
     case FLOAT :
       OCINumberToReal(m_env->errhp(), (OCINumber *) m_value, sizeof(float), option);

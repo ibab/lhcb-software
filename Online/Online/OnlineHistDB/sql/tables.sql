@@ -12,6 +12,7 @@ drop table ALGORITHM;
 drop table TASK;
 drop table SUBSYSTEM;
 drop table ERGOSUM;
+drop type DISPOPT;
 
 drop sequence HistogramSet_ID;
 drop sequence Analysis_ID;
@@ -68,7 +69,8 @@ CREATE OR REPLACE TYPE DISPOPT AS OBJECT (
   GRIDX        NUMBER(1),
   GRIDY        NUMBER(1),
   THETA        FLOAT,
-  PHI          FLOAT
+  PHI          FLOAT,
+  CNTPLOT      VARCHAR2(5)
 );
 /
 

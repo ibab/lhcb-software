@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.3 2007-11-08 16:18:52 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.4 2007-11-22 17:38:35 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -88,10 +88,10 @@ void OnlineHistDBEnv::getOCITypes() {
 			 &OCIdispopt)); 
 
 
-  boolean b=TRUE;
-  checkerr(OCIAttrSet ( (dvoid *) m_envhp, (ub4) OCI_HTYPE_ENV, &b,
-			(ub4) 0,
-			(ub4) OCI_ATTR_OBJECT_NEWNOTNULL,  m_errhp) );
+//   boolean b=TRUE;
+//   checkerr(OCIAttrSet ( (dvoid *) m_envhp, (ub4) OCI_HTYPE_ENV, &b,
+// 			(ub4) 0,
+// 			(ub4) OCI_ATTR_OBJECT_NEWNOTNULL,  m_errhp) );
 }
 
 void OnlineHistDBEnv::errorMessage(std::string Error) const {

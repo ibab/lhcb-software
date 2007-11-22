@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.13 2007-11-19 17:26:45 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.14 2007-11-22 17:38:35 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -10,7 +10,7 @@ OnlineRootHist::OnlineRootHist(std::string Identifier,
 			       std::string Page,
 			       int Instance) :
   m_identifier(Identifier) , m_session(Session), m_dbHist(NULL), m_rootHist(NULL),
-  m_reference(NULL), m_startrun(1), m_DataType("default")
+  m_refOption("NOREF"), m_reference(NULL), m_startrun(1), m_DataType("default")
 {
   if (Session) connectToDB(Session, Page, Instance);
 }
@@ -104,7 +104,6 @@ void OnlineRootHist::setTH1FromDB() {
     if(m_dbHist->getDisplayOption("LINESTYLE", &iopt)) m_rootHist->SetLineStyle(iopt);
     if(m_dbHist->getDisplayOption("LINECOLOR", &iopt)) m_rootHist->SetLineColor(iopt);
     if(m_dbHist->getDisplayOption("LINEWIDTH", &iopt)) m_rootHist->SetLineWidth(iopt);
-    if(m_dbHist->getDisplayOption("DRAWOPTS",  &sopt)) m_rootHist->SetOption(sopt.data());
     if(m_dbHist->getDisplayOption("TIT_X_SIZE",&fopt)) m_rootHist->GetXaxis()->SetTitleSize(fopt);
     if(m_dbHist->getDisplayOption("TIT_X_OFFS",&fopt)) m_rootHist->GetXaxis()->SetTitleOffset(fopt);
     if(m_dbHist->getDisplayOption("LAB_X_SIZE",&fopt)) m_rootHist->GetXaxis()->SetLabelSize(fopt);
@@ -117,14 +116,16 @@ void OnlineRootHist::setTH1FromDB() {
     if(m_dbHist->getDisplayOption("TIT_Z_OFFS",&fopt)) m_rootHist->GetZaxis()->SetTitleOffset(fopt);
     if(m_dbHist->getDisplayOption("LAB_Z_SIZE",&fopt)) m_rootHist->GetZaxis()->SetLabelSize(fopt);
     if(m_dbHist->getDisplayOption("LAB_Z_OFFS",&fopt)) m_rootHist->GetZaxis()->SetLabelOffset(fopt);    
+    if(m_dbHist->getDisplayOption("DRAWOPTS",  &sopt)) m_rootHist->SetOption(sopt.c_str());
+    if(m_dbHist->getDisplayOption("REF",       &sopt)) m_refOption = sopt;
   }
 }
 
-void OnlineRootHist::setDrawOptionsFromDB() {
+void OnlineRootHist::setDrawOptionsFromDB(TPad* &Pad) {
   if(m_dbHist && m_rootHist) {
     int iopt=0;
     float fopt=0.;
-    //std::string sopt="";
+    std::string sopt="";
 
     // TPaveStats is obtained after a pad->Draw(), but changing OptStat
     // doesn't resize the Pave.. using gStyle->SetOptStat in Draw() instead
@@ -132,16 +133,16 @@ void OnlineRootHist::setDrawOptionsFromDB() {
     //   TPaveStats* stats =  (TPaveStats*)m_rootHist->GetListOfFunctions()->FindObject("stats");
     //   if (stats) stats->SetOptStat(iopt);
 
-    if(m_dbHist->getDisplayOption("LOGX", &iopt)) gPad->SetLogx(1);
-    if(m_dbHist->getDisplayOption("LOGY", &iopt)) gPad->SetLogy(1);
+    if(m_dbHist->getDisplayOption("LOGX", &iopt)) Pad->SetLogx(1);
+    if(m_dbHist->getDisplayOption("LOGY", &iopt)) Pad->SetLogy(1);
     int gridx=gStyle->GetPadGridX(),gridy=gStyle->GetPadGridY();
     if(m_dbHist->getDisplayOption("GRIDX", &iopt)) gridx=iopt;
     if(m_dbHist->getDisplayOption("GRIDY", &iopt)) gridy=iopt;
-    gPad->SetGrid(gridx,gridy);
+    Pad->SetGrid(gridx,gridy);
     if (m_dbHist->dimension() > 1) {
-      if(m_dbHist->getDisplayOption("LOGZ", &iopt)) gPad->SetLogz(1);
-      if(m_dbHist->getDisplayOption("THETA", &fopt)) gPad->SetTheta(fopt);
-      if(m_dbHist->getDisplayOption("PHI", &fopt)) gPad->SetPhi(fopt);
+      if(m_dbHist->getDisplayOption("LOGZ", &iopt)) Pad->SetLogz(1);
+      if(m_dbHist->getDisplayOption("THETA", &fopt)) Pad->SetTheta(fopt);
+      if(m_dbHist->getDisplayOption("PHI", &fopt)) Pad->SetPhi(fopt);
     }
 
   }
@@ -182,16 +183,13 @@ bool OnlineRootHist::saveTH1ToDB(TPad* Pad) {
     sopt = m_rootHist->GetYaxis()->GetTitle();
     out &= updateDBOption ("LABEL_Y",     &sopt,
 			   sopt == "");
-    sopt = m_rootHist->GetZaxis()->GetTitle();
-    out &= updateDBOption ("LABEL_Z",     &sopt,
-			   sopt == "");
     // note: axis mimina and maxima should not be set in this way, but through the web interface
 
     TPaveStats* stats =  (TPaveStats*)m_rootHist->GetListOfFunctions()->FindObject("stats");
     if(stats) { // if histogram has not been plotted (or has been plotted without stats), do nothing
       iopt = (int) stats->GetOptStat();
       out &= updateDBOption ("STATS", &iopt,
-			     iopt == (int) gStyle->GetOptStat() );
+			     iopt == 1110 ); // seems to be hardcoded in root
     }
     iopt=(int) m_rootHist->GetFillStyle();
     out &= updateDBOption ("FILLSTYLE", &iopt,
@@ -235,19 +233,25 @@ bool OnlineRootHist::saveTH1ToDB(TPad* Pad) {
     fopt = m_rootHist->GetYaxis()->GetLabelOffset();
     out &= updateDBOption ("LAB_Y_OFFS",  &fopt,
 			   fopt == (float) gStyle->GetLabelOffset("Y") );    
-    fopt = m_rootHist->GetZaxis()->GetTitleSize();
-    out &= updateDBOption ("TIT_Z_SIZE",  &fopt,
-			   fopt == (float) gStyle->GetTitleSize("Z") );
-    fopt = m_rootHist->GetZaxis()->GetTitleOffset();
-    out &= updateDBOption ("TIT_Z_OFFS",  &fopt,
-			   fopt == (float) gStyle->GetTitleOffset("Z") );
-    fopt = m_rootHist->GetZaxis()->GetLabelSize();
-    out &= updateDBOption ("LAB_Z_SIZE",  &fopt,
-			   fopt == (float) gStyle->GetLabelSize("Z") );
-    fopt = m_rootHist->GetZaxis()->GetLabelOffset();
-    out &= updateDBOption ("LAB_Z_OFFS",  &fopt,
-			   fopt == (float) gStyle->GetLabelOffset("Z") );
+    if (m_dbHist->dimension() > 1) {
+      sopt = m_rootHist->GetZaxis()->GetTitle();
+      out &= updateDBOption ("LABEL_Z",     &sopt,
+			     sopt == "");
+      fopt = m_rootHist->GetZaxis()->GetTitleSize();
+      out &= updateDBOption ("TIT_Z_SIZE",  &fopt,
+			     fopt == (float) gStyle->GetTitleSize("Z") );
+      fopt = m_rootHist->GetZaxis()->GetTitleOffset();
+      out &= updateDBOption ("TIT_Z_OFFS",  &fopt,
+			     fopt == (float) gStyle->GetTitleOffset("Z") );
+      fopt = m_rootHist->GetZaxis()->GetLabelSize();
+      out &= updateDBOption ("LAB_Z_SIZE",  &fopt,
+			     fopt == (float) gStyle->GetLabelSize("Z") );
+      fopt = m_rootHist->GetZaxis()->GetLabelOffset();
+      out &= updateDBOption ("LAB_Z_OFFS",  &fopt,
+			     fopt == (float) gStyle->GetLabelOffset("Z") );
+    }
 
+    
     // now options from Pad ... be sure we are in the right Pad
    if(Pad) {
      iopt = Pad->GetLogx();
@@ -255,25 +259,27 @@ bool OnlineRootHist::saveTH1ToDB(TPad* Pad) {
 			     iopt == gStyle->GetOptLogx() );
      iopt = Pad->GetLogy();
      out &= updateDBOption ("LOGY", &iopt,
-			     iopt == gStyle->GetOptLogy() );
-     iopt = Pad->GetLogz();
-     out &= updateDBOption ("LOGZ", &iopt,
-			     iopt == gStyle->GetOptLogz() );
-     iopt = Pad->GetGridx();
+			    iopt == gStyle->GetOptLogy() );
+     iopt = Pad->GetGridx() ? 1 : 0;
      out &= updateDBOption ("GRIDX", &iopt,
 			    (iopt>0) == gStyle->GetPadGridX() );
-     iopt = Pad->GetGridy();
+     iopt = Pad->GetGridy() ? 1 : 0;
      out &= updateDBOption ("GRIDY", &iopt,
 			    (iopt>0) == gStyle->GetPadGridY() );
-     fopt = (float)Pad->GetTheta();
-     out &= updateDBOption ("THETA", &fopt,
-			     fopt == 30 ); // seems to be hardcoded in root
-     fopt = (float)Pad->GetPhi();
-     out &= updateDBOption ("PHI", &fopt,
-			     fopt == 30 ); // seems to be hardcoded in root
+     if (m_dbHist->dimension() > 1) {
+       iopt = Pad->GetLogz();
+       out &= updateDBOption ("LOGZ", &iopt,
+			      iopt == gStyle->GetOptLogz() );
+       fopt = (float)Pad->GetTheta();
+       out &= updateDBOption ("THETA", &fopt,
+			      (int)fopt == 30 ); // seems to be hardcoded in root
+       fopt = (float)Pad->GetPhi();
+       out &= updateDBOption ("PHI", &fopt,
+			      (int)fopt == 30 ); // seems to be hardcoded in root
+     }
    }
-    if(out)
-      out=m_dbHist->saveDisplayOptions();
+   if(out)
+     out=m_dbHist->saveDisplayOptions();
   }
   return out;
 }
@@ -291,20 +297,32 @@ bool OnlineRootHist::setDisplayOption(std::string ParameterName,
 }
 
 
-void OnlineRootHist::Draw() {
+void OnlineRootHist::Draw(TPad* &Pad) {
   if(m_rootHist) {
     int curStat=0,iopt;
-    if(m_dbHist->getDisplayOption("STATS"  ,   &iopt)) {
-      curStat = gStyle->GetOptStat();
-      gStyle->SetOptStat(iopt);      
+    if (m_dbHist) {
+      if(m_dbHist->getDisplayOption("STATS"  ,   &iopt)) {
+	curStat = gStyle->GetOptStat();
+	gStyle->SetOptStat(iopt);      
+      }
+      else {
+	gStyle->SetOptStat(1110); // seems to be hardcoded in root
+      }
     }
-    else {
-      gStyle->SetOptStat(1110);
+    m_rootHist->Draw(); 
+    setDrawOptionsFromDB(Pad);
+
+    if ("NOREF" != m_refOption) {
+      if (getReference()) {
+	drawReference();
+      }
     }
-    m_rootHist->Draw();
-    setDrawOptionsFromDB();
+
   }
 }
+
+
+
 
 bool OnlineRootHist::setReference(TH1 *ref,
 				  int startrun,
@@ -322,7 +340,8 @@ bool OnlineRootHist::setReference(TH1 *ref,
     m_startrun = startrun;
     m_DataType = DataType;
     
-    TFile* f = new TFile(refFile.str().c_str(),"UPDATE");
+    const char *file =  refFile.str().c_str();
+    TFile* f = new TFile(file,"UPDATE");
     if(f) {
       if (false == f->IsZombie() ) {
 	// keeps old versions.. use Write("",TObject::kOverwrite) to overwrite them
@@ -376,4 +395,22 @@ TH1* OnlineRootHist::getReference(int startrun,
     }
   }
   return out;
+}
+
+void OnlineRootHist::drawReference() {
+  if( m_reference ) {
+    // standard plot style
+    m_reference->SetLineStyle(2);
+    m_reference->SetLineColor(16);
+    // normalization
+    if ("ENTR" == m_refOption) {
+      m_reference->DrawNormalized("SAME",m_rootHist->GetSumOfWeights());
+    }
+    else if ("AREA" == m_refOption) {
+      m_reference->DrawNormalized("SAME",m_rootHist->Integral());
+    }
+    else {
+      m_reference->Draw("SAME");
+    }
+  }
 }

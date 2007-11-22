@@ -3,28 +3,33 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v4r0
+version             v4r1
 
 branches            cmt doc src OnlineHistDB sql www
 use GaudiPolicy    v*
 use oracle         v*  LCG_Interfaces
-use ROOT           v*  LCG_Interfaces
+use ROOT           v5r*  LCG_Interfaces
 #
+# Go for the latest and greatest ROOT:
+macro ROOT_config_version "5.17.04"
+
+
 apply_pattern install_more_includes more=OnlineHistDB
 #
 library             OnlineHistDB    *.cpp
 
 #use the -full version to work with cern DBDEV10 Oracle server
-#macro oracle_config_version 10.2.0.3-full
+macro oracle_config_version 10.2.0.3-full
 
 macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
 macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
 
 apply_pattern  linker_library library=OnlineHistDB 
 
+
+
 macro_append OnlineHistDB_shlibflags  "" \
   WIN32                              " oci.lib ociw32.lib "
 
-macro_append OnlineHistDB_shlibflags " -lHist -lGraf  " WIN32 " libHist.lib libGraf.lib"
-
+macro_append OnlineHistDB_shlibflags " -lHist -lGraf -lRIO " WIN32 " libHist.lib libGraf.lib libRIO.lib"
 

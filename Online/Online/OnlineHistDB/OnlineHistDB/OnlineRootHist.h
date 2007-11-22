@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.10 2007-11-08 16:18:51 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineRootHist.h,v 1.11 2007-11-22 17:38:35 ggiacomo Exp $
 #ifndef ONLINEROOTHIST_H
 #define ONLINEROOTHIST_H 1
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -39,7 +39,7 @@ class OnlineRootHist
   /// (normally called when connecting)
   void setTH1FromDB();
   /// updates current drawing options from Histogram DB (via OnlineHistogram object)
-  void setDrawOptionsFromDB();
+  void setDrawOptionsFromDB(TPad* &Pad);
   /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
   bool saveTH1ToDB(TPad* Pad = NULL);
   // OnlineHistogram methods for setting display options  
@@ -54,10 +54,11 @@ class OnlineRootHist
   /// get reference histogram if available
   TH1* getReference(int startrun = 1,
 		    std::string DataType = "default");
-
   // TH1 drawing methods
   /// calls TH1 Draw method, calls setDrawOptions()
-  virtual void Draw();
+  virtual void Draw(TPad* &Pad);
+  /// overdraw reference (if existing and requested) on current plot
+  void drawReference();
 
  private:
   bool updateDBOption(std::string opt, void *value, bool isdefault);
@@ -66,6 +67,7 @@ class OnlineRootHist
   OnlineHistogram* m_dbHist;
   TH1* m_rootHist;
 
+  std::string m_refOption;
   TH1* m_reference;
   int m_startrun;
   std::string m_DataType;

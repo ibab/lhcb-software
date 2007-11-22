@@ -63,7 +63,7 @@
  (normally called when connecting)
 
 
-\item    void {\bf setDrawOptionsFromDB}();
+\item    void {\bf setDrawOptionsFromDB}(TPad* \&Pad);
 
 
  updates current drawing options from Histogram DB (via OnlineHistogram object)
@@ -95,7 +95,7 @@
  get reference histogram if available
 
 
-\item    virtual void {\bf Draw}();
+\item    virtual void {\bf Draw}(TPad* \&Pad);
 
 
  calls TH1 Draw method, calls setDrawOptions()

@@ -26,15 +26,16 @@ create or replace package OnlineHistDB as
  function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         theOptions IN dispopt) return number;
  function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt)  return number;
- procedure GET_DISPLAYOPTIONS(theDOID IN int,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2
-  ,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT
-  ,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT
-  ,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2
-  ,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT
-  ,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT
-  ,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT,THETA OUT FLOAT,PHI OUT FLOAT);
- function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
+ procedure GET_DISPLAYOPTIONS(theDOID IN int
+,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
+,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
+,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
+,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
+,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
+,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
+,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2);
 
+ function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
  function GetName(theHID IN varchar2) return varchar2;
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
@@ -45,7 +46,7 @@ create or replace package OnlineHistDB as
  procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
-                                  theSources sourceh := NULL, thePars IN thresholds := thresholds());
+                                  theSources sourceh := NULL, thePars IN thresholds := thresholds(),theName OUT varchar2);
  procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist);
  function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2;
  function DeclarePageFolder(theFolder IN varchar2) return varchar2;
@@ -55,6 +56,7 @@ create or replace package OnlineHistDB as
  function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
  function DeletePageFolder(thePageFolder IN varchar2) return number;
  function DeletePage(thePage IN varchar2) return number;
+ function RenamePage(oldName IN varchar2, newName IN varchar2, newFolder OUT varchar2) return varchar2;
  function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
 	theHid OUT varchar2,theHsid OUT int,
 	theIhs OUT int,theNhs OUT int, theHstype OUT varchar2, theHstitle OUT varchar2, theSubtitle OUT varchar2,
@@ -65,6 +67,7 @@ create or replace package OnlineHistDB as
 	return number;
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
+ procedure TaskCleanup;
  procedure GetTotalCounts(nHist OUT int, nPages OUT int, nPageFolders OUT int);
  procedure CheckSchema(dbschema IN int := 0); 
  procedure CheckSchema(dbschema IN int := 0, algListID OUT int);
@@ -616,46 +619,15 @@ end GetDisplayOptions;
 -----------------------
 -- this is needed for the web interface since PHP4 doesn't support objects
 -- produced automatically by  autodispopt.pl
+
 procedure GET_DISPLAYOPTIONS(theDOID IN int
-,LABEL_X OUT VARCHAR2
-,LABEL_Y OUT VARCHAR2
-,LABEL_Z OUT VARCHAR2
-,YMIN OUT FLOAT
-,YMAX OUT FLOAT
-,STATS OUT INT
-,FILLSTYLE OUT INT
-,FILLCOLOR OUT INT
-,LINESTYLE OUT INT
-,LINECOLOR OUT INT
-,LINEWIDTH OUT INT
-,DRAWOPTS OUT VARCHAR2
-,XMIN OUT FLOAT
-,XMAX OUT FLOAT
-,ZMIN OUT FLOAT
-,ZMAX OUT FLOAT
-,LOGX OUT INT
-,LOGY OUT INT
-,LOGZ OUT INT
-,TIMAGE OUT VARCHAR2
-,REF OUT VARCHAR2
-,REFRESH OUT FLOAT
-,TIT_X_SIZE OUT FLOAT
-,TIT_X_OFFS OUT FLOAT
-,TIT_Y_SIZE OUT FLOAT
-,TIT_Y_OFFS OUT FLOAT
-,TIT_Z_SIZE OUT FLOAT
-,TIT_Z_OFFS OUT FLOAT
-,LAB_X_SIZE OUT FLOAT
-,LAB_X_OFFS OUT FLOAT
-,LAB_Y_SIZE OUT FLOAT
-,LAB_Y_OFFS OUT FLOAT
-,LAB_Z_SIZE OUT FLOAT
-,LAB_Z_OFFS OUT FLOAT
-,GRIDX OUT INT
-,GRIDY OUT INT
-,THETA OUT FLOAT
-,PHI OUT FLOAT
-) is
+,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
+,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
+,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
+,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
+,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
+,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
+,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2) is
  mydo dispopt; 
 begin
  SELECT OPT INTO mydo FROM DISPLAYOPTIONS WHERE DOID = theDOID;
@@ -697,6 +669,7 @@ begin
  GRIDY := mydo.GRIDY;
  THETA := mydo.THETA;
  PHI := mydo.PHI;
+ CNTPLOT := mydo.CNTPLOT;
 end GET_DISPLAYOPTIONS;
 
 -------------------------------
@@ -889,8 +862,10 @@ end GetHCSettings;
 -------------------------
 
 procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE,
-			           theSources sourceh, thePars IN thresholds := thresholds()) is
- cursor histo is select HSID from HISTOGRAMSET where HSTITLE=theTitle AND HSTASK='ANALYSIS' AND HSALGO=theAlg;
+			           theSources sourceh, thePars IN thresholds := thresholds(),
+	                           theName OUT varchar2) is
+ cursor histo(Xtask HISTOGRAMSET.HSTASK%TYPE) is select HSID from HISTOGRAMSET HS, HISTOGRAM H 
+     where HS.HSTITLE=theTitle AND H.ISANALYSISHIST=1 AND HS.HSALGO=theAlg AND HS.HSTASK=Xtask;
  myhsid HISTOGRAMSET.HSID%TYPE;
  cursor al(xAlg ALGORITHM.ALGNAME%TYPE) is  select ALGTYPE,NINPUT,NPARS,HCTYPE from ALGORITHM where ALGNAME=xAlg;	
  algotype ALGORITHM.ALGTYPE%TYPE;
@@ -923,21 +898,28 @@ begin
  if (algonp != thePars.COUNT) then
    raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters');
  end if;
- if (myhctype = 'SAM') then -- take type from source
+ if (myhctype = 'SAM') then -- take type and task from source
   if (algonh >0) then
-    select HSTYPE into myhctype from VIEWHISTOGRAM where HID=theSources(1);
+    select HSTYPE,TASK into myhctype,anatk from VIEWHISTOGRAM where HID=theSources(1);
   else
-    select HSTYPE into myhctype from VIEWHISTOGRAM where HID=theSet||'/1';
+    select HSTYPE,TASK into myhctype,anatk from VIEWHISTOGRAM where HID=theSet||'/1';
+  end if;
+ else  -- take task from source
+  if (algonh >0) then
+    select TASK into anatk from VIEWHISTOGRAM where HID=theSources(1);
+  else
+    select TASK into anatk from VIEWHISTOGRAM where HID=theSet||'/1';
   end if;
  end if;
-
+ anatk :=  anatk || '_ANALYSIS';
 
 
  -- CHECK IF THE HISTOGRAM IS ALREADY DEFINED
- open histo;
+ open histo(anatk);
  fetch histo into myhsid;
  if (histo%NOTFOUND) then
   -- create histogram entry
+  DeclareTask(anatk);
   INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) VALUES(HistogramSet_ID.NEXTVAL,1,anatk,theAlg,theTitle,myhctype);
   INSERT INTO HISTOGRAM(HID,NAME,HSET,IHS,SUBTITLE,CREATION,ISANALYSISHIST) 
         VALUES(HistogramSet_ID.CURRVAL||'/1',anatk||'/'||theAlg||'/'||theTitle,
@@ -960,6 +942,7 @@ begin
   EXECUTE IMMEDIATE command;
  end if;
  close histo;
+ theName := anatk||'/'||theAlg||'/'||theTitle;
 exception
  when OTHERS then  
   ROLLBACK TO beforeHCwrite;
@@ -1215,6 +1198,37 @@ EXCEPTION
   raise_application_error(-20050,SQLERRM);  
 end DeletePage;
 -----------------------
+function RenamePage(oldName IN varchar2, newName IN varchar2, newFolder OUT varchar2) return varchar2 is
+ cursor oldp is select  NHISTO,PAGEDOC from PAGE where PAGENAME=oldName;
+ nh int;
+ doc PAGE.PAGEDOC%TYPE;
+ fold PAGE.FOLDER%TYPE;
+ out PAGE.PAGENAME%TYPE;
+begin
+ savepoint beforePAGErename;
+-- check old page is there
+ open oldp;
+ fetch oldp into nh,doc;
+ if (oldp%FOUND) then
+  out := PagenameSyntax(newName, fold);
+  newFolder := fold;
+  fold := DeclarePageFolder(fold);
+  INSERT INTO PAGE(PAGENAME,FOLDER,NHISTO,PAGEDOC) VALUES(out,fold,nh,doc);
+  UPDATE SHOWHISTO SET PAGE=out,PAGEFOLDER=fold where PAGE=oldName;
+  DELETE FROM PAGE where PAGENAME=oldName;
+ else
+  out := oldName;
+  newFolder :='';
+ end if;
+ return out;
+EXCEPTION
+ when OTHERS then
+  ROLLBACK TO beforePAGErename;
+  raise_application_error(-20050,SQLERRM); 
+end RenamePage;
+
+
+-----------------------
 
 function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance IN int , 
 	theHid OUT varchar2,theHsid OUT int,
@@ -1324,6 +1338,20 @@ EXCEPTION
 end DeleteHistogram;
 
 -----------------------------------
+
+procedure TaskCleanup is
+ n int;
+begin
+ for tset in (select TASKNAME from TASK) LOOP
+  select COUNT(*) into n from HISTOGRAMSET where HSTASK = tset.TASKNAME;
+  if (n = 0) then
+    delete from task where TASKNAME = tset.TASKNAME;
+  end if;
+ end LOOP;
+end TaskCleanup;
+
+-----------------------------------
+
 procedure GetTotalCounts(nHist OUT int, nPages OUT int, nPageFolders OUT int) is
 begin
  select COUNT(*) into nHist from HISTOGRAM;
@@ -1346,7 +1374,7 @@ procedure CheckSchema(dbschema IN int := 0, algListID OUT int) is
 begin
  SELECT version,apiversion,alglist into curschema,curapi,curalglist  from ERGOSUM;
  algListID := curalglist;
- if (dbschema != curschema) then
+ if (dbschema < curschema) then
    rollback;
    raise_application_error(-20999,'
 -----------------------------------------------------------------------------
@@ -1354,6 +1382,16 @@ You are using an HistDB API version incompatible with the current DB schema.
 No changes can be committed. Please update to OnlineHistDB '||curapi||' 
 -----------------------------------------------------------------------------
 ');
+ else 
+  if (dbschema > curschema) then
+   rollback;
+   raise_application_error(-20999,'
+-----------------------------------------------------------------------------
+You are using an HistDB API version too recent for the current DB schema. 
+No changes can be committed. Please downgrade to OnlineHistDB version '||curapi||' 
+-----------------------------------------------------------------------------
+');
+  end if;
  end if;
 end CheckSchema;
 

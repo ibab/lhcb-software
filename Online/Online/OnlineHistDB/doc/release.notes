@@ -1,12 +1,24 @@
-! $Id: release.notes,v 1.19 2007-11-19 17:26:45 ggiacomo Exp $
+! $Id: release.notes,v 1.20 2007-11-22 17:38:35 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 !
 
+
+! 20071122  - OnlineHistDB v4r1
+	- add OnlineHistDB::setRefRoot for using a test reference histogram repository
+	- add CNTPLOT option for counter display
+	- change taskname of analysis histograms to <original_taskname>_ANALYSIS
+	- add OnlineHistPage::rename
+	- add support for drawing Ref. histograms in OnlineRootHist
+	- fix inizialization of display options
+	- switch to ROOT 5.17
+
+
 ! 20071119 
 	- make it compile under M$ (but I'm still waiting for the $s)
+	- support for the new Oracle RAC cluster in the pit
 
 
 ! 20071108  - OnlineHistDB v4r0

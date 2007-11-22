@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.12 2007-11-19 17:26:44 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.13 2007-11-22 17:38:35 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -20,14 +20,16 @@ class OnlineHistogramStorage;
 class OnlinePageStorage;
 
 namespace OnlineHistDBEnv_constants {
+  static const std::string DB="lbora01:1528/HISTOGRAMDB";
+  static const std::string ACCOUNT="HIST_WRITER";
+  static const unsigned int DBschema = 7;
+
   static const int NHTYPES=6;
   static const char HistTypeName[][4] = {
     "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
-  static const std::string DB="lbora01:1528/HISTOGRAMDB";
-  static const std::string ACCOUNT="HIST_WRITER";
-  static const std::string RefRoot="/home/online/Histograms/Reference"; 
-  static const unsigned int DBschema = 6;
+
+  static std::string RefRoot = "/home/online/Histograms/Reference"; 
   static const std::string m_SetSeparator = "_$";
 
   static const unsigned int VSIZE_SN          = 131;

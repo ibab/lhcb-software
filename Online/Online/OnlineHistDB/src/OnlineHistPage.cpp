@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.16 2007-11-19 17:26:45 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.17 2007-11-22 17:38:35 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace OnlineHistDBEnv_constants;
@@ -93,6 +93,8 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
 
 
 OnlineHistPage::~OnlineHistPage(){}
+
+
 
 
 OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
@@ -202,6 +204,29 @@ bool OnlineHistPage::remove() {
   }
   return (out > 0);  
 }
+
+void OnlineHistPage::rename(std::string NewName) {
+  OCIStmt *stmt=NULL;
+  if(m_syncWithDB) {
+    m_StmtMethod = "OnlineHistPage::Rename";
+    if ( OCI_SUCCESS == prepareOCIStatement(stmt,"BEGIN :out := ONLINEHISTDB.RENAMEPAGE(:old,:new,:fold); END;" ) ) {
+      text Name[VSIZE_PAGENAME];
+      text Fold[VSIZE_FOLDER];
+      myOCIBindString(stmt,":old", m_name);
+      myOCIBindString(stmt,":new", NewName);
+      myOCIBindString(stmt,":out", Name, VSIZE_PAGENAME);    
+      myOCIBindString(stmt,":fold", Fold, VSIZE_FOLDER);    
+      if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+	m_name = std::string((const char *) Name);
+	m_folder = std::string((const char *) Fold);
+      }
+    }
+  }
+  else {
+    m_name =PagenameSyntax(NewName, m_folder);
+  }
+}
+
 
 int OnlineHistPage::findHistogram(OnlineHistogram* h,
 				  unsigned int instance,
