@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-11-22 - Chris Jones
+ - Add new default tool mapping nto registry, for photon emission point tools
+
 ! 2007-11-12 - "Antonis Papanestis"
  - Added an option to SmartIDTool to allow the detection point to be 
    on the photoCathode or the outside of the window (including refraction

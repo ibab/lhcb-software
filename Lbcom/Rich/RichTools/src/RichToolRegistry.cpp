@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.19 2007-10-23 09:55:07 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.20 2007-11-22 13:23:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -71,6 +71,7 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::TrackSelector/TrackSelector" );
   defaultTools.push_back ( "Rich::Rec::StereoFitter/RichStereoFitter" );
   defaultTools.push_back ( "Rich::Rec::StereoProjection/RichStereoProjection" );
+  defaultTools.push_back ( "Rich::Rec::PhotonEmissionPoint/RichPhotonEmissionPoint" );
   // MC
   defaultTools.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
   defaultTools.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
