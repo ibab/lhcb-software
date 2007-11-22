@@ -4,6 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-11-22 - Juan PALACIOS
+ - Add tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . QMT test for stripping options.
+
 ! 2007-11-21 - Juan PALACIOS
  - Add tests/options/DVTestAllPreselections.opts
   . Test for the pre-selections to be run in the stripping, on BB inclusive
