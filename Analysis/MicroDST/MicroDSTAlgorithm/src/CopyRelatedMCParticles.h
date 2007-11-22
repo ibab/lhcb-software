@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.3 2007-11-15 08:19:09 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.4 2007-11-22 16:19:48 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -6,8 +6,11 @@
 // from Gaudi
 #include "MicroDST/CopyAndStoreData.h"
 #include "Event/Particle.h"
+// from LHCb
+#include "Kernel/Particle2MCLinker.h"
 class MCParticle;
 class MCVertex;
+
 
 /** @class CopyRelatedMCParticles CopyRelatedMCParticles.h
  *  
@@ -26,8 +29,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
@@ -54,5 +55,12 @@ private:
                                    LHCb::MCParticle::ConstVector&);
   
 
+
+private:
+
+  Particle2MCLinker* m_compositeLinker; ///< Linker for composite particles
+ 
+  Particle2MCLinker* m_linksLinker; ///< Linker for basic particles
+  
 };
 #endif // COPYRELATEDMCPARTICLES_H

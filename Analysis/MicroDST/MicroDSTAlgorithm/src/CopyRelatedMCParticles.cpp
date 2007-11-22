@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.3 2007-11-15 08:19:08 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.4 2007-11-22 16:19:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
+
 // local
 #include "CopyRelatedMCParticles.h"
 
@@ -53,6 +54,12 @@ StatusCode CopyRelatedMCParticles::initialize() {
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
+  m_compositeLinker = new Particle2MCLinker(this,
+                                            Particle2MCMethod::Composite,"")  ;
+
+  m_linksLinker     = new Particle2MCLinker(this,
+                                            Particle2MCMethod::Links,"")  ;
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -69,6 +76,9 @@ StatusCode CopyRelatedMCParticles::execute() {
     get<LHCb::Particle::Container>( inputTESLocation() );
 
   verbose() << "Found " << particles->size() << " particles" << endmsg;
+
+  // Actually this needs to be iterative, so we store the MCParticles for
+  // everything in the tree.
   
   for (LHCb::Particle::Container::const_iterator iPart = particles->begin();
        iPart != particles->end();
@@ -90,7 +100,10 @@ LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::Particle* 
 
   // Get a vector of associated particles
   // Store them on the local store.
+  LHCb::MCParticle::ConstVector AssociatedMCParticles;
 
+  StatusCode sc = associatedMCParticles(particle, AssociatedMCParticles);
+  
   return 0;
 
 }
@@ -98,6 +111,9 @@ LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::Particle* 
 StatusCode CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
                                                          LHCb::MCParticle::ConstVector&) 
 {
+
+  Particle2MCLinker* linker = (particle->isBasicParticle() ) ? m_linksLinker : m_compositeLinker;
+
   return StatusCode::SUCCESS;
   
 }
