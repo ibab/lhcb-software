@@ -1,4 +1,4 @@
-// $Id: HltVertexFilter.cpp,v 1.6 2007-10-11 09:41:18 hernando Exp $
+// $Id: HltVertexFilter.cpp,v 1.7 2007-11-23 12:31:11 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,9 @@
 #include "HltBase/EDictionary.h"
 #include "Event/HltNames.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/construct.hpp"
+using namespace boost::lambda;
 
 // local
 #include "HltVertexFilter.h"
@@ -37,12 +40,8 @@ HltVertexFilter::HltVertexFilter( const std::string& name,
 // Destructor
 //=============================================================================
 HltVertexFilter::~HltVertexFilter() {
-  for (std::vector<Hlt::VertexFunction*>::iterator it = m_functions.begin();
-       it != m_functions.end(); ++it)
-    delete *it;
-  for (std::vector<Hlt::VertexFilter*>::iterator it = m_filters.begin();
-       it != m_filters.end(); ++it)
-    delete *it;
+  std::for_each(m_functions.begin(),m_functions.end(), delete_ptr());
+  std::for_each(m_filters.begin(),m_filters.end(), delete_ptr());
 } 
 
 //=============================================================================
@@ -84,11 +83,11 @@ StatusCode HltVertexFilter::initialize() {
     m_tcounters.push_back(0);   
 
     if (m_histogramUpdatePeriod>0) {
-      HltHisto histo = NULL;
+      HltHisto histo = 0;
       initializeHisto(histo,funname,0.,100.,100);
       m_histos.push_back(histo);
       
-      HltHisto histo1 = NULL;
+      HltHisto histo1 = 0;
       initializeHisto(histo1,funname+"Best",0.,100.,100);
       m_histos1.push_back(histo1);  
     }

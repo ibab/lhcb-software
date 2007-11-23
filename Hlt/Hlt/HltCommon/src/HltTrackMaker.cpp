@@ -1,4 +1,4 @@
-// $Id: HltTrackMaker.cpp,v 1.2 2007-11-14 13:57:03 hernando Exp $
+// $Id: HltTrackMaker.cpp,v 1.3 2007-11-23 12:32:24 graven Exp $
 // Include files 
 
 
@@ -33,10 +33,7 @@ HltTrackMaker::HltTrackMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
-  declareProperty( "TrackMakerTool",  
-                   m_trackMakerName = "empty");
-
+  declareProperty("TrackMakerTool",   m_trackMakerName);
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
 
@@ -67,9 +64,8 @@ StatusCode HltTrackMaker::initialize() {
   checkInput(m_outputTracks," output tracks ");
 
   // get track maker
-  m_trackMaker = NULL;
-  if (m_trackMakerName == "empty")
-    fatal() << " No declared track Maker tool " << endreq;
+  if (m_trackMakerName.empty())
+    fatal() << " No declared Track Maker tool " << endreq;
   m_trackMaker = tool<ITrackMatchUpgrade>(m_trackMakerName);    
   if (!m_trackMaker)
     fatal() << " No ITrackMatchUpdate tool" << endreq;
@@ -94,10 +90,10 @@ StatusCode HltTrackMaker::initialize() {
     Hlt::TrackBiFunction* fun = factory->trackBiFunction(funname);
     m_functions.push_back(fun);
     m_filterIDs.push_back(id);
-    if (!fun) error() << " error crearing function " << filtername 
+    if (!fun) error() << " error creating function " << filtername 
                       << " " << id << endreq;
 
-    Hlt::Filter* fil = NULL;
+    Hlt::Filter* fil = 0;
     if (mode == "<") fil = new Estd::less<double>(x0);
     else if (mode == ">") fil = new Estd::greater<double>(x0);
     else fil = new Estd::in_range<double>(x0,xf);
@@ -108,7 +104,7 @@ StatusCode HltTrackMaker::initialize() {
     m_tcounters.push_back(0);   
 
     if (m_histogramUpdatePeriod>0) {
-      HltHisto histo = NULL;
+      HltHisto histo = 0;
       initializeHisto(histo,filtername,0.,100.,100);
       m_histos.push_back(histo);
     }
