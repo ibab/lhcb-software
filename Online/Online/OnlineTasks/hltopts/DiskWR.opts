@@ -22,3 +22,4 @@ EventSelector.Input                  = "RESULT";
 EventSelector.AllowSuspend           = true;
 EventSelector.Decode                 = true;
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+//MessageSvc.OutputLevel = 1;

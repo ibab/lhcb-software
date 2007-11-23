@@ -10,7 +10,7 @@
 echo Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE
 #[ -z $HOME ] && export HOME=/home/$(/usr/bin/whoami)
 
-. /home/online/Online_v4r2/Online/OnlineTasks/v1r6/job/pathsetup
+. pathsetup
 
 #export MSGSVC=MessageSvc
 
@@ -30,10 +30,10 @@ export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCON
 #export gaudi_exe3="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline"  
 
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
-#export CLASS0_TASK="${gaudi_exe} -opt=${GAUDIONLINEROOT}/options/Daemon.opts"
-export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=${HLTOPTS}/Main.opts"
+export CLASS0_TASK="${gaudi_exe} -tasktype=LHCb::Class0Task -opt=${GAUDIONLINEROOT}/options/Daemon.opts"
+#export CLASS1_TASK="${gaudi_exe} -main=${HLTOPTS}/Main.opts"
 #identical?
-#export CLASS2_TASK="${gaudi_exe} -type=LHCb::Class2Task -main=${HLTOPTS}/Main.opts"
+#export CLASS2_TASK="${gaudi_exe} -main=${HLTOPTS}/Main.opts"
 
 #echo Working Directory: $PWD
 #${gaudi_exe} ${gaudi_exe_args} -main=../options/MBMinit.opts  -opt=../options/Daemon.opts -msgsvc=${MSGSVC}  &

@@ -3,3 +3,4 @@ Runable.ethInterface = 0;        // interface number for data input eth"0" eth"1
 //Runable.rxIPAddr = "$DATAINTERFACE";
 Runable.IPSrc = @OnlineEnv.Tell1Boards;
 Runable.rxIPAddr = "0.0.0.0";
+Runable.IPNameOdin = @OnlineEnv.ODIN_IP;

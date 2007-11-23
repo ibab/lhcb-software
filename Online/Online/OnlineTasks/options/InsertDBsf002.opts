@@ -1,0 +1,21 @@
+// Job options file. Simple Online Saver example
+//==============================================================
+
+ApplicationMgr.ExtSvc = { "MonitorSvc" };
+
+ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud", "Gaucho", "GaudiOnline"};
+ApplicationMgr.DLLs += {"InsertDB"};
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.TopAlg  = { "InsertDB" };
+
+
+InsertDB.OutputLevel = 1;
+
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+
+InsertDB.dimclientdns="ecs01";
+InsertDB.topleveltaskname="Adder";
+InsertDB.nodename="sf002";
