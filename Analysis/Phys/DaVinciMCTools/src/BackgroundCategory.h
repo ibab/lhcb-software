@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.18 2007-07-11 16:53:47 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.19 2007-11-23 23:28:23 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -78,7 +78,7 @@ private:
 
   bool isStable(int);
 
-  bool condition_A(MCParticleVector, ParticleVector);
+  bool condition_A(MCParticleVector, MCParticleVector, ParticleVector);
   bool condition_B(MCParticleVector);
   bool condition_C(ParticleVector, MCParticleVector);
   //  bool condition_D(MCParticleVector, const Particle*);
@@ -97,6 +97,8 @@ private:
   IParticleDescendants* m_particleDescendants;
   ProtoParticle2MCLinker* m_pCPPAsct; //ProtoParticle2MCAsct::IAsct* m_pCPPAsct;
   ProtoParticle2MCLinker* m_pNPPAsct; //ProtoParticle2MCAsct::IAsct* m_pNPPAsct;
+  //Particle2MCLinker* m_pCPPAsct;
+  //Particle2MCLinker* m_pNPPAsct;
   Particle2MCLinker* m_pChi2PPAsct; //Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
   const LHCb::MCParticle* m_commonMother;
 

@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.188 2007-10-25 15:59:22 jpalac Exp $
+! $Id: release.notes,v 1.189 2007-11-23 23:27:02 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-11-23 - Vladimir Gligorov
+ - Add src/DumpEvent{.cpp, .h}
+  . Old method from DC04, allows trivial dumping of entire MC event
+ - Add FilterByRunEvent{.cpp,.h}, allows filtering by event and run numbers in
+   option file based selections. On behalf of P. Spradlin.
+ - New version of BackgroundCategory, with many important bugfixes.
 
 !========================== DaVinciMCTools v9r7 2007-10-25 ===================
 
