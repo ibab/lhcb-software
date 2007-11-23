@@ -1,4 +1,4 @@
-// $Id: HltSelectionDataToTes.cpp,v 1.4 2007-10-12 12:21:21 hernando Exp $
+// $Id: HltSelectionDataToTes.cpp,v 1.5 2007-11-23 12:33:50 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( HltSelectionDataToTes );
 //=============================================================================
 HltSelectionDataToTes::HltSelectionDataToTes( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_hltSvc(0),m_conf(0),m_datasummary(0)
 {
 
   declareProperty("CopyAll",m_copyAll = false);
@@ -48,7 +48,7 @@ StatusCode HltSelectionDataToTes::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
   // get the Hlt Data Svc
-  m_hltSvc = NULL;
+  m_hltSvc = 0;
   sc = serviceLocator()->service("HltDataSvc",m_hltSvc);
   if (!m_hltSvc) fatal() << " not able to create Hlt Svc provider " << endreq;
   info() << " hltsvc " << (int) m_hltSvc << endreq;

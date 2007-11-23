@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 ! 2007-11-23 Gerhard Raven
+      - HltSelectionDataToTes: initialize all member pointers to 0 in c'tor, use 0 instead of NULL
       - HltTrackMaker,HltVertexMaker: use boost::delete_ptr, 0 instead of NULL, use 'empty()' instead
                         of a-priori invalid string value
       - HltTrackFilter,HltVertexFilter: use boost::delete_ptr, 0 instead of NULL
