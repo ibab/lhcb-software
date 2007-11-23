@@ -1,4 +1,4 @@
-// $Id: RawEventPrintout.h,v 1.2 2006-10-19 09:07:41 frankb Exp $
+// $Id: RawEventPrintout.h,v 1.3 2007-11-23 18:34:07 frankb Exp $
 //====================================================================
 //	RawEventPrintout.h
 //--------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace LHCb  {
     static std::string bankType(int i)  {
 #define PRINT(x)  case RawBank::x : return #x;
       switch(i)  {
-        PRINT(L0Calo);
+        PRINT(L0Calo);          // 0
         PRINT(L0DU);
         PRINT(PrsE);
         PRINT(EcalE);
@@ -47,7 +47,7 @@ namespace LHCb  {
         PRINT(HcalTrig);
         PRINT(Velo);
         PRINT(Rich);
-        PRINT(TT);
+        PRINT(TT);              //10
         PRINT(IT);
         PRINT(OT);
         PRINT(Muon);
@@ -57,7 +57,7 @@ namespace LHCb  {
         PRINT(HLT);
         PRINT(VeloFull);
         PRINT(TTFull);
-        PRINT(ITFull);
+        PRINT(ITFull);          // 20
         PRINT(EcalPacked);
         PRINT(HcalPacked);
         PRINT(PrsPacked);
@@ -67,8 +67,25 @@ namespace LHCb  {
         PRINT(ITPedestal);
         PRINT(TTPedestal);
         PRINT(VeloError);
-        PRINT(VeloPedestal);
+        PRINT(VeloPedestal);    // 30
         PRINT(VeloProcFull);
+        PRINT(OTRaw);
+        PRINT(OTError);
+        PRINT(EcalPackedError); //34
+        PRINT(HcalPackedError); //35  
+        PRINT(PrsPackedError);  //36
+        PRINT(L0CaloFull);      //37
+        PRINT(L0CaloError);     //38
+        PRINT(L0MuonCtrlAll);   //39
+        PRINT(L0MuonProcCand);  //40
+        PRINT(L0MuonProcData);  //41
+        PRINT(L0MuonRaw);       //42
+        PRINT(L0MuonError);     //43
+        PRINT(GaudiSerialize);  //44
+        PRINT(GaudiHeader);     //45
+        PRINT(TTProcFull);      //46
+        PRINT(ITProcFull);      //47
+
         default: return "UNKNOWN";
 #undef PRINT
       }

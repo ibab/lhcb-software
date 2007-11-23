@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-11-23 - Markus Frank
+  - Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
+
 ! 2007-11-04 - Markus Frank
   - Implemement connection to XML file catalog from GaudiUtils
     New files: RawDataConnection.h/cpp
