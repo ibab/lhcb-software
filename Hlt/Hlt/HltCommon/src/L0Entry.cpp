@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.8 2007-11-01 16:36:48 hernando Exp $
+// $Id: L0Entry.cpp,v 1.9 2007-11-23 12:22:46 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -29,11 +29,8 @@ L0Entry::L0Entry( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
- 
   declareProperty("L0ChannelsName", m_l0ChannelsName);
-  
 }
 //=============================================================================
 // Destructor
@@ -44,16 +41,14 @@ L0Entry::~L0Entry() {};
 // Initialization
 //=============================================================================
 StatusCode L0Entry::initialize() {
+  debug() << "==> Initialize" << endmsg;
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
 
   m_l0Channels.clear();
   const std::vector< std::string > values = m_l0ChannelsName.value();
 
   typedef std::pair< std::string, int>  Config;  
-  std::vector< Config > configs;
 
   // default configuration
   // TODO; this needs to be solved with the TCK!!
@@ -91,15 +86,12 @@ StatusCode L0Entry::initialize() {
     } 
   }
   
-  for (int i = 0; i < conf.size(); i++)
-    configs.push_back( Config(conf[i],i) );
+  std::vector< Config > configs;
+  for (unsigned i = 0; i < conf.size(); i++) configs.push_back( Config(conf[i],i) );
 
-  for (std::vector< std::string>::const_iterator it = values.begin();
-       it != values.end(); ++it) {
-    const std::string& name = *it;
-    for (std::vector<Config>::const_iterator it2 = configs.begin();
-         it2 != configs.end(); ++it2) 
-      if (name == it2->first) {
+  for (std::vector< std::string>::const_iterator it = values.begin(); it != values.end(); ++it) {
+    for (std::vector<Config>::const_iterator it2 = configs.begin(); it2 != configs.end(); ++it2) 
+      if (*it == it2->first) {
         m_l0Channels.push_back( it2->second );
         info() << " accepting L0 trigger channel  " << it2->first
                << " (int) " << it2->second << endreq;  
@@ -108,7 +100,7 @@ StatusCode L0Entry::initialize() {
 
   initializeHisto(m_histoL0,"L0",0.,14.,28);
   
-  if (m_l0Channels.size() == 0)
+  if (m_l0Channels.empty())
     info() << " accepting all L0 triggers " << endreq;
 
   return StatusCode::SUCCESS;
@@ -122,14 +114,15 @@ StatusCode L0Entry::execute() {
   if (!retrieve(m_l0,m_l0Location)) return stop(" No L0 report");
   
   bool ok = m_l0->decision();
-  if (!ok) return stop(" No L0 decsion");
+  if (!ok) return stop(" No L0 decision");
 
 
-  if (m_l0Channels.size()>0 ) {
+  if (!m_l0Channels.empty()) {
     ok = false;
     if (m_monitor) 
-      for (int i = 0; i<14; i+=1)
+      for (int i = 0; i<14; ++i)
         if (m_l0->channelDecision(i)) fillHisto( m_histoL0, 1.*i , 1.);
+
     for (std::vector<int>::iterator it = m_l0Channels.begin();
          it != m_l0Channels.end(); ++it) {
       ok = ( ok || m_l0->channelDecision( *it ) );
@@ -149,7 +142,6 @@ StatusCode L0Entry::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0Entry::finalize() {
-
   return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
