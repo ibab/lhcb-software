@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.5 2007-11-19 17:26:44 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.6 2007-11-23 17:58:55 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -64,6 +64,8 @@ class OnlineHistTask : public OnlineHistDBEnv
   bool isAbort() {return m_abort;}
   /// dumps task options
   void dump();
+  // load task from DB
+  void load();
 
  private:
   std::string m_name;
@@ -106,6 +108,7 @@ class OnlineTaskStorage
   OnlineHistTask* getTask(std::string Name);
  protected:
   void setTaskEnv(OnlineHistDBEnv* Env) {m_Taskenv = Env;}
+  void reloadTasks();
  private: 
   OnlineHistDBEnv* m_Taskenv;
   std::vector<OnlineHistTask*> m_myTask;

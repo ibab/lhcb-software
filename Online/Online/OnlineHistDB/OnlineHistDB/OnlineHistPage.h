@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.14 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.15 2007-11-23 17:58:55 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -73,7 +73,8 @@ class OnlineHistPage : public OnlineHistDBEnv
   bool save();
   /// dumps the current page layout 
   void dump();
-
+  // load the page from DB
+  void load();
  private:
   // private dummy copy constructor and assignment operator 
   OnlineHistPage(const OnlineHistPage&) : OnlineHistDBEnv("dummy") {}
@@ -108,6 +109,7 @@ class OnlinePageStorage
   bool removePage(OnlineHistPage* Page);
  protected:
   void setPageEnv(OnlineHistDBEnv* Env) {m_Pagenv = Env;}
+  void reloadPages();
  private:
   OnlineHistDBEnv* m_Pagenv;
   std::vector<OnlineHistPage*> m_myPage;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.16 2007-11-22 18:23:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.17 2007-11-23 17:58:54 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -27,6 +27,8 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   // DB session methods
   /// commits all changes to the DB. Returns true if there are no errors.
   bool commit();
+  /// true if user has write access to the DB
+  bool canwrite() {return (m_canwrite>0);}
 
   // declarations of main DB objects
   /// declares a  subsystem, returning true on success
@@ -82,7 +84,8 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 
   /// removes Page Folder only if it doesn't have pages (useful for cleanup)
   bool removePageFolder(std::string Folder);
-
+  /// reload all cached objects from the DB
+  void refresh();
 
 
   // query functions
@@ -148,6 +151,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
    OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"),  
      OnlineTaskStorage(), OnlineHistogramStorage(), OnlinePageStorage() {} 
      OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;} 
+  int m_canwrite;
   int m_AlgListID;
   int m_nit;
   int m_nHistograms;

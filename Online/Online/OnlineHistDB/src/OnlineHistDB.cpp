@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.20 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.21 2007-11-23 17:58:56 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -56,9 +56,10 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   OCIStmt *stmt=NULL;
   int schema = DBschema;
   m_StmtMethod = "OnlineHistDB::OnlineHistDB";
-  if ( OCI_SUCCESS == prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.CHECKSCHEMA(:x1,:x2); END;") ) {
+  if ( OCI_SUCCESS == prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.CHECKSCHEMA(:x1,:x2, :x3); END;") ) {
     if ( OCI_SUCCESS == myOCIBindInt(stmt, ":x1", schema) &&
-	 OCI_SUCCESS == myOCIBindInt(stmt, ":x2", m_AlgListID) ) {
+	 OCI_SUCCESS == myOCIBindInt(stmt, ":x2", m_AlgListID) && 
+	 OCI_SUCCESS == myOCIBindInt(stmt, ":x3", m_canwrite)) {
       myOCIStmtExecute(stmt, SEVERE);
     }
   } 
@@ -301,6 +302,11 @@ bool OnlineHistDB::removePageFolder(std::string Folder) {
   return out;
 }
 
+void OnlineHistDB::refresh() {
+  reloadHistograms();
+  reloadPages();
+  reloadTasks();
+}
 
 
 bool OnlineHistDB::setAlgListID(int algListID) {
@@ -315,7 +321,6 @@ bool OnlineHistDB::setAlgListID(int algListID) {
   }
   return out;
 }
-
 
 
 int OnlineHistDB::getAllHistograms(std::vector<OnlineHistogram*>* list ,

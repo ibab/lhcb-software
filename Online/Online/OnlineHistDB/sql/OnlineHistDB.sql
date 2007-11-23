@@ -71,6 +71,7 @@ create or replace package OnlineHistDB as
  procedure GetTotalCounts(nHist OUT int, nPages OUT int, nPageFolders OUT int);
  procedure CheckSchema(dbschema IN int := 0); 
  procedure CheckSchema(dbschema IN int := 0, algListID OUT int);
+ procedure CheckSchema(dbschema IN int := 0, algListID OUT int, writePerm OUT int);
  procedure mycommit(dbschema int := 0);
 end OnlineHistDB;
 /
@@ -1368,9 +1369,18 @@ end CheckSchema;
 
 -----------------------
 procedure CheckSchema(dbschema IN int := 0, algListID OUT int) is
+wP int;
+begin
+ CheckSchema(dbschema, algListID, wP);
+end CheckSchema;
+
+----------------------
+procedure CheckSchema(dbschema IN int := 0, algListID OUT int, writePerm OUT int) is
  curschema ERGOSUM.version%TYPE;
  curapi ERGOSUM.apiversion%TYPE;
  curalglist ERGOSUM.ALGLIST%TYPE;
+ insuf_privs exception;
+ pragma exception_init(insuf_privs, -1031);
 begin
  SELECT version,apiversion,alglist into curschema,curapi,curalglist  from ERGOSUM;
  algListID := curalglist;
@@ -1393,6 +1403,14 @@ No changes can be committed. Please downgrade to OnlineHistDB version '||curapi|
 ');
   end if;
  end if;
+ -- check write permission
+ EXECUTE IMMEDIATE 'update ERGOSUM set ALGLIST=ALGLIST';
+ writePerm := 1;
+EXCEPTION
+when insuf_privs then 
+ writePerm := 0;
+when OTHERS then
+ RAISE;
 end CheckSchema;
 
 -----------------------

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.3 2007-11-19 17:26:45 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.4 2007-11-23 17:58:56 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -23,16 +23,20 @@ OnlineHistTask::OnlineHistTask(OnlineHistDBEnv &env,
 			       std::string Name) :
   OnlineHistDBEnv(env) , m_abort(false)
 {
+  m_name = Name; 
+  load();
+}
 
+void  OnlineHistTask::load() {
   OCIStmt *stmt=NULL;
-  m_StmtMethod = "OnlineHistTask::OnlineHistTask";
+  m_StmtMethod = "OnlineHistTask::load";
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, "SELECT SUBSYS1,SUBSYS2,SUBSYS3,RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SAVEFREQUENCY,REFERENCE FROM TASK where TASKNAME=:1") ) {
     text SUBSYS[3][VSIZE_SSNAME];
     SUBSYS[0][0]=SUBSYS[1][0]=SUBSYS[2][0]='\0';
     int RUNONPHYSICS,RUNONCALIB,RUNONEMPTY;
     text REFERENCE[VSIZE_REFERENCE]="";
-    myOCIBindString(stmt,":1", Name);
+    myOCIBindString(stmt,":1", m_name);
     myOCIDefineString(stmt, 1, SUBSYS[0], VSIZE_SSNAME, &m_sd_null[0]);
     myOCIDefineString(stmt, 2, SUBSYS[1], VSIZE_SSNAME, &m_sd_null[1]);
     myOCIDefineString(stmt, 3, SUBSYS[2], VSIZE_SSNAME, &m_sd_null[2]);
@@ -42,7 +46,6 @@ OnlineHistTask::OnlineHistTask(OnlineHistDBEnv &env,
     myOCIDefineFloat (stmt, 7, m_SavingFrequency, &m_SavingFrequency_null);
     myOCIDefineString(stmt, 8, REFERENCE, VSIZE_REFERENCE, &m_Reference_null);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-      m_name = Name;      
       m_ndet=0;
       for ( int id=0; id<3; id++) {
 	m_sd[id]="NULL";
@@ -115,6 +118,7 @@ bool OnlineHistTask::save() {
     myOCIBindFloat (stmt,":x8", m_SavingFrequency, &m_SavingFrequency_null);
     myOCIBindString(stmt,":x9", m_Reference, &m_Reference_null);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      m_abort=false;
       out=true;
     }
   }
@@ -206,4 +210,11 @@ OnlineHistTask* OnlineTaskStorage::getTask(std::string Name) {
       m_myTask.push_back(tk);
   }
   return tk;
+}
+
+void OnlineTaskStorage::reloadTasks() {
+  std::vector<OnlineHistTask*>::iterator it;
+  for (it = m_myTask.begin();it != m_myTask.end(); ++it) {
+    (*it)->load();
+  }
 }

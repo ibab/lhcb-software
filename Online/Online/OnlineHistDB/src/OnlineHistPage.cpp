@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.17 2007-11-22 17:38:35 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.18 2007-11-23 17:58:56 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace OnlineHistDBEnv_constants;
@@ -8,22 +8,24 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
   OnlineHistDBEnv(Env), m_name(Name), 
   m_folder(""), m_doc(""), m_syncWithDB(false)
 {
-  std::string outname;
-  const int Nfetch=100;
   // check page name syntax
-  outname = PagenameSyntax(m_name, m_folder);
+  std::string outname = PagenameSyntax(m_name, m_folder);
   if (outname != m_name) {
     errorMessage("Page name was changed from "+m_name+" to "+outname);
     m_name = outname;
   }
+  load();
+}
 
+void OnlineHistPage::load() {
   // check if page exists already in DB
+  const int Nfetch=100;
   int out=0;
   m_h.clear();
   text theFolder[VSIZE_FOLDER]="";
   sb2 folder_null;
   text theDoc[VSIZE_PAGEDOC]="";
-  m_StmtMethod = "OnlineHistPage::OnlineHistPage";
+  m_StmtMethod = "OnlineHistPage::load";
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCITaggedStatement
        (stmt, "BEGIN :out := ONLINEHISTDB.GETPAGE(thePage => :2, theFolder => :3, theDoc => :4); END;",
@@ -406,4 +408,11 @@ bool OnlinePageStorage::removePage(OnlineHistPage* Page) {
     delete Page;
   }
   return out;  
+}
+
+void OnlinePageStorage::reloadPages() {
+  std::vector<OnlineHistPage*>::iterator ip;
+  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) {
+     (*ip)->load();
+  }
 }

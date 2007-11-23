@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.21 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.22 2007-11-23 17:58:56 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -164,7 +164,7 @@ bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
 
 void OnlineHistogram::load() {
   int out=0;
-
+  m_anadirLoaded = m_credirLoaded = false;
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::load";
   std::string command = 
@@ -1348,9 +1348,16 @@ bool OnlineHistogramStorage::removeHistogram(OnlineHistogram* h,
 
 void OnlineHistogramStorage::reloadAnalysisForSet(int Hsid, 
 						  int Ihs) {
-  std::vector<OnlineHistogram*>::iterator ih = m_myHist.begin();
+  std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
     if( (*ih)->hsid() == Hsid && (*ih)->ihs() != Ihs)
       (*ih)->loadAnalysisDirections();
+  }
+}
+
+void OnlineHistogramStorage::reloadHistograms() {
+  std::vector<OnlineHistogram*>::iterator ih;
+  for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
+    (*ih)->load();
   }
 }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.16 2007-11-22 17:38:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.17 2007-11-23 17:58:55 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -331,6 +331,7 @@ class OnlineHistogramStorage
 			    int ihs);
  protected:
   void setHistEnv(OnlineHistDBEnv* Env) {m_Histenv = Env;}
+  void reloadHistograms();
  private: 
   OnlineHistDBEnv* m_Histenv;
   std::vector<OnlineHistogram*> m_myHist;
