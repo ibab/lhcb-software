@@ -438,6 +438,10 @@ void StreamControlPanel_checkRecvAllocation()  {
 void StreamControlPanel_checkStrmAllocation()  {
 }
 //=============================================================================
+void StreamControlPanel_showJobOptions()  {
+  ChildPanelOn("JobOptions/JobOptions","JobOptions",makeDynString(),100,100);
+}
+//=============================================================================
 int StreamControlPanel_AllocSave(string stream, string partition)  {
   // Are you sure ....
   string info;

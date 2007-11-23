@@ -2,6 +2,7 @@ import copy, time
 import Online.PVSS    as PVSS
 import Online.Utils   as Utils
 import Online.SetupParams as Params
+import Online.PVSSSystems as Systems
 import Online.Streaming.PartitionInfo as PartitionInfo
 from   Online.Streaming.SlotPolicy import SlotPolicy as SlotPolicy
 from   Online.Streaming.StreamingDescriptor import StreamingDescriptor as StreamingDescriptor
@@ -69,11 +70,12 @@ class FSMmanip:
     self.types   = self._tskLookup('Type',tsk_typ)
     self.cmds    = self._tskLookup('FMC_Start',tsk_typ)
     self.sysName = self._tskLookup('SysName',tsk_typ)
-    self.dimDns = self._tskLookup('DimDNS',tsk_typ)
+    self.dimDns  = self._tskLookup('DimDNS',tsk_typ)
     self.slots = {}
-    self.optionsFile = self._optsFile
-    self.setupTask = self._setupTask
-    self.configureTask = self._configureTask
+    self.startupScript     = self._startupScript
+    self.optionsFile       = self._optsFile
+    self.setupTask         = self._setupTask
+    self.configureTask     = self._configureTask
     self.allocateProcesses = self._allocateProcesses
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
@@ -138,7 +140,7 @@ class FSMmanip:
         dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
         dpv.back().data = action+'/DEVICES(S)='+vals[:-1]
         if debug: log('%-12s %s'%(action,dpv.back().data))
-        log('%s>>>>>>> %-12s %s'%(i,action,dpv.back().data))
+        #log('%s>>>>>>> %-12s %s'%(i,action,dpv.back().data))
     self.writer.add(dpv)
     length = self.writer.length()
     if not self.writer.execute():
@@ -309,6 +311,44 @@ class FSMmanip:
     return (used_tasks,unused_tasks)
 
   # ===========================================================================
+  def _collectScriptPath(self,mgr):
+    typ = mgr.typeMgr().type('JobOptionsTaskType')
+    scripts = []
+    if typ:
+      o1 = PVSS.DpVectorActor(mgr)
+      o2 = PVSS.DpVectorActor(mgr)
+      o1.lookupOriginal('JobOptionsTaskType_*.ScriptPath',typ)
+      o2.lookupOriginal('JobOptionsTaskType_*.RunAs',typ)
+      w = mgr.devReader()
+      w.add(o1.container)
+      w.add(o2.container)
+      w.execute()
+      for idx in xrange(len(o1.container)):
+        i = o1.container[idx]
+        j = o2.container[idx]
+        n = i.name()[i.name().find('_')+1:]
+        scripts.append((n[:n.find('.')],i.data,j.data))
+    return scripts
+    
+  # ===========================================================================
+  def _startupScript(self,task_typ):
+    " Return startup script of a given task type."
+    script  = Params.gauditask_startscript
+    account = 'online'
+    if not hasattr(self,'startupInfo'):
+      self.startupInfo = {}
+      self.accountNames = {}
+      # first look for defaults
+      info = self._collectScriptPath(Systems.controlsMgr(Params.jobopts_system_name))
+      for name,path,account in info: self.startupInfo[name] = (path,account)
+      # now look in project specific values/overrides
+      info = self._collectScriptPath(self.manager)
+      for name,path.account in info: self.startupInfo[name] = (path,account)
+    if self.startupInfo.has_key(task_typ):
+      return self.startupInfo[task_typ]
+    return (script,account)
+    
+  # ===========================================================================
   def _configureTask(self, fsm_node, item, task):
     "Configure single task object"
     node    = task[0]
@@ -316,14 +356,16 @@ class FSMmanip:
     sysname = task[6]
     dimdns  = task[5]
     type    = task[3]
-    opts = self.optionsFile(utgid,type)
-    script = Params.gauditask_startscript
-    cmd = sysname+'#-e -o -c -u '+utgid+\
+    clazz   = task[4]
+    script,account = self.startupScript(type)
+    if len(account) == 0: account = 'online'
+    opts    = self.optionsFile(utgid,type)
+    cmd = sysname+'#-e -o -c -u '+utgid+' -n '+account+\
           ' -D TASKTYPE='+type+\
-          ' -D TASKCLASS='+task[4]+\
+          ' -D TASKCLASS='+clazz+\
           ' -D PARTITION='+self.info.detectorName()+\
           ' '+script+' '+opts+' '+\
-          task[4]+' '+type+' '+dimdns
+          clazz+' '+type+' '+dimdns
     self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
     return self
 

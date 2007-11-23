@@ -1,5 +1,5 @@
 #!/bin/bash
-ONLINEDIR=`dirname $0`/../..
+export ONLINEDIR=`dirname $0`/../..
 cd $ONLINEDIR/OnlineControls/cmt
 . setup.vars
 export PVSS_II=/localdisk/pvss/${1}/config/config
@@ -27,8 +27,7 @@ export TAN_NODE=${DATAINTERFACE}
 unset ONLINEDIR
 unset EXECS
 export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.4.so
-echo $PYTHONPATH
-exec -a ${UTGID} ../pvss/bin/PVSS00api.sh \
+exec -a ${UTGID} ${PVSS00api} \
 -NAME FSMMON_0 \
 -DLL PVSSInterface \
 -FUN pvss_pymain \

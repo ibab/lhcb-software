@@ -64,7 +64,7 @@ daq_numPartition    = 16
 hlt_numSubFarms     = 50
 
 # Joboptions control parameters
-if platform.system() == 'Linux': jobopts_optsdir = "/home/frankm/options"
+if platform.system() == 'Linux': jobopts_optsdir = "/group/online/dataflow/options"
 else:                            jobopts_optsdir = "J:/options"
 gauditask_startscript='/home/frankm/runGaudi.sh'
 

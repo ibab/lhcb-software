@@ -293,7 +293,7 @@ class HLTOptionsWriter(OptionsWriter):
           except Exception,X:
             error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
             error('Error '+str(X),timestamp=1)
-            err = None # self
+            err = self # None # self
         if num > 0:
           opts.value = opts.value[:-2] + '\n};\n'
         else:
@@ -312,7 +312,7 @@ class HLTOptionsWriter(OptionsWriter):
         except Exception,X:
           error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
           error('Error [IGNORED for NOW] '+str(X),timestamp=1)
-          err = None
+          err = self
         if err:
           return None
         fname = partition+'_Tell1Boards'

@@ -85,7 +85,7 @@ LANG:1 6 Layer2
 20 21
 "m_needTell1Setup"
 ""
-1 160 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 339 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -95,9 +95,9 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 158 318 402 342
+ 337 318 470 342
 1
 T 
 1
@@ -113,7 +113,7 @@ E E
 EE20 22
 "m_needDefaults"
 ""
-1 399 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 481 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 22 0 0 0 0 0
 E E E
@@ -123,9 +123,9 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 397 318 621 342
+ 479 318 623 342
 1
 T 
 1
@@ -150,7 +150,7 @@ E E E
 LANG:1 0 
 
 0
- 160 120 621 321
+ 160 120 621 294
 15 PVSS.TextEdit.1
 5
 0 "TextChanged" "()"
@@ -163,7 +163,81 @@ LANG:1 0
 ""
 0 "CursorPositionChanged" "(int para, int pos)"
 ""
-E0
+E14 55
+"m_scriptPath"
+""
+1 241 296 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+72 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 239 294 622 318
+3 "0s" 0 0 0 0 0 -1  E E E
+2 56
+"m_scriptPathText"
+""
+1 161 298 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+73 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 161 298 289 316
+0 2 2 "0s" 0 0 0 64 0 0  161 298 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 15 Startup script:
+14 58
+"m_runAs"
+""
+1 202 321 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+77 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 200 319 330.9999999999999 343
+3 "0s" 0 0 0 0 0 -1  E E E
+2 57
+"m_runAsText"
+""
+1 160 324 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+75 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 160 324 288 342
+0 2 2 "0s" 0 0 0 64 0 0  160 324 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 6 RunAs:
+0
 LAYER, 2 
 1
 LANG:1 6 Layer3

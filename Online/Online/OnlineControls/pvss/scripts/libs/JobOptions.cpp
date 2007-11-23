@@ -351,10 +351,14 @@ void JobOptions_installOptions() {
   names[2] = makeDynString ("","Options","","");	
   names[3] = makeDynString ("","NeedTell1s","","");	
   names[4] = makeDynString ("","NeedDefaults","","");	
+  names[5] = makeDynString ("","ScriptPath","","");	
+  names[6] = makeDynString ("","RunAs","","");	
   types[1] = makeDynInt (DPEL_STRUCT);
   types[2] = makeDynInt (0,DPEL_STRING);
   types[3] = makeDynInt (0,DPEL_BOOL);
   types[4] = makeDynInt (0,DPEL_BOOL);
+  types[5] = makeDynInt (0,DPEL_STRING);
+  types[6] = makeDynInt (0,DPEL_STRING);
   JobOptions_typeCreate(names,types);
 }
 /// Uninstall types
@@ -408,6 +412,10 @@ int JobOptionsEditor_init()  {
   setValue("m_textEditor","visible",true);
   setValue("m_needDefaults","visible",true);
   setValue("m_needTell1Setup","visible",true);
+  setValue("m_scriptPath","visible",true);
+  setValue("m_scriptPathText","visible",true);
+  setValue("m_runAs","visible",true);
+  setValue("m_runAsText","visible",true);
   setValue("m_OK","visible",1);//isChild);
   JobOptionsEditor_setToolTips();
   JobOptionsEditor_closeEditors();
@@ -425,8 +433,8 @@ void JobOptionsEditor_setToolTips()  {
   m_showPartitions.toolTipText = "Show list of known partition configurations.";
 
   m_OK.toolTipText             = "Exit and close panel";
-  m_close.toolTipText	       = "Close text editor without saving possible changes.";
-  m_save.toolTipText	       = "Close text editor WITH saving possible changes.";
+  m_close.toolTipText	          = "Close text editor without saving possible changes.";
+  m_save.toolTipText	          = "Close text editor WITH saving possible changes.";
   m_systemName.toolTipText     = "Click here to change the system for accessing job options.";
 
   m_list.toolTipText           = "List of found objects. Double click for further expansion.";
@@ -434,12 +442,15 @@ void JobOptionsEditor_setToolTips()  {
   m_createFrame.toolTipText    = "Enter here information to create new objects.";
   m_create.toolTipText         = "Create new object of the requested type.";
   m_newName.toolTipText        = "Enter name of new object to be created.";
-
+  m_scriptPath.toolTipText     = "Enter here the task's startup script path";
+  m_scriptPathText.toolTipText = m_scriptPath.toolTipText;
+  m_runAs.toolTipText          = "Enter here account name to start the task [default:online]";
+  m_runAsText.toolTipText      = m_runAs.toolTipText;
   m_partitionInfo.toolTipText  = "Summary information of the selected partition.";
   m_partitionName.toolTipText  = "Name of the selected partition.";
   m_partitionID.toolTipText    = "Partition identifier of the selected partition.";
   m_activity.toolTipText       = "Active activity type of the selected partition.";
-  m_state.toolTipText	       = "State of the selected partition.";
+  m_state.toolTipText	          = "State of the selected partition.";
   m_logo.toolTipText           = "Yeah! That's us!!!";
   m_logo2.toolTipText          = m_logo.toolTipText;
 }
@@ -520,6 +531,8 @@ void JobOptionsEditor_openTextEditor() {
   setValue("m_close","visible",true);
   m_needDefaults.text(0)    = "Require defaults";
   m_needTell1Setup.text(0)  = "Require TELL1 list";
+  m_scriptPathText.text     = "Script Path:";
+  m_runAsText.text          = "Run as:";
   m_list.scale(1.,0.3);
   JobOptionsEditor_showTextEditor(1);
 }
@@ -655,7 +668,7 @@ int JobOptionsEditor_showNodeTypes()  {
       JobOptionsEditor_populateListEditor(JobOptions_nodeTypes());
       JobOptionsEditor_openListEditor();
       m_partitionInfo.text	= "Partition info";
-      m_partitionName.text      = "Partition:"+m_list.selectedText;
+      m_partitionName.text  = "Partition:"+m_list.selectedText;
       m_partitionID.text	= "Partition ID:"+part_id;
       m_activity.text		= "Activity:"+activity;
       m_state.text		= "State:"+state;
@@ -674,14 +687,21 @@ int JobOptionsEditor_showNodeTypes()  {
 }
 /// Editor: Show options for one task type in edit control
 int JobOptionsEditor_showTaskType(string text)  {
-  string nam = JobOptionsTaskType_t+"_"+text, opts;
+  string nam = JobOptionsTaskType_t+"_"+text, opts, script, runas;
   string dp  = JobOptions_sysName()+nam+".";
   bool   tell1, defs;
-  int rc = dpGet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
+  int rc = dpGet(dp+"Options",opts,
+                 dp+"NeedTell1s",tell1,
+                 dp+"NeedDefaults",defs,
+                 dp+"ScriptPath",script,
+                 dp+"RunAs",runas
+                 );
   if ( 0 == rc )  {
     m_textEditor.Text	= opts;
     m_needDefaults.state(0) = defs;
     m_needTell1Setup.state(0) = tell1;
+    m_scriptPath.text = script;
+    m_runAs.text = strlen(runas)>0 ? runas : "online";
     JobOptionsEditor_openTextEditor();
     return jo_TASK_EDIT;
   }
@@ -810,9 +830,15 @@ int JobOptionsEditor_save(int panel_type)  {
 void JobOptionsEditor_saveOptions(string text)  {
   string opts  = m_textEditor.Text;
   string dp    = JobOptions_sysName()+JobOptionsTaskType_t+"_"+text+".";
+  string script = m_scriptPath.text;
+  string runas  = m_runAs.text;
   bool   tell1 = m_needTell1Setup.state(0);
   bool   defs  = m_needDefaults.state(0);
-  int rc = dpSet(dp+"Options",opts,dp+"NeedTell1s",tell1,dp+"NeedDefaults",defs);
+  int rc = dpSet(dp+"Options",opts,
+                 dp+"NeedTell1s",tell1,
+                 dp+"NeedDefaults",defs,
+                 dp+"ScriptPath",script,
+                 dp+"RunAs",runas);
   if ( 0 == rc )  {
     JobOptionsEditor_showTextEditor(0);
     return;
