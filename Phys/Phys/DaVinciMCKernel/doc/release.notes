@@ -4,6 +4,13 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2007-11-16 - Vladimir Gligorov
+ - Added class MCAssociation to Particle2MCLinker.h to hold result of single association
+   in the form of an MCParticle and an association weight
+ - Added type ToRange, as existed in DC04.  
+ - Added method rangeFrom(), with identical interface as it had in DC04, to return
+   all MCParticles associated to any one Object type, via the ToRange type.
+
 ! 2007-11-16 - Chris Jones
  - Remove couts from Constructors in Particle2MCLinker.h + fix a few doxygen
    errors
