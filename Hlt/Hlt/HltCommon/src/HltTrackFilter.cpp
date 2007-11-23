@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.7 2007-10-11 09:41:18 hernando Exp $
+// $Id: HltTrackFilter.cpp,v 1.8 2007-11-23 12:25:37 graven Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,9 @@
 #include "HltBase/EParser.h"
 #include "Event/HltNames.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/construct.hpp"
+using namespace boost::lambda;
 
 // local
 #include "HltTrackFilter.h"
@@ -37,12 +40,8 @@ HltTrackFilter::HltTrackFilter( const std::string& name,
 // Destructor
 //=============================================================================
 HltTrackFilter::~HltTrackFilter() {
-  for (std::vector<Hlt::TrackFunction*>::iterator it = m_functions.begin();
-       it != m_functions.end(); ++it)
-    delete *it;
-  for (std::vector<Hlt::TrackFilter*>::iterator it = m_filters.begin();
-       it != m_filters.end(); ++it)
-    delete *it;
+  std::for_each(m_functions.begin(),m_functions.end(), delete_ptr());
+  std::for_each(m_filters.begin(),m_filters.end(), delete_ptr());
 }
 
 //=============================================================================
@@ -87,11 +86,11 @@ StatusCode HltTrackFilter::initialize() {
     m_tcounters.push_back(0);
 
     if (m_histogramUpdatePeriod>0) {
-      HltHisto histo = NULL;
+      HltHisto histo = 0;
       initializeHisto(histo,funname,0.,100.,100);
       m_histos.push_back(histo);
 
-      HltHisto histo1 = NULL;
+      HltHisto histo1 = 0;
       initializeHisto(histo1,funname+"Best",0.,100.,100);
       m_histos1.push_back(histo1);
     }
@@ -100,7 +99,7 @@ StatusCode HltTrackFilter::initialize() {
             << mode << x0 << "," << xf << endreq;
   }
 
-  release(factory);
+  // release(factory);
 
   checkInput(m_inputTracks," input tracks");
   checkInput(m_outputTracks," output tracks");

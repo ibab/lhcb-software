@@ -19,8 +19,12 @@ use L0Event		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
+use LoKiTrigger         v*    Phys
 
 use TrackInterfaces     v*    Tr
+
+use Boost        v*   LCG_Interfaces
+
 
 #============================================================================
 # Component library building rule
