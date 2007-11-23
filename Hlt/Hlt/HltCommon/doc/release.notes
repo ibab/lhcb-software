@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 ! 2007-11-23 Gerhard Raven
+      - HltVertexMaker: use boost::delete_ptr, 0 instead of NULL, use 'empty()' instead
+                        of a-priori invalid string value
       - HltTrackFilter: use boost::delete_ptr, 0 instead of NULL
       - L0Entry: remove unneeded temporaries which fix assumptions on types
                  use 'empty()' instead of 'size()>0' or 'size()==0'

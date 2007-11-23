@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.7 2007-11-14 13:57:04 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.8 2007-11-23 12:27:58 graven Exp $
 // Include files 
 
 
@@ -14,6 +14,8 @@
 #include "HltBase/EParser.h"
 #include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/construct.hpp"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVertexMaker
@@ -25,6 +27,8 @@
 DECLARE_ALGORITHM_FACTORY( HltVertexMaker );
 
 using namespace LHCb;
+using namespace boost::lambda;
+// #namespace bl = boost::lambda;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -33,9 +37,8 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  m_consider2 = true;
-  declareProperty( "CheckForOverlaps",       m_checkForOverlaps = false );
-
+  m_consider2=true;
+  declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
 
@@ -45,10 +48,8 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
 // Destructor
 //=============================================================================
 HltVertexMaker::~HltVertexMaker() {
-  for (std::vector<Hlt::TrackBiFunction*>::iterator it = m_functions.begin();
-       it != m_functions.end(); ++it) delete *it;
-  for (std::vector<Hlt::Filter*>::iterator it = m_filters.begin();
-       it != m_filters.end(); ++it) delete *it;
+  std::for_each(m_functions.begin(),m_functions.end(), delete_ptr());
+  std::for_each(m_filters.begin(),m_filters.end(), delete_ptr());
 };
 
 //=============================================================================
@@ -58,7 +59,7 @@ HltVertexMaker::~HltVertexMaker() {
 StatusCode HltVertexMaker::initialize() {
 
   m_twoContainers = true;
-  if (m_inputTracks2Name == "" )  {
+  if (m_inputTracks2Name.empty())  {
     info() << "only one input container requested " 
            << m_inputTracksName << endreq;
     m_twoContainers = false;
@@ -98,7 +99,7 @@ StatusCode HltVertexMaker::initialize() {
     if (!fun) error() << " error crearing function " << filtername 
                       << " " << id << endreq;
 
-    Hlt::Filter* fil = NULL;
+    Hlt::Filter* fil = 0;
     if (mode == "<") fil = new Estd::less<double>(x0);
     else if (mode == ">") fil = new Estd::greater<double>(x0);
     else fil = new Estd::in_range<double>(x0,xf);
@@ -109,7 +110,7 @@ StatusCode HltVertexMaker::initialize() {
     m_tcounters.push_back(0);   
 
     if (m_histogramUpdatePeriod>0) {
-      HltHisto histo = NULL;
+      HltHisto histo = 0;
       initializeHisto(histo,funname,0.,100.,100);
       m_histos.push_back(histo);
     }
@@ -216,12 +217,8 @@ StatusCode HltVertexMaker::execute() {
 
 void HltVertexMaker::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
-
-  std::string type = "HltVertexMaker";
-  confregister("Type",type);
-
-  const std::vector<std::string>& filters = m_filterDescriptor.value();
-  confregister("Filters",filters);
+  confregister("Type",std::string("HltVertexMaker"));
+  confregister("Filters",m_filterDescriptor.value());
 }
 
 
@@ -245,7 +242,7 @@ StatusCode HltVertexMaker::finalize() {
 //=============================================================================
 
 bool HltVertexMaker::haveOverlaps( const LHCb::Track& track1, 
-                                    const LHCb::Track& track2) {
+                                   const LHCb::Track& track2) {
   return HltUtils::matchIDs(track1,track2);
 }
 
