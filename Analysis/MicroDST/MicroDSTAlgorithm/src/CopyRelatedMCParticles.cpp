@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.4 2007-11-22 16:19:48 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.5 2007-11-23 17:59:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,9 +26,11 @@ DECLARE_ALGORITHM_FACTORY( CopyRelatedMCParticles );
 
 CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-  : CopyAndStoreData ( name , pSvcLocator )
+  : 
+  CopyAndStoreData ( name , pSvcLocator ),
+  m_deepCloneMCVertex(false)
 {
-
+  declareProperty("DeepCloneMCVertex", m_deepCloneMCVertex);
 }
 
 //=============================================================================
@@ -79,13 +81,10 @@ StatusCode CopyRelatedMCParticles::execute() {
 
   // Actually this needs to be iterative, so we store the MCParticles for
   // everything in the tree.
-  
-  for (LHCb::Particle::Container::const_iterator iPart = particles->begin();
-       iPart != particles->end();
-       ++iPart) {
-    LHCb::MCParticle* mcPart = storeMCParticle( *iPart);
-  }
 
+  StatusCode sc = loopOnParticles( particles->begin(),
+                                   particles->end()    );
+  
   setFilterPassed(true);
 
   verbose() << "Going to store to TES" << endmsg;
@@ -95,17 +94,78 @@ StatusCode CopyRelatedMCParticles::execute() {
 
 }
 //=============================================================================
-LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::Particle* particle)
+template <class IT>
+StatusCode CopyRelatedMCParticles::loopOnParticles(IT begin, IT end) 
+{
+
+  StatusCode sc(StatusCode::SUCCESS);
+  
+  for (IT iPart = begin,;
+       sc == StatusCode::SUCCESS && iPart != end;
+       ++iPart) {
+    if ( storeAssociatedMCParticles( *iPart) ) {
+      const SmartRefVector<LHCb::Particle>& daughters = (*iPart)->daughters();
+      sc = loopOnParticles(daughters.begin(), daughters.end());
+    }
+    
+  }
+
+  return sc;
+  
+}
+//=============================================================================
+StatusCode
+CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particle)
 {
 
   // Get a vector of associated particles
-  // Store them on the local store.
-  LHCb::MCParticle::ConstVector AssociatedMCParticles;
 
-  StatusCode sc = associatedMCParticles(particle, AssociatedMCParticles);
+  LHCb::MCParticle::ConstVector assocMCPs;
+
+  StatusCode sc = associatedMCParticles(particle, assocMCPs);
+
+  for (LHCb::MCParticle::ConstVector::const_iterator iMCP = assocMCPs.begin();
+       iMCP != assocMCPs.end();
+       ++iMCP) {
+    storeMCParticle(*iMCP);
+    
+  }
+
+  // Store clone of mother if available
+
+  // Store origin vertex if desireable.
   
-  return 0;
+  return sc;
 
+}
+//=============================================================================
+LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::MCParticle* mcp,
+                                                          bool storeOriginVertex )
+{
+  // Store MCParticle clones
+  LHCb::MCParticle* mcpClone = 
+    cloneKeyedItemToLocalStore<LHCb::MCParticle, MCParticleItemCloner>(mcp);
+  // Store clone of mother if available
+  const LHCb::MCParticle* mother = mcp->mother();
+  LHCb::MCParticle* motherClone = 0;
+  
+  if (mother) motherClone = 
+                cloneKeyedItemToLocalStore<LHCb::MCParticle,MCParticleItemCloner>(mother);
+  
+  if (storeOriginVertex) {
+    // Store origin vertex if desireable.
+    const LHCb::MCVertex* originVertex = mcp->originVertex();
+    if (originVertex) {
+      LHCb::MCVertex* originVertexClone = storeMCVertex(originVertex);
+      mcpClone->setOriginVertex(originVertexClone);
+      originVertexClone->setMother(motherClone);
+    
+    }
+  } else {
+    mcpClone->setOriginVertex( mcp->originVertex() );
+  }
+  
+  
 }
 //=============================================================================
 StatusCode CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
@@ -118,9 +178,25 @@ StatusCode CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* p
   
 }
 //=============================================================================
-const LHCb::MCVertex* CopyRelatedMCParticles::storeMCVertex(const LHCb::MCVertex* vertex) 
+LHCb::MCVertex* CopyRelatedMCParticles::storeMCVertex(const LHCb::MCVertex* vertex) 
 {
-  return 0;
+
+  LHCb::MCVertex* clone = cloneKeyedItemToLocalStore<LHCb::MCVertex,MCVertexItemCloner>(vertex);
+
+  if ( deepCloneMCVertex() ) {
+
+    clone->clearProducts();    
+    const SmartRefVector<LHCb::MCParticle>& products = vertex->products();
+    for (SmartRefVector<LHCb::MCParticle>::const_iterator iProd = products.begin();
+         iProd != products.end();
+         ++iProd) {
+
+      LHCb::MCParticle* productClone = storeMCParticle(*iProd, false);
+      if (productClone) clone->addToProducts(productClone);
+    }
+  }
+
+  return clone;
 }
 //=============================================================================
 //  Finalize

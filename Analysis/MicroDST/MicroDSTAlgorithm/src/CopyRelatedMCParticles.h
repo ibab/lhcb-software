@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.4 2007-11-22 16:19:48 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.5 2007-11-23 17:59:19 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -33,18 +33,20 @@ public:
 private:
 
   /**
-   * Store the MCParticle which is related to a Particle.
+   * Store the MCParticles which are related to a Particle.
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
-  LHCb::MCParticle* storeMCParticle(const LHCb::Particle* particle);
+  StatusCode storeAssociatedMCParticles(const LHCb::Particle* particle);
+
+
 
   /**
    *
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
-  const LHCb::MCVertex* storeMCVertex(const LHCb::MCVertex* vertex);
+  LHCb::MCVertex* storeMCVertex(const LHCb::MCVertex* vertex);
 
   /**
    *
@@ -55,12 +57,46 @@ private:
                                    LHCb::MCParticle::ConstVector&);
   
 
+  /**
+   *
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class IT>
+  StatusCode loopOnParticles(IT begin, IT end);
+
+  /**
+   *
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  LHCb::MCParticle* storeMCParticle(const LHCb::MCParticle* mcp,
+                                    bool storeOriginVertex = false);
+
+  /**
+   *
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  inline bool deepCloneMCVertex() { return m_deepCloneMCVertex; }  
+
+private:
+
+  typedef LHCb::MCParticle::Container MCParticles;
+  typedef MicroDST::BasicItemCloner<LHCb::MCParticle> MCParticleItemCloner;
+  typedef MicroDST::CloneKeyedContainerItem<LHCb::MCParticle, MCParticleItemCloner> MCParticleCloner;
+
+  typedef LHCb::MCVertex::Container MCVertices;
+  typedef MicroDST::BasicItemCloner<LHCb::MCVertex> MCVertexItemCloner;
+  typedef MicroDST::CloneKeyedContainerItem<LHCb::MCVertex, MCVertexItemCloner> MCVertexCloner;
 
 private:
 
   Particle2MCLinker* m_compositeLinker; ///< Linker for composite particles
  
   Particle2MCLinker* m_linksLinker; ///< Linker for basic particles
+
+  bool m_deepCloneMCVertex; ///< control whether MCVertex's products should also be cloned
   
 };
 #endif // COPYRELATEDMCPARTICLES_H
