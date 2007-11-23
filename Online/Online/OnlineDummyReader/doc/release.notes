@@ -1,0 +1,6 @@
+package OnlineDummyReader
+! Example code to read online data 
+
+! 20071123 = OnlineDummyReader v1r3 - Eric van Herwijnen
+  - update to use most recent raw data bank format & publish some histograms
+

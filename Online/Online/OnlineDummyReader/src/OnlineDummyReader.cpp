@@ -28,12 +28,23 @@ using LHCb::RawBank;
 using LHCb::RawEvent;
 
 	 
-static const char  * rawtypstr[] = { "L0CA", "L0DU", "PRSE", "ECAE", "HCAE", "PRTR",
-				     "ECTR", "HCTR", "VELO", "RICH",   "TT",   "IT", 
-				     "OT", "MUON", "L0PU",  "DAQ",  "ODIN",  "HLT",
-				     "VELOFULL", "TTFULL", "ITFULL", "ECALPCK", "HCALPCK",
-				     "PRSPCK", "L0MU", "ITERR", "TTERR", "ITPED", "TTPED",
-				     "VELOERR","VELOPED", "TOOLARGE" };
+//static const char  * rawtypstr[] = { "L0CA", "L0DU", "PRSE", "ECAE", "HCAE", "PRTR",
+//				     "ECTR", "HCTR", "VELO", "RICH",   "TT",   "IT", 
+//				     "OT", "MUON", "L0PU",  "DAQ",  "ODIN",  "HLT",
+//				     "VELOFULL", "TTFULL", "ITFULL", "ECALPCK", "HCALPCK",
+//				     "PRSPCK", "L0MU", "ITERR", "TTERR", "ITPED", "TTPED",
+//				     "VELOERR","VELOPED", "TOOLARGE" };
+static const char  * rawtypstr[] = { "L0Calo", "L0DU", "PrsE", "EcalE", "HcalE", "PrsTrig",
+				     "EcalTrig", "HcalTrig", "Velo", "Rich",   "TT",   "IT", 
+				     "OT", "Muon", "L0PU",  "DAQ",  "ODIN",  "HLT",
+				     "VeloFull", "TTFull", "ITFull", "EcalPacked", "HcalPacked",
+				     "PrsPacked", "L0Muon", "ITError", "TTError", "ITPedestal", "TTPedestal",
+				     "VeloError","VeloPedestal", "VeloProcFull", "OTRaw",
+                                     "OTError", "EcalPackedError", "HcalPackedError",
+                                     "PrsPackedError", "L0CaloFUll", "L0CaloError",
+                                     "L0MuonCtrlAll", "L0MuonProcCand", "L0MuonProcData",
+                                     "L0MuonRaw", "L0MuonError", "GaudiSerialize", "GaudiHeader",
+                                     "TTProcFull", "ITProcFull", "LastType" };
 
 
 int rawtyp2det[] = { 0,      1,      2,      3,      4,      2, 
@@ -64,31 +75,46 @@ StatusCode
 OnlineDummyReader::initialize() {
     m_log = new MsgStream(msgSvc(), name());
     *m_log << "Initialize done" << endmsg;
+    StatusCode sc = service("HistogramDataSvc", m_histosvc, true );
+
+    myhisto = m_histosvc->book("eventsize", "Event size", 10, 0, 100);
+    declareInfo("eventsize",myhisto,"Event size");
+    myhisto2 = m_histosvc->book("banktype", "Bank type", 49, 0, 48);
+    declareInfo("banktype",myhisto2,"Bank type");
     return StatusCode::SUCCESS;
 }
 
 StatusCode
 OnlineDummyReader::analyze(RawEvent * evt)
 {
+  double eventsize=0.;
   for (int j = 0; j < RawBank::LastType; ++j)  {
     RawBank::BankType i = RawBank::BankType(j);
     const std::vector<RawBank*>& b = evt->banks(i);
-    *m_log << MSG::INFO << b.size() << " banks of type: " << rawtypstr[i] << endmsg;
+    *m_log << MSG::DEBUG << b.size() << " banks of type: " << rawtypstr[i] << endmsg;
+    if (b.size()>0) myhisto2->fill(j,b.size());
+    int banklen=0;
     for (unsigned int k = 0; k < b.size(); ++k) {
       const RawBank* r = b[k];
       //int type = r->type();
       //int src  = r->sourceID();
       int len  = r->size();
-      const unsigned char *data = (const unsigned char *) r->data();
+      banklen=banklen+len;
+  /*    const unsigned char *data = (const unsigned char *) r->data();
       *m_log << MSG::DEBUG;;
       int l; 
       for (l = 0; l < len; ++l) {
 	*m_log << std::hex << data[l] << " ";
 	if (!(l + 1 % 16)) *m_log << endmsg << MSG::DEBUG;
       }
-      if (!(l % 16)) *m_log << endmsg;
+      if (!(l % 16)) *m_log << endmsg; */
     }
+    eventsize=eventsize+banklen;
+
   }
+  *m_log << MSG::DEBUG << " eventsize: " << eventsize << endmsg;
+  eventsize=eventsize/1024;
+  myhisto->fill(eventsize);
     return StatusCode::SUCCESS;
 }  
 //--------------------------------------------------------------------
