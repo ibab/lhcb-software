@@ -1,12 +1,21 @@
-! $Id: release.notes,v 1.39 2007-11-15 08:23:22 jpalac Exp $
+! $Id: release.notes,v 1.40 2007-11-23 18:01:07 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-11-23 - Juan PALACIOS
+ - src/CopyRelatedMCParticles{.cpp, .h}
+  . Add copying of related MCParticles, mothers, and origin MCVertex.
+
+! 2007-11-22 - Juan PALACIOS
+ - src/CopyRelatedMCParticles{.cpp, .h}
+  . Start implementation of MCParticle linking.
 
 !======================== MicroDST v2r1 2007-11-15 ====================
 
 ! 2007-11-08 - Juan PALACIOS
  - src/CopyRelatedMCParticles{.cpp, .h}
+  . Make into a CopyAndSroteData algorithm.
   . Continue to add more imlementation.
 
 ! 2007-11-08 - Juan PALACIOS
