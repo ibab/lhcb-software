@@ -1,4 +1,4 @@
-// $Id: MCSTDigitMonitor.cpp,v 1.2 2007-01-10 16:02:22 cattanem Exp $
+// $Id: MCSTDigitMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -49,10 +49,10 @@ StatusCode MCSTDigitMonitor::initialize()
 StatusCode MCSTDigitMonitor::execute()
 {
   // retrieve Digitizations
-  MCSTDigits* digitsCont = get<MCSTDigits>(m_digitLocation);
+  const MCSTDigits* digitsCont = get<MCSTDigits>(m_digitLocation);
 
   // number of digits
-  plot((double)digitsCont->size(),"Number of MCDigits" ,  0., 10000., 100);
+  plot((double)digitsCont->size(),1,"Number of MCDigits" ,  0., 10000., 100);
 
   // histos per digit
   MCSTDigits::const_iterator iterDep = digitsCont->begin();
@@ -66,18 +66,16 @@ StatusCode MCSTDigitMonitor::execute()
 void MCSTDigitMonitor::fillHistograms(const MCSTDigit* aDigit) const
 {
   // number of deposits that contribute
-  plot((double)aDigit->mcDeposit().size(),"Number of deposits per digit", 
+  plot((double)aDigit->mcDeposit().size(),2,"Number of deposits per digit", 
        -0.5, 10.5, 11);
 
   // histogram by station
   const int iStation = aDigit->channelID().station();
-  plot((double)iStation, "Number of digits per station" ,-0.5 , 4.5, 11 );
+  plot((double)iStation,3 ,"Number of digits per station" ,-0.5 , 4.5, 11 );
   
   // by layer
   const int iLayer = aDigit->channelID().layer();
   plot((double)(10*iStation+iLayer), "Number of digits per layer", 
        -0.5, 40.5, 41);
 
-  // end
-  return;
 }

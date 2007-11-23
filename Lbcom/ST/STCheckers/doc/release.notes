@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2007-23-11 M Needham
+ - Ensure histo ids are the same
+ - Add some consts
+
 ! 2007-15-11 M Needham
  - Make input location of STClusters2MCHits a jobOption
 

@@ -96,15 +96,15 @@ StatusCode STRawBankMonitor::execute(){
   } // iterBank
 
   // data size
-  plot((double)eventDataSize, "event data size",0. , 10000., 500);
+  plot((double)eventDataSize,1, "event data size",0. , 10000., 500);
 
   // include standard header HARDCODE !!!
   unsigned int headerSize = tBanks.size()*2u;
-  plot((double)(eventDataSize+headerSize), "total data size",0.,10000., 500);  
+  plot((double)(eventDataSize+headerSize),2, "total data size",0.,10000., 500);  
 
-  plot((double)maxBoardSize, "hot board size", 0., 200., 200);
+  plot((double)maxBoardSize,3, "hot board size", 0., 200., 200);
   unsigned int id = (hotBoard.region()*20) + hotBoard.subID();
-  plot((double)id,"hot board ID", 0., 100., 100);
+  plot((double)id,4,"hot board ID", 0., 100., 100);
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.14 2007-05-29 15:01:28 cattanem Exp $
+// $Id: STClusterChecker.cpp,v 1.15 2007-11-23 13:49:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -73,7 +73,7 @@ StatusCode STClusterChecker::initialize()
 StatusCode STClusterChecker::execute()
 {
   // retrieve clusters
-  STClusters* clusterCont = get<STClusters>(m_clusterLocation);
+  const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
   AsctTool associator(evtSvc(), m_asctLocation);
@@ -100,14 +100,13 @@ void STClusterChecker::fillHistograms( const STCluster* aCluster,
   if (0 != aHit){ 
     // histo cluster size for physics tracks
     if ( m_selector->accept(aHit->mcParticle()) == true ) {
-      DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
+      const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
-        plot(aCluster->totalCharge(),"Charge of "+aSector->type()+" ladders",
-             0., 200., 200);
+        plot(aCluster->totalCharge(),aSector->type()+"/1",
+             "Charge", 0., 200., 200);
         plot(m_sigNoiseTool->signalToNoise(aCluster),
-             "S/N of "+aSector->type()+" ladders",0.,100., 100);
+             aSector->type()+"/1","S/N",0.,100., 100);
       }
     } 
   }
-  return;
 }

@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.2 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STClusterMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -62,7 +62,7 @@ StatusCode STClusterMonitor::initialize()
 StatusCode STClusterMonitor::execute()
 {
   // retrieve clusters
-  STClusters* clusterCont = get<STClusters>(m_clusterLocation);
+  const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
   
   // number of digits
   plot((double)clusterCont->size(),1,"Number of clusters", 0.,5000., 500);
@@ -80,48 +80,45 @@ StatusCode STClusterMonitor::execute()
 void STClusterMonitor::fillHistograms(const STCluster* aCluster)
 {
   // cluster Size 
-  plot((double)aCluster->size(),"Size of cluster",-0.5,6.5,7);
+  plot((double)aCluster->size(),1,"Size of cluster",-0.5,6.5,7);
 
   // high threshold
-  plot((double)aCluster->highThreshold(),"High threshold",-0.5,1.5,2);
+  plot((double)aCluster->highThreshold(),1,"High threshold",-0.5,1.5,2);
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
-  plot((double)iStation,"Number of clusters per station",-0.5,4.5,5);
+  plot((double)iStation,3,"Number of clusters per station",-0.5,4.5,5);
  
   // by layer
   const int iLayer = aCluster->channelID().layer();
-  plot((double)(10*iStation+iLayer),"Number of clusters per layer",
+  plot((double)(10*iStation+iLayer),4,"Number of clusters per layer",
        -0.5,40.5,41);
 
   if (fullDetail() == true) {
  
-    plot( (double)aCluster->pseudoSize(),"Pseudo size of cluster",
+    plot( (double)aCluster->pseudoSize(),5,"Pseudo size of cluster",
           -0.5,10.5,11);
-    plot( (double)aCluster->interStripFraction(),"Interstrip fraction",
+    plot( (double)aCluster->interStripFraction(),6,"Interstrip fraction",
           -0.125, 1.125, 5);
 
     // neighbour sum
-    plot(aCluster->neighbourSum(),"Neighbour sum", -16.5, 26.5, 43);
+    plot(aCluster->neighbourSum(),"Neighbour sum",7, -16.5, 26.5, 43);
     plot(aCluster->neighbourSum()/aCluster->totalCharge(),
          "Relative neighbour sum", -1.02, 1.02, 51);
 
     if (aCluster->size() < 3) {
-      plot(aCluster->neighbourSum(),"Neighbour sum (1- and 2-strip clusters)", 
+      plot(aCluster->neighbourSum(),8,"Neighbour sum (1- and 2-strip clusters)", 
            -16.5, 26.5, 43);
       plot(aCluster->neighbourSum()/aCluster->totalCharge(),
-           "Relative neighbour sum (1- and 2-strip clusters)", -1.02, 1.02, 51);
+           9,"Relative neighbour sum (1- and 2-strip clusters)", -1.02, 1.02, 51);
     }
 
     const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0) {
-      plot(aCluster->totalCharge(), "Charge of "+aSector->type()+" ladders",
+      plot(aCluster->totalCharge(),aSector->type()+"/1", "Charge",
            0., 200., 200);
       plot(m_sigNoiseTool->signalToNoise(aCluster), 
-           "S/N of "+aSector->type()+" ladders",0., 100., 100);
+           aSector->type()+"/2","S/N",0., 100., 100);
     }
   }
-
-  // end
-  return;
 }

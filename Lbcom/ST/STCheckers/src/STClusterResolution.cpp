@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.12 2007-05-29 15:01:28 cattanem Exp $
+// $Id: STClusterResolution.cpp,v 1.13 2007-11-23 13:49:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -87,7 +87,7 @@ StatusCode STClusterResolution::initialize()
 StatusCode STClusterResolution::execute()
 {
   // retrieve clusters
-  STClusters* clusterCont = get<STClusters>(m_clusterLocation);
+  const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
   AsctTool associator(evtSvc(), m_clusterLocation+"2MCHits");
@@ -121,7 +121,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     
     // rec u - offline
     ISTClusterPosition::Info measVal = m_positionTool->estimate(aCluster);
-    double uRec = aSector->localU( measVal.strip.strip(), 
+    const double uRec = aSector->localU( measVal.strip.strip(), 
                                    measVal.fractionalPosition);
 
     // determine which histos to fill based on cluster size

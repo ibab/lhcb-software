@@ -1,4 +1,4 @@
-// $Id: STDigitMonitor.cpp,v 1.2 2007-01-10 16:02:23 cattanem Exp $
+// $Id: STDigitMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,7 +32,7 @@ STDigitMonitor::STDigitMonitor( const std::string& name,
   m_tracker(0)
 {
   // constructer
-  declareProperty("DetType",      m_detType          = "TT"                  );
+  declareProperty("DetType", m_detType = "TT" );
 }
 
 STDigitMonitor::~STDigitMonitor()
@@ -62,7 +62,7 @@ StatusCode STDigitMonitor::initialize()
 StatusCode STDigitMonitor::execute()
 {
   // retrieve STDigits
-  STDigits* digitsCont = get<STDigits>(m_dataLocation);
+  const STDigits* digitsCont = get<STDigits>(m_dataLocation);
   
   // number of digits
   plot((double)digitsCont->size(), 1, "Number of digits", 0., 10000., 500);
@@ -88,12 +88,11 @@ void STDigitMonitor::fillHistograms(const STDigit* aDigit)
        -0.5, 40.5, 41);
 
   if ( fullDetail() ){
-    DeSTSector* aSector = m_tracker->findSector(aDigit->channelID());
+    const DeSTSector* aSector = m_tracker->findSector(aDigit->channelID());
     if (aSector != 0) {
-       plot(aDigit->depositedCharge(),
-            "Deposited charge "+aSector->type()+" ladders", 0., 128., 128);
+      plot(aDigit->depositedCharge(),aSector->type()+"/1", 
+            "Deposited charge ", 0., 128., 128);
     }
   }
 
-  return;
 }

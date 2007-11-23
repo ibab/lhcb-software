@@ -1,4 +1,4 @@
-// $Id: STClusterClassification.cpp,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterClassification.cpp,v 1.4 2007-11-23 13:49:10 mneedham Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -76,7 +76,7 @@ StatusCode STClusterClassification::initialize()
 StatusCode STClusterClassification::execute()
 {
   // retrieve clusters
-  STClusters* clusterCont = get<STClusters>(m_clusterLocation);
+  const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
   AsctTool associator(evtSvc(), m_asctLocation);
