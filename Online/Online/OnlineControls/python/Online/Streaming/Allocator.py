@@ -72,7 +72,7 @@ class FSMmanip:
     self.sysName = self._tskLookup('SysName',tsk_typ)
     self.dimDns  = self._tskLookup('DimDNS',tsk_typ)
     self.slots = {}
-    self.startupScript     = self._startupScript
+    self.startupInfo       = self._startupInfo
     self.optionsFile       = self._optsFile
     self.setupTask         = self._setupTask
     self.configureTask     = self._configureTask
@@ -278,11 +278,13 @@ class FSMmanip:
     if not tasks_parents:
       error(self.name+': No task list present!',timestamp=1)
       return None
+
     unused_tasks = copy.deepcopy(tasks_parents[0])
     parents = copy.deepcopy(tasks_parents[1])
     used_tasks = {}
     for n in processes.keys():
       if debug: print '--->',len(processes[n]),' tasks running on node:',n
+      
     for (n,task_list) in processes.items():
       if debug: print 'allocateProcesses:',n,task_list
       if parents.has_key(n) and len(task_list) > 0:
@@ -317,36 +319,40 @@ class FSMmanip:
     if typ:
       o1 = PVSS.DpVectorActor(mgr)
       o2 = PVSS.DpVectorActor(mgr)
+      o3 = PVSS.DpVectorActor(mgr)
       o1.lookupOriginal('JobOptionsTaskType_*.ScriptPath',typ)
       o2.lookupOriginal('JobOptionsTaskType_*.RunAs',typ)
+      o3.lookupOriginal('JobOptionsTaskType_*.Detector',typ)
       w = mgr.devReader()
       w.add(o1.container)
       w.add(o2.container)
+      w.add(o3.container)
       w.execute()
       for idx in xrange(len(o1.container)):
         i = o1.container[idx]
         j = o2.container[idx]
+        k = o3.container[idx]
         n = i.name()[i.name().find('_')+1:]
-        scripts.append((n[:n.find('.')],i.data,j.data))
+        scripts.append((n[:n.find('.')],i.data,j.data,k.data))
     return scripts
     
   # ===========================================================================
-  def _startupScript(self,task_typ):
+  def _startupInfo(self,task_typ):
     " Return startup script of a given task type."
     script  = Params.gauditask_startscript
     account = 'online'
-    if not hasattr(self,'startupInfo'):
-      self.startupInfo = {}
-      self.accountNames = {}
+    detector = 'ANY'
+    if not hasattr(self,'startupInfoData'):
+      self.startupInfoData = {}
       # first look for defaults
       info = self._collectScriptPath(Systems.controlsMgr(Params.jobopts_system_name))
-      for name,path,account in info: self.startupInfo[name] = (path,account)
+      for name,path,account,detector in info: self.startupInfoData[name] = (path,account,detector)
       # now look in project specific values/overrides
       info = self._collectScriptPath(self.manager)
-      for name,path.account in info: self.startupInfo[name] = (path,account)
-    if self.startupInfo.has_key(task_typ):
-      return self.startupInfo[task_typ]
-    return (script,account)
+      for name,path.account,detector in info: self.startupInfoData[name] = (path,account,detector)
+    if self.startupInfoData.has_key(task_typ):
+      return self.startupInfoData[task_typ]
+    return (script,account,detector)
     
   # ===========================================================================
   def _configureTask(self, fsm_node, item, task):
@@ -357,15 +363,15 @@ class FSMmanip:
     dimdns  = task[5]
     type    = task[3]
     clazz   = task[4]
-    script,account = self.startupScript(type)
+    script,account,detector = self.startupInfo(type)
     if len(account) == 0: account = 'online'
     opts    = self.optionsFile(utgid,type)
     cmd = sysname+'#-e -o -c -u '+utgid+' -n '+account+\
           ' -D TASKTYPE='+type+\
           ' -D TASKCLASS='+clazz+\
-          ' -D PARTITION='+self.info.detectorName()+\
-          ' '+script+' '+opts+' '+\
-          clazz+' '+type+' '+dimdns
+          ' -D PARTITION='+self.info.detectorName()
+    if len(detector)>0: cmd = cmd + ' -D DETECTOR='+detector
+    cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
     self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
     return self
 
@@ -646,7 +652,14 @@ class Allocator(StreamingDescriptor):
       res = fsm_manip.collectTaskSlots()
       if res:
         fsm_manip.disableTasks(res)
-        res = fsm_manip.allocateProcesses(tasks,res)
+        used_tasks = {}
+        for node in tasks.keys():
+          for task in tasks[node]:
+            script,account,detector = fsm_manip.startupInfo(task[3])
+            if info_obj.isDetectorUsed(detector):
+              if not used_tasks.has_key(node): used_tasks[node]=[]
+              used_tasks[node].append(task)
+        res = fsm_manip.allocateProcesses(used_tasks,res)
         if res is None:
           return None
         if fsm_manip.commit(res) is None:

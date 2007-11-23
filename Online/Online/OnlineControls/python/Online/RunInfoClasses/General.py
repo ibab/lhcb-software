@@ -28,7 +28,7 @@ class General:
     self.name        = name
     self.reader      = self.manager.devReader()
     self.runTyp      = self.dp('general.runType')
-    self.partID      = self.dp('general.partId')
+    self.partID      = self.dp('general.activePartId')
     self.partition   = self.dp('general.partName')
     self.nSubFarm    = self.dp('HLTFarm.nSubFarms')
     self.storeFlag   = self.dp('Storage.storeFlag')
@@ -167,16 +167,24 @@ class General:
       log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
       
   # ===========================================================================
+  def isDetectorUsed(self,detector):
+    "Check if detector identified by its name is in use by the selected partition."
+    return 1 ### None
+  # ===========================================================================
   def setPartitionID(self,partID,save=0):
+    "Update active partition identifier."
     return self._setDataItem(self.partID,partID,save)
   # ===========================================================================
   def partitionID(self):
+    "Access to the active partition identifier."
     return self._dataItem(self.partID)
   # ===========================================================================
   def setRunType(self,runType,save=0):
+    "Update the run type identifier."
     return self._setDataItem(self.runTyp,runType,save)
   # ===========================================================================
   def runType(self):
+    "Access to the run type identifier."
     return self._dataItem(self.runTyp)
 
 # =============================================================================

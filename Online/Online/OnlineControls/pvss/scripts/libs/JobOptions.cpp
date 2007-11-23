@@ -353,12 +353,14 @@ void JobOptions_installOptions() {
   names[4] = makeDynString ("","NeedDefaults","","");	
   names[5] = makeDynString ("","ScriptPath","","");	
   names[6] = makeDynString ("","RunAs","","");	
+  names[7] = makeDynString ("","Detector","","");	
   types[1] = makeDynInt (DPEL_STRUCT);
   types[2] = makeDynInt (0,DPEL_STRING);
   types[3] = makeDynInt (0,DPEL_BOOL);
   types[4] = makeDynInt (0,DPEL_BOOL);
   types[5] = makeDynInt (0,DPEL_STRING);
   types[6] = makeDynInt (0,DPEL_STRING);
+  types[7] = makeDynInt (0,DPEL_STRING);
   JobOptions_typeCreate(names,types);
 }
 /// Uninstall types
@@ -416,6 +418,8 @@ int JobOptionsEditor_init()  {
   setValue("m_scriptPathText","visible",true);
   setValue("m_runAs","visible",true);
   setValue("m_runAsText","visible",true);
+  setValue("m_detector","visible",true);
+  setValue("m_detectorText","visible",true);
   setValue("m_OK","visible",1);//isChild);
   JobOptionsEditor_setToolTips();
   JobOptionsEditor_closeEditors();
@@ -446,6 +450,8 @@ void JobOptionsEditor_setToolTips()  {
   m_scriptPathText.toolTipText = m_scriptPath.toolTipText;
   m_runAs.toolTipText          = "Enter here account name to start the task [default:online]";
   m_runAsText.toolTipText      = m_runAs.toolTipText;
+  m_detector.toolTipText       = "Enter here the detector context of this task. ANY=to be started for all detectors if requested.";
+  m_detectorText.toolTipText   = m_detector.toolTipText;
   m_partitionInfo.toolTipText  = "Summary information of the selected partition.";
   m_partitionName.toolTipText  = "Name of the selected partition.";
   m_partitionID.toolTipText    = "Partition identifier of the selected partition.";
@@ -531,7 +537,8 @@ void JobOptionsEditor_openTextEditor() {
   setValue("m_close","visible",true);
   m_needDefaults.text(0)    = "Require defaults";
   m_needTell1Setup.text(0)  = "Require TELL1 list";
-  m_scriptPathText.text     = "Script Path:";
+  m_scriptPathText.text     = "Script:";
+  m_detectorText.text       = "Detector:";
   m_runAsText.text          = "Run as:";
   m_list.scale(1.,0.3);
   JobOptionsEditor_showTextEditor(1);
@@ -687,14 +694,15 @@ int JobOptionsEditor_showNodeTypes()  {
 }
 /// Editor: Show options for one task type in edit control
 int JobOptionsEditor_showTaskType(string text)  {
-  string nam = JobOptionsTaskType_t+"_"+text, opts, script, runas;
+  string nam = JobOptionsTaskType_t+"_"+text, opts, script, runas, detector;
   string dp  = JobOptions_sysName()+nam+".";
   bool   tell1, defs;
   int rc = dpGet(dp+"Options",opts,
                  dp+"NeedTell1s",tell1,
                  dp+"NeedDefaults",defs,
                  dp+"ScriptPath",script,
-                 dp+"RunAs",runas
+                 dp+"RunAs",runas,
+                 dp+"Detector",detector
                  );
   if ( 0 == rc )  {
     m_textEditor.Text	= opts;
@@ -702,6 +710,7 @@ int JobOptionsEditor_showTaskType(string text)  {
     m_needTell1Setup.state(0) = tell1;
     m_scriptPath.text = script;
     m_runAs.text = strlen(runas)>0 ? runas : "online";
+    m_detector.text = strlen(detector)>0 ? detector : "ANY";
     JobOptionsEditor_openTextEditor();
     return jo_TASK_EDIT;
   }
@@ -832,13 +841,15 @@ void JobOptionsEditor_saveOptions(string text)  {
   string dp    = JobOptions_sysName()+JobOptionsTaskType_t+"_"+text+".";
   string script = m_scriptPath.text;
   string runas  = m_runAs.text;
+  string detector = m_detector.text;
   bool   tell1 = m_needTell1Setup.state(0);
   bool   defs  = m_needDefaults.state(0);
   int rc = dpSet(dp+"Options",opts,
                  dp+"NeedTell1s",tell1,
                  dp+"NeedDefaults",defs,
                  dp+"ScriptPath",script,
-                 dp+"RunAs",runas);
+                 dp+"RunAs",runas,
+                 dp+"Detector",detector);
   if ( 0 == rc )  {
     JobOptionsEditor_showTextEditor(0);
     return;

@@ -85,7 +85,7 @@ LANG:1 6 Layer2
 20 21
 "m_needTell1Setup"
 ""
-1 339 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 354 319 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -95,9 +95,9 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 337 318 470 342
+ 352 317 485 341
 1
 T 
 1
@@ -113,7 +113,7 @@ E E
 EE20 22
 "m_needDefaults"
 ""
-1 481 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+1 485 319 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 22 0 0 0 0 0
 E E E
@@ -123,9 +123,9 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 479 318 623 342
+ 483 317 627 341
 1
 T 
 1
@@ -138,7 +138,81 @@ E E
 0 0 0 0 0
 1
 E E
-EE29 23
+EE14 55
+"m_scriptPath"
+""
+1 335 298 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+72 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 333 296 622 317
+3 "0s" 0 0 0 0 0 -1  E E E
+2 56
+"m_scriptPathText"
+""
+1 297 298 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+73 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 297 298 425 316
+0 2 2 "0s" 0 0 0 64 0 0  297 298 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 7 Script:
+14 58
+"m_runAs"
+""
+1 184.7613636363637 320 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+77 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 216 318 295 339
+3 "0s" 0 0 0 0 0 -1  E E E
+2 57
+"m_runAsText"
+""
+1 160 323 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+75 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 160 323 288 341
+0 2 2 "0s" 0 0 0 64 0 0  160 323 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 6 RunAs:
+29 23
 "m_textEditor"
 ""
 1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
@@ -163,12 +237,12 @@ LANG:1 0
 ""
 0 "CursorPositionChanged" "(int para, int pos)"
 ""
-E14 55
-"m_scriptPath"
+E14 59
+"m_detector"
 ""
-1 241 296 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 184.7613636363637 298 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
-72 0 0 0 0 0
+79 0 0 0 0 0
 E E E
 0
 1
@@ -178,14 +252,14 @@ LANG:1 0
 1
 LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
 0 ""
- 239 294 622 318
+ 216 296 295 317
 3 "0s" 0 0 0 0 0 -1  E E E
-2 56
-"m_scriptPathText"
+2 60
+"m_detectorText"
 ""
-1 161 298 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 161 300 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
-73 0 0 0 0 0
+81 0 0 0 0 0
 E E E
 0
 1
@@ -193,50 +267,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 161 298 289 316
-0 2 2 "0s" 0 0 0 64 0 0  161 298 1
+E E 0 1 1 2 1 E U  1 E 161 300 289 318
+0 2 2 "0s" 0 0 0 64 0 0  161 300 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 15 Startup script:
-14 58
-"m_runAs"
-""
-1 202 321 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-77 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 200 319 330.9999999999999 343
-3 "0s" 0 0 0 0 0 -1  E E E
-2 57
-"m_runAsText"
-""
-1 160 324 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-75 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 160 324 288 342
-0 2 2 "0s" 0 0 0 64 0 0  160 324 1
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 6 RunAs:
+LANG:1 9 Detector:
 0
 LAYER, 2 
 1
@@ -254,9 +291,9 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 288 318 622 345
+ 288 318 622 342
 3 "0s" 0 0 0 0 0 -1  E E E
 13 19
 "m_create"
@@ -318,33 +355,9 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  158 28 622 342
-0
-
-E
-E
-E
-
-0 0
-17 12
-"m_listEditor"
-""
-1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E "main() { _p0(); jo_editType=JobOptionsEditor_showInfo(jo_editType);     _p1(); }" 0
-
-5 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 158 118 622 342
 0
 
 E
@@ -522,7 +535,7 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  8 8 132 35
 
@@ -544,7 +557,7 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  8 38 132 65
 
@@ -566,7 +579,7 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  8 68 132 95
 
@@ -588,7 +601,7 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  9 292 133 319
 
@@ -610,7 +623,7 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  9 262 133 289
 
@@ -632,7 +645,7 @@ LANG:1 20 what\r\n\0ever\r\n\0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
  9 322 133 349
 
@@ -670,6 +683,30 @@ LANG:1 125 -*-Bitstream Vera Sans Mono-bold-i-normal-*-20-*-100-100-*-*-iso8859-
 0 ""
 1
 LANG:1 5 Logo2
+17 12
+"m_listEditor"
+""
+1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E "main() { _p0(); jo_editType=JobOptionsEditor_showInfo(jo_editType);     _p1(); }" 0
+
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 158 118 622 342
+0
+
+E
+E
+E
+
+0 0
 0
 LAYER, 4 
 1

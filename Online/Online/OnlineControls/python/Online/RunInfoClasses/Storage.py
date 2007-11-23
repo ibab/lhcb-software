@@ -114,6 +114,13 @@ class StorageInfo(General):
     for i,data in rcv_targets.items():
       strmReceivers[i] = strmReceivers[i]+cl1+str(data)
 
+    if self.storeFlag.data == 0:
+      # If we do not store the data, the streaming layer
+      # does not have to be instrumented.
+      recvSenders = PVSS.StringVector()
+      strmInfrastructure = PVSS.StringVector()
+      strmReceivers = PVSS.StringVector()
+      strmSenders = PVSS.StringVector()
     partition.setDataSources(dataSources)
     partition.setRecvInfrastructure(recvInfrastructure)
     partition.setRecvReceivers(recvReceivers)
