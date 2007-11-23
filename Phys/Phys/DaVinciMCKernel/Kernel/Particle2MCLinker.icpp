@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.icpp,v 1.1 2007-02-24 14:29:15 pkoppenb Exp $
+// $Id: Particle2MCLinker.icpp,v 1.2 2007-11-23 23:19:42 gligorov Exp $
 // Include files 
 
 
@@ -279,6 +279,24 @@ Object2MCLinker<SOURCE>::associatedMCP( const SOURCE* obj)
        mcPart = nextMCP(), n++);
   return n;
 }
+template <class SOURCE>
+typename Object2MCLinker<SOURCE>::ToRange
+Object2MCLinker<SOURCE>::rangeFrom(const SOURCE* part)
+{
+  ToRange associatedRange;
+  MCAssociation associatedMCP;
+  const LHCb::MCParticle* tempMCP = firstMCP(part);
+
+  while(tempMCP != NULL){
+	associatedMCP.set_to(tempMCP);
+	associatedMCP.set_weight(weightMCP());
+	associatedRange.push_back(associatedMCP);
+	tempMCP = nextMCP();
+  } 
+
+  return associatedRange;
+}
+
 template <class SOURCE>
 const LHCb::MCParticle* 
 Object2MCLinker<SOURCE>::firstMCP( const SOURCE* part, double& weight)

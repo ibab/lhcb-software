@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.2 2007-11-16 09:13:08 jonrob Exp $
+// $Id: Particle2MCLinker.h,v 1.3 2007-11-23 23:19:28 gligorov Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -31,12 +31,46 @@ namespace LHCb
     *  @date   2004-04-29
     */
 
+/* 	The class MCAssociation holds a single MCParticle and an association weight. it is
+	used when returning the array of all MCParticles associated to a single
+	Particle/ProtoParticle. This is implemented in the rangeFrom method, where the interface
+	is identical as it was in DC04.
+
+	Added by V. Gligorov, 23-11-07. 
+	
+*/
+
+class MCAssociation {
+        public:
+                MCAssociation() {}
+                virtual ~MCAssociation() {}
+
+                const LHCb::MCParticle* to(){return m_associatedMCP;}
+                double weight(){return m_weight;}
+                StatusCode set_to(const LHCb::MCParticle* associatedMCP)
+                                {
+                                        m_associatedMCP = associatedMCP;
+                                        return StatusCode::SUCCESS;
+                                }
+                StatusCode set_weight(double weight)
+                                {
+                                        m_weight = weight;
+                                        return StatusCode::SUCCESS;
+                                }
+        private:
+                double m_weight;
+                const LHCb::MCParticle* m_associatedMCP;
+};
+
 template <class SOURCE=LHCb::Particle>
 class Object2MCLinker
 {
 public:
   // Typedef for source type
   typedef SOURCE Source;
+  // Typedef for RangeFrom return type
+  typedef std::vector<MCAssociation> ToRange;
+  typedef ToRange::iterator ToIterator;
   // Constructors from Algorithm
   Object2MCLinker( const Algorithm* myMother,
                    const int method,
@@ -233,6 +267,8 @@ public:
   Linker* linkerTable( const std::string& name) ;
 
   Linker* linkerTable( const std::string& name, To& test) ;
+
+  ToRange rangeFrom(const SOURCE* part);
 
   const LHCb::MCParticle* firstMCP( const SOURCE* obj) ;
 

@@ -4,7 +4,7 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
-! 2007-11-16 - Vladimir Gligorov
+! 2007-11-23 - Vladimir Gligorov
  - Added class MCAssociation to Particle2MCLinker.h to hold result of single association
    in the form of an MCParticle and an association weight
  - Added type ToRange, as existed in DC04.  
