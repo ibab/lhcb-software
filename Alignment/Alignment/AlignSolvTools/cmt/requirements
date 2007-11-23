@@ -17,6 +17,13 @@ use AlignmentInterfaces   v* Alignment
 library AlignSolvTools *.cpp
 apply_pattern component_library library=AlignSolvTools
 
+
+# Needed to force creation of cblas_dnrm2 symbol
+private 
+macro_prepend GSL_linkopts " -Wl,--no-as-needed "
+macro_append  GSL_linkopts " -Wl,--as-needed "
+end_private
+
 #===============================================================
 
 
