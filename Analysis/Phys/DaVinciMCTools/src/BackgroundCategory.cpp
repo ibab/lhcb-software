@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.27 2007-11-23 23:28:20 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.28 2007-11-24 00:27:50 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -365,48 +365,48 @@ bool BackgroundCategory::condition_A(	MCParticleVector mc_mothers_final,
   const LHCb::MCParticle* tempmother = NULL;
 
   //Begin DEBUG printouts of the finalstate MC daughters and mothers
-  info() << "####################################################################" << endmsg;
-  info() << "Beginning printout of the final state mothers" << endmsg;
-  info() << "********************************************************************" << endmsg;
+  verbose() << "####################################################################" << endmsg;
+  verbose() << "Beginning printout of the final state mothers" << endmsg;
+  verbose() << "********************************************************************" << endmsg;
   for (iP = mc_mothers_final.begin(); iP != mc_mothers_final.end(); ++iP) {
-	info() << "Mother = " << (*iP) << endmsg;
+	verbose() << "Mother = " << (*iP) << endmsg;
   	if (*iP){
-  	      info() << "PID of mother = " << (*iP)->particleID().pid() << endmsg;
+  	      verbose() << "PID of mother = " << (*iP)->particleID().pid() << endmsg;
         }
   }
   iP = mc_mothers_final.begin();
-  info() << "********************************************************************" << endmsg;
-  info() << "**********************************************" << endmsg;
-  info() << "Beginning printout of the reconstructed particles" << endmsg;
+  verbose() << "********************************************************************" << endmsg;
+  verbose() << "**********************************************" << endmsg;
+  verbose() << "Beginning printout of the reconstructed particles" << endmsg;
   for (iPP = particles_in_decay.begin(); iPP != particles_in_decay.end(); ++iPP) {
-	info() << "Reconstructed particle = " << (*iPP) << endmsg;
+	verbose() << "Reconstructed particle = " << (*iPP) << endmsg;
   	if (*iPP) {
-  	      info() << "PID of reconstructed particle = " << (*iPP)->particleID().pid() << endmsg;
+  	      verbose() << "PID of reconstructed particle = " << (*iPP)->particleID().pid() << endmsg;
         }
   }
   iPP = particles_in_decay.begin();
-  info() << "********************************************************************" << endmsg;
-  info() << "**********************************************" << endmsg;
-  info() << "Beginning printout of the associated particles" << endmsg;
+  verbose() << "********************************************************************" << endmsg;
+  verbose() << "**********************************************" << endmsg;
+  verbose() << "Beginning printout of the associated particles" << endmsg;
   for (iDebug = mc_particles_linked_to_decay.begin(); iDebug != mc_particles_linked_to_decay.end(); ++iDebug) {
-        info() << "Associated particle = " << (*iDebug) << endmsg;
+        verbose() << "Associated particle = " << (*iDebug) << endmsg;
         if (*iDebug) {
-              info() << "PID of associated particle = " << (*iDebug)->particleID().pid() << endmsg;
+              verbose() << "PID of associated particle = " << (*iDebug)->particleID().pid() << endmsg;
         }
   }
-  info() << "####################################################################" << endmsg;
+  verbose() << "####################################################################" << endmsg;
   //End DEBUG
 
   do {
 
-    info() << "Condition A looping on " << (*iPP) << " and " << (*iP) << endmsg; 
+    verbose() << "Condition A looping on " << (*iPP) << " and " << (*iP) << endmsg; 
 
     if (*iPP) {
 
       verbose () << "Passed" << endmsg;	
 
       //if ( (*iPP)->isBasicParticle()) { //final state particle
-      if ( isStable((*iPP)->particleID().abspid())) { //final state particle -- the other way
+      if ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle() ) { //final state particle -- the other way
 
 	verbose () << "Passed" << endmsg;
 
@@ -430,7 +430,7 @@ bool BackgroundCategory::condition_A(	MCParticleVector mc_mothers_final,
       }
     } else carryon = false;
 
-    info() << "Common mother is " << tempmother 
+    verbose() << "Common mother is " << tempmother 
 	   << " mother is " << (*iP) 
 	   << " particle is " << (*iPP) 
 	   << " and carryon is " << carryon << endmsg;
@@ -452,7 +452,7 @@ bool BackgroundCategory::condition_A(	MCParticleVector mc_mothers_final,
     }
   } else m_commonMother = 0;
 
-  info() << "####################################################################" << endmsg;
+  verbose() << "####################################################################" << endmsg;
 
   return carryon;
 }
@@ -477,27 +477,27 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 	verbose() << "Checking condition B step 4" << endmsg;
 
 	//Begin DEBUG printouts of the finalstate MC daughters and the associated particles
-	info() << "####################################################################" << endmsg;
-	info() << "Beginning printout of the final state daughters of the common mother" << endmsg;
-	info() << "********************************************************************" << endmsg;
+	verbose() << "####################################################################" << endmsg;
+	verbose() << "Beginning printout of the final state daughters of the common mother" << endmsg;
+	verbose() << "********************************************************************" << endmsg;
 	for (iPP = finalstateproducts.begin(); iPP != finalstateproducts.end(); ++iPP) {
-		info() << "Daughter of common mother = " << (*iPP) << endmsg;
+		verbose() << "Daughter of common mother = " << (*iPP) << endmsg;
 		if (*iPP){
-			info() << "PID of daughter = " << (*iPP)->particleID().pid() << endmsg;
+			verbose() << "PID of daughter = " << (*iPP)->particleID().pid() << endmsg;
 		}
 	}
 	iPP = finalstateproducts.begin();
-	info() << "********************************************************************" << endmsg;
-	info() << "**********************************************" << endmsg;
-	info() << "Beginning printout of the associated particles" << endmsg;
+	verbose() << "********************************************************************" << endmsg;
+	verbose() << "**********************************************" << endmsg;
+	verbose() << "Beginning printout of the associated particles" << endmsg;
 	for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
-		info() << "Associated particle = " << (*iP) << endmsg;
+		verbose() << "Associated particle = " << (*iP) << endmsg;
 		if (*iP) {
-			info() << "PID of associated particle = " << (*iP)->particleID().pid() << endmsg;
+			verbose() << "PID of associated particle = " << (*iP)->particleID().pid() << endmsg;
 		}
 	}
 	iP = mc_particles_linked_to_decay.begin();
-	info() << "**********************************************" << endmsg;
+	verbose() << "**********************************************" << endmsg;
 	//End DEBUG
 	
 	do {
@@ -522,7 +522,7 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
                                         (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
                                         (*iPP)->particleID().abspid() == 16) neutrinosFound +=1;
 
-				info() << "Photon is being ignored!!!!!!!!!!!!!!!!!!!!" << endmsg;
+				verbose() << "Photon is being ignored!!!!!!!!!!!!!!!!!!!!" << endmsg;
 
 				carryon = true;
 
@@ -538,14 +538,14 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 					//if ( m_semileptonicDecay && (*iP)->particleID().abspid() == 16 ) continue; //neutrinos are ignored
 					if ( m_useSoftPhotonCut && (*iP)->particleID().abspid() == 22 && 
 						(*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
-					info() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
+					verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
 					//verbose() << "Checking condition B step 7" << endmsg;
 					SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 					//verbose() << "Checking condition B step 7b" << endmsg;
           				if ( (*iVV)->products().empty() || isStable( (*iP)->particleID().abspid() )  ) {
 						//verbose() << "Checking condition B step 8" << endmsg;
-						info() << "Associated Particle:" << (*iP) << endmsg;
-						info() << "MC-final state Particle:" << (*iPP) << endmsg;
+						verbose() << "Associated Particle:" << (*iP) << endmsg;
+						verbose() << "MC-final state Particle:" << (*iPP) << endmsg;
 						carryon = ( *iP == *iPP ); 
 						if (carryon) break;
 					}
@@ -563,11 +563,11 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 
 	//verbose() << "Checking condition B step 9" << endmsg;
 
-	info() << "Has condition B passed or failed?" << endmsg;
-	info() << "*********************************" << endmsg;
-	info() << carryon << endmsg; 
-	info() << "*********************************" << endmsg;
-	info() << "#################################" << endmsg;
+	verbose() << "Has condition B passed or failed?" << endmsg;
+	verbose() << "*********************************" << endmsg;
+	verbose() << carryon << endmsg; 
+	verbose() << "*********************************" << endmsg;
+	verbose() << "#################################" << endmsg;
 
   return carryon;
 }
@@ -584,7 +584,7 @@ bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCPartic
 	do {
 		if ( *iPmc && *iP) {
 			//if ( (*iP)->isBasicParticle() ) {
-			if( isStable((*iP)->particleID().abspid())){
+			if( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle()){
 				carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
 			}
 		}
@@ -639,7 +639,7 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 		if ( 
 			(*iP) == 0 && 
 			//(*iPP)->isBasicParticle() 
-			isStable((*iPP)->particleID().abspid())
+			( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle()  )
 		   ) 
 				carryon = false;  
 		++iP;
@@ -664,7 +664,7 @@ bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_dec
 	do {
 
 		//if ( (*iPP)->isBasicParticle() ) {
-		if ( isStable((*iPP)->particleID().abspid()) ) {
+		if ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle() ) {
 
 			if (*iP) {
 
@@ -813,7 +813,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 		verbose() << "About to check if we are dealing with a basic particle" << endmsg;
 		verbose() << "Particle PID is " << (*iP)->particleID().pid() << endmsg;
 		//if ( (*iP)->isBasicParticle() ) {
-		if ( isStable((*iP)->particleID().abspid()) ) {
+		if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
 			//verbose() << "Associating step 3a - loop step " << verboses << endmsg;
 			verbose() << "About to get the relevant protoparticle" << endmsg;
 			const LHCb::ProtoParticle* protoTemp = (*iP)->proto();//dynamic_cast<ProtoParticle*>((*iP)->origin());
@@ -906,14 +906,14 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				int looper = 1;
 
 				for (mcPartIt = mcPartRange.begin(); mcPartIt!=mcPartRange.end(); ++mcPartIt) {
-					info() << "About to get the " << looper << "th match" << endmsg;
+					verbose() << "About to get the " << looper << "th match" << endmsg;
 				        mc_TempDeux = (*mcPartIt).to();
-				        info() << "To Range MCParticle is at " << mc_TempDeux << endmsg;
-				        info() << "To Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endmsg;
+				        verbose() << "To Range MCParticle is at " << mc_TempDeux << endmsg;
+				        verbose() << "To Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endmsg;
 				        //verbose() << "To Range energy = " << mc_TempDeux->momentum().e() << endmsg;
 				        //verbose() << "Range pt = " << mc_TempDeux->momentum().vect().perp() << endmsg;
 				        //verbose() << "Range momentum = " << mc_TempDeux->momentum().vect().mag() << endmsg;
-				        info() << "Range weight = " << (*mcPartIt).weight() << endmsg; 
+				        verbose() << "Range weight = " << (*mcPartIt).weight() << endmsg; 
 				        mc_weight = (*mcPartIt).weight();
 				        if ( mc_weight > minimumweight ) {
 					        minimumweight = mc_weight;
@@ -929,27 +929,27 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				}
 				if (mc_correctPID) {
 				        if (mc_correctPID == mc_bestQ) {
-					        info() << "Pushing back best match" << endmsg;
-					        info() << "Best PID weight = " << minimumweight << endmsg;
+					        verbose() << "Pushing back best match" << endmsg;
+					        verbose() << "Best PID weight = " << minimumweight << endmsg;
 					        associated_mcparts.push_back(mc_bestQ);
 				        } else {
 					        if (mc_correctPID_weight > m_override) {
-						        info() << "Pushing back best pid match" << endmsg;
-						        info() << "Best PID weight = " << mc_correctPID_weight << endmsg;
+						        verbose() << "Pushing back best pid match" << endmsg;
+						        verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
 							associated_mcparts.push_back(mc_correctPID);
 					        } else {
-						        info() << "OVERRIDE! Pushing back best Q match" << endmsg;
-						        info() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
-						        info() << "Best PID weight = " << mc_correctPID_weight << endmsg;
-						        info() << "Best Q = " << minimumweight << endmsg;
+						        verbose() << "OVERRIDE! Pushing back best Q match" << endmsg;
+						        verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
+						        verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
+						        verbose() << "Best Q = " << minimumweight << endmsg;
 						        associated_mcparts.push_back(mc_bestQ);
 					        }
 					}
 				} else {
 				        //No match with correct PID, we just match the best quality one there is
-				        info() << "Pushing back best Q match" << endmsg;
-				        info() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
-				        info() << "Best Q = " << minimumweight << endmsg;
+				        verbose() << "Pushing back best Q match" << endmsg;
+				        verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
+				        verbose() << "Best Q = " << minimumweight << endmsg;
 				        associated_mcparts.push_back(mc_bestQ);
 				}
         		}
