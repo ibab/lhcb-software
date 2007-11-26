@@ -101,30 +101,47 @@
         setMeth = 'FALSE'
         nonconstaccessor = 'TRUE'  />
 
-    <attribute
-        type = 'ROOT::Math::SMatrix&lt;double,3,3&gt;'
-        name = 'mommomcov'
-        desc = 'off-diagonal part of the momentum-momentum covariance matrix'
-        setMeth = 'FALSE'
-        nonconstaccessor = 'TRUE'  />
 
-    <method
-        type = 'const Gaudi::LorentzVector'
-        name = 'p4A'
-        desc = 'fitted p4 of first track'
-        const   = 'TRUE'>
-        <arg type='double' name='mass'/>
-        <code>
-           return p4(m_momA,mass) ;
-        </code>
-     </method>
+      <attribute
+	type = 'ROOT::Math::SMatrix&lt;double,3,3&gt;'
+	name = 'mommomcov'
+	desc = 'off-diagonal part of the momentum-momentum covariance matrix'
+	setMeth = 'FALSE'
+	nonconstaccessor = 'TRUE'  />
 
-    <method
+      <attribute 
+	type = 'std::vector&lt;LHCb::ParticleID&gt;'
+	name = 'compatablePIDs'
+	desc = 'Vector of Compatable PIDs for the mother'
+	/>
+      
+      <method
+	type = 'void'
+	name = 'addPID'
+	desc = 'add a PID to the vector'>
+	<arg type = 'LHCb::ParticleID' name = 'value'/> 
+	<code>
+	  m_compatablePIDs.push_back(value);
+	</code>
+      </method>
+
+      <method
+	type = 'const Gaudi::LorentzVector'
+	name = 'p4A'
+	desc = 'fitted p4 of first track'
+	const   = 'TRUE'>
+	<arg type='double' name='mass'/>
+	<code>
+	  return p4(m_momA,mass) ;
+	</code>
+      </method>
+      
+      <method
         type = 'const Gaudi::LorentzVector'
         name = 'p4B'
         desc = 'fitted p4 of second track'
         const   = 'TRUE'>
-      <arg type='double' name='mass'/>
+	<arg type='double' name='mass'/>
       <code>
          return p4(m_momB,mass) ;
       </code>
@@ -182,25 +199,25 @@
 	</method>
 
       <method
-        type = "const SmartRef&lt;LHCb::Track&gt;"
+        type = "const LHCb::Track *"
         name="trackA"
         desc = "Retrieve the first track easily"
         const = "TRUE">
         <code>
 	  
-          return  (tracks().at(0));
+          return  (tracks().at(0)).target();
 	  
         </code>
       </method>
 
       <method
-        type = "const SmartRef&lt;LHCb::Track&gt;"
+        type = "const LHCb::Track *"
         name="trackB"
         desc = "Retrieve the second track easily"
         const = "TRUE">
         <code>
 
-          return  tracks().at(1);
+          return  (tracks().at(1)).target();
 
 	</code>
       </method>
@@ -230,8 +247,7 @@
 	const = "TRUE">
 	<arg type = "unsigned int" name = "trackIndex" const = "TRUE"/>
 	<code>
-	  if (tracks().size()&lt;=trackIndex) return (LHCb::Track::Types) Unknown;
-	  return (LHCb::Track::Types) tracks().at(trackIndex)->LHCb::Track::type();
+	  return trackIndex &lt; tracks().size() ? tracks().at(trackIndex)->type() : LHCb::Track::TypeUnknown ;
 	</code>
       </method>
 

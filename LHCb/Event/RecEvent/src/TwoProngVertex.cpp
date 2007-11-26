@@ -1,4 +1,4 @@
-// $Id: TwoProngVertex.cpp,v 1.1 2007-11-26 10:31:50 sean Exp $
+// $Id: TwoProngVertex.cpp,v 1.2 2007-11-26 17:11:14 sean Exp $
 // Include files
 
 // local
@@ -108,9 +108,16 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
     dP4dMom( m_momB, mass2, JacobP2);
     
     //covmompos contains the rotate covariance matrix fo off diagonal part (position and momentum)
-    Gaudi::Matrix3x4 covmompos;
-    covmompos = (m_momposcovA) *((Gaudi::Matrix3x4) ROOT::Math::Transpose(JacobP1));
-    covmompos += (m_momposcovB) *( ROOT::Math::Transpose(JacobP2));
+    Gaudi::Matrix4x3 covmompos;
+    //. . . . . . . 
+    //. . . . . . . 
+    //. . . . . . . 
+    //x x x . . . . 
+    //x x x . . . . 
+    //x x x . . . .
+    //x x x . . . . 
+    covmompos =JacobP1* (m_momposcovA) ;
+    covmompos += JacobP2 * m_momposcovB; 
 
     //covmommom contains the V0 symmetric covariance for momentum
     Gaudi::SymMatrix4x4 covmommom ;
@@ -121,7 +128,7 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
        (Gaudi::Matrix4x4)((JacobP2*m_mommomcov) * (Gaudi::Matrix3x4) ROOT::Math::Transpose(JacobP1))
 
        );
-    covmommom+=ROOT::Math::Similarity(JacobP1, m_momcovA);
+    covmommom+=ROOT::Math::Similarity(JacobP1, m_momcovA); //J * C * JT
     covmommom+=ROOT::Math::Similarity(JacobP2, m_momcovB);
     
     //theMatrix.Place_at(m_poscov, 0,0);
@@ -129,9 +136,9 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
     theMatrix.Place_at(LHCb::VertexBase::covMatrix(), 0,0); //position part from rec vertex
 
     //now to copy off diagonal elements into full 7x7 matrix
-    for(int i = 0 ; i <3; ++i){
-      for(int j =0;j<4;++j){
-        theMatrix(i,j+3) = covmompos(i,j);
+    for(int i = 0 ; i <4; ++i){
+      for(int j =0;j<3;++j){
+        theMatrix(i+3,j) = covmompos(i,j);
       }
     }
       
