@@ -22,6 +22,8 @@
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
       <import name='Event/Track'/>
+      <import name="Kernel/SerializeStl"/>
+
 
       <typedef
 	desc = 'Container for mother PID values'
@@ -29,7 +31,7 @@
         def  = 'MotherPIDContainer'
         access = 'PUBLIC' />
 
-  <enum
+      <enum
         desc="Additional information assigned to this V0. Contains Impact parameter information"
         name="additionalInfo"
         access="PUBLIC" >
@@ -110,8 +112,8 @@
 	nonconstaccessor = 'TRUE'  />
 
       <attribute 
-	type = 'std::vector&lt;LHCb::ParticleID&gt;'
-	name = 'compatablePIDs'
+	type = 'MotherPIDContainer'
+	name = 'compatiblePIDs'
 	desc = 'Vector of Compatable PIDs for the mother'
 	/>
       
@@ -121,7 +123,7 @@
 	desc = 'add a PID to the vector'>
 	<arg type = 'LHCb::ParticleID' name = 'value'/> 
 	<code>
-	  m_compatablePIDs.push_back(value);
+	  m_compatiblePIDs.push_back(value);
 	</code>
       </method>
 
