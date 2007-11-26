@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2007-11-26 - Wouter Hulsbergen
+ - Make RawBankDecoder suitable for reading real data
+
 !======================= OTDAQ v5r6 2007-11-14 ======================
 ! 2007-11-14 - Wouter Hulsbergen
  - Cache calibrated time in OTLiteTime, replacing the static data member.
