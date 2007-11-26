@@ -1,4 +1,4 @@
-// $Id: SignalIsFromBDecay.h,v 1.1 2007-11-26 13:44:34 jonrob Exp $
+// $Id: SignalIsFromBDecay.h,v 1.2 2007-11-26 13:49:21 jonrob Exp $
 #ifndef GENERATORS_SignalIsFromBDecay_H
 #define GENERATORS_SignalIsFromBDecay_H 1
 
@@ -7,7 +7,7 @@
 
 #include "Generators/IGenCutTool.h"
 
-/** @class DaughtersInLHCbAndFromB DaughtersInLHCbAndFromB.h
+/** @class SignalIsFromBDecay SignalIsFromBDecay.h
  *
  *  Selects only signal which ultimately came from a B decay
  *
