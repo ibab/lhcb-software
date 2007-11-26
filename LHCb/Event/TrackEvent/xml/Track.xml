@@ -159,6 +159,27 @@
         access = "PUBLIC"
    />
 
+   <typedef
+        type   = "std::vector&lt;LHCb::Measurement*&gt;"
+        def    = "MeasurementContainer"
+        desc   = "Container for LHCb::Measurements on track"
+        access = "PUBLIC"
+   />
+
+   <typedef
+        type   = "std::vector&lt;LHCb::State*&gt;"
+        def    = "StateContainer"
+        desc   = "Container for LHCb::States on track"
+        access = "PUBLIC"
+   />
+
+   <typedef
+        type   = "std::vector&lt;LHCb::Node*&gt;"
+        def    = "NodeContainer"
+        desc   = "Container for LHCb::Nodes on track"
+        access = "PUBLIC"
+   />
+
    <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
@@ -593,7 +614,13 @@
         <arg type = 'const LHCb::Measurement' name='meas' />
       </method>
 
-     <method
+      <method
+        name    = 'addToMeasurements'
+        desc    = 'Add a set of measurements to the track. Track takes ownership.'>
+        <arg type = 'MeasurementContainer' name='measurements' />
+      </method>
+
+      <method
         name    = 'removeFromMeasurements'
         desc    = 'Remove a Measurement from the list of Measurements associated to the track'
         argList = 'LHCb::Measurement* value'>

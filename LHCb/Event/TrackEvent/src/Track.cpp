@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <map>
 
 // from gsl
 #include "gsl/gsl_cdf.h"
@@ -212,6 +213,23 @@ void Track::addToMeasurements( const Measurement& meas )
 };
 
 //=============================================================================
+// Add a list of measurement to the list associated to the Track. This takes ownership.
+//=============================================================================
+void Track::addToMeasurements( MeasurementContainer& measurements )
+{
+  // Make sure that the incoming measurements are properly sorted. The 'if' is ugly, but more efficient than using 'orderByZ'.
+  bool backward = checkFlag(Track::Backward) ;
+  if(backward) std::sort(measurements.begin(),measurements.end(),TrackFunctor::decreasingByZ<Measurement>());
+  else         std::sort(measurements.begin(),measurements.end(),TrackFunctor::increasingByZ<Measurement>());
+  // Now append and use std::inplace_merge. Make sure there is enough capacity such that iterators stay valid.
+  m_measurements.reserve( measurements.size() + m_measurements.size()) ;
+  MeasurementContainer::iterator middle = m_measurements.end() ;
+  m_measurements.insert(middle, measurements.begin(), measurements.end()) ;
+  if(backward) std::inplace_merge(m_measurements.begin(),middle,m_measurements.end(),TrackFunctor::decreasingByZ<Measurement>());
+  else         std::inplace_merge(m_measurements.begin(),middle,m_measurements.end(),TrackFunctor::increasingByZ<Measurement>());
+};
+
+//=============================================================================
 // Remove an LHCbID from the list of LHCbIDs associated to the Track
 //=============================================================================
 void Track::removeFromLhcbIDs( const LHCbID& value )
@@ -384,19 +402,29 @@ void Track::copy( const Track& track )
        istate != track.states().end(); ++istate)
     m_states.push_back( (*istate)->clone() ) ;
   
-  // copy the measurements
+  // copy the measurements. make a map from old to new measurements.
+  typedef std::map<const Measurement*, Measurement*> MeasurementMap ;
+  MeasurementMap measurementmap ;
   m_measurements.reserve(track.measurements().size()) ;
   for( std::vector<Measurement*>::const_iterator imeas = track.measurements().begin() ;
-       imeas != track.measurements().end(); ++imeas)
+       imeas != track.measurements().end(); ++imeas) {
     m_measurements.push_back( (*imeas)->clone() ) ;
-  
+    measurementmap[*imeas] = m_measurements.back() ;
+  }
+
   // copy the nodes. be sure to remap the measurement.
   m_nodes.reserve(track.nodes().size()) ;
   for (std::vector<Node*>::const_iterator inode = track.nodes().begin();
        inode != track.nodes().end(); ++inode) {
     m_nodes.push_back((*inode)->clone()) ;
-    if( (*inode)->hasMeasurement() )
-      m_nodes.back()->setMeasurement(const_cast<Measurement&>(measurement((*inode)->measurement().lhcbID()))) ;
+    if( (*inode)->hasMeasurement() ) {
+      MeasurementMap::const_iterator it = measurementmap.find( &(*inode)->measurement() );
+      if(it != measurementmap.end()) 
+        m_nodes.back()->setMeasurement(*(it->second)) ;
+      else 
+        throw GaudiException( "Track::copy: found a node pointing to a measurement not on track!",
+                              "Track.cpp",StatusCode::FAILURE );
+    }
   }
   
   // copy the ancestors
