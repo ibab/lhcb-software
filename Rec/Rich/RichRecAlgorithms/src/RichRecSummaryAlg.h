@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::SummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.6 2007-03-09 22:48:41 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.7 2007-11-26 16:48:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -62,7 +62,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private:   // Private data members
 

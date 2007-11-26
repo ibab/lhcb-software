@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.7 2007-03-09 22:48:41 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.8 2007-11-26 16:48:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -197,10 +197,4 @@ StatusCode SummaryAlg::execute()
   } // loop over reco tracks
 
   return StatusCode::SUCCESS;
-}
-
-StatusCode SummaryAlg::finalize()
-{
-  // Execute base class method and return
-  return RichRecAlgBase::finalize();
 }
