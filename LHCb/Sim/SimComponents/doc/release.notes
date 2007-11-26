@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r8 2007-11-26 ========================
+! 2007-11-26 - Marco Cattaneo
+ - Add PrintMCDecayTreeAlg to replace DumpEvent algorithm in DaVinciMCTools
+
 !====================== SimComponents v2r7 2007-11-02 ========================
 ! 2007-11-02 - Marco Cattaneo
  - Fix units in printout of MCParticleSelector cuts
