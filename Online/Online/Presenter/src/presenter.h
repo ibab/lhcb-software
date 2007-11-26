@@ -4,12 +4,12 @@
 // slots/signals cint hates namespaces
 enum FilterCriteria
 {
-  ByFolderAndPage = 0,
-  ByTask = 1,
-  BySubsystem = 2,
-  ByHistogramsWithAnalysis = 3,
-  ByAnalysisHistograms = 4,
-  AllHistos = 5
+  FoldersAndPages = 0,
+  Tasks = 1,
+  Subsystems = 2,
+  HistogramsWithAnalysis = 3,
+  AnalysisHistograms = 4,
+  AllHistograms = 5
 };
 
 namespace pres
@@ -55,9 +55,6 @@ namespace pres
   // Tunables:
   static const int EstimatedDimServiceCount = 1000;
   static const int EstimatedHistosOnPage = 200;
-  static const int EstimatedDbHistoCount = 5000;
-  static const int EstimatedDbFolderCount = 500;
-  static const int EstimatedDbPageCount = 500;
   static const int TimeoutOfMainTimer = 2000;
 }
 #endif /*PRESENTER_H_*/
