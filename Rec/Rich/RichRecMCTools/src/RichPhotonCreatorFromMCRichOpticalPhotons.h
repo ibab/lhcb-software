@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.11 2007-06-01 09:47:08 cattanem Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.12 2007-11-26 16:51:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -71,8 +71,8 @@ namespace Rich
 
       private: // private data
 
-        // Pointers to tool instances
-        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
+        /// Rich Reconstruction MC Truth tool
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool; 
 
       };
 

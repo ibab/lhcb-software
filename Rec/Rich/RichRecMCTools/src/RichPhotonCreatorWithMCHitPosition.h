@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------------------------
-/** @file RichPhotonCreatorWithMCSignal.h
+/** @file RichPhotonCreatorWithMCHitPosition.h
  *
- *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithMCSignal
+ *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithMCHitPosition
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.h,v 1.9 2007-11-26 16:51:31 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithMCHitPosition.h,v 1.1 2007-11-26 16:51:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
+ *  @date   06/11/2007
  */
 //-----------------------------------------------------------------------------------------------
 
-#ifndef RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H
-#define RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H 1
+#ifndef RICHRECMCTOOLS_RichPhotonCreatorWithMCHitPosition_H
+#define RICHRECMCTOOLS_RichPhotonCreatorWithMCHitPosition_H 1
 
 // base class
 #include "RichRecBase/RichPhotonCreatorBase.h"
@@ -33,31 +33,31 @@ namespace Rich
     {
 
       //-----------------------------------------------------------------------------------------------
-      /** @class PhotonCreatorWithMCSignal RichPhotonCreatorWithMCSignal.h
+      /** @class PhotonCreatorWithMCHitPosition RichPhotonCreatorWithMCHitPosition.h
        *
        *  Tool which performs the association between RichRecTracks and
-       *  RichRecPixels to form RichRecPhotons. MC cheating is performed
-       *  by for true Cherenkov photon candidates referring to the associated
-       *  MCRichOpticalPhoton to get the true Cherenkov angles etc. For fake photons
-       *  the reconstructed quantities are used.
+       *  RichRecPixels to form RichRecPhotons. 
+       *
+       *  This implementation performs some MC cheating
+       *  by using the MC hit position on the HPD entrance window.
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       *  @date   08/07/2004
+       *  @date   06/11/2007
        */
       //-----------------------------------------------------------------------------------------------
 
-      class PhotonCreatorWithMCSignal : public PhotonCreatorBase
+      class PhotonCreatorWithMCHitPosition : public PhotonCreatorBase
       {
 
       public: // methods for Gaudi framework
 
         /// Standard constructor
-        PhotonCreatorWithMCSignal( const std::string& type,
-                                   const std::string& name,
-                                   const IInterface* parent );
+        PhotonCreatorWithMCHitPosition( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent );
 
         /// Destructor
-        virtual ~PhotonCreatorWithMCSignal();
+        virtual ~PhotonCreatorWithMCHitPosition();
 
         // Initialize method
         StatusCode initialize();
@@ -73,8 +73,7 @@ namespace Rich
 
         // Pointers to tool instances
         const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
-        const IPhotonCreator * m_mcPhotCr;    ///< Delegated photon creator for MC photons
-        const IPhotonCreator * m_recoPhotCr;  ///< Delegated photon creator for reco photons
+        const IPhotonCreator * m_recoPhotCr;  ///< Delegated photon creator
 
       };
 
@@ -82,4 +81,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H
+#endif // RICHRECMCTOOLS_RichPhotonCreatorWithMCHitPosition_H

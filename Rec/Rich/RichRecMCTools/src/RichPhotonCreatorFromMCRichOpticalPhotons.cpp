@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.16 2007-08-13 12:37:07 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.17 2007-11-26 16:51:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -41,6 +41,10 @@ StatusCode PhotonCreatorFromMCRichOpticalPhotons::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_mcRecTool );
+
+  // Issue a warning, to make sure user knows they are MC cheating
+  Warning( "Using cheated photon creator that only uses MC for all photons", 
+           StatusCode::SUCCESS );
 
   return sc;
 }

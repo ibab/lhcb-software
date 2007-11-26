@@ -4,6 +4,14 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-11-26 - Chris Jones
+ - Add two new tools
+  + RichMCTruePhotonEmissionPoint which uses MC to cheat the photon emission 
+    point calculation
+  + RichPhotonCreatorWithMCHitPosition which uses the true MC hit position to
+    cheat reconstruct the photon candidates
+ - Other various minor cleanups
+
 ! 2007-10-26 - Chris Jones
  - Improvements to the MCRichTrack based track creators
 

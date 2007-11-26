@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.29 2007-08-09 16:13:54 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.30 2007-11-26 16:51:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -524,7 +524,7 @@ MCTruthTool::trueOpticalPhoton( const LHCb::RichRecSegment * segment,
   // this is not handled well at the moment
   if ( photons.size() >= 2 )
   {
-    Warning( "Found more than one associated MCRichOpticalPhoton. This is not handled well at present. Returning first",
+    Warning( "Found more than one associated MCRichOpticalPhoton. This is not handled well at present -> Returning first",
              StatusCode::SUCCESS, 1 );
   }
 

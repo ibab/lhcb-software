@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.7 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.8 2007-11-26 16:51:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -26,14 +26,15 @@ using namespace Rich::Rec::MC;
 DECLARE_TOOL_FACTORY( PhotonCreatorWithMCSignal );
 
 // Standard constructor
-PhotonCreatorWithMCSignal::
-PhotonCreatorWithMCSignal( const std::string& type,
-                           const std::string& name,
-                           const IInterface* parent )
+PhotonCreatorWithMCSignal::PhotonCreatorWithMCSignal( const std::string& type,
+                                                      const std::string& name,
+                                                      const IInterface* parent )
   : PhotonCreatorBase     ( type, name, parent ),
     m_mcRecTool           ( NULL ),
     m_mcPhotCr            ( NULL ),
     m_recoPhotCr          ( NULL ) { }
+
+PhotonCreatorWithMCSignal::~PhotonCreatorWithMCSignal() { }
 
 StatusCode PhotonCreatorWithMCSignal::initialize()
 {
@@ -46,13 +47,11 @@ StatusCode PhotonCreatorWithMCSignal::initialize()
   acquireTool( "RichPhotonCreatorMC",   m_mcPhotCr   );
   acquireTool( "RichPhotonCreatorReco", m_recoPhotCr );
 
-  return sc;
-}
+  // Issue a warning, to make sure user knows they are MC cheating
+  Warning( "Using cheated photon creator that uses MC for signal photons", 
+           StatusCode::SUCCESS );
 
-StatusCode PhotonCreatorWithMCSignal::finalize()
-{
-  // Execute base class method
-  return PhotonCreatorBase::finalize();
+  return sc;
 }
 
 LHCb::RichRecPhoton *
