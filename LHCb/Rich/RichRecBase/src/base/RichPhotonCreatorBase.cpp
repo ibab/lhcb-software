@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.20 2007-08-13 12:41:32 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.21 2007-11-26 16:45:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -104,7 +104,7 @@ namespace Rich
       }
 
       // get tools
-      acquireTool( m_photPredName, "Predictor", m_photonPredictor, this  );
+      acquireTool( m_photPredName, "Predictor", m_photonPredictor, this );
       acquireTool( "RichPhotonSignal", m_photonSignal );
       acquireTool( "RichCherenkovAngle",  m_ckAngle   );
       acquireTool( "RichCherenkovResolution", m_ckRes );
@@ -423,7 +423,6 @@ namespace Rich
 
       return m_photons;
     }
-
 
     const LHCb::RichRecTrack::Photons &
     PhotonCreatorBase::reconstructPhotons( LHCb::RichRecTrack * track ) const
