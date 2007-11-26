@@ -5,15 +5,15 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.14 2007-08-13 12:44:22 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.15 2007-11-26 17:22:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
-#define RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H 1
+#ifndef RICHRECTOOLS_RichRayTraceCherenkovCone_H
+#define RICHRECTOOLS_RichRayTraceCherenkovCone_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -28,6 +28,9 @@
 // Event
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
+
+// RichKernel
+#include "RichKernel/FastMaths.h"
 
 namespace Rich
 {
@@ -164,4 +167,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
+#endif // RICHRECTOOLS_RichRayTraceCherenkovCone_H
