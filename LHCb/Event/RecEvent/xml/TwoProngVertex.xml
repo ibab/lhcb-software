@@ -22,7 +22,7 @@
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
       <import name='Event/Track'/>
-      <import name="Kernel/SerializeStl"/>
+
 
 
       <enum
