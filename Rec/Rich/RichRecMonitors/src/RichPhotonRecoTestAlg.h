@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::PhotonRecoTestAlg
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoTestAlg.h,v 1.5 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.h,v 1.6 2007-11-26 17:14:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -58,7 +58,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private: // data
 

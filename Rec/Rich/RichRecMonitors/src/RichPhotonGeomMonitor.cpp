@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.13 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.14 2007-11-26 17:14:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -159,9 +159,3 @@ StatusCode PhotonGeomMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-//  Finalize
-StatusCode PhotonGeomMonitor::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
-}

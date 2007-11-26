@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.11 2007-10-09 15:35:44 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.12 2007-11-26 17:14:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor );
 // Standard constructor, initializes variables
 CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase     ( name, pSvcLocator ),
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -36,6 +36,8 @@ CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
 {
   // min beta
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
+  // number of bins
+  declareProperty( "NumberBins1D",  m_nBins1D = 200 );
 }
 
 // Destructor
@@ -206,11 +208,11 @@ StatusCode CherenkovAngleMonitor::execute()
             delThetaExpMC = thetaExpTrue-mcPhot->cherenkovTheta();
 
             plot1D( thetaMC, hid(rad,"ckThetaMC"), "MC Cherenkov theta",
-                    minCkTheta[rad], maxCkTheta[rad] );
+                    minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
             plot1D( delThetaMC, hid(rad,"mcckDiffTrue"), "Rec-MC CK theta true",
-                    -ckRange[rad],ckRange[rad]);
+                    -ckRange[rad],ckRange[rad], m_nBins1D );
             plot1D( delThetaExpMC, hid(rad,"mcExpDiff"), "MC-Exp CK theta true",
-                    -ckRange[rad],ckRange[rad]);
+                    -ckRange[rad],ckRange[rad], m_nBins1D );
           } // mc photon
 
             // make a tuple
@@ -230,12 +232,12 @@ StatusCode CherenkovAngleMonitor::execute()
           
           // CK angles for fake photons
           plot1D( thetaRec, hid(rad,mcType,"ckThetaFake"), "Cherenkov theta : fake",
-                  minCkTheta[rad], maxCkTheta[rad] );
+                  minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
           plot1D( thetaExpTrue, hid(rad,"ckThetaExpFake"), "Expected Cherenkov theta : fake",
-                  minCkTheta[rad], maxCkTheta[rad] );
-          plot1D( phiRec,   hid(rad,mcType,"ckPhiFake"), "Cherenkov phi : fake", 0, 2*M_PI );
+                  minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
+          plot1D( phiRec,   hid(rad,mcType,"ckPhiFake"), "Cherenkov phi : fake", 0, 2*M_PI, m_nBins1D );
           plot1D( delTheta, hid(rad,"ckDiffFake"), "Rec-Exp CK theta all : fake",
-                  -ckRange[rad],ckRange[rad]);
+                  -ckRange[rad],ckRange[rad], m_nBins1D );
           profile1D( delTheta, pTot, hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
                      minP, maxP, 50 ); 
 
@@ -249,11 +251,3 @@ StatusCode CherenkovAngleMonitor::execute()
 
   return StatusCode::SUCCESS;
 }
-
-//  Finalize
-StatusCode CherenkovAngleMonitor::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::TupleAlgBase::finalize();
-}
-
