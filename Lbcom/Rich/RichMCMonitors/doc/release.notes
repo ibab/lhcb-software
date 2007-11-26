@@ -4,6 +4,13 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+! 2007-11-26 - Chris Jones
+ - Improvements to CK photon yield algorithm
+
+! 2007-11-12 - Chris Jones
+ - Add check for existance of MCRichHits in MCCKPhotonYieldAlg, so processing 
+   is not aborted when these data objects are missing (a warning is printed).
+
 !========================== RichMCMonitors v1r4 2007-07-09 ===================
 ! 2007-06-22 - Chris Jones
  - Add new monitor for MRichOpticalPhotons

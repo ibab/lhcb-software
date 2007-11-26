@@ -5,7 +5,7 @@
  * Header file for monitor algorithm Rich::MC::MCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.h,v 1.6 2007-05-29 13:57:22 cattanem Exp $
+ * $Id: RichMCCKPhotonYieldAlg.h,v 1.7 2007-11-26 17:40:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -61,7 +61,6 @@ namespace Rich
 
       virtual ~MCCKPhotonYieldAlg( ); ///< Destructor
 
-      virtual StatusCode initialize();    ///< Algorithm initialization
       virtual StatusCode execute   ();    ///< Algorithm execution
       virtual StatusCode finalize  ();    ///< Algorithm finalization
 
@@ -127,6 +126,9 @@ namespace Rich
 
       std::vector<double> m_minPathLength; ///< Minimum path length in the radiator volume
       std::vector<double> m_maxPathLength; ///< Maximum path length in the radiator volume
+
+      std::vector<double> m_minMRAD;  ///< Minimum radiator slope (mrad)
+      std::vector<double> m_maxMRAD;   ///< Maximum radiator slope (mrad)
 
       // Track and photon tally for all events
       RichRadCount m_signalRadHits;

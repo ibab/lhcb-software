@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.8 2007-02-01 17:49:09 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.9 2007-11-26 17:40:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -48,7 +48,9 @@ MCCKPhotonYieldAlg::MCCKPhotonYieldAlg( const std::string& name,
     m_maxEntryY      ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
     m_maxExitY       ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
     m_minPathLength  ( Rich::NRadiatorTypes, 0 ),
-    m_maxPathLength  ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm )
+    m_maxPathLength  ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_minMRAD        ( Rich::NRadiatorTypes, 0 ),
+    m_maxMRAD        ( Rich::NRadiatorTypes, 999999 )
 {
   // job options
   declareProperty( "MCRichHitsLocation",
@@ -68,6 +70,10 @@ MCCKPhotonYieldAlg::MCCKPhotonYieldAlg( const std::string& name,
   declareProperty( "MaxEntryR", m_maxEntryR );
   declareProperty( "MaxEntryX", m_maxEntryX );
   declareProperty( "MaxEntryY", m_maxEntryY );
+
+  // slope cuts
+  declareProperty( "MinMRAD",   m_minMRAD   );
+  declareProperty( "MaxMRAD",   m_maxMRAD   );
 
   // Exit fudicial cuts
   declareProperty( "MinExitR", m_minExitR );
@@ -89,26 +95,16 @@ MCCKPhotonYieldAlg::MCCKPhotonYieldAlg( const std::string& name,
 MCCKPhotonYieldAlg::~MCCKPhotonYieldAlg() {}
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode MCCKPhotonYieldAlg::initialize()
-{
-  // must be done first
-  const StatusCode sc = RichHistoAlgBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // add custom initialisation stuff here
-
-  return sc;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode MCCKPhotonYieldAlg::execute()
 {
 
   // Load the MCRichHits that are to be analysed
+  if ( !exist<LHCb::MCRichHits>(m_mcRichHitsLoc) )
+  {
+    return Warning( "No MCRichHits at '"+m_mcRichHitsLoc+"'", StatusCode::SUCCESS );
+  }
   const LHCb::MCRichHits * hits = get<LHCb::MCRichHits> ( m_mcRichHitsLoc );
 
   // Loop over the hits and form a mapping from MCParticles to
@@ -185,6 +181,10 @@ StatusCode MCCKPhotonYieldAlg::execute()
       // entry and exit slopes
       entrySlope = atan2( entryR, entP.z() );
       exitSlope  = atan2( exitR,  extP.z() );
+
+      // slope cuts
+      if ( entrySlope < m_minMRAD[rad] || entrySlope > m_maxMRAD[rad] ||
+           exitSlope  < m_minMRAD[rad] || exitSlope  > m_maxMRAD[rad] ) continue;
 
     }
     debug() << " -> Segment selected" << endreq;
@@ -263,18 +263,25 @@ StatusCode MCCKPhotonYieldAlg::execute()
 //=============================================================================
 StatusCode MCCKPhotonYieldAlg::finalize()
 {
+  const std::string & lines 
+    = "===================================================================================";
 
   // Statistical tools
   const StatDivFunctor eff("%8.2f +-%5.2f");
 
-  info() << "=============================================================================="
-         << endreq;
+  info() << lines << endreq;
 
   // track selection
   info() << " Track Selection : Min. Ptot (aero/R1Gas/R2Gas) = "
          << m_minP << " MeV/c" << endreq;
   info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = "
          << m_maxP << " MeV/c" << endreq;
+  info() << "                 : Min. Entry R (aero/R1Gas/R2Gas) = " << m_minEntryR << endreq;
+  info() << "                 : Max. Entry R (aero/R1Gas/R2Gas) = " << m_maxEntryR << endreq;
+  info() << "                 : Min. Exit  R (aero/R1Gas/R2Gas) = " << m_minExitR << endreq;
+  info() << "                 : Max. Exit  R (aero/R1Gas/R2Gas) = " << m_maxExitR << endreq;
+  info() << "                 : Min. MRAD    (aero/R1Gas/R2Gas) = " << m_minMRAD << endreq;
+  info() << "                 : Max. MRAD    (aero/R1Gas/R2Gas) = " << m_maxMRAD << endreq;
 
   // Summarise the photon tallies for each radiator type
   for ( RichRadCount::const_iterator iC = m_signalRadHits.begin();
@@ -285,12 +292,12 @@ StatusCode MCCKPhotonYieldAlg::finalize()
       std::string rad(Rich::text((*iC).first));
       rad.resize(15,' ');
       info() << " " << rad << " Av. # CK photons = "
-             << eff((*iC).second.nPhotons,(*iC).second.nTracks) << " photons/MCParticle" << endreq;
+             << eff((*iC).second.nPhotons,(*iC).second.nTracks) 
+             << " photons/MCParticle" << endreq;
     }
   }
 
-  info() << "=============================================================================="
-         << endreq;
+  info() << lines << endreq;
 
   // must be called after all other actions
   return RichHistoAlgBase::finalize();
