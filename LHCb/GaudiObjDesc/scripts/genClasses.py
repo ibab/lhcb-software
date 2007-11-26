@@ -547,14 +547,21 @@ class genClasses(genSrcUtils.genSrcUtils):
           s += '  s << "{ "'
           for att in godClass['attribute']:
             attAtt = att['attrs']
-            if attAtt['type'][:5] == 'std::' and 'Kernel/SerializeStl' not in self.include:
-              self.include.append('Kernel/SerializeStl')
+            type = attAtt['type'].lstrip()
+            if type[:5] == 'std::':
+              if 'GaudiKernel/SerializeSTL' not in self.include:
+                self.include.append('GaudiKernel/SerializeSTL')
             if s[-1] == '"' : s += ' << "%s :\t" ' % attAtt['name']
             else            : s += '\n            << "%s :\t" ' % attAtt['name']
-            if   attAtt['type'] == 'bool'   : s += '<< l_'
-            elif attAtt['type'] == 'double' : s += '<< (float)m_'
-            else                            : s += '<< m_'
-            s += attAtt['name'] + ' << std::endl'
+            # Hack to get round namespace problems in gccxml (Savannah bug 29887)
+            if type[:11] == 'std::vector' or type[:8] == 'std::map' or \
+               type[:9]  == 'std::list'   or type[:9] == 'std::pair':
+              s += ';  GaudiUtils::operator<<(s,m_%s);  s << std::endl'%attAtt['name']
+            else:
+              if   type == 'bool'   : s += '<< l_'
+              elif type == 'double' : s += '<< (float)m_'
+              else                  : s += '<< m_'
+              s += attAtt['name'] + ' << std::endl'
           s += ' << " }";\n'
         s += '  return s;\n'
         s += '}\n\n'

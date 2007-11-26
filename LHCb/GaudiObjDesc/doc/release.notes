@@ -4,6 +4,13 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r0 2007-11-26 ======================
+! 2007-11-26 - Marco Cattaneo
+ - Pick up GaudiKernel/SerializeSTL.h instead of Kernel/SerializeStl.h. These
+   serializers are now in GaudiUtils:: namespace, not LHCb::
+   Removes dependency of generated files on LHCbKernel (Savannah bug no. 29887).
+   Requires Gaudi v19r6 or greater
+
 !======================== GaudiObjDesc v10r4p2 2007-11-09 ====================
 ! 2007-11-09 - Marco Cattaneo
  - In god_headers CMT pattern, add dependency of <package> constituent on
@@ -15,7 +22,7 @@
  - Add a missing "inline" in string to type conversion functions
 
 ! 2007-10-19 Stefan Roiser
-- fix typo. The generated copyconstructor was missing a comma for base classes,
+- fix typo. The generated copy constructor was missing a comma for base classes
   which were not KeyedObjects
 
 !======================== GaudiObjDesc v10r4 2007-09-19 ======================
@@ -66,7 +73,7 @@
    god_dictionary: generates the dictionary header file and selection file and calls the
                    standard relex_dictionary provided by the Reflex LCGCMT interface package
    IMPORTANT!! All Event packages need to be adapted to this change
-   For example the TarckEvent package changes are:
+   For example the TrackEvent package changes are:
 
 		--- requirements        8 May 2007 11:20:01 -0000       1.46
 		+++ requirements        7 Jun 2007 11:42:21 -0000
