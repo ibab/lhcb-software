@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.34 2007-10-09 17:20:13 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.35 2007-11-26 17:33:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -33,9 +33,7 @@ RecoQC::RecoQC( const std::string& name,
     m_ckRes             ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_trSelector        ( NULL ),
-    m_minBeta           ( Rich::NRadiatorTypes, 0 ),
-    m_minP              ( Rich::NRadiatorTypes, 0 ),
-    m_maxP              ( Rich::NRadiatorTypes, 0 ),
+    m_minBeta           ( Rich::NRadiatorTypes, 0.999 ),
     m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
     m_nSegs             ( Rich::NRadiatorTypes, 0 ),
     m_chThetaRecHistoLimitMax ( Rich::NRadiatorTypes, 0 ),
@@ -55,19 +53,10 @@ RecoQC::RecoQC( const std::string& name,
   m_chThetaRecHistoLimitMax[Rich::Rich1Gas] = 0.08;
   m_chThetaRecHistoLimitMax[Rich::Rich2Gas] = 0.05;
   declareProperty( "ChThetaRecHistoLimitMin", m_chThetaRecHistoLimitMin );
+  declareProperty( "CKResHistoRange", 
+                   m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
 
-  // Min momentum
-  m_minP[Rich::Aerogel]  = 50 * Gaudi::Units::GeV;
-  m_minP[Rich::Rich1Gas] = 80 * Gaudi::Units::GeV;
-  m_minP[Rich::Rich2Gas] = 80 * Gaudi::Units::GeV;
-  declareProperty( "MinParticleMomentum", m_minP );
-
-  // Max momentum
-  m_maxP[Rich::Aerogel]  = 999 * Gaudi::Units::GeV;
-  m_maxP[Rich::Rich1Gas] = 999 * Gaudi::Units::GeV;
-  m_maxP[Rich::Rich2Gas] = 999 * Gaudi::Units::GeV;
-  declareProperty( "MaxParticleMomentum", m_maxP );
-
+  declareProperty( "NumberBins", m_nBins = 100 );
 }
 
 // Destructor
@@ -89,16 +78,11 @@ StatusCode RecoQC::initialize()
 // Main execution
 StatusCode RecoQC::execute()
 {
-  debug() << "Execute" << endreq;
-
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Rich Histo ID
   const RichHistoID hid;
-
-  // Histo ranges               Aero   Rich1Gas  Rich2Gas
-  const double ckResRange[] = { 0.01, 0.005,  0.0025 };
 
   // Make sure all tracks and segments have been formed
   if ( trackCreator()->newTracks().isFailure() )
@@ -131,9 +115,6 @@ StatusCode RecoQC::execute()
     // segment momentum
     const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
 
-    // momentum cuts
-    if ( pTot < m_minP[rad] || pTot > m_maxP[rad] ) continue;
-
     double thetaExpTrue(0.0), resExpTrue(0.0);
     Rich::ParticleIDType mcType = Rich::Pion; // If MC not available, assume pion
     if ( mcTrackOK )
@@ -165,12 +146,15 @@ StatusCode RecoQC::execute()
 
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
-      const double phiRec = photon->geomPhoton().CherenkovPhi();
-      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta",
-              m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad], 50 );
-      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi", 0.0, 2*Gaudi::Units::pi, 50 );
+      // reconstructed phi
+      const double phiRec   = photon->geomPhoton().CherenkovPhi();
+
+      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta : All photons",
+              m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad], m_nBins );
+      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi : All photons", 0.0, 2*Gaudi::Units::pi, m_nBins );
       plot1D( thetaRec-thetaExpTrue,
-              hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad], 50 );
+              hid(rad,"ckResAll"), "Rec-Exp Cktheta : beta=1 : All photons",
+              -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
 
       if ( mcTrackOK && mcRICHOK )
       {
@@ -182,18 +166,20 @@ StatusCode RecoQC::execute()
           avRecTrueTheta += thetaRec;
           // resolution plot
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1 : MC true photons", -ckResRange[rad], ckResRange[rad], 50 );
+                  hid(rad,"ckResTrue"), "Rec-Exp Cktheta : beta=1 : MC true photons", 
+                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
           if ( resExpTrue>0 )
           {
             // pull plot
             const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-            plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -4, 4, 50 );
+            plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -4, 4, m_nBins );
           }
         }
         else // fake photon
         {
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1 : MC fake photons", -ckResRange[rad], ckResRange[rad], 50 );
+                  hid(rad,"ckResFake"), "Rec-Exp Cktheta : beta=1 : MC fake photons", 
+                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
         }
       } // MC is available
 
@@ -258,10 +244,6 @@ StatusCode RecoQC::finalize()
   // track selection
   info() << " Track Selection : " << m_trSelector->selectedTracks() << endreq;
   info() << "                 : beta > " << m_minBeta << endreq;
-  info() << "                 : Min. Ptot (aero/R1Gas/R2Gas) = "
-         << m_minP << " MeV/c" << endreq;
-  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = "
-         << m_maxP << " MeV/c" << endreq;
 
   // loop over radiators
   for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )

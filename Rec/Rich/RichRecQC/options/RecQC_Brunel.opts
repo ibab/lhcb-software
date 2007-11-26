@@ -23,36 +23,36 @@ CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResAllHighP" };
 RiCKResAllHighP.HistoPrint       = false;
 
 // Long tracks tracks - all P
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResLong" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResLongAll" };
 RiCKResLong.TrackSelector.TrackAlgs  = { "Forward", "Match" };
-RiCKResLong.HistoPrint       = false;
-RiCKResLong.MinParticleMomentum = { 2*GeV, 2*GeV, 2*GeV };
+RiCKResLong.HistoPrint = false;
+RiCKResLong.MinBeta = { 0, 0, 0 };
 
 // forward tracks
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResFrwdHighP" };
-RiCKResFrwdHighP.TrackSelector.TrackAlgs  = { "Forward" };
-RiCKResFrwdHighP.HistoPrint      = false;
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResFrwdHighBeta" };
+RiCKResFrwdHighBeta.TrackSelector.TrackAlgs  = { "Forward" };
+RiCKResFrwdHighBeta.HistoPrint      = false;
 
 // match tracks
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResMatchHighP" };
-RiCKResMatchHighP.TrackSelector.TrackAlgs = { "Match" };
-RiCKResMatchHighP.HistoPrint     = false;
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResMatchHighBeta" };
+RiCKResMatchHighBeta.TrackSelector.TrackAlgs = { "Match" };
+RiCKResMatchHighBeta.HistoPrint     = false;
 
 // KsTracks tracks
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResKsTkHighP" };
-RiCKResKsTkHighP.TrackSelector.TrackAlgs  = { "KsTrack" };
-RiCKResKsTkHighP.HistoPrint      = false;
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResKsTkHighBeta" };
+RiCKResKsTkHighBeta.TrackSelector.TrackAlgs  = { "KsTrack" };
+RiCKResKsTkHighBeta.HistoPrint      = false;
 
 // VeloTT tracks
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResVeloTTHighP" };
-RiCKResVeloTTHighP.TrackSelector.TrackAlgs = { "VeloTT" };
-RiCKResVeloTTHighP.HistoPrint    = false;
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResVeloTTHighBeta" };
+RiCKResVeloTTHighBeta.TrackSelector.TrackAlgs = { "VeloTT" };
+RiCKResVeloTTHighBeta.HistoPrint    = false;
 
 //RiCKResVeloTT.HistoProduce  = false;
 // Seed tracks
-CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResSeedHighP" };
-RiCKResSeedHighP.TrackSelector.TrackAlgs  = { "Seed" };
-RiCKResSeedHighP.HistoPrint      = false;
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResSeedHighBeta" };
+RiCKResSeedHighBeta.TrackSelector.TrackAlgs  = { "Seed" };
+RiCKResSeedHighBeta.HistoPrint      = false;
 
 // MCRichTracks
 //CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResMCRichTrack" };
@@ -60,5 +60,9 @@ RiCKResSeedHighP.HistoPrint      = false;
 //RiCKResMCRichTrack.HistoPrint      = true;
 
 // Reco summary monitor
-CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryQC/RichRecSummaryQC" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryQC/RiSummaryQC" };
 
+// Cross check CK res from summary objects
+//CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryCKResMoni/RiSummaryCKResLongAll" };
+//RiSummaryCKResLongAll.TrackSelector.TrackAlgs  = { "Forward", "Match" };
+//RiSummaryCKResLongAll.MinBeta = { 0, 0, 0 };

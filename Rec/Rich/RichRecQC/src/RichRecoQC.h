@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.21 2007-06-01 06:50:12 cattanem Exp $
+ *  $Id: RichRecoQC.h,v 1.22 2007-11-26 17:33:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -119,15 +119,19 @@ namespace Rich
         mutable const ITrackSelector * m_trSelector;  ///< Track selector
 
         // job options selection cuts
-        std::vector<double> m_minBeta;           ///< minimum beta value for 'saturated' tracks
-        std::vector<double> m_minP; ///< Min momentum per radiator
-        std::vector<double> m_maxP; ///< Max momentum per radiator
+        std::vector<double> m_minBeta; ///< minimum beta value for 'saturated' tracks
 
         std::vector<unsigned int> m_truePhotCount; ///< Total number of true cherenkov photons per radiator
         std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator
 
         std::vector<double> m_chThetaRecHistoLimitMax; ///< Max theta limit for histos for each rad
         std::vector<double> m_chThetaRecHistoLimitMin; ///< Min theta limit for histos for each rad
+
+        /// Number of histogram bins
+        unsigned int m_nBins;
+
+        /// Histogram ranges for CK resolution plots
+        std::vector<double> m_ckResRange;
 
       };
 

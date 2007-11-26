@@ -4,6 +4,15 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-11-26 - Chris Jones
+ - Make sure RichPIDQC always uses the Error(...) and Warning(..) methods.
+ - Cleanup RichRecoQC, removing its own momentum cuts (use track selector).
+   Also make number of bins and histogram ranges configurable via options.
+
+! 2007-11-23 - Chris Jones
+ - Add new monitor RichRecSummaryCKResMoni that produces CK theta resolution
+   plots using the RICH summary information
+
 ! 2007-10-26 - Chris Jones
  - Add options to create PID tables for MCRichTracks
  - Suppress table printout for empty summarises

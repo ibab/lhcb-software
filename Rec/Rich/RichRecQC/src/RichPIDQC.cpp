@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.67 2007-10-26 10:44:40 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.68 2007-11-26 17:33:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -247,9 +247,7 @@ StatusCode PIDQC::execute()
         }
         catch ( const GaudiException & exp )
         {
-          error() << exp << endreq;
-          return Warning( "Failed to load tracking objects at "+contLoc,
-                          StatusCode::SUCCESS );
+          return Error( exp.what(), StatusCode::SUCCESS );
         }
       }
 
