@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.61 2007-08-03 14:06:38 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.62 2007-11-26 17:39:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -732,6 +732,11 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       ingressInfo.setIngressHeader( ingressWord );
 
       // Compare Ingress header to the ODIN
+      if (  msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "ODIN : EventNumber=" << odin()->eventNumber() 
+                  << " BunchID=" << odin()->bunchId() << endreq;
+      }
       const bool odinOK
         = ( !m_decodeUseOdin ? true :
             ( !m_checkEventsIDs || ingressWord.eventID() == EventID(odin()->eventNumber()) ) &&
