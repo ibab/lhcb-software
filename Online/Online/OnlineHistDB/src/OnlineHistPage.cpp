@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.18 2007-11-23 17:58:56 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.19 2007-11-26 17:36:43 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace OnlineHistDBEnv_constants;
@@ -11,7 +11,7 @@ OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,
   // check page name syntax
   std::string outname = PagenameSyntax(m_name, m_folder);
   if (outname != m_name) {
-    errorMessage("Page name was changed from "+m_name+" to "+outname);
+    warningMessage("Page name was changed from "+m_name+" to "+outname);
     m_name = outname;
   }
   load();
@@ -326,7 +326,7 @@ bool OnlineHistPage::save() {
       out = true;
       std::string xfn((const char *) fullName);
       if (xfn != m_name)
-	errorMessage("pagename "+m_name+" becomes "+xfn+
+	warningMessage("pagename "+m_name+" becomes "+xfn+
 		     " in DeclarePage... something wrong?");
       m_shortname = std::string((const char *) theName);
     }

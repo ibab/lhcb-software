@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.22 2007-11-23 17:58:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.23 2007-11-26 17:36:43 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -25,7 +25,7 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
       if (!verifyPage(m_page,Instance)) {
 	std::stringstream error;
 	error << "Instance "<<Instance<<" of Histogram "<<m_identifier<<" not found on page "<<m_page;
-	if (debug()) errorMessage(error.str());
+	if (debug()) warningMessage(error.str());
 	m_page = "_NONE_";
 	m_instance =1;
       }
@@ -97,7 +97,7 @@ bool OnlineHistogram::setDoc(std::string doc) {
   bool out=false;
   OCIStmt *stmt=NULL;
   if (doc.size() > (VSIZE_DOC-1) ) {
-    errorMessage("doc too long for "+m_identifier);
+    warningMessage("doc too long for "+m_identifier);
   }
   else {
     m_StmtMethod = "OnlineHistogram::setDoc";
@@ -115,7 +115,7 @@ bool OnlineHistogram::setDescr(std::string descr) {
   bool out=false;
   OCIStmt *stmt=NULL;
   if (descr.size() > (VSIZE_DESCR-1) ) {
-    errorMessage("descr too long for "+m_identifier);
+    warningMessage("descr too long for "+m_identifier);
   }
   else {
     m_StmtMethod = "OnlineHistogram::setDescr";
@@ -503,7 +503,7 @@ bool OnlineHistogram::remove(bool RemoveWholeSet) {
     else
       myOCIBindString(stmt,":1", m_hid);
     if (OCI_SUCCESS != myOCIStmtExecute(stmt)) {
-      errorMessage("Histogram is probably on a page, remove it from all pages first");
+      warningMessage("Histogram is probably on a page, remove it from all pages first");
       out = 0;
     }
   }
@@ -665,7 +665,7 @@ bool OnlineHistogram::initHistDisplayOptionsFromSet() {
   }
   else {
     if (m_hdisp != 0) 
-      errorMessage("HistDisplayOptions were already defined and will be reinitialized");
+      warningMessage("HistDisplayOptions were already defined and will be reinitialized");
     if (m_domode != SET) getDisplayOptions(m_hsdisp);
     std::string function="DECLAREHISTDISPLAYOPTIONS('"+m_hid+"'";
     m_StmtMethod = "OnlineHistogram::initHistDisplayOptionsFromSet";
@@ -700,7 +700,7 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
 	}
 	else {
 	  if (m_shdisp != 0) 
-	    errorMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
+	    warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
 	  if (m_domode != SET) {
 	    getDisplayOptions(m_hsdisp);
 	    m_domode = SET;
@@ -743,7 +743,7 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
     }
     else {
       if (m_shdisp != 0) 
-	errorMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
+	warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
       if (m_domode != HIST) {
 	getDisplayOptions(m_hdisp);
 	m_domode = HIST;
@@ -803,7 +803,7 @@ bool OnlineHistogram::saveHistoPageDisplayOptions(std::string PageName,
   if (Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (!verifyPage(PageName,Instance)) {
-    errorMessage("aborted: bad page/instance");
+    warningMessage("aborted: bad page/instance");
     out = 0;
   }				 
   else {
@@ -842,7 +842,7 @@ bool OnlineHistogram::getDisplayOption(std::string ParameterName,
     out=mydo->get(option);
   }
   else {
-    errorMessage("parameter "+ParameterName+" is unknown");
+    warningMessage("parameter "+ParameterName+" is unknown");
     out=false;
   }
   return out;
@@ -856,7 +856,7 @@ bool OnlineHistogram::isSetDisplayOption(std::string ParameterName)
     out=mydo->isSet();
   }
   else {
-    errorMessage("parameter "+ParameterName+" is unknown");
+    warningMessage("parameter "+ParameterName+" is unknown");
     out=false;
   }
   return out;
@@ -871,7 +871,7 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
     mydo->set(option);
   }
   else {
-    errorMessage("parameter "+ParameterName+" is unknown");
+    warningMessage("parameter "+ParameterName+" is unknown");
     out=false;
   }
   return out;
@@ -884,7 +884,7 @@ bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
     mydo->unset();
   }
   else {
-    errorMessage("parameter "+ParameterName+" is unknown");
+    warningMessage("parameter "+ParameterName+" is unknown");
     out=false;
   }
   return out;
@@ -1104,7 +1104,7 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
   bool known = false;
   int Np=getAlgorithmNpar( Algorithm );
   if(Np<0) {
-    errorMessage("unknown algorithm "+Algorithm);
+    warningMessage("unknown algorithm "+Algorithm);
   }
   else {
     OCIStmt *stmt=NULL;
@@ -1163,7 +1163,7 @@ bool OnlineHistogram::setAnalysis(int AnaID,
   if(Np<0) {
     std::stringstream error;
     error<< "unknown analysis "<<AnaID;
-    errorMessage(error.str());
+    warningMessage(error.str());
   }
   else {
     OCIStmt *stmt=NULL;

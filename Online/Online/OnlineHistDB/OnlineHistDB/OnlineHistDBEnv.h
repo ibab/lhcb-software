@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.14 2007-11-22 18:23:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.15 2007-11-26 17:36:43 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -29,7 +29,8 @@ namespace OnlineHistDBEnv_constants {
     "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
 
-  static const std::string StdRefRoot = "/home/online/Histograms/Reference"; 
+  static const std::string StdRefRoot = "/group/online/Histograms/Reference"; 
+  static const std::string StdSavesetsRoot = "/group/online/Histograms/Savesets"; 
   static const std::string m_SetSeparator = "_$";
 
   static const unsigned int VSIZE_SN          = 131;
@@ -79,14 +80,17 @@ class OnlineHistDBEnv {
   /// gets the name of parameter Ipar (starting from 1) of algorithm AlgName
   std::string getAlgParName(std::string AlgName,
 			    int Ipar);
-  void errorMessage(std::string Error) const; 
+  void warningMessage(std::string Error) const; 
   inline OCIEnv *envhp() const {return m_envhp;}
   inline OCIError *errhp() const {return m_errhp;}
   inline OCISvcCtx *svchp() const {return m_svchp;}
   /// get reference histograms root directory 
   inline std::string refRoot() {return m_refRoot;}
+  inline std::string savesetsRoot() {return m_savesetsRoot;}
   /// change reference histograms root directory (for testing)
   void setRefRoot(std::string newroot) { m_refRoot = newroot; }
+  /// change savesets root directory (for testing)
+  void setSavesetsRoot(std::string newroot) { m_savesetsRoot = newroot; }
 
  protected:
   OnlineHistDBEnv(std::string User); 
@@ -200,6 +204,7 @@ class OnlineHistDBEnv {
   int m_excLevel;
 
   std::string m_refRoot;
+  std::string m_savesetsRoot;
 };
 
 #endif // ONLINEHISTDBENV_H

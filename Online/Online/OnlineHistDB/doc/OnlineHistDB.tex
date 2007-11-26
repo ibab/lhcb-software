@@ -11,6 +11,11 @@
  commits all changes to the DB. Returns true if there are no errors.
 
 
+\item    bool {\bf canwrite}() ;
+
+ true if user has write access to the DB
+
+
 \item    bool {\bf declareTask}(std::string Name,\\\mbox{}~~~~~~~~~ 
 		   std::string SubDet1="NULL",\\\mbox{}~~~~~~~~~ 
 		   std::string SubDet2="NULL",\\\mbox{}~~~~~~~~~ 
@@ -140,6 +145,12 @@
 
 
  removes Page Folder only if it doesn't have pages (useful for cleanup)
+
+
+\item    void {\bf refresh}();
+
+
+ reload all cached objects from the DB
 
 
 \item    int {\bf nHistograms}() ;

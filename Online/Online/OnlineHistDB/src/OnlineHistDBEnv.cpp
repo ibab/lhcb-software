@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.5 2007-11-22 18:23:40 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.6 2007-11-26 17:36:43 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -7,7 +7,8 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string User)
     OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
     m_user(toUpper(User)), m_debug(0), m_excLevel(1),
-    m_refRoot(OnlineHistDBEnv_constants::StdRefRoot) {
+    m_refRoot(OnlineHistDBEnv_constants::StdRefRoot),
+    m_savesetsRoot(OnlineHistDBEnv_constants::StdSavesetsRoot) {
     initOCIBinds();
   }
 
@@ -28,6 +29,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
   m_HStorage = m.m_HStorage;
   m_PStorage = m.m_PStorage;
   m_refRoot = m.m_refRoot;
+  m_savesetsRoot = m.m_savesetsRoot;
   initOCIBinds();
 }
 
@@ -88,15 +90,9 @@ void OnlineHistDBEnv::getOCITypes() {
 			 (CONST text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_ALL,
 			 &OCIdispopt)); 
-
-
-//   boolean b=TRUE;
-//   checkerr(OCIAttrSet ( (dvoid *) m_envhp, (ub4) OCI_HTYPE_ENV, &b,
-// 			(ub4) 0,
-// 			(ub4) OCI_ATTR_OBJECT_NEWNOTNULL,  m_errhp) );
 }
 
-void OnlineHistDBEnv::errorMessage(std::string Error) const {
+void OnlineHistDBEnv::warningMessage(std::string Error) const {
   if (m_debug > -1) {
     cout << "------- WARNING: ---------- from "  << m_StmtMethod << endl;
     cout<< Error <<endl;

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.15 2007-11-22 18:23:40 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineRootHist.cpp,v 1.16 2007-11-26 17:36:44 ggiacomo Exp $
 #include "OnlineHistDB/OnlineRootHist.h"
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -41,7 +41,7 @@ bool OnlineRootHist::setdbHist(OnlineHistogram*  oh) {
       out=true;
     }
     else {
-      oh->errorMessage("provided OnlineHistogram object is not compatible");
+      oh->warningMessage("provided OnlineHistogram object is not compatible");
     }
   }
   return out;
