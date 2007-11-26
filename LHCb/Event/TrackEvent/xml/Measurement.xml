@@ -13,6 +13,7 @@
       serializers = 'FALSE' >
 
       <import name='Event/TrackTypes.h' />
+      <import name='Event/StateVector.h' />
       <import name='Kernel/LHCbID' />
       <import name='Kernel/Trajectory' />
 
@@ -50,6 +51,12 @@
           m_refVector = other.m_refVector;
           m_refIsSet = other.m_refIsSet;
         </code>
+      </constructor>
+
+      <constructor 
+	desc     = "Constructor" 
+	argList  = "const LHCb::Measurement::Type type, const LHCb::LHCbID id"
+        initList = "m_mtype(type), m_z(0), m_lhcbID(id), m_refIsSet(false)" >
       </constructor>
 
      <attribute
@@ -185,6 +192,17 @@
         <code>
   m_refIsSet  = true;
   m_refVector = refVector;
+        </code>
+      </method>
+
+      <method
+        name    = 'setRefVector'
+        desc    = 'Update the reference vector'
+        argList = 'const LHCb::StateVector refVector'>
+        <code>
+  m_refIsSet  = true;
+  m_z         = refVector.z();
+  m_refVector = refVector.parameters();
         </code>
       </method>
 
