@@ -2,11 +2,6 @@
 
 CheckRICHSeq.Context = "Offline";
 
-// MC tools
-//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" };
-//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
-//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
-
 // Turn on HPD suppression warnings
 //ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintHPDSuppressions = true;
 
@@ -15,14 +10,15 @@ CheckRICHSeq.Context = "Offline";
 
 // track monitor sequences
 CheckRICHSeq.Members += {
-  "GaudiSequencer/RichTkGeom" // general track geometry plots
- ,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
- ,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
- ,"GaudiSequencer/RichTkRes" // track resolution plots
- ,"GaudiSequencer/RichPhotSig" // photon signal number plots
- ,"GaudiSequencer/RichPhotAng" // photon angle plots
- ,"GaudiSequencer/RichPhotGeom" // photon geometry plots
+  //"GaudiSequencer/RichTkGeom" // general track geometry plots
+  //,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
+  //,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
+ //,"GaudiSequencer/RichTkRes" // track resolution plots
+ //,"GaudiSequencer/RichPhotSig" // photon signal number plots
+  "GaudiSequencer/RichPhotAng" // photon angle plots
+  //,"GaudiSequencer/RichPhotGeom" // photon geometry plots
   //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
+ //,"GaudiSequencer/RichPixelMoni" // pixel plots
 };
 RichPhotEff.MeasureTime  = true;
 RichPhotGeom.MeasureTime = true;
@@ -69,7 +65,7 @@ ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,  
 //RichXMLTest.HistoPath = "RICH/XMLTEST/";
 
 // Pixel monitors
-CheckRICHSeq.Members += {
+RichPixelMoni.Members += {
   "Rich::Rec::MC::PixelPositionMonitor/RiRecPixelPosMoni"
 // ,"Rich::Rec::MC::PixelRecoEffMonitor/RiRecPixelRecoEffMoni"
 };
