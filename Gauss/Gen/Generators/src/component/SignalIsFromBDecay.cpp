@@ -1,4 +1,4 @@
-// $Id: SignalIsFromBDecay.cpp,v 1.1 2007-11-26 13:44:34 jonrob Exp $
+// $Id: SignalIsFromBDecay.cpp,v 1.2 2007-11-26 13:51:23 jonrob Exp $
 // Include files
 
 // local
@@ -48,8 +48,10 @@ bool SignalIsFromBDecay::applyCut( ParticleVector & theParticleVector ,
                                    const LHCb::GenCollision * /* theHardInfo */ )
   const
 {
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Passed " << theParticleVector.size() << " Particles" << endreq;
+
   // Apply from B cuts
-  debug() << "Passed " << theParticleVector.size() << " Particles" << endreq;
   bool fromB = false;
   for ( ParticleVector::iterator it = theParticleVector.begin();
         it != theParticleVector.end(); ++it )
@@ -58,8 +60,8 @@ bool SignalIsFromBDecay::applyCut( ParticleVector & theParticleVector ,
     {
       debug() << " -> Particle PDG Code = " << (*it)->pdg_id() << endreq;
     }
-    fromB = fromB || isFromB(*it);
-    //if ( fromB ) break;
+    fromB = isFromB(*it);
+    if ( fromB ) break;
   }
   if ( msgLevel(MSG::DEBUG) )
   {
