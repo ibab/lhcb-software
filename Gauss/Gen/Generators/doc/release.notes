@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.113 2007-11-08 15:48:52 gcorti Exp $
+! $Id: release.notes,v 1.114 2007-11-26 13:44:34 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-11-26 - Chris Jones
+ - Add three new Signal selection 'Cut' tools
+  + SignalIsFromBDecay      : Selects only decays that originate from a b
+  + LHCbAcceptanceAndFromB  : The AND of the SignalIsFromBDecay and 
+    LHCbAcceptance selections
+  + DaughtersInLHCbAndFromB : The AND of the SignalIsFromBDecay and 
+    DaughtersInLHCb selections
 
 ! 2007-11-08 - Gloria Corti for Karl Harrison
  - Linking of HepMCfio for WIN32

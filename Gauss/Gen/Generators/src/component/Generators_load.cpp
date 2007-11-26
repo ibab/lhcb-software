@@ -1,5 +1,5 @@
-// $Id: Generators_load.cpp,v 1.11 2007-10-02 15:56:42 gcorti Exp $
-// Include files 
+// $Id: Generators_load.cpp,v 1.12 2007-11-26 13:44:34 jonrob Exp $
+// Include files
 
 //
 //  Package    : Gen/Generators
@@ -20,22 +20,22 @@
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
 DECLARE_FACTORY_ENTRIES(Generators) {
-  
+
   DECLARE_ALGORITHM( DumpMC );
   DECLARE_ALGORITHM( DumpMCDecay );
   DECLARE_ALGORITHM( DumpHepMCTree );
 
   // New structure:
- 
+
   // Main algorithm
   DECLARE_ALGORITHM( Generation ) ;
- 
+
   // Luminosity Tools
   DECLARE_TOOL( VariableLuminosity ) ;
   DECLARE_TOOL( FixedLuminosity ) ;
   DECLARE_TOOL( FixedLuminosityForRareProcess ) ;
   DECLARE_TOOL( FixedNInteractions ) ;
- 
+
   // Sample Generation tools
   DECLARE_TOOL( MinimumBias ) ;
   DECLARE_TOOL( Inclusive ) ;
@@ -54,24 +54,28 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( BeamSpotSmearVertex );
   DECLARE_TOOL( FlatZSmearVertex );
   DECLARE_TOOL( UniformSmearVertex );
- 
+
   // Decay Tools
   DECLARE_TOOL( EvtGenDecay ) ;
- 
+
   // Cut Tools
-  DECLARE_TOOL( LHCbAcceptance         ) ;
-  DECLARE_TOOL( BiasedBB               ) ;
-  DECLARE_TOOL( DaughtersInLHCb        ) ;
-  DECLARE_TOOL( SelectedDaughterInLHCb ) ;
-  DECLARE_TOOL( ListOfDaughtersInLHCb  ) ;
-  
+  DECLARE_TOOL( LHCbAcceptance          ) ;
+  DECLARE_TOOL( BiasedBB                ) ;
+  DECLARE_TOOL( DaughtersInLHCb         ) ;
+  DECLARE_TOOL( SelectedDaughterInLHCb  ) ;
+  DECLARE_TOOL( ListOfDaughtersInLHCb   ) ;
+  DECLARE_TOOL( SignalIsFromBDecay      ) ;
+  DECLARE_TOOL( LHCbAcceptanceAndFromB  ) ;
+  DECLARE_TOOL( DaughtersInLHCbAndFromB ) ;
+
   // "pseudo-production tool"
   DECLARE_TOOL ( ReadHepMCAsciiFile ) ;
   // helper algorithm
   DECLARE_ALGORITHM ( WriteHepMCAsciiFile ) ;
-  
+
   // Full event cut tools
-  DECLARE_TOOL( LeptonInAcceptance   ) ; 
+  DECLARE_TOOL( LeptonInAcceptance   ) ;
   DECLARE_TOOL( MuXMaxBias           ) ;
   DECLARE_TOOL( DiLeptonInAcceptance ) ;
+
 }
