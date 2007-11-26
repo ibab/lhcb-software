@@ -61,5 +61,6 @@
   <class name = "Rich::Rec::ITrSegMaker" />
   <class name = "Rich::Rec::ITrackCreator" />
   <class name = "Rich::Rec::ITrackSelector" />
+  <class name = "Rich::Rec::IPhotonEmissionPoint" />
 
 </lcgdict>
