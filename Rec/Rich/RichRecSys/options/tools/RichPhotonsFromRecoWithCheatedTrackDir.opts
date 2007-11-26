@@ -14,12 +14,20 @@ ToolSvc.Offline.RichDelPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.
 ToolSvc.Offline.RichDelPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichDelPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-// Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichDelPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+// N sigma on expected CK theta resolution
+ToolSvc.Offline.RichDelPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichDelPhotonCreator.PhotonRecoTool  = "PhotonParams";
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,3,3 };
-//ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.AssumeFlatSecondaries      = true;
+
+//                                                                                    Aero   C4F10  CF4
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };

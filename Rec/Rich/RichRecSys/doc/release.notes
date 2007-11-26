@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-11-26 - Chris Jones
+ - Add new MC cheating options for photon reconstruction
+
 ! 2007-10-26 - Chris Jones
  - Reorganise sequences to have a single sequence for each initialisation
    task (Makes it easy to append algorothms at correct place later).
