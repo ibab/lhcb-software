@@ -25,12 +25,6 @@
       <import name="Kernel/SerializeStl"/>
 
 
-      <typedef
-	desc = 'Container for mother PID values'
-	type = 'std::vector&lt;LHCb::ParticleID&gt;'
-        def  = 'MotherPIDContainer'
-        access = 'PUBLIC' />
-
       <enum
         desc="Additional information assigned to this V0. Contains Impact parameter information"
         name="additionalInfo"
@@ -112,9 +106,9 @@
 	nonconstaccessor = 'TRUE'  />
 
       <attribute 
-	type = 'MotherPIDContainer'
+	type = 'std::vector&lt;LHCb::ParticleID&gt;'
 	name = 'compatiblePIDs'
-	desc = 'Vector of Compatable PIDs for the mother'
+	desc = 'Vector of Compatible PIDs for the mother'
 	/>
       
       <method

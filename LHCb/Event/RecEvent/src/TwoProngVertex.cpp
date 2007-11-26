@@ -1,4 +1,4 @@
-// $Id: TwoProngVertex.cpp,v 1.2 2007-11-26 17:11:14 sean Exp $
+// $Id: TwoProngVertex.cpp,v 1.3 2007-11-26 17:43:44 sean Exp $
 // Include files
 
 // local
@@ -107,7 +107,7 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
     dP4dMom( m_momA, mass1, JacobP1);
     dP4dMom( m_momB, mass2, JacobP2);
     
-    //covmompos contains the rotate covariance matrix fo off diagonal part (position and momentum)
+    //covmompos contains the transformed covariance matrix for the off diagonal part (position and momentum)
     Gaudi::Matrix4x3 covmompos;
     //. . . . . . . 
     //. . . . . . . 
@@ -119,7 +119,7 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
     covmompos =JacobP1* (m_momposcovA) ;
     covmompos += JacobP2 * m_momposcovB; 
 
-    //covmommom contains the V0 symmetric covariance for momentum
+    //covmommom contains the V0 symmetric covariance for the  momentum part
     Gaudi::SymMatrix4x4 covmommom ;
     
     ROOT::Math::AssignSym::Evaluate
