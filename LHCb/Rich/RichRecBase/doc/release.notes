@@ -6,6 +6,7 @@
 
 ! 2007-11-26 - Chris Jones
  - Add new interface for photon emission point tool
+ - Remove redundant method from IRichPhotonReconstruction.h
 
 !===================== RichRecBase v3r8 2007-11-12 =======================
 ! 2007-11-12 - Marco Cattaneo
