@@ -303,12 +303,21 @@ class HLTOptionsWriter(OptionsWriter):
 
         odin = 'Unknown'
         try:
+          # If OdinData or OdinIP is explicitly set to None
+          # No odin is in the readout
           odin  = self.run.odinData.data
-          opts.append('Tell1Boards',[socket.gethostbyname(odin),odin,''])
+          host  = odin
+          if odin != "None":
+            host = socket.gethostbyname(odin)
+          opts.append('Tell1Boards',[host,odin,''])
 
           odin  = self.run.odinRequest.data
+          host  = odin
+          if odin != "None":
+            host = socket.gethostbyname(odin)
+
           opts.add('ODIN_Name',odin)
-          opts.add('ODIN_IP',  socket.gethostbyname(odin))
+          opts.add('ODIN_IP',  host)
         except Exception,X:
           error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
           error('Error [IGNORED for NOW] '+str(X),timestamp=1)
