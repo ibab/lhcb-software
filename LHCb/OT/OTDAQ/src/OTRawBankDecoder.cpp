@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.6 2007-11-14 16:05:39 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.7 2007-11-26 11:08:30 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -12,10 +12,15 @@
 #include "OTDet/DeOTModule.h"
 
 // Event
-#include "Event/GolHeader.h"
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
-#include "Event/DataWord.h"
+
+// local
+#include "RawHit.h"
+#include "GolHeaderDC06.h"
+#include "GolHeaderV3.h"
+
+//#include "Event/DataWord.h"
 
 // GSL
 #include <algorithm>
@@ -29,38 +34,116 @@
 // local
 #include "OTRawBankDecoder.h"
 
+
 namespace OTRawBankDecoderHelpers
 {
+
+
   class Module
   {
   public:
     Module() : m_detelement(0), m_isdecoded(false), m_data(0) { m_ottimes.reserve(16) ; }
-    void clearevent() { m_isdecoded=false ; m_data=0 ; m_ottimes.clear() ; }
-    void setGolHeader( const LHCb::GolHeader& header, const unsigned int* data) {
-      m_golHeader = header; m_data = data ; }
-    
-    const LHCb::GolHeader& golHeader() const { return m_golHeader ; }
+    void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; }
+    void setData( unsigned int size, const unsigned short* data, unsigned int bankversion) { 
+      m_size = size ;  m_data = data ; m_bankversion = bankversion ; }
     bool isDecoded() const { return m_isdecoded ; }
     void setIsDecoded(bool b=true) { m_isdecoded = b ; }
-    const unsigned int* data() const { return m_data ; }
+    const unsigned short* data() const { return m_data ; }
+    unsigned int size() const { return m_size ; }
     LHCb::OTLiteTimeContainer& ownedottimes() { return m_ottimes ; }
     LHCb::OTLiteTimeRange ottimes() const { return LHCb::OTLiteTimeRange(m_ottimes.begin(),m_ottimes.end()) ; }
-    void setDetElement( const DeOTModule& e) { m_detelement = &e ; }
+    void setDetElement( const DeOTModule& e) ;
     const DeOTModule& detelement() const { return *m_detelement ; }
-    void addHit(LHCb::OTChannelID channel, float tdcconversion) ;
+    
+    size_t decodeDC06(double tdcconversion) ;
+    size_t decodeV3(double tdcconversion) ;
+    size_t decode(double tdcconversion) ;
     
   private:
+    void addHitDC06(unsigned short data, float tdcconversion) ;
+     
+  private:
     const DeOTModule* m_detelement ;
+    unsigned int m_station ;
+    unsigned int m_layer ;
+    unsigned int m_quarter ;
+    unsigned int m_module ;
+    
     bool m_isdecoded ;
-    LHCb::GolHeader m_golHeader ;
-    const unsigned int* m_data ;
+    unsigned int m_size ;
+    const unsigned short* m_data ;
+    unsigned int m_bankversion ;
     LHCb::OTLiteTimeContainer m_ottimes ;
   } ;
   
-  inline void Module::addHit(LHCb::OTChannelID channel, float tdcconversion) 
+  void Module::setDetElement( const DeOTModule& e) 
   {
-    float t0 = m_detelement->strawT0( channel.straw()) ;
-    m_ottimes.push_back( LHCb::OTLiteTime( channel, channel.tdcTime() * tdcconversion - t0) );
+    // cache for speed
+    m_detelement = &e ;
+    LHCb::OTChannelID moduleid = e.elementID() ;
+    m_station = moduleid.station() ;
+    m_layer   = moduleid.layer() ;
+    m_quarter = moduleid.quarter() ;
+    m_module  = moduleid.module() ;
+  }
+  
+  inline void Module::addHitDC06(unsigned short data, float tdcconversion) 
+  { 
+    OTDAQ::RawHit hit(data) ;
+    unsigned int otis    = hit.otis() ;
+    unsigned int channel = hit.channel() ;
+    unsigned int straw   = otis/2 ? 32 * (6-otis) - channel : 32 * otis + channel + 1 ;
+    LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,hit.time()) ;
+    float t0 = m_detelement->strawT0( straw ) ;
+    m_ottimes.push_back( LHCb::OTLiteTime( channelid, channelid.tdcTime() * tdcconversion - t0) );
+  }
+  
+  inline size_t Module::decodeDC06(double tdcconversion) 
+  {
+    if(!m_isdecoded) {
+      if( m_size != 0 ) {
+        // now, DC06 has a padding problem: The padded hits appears before the last 
+        // hit. So, we need to fix that. 
+        bool haspaddinghit = m_data[m_size-2] == 0 ;
+        const unsigned short* begin = m_data ;
+        const unsigned short* end   = begin + (haspaddinghit ? m_size -2 : m_size) ;
+        m_ottimes.reserve( m_size ) ;
+        for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
+          addHitDC06(*ihit,tdcconversion) ;
+        if(haspaddinghit) addHitDC06(m_data[m_size-1],tdcconversion) ;
+      }
+      m_isdecoded = true ;
+    }
+    return m_ottimes.size() ;
+  }
+
+  inline size_t Module::decodeV3(double tdcconversion) 
+  {
+    if(!m_isdecoded) {
+      if( m_size != 0 ) {
+        const unsigned short* begin = m_data ;
+        const unsigned short* end   = begin + m_size ;
+        m_ottimes.reserve( m_size ) ;
+        for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
+          addHitDC06(*ihit,tdcconversion) ;
+      }
+      m_isdecoded = true ;
+    }
+    return m_ottimes.size() ;
+  }
+  
+  inline size_t Module::decode(double tdcconversion)
+  {
+    size_t rc(0) ;
+    switch(m_bankversion) {
+    case OTBankVersion::DC06: 
+      rc = decodeDC06(tdcconversion) ;
+      break;
+    case OTBankVersion::v3:
+      rc = decodeV3(tdcconversion) ;
+      break;
+    }
+    return 0 ;
   }
   
   class Detector
@@ -112,6 +195,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
     m_countsPerBX(64),
     m_numberOfBX(3),
     m_timePerBX(25*Gaudi::Units::ns),
+    m_forcebankversion(OTBankVersion::UNDEFINED),
     m_otdet(0),
     m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
     m_detectordata(0)
@@ -120,6 +204,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("countsPerBX", m_countsPerBX );
   declareProperty("numberOfBX", m_numberOfBX );
   declareProperty("timePerBX", m_timePerBX );
+  declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED) ;
 }
 //=============================================================================
 // Destructor
@@ -152,6 +237,9 @@ StatusCode OTRawBankDecoder::initialize()
   
   m_nsPerTdcCount = m_timePerBX/ double(m_countsPerBX);
   
+  if( m_forcebankversion != OTBankVersion::UNDEFINED )
+    warning() << "Forcing bank version to be " << m_forcebankversion << endreq ;
+
   return StatusCode::SUCCESS;
 };
 
@@ -196,60 +284,74 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   const std::vector<RawBank*>& OTBanks = event->banks(RawBank::OT );
   
   // Loop over vector of banks (The Buffer)
-  size_t numgolheaders(0) ;
   bool decodingerror(false) ;
   for (std::vector<RawBank*>::const_iterator  ibank = OTBanks.begin();
        ibank != OTBanks.end() ; ++ibank) {
     // get bank version
     bool bankdecodingerror(false) ;
-    int bVersion = (*ibank)->version();
+    int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
     unsigned int nTell1 = 0u;
-    if (bVersion == OTBankVersion::v1) {
-      //set up decoding with one header word
-      nTell1 = 3;
-    }
-    else if (bVersion == OTBankVersion::v2 ) {
-      //set up decoding with one header word
-      nTell1 = 1;
-    } else {
+    switch( bVersion ) {
+    case OTBankVersion::v1:
+      nTell1 = 3 ;
+      break ;
+    case OTBankVersion::DC06:
+    case OTBankVersion::v3:
+      nTell1 = 1 ;
+      break ;
+    default:
       error() << "Cannot decode OT raw buffer bank version "
-	      << bVersion << " with this version of OTDAQ" << endmsg;
+              << bVersion << " with this version of OTDAQ" << endmsg;
       bankdecodingerror = true ;
-    }
+    } ;
     
     if( !bankdecodingerror ) {
       
       if (msgLevel(MSG::DEBUG))
-	debug() << " Bank Nr " << (*ibank)->sourceID() << " with Size "
-		<< (*ibank)->size()/4 << endmsg;
+        debug() << " Bank Nr " << (*ibank)->sourceID() << " with Size "
+                << (*ibank)->size()/4 << " " << (*ibank)->version() << endmsg;
       
       const unsigned int* begin = (*ibank)->data() + nTell1 ;
       const unsigned int* end   = (*ibank)->data() + (*ibank)->size()/4 ;
       const unsigned int* idata ;
+      unsigned int buffersize,station,layer,quarter,module,numhits ;
+      
       for( idata = begin ; idata < end && !bankdecodingerror; ++idata ) {
-	LHCb::GolHeader golHeader(*idata) ;
-	const unsigned int size = golHeader.size();
-	if(size != 0 ) {
-	  const unsigned int station = golHeader.station();
-	  const unsigned int layer = golHeader.layer();
-	  const unsigned int quarter = golHeader.quarter();
-	  const unsigned int module = golHeader.module();
-	  if(station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
-	    error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
-		    << station << "," << layer << "," << quarter << "," << module << "). " 
-		    << "skipping bank nr = " <<(*ibank)->sourceID() << " with size = "
-		    << (*ibank)->size()/4 << "." << endmsg ;
-	    bankdecodingerror = true ;
-	  } else {
-	    m_detectordata->module(station,layer,quarter,module).setGolHeader(golHeader,idata+1) ;
-	    ++numgolheaders ;
-	  }
-	  idata += size ;
-	}
+        
+	// I'd rather do this with a function pointer, such that we don't need the fork.
+        if( bVersion == OTBankVersion::v2 ) {
+          // in DC06 'size' is the size of the data-block (in units of 4 bytes). in real data it is the number of hits.
+          OTDAQ::GolHeaderDC06 golHeader(*idata) ;
+          buffersize = golHeader.size();
+          station = golHeader.station();
+          layer = golHeader.layer();
+          quarter = golHeader.quarter();
+          module = golHeader.module();
+          numhits = 2*buffersize ;
+        } else {
+          OTDAQ::GolHeaderV3 golHeader(*idata) ;
+          numhits = golHeader.size();
+          station = golHeader.station();
+          layer = golHeader.layer();
+          quarter = golHeader.quarter();
+          module = golHeader.module();
+          buffersize = numhits/2 + numhits%2 ;
+        } 
+        
+        if(station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
+          error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
+                  << station << "," << layer << "," << quarter << "," << module << "). " 
+		  << endmsg ;
+        } else {
+          const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+          m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ;
+        }
+        idata += buffersize ;
       }
+      
       if(!bankdecodingerror && idata != end) {
-	error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
-	bankdecodingerror = true ;
+        error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
+        bankdecodingerror = true ;
       }
     }
     decodingerror |= bankdecodingerror ;
@@ -261,103 +363,18 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
 }
 
-//==============================================================================
-inline int getStrawID(const int otisID, const int channel) {
-  
-  /*
-   * Conversion from Straw Number 1 to 128 in Otis (0 to 3) and Channel Number
-   * form 0 to 31. The second numberig scheme is the Eletronic Numberig Scheme.
-   */
-  
-  int straw = 0;
-  if ((otisID == 0) || (otisID == 1)) {
-    straw = (channel + 1) + otisID * 32;
-  }
-  else if ((otisID == 3) || (otisID == 2)) {
-    int tempstraw = (31 - channel) ;
-    int tempOtis = 0;
-    if (otisID == 2) {
-      tempOtis =  3 * 32;
-    }
-    else {
-      tempOtis =  2 * 32;
-    }
-    straw = tempstraw + tempOtis + 1;
-  }
-  return (straw);
-}
-
-//=============================================================================
-//Decode the data of a single module.
-//=============================================================================
 size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduledata ) const 
 {
-  // load the module data if necessary
-  if( !moduledata.isDecoded() ) {
-    
-    // load the Gol headers if necessary
-    if( !m_detectordata->golHeadersLoaded() ) decodeGolHeaders().ignore() ;
-    
-    const unsigned int* data = moduledata.data();
-    if( data != 0 ) {
-      
-      const GolHeader& golHeader = moduledata.golHeader() ;
-      
-      size_t size = golHeader.size();
-      // Given Gol Header we Get Station, Layer, Quarter, Module Nr.
-      unsigned int station = golHeader.station();
-      unsigned int layer = golHeader.layer();
-      unsigned int quarter = golHeader.quarter();
-      unsigned int module = golHeader.module();
-      
-      moduledata.ownedottimes().reserve(2*size) ;
-      for(unsigned int i=0; i<size; ++i) {
-        DataWord dataWord = data[i];
-        
-        //getting data word information using the mask
-        int nextTime = dataWord.nextTime();
-        int nextChannelID = dataWord.nextChannel();
-        int nextOtisID = dataWord.nextOtis();
-        int firstTime = dataWord.firstTime();
-        int firstChannelID = dataWord.firstChannel();
-        int firstOtisID = dataWord.firstOtis();
-        
-        //Get Straw numbers
-        int Fstraw  = getStrawID(firstOtisID, firstChannelID);
-        int Nstraw = ((nextTime==0 && nextOtisID==0 && nextChannelID==0) ? 0 : getStrawID(nextOtisID, nextChannelID)) ;
-        
-        // format statement is always evaluated so check msg level
-        if (msgLevel(MSG::DEBUG)) {
-          verbose() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, "
-                                            "nextOtisID %d, nextStrawID %d, nextTime %d",
-                                            firstOtisID, firstChannelID, firstTime,
-                                            nextOtisID, nextChannelID, nextTime) << endmsg;
-        }
-        
-        //Get First ChannelID
-        OTChannelID fchannelID(station, layer, quarter, module, Fstraw, firstTime);
-        moduledata.addHit( fchannelID, m_nsPerTdcCount ) ;
-        
-        //Next Hit
-        if (Nstraw != 0) { //To Check that this is not a No Channel Case
-          
-          //Get Next ChannelID
-          OTChannelID nchannelID(station, layer, quarter, module, Nstraw, nextTime);
-          moduledata.addHit( nchannelID, m_nsPerTdcCount  ) ;
-        }
-      }
-    }
-    moduledata.setIsDecoded(true) ;
-  }
+  if( !m_detectordata->golHeadersLoaded() ) decodeGolHeaders().ignore() ;
+  if( !moduledata.isDecoded() ) moduledata.decode( m_nsPerTdcCount ) ;
   return moduledata.ottimes().size() ;
 }
-
 
 LHCb::OTLiteTimeRange OTRawBankDecoder::decodeModule( const LHCb::OTChannelID& moduleid ) const
 {
   OTRawBankDecoderHelpers::Module& moduledata =
     m_detectordata->module(moduleid.station(),moduleid.layer(),moduleid.quarter(),moduleid.module()) ;
-  if( !moduledata.isDecoded() ) decodeModule( moduledata ) ;
+  if( !moduledata.isDecoded() ) OTRawBankDecoder::decodeModule(moduledata) ;
   return moduledata.ottimes() ;
 }
 

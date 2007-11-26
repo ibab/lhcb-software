@@ -1,4 +1,4 @@
-// $Id: OTFillEventFromOTTime.h,v 1.2 2006-05-01 17:04:25 janos Exp $
+// $Id: OTFillEventFromOTTime.h,v 1.3 2007-11-26 11:08:30 wouter Exp $
 #ifndef OTDAQ_OTFILLEVENTFROMOTTIME_H 
 #define OTDAQ_OTFILLEVENTFROMOTTIME_H 1
 
@@ -6,14 +6,15 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 //local
-#include "Event/GolHeader.h"
-#include "Event/DataWord.h"
+#include "GolHeaderDC06.h"
+#include "DataWord.h"
 
 namespace LHCb 
 {
   class RawEvent;
   class OTChannelID;
   class OTTime;
+  typedef OTDAQ::GolHeaderDC06 GolHeader ;
 }
 
   

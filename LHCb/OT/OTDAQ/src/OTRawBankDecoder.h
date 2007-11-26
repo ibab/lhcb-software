@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.3 2007-11-14 16:05:39 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.4 2007-11-26 11:08:30 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -80,6 +80,7 @@ private:
   int  m_countsPerBX;                       ///< Counts per BX
   int  m_numberOfBX;                        ///< Number of BX
   double m_timePerBX;                       ///< Time Per BX
+  int m_forcebankversion;
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns
   
