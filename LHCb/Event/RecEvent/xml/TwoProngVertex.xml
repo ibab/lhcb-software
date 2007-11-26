@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Wouter HULSBERGEN -->
+<!--- Created : 2007-11-07 -->
+
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='RecEvent'>
+
+<!-- ================ TwoProngVertex class definition ================ -->
+
+    <class
+      name        = 'TwoProngVertex'
+      author      = 'Wouter Hulsbergen, Sean Brisbane'
+      desc        = 'TwoProngVertex for use in V0 finding and tracking monitoring'
+      serializers = 'TRUE'>
+
+      <base name='LHCb::RecVertex'/>
+
+      <import name='Event/RecVertex'/>
+      <import name='Event/State'/>
+      <import name='GaudiKernel/Vector4DTypes'/>
+      <import name='Kernel/ParticleID'/>
+      <import name='Event/Track'/>
+
+      <typedef
+	desc = 'Container for mother PID values'
+	type = 'std::vector&lt;LHCb::ParticleID&gt;'
+        def  = 'MotherPIDContainer'
+        access = 'PUBLIC' />
+
+  <enum
+        desc="Additional information assigned to this V0. Contains Impact parameter information"
+        name="additionalInfo"
+        access="PUBLIC" >
+
+        <enumval name="IPx"     value = "1"   desc="TheImpact parameter with respect to the primary vertex in x"/>
+        <enumval name="IPy"     value = "2"   desc="TheImpact parameter with respect to the primary vertex in y"/>
+
+        <enumval name="POCAx"     value = "11"   desc="The Closest apporach of the contained tracks in x direction"/>
+        <enumval name="POCAy"     value = "12"   desc="The Closest apporach of the contained tracks in y direction"/>
+	<enumval name="LastGlobal"      value="10000"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
+
+       </enum>
+
+	
+      <constructor
+        desc = 'Sets minimal data content for useable vertex. The rest we do with setters.'>
+        <arg type='Gaudi::XYZPoint' name='position' const='TRUE' />
+      </constructor>
+
+      <method
+        type    = 'LHCb::TwoProngVertex*'
+        name    = 'clone'
+        desc    = 'Clone the TwoProngVertex'
+        const   = 'TRUE'>
+        <code>
+          return new LHCb::TwoProngVertex(*this);
+        </code>
+      </method>
+
+    <attribute
+        type = 'ROOT::Math::SVector&lt;double,3&gt;'
+        name = 'momA'
+        desc = 'fitted momentum (tx,ty,qop) of first track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE' />
+
+    <attribute
+        type = 'Gaudi::SymMatrix3x3'
+        name = 'momcovA'
+        desc = 'covariance matrix of momentum of first track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+    <attribute
+        type = 'ROOT::Math::SMatrix&lt;double,3,3&gt;'
+        name = 'momposcovA'
+        desc = 'off-diagonal part of momentum-position covariance matrix of first track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+   <attribute
+        type = 'ROOT::Math::SVector&lt;double,3&gt;'
+        name = 'momB'
+        desc = 'fitted momentum (tx,ty,qop) of second track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+    <attribute
+        type = 'Gaudi::SymMatrix3x3'
+        name = 'momcovB'
+        desc = 'covariance matrix of momentum of second track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+    <attribute
+        type = 'ROOT::Math::SMatrix&lt;double,3,3&gt;'
+        name = 'momposcovB'
+        desc = 'off-diagonal part of momentum-position covariance matrix of second track'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+    <attribute
+        type = 'ROOT::Math::SMatrix&lt;double,3,3&gt;'
+        name = 'mommomcov'
+        desc = 'off-diagonal part of the momentum-momentum covariance matrix'
+        setMeth = 'FALSE'
+        nonconstaccessor = 'TRUE'  />
+
+    <method
+        type = 'const Gaudi::LorentzVector'
+        name = 'p4A'
+        desc = 'fitted p4 of first track'
+        const   = 'TRUE'>
+        <arg type='double' name='mass'/>
+        <code>
+           return p4(m_momA,mass) ;
+        </code>
+     </method>
+
+    <method
+        type = 'const Gaudi::LorentzVector'
+        name = 'p4B'
+        desc = 'fitted p4 of second track'
+        const   = 'TRUE'>
+      <arg type='double' name='mass'/>
+      <code>
+         return p4(m_momB,mass) ;
+      </code>
+     </method>
+
+    <method 
+        type = 'const double'
+        name = 'mass'
+        desc = 'fitted mass of two-prong given mass hypothesis for 2 daughters'
+        const   = 'TRUE'>
+      <arg type='double' name='massA'/>
+      <arg type='double' name='massB'/>
+      <code>
+         return (p4A(massA)+p4B(massB)).M() ; 
+      </code>
+     </method>
+
+      <method 
+        type = 'const Gaudi::LorentzVector'
+        name = 'momentum'
+        desc = 'fitted momentum of two-prong given mass hypothesis for 2 daughters'
+        const   = 'TRUE'>
+	<arg type='double' name='massA'/>
+	<arg type='double' name='massB'/>
+	<code>
+	  return (p4A(massA)+p4B(massB)) ; 
+	</code>
+      </method>
+
+
+     <method
+        type = 'const Gaudi::LorentzVector'
+        name = 'p4'
+        desc = 'calculated p4 from (tx,ty,qop) and mass.'
+        const = "TRUE" >
+      <arg type='ROOT::Math::SVector&lt;double,3&gt;' name='mom' const='TRUE' />
+      <arg type='double' name='mass' const = "TRUE"/>
+     </method>
+
+
+      <method
+	type = "const Gaudi::SymMatrix7x7"	
+	name = "covMatrix7x7"
+	desc = "retrieve the  7x7 Covariance Martix, x, y, z, px, py, pz, E for the V0"
+	const = "TRUE">
+	<arg type="double"  name="mass1" const="TRUE"/>
+	<arg type="double"  name="mass2" const="TRUE"/>
+	</method>
+
+      <method
+	type = "const Gaudi::SymMatrix9x9"
+	name = "covMatrix9x9"
+	desc = "retrieve the  9x9 full Covariance Martix, x, y, z, txA, tyA, qopA,txB, tyB, qopB for the V0 and tracks"
+	const = "TRUE">
+	</method>
+
+      <method
+        type = "const SmartRef&lt;LHCb::Track&gt;"
+        name="trackA"
+        desc = "Retrieve the first track easily"
+        const = "TRUE">
+        <code>
+	  
+          return  (tracks().at(0));
+	  
+        </code>
+      </method>
+
+      <method
+        type = "const SmartRef&lt;LHCb::Track&gt;"
+        name="trackB"
+        desc = "Retrieve the second track easily"
+        const = "TRUE">
+        <code>
+
+          return  tracks().at(1);
+
+	</code>
+      </method>
+
+      <method
+        type = "void"
+        name="throwError"
+        desc = "error handling"
+	static = "TRUE">
+	<arg type=
+	  "char" 
+	  name="error[]"
+	 />
+	<code>
+	  std::cout &lt;&lt; error &lt;&lt; std::endl;//this is bad, how should I report error
+	</code>
+        
+      </method>
+
+	  
+        
+ 
+      <method
+	type ="const LHCb::Track::Types"
+	name = "TrackType"
+	desc = "return the track type of the track at trackIndex"
+	const = "TRUE">
+	<arg type = "unsigned int" name = "trackIndex" const = "TRUE"/>
+	<code>
+	  if (tracks().size()&lt;=trackIndex) return (LHCb::Track::Types) Unknown;
+	  return (LHCb::Track::Types) tracks().at(trackIndex)->LHCb::Track::type();
+	</code>
+      </method>
+
+
+
+   </class>
+  </package>
+</gdd>

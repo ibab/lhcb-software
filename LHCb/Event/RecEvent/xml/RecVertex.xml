@@ -26,11 +26,11 @@
       <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
       <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
       <location name="Primary"   place="Rec/Vertex/Primary"    />
-
+      <location name="V0"        place="Rec/Vertex/V0"    />
       <enum
         desc="Describe how the vertex was made (NEED MORE)"
         name="RecVertexType"
-        value="Unknown=0, Vertex2D, Vertex3D, Primary=LHCb::VertexBase::Primary, LastRec=10000"
+        value="Unknown=0, Vertex2D, Vertex3D, V0, Primary=LHCb::VertexBase::Primary, LastRec=10000"
         access="PUBLIC"
 	/>
 
