@@ -1,4 +1,4 @@
-// $Id: L0BufferCnvContainer.cpp,v 1.1 2007-08-27 09:32:25 jucogan Exp $
+// $Id: L0BufferCnvContainer.cpp,v 1.2 2007-11-26 16:32:03 jucogan Exp $
 // Include files 
 
 #include "L0MuonKernel/PUL0BufferCnv.h"
@@ -67,8 +67,9 @@ L0Muon::L0BufferCnvContainer::L0BufferCnvContainer(std::vector<LHCb::MuonTileID>
     LHCb::MuonTileID board = ipu->containerID(MuonLayout(1,1));
     boards[board] = true;
     
-    int quarter = ipu->quarter();
-    quarters[quarter] = true;
+    LHCb::MuonTileID quarter = LHCb::MuonTileID(0);
+    quarter.setQuarter(ipu->quarter());
+    quarters[quarter]=true;
   }
 
   std::map<LHCb::MuonTileID , bool>::iterator  iboard;
