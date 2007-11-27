@@ -13,6 +13,7 @@
       name        = 'TwoProngVertex'
       author      = 'Wouter Hulsbergen, Sean Brisbane'
       desc        = 'TwoProngVertex for use in V0 finding and tracking monitoring'
+      id = '10040'
       serializers = 'TRUE'>
 
       <base name='LHCb::RecVertex'/>
@@ -44,6 +45,8 @@
         desc = 'Sets minimal data content for useable vertex. The rest we do with setters.'>
         <arg type='Gaudi::XYZPoint' name='position' const='TRUE' />
       </constructor>
+
+
 
       <method
         type    = 'LHCb::TwoProngVertex*'
@@ -108,7 +111,7 @@
       <attribute 
 	type = 'std::vector&lt;LHCb::ParticleID&gt;'
 	name = 'compatiblePIDs'
-	desc = 'Vector of Compatible PIDs for the mother'
+	desc = 'Vector of compatible PIDs for the mother'
 	/>
       
       <method
