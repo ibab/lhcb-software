@@ -1,26 +1,30 @@
 #ifndef DBROOTHIST_H
 #define DBROOTHIST_H 1
-#include "OnlineHistDB/OnlineRootHist.h"
+#include "OnlineHistDB/OnlineHistDB.h"
+#include "OnlineHistDB/OnlineHistogram.h"
 #include "HistogramIdentifier.h"
 #include "OMAlib/OMAlib.h"
 #include "dic.hxx"
-class TPad;
+
+#include <TH1.h>
+#include <TPad.h>
 //class TImage;
 
-class DbRootHist : public OnlineRootHist, public DimInfo,
-  public HistogramIdentifier
+//class TPad;
+
+class DbRootHist : public DimInfo, public HistogramIdentifier
 {
   public:
     DbRootHist(std::string identifier, std::string dimServiceName,
                int refreshTime, int localInstance, OnlineHistDB* histogramDB,
-               OMAlib* anaLib);
+               OMAlib* analysisLib, OnlineHistogram * OnlineHist);
 
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
 
     virtual ~DbRootHist();
 
-    virtual bool setdbHist(OnlineHistogram*  oh);
+//    virtual bool setdbHist(OnlineHistogram*  oh);
 
     // Binning is only known from DIM, so create ROOT histo with DIM
     void initHistogram();
@@ -40,7 +44,7 @@ class DbRootHist : public OnlineRootHist, public DimInfo,
 
     std::string histoRootName() {return std::string(m_histoRootName.Data());}
     std::string hstype() { return m_hstype; }
-    int instance() { return m_localInstance; }
+    int instance() { return m_instance; }
 
     // actual ROOT histo
     TH1*    rootHistogram;
@@ -49,6 +53,46 @@ class DbRootHist : public OnlineRootHist, public DimInfo,
     // H2Ds are rendered as images
 //    TImage* histogramImage;
 
+    /// histogram identifier
+    std::string identifier()  { return m_identifier;}
+    /// corresponding OnlineHistogram object
+    OnlineHistogram* onlineHistogram() {return m_onlineHistogram;}
+    /// link to an existing OnlineHistogram object, returns true on success
+    virtual bool setOnlineHistogram(OnlineHistogram*  oh);
+    /// link to an existing ROOT TH1 object, returns true on success
+    bool setrootHist(TH1*  rh);
+    /// true if object knows an existing DB session
+    bool connected() {return (m_session != NULL);}
+    /// returns link to DB session
+    OnlineHistDB* dbSession() {return m_session;}
+    /// connect to DB session, returns true if the corresponding DB histogram entry is found
+    bool connectToDB(OnlineHistDB* Session,
+         std::string Page="_NONE_",
+         int Instance=1);
+    /// updates ROOT TH1 display properties from Histogram DB (via OnlineHistogram object) 
+    /// (normally called when connecting)
+    void setTH1FromDB();
+    /// updates current drawing options from Histogram DB (via OnlineHistogram object)
+    void setDrawOptionsFromDB(TPad* &Pad);
+    /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
+    bool saveTH1ToDB(TPad* Pad = NULL);
+    // OnlineHistogram methods for setting display options  
+    /// sets display option (see OnlineHistogram method). Change is sent to the DB only 
+    /// after a call to saveTH1ToDB()
+    virtual bool setDisplayOption(std::string ParameterName, 
+          void* value);
+    /// save provided histogram as a reference in the standard file, with optional run period and data type
+    bool setReference(TH1 *ref,
+          int startrun = 1,
+          std::string DataType = "default");
+    /// get reference histogram if available
+    TH1* getReference(int startrun = 1,
+          std::string DataType = "default");
+    // TH1 drawing methods
+    /// calls TH1 Draw method, calls setDrawOptions()
+    virtual void Draw(TPad* &Pad);
+    /// normalize reference (if existing and requested) to current plot
+    void normalizeReference();
 
   private:
     DimInfo* m_gauchocommentDimInfo;
@@ -62,7 +106,7 @@ class DbRootHist : public OnlineRootHist, public DimInfo,
     // source histograms for analysis histogram
     std::vector<DbRootHist*> m_anaSources;
     bool      m_anaLoaded;
-    OMAlib*   m_analib;
+    OMAlib*   m_analysisLib;
     std::string m_creationAlgorithm;
     std::vector<std::string> m_sourcenames;
     std::vector<float> m_parameters;
@@ -83,7 +127,7 @@ class DbRootHist : public OnlineRootHist, public DimInfo,
     bool      m_cleared;
     std::string m_hstype;
     std::string m_hname;
-    int m_localInstance;
+    int m_instance;
     int m_waitTime;
     int m_msgBoxReturnCode;
     int m_serviceSize;
@@ -92,6 +136,17 @@ class DbRootHist : public OnlineRootHist, public DimInfo,
     void loadAnaSources();
     void initRootFromDim();
     void fillRootFromDim();
+    
+    bool updateDBOption(std::string opt, void *value, bool isdefault);
+    void drawReference();
+    std::string m_identifier;
+    OnlineHistDB *m_session;
+    OnlineHistogram* m_onlineHistogram;
+  
+    std::string m_refOption;
+    TH1* m_reference;
+    int m_startrun;
+    std::string m_DataType;    
 };
 
 #endif // DBROOTHIST_H

@@ -7,6 +7,11 @@
 #include <TGMsgBox.h>
 #include <TPad.h>
 #include <TCanvas.h>
+#include <TGResourcePool.h>
+
+#include <TPRegexp.h>
+#include <TObjString.h>
+#include <TObjArray.h>
 
 #include <TH1.h>
 #include <TH2.h>
@@ -15,7 +20,6 @@
 #include "DbRootHist.h"
 
 #include "PresenterMainFrame.h"
-#include "EditorFrame.h"
 #include "PageSaveDialog.h"
 
 ClassImp(PageSaveDialog)
@@ -67,8 +71,8 @@ void PageSaveDialog::build()
   // list tree
   m_pageFolderListTree = new TGListTree(fCanvas694, kHorizontalFrame);
   m_pageFolderListTree->AddRoot("Pages");
-  m_mainFrame->readFromHistoDatabase(m_pageFolderListTree,
-      ByFolderAndPage, WithoutHistograms);
+  m_mainFrame->listFromHistogramDB(m_pageFolderListTree,
+      FoldersAndPages, WithoutHistograms);
   m_pageFolderListTree->Connect(
     "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog", this,
     "updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t)");
@@ -110,13 +114,13 @@ void PageSaveDialog::build()
   m_okButton->MoveResize(280, 288, 80, 24);
   m_okButton->Connect("Clicked()", "PageSaveDialog", this, "ok()");
 
-  TGTextButton *fTextButton755 = new TGTextButton(this,"Cancel");
-  fTextButton755->SetTextJustify(36);
-  fTextButton755->Resize(80, 24);
-  AddFrame(fTextButton755,
+  m_cancelButton = new TGTextButton(this,"Cancel");
+  m_cancelButton->SetTextJustify(36);
+  m_cancelButton->Resize(80, 24);
+  AddFrame(m_cancelButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  fTextButton755->MoveResize(376, 288, 80, 24);
-  fTextButton755->Connect("Clicked()", "PageSaveDialog", this,
+  m_cancelButton->MoveResize(376, 288, 80, 24);
+  m_cancelButton->Connect("Clicked()", "PageSaveDialog", this,
                           "DeleteWindow()");
 
   MapSubwindows();
@@ -128,48 +132,47 @@ void PageSaveDialog::ok()
 {
   m_okButton->SetEnabled(false);
 
-  if (m_mainFrame->isConnectedToDatabase()) {
+  if (m_mainFrame->isConnectedToHistogramDB()) {
 
-    OnlineHistDB* m_histogramDB = m_mainFrame->getDatabase();
+    OnlineHistDB* m_histogramDB = m_mainFrame->histogramDB();
     std::string folderName = folderNameTextEntry->GetText();
     std::string pageName = pageNameTextEntry->GetText();
 
     try {
       OnlineHistPage* page = m_histogramDB->getPage("/"+folderName+"/"+pageName);
-      if (page) { page->removeAllHistograms(); }
+      page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 
-      m_DbHistosOnPageIt = m_mainFrame->editorFrame->m_DbHistosOnPage.begin();
-      while (m_DbHistosOnPageIt != m_mainFrame->editorFrame->m_DbHistosOnPage.end()) {
+      m_DbHistosOnPageIt = m_mainFrame->m_DbHistosOnPage.begin();
+      while (m_DbHistosOnPageIt != m_mainFrame->m_DbHistosOnPage.end()) {
         ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
-        OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->dbHist(),
-            xlow , ylow, xup, yup);
+        OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
+            (float)xlow , (float)ylow, (float)xup, (float)yup);
         if (onlineHistogram) {
-            (*m_DbHistosOnPageIt)->setdbHist(onlineHistogram);
+            (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
         }
         m_DbHistosOnPageIt++;
       }
 
       if (page->save()) {
         // now save current ROOT display options of histograms on page
-        m_DbHistosOnPageIt = m_mainFrame->editorFrame->m_DbHistosOnPage.begin();
-        while (m_DbHistosOnPageIt != m_mainFrame->editorFrame->m_DbHistosOnPage.end()) {
-          if((*m_DbHistosOnPageIt)->dbHist()->page() == page->name()) {
-            (*m_DbHistosOnPageIt)->saveTH1ToDB();
+        m_DbHistosOnPageIt = m_mainFrame->m_DbHistosOnPage.begin();
+        while (m_DbHistosOnPageIt != m_mainFrame->m_DbHistosOnPage.end()) {
+          if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
+            (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
           m_DbHistosOnPageIt++;
         }
       }
       m_histogramDB->commit();
-    } catch (SQLException sqlException) {
+    } catch (std::string Exc) {
       // TODO: add error logging backend - MsgStream?
-      std::string m_message = sqlException.getMessage();
-      m_mainFrame->setStatusBarText(m_message.c_str(), 0);
-      if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
+      m_mainFrame->setStatusBarText(Exc.c_str(), 0);
+      if (m_verbosity >= Verbose) { std::cout << Exc << std::endl; }
 
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
           Form("Could save the page to OnlineHistDB:\n\n%s\n",
-            m_message.c_str()), kMBIconExclamation,
+            Exc.c_str()), kMBIconExclamation,
           kMBOk, &m_msgBoxReturnCode);
     }
     DeleteWindow();
@@ -177,34 +180,35 @@ void PageSaveDialog::ok()
 }
 void PageSaveDialog::updateTextFields(TGListTreeItem* node, Int_t, Int_t, Int_t)
 {
-  //  &&    m_pageFolderListTree->GetFirstItem() != node
   if (node) {
     char path[1024];
-    TObjArray* m_folderItems;
-    TIterator* m_folderItemsIt;
     
     m_pageFolderListTree->GetPathnameFromItem(node, path);
-    
-    if (node->GetUserData()) {
-      m_folderItems = (*static_cast<TString*>(node->GetUserData())).
-        Tokenize("/");
-      m_folderItemsIt = m_folderItems->MakeIterator();
-      pageNameTextEntry->SetText((m_folderItems->Last())->GetName());
-      m_folderItems->Delete();
-      delete m_folderItems;
-      m_folderItems = NULL;
-      delete m_folderItemsIt;
-      m_folderItemsIt = NULL;
-    }
-
     std::string dbPath = std::string(path);
     // Drop DB url
     dbPath = dbPath.erase(0, std::string(
-      m_pageFolderListTree->GetFirstItem()->GetText()).length()+1);
+                          m_pageFolderListTree->GetFirstItem()->GetText()).
+                            length() + 2);
+    
+    // find pagename in path                        
+    TObjArray* pathSlices = TPRegexp("^((?:(?:[^/]*)/)*)([^/]*)$").
+                                      MatchS(dbPath.c_str());
+                                      
+    const TString folderName = ((TObjString *)pathSlices->At(1))->GetString();                                  
+    const TString pageName = ((TObjString *)pathSlices->At(2))->GetString();
+    
+    pathSlices->Delete();
+    delete pathSlices;
+    
+    if (NULL != node->GetUserData()) {
+       pageNameTextEntry->SetText(pageName);
+       folderNameTextEntry->SetText(folderName);
+    } else {
+       folderNameTextEntry->SetText(dbPath.c_str());
+    }   
 
-    folderNameTextEntry->SetText(dbPath.c_str());
+    setOkButton();
   }
-  setOkButton();
 }
 void PageSaveDialog::setOkButton() {
   if (TString(folderNameTextEntry->GetText()).Sizeof() > 1  &&
