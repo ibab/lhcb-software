@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.53 2007-09-28 11:36:13 jpalac Exp $
+! $Id: release.notes,v 1.54 2007-11-27 18:21:30 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-11-27 - Patrick Koppenburg
+ - ParticleTransporter.cpp
+   . Check that momentum is not infinity. If it is issue a 
+     warning and return Failure.
+ - increment to v3r7p2
 
 !====================== DaVinciTransporter v3r7p1 2007-09-28 ==================
 

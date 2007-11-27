@@ -1,10 +1,11 @@
-// $Id: ParticleTransporter.cpp,v 1.18 2007-08-07 15:55:55 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.19 2007-11-27 18:21:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiAlg/CheckForNaN.h" // lfin
 
 #include "Event/TrackTypes.h" /// @todo temporary
 #include "TrackInterfaces/ITrackExtrapolator.h"        // TrackExtrapolator
@@ -107,12 +108,17 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
     sc = m_p2s->state2Particle(s,transParticle);
     if (!sc) return sc;
   }
-  verbose() << "Obtained Particle " << transParticle.particleID().pid() << endmsg;
-  verbose() << transParticle << endmsg ;
-
-  debug() << "Transported " << P->particleID().pid() << " " << transParticle.momentum() << " to " 
-          << transParticle.referencePoint() << endmsg ;
-
+  if ( lfin(transParticle.momentum().E() )){
+    verbose() << "Obtained Particle " << transParticle.particleID().pid() << endmsg;
+    verbose() << transParticle << endmsg ;  
+    debug() << "Transported " << P->particleID().pid() << " " << transParticle.momentum() << " to " 
+            << transParticle.referencePoint() << endmsg ;
+  } else {
+    Warning("Transported Particle gets infinite momentum. Check Track states used.");
+    return StatusCode::FAILURE ;
+  }
+  
+  
   return sc;
 }
 //=============================================================================
@@ -144,6 +150,13 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
     } else {
       // That's fine
       s = P->proto()->track()->closestState(znew);
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << "Getting state closest to " << znew << " at "
+                << s.position().z() << " : " << s.stateVector() << endmsg ;
+        debug() << "Track has " << P->proto()->track()->nStates() << ". First at "
+                << P->proto()->track()->firstState().position().z() << " : " 
+                << P->proto()->track()->firstState().stateVector() << endmsg ;
+      }      
     }
   } else { // make a state
     return m_p2s->particle2State(*P,s);
