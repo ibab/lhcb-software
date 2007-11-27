@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2007-11-27 - Stephanie Hansmann-Menzemer
+ - remove removal of measurements in TrackToDST
 
 !========================== TrackUtils v1r16 2007-10-23 ======================
 ! 2007-10-23 - Marco Cattaneo

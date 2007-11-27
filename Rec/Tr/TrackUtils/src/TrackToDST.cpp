@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.10 2007-07-04 11:10:55 dhcroft Exp $
+// $Id: TrackToDST.cpp,v 1.11 2007-11-27 13:17:00 smenzeme Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -120,15 +120,9 @@ StatusCode TrackToDST::execute(){
         break;
       } // switch
     } // if
-
-  // remove all the Measurements on the Track
-  const std::vector<Measurement*> allmeas = (*iterT) -> measurements();
-  for ( std::vector<Measurement*>::const_iterator it = allmeas.begin();
-        it != allmeas.end(); ++it)
-    (*iterT) -> removeFromMeasurements( *it );
-  // set the appropriate flag!
-  (*iterT) -> setPatRecStatus( Track::PatRecIDs );
-
+    // set the appropriate flag!
+    (*iterT) -> setPatRecStatus( Track::PatRecIDs );
+  
   } // iterT
    
   return StatusCode::SUCCESS;
