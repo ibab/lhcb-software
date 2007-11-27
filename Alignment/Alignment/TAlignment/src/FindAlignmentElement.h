@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.h,v 1.2 2007-11-15 11:12:04 janos Exp $
+// $Id: FindAlignmentElement.h,v 1.3 2007-11-27 19:20:49 janos Exp $
 #ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H 
 #define TALIGNMENT_FINDALIGNMENTELEMENT_H 1
 
@@ -16,6 +16,7 @@
 
 // from STDet
 #include "STDet/DeSTSector.h"
+#include "VeloDet/DeVeloSensor.h"
 
 // from BOOST
 #include "boost/function.hpp"
@@ -34,7 +35,13 @@ namespace Alignment {
   typedef std::map<std::string, DetElemFromID> FunctorMap;
   
   /** This should go into the sub-detector interfaces */
-    /// This returns the tt half module, i.e. parent, that a sensor belongs to
+  /// This returns the Velo box, i.e. parent, that a sensor belongs to
+  const DetectorElement* findVeloBox(const DeVeloSensor* sensor);
+
+  /// This returns the Velo module, i.e. parent, that a sensor belongs to
+  const DetectorElement* findVeloModule(const DeVeloSensor* sensor);
+
+  /// This returns the TT half module, i.e. parent, that a sensor belongs to
   const DetectorElement* findHalfModule(const DeSTSector* sensor);
 
   /// This returns the IT ladder, i.e. parent, that a sensor belongs to

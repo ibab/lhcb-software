@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.2 2007-11-15 15:05:28 jblouw Exp $
+// $Id: FindAlignmentElement.cpp,v 1.3 2007-11-27 19:20:55 janos Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -8,6 +8,7 @@
 #include "DetDesc/Services.h"
 
 // from detector interfaces
+#include "VeloDet/DeVelo.h"
 #include "STDet/DeTTDetector.h"
 #include "STDet/DeITDetector.h"
 #include "STDet/DeITBox.h"
@@ -53,13 +54,22 @@ Alignment::FunctorMap createFunctorMap() {
 
   /// These are needed to get a detector element from an LHCBb id.
   /// Get pointers to detector elements
-  DeTTDetector* tt = getDetector<DeTTDetector>(DeSTDetLocation::TT);           ///< Pointer to TT Detector
-  DeITDetector* it = getDetector<DeITDetector>(DeSTDetLocation::IT);           ///< Pointer to IT Detector
-  DeOTDetector* ot = getDetector<DeOTDetector>(DeOTDetectorLocation::Default); ///< Pointer to OT Detector
+  DeVelo*       velo = getDetector<DeVelo>(DeVeloLocation::Default);            ///< Pointer to Velo Detector 
+  DeTTDetector* tt   = getDetector<DeTTDetector>(DeSTDetLocation::TT);           ///< Pointer to TT Detector
+  DeITDetector* it   = getDetector<DeITDetector>(DeSTDetLocation::IT);           ///< Pointer to IT Detector
+  DeOTDetector* ot   = getDetector<DeOTDetector>(DeOTDetectorLocation::Default); ///< Pointer to OT Detector
   
   /// The following methods are overloaded. So we need a fuction pointer to the function we want, i.e.
   /// function pointers to the methods in the detector interfaces that return a detector element for 
   /// a given detector id.
+  /// Velo
+  typedef const DeVeloSensor* (DeVelo::*FindVeloSensor) (const VeloChannelID) const;
+  FindVeloSensor findVeloSensor = &DeVelo::sensor;
+  
+  typedef boost::function<const DetectorElement* (const DeVeloSensor* sensor)> VeloParentOfSensor;
+  VeloParentOfSensor findVeloBox    = &Alignment::findVeloBox;
+  VeloParentOfSensor findVeloModule = &Alignment::findVeloModule;
+  
   /// TT & IT
   typedef DeSTStation* (DeSTDetector::*FindSTStation) (const STChannelID);
   FindSTStation findSTStation  = &DeSTDetector::findStation;
@@ -74,7 +84,7 @@ Alignment::FunctorMap createFunctorMap() {
 
   /// IT specific
   typedef DeITBox* (DeITDetector::*FindITBox) (const STChannelID);
-//  FindITBox findITBox = &DeITDetector::findBox;
+  FindITBox findITBox = &DeITDetector::findBox;
   STParentOfSector findITLadder = &Alignment::findLadder;
 
   /// OT
@@ -86,6 +96,20 @@ Alignment::FunctorMap createFunctorMap() {
   FindOTModule findOTModule   = &DeOTDetector::findModule;
  
   /// I can probably template these (?)
+  /// Velo find functors
+  DetElemFromID veloBox =  
+    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isVelo,_1),
+						    bind<const DetectorElement*>(findVeloBox, 
+										 bind<const DeVeloSensor*>(findVeloSensor, velo, 
+													   bind<VeloChannelID>(&LHCbID::veloID,_1))),
+						    static_cast<const DetectorElement*>(0)));
+  DetElemFromID veloModule =  
+    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isVelo,_1),
+						    bind<const DetectorElement*>(findVeloModule, 
+										 bind<const DeVeloSensor*>(findVeloSensor, velo, 
+													   bind<VeloChannelID>(&LHCbID::veloID,_1))),
+						    static_cast<const DetectorElement*>(0)));
+
   /// TT find functors
   DetElemFromID ttStation =  
     ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isTT,_1), 
@@ -115,10 +139,10 @@ Alignment::FunctorMap createFunctorMap() {
 						    bind<const DetectorElement*>(findSTLayer,   it, bind<STChannelID>(&LHCbID::stID,_1)),
 						    static_cast<const DetectorElement*>(0)));
   
-//  DetElemFromID itBox     =  
-//    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1), 
-//						    bind<const DetectorElement*>(findITBox,     it, bind<STChannelID>(&LHCbID::stID,_1)),
-//						    static_cast<const DetectorElement*>(0)));
+ DetElemFromID itBox     =  
+   ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1), 
+						   bind<const DetectorElement*>(findITBox,     it, bind<STChannelID>(&LHCbID::stID,_1)),
+						   static_cast<const DetectorElement*>(0)));
 
   DetElemFromID itLadder =  
     ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isIT,_1),
@@ -143,11 +167,13 @@ Alignment::FunctorMap createFunctorMap() {
 						    bind<const DetectorElement*>(findOTModule,  ot, bind<OTChannelID>(&LHCbID::otID,_1)),
 						    static_cast<const DetectorElement*>(0)));
   
-  FunctorMap map = map_list_of("TTStations"    , ttStation   )
+  FunctorMap map = map_list_of("VeloBoxes"     , veloBox     )
+                              ("VeloModules"   , veloModule  )
+                              ("TTStations"    , ttStation   )
                               ("TTLayers"      , ttLayer     )
                               ("TTHalfModules" , ttHalfModule) 
                               ("ITStations"    , itStation   )
-//                              ("ITBoxes"       , itBox       )
+                              ("ITBoxes"       , itBox       )
                               ("ITLayers"      , itLayer     )
                               ("ITLadders"     , itLadder    )
                               ("OTStations"    , otStation   )
@@ -168,6 +194,24 @@ Alignment::DetElemFromID Alignment::FindElement(const std::string& findWhat) {
   Alignment::DetElemFromID emptyFunctor = 0;
   return ( i != s_map.end() ? i->second : emptyFunctor);
   ///@todo throw exception if functor is empty, i.e. when the user is trying to align something we don't know.
+}
+
+const DetectorElement* Alignment::findVeloBox(const DeVeloSensor* sensor) {
+  IDetectorElement* iElem = sensor->parentIDetectorElement();
+  ///std::cout << dynamic_cast<const DetectorElement*>(iElem)->name() << std::endl;
+  IDetectorElement* mod   = (dynamic_cast<const DetectorElement*>(iElem))->parentIDetectorElement();
+  ///std::cout << dynamic_cast<const DetectorElement*>(mod)->name() << std::endl;
+  IDetectorElement* box   = (dynamic_cast<const DetectorElement*>(mod))->parentIDetectorElement();
+  ///std::cout << dynamic_cast<const DetectorElement*>(box)->name() << std::endl;
+  return dynamic_cast<const DetectorElement*>(box);
+}
+
+const DetectorElement* Alignment::findVeloModule(const DeVeloSensor* sensor) {
+  IDetectorElement* iElem = sensor->parentIDetectorElement();
+  ///std::cout << dynamic_cast<const DetectorElement*>(iElem)->name() << std::endl;
+  IDetectorElement* mod   = (dynamic_cast<const DetectorElement*>(iElem))->parentIDetectorElement();
+  ///std::cout << dynamic_cast<const DetectorElement*>(mod)->name() << std::endl;
+  return dynamic_cast<const DetectorElement*>(mod);
 }
 
 const DetectorElement* Alignment::findHalfModule(const DeSTSector* sensor) {
