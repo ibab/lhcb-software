@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.342 2007-11-09 17:10:06 marcocle Exp $ 
+! $Id: release.notes,v 1.343 2007-11-27 16:27:08 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r2 2007-11-27 ==============================
  ### requires GaudiKernel >= v23r2 ###
 ! 2007-11-09 - Marco Clemencic
  - Added specialized fillStream() member function for ValidDataObject and
