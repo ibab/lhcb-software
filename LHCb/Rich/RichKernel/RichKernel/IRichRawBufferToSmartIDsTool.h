@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.9 2007-04-23 12:44:03 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.10 2007-11-27 12:19:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -37,6 +37,8 @@ namespace Rich
      *
      *  Interface for tool for decoding the Rich Raw Buffer
      *
+     *  Provides back the raw data in a decoded format.
+     *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
      */
@@ -56,6 +58,12 @@ namespace Rich
        *  @return Reference to the decoded RICH data structure
        */
       virtual const Rich::DAQ::L1Map & allRichSmartIDs() const = 0;
+
+      /** Access the vector of RichSmartIDs for the given HPD identifier
+       *  @param[IN] hpdID The HPD identifier
+       *  @return The vector of hits (RichSmartIDs) for the given HPD
+       */
+      virtual const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID ) const = 0;
 
     };
 
