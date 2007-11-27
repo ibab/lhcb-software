@@ -4,7 +4,7 @@
   <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: MuonPID.xml,v 1.2 2007-06-30 18:25:41 miriamg Exp $
+  * $Id: MuonPID.xml,v 1.3 2007-11-27 16:32:16 jonrob Exp $
   *****************************************************************************
   * XML-description of MuonPID class                                          *
   * author: Erica Polycarpo                                                   *
@@ -46,6 +46,9 @@ acceptance"/>
         desc="The track segment as reconstructed in the Muon system"/>
     
       <location name="Default" place="Rec/Muon/MuonPID"/>
+      <location name="Offline" place="Rec/Muon/MuonPID"/>
+      <location name="Hlt"     place="Hlt/Muon/MuonPID"/>
+
     </class>
   </package>
 </gdd>
