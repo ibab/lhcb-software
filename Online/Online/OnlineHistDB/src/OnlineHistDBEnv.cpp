@@ -1,10 +1,11 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.6 2007-11-26 17:36:43 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.7 2007-11-27 11:52:20 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
 OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
   : OCIthresholds(NULL), OCIparameters(NULL),
     OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
+    m_TaggedStatement(NULL),
     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
     m_user(toUpper(User)), m_debug(0), m_excLevel(1),
     m_refRoot(OnlineHistDBEnv_constants::StdRefRoot),

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.22 2007-11-27 11:17:28 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.23 2007-11-27 11:52:20 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -80,7 +80,7 @@ OnlineHistDB::~OnlineHistDB () {
   OCICacheFree ( m_envhp, m_errhp, m_svchp);
   if (m_envhp)
     OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
-  delete m_TaggedStatement;
+  if(m_TaggedStatement) delete m_TaggedStatement;
 }
 
 bool OnlineHistDB::commit() {
