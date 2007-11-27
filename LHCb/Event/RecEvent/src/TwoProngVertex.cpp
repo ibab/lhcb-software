@@ -1,4 +1,4 @@
-// $Id: TwoProngVertex.cpp,v 1.4 2007-11-27 18:25:51 sean Exp $
+// $Id: TwoProngVertex.cpp,v 1.5 2007-11-27 18:36:50 sean Exp $
 // Include files
 
 // local
@@ -69,10 +69,10 @@ if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
  return theMatrix; }
     //the Jacobians to change momenta of daughters from tx,ty,qop to PxPyPzE space
 
-// std::cout << " silly " << Gaudi::Math::aSillyNumber;
-
     Gaudi::Matrix4x3 JacobP1;
     Gaudi::Matrix4x3 JacobP2;
+    //Moved a function to Gaudi::Math, means RecEvent now requires 
+    //LHCbMath v2r3 (or greater) in Kernel
     Gaudi::Math::JacobdP4dMom( m_momA, mass1, JacobP1);
     Gaudi::Math::JacobdP4dMom( m_momB, mass2, JacobP2);
 
