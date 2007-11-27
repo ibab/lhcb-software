@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.4 2007-09-04 16:45:09 jonrob Exp $
+ *  $Id: RichPixelCluster.h,v 1.5 2007-11-27 08:40:27 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -22,7 +22,7 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
-#include "Kernel/SerializeStl.h"
+#include "GaudiKernel/SerializeSTL.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -105,7 +105,9 @@ namespace Rich
     friend inline std::ostream& operator << ( std::ostream& s,
                                               const HPDPixelCluster & cluster )
     {
-      return s << "[ " << cluster.smartIDs() << " ]";
+      s << "[ ";
+      GaudiUtils::operator<<( s, cluster.smartIDs() );
+      return s << " ]";
     }
 
 

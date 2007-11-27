@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.160 2007-09-17 09:51:01 cattanem Exp $
+! $Id: release.notes,v 1.161 2007-11-27 08:40:30 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+!====================== RichKernel v7r9 2007-11-26 ====================
+! 2007-11-26 - Marco Cattaneo
+ - Adapt to changed namespace of STL serializers in Gaudi v19r6
 
 !====================== RichKernel v7r8 2007-09-17 ====================
 ! 2007-09-04 - Chris Jones
