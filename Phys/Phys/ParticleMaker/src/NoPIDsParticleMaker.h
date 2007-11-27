@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.h,v 1.7 2006-05-16 17:59:02 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.8 2007-11-27 16:46:15 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
@@ -99,6 +99,9 @@ private:
   
   // Job options to keep VTT tracks
   bool m_vttTracks;
+
+  // Job options to keep velo tracks
+  bool m_veloTracks;
 
   /// Particle to state convertion tool
   IParticle2State* m_p2s ;

@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.72 2007-09-24 09:28:17 jpalac Exp $ 
+! $Id: release.notes,v 1.73 2007-11-27 16:46:14 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2007-11-27 - Patrick Koppenburg
+ - src/NoPIDsParticleMaker.{cpp,h}
+   . Keep only track types that are explicitly foreseen (i.e. kill velo 
+     by default)
+   . Allow to switch on velo tracks (default false)
+   . Default behaviour: keep long, upstream, downstream unchanged (as long
+     as there are no tracks of other types in ProtoP container)
+   . Discard ProtoParticles with charge!=0 && track==0.
+ - src/ParticleStuffer.cpp
+   . Some printout in DEBUG. Note that Usually ParticleStuffer is a public 
+	   tool, and ToolSvc.ParticleStuffer must be configured.
+ - cmt/requirements
+   . Increment to v3r4
 
 !======================== ParticleMaker v3r3 2007-09-24 =====================
 

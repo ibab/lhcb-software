@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.10 2007-04-25 16:18:58 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.11 2007-11-27 16:46:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,7 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
   , m_longTracks ( true )
   , m_downstreamTracks ( true )  // set to false for HLT
   , m_vttTracks ( true )         // set to false for HLT
+  , m_veloTracks ( false )         // 
   , m_p2s()
 {
   declareInterface<IParticleMaker>(this);
@@ -59,6 +60,7 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
   declareProperty ( "UseLongTracks",     m_longTracks );
   declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
   declareProperty ( "UseUpstreamTracks",      m_vttTracks );
+  declareProperty ( "UseVeloTracks",      m_veloTracks );
 
 }
 //=============================================================================
@@ -114,6 +116,11 @@ StatusCode NoPIDsParticleMaker::initialize() {
   if ( !m_longTracks ) info() << "Filtering out long tracks"<< endmsg;
   if ( !m_downstreamTracks ) info() << "Filtering out downstream tracks" << endmsg;
   if ( !m_vttTracks ) info() << "Filtering out upstream tracks" << endmsg;
+  if ( m_veloTracks ) info() << "Keeping velo tracks" << endmsg;
+  if (!(( m_longTracks ) || ( m_downstreamTracks) || ( m_vttTracks)|| ( m_veloTracks))){
+    Warning("You have chosen to veto all tracks.") ;
+  }
+
   return StatusCode::SUCCESS;
   
 } 
@@ -185,15 +192,16 @@ StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & par
       if ( 0 == pp                ) { continue ; }              // CONTINUE
       if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
           
-      if (( !m_longTracks ) || ( !m_downstreamTracks) || ( !m_vttTracks)){
-        const LHCb::Track* ptrack = pp->track();
-        if ( ptrack ) {
-          if (( !m_longTracks ) && ( ptrack->checkType( LHCb::Track::Long))){ continue ;}
-          if (( !m_downstreamTracks ) && ( ptrack->checkType( LHCb::Track::Downstream))){ 
-            continue ;}
-          if (( !m_vttTracks ) && ( ptrack->checkType( LHCb::Track::Upstream))){ continue ;}
-        }            
+      const LHCb::Track* ptrack = pp->track();
+      if ( 0==ptrack ) {
+        Warning("Charged protoparticle with no Track found. Ignoring.");
+        continue ;
       }
+      // require that at leat one of the accepted types is OK
+      if (!((( m_veloTracks ) && ( ptrack->checkType( LHCb::Track::Velo))) ||
+            (( m_longTracks ) && ( ptrack->checkType( LHCb::Track::Long))) ||
+            (( m_downstreamTracks ) && ( ptrack->checkType( LHCb::Track::Downstream))) ||
+            (( m_vttTracks ) && ( ptrack->checkType( LHCb::Track::Upstream))))) continue ;
           
       LHCb::Particle* particle = new LHCb::Particle();
           

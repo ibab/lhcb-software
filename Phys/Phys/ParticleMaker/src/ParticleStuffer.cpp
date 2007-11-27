@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.10 2007-02-06 09:59:57 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.11 2007-11-27 16:46:15 pkoppenb Exp $
 // Include files 
 
 // 
@@ -88,9 +88,15 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
     MotherlorVec += transParticle.momentum(); 
     // Set the four-momentum error matrix.
     MothermeMat += transParticle.momCovMatrix();    
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Transported " << (*it)->particleID().pid()
+                                          << " to " << zVtxPos*Gaudi::Units::mm  << "mm P = " 
+                                          << transParticle.momentum() << endmsg ;
   }
   part.setMomentum( MotherlorVec );
   part.setMomCovMatrix( MothermeMat );
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Mother " << part.particleID().pid()
+                                        << " has P= " << part.momentum() 
+                                        << " M= " << part.momentum().mag() << endmsg ;
 
   // Set the measured mass.
   part.setMeasuredMass( part.momentum().mag() ); 
@@ -104,6 +110,8 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
   const double massErr2 = ROOT::Math::Similarity<double,4>(derivs, 
                                                            part.momCovMatrix());
   
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Error^2 on mass is " << massErr2  << endmsg ;
+
   const double massErr = sqrt(massErr2);
   
   part.setMeasuredMassErr( massErr ); 
@@ -128,9 +136,11 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
       iterP != daughters.end(); iterP++) {
     part.addToDaughters(*iterP);
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Returning a " << part.particleID().pid()
+                                    << " P= " << part.momentum() 
+                                    << " M= " << part.measuredMass()
+                                    << " at " << part.referencePoint()*Gaudi::Units::mm 
+                                    << " mm" << endmsg ;
 
-
-
-  
   return StatusCode::SUCCESS;
 }
