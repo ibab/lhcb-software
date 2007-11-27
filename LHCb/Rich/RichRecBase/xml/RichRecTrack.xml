@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.14 2007-09-17 11:28:52 jonrob Exp $
+  * $Id: RichRecTrack.xml,v 1.15 2007-11-27 10:31:53 cattanem Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -436,7 +436,7 @@
             
 	<attribute 
 		name      = "richRecSegments"
-		type      = "Segments"
+		type      = "std::vector&lt;LHCb::RichRecSegment*&gt;"
 		access    = "PRIVATE" 
 		desc      = "Associated RichRecSegments for this RichRecTrack" 
                 nonconstaccessor = "TRUE"
@@ -454,7 +454,7 @@
             
 	<attribute 
 		name      = "richRecPixels"
-		type      = "Pixels"
+		type      = "std::vector&lt;LHCb::RichRecPixel*&gt;"
 		access    = "PRIVATE" 
 		desc      = "Associated RichRecPixels for which this track has valid photon associations"  
                 nonconstaccessor = "TRUE"
@@ -474,7 +474,7 @@
 		name      = "richRecPhotons"
 		access    = "PRIVATE" 
 		desc      = "RichRecPhotons associated with this track" 
-		type      = "Photons"
+		type      = "std::vector&lt;LHCb::RichRecPhoton*&gt;"
                 nonconstaccessor = "TRUE"
 	/>
             

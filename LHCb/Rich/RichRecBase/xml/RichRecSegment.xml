@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecSegment.xml,v 1.14 2007-09-04 16:46:57 jonrob Exp $
+  * $Id: RichRecSegment.xml,v 1.15 2007-11-27 10:31:53 cattanem Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -425,7 +425,7 @@
                 desc        = "The geometrical efficiency for a given hypothesis, binned per HPD" 
                 init        = "Rich::NParticleTypes,PDGeomEffs() " 
                 name        = "geomEfficiencyPerPD" 
-                type        = "PDGeomEffsVector"
+                type        = "std::vector&lt;Rich::Map&lt;LHCb::RichSmartID::KeyType,LHCb::RichRecSegment::FloatType&gt; &gt;"
                 nonconstaccessor = "TRUE"
         />
 

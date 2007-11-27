@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.13 2007-08-13 13:21:26 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.14 2007-11-27 10:31:53 cattanem Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -81,7 +81,7 @@
         />
             
         <attribute 
-                desc = "Assumed mass hypothsis for this ring" 
+                desc = "Assumed mass hypothesis for this ring" 
                 init = "Rich::Unknown" 
                 name = "massHypo" 
                 type = "Rich::ParticleIDType"
@@ -90,7 +90,7 @@
         <attribute 
                 desc = "A collection of points on the ring" 
                 name = "ringPoints"
-                type = "LHCb::RichRecPointOnRing::Vector"
+                type = "std::vector&lt;LHCb::RichRecPointOnRing&gt;"
                 nonconstaccessor = "TRUE"
         />
 
