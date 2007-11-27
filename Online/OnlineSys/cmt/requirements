@@ -9,7 +9,7 @@ branches cmt doc
 use Adder             v4r4     Online
 #use confDB            v1r0     Online
 #use confDBpython     v1r0     Online
-use CCPCHist          v2r3     Online
+use CCPCHist          v2r5     Online
 use DIM               v16r13   Online
 #use DimCond          v1r0     Online
 use ExampleGaucho     v2r4     Online
