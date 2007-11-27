@@ -4,6 +4,7 @@
 #include <TGTextEntry.h>
 #include <TGTextBuffer.h>
 #include <TGLabel.h>
+#include <TSystem.h>
 
 #include "OnlineHistDB/OnlineHistDB.h"
 
@@ -42,27 +43,30 @@ void LoginDialog::build()
 
   m_histogramDB = new TGComboBox(this);
   //m_histogramDB = new TGComboBox(this, m_input);
-  //m_histogramDB->AddEntry(TString("HISTDB"), 0);
   m_histogramDB->AddEntry(TString("lbora01:1528/HISTOGRAMDB"), 0);
   m_histogramDB->AddEntry(TString("ora01:1528/HISTOGRAMDB"), 1);
   m_histogramDB->AddEntry(TString("oradev10.cern.ch:10520/D10"), 2);
-  m_histogramDB->AddEntry("HISTOGRAMDB", 3);
+  m_histogramDB->AddEntry(TString("HISTOGRAMDB"), 3);
   m_histogramDB->Select(1);
   m_histogramDB->Resize(168, 22);
-  AddFrame(m_histogramDB, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2,
+  AddFrame(m_histogramDB, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2,
     2, 2));
-  m_histogramDB->MoveResize(88, 16, 168, 22);
+  m_histogramDB->Move(88, 16);
 
   m_dbUsername = new TGComboBox(this,-1, kHorizontalFrame | kSunkenFrame |
     kDoubleBorder | kOwnBackground);
-  m_dbUsername->AddEntry(gSystem->GetUserInfo()->fUser, 0); //TODO: mem lost
+  
+  UserGroup_t* userInfo = gSystem->GetUserInfo(); //returns new...
+  m_dbUsername->AddEntry(userInfo->fUser, 0);
+  delete userInfo;
+  
   m_dbUsername->AddEntry(TString("HIST_READER"), 1);
   m_dbUsername->AddEntry(TString("HIST_WRITER"), 2);
   m_dbUsername->AddEntry(TString("LHCB_MON_GIACOMO"), 3);
   m_dbUsername->AddEntry(TString(""), 4);
   m_dbUsername->Select(2);
   m_dbUsername->Resize(168, 22);
-  AddFrame(m_dbUsername, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2,
+  AddFrame(m_dbUsername, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2, 2,
     2));
   m_dbUsername->MoveResize(88, 48, 168, 22);
   m_dbUsername->Connect("ChangedBy(const char *)", "LoginDialog", this,
@@ -91,7 +95,7 @@ void LoginDialog::build()
   m_dbPasswdInput->SetEchoMode(TGTextEntry::kPassword);
   m_dbPasswdInput->SetText("histeggia194");
   m_dbPasswdInput->Resize(168, m_dbPasswdInput->GetDefaultHeight());
-  AddFrame(m_dbPasswdInput, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2,
+  AddFrame(m_dbPasswdInput, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2,
     2, 2));
   m_dbPasswdInput->MoveResize(88, 80, 168, 22);
 
@@ -130,7 +134,7 @@ void LoginDialog::defaultPw(const char *)
 void LoginDialog::login()
 {
   m_loginButton->SetEnabled(false);
-  if (m_mainFrame->connectToDatabase(m_dbPasswd->GetString(),
+  if (m_mainFrame->connectToHistogramDB(m_dbPasswd->GetString(),
                               dynamic_cast<TGTextLBEntry*>(m_dbUsername->
                                 GetSelectedEntry())->GetText()->GetString(),
                               dynamic_cast<TGTextLBEntry*>(m_histogramDB->
@@ -144,6 +148,6 @@ void LoginDialog::login()
 }
 void LoginDialog::cancelLogin()
 {
-  m_mainFrame->logoutOnlineHistDB();
+  m_mainFrame->logoutFromHistogramDB();
   DeleteWindow();
 }
