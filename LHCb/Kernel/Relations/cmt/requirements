@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.22 2007-09-04 16:19:23 cattanem Exp $
+# $Id: requirements,v 1.23 2007-11-27 13:38:27 ibelyaev Exp $
 # =============================================================================
 package Relations
-author  I.Belyaev
-manager I.Belyaev
+author  Vanya.Belyaev
+manager Vanya.Belyaev
 
-version v5r2
+version v5r3
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
@@ -29,6 +29,7 @@ library          RelationsLib  *.cpp
 
 # ============== patterns =====================================================
 apply_pattern    linker_library    library=RelationsLib
+apply_pattern    install_python_modules 
 
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \

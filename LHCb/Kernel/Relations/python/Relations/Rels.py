@@ -1,20 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $
+# $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
+"""
+Simple module for 'decorations' of various relation tables
+for interactive work in (Gauid)python
+"""
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.9  2006/06/12 15:27:28  ibelyaev
-#  add Bases.h file to preserve the file independence
-#
-# Revision 1.8  2006/06/11 19:37:02  ibelyaev
-#  remove some extra classes + fix all virtual bases
-#
-# Revision 1.7  2006/06/11 15:23:47  ibelyaev
-#  The major  upgrade: see doc/release.notes
-#
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
+
 
 import sys,os,os.path,datetime  
 import PyCintex
@@ -33,7 +28,13 @@ _gbl=PyCintex.makeNamespace('')
 _range = _gbl.Relations.BaseRange
 
 def _range_iter_ ( self ) :
-    """ Iterator function which allows the sequential iteration over the range """
+    """
+    Iterator function which allows the sequential iteration over the range
+    
+    >>> range = ...
+    >>> for i in range : print i 
+    
+    """
     _r   = self
     _num = _r.size()
     _i   = 0 
@@ -42,7 +43,13 @@ def _range_iter_ ( self ) :
         _i += 1
 
 def _range_len_ ( self ) :
-    """ helper function which allows to use len(range) functions """
+    """
+    Helper function which allows to use len(range) functions
+
+    >>> range = ...
+    >>> len( range )
+    
+    """
     return self.size()
 
 _range.__iter__    = _range_iter_
@@ -206,9 +213,9 @@ class RelW2D ( Rel ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $ '] 
+    lines += ['<!-- * $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $ '] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.10 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.1 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -264,9 +271,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $' ] 
+    lines += ['// $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
