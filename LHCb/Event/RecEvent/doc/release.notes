@@ -1,14 +1,17 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.70 2007-11-26 10:31:50 sean Exp $
+! $Id: release.notes,v 1.71 2007-11-27 07:57:02 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
-!========================= RecEvent v2r8 2007-11-09 ==========================
-2007-11-23 - Sean Brisbane
+!========================= RecEvent v2r8 2007-11-27 ==========================
+! 2007-11-27 - Marco Cattaneo
+ - Fixes to cope with changes in GaudiObjDesc v11r0 (backward compatible)
+
+! 2007-11-23 - Sean Brisbane
  - Add new class, TwoProngVertex
- - Update the RecVertex class with new ReVertex Location for TwoProngVertex
+ - Update the RecVertex class with new RecVertex Location for TwoProngVertex
 
 !========================= RecEvent v2r7 2007-11-09 ==========================
 ! 2007-11-09 - Marco Cattaneo

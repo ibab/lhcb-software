@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichSummaryRadSegment.xml,v 1.2 2006-10-20 12:52:09 jonrob Exp $
+  * $Id: RichSummaryRadSegment.xml,v 1.3 2007-11-27 07:57:02 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSummaryRadSegment class                            *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -37,7 +37,7 @@
         <attribute 
                 name = "photons"
                 desc = "Vector of photons for this track segment" 
-                type = "LHCb::RichSummaryPhoton::Vector"
+                type = "std::vector&lt;LHCb::RichSummaryPhoton&gt;"
         />
 
 
