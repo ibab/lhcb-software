@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.21 2007-11-23 17:58:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.22 2007-11-27 11:17:28 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -77,12 +77,10 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 }
 
 OnlineHistDB::~OnlineHistDB () {  
-  // a rollback is needed, otherwise all changes are committed at termination
-  //m_conn->rollback();
   OCICacheFree ( m_envhp, m_errhp, m_svchp);
   if (m_envhp)
     OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
-
+  delete m_TaggedStatement;
 }
 
 bool OnlineHistDB::commit() {
