@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: selection.py,v 1.5 2007-06-29 14:11:55 ibelyaev Exp $
+# $Id: selection.py,v 1.6 2007-11-27 13:41:38 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 # =============================================================================
 ## @file
 #  Simple script to create proper selection files to buils relations
@@ -14,34 +14,35 @@
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 
 if "__main__" == __name__ :
-    import Relations
-
+    
+    import Relations.Rels as Rels 
+    
     classes  = []
     includes = []
     
-    classes += [ Relations.RelW1D( 'LHCb::ProtoParticle' , 'LHCb::MCParticle'  , 'double' ) ]
-    classes += [ Relations.RelW1D( 'LHCb::CaloDigit'     , 'LHCb::MCParticle'  , 'float'  ) ]
-    classes += [ Relations.RelW1D( 'LHCb::CaloCluster'   , 'LHCb::MCParticle'  , 'float'  ) ]
-    classes += [ Relations.RelW2D( 'LHCb::CaloHypo'      , 'LHCb::Track'       , 'float'  ) ]
-    classes += [ Relations.RelW2D( 'LHCb::CaloCluster'   , 'LHCb::Track'       , 'float'  ) ]
-    classes += [ Relations.Rel1D ( 'LHCb::Track'                               , 'float'  ) ]
-    classes += [ Relations.RelW1D( 'LHCb::MCParticle'    , 'LHCb::CaloCluster' , 'float'  ) ]
-    classes += [ Relations.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double' ) ]
+    classes += [ Rels.RelW1D( 'LHCb::ProtoParticle' , 'LHCb::MCParticle'  , 'double' ) ]
+    classes += [ Rels.RelW1D( 'LHCb::CaloDigit'     , 'LHCb::MCParticle'  , 'float'  ) ]
+    classes += [ Rels.RelW1D( 'LHCb::CaloCluster'   , 'LHCb::MCParticle'  , 'float'  ) ]
+    classes += [ Rels.RelW2D( 'LHCb::CaloHypo'      , 'LHCb::Track'       , 'float'  ) ]
+    classes += [ Rels.RelW2D( 'LHCb::CaloCluster'   , 'LHCb::Track'       , 'float'  ) ]
+    classes += [ Rels.Rel1D ( 'LHCb::Track'                               , 'float'  ) ]
+    classes += [ Rels.RelW1D( 'LHCb::MCParticle'    , 'LHCb::CaloCluster' , 'float'  ) ]
+    classes += [ Rels.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double' ) ]
 
     # $DAVINCIMCKERNELROOT/Kernel/HepMC2MC.h:
-    classes += [ Relations.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]
+    classes += [ Rels.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]
     # $DAVINCIMCKERNELROOT/Kernel/MC2Collision.h:
-    classes += [ Relations.Rel1D  ( 'LHCb::MCVertex'      , 'LHCb::GenCollision' ) ]
+    classes += [ Rels.Rel1D  ( 'LHCb::MCVertex'      , 'LHCb::GenCollision' ) ]
     # $DAVINCIMCKERNELROOT/Kernel/PC2MC.h:
-    classes += [ Relations.RelW2D ('LHCb::RecVertex','LHCb::GenCollision','std::pair<unsigned int,float>') ]
-    classes += [ Relations.RelW2D ('LHCb::RecVertex','LHCb::MCVertex'    ,'std::pair<unsigned int,float>') ]
+    classes += [ Rels.RelW2D ('LHCb::RecVertex','LHCb::GenCollision','std::pair<unsigned int,float>') ]
+    classes += [ Rels.RelW2D ('LHCb::RecVertex','LHCb::MCVertex'    ,'std::pair<unsigned int,float>') ]
     # $DAVINCIMCKERNELROOT/Kernel/Track2MC.h:
-    classes += [ Relations.RelW2D ('LHCb::Track'    , 'LHCb::MCParticle' ,'double' ) ]
+    classes += [ Rels.RelW2D ('LHCb::Track'    , 'LHCb::MCParticle' ,'double' ) ]
     # $DAVINCIMCKERNELROOT/Kernel/RC2HepMC.h:
-    classes += [ Relations.Rel2D  ('LHCb::Particle' , 'HepMC::GenParticle*' ) ]
+    classes += [ Rels.Rel2D  ('LHCb::Particle' , 'HepMC::GenParticle*' ) ]
     # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h:
-    classes += [ Relations.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
-    classes += [ Relations.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
+    classes += [ Rels.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
+    classes += [ Rels.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
     
     includes += ['Event/Particle.h'      ]
     includes += ['Event/MCParticle.h'    ]
@@ -56,23 +57,8 @@ if "__main__" == __name__ :
     includes += ['HepMC/GenParticle.h'   ]
     
     # make XML and C++ selction files:
-    Relations.prepare ( classes , includes ) 
-
-
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.4  2007/03/23 16:32:23  ibelyaev
-#  add R2W(MCParticle,CaloCluster,float)
-#
-# Revision 1.3  2006/11/27 17:01:02  ibelyaev
-#  'size_t' --> 'unsigned int'
-#
-# Revision 1.2  2006/11/25 19:01:15  ibelyaev
-#  add the types from DaVinciMCKernel
-#
-# Revision 1.1  2006/06/11 15:36:15  ibelyaev
-#  enable dictionaries on Win32
-#
+    Rels.prepare ( classes , includes ) 
+    
 # =============================================================================
 # The END 
 # =============================================================================
