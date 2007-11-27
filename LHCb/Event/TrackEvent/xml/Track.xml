@@ -627,6 +627,16 @@
       </method>
 
       <method
+        name    = 'removeMeasurements'
+        desc    = 'Remove all measurements on track'>
+      </method>
+
+      <method
+        name    = 'removeNodes'
+        desc    = 'Remove all nodes on track'>
+      </method>
+
+      <method
         name    = 'addToNodes'
         desc    = 'Add a Node to the list of Nodes (note: track will take the ownership of this pointer!!)'>
         <arg type = 'Node*' name='node' />

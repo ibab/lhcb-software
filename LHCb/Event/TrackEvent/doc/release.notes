@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!2007-11-27 - Wouter Hulsbergen
+ - Added method to remove all measurements or nodes from a track
+
 !2007-11-26 - Wouter Hulsbergen
  - Fixed 'Track::copy' method to work also for track with muon measurements
  - Added method to efficiently add set of measurements to Track

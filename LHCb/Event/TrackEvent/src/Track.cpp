@@ -341,6 +341,28 @@ Measurement& Track::measurement( const LHCbID& value )
                         StatusCode::FAILURE );
 };
 
+
+//=============================================================================
+// Remove all measurements from the track
+//=============================================================================
+void Track::removeMeasurements() 
+{
+  // remove all nodes first
+  removeNodes() ;
+  // now remove the measurements
+  std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
+  m_measurements.clear() ;
+}
+
+//=============================================================================
+// Remove all nodes from the track
+//=============================================================================
+void Track::removeNodes() 
+{
+  std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
+  m_nodes.clear() ;
+}
+
 //=============================================================================
 // reset the track
 //=============================================================================
@@ -350,12 +372,9 @@ void Track::reset()
   m_nDoF       = 0;
   m_flags      = 0;
   m_lhcbIDs.clear();
-  for (std::vector<State*>::iterator it = m_states.begin();
-       it != m_states.end(); ++it) delete *it;
-  for (std::vector<Measurement*>::iterator it2 = m_measurements.begin();
-       it2 != m_measurements.end(); ++it2) delete *it2;
-  for (std::vector<Node*>::iterator it3 = m_nodes.begin();
-       it3 != m_nodes.end(); ++it3) delete *it3;
+  std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
+  std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
+  std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
   m_states.clear();
   m_measurements.clear();
   m_nodes.clear();
