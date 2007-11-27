@@ -1,9 +1,11 @@
-// $Id: TwoProngVertex.cpp,v 1.3 2007-11-26 17:43:44 sean Exp $
+// $Id: TwoProngVertex.cpp,v 1.4 2007-11-27 18:25:51 sean Exp $
 // Include files
 
 // local
 #include "Event/TwoProngVertex.h"
 #include "Event/TrackParameters.h"
+//using namespace Gaudi::Math;
+//#include "/afs/cern.ch/user/s/sean/cmtuserV0/Brunel_v31r9/InstallArea/include/LHCbMath/LorentzUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TwoProngVertex
@@ -11,32 +13,7 @@
 // 2007-10-16 : Wouter HULSBERGEN, Sean BRISBANE
 //-----------------------------------------------------------------------------
 
- static void dP4dMom( const ROOT::Math::SVector<double,3>& mom,const double mass, Gaudi::Matrix4x3& J)
-{
-    double tx = mom(0) ;
-    double ty = mom(1) ;
-    double qop = mom(2) ;
-    double p  = 1/fabs(qop) ;
-    double n2 = 1 + tx*tx + ty*ty ;
-    double n  = std::sqrt(n2) ;
-    double n3 = n2*n ;
-    double px = p*tx/n ;
-    double py = p*ty/n ;
-    double pz = p/n ;
-    double E = sqrt(p*p+mass*mass) ;
-    
-    J(0,0) = p * (1+ty*ty)/n3 ;// dpx/dtx
-    J(0,1) = p * tx * -ty/n3  ;// dpx/dty
-    J(0,2) = -px/qop ;// dpx/dqop
-    J(1,0) = p * ty * -tx/n3  ;// dpy/dtx
-    J(1,1) = p * (1+tx*tx)/n3 ;// dpy/dty
-    J(1,2) = -py/qop ;// dpy/dqop
-    J(2,0) = pz * -tx/n2 ;// dpz/dtx
-    J(2,1) = pz * -ty/n2 ;// dpz/dtx
-    J(2,2) = -pz/qop ;// dpz/dqop
-    J(3,2) = p/E * -p/qop ;// dE/dqop
-       return ;
-}
+
   
 
 namespace LHCb 
@@ -44,17 +21,6 @@ namespace LHCb
   TwoProngVertex::TwoProngVertex( const Gaudi::XYZPoint& position)
     : LHCb::RecVertex(position)
   {
-  }
-
-  const Gaudi::LorentzVector TwoProngVertex::p4(const ROOT::Math::SVector<double,3> & mom, double mass) const
-  {
-    // first calculate momentum in carthesian coordinates:
-    double p = 1/fabs(mom(2)) ;
-    double n = sqrt( 1 + mom(0)*mom(0)+mom(1)*mom(1)) ;
-    double px = p*mom(0)/n ;
-    double py = p*mom(1)/n ;
-    double pz = p/n ;
-    return Gaudi::LorentzVector(px,py,pz,std::sqrt(p*p+mass*mass)) ;
   }
 
  
@@ -102,10 +68,23 @@ Gaudi::SymMatrix7x7 theMatrix;
 if(tracks().size()<2){ throwError("covMatrix7x7 needs at least 2 V0 daughters");
  return theMatrix; }
     //the Jacobians to change momenta of daughters from tx,ty,qop to PxPyPzE space
+
+// std::cout << " silly " << Gaudi::Math::aSillyNumber;
+
     Gaudi::Matrix4x3 JacobP1;
     Gaudi::Matrix4x3 JacobP2;
-    dP4dMom( m_momA, mass1, JacobP1);
-    dP4dMom( m_momB, mass2, JacobP2);
+    Gaudi::Math::JacobdP4dMom( m_momA, mass1, JacobP1);
+    Gaudi::Math::JacobdP4dMom( m_momB, mass2, JacobP2);
+
+
+    
+    
+       
+       // fill Linear Algebra vector from 3D-point
+  
+      Gaudi::Matrix4x3    mtrx1;
+       Gaudi::Math::scale ( mtrx1 , 100.0   ) ;
+
     
     //covmompos contains the transformed covariance matrix for the off diagonal part (position and momentum)
     Gaudi::Matrix4x3 covmompos;

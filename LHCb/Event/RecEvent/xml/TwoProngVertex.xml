@@ -16,14 +16,20 @@
       id = '10040'
       serializers = 'TRUE'>
 
-      <base name='LHCb::RecVertex'/>
+      <location name= "Default"
+	place="LHCb::RecVertexLocation::V0"
+	noQuote="TRUE"
+	/>
 
+
+
+      <base name='LHCb::RecVertex'/>
       <import name='Event/RecVertex'/>
       <import name='Event/State'/>
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
       <import name='Event/Track'/>
-
+      <import name='LHCbMath/MatrixUtils'/>
 
 
       <enum
@@ -131,7 +137,8 @@
 	const   = 'TRUE'>
 	<arg type='double' name='mass'/>
 	<code>
-	  return p4(m_momA,mass) ;
+	   Gaudi::LorentzVector p4a;
+	  return Gaudi::Math::geo2LA(m_momA,mass, p4a);
 	</code>
       </method>
       
@@ -142,7 +149,8 @@
         const   = 'TRUE'>
 	<arg type='double' name='mass'/>
       <code>
-         return p4(m_momB,mass) ;
+	  Gaudi::LorentzVector p4b;
+         return Gaudi::Math::geo2LA(m_momB,mass,p4b);
       </code>
      </method>
 
@@ -171,14 +179,7 @@
       </method>
 
 
-     <method
-        type = 'const Gaudi::LorentzVector'
-        name = 'p4'
-        desc = 'calculated p4 from (tx,ty,qop) and mass.'
-        const = "TRUE" >
-      <arg type='ROOT::Math::SVector&lt;double,3&gt;' name='mom' const='TRUE' />
-      <arg type='double' name='mass' const = "TRUE"/>
-     </method>
+ 
 
 
       <method

@@ -15,6 +15,7 @@
                  place="LHCb::ProcessHeaderLocation::Rec"
                  noQuote="TRUE"
        />
+
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>

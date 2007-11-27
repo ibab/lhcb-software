@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2007-11-23 16:56:15 sean Exp $
+# $Id: requirements,v 1.26 2007-11-27 18:25:51 sean Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
@@ -14,6 +14,7 @@ branches          cmt doc xml Event src
 use EventBase    v*      Event
 use DigiEvent    v*      Event
 use TrackEvent   v*      Event
+use LHCbMath   v2r3      Kernel
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
