@@ -119,6 +119,10 @@
         name="Neutrals"
         place="Rec/ProtoP/Neutrals"
        />
+       <location
+        name="HltCharged"
+        place="Hlt/ProtoP/Charged"
+       />
 
        <relation
         name="calo"
