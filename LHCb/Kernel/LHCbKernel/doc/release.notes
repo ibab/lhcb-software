@@ -3,6 +3,11 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+
+!===================== LHCbKernel v8r0 2007-11-23 ========================
+! 2007-11-23 - Marco Cattaneo
+ - Remove Kernel/SerializeStl.h (now in GaudiKernel)
+
 ! 2007-11-02 - Tomasz Szumlak
  - IVeloClusterPosition moved to Tr/TrackInterfaces package
 

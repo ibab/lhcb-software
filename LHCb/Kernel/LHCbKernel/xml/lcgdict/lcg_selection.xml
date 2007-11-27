@@ -25,6 +25,7 @@
   <class name = "IBdlTool"             />
   <class name = "IBIntegrator"         />
   <class name = "ICheckTool"           />
+  <class name = "ICondDBInfo"          />
   <class name = "IDetElemFinder"       />
   <class name = "IEventTimeDecoder"    />
   <class name = "IEvtTypeSvc"          />
@@ -37,8 +38,6 @@
   <class name = "ISTClusterPosition"   />
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
-  <class name = "IVeloClusterPosition" />
-  <class name = "ICondDBInfo"          />
 <!--- These should really be moved to GaudiKernel or Reflex --> 
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 </lcgdict>
