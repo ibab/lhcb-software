@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-11-27 - Jan Amoraal
+ - Added Velo boxes and modules
+
 ! 2007-11-15 - Johan Blouw
  - restored head of TAlignment package to v3r3...
 
