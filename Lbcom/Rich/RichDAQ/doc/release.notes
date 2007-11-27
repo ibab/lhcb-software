@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-11-27 - Chris Jones
+ - Add new method to RawBufferToSmartIDsTool to return the hits for a 
+   requested HPD
+
 !========================== RichDAQ v3r12p1 2007-11-09 =======================
 ! 2007-11-09 - Marco Cattaneo
  - Fix a compilation error with gcc 4 on osx

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.15 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.16 2007-11-27 12:21:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -73,7 +73,10 @@ namespace Rich
 
       // Access all RichSmartIDs for the current Event
       const Rich::DAQ::L1Map & allRichSmartIDs() const;
-
+      
+      // Access the vector of RichSmartIDs for the given HPD identifier
+      const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID ) const;
+      
     private: // private methods
 
       /// Initialise for a new event
