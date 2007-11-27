@@ -4,9 +4,6 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
-! 2007-11-26 - Chris Jones
- - Improvements to CK photon yield algorithm
-
 ! 2007-11-12 - Chris Jones
  - Add check for existance of MCRichHits in MCCKPhotonYieldAlg, so processing 
    is not aborted when these data objects are missing (a warning is printed).
