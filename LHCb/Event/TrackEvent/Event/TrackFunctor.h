@@ -173,6 +173,15 @@ namespace TrackFunctor
   };
 
 //=============================================================================
+// Funtor to delete an object
+//=============================================================================
+  struct deleteObject
+  { 
+    template <typename T>
+    void operator()(T *ptr){ delete ptr; ptr=0 ; }
+  };
+
+//=============================================================================
 // Retrieve the reference to the state closest to the given object
 // e.g.: closestState( aTrack, TrackFunctor::distanceAlongZ<State>(z) )
 //       closestState( aTrack, TrackFunctor::distanceToPlane<State>(aPlane) )
