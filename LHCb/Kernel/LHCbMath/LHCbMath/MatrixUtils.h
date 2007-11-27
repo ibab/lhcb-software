@@ -1,6 +1,6 @@
-// $Id: MatrixUtils.h,v 1.2 2007-02-26 17:17:13 cattanem Exp $
+// $Id: MatrixUtils.h,v 1.3 2007-11-27 18:24:36 sean Exp $
 // ============================================================================
-#ifndef MATRIXUTILS_H 
+#ifndef MATRIXUTILS_H
 #define MATRIXUTILS_H 1
 // ============================================================================
 // Include files
@@ -22,8 +22,7 @@
 // ============================================================================
 
 namespace Gaudi
-{
-  namespace Math 
+{namespace Math 
   {
     /** fill  Linear Algebra - vector from 3D-point
      *
@@ -46,11 +45,13 @@ namespace Gaudi
     template <class C,class T>
     inline ROOT::Math::SVector<T,3>& 
     geo2LA 
+
     ( const ROOT::Math::PositionVector3D<C>& source , 
       ROOT::Math::SVector<T,3>&              dest   ) 
     {
       dest[0] = source.X () ;
-      dest[1] = source.Y () ;
+      dest[1] = source.Y ()
+ ;
       dest[2] = source.Z () ;
       return dest ;
     } ;
@@ -113,6 +114,10 @@ namespace Gaudi
       dest[3] = source.E () ;
       return dest ;
     } ;
+
+
+   
+
     /** construct similarity("chi2") using 3D-vector 
      *
      *  E.g. one can ask the "chi2"-distance inbetween vertices:
@@ -1260,8 +1265,110 @@ namespace Gaudi
       const ROOT::Math::SMatrix<T,D1,D2,R>& m2 , P pred )
     { return std::equal ( m1.begin() , m1.end() , m2.begin() , pred ) ; } ;
     
+    //Compute the jacobian for the transformation of a covariance matrix
+    //with rows representing track parameters TxTyQop and columns in xyz
+    //into a covariance matrix representing the track parameters in 
+    //PxPyPzE and columns xyz
+
+     /** Fill Lorentz vector from 3D displacement vector + Mass
+     *     
+     *@code
+     *
+     *geoLA(xyz, mass, lav)
+     *
+     @endcode
+     *
+     * @param source (input) Linear Algebra vector3D
+     * @param dest   (output) Lorentz Vector 
+     * @return  Lorentz Vector
+     * @author Sean BRISBANE sean.brisbane@cern.ch
+     * @date 2007-11-27
+     */
+
+
+
+
+
+    template<class T, class C, class M>
+    inline ROOT::Math::LorentzVector<C>&
+    geo2LA 
+    ( const ROOT::Math::SVector<T, 3>& source , const M mass,
+      ROOT::Math::LorentzVector<C>& dest  ) 
+    {
+      // first calculate momentum in carthesian coordinates:
+      double p = 1/fabs(source(2)) ;
+      double n = sqrt( 1 + source(0)*source(0)+source(1)*source(1)) ;
+      double px = p*source(0)/n ;
+      double py = p*source(1)/n ;
+      double pz = p/n ;
+      dest=   ROOT::Math::LorentzVector<C>(px,py,pz,std::sqrt(p*p+mass*mass)) ;
+      return dest ;
+    } ;
+
+  
+    //Compute the jacobian for the transformation of a covariance matrix
+    //with rows representing track parameters TxTyQop and columns in xyz
+    //into a covariance matrix representing the track parameters in 
+    //PxPyPzE and columns xyz
+
+    /**@code 
+     * 
+     *
+     * ROOT::Math::SMatrix<T, 3 ,3 ,R> covTxTyQoP_xyz = ....  ;
+     * ROOT::Math::SVector<C,3>& particleMomentum=...;
+     * ROOT::Math::SMatrix<T, 4 , 3, R > covPxPyPzE_xyz;
+     * massOfParticle = ...;
+     *
+     * ROOT::Math::SMatrix<T,4,3,R> Jacob;
+     * JacobdP4dMom (particleMomentum, massOfParticle, Jacob) ;
+     * covPxPyPzE_xyz = Jacob * covTxTyQoP_xyz;
+     *
+     * @endcode 
+     *
+     * param dP4dMom (input) the txtyqop vector of track/perticle momenta
+     * mass (input) the particle mass
+     * J (output) the Jacobian for the transformation
+     * return J
+     * @author Sean BRISBANE sean.brisbane@cern.ch
+     * @date 2007-11-27
+     */
+
+    template <class T,class R, class M >
+    inline void  JacobdP4dMom 
+    (const ROOT::Math::SVector<T, 3>mom,
+     const M mass, 
+     ROOT::Math::SMatrix<R, 4, 3>& J)
+    {
+      double tx = mom(0) ;
+      double ty = mom(1) ;
+      double qop = mom(2) ;
+      double p  = 1/fabs(qop) ;
+      double n2 = 1 + tx*tx + ty*ty ;
+      double n  = std::sqrt(n2) ;
+      double n3 = n2*n ;
+      double px = p*tx/n ;
+      double py = p*ty/n ;
+      double pz = p/n ;
+      double E = sqrt(p*p+mass*mass) ;
+      
+      J(0,0) = p * (1+ty*ty)/n3 ;// dpx/dtx
+      J(0,1) = p * tx * -ty/n3  ;// dpx/dty
+      J(0,2) = -px/qop ;// dpx/dqop
+      J(1,0) = p * ty * -tx/n3  ;// dpy/dtx
+      J(1,1) = p * (1+tx*tx)/n3 ;// dpy/dty
+      J(1,2) = -py/qop ;// dpy/dqop
+      J(2,0) = pz * -tx/n2 ;// dpz/dtx
+      J(2,1) = pz * -ty/n2 ;// dpz/dtx
+      J(2,2) = -pz/qop ;// dpz/dqop
+      J(3,2) = p/E * -p/qop ;// dE/dqop
+      return ; 
+    };
     
-  } // end of namespace Math  
+    
+    
+    
+    
+} // end of namespace Math  
 } // end of namespace Gaudi
 
 // ============================================================================

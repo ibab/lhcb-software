@@ -12,6 +12,8 @@
 !========================= LHCbMath v2r3 2007-10-02 ===========================
 ! 2007-10-02 - Marco Cattaneo
  - Remove implementations of cbrt from Power.h, now available in GaudiKernel
+! 207-11-27 - Sean BRISBANE
+ - Add functions in MatrixUtils.h
 
 !========================= LHCbMath v2r2 2007-07-10 ===========================
 ! 2007-07-10 - Juan Palacios
