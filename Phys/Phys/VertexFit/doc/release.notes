@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.124 2007-11-14 17:54:33 jpalac Exp $
+! $Id: release.notes,v 1.125 2007-11-27 18:24:53 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-11-27 - Patrick Koppenburg
+ - TrgVerexFitter: issue a failure when stuffing failed.
+ - Increment to v4r4p1
 
 !========================== VertexFit v4r4 2007-11-14 ===================
 

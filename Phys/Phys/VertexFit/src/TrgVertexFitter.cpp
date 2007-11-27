@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.19 2007-10-11 17:11:40 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.20 2007-11-27 18:24:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -72,8 +72,14 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
                                  LHCb::Particle& P, LHCb::Vertex& V) const{
   StatusCode sc = fit(parts,V);
   if (!sc) return sc ;
-  return m_stuffer->fillParticle(parts,V,P);
-  
+  sc = m_stuffer->fillParticle(parts,V,P);
+  if ( msgLevel(MSG::DEBUG) ) {
+    if (!sc) debug() << "Stuffing failed" << endmsg ;
+    else debug() << "ParticleStuffer returns particle " 
+                 << P.particleID().pid() << " " << P.momentum() 
+                 << " " << P.measuredMass() << endmsg ;
+  }
+  return sc ;
 }
 //=============================================================================
 // Fit the vertex from a vector of Particles
