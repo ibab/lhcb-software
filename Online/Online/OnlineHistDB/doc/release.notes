@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.22 2007-11-26 17:36:43 ggiacomo Exp $
+! $Id: release.notes,v 1.23 2007-11-27 19:03:36 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 !
 
+! 20071127  OnlineHistDB v4r3
+ 	- remove OnlineRootHist class that has been merged into Presenter code
+	- remove ROOT dependencies
+
 ! 20071126  OnlineHistDB v4r2
-	- tag version for Online release v4r3
+	- minor changes for next Online release 
 
 ! 20071123  
 	- add OnlineHistDB::canwrite for checking write permissions

@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{4}
-\docrev{2}
+\docrev{3}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -328,21 +328,26 @@ explicit call to {\it saveDisplayOptions()}
 
 \subsection{OnlineRootHist class}
 
-This class is intended to be used as an interface between ROOT and the
+
+This class was intended to be used as an interface between ROOT and the
 Histogram DB, in
-order to load or save display parameters trasparently.
- The user can instantiate objects that can be optionally 
-linked to existing OnlineHistogram and/or TH1 objects.
-Display options in ROOT are saved to the DB only if different from the
-default values in {\it gStyle}.
-
-The identifier must be the DB histogram identifier\\
-{\it Taskname}/{\it Algorithmname}/{\it HistogramName}
+order to load or save display parameters trasparently. \\
+It has been removed since version 4.3, since it is now integrated in
+the Presenter code.
 
 
-\begin{list}{$\bullet$}{}
-\input{OnlineRootHist}
-\end{list}
+% The user can instantiate objects that can be optionally 
+%linked to existing OnlineHistogram and/or TH1 objects.
+%Display options in ROOT are saved to the DB only if different from the
+%default values in {\it gStyle}.
+
+%The identifier must be the DB histogram identifier\\
+%{\it Taskname}/{\it Algorithmname}/{\it HistogramName}
+
+
+%\begin{list}{$\bullet$}{}
+%\input{OnlineRootHist}
+%\end{list}
 
 
 \subsection{OnlineHistTask class}
@@ -480,13 +485,6 @@ histograms.
      newh->saveDisplayOptions();
      newh->dump();
 
-     // link a DB histogram with a ROOT histogram
-     TH1F* rh = new TH1F("root histogram",
-                         "EXAMPLE/OccupancyMap/Hit_Map Region_M1R1",100,0,1);
-     OnlineRootHist* orh=new OnlineRootHist(newh);
-     orh->setrootHist(rh);
-     // display options are passed to the ROOT object
-     cout << "Line color of ROOT histo is  "<< orh->rootHist()->GetLineColor() <<endl;
    }
  }
 \end{verbatim}

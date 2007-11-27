@@ -3,15 +3,12 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v4r2
+version             v4r3
 
 branches            cmt doc src OnlineHistDB sql www
 use GaudiPolicy    v*
 use oracle         v*  LCG_Interfaces
-use ROOT           v5r*  LCG_Interfaces
 #
-# Go for the latest and greatest ROOT:
-#macro ROOT_config_version "5.17.04"
 
 
 apply_pattern install_more_includes more=OnlineHistDB
@@ -31,7 +28,3 @@ apply_pattern  linker_library library=OnlineHistDB
 macro_append OnlineHistDB_shlibflags  "" \
   WIN32                              " oci.lib ociw32.lib "
 
-# for ROOT 5.17.04
-#macro_append OnlineHistDB_shlibflags " -lHist -lGraf -lRIO " WIN32 " libHist.lib libGraf.lib libRIO.lib"
-
-macro_append OnlineHistDB_shlibflags " -lHist -lGraf " WIN32 " libHist.lib libGraf.lib"
