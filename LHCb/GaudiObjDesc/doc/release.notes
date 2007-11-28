@@ -4,7 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-!======================== GaudiObjDesc v11r0 2007-11-26 ======================
+!======================== GaudiObjDesc v11r0 2007-11-29 ======================
+! 2007-11-29 - Marco Cattaneo
+ - Improved workaround for namespace scoping of GaudiUtils:: serializers
+
 ! 2007-11-26 - Marco Cattaneo
  - Pick up GaudiKernel/SerializeSTL.h instead of Kernel/SerializeStl.h. These
    serializers are now in GaudiUtils:: namespace, not LHCb::

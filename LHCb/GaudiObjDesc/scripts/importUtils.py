@@ -10,6 +10,7 @@ class importUtils:
     self.forwardDeclLHCb = []
     self.forwardDeclGlob = {}
     self.forwardIncl = []
+    self.verbatimLHCb = []
 #--------------------------------------------------------------------------------
   def reset(self,godClass):
     self.typedefenums = []
@@ -62,6 +63,7 @@ class importUtils:
     s = ''
     for decl in self.forwardDeclLHCb :
       if decl not in self.include : s += 'class %s;\n' % decl.split('/')[-1]
+    for imp in self.verbatimLHCb : s += '%s\n' % imp
     return s
 #--------------------------------------------------------------------------------
   def genForwardDeclsGlob(self):

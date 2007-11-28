@@ -544,24 +544,25 @@ class genClasses(genSrcUtils.genSrcUtils):
             if b['attrs']['name'].split('<')[0] not in ('ContainedObject', 'DataObject', 'KeyedObject'):
               s += '  %s::fillStream(s);\n' % b['attrs']['name']
         if godClass.has_key('attribute'):
-          s += '  s << "{ "'
           for att in godClass['attribute']:
             attAtt = att['attrs']
             type = attAtt['type'].lstrip()
             if type[:5] == 'std::':
               if 'GaudiKernel/SerializeSTL' not in self.include:
                 self.include.append('GaudiKernel/SerializeSTL')
+                 # Trick for namespace problems (Savannah bug 29887)
+                self.verbatimLHCb.append('using GaudiUtils::operator<<;')
+                break;
+          s += '  s << "{ "'
+          for att in godClass['attribute']:
+            attAtt = att['attrs']
+            type = attAtt['type'].lstrip()
             if s[-1] == '"' : s += ' << "%s :\t" ' % attAtt['name']
             else            : s += '\n            << "%s :\t" ' % attAtt['name']
-            # Hack to get round namespace problems in gccxml (Savannah bug 29887)
-            if type[:11] == 'std::vector' or type[:8] == 'std::map' or \
-               type[:9]  == 'std::list'   or type[:9] == 'std::pair':
-              s += ';  GaudiUtils::operator<<(s,m_%s);  s << std::endl'%attAtt['name']
-            else:
-              if   type == 'bool'   : s += '<< l_'
-              elif type == 'double' : s += '<< (float)m_'
-              else                  : s += '<< m_'
-              s += attAtt['name'] + ' << std::endl'
+            if   type == 'bool'   : s += '<< l_'
+            elif type == 'double' : s += '<< (float)m_'
+            else                  : s += '<< m_'
+            s += attAtt['name'] + ' << std::endl'
           s += ' << " }";\n'
         s += '  return s;\n'
         s += '}\n\n'
