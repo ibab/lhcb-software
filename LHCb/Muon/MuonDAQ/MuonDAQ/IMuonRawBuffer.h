@@ -1,4 +1,4 @@
-// $Id: IMuonRawBuffer.h,v 1.4 2007-06-06 14:26:10 cattanem Exp $
+// $Id: IMuonRawBuffer.h,v 1.5 2007-11-28 14:48:15 cattanem Exp $
 #ifndef MUONDAQ_IMUONRAWBUFFER_H 
 #define MUONDAQ_IMUONRAWBUFFER_H 1
 
@@ -7,11 +7,9 @@
 
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-#include "GaudiAlg/GaudiTool.h"
-#include "Event/RawEvent.h"
 
 #include <vector>
-//#include <pair.h>
+#include <utility>
 
 
 /** @class IMuonRawBuffer IMuonRawBuffer.h MuonTools/IMuonRawBuffer.h

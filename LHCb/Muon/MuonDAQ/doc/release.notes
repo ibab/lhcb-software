@@ -3,6 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+
+!========================== MuonDAQ v3r3 2007-11-28 ==========================
+! 2007-11-28 - Marco Cattaneo
+ - Add dictionary fo tool interface
+
 ! 2007-11-20 - Alessia Satta
  - Fix for unchecked status code
 
