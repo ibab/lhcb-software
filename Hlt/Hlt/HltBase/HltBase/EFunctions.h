@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.8 2007-08-01 21:30:45 hernando Exp $
+// $Id: EFunctions.h,v 1.9 2007-11-28 15:36:42 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -110,7 +110,7 @@ namespace Estd
       return d0;
     }
     Pair pair(const T1& t) const {
-      // TODO trought exceptio if empty container
+      // TODO throw exception if empty container
       Iterator it = container->begin(); Iterator it0 = it;
       double d0 = (*bifunction)(t, **it); ++it;
       for (; it != container->end(); ++it) {
