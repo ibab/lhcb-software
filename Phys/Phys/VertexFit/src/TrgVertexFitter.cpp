@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.21 2007-11-28 11:16:59 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.22 2007-11-28 12:58:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -250,7 +250,6 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "cov\n " << cov << endmsg ;
     else if (msgLevel(MSG::DEBUG)) debug() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
-    
 
     const Gaudi::XYZVector slopes = par->slopes();
     iMX = slopes.X();
@@ -386,9 +385,13 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   Gaudi::SymMatrix3x3 fastCov;
 
   double det = ( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
+  if ( 0 == gsl_fcmp ( det , 0 , 1.e-8 ) ) { 
+    Warning("Position covariance matrix determinant is zero");
+    return StatusCode::FAILURE;    
+  }
   double invDet = 1./det ;
-  if ( ! lfin(invDet) ){
-    Warning("Position covariance matrix failed");
+  if ( ! lfin(invDet) ){ // that's probably not needed anymore
+    Warning("Position covariance matrix determinant cannot be inverted");
     return StatusCode::FAILURE;
   }
   
