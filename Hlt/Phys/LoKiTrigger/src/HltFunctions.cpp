@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.4 2007-08-19 13:42:59 ibelyaev Exp $
+// $Id: HltFunctions.cpp,v 1.5 2007-11-28 14:56:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -73,9 +73,9 @@ LoKi::Tracks::DeltaE::operator()
   // get the state:
   const LHCb::State& s = t.stateAt(LHCb::State::MidHCal) ;
   // calculate delta E: 
-  const double p = t . p () ;
-  const double e = s . p () ;
-  const double de = e*(sqrt( 0.60*0.60 + 0.70*0.70/e ));
+  const double p  = t . p () ;
+  const double e  = s . p () ;
+  const double de = e * ( sqrt ( 0.60 * 0.60 + 0.70 * 0.70 / e ) ) ;
   //
   return (e-p)/de ;                                            // REUTRN   
 }
@@ -84,7 +84,7 @@ LoKi::Tracks::DeltaE::operator()
 // ============================================================================
 LoKi::Tracks::TrackMatch::TrackMatch
 ( ITrackMatch* tool )
-  : LoKi::Function<LoKi::TrackTypes::TrackPair> () 
+  : LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function() 
   , m_tool ( tool )
 {}
 // ============================================================================
@@ -92,7 +92,7 @@ LoKi::Tracks::TrackMatch::TrackMatch
 // ============================================================================
 LoKi::Tracks::TrackMatch::TrackMatch
 ( const LoKi::Interface<ITrackMatch>& tool )
-  : LoKi::Function<LoKi::TrackTypes::TrackPair> () 
+  : LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function () 
   , m_tool ( tool )
 {}
 // ============================================================================
@@ -107,12 +107,12 @@ LoKi::Tracks::TrackMatch::operator()
   const LHCb::Track& t2 = a.second ;
   if ( !m_tool.validPointer() )
   {
-    Error ("Tool is invalid, return +inf") ;
+    Error ( "Tool is invalid, return +inf" ) ;
     return LoKi::Constants::PositiveInfinity ;               // RETURN
   }
   //
   double chi2 = 0 ;
-  m_tool->match ( t1 , t2 , chi2 ).ignore() ;
+  m_tool -> match ( t1 , t2 , chi2 ).ignore() ;
   // 
   return chi2 ;  
 }
@@ -168,10 +168,6 @@ LoKi::Tracks::DeltaAngle::operator()
   //
   return HltUtils::deltaAngle ( t1 , t2 ) ;
 }
-
- 
-
-
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: InfoDicts.h,v 1.1 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: InfoDicts.h,v 1.2 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INFODICTS_H 
 #define LOKI_INFODICTS_H 1
@@ -13,20 +13,20 @@ namespace LoKi
 {
   namespace Dicts 
   {
-    namespace Info
+    namespace TrInfo
     {
       // ======================================================================
-      LoKi::FunctionFromFunction<LHCb::Track>
+      LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction
       info 
-      ( const int                              index          , 
-        const LoKi::Function<LHCb::Track>&     fun            ,
-        const bool                             update = false ) ;
+      ( const int                                         index          , 
+        const LoKi::BasicFunctors<LHCb::Track>::Function& fun            ,
+        const bool                                        update = false ) ;
       // ======================================================================
-      LoKi::FunctionFromFunction<LHCb::RecVertex>
+      LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction
       info 
-      ( const int                              index          , 
-        const LoKi::Function<LHCb::RecVertex>& fun            ,
-        const bool                             update = false ) ;
+      ( const int                                             index          , 
+        const LoKi::BasicFunctors<LHCb::RecVertex>::Function& fun            ,
+        const bool                                            update = false ) ;
     }
   }  
 }

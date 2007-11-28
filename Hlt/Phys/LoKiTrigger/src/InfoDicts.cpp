@@ -1,4 +1,4 @@
-// $Id: InfoDicts.cpp,v 1.1 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: InfoDicts.cpp,v 1.2 2007-11-28 14:56:24 ibelyaev Exp $
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -12,20 +12,20 @@
  *  @date 2007-08-14 
  */
 // ============================================================================
-LoKi::FunctionFromFunction<LHCb::Track>
-LoKi::Dicts::Info::info 
-( const int                              index  , 
-  const LoKi::Function<LHCb::Track>&     fun    ,
-  const bool                             update ) 
+LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction
+LoKi::Dicts::TrInfo::info 
+( const int                                         index  , 
+  const LoKi::BasicFunctors<LHCb::Track>::Function& fun    ,
+  const bool                                        update ) 
 { 
-  return LoKi::Tracks::SmartInfo( index , fun , update ) ; 
+  return LoKi::Tracks::SmartInfo ( index , fun , update ) ; 
 }  
 // ======================================================================
-LoKi::FunctionFromFunction<LHCb::RecVertex>
-LoKi::Dicts::Info::info 
-( const int                              index  , 
-  const LoKi::Function<LHCb::RecVertex>& fun    ,
-  const bool                             update ) 
+LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction
+LoKi::Dicts::TrInfo::info 
+( const int                                             index  , 
+  const LoKi::BasicFunctors<LHCb::RecVertex>::Function& fun    ,
+  const bool                                            update ) 
 { 
   return LoKi::RecVertices::SmartInfo( index , fun , update ) ; 
 }

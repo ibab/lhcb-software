@@ -1,4 +1,4 @@
-// $Id: TrackCuts.h,v 1.3 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: TrackCuts.h,v 1.4 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKCUTS_H
 #define LOKI_TRACKCUTS_H 1
@@ -39,9 +39,6 @@ namespace LoKi
      */
     const LoKi::Tracks::Type                                           TrTYPE ;
     // ========================================================================
-
-
-    // ========================================================================
     /** @var TrALL 
      *  trivial predicate which always return true 
      *
@@ -49,7 +46,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::BooleanConstant<LHCb::Track>                   TrALL ( true ) ;
+    const LoKi::BasicFunctors<LHCb::Track>::BooleanConstant    TrALL ( true ) ;
     // ========================================================================
     /** @var TrBACKWARD 
      *  simple objects which check the "Flag" of the track:
@@ -162,7 +159,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<LHCb::Track>                  TrCOUNTER ;
+    typedef LoKi::Monitoring::Counter<LHCb::Track,bool>             TrCOUNTER ;
     // ========================================================================
     /** @var TrDOWNSTREAM
      *  simple predicate to check if the track has a type LHCb::Track::Downstream
@@ -184,7 +181,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrDOWNSTREAM ( TrTYPE , LHCb::Track::Downstream ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrDOWNSTREAM ( TrTYPE , LHCb::Track::Downstream ) ;
     // ========================================================================
     /** @typedef TrEQUALTO
      *  helper function to check the equality of another function to some value
@@ -192,7 +190,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    typedef LoKi::EqualToValue<LHCb::Track>                         TrEQUALTO ;
+    typedef LoKi::EqualToValue<LHCb::Track,double>                 TrEQUALTO ;
     // ======================================================================== 
     /** @var TrFALSE
      *  trivial predicate which always return false 
@@ -201,7 +199,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::BooleanConstant<LHCb::Track>               TrFALSE ( false ) ;
+    const LoKi::BasicFunctors<LHCb::Track>::BooleanConstant TrFALSE ( false ) ;
     // ========================================================================
     /** @typedef TrFILTER  
      *  Simple predicate (wrapper) for ITrackSelector tool
@@ -448,7 +446,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrLONG ( TrTYPE , LHCb::Track::Long ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrLONG ( TrTYPE , LHCb::Track::Long ) ;
     // ========================================================================
     /** @var TrMUON
      *  simple predicate to check if the track has a type LHCb::Track:Muon
@@ -470,7 +469,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrMUON ( TrTYPE , LHCb::Track::Muon ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrMUON ( TrTYPE , LHCb::Track::Muon ) ;
     // ========================================================================
     /** @var TrNONE
      *  trivial predicate which always return false 
@@ -479,7 +479,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::BooleanConstant<LHCb::Track>                 TrNONE ( false ) ;
+    const LoKi::BasicFunctors<LHCb::Track>::BooleanConstant TrNONE ( false ) ;
     // ========================================================================
     /** @var TrONE 
      *  trivial function which always return 1 
@@ -488,9 +488,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::Constant<LHCb::Track>                             TrONE ( 1 ) ;
-    // ========================================================================
-    
+    const LoKi::BasicFunctors<LHCb::Track>::Constant              TrONE ( 1 ) ;
+    // ======================================================================== 
     /** @var TrP
      *  trivial estimator of the momentum of the track
      *
@@ -586,7 +585,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Plot<LHCb::Track>                        TrPLOT ;
+    typedef LoKi::Monitoring::Plot<LHCb::Track,double>                TrPLOT ;
     // ========================================================================
     /** @var TrPROBCHI2
      *  the simple function which returns LHCb::Track::probChi2
@@ -774,7 +773,7 @@ namespace LoKi
      *  @endcode 
      *
      *  The substitution of the function by monitored function 
-     *  cound be done "on-flight" without the disturbing of the
+     *  could be done "on-flight" without the disturbing of the
      *  actual processing:
      *  @code
      *
@@ -794,13 +793,13 @@ namespace LoKi
      *             from its string representations. It is done 
      *             on purpose to avoid the disturbing of ids. 
      * 
-     *  @see LoKi::Monitoring::Stat
+     *  @see LoKi::Monitoring::Counter
      *  @see LoKi::monitor
      *  @see StatEntity
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Stat<LHCb::Track>                        TrSTAT ;
+    typedef LoKi::Monitoring::Counter<LHCb::Track,double>              TrSTAT ;
     // ========================================================================
     /** @typedef TrSWITCH
      *  "switch"
@@ -836,7 +835,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::BooleanConstant<LHCb::Track>                  TrTRUE ( true ) ;
+    const LoKi::BasicFunctors<LHCb::Track>::BooleanConstant    TrTRUE ( true ) ;
     // ========================================================================
     /** @var TrTTRACK
      *  simple predicate to check if the track has a type LHCb::Track::Ttrack
@@ -858,7 +857,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrTTRACK ( TrTYPE , LHCb::Track::Ttrack ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrTTRACK ( TrTYPE , LHCb::Track::Ttrack ) ;
     // ========================================================================
     /** @var TrUNKNOWN
      *  simple predicate to check if the track has a type LHCb::Track::TypeUnknown
@@ -880,7 +880,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrUNKNOWN ( TrTYPE , LHCb::Track::TypeUnknown ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrUNKNOWN ( TrTYPE , LHCb::Track::TypeUnknown ) ;
     // ========================================================================
     /** @var TrUPSTREAM
      *  simple predicate to check if the track has a type LHCb::Track::Upstream
@@ -902,7 +903,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrUPSTREAM ( TrTYPE , LHCb::Track::Upstream ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrUPSTREAM ( TrTYPE , LHCb::Track::Upstream ) ;
     // ========================================================================
     /** @var TrUSED
      *  simple objects which check the "Flag" of the track:
@@ -941,9 +943,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrVELO ( TrTYPE , LHCb::Track::Velo ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrVELO ( TrTYPE , LHCb::Track::Velo ) ;
     // ========================================================================
-     /** @var TrVELOR
+    /** @var TrVELOR
      *  simple predicate to check if the track has a type LHCb::Track:VeloR
      *
      *  @code
@@ -963,7 +966,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::EqualToValue<LHCb::Track> TrVELOR ( TrTYPE , LHCb::Track::VeloR ) ;
+    const LoKi::EqualToValue<LHCb::Track,double> 
+    TrVELOR ( TrTYPE , LHCb::Track::VeloR ) ;
     // ========================================================================
    /** @var TrZERO
      *  trivial function which always return 0 
@@ -972,7 +976,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::Constant<LHCb::Track>                            TrZERO ( 0 ) ;
+    const LoKi::BasicFunctors<LHCb::Track>::Constant TrZERO ( 0 ) ;
     // ========================================================================
   } // end of namespace LoKi::Tracks
 } // end of namespace LoKi 

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.4 2007-08-19 13:42:59 ibelyaev Exp $
+// $Id: HltFunctions.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
@@ -32,7 +32,7 @@ namespace LoKi
      *  @date 2007-08-13
      */
     class DistanceOfClosestApproach 
-      : public LoKi::Function<LoKi::TrackTypes::TrackPair>
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -59,7 +59,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class DeltaP : public LoKi::Function<LoKi::TrackTypes::TrackPair>
+    class DeltaP 
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor
@@ -85,7 +86,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class DeltaE : public LoKi::Function<LHCb::Track>
+    class DeltaE 
+      : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destructor
@@ -108,7 +110,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class TrackMatch : public LoKi::Function<LoKi::TrackTypes::TrackPair>
+    class TrackMatch 
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// constructor from the tool 
@@ -146,7 +149,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class RadialIP : public LoKi::Function<LoKi::TrackTypes::TrackVertexPair>
+    class RadialIP 
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -171,7 +175,7 @@ namespace LoKi
      *  @date 2007-08-13
      */     
     class ImpactParameter 
-      : public LoKi::Function<LoKi::TrackTypes::TrackVertexPair>
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -197,7 +201,7 @@ namespace LoKi
      *  @date 2007-08-13
      */     
     class MatchIDsFraction
-      : public LoKi::Function<LoKi::TrackTypes::TrackPair>
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -223,7 +227,7 @@ namespace LoKi
      *  @date 2007-08-13
      */     
     class DeltaAngle 
-      : public LoKi::Function<LoKi::TrackTypes::TrackPair>
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor 

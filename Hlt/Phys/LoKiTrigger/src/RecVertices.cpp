@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.2 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: RecVertices.cpp,v 1.3 2007-11-28 14:56:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -133,9 +133,9 @@ LoKi::RecVertices::FC2::operator()
  */
 // ============================================================================
 LoKi::RecVertices::SmartInfo::SmartInfo
-( const int                              index  , 
-  const LoKi::Function<LHCb::RecVertex>& fun    , 
-  const bool                             update ) 
+( const int                                             index  , 
+  const LoKi::BasicFunctors<LHCb::RecVertex>::Function& fun    , 
+  const bool                                            update ) 
   : LoKi::ExtraInfo::GetSmartInfo<LHCb::RecVertex> ( index , fun , update )
 {}
 // ============================================================================
@@ -148,8 +148,6 @@ LoKi::RecVertices::SmartInfo::fillStream( std::ostream& s ) const
   s << update() ? "True" : "False" ;
   return s << ")" ;  
 }
-
-
 // ============================================================================
 // The END 
 // ============================================================================

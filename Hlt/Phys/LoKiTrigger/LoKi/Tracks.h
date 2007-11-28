@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.4 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: Tracks.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -35,7 +35,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Key : public LoKi::Function<LHCb::Track>
+    class Key : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -55,7 +55,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class InTES : public LoKi::Predicate<LHCb::Track>
+    class InTES : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -76,7 +76,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class Charge : public LoKi::Function<LHCb::Track>
+    class Charge : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -96,7 +96,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class TransverseMomentum : public LoKi::Function<LHCb::Track>
+    class TransverseMomentum : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -117,7 +117,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class Momentum : public LoKi::Function<LHCb::Track>
+    class Momentum : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -145,7 +145,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class CheckFlag : public LoKi::Predicate<LHCb::Track> 
+    class CheckFlag : public LoKi::BasicFunctors<LHCb::Track>::Predicate 
     {
     public:
       /// constructor form the flag ; 
@@ -177,7 +177,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelayev@physics.syr.edu
      *  @date 2007-06-10
      */
-    class Selector : public LoKi::Predicate<LHCb::Track> 
+    class Selector : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public :
       /// constructor form the tool 
@@ -300,9 +300,9 @@ namespace LoKi
        *  @param update the flag to allow the insert of mnissing information
        */
       SmartInfo
-      ( const int                          index          , 
-        const LoKi::Function<LHCb::Track>& fun            , 
-        const bool                         update = false ) ;
+      ( const int                                         index          , 
+        const LoKi::BasicFunctors<LHCb::Track>::Function& fun            , 
+        const bool                                        update = false ) ;
       /// destructor 
       virtual ~SmartInfo(){};
       /// clone method (mandatory!)
@@ -320,7 +320,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Chi2 : public LoKi::Function<LHCb::Track>
+    class Chi2 : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -333,14 +333,14 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrCHI2" ; }
     } ;
-   // ========================================================================
+    // ========================================================================
     /** @class ProbChi2
      *  simple evaluator of the LHCb::Track::probChi2
      *  @see LoKi::Cuts::TrPROBCHI2
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class ProbChi2 : public LoKi::Function<LHCb::Track>
+    class ProbChi2 : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  
@@ -360,11 +360,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class HasStateAt : public LoKi::Predicate<LHCb::Track>
+    class HasStateAt : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
       HasStateAt ( const LHCb::State::Location& loc )
-        : LoKi::Predicate<LHCb::Track> () 
+        : LoKi::BasicFunctors<LHCb::Track>::Predicate () 
         , m_loc ( loc ) {}
       /// MANDATORY: virtual destructor 
       virtual ~HasStateAt() {}  ;
@@ -393,11 +393,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class IsOnTrack : public LoKi::Predicate<LHCb::Track>
+    class IsOnTrack : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
       IsOnTrack ( const LHCb::LHCbID& id ) 
-        : LoKi::Predicate<LHCb::Track> () 
+        : LoKi::BasicFunctors<LHCb::Track>::Predicate () 
         , m_id ( id ) {}
       /// MANDATORY: virtual destructor 
       virtual ~IsOnTrack () {} ;
@@ -415,7 +415,7 @@ namespace LoKi
     private:
       LHCb::LHCbID m_id ;
     } ;
-   // ========================================================================
+    // ========================================================================
     /** @class Type
      *  simple evaluator of the LHCb::Track::type
      *  @see LHCb::Track::type 
@@ -424,7 +424,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Type : public LoKi::Function<LHCb::Track>
+    class Type : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
       /// MANDATORY: virtual destrcutor  

@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.4 2007-08-19 13:42:59 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -32,8 +32,8 @@ namespace LoKi
     class FunCalls<LHCb::Track>
     {
     private:
-      typedef LHCb::Track                Type ;
-      typedef LoKi::Function<const Type> Fun  ;
+      typedef LHCb::Track                         Type ;
+      typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type& o ) { return fun ( o ) ; }
@@ -43,8 +43,8 @@ namespace LoKi
     class FunCalls<LHCb::RecVertex>
     {
     private:
-      typedef LHCb::RecVertex             Type ;
-      typedef LoKi::Function<const Type>  Fun  ;
+      typedef LHCb::RecVertex                      Type ;
+      typedef LoKi::BasicFunctors <Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type& o ) { return fun ( o ) ; }
@@ -54,8 +54,8 @@ namespace LoKi
     class FunCalls<LoKi::TrackTypes::TrackPair>
     {
     private:
-      typedef LoKi::TrackTypes::TrackPair Type ;
-      typedef LoKi::Function<Type>        Fun  ;
+      typedef LoKi::TrackTypes::TrackPair         Type ;
+      typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
@@ -67,8 +67,8 @@ namespace LoKi
     class FunCalls<LoKi::TrackTypes::TrackVertexPair>
     {
     private:
-      typedef LoKi::TrackTypes::TrackVertexPair Type ;
-      typedef LoKi::Function<Type>              Fun  ;
+      typedef LoKi::TrackTypes::TrackVertexPair   Type ;
+      typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
@@ -81,7 +81,7 @@ namespace LoKi
     {
     private:
       typedef LoKi::TrackTypes::VertexPair Type ;
-      typedef LoKi::Function<Type>         Fun  ;
+      typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
@@ -94,7 +94,7 @@ namespace LoKi
     {
     private:
       typedef LHCb::Track           Type ;
-      typedef LoKi::Predicate<Type> Fun ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
@@ -106,7 +106,7 @@ namespace LoKi
     {
     private:
       typedef LHCb::RecVertex       Type ;
-      typedef LoKi::Predicate<Type> Fun  ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun , const Type& o ) { return fun ( o ) ; }
@@ -117,7 +117,7 @@ namespace LoKi
     {
     private:
       typedef LoKi::TrackTypes::TrackPair Type ;
-      typedef LoKi::Predicate<Type>       Fun ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
@@ -130,7 +130,7 @@ namespace LoKi
     {
     private:
       typedef LoKi::TrackTypes::TrackVertexPair Type ;
-      typedef LoKi::Predicate<Type>             Fun ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
@@ -143,7 +143,7 @@ namespace LoKi
     {
     private:
       typedef LoKi::TrackTypes::VertexPair Type ;
-      typedef LoKi::Predicate<Type>             Fun ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
@@ -183,14 +183,6 @@ namespace
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::TrackPair>        m_cc3 ;
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::TrackVertexPair>  m_cc4 ;
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::VertexPair>       m_cc5 ;
-    /// 
-    LoKi::Monitoring::Counter<LHCb::Track>                    m_mc1 ;
-    LoKi::Monitoring::Plot<LHCb::Track>                       m_mp1 ;
-    LoKi::Monitoring::Stat<LHCb::Track>                       m_ms1 ;
-    LoKi::Monitoring::Counter<LHCb::RecVertex>                m_mc2 ;
-    LoKi::Monitoring::Plot<LHCb::RecVertex>                   m_mp2 ;
-    LoKi::Monitoring::Stat<LHCb::RecVertex>                   m_ms2 ;
-    
     /// fictive constructor 
     _Instantiations () ;
   } ;  

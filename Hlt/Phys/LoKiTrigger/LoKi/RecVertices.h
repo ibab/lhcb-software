@@ -1,4 +1,4 @@
-// $Id: RecVertices.h,v 1.2 2007-08-14 20:32:32 ibelyaev Exp $
+// $Id: RecVertices.h,v 1.3 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTICES_H 
 #define LOKI_RECVERTICES_H 1
@@ -119,9 +119,9 @@ namespace LoKi
        *  @param update the flag to allow the insert of mnissing information
        */
       SmartInfo
-      ( const int                              index          , 
-        const LoKi::Function<LHCb::RecVertex>& fun            , 
-        const bool                             update = false ) ;
+      ( const int                                             index          , 
+        const LoKi::BasicFunctors<LHCb::RecVertex>::Function& fun            , 
+        const bool                                            update = false ) ;
       /// destructor 
       virtual ~SmartInfo(){};
       /// clone method (mandatory!)
@@ -144,7 +144,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class MinPt : public LoKi::Function<LHCb::RecVertex> 
+    class MinPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function
     {
     public:
       /// mandatory: virtual destructor
@@ -168,7 +168,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class MaxPt : public LoKi::Function<LHCb::RecVertex> 
+    class MaxPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function 
     {
     public:
       /// mandatory: virtual destructor
@@ -192,7 +192,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class DeltaZ : public LoKi::Function<LoKi::TrackTypes::VertexPair>
+    class DeltaZ 
+      : public LoKi::BasicFunctors<LoKi::TrackTypes::VertexPair>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -216,7 +217,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class FC :  public LoKi::Function<LoKi::TrackTypes::VertexPair>
+    class FC 
+      :  public LoKi::BasicFunctors<LoKi::TrackTypes::VertexPair>::Function
     {
     public :
       /// MANDATORY: virtual destructor 
@@ -240,7 +242,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class FC2 :  public LoKi::Function<LoKi::TrackTypes::VertexPair>
+    class FC2 
+      :  public LoKi::BasicFunctors<LoKi::TrackTypes::VertexPair>::Function
     {
     public :
       /// MANDATORY: virtual destructor 

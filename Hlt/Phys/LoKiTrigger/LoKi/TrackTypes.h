@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrackTypes.h,v 1.2 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKTYPES_H 
 #define LOKI_TRACKTYPES_H 1
@@ -27,70 +27,79 @@ namespace LoKi
    */
   namespace TrackTypes 
   {
+    // ========================================================================
     // the regular functors for Tracks
+    // ========================================================================
     
     /// type of 'cuts' for Tracks       (interface)
-    typedef LoKi::Predicate<LHCb::Track>                          TrCuts  ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::Predicate             TrCuts ;
     /// type of 'functions' for Tracks  (interface)
-    typedef LoKi::Function<LHCb::Track>                           TrFunc  ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::Function              TrFunc ;
     /// type of 'cuts' for Tracks       (assignable)
-    typedef LoKi::PredicateFromPredicate<LHCb::Track>             TrCut   ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::PredicateFromPredicate TrCut ;
     /// type of 'functions' for Tracks  (assignable)
-    typedef LoKi::FunctionFromFunction<LHCb::Track>               TrFun   ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction   TrFun ;
     
-    // the regular functors for recontruccted vertics 
+    // ========================================================================
+    // the regular functors for reconstructed vertics 
+    // ========================================================================
     
     /// type of 'cuts' for recontructed vertics        (interface)
-    typedef LoKi::Predicate<LHCb::RecVertex>                      RVCuts  ;
+    typedef LoKi::BasicFunctors<LHCb::RecVertex>::Predicate              RVCuts ;
     /// type of 'functions' for recontructed vertices (interface)
-    typedef LoKi::Function<LHCb::RecVertex>                       RVFunc  ;
+    typedef LoKi::BasicFunctors<LHCb::RecVertex>::Function               RVFunc ;
     /// type of 'cuts' for recontructed vertices (assignable)
-    typedef LoKi::PredicateFromPredicate<LHCb::RecVertex>         RVCut   ;
+    typedef LoKi::BasicFunctors<LHCb::RecVertex>::PredicateFromPredicate RVCut  ;
     /// type of 'functions' for recontructed vertices (assignable)
-    typedef LoKi::FunctionFromFunction<LHCb::RecVertex>           RVFun   ;
+    typedef LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction   RVFun  ;
     
     /// The *fictive* argument for  "Track Track bi-functions"
     typedef LoKi::Holder<LHCb::Track,LHCb::Track>                 TrackPair ;
     
-    // the functors for 2 tracks  
+    // ========================================================================
+    // the functors for two tracks  
+    // ========================================================================
     
     /// the type of 'cuts'     for Track-Vertex pair  (interface)
-    typedef LoKi::Predicate<TrackPair>                            TTrCuts   ;
+    typedef LoKi::BasicFunctors<TrackPair>::Predicate              TTrCuts   ;
     /// the type of 'function' for Track-Vertex pair  (interface)
-    typedef LoKi::Function<TrackPair>                             TTrFunc   ;
+    typedef LoKi::BasicFunctors<TrackPair>::Function               TTrFunc   ;
     /// type of 'cuts' for Track-VertexPair        (assignable)
-    typedef LoKi::PredicateFromPredicate<TrackPair>               TTrCut    ;
+    typedef LoKi::BasicFunctors<TrackPair>::PredicateFromPredicate TTrCut    ;
     /// type of 'functions' for Track-Vertex-Pair  (assignable)
-    typedef LoKi::FunctionFromFunction<TrackPair>                 TTrFun    ;
+    typedef LoKi::BasicFunctors<TrackPair>::FunctionFromFunction   TTrFun    ;
     
     /// The *fictive* argument for  "Track-Vertex bi-functions"
     typedef LoKi::Holder<LHCb::Track,LHCb::RecVertex>       TrackVertexPair ;
     
+    // ========================================================================
     // the functors for track&vertex 
+    // ========================================================================
     
     /// the type of 'cuts'     for Track-Vertex pair  (interface)
-    typedef LoKi::Predicate<TrackVertexPair>                      TrVCuts   ;
+    typedef LoKi::BasicFunctors<TrackVertexPair>::Predicate              TrVCuts ;
     /// the type of 'function' for Track-Vertex pair  (interface)
-    typedef LoKi::Function<TrackVertexPair>                       TrVFunc   ;
+    typedef LoKi::BasicFunctors<TrackVertexPair>::Function               TrVFunc ;
     /// type of 'cuts' for Track-VertexPair        (assignable)
-    typedef LoKi::PredicateFromPredicate<TrackVertexPair>         TrVCut    ;
+    typedef LoKi::BasicFunctors<TrackVertexPair>::PredicateFromPredicate TrVCut  ;
     /// type of 'functions' for Track-Vertex-Pair  (assignable)
-    typedef LoKi::FunctionFromFunction<TrackVertexPair>           TrVFun    ;
+    typedef LoKi::BasicFunctors<TrackVertexPair>::FunctionFromFunction   TrVFun  ;
     
     /// The *fictive* argument for  "Vertex-Vertex bi-functions"
     typedef LoKi::Holder<LHCb::RecVertex,LHCb::RecVertex>        VertexPair ;
-    
-    // the functors for 2 vertices 
+   
+    // ========================================================================
+    // the functors for two vertices 
+    // ========================================================================
     
     /// the type of 'cuts'     for Track-Vertex pair  (interface)
-    typedef LoKi::Predicate<VertexPair>                           RVVCuts   ;
+    typedef LoKi::BasicFunctors<VertexPair>::Predicate              RVVCuts ;
     /// the type of 'function' for Track-Vertex pair  (interface)
-    typedef LoKi::Function<VertexPair>                            RVVFunc   ;
+    typedef LoKi::BasicFunctors<VertexPair>::Function               RVVFunc ;
     /// type of 'cuts' for Track-VertexPair        (assignable)
-    typedef LoKi::PredicateFromPredicate<VertexPair>              RVVCut    ;
+    typedef LoKi::BasicFunctors<VertexPair>::PredicateFromPredicate RVVCut  ;
     /// type of 'functions' for Track-Vertex-Pair  (assignable)
-    typedef LoKi::FunctionFromFunction<VertexPair>                RVVFun    ;
-    
+    typedef LoKi::BasicFunctors<VertexPair>::FunctionFromFunction   RVVFun  ;
     
   } // end of namespace LoKi::TrackTypes 
   // ==========================================================================

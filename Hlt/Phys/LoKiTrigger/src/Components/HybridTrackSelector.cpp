@@ -1,4 +1,4 @@
-// $Id: HybridTrackSelector.cpp,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: HybridTrackSelector.cpp,v 1.2 2007-11-28 14:56:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,7 +55,7 @@ namespace LoKi
         const std::string& name,
         const IInterface* parent)
         : GaudiTool ( type , name , parent )
-        , m_cut     ( LoKi::BooleanConstant<LHCb::Track>( false ) ) 
+        , m_cut     ( LoKi::BasicFunctors<LHCb::Track>::BooleanConstant ( false ) ) 
         , m_code    ( "TrNONE" )
         , m_factory ( "LoKi::Hybrid::TrTool/TrHybridFactory:PUBLIC") 
       {

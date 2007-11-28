@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.4 2007-08-20 10:43:27 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -14,15 +14,12 @@
 // ============================================================================
 namespace LoKi 
 {
-
-
-
   namespace HltBinders
   {    
     // ========================================================================
-    /** @class LigthBinder1st 
+    /** @class LightBinder1st 
      *  "Ligth" (optimized) version of class LoKi::Binder1st
-     *  The class is not suppose dto be used as LoKi-function, 
+     *  The class is not supposed to be used as LoKi-function, 
      *  it is just a useful intermediate object for efficient evaluations 
      *  
      *  @attention the class does not own the arguemt and the function
@@ -30,18 +27,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3=double>
     class LightBinder1st 
       : public std::unary_function
     <
-      typename LoKi::Function<TYPE2>::argument_type ,
-      typename LoKi::Function<TYPE2>::result_type   > 
+      typename LoKi::Functor<TYPE2,TYPE3>::argument_type ,
+      typename LoKi::Functor<TYPE2,TYPE3>::result_type   > 
     {
     private:
       /// the actual type for data-holder 
       typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
     public:
       /// contructor from the function and argument
       LightBinder1st 
@@ -58,13 +55,13 @@ namespace LoKi
         , m_fun   ( &fun   )  
       {}
       /// evaluate the  function
-      inline typename LoKi::Function<TYPE2>::result_type operator() 
-      ( typename  LoKi::Function<TYPE2>::argument a ) const 
-      { return (*m_fun) ( Holder_( m_first ,  a ) ) ; }
+      inline typename LoKi::Functor<TYPE2,TYPE3>::result_type operator() 
+        ( typename  LoKi::Functor<TYPE2,TYPE3>::argument a ) const 
+      { return  (*m_fun) ( Holder_( m_first ,  a ) ) ; }
       /// evaluate the  function (HltSpecific) 
-      inline typename LoKi::Function<TYPE2>::result_type operator() 
-      ( const TYPE2* a ) const 
-      { return (*m_fun) ( Holder_( m_first , *a ) ) ; }
+      inline typename LoKi::Functor<TYPE2,TYPE3>::result_type operator() 
+        ( const TYPE2* a ) const 
+      { return  (*m_fun) ( Holder_( m_first , *a ) ) ; }
     private:
       // the default constructor is disabled 
       LightBinder1st(); ///< the default constructor is disabled 
@@ -72,7 +69,7 @@ namespace LoKi
       // the fixed argument 
       typename Holder_::First                           m_first  ;  ///< the fixed argument 
       /// the actual function 
-      const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >* m_fun    ; ///< function 
+      const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>* m_fun    ; ///< function 
     } ;
     // ========================================================================
     /** @class LigthBinder2nd 
@@ -85,18 +82,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2,class TYPE3=double>
     class LightBinder2nd 
       : public std::unary_function
     <
-      typename LoKi::Function<TYPE1>::argument_type ,
-      typename LoKi::Function<TYPE1>::resul_type    > 
+      typename LoKi::Functor<TYPE1,TYPE3>::argument_type ,
+      typename LoKi::Functor<TYPE1,TYPE3>::result_type   > 
     {
     private:
       /// the actual type for data-holder 
       typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
     public:
       /// contructor from the function and argument
       LightBinder2nd 
@@ -113,12 +110,12 @@ namespace LoKi
         , m_fun    ( &fun   )  
       {}
       /// evaluate the  function
-      inline typename LoKi::Function<TYPE1>::result_type operator() 
-      ( typename  LoKi::Function<TYPE1>::argument a ) const 
+      inline typename LoKi::Functor<TYPE1,TYPE3>::result_type operator() 
+        ( typename  LoKi::Functor<TYPE1,TYPE3>::argument a ) const 
       { return (*m_fun) ( Holder_( a , m_second ) ) ; }
       /// evaluate the  function (Hlt-specific) 
-      inline typename LoKi::Function<TYPE1>::result_type operator() 
-      ( const TYPE1* a ) const 
+      inline typename LoKi::Functor<TYPE1,TYPE3>::result_type operator() 
+        ( const TYPE1* a ) const 
       { return (*m_fun) ( Holder_( *a , m_second ) ) ; }
     private:
       // the default constructor is disabled 
@@ -127,7 +124,7 @@ namespace LoKi
       // the fixed argument 
       typename Holder_::Second                          m_second ;  ///< the fixed argument 
       /// the actual function 
-      const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >* m_fun    ; ///< function 
+      const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>* m_fun    ; ///< function 
     } ;
     // ========================================================================
     /** @class HltBinder
@@ -139,13 +136,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE,class TYPE2>
+    template <class TYPE,class TYPE2, class TYPE3=double>
     class HltBinder : public LoKi::AuxFunBase
     {
     public:
-      typedef typename LoKi::Holder<TYPE,TYPE2>   Holder_    ;
-      typedef typename LoKi::Function<Holder_>    Function_  ;
-      typedef std::vector<TYPE2*>                 Container  ;
+      typedef typename LoKi::Holder<TYPE,TYPE2>     Holder_    ;
+      typedef typename LoKi::Functor<Holder_,TYPE3> Function_  ;
+      typedef std::vector<TYPE2*>                   Container  ;
       typedef std::pair<typename Container::const_iterator,double> Pair ;
     public :
       /// constructor from thiie function and container:
@@ -180,13 +177,13 @@ namespace LoKi
       // find the extremal value with respect to the specified operation
       template <class BINOP>
       inline Pair extremum 
-      ( typename LoKi::Function<TYPE>::argument a     , 
-        BINOP                                   binop ) const 
+      ( typename LoKi::Functor<TYPE,TYPE3>::argument a     , 
+        BINOP                                        binop ) const 
       {
         return LoKi::Algs::extremum 
           ( m_vct -> begin () , 
             m_vct -> end   () , 
-            LoKi::HltBinders::LightBinder1st<TYPE,TYPE2> ( m_fun , a )  , 
+            LoKi::HltBinders::LightBinder1st<TYPE,TYPE2,TYPE3> ( m_fun , a )  , 
             LoKi::Objects::_VALID<TYPE2*> () , // only valid pointers!
             binop            ) ;
       }
@@ -200,13 +197,13 @@ namespace LoKi
       HltBinder() ; ///<  the default constructor is disabled
     private:
       // the actual function 
-      typename LoKi::FunctionFromFunction<Holder_>  m_fun ; // the actual function 
+      typename LoKi::FunctorFromFunctor<Holder_,TYPE3> m_fun ; // the actual function 
       const Container*                              m_vct;
     } ;
     // ========================================================================
     /** @class BinderValue
      *  Auxillary class to represent various "binders"
-     *  For the given argment, it funcd the exttream of "bi"-function
+     *  For the given argment, it funds the extremum of "bi"-function
      *  with against all elements from the reference container and 
      *  returns the extremal value 
      *
@@ -216,11 +213,14 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2, class BINOP = std::less<double> >
-    class BinderValue : public LoKi::Function<TYPE1>
+    template <class TYPE1                  ,
+              class TYPE2                  , 
+              class TYPE3=double           , 
+              class BINOP=std::less<TYPE3> > 
+    class BinderValue : public LoKi::Functor<TYPE1,TYPE3>
     {
     protected:
-      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2> Binder ;
+      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2,TYPE3> Binder ;
     public:
       /// constructor from the container and the function 
       BinderValue 
@@ -228,7 +228,7 @@ namespace LoKi
         const typename Binder::Container* vct  , 
         const std::string&                nam1 ,
         const std::string&                nam2 ) 
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_binder ( fun , vct ) 
         , m_binop  ( BINOP ()  ) 
         , m_nam1   ( nam1     ) 
@@ -239,7 +239,7 @@ namespace LoKi
       ( const Binder&      binder , 
         const std::string& nam1   ,
         const std::string& nam2   ) 
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_binder ( binder   ) 
         , m_binop  ( BINOP () ) 
         , m_nam1   ( nam1     ) 
@@ -250,8 +250,8 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  BinderValue* clone () const { return new BinderValue(*this); }
       /// MANDATORY: the only one essential method 
-      virtual typename LoKi::Function<TYPE1>::result_type operator() 
-      ( typename LoKi::Function<TYPE1>::argument a ) const 
+      virtual typename LoKi::Functor<TYPE1,TYPE3>::result_type operator() 
+        ( typename LoKi::Functor<TYPE1,TYPE3>::argument a ) const 
       {
         typename Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
         Assert ( m_binder.vct()-> end() != r.first ,"No valid tracks are found" ) ;
@@ -280,7 +280,7 @@ namespace LoKi
     // ========================================================================
     /** @class BinderFun
      *  Auxillary class to represent various "binders"
-     *  For the given argment, it funcd the exttream of "bi"-function
+     *  For the given argment, it finds the extremum of "bi"-function
      *  with against all elements from the reference container, 
      *  and evaluates the second function for the found element,,
      *
@@ -290,12 +290,15 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2, class BINOP>
-    class BinderFun : public LoKi::Function<TYPE1>
+    template <class TYPE1                  ,
+              class TYPE2                  , 
+              class TYPE3=double           , 
+              class BINOP=std::less<TYPE3> > 
+    class BinderFun : public LoKi::Functor<TYPE1,TYPE3>
     {
     protected:
-      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2> Binder ;
-      typedef  LoKi::Function<TYPE2>                    Fun2   ;
+      typedef  typename LoKi::HltBinders::HltBinder<TYPE1,TYPE2,TYPE3> Binder ;
+      typedef  LoKi::Functor<TYPE2,TYPE3>                    Fun2   ;
     public:
       /// constructor from the container and the functions 
       BinderFun
@@ -304,7 +307,7 @@ namespace LoKi
         const typename Binder::Container* vct  , 
         const std::string&                nam1 ,
         const std::string&                nam2 ) 
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_binder ( fun , vct ) 
         , m_binop  ( BINOP ()  ) 
         , m_fun2   ( fun2      ) 
@@ -317,7 +320,7 @@ namespace LoKi
         const Fun2&        fun2   ,
         const std::string& nam1   ,
         const std::string& nam2   ) 
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_binder ( binder    ) 
         , m_binop  ( BINOP ()  ) 
         , m_fun2   ( fun2      ) 
@@ -329,8 +332,8 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  BinderFun* clone () const { return new BinderFun(*this); }
       /// MANDATORY: the only one essential method 
-      virtual typename LoKi::Function<TYPE1>::result_type operator() 
-      ( typename LoKi::Function<TYPE1>::argument a ) const 
+      virtual typename LoKi::Functor<TYPE1,TYPE3>::result_type operator() 
+        ( typename LoKi::Functor<TYPE1,TYPE3>::argument a ) const 
       {
         typename Binder::Pair r = m_binder.extremum ( a , m_binop ) ;
         Assert ( m_binder.vct()-> end() != r.first , "No valid elements are found" ) ;
@@ -354,7 +357,7 @@ namespace LoKi
       // binary operation
       BINOP  m_binop  ; ///< binary operation
       // the function to be evaluated 
-      LoKi::FunctionFromFunction<TYPE2>  m_fun2 ; /// the function to be evaluated 
+      LoKi::FunctorFromFunctor<TYPE2,TYPE3>  m_fun2 ; /// the function to be evaluated 
       // function name 
       std::string m_nam1   ;
       // function name 
@@ -382,17 +385,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2,class BINOP>
+    template <class TYPE1,class TYPE2,class TYPE3,class BINOP >
     inline 
-    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP>
+    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,TYPE3,BINOP>
     bind 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun      ,
-      const std::vector<TYPE2*>*                        vct      , 
-      BINOP                                          /* binop */ ,
-      const std::string&                                nam1     ,
-      const std::string&                                nam2     )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>&   fun      ,
+      const std::vector<TYPE2*>*                              vct      , 
+      BINOP                                                /* binop */ ,
+      const std::string&                                      nam1     ,
+      const std::string&                                      nam2     )
     {
-      return LoKi::HltBinders::BinderValue<TYPE1,TYPE2,BINOP> 
+      return LoKi::HltBinders::BinderValue<TYPE1,TYPE2,TYPE3,BINOP> 
         ( fun , vct , nam1 , nam2 ) ;  
     }
     // ========================================================================
@@ -418,18 +421,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2,class BINOP>
+    template <class TYPE1,class TYPE2,class TYPE3,class BINOP>
     inline 
-    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
+    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,TYPE3,BINOP>
     bind 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun      ,
-      const LoKi::Function<TYPE2>&                      fun2     , 
-      const std::vector<TYPE2*>*                        vct      ,
-      BINOP                                          /* binop */ ,
-      const std::string&                                nam1     ,
-      const std::string&                                nam2     )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3 >& fun      ,
+      const LoKi::Functor<TYPE2,TYPE3>&                      fun2     , 
+      const std::vector<TYPE2*>*                             vct      ,
+      BINOP                                               /* binop */ ,
+      const std::string&                                     nam1     ,
+      const std::string&                                     nam2     )
     {
-      return LoKi::HltBinders::BinderFun<TYPE1,TYPE2,BINOP>
+      return LoKi::HltBinders::BinderFun<TYPE1,TYPE2,TYPE3,BINOP>
         ( fun , fun2 , vct , nam1 , nam2 ) ;
     }  
     // ========================================================================
@@ -453,17 +456,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
-    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,std::less<double> >
+    LoKi::HltBinders::BinderValue<TYPE1,TYPE2,TYPE3,std::less<TYPE3> >
     bindMin 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const std::vector<TYPE2*>*                        vct   , 
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const std::vector<TYPE2*>*                            vct   , 
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , std::less<double>() , nam1 , nam2 ) ;
+        ( fun , vct , std::less<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -488,18 +491,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
-    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,std::less<double> >
+    LoKi::HltBinders::BinderFun<TYPE1,TYPE2,TYPE3,std::less<TYPE3> >
     bindMin 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const LoKi::Function<TYPE2>&                      fun2  , 
-      const std::vector<TYPE2*>*                        vct   ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
+      const std::vector<TYPE2*>*                            vct   ,
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , std::less<double>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , std::less<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
     /** helper function to create the the metatunction:
@@ -522,18 +525,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderValue
-    <TYPE1,TYPE2,LoKi::StdMath::abs_less<double> >
+    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_less<TYPE3> >
     bindAbsMin 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const std::vector<TYPE2*>*                        vct   , 
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const std::vector<TYPE2*>*                            vct   , 
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , LoKi::StdMath::abs_less<double>() , nam1 , nam2 ) ;
+        ( fun , vct , LoKi::StdMath::abs_less<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -558,22 +561,22 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderFun
-    <TYPE1,TYPE2,LoKi::StdMath::abs_less<double> >
+    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_less<TYPE3> >
     bindAbsMin 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const LoKi::Function<TYPE2>&                      fun2  , 
-      const std::vector<TYPE2*>*                        vct   ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
+      const std::vector<TYPE2*>*                            vct   ,
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , LoKi::StdMath::abs_less<double>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , LoKi::StdMath::abs_less<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
-    /** helper function to create the the metatunction:
+    /** helper function to create the the metafunction:
      *
      *  @code
      *
@@ -593,18 +596,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2,class TYPE3>
     inline 
     LoKi::HltBinders::BinderValue
-    <TYPE1,TYPE2,std::greater<double> >
+    <TYPE1,TYPE2,TYPE3,std::greater<TYPE3> >
     bindMax 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const std::vector<TYPE2*>*                        vct   , 
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const std::vector<TYPE2*>*                            vct   , 
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , std::greater<double>() , nam1 , nam2 ) ;
+        ( fun , vct , std::greater<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -629,19 +632,19 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderFun
-    <TYPE1,TYPE2,std::greater<double> >
+    <TYPE1,TYPE2,TYPE3,std::greater<TYPE3> >
     bindMax 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const LoKi::Function<TYPE2>&                      fun2  , 
-      const std::vector<TYPE2*>*                        vct   ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
+      const std::vector<TYPE2*>*                            vct   ,
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , std::greater<double>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , std::greater<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
     /** helper function to create the the metatunction:
@@ -664,18 +667,18 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderValue
-    <TYPE1,TYPE2,LoKi::StdMath::abs_greater<double> >
+    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_greater<TYPE3> >
     bindAbsMax 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const std::vector<TYPE2*>*                        vct   , 
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const std::vector<TYPE2*>*                            vct   , 
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , LoKi::StdMath::abs_greater<double>() , nam1 , nam2 ) ;
+        ( fun , vct , LoKi::StdMath::abs_greater<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -700,24 +703,21 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */    
-    template <class TYPE1,class TYPE2>
+    template <class TYPE1,class TYPE2,class TYPE3>
     inline 
     LoKi::HltBinders::BinderFun
-    <TYPE1,TYPE2,LoKi::StdMath::abs_greater<double> >
+    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_greater<TYPE3> >
     bindAbsMax 
-    ( const LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >& fun   ,
-      const LoKi::Function<TYPE2>&                      fun2  , 
-      const std::vector<TYPE2*>*                        vct   ,
-      const std::string&                                nam1  ,
-      const std::string&                                nam2  )
+    ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
+      const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
+      const std::vector<TYPE2*>*                            vct   ,
+      const std::string&                                    nam1  ,
+      const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , LoKi::StdMath::abs_greater<double>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , LoKi::StdMath::abs_greater<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
-    
-    
-    
   } // end of namespace LoKi::HltBinders 
 } // end of namespace LoKi
 // ============================================================================

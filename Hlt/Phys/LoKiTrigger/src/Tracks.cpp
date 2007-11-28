@@ -1,4 +1,4 @@
-// $Id: Tracks.cpp,v 1.4 2007-08-20 10:43:27 ibelyaev Exp $
+// $Id: Tracks.cpp,v 1.5 2007-11-28 14:56:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,7 +24,7 @@
 // ============================================================================
 LoKi::Tracks::CheckFlag::CheckFlag 
 ( LHCb::Track::Flags flag ) 
-  : LoKi::Predicate<LHCb::Track> () 
+  : LoKi::BasicFunctors<LHCb::Track>::Predicate() 
   , m_flag ( flag ) 
 {}
 // ============================================================================
@@ -33,7 +33,7 @@ LoKi::Tracks::CheckFlag::CheckFlag
 LoKi::Tracks::CheckFlag::CheckFlag 
 ( const LoKi::Tracks::CheckFlag& right ) 
   : AuxFunBase ( right ) 
-  , LoKi::Predicate<LHCb::Track> ( right ) 
+  , LoKi::BasicFunctors<LHCb::Track>::Predicate ( right ) 
   , m_flag ( right.m_flag ) 
 {}
 // ============================================================================
@@ -69,7 +69,7 @@ std::ostream& LoKi::Tracks::CheckFlag::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Tracks::Selector::Selector 
 ( ITrackSelector* tool ) 
-  : LoKi::Predicate<LHCb::Track> () 
+  : LoKi::BasicFunctors<LHCb::Track>::Predicate() 
   , m_tool ( tool ) 
 {
   Assert ( m_tool.validPointer() , 
@@ -80,7 +80,7 @@ LoKi::Tracks::Selector::Selector
 // ============================================================================
 LoKi::Tracks::Selector::Selector 
 ( const LoKi::Interface<ITrackSelector>& tool ) 
-  : LoKi::Predicate<LHCb::Track> () 
+  : LoKi::BasicFunctors<LHCb::Track>::Predicate() 
   , m_tool ( tool ) 
 {
   Assert ( m_tool.validPointer() , " IParticleSelector* point to NULL" );  
@@ -91,7 +91,7 @@ LoKi::Tracks::Selector::Selector
 LoKi::Tracks::Selector::Selector 
 ( const LoKi::Tracks::Selector& right ) 
   : LoKi::AuxFunBase             ( right ) 
-  , LoKi::Predicate<LHCb::Track> ( right ) 
+  , LoKi::BasicFunctors<LHCb::Track>::Predicate ( right ) 
   , m_tool ( right.m_tool ) 
 {
   Assert ( m_tool.validPointer() , " IParticleSelector* point to NULL" );  
@@ -162,9 +162,9 @@ std::ostream& LoKi::Tracks::Info::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Tracks::SmartInfo::SmartInfo
-( const int                          index  , 
-  const LoKi::Function<LHCb::Track>& fun    , 
-  const bool                         update ) 
+( const int                                         index  , 
+  const LoKi::BasicFunctors<LHCb::Track>::Function& fun    , 
+  const bool                                        update ) 
   : LoKi::ExtraInfo::GetSmartInfo<LHCb::Track> ( index , fun , update )
 {}
 // ============================================================================
