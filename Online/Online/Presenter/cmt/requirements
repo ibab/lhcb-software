@@ -1,12 +1,12 @@
 package Presenter
-version v0r4
+version v0r5
 
 branches cmt doc src test
 
 use DIM           v16r* Online
 
-use OnlineHistDB  v3r4  Online
-use OMAlib        v0r0  Online
+use OnlineHistDB  v4r3  Online
+use OMAlib        v0r1  Online
 
 use ROOT          v5r*  LCG_Interfaces
 use Python        v2r*  LCG_Interfaces
@@ -14,7 +14,7 @@ use Python        v2r*  LCG_Interfaces
 #use  Boost       v*    LCG_Interfaces
 
 # Go for the latest and greatest ROOT:
-#macro ROOT_config_version "5.17.02"
+#macro ROOT_config_version "5.17.04"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
@@ -23,16 +23,20 @@ use Python        v2r*  LCG_Interfaces
 # Build ROOT dictionary - cmt fragment accepts only(?) 1 header file...
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc \
-                                         -I$(PRESENTERROOT)/src"
+macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
+
 macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
                libGraf3d.lib libGed.lib"
-macro_append OnlineHistDB_linkopts "" WIN32 " oci.lib ociw32.lib \
-                                                                              oraocci10.lib "
 
-application Presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
+# Setup cppflags 
+#macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
+
+# RegexpFrame.cpp 
+
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
-                                     EditorFrame.cpp LoginDialog.cpp \
-                                     HistoPropDialog.cpp PageSaveDialog.cpp  \
+                                     LoginDialog.cpp HistoPropDialog.cpp \
+                                     PageSaveDialog.cpp SetUtgidTaskDialog.cpp \
+                                     SetDimDnsNodeDialog.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
