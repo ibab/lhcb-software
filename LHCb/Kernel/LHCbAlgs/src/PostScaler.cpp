@@ -1,4 +1,4 @@
-// $Id: PostScaler.cpp,v 1.2 2007-10-11 08:47:29 cattanem Exp $
+// $Id: PostScaler.cpp,v 1.3 2007-11-28 13:43:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -93,9 +93,7 @@ StatusCode PostScaler::finalize() {
   info() << "Event Filtered " << m_nEventsAll << endreq;
   info() << "Event Accepted " << m_nEvents << endreq;
 
-  GaudiAlgorithm::finalize() ;
-
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize() ;
 }
 
 //=============================================================================

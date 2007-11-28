@@ -1,10 +1,10 @@
-// $Id: FilterByRunEvent.cpp,v 1.1 2007-11-24 18:08:55 gligorov Exp $
+// $Id: FilterByRunEvent.cpp,v 1.2 2007-11-28 13:43:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-#include "Event/RecHeader.h"
+#include "Event/ODIN.h"
 
 // local
 #include "FilterByRunEvent.h"
@@ -26,35 +26,13 @@ FilterByRunEvent::FilterByRunEvent( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "RunNumList",   m_runnum );
-  declareProperty( "EventNumList", m_evnum );
+  declareProperty( "RunEventNumList", m_events );
   declareProperty( "PassSelectedEvents", m_passSelect = true );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 FilterByRunEvent::~FilterByRunEvent() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode FilterByRunEvent::initialize()
-{
-  //=== The following two lines should be commented for DC04 algorithms ! ===
-  // StatusCode sc = DVAlgorithm::initialize(); 
-  // if ( sc.isFailure() ) return sc;
-
-  debug() << "==> Initialize" << endmsg;
-
-  if( m_runnum.size() != m_evnum.size() )
-  {
-    err() << "Vector of run and event numbers different lengths: "
-    	  << m_runnum.size() << "/" << m_evnum.size() << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // Main execution
@@ -67,24 +45,17 @@ StatusCode FilterByRunEvent::execute()
   // code goes here  
   setFilterPassed(!m_passSelect);
 
-  // Get the EventHeader
-  LHCb::RecHeader* evthdr = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);
-  //SmartDataPtr<RecHeader> evthdr( eventSvc(), EventHeaderLocation::Default );
-  if ( !evthdr )
-  {
-    err() << "Not able to retrieve event header" << endreq;
-    return StatusCode::FAILURE;
-  }
-  long lcl_runNum = evthdr->runNumber();
-  long lcl_evtNum = evthdr->evtNumber();
+  // Get the run and event number from the ODIN bank
+  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+
+  int lcl_runNum = odin->runNumber();
+  int lcl_evtNum = odin->eventNumber();
 
   bool lcl_sel = false;
-  std::vector<long>::const_iterator i;
-  for( i = m_runnum.begin(); i != m_runnum.end(); i++ )
+  std::vector< std::pair<int,int> >::const_iterator i;
+  for( i = m_events.begin(); i != m_events.end(); i++ )
   {
-    std::vector<long>::const_iterator j = m_evnum.begin() 
-    						+ (i - m_runnum.begin());
-    if( lcl_runNum == *i && lcl_evtNum == *j )
+    if( lcl_runNum == (*i).first && lcl_evtNum == (*i).second )
     {
       lcl_sel = true;
       break;
@@ -101,16 +72,4 @@ StatusCode FilterByRunEvent::execute()
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FilterByRunEvent::finalize()
-{
-
-  debug() << "==> Finalize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
 //=============================================================================

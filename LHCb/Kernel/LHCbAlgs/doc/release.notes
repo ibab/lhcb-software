@@ -4,6 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r13 2007-11-28 ==========================
+! 2007-11-28 - Marco Cattaneo
+ - Reimplemented FilterByRunEvent using property type std::vector<std::pair> >
+   Now, run/event number pairs are defined with the following syntax:
+   FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
+ - Fix an untested StatusCode
+
 ! 2007-11-24 V Gligorov
  - Added FilterByRunEvent{.ccp,.h}, for Patrick Spradlin.
 

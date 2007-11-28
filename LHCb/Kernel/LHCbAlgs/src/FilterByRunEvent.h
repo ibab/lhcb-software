@@ -1,10 +1,12 @@
-// $Id: FilterByRunEvent.h,v 1.1 2007-11-24 18:08:52 gligorov Exp $
+// $Id: FilterByRunEvent.h,v 1.2 2007-11-28 13:43:20 cattanem Exp $
 #ifndef FILTERBYRUNEVENT_H 
 #define FILTERBYRUNEVENT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include <vector>
+#include <utility>
 
 /** @class FilterByRunEvent FilterByRunEvent.h
  *   
@@ -19,16 +21,13 @@ public:
 
   virtual ~FilterByRunEvent( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
 private:
 
-  std::vector<long> m_runnum;	///< Vector of run numbers
-  std::vector<long> m_evnum;	///< Vector of event numbers
+  std::vector<std::pair<int,int> > m_events; ///< Run/event number pairs
   bool m_passSelect;		///< If true, will pass list events; false, fail
 
 };
