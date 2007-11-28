@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-11-28 - Chris Jones
+ - Update how Offline/HLT data locations are handled, to always try and guess
+   the correct location using the context() flag
+
 !========================== GlobalReco v6r13 2007-10-08 ======================
 ! 2007-09-29 - Chris Jones
  - Update ChargedProtoCombineDLLsAlg to produce better combined DLL values

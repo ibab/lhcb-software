@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.62 2007-10-23 10:41:53 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.63 2007-11-28 16:30:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -34,6 +34,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_tracksPath   ( TrackLocation::Default ),
     m_richPath     ( RichPIDLocation::Default ),
     m_muonPath     ( MuonPIDLocation::Default ),
+    m_protoPath    ( ProtoParticleLocation::Charged ),
     m_protos       ( NULL ),
     m_trSel        ( NULL ),
     m_velodEdx     ( NULL ),
@@ -67,13 +68,15 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   if      ( context() == "Offline" )
   {
     m_richPath   = LHCb::RichPIDLocation::Offline; 
-    m_muonPath   = MuonPIDLocation::Default;
+    m_muonPath   = LHCb::MuonPIDLocation::Offline;
+    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
   }
   else if ( context() == "HLT" || context() == "Hlt" )
   {
     m_richPath   = LHCb::RichPIDLocation::HLT;
     m_tracksPath = LHCb::TrackLocation::HltForward;
-    m_muonPath   = "Hlt/Muon/MuonPID";
+    m_muonPath   = LHCb::MuonPIDLocation::Hlt;
+    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
   }
 
   // Input data
@@ -92,8 +95,8 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("UseCaloBremPID", m_BremPID   =   true  );
 
   // output data
-  declareProperty( "OutputProtoParticleLocation",
-                   m_protoPath = ProtoParticleLocation::Charged );
+  declareProperty( "OutputProtoParticleLocation", m_protoPath );
+
 }
 
 //=============================================================================

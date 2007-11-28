@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.3 2007-09-29 21:16:13 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.4 2007-11-28 16:30:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -29,11 +29,20 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleTupleAlg );
 ChargedProtoParticleTupleAlg::ChargedProtoParticleTupleAlg( const std::string& name,
                                                             ISvcLocator* pSvcLocator )
   : GaudiTupleAlg ( name , pSvcLocator ),
+    m_protoPath   ( LHCb::ProtoParticleLocation::Charged ),
     m_truth       ( NULL )
 {
+  // context specific locations
+  if      ( context() == "Offline" )
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::Charged;
+  }
+  else if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
+  }
   // Job Options
-  declareProperty( "ProtoParticleLocation",
-                   m_protoPath = LHCb::ProtoParticleLocation::Charged );
+  declareProperty( "ProtoParticleLocation", m_protoPath );
 }
 
 //=============================================================================
@@ -60,7 +69,7 @@ StatusCode ChargedProtoParticleTupleAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoParticleTupleAlg::execute()
 {
-   // Load the charged ProtoParticles
+  // Load the charged ProtoParticles
   const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
 
   // Loop over the protos

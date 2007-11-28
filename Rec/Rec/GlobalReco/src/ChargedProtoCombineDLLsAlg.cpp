@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.16 2007-10-03 15:00:35 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.17 2007-11-28 16:30:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -29,16 +29,27 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoCombineDLLsAlg );
 ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator )
-    ,m_elCombDll(0xFFFF)
-    ,m_muCombDll(0xFFFF)
-    ,m_prCombDll(0xFFFF)
-    ,m_piCombDll(0xFFFF)
-    ,m_kaCombDll(0xFFFF)
+    , m_protoPath(LHCb::ProtoParticleLocation::Charged)
+    , m_elCombDll(0xFFFF)
+    , m_muCombDll(0xFFFF)
+    , m_prCombDll(0xFFFF)
+    , m_piCombDll(0xFFFF)
+    , m_kaCombDll(0xFFFF)
 {
+
+  // context specific locations
+  if      ( context() == "Offline" )
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::Charged;
+  }
+  else if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
+  }
   
   // Job Options
-  declareProperty( "ProtoParticleLocation", 
-                   m_protoPath = LHCb::ProtoParticleLocation::Charged );
+  declareProperty( "ProtoParticleLocation", m_protoPath );
+
   declareProperty("ElectronDllDisable"  , m_elDisable);
   declareProperty("MuonDllDisable"      , m_muDisable);
   declareProperty("KaonDllDisable"      , m_kaDisable);
