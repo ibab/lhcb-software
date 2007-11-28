@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.3 2007-11-28 14:08:30 cattanem Exp $
+! $Id: release.notes,v 1.4 2007-11-28 21:21:54 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-!====================== STKernel v1r0 2007-11-29 ============================
+!====================== STKernel v1r0 2007-11-28 ============================
 ! 2007-11-28 - Marco Cattaneo
  - Add dictionary for Tool interface
+ - Add missing LHCbKernel dependency
 
 ! 2007-16-11 M  Needham
   - First port of new STKernel package
