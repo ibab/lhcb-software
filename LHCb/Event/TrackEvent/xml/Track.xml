@@ -627,13 +627,8 @@
       </method>
 
       <method
-        name    = 'removeMeasurements'
-        desc    = 'Remove all measurements on track'>
-      </method>
-
-      <method
-        name    = 'removeNodes'
-        desc    = 'Remove all nodes on track'>
+        name    = 'clearMeasurements'
+        desc    = 'Clear all measurements on track'>
       </method>
 
       <method
@@ -645,7 +640,12 @@
         </code>
       </method>
 
-     <method
+      <method
+        name    = 'clearNodes'
+        desc    = 'Clear all nodes on track'>
+      </method>
+
+      <method
         name    = 'removeFromNodes'
         desc    = 'Remove a Node from the list of Nodes associated to the track'
         argList = 'Node* value'>

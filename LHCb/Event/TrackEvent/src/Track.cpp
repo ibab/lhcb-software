@@ -345,10 +345,10 @@ Measurement& Track::measurement( const LHCbID& value )
 //=============================================================================
 // Remove all measurements from the track
 //=============================================================================
-void Track::removeMeasurements() 
+void Track::clearMeasurements() 
 {
   // remove all nodes first
-  removeNodes() ;
+  clearNodes() ;
   // now remove the measurements
   std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
   m_measurements.clear() ;
@@ -357,7 +357,7 @@ void Track::removeMeasurements()
 //=============================================================================
 // Remove all nodes from the track
 //=============================================================================
-void Track::removeNodes() 
+void Track::clearNodes() 
 {
   std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
   m_nodes.clear() ;
