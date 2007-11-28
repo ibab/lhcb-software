@@ -1,4 +1,4 @@
-// $Id: MatrixUtils.h,v 1.3 2007-11-27 18:24:36 sean Exp $
+// $Id: MatrixUtils.h,v 1.4 2007-11-28 08:54:38 cattanem Exp $
 // ============================================================================
 #ifndef MATRIXUTILS_H
 #define MATRIXUTILS_H 1
@@ -22,7 +22,8 @@
 // ============================================================================
 
 namespace Gaudi
-{namespace Math 
+{
+  namespace Math 
   {
     /** fill  Linear Algebra - vector from 3D-point
      *
@@ -50,8 +51,7 @@ namespace Gaudi
       ROOT::Math::SVector<T,3>&              dest   ) 
     {
       dest[0] = source.X () ;
-      dest[1] = source.Y ()
- ;
+      dest[1] = source.Y () ;
       dest[2] = source.Z () ;
       return dest ;
     } ;
@@ -252,7 +252,7 @@ namespace Gaudi
     ( const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> > & matrix ,
       const ROOT::Math::LorentzVector<C>&                            delta  ) 
     { return Similarity ( delta , matrix ) ; } ;
-    /** incrment  LorentzVector with 4-component linear vector 
+    /** increment  LorentzVector with 4-component linear vector 
      *  
      *  @code 
      *
@@ -1265,11 +1265,6 @@ namespace Gaudi
       const ROOT::Math::SMatrix<T,D1,D2,R>& m2 , P pred )
     { return std::equal ( m1.begin() , m1.end() , m2.begin() , pred ) ; } ;
     
-    //Compute the jacobian for the transformation of a covariance matrix
-    //with rows representing track parameters TxTyQop and columns in xyz
-    //into a covariance matrix representing the track parameters in 
-    //PxPyPzE and columns xyz
-
      /** Fill Lorentz vector from 3D displacement vector + Mass
      *     
      *@code
@@ -1284,11 +1279,6 @@ namespace Gaudi
      * @author Sean BRISBANE sean.brisbane@cern.ch
      * @date 2007-11-27
      */
-
-
-
-
-
     template<class T, class C, class M>
     inline ROOT::Math::LorentzVector<C>&
     geo2LA 
@@ -1306,13 +1296,12 @@ namespace Gaudi
     } ;
 
   
-    //Compute the jacobian for the transformation of a covariance matrix
-    //with rows representing track parameters TxTyQop and columns in xyz
-    //into a covariance matrix representing the track parameters in 
-    //PxPyPzE and columns xyz
-
-    /**@code 
-     * 
+    /** Compute the jacobian for the transformation of a covariance matrix
+     *  with rows representing track parameters TxTyQop and columns in xyz
+     *  into a covariance matrix representing the track parameters in 
+     *  PxPyPzE and columns xyz
+     *
+     * @code 
      *
      * ROOT::Math::SMatrix<T, 3 ,3 ,R> covTxTyQoP_xyz = ....  ;
      * ROOT::Math::SVector<C,3>& particleMomentum=...;
@@ -1363,12 +1352,8 @@ namespace Gaudi
       J(3,2) = p/E * -p/qop ;// dE/dqop
       return ; 
     };
-    
-    
-    
-    
-    
-} // end of namespace Math  
+
+  } // end of namespace Math  
 } // end of namespace Gaudi
 
 // ============================================================================
