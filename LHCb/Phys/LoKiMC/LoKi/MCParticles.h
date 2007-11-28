@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.14 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.15 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -59,7 +59,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum : public LoKi::Function<const LHCb::MCParticle*> 
+    class Momentum : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
       /// clone method (mandatory!)
@@ -76,7 +76,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Energy : public LoKi::Function<const LHCb::MCParticle*>
+    class Energy : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -93,7 +93,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TransverseMomentum : public LoKi::Function<const LHCb::MCParticle*>
+    class TransverseMomentum 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -110,7 +111,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumX : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumX : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -127,7 +128,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumY : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumY : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {  
     public:
       /// clone method (mandatory!)
@@ -144,7 +145,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumZ : public LoKi::Function<const LHCb::MCParticle*>
+    class MomentumZ : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -161,7 +162,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity : public LoKi::Function<const LHCb::MCParticle*>
+    class PseudoRapidity : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -178,7 +179,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2002-07-15
      */
-    class Theta : public LoKi::Function<const LHCb::MCParticle*>
+    class Theta : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {  
     public:
       /// clone method (mandatory!)
@@ -195,7 +196,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi : public LoKi::Function<const LHCb::MCParticle*>
+    class Phi : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -212,7 +213,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Mass : public LoKi::Function<const LHCb::MCParticle*>
+    class Mass : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -229,7 +230,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier : public LoKi::Function<const LHCb::MCParticle*>
+    class Identifier : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -246,7 +247,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier : public LoKi::Function<const LHCb::MCParticle*>
+    class AbsIdentifier 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {      
     public:
       /// clone method (mandatory!)
@@ -264,7 +266,8 @@ namespace LoKi
      *  @author Vanya Belyaev ibelyaev@physics.syr.edu
      *  @date   2006-02-05
      */
-    class Oscillated : public LoKi::Predicate<const LHCb::MCParticle*>
+    class Oscillated 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {      
     public:
       /// clone method (mandatory!)
@@ -281,7 +284,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ThreeCharge : public LoKi::Function<const LHCb::MCParticle*>
+    class ThreeCharge 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -302,7 +306,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class ProperLifeTime : public LoKi::Function<const LHCb::MCParticle*>
+    class ProperLifeTime 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
       /// clone method (mandatory!)
@@ -319,7 +324,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class  HasQuark : public LoKi::Predicate<const LHCb::MCParticle*>
+    class  HasQuark 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       HasQuark (  const LHCb::ParticleID::Quark quark ) ;
@@ -344,7 +350,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsCharged : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsCharged 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -360,7 +367,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNeutral : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNeutral
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -376,7 +384,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsLepton : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsLepton 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -392,7 +401,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsMeson : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsMeson : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -408,7 +417,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsBaryon : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsBaryon 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -424,7 +434,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsHadron : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsHadron : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -440,7 +450,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNucleus : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNucleus : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -457,7 +467,8 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class FromMCDecayTree : public LoKi::Predicate<const LHCb::MCParticle*>
+    class FromMCDecayTree 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     protected:
       typedef std::vector<const LHCb::MCParticle*> MCCont ;
@@ -485,7 +496,7 @@ namespace LoKi
       template <class MCPARTICLE>
       FromMCDecayTree ( MCPARTICLE first , 
                         MCPARTICLE last  ) 
-        : LoKi::Predicate<const LHCb::MCParticle*>()
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate()
           , m_cont ( first , last ) {}
       // copy constructor 
       FromMCDecayTree( const FromMCDecayTree& ) ;
@@ -566,13 +577,15 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-11-17 
      */
-    class NinMCdownTree: public LoKi::Function<const LHCb::MCParticle*>
+    class NinMCdownTree
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** constructor 
        *  @param cut cut to be inspected 
        */
-      NinMCdownTree ( const LoKi::Predicate<const LHCb::MCParticle*>& cut ) ;
+      NinMCdownTree 
+      ( const LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate& cut ) ;
       /// destructor
       virtual ~NinMCdownTree() ;
       /// clone method/"virtual constructor" (mandatory!)
@@ -592,15 +605,17 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-11-17 
      */
-    class MCMotherFunction: public LoKi::Function<const LHCb::MCParticle*>
+    class MCMotherFunction
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** constructor 
        *  @param fun function to be evaluated 
        *  @param val value to be returned for 'invalid' mother 
        */
-      MCMotherFunction ( const LoKi::Function<const LHCb::MCParticle*>& fun   , 
-                         const double                             val   ) ;
+      MCMotherFunction
+      ( const LoKi::BasicFunctors<const LHCb::MCParticle*>::Function& fun   , 
+        const double                             val   ) ;
       /// copy constructor 
       MCMotherFunction ( const MCMotherFunction&                  right ) ;
       /// destructor 
@@ -623,7 +638,8 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date   2005-02-02 
      */
-    class MCMotherPredicate: public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCMotherPredicate
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /** constructor 
@@ -631,7 +647,7 @@ namespace LoKi
        *  @param val value to be returned for 'invalid' mother 
        */
       MCMotherPredicate
-      ( const LoKi::Predicate<const LHCb::MCParticle*>& cut   , 
+      ( const LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate& cut   , 
         const bool                                      val   ) ;
       /// copy constructor 
       MCMotherPredicate 
@@ -656,7 +672,8 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-02-02
      */
-    class IsParticle : public LoKi::Predicate<const LHCb::MCParticle*> 
+    class IsParticle 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
       typedef std::vector<const LHCb::MCParticle*> Objects;
@@ -681,7 +698,7 @@ namespace LoKi
       IsParticle
       ( OBJECT begin , 
         OBJECT end   ) 
-        : LoKi::Predicate<const LHCb::MCParticle*>() 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
         , m_objects ( begin , end ) 
       {};
       /** copy constructor
@@ -707,7 +724,8 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-02-02
      */
-    class IsContainedObject : public LoKi::Predicate<const LHCb::MCParticle*> 
+    class IsContainedObject 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
       typedef std::vector<const ContainedObject*> Objects;
@@ -725,7 +743,7 @@ namespace LoKi
       IsContainedObject
       ( OBJECT begin , 
         OBJECT end   ) 
-        : LoKi::Predicate<const LHCb::MCParticle*>() 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
         , m_objects ( begin , end ) 
       {};
       /** copy constructor
@@ -770,7 +788,8 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class MomentumDistance : public LoKi::Function<const LHCb::MCParticle*> 
+    class MomentumDistance 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
       /// constructor from four components
@@ -818,7 +837,8 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class TransverseMomentumRel : public LoKi::Function<const LHCb::MCParticle*> 
+    class TransverseMomentumRel 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
       /// constructor from theta & phi 
@@ -857,7 +877,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaPhi 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// constructor from the angle
@@ -869,7 +890,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaPhi ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
         , m_eval (         )
         , m_phi  ( v.phi() )
       { 
@@ -880,7 +901,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaPhi ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
           , m_eval (  )
           , m_phi  (  )
       { 
@@ -922,7 +943,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaEta : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// constructor from the eta
@@ -934,7 +955,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaEta ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
         , m_eval (         )
         , m_eta  ( v.Eta() )
       {} ;
@@ -943,7 +964,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaEta ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
         , m_eval (  )
         , m_eta  (  )
       { 
@@ -988,7 +1009,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public LoKi::Function<const LHCb::MCParticle*>
+    class DeltaR2 : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// constructor from eta and phi 
@@ -1000,7 +1021,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaR2 ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
         , m_dphi ( v )
         , m_deta ( v )
       {} ;
@@ -1009,7 +1030,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaR2 ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
         , m_dphi ( p )
         , m_deta ( p )
       {} ;
@@ -1039,7 +1060,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class ValidOrigin : public LoKi::Predicate<const LHCb::MCParticle*>
+    class ValidOrigin 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// MANDATORY : virtual destructor 
@@ -1058,7 +1080,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCVertexFunAdapter : public LoKi::Function<const LHCb::MCParticle*> 
+    class MCVertexFunAdapter 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public  :
       /** constructor from vertex funtion 
@@ -1108,7 +1131,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCDecayPattern : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCDecayPattern 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /** constructor 
@@ -1155,7 +1179,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
-    class MCFilter : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCFilter : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// constructor from selector 
@@ -1187,7 +1211,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-01
      */
-    class MCReconstructible : public LoKi::Function<const LHCb::MCParticle*>
+    class MCReconstructible
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// constructor from the tool 
@@ -1224,7 +1249,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-01
      */
-    class MCReconstructibleAs : public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCReconstructibleAs
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /// constructor from the tool and category 
@@ -1286,7 +1312,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
-    class ChildFunction : public LoKi::Function<const LHCb::MCParticle*>
+    class ChildFunction 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** constructor from the function and daughter index 
@@ -1349,7 +1376,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
-    class ChildPredicate : public LoKi::Predicate<const LHCb::MCParticle*>
+    class ChildPredicate 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /** constructor from the function and daughter index 
@@ -1407,7 +1435,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree : public LoKi::Predicate<const LHCb::MCParticle*> 
+    class InTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
       /** standard constructor 
@@ -1447,7 +1475,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class NinTree : public LoKi::Function<const LHCb::MCParticle*>
+    class NinTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** standard constructor 
@@ -1490,7 +1518,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class SumTree : public LoKi::Function<const LHCb::MCParticle*>
+    class SumTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** standard constructor 
@@ -1552,7 +1580,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MultTree : public LoKi::Function<const LHCb::MCParticle*>
+    class MultTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** standard constructor 
@@ -1613,7 +1641,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MinTree : public LoKi::Function<const LHCb::MCParticle*>
+    class MinTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** standard constructor 
@@ -1676,7 +1704,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MaxTree : public LoKi::Function<const LHCb::MCParticle*>
+    class MaxTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /** standard constructor 

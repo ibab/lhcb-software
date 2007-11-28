@@ -1,20 +1,4 @@
-// $Id: MCVertices.h,v 1.6 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.4  2006/10/10 09:14:06  ibelyaev
-//  tiny fixes needed for good&valid dictionaries
-//
-// Revision 1.3  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/07 17:14:02  ibelyaev
-//  regular update
-//
+// $Id: MCVertices.h,v 1.7 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCVERTICES_H 
 #define LOKI_MCVERTICES_H 1
@@ -38,8 +22,6 @@
 #include "LoKi/Constants.h"
 #include "LoKi/MCTypes.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -54,7 +36,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @namespace  LoKi::MCVertices MCVertices.h LoKi/MCVertices.h
@@ -65,14 +46,14 @@ namespace LoKi
    */
   namespace MCVertices 
   {
-    
+    // ========================================================================
     /** @struct TypeOfMCVertex 
      *  evaluator of MC verte type 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    struct TypeOfMCVertex : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct TypeOfMCVertex 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual TypeOfMCVertex* clone() const ;
@@ -81,14 +62,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-    
+    // ========================================================================    
     /** @struct TimeOfFlight
      *  evaluator of MC vertex TOF 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    struct TimeOfFlight : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct TimeOfFlight 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual TimeOfFlight* clone() const ;
@@ -97,14 +78,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-    
+    // ========================================================================    
     /** @struct VertexPositionX
      *  evaluator of x-position of MC vertex 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    struct VertexPositionX : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct VertexPositionX 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual VertexPositionX* clone() const ; 
@@ -113,14 +94,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-
+    // ========================================================================
     /** @struct VertexPositionY
      *  evaluator of y-position of MC vertex 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    struct VertexPositionY : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct VertexPositionY 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual VertexPositionY* clone() const ;
@@ -129,14 +110,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-
+    // ========================================================================
     /** @struct VertexPositionZ
      *  evaluator of z-position of MC vertex 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    struct VertexPositionZ : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct VertexPositionZ 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual VertexPositionZ* clone() const ;
@@ -145,14 +126,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-    
+    // ========================================================================    
     /** @struct VertexTime 
      *  evaluator of "vertex time" (?)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    struct VertexTime :
-      public LoKi::Function<const LHCb::MCVertex*>
+    struct VertexTime 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
       /// clone method (mandatory)
       virtual VertexTime* clone() const ;
@@ -161,14 +142,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-
+    // ========================================================================
     /** @struct Primary
      *  return true for 'primary' vertices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    struct Primary:
-      public LoKi::Predicate<const LHCb::MCVertex*>
+    struct Primary
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Predicate
     {
       /// clone method (mandatory)
       virtual Primary* clone() const ;
@@ -177,14 +158,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-
+    // ========================================================================
     /** @struct Decay
      *  return true for 'decay' vertices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    struct Decay:
-      public LoKi::Predicate<const LHCb::MCVertex*>
+    struct Decay
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Predicate
     {
       /// clone method (mandatory)
       virtual Decay* clone() const ;
@@ -193,14 +174,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
-    
+    // ========================================================================    
     /** @class MCVertexDistance
      *  evaluator of distance from MC verted to 3D-point 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class MCVertexDistance : 
-      public LoKi::Function<const LHCb::MCVertex*>
+    class MCVertexDistance 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
     {
     public:
       /** constructor from LoKi::Point3D
@@ -226,7 +207,7 @@ namespace LoKi
     private:
       LoKi::Point3D m_point ;
     };
-    
+    // ========================================================================    
     /** @class MCVFunAsMCFun
      *  simple adapter function which allows to use MC Veretx function as 
      *  MC particle function
@@ -236,8 +217,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class MCVFunAsMCFun : 
-      public LoKi::Function<const LHCb::MCParticle*>
+    class MCVFunAsMCFun 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
       /// constructor from MC Vertex fuction
@@ -255,10 +236,9 @@ namespace LoKi
     private:
       LoKi::MCTypes::MCVFun m_fun ;
     };
-
-  }
-}
-
+    // ========================================================================
+  } // end of namespace LoKi::MCVertices 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

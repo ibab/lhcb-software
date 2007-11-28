@@ -1,4 +1,4 @@
-// $Id: PIDOperators.cpp,v 1.5 2007-06-04 09:57:30 cattanem Exp $
+// $Id: PIDOperators.cpp,v 1.6 2007-11-28 14:14:00 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -11,8 +11,6 @@
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/MCParticles.h"
 #include "LoKi/MCPIDOperators.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -30,107 +28,103 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LoKi::MCParticles::Identifier& id   , 
             const LHCb::ParticleID&              pid  )
 {
-  typedef LoKi::Function<const LHCb::MCParticle*> Func ;
+  typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Function Func ;
   return static_cast<const Func&> ( id ) == (double) pid.pid() ;
-};
+}
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LoKi::MCParticles::Identifier& id   , 
             const LHCb::ParticleID&                    pid  )
 {
-  typedef LoKi::Function<const LHCb::MCParticle*> Func ;
+  typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Function Func ;
   return static_cast<const Func&> ( id ) != (double) pid.pid() ;
-};
+}
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LHCb::ParticleID&                    pid  ,
             const LoKi::MCParticles::Identifier& id   )
-{ return id == pid ; } ;
+{ return id == pid ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LHCb::ParticleID&                    pid  ,
             const LoKi::MCParticles::Identifier& id   )
-{ return id != pid ; } ;
+{ return id != pid ; } 
 // ============================================================================
 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LoKi::MCParticles::Identifier& id   , 
             const std::string&                   name )
-{ return id == LoKi::Particles::pidFromName( name ) ; } ;
+{ return id == LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const std::string&                   name , 
             const LoKi::MCParticles::Identifier& id   )
-{ return id == LoKi::Particles::pidFromName( name ) ; } ;
+{ return id == LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LoKi::MCParticles::Identifier& id   , 
             const std::string&                   name )
-{ return id != LoKi::Particles::pidFromName( name ) ; } ;
+{ return id != LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const std::string&                   name , 
             const LoKi::MCParticles::Identifier& id   )
-{ return id != LoKi::Particles::pidFromName( name ) ; } ;
+{ return id != LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LoKi::MCParticles::AbsIdentifier& id   , 
             const LHCb::ParticleID&                     pid  )
 { 
-  typedef LoKi::Function<const LHCb::MCParticle*> Func ;
+  typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Function Func ;
   return static_cast<const Func&> ( id ) == (double) pid.abspid() ;
-};
+}
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LoKi::MCParticles::AbsIdentifier& id   , 
             const LHCb::ParticleID&                  pid  )
 {
-  typedef LoKi::Function<const LHCb::MCParticle*> Func ;
+  typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Function Func ;
   return static_cast<const Func&> ( id ) != (double) pid.abspid() ;
-};
+}
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LHCb::ParticleID&                       pid  ,
             const LoKi::MCParticles::AbsIdentifier& id   )
-{ return id == pid ; } ;
+{ return id == pid ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LHCb::ParticleID&                       pid  ,
             const LoKi::MCParticles::AbsIdentifier& id   )
-{ return id != pid ; } ;
+{ return id != pid ; } 
 // ============================================================================
 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const LoKi::MCParticles::AbsIdentifier& id   , 
             const std::string&                      name )
-{ return id == LoKi::Particles::pidFromName( name ) ;} ;
+{ return id == LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator==( const std::string&                      name , 
             const LoKi::MCParticles::AbsIdentifier& id   )
-{ return id == LoKi::Particles::pidFromName( name ) ; } ;
+{ return id == LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const LoKi::MCParticles::AbsIdentifier& id   , 
             const std::string&                      name )
-{ return id != LoKi::Particles::pidFromName( name ) ; } ;
+{ return id != LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
-LoKi::PredicateFromPredicate<const LHCb::MCParticle*> 
+LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
 operator!=( const std::string&                      name , 
             const LoKi::MCParticles::AbsIdentifier& id   )
-{ return id != LoKi::Particles::pidFromName( name ) ; } ;
-// ============================================================================
-
+{ return id != LoKi::Particles::pidFromName( name ) ; } 
 // ============================================================================
 // The END 
 // ============================================================================

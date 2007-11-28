@@ -1,20 +1,4 @@
-// $Id: MCVertices.cpp,v 1.6 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/10/27 13:35:46  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.4  2006/05/17 16:23:24  jpalac
-// *** empty log message ***
-//
-// Revision 1.3  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/07 17:14:03  ibelyaev
-//  regular update
-//
+// $Id: MCVertices.cpp,v 1.7 2007-11-28 14:14:00 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -29,9 +13,6 @@
 #include "LoKi/Constants.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCVertices.h"
-// ============================================================================
-
-
 // ============================================================================
 /** @file
  *
@@ -49,8 +30,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
 LoKi::MCVertices::TypeOfMCVertex* 
 LoKi::MCVertices::TypeOfMCVertex::clone() const 
 { return new TypeOfMCVertex() ; }
@@ -65,11 +44,11 @@ LoKi::MCVertices::TypeOfMCVertex::operator()
     return -1000000.0 ;
   }
   return v->type() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::TypeOfMCVertex::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVTYPE" ; } ;
+{ return s << "MCVTYPE" ; } 
 // ============================================================================
 
 // ============================================================================
@@ -87,11 +66,11 @@ LoKi::MCVertices::TimeOfFlight::operator()
     return -1000. * Gaudi::Units::ms ;
   }
   return v->time() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::TimeOfFlight::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVTOF" ; } ;
+{ return s << "MCVTOF" ; } 
 // ============================================================================
 
 // ============================================================================
@@ -109,11 +88,11 @@ LoKi::MCVertices::VertexPositionX::operator()
     return LoKi::Constants::InvalidDistance ;
   }
   return v->position().x() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::VertexPositionX::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVX" ; } ;
+{ return s << "MCVX" ; } 
 // ============================================================================
 
 
@@ -154,11 +133,11 @@ LoKi::MCVertices::VertexPositionZ::operator()
     return LoKi::Constants::InvalidDistance ;
   }
   return v->position().z() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::VertexPositionZ::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVZ" ; } ;
+{ return s << "MCVZ" ; } 
 // ============================================================================
 
 // ============================================================================
@@ -176,11 +155,11 @@ LoKi::MCVertices::VertexTime::operator()
     return LoKi::Constants::InvalidTime ;
   }
   return v->time() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::VertexTime::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVTIME" ; } ;
+{ return s << "MCVTIME" ; } 
 // ============================================================================
 
 // ============================================================================
@@ -198,11 +177,11 @@ LoKi::MCVertices::Primary::operator()
     return false ;
   }
   return v->isPrimary() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::Primary::fillStream
 ( std::ostream& s ) const
-{ return s << "MCISPRIMARY" ; } ;
+{ return s << "MCISPRIMARY" ; } 
 // ============================================================================
 
 // ============================================================================
@@ -220,23 +199,23 @@ LoKi::MCVertices::Decay::operator()
     return false ;
   }
   return v->isDecay() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::Decay::fillStream
 ( std::ostream& s ) const
-{ return s << "MCISDECAY" ; } ;
+{ return s << "MCISDECAY" ; } 
 // ============================================================================
 
 // ============================================================================
 LoKi::MCVertices::MCVertexDistance::MCVertexDistance 
 ( const LoKi::Point3D& point ) 
-  : LoKi::Function<const LHCb::MCVertex*>() 
+  : LoKi::BasicFunctors<const LHCb::MCVertex*>::Function() 
   , m_point ( point )
 {}
 // ============================================================================
 LoKi::MCVertices::MCVertexDistance::MCVertexDistance 
 ( const LHCb::MCVertex* point ) 
-  : LoKi::Function<const LHCb::MCVertex*>() 
+  : LoKi::BasicFunctors<const LHCb::MCVertex*>::Function() 
   , m_point ()
 {
   if ( 0 == point ) 
@@ -252,9 +231,9 @@ LoKi::MCVertices::MCVertexDistance::MCVertexDistance
 LoKi::MCVertices::MCVertexDistance::MCVertexDistance 
 ( const LoKi::MCVertices::MCVertexDistance& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::MCVertex*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::MCVertex*>::Function( right ) 
   , m_point ( right.m_point )
-{};
+{}
 // ============================================================================
 LoKi::MCVertices::MCVertexDistance::~MCVertexDistance(){}
 // ============================================================================
@@ -272,26 +251,26 @@ LoKi::MCVertices::MCVertexDistance::operator()
     return -1.0 * Gaudi::Units::km ;
   }
   return  ( v->position() - m_point ).R() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::MCVertexDistance::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVDIST" ; } ;
+{ return s << "MCVDIST" ; } 
 // ============================================================================
 
 // ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun::MCVFunAsMCFun
 ( const LoKi::MCTypes::MCVFunc& fun ) 
-  : LoKi::Function<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_fun ( fun ) 
-{};
+{}
 // ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun::MCVFunAsMCFun
 ( const LoKi::MCVertices::MCVFunAsMCFun& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Function<const LHCb::MCParticle*> ( right )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ( right )
   , m_fun ( right.m_fun ) 
-{};
+{}
 // ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun::~MCVFunAsMCFun(){}
 // ============================================================================
@@ -312,11 +291,11 @@ LoKi::MCVertices::MCVFunAsMCFun::operator()
   if ( 0 == vertex ) { Warning ( "'origin' MCVertex* points to NULL") ;}
   //
   return m_fun( vertex ) ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::MCVFunAsMCFun::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVXFUN" ; } ;
+{ return s << "MCVXFUN" ; } 
 // ============================================================================
 
 // ============================================================================

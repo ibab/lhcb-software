@@ -1,9 +1,4 @@
-// $Id: MCTypes.h,v 1.9 2007-06-01 11:57:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: MCTypes.h,v 1.10 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -67,24 +62,24 @@ namespace LoKi
     typedef MCVSelected::Range              MCVRange         ;
     
     /// type of 'cuts' for MCParticles       (interface)
-    typedef LoKi::Predicate<const LHCb::MCParticle*>              MCCuts  ;
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate MCCuts ;
     /// type of 'functions' for <MCParticles  (interface)
-    typedef LoKi::Function<const LHCb::MCParticle*>               MCFunc  ;
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Function  MCFunc ;
     /// type of 'cuts' for MCParticles       (assignable)
-    typedef LoKi::PredicateFromPredicate<const LHCb::MCParticle*> MCCut   ;
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate MCCut   ;
     /// type of 'functions' for MCParticles  (assignable)
-    typedef LoKi::FunctionFromFunction<const LHCb::MCParticle*>   MCFun   ;
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::FunctionFromFunction   MCFun   ;
     
     /// type of 'cuts' for MCVertices      (interface)
-    typedef LoKi::Predicate<const LHCb::MCVertex*>                MCVCuts ;
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Predicate MCVCuts ;
     /// type of 'functions' for MCVertices (interface)
-    typedef LoKi::Function<const LHCb::MCVertex*>                 MCVFunc ;
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Function  MCVFunc ;
     /// type of 'cuts' for Vertices      (assignable)
-    typedef LoKi::PredicateFromPredicate<const LHCb::MCVertex*>   MCVCut  ;
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::PredicateFromPredicate MCVCut ;
     /// type of 'functions' for Vertices (assignable)
-    typedef LoKi::FunctionFromFunction<const LHCb::MCVertex*>     MCVFun  ;
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::FunctionFromFunction   MCVFun ;
     //
-  } // end of namespace MCTypes  
+  } // end of namespace LoKi::MCTypes  
   namespace Types 
   { 
     /// the actual type of the sequence of MC-particles 
@@ -112,7 +107,7 @@ namespace LoKi
     /// the actual type of the range list 
     typedef LoKi::RangeList_<MCVRange> MCVRangeL ; 
     //
-  }
+  } // end of namespace LoKi::Types  
 } // end of namespace LoKi
 // ============================================================================
 // The END 

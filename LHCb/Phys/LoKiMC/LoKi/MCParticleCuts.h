@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.10 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.11 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -221,7 +221,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const LHCb::MCParticle*>       MCALL ( true ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,bool>       MCALL ( true ) ;
     // ========================================================================
     /** @typedef MCCHILD 
      *  Simple function which delegates the evaluation of 
@@ -377,7 +377,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<const LHCb::MCParticle*>      MCCOUNTER ;
+    typedef LoKi::Monitoring::Counter<const LHCb::MCParticle*,bool>  MCCOUNTER ;
     // ========================================================================
     /** @var MCCTAU
      *  MCParticle proper lifetime (in c*tau units)
@@ -551,7 +551,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const LHCb::MCParticle*>     MCFALSE ( false ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,bool>     MCFALSE ( false ) ;
     // =========================================================================
     /** @var MCETA
      *  MCParticle pseudorapidity 
@@ -781,7 +781,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const LHCb::MCParticle*>     MCNONE ( false ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,bool>     MCNONE ( false ) ;
     // ========================================================================
     /** @var MCONE
      *  primitive function, "always 1"
@@ -789,7 +789,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::Constant       <const LHCb::MCParticle*>          MCONE ( 1 ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,double>          MCONE ( 1 ) ;
     // ========================================================================
     /** @var MCOSCILLATED
      *
@@ -931,7 +931,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Plot<const LHCb::MCParticle*>            MCPLOT ;
+    typedef LoKi::Monitoring::Plot<const LHCb::MCParticle*,double>    MCPLOT ;
     // ========================================================================
     /** @var MCPT
      *  MCParticle transverse momentum 
@@ -1232,10 +1232,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Stat<const LHCb::MCParticle*>            MCSTAT ;
+    typedef LoKi::Monitoring::Counter<const LHCb::MCParticle*,double> MCSTAT ;
     // ========================================================================
-
-
     /** @typedef MCSUMTREE
      *  Simple function to accumulate certain  values in the decay tree
      *  @see LoKi::MCParticles::SumTree
@@ -1354,7 +1352,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const LHCb::MCParticle*>      MCTRUE ( true ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,bool>      MCTRUE ( true ) ;
     // ========================================================================
     /** @var MCVALID 
      *
@@ -1397,7 +1395,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::Constant       <const LHCb::MCParticle*>         MCZERO ( 0 ) ;
+    const LoKi::Constant<const LHCb::MCParticle*,double>         MCZERO ( 0 ) ;
     // ========================================================================
     /** @var MESON  
      *  Check for particle type   

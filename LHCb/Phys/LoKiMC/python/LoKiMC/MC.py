@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.5 2007-08-17 15:21:30 ibelyaev Exp $ 
+# $Id: MC.py,v 1.6 2007-11-28 14:13:59 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -323,11 +323,16 @@ printDecay. __doc__ += "\n\n" + LoKi.PrintMC.printDecay . __doc__
 
 if not hasattr ( LHCb.MCParticle ,     'printDecay'   ) :
     LHCb.MCParticle .  printDecay   =   printDecay
+    LHCb.MCParticle .       decay   =   printDecay
 if not hasattr ( LHCb.MCParticle ,   '__printDecay__' ) :
     LHCb.MCParticle. __printDecay__ =   printDecay
+    LHCb.MCParticle.      __decay__ =   printDecay
 
 
 import LoKiCore.functions  as _LCF 
+LHCb.MCParticle.__pname__ =  _LCF.__pname__
+LHCb.MCParticle.  pname   =  _LCF.__pname__
+LHCb.MCParticle.   name   =  _LCF.__pname__
 
 _LCF.nChildren     . __doc__ += "\n" + LoKi.MCChild.nChildren         . __doc__ 
 _LCF.child         . __doc__ += "\n" + LoKi.MCChild.child             . __doc__

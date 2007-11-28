@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.6 2007-08-11 20:19:58 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.7 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -55,12 +55,12 @@ namespace
     LoKi::Dicts::PIDOps<LoKi::MCParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::MCParticles::AbsIdentifier> m_i2 ;
     /// monitoring
-    LoKi::Monitoring::Counter<const LHCb::MCParticle*> m_m1 ;
-    LoKi::Monitoring::Stat<const LHCb::MCParticle*>    m_m2 ;
-    LoKi::Monitoring::Plot<const LHCb::MCParticle*>    m_m3 ;
-    LoKi::Monitoring::Counter<const LHCb::MCVertex*>   m_m4 ;
-    LoKi::Monitoring::Stat<const LHCb::MCVertex*>      m_m5 ;
-    LoKi::Monitoring::Plot<const LHCb::MCVertex*>      m_m6 ;
+    LoKi::Monitoring::Counter<const LHCb::MCParticle*,bool>   m_m1 ;
+    LoKi::Monitoring::Counter<const LHCb::MCParticle*,double> m_m2 ;
+    LoKi::Monitoring::Plot<const LHCb::MCParticle*,double>    m_m3 ;
+    LoKi::Monitoring::Counter<const LHCb::MCVertex*,bool>     m_m4 ;
+    LoKi::Monitoring::Counter<const LHCb::MCVertex*,double>   m_m5 ;
+    LoKi::Monitoring::Plot<const LHCb::MCVertex*,double>      m_m6 ;
    } ;  
 } // end of anonymout namespace 
 // ============================================================================

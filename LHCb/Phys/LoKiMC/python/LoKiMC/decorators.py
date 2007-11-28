@@ -75,22 +75,22 @@ def _decorate ( name = _name ) :
     import LoKiCore.decorators as _LoKiCore
     _decorated  = _LoKiCore.getAndDecorateFunctions (
         name                                          , ## module name 
-        LoKi.Function('const LHCb::MCParticle*')      , ## the base 
+        LoKi.Functor('const LHCb::MCParticle*,double'), ## the base 
         LoKi.Dicts.FunCalls(LHCb.MCParticle)          , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCParticle*') ) ## operators 
     _decorated |= _LoKiCore.getAndDecorateFunctions  (
         name                                          , ## module name 
-        LoKi.Function('const LHCb::MCVertex*')        , ## the base 
+        LoKi.Functor('const LHCb::MCVertex*,double')  , ## the base 
         LoKi.Dicts.FunCalls(LHCb.MCVertex)            , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCVertex*')   ) ## operators
     _decorated |=  _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Predicate('const LHCb::MCParticle*')     , ## the base 
+        LoKi.Functor('const LHCb::MCParticle*,bool')  , ## the base 
         LoKi.Dicts.CutCalls(LHCb.MCParticle)          , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCParticle*') ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Predicate('const LHCb::MCVertex*')       , ## the base 
+        LoKi.Functor('const LHCb::MCVertex*,bool')    , ## the base 
         LoKi.Dicts.CutCalls(LHCb.MCVertex)            , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCVertex*')   ) ## the operators 
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
@@ -109,7 +109,7 @@ _decorated = _decorate()
 
 # =============================================================================
 if '__main__' == __name__ :
-    print 'Number of properly decorated types: %s'%len(_decorated)
+    print 'Number of properly decorated types: %s' % len(_decorated)
     for o in _decorated : print o
 
 # =============================================================================

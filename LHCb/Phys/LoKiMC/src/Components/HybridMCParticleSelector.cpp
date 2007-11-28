@@ -1,4 +1,4 @@
-// $Id: HybridMCParticleSelector.cpp,v 1.1 2007-07-25 15:16:07 ibelyaev Exp $
+// $Id: HybridMCParticleSelector.cpp,v 1.2 2007-11-28 14:14:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -68,7 +68,7 @@ namespace LoKi
         const std::string& name,
         const IInterface* parent)
         : GaudiTool ( type , name , parent )
-        , m_mccut   ( LoKi::BooleanConstant<const LHCb::MCParticle*>( false ) ) 
+        , m_mccut   ( LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant( false ) ) 
         , m_code    ( "MCNONE" )
         , m_factory ("LoKi::Hybrid::MCTool/MCHybridFactory:PUBLIC") 
       {

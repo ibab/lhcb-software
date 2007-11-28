@@ -1,17 +1,4 @@
-// $Id: MCVertexCuts.h,v 1.7 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2007/01/23 13:27:18  ibelyaev
-//  add MCVALID/MCVVALID
-//
-// Revision 1.5  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.4  2006/10/10 09:14:05  ibelyaev
-//  tiny fixes needed for good&valid dictionaries
-//
+// $Id: MCVertexCuts.h,v 1.8 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCVERTEXCUTS_H 
 #define LOKI_MCVERTEXCUTS_H 1
@@ -22,8 +9,6 @@
 // ============================================================================
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCVertices.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,12 +24,11 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-
 namespace LoKi
 {
   namespace Cuts 
-  { 
+  {
+    // ========================================================================
     /** Minimum from 2 functions 
      *  
      *  @code 
@@ -59,7 +43,7 @@ namespace LoKi
      *  @see LoKi::Min
      */
     typedef LoKi::Min<const LHCb::MCVertex*>  MCVMIN ;
-
+    // ========================================================================
     /** Maxumum from 2 functions 
      *  
      *  @code 
@@ -74,7 +58,7 @@ namespace LoKi
      *  @see LoKi::Max
      */
     typedef LoKi::Max<const LHCb::MCVertex*> MCVMAX ;
-
+    // ========================================================================
     /** Simple "switch"
      *  The function evaluated the predicate and returns 
      *  one of the predefined values, depending on result on 
@@ -87,7 +71,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
     typedef LoKi::SimpleSwitch<const LHCb::MCVertex*> MCVSSWITCH ;
-    
+    // ========================================================================    
     /** switch"
      *  The function evaluates the predicate and returns 
      *  the values of one of the predefined functions, 
@@ -99,7 +83,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
     typedef LoKi::Switch<const LHCb::MCVertex*> MCVSWITCH ;
-
+    // ========================================================================
     /** @var MCVTYPE
      *  the type of MC vertex ( MCVertex::type )
      * 
@@ -116,7 +100,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::TypeOfMCVertex MCVTYPE ;
-
+    // ========================================================================
     /** @var MCVVALID 
      *
      *  The trivial checker of "the validity" of the pointer to 
@@ -134,8 +118,7 @@ namespace LoKi
      *  @date 2007-01-21
      */
     const LoKi::Valid<const LHCb::MCVertex*>                    MCVVALID ;
-    
-
+    // ========================================================================
     /** @var MCVFOT
      *  the time of flight for  MC vertex ( MCVertex::timeOfFlight )
      * 
@@ -152,7 +135,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::TimeOfFlight MCVTOF  ;
-
+    // ========================================================================
     /** @var MCVX
      *  the x-position of       MC vertex 
      * 
@@ -169,7 +152,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionX MCVX ;
-
+    // ========================================================================
     /** @var MCVY
      *  the y-position of       MC vertex 
      * 
@@ -186,7 +169,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionY MCVY ;
-
+    // ========================================================================
     /** @var MCVZ
      *  the z-position of       MC vertex 
      * 
@@ -203,7 +186,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::VertexPositionZ MCVZ ;
-
+    // ========================================================================
     /** @var MCVTIME
      *  the "time" of MC vertex 
      * 
@@ -221,7 +204,7 @@ namespace LoKi
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::VertexTime      MCVTIME ;
-
+    // ========================================================================
     /** @var MCPRIMARY
      *  evaluates to "true" for  primary vertices 
      * 
@@ -239,7 +222,7 @@ namespace LoKi
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::Primary      MCPRIMARY ;
-    
+    // ========================================================================    
     /** @var MCISPRIMARY
      *  evaluates to "true" for  primary vertices 
      * 
@@ -257,7 +240,7 @@ namespace LoKi
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::Primary      MCISPRIMARY ;
-
+    // ========================================================================
     /** @var MCISDECAY
      *  evaluates to "true" for 'decay' vertices 
      * 
@@ -275,7 +258,7 @@ namespace LoKi
      *  @date 2006-02-06
      */
     const LoKi::MCVertices::Decay      MCISDECAY  ;
-    
+    // ========================================================================    
     /** the distance for MC vertex from given point, 
      *  given (MC)Vertex or collision
      * 
@@ -308,7 +291,7 @@ namespace LoKi
      *  @date 2004-07-07
      */
     typedef LoKi::MCVertices::MCVertexDistance MCVDIST ;
-
+    // ========================================================================
     /** the adaptor for MC vertex function to be interpreted as 
      *  MC particle function
      *  it acts using the rule 
@@ -335,17 +318,21 @@ namespace LoKi
      *  @date   2004-03-01 
      */
     typedef LoKi::MCVertices::MCVFunAsMCFun MCVXFUN ;
-    
-    const LoKi::BooleanConstant<const LHCb::MCVertex*> MCVTRUE   ( true  )  ;
-    const LoKi::BooleanConstant<const LHCb::MCVertex*> MCVFALSE  ( false )  ;
-    const LoKi::BooleanConstant<const LHCb::MCVertex*> MCVALL    = MCVTRUE  ;
-    const LoKi::BooleanConstant<const LHCb::MCVertex*> MCVNONE   = MCVFALSE ;
-    const LoKi::Constant       <const LHCb::MCVertex*> MCVONE    ( 1.0   )  ;
-    const LoKi::Constant       <const LHCb::MCVertex*> MCVZERO   ( 0.0   )  ;
-    
-  }
-}
-
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVTRUE   ( true  )  ;
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVFALSE  ( false )  ;
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVALL    = MCVTRUE  ;
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVNONE   = MCVFALSE ;
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,double> MCVONE    ( 1.0   )  ;
+    // ========================================================================    
+    const LoKi::Constant<const LHCb::MCVertex*,double> MCVZERO   ( 0.0   )  ;
+    // ========================================================================    
+  } // end of namespace LoKi::Cuts 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

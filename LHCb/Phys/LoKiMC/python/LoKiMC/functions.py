@@ -36,38 +36,38 @@ MCVRangeL = LoKi.RangeList_  ( MCVRange )
 # =============================================================================
 
 ## @see LoKi::Types::MCFunc
-MCFunc  = LoKi.Function               ( _MCP ) 
+MCFunc  = LoKi.Functor               ( _MCP , 'double' ) 
 ## @see LoKi::Types::MCCuts
-MCCuts  = LoKi.Predicate              ( _MCP ) 
+MCCuts  = LoKi.Functor               ( _MCP ,  bool    ) 
 ## @see LoKi::Types::MCFun
-MCFun   = LoKi.FunctionFromFunction   ( _MCP ) 
+MCFun   = LoKi.FunctorFromFunctor    ( _MCP , 'double' ) 
 ## @see LoKi::Types::MCCut
-MCCut   = LoKi.PredicateFromPredicate ( _MCP ) 
+MCCut   = LoKi.FunctorFromFunctor    ( _MCP ,  bool    ) 
 ## @see LoKi::Types::MCFunc
-MCVFunc = LoKi.Function               ( _MCV ) 
+MCVFunc = LoKi.Functor               ( _MCV , 'double' ) 
 ## @see LoKi::Types::MCCuts
-MCVCuts = LoKi.Predicate              ( _MCV ) 
+MCVCuts = LoKi.Functor               ( _MCV ,  bool    ) 
 ## @see LoKi::Types::MCFun
-MCVFun  = LoKi.FunctionFromFunction   ( _MCV ) 
+MCVFun  = LoKi.FunctorFromFunctor    ( _MCV , 'double' ) 
 ## @see LoKi::Types::MCCut
-MCVCut  = LoKi.PredicateFromPredicate ( _MCV ) 
+MCVCut  = LoKi.FunctorFromFunctor    ( _MCV ,  bool    ) 
 
 # =============================================================================
 ## All concrete types 
 # =============================================================================
 
 ## @see LoKi::Cuts::MCTRUE
-MCTRUE     = LoKi.BooleanConstant( _MCP )(True)
+MCTRUE     = LoKi.Constant( _MCP , bool )(True)
 ## @see LoKi::Cuts::MCFALSE
-MCFALSE    = LoKi.BooleanConstant( _MCP )(False)
+MCFALSE    = LoKi.Constant( _MCP , bool )(False)
 ## @see LoKi::Cuts::MCALL
 MCALL      = MCTRUE
 ## @see LoKi::Cuts::MCNONE
 MCNONE     = MCFALSE
 ## @see LoKi::Cuts::MCONE
-MCONE      = LoKi.Constant     ( _MCP )(1.0)
+MCONE      = LoKi.Constant     ( _MCP , 'double' ) (1.0)
 ## @see LoKi::Cuts::MCZERO
-MCZERO     = LoKi.Constant     ( _MCP )(0.0)
+MCZERO     = LoKi.Constant     ( _MCP , 'double' ) (0.0)
 ## @see LoKi::Cuts::MCMIN
 #MCMIN      = LoKi.Min          ( _MCP )
 ## @see LoKi::Cuts::MCMIN
@@ -205,17 +205,17 @@ HADRON     = MCHADRON
 NUCLEUS    = MCNUCLEUS
 
 ## @see LoKi::Cuts::MCVTRUE
-MCVTRUE     = LoKi.BooleanConstant( _MCV )(True)
+MCVTRUE     = LoKi.Constant( _MCV  , bool )(True)
 ## @see LoKi::Cuts::MCVFALSE
-MCVFALSE    = LoKi.BooleanConstant( _MCV )(False)
+MCVFALSE    = LoKi.Constant( _MCV  , bool )(False)
 ## @see LoKi::Cuts::MCVALL
 MCVALL      = MCVTRUE
 ## @see LoKi::Cuts::MCVNONE
 MCVNONE     = MCVFALSE
 ## @see LoKi::Cuts::MCVONE
-MCVONE      = LoKi.Constant     ( _MCV )(1.0)
+MCVONE      = LoKi.Constant     ( _MCV , 'double' )(1.0)
 ## @see LoKi::Cuts::MCVZERO
-MCVZERO     = LoKi.Constant     ( _MCV )(0.0)
+MCVZERO     = LoKi.Constant     ( _MCV , 'double' )(0.0)
 ## @see LoKi::Cuts::MCVMIN
 #MCVMIN      = LoKi.Min         ( _MCV )
 ## @see LoKi::Cuts::MCVMIN
@@ -244,8 +244,6 @@ MCISDECAY   = LoKi.MCVertices.Decay          ()
 MCVDIST     = LoKi.MCVertices.MCVertexDistance
 ## @see LoKi::Cuts::MCVXFUN
 MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
-
-_MCChild = LoKi.Child.MCChild 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.11 2007-08-27 12:28:52 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.12 2007-11-28 14:13:59 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -25,8 +25,9 @@
   <class pattern   = "std::unary_function<*LHCb::MC*,bool>"            />
   <class pattern   = "std::binary_function<*LHcb::MC*,*LHCb::MC::*,bool>" />
   
-  <class pattern   = "LoKi::Function<*LHCb::MC*>"         />
-  <class pattern   = "LoKi::Predicate<*LHCb::MC*>"        />
+
+  <class pattern   = "LoKi::Functor<*LHCb::MC*>"         />
+  <class pattern   = "LoKi::BasicFunctors<*LHCb::MC*>"   />
   
   <class pattern   = "LoKi::Constant<*LHCb::MC*>"         />
   <class pattern   = "LoKi::BooleanConstant<*LHCb::MC*>"  />
@@ -36,47 +37,10 @@
   <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
   <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
 
-
-
-
-<!-- 
-     
-     <class pattern   = "LoKi::SimpleSwitch<*LHCb::MC*>"     />
-     <class pattern   = "LoKi::Switch<*LHCb::MC*>"           />
-     
-     <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::MC*>"    />
-     <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::MC*>"     />
-     <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::MC*>"      />
-     <class pattern   = "LoKi::PredicateFromFunctionAndValue<*LHCb::MC*>" />
-     
-     <class pattern   = "LoKi::And<*LHCb::MC*>"              />
-     <class pattern   = "LoKi::Or<*LHCb::MC*>"               />
-     <class pattern   = "LoKi::Not<*LHCb::MC*>"              />
-     
-     <class pattern   = "LoKi::Less<*LHCb::MC*>"             />
-     <class pattern   = "LoKi::Equal<*LHCb::MC*>"            />
-     <class pattern   = "LoKi::LessOrEqual<*LHCb::MC*>"      />
-     <class pattern   = "LoKi::NotEqual<*LHCb::MC*>"         />
-     
-     <class pattern   = "LoKi::Plus<*LHCb::MC*>"             />
-     <class pattern   = "LoKi::Minus<*LHCb::MC*>"            />
-     <class pattern   = "LoKi::Divide<*LHCb::MC*>"           />
-     <class pattern   = "LoKi::Multiply<*LHCb::MC*>"         />
-     
-     <class pattern   = "LoKi::Min<*LHCb::MC*>"              />
-     <class pattern   = "LoKi::Max<*LHCb::MC*>"              />
-     
-     <class pattern   = "LoKi::ComposeFunction<*LHCb::MC*>"  />
-     <class pattern   = "LoKi::ComposeFunction2<*LHCb::MC*>" />
-     
-     <class pattern   = "LoKi::Compare<*LHCb::MC*>"          />
-          
--->
- 
   <class pattern   = "LoKi::MCParticles::*"                />
   <class pattern   = "LoKi::MCVertices::*"                 />
   
-  <function pattern = "LoKi::Kinematics::*"                />
+  <function pattern = "LoKi::MCKinematics::*"              />
   <function pattern = "LoKi::PrintMC:*"                    />
   <function pattern = "LoKi::MCChild::*"                   />
   <function pattern = "LoKi::Dicts::MCAlgs::*"             />
@@ -88,9 +52,7 @@
   <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::CutCalls<LHCb::MC*>"     />
 
-
   <class name = "std::vector<const LHCb::MCVertex*>"        /> 
-
   
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />

@@ -1,4 +1,4 @@
-// $Id: MCKinematics.h,v 1.5 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id: MCKinematics.h,v 1.6 2007-11-28 14:13:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCKINEMATICS_H 
 #define LOKI_MCKINEMATICS_H 1
@@ -29,12 +29,12 @@ namespace LHCb { class MCParticle ; }
 // ============================================================================
 namespace LoKi
 {
-  /** @namespace LoKi::Kinematics 
+  /** @namespace LoKi::MCKinematics 
    *  collection varios kinematic-related functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2001-01-23 
    */
-  namespace Kinematics
+  namespace MCKinematics
   {
     // ========================================================================
     /** Trivial function to evaluate the mass MCParticle
@@ -89,6 +89,11 @@ namespace LoKi
       const LHCb::MCParticle* p3 ,
       const LHCb::MCParticle* p4 ) ;
     // ========================================================================   
+  } // end of namespace LoKi::MCKinematics 
+  namespace Kinematics
+  {
+    /// export the namespace into the proper scope 
+    using namespace LoKi::MCKinematics ;
   } // end of namespace LoKi::Kinematics 
 } // end of namespace LoKi
 // ============================================================================

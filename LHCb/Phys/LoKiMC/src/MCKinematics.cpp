@@ -1,4 +1,4 @@
-// $Id: MCKinematics.cpp,v 1.4 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: MCKinematics.cpp,v 1.5 2007-11-28 14:14:00 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -40,7 +40,7 @@
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::MCKinematics::mass 
 ( const LHCb::MCParticle* p ) 
 {
   if ( 0 == p ) 
@@ -49,7 +49,8 @@ double LoKi::Kinematics::mass
       ("mass(LHCb::MCParticle*),invaild argument,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
-  return mass ( p->momentum() ) ;
+  return LoKi::Kinematics::mass
+    ( p->momentum() ) ;
 } 
 // ============================================================================
 /*  trivial function to evaluate the mass MCParticles
@@ -61,7 +62,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::MCKinematics::mass 
 ( const LHCb::MCParticle* p1 , 
   const LHCb::MCParticle* p2 ) 
 {
@@ -77,11 +78,12 @@ double LoKi::Kinematics::mass
       ("mass(2*LHCb::MCParticle*),invaild argument 2,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
-  return mass ( p1 -> momentum() , 
-                p2 -> momentum() ) ;
+  return LoKi::Kinematics::mass 
+    ( p1 -> momentum() , 
+      p2 -> momentum() ) ;
 } 
 // ============================================================================
-/** trivial function to evaluate the mass MCParticles
+/*  trivial function to evaluate the mass MCParticles
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @param  p3 the third particle 
@@ -91,7 +93,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::MCKinematics::mass 
 ( const LHCb::MCParticle* p1 , 
   const LHCb::MCParticle* p2 ,
   const LHCb::MCParticle* p3 ) 
@@ -114,12 +116,13 @@ double LoKi::Kinematics::mass
       ("mass(3*LHCb::MCParticle*),invaild argument 3,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
-  return mass ( p1 -> momentum() , 
-                p2 -> momentum() ,
-                p3 -> momentum() ) ;
+  return LoKi::Kinematics::mass 
+    ( p1 -> momentum() , 
+      p2 -> momentum() ,
+      p3 -> momentum() ) ;
 }
 // ============================================================================
-/** trivial function to evaluate the mass MCParticle
+/*  trivial function to evaluate the mass MCParticle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @param  p3 the third particle 
@@ -130,7 +133,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::MCKinematics::mass 
 ( const LHCb::MCParticle* p1 , 
   const LHCb::MCParticle* p2 ,
   const LHCb::MCParticle* p3 ,
@@ -160,10 +163,11 @@ double LoKi::Kinematics::mass
       ("mass(4*LHCb::MCParticle*),invaild argument 4,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
-  return mass ( p1 -> momentum() , 
-                p2 -> momentum() ,
-                p3 -> momentum() ,
-                p4 -> momentum() ) ;
+  return LoKi::Kinematics::mass 
+    ( p1 -> momentum() , 
+      p2 -> momentum() ,
+      p3 -> momentum() ,
+      p4 -> momentum() ) ;
 }
 // ============================================================================
 // The END 
