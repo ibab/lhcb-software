@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.6 2007-11-28 13:56:34 ibelyaev Exp $
+// $Id: Services.cpp,v 1.7 2007-11-28 14:08:51 ibelyaev Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -184,7 +184,7 @@ IDataProviderSvc* LoKi::Services::evtSvc     () const
   IAlgContextSvc* ctx = contextSvc() ;
   if ( 0 == ctx ) 
   {
-    Error("evtSvc(): no vaild context is established, return NULL") ;
+    Error ( "evtSvc(): no vaild context is established, return NULL" ) ;
     return 0 ;
   }
   { /// get the last GaudiAlgorithm
@@ -197,9 +197,11 @@ IDataProviderSvc* LoKi::Services::evtSvc     () const
     if ( 0 != alg ) 
     {
       Algorithm* a = dynamic_cast<Algorithm*> ( alg ) ;
-      if ( 0 != a ) { return a->evtSvc() ; }                    // RETURN 
+      if ( 0 != a ) { return a -> evtSvc() ; }                   // RETURN 
     }
-  } 
+  }
+  Error ( "evtSvc(): no way to get the valid service, return NULL" ) ;  
+  return 0 ;
 }
 // ===========================================================================
 // The END 

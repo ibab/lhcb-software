@@ -1,4 +1,4 @@
-// $Id: HistoBook.cpp,v 1.1 2007-11-28 13:56:34 ibelyaev Exp $
+// $Id: HistoBook.cpp,v 1.2 2007-11-28 14:08:51 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +29,7 @@ AIDA::IHistogram1D* LoKi::HistoBook::book
 ( const std::string&       path ,
   const Gaudi::Histo1DDef& hist ) 
 {
-  const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
+  const LoKi::Services& svcs = LoKi::Services::instance() ;
   IHistogramSvc* svc = svcs.histoSvc();  
   if ( 0 == svc ) { return 0 ; }                              // RETURN 
   // check the existing histogram:
@@ -61,7 +61,7 @@ AIDA::IHistogram1D* LoKi::HistoBook::book
   const std::string&       id   ,
   const Gaudi::Histo1DDef& hist ) 
 {
-  const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
+  const LoKi::Services& svcs = LoKi::Services::instance() ;
   IHistogramSvc* svc = svcs.histoSvc();  
   if ( 0 == svc ) { return 0 ; }                              // RETURN 
   // check the existing histogram:
@@ -94,7 +94,7 @@ AIDA::IHistogram1D* LoKi::HistoBook::book
   const int                id   ,
   const Gaudi::Histo1DDef& hist ) 
 {
-  const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
+  const LoKi::Services& svcs = LoKi::Services::instance() ;
   IHistogramSvc* svc = svcs.histoSvc();  
   if ( 0 == svc ) { return 0 ; }                              // RETURN 
   // check the existing histogram:
