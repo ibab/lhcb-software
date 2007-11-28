@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.4 2007-11-28 13:01:22 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -102,7 +102,7 @@ void STClusterMonitor::fillHistograms(const STCluster* aCluster)
           -0.125, 1.125, 5);
 
     // neighbour sum
-    plot(aCluster->neighbourSum(),"Neighbour sum",7, -16.5, 26.5, 43);
+    plot(aCluster->neighbourSum(),7,"Neighbour sum", -16.5, 26.5, 43);
     plot(aCluster->neighbourSum()/aCluster->totalCharge(),
          "Relative neighbour sum", -1.02, 1.02, 51);
 

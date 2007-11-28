@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2007-26-11 M Needham
+ - Bug fix in neighbour sum histo
+
 ! 2007-23-11 M Needham
  - Ensure histo ids are the same
  - Add some consts
