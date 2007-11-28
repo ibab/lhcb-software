@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.9 2007-10-12 12:21:20 hernando Exp $
+// $Id: HltInit.cpp,v 1.10 2007-11-28 14:00:47 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,8 @@ DECLARE_ALGORITHM_FACTORY( HltInit );
 //=============================================================================
 HltInit::HltInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_hltSvc(0)
 {
   // location of the summary and the summary box name
   declareProperty("TCKName", m_TCKName = "Default");
@@ -57,27 +58,21 @@ StatusCode HltInit::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // create the Hlt Data Svc
-  m_hltSvc = NULL;
   std::string name = "DataSvc/HltDataSvc";
-  info() << " trying to create " << name << endreq;
-  sc = serviceLocator()->service(name,m_hltSvc,true);
-  // m_hltSvc = svc<IDataManagerSvc>("HltDataSvc",true);  
-  if (!m_hltSvc) fatal() << " not able to create Hlt Svc " << endreq;
-  else info() << " created Hlt Data Svc! " << endreq;
+  m_hltSvc = svc<IDataManagerSvc>(name,true); // 2nd argument: create
   m_hltSvc->setRoot("/Event", new DataObject());
 
-  IDataProviderSvc* hltsvc = NULL;
-  sc = serviceLocator()->service(name,hltsvc);
-  if (!hltsvc) error() << " not able to create Hlt Svc provider " << endreq;
-  else debug() << " SUCCESSFULLY CREATED provider!! " << endreq;
+  IDataProviderSvc* hltsvc = svc<IDataProviderSvc>(name,false);
+
+  put(hltsvc,new Hlt::DataHolder<LHCb::HltSummary>(m_datasummary),m_dataSummaryLocation );
+  if (sc.isFailure()) { 
+    Exception(std::string(" failed to register at ") + m_dataSummaryLocation, sc); 
+  }
+
+  put(hltsvc,new Hlt::DataHolder<Estd::dictionary>(m_hltConfiguration),
+             m_dataSummaryLocation+"/Configuration");
 
 
-  std::string loca = m_dataSummaryLocation;
-  put(hltsvc, new Hlt::DataHolder<LHCb::HltSummary>(m_datasummary),loca);  
-  info() << " stored hlt summary data " << endreq;
-
-  loca = m_dataSummaryLocation+"/Configuration";
-  put(hltsvc,new Hlt::DataHolder<Estd::dictionary>(m_hltConfiguration),loca);
   m_hltConfiguration.add("TCKName",m_TCKName);
   info() << " stored hlt configuration " << m_TCKName << endreq;
 

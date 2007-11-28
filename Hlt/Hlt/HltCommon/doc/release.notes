@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2007-11-28 Gerhard Raven
+      - HltInit: use templated svc locator from GaudiAlg
+
 ! 2007-11-23 Gerhard Raven
       - HltSelectionDataToTes: initialize all member pointers to 0 in c'tor, use 0 instead of NULL
       - HltTrackMaker,HltVertexMaker: use boost::delete_ptr, 0 instead of NULL, use 'empty()' instead
