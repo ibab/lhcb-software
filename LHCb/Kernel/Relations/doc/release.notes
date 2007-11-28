@@ -1,18 +1,16 @@
-! $Id: release.notes,v 1.49 2007-11-27 13:38:27 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.49 $
+! $Id: release.notes,v 1.50 2007-11-28 13:50:12 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r3 2007-11-29 ============================
 ! 2007-11-27 - Vanya BELYAEV
   - move python/Relations.py in python/Relations/Rels.py
   - add python/Relations/__init__.py 
   - cmt/requirements
     version increment to v5r3 
- 
 
 !====================== Relations v5r2 2007-09-04 ============================
 ! 2007-08-28
