@@ -4,8 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r5 2007-11-29 =============
+! 2007-11-29
+ + updated to OnlineHistDB v4
+ + new GUI layout
+ + minor bugfixes, improvements
+ + initial reference histogram support (no setting through GUI)
 
 !============ Presenter v0r4 2007-10-29 =============
-! 2007-10-29 -
+! 2007-10-29
  - New test package. 
 
