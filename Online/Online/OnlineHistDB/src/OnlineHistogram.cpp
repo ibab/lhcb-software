@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.24 2007-11-28 13:50:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.25 2007-11-28 18:04:07 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -259,6 +259,7 @@ void OnlineHistogram::createDisplayOptions() {
 				(dvoid *) m_dispopt,
 				(dvoid **) &m_dispopt_null), SEVERE);
 
+
     m_do.reserve(39);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->LABEL_X),
@@ -377,9 +378,8 @@ void OnlineHistogram::createDisplayOptions() {
     m_do.push_back(new OnlineDisplayOption("CNTPLOT",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->CNTPLOT),
 					   &(m_dispopt_null->CNTPLOT), this ) );
-
-
   }
+
   if(m_shdisp) {
     m_domode=HISTPAGE;
     getDisplayOptions(m_shdisp);
@@ -903,10 +903,8 @@ OnlineHistogram::OnlineDisplayOption::OnlineDisplayOption(std::string Name,
     m_env(Env) 
 { if(Type == STRING) { //needs to be created (I guess)
     OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
-		   (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
-		   (dvoid **) &OCIvar);
-    //  OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) "",
-    //		(ub2)0, (OCIString **) m_value);
+    		   (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
+		   (dvoid **) OCIvar);
   } 
 }
 
@@ -971,7 +969,9 @@ OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string Paramet
 
 // dump functions
 
+
 void OnlineHistogram::dump() {
+
   cout<<" ----- HISTOGRAM RECORD " << m_hid << "------------------"<<endl;
   cout<<" Identifier: "<< m_identifier<< "    Type "<<hstype() <<endl;
   if (m_page != "_NONE_")
