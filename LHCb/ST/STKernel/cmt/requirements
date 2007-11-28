@@ -4,6 +4,7 @@ version v1r0
 use GaudiKernel v*
 use LHCbKernel  v* Kernel
 use DigiEvent   v* Event
+use DAQEvent    v* Event
 use SiDAQ       v* Si
 
 branches Kernel doc cmt src 
