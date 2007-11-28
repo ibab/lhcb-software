@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v4r8
+version           v4r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
