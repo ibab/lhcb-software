@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.53 2007-10-25 15:21:57 scheruku Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.54 2007-11-28 22:02:55 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -62,6 +62,8 @@ namespace LHCb {
 #endif
 
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
+#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I:", & m_ ## name [0], sizeof(m_ ## name), desc, this);} while(0);
+
 #define printnum(n, s) n << s << (n == 1 ? "" : "s")
 
 #define HDR_LEN (IP_HEADER_LEN + sizeof(LHCb::MEPHdr)) 
@@ -123,22 +125,24 @@ namespace LHCb  {
     void multipleSrc(int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
       m_log << MSG::ERROR << "Multiple event from " << 
-  m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
+	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
       << ")" << endmsg; 
     } 
-    void badPkt(DAQErrorEntry::DAQErrorType  /* type */, int srcid ) {
+    void badPkt(DAQErrorEntry::DAQErrorType type , int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
-      m_log << MSG::ERROR << "Bad packet from " << 
-  m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
-      << ")" << endmsg; 
-    }
-    void warnSwap(int srcid) {
-      if ( m_parent->addMEPSwapEvent() < 10 )  {
-        m_log << MSG::WARNING 
-              << "MEP with swapped packing_factor / len detected. " << 
-    "Sent by " << m_parent->m_srcName[srcid] <<  " (" << 
-    m_parent->m_srcDottedAddr[srcid] << ")" << ". Fixed!" << endmsg;
+      m_log << MSG::ERROR << "Bad packet from " <<
+	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid] << ")  [";
+      switch (type) {
+      case DAQErrorEntry::EmptyMEP: m_parent->m_truncPkt[srcid]++; 
+	m_log << "empty MEP"; break;
+      case DAQErrorEntry::WrongPackingFactor: m_parent->m_badPckFktPkt[srcid]++;
+	m_log << "mismatch in packing factor"; break;
+      case DAQErrorEntry::ShortPkt: m_parent->m_badLenPkt[srcid]++;
+	m_log << "mismatch between length on wire and in MEP header"; break;
+      default: m_log << "Mysterious error: " << type;
       }
+      m_log << "]" << endmsg;
+      
     }
 
 #define RAWBHDRSIZ (sizeof(RawBank) - 4)
@@ -220,14 +224,14 @@ int MEPRx::setupDAQErrorBankHdr() {
 
 void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
-  int events;  
-  if ( (events = m_parent->addIncompleteEvent()) < 10 || !(events % 2000)) {
-    m_log << MSG::ERROR << "Incomplete Event! No packet from: ";
-    for (int i = 0; i < m_nSrc; ++i) 
-      if (!m_seen[i]) 
-  m_log << FULLNAME(i) << " "; 
-    m_log << endmsg;
-  }
+  m_parent->addIncompleteEvent();
+  m_log << MSG::ERROR << "Incomplete Event! No packet from: ";
+  for (int i = 0; i < m_nSrc; ++i) 
+    if (!m_seen[i]) { 
+      m_log << FULLNAME(i) << " "; 
+      m_parent->m_misPkt[i]++;
+    }
+  m_log << endmsg;
   if (m_parent->m_dropIncompleteEvents) { // added on Kazu's demand
     m_eventType = EVENT_TYPE_ERROR;
   }  
@@ -338,23 +342,15 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   MEPHdr *newhdr = (MEPHdr*) ((u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN);
   m_parent->m_totRxOct += len;
   m_brx += len;
-
-  // check for swapped m_nEvt field
-  if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
-    if (len != (hdr->m_nEvt + IP_HEADER_LEN)) {
-      badPkt(DAQErrorEntry::ShortPkt, srcid);
-    }
-    else {
-      u_int16_t tmp;
-
-      tmp = newhdr->m_totLen; newhdr->m_totLen = newhdr->m_nEvt; newhdr->m_nEvt = tmp; 
-      //         std::swap(newhdr->m_totLen,newhdr->m_nEvt);
-      if (m_nrx == 0) m_pf = newhdr->m_nEvt;
-      warnSwap(srcid);
-    }
-  }
   m_nrx++; 
-  if (m_pf != newhdr->m_nEvt) badPkt(DAQErrorEntry::WrongPackingFactor, srcid);    
+
+  if (len != (hdr->m_totLen + IP_HEADER_LEN)) 
+    badPkt(DAQErrorEntry::ShortPkt, srcid);   
+  if (m_pf == 0) 
+    badPkt(DAQErrorEntry::EmptyMEP, srcid);
+  if (m_pf != newhdr->m_nEvt) 
+    badPkt(DAQErrorEntry::WrongPackingFactor, srcid);    
+  m_parent->m_rxEvt[srcid] += m_pf;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -370,7 +366,7 @@ void MEPRQCommand::commandHandler(void) {
 
 // Standard Constructor
 MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
-: Service(nam, svc), m_receiveEvents(false), m_incidentSvc(0)
+: Service(nam, svc), m_state(NOT_READY), m_incidentSvc(0)
 {
   declareProperty("MEPBuffers",       m_MEPBuffers = 4);
   declareProperty("ethInterface",     m_ethInterface);
@@ -388,10 +384,11 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RTTCCompat",       m_RTTCCompat = false);
   declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
-  declareProperty("InitialMEPRQs",    m_initialMEPRQ = 1);
-  declareProperty("MEPsPerMEPRQ",     m_MEPsPerMEPRQ = 1);
+  declareProperty("InitialMEPReqs",    m_initialMEPReq = 1);
+  declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
+  declareProperty("nCrh", m_nCrh = 10);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
 
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
@@ -456,8 +453,8 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
     mepreq.nmep = m;
     int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq, MEP_REQ_LEN, 0);
     if (n == MEP_REQ_LEN)   {
-      m_totMEPRQ += m;
-      m_totMEPRQPkt++;
+      m_totMEPReq += m;
+      m_totMEPReqPkt++;
       return StatusCode::SUCCESS;
     }
     if (n == -1)  {
@@ -471,6 +468,7 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
 }
 
 void MEPRxSvc::freeRx() {
+  int rc;  
   lib_rtl_lock(m_usedDscLock);
   if (m_usedDsc.empty()) {
     lib_rtl_unlock(m_usedDscLock);
@@ -479,13 +477,16 @@ void MEPRxSvc::freeRx() {
   MEPRx *rx = *(--m_usedDsc.end());
   m_usedDsc.pop_back();
   lib_rtl_unlock(m_usedDscLock);
-  if (rx->spaceRearm(0) == MBM_NORMAL) {
+  if ((rc = rx->spaceRearm(0)) == MBM_NORMAL) {
     lib_rtl_lock(m_freeDscLock);
     m_freeDsc.push_back(rx);
     lib_rtl_unlock(m_freeDscLock);
-    sendMEPReq(m_MEPsPerMEPRQ);
+    sendMEPReq(m_MEPsPerMEPReq);
     return; 
   }
+  else if (rc == MBM_REQ_CANCEL) {
+    return;
+  } 
   error("timeout on getting space.");
 }
 
@@ -505,13 +506,26 @@ StatusCode MEPRxSvc::run() {
   RTL::IPHeader *iphdr  = (RTL::IPHeader*)hdr;
   MEPHdr        *mephdr = (MEPHdr*) &hdr[IP_HEADER_LEN];;
   int srcid;
-  bool beenthere = false;
 
-  m_forceStop = false;
-  while (!m_receiveEvents) {
-    MEPRxSys::microsleep(100000); // 100 ms
+  // we are ready - wait for start
+  while (m_state != RUNNING) {
+    switch(m_state) {
+    case STOPPED:
+    case NOT_READY:
+      log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
+      return StatusCode::SUCCESS;
+    case READY: 
+      MEPRxSys::microsleep(100000); // 100 ms
+      break;
+    default: continue;
+    }
   }
-
+  // we got a START command - send a few MEP requests
+  if (!sendMEPReq(m_initialMEPReq).isSuccess()) {
+    log << MSG::WARNING << "Could not send " << m_initialMEPReq
+        << " initial MEP requests." << endmsg;
+  }
+     
   for (;;) {
     int n = MEPRxSys::rx_select(m_dataSock, m_MEPRecvTimeout);  
     if (n ==  -1) {
@@ -519,28 +533,30 @@ StatusCode MEPRxSvc::run() {
       continue;
     }
     if (n == MEPRX_WRONG_FD) {
-      error("wrong filedes on select");
+      error("wrong file-descriptor in select");
       continue;
     }
     if (n == 0) {
-
       /* We haven't received a MEP for quite some time. Update counter.
        */
       m_numMEPRecvTimeouts++;
 
       static int ncrh = 1;
-      if (!m_receiveEvents) {
+      if (m_state != RUNNING) {
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
+        log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
       }
       if (--ncrh == 0) {
-        log << MSG::DEBUG << "crhhh..." <<  m_freeDsc.size()  << " Event# ";
-        ncrh = 10;
-        for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
-        log << " nrx ";
-        for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
-        log << endmsg;
+        log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << " free buffers";
+	log << MSG::DEBUG << endmsg;
+        for(size_t i = 0; i < m_workDsc.size(); ++i) {
+	  log << MSG::DEBUG << "Event L0ID# " << m_workDsc[i]->m_l0ID << " missing ";
+          log << MSG::DEBUG << m_workDsc[i]->m_nrx << " MEPs. ";
+	}
+	log << endmsg;
+	ncrh = m_nCrh;
       }
 
       continue;
@@ -558,14 +574,6 @@ StatusCode MEPRxSvc::run() {
       removePkt();
       continue;
     }
-    if (m_srcFlags[srcid] & DOUBLE_ZERO_BUG) {
-      if (mephdr->m_l0ID == 0 && !beenthere) {
-  beenthere = true;
-  error("Activated DOUBLE_ZERO_BUG fix for source " + m_srcName[srcid]);
-      } else if (beenthere) {
-  mephdr->m_l0ID++;
-      }
-    }      
     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
       rxit = --m_workDsc.end();
     } 
@@ -578,6 +586,7 @@ StatusCode MEPRxSvc::run() {
           if (m_freeDsc.empty()) {
             forceEvent(oldest);
             freeRx(); // only if not in separate thread
+	    
           }
           while (m_freeDsc.empty()) MEPRxSys::microsleep(100) ; /* only necessary on 
                                                             multithreading */
@@ -585,8 +594,8 @@ StatusCode MEPRxSvc::run() {
           rx = m_freeDsc.back();
           m_freeDsc.pop_back();
           lib_rtl_unlock(m_freeDscLock);
-    rx->m_age = m_MEPBuffers;
-    rx->m_l0ID = mephdr->m_l0ID;
+	  rx->m_age = m_MEPBuffers;
+	  rx->m_l0ID = mephdr->m_l0ID;
           RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
           m_workDsc.insert(j, rx);
           rxit = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
@@ -604,7 +613,7 @@ StatusCode MEPRxSvc::run() {
       lib_rtl_unlock(m_usedDscLock);
       freeRx();
     }              
-  }
+  } // for{;;}
   return 1; 
 }   
 
@@ -754,24 +763,35 @@ void MEPRxSvc::publishCounters()
 void MEPRxSvc::clearCounters() {
   memset(&m_rxOct.front(),  0, m_nCnt * sizeof(u_int64_t));
   memset(&m_rxPkt.front(),  0, m_nCnt * sizeof(u_int64_t));
-  memset(&m_badPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
+  memset(&m_rxEvt.front(),  0, m_nCnt * sizeof(u_int64_t));
+  memset(&m_badPckFktPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
+  memset(&m_badLenPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
   memset(&m_misPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
-  m_notReqPkt = m_swappedMEP = 0;
+  memset(&m_truncPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
+  m_totRxOct = m_totRxPkt = m_incEvt = m_notReqPkt;
+  m_totMEPReq = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_notReqPkt = 0;
 } 
 
 int MEPRxSvc::setupCounters(int n) {
   m_rxOct.resize(n,0);
   m_rxPkt.resize(n,0);
-  m_badPkt.resize(n,0);
+  m_rxEvt.resize(n,0);
+  m_badPckFktPkt.resize(n,0);
+  m_badLenPkt.resize(n,0);
   m_misPkt.resize(n,0);
-  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPRQPkt = m_numMEPRecvTimeouts = m_totMEPRQ = 0;
+  m_truncPkt.resize(n,0);
+  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_totMEPReq = 0;
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
   PUBCNT(incEvt,   "Incomplete events");
-  PUBCNT(totMEPRQ, "Total Requested MEPs");
-  PUBCNT(totMEPRQPkt, "Total Sent MEP Request Packets");
-  PUBCNT(numMEPRecvTimeouts, "MEP Receive Timeouts");
-  m_notReqPkt = m_swappedMEP = 0;
+  PUBCNT(totMEPReq, "Total requested MEPs");
+  PUBCNT(totMEPReqPkt, "Total Sent MEP-request packets");
+  PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
+  PUBCNT(notReqPkt, "Total unsolicited packets");
+  PUBARRAYCNT(badLenPkt, "MEPs with mismatched length");
+  PUBARRAYCNT(misPkt, "Missing MEPs");
+  PUBARRAYCNT(badPckFktPkt, "MEPs with wrong packing (MEP) factor");
+  PUBARRAYCNT(truncPkt, "Truncated MEPs");
   m_nCnt = n;
   return 0;
 }
@@ -780,10 +800,10 @@ void  MEPRxSvc::handle(const Incident& inc)    {
   MsgStream log(msgSvc(), "MEPRx");
   log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  {
-    m_receiveEvents = false;
+    m_state = STOPPED;
   }
   else if (inc.type() == "DAQ_ENABLE")  {
-    m_receiveEvents = true;
+    m_state = RUNNING;
   }
 }
 
@@ -806,7 +826,6 @@ StatusCode MEPRxSvc::initialize()  {
     if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
       m_incidentSvc->addListener(this, "DAQ_CANCEL");
       m_incidentSvc->addListener(this, "DAQ_ENABLE");
-      /*Add another one for sending mep requests.*/
     } 
     else { 
       return error("Failed to access incident service.");
@@ -818,33 +837,29 @@ StatusCode MEPRxSvc::initialize()  {
       return error("Failed to access monitor service.");
     }
 
-    /*Send some MEP requests to start with.*/
-    if(!sendMEPReq(m_initialMEPRQ).isSuccess()) {
-      log << MSG::WARNING << "Could not send " << m_initialMEPRQ
-        << " initial MEP requests." << endmsg;
-    }
-
+//    /*Send some MEP requests to start with.*/
+///    if(!sendMEPReq(m_initialMEPReq).isSuccess()) {
+//      log << MSG::WARNING << "Could not send " << m_initialMEPReq
+//        << " initial MEP requests." << endmsg;
+//    }
+    m_state = READY;
     return StatusCode::SUCCESS;
 }
 
 StatusCode MEPRxSvc::finalize()  {
   MsgStream log(msgSvc(),"MEPRx");
   log << MSG::DEBUG << "Entering finalize....." << endmsg;
-  m_receiveEvents = false;
   releaseRx();
   if (m_incidentSvc) {
     m_incidentSvc->removeListener(this);
     //m_incidentSvc->release();
-    m_incidentSvc = NULL;
+    m_incidentSvc = 0;
   }
   if (m_monSvc) {
     m_monSvc->undeclareAll(this);
     m_monSvc->release();
-    m_monSvc = NULL;
+    m_monSvc = 0;
   }
-  if ( m_swappedMEP ) {
-    log << MSG::WARNING << m_swappedMEP << " MEPs with" <<
-           " swapped header structure detected" << endmsg;
-  }
+  m_state = NOT_READY;
   return Service::finalize();
 }
