@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.11 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.12 2007-11-28 14:08:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -87,7 +87,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*>      GALL ( true ) ;
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant GALL ( true ) ;
     // ========================================================================    
     /** @typedef GANCESTOR
      *  trivial function which evaluates for true for all 
@@ -277,7 +277,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<const HepMC::GenParticle*>     GCOUNTER ;
+    typedef LoKi::Monitoring::Counter<const HepMC::GenParticle*,bool> GCOUNTER ;
     // ========================================================================
     /** @var GCTAU 
      *  evaluator of particle proper lifetime c*tau (in HepMC units)
@@ -426,7 +426,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*>   GFALSE ( false ) ;
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant GFALSE ( false ) ;
     // ========================================================================    
     /** @typdef GFAEVX 
      *  helper adapter which delegates the evaluation of the 
@@ -805,7 +805,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*>    GNONE ( false ) ;
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant GNONE ( false ) ;
     // ========================================================================    
     /** @var GNUCLEUS
      *  Check for particle type   
@@ -831,7 +831,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::Constant<const HepMC::GenParticle*>                GONE ( 1 ) ;
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::Constant GONE ( 1 ) ;
     // ========================================================================    
     /** @var GP 
      *  evaluator of particle momentum (in HepMC units)
@@ -927,7 +927,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Plot<const HepMC::GenParticle*>           GPLOT ;
+    typedef LoKi::Monitoring::Plot<const HepMC::GenParticle*,double> GPLOT ;
     // ========================================================================
     /** @var GPT 
      *  evaluator of particle transverse momentum (in HepMC units)
@@ -1148,13 +1148,13 @@ namespace LoKi
      *             from its string representations. It is done 
      *             on purpose to avoid the disturbing of ids. 
      * 
-     *  @see LoKi::Monitoring::Stat
+     *  @see LoKi::Monitoring::Counter
      *  @see LoKi::monitor
      *  @see StatEntity
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Stat<const HepMC::GenParticle*>           GSTAT ;
+    typedef LoKi::Monitoring::Counter<const HepMC::GenParticle*,double> GSTAT ;
     // ========================================================================
     /** @var GSTATUS 
      *  the primitive evaluator of HepMC::Particle::status()
@@ -1265,7 +1265,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::BooleanConstant<const HepMC::GenParticle*>    GTRUE ( true  ) ;
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant GTRUE ( true  ) ;
     // ========================================================================
     /** @var GVALID 
      *  Simple predicate which checks the ildty of the pointer 
@@ -1301,7 +1301,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
      *  @date 2005-03-27
      */
-    const LoKi::Constant<const HepMC::GenParticle*>               GZERO ( 0 ) ;    
+    const LoKi::BasicFunctors<const HepMC::GenParticle*>::Constant GZERO ( 0 ) ;    
     // ========================================================================
   } // end of namespace LoKi::Cuts  
 } // end of namespace LoKi

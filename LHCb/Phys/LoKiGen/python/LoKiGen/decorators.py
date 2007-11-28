@@ -19,25 +19,25 @@ def _decorate ( name = _name  ) :
     """ Make the decoration of all objects fomr this module """
     import LoKiCore.decorators as _LoKiCore 
     _decorated  = _LoKiCore.getAndDecorateFunctions (
-        name                                            , ## module name 
-        LoKi.Function('const HepMC::GenParticle*')      , ## the base 
-        LoKi.Dicts.FunCalls(HepMC.GenParticle)          , ## call-traits 
-        LoKi.Dicts.FuncOps('const HepMC::GenParticle*') ) ## operators 
+        name                                             , ## module name 
+        LoKi.Functor('const HepMC::GenParticle*,double') , ## the base 
+        LoKi.Dicts.FunCalls(HepMC.GenParticle)           , ## call-traits 
+        LoKi.Dicts.FuncOps('const HepMC::GenParticle*')  ) ## operators 
     _decorated |= _LoKiCore.getAndDecorateFunctions  (
-        name                                            , ## module name 
-        LoKi.Function('const HepMC::GenVertex*')        , ## the base 
-        LoKi.Dicts.FunCalls(HepMC.GenVertex)            , ## call-traits 
-        LoKi.Dicts.FuncOps('const HepMC::GenVertex*')   ) ## operators
+        name                                             , ## module name 
+        LoKi.Functor('const HepMC::GenVertex*,double')   , ## the base 
+        LoKi.Dicts.FunCalls(HepMC.GenVertex)             , ## call-traits 
+        LoKi.Dicts.FuncOps('const HepMC::GenVertex*')    ) ## operators
     _decorated |=  _LoKiCore.getAndDecoratePredicates (
-        name                                            , ## module name 
-        LoKi.Predicate('const HepMC::GenParticle*')     , ## the base 
-        LoKi.Dicts.CutCalls(HepMC.GenParticle)          , ## call-traits 
-        LoKi.Dicts.FuncOps('const HepMC::GenParticle*') ) ## operators 
+        name                                             , ## module name 
+        LoKi.Functor('const HepMC::GenParticle*,bool')   , ## the base 
+        LoKi.Dicts.CutCalls(HepMC.GenParticle)           , ## call-traits 
+        LoKi.Dicts.FuncOps('const HepMC::GenParticle*')  ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
-        name                                            , ## module name 
-        LoKi.Predicate('const HepMC::GenVertex*')       , ## the base 
-        LoKi.Dicts.FunCalls(HepMC.GenVertex)            , ## call-traits 
-        LoKi.Dicts.FuncOps('const HepMC::GenVertex*')   ) ## the operators
+        name                                             , ## module name 
+        LoKi.Functor('const HepMC::GenVertex*,bool')     , ## the base 
+        LoKi.Dicts.FunCalls(HepMC.GenVertex)             , ## call-traits 
+        LoKi.Dicts.FuncOps('const HepMC::GenVertex*')    ) ## the operators
     # decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( GID , GABSID ) :
         t = type ( t ) 

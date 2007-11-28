@@ -1,11 +1,4 @@
-// $Id: GenVertexCuts.h,v 1.4 2006-11-25 19:14:19 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
+// $Id: GenVertexCuts.h,v 1.5 2007-11-28 14:08:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENVERTEXCUTS_H 
 #define LOKI_GENVERTEXCUTS_H 1
@@ -45,55 +38,56 @@ namespace LoKi
 {
   namespace Cuts 
   {
+    // ========================================================================
     /** @var GVTRUE
      *  trivial predicate which always returns "true"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::BooleanConstant<const HepMC::GenVertex*>   GVTRUE   ( true  ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::BooleanConstant GVTRUE ( true  ) ;
+    // ========================================================================
     /** @var GVFALSE
      *  trivial predicate which always returns "false"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::BooleanConstant<const HepMC::GenVertex*>   GVFALSE  ( false ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::BooleanConstant GVFALSE  ( false ) ;
+    // ========================================================================
     /** @var GVALL
      *  trivial predicate which always returns "true"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::BooleanConstant<const HepMC::GenVertex*>   GVALL    ( true  ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::BooleanConstant GVALL ( true  ) ;
+    // ========================================================================
     /** @var GVNONE
      *  trivial predicate which always returns "false"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::BooleanConstant<const HepMC::GenVertex*>   GVNONE   ( false ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::BooleanConstant GVNONE ( false ) ;
+    // ========================================================================
     /** @var GVONE
      *  trivial function which always returns 1
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::Constant<const HepMC::GenVertex*>          GVONE    ( 1     ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::Constant GVONE ( 1 ) ;
+    // ========================================================================
     /** @var GVNULL
      *  trivial function which always returns 0
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::Constant<const HepMC::GenVertex*>          GVNULL   ( 0     ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::Constant GVNULL ( 0 ) ;
+    // ========================================================================
     /** @var GVZERO
      *  trivial function which always returns 0
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const LoKi::Constant<const HepMC::GenVertex*>          GVZERO   ( 0     ) ;
-
+    const LoKi::BasicFunctors<const HepMC::GenVertex*>::Constant GVZERO ( 0 ) ;
+    // ========================================================================
     /** Minimum from 2 functions 
      *  
      *  @code 
@@ -108,7 +102,7 @@ namespace LoKi
      *  @see LoKi::Min
      */
     typedef LoKi::Min<const HepMC::GenVertex*>             GVMIN ;
-
+    // ========================================================================
     /** Maximum from 2 functions 
      *  
      *  @code 
@@ -123,7 +117,7 @@ namespace LoKi
      *  @see LoKi::MAX
      */
     typedef LoKi::Min<const HepMC::GenVertex*>             GVMAX ;
-
+    // ========================================================================
     /** @var GVBAR
      *  trivial function which returns the "bar-code" for 
      *  HepMC::GenVertex
@@ -131,7 +125,7 @@ namespace LoKi
      *  @date 2006-02-08
      */
     const   LoKi::GenVertices::BarCode                     GVBAR     ;
-
+    // ========================================================================
     /** @var GVBARCODE
      *  trivial function which returns the "bar-code" for 
      *  HepMC::GenVertex
@@ -139,7 +133,7 @@ namespace LoKi
      *  @date 2006-02-08
      */
     const   LoKi::GenVertices::BarCode                     GVBARCODE ;
-    
+    // ========================================================================    
     /** @var GVX 
      *  trivial function which returns the X-position of 
      *  HepMC::GenVertex 
@@ -149,7 +143,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     const   LoKi::GenVertices::PositionX                   GVX    ;
-
+    // ========================================================================
     /** @var GVY
      *  trivial function which returns the X-position of 
      *  HepMC::GenVertex 
@@ -159,7 +153,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     const   LoKi::GenVertices::PositionY                   GVY    ;
-
+    // ========================================================================
     /** @var GVZ 
      *  trivial function which returns the Z-position of 
      *  HepMC::GenVertex 
@@ -169,7 +163,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     const   LoKi::GenVertices::PositionZ                   GVZ    ;
-
+    // ========================================================================
     /** @var GVT
      *  trivial function which returns the T-position of 
      *  HepMC::GenVertex 
@@ -179,7 +173,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     const   LoKi::GenVertices::PositionT                   GVT    ;
-
+    // ========================================================================
     /** @var GVTIME
      *  trivial function which returns the T-position of 
      *  HepMC::GenVertex 
@@ -189,7 +183,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     const   LoKi::GenVertices::PositionT                   GVTIME ;
-    
+    // ========================================================================    
     /** the adapter function which counts number of particles 
      *  which satisfy certain criteria within the specified range 
      *
@@ -223,7 +217,7 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     typedef LoKi::GenVertices::CountIF                     GVCOUNT ;
-
+    // ========================================================================
     /** the adapter function which accumulated the value of 
      *  given function over the particles which satisfy 
      *  certain criteria within the specified range 
@@ -251,10 +245,9 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     typedef LoKi::GenVertices::SumIF                     GVSUM ;
-
-  } ; // end of namespace LoKi::Cuts
-} ; // end of namespace LoKi
-
+    // ========================================================================
+  } // end of namespace LoKi::Cuts
+} // end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

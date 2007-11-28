@@ -1,4 +1,4 @@
-// $Id: PrintHepMCDecay.cpp,v 1.6 2007-08-16 13:51:04 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.7 2007-11-28 14:08:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -124,7 +124,7 @@ std::ostream& LoKi::PrintHepMC::printDecay
 {
   return LoKi::PrintHepMC::printDecay 
     ( particle , stream , 
-      LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+      LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant ( true ) ) ;  
 }
 // ============================================================================
 //  Simple function to print HepMC decay in more or less "readable" format 
@@ -135,7 +135,7 @@ MsgStream& LoKi::PrintHepMC::printDecay
 {
   return LoKi::PrintHepMC::printDecay 
     ( particle , stream , 
-      LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+      LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant ( true ) ) ;  
 }
 // ============================================================================
 //  Simple function to print HepMC decay in more or less "readable" format 
@@ -144,7 +144,8 @@ std::string LoKi::PrintHepMC::printDecay
 ( const HepMC::GenParticle*    particle ) 
 {
   return LoKi::PrintHepMC::printDecay 
-    ( particle , LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) ) ;  
+  ( particle , 
+    LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant ( true ) ) ;  
 }
 // ============================================================================
 

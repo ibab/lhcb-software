@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.9 2007-08-27 12:28:24 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.10 2007-11-28 14:08:29 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -24,62 +24,19 @@
   <class pattern   = "std::unary_function<*HepMC::*,bool>"            />
   <class pattern   = "std::binary_function<*HepMC::*,*HepMC::*,bool>" />
   
-  <class pattern   = "LoKi::Function<*HepMC::*>"         />
-  <class pattern   = "LoKi::Predicate<*HepMC::*>"        />
+  <class pattern   = "LoKi::BasicFunctors<*HepMC::*>"      />
+  <class pattern   = "LoKi::Functor<*HepMC::*>"            />
+  <class pattern   = "LoKi::FunctorFromFunctor<*HepMC::*>" />
+  <class pattern   = "LoKi::Constant<*HepMC::*>"           />
   
-  <class pattern   = "LoKi::Constant<*HepMC::*>"         />
-  <class pattern   = "LoKi::BooleanConstant<*HepMC::*>"  />
-  <class pattern   = "LoKi::PredicateFromPredicate<*HepMC::*>"        />
-  <class pattern   = "LoKi::FunctionFromFunction<*HepMC::*>"          />
-
   <class pattern   = "LoKi::Valid<*HepMC::*>"         />
   <class pattern   = "LoKi::TheSame<*HepMC::*>"       />
   
-  <!-- 
-       
-       <class pattern   = "LoKi::EqualToValue<*HepMC::*>"     />
-       <class pattern   = "LoKi::SimpleSwitch<*HepMC::*>"     />
-       <class pattern   = "LoKi::Switch<*HepMC::*>"           />
-       
-       <class pattern   = "LoKi::PredicateFromTwoPredicates<*HepMC::*>"    />
-       <class pattern   = "LoKi::PredicateFromTwoFunctions<*HepMC::*>"     />
-       <class pattern   = "LoKi::FunctionFromTwoFunctions<*HepMC::*>"      />
-       <class pattern   = "LoKi::PredicateFromFunctionAndValue<*HepMC::*>" />
-       
-       <class pattern   = "LoKi::And<*HepMC::*>"              />
-       <class pattern   = "LoKi::Or<*HepMC::*>"               />
-       <class pattern   = "LoKi::Not<*HepMC::*>"              />
-       
-       <class pattern   = "LoKi::Less<*HepMC::*>"             />
-       <class pattern   = "LoKi::Equal<*HepMC::*>"            />
-       <class pattern   = "LoKi::LessOrEqual<*HepMC::*>"      />
-       <class pattern   = "LoKi::NotEqual<*HepMC::*>"         />
-       
-       <class pattern   = "LoKi::Plus<*HepMC::*>"             />
-       <class pattern   = "LoKi::Minus<*HepMC::*>"            />
-       <class pattern   = "LoKi::Divide<*HepMC::*>"           />
-       <class pattern   = "LoKi::Multiply<*HepMC::*>"         />
-       
-       <class pattern   = "LoKi::Min<*HepMC::*>"              />
-       <class pattern   = "LoKi::Max<*HepMC::*>"              />
-       
-       <class pattern   = "LoKi::ComposeFunction<*HepMC::*>"  />
-       <class pattern   = "LoKi::ComposeFunction2<*HepMC::*>" />
-       
-       <class pattern   = "LoKi::Compare<*HepMC::*>"          />
-       
-       
-       <class pattern = "LoKi::Monitoring::Counter<*HepMC::*>"   />
-       <class pattern = "LoKi::Monitoring::Stat<*HepMC::*>"      />
-       <class pattern = "LoKi::Monitoring::Plot<*HepMC::*>"      />
 
-  -->
-  
-  
   <class pattern   = "LoKi::GenParticles::*"             />
   <class pattern   = "LoKi::GenVertices::*"              />
   
-  <function pattern = "LoKi::Kinematics::*"              />
+  <function pattern = "LoKi::GenKinematics::*"           />
   <function pattern = "LoKi::PrintHepMC::*"              />
   <function pattern = "LoKi::GenChild::*"                />
   <function pattern = "LoKi::Dicts::Extract::*"          />
@@ -91,7 +48,7 @@
   <class pattern   = "LoKi::Dicts::FunCalls<HepMC::Gen*>" />
   <class pattern   = "LoKi::Dicts::CutCalls<HepMC::Gen*>" />
   
-
+  
   <class name    = "LoKi::IGenHybridFactory"  />
   <class name    = "LoKi::IGenHybridTool"     />
   <class pattern = "LoKi::Hybrid::*"    />

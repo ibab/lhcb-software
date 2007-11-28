@@ -1,11 +1,4 @@
-// $Id: GenKinematics.cpp,v 1.4 2007-02-26 11:03:03 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:30:28  ibelyaev
-//  censored
-//
+// $Id: GenKinematics.cpp,v 1.5 2007-11-28 14:08:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,8 +10,6 @@
 // LoKiGen 
 // ============================================================================
 #include "LoKi/GenKinematics.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -36,9 +27,7 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/** trivial function to evaluate the mass HepMC::GenParticle
+/*  trivial function to evaluate the mass HepMC::GenParticle
  *  @param  p particle 
  *  @return invariant mass 
  *  @see HepMC::GenParticle 
@@ -46,7 +35,7 @@
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::GenKinematics::mass 
 ( const HepMC::GenParticle* p ) 
 {
   if ( 0 == p ) 
@@ -55,12 +44,11 @@ double LoKi::Kinematics::mass
       ("mass(HepMC::GenParticle*),invaild argument,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
-  return mass ( LoKi::LorentzVector ( p->momentum() ) ) ;
-} ;
+  return LoKi::Kinematics::mass 
+    ( LoKi::LorentzVector ( p->momentum() ) ) ;
+}
 // ============================================================================
-
-// ============================================================================
-/** trivial function to evaluate the mass HepMC::GenParticle
+/*  trivial function to evaluate the mass HepMC::GenParticle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @return invariant mass 
@@ -69,7 +57,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::GenKinematics::mass 
 ( const HepMC::GenParticle* p1 , 
   const HepMC::GenParticle* p2 ) 
 {
@@ -86,13 +74,12 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( LoKi::LorentzVector ( p1 -> momentum() ) , 
-                LoKi::LorentzVector ( p2 -> momentum() ) ) ;  
-} ;
+  return LoKi::Kinematics::mass
+    ( LoKi::LorentzVector ( p1 -> momentum() ) , 
+      LoKi::LorentzVector ( p2 -> momentum() ) ) ;  
+}
 // ============================================================================
-
-// ============================================================================
-/** trivial function to evaluate the mass HepMC::GenParticle
+/*  trivial function to evaluate the mass HepMC::GenParticle
  *  @param  p1 the first particle 
  *  @param  p2 the third particle 
  *  @param  p3 the second particle 
@@ -102,7 +89,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::GenKinematics::mass 
 ( const HepMC::GenParticle* p1 , 
   const HepMC::GenParticle* p2 ,
   const HepMC::GenParticle* p3 ) 
@@ -126,14 +113,13 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( LoKi::LorentzVector ( p1 -> momentum() ) , 
-                LoKi::LorentzVector ( p2 -> momentum() ) , 
-                LoKi::LorentzVector ( p3 -> momentum() ) ) ;  
-} ;
+  return LoKi::Kinematics::mass 
+    ( LoKi::LorentzVector ( p1 -> momentum() ) , 
+      LoKi::LorentzVector ( p2 -> momentum() ) , 
+      LoKi::LorentzVector ( p3 -> momentum() ) ) ;  
+}
 // ============================================================================
-
-// ============================================================================
-/** trivial function to evaluate the mass HepMC::GenParticle
+/*  trivial function to evaluate the mass HepMC::GenParticle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @param  p3 the third  particle 
@@ -144,7 +130,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::GenKinematics::mass 
 ( const HepMC::GenParticle* p1 , 
   const HepMC::GenParticle* p2 ,
   const HepMC::GenParticle* p3 ,
@@ -175,14 +161,12 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( LoKi::LorentzVector ( p1 -> momentum() ) , 
-                LoKi::LorentzVector ( p2 -> momentum() ) , 
-                LoKi::LorentzVector ( p3 -> momentum() ) ,
-                LoKi::LorentzVector ( p4 -> momentum() ) ) ;  
-} ;
-// ============================================================================
-
-
+  return LoKi::Kinematics::mass
+    ( LoKi::LorentzVector ( p1 -> momentum() ) , 
+      LoKi::LorentzVector ( p2 -> momentum() ) , 
+      LoKi::LorentzVector ( p3 -> momentum() ) ,
+      LoKi::LorentzVector ( p4 -> momentum() ) ) ;  
+}
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.16 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.17 2007-11-28 14:08:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -57,7 +57,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class BarCode : public LoKi::Function<const HepMC::GenParticle*> 
+    class BarCode : public LoKi::GenTypes::GFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -85,7 +85,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class Identifier : public LoKi::Function<const HepMC::GenParticle*> 
+    class Identifier : public LoKi::GenTypes::GFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -113,7 +113,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class AbsIdentifier : public LoKi::Function<const HepMC::GenParticle*> 
+    class AbsIdentifier : public LoKi::GenTypes::GFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -136,7 +136,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class Status : public LoKi::Function<const HepMC::GenParticle*> 
+    class Status : public LoKi::GenTypes::GFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -157,7 +157,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity : public LoKi::Function<const HepMC::GenParticle*>
+    class PseudoRapidity : public LoKi::GenTypes::GFunc
     {   
     public:
       /// clone method (mandatory!)
@@ -178,7 +178,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi : public LoKi::Function<const HepMC::GenParticle*>
+    class Phi : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -199,7 +199,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Theta : public LoKi::Function<const HepMC::GenParticle*>
+    class Theta : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -220,7 +220,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Momentum : public LoKi::Function<const HepMC::GenParticle*>
+    class Momentum : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -241,7 +241,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class TransverseMomentum : public LoKi::Function<const HepMC::GenParticle*>
+    class TransverseMomentum : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -262,7 +262,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Energy : public LoKi::Function<const HepMC::GenParticle*>
+    class Energy : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -283,7 +283,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Mass : public LoKi::Function<const HepMC::GenParticle*>
+    class Mass : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -304,7 +304,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumX : public LoKi::Function<const HepMC::GenParticle*>
+    class MomentumX : public LoKi::GenTypes::GFunc
     {
     public:
       /// clone method (mandatory!)
@@ -325,7 +325,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumY : public LoKi::Function<const HepMC::GenParticle*>
+    class MomentumY : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -346,7 +346,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumZ : public LoKi::Function<const HepMC::GenParticle*>
+    class MomentumZ : public LoKi::GenTypes::GFunc
     { 
     public:
       /// clone method (mandatory!)
@@ -370,7 +370,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class ValidEndVertex : public LoKi::Predicate<const HepMC::GenParticle*> 
+    class ValidEndVertex : public LoKi::GenTypes::GCuts
     {
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -411,7 +411,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class MomentumDistance : public LoKi::Function<const HepMC::GenParticle*> 
+    class MomentumDistance : public LoKi::GenTypes::GFunc 
     {
     public:
       /// constructor from 4 components
@@ -461,7 +461,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class TransverseMomentumRel : public LoKi::Function<const HepMC::GenParticle*> 
+    class TransverseMomentumRel : public LoKi::GenTypes::GFunc 
     {
     public:
       /** constructor from theta and phi
@@ -522,7 +522,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class FromHepMCTree : public LoKi::Predicate<const HepMC::GenParticle*>
+    class FromHepMCTree : public LoKi::GenTypes::GCuts 
     {
     public:
       /** constructor from particle ("head")
@@ -545,7 +545,7 @@ namespace LoKi
       template <class ITERATOR>
       FromHepMCTree 
       ( ITERATOR first , ITERATOR last  ) 
-        : LoKi::Predicate<const HepMC::GenParticle*>()
+        : LoKi::GenTypes::GCuts ()
       { _add ( first , last ) ; }
       /** copy constructor 
        *  @param right object to be copied 
@@ -596,7 +596,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsAnAncestor : public LoKi::Predicate<const HepMC::GenParticle*> 
+    class IsAnAncestor : public LoKi::GenTypes::GCuts 
     {
     public:
       /** constructor from particle 
@@ -630,7 +630,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class  HasQuark : public LoKi::Predicate<const HepMC::GenParticle*>
+    class  HasQuark : public LoKi::GenTypes::GCuts
     {
     public:
       HasQuark (  const LHCb::ParticleID::Quark quark ) ;
@@ -654,7 +654,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsCharged : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsCharged : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -670,7 +670,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsNeutral : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsNeutral : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -686,7 +686,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsLepton : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsLepton : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -702,7 +702,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsMeson : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsMeson : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -718,7 +718,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsBaryon : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsBaryon : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -734,7 +734,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsHadron : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsHadron : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -750,7 +750,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNucleus : public LoKi::Predicate<const HepMC::GenParticle*>
+    class IsNucleus : public LoKi::GenTypes::GCuts
     {
     public:
       /// clone method (mandatory!)
@@ -767,7 +767,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    class ProperLifeTime : public LoKi::Function<const HepMC::GenParticle*>
+    class ProperLifeTime : public LoKi::GenTypes::GFunc
     {
     public:
       /** constructor
@@ -796,7 +796,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    class NominalLifeTime : public LoKi::Function<const HepMC::GenParticle*>
+    class NominalLifeTime : public LoKi::GenTypes::GFunc
     {
     public:
       /// clone method (mandatory!)
@@ -816,7 +816,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    class AdapterToProductionVertex : public LoKi::Function<const HepMC::GenParticle*>
+    class AdapterToProductionVertex : public LoKi::GenTypes::GFunc
     {
     public:
       /** constructor from vertex function and "bad" value 
@@ -857,7 +857,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    class AdapterToEndVertex : public LoKi::Function<const HepMC::GenParticle*>
+    class AdapterToEndVertex : public LoKi::GenTypes::GFunc
     {
     public:
       /** constructor from vertex function and "bad" value 
@@ -903,7 +903,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-07
      */
-    class ThreeCharge : public LoKi::Function<const HepMC::GenParticle*> 
+    class ThreeCharge : public LoKi::GenTypes::GFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -924,7 +924,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi : public LoKi::Function<const HepMC::GenParticle*>
+    class DeltaPhi : public LoKi::GenTypes::GFunc
     {
     public:
       /// constructor from the angle
@@ -936,7 +936,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaPhi ( const VECTOR& v ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_eval (         )
         , m_phi  ( v.phi() )
       { 
@@ -947,7 +947,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaPhi ( const PARTICLE* p ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_eval (  )
         , m_phi  (  )
       { 
@@ -989,7 +989,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public LoKi::Function<const HepMC::GenParticle*>
+    class DeltaEta : public LoKi::GenTypes::GFunc
     {
     public:
       /// constructor from the eta
@@ -1001,7 +1001,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaEta ( const VECTOR& v ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_eval (         )
         , m_eta  ( v.Eta() )
       {} ;
@@ -1010,7 +1010,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaEta ( const PARTICLE* p ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_eval (  )
         , m_eta  (  )
       { 
@@ -1055,7 +1055,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public LoKi::Function<const HepMC::GenParticle*>
+    class DeltaR2 : public LoKi::GenTypes::GFunc
     {
     public:
       /// constructor from eta & phi
@@ -1067,7 +1067,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaR2 ( const VECTOR& v ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_dphi ( v )
         , m_deta ( v )
       {} ;
@@ -1076,7 +1076,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaR2 ( const PARTICLE* p ) 
-        : LoKi::Function<const HepMC::GenParticle*> () 
+        : LoKi::GenTypes::GFunc () 
         , m_dphi ( p )
         , m_deta ( p )
       {} ;
@@ -1137,19 +1137,15 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class NInTree : public LoKi::Function<const HepMC::GenParticle*>
+    class NInTree : public LoKi::GenTypes::GFunc
     {
-    public:
-      typedef LoKi::Predicate<const HepMC::GenParticle*> GCut ;
-    protected:
-      typedef LoKi::PredicateFromPredicate<const HepMC::GenParticle*> _Cut ;
     public:
       /** constructor 
        *  @param cut    predicate to be used for counting
        *  @param range  "iterator range", see HepMC::IteratorRange
        *  @see HepMC::IteratorRange 
        */
-      NInTree ( const NInTree::GCut& cut                     , 
+      NInTree ( const LoKi::GenTypes::GCuts& cut                     , 
                 HepMC::IteratorRange range = HepMC::children ) ;
       /** copy constructor 
        *  @param right object to be copied 
@@ -1175,7 +1171,7 @@ namespace LoKi
       // default constructor is disabled 
       NInTree();
     private:
-      _Cut                  m_cut   ;
+      LoKi::GenTypes::GCut  m_cut   ;
       HepMC::IteratorRange  m_range ;
     } ;
     // ========================================================================
@@ -1193,7 +1189,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree : public LoKi::Predicate<const HepMC::GenParticle*> 
+    class InTree : public LoKi::GenTypes::GCuts 
     {
     public:
       /** standard constructor 

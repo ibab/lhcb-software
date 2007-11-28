@@ -1,4 +1,4 @@
-// $Id: GenVertices.cpp,v 1.6 2007-07-23 17:23:37 ibelyaev Exp $
+// $Id: GenVertices.cpp,v 1.7 2007-11-28 14:08:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -189,7 +189,7 @@ LoKi::GenVertices::PositionT::fillStream( std::ostream& stream ) const
 LoKi::GenVertices::CountIF::CountIF
 ( const LoKi::Types::GCuts& cut   , 
   HepMC::IteratorRange      range ) 
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_cut   ( cut   ) 
   , m_range ( range ) 
 {}
@@ -203,7 +203,7 @@ LoKi::GenVertices::CountIF::CountIF
 LoKi::GenVertices::CountIF::CountIF
 ( HepMC::IteratorRange      range ,
   const LoKi::Types::GCuts& cut   )
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_cut   ( cut   ) 
   , m_range ( range ) 
 {}
@@ -213,7 +213,7 @@ LoKi::GenVertices::CountIF::CountIF
 LoKi::GenVertices::CountIF::CountIF
 ( const LoKi::GenVertices::CountIF& right ) 
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Function<const HepMC::GenVertex*>( right ) 
+  , LoKi::GenTypes::GVFunc( right ) 
   , m_cut   ( right.m_cut   ) 
   , m_range ( right.m_range ) 
 {}
@@ -276,9 +276,9 @@ LoKi::GenVertices::CountIF::fillStream
 LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::Types::GFunc& fun   ,
   HepMC::IteratorRange      range ) 
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_fun   ( fun   ) 
-  , m_cut   ( LoKi::BooleanConstant<const HepMC::GenParticle*>( true ) ) 
+  , m_cut   ( LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant( true ) ) 
   , m_range ( range ) 
 {}
 // ============================================================================
@@ -290,9 +290,9 @@ LoKi::GenVertices::SumIF::SumIF
 LoKi::GenVertices::SumIF::SumIF
 ( HepMC::IteratorRange      range ,
   const LoKi::Types::GFunc& fun   )
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_fun   ( fun   ) 
-  , m_cut   ( LoKi::BooleanConstant<const HepMC::GenParticle*>( true ) ) 
+  , m_cut   ( LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant( true ) ) 
   , m_range ( range ) 
 {}
 // ============================================================================
@@ -306,7 +306,7 @@ LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::Types::GFunc& fun   , 
   HepMC::IteratorRange      range , 
   const LoKi::Types::GCuts& cut   ) 
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_fun   ( fun   ) 
   , m_cut   ( cut   ) 
   , m_range ( range ) 
@@ -323,7 +323,7 @@ LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::Types::GFunc& fun   ,
   const LoKi::Types::GCuts& cut   ,
   HepMC::IteratorRange      range ) 
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_fun   ( fun   ) 
   , m_cut   ( cut   ) 
   , m_range ( range ) 
@@ -340,7 +340,7 @@ LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::Types::GCuts& cut   ,
   const LoKi::Types::GFunc& fun   ,
   HepMC::IteratorRange      range ) 
-  : LoKi::Function<const HepMC::GenVertex*>()
+  : LoKi::GenTypes::GVFunc()
   , m_fun   ( fun   ) 
   , m_cut   ( cut   ) 
   , m_range ( range ) 
@@ -351,7 +351,7 @@ LoKi::GenVertices::SumIF::SumIF
 LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::GenVertices::SumIF& right ) 
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Function<const HepMC::GenVertex*>( right ) 
+  , LoKi::GenTypes::GVFunc( right ) 
   , m_fun   ( right.m_fun   ) 
   , m_cut   ( right.m_cut   ) 
   , m_range ( right.m_range ) 

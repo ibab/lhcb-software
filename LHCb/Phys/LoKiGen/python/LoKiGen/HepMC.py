@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.5 2007-08-17 15:21:16 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.6 2007-11-28 14:08:29 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -468,11 +468,30 @@ printDecay. __doc__ += "\n\n" + LoKi.PrintHepMC.printDecay . __doc__
 
 if not hasattr ( HepMC.GenParticle ,     'printDecay'   ) :
     HepMC.GenParticle .  printDecay   =   printDecay
+    HepMC.GenParticle .       decay   =   printDecay
 if not hasattr ( HepMC.GenParticle ,   '__printDecay__' ) :
     HepMC.GenParticle. __printDecay__ =   printDecay
+    HepMC.GenParticle.      __decay__ =   printDecay
 
+
+def __particleID__ ( self ) :
+    """
+    Get the ParticleID obejct for the particle
+
+    >>> p =
+    >>> pid = p.particleID()
+    
+    """
+    return LHCb.ParticleID( self.pdg_id() )
+
+HepMC.GenParticle.__particleID__  = __particleID__
+HepMC.GenParticle.  particleID    = __particleID__
 
 import LoKiCore.functions  as _LCF 
+HepMC.GenParticle.  pname   = _LCF.__pname__
+HepMC.GenParticle.   name   = _LCF.__pname__
+HepMC.GenParticle.__pname__ = _LCF.__pname__
+
 
 _LCF.nChildren     . __doc__ += "\n" + LoKi.GenChild.nChildren         . __doc__ 
 _LCF.child         . __doc__ += "\n" + LoKi.GenChild.child             . __doc__

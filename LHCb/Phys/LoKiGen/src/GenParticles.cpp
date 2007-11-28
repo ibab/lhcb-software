@@ -1,5 +1,4 @@
-
-// $Id: GenParticles.cpp,v 1.15 2007-07-23 17:23:37 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.16 2007-11-28 14:08:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -444,7 +443,7 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
   const double py , 
   const double pz ,
   const double e  ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct () 
 {
   m_vct.SetXYZT( px , py , pz , e ) ;
@@ -456,7 +455,7 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
 // ============================================================================  
 LoKi::GenParticles::MomentumDistance::MomentumDistance
 ( const LoKi::LorentzVector& vct ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct ( vct ) 
 {}
 // ============================================================================
@@ -467,7 +466,7 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
 LoKi::GenParticles::MomentumDistance::MomentumDistance
 ( const LoKi::GenParticles::MomentumDistance& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , LoKi::GenTypes::GFunc( right ) 
   , m_vct ( right.m_vct ) 
 {}
 // ============================================================================  
@@ -522,7 +521,7 @@ LoKi::GenParticles::MomentumDistance::fillStream
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const double theta , 
   const double phi   ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct() 
 {
   m_vct.SetXYZ 
@@ -541,7 +540,7 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 ( const double x , 
   const double y ,
   const double z ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct() 
 {
   m_vct.SetXYZ (  x , y , z ) ;
@@ -554,7 +553,7 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::ThreeVector& vct ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct ( vct ) 
 {}
 // ============================================================================
@@ -565,7 +564,7 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::LorentzVector& vct ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_vct ( vct.Vect() ) 
 {}
 // ============================================================================
@@ -576,7 +575,7 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::GenParticles::TransverseMomentumRel& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , LoKi::GenTypes::GFunc( right ) 
   , m_vct ( right.m_vct ) 
 {}
 // ============================================================================
@@ -629,21 +628,21 @@ LoKi::GenParticles::TransverseMomentumRel::fillStream
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenParticle* p ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::GenTypes::GCuts ()
     , m_vertices () { _add ( p ) ; }
 // ============================================================================
 //  constructor from range of particles 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::Types::GRange& r  ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::GenTypes::GCuts ()
   , m_vertices () { _add ( r.begin() , r.end() ) ; }
 // ============================================================================
 //  constructor from range of particles 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::GenTypes::GenContainer& r  ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::GenTypes::GCuts ()
   , m_vertices () { _add ( r.begin() , r.end() ) ; }
 // ============================================================================
 /*  constructor from vertex  ("head")
@@ -652,7 +651,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenVertex* v ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::GenTypes::GCuts ()
   , m_vertices() { _add ( v ) ; } ;
 // ============================================================================
 /*  copy constructor 
@@ -662,7 +661,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::GenParticles::FromHepMCTree& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  , LoKi::GenTypes::GCuts ( right )
   , m_vertices( right.m_vertices ) 
 {}  
 // ============================================================================
@@ -745,7 +744,7 @@ LoKi::GenParticles::FromHepMCTree::fillStream
 // ============================================================================
 LoKi::GenParticles::IsAnAncestor::IsAnAncestor
 ( const HepMC::GenParticle* p ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GCuts () 
   , m_particle ( p ) 
 {}
 // ============================================================================
@@ -756,7 +755,7 @@ LoKi::GenParticles::IsAnAncestor::IsAnAncestor
 LoKi::GenParticles::IsAnAncestor::IsAnAncestor
 ( const LoKi::GenParticles::IsAnAncestor& right )
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Predicate<const HepMC::GenParticle*> ( right ) 
+  , LoKi::GenTypes::GCuts ( right ) 
   , m_particle ( right.m_particle  ) 
 {}
 // ============================================================================
@@ -801,14 +800,14 @@ LoKi::GenParticles::IsAnAncestor::fillStream
 //  constructor from Quark 
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark ( const LHCb::ParticleID::Quark quark ) 
-  : LoKi::Predicate<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GCuts() 
   , m_quark ( quark  )
 {}
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark 
 ( const LoKi::GenParticles::HasQuark& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Predicate<const HepMC::GenParticle*>( right ) 
+  , LoKi::GenTypes::GCuts( right ) 
   , m_quark ( right.m_quark  )
 {}
 // ============================================================================
@@ -1019,14 +1018,14 @@ LoKi::GenParticles::IsNucleus::fillStream
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const double bad ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_bad ( bad ) 
 {} 
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const LoKi::GenParticles::ProperLifeTime& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right )
+  , LoKi::GenTypes::GFunc( right )
   , m_bad ( right.m_bad ) {}
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::~ProperLifeTime(){} ;
@@ -1116,7 +1115,7 @@ LoKi::GenParticles::NominalLifeTime::fillStream
 LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
 ( const LoKi::Types::GVFunc& fun , 
   const double               bad ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_fun ( fun ) 
   , m_bad ( bad ) 
 {}
@@ -1126,7 +1125,7 @@ LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex
 LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
 ( const LoKi::GenParticles::AdapterToProductionVertex& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , LoKi::GenTypes::GFunc( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
 {}
@@ -1168,7 +1167,7 @@ LoKi::GenParticles::AdapterToProductionVertex::operator()
 LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
 ( const LoKi::Types::GVFunc& fun , 
   const double               bad ) 
-  : LoKi::Function<const HepMC::GenParticle*>() 
+  : LoKi::GenTypes::GFunc() 
   , m_fun ( fun ) 
   , m_bad ( bad ) 
 {}
@@ -1178,7 +1177,7 @@ LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex
 LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
 ( const LoKi::GenParticles::AdapterToEndVertex& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , LoKi::GenTypes::GFunc( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
 {} 
@@ -1236,7 +1235,7 @@ LoKi::GenParticles::ThreeCharge::fillStream
 //  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (     )
   , m_phi  ( phi )
 { 
@@ -1246,7 +1245,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (         )
   , m_phi  ( v.Phi() )
 { 
@@ -1256,7 +1255,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (         )
   , m_phi  ( v.Phi() )
 { 
@@ -1266,7 +1265,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v )
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const HepMC::GenParticle* p )
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval ( )
   , m_phi  ( )
 { 
@@ -1280,7 +1279,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const HepMC::GenParticle* p )
 LoKi::GenParticles::DeltaPhi::DeltaPhi 
 ( const LoKi::GenParticles::DeltaPhi& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*> ( right ) 
+  , LoKi::GenTypes::GFunc ( right ) 
   , m_eval ( right.m_eval )
   , m_phi  ( right.m_phi  )
 { 
@@ -1328,7 +1327,7 @@ const double LoKi::GenParticles::DeltaPhi::adjust ( double phi ) const
 //  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const double eta ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (     )
   , m_eta  ( eta )
 {}
@@ -1336,7 +1335,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const double eta )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (         )
   , m_eta  ( v.Eta() )
 {}
@@ -1344,7 +1343,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval (         )
   , m_eta  ( v.Eta() )
 {}
@@ -1352,7 +1351,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v )
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const HepMC::GenParticle* p ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_eval ( )
   , m_eta  ( )
 {
@@ -1365,7 +1364,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const HepMC::GenParticle* p )
 LoKi::GenParticles::DeltaEta::DeltaEta 
 ( const LoKi::GenParticles::DeltaEta& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*> ( right ) 
+  , LoKi::GenTypes::GFunc ( right ) 
   , m_eval ( right.m_eval )
   , m_eta  ( right.m_eta  )
 {}  
@@ -1398,7 +1397,7 @@ std::ostream& LoKi::GenParticles::DeltaEta::fillStream ( std::ostream& s ) const
 //  constructor from eta and phi
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const double eta , const double phi ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_dphi ( phi ) 
   , m_deta ( eta ) 
 {}
@@ -1406,7 +1405,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const double eta , const double phi )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -1414,7 +1413,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -1422,7 +1421,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v )
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const HepMC::GenParticle* v ) 
-  : LoKi::Function<const HepMC::GenParticle*> () 
+  : LoKi::GenTypes::GFunc () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -1432,7 +1431,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const HepMC::GenParticle* v )
 LoKi::GenParticles::DeltaR2::DeltaR2 
 ( const LoKi::GenParticles::DeltaR2& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*> ( right ) 
+  , LoKi::GenTypes::GFunc ( right ) 
   , m_dphi ( right.m_dphi )
   , m_deta ( right.m_deta )
 {} 
@@ -1467,9 +1466,9 @@ std::ostream& LoKi::GenParticles::DeltaR2::fillStream ( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::GenParticles::NInTree::NInTree 
-( const LoKi::GenParticles::NInTree::GCut&  cut   , 
-  HepMC::IteratorRange                      range ) 
-  : LoKi::Function<const HepMC::GenParticle*>()
+( const LoKi::GenTypes::GCuts&  cut   , 
+  HepMC::IteratorRange          range ) 
+  : LoKi::GenTypes::GFunc()
   , m_cut( cut )
   , m_range ( range )
 {}
@@ -1481,7 +1480,7 @@ LoKi::GenParticles::NInTree::NInTree
 LoKi::GenParticles::NInTree::NInTree 
 ( const LoKi::GenParticles::NInTree& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right )
+  , LoKi::GenTypes::GFunc( right )
   , m_cut   ( right.m_cut )
   , m_range ( right.m_range )
 {}
@@ -1548,7 +1547,7 @@ LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::GenParticles::InTree::InTree
 ( const LoKi::GenTypes::GCuts& cut )
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::GenTypes::GCuts ()
   , m_cut ( cut )
 {}
 // ============================================================================
@@ -1557,7 +1556,7 @@ LoKi::GenParticles::InTree::InTree
 LoKi::GenParticles::InTree::InTree
 ( const LoKi::GenParticles::InTree& right ) 
   : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  , LoKi::GenTypes::GCuts ( right )
   , m_cut ( right.m_cut )
 {}
 // ============================================================================

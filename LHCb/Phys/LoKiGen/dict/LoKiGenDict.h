@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.4 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.5 2007-11-28 14:08:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -34,7 +34,7 @@ namespace LoKi
     {
     private:
       typedef HepMC::GenParticle          Type ;
-      typedef LoKi::Function<const Type*> Fun  ;
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
@@ -44,7 +44,7 @@ namespace LoKi
     {
     private:
       typedef HepMC::GenParticle           Type ;
-      typedef LoKi::Predicate<const Type*> Fun ;
+      typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
@@ -54,7 +54,7 @@ namespace LoKi
     {
     private:
       typedef HepMC::GenVertex            Type ;
-      typedef LoKi::Function<const Type*> Fun  ;
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
@@ -64,7 +64,7 @@ namespace LoKi
     {
     private:
       typedef HepMC::GenVertex             Type ;
-      typedef LoKi::Predicate<const Type*> Fun ;
+      typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
@@ -103,12 +103,12 @@ namespace
     LoKi::Dicts::PIDOps<LoKi::GenParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::GenParticles::AbsIdentifier> m_i2 ;    
     /// monitoring and historgamming
-    LoKi::Monitoring::Counter<const HepMC::GenParticle*>   m_40 ;
-    LoKi::Monitoring::Stat<const HepMC::GenParticle*>      m_41 ;
-    LoKi::Monitoring::Plot<const HepMC::GenParticle*>      m_42 ;
-    LoKi::Monitoring::Counter<const HepMC::GenVertex*>     m_50 ;
-    LoKi::Monitoring::Stat<const HepMC::GenVertex*>        m_51 ;
-    LoKi::Monitoring::Plot<const HepMC::GenVertex*>        m_52 ;
+    LoKi::Monitoring::Counter<const HepMC::GenParticle*,bool>   m_40 ;
+    LoKi::Monitoring::Counter<const HepMC::GenParticle*,double> m_41 ;
+    LoKi::Monitoring::Plot<const HepMC::GenParticle*,double>    m_42 ;
+    LoKi::Monitoring::Counter<const HepMC::GenVertex*,bool>     m_50 ;
+    LoKi::Monitoring::Counter<const HepMC::GenVertex*,double>   m_51 ;
+    LoKi::Monitoring::Plot<const HepMC::GenVertex*,double>      m_52 ;
     /// fictive constructor 
     _Instantiations () ;
   } ;  

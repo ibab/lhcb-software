@@ -1,4 +1,4 @@
-// $Id: GenVertices.h,v 1.5 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenVertices.h,v 1.6 2007-11-28 14:08:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENVERTICES_H 
 #define LOKI_GENVERTICES_H 1
@@ -51,7 +51,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class BarCode : public LoKi::Function<const HepMC::GenVertex*> 
+    class BarCode : public LoKi::GenTypes::GVFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -75,7 +75,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionX : public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionX : public LoKi::GenTypes::GVFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -99,7 +99,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionY : public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionY : public LoKi::GenTypes::GVFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -123,7 +123,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class  PositionZ : public LoKi::Function<const HepMC::GenVertex*> 
+    class  PositionZ : public LoKi::GenTypes::GVFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -147,7 +147,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionT : public LoKi::Function<const HepMC::GenVertex*> 
+    class PositionT : public LoKi::GenTypes::GVFunc 
     {
     public:
       /// MANDATORY: clone method ("virtual" constructor")
@@ -171,7 +171,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class CountIF : public LoKi::Function<const HepMC::GenVertex*> 
+    class CountIF : public LoKi::GenTypes::GVFunc 
     {
     public:
       /** constructor from the criteria and "range"
@@ -220,7 +220,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class SumIF : public LoKi::Function<const HepMC::GenVertex*> 
+    class SumIF : public LoKi::GenTypes::GVFunc 
     {
     public:
       /** constructor from the function and the "range" 

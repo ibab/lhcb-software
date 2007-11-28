@@ -1,4 +1,4 @@
-// $Id: GenKinematics.h,v 1.7 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenKinematics.h,v 1.8 2007-11-28 14:08:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -29,7 +29,7 @@
 // ============================================================================
 namespace LoKi 
 {  
-  namespace Kinematics 
+  namespace GenKinematics 
   { 
     // ========================================================================
     /** The most trivial function.
@@ -46,7 +46,7 @@ namespace LoKi
     {
       if ( 0 == p ) { return LoKi::LorentzVector() ; }
       return LoKi::LorentzVector ( p->momentum () ) ;
-    };
+    }
     // ========================================================================
     /** @struct Gen4Momentum 
      *  the simple object which acts as a converter of HepMC::GenPartile
@@ -59,7 +59,7 @@ namespace LoKi
     {
       LoKi::LorentzVector operator() 
         ( const HepMC::GenParticle* p ) const { return momentum ( p ) ; }  
-    };
+    } ;
     // ========================================================================
     /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p particle 
@@ -113,7 +113,12 @@ namespace LoKi
       const HepMC::GenParticle* p3 ,
       const HepMC::GenParticle* p4 ) ;
     // ========================================================================
-  } // end of namespace LoKi::Kinematics
+  } // end of namespace LoKi::GenKinematics
+  namespace Kinematics
+  {
+    // export the namespace into more general scope 
+    using namespace LoKi::GenKinematics ;
+  } // end of namespace LoKi::Kinematics 
 } // end of namespace LoKi 
 // ============================================================================
 // The END 
