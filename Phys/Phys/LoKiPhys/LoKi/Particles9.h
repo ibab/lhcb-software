@@ -1,4 +1,4 @@
-// $Id: Particles9.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
+// $Id: Particles9.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES9_H 
 #define LOKI_PARTICLES9_H 1
@@ -50,7 +50,7 @@ namespace LoKi
      *  @date 2006-02-22 
      */
     class HasTracks
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::UniqueKeeper<LHCb::Track>
     {
     public:
@@ -74,9 +74,9 @@ namespace LoKi
       HasTracks 
       ( TRACK first , 
         TRACK last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , LoKi::UniqueKeeper<LHCb::Track> ( first , last ) 
-      {} ;
+      {} 
       /// copy constructor 
       HasTracks ( const HasTracks& right ) ;
       /// MANDATORY: virtual destructor
@@ -109,7 +109,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasTracksInTree : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksInTree
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor from one track 
@@ -132,9 +133,9 @@ namespace LoKi
       HasTracksInTree 
       ( TRACK first , 
         TRACK last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last )
-      {} ;
+      {} 
       /// copy constructor 
       HasTracksInTree 
       ( const HasTracksInTree& right ) ;

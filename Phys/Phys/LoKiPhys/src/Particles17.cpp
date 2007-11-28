@@ -1,4 +1,4 @@
-// $Id: Particles17.cpp,v 1.4 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles17.cpp,v 1.5 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,7 +25,7 @@
 // constructor from the angle
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const double phi ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (     )
   , m_phi  ( phi )
 { 
@@ -35,7 +35,7 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const double phi )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (         )
   , m_phi  ( v.Phi() )
 { 
@@ -45,7 +45,7 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (         )
   , m_phi  ( v.Phi() )
 { 
@@ -55,7 +55,7 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v )
 // constructor from the particle
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const LHCb::Particle* p )
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval ( )
   , m_phi  ( )
 { 
@@ -69,7 +69,7 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const LHCb::Particle* p )
 LoKi::Particles::DeltaPhi::DeltaPhi 
 ( const LoKi::Particles::DeltaPhi& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_eval ( right.m_eval )
   , m_phi  ( right.m_phi  )
 { 
@@ -117,7 +117,7 @@ const double LoKi::Particles::DeltaPhi::adjust ( double phi ) const
 // constructor from the angle
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const double eta ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (     )
   , m_eta  ( eta )
 {}
@@ -125,7 +125,7 @@ LoKi::Particles::DeltaEta::DeltaEta ( const double eta )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (         )
   , m_eta  ( v.Eta() )
 {}
@@ -133,7 +133,7 @@ LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval (         )
   , m_eta  ( v.Eta() )
 {}
@@ -141,7 +141,7 @@ LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v )
 // constructor from the particle
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const LHCb::Particle* p ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval ( )
   , m_eta  ( )
 {
@@ -154,7 +154,7 @@ LoKi::Particles::DeltaEta::DeltaEta ( const LHCb::Particle* p )
 LoKi::Particles::DeltaEta::DeltaEta 
 ( const LoKi::Particles::DeltaEta& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_eval ( right.m_eval )
   , m_eta  ( right.m_eta  )
 {}  
@@ -188,7 +188,7 @@ std::ostream& LoKi::Particles::DeltaEta::fillStream ( std::ostream& s ) const
 // constructor from the eta, phi
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( double eta , double phi ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_dphi ( phi )
   , m_deta ( eta )
 {} 
@@ -196,7 +196,7 @@ LoKi::Particles::DeltaR2::DeltaR2 ( double eta , double phi )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -204,7 +204,7 @@ LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -212,7 +212,7 @@ LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v )
 // constructor from the particle
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LHCb::Particle* v ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_dphi ( v ) 
   , m_deta ( v ) 
 {}
@@ -222,7 +222,7 @@ LoKi::Particles::DeltaR2::DeltaR2 ( const LHCb::Particle* v )
 LoKi::Particles::DeltaR2::DeltaR2 
 ( const LoKi::Particles::DeltaR2& right ) 
   : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_dphi ( right.m_dphi )
   , m_deta ( right.m_deta )
 {}  

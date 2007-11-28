@@ -1,4 +1,4 @@
-// $Id: Particles7.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: Particles7.cpp,v 1.6 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,7 +31,7 @@
 LoKi::Particles::VFunAsPFun::VFunAsPFun
 ( const LoKi::Types::VFunc& vfun , 
   const double              bad  ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_vfun ( vfun ) 
   , m_bad  ( bad  ) 
 {}
@@ -39,7 +39,7 @@ LoKi::Particles::VFunAsPFun::VFunAsPFun
 LoKi::Particles::VFunAsPFun::VFunAsPFun
 ( const LoKi::Particles::VFunAsPFun& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_vfun ( right.m_vfun ) 
   , m_bad  ( right.m_bad  ) 
 {}

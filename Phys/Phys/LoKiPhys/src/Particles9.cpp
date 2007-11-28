@@ -1,4 +1,4 @@
-// $Id: Particles9.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: Particles9.cpp,v 1.6 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,44 +34,44 @@
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track* p ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (   ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( p ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track::Vector& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LHCb::Track::ConstVector& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const SmartRefVector<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Keeper<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::UniqueKeeper<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Particles::HasTracks& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( right ) 
 {}
 // ============================================================================
@@ -99,44 +99,44 @@ LoKi::Particles::HasTracks::fillStream
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track* p ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (   ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , m_cut ( p ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track::Vector& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ()
   , m_cut ( pp ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track::ConstVector& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , m_cut ( pp )  
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const SmartRefVector<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , m_cut ( pp )  
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::Keeper<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , m_cut ( pp ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::UniqueKeeper<LHCb::Track>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , m_cut ( pp ) 
 {}
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::Particles::HasTracksInTree& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
   , m_cut                                   ( right.m_cut )
 {}
 // ============================================================================

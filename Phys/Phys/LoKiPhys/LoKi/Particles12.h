@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
+// $Id: Particles12.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -44,7 +44,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class ProtoHasInfo : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasInfo 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor form the index in ProtoParticle::ExtraInfo
@@ -81,8 +82,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoInfo : public LoKi::Function<const LHCb::Particle*>
-    {
+    class ProtoInfo
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+   {
     public:
       /** constructor from "info"
        *  @param key info index/mark/key
@@ -136,7 +138,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasRichPID : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasRichPID
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -164,7 +167,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasMuonPID : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasMuonPID 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -191,7 +195,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasCaloHypos : public LoKi::Predicate<const LHCb::Particle*>
+    class ProtoHasCaloHypos 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -216,7 +221,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-02-25
      */
-    class IsMuon : public LoKi::Predicate<const LHCb::Particle*>
+    class IsMuon
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// MANDATORY: virtual destructor 

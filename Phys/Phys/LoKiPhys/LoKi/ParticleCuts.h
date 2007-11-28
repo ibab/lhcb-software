@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.20 2007-07-23 17:35:42 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.21 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -227,7 +227,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>           ALL ( true ) ;    
+    const LoKi::Constant<const LHCb::Particle*,bool>           ALL ( true ) ;    
     // ========================================================================
     /** @var BASIC 
      *  The trivial predicate which evaluates to "true" for 
@@ -760,7 +760,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<const LHCb::Particle*>          COUNTER ;
+    typedef LoKi::Monitoring::Counter<const LHCb::Particle*,bool>    COUNTER ;
     // ========================================================================
     /** @typedef CTAU
      *  Simple evaluator of the proper lifetime 
@@ -2911,7 +2911,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>         NONE ( false ) ;
+    const LoKi::Constant<const LHCb::Particle*,bool>          NONE ( false ) ;
     // ========================================================================
     /** @var ONE
      *  the trivial functor which always evaluates to 1
@@ -2922,7 +2922,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Particle*>                    ONE ( 1  ) ;
+    const LoKi::Constant<const LHCb::Particle*,double>              ONE ( 1  ) ;
     // ========================================================================
     /** @var P 
      *  Particle's momentum 
@@ -2972,7 +2972,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>          PALL ( true ) ;
+    const LoKi::Constant<const LHCb::Particle*,bool>           PALL ( true ) ;
     // ========================================================================
     /** @var PFALSE
      *  the trivial functor which always evaluates to "false"
@@ -2984,7 +2984,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>       PFALSE ( false ) ;
+    const LoKi::Constant<const LHCb::Particle*,bool>       PFALSE ( false ) ;
     // ========================================================================
     /** @typedef PHASINFO 
      *  Trivial predicate which evaluates LHCb::Particle::hasInfo
@@ -3325,7 +3325,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Plot<const LHCb::Particle*>                PLOT ;
+    typedef LoKi::Monitoring::Plot<const LHCb::Particle*,double>         PLOT ;
     // ========================================================================
     /** @var PNONE
      *  the trivial functor which always evaluates to "false"
@@ -3337,7 +3337,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>       PNONE ( false )  ;
+    const LoKi::Constant<const LHCb::Particle*,bool>        PNONE ( false )  ;
     // ========================================================================
     /** @var PONE
      *  the trivial functor which always evaluates to 1
@@ -3349,7 +3349,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Particle*>                    PONE ( 1 ) ;
+    const LoKi::Constant<const LHCb::Particle*,double>            PONE ( 1 ) ;
     // ========================================================================
     /** @var PPHASCALOS 
      *  the trivial predicate which tests the validity of 
@@ -3697,7 +3697,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Particle*>         PTRUE ( true ) ;
+    const LoKi::Constant<const LHCb::Particle*,bool>         PTRUE ( true ) ;
     // ========================================================================
     /** @typedef PVTRACK
      *  The simple predicate which evaluates to 'true' for 
@@ -3826,7 +3826,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Particle*>                   PZERO ( 0 ) ;
+    const LoKi::Constant<const LHCb::Particle*,double>            PZERO ( 0 ) ;
     // ========================================================================
     /** @var Q 
      *  the trivial evaluator of particle charge 
@@ -3962,7 +3962,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Stat<const LHCb::Particle*>                STAT ;
+    typedef LoKi::Monitoring::Counter<const LHCb::Particle*,double>      STAT ;
     // ========================================================================
     /** @var SUMQ
      *  the trivial evaluator of particle charge 
@@ -4993,7 +4993,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Particle*>                    ZERO ( 0 ) ;
+    const LoKi::Constant<const LHCb::Particle*,double>             ZERO ( 0 ) ;
     // ========================================================================
   }  // end of namespace LoKi::Cuts  
 }  // end of namespace LoKi

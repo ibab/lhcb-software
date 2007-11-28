@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.8 2007-07-23 17:35:50 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.9 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -45,8 +45,8 @@ namespace LoKi
      *  @date   2004-07-07
      */
     class VertexDistance 
-      : public    LoKi::Function<const LHCb::VertexBase*> 
-      , public    LoKi::Vertices::VertexHolder 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+      , public LoKi::Vertices::VertexHolder 
     {
     public:
       /// constructor 
@@ -96,7 +96,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexSignedDistance : public LoKi::Function<const LHCb::VertexBase*> 
+    class VertexSignedDistance 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
       /// constructor 
@@ -145,7 +146,7 @@ namespace LoKi
      *  @date   2004-07-07
      */
     class VertexChi2Distance 
-      : public    LoKi::Function<const LHCb::VertexBase*> 
+      : public    LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
       , public    LoKi::Vertices::VertexHolder 
     {
     public:
@@ -189,7 +190,7 @@ namespace LoKi
      *  @date   2004-07-08
      */
     class MinVertexDistance 
-      : public LoKi::Function<const LHCb::VertexBase*> 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
       , public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
@@ -280,7 +281,7 @@ namespace LoKi
       MinVertexDistance 
       ( VERTEX                          first , 
         VERTEX                          last  )
-        : LoKi::Function<const LHCb::VertexBase*> () 
+        : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
         , LoKi::UniqueKeeper<LHCb::VertexBase> ( first , last    )
         , m_fun                            ( LoKi::Point3D() )
       {}
@@ -311,7 +312,7 @@ namespace LoKi
      *  @date   2004-07-08
      */
     class MinVertexChi2Distance 
-      : public LoKi::Function<const LHCb::VertexBase*> 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
       , public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
@@ -405,7 +406,7 @@ namespace LoKi
       MinVertexChi2Distance 
       ( VERTEX                          first , 
         VERTEX                          last  )
-        : LoKi::Function<const LHCb::Vertex*> () 
+        : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
         , LoKi::UniqueKeeper<LHCb::Vertex> ( first , last    )
         , m_fun                            ( LoKi::Point3D() )
       {}

@@ -38,38 +38,38 @@ VRangeL = LoKi.RangeList_  ( VRange )
 # =============================================================================
 
 ## @see LoKi::Types::Func
-Func  = LoKi.Function               ( _RCP ) 
+Func  = LoKi.Functor                ( _RCP , 'double' ) 
 ## @see LoKi::Types::Cuts
-Cuts  = LoKi.Predicate              ( _RCP ) 
+Cuts  = LoKi.Functor                ( _RCP ,  bool    ) 
 ## @see LoKi::Types::Fun
-Fun   = LoKi.FunctionFromFunction   ( _RCP ) 
+Fun   = LoKi.FunctorFromFunctor     ( _RCP , 'double' ) 
 ## @see LoKi::Types::Cut
-Cut   = LoKi.PredicateFromPredicate ( _RCP ) 
+Cut   = LoKi.FunctorFromFunctor     ( _RCP ,  bool    ) 
 ## @see LoKi::Types::Func
-VFunc = LoKi.Function               ( _RCV ) 
+VFunc = LoKi.Functor                ( _RCV , 'double' ) 
 ## @see LoKi::Types::Cuts
-VCuts = LoKi.Predicate              ( _RCV ) 
+VCuts = LoKi.Functor                ( _RCV ,  bool    ) 
 ## @see LoKi::Types::Fun
-VFun  = LoKi.FunctionFromFunction   ( _RCV ) 
+VFun  = LoKi.FunctorFromFunctor     ( _RCV , 'double' ) 
 ## @see LoKi::Types::Cut
-VCut  = LoKi.PredicateFromPredicate ( _RCV ) 
+VCut  = LoKi.FunctorFromFunctor     ( _RCV ,  bool    ) 
 
 # =============================================================================
 ## All concrete types 
 # =============================================================================
 
 ## @see LoKi::Cuts::TRUE
-TRUE     = LoKi.BooleanConstant( _RCP )(True)
+TRUE     = LoKi.Constant( _RCP , bool )(True)
 ## @see LoKi::Cuts::FALSE
-FALSE    = LoKi.BooleanConstant( _RCP )(False)
+FALSE    = LoKi.Constant( _RCP , bool )(False)
 ## @see LoKi::Cuts::ALL
 ALL      = TRUE
 ## @see LoKi::Cuts::NONE
 NONE     = FALSE
 ## @see LoKi::Cuts::ONE
-ONE      = LoKi.Constant     ( _RCP )(1.0)
+ONE      = LoKi.Constant     ( _RCP , 'double' )(1.0)
 ## @see LoKi::Cuts::ZERO
-ZERO     = LoKi.Constant     ( _RCP )(0.0)
+ZERO     = LoKi.Constant     ( _RCP , 'double' )(0.0)
 ## @see LoKi::Cuts::VALID
 VALID    = LoKi.Valid        ( _RCP )()
 ## @see LoKi::Cuts::SAME
@@ -330,17 +330,17 @@ DANG     = LoKi.Particles.CosineDirectionAngle
 DIRA     = LoKi.Particles.CosineDirectionAngle 
 
 ## @see LoKi::Cuts::VTRUE
-VTRUE     = LoKi.BooleanConstant( _RCV )(True)
+VTRUE     = LoKi.Constant( _RCV , bool )(True)
 ## @see LoKi::Cuts::VFALSE
-VFALSE    = LoKi.BooleanConstant( _RCV )(False)
+VFALSE    = LoKi.Constant( _RCV , bool )(False)
 ## @see LoKi::Cuts::VALL
 VALL      = VTRUE
 ## @see LoKi::Cuts::VNONE
 VNONE     = VFALSE
 ## @see LoKi::Cuts::VONE
-VONE      = LoKi.Constant     ( _RCV )(1.0)
+VONE      = LoKi.Constant     ( _RCV , 'double' )(1.0)
 ## @see LoKi::Cuts::VZERO
-VZERO     = LoKi.Constant     ( _RCV )(0.0)
+VZERO     = LoKi.Constant     ( _RCV , 'double' )(0.0)
 ## @see LoKi::Cuts::VVALID
 VVALID    = LoKi.Valid        ( _RCV )()
 ## @see LoKi::Cuts::VSAME

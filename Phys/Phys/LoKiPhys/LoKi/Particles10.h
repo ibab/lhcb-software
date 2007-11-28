@@ -1,4 +1,4 @@
-// $Id: Particles10.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
+// $Id: Particles10.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
@@ -48,7 +48,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksFromPV : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksFromPV
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor from one primary vertex 
@@ -83,7 +84,7 @@ namespace LoKi
       HasTracksFromPV 
       ( VERTEX first , 
         VERTEX last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut () 
       { addVertices ( first , last ) ; }
       /// copy constructor 
@@ -151,7 +152,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksInTreeFromPV : public LoKi::Predicate<const LHCb::Particle*>
+    class HasTracksInTreeFromPV 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor from one primary vertex 
@@ -198,7 +200,7 @@ namespace LoKi
       HasTracksInTreeFromPV 
       ( VERTEX first , 
         VERTEX last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last )
       {}
       /// copy constructor 

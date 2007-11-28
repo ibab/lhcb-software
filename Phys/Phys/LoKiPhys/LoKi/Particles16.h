@@ -1,4 +1,4 @@
-// $Id: Particles16.h,v 1.3 2007-07-23 17:35:45 ibelyaev Exp $
+// $Id: Particles16.h,v 1.4 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1
@@ -39,7 +39,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class CosineDirectionAngle 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::Vertices::VertexHolder
     {
     public:

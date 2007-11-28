@@ -1,4 +1,4 @@
-// $Id: Vertices0.cpp,v 1.6 2007-07-23 17:35:57 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.7 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -192,14 +192,14 @@ LoKi::Vertices::NumberOfOutgoing::fillStream
 { return s << "NPRONGS" ; }
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo( const int info ) 
-  : LoKi::Predicate<const LHCb::VertexBase*>() 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate() 
   , m_info ( info ) 
 {}
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo
 ( const LoKi::Vertices::HasInfo& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Predicate<const LHCb::VertexBase*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate( right ) 
   , m_info ( right.m_info )
 {}
 // ============================================================================
@@ -227,7 +227,7 @@ LoKi::Vertices::Info::Info
 ( const int    key , 
   const double def , 
   const double bad )
-  : LoKi::Function<const LHCb::VertexBase*>() 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -236,7 +236,7 @@ LoKi::Vertices::Info::Info
 LoKi::Vertices::Info::Info
 ( const int    key , 
   const double def )
-  : LoKi::Function<const LHCb::VertexBase*>() 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( def ) 
@@ -245,7 +245,7 @@ LoKi::Vertices::Info::Info
 LoKi::Vertices::Info::Info
 ( const LoKi::Vertices::Info& right ) 
   : LoKi::AuxFunBase                       ( right )
-  , LoKi::Function<const LHCb::VertexBase*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function( right ) 
   , m_key  ( right.m_key  )
   , m_def  ( right.m_def  )
   , m_bad  ( right.m_bad  )

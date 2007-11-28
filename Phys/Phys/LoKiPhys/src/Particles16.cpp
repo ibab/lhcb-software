@@ -1,4 +1,4 @@
-// $Id: Particles16.cpp,v 1.4 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles16.cpp,v 1.5 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -32,7 +32,7 @@
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( vertex ) 
 {}
 // ============================================================================
@@ -40,7 +40,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Point3D& point ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( point ) 
 {}
 // ============================================================================
@@ -48,7 +48,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Vertices::VertexHolder& holder ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( holder ) 
 {}
 // ============================================================================
@@ -57,7 +57,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Particles::CosineDirectionAngle& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Function<const LHCb::Particle*> ( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
   , LoKi::Vertices::VertexHolder          ( right ) 
 {}
 // ============================================================================

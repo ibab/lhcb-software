@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.20 2007-10-07 13:46:33 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2007-11-28 14:39:30 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v6r1
+version           v7r0
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -32,6 +32,8 @@ apply_pattern    reflex_dictionary                                   \
 apply_pattern     linker_library library=LoKiPhys
 
 macro LoKiPhysDict_use_linkopts $(use_linkopts)
+
+apply_pattern application_path 
 
 # ============================================================================
 # The END 

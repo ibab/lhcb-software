@@ -1,4 +1,4 @@
-// $Id: Particles2.h,v 1.5 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles2.h,v 1.6 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES2_H 
 #define LOKI_PARTICLES2_H 1
@@ -44,7 +44,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDistance : public LoKi::Function<const LHCb::Particle*>
+    class TimeDistance 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor 
@@ -97,7 +98,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeSignedDistance : public LoKi::Function<const LHCb::Particle*>
+    class TimeSignedDistance 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor 
@@ -150,7 +152,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDotDistance : public LoKi::Function<const LHCb::Particle*>
+    class TimeDotDistance 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor 

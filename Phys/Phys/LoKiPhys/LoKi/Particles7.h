@@ -1,4 +1,4 @@
-// $Id: Particles7.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
+// $Id: Particles7.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES7_H 
 #define LOKI_PARTICLES7_H 1
@@ -54,7 +54,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-02-27
      */
-    class VFunAsPFun : public LoKi::Function<const LHCb::Particle*>
+    class VFunAsPFun
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /** constructor form "Vertex function"

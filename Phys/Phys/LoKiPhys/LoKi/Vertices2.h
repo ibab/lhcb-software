@@ -1,4 +1,4 @@
-// $Id: Vertices2.h,v 1.2 2007-07-23 17:35:50 ibelyaev Exp $
+// $Id: Vertices2.h,v 1.3 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES2_H 
 #define LOKI_VERTICES2_H 1
@@ -33,7 +33,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpPar : public LoKi::Function<const LHCb::VertexBase*> 
+    class ImpPar 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
       /// constructor from the particle and tool 
@@ -91,7 +92,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpParChi2 : public LoKi::Function<const LHCb::VertexBase*> 
+    class ImpParChi2 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
       /// constructor from the particle and tool 

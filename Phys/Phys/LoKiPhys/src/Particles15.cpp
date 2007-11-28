@@ -1,4 +1,4 @@
-// $Id: Particles15.cpp,v 1.5 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles15.cpp,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,7 +30,7 @@
 // ============================================================================
 LoKi::Particles::Filter::Filter
 ( const IFilterCriterion* filter ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_filter ( filter )
 {} 
 // ============================================================================
@@ -39,7 +39,7 @@ LoKi::Particles::Filter::Filter
 LoKi::Particles::Filter::Filter
 ( const LoKi::Particles::Filter& right ) 
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
   , m_filter ( right.m_filter )
 {} 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: Particles8.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: Particles8.cpp,v 1.6 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,38 +38,38 @@
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const LHCb::ProtoParticle* p ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (   ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( p ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const std::vector<LHCb::ProtoParticle*>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp.begin() , pp.end() ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const std::vector<const LHCb::ProtoParticle*>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp.begin() , pp.end() ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const LoKi::Keeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
 ( const LoKi::Particles::HasProtos& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( right ) 
 {};
 // ============================================================================
@@ -99,38 +99,38 @@ LoKi::Particles::HasProtos::fillStream
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const LHCb::ProtoParticle* p ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (   ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , m_cut ( p ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const std::vector<LHCb::ProtoParticle*>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ()
   , m_cut ( pp ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const std::vector<const LHCb::ProtoParticle*>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , m_cut ( pp )  
 {};
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const LoKi::Keeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , m_cut ( pp ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::Predicate<const LHCb::Particle*>  (    ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
   , m_cut ( pp ) 
 {};
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const LoKi::Particles::HasProtosInTree& right ) 
   : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
   , m_cut                                   ( right.m_cut )
 {};
 // ============================================================================

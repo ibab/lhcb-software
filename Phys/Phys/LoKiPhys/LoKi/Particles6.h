@@ -1,4 +1,4 @@
-// $Id: Particles6.h,v 1.5 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles6.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES6_H 
 #define LOKI_PARTICLES6_H 1
@@ -49,7 +49,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-21
      */
-    class ChildFunction : public LoKi::Function<const LHCb::Particle*>
+    class ChildFunction
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /** constructor from the function and daughter index 
@@ -104,7 +105,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-21
      */
-    class ChildPredicate : public LoKi::Predicate<const LHCb::Particle*>
+    class ChildPredicate 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /** constructor from the function and daughter index 

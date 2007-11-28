@@ -1,4 +1,4 @@
-// $Id: Particles14.h,v 1.4 2007-07-23 17:35:45 ibelyaev Exp $
+// $Id: Particles14.h,v 1.5 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES14_H 
 #define LOKI_PARTICLES14_H 1
@@ -48,7 +48,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-11-02
      */
-    class DecayAngle : public LoKi::Function<const LHCb::Particle*>
+    class DecayAngle 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /** constructor with daughter index (starts from 1).

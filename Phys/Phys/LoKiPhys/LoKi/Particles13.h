@@ -1,4 +1,4 @@
-// $Id: Particles13.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
+// $Id: Particles13.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES13_H 
 #define LOKI_PARTICLES13_H 1
@@ -41,7 +41,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackChi2 : public LoKi::Function<const LHCb::Particle*> 
+    class TrackChi2
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -68,7 +69,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackChi2PerDoF : public LoKi::Function<const LHCb::Particle*> 
+    class TrackChi2PerDoF 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -96,7 +98,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHasState : public LoKi::Predicate<const LHCb::Particle*> 
+    class TrackHasState
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
       /// constructor from the state location 
@@ -134,7 +137,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackType : public LoKi::Function<const LHCb::Particle*> 
+    class TrackType
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -163,7 +167,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHistory : public LoKi::Function<const LHCb::Particle*> 
+    class TrackHistory 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -192,7 +197,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHistoryFit : public LoKi::Function<const LHCb::Particle*> 
+    class TrackHistoryFit
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -221,7 +227,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackStatus : public LoKi::Function<const LHCb::Particle*> 
+    class TrackStatus
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// MANDATORY: virtual destructor 

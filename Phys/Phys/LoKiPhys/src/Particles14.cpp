@@ -1,4 +1,4 @@
-// $Id: Particles14.cpp,v 1.5 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles14.cpp,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,7 +40,7 @@
 // ============================================================================
 LoKi::Particles::DecayAngle::DecayAngle
 ( const size_t child ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_child ( child ) 
 {}
 // ============================================================================
@@ -49,7 +49,7 @@ LoKi::Particles::DecayAngle::DecayAngle
 LoKi::Particles::DecayAngle::DecayAngle
 ( const LoKi::Particles::DecayAngle& right ) 
   : LoKi::AuxFunBase                     ( right )
-  , LoKi::Function<const LHCb::Particle*>( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right )
   , m_child                              ( right.m_child ) 
 {}
 // ============================================================================

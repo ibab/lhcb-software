@@ -1,4 +1,4 @@
-// $Id: PrintDecay.cpp,v 1.6 2007-08-16 13:52:08 ibelyaev Exp $
+// $Id: PrintDecay.cpp,v 1.7 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -117,7 +117,7 @@ std::ostream& LoKi::PrintPhys::printDecay
 {
   return LoKi::PrintPhys::printDecay 
     ( particle , stream , 
-      LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
+      LoKi::Constant<const  LHCb::Particle*,bool> ( true ) ) ;
 }
 // ========================================================================    
 //  Simple function to print decay in more or less "readable" format 
@@ -128,7 +128,7 @@ MsgStream& LoKi::PrintPhys::printDecay
 {
   return LoKi::PrintPhys::printDecay 
     ( particle , stream , 
-      LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
+      LoKi::Constant<const  LHCb::Particle*,bool> ( true ) ) ;
 }
 // ========================================================================
 //  Simple function to print decay in more or less "readable" format 
@@ -137,7 +137,7 @@ std::string LoKi::PrintPhys::printDecay
 ( const LHCb::Particle*        particle ) 
 {
   return LoKi::PrintPhys::printDecay 
-    ( particle , LoKi::BooleanConstant<const  LHCb::Particle*> ( true ) ) ;
+    ( particle , LoKi::Constant<const  LHCb::Particle*,bool> ( true ) ) ;
 }
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.6 2007-08-23 12:01:24 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -37,8 +37,9 @@ namespace LoKi
     {
     private:
       typedef LHCb::VertexBase            Type ;
-      typedef LoKi::Function<const Type*> Fun  ;
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
+      //
       static Fun::result_type __call__ 
       ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
@@ -51,6 +52,7 @@ namespace LoKi
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::VertexBase>& o ) { return fun ( o ) ; }
+      //
     } ;
   }
 }
@@ -98,12 +100,12 @@ namespace
     LoKi::ExtraInfo::GetInfo<const LHCb::VertexBase*>   m_63 ;
     LoKi::ExtraInfo::CheckInfo<const LHCb::VertexBase*> m_64 ;
     // Monitoring 
-    LoKi::Monitoring::Counter<const LHCb::Particle*>    m_50 ;
-    LoKi::Monitoring::Stat<const LHCb::Particle*>       m_51 ;
-    LoKi::Monitoring::Plot<const LHCb::Particle*>       m_52 ;
-    LoKi::Monitoring::Counter<const LHCb::VertexBase*>  m_60 ;
-    LoKi::Monitoring::Stat<const LHCb::VertexBase*>     m_61 ;
-    LoKi::Monitoring::Plot<const LHCb::VertexBase*>     m_62 ;
+    LoKi::Monitoring::Counter<const LHCb::Particle*,bool>   m_50 ;
+    LoKi::Monitoring::Counter<const LHCb::Particle*,double> m_51 ;
+    LoKi::Monitoring::Plot<const LHCb::Particle*,double>    m_52 ;
+    LoKi::Monitoring::Counter<const LHCb::VertexBase*,bool> m_60 ;
+    LoKi::Monitoring::Counter<const LHCb::VertexBase*,double> m_61 ;
+    LoKi::Monitoring::Plot<const LHCb::VertexBase*,double>  m_62 ;
     // additional 
     LoKi::TheSame<const LHCb::Particle*>                m_71 ;
     LoKi::TheSame<const LHCb::VertexBase*>              m_72 ;

@@ -1,4 +1,4 @@
-// $Id: Particles12.cpp,v 1.7 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,14 +41,14 @@
  */
 // ============================================================================
 LoKi::Particles::ProtoHasInfo::ProtoHasInfo( const int info ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_info ( info ) 
 {}
 // ============================================================================
 LoKi::Particles::ProtoHasInfo::ProtoHasInfo
 ( const LoKi::Particles::ProtoHasInfo& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Predicate<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right ) 
   , m_info ( right.m_info )
 {}
 // ============================================================================
@@ -77,7 +77,7 @@ LoKi::Particles::ProtoInfo::ProtoInfo
 ( const int    key , 
   const double def , 
   const double bad )
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -86,7 +86,7 @@ LoKi::Particles::ProtoInfo::ProtoInfo
 LoKi::Particles::ProtoInfo::ProtoInfo
 ( const int    key , 
   const double def )
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( def ) 
@@ -95,7 +95,7 @@ LoKi::Particles::ProtoInfo::ProtoInfo
 LoKi::Particles::ProtoInfo::ProtoInfo
 ( const LoKi::Particles::ProtoInfo& right ) 
   : LoKi::AuxFunBase                     ( right )
-  , LoKi::Function<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right ) 
   , m_key  ( right.m_key  )
   , m_def  ( right.m_def  )
   , m_bad  ( right.m_bad  )

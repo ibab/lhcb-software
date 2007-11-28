@@ -1,4 +1,4 @@
-// $Id: PhysKinematics.h,v 1.5 2007-07-23 17:35:48 ibelyaev Exp $
+// $Id: PhysKinematics.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSKINEMATICS_H 
 #define LOKI_PHYSKINEMATICS_H 1
@@ -27,7 +27,7 @@ namespace LHCb { class Particle ; }
 // ============================================================================
 namespace LoKi
 {
-  namespace Kinematics 
+  namespace PhysKinematics 
   {
     // ========================================================================
     /** trivial function to evaluate the mass LHCb::Particle
@@ -82,6 +82,11 @@ namespace LoKi
       const LHCb::Particle* p3 ,
       const LHCb::Particle* p4 ) ;
     // ========================================================================
+  } // end of namespace LoKi::PhysKinematics
+  namespace Kinematics 
+  {
+    /// import the namespace into the proper scope 
+    using namespace LoKi::PhysKinematics ;
   } // end of namespace LoKi::Kinematics
 } // end of namespace LoKi
 // ============================================================================

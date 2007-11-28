@@ -1,4 +1,4 @@
-// $Id: Particles2.cpp,v 1.6 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,7 +35,7 @@
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -43,7 +43,7 @@ LoKi::Particles::TimeDistance::TimeDistance
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -51,7 +51,7 @@ LoKi::Particles::TimeDistance::TimeDistance
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -59,7 +59,7 @@ LoKi::Particles::TimeDistance::TimeDistance
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Particles::VertexDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -67,7 +67,7 @@ LoKi::Particles::TimeDistance::TimeDistance
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -76,7 +76,7 @@ LoKi::Particles::TimeDistance::TimeDistance
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Particles::TimeDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex ) 
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -140,7 +140,7 @@ LoKi::Particles::TimeDistance::fillStream
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -148,7 +148,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -156,7 +156,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -164,7 +164,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Particles::VertexSignedDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -172,7 +172,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -181,7 +181,7 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Particles::TimeSignedDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex ) 
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -246,7 +246,7 @@ LoKi::Particles::TimeSignedDistance::fillStream
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -254,7 +254,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -262,7 +262,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -270,7 +270,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Particles::VertexDotDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -279,7 +279,7 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Particles::TimeDotDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex ) 
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================

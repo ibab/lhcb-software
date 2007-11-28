@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.11 2007-07-23 17:35:42 ibelyaev Exp $
+// $Id: Particles0.h,v 1.12 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -48,7 +48,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class HasKey : public LoKi::Predicate<const LHCb::Particle*>
+    class HasKey
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -70,7 +71,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class  Key : public LoKi::Function<const LHCb::Particle*>
+    class  Key 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /** constructor from "bad" value, to be returned 
@@ -119,7 +121,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class InTES : public LoKi::Predicate<const LHCb::Particle*>
+    class InTES
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /** constructor fomr the location and the flag
@@ -164,7 +167,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier : public LoKi::Function<const LHCb::Particle*>
+    class Identifier
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {  
     public:
       /// clone method (mandatory!)
@@ -184,7 +188,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier : public LoKi::Function<const LHCb::Particle*>
+    class AbsIdentifier
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {  
     public:
       /// clone method (mandatory!)
@@ -205,7 +210,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class Charge : public LoKi::Function<const LHCb::Particle*>
+    class Charge 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -227,7 +233,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class SumCharge : public LoKi::Function<const LHCb::Particle*>
+    class SumCharge 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {  
     public:
       /// clone method (mandatory!)
@@ -248,7 +255,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum : public LoKi::Function<const LHCb::Particle*> 
+    class Momentum 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
       /// clone method (mandatory!)
@@ -264,7 +272,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum2 : public LoKi::Function<const LHCb::Particle*> 
+    class Momentum2 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
       /// clone method (mandatory!)
@@ -281,7 +290,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Energy : public LoKi::Function<const LHCb::Particle*>
+    class Energy 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -298,7 +308,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TransverseMomentum : public LoKi::Function<const LHCb::Particle*>
+    class TransverseMomentum 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -315,7 +326,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumX : public LoKi::Function<const LHCb::Particle*>
+    class MomentumX 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -332,7 +344,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumY : public LoKi::Function<const LHCb::Particle*>
+    class MomentumY
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
       /// clone method (mandatory!)
@@ -349,7 +362,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumZ : public LoKi::Function<const LHCb::Particle*>
+    class MomentumZ 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
       /// clone method (mandatory!)
@@ -366,7 +380,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity : public LoKi::Function<const LHCb::Particle*>
+    class PseudoRapidity 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -383,7 +398,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi : public LoKi::Function<const LHCb::Particle*>
+    class Phi
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -400,7 +416,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Theta : public LoKi::Function<const LHCb::Particle*>
+    class Theta 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -417,7 +434,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Mass : public LoKi::Function<const LHCb::Particle*>
+    class Mass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -434,7 +452,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MeasuredMass : public LoKi::Function<const LHCb::Particle*>
+    class MeasuredMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
       /// clone method (mandatory!)
@@ -460,7 +479,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class InvariantMass : public LoKi::Function<const LHCb::Particle*>
+    class InvariantMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:      
       /// type for container of indices 
@@ -510,7 +530,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMass : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {      
     public:
       /** constructor  
@@ -577,7 +598,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class AbsDeltaMass : public LoKi::Function<const LHCb::Particle*>
+    class AbsDeltaMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {      
     public:
       /** constructor  
@@ -643,7 +665,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMeasuredMass : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMeasuredMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {      
     public:
       /// constructor  
@@ -710,7 +733,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-08-04
      */
-    class AbsDeltaMeasuredMass : public  LoKi::Function<const LHCb::Particle*>
+    class AbsDeltaMeasuredMass 
+      : public  LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public :
       /** constructor  from particle mass 
@@ -782,7 +806,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2003-01-17
      */
-    class DeltaMeasuredMassChi2 : public LoKi::Function<const LHCb::Particle*>
+    class DeltaMeasuredMassChi2 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {      
     public:
       /// constructor  
@@ -853,7 +878,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ConfidenceLevel : public LoKi::Function<const LHCb::Particle*>
+    class ConfidenceLevel 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -876,7 +902,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Weight : public LoKi::Function<const LHCb::Particle*>
+    class Weight
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -899,7 +926,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class IsBasic : public LoKi::Predicate<const LHCb::Particle*>
+    class IsBasic 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -922,7 +950,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class NumberOfDaughters : public LoKi::Function<const LHCb::Particle*>
+    class NumberOfDaughters 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// clone method (mandatory!)
@@ -945,7 +974,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasProto : public LoKi::Predicate<const LHCb::Particle*>
+    class HasProto 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -968,7 +998,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasVertex : public LoKi::Predicate<const LHCb::Particle*>
+    class HasVertex 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// clone method (mandatory!)
@@ -990,7 +1021,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-01
      */
-    class TransverseMomentumRel : public LoKi::Function<const LHCb::Particle*>
+    class TransverseMomentumRel 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor from theta phi
@@ -1022,9 +1054,11 @@ namespace LoKi
       const LoKi::ThreeVector& direction () const { return   momentum() ; }      
     public:
       /// set new momentum 
-      void setMomentum  ( const LoKi::ThreeVector&   vct ) { m_momentum = vct ; }
+      void setMomentum  ( const LoKi::ThreeVector&   vct ) 
+      { m_momentum = vct ; }
       /// set new momentum 
-      void setMomentum  ( const LoKi::LorentzVector& vct ) { m_momentum = vct ; }
+      void setMomentum  ( const LoKi::LorentzVector& vct ) 
+      { m_momentum = vct ; }
       /// set new momentum 
       template <class VECTOR>
       void setMomentum  ( const VECTOR&              vct ) 
@@ -1049,8 +1083,8 @@ namespace LoKi
       LoKi::ThreeVector m_momentum ; ///< the direction 
     } ;
     // ========================================================================
-  }  // end of namespace LoKi::Particles
-}  // end of namespace LoKi
+  } // end of namespace LoKi::Particles
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

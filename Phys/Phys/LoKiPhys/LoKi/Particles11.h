@@ -1,4 +1,4 @@
-// $Id: Particles11.h,v 1.6 2007-07-23 17:35:43 ibelyaev Exp $
+// $Id: Particles11.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES11_H 
 #define LOKI_PARTICLES11_H 1
@@ -47,7 +47,7 @@ namespace LoKi
      *  @date 2006-02-22 
      */
     class IsAParticle 
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
@@ -83,7 +83,7 @@ namespace LoKi
       IsAParticle
       ( PARTICLE first , 
         PARTICLE last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , LoKi::UniqueKeeper<LHCb::Particle>( first , last ) 
       {};
       /// copy constructor 
@@ -114,7 +114,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class IsAParticleInTree : public LoKi::Predicate<const LHCb::Particle*>
+    class IsAParticleInTree 
+        : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
       /// constructor from one particle 
@@ -148,8 +149,8 @@ namespace LoKi
       template <class PARTICLE>
       IsAParticleInTree
       ( PARTICLE first , 
-        PARTICLE last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        PARTICLE last  )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last ) 
       {};
       /// copy constructor 
@@ -188,7 +189,7 @@ namespace LoKi
      *  @date 2006-02-22 
      */
     class IsAParticleFromTree
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
@@ -224,9 +225,9 @@ namespace LoKi
       IsAParticleFromTree
       ( PARTICLE first , 
         PARTICLE last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
-      {};
+      {}
       /// copy constructor 
       IsAParticleFromTree( const IsAParticleFromTree& right ) ;
       /// MANDATORY: virtual destructor

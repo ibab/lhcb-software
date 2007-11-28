@@ -1,4 +1,4 @@
-// $Id: Particles13.cpp,v 1.7 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -105,14 +105,14 @@ LoKi::Particles::TrackChi2PerDoF::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LHCb::State::Location location ) 
-  : LoKi::Predicate<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_location ( location ) 
 {};
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LoKi::Particles::TrackHasState& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Predicate<const LHCb::Particle*>( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right )
   , m_location                            ( right.m_location ) 
 {};
 // ============================================================================

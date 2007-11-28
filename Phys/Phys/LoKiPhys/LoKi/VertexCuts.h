@@ -1,4 +1,4 @@
-// $Id: VertexCuts.h,v 1.7 2007-07-23 17:35:49 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1
@@ -46,7 +46,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VALL ( true ) ;
+    const LoKi::Constant<const LHCb::VertexBase*,bool>      VALL ( true ) ;
     // ========================================================================
     /** @var VTRUE
      *  the trivial functor which always evaluates to "true"
@@ -58,7 +58,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VTRUE = VALL ;
+    const LoKi::Constant<const LHCb::VertexBase*,bool>      VTRUE = VALL ;
     // ========================================================================
     /** @var VNONE
      *  the trivial functor which always evaluates to "false"
@@ -69,7 +69,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VNONE ( false ) ;
+    const LoKi::Constant<const LHCb::VertexBase*,bool>      VNONE ( false ) ;
     // ========================================================================
     /** @var VFALSE
      *  the trivial functor which always evaluates to "false"
@@ -81,7 +81,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::VertexBase*>    VFALSE = VNONE ;
+    const LoKi::Constant<const LHCb::VertexBase*,bool>    VFALSE = VNONE ;
     // ========================================================================
     /** @var VONE
      *  the trivial functor which always evaluates to 1
@@ -92,7 +92,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::VertexBase*>             VONE ( 1  ) ;
+    const LoKi::Constant<const LHCb::VertexBase*,double>         VONE ( 1  ) ;
     // ========================================================================
     /** @var VZERO
      *  the trivial functor which always evaluates to 0
@@ -103,7 +103,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::VertexBase*>             VZERO ( 0 ) ;
+    const LoKi::Constant<const LHCb::VertexBase*,double>         VZERO ( 0 ) ;
     // ========================================================================
     /** @var VVALID
      *  the trivial functor which evaluayed the "validity" of the argument

@@ -1,4 +1,4 @@
-// $Id: PhysKinematics.cpp,v 1.4 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: PhysKinematics.cpp,v 1.5 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -31,7 +31,7 @@
  *  @date 2006-02-06 
  */
 // ============================================================================
-/** Trivial function to evaluate the mass LHCb::Particle
+/*  Trivial function to evaluate the mass LHCb::Particle
  *  @param  p particle 
  *  @return invariant mass 
  *  @see LHCb::Particle 
@@ -39,7 +39,7 @@
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::PhysKinematics::mass 
 ( const LHCb::Particle* p ) 
 {
   //
@@ -50,10 +50,11 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( p->momentum() ) ;
+  return LoKi::Kinematics::mass 
+    ( p->momentum() ) ;
 } 
 // ============================================================================
-/** Trivial function to evaluate the mass LHCb::Particle
+/*  Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @return invariant mass 
@@ -62,7 +63,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::PhysKinematics::mass 
 ( const LHCb::Particle* p1 , 
   const LHCb::Particle* p2 ) 
 {
@@ -81,11 +82,12 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( p1->momentum() , 
-                p2->momentum() ) ;
+  return LoKi::Kinematics::mass
+    ( p1->momentum() , 
+      p2->momentum() ) ;
 } 
 // ============================================================================
-/** Trivial function to evaluate the mass LHCb::Particle
+/*  Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the third particle 
  *  @param  p3 the second particle 
@@ -95,7 +97,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
+double LoKi::PhysKinematics::mass 
 ( const LHCb::Particle* p1 , 
   const LHCb::Particle* p2 ,
   const LHCb::Particle* p3 ) 
@@ -122,12 +124,13 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }
   //
-  return mass ( p1->momentum() , 
-                p2->momentum() ,
-                p3->momentum() ) ;
+  return LoKi::Kinematics::mass 
+    ( p1->momentum() , 
+      p2->momentum() ,
+      p3->momentum() ) ;
 } 
 // ============================================================================
-/** Trivial function to evaluate the mass LHCb::Particle
+/*  Trivial function to evaluate the mass LHCb::Particle
  *  @param  p1 the first particle 
  *  @param  p2 the second particle 
  *  @param  p3 the third  particle 
@@ -138,7 +141,7 @@ double LoKi::Kinematics::mass
  *  @date 2006-01-17
  */
 // ============================================================================
-double LoKi::Kinematics::mass
+double LoKi::PhysKinematics::mass
 ( const LHCb::Particle* p1 , 
   const LHCb::Particle* p2 ,
   const LHCb::Particle* p3 ,
@@ -173,13 +176,12 @@ double LoKi::Kinematics::mass
     return LoKi::Constants::InvalidMass ;
   }  
   //
-  return mass ( p1->momentum() , 
-                p2->momentum() ,
-                p3->momentum() , 
-                p4->momentum() ) ;
-} 
-// ============================================================================
-
+  return LoKi::Kinematics::mass
+    ( p1->momentum() , 
+      p2->momentum() ,
+      p3->momentum() , 
+      p4->momentum() ) ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

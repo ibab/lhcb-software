@@ -1,4 +1,4 @@
-// $Id: Particles15.h,v 1.5 2007-07-23 17:35:45 ibelyaev Exp $
+// $Id: Particles15.h,v 1.6 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
 #define LOKI_PARTICLES15_H 1
@@ -44,7 +44,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
-    class Filter : public LoKi::Predicate<const LHCb::Particle*>
+    class Filter
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor from the filter 

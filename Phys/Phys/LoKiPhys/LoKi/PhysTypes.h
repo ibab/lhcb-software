@@ -1,4 +1,4 @@
-// $Id: PhysTypes.h,v 1.7 2007-07-23 17:35:48 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1
@@ -14,8 +14,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-namespace LHCb { class RecVertex ; }
-// ============================================================================
 namespace LoKi 
 {
   /** @namespace LoKi::PhysTypes PhysTypes.h LoKi/PhysTypes.h
@@ -25,23 +23,23 @@ namespace LoKi
   namespace  PhysTypes 
   {
     /// type of 'cuts' for LHCb::Particle       (interface)
-    typedef LoKi::Predicate<const LHCb::Particle*>                Cuts  ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Predicate Cuts  ;
     /// type of 'functions' for LHCb::Particle  (interface)
-    typedef LoKi::Function<const LHCb::Particle*>                 Func  ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Function  Func  ;
     /// type of 'cuts' for LHCb::Particle       (assignable)
-    typedef LoKi::PredicateFromPredicate<const LHCb::Particle*>   Cut   ; 
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::PredicateFromPredicate  Cut ; 
     /// type of 'functions' for LHCb::Particle  (assignable)
-    typedef LoKi::FunctionFromFunction<const LHCb::Particle*>     Fun   ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::FunctionFromFunction    Fun ;
     /// type of 'cuts' for LHCb::VertexBase     (interface)
-    typedef LoKi::Predicate<const LHCb::VertexBase*>              VCuts ;
+    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate VCuts ;
     /// type of 'functions' for LHCb::VertexBase (interface)
-    typedef LoKi::Function<const LHCb::VertexBase*>               VFunc ;
+    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Function  VFunc ;
     /// type of 'cuts' for LHCb::Vertex         (assignable)
-    typedef LoKi::PredicateFromPredicate<const LHCb::VertexBase*> VCut  ; 
+    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::PredicateFromPredicate VCut ; 
     /// type of 'functions' for LHCb::Vertex    (assignable)
-    typedef LoKi::FunctionFromFunction<const LHCb::VertexBase*>   VFun  ;
+    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::FunctionFromFunction   VFun ;
     //
-  }  // end of namespace LoKi::PhysTypes
+  } // end of namespace LoKi::PhysTypes
   namespace Types 
   {    
     /// type of 'cuts' for LHCb::Particle        (interface)

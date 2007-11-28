@@ -1,4 +1,4 @@
-// $Id: Vertices2.cpp,v 1.3 2007-07-23 17:35:57 ibelyaev Exp $
+// $Id: Vertices2.cpp,v 1.4 2007-11-28 14:39:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,7 +11,7 @@
 LoKi::Vertices::ImpPar::ImpPar
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpactParamTool& tool     ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( (const LHCb::VertexBase*)0 , tool )
   , m_particle  ( particle ) 
 {} 
@@ -21,7 +21,7 @@ LoKi::Vertices::ImpPar::ImpPar
 LoKi::Vertices::ImpPar::ImpPar
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpParBase&      tool     ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( tool )
   , m_particle  ( particle ) 
 {} 
@@ -31,7 +31,7 @@ LoKi::Vertices::ImpPar::ImpPar
 LoKi::Vertices::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool     ,
   const LHCb::Particle*                  particle ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( (const LHCb::VertexBase*)0 , tool )
   , m_particle  ( particle ) 
 {} 
@@ -41,7 +41,7 @@ LoKi::Vertices::ImpPar::ImpPar
 LoKi::Vertices::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpParBase&      tool     ,
   const LHCb::Particle*                  particle )
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( tool )
   , m_particle  ( particle ) 
 {} 
@@ -51,7 +51,7 @@ LoKi::Vertices::ImpPar::ImpPar
 LoKi::Vertices::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpPar& right )
   : LoKi::AuxFunBase( right )
-  , LoKi::Function<const LHCb::VertexBase*> ( right )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ( right )
   , m_evaluator ( right.m_evaluator  )
   , m_particle  ( right.m_particle ) 
 {} 
@@ -98,7 +98,7 @@ LoKi::Vertices::ImpPar::fillStream( std::ostream& s ) const
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpactParamTool& tool     ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( (const LHCb::VertexBase*)0 , tool )
   , m_particle  ( particle ) 
 {} 
@@ -108,7 +108,7 @@ LoKi::Vertices::ImpParChi2::ImpParChi2
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpParBase&      tool     ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( tool )
   , m_particle  ( particle ) 
 {} 
@@ -118,7 +118,7 @@ LoKi::Vertices::ImpParChi2::ImpParChi2
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool     ,
   const LHCb::Particle*                  particle ) 
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( (const LHCb::VertexBase*)0 , tool )
   , m_particle  ( particle ) 
 {} 
@@ -128,7 +128,7 @@ LoKi::Vertices::ImpParChi2::ImpParChi2
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpParBase&      tool     ,
   const LHCb::Particle*                  particle )
-  : LoKi::Function<const LHCb::VertexBase*> ()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ()
   , m_evaluator ( tool )
   , m_particle  ( particle ) 
 {} 
@@ -138,7 +138,7 @@ LoKi::Vertices::ImpParChi2::ImpParChi2
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpParChi2& right )
   : LoKi::AuxFunBase( right )
-  , LoKi::Function<const LHCb::VertexBase*> ( right )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ( right )
   , m_evaluator ( right.m_evaluator  )
   , m_particle  ( right.m_particle ) 
 {} 

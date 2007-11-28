@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.8 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles4.h,v 1.9 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -57,7 +57,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class ImpPar 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Vertices::ImpParBase 
     {
     public:
@@ -120,7 +120,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class ImpParChi2 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Vertices::ImpParBase 
     {
     public:
@@ -188,7 +188,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class MinImpPar 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Keeper<LHCb::VertexBase> 
     {
     public:
@@ -325,7 +325,7 @@ namespace LoKi
       ( VERTEX                                 first , 
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
         , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {}
@@ -340,7 +340,7 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         VERTEX                                 first , 
         VERTEX                                 last  ) 
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
         , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {};
@@ -384,7 +384,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class MinImpParChi2 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Keeper<LHCb::VertexBase> 
     {
     public:
@@ -519,7 +519,7 @@ namespace LoKi
       ( VERTEX                                 first , 
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
         , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {}
@@ -534,7 +534,7 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         VERTEX                                 first , 
         VERTEX                                 last  ) 
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
         , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {};

@@ -1,4 +1,4 @@
-// $Id: Particles11.cpp,v 1.6 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles11.cpp,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,7 +38,7 @@
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LHCb::Particle*                 p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -46,7 +46,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LHCb::Particles*                p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ()
 { if ( 0 != p ) { addObjects( p->begin() , p->end() ) ; } }
 // ============================================================================
@@ -54,7 +54,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -62,7 +62,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LHCb::Particle::Vector&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -70,7 +70,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LHCb::Particle::ConstVector&    p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -78,7 +78,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LoKi::PhysTypes::Range&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -86,7 +86,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
     , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -94,7 +94,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LoKi::UniqueKeeper<LHCb::Particle>& p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -103,7 +103,7 @@ LoKi::Particles::IsAParticle::IsAParticle
 LoKi::Particles::IsAParticle::IsAParticle 
 ( const LoKi::Particles::IsAParticle& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Predicate<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right ) 
   , LoKi::UniqueKeeper<LHCb::Particle>    ( right ) 
 {} 
 // ============================================================================
@@ -136,7 +136,7 @@ LoKi::Particles::IsAParticle::fillStream
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree 
 ( const LHCb::Particle*                 p )
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -144,7 +144,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LHCb::Particles*                p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}
 // ============================================================================
@@ -152,7 +152,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -160,7 +160,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LHCb::Particle::Vector&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -168,7 +168,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LHCb::Particle::ConstVector&    p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -176,7 +176,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LoKi::PhysTypes::Range&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -184,7 +184,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -192,7 +192,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LoKi::UniqueKeeper<LHCb::Particle>& p )       
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( p )
 {}  
 // ============================================================================
@@ -201,7 +201,7 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LoKi::Particles::IsAParticleInTree&  right ) 
   : LoKi::AuxFunBase                       ( right )
-  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
   , m_cut                                  ( right.m_cut  )
 {}  
 // ============================================================================
@@ -234,7 +234,7 @@ LoKi::Particles::IsAParticleInTree::fillStream
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LHCb::Particle*                 p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -242,7 +242,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LHCb::Particles*                p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ()
 { if ( 0 != p ) { addObjects( p->begin() , p->end() ) ; } }
 // ============================================================================
@@ -250,7 +250,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -258,7 +258,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const LHCb::Particle::Vector&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -266,7 +266,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const LHCb::Particle::ConstVector&    p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -274,7 +274,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LoKi::PhysTypes::Range&         p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
@@ -282,7 +282,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
     , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -290,7 +290,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const LoKi::UniqueKeeper<LHCb::Particle>& p ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
 {} 
 // ============================================================================
@@ -299,7 +299,7 @@ LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LoKi::Particles::IsAParticleFromTree& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Predicate<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right ) 
   , LoKi::UniqueKeeper<LHCb::Particle>    ( right ) 
 {} 
 // ============================================================================

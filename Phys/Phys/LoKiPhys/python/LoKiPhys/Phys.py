@@ -284,11 +284,16 @@ printDecay. __doc__ += "\n\n" + LoKi.PrintPhys.printDecay . __doc__
 
 if not hasattr ( LHCb.Particle ,     'printDecay'   ) :
     LHCb.Particle .  printDecay   =   printDecay
+    LHCb.Particle .       decay   =   printDecay
 if not hasattr ( LHCb.Particle ,   '__printDecay__' ) :
     LHCb.Particle. __printDecay__ =   printDecay
+    LHCb.Particle.      __decay__ =   printDecay
 
 
 import LoKiCore.functions  as _LCF 
+LHCb.Particle.__pname__ =  _LCF.__pname__
+LHCb.Particle.  pname   =  _LCF.__pname__
+LHCb.Particle.   name   =  _LCF.__pname__
 
 _LCF.nChildren     . __doc__ += "\n" + LoKi.Child.nChildren         . __doc__ 
 _LCF.child         . __doc__ += "\n" + LoKi.Child.child             . __doc__

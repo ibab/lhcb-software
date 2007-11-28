@@ -1,4 +1,4 @@
-// $Id: Particles8.h,v 1.5 2007-07-23 17:35:47 ibelyaev Exp $
+// $Id: Particles8.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES8_H 
 #define LOKI_PARTICLES8_H 1
@@ -49,7 +49,7 @@ namespace LoKi
      *  @date 2006-02-22 
      */     
     class HasProtos
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::UniqueKeeper<LHCb::ProtoParticle>
     {
     public:
@@ -71,7 +71,7 @@ namespace LoKi
       HasProtos 
       ( PROTO first , 
         PROTO last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( first , last ) 
       {} ;
       /// copy constructor 
@@ -101,7 +101,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasProtosInTree : public LoKi::Predicate<const LHCb::Particle*>
+    class HasProtosInTree
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       /// constructor from one protoparticle 
@@ -127,7 +128,7 @@ namespace LoKi
       HasProtosInTree 
       ( PROTO first , 
         PROTO last  ) 
-        : LoKi::Predicate<const LHCb::Particle*>()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last ) 
       {} ;
       /// copy constructor 

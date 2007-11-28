@@ -1,4 +1,4 @@
-// $Id: Particles6.cpp,v 1.4 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: Particles6.cpp,v 1.5 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,7 +36,7 @@
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const LoKi::PhysTypes::Func& fun   , 
   const size_t                 index ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun   ( fun   ) 
   , m_index ( index ) 
 {} ;
@@ -49,7 +49,7 @@ LoKi::Particles::ChildFunction::ChildFunction
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const size_t                 index ,
   const LoKi::PhysTypes::Func& fun   ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun   ( fun   ) 
   , m_index ( index ) 
 {} ;
@@ -59,7 +59,7 @@ LoKi::Particles::ChildFunction::ChildFunction
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const LoKi::Particles::ChildFunction& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_fun   ( right.m_fun   ) 
   , m_index ( right.m_index ) 
 {} ;
@@ -90,7 +90,7 @@ LoKi::Particles::ChildFunction::fillStream( std::ostream& s ) const
 LoKi::Particles::ChildPredicate::ChildPredicate 
 ( const LoKi::PhysTypes::Cuts& cut   , 
   const size_t                 index ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut   ( cut   ) 
   , m_index ( index ) 
 {} ;
@@ -103,7 +103,7 @@ LoKi::Particles::ChildPredicate::ChildPredicate
 LoKi::Particles::ChildPredicate::ChildPredicate 
 ( const size_t                 index ,
   const LoKi::PhysTypes::Cuts& cut   ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut   ( cut   ) 
   , m_index ( index ) 
 {} ;
@@ -113,7 +113,7 @@ LoKi::Particles::ChildPredicate::ChildPredicate
 LoKi::Particles::ChildPredicate::ChildPredicate
 ( const LoKi::Particles::ChildPredicate& right ) 
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
   , m_cut   ( right.m_cut   ) 
   , m_index ( right.m_index ) 
 {} ;

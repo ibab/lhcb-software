@@ -1,4 +1,4 @@
-// $Id: Particles3.h,v 1.6 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles3.h,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -51,7 +51,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
     class ClosestApproach 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Vertices::ImpactParamTool 
     {
     public:
@@ -105,7 +105,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
     class ClosestApproachChi2 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Vertices::ImpactParamTool 
     {
     public:
@@ -155,7 +155,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
     class MinClosestApproach 
-      : public LoKi::Function<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
@@ -218,7 +218,7 @@ namespace LoKi
       ( PARTICLE first , 
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
-      : LoKi::Function<const LHCb::Particle*> ()
+      : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
       , LoKi::Keeper<LHCb::Particle>( first , last ) 
       , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {} ;
@@ -233,7 +233,7 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         PARTICLE                               first , 
         PARTICLE                               last  )
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::Particle>( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {} ;
@@ -276,7 +276,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
     class MinClosestApproachChi2 
-      : public LoKi::Function<const LHCb::Particle*> 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
@@ -339,7 +339,7 @@ namespace LoKi
       ( PARTICLE first , 
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {};
@@ -354,7 +354,7 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  , 
         PARTICLE                               first , 
         PARTICLE                               last  )
-        : LoKi::Function<const LHCb::Particle*> ()
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {} ;

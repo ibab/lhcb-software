@@ -1,4 +1,4 @@
-// $Id: Particles1.cpp,v 1.7 2007-07-23 17:35:53 ibelyaev Exp $
+// $Id: Particles1.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -37,7 +37,7 @@
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -45,7 +45,7 @@ LoKi::Particles::VertexDistance::VertexDistance
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -53,7 +53,7 @@ LoKi::Particles::VertexDistance::VertexDistance
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -61,7 +61,7 @@ LoKi::Particles::VertexDistance::VertexDistance
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -70,7 +70,7 @@ LoKi::Particles::VertexDistance::VertexDistance
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LoKi::Particles::VertexDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex )
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -118,7 +118,7 @@ LoKi::Particles::VertexDistance::fillStream ( std::ostream & s ) const
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -126,7 +126,7 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -134,7 +134,7 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -142,7 +142,7 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -150,7 +150,7 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexSignedDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -159,7 +159,7 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Particles::VertexSignedDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex )
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -208,7 +208,7 @@ LoKi::Particles::VertexSignedDistance::fillStream ( std::ostream & s ) const
 // ============================================================================
 LoKi::Particles::VertexDotDistance::VertexDotDistance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
 // ============================================================================
@@ -216,7 +216,7 @@ LoKi::Particles::VertexDotDistance::VertexDotDistance
 // ============================================================================
 LoKi::Particles::VertexDotDistance::VertexDotDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
 // ============================================================================
@@ -224,7 +224,7 @@ LoKi::Particles::VertexDotDistance::VertexDotDistance
 // ============================================================================
 LoKi::Particles::VertexDotDistance::VertexDotDistance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
 // ============================================================================
@@ -233,7 +233,7 @@ LoKi::Particles::VertexDotDistance::VertexDotDistance
 LoKi::Particles::VertexDotDistance::VertexDotDistance
 ( const LoKi::Particles::VertexDotDistance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex )
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
 // ============================================================================
@@ -306,7 +306,7 @@ LoKi::Particles::VertexDotDistance::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LHCb::VertexBase* vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -314,7 +314,7 @@ LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -322,7 +322,7 @@ LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Vertices::VertexHolder& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -330,7 +330,7 @@ LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Vertices::VertexChi2Distance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -339,7 +339,7 @@ LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Particles::VertexChi2Distance& vertex ) 
   : LoKi::AuxFunBase                     ( vertex )
-  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -390,7 +390,7 @@ LoKi::Particles::VertexChi2Distance::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::VertexBase::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -400,7 +400,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::VertexBase::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -410,7 +410,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -420,7 +420,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::Vertex::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -430,7 +430,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -440,7 +440,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -450,7 +450,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertex::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -460,7 +460,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertices*   vs  ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -470,7 +470,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::PhysTypes::VRange& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -480,7 +480,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -490,7 +490,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -500,7 +500,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -510,7 +510,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -520,7 +520,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -530,7 +530,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs )       
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -539,7 +539,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 LoKi::Particles::MinVertexDistance::MinVertexDistance
 ( const LoKi::Particles::MinVertexDistance& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_fun ( right.m_fun ) 
 {};
 // ============================================================================
@@ -572,7 +572,7 @@ LoKi::Particles::MinVertexDistance::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::VertexBase::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -582,7 +582,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::VertexBase::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -592,7 +592,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -602,7 +602,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -612,7 +612,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -622,7 +622,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -632,7 +632,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::RecVertex::ConstVector& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -642,7 +642,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::RecVertices*   vs  ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -652,7 +652,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::PhysTypes::VRange& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -662,7 +662,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -672,7 +672,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -682,7 +682,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -692,7 +692,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -702,7 +702,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -712,7 +712,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs )       
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
 {};
 // ============================================================================
@@ -721,7 +721,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 ( const LoKi::Particles::MinVertexChi2Distance& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_fun ( right.m_fun ) 
 {};
 // ============================================================================

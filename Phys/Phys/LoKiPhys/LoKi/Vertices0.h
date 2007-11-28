@@ -1,4 +1,4 @@
-// $Id: Vertices0.h,v 1.5 2007-07-23 17:35:49 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES0_H 
 #define LOKI_VERTICES0_H 1
@@ -42,7 +42,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class IsPrimary : public LoKi::Predicate<const LHCb::VertexBase*>
+    class IsPrimary 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -64,7 +65,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Technique : public LoKi::Function<const LHCb::VertexBase*>
+    class Technique
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     { 
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -86,7 +88,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexChi2 : public LoKi::Function<const LHCb::VertexBase*>
+    class VertexChi2
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -109,7 +112,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexDoF : public LoKi::Function<const LHCb::VertexBase*>
+    class VertexDoF
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -129,7 +133,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionX : public LoKi::Function<const LHCb::VertexBase*>
+    class PositionX
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -149,7 +154,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionY : public LoKi::Function<const LHCb::VertexBase*>
+    class PositionY
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -169,7 +175,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionZ : public LoKi::Function<const LHCb::VertexBase*>
+    class PositionZ 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -191,7 +198,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class NumberOfOutgoing : public LoKi::Function<const LHCb::VertexBase*>
+    class NumberOfOutgoing 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -214,7 +222,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasInfo : public LoKi::Predicate<const LHCb::VertexBase*>
+    class HasInfo
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {
     public:
       /** constructor from "info"
@@ -249,7 +258,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Info : public LoKi::Function<const LHCb::VertexBase*>
+    class Info
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {
     public:
       /** constructor from "info"
@@ -298,7 +308,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class NumberOfTracks : public LoKi::Function<const LHCb::VertexBase*>
+    class NumberOfTracks 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {    
     public:
       /// MANDATORY: clone method ("virtual constructor")
@@ -309,8 +320,8 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
     // ========================================================================
-  }  // end of namespace LoKi::Vertices 
-}  // end of namespace LoKi
+  } // end of namespace LoKi::Vertices 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

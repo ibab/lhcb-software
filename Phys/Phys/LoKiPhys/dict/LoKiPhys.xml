@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.10 2007-08-23 12:01:24 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.11 2007-11-28 14:39:30 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -30,56 +30,18 @@
   <class pattern   = "std::unary_function<*LHCb::Particle*,bool>"    />
   <class pattern   = "std::binary_function<*LHCb::*,*LHCb::*,bool>"  />
   
-  <class pattern   = "LoKi::Function<*LHCb::*>"  />
-  <class pattern   = "LoKi::Predicate<*LHCb::*>" />
+  <class pattern   = "LoKi::Functor<*LHCb::Pa*>" />
+  <class pattern   = "LoKi::Functor<*LHCb::Ve*>" />
+  <class pattern   = "LoKi::BasicFunctors<*LHCb::Pa*>" />
+  <class pattern   = "LoKi::BasicFunctors<*LHCb::Ve*>" />
   
-  <class pattern   = "LoKi::Constant<*LHCb::*>"               />
-  <class pattern   = "LoKi::BooleanConstant<*LHCb::*>"        />
-  <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::*>" />
-  <class pattern   = "LoKi::FunctionFromFunction<*LHCb::*>"   />
+  <class pattern   = "LoKi::Constant<*LHCb::Pa*>" />
+  <class pattern   = "LoKi::Constant<*LHCb::Ve*>" />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Pa*>" />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Ve*>" />
   
-  <class pattern   = "LoKi::Valid<*LHCb::*>"            />
-  <class pattern   = "LoKi::TheSame<*LHCb::*>"          />
-  
-  <!-- 
-       
-       <class pattern   = "LoKi::EqualToValue<*LHCb::*>"       />
-       <class pattern   = "LoKi::SimpleSwitch<*LHCb::*>"       />
-       <class pattern   = "LoKi::Switch<*LHCb::*>"             />
-       <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::*>"    />
-       <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::*>"     />
-       <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::*>"      />
-       <class pattern   = "LoKi::PredicateFromFunctionAndValue<*LHCb::*>" />
-       
-       <class pattern   = "LoKi::And<*LHCb::*>"              />
-       <class pattern   = "LoKi::Or<*LHCb::*>"               />
-       <class pattern   = "LoKi::Not<*LHCb::*>"              />
-       
-       <class pattern   = "LoKi::Less<*LHCb::*>"             />
-       <class pattern   = "LoKi::Equal<*LHCb::*>"            />
-       <class pattern   = "LoKi::LessOrEqual<*LHCb::*>"      />
-       <class pattern   = "LoKi::NotEqual<*LHCb::*>"         />
-       
-       <class pattern   = "LoKi::Plus<*LHCb::*>"             />
-       <class pattern   = "LoKi::Minus<*LHCb::*>"            />
-       <class pattern   = "LoKi::Divide<*LHCb::*>"           />
-       <class pattern   = "LoKi::Multiply<*LHCb::*>"         />
-       
-       <class pattern   = "LoKi::Min<*LHCb::*>"              />
-       <class pattern   = "LoKi::Max<*LHCb::*>"              />
-       
-       <class pattern   = "LoKi::ComposeFunction<*LHCb::*>"  />
-       <class pattern   = "LoKi::ComposeFunction2<*LHCb::*>" />
-       
-       <class pattern   = "LoKi::Compare<*LHCb::*>"          />       
-       
-       <class pattern   = "LoKi::TheSame<*LHCb::*>"          />
-       
-       <class pattern = "LoKi::Monitoring::Counter<*LHCb::*>"   />
-       <class pattern = "LoKi::Monitoring::Stat<*LHCb::*>"      />
-       <class pattern = "LoKi::Monitoring::Plot<*LHCb::*>"      />
-       
-  -->
+  <class pattern   = "LoKi::Valid<*LHCb::*>"   />
+  <class pattern   = "LoKi::TheSame<*LHCb::*>" />
   
   <class pattern = "LoKi::ExtraInfo::GetInfo<*LHCb::*>"    />
   <class pattern = "LoKi::ExtraInfo::CheckInfo<*LHCb::*>"  />

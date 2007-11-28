@@ -1,4 +1,4 @@
-// $Id: Particles3.cpp,v 1.8 2007-07-23 17:35:54 ibelyaev Exp $
+// $Id: Particles3.cpp,v 1.9 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -46,7 +46,7 @@
 LoKi::Particles::ClosestApproach::ClosestApproach
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpactParamTool& tool     )
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
 {}
@@ -56,7 +56,7 @@ LoKi::Particles::ClosestApproach::ClosestApproach
 LoKi::Particles::ClosestApproach::ClosestApproach
 (  const LoKi::Vertices::ImpactParamTool& tool     ,
    const LHCb::Particle*                  particle )
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
 {}
@@ -110,7 +110,7 @@ LoKi::Particles::ClosestApproach::fillStream
 LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
 ( const LHCb::Particle*                  particle , 
   const LoKi::Vertices::ImpactParamTool& tool     )
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
 {}
@@ -172,7 +172,7 @@ LoKi::Particles::ClosestApproachChi2::fillStream
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LHCb::Particle::Vector&          particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -182,7 +182,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LHCb::Particle::ConstVector&     particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -192,7 +192,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const SmartRefVector<LHCb::Particle>&  particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -202,7 +202,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::PhysTypes::Range&          particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -212,7 +212,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Keeper<LHCb::Particle>&    particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>  ( particles ) 
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -222,7 +222,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>  ( particles ) 
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -232,7 +232,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LHCb::Particle::Vector&          particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -242,7 +242,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LHCb::Particle::ConstVector&     particles ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -252,7 +252,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const SmartRefVector<LHCb::Particle>&  particles ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -262,7 +262,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
   const LoKi::PhysTypes::Range&          particles ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles.begin() , particles.end() )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -272,7 +272,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
   const LoKi::Keeper<LHCb::Particle>& particles ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -282,7 +282,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Vertices::ImpactParamTool& tool      , 
   const LoKi::UniqueKeeper<LHCb::Particle>& particles ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle>( particles )
   , m_fun       ( LoKi::Helpers::_First ( particles ) , tool ) 
 {} ;
@@ -292,7 +292,7 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Particles::MinClosestApproach& right ) 
   : LoKi::AuxFunBase                     ( right ) 
-  , LoKi::Function<const LHCb::Particle*>( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right )
   , LoKi::UniqueKeeper<LHCb::Particle>   ( right )
   , m_fun                                ( right.m_fun ) 
 {} ;
@@ -330,7 +330,7 @@ LoKi::Particles::MinClosestApproach::fillStream
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LHCb::Particle::Vector&          particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -340,7 +340,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LHCb::Particle::ConstVector&     particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -350,7 +350,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const SmartRefVector<LHCb::Particle>&  particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -360,7 +360,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::PhysTypes::Range&          particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -370,7 +370,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Keeper<LHCb::Particle>&    particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -380,7 +380,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
   const LoKi::Vertices::ImpactParamTool& tool      ) 
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -390,7 +390,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LHCb::Particle::Vector&          particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -400,7 +400,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LHCb::Particle::ConstVector&     particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -410,7 +410,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const SmartRefVector<LHCb::Particle>&  particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -420,7 +420,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LoKi::PhysTypes::Range&          particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles.begin() , particles.end() )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -430,7 +430,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool& tool      ,
   const LoKi::Keeper<LHCb::Particle>&    particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -440,7 +440,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Vertices::ImpactParamTool&    tool      ,
   const LoKi::UniqueKeeper<LHCb::Particle>& particles )
-  : LoKi::Function<const LHCb::Particle*>()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , LoKi::UniqueKeeper<LHCb::Particle> ( particles )
   , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
 {};
@@ -450,7 +450,7 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Particles::MinClosestApproachChi2& right ) 
   : LoKi::AuxFunBase                     ( right ) 
-  , LoKi::Function<const LHCb::Particle*>( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right )
   , LoKi::UniqueKeeper<LHCb::Particle>   ( right )
   , m_fun                                ( right.m_fun ) 
 {} 

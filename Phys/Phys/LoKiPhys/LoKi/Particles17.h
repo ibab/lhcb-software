@@ -1,4 +1,4 @@
-// $Id: Particles17.h,v 1.4 2007-07-23 17:35:45 ibelyaev Exp $
+// $Id: Particles17.h,v 1.5 2007-11-28 14:39:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES17_H 
 #define LOKI_PARTICLES17_H 1
@@ -40,7 +40,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi : public LoKi::Function<const LHCb::Particle*>
+    class DeltaPhi 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor from the angle
@@ -52,25 +53,25 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaPhi ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_eval (         )
         , m_phi  ( v.phi() )
       { 
         m_phi = adjust ( m_phi ) ;
-      } ;
+      } 
       /// constructor from the particle
       DeltaPhi ( const LHCb::Particle* p ) ;
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaPhi ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_eval (  )
         , m_phi  (  )
       { 
         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
         m_phi = p->momentum().phi() ;
         m_phi = adjust ( m_phi ) ;
-      } ;
+      } 
       /// copy constructor
       DeltaPhi ( const DeltaPhi& right ) ;
       /// MANDATORY: virtual destructor 
@@ -105,7 +106,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public LoKi::Function<const LHCb::Particle*>
+    class DeltaEta 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor from the eta
@@ -117,22 +119,22 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaEta ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , m_eval (         )
         , m_eta  ( v.Eta() )
-      {} ;
+      {} 
       /// constructor from the particle
       DeltaEta ( const LHCb::Particle* p ) ;
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaEta ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , m_eval (  )
         , m_eta  (  )
       { 
         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
         m_eta = p->momentum().Eta() ;
-      } ;
+      } 
       /// copy constructor
       DeltaEta ( const DeltaEta& right ) ;
       /// MANDATORY: virtual destructor 
@@ -171,7 +173,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public LoKi::Function<const LHCb::Particle*>
+    class DeltaR2 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       /// constructor from the eta, phi
@@ -183,7 +186,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaR2 ( const VECTOR& v ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_dphi ( v )
         , m_deta ( v )
       {} ;
@@ -192,7 +195,7 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaR2 ( const PARTICLE* p ) 
-        : LoKi::Function<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_dphi ( p )
         , m_deta ( p )
       {} ;

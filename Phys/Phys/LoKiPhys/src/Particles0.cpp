@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.13 2007-08-22 17:24:02 pkoppenb Exp $
+// $Id: Particles0.cpp,v 1.14 2007-11-28 14:39:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -59,7 +59,7 @@ LoKi::Particles::HasKey::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::Key::Key
 ( const LHCb::Particle::key_type bad ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_bad   ( bad ) 
   , m_nokey ( bad ) 
 {} 
@@ -67,7 +67,7 @@ LoKi::Particles::Key::Key
 LoKi::Particles::Key::Key
 ( const LHCb::Particle::key_type bad   ,
   const LHCb::Particle::key_type nokey ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_bad   ( bad   ) 
   , m_nokey ( nokey ) 
 {} 
@@ -75,7 +75,7 @@ LoKi::Particles::Key::Key
 LoKi::Particles::Key::Key
 ( const LoKi::Particles::Key& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_bad   ( right.m_bad   ) 
   , m_nokey ( right.m_nokey ) 
 {} 
@@ -106,7 +106,7 @@ LoKi::Particles::Key::fillStream ( std::ostream& s ) const
 LoKi::Particles::InTES::InTES 
 ( const std::string& path , 
   const bool         full ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
   , m_location ( path ) 
   , m_fullpath ( full ) 
 {} 
@@ -114,7 +114,7 @@ LoKi::Particles::InTES::InTES
 LoKi::Particles::InTES::InTES 
 ( const LoKi::Particles::InTES& right ) 
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Predicate<const LHCb::Particle*> ( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right )
   , m_location ( right.m_location ) 
   , m_fullpath ( right.m_fullpath ) 
 {}
@@ -467,7 +467,7 @@ LoKi::Particles::MeasuredMass::fillStream( std::ostream& s ) const
  */
 LoKi::Particles::InvariantMass::InvariantMass
 ( const size_t index ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { m_indices.push_back ( index ) ; }
 // ============================================================================
@@ -478,7 +478,7 @@ LoKi::Particles::InvariantMass::InvariantMass
 LoKi::Particles::InvariantMass::InvariantMass
 ( const size_t index1    , 
   const size_t index2    ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { 
   m_indices.push_back ( index1 ) ; 
@@ -494,7 +494,7 @@ LoKi::Particles::InvariantMass::InvariantMass
 ( const size_t index1    , 
   const size_t index2    , 
   const size_t index3    ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices() 
 { 
   m_indices.push_back ( index1 ) ; 
@@ -509,7 +509,7 @@ LoKi::Particles::InvariantMass::InvariantMass
 // ============================================================================
 LoKi::Particles::InvariantMass::InvariantMass
 ( const LoKi::Particles::InvariantMass::Indices& indices ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_indices( indices ) 
 {
   std::sort ( m_indices.begin() , m_indices.end () ) ;
@@ -580,7 +580,7 @@ LoKi::Particles::InvariantMass::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
 ( const ParticleProperty&     pp     )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( pp.mass() ) 
   , m_eval () 
 {}
@@ -593,7 +593,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const std::string&    name   , 
   IParticlePropertySvc* ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
@@ -611,7 +611,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
 ( const std::string&    name   )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV )
   , m_eval ()
 {
@@ -629,7 +629,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const LHCb::ParticleID&     pid    , 
   IParticlePropertySvc* ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
@@ -648,7 +648,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
 ( const LHCb::ParticleID&     pid    )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
@@ -661,7 +661,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const LoKi::Particles::DeltaMass& right )
   : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_mass ( right.m_mass )
   , m_eval ( right.m_eval ) 
 {}
@@ -692,7 +692,7 @@ LoKi::Particles::DeltaMass::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass( const double mass ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( mass ) {}
 // ============================================================================
 /*  constructor 
@@ -700,7 +700,7 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass( const double mass )
  */
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass ( const ParticleProperty& pp ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pp ) {}
 // ============================================================================
 /*  constructor 
@@ -711,7 +711,7 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass ( const ParticleProperty& pp )
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
 ( const std::string&      name   , 
   IParticlePropertySvc*   ppsvc  ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( name , ppsvc ) {}
 // ============================================================================
 /*  constructor 
@@ -722,7 +722,7 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 ( const LHCb::ParticleID& pid    , 
   IParticlePropertySvc*   ppsvc  ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid , ppsvc ) {}
 // ============================================================================
 /*  constructor 
@@ -731,7 +731,7 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
 ( const std::string&      name   ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( name  ) {}
 // ============================================================================
 /*  constructor 
@@ -740,18 +740,18 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
 ( const LHCb::ParticleID&       pid    ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid ) {}
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 ( const LoKi::Particles::DeltaMass& right ) 
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval ( right ) {}
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 ( const LoKi::Particles::AbsDeltaMass& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_eval ( right.m_eval ) {}
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::result_type 
@@ -775,7 +775,7 @@ LoKi::Particles::AbsDeltaMass::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass 
 ( const double mass ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( mass ) , m_eval () {};
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::result_type 
@@ -793,7 +793,7 @@ LoKi::Particles::DeltaMeasuredMass::operator()
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const ParticleProperty&     pp     )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( pp.mass() ) 
   , m_eval () 
 {}
@@ -806,7 +806,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const std::string&    name   , 
   IParticlePropertySvc* ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
@@ -825,7 +825,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const std::string&    name  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
@@ -846,7 +846,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LHCb::ParticleID&  pid    , 
   IParticlePropertySvc*    ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
@@ -865,7 +865,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LHCb::ParticleID&     pid  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
@@ -885,7 +885,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LoKi::Particles::DeltaMeasuredMass& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
   , m_mass ( right.m_mass ) 
   , m_eval ( right.m_eval ) {}
 // ============================================================================
@@ -911,7 +911,7 @@ LoKi::Particles::DeltaMeasuredMass::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass 
 ( const double mass ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( mass ) {};
 // ============================================================================
 /*  constructor 
@@ -920,7 +920,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass 
 ( const ParticleProperty& pp ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval( pp ) {}
 // ============================================================================
 /*  constructor 
@@ -931,7 +931,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const std::string&      name   , 
   IParticlePropertySvc*   ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( name , ppsvc ) {} 
 // ============================================================================
 /*  constructor 
@@ -942,7 +942,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const LHCb::ParticleID& pid    , 
   IParticlePropertySvc*   ppsvc  )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid  , ppsvc ) {} 
 // ============================================================================
 /*  constructor 
@@ -951,7 +951,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const std::string&      name   ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( name ) {} 
 // ============================================================================
 /*  constructor 
@@ -960,12 +960,12 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const LHCb::ParticleID&       pid    ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid ) {} 
 // ============================================================================/
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const LoKi::Particles::DeltaMeasuredMass& right ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( right ) {} 
 // ============================================================================/
 /*  copy constructor
@@ -975,7 +975,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const LoKi::Particles::AbsDeltaMeasuredMass& right ) 
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
   , m_eval ( right.m_eval  ) {} 
 // ============================================================================
 //  destructor (virtual)
@@ -1007,45 +1007,45 @@ LoKi::Particles::AbsDeltaMeasuredMass::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const double mass ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( mass ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const ParticleProperty& pp ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pp   ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const std::string&    nam , 
   IParticlePropertySvc* svc )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( nam , svc ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const LHCb::ParticleID&     pid , 
   IParticlePropertySvc* svc )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid , svc ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const std::string&    nam )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( nam       ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const LHCb::ParticleID&     pid )
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval ( pid       ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const LoKi::Particles::DeltaMeasuredMass& right )
-  : LoKi::Function<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_eval ( right ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const LoKi::Particles::DeltaMeasuredMassChi2& right )
   : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::Function<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
   , m_eval ( right.m_eval ) {} 
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::result_type 
@@ -1188,7 +1188,7 @@ LoKi::Particles::HasVertex::fillStream
 LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 ( const double theta , 
   const double phi   ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_momentum ( ) 
 {
   m_momentum.SetXYZ 
@@ -1201,7 +1201,7 @@ LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 ( const LoKi::ThreeVector&  v ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_momentum ( v ) 
 {} 
 // ============================================================================
@@ -1209,7 +1209,7 @@ LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 ( const LoKi::LorentzVector&  v ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_momentum ( v ) 
 {} 
 // ============================================================================
@@ -1217,7 +1217,7 @@ LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 ( const LHCb::Particle*  v ) 
-  : LoKi::Function<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_momentum () 
 {
   if ( 0 == v ) { Exception ( "Invalid LHCb::Particle*!" ) ; }
@@ -1229,7 +1229,7 @@ LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
 LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::Particles::TransverseMomentumRel& right ) 
   : LoKi::AuxFunBase                     ( right ) 
-  , LoKi::Function<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right ) 
   , m_momentum ( right.m_momentum ) 
 {} 
 // ============================================================================
