@@ -20,7 +20,7 @@ use GaudiUPI          v1r5     Online
 use HPDMonitor        v1r4     Online
 use InsertDB          v1r0     Online
 use MBMDump           v1r4     Online
-use OMAlib            v0r0     Online
+use OMAlib            v0r1     Online
 use OnlineDummyReader v1r2     Online
 use OnlineHistDB      v4r3     Online
 use OnlineKernel      v1r9     Online
